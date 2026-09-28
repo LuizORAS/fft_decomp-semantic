@@ -130,6 +130,12 @@ typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_END_TURN = 2,
 } battle_ai_command_kind_e;
 
+typedef enum battle_ai_simulation_phase {
+    BATTLE_AI_SIMULATION_PREPARE_ACTION = 0,
+    BATTLE_AI_SIMULATION_ADVANCE_TURNS = 1,
+    BATTLE_AI_SIMULATION_SCORE_STATE = 2,
+} battle_ai_simulation_phase_e;
+
 enum {
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES = 0x01,
@@ -552,7 +558,7 @@ typedef struct battle_ai_data {
     s32 saved_turn_state_1;                            /* 0x0ee4; snapshot of 0x8018f51c */
     s32 saved_turn_state_2;                            /* 0x0ee8; snapshot of 0x8018f520 */
     u16 simulated_turn_events;                         /* 0x0eec; interturn loop stops at 256 */
-    u8 progress_0eee;                                  /* 0x0eee */
+    u8 action_simulation_phase;                        /* 0x0eee; battle_ai_simulation_phase_e */
     u8 _padding_0eef;                                  /* aligns ability_lists */
     battle_ai_ability_entry_t ability_lists[16][0x22]; /* 0x0ef0; 0x88 bytes per unit */
     /* Blood Suck/Frog IDs start without unit bits; 0x8019729c/0x80197510
