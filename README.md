@@ -2,9 +2,6 @@
 
 > Status: 100% decompiled and byte-exact ✅
 
-This project is an ode to the [FFHacktics](https://ffhacktics.com/wiki/)
-community. This project would not be possible without it. ❤️
-
 A matching decompilation of the North American PlayStation release of *Final
 Fantasy Tactics* (`SCUS-94221` [redump](http://redump.org/disc/55/)). Every game
 function is C that compiles to the original bytes, and the rebuilt disc is a
@@ -40,3 +37,7 @@ make build     # build every module and a byte-matching disc (needs the BIN)
 
 `make build` writes `build/disc/output-scus-94221.bin` and `.cue`.
 
+## Thanks
+
+This project is an ode to the [FFHacktics](https://ffhacktics.com/wiki/)
+community. This project would not be possible without it. ❤️
