@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/etc.h"
-#include "psx/gpu.h"
+#include "psx/libetc.h"
+#include "psx/libgpu.h"
 
 void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_level_t* level) {
     RECT rect;

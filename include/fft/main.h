@@ -1,5 +1,5 @@
-#ifndef FFT_MAIN_H
-#define FFT_MAIN_H
+#ifndef MAIN_H
+#define MAIN_H
 
 /* SCUS_942.21: the resident executable, its data tables and the Suzuki sound driver. */
 
@@ -10,8 +10,11 @@
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
-#include "psx/cd.h"
-#include "psx/spu.h"
+#include "psx/crt.h"
+#include "psx/libapi.h"
+#include "psx/libcd.h"
+#include "psx/libspu.h"
+#include "psx/suzuki.h"
 
 struct battle_deployed_coords;
 
@@ -118,11 +121,6 @@ extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
 extern u8 g_card_save_slot_metadata[][0x18];
 extern u8 g_card_save_slot_playtimes[][3];
-void init_card_earlysafe(s32 val);
-s32 card_create_new(s32 port);
-s32 card_info(s32 port);
-s32 card_load(s32 port);
-s32 card_status(s32 slot);
 void main_card_init_events(void);
 
 /* file */
@@ -176,7 +174,6 @@ void main_file_poll_load(main_file_load_descriptor_t* state);
 void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
 
 /* input */
-extern u32 g_main_input_raw_buttons;
 extern u8 g_main_input_repeat_initial_delay;
 extern u8 g_main_input_repeat_period;
 extern u8 g_main_input_secondary_repeat_period;
@@ -349,17 +346,6 @@ typedef struct suzuki_ramp {
     s16 count;  /* 0x08 */
     s16 target; /* 0x0a */
 } suzuki_ramp_t;
-
-/* Suzuki heap block header (0x10 bytes; payload follows). The $gp-relative
- * allocator (0x8001423c-0x8001442c) rounds requests to 16 bytes and chains
- * blocks in address order from g_main_sound_heap_blocks. */
-typedef struct suzuki_heap_block {
-    u16 flags;                      /* 0x00; 0x8000 list head, 0x2 in use */
-    u16 _unused_02;                 /* 0x02; cleared on allocation */
-    u32 _unused_04;                 /* 0x04; cleared on allocation */
-    u8* end;                        /* 0x08; end of the payload */
-    struct suzuki_heap_block* next; /* 0x0c */
-} suzuki_heap_block_t;
 
 /* WAVESET instrument entry (0x10 bytes). main_smd_set_instrument
  * (0x80016fb4) and main_smd_get_instrument_attr copy it into a channel or an
@@ -756,8 +742,6 @@ typedef struct suzuki_play_time {
 
 extern u8 g_main_sound_env_sed_data[];
 extern u8 g_main_sound_system_sed_data[];
-extern volatile u32* g_spu_delay_reg_pointer;
-extern volatile u32* volatile g_spu_dpcr_pointer;
 
 /* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
 extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80];      /* 0x80028b0c; opcodes 0x80-0xff */
@@ -775,8 +759,6 @@ extern u16 g_main_smd_pitch_table[12 * 256];
 /* Driver globals (0x800329f0-0x80032a68, gp = 0x800329bc). The heap globals
  * are only ever reached $gp-relative, by 0x8001423c-0x8001442c. */
 extern s16 g_main_sound_sfx_channel_count;                /* SFX request mode; the Play Sound wrappers store 2 */
-extern suzuki_heap_block_t* g_main_sound_heap_arena;      /* 0x800329f8 */
-extern suzuki_heap_block_t* g_main_sound_heap_blocks;     /* 0x800329fc */
 extern main_sound_resource_t* g_main_sound_resource_list; /* 0x80032a00 */
 extern s16* g_main_sound_spu_transfer_status_records;     /* SPU transfer status records, 16 bytes each */
 extern u32 g_main_sound_music_key_off_voices;             /* voices queued for key-off by stopped music */
@@ -788,7 +770,6 @@ extern s16 g_main_sound_sfx_instrument;
 extern u32 g_main_sound_sfx_key_off_voices;        /* SFX voices pending key-off */
 extern u32 g_main_sound_tick_count;                /* root-counter tick count; odd ticks step the ramps */
 extern u16 g_main_sound_spu_transfer_status_index; /* index into g_main_sound_spu_transfer_status_records */
-extern u32 g_main_sound_heap_size;                 /* 0x80032a38 */
 extern CdlATV g_main_sound_cd_mix;                 /* 0x80032a3c; written by Put Sound Type */
 
 /* g_main_sound_cd_mix val1 (CD left to SPU right) and val3 (CD right to SPU
@@ -808,10 +789,8 @@ extern suzuki_music_t* g_main_sound_active_music_list; /* 0x80032a50 */
 extern u16 g_main_sound_driver_flags;
 extern s32 g_main_root_counter_2_event;        /* 0x80032a5c; OpenEvent handle of main_sound_root_counter_2_handler */
 extern suzuki_music_t* g_main_sound_sfx_music; /* 0x80032a60; eight channels on SPU voices 16-23 */
-extern u8* g_main_sound_heap_end;              /* 0x80032a64 */
 extern SpuReverbAttr g_main_sound_reverb_attr; /* 0x80037008 */
 extern suzuki_spu_state_t g_main_sound_spu_state; /* 0x80037020 */
-extern u8 g_main_sound_heap_memory[];             /* 0x800370bc; the Suzuki heap arena */
 extern u8 g_main_sound_spu_malloc_table[];        /* 0x800408e0; SpuInitMalloc(6, ...) records */
 extern main_sound_music_t g_main_sound_music;
 extern main_sound_smd_file_t g_main_sound_scenario_smd_files[];
@@ -924,12 +903,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
 void main_sound_stop_all(void);
 
 /* Suzuki heap (0x8001423c-0x80014544) and SPU RAM wrappers. */
-void main_sound_init_heap(void* arena, u32 size);
-void* main_sound_alloc(u32 size);
-void main_sound_free(void* payload);
-s32 main_sound_get_largest_free_block(void);
 void main_sound_copy_memory(void* destination, void* source, s32 size);
-void main_sound_clear_memory(void* destination, s32 size);
 s32 main_sound_alloc_spu_ram(s32 size);
 s32 main_sound_free_spu_ram(u32 addr);
 
@@ -1408,7 +1382,6 @@ extern s32 g_main_deployed_unit_map_coordinates[];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
-void AddPrims(u32* ot, void* first, void* last); /* follows AddPrim; AddPrims-shaped call */
 s32 main_return_zero_80043708(void);
 
 /* unnamed */
@@ -1420,5 +1393,7 @@ extern s32 D_800459D8;
 extern u8 D_800473A7;
 extern u8 D_80057b1c;
 extern u8 D_8005E950[];
+
+/* entry */
 
 #endif

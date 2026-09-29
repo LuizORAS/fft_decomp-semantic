@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 
 /* Local view of battle_ai_data_t::walkable_tiles as level/y rows. */
 typedef struct battle_ai_walkable_view {

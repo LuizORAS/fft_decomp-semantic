@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 #define WLDCORE_ROUTE_COUNT           48

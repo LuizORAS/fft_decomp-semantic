@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const u8* color, s32 semitrans,

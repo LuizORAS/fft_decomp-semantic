@@ -1,6 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* CARD copy of main_gfx_build_zodiac_bin. */

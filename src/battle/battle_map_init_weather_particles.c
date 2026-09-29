@@ -1,8 +1,8 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
 
-/* Flat-textured triangle; the psx/gpu.h clean-room set does not declare it. */
+/* Flat-textured triangle; the psx/libgpu.h clean-room set does not declare it. */
 
 /* Set up the weather particles and their flat-textured sprites.
  *

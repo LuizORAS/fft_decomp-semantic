@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Animates a window's two quads from their current corners towards `to`

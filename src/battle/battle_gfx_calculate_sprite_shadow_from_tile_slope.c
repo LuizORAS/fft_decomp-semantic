@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Offsets of the unit inside its 28-unit tile along X and Z. */

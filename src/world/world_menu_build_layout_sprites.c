@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Set up the two menu sprites for one record. The first sprite is positioned
  * from the record's x/y according to its layout mode (1 or 2), the second is

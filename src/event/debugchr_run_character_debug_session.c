@@ -14,7 +14,7 @@
  *  - `PRIM_AT` keeps the target's `addu rd,index,base` operand order.
  */
 #include "fft/event_debugchr.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

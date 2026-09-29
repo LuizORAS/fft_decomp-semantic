@@ -1,4 +1,4 @@
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 void world_gs_clearot(s32 x, s32 y, GsOT* ot) {

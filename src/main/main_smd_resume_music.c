@@ -1,6 +1,6 @@
 #include "fft/main.h"
-#include "psx/api.h"
-#include "psx/etc.h"
+#include "psx/libapi.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Resumes a music handle paused by main_smd_pause_music: with the

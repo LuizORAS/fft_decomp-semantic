@@ -1,4 +1,4 @@
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Only the low halfword of each input component is read. */

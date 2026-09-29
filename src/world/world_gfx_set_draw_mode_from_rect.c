@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Set a WORLD draw mode from aligned texture-page coordinates in a rect. */

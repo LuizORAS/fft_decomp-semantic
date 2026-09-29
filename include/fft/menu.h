@@ -1,11 +1,11 @@
-#ifndef FFT_MENU_H
-#define FFT_MENU_H
+#ifndef MENU_H
+#define MENU_H
 
 /* Menu, window and text records shared across modules. */
 
 #include "fft/gfx.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* ability */

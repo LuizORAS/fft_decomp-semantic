@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* BATTLE/ZODIAC.BIN is a headerless image, not an executable overlay.
  * Sector 0xec61 supplies 0x10000 bytes: 128 * 256 16-bit VRAM transfer

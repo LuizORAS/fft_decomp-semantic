@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_ETC_H
-#define FFT_EVENT_ETC_H
+#ifndef EVENT_ETC_H
+#define EVENT_ETC_H
 
 /* EVENT/ETC.OUT: menu screen overlay that runs with BATTLE. */
 

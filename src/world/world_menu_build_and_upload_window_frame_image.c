@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Builds a tiled window-frame text image for rect in a UI buffer and, for

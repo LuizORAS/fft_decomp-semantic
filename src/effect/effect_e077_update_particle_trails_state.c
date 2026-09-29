@@ -1,8 +1,8 @@
 #include "fft/effect.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 s32 effect_e077_update_particle_trails_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {

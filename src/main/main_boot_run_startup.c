@@ -18,7 +18,7 @@ void main_boot_run_startup(void) {
     ResetGraph(0);
     SetGraphDebug(0);
     PadInit(0);
-    SsUtReverbOff();
+    SpuInit();
     main_file_reset_cdrom_cpu_ram();
     main_gfx_reset_display(256, 240, 512, 0, 0, 0);
     main_boot_build_and_draw_sceap_logo();

@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch) {
     RECT image_rect;

@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Append a two-color line to the menu ordering table. */
 void world_menu_add_gradient_line_primitive(s16* endpoints, u8* rgb, s32 semi_trans, s32 ot_index) {

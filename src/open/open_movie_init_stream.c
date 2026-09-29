@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/cd.h"
+#include "psx/libcd.h"
 #include "psx/types.h"
 
 void open_movie_init_stream(s32 sector, void* output_callback) {

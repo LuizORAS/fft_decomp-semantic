@@ -11,7 +11,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [world]
 
 libraries:
-  - {id: libpress, addr: 0x8007348c, end: 0x80073edc, kind: psyq, library: LIBPRESS}
+  - {id: libpress, addr: 0x8007348c, end: 0x80073f10, kind: psyq, library: LIBPRESS}
 
 functions:
   - {addr: 0x800670f0, size: 284, name: open_system_run_main_loop, hash: 1b6e181d0ae942f3}
@@ -162,6 +162,8 @@ functions:
   - {addr: 0x8007393c, size: 152, name: open_bin_mdec_in_sync, hash: 855ba4b219e3e4ae}
   - {addr: 0x800739d4, size: 152, name: open_bin_mdec_out_sync, hash: 3ba7c2e453a1ded1}
   - {addr: 0x80073a6c, size: 304, name: open_bin_libpress_timeout, hash: 7a6be33875e51769}
+  - {addr: 0x80073ba0, size: 48, name: DecDCTvlcSize, hash: 2663bd671b465d7e, source: src/psyq/libpress/DecDCTvlcSize.c}
+  - {addr: 0x80073bd0, size: 832, name: DecDCTvlc, hash: 7a6cb5dc58da8ec9, source: src/psyq/libpress/DecDCTvlc.c}
 
 data:
   - {addr: 0x80067044, name: g_open_text_mdec_reset_bad_option_format}
@@ -175,7 +177,8 @@ data:
   - {addr: 0x80070cb4, name: g_open_new_game_transition_entries}
   - {addr: 0x80070d84, name: g_open_script_font_metrics}
   - {addr: 0x80070d88, name: g_open_script_initial_data_base}
-  - {addr: 0x80073bd0, name: DecDCTvlc}
+  - {addr: 0x80073b9c, name: g_psyq_press_vlc_limit_halfwords}
+  - {addr: 0x80073f10, name: g_psyq_press_vlc_state}
   - {addr: 0x80073f34, name: g_open_birthday_month_lengths}
   - {addr: 0x80073f40, name: g_open_birthday_zodiac_months}
   - {addr: 0x80073f41, name: g_open_birthday_zodiac_days}
@@ -201,6 +204,10 @@ data:
   - {addr: 0x800741b0, name: g_open_mdec_command_reg}
   - {addr: 0x800741b4, name: g_open_mdec_status_reg}
   - {addr: 0x800741b8, name: g_open_dma_dpcr}
+  - {addr: 0x800741bc, name: g_psyq_press_dc_luma_table}
+  - {addr: 0x800745bc, name: g_psyq_press_dc_chroma_table}
+  - {addr: 0x800749bc, name: g_psyq_press_ac_primary_table}
+  - {addr: 0x800849bc, name: g_psyq_press_ac_secondary_table}
   - {addr: 0x800851bc, name: g_open_input_current_buttons}
   - {addr: 0x800851c0, name: g_open_gfx_screen_environments}
   - {addr: 0x800852a0, name: g_open_gfx_next_render_record_36}
@@ -291,4 +298,3 @@ data:
 regions:
   - {addr: 0x800707f8, end: 0x8007348c, kind: data, why: "pointer table and zero-filled region; no decoded control transfer"}
   - {addr: 0x80073b9c, end: 0x80073ba0, kind: data, why: "word 0x00ffffff before LIBPRESS code; same runtime address is a BATTLE candidate start"}
-  - {addr: 0x80073bc0, end: 0x80073bd0, kind: interior, why: "inside 0x80073ba0: branch target in DecDCTvlcSize; depends on t0 established at parent entry"}

@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void battle_menu_render_text_image_at_record_origin(battle_menu_text_image_t* record) {

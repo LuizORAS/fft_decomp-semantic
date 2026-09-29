@@ -1,6 +1,6 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 void open_gfx_init_screen_environments(s32 clear_first) {
     RECT rect;

@@ -1,7 +1,7 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* DR_TPAGE + SPRT packet under one tag, as the packed words libgs writes. */

@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* Fills the sample address and envelope of an SpuVoiceAttr from an

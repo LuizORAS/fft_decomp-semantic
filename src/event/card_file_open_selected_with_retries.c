@@ -26,7 +26,7 @@ s32 card_file_open_selected_with_retries(const char* filename, s32 mode) {
         if (result != CARD_IO_RESULT_COMPLETE) {
             return -2;
         }
-        g_card_file_open_descriptor = FileOpen(path, mode);
+        g_card_file_open_descriptor = open(path, mode);
         if (g_card_file_open_descriptor != -1) {
             break;
         }

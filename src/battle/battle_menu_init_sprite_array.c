@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Initialize an array of BATTLE menu sprites with a shared CLUT. */
 void battle_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut) {

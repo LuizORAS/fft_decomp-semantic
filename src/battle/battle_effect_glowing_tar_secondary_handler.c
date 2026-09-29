@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Local view of battle_effect_secondary_data_t::target.fields including the

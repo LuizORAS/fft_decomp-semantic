@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 void battle_map_update_mesh_part_animations(void) {

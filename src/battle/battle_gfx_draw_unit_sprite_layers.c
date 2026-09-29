@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /* flags is passed as a sign-extended word; the u16 mode parameter would
  * zero-extend it, so these calls use a word-mode view. */

@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 typedef struct open_title_new_game_state {

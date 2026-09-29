@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* Pushes the voice attributes marked in each channel's func_flags to the SPU,

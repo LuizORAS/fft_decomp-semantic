@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 /* Emits a texture-page packet and SPRT primitive for the sprite, then links

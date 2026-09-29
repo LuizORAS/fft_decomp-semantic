@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /* Collects every other active unit's tile position into a scratchpad list. */
 struct battle_effect_obstacle_unit_list;

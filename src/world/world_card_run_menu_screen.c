@@ -1,6 +1,6 @@
 #include "fft/event_card.h"
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Stack-resident primitive pools for both WORLD packet buffers. Each pool

@@ -4,7 +4,7 @@
  * equipment names of an item stat-detail record and draws their item icons.
  */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Equipment panel thread. The sprite sheet layout (0-3) comes from the two

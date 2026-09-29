@@ -1,6 +1,6 @@
 #include "fft/main.h"
-#include "psx/api.h"
-#include "psx/etc.h"
+#include "psx/libapi.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Restarts a music handle from the top of its sequence: re-reads the SMD

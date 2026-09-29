@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 
 void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level_t* level) {

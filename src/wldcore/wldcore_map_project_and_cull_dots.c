@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Projects every world-map dot and marks the ones that are off screen, hidden

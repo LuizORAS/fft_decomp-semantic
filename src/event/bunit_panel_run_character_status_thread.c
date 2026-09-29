@@ -1,5 +1,5 @@
 #include "fft/event_bunit.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The status buffer is battle_menu_status_panel_buffer_t and the thread record

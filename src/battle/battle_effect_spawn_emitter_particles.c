@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
 #include "psx/libc.h"
+#include "psx/libgte.h"
 
 /* Factor of the curve selected by a 1-based palette-table nibble (0 = none) for
  * the current frame column. The index is decremented in its own statement: a

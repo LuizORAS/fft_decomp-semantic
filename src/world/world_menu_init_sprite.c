@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Initialize the fixed sprite used by WORLD menu graphics. */
 void world_menu_init_sprite(SPRT* sprite) {

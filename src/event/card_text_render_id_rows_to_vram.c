@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void card_text_render_id_rows_to_vram(glyph_data, text_ids, destination, flags) void* glyph_data;

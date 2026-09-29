@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Flags word of the projection-motion record described in

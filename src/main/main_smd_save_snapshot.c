@@ -1,6 +1,6 @@
 #include "fft/main.h"
-#include "psx/api.h"
-#include "psx/etc.h"
+#include "psx/libapi.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Copies the MUS record and its channels into the record's snapshot block,

@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void bunit_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount) {
     if (poly->u0 != poly->u1) {

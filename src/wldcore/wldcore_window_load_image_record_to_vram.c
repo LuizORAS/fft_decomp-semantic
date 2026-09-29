@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image) {
     s32 transformed[2];

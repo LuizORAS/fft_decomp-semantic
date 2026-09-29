@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Initialize the fixed sprite used by BATTLE menu graphics. */
 void battle_menu_init_semitransparent_sprt(SPRT* sprite) {

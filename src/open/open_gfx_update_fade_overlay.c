@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* With a single struct, cse keeps the flags address in a register (the

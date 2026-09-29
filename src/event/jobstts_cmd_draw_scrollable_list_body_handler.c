@@ -2,7 +2,7 @@
  * `lb`; this candidate needs the header changed to s8. Until then the rename
  * keeps the header's declaration out of the way. */
 #include "fft/event_jobstts.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 
 /* Page-scroll direction latch: -1 up, 1 down, 0 idle. */

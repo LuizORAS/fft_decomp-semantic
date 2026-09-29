@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index) {

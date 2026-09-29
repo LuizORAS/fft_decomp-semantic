@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 
 void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* level) {
     GsIMAGE image;

@@ -1,5 +1,5 @@
 #include "fft/event_require.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void require_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu) {

@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/etc.h"
 #include "psx/libc.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Counts the save files on the selected memory card into `dir`: every

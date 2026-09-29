@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Scalar views of g_wldcore_location_entry_state at 0x800d0b24 (flags), +0x18

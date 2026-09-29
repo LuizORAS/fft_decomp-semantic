@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /*
  * Append a four-color menu quad to the selected ordering-table entry.

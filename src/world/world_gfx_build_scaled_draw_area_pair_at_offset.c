@@ -2,7 +2,7 @@
  * locals reorders the prologue's saved-register moves. One `scaled` local is
  * shared across both /200 divisions, as the target puts both results in $t3. */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Callers pass different thread records; only the halfwords at offsets 0 and

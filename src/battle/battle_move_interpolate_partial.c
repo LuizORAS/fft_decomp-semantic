@@ -1,4 +1,4 @@
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Scales the misc unit's partial X/Z/Y step (words 10-12, offsets 0x28-0x30)

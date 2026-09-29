@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data

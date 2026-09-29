@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Per-frame update for a battle state that fades the screen out: it advances

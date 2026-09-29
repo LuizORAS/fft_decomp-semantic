@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Renders one encoded glyph (either a direct id or a 0xD?-prefixed

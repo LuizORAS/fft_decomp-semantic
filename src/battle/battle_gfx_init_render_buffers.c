@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Initialises both battle render buffers: every primitive in each pool gets its

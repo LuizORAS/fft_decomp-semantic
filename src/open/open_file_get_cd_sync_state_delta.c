@@ -1,4 +1,4 @@
-#include "psx/cd.h"
+#include "psx/libcd.h"
 #include "psx/types.h"
 
 s32 open_file_get_cd_sync_state_delta(void) {

@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /*
  * Append a Gouraud-shaded textured rectangle to the selected ordering-table

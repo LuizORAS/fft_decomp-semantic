@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/types.h"
 
 /* Poll the four BIOS card events and report which one fired, or pending when

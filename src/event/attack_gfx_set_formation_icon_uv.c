@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void attack_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index) {

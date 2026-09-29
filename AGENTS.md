@@ -5,6 +5,41 @@ Fantasy Tactics* (`SCUS-94221`). Every game function is C that compiles to the
 original bytes. The work now is making that C better (names, types, structure)
 without changing a single byte.
 
+## Linked libraries
+
+Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
+repository source. Keep public SDK entry-point names, use `include/psx/`, and
+put one reconstructed function per file under `src/psyq/<library>/`. Register
+it in the original module's `target/` configuration with an explicit `source:`
+path. Existing LIBGS, LIBPRESS and Suzuki functions stay in their current
+module directories unless a separate change moves them coherently.
+
+Library C has the same byte-exact requirements as game C. Every completed
+function must match all original bytes; unmatched drafts stay in ignored
+`build/`. Generate hashes only from original bytes through `make checksums`.
+Never weaken checks, accept mismatches, or change a hash to bless edited code.
+Use `make library-diff ARGS="--name=NAME --source=build/.../NAME.c
+--addr=0xADDRESS --size=BYTES"` for scratch candidates before integration; it
+uses the normal historical compiler pipeline without modifying target metadata.
+
+Library headers and sources must never include `fft/` game headers. Move
+shared library declarations to the library that logically owns them; game
+headers may consume those declarations. Startup declares the program's `main`
+as an external runtime contract. Keep ordinary declarations and driver
+internals together; isolate or localize architectural register views so an
+ordinary include cannot reserve CPU registers in unrelated callers.
+
+Keep useful behavior and matching constraints in source comments and
+`QUIRKS.md`, not research diaries or duplicate inventories. Retain a register
+pin or empty assembly barrier only when it implements a real architectural ABI
+or its removal changes the original bytes. Re-measure speculative workarounds
+and remove those that prove unnecessary. Document uncertainty honestly.
+
+These files implement the original PS1 behavior. BIOS firmware remains
+external; linked BIOS veneers and hardware helpers are reconstructed here.
+Game media, SDK archives/objects, extracted binaries and copied table dumps
+remain excluded. Never modify `meta/`.
+
 ## Target
 
 - Input: `scus-94221.bin` at the repo root (raw Mode 2/2352, 541,315,152
@@ -20,8 +55,9 @@ without changing a single byte.
 | Path | Contents |
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
+| `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `include/fft/` | One header per module (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`) plus shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `script.h`) |
-| `include/psx/` | Clean-room Psy-Q SDK declarations (keep SDK names and signatures) |
+| `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
 | `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
@@ -37,12 +73,13 @@ without changing a single byte.
 | event-* | `EVENT/*.OUT` | `0x801bf000`… | Menu screens run with BATTLE (`target/event.yaml`) |
 | effect-* | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects run with BATTLE (`target/effect.yaml`) |
 
-File offset = address − `load`. Linked library code is declared under
-`libraries:`. The Psy-Q libraries in main stay original bytes, with only their
-interface declared in `include/psx/`. LIBGS (WORLD), LIBPRESS (OPENING) and
-the Suzuki sound driver (main `0x800120f4`–`0x800186c4`) are C, except four
-Suzuki heap routines at `0x8001423c`–`0x8001442c` built with `-G8`
-`$gp`-relative small data, which stay original bytes by decision.
+File offset = address − `load`. Linked library ranges are declared under
+`libraries:`. The linked Psy-Q and startup functions, LIBGS (WORLD), LIBPRESS
+(OPENING), and Suzuki sound driver are reconstructed C. This includes the four
+Suzuki heap routines at `0x8001423c`–`0x8001442c`, which use the original
+`-G8` profile and `$gp` binding. Original padding, tables and executable
+patch templates remain data in their original modules. `target/*.yaml` is
+authoritative for each function's source, address, size, profile and hash.
 
 ## Commands
 
@@ -57,6 +94,7 @@ make config-fmt            # rewrite target/*.yaml in canonical form
 make declarations          # report conflicting declarations in detail
 make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
+make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
 make test                  # vet and test the Go tooling
 make fmt                   # clang-format src/ and include/ in place
@@ -120,6 +158,9 @@ profiles are used only where a function matches no other way:
   code: the separate `mfhi` in constant divisions, or a `lw ra` epilogue with
   its delay slot filled.
 - `_divcheck`: division with the zero/overflow `break` checks.
+- `gcc-2.6.3_O2_G8_aspsx-2.34`: the four Suzuki CPU heap routines require
+  `$gp`-relative small data with `$gp = 0x800329bc`. The measured assembler
+  load-delay correction applies only to this profile; the default remains G0.
 
 Never add a profile or move a function between profiles without a specific
 function that matches only that way.
@@ -128,9 +169,10 @@ function that matches only that way.
 
 - Byte-exact always. Never weaken a check or edit a hash to accept a mismatch.
 - C only. The single `.s` file (`main_restore_game_loop_stack_pointer.s`) is
-  an ABI boundary. Instruction-emitting inline asm remains only in the
-  hand-written helpers (thread context, copy loops) and the GTE macros of
-  `include/psx/gte_inline.h`.
+  an ABI boundary. Instruction-emitting inline asm remains in the hand-written
+  thread/copy helpers and the PS1 hardware/ABI helpers in `include/psx/`.
+  Library algorithms stay C; each hardware instruction or register constraint
+  must have a measured PS1 dependency or byte-exact ABI reason.
 - Typed access: structs and named fields, never raw offsets such as
   `*(s16*)((u8*)x + 0x218)`. Add a missing field to its shared header with a
   provisional name. A raw offset, cast, register pin or empty asm barrier stays
@@ -145,8 +187,14 @@ function that matches only that way.
   hex offset in the member's own struct, zero-padded to the same width
   throughout the struct. `make check-config` fails on any access to an
   `_unused_` or `_padding_` member. snake_case; `_t` struct and `_e` enum typedefs; uppercase enum values;
-  `_init_`, not `_initialize_`. `include/psx/` keeps SDK names.
-- Fixed point is 1.3.12 / 20.12 with 1.0 = `ONE` (4096, `psx/gte.h`), also
+  `_init_`, not `_initialize_`. `include/psx/` keeps SDK names. Header guards
+  use descriptive header/path names without an `FFT_` prefix. A library
+  header groups its SDK interface and reconstructed driver internals together;
+  register-reserving ABI helpers stay in focused separate headers.
+  In partial SDK/BIOS views, a field absent from this game's accesses remains
+  `_unknown_XX`; use `_unused_XX` only when broader library/BIOS evidence proves
+  it unused. Proven register spacing and alignment remain `_padding_XX`.
+- Fixed point is 1.3.12 / 20.12 with 1.0 = `ONE` (4096, `psx/libgte.h`), also
   one full rsin/rcos turn. Write `ONE` for 1.0; `>> 12` rescales after a
   multiply.
 - One declaration per symbol, in its header. `make check-config` fails on

@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* Event handler of root counter 2 (g_main_root_counter_2_event): commits

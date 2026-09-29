@@ -1,5 +1,5 @@
-#ifndef FFT_SCRIPT_H
-#define FFT_SCRIPT_H
+#ifndef SCRIPT_H
+#define SCRIPT_H
 
 /* Event-script bytecode and variables shared by the BATTLE and WORLD interpreters. */
 

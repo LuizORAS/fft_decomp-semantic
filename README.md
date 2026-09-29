@@ -11,9 +11,9 @@ Game files and proprietary Sony tools are not included.
 
 ## Next Steps
 
-The game is 100% completely decompiled (excluding PsyQ libs, which we don't
-want), but there are plenty of semantic changes and cleanup to be done. Variable
-and function names, correcting types, improving enum usage/naming, etc.
+The game is 100% completely decompiled, but there are plenty of semantic changes
+and cleanup to be done. Variable and function names, correcting types, improving
+enum usage/naming, etc.
 
 Each time a change is made `make validate` will ensure the changes still match
 byte-for-byte.

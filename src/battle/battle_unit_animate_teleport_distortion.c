@@ -1,4 +1,4 @@
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Primitive the pulse animation scales; only the two 16.16-fraction scale

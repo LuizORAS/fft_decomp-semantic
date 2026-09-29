@@ -1,5 +1,5 @@
 #include "fft/event_debugchr.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const debug_chr_texture_page_t* texture,

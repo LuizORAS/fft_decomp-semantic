@@ -4,7 +4,7 @@
  * The shared `fail:` tail reproduces the target's cross-jumped `j; li v0,-1`
  * block at 0x64, which all three -1 returns reach. */
 #include "fft/world.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/types.h"
 
 s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size) {
@@ -19,7 +19,7 @@ s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size
     if (result < 0) {
         goto fail;
     }
-    if (FileGetError(g_world_card_open_descriptor) != 0) {
+    if (_get_error(g_world_card_open_descriptor) != 0) {
         world_card_close_file_with_retries(g_world_card_open_descriptor);
     fail:
         return -1;
@@ -29,7 +29,7 @@ s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size
         if (world_card_seek_file_with_retries(g_world_card_open_descriptor, total, 1) < 0) {
             break;
         }
-        result = FileRead(g_world_card_open_descriptor, destination + total, size - total);
+        result = read(g_world_card_open_descriptor, destination + total, size - total);
         if (result != -1) {
             total += result;
             if (total >= size) {

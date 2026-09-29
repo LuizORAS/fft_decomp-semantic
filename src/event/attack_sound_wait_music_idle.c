@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 void attack_sound_wait_music_idle(void) {

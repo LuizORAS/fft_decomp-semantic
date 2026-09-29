@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Build the centred, 4-aligned source rectangle for a scale mode and quad size. */

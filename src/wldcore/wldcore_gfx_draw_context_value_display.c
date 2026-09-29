@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
-#include "psx/gte.h"
+#include "psx/libgs.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 u16 GetTPage(s32 tp, s32 abr, s32 x, s32 y);

@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 type symbolMutationResult struct {
@@ -286,15 +285,20 @@ func planSourceIdentifierRenames(root string, renames []sourceIdentifierRename) 
 				}
 				return err
 			}
+			var definitions map[string]bool
+			if filepath.Ext(path) == ".c" {
+				definitions, err = sourceDefinedIdentifiers(body)
+				if err != nil {
+					return fmt.Errorf("%s: %w", path, err)
+				}
+			}
 			current := body
 			for index, rename := range renames {
-				if filepath.Ext(path) == ".c" {
-					if bytes.Contains(body, []byte(rename.oldName)) && sourceDefinesIdentifier(body, rename.oldName) {
-						plan.oldDefinition[index] = append(plan.oldDefinition[index], path)
-					}
-					if bytes.Contains(body, []byte(rename.newName)) && sourceDefinesIdentifier(body, rename.newName) {
-						plan.newDefinition[index] = append(plan.newDefinition[index], path)
-					}
+				if definitions[rename.oldName] {
+					plan.oldDefinition[index] = append(plan.oldDefinition[index], path)
+				}
+				if definitions[rename.newName] {
+					plan.newDefinition[index] = append(plan.newDefinition[index], path)
 				}
 				if !bytes.Contains(current, []byte(rename.oldName)) {
 					continue
@@ -333,16 +337,243 @@ func planSourceIdentifierRenames(root string, renames []sourceIdentifierRename) 
 	return plan, nil
 }
 
-func sourceDefinesIdentifier(source []byte, name string) bool {
-	function := regexp.MustCompile(`\b` + regexp.QuoteMeta(name) + `\s*\([^;{}]*\)\s*\{`)
-	if function.Match(source) {
-		return true
+// sourceDefinedIdentifiers uses the declaration checker's file-scope parser,
+// retaining static definitions because a rename can collide with them too.
+// Function bodies are skipped, so local names and calls cannot be definitions.
+func sourceDefinedIdentifiers(source []byte) (map[string]bool, error) {
+	text := string(source)
+	tokens, err := tokenizeC(text)
+	if err != nil {
+		return nil, err
 	}
-	variable := regexp.MustCompile(`(?m)^[ \t]*(?:[A-Za-z_][A-Za-z0-9_]*[ \t*]+)+` + regexp.QuoteMeta(name) + `\s*(?:\[[^\]]*\]\s*)*(?:=|;)`)
-	for _, match := range variable.FindAll(source, -1) {
-		trimmed := strings.TrimSpace(string(match))
-		if !strings.HasPrefix(trimmed, "extern ") && !strings.HasPrefix(trimmed, "typedef ") && !strings.HasPrefix(trimmed, "return ") && !strings.HasPrefix(trimmed, "goto ") {
-			return true
+	definitions := make(map[string]bool)
+	for index := 0; index < len(tokens); {
+		start := index
+		if tokens[start].text == "}" {
+			return nil, fmt.Errorf("line %d: unexpected file-scope closing brace", lineOf(text, tokens[start].start))
+		}
+		next, statement, body, err := sourceDefinitionStatement(tokens, index)
+		if err != nil {
+			return nil, fmt.Errorf("line %d: %w", lineOf(text, tokens[start].start), err)
+		}
+		index = next
+		if len(statement) == 0 {
+			// The shared parser skips standalone tag bodies. A trailing object
+			// declarator instead needs parsing before its bindings can be trusted.
+			for brace := start; brace < next; brace++ {
+				if tokens[brace].text == "{" && isTagBody(tokens, start, brace) {
+					close := matchingToken(tokens, brace)
+					if close+1 < next && tokens[close+1].text != ";" {
+						return nil, fmt.Errorf("line %d: cannot parse object declared with a tag body", lineOf(text, tokens[start].start))
+					}
+					break
+				}
+			}
+			continue
+		}
+		if statement[0].text == "typedef" || fileScopeAssembly(statement) ||
+			len(statement) == 2 && isTagKeyword(statement[0].text) && statement[1].kind == cIdent {
+			continue
+		}
+		// The declaration checker omits static symbols from cross-file comparisons.
+		// Strip that storage class here while preserving all declarator tokens.
+		filtered := make([]cToken, 0, len(statement))
+		external := false
+		depth := 0
+		for _, token := range statement {
+			if depth == 0 && token.text == "static" {
+				continue
+			}
+			if depth == 0 && token.text == "extern" {
+				external = true
+			}
+			filtered = append(filtered, token)
+			switch token.text {
+			case "(", "[", "{":
+				depth++
+			case ")", "]", "}":
+				depth--
+			}
+		}
+		if len(filtered) == 0 {
+			return nil, fmt.Errorf("line %d: cannot parse file-scope declaration", lineOf(text, tokens[start].start))
+		}
+		parts := splitTopLevel(filtered, ",")
+		_, begin, _ := parseDeclarationSpecifier(parts[0])
+		for partIndex, part := range parts {
+			if len(part) == 0 {
+				return nil, fmt.Errorf("line %d: empty file-scope declarator", lineOf(text, tokens[start].start))
+			}
+			// An extern without a body or initializer cannot define a symbol.
+			// Its parameter types need not fit the signature comparison parser.
+			if external && !body && topLevelIndex(part, "=") < 0 {
+				continue
+			}
+			declarator := part
+			if partIndex > 0 {
+				declarator = append(append([]cToken(nil), parts[0][:begin]...), part...)
+			}
+			if name, architectural, err := sourceArchitecturalRegister(declarator, body); err != nil {
+				return nil, fmt.Errorf("line %d: %w", lineOf(text, part[0].start), err)
+			} else if architectural {
+				// This binds a C name, but no ELF symbol named "$N".
+				definitions[name] = true
+				continue
+			}
+			declarations := parseDeclaratorList(declarator, body)
+			if len(declarations) != 1 {
+				return nil, fmt.Errorf("line %d: cannot parse file-scope declaration", lineOf(text, part[0].start))
+			}
+			declaration := declarations[0]
+			if body || !functionDeclarationSignature(declaration.signature) && (!external || topLevelIndex(part, "=") >= 0) {
+				definitions[declaration.symbol] = true
+				lexical := part
+				if partIndex == 0 {
+					lexical = part[begin:]
+				}
+				if name := boundIdentifier(lexical); name >= 0 {
+					definitions[lexical[name].text] = true
+				}
+			}
+		}
+	}
+	return definitions, nil
+}
+
+func sourceArchitecturalRegister(statement []cToken, body bool) (string, bool, error) {
+	specifier, begin, _ := parseDeclarationSpecifier(statement)
+	registered := false
+	for _, token := range statement[:begin] {
+		registered = registered || token.text == "register"
+	}
+	if !registered {
+		return "", false, nil
+	}
+	declarator := statement[begin:]
+	alias, signature, ok := parseDeclarationDeclarator(specifier, declarator)
+	if !ok || len(alias) == 0 || alias[0] != '$' {
+		return "", false, nil
+	}
+	if body || topLevelIndex(statement, "=") >= 0 || functionDeclarationSignature(signature) || !mipsArchitecturalRegisterName.MatchString(alias) {
+		return "", false, errors.New("invalid architectural register declaration")
+	}
+	name := boundIdentifier(declarator)
+	if name < 0 {
+		return "", false, errors.New("architectural register has no C binding")
+	}
+	return declarator[name].text, true, nil
+}
+
+// K&R definitions place parameter declarations between the header and body.
+// Traverse those declarations as parameters, never as file-scope objects.
+func sourceDefinitionStatement(tokens []cToken, start int) (int, []cToken, bool, error) {
+	if tokens[start].kind == cIdent && macroInvocationName.MatchString(tokens[start].text) &&
+		start+1 < len(tokens) && tokens[start+1].text == "(" {
+		return declarationStatement(tokens, start)
+	}
+	open := start
+	for open < len(tokens) && tokens[open].text != "(" {
+		if tokens[open].text == ";" || tokens[open].text == "{" || tokens[open].text == "=" {
+			return declarationStatement(tokens, start)
+		}
+		open++
+	}
+	if open == len(tokens) {
+		return declarationStatement(tokens, start)
+	}
+	close := matchingToken(tokens, open)
+	if close < 0 || close+1 >= len(tokens) || tokens[close+1].kind != cIdent {
+		return declarationStatement(tokens, start)
+	}
+	parameters := make(map[string]bool)
+	for index := open + 1; index < close; index++ {
+		token := tokens[index]
+		if (index-open)%2 == 0 {
+			if token.text != "," {
+				return declarationStatement(tokens, start)
+			}
+		} else if token.kind != cIdent || declarationBaseWords[token.text] || declarationQualifiers[token.text] {
+			return declarationStatement(tokens, start)
+		} else {
+			parameters[token.text] = true
+		}
+	}
+	if len(parameters) == 0 || (close-open)%2 != 0 {
+		return declarationStatement(tokens, start)
+	}
+	header := tokens[start : close+1]
+	withoutStatic := make([]cToken, 0, len(header))
+	for _, token := range header {
+		if token.text != "static" {
+			withoutStatic = append(withoutStatic, token)
+		}
+	}
+	declarations := parseDeclaratorList(withoutStatic, true)
+	if len(declarations) != 1 || !functionDeclarationSignature(declarations[0].signature) {
+		return declarationStatement(tokens, start)
+	}
+	for cursor := close + 1; cursor < len(tokens); {
+		if tokens[cursor].text == "{" {
+			end := matchingToken(tokens, cursor)
+			if end < 0 {
+				return 0, nil, false, errors.New("unterminated K&R function body")
+			}
+			return end + 1, header, true, nil
+		}
+		next, statement, body, err := declarationStatement(tokens, cursor)
+		if err != nil {
+			return 0, nil, false, err
+		}
+		declarations := parseDeclaratorList(statement, false)
+		if body || len(declarations) == 0 || topLevelIndex(statement, "=") >= 0 {
+			return 0, nil, false, errors.New("cannot parse K&R parameter declaration")
+		}
+		for _, declaration := range declarations {
+			if !parameters[declaration.symbol] {
+				return 0, nil, false, fmt.Errorf("K&R declaration is not a parameter: %s", declaration.symbol)
+			}
+		}
+		cursor = next
+	}
+	return 0, nil, false, errors.New("missing K&R function body")
+}
+
+// Global assembly has no C binding. Accept the simple string-only form used
+// by this project's assembler mode directives; other forms remain parse errors.
+func fileScopeAssembly(statement []cToken) bool {
+	if len(statement) < 4 || statement[0].text != "asm" && statement[0].text != "__asm" && statement[0].text != "__asm__" {
+		return false
+	}
+	open := 1
+	if statement[open].text == "volatile" || statement[open].text == "__volatile__" {
+		open++
+	}
+	if open >= len(statement) || statement[open].text != "(" || matchingToken(statement, open) != len(statement)-1 {
+		return false
+	}
+	for _, token := range statement[open+1 : len(statement)-1] {
+		if token.kind != cString {
+			return false
+		}
+	}
+	return len(statement) > open+2
+}
+
+func functionDeclarationSignature(signature []string) bool {
+	for index, segment := range signature {
+		if segment != "@" {
+			continue
+		}
+		left, right := index, index+1
+		for {
+			if right < len(signature) && isParameterSegment(signature[right]) {
+				return true
+			}
+			if left == 0 || right >= len(signature) || signature[left-1] != "(" || signature[right] != ")" {
+				return false
+			}
+			left--
+			right++
 		}
 	}
 	return false

@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/types.h"
 
 s32 card_file_delete_selected_with_retries(const char* filename) {
@@ -20,7 +20,7 @@ s32 card_file_delete_selected_with_retries(const char* filename) {
         if (card_io_wait_operation_result(10) != CARD_IO_RESULT_COMPLETE) {
             return 0;
         }
-        result = FileDelete(path);
+        result = erase(path);
         if (result != 0) {
             return result;
         }

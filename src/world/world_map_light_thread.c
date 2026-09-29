@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/world.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Thread task 7: interpolates the map light rotation (g_world_map_light_rotation) and scale

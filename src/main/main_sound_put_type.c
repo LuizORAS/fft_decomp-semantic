@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/cd.h"
+#include "psx/libcd.h"
 #include "psx/types.h"
 
 /* Sets the CD audio attenuation for the current sound type;

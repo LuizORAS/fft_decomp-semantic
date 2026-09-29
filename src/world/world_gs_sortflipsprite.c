@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 /* WORLD copy of libgs GsSortSprite for unscaled, unrotated sprites: attribute

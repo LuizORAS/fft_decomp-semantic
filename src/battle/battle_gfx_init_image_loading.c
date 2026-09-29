@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Battle twin of world_gfx_init_image_loading: fill a textured quad from load and screen placement parameters. */

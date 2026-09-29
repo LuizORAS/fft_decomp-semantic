@@ -3,7 +3,7 @@
  * (same code, globals and callees rebound).
  */
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Provisional 0x1AC-byte double-buffered panel record at 0x80172834; layout

@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Render each text id of the -1 terminated `list` as one 16-pixel row in VRAM at `rect`. */

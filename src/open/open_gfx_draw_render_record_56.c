@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Emits one 56-byte render record as a DR_MODE + SPRT pair from the shared

@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 
 /* Pushes menu level type 0x14 (driven by wldcore_menu_step_sound_novel_resume_level) with the given mode:
  * appends the cursor window, a VRAM render record for the TIM at g_wldcore_picture_buffer

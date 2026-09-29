@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Provisional: the byte colour triple of the screen-wide fade overlay. It
  * overlaps g_wldcore_screen_fade_state.boxes[0].r, but the target addresses

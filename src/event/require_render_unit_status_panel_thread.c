@@ -8,8 +8,8 @@
  * which the allocator otherwise rotates by one register.
  */
 #include "fft/event_require.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 struct world_menu_palette_primitives;

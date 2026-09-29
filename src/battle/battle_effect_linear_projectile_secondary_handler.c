@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 /* 0x2a0-byte work buffer: two sets of twelve G3 polygons. */
 typedef struct battle_effect_projectile_g3x12_work {

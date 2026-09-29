@@ -1,5 +1,5 @@
-#ifndef FFT_DATA_H
-#define FFT_DATA_H
+#ifndef DATA_H
+#define DATA_H
 
 /* Static game data shared across modules: abilities, items, jobs and skillsets. */
 

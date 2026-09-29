@@ -11,13 +11,13 @@ s32 world_card_write_file_with_retries(s32 descriptor, const void* source, s32 s
     if (initial_position < 0) {
         return -1;
     }
-    error = FileGetError(descriptor);
+    error = _get_error(descriptor);
     if (error != 0) {
         return -1;
     }
 
     for (i = 0; i < 10; i++) {
-        result = FileWrite(descriptor, source, size);
+        result = write(descriptor, source, size);
         if (result == size) {
             break;
         }

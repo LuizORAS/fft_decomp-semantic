@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Build the portrait source rectangle and palette for a formation unit.

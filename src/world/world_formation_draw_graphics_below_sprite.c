@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 extern world_draw_number_command_t* world_menu_script_draw_formatted_number();
 

@@ -14,8 +14,8 @@
  * instructions; each is explained where it appears.
  */
 #include "fft/event_debugchr.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* The bar loop advances its destination by one POLY_G4 per iteration instead of

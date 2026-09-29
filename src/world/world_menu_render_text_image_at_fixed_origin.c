@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Render a menu text record into a temporary image buffer at the fixed
  * origin (8, 8), upload it to VRAM and release the buffer. Twin of

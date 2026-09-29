@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
-#include "psx/gte.h"
+#include "psx/libgs.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* One frame of an animation sequence: the cel it draws and how long it holds.

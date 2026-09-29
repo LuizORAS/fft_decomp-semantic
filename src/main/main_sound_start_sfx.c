@@ -1,6 +1,6 @@
 #include "fft/main.h"
-#include "psx/api.h"
-#include "psx/etc.h"
+#include "psx/libapi.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Starts SFX sound_id (resource id << 16 | sound index) on

@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 int main_boot_draw_sceap_logo(void* otag, u32* image) {
     RECT destination;

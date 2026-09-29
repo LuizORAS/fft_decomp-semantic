@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 /* The packet libgs sorts for a GsLINE: one four-word tag covering a

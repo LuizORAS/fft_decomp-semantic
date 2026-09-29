@@ -1,6 +1,6 @@
 #include "fft/open.h"
-#include "psx/cd.h"
-#include "psx/gpu.h"
+#include "psx/libcd.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -67,7 +67,7 @@ void open_title_update_menu(open_title_controller_t* state) {
     }
 
     if (g_open_system_runtime_flags & 4) {
-        CdControlb(0x10, 0, loc);
+        CdControlB(0x10, 0, loc);
         if (CdPosToInt(loc) >= state->cd_end_position) {
             open_sound_set_type_and_volume(0, 0x20);
             state->exit_timer = 0x20;

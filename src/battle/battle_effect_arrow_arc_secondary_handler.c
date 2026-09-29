@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary-effect handler for bow and crossbow arrows.

@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Merge the caller's display word with the active display word. */
 void world_gfx_draw_or_append_gpu_primitive(void* primitive) {

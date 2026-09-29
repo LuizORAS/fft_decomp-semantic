@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Copy an image record's first four halfwords (the third scaled down by 4)
  * and set up a menu quad from the record's load/screen/parameter blocks. */

@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Tutorial command: lay out the highlight ring. The two corner arrays the

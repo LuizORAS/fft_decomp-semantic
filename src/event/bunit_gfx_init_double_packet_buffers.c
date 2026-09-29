@@ -1,5 +1,5 @@
 #include "fft/event_bunit.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Per-buffer pool capacities, one per pointer above, set by

@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Job-wheel sprite record: destination rectangle followed by the 12-byte

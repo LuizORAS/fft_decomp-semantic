@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* Selects the output sound type and reapplies the volumes, reverb and CD mix

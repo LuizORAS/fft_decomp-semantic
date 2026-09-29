@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* One TIM-shaped OPNTEX block header: a byte length, then the VRAM rectangle

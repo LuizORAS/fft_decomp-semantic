@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* World-map tile atlas setup, run once from wldcore_init_subsystems between

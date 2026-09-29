@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /*
  * Event thread started by the AddUnitStart instruction: walks the following

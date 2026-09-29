@@ -6,11 +6,11 @@ s32 card_io_poll_operation_result(void) {
     s32 result;
 
     if (g_card_io_operation_pending == 0) {
-        card_info(g_card_io_selected_slot << 4);
+        _card_info(g_card_io_selected_slot << 4);
         g_card_io_operation_pending = 1;
     }
 
-    status = card_status(g_card_io_selected_slot) & 1;
+    status = _card_status(g_card_io_selected_slot) & 1;
     result = card_io_poll_bios_event_result();
     if (status != 0 && result == CARD_IO_RESULT_PENDING) {
         result = CARD_IO_RESULT_TIMEOUT;

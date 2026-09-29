@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/cd.h"
+#include "psx/libcd.h"
 
 /* Initialize a descriptor and enter the asynchronous loader's setup phase. */
 s32 main_file_build_header(

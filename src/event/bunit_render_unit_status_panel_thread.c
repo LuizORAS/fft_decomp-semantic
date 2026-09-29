@@ -1,5 +1,5 @@
 #include "fft/event_bunit.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The packet, state and thread layouts are the shared fft/menu.h

@@ -1,5 +1,5 @@
-#ifndef FFT_THREAD_H
-#define FFT_THREAD_H
+#ifndef THREAD_H
+#define THREAD_H
 
 /* Native cooperative threads shared by the BATTLE and WORLD schedulers. */
 

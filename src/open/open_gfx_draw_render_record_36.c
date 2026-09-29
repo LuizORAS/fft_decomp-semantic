@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Advances one OPEN sprite actor's animation and emits its parts into an

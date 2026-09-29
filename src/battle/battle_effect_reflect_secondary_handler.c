@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 /* 0x28-byte GT3 polygon initialised by SetPolyGT3. */
 typedef struct battle_effect_reflect_prim {

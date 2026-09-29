@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_EQUIP_H
-#define FFT_EVENT_EQUIP_H
+#ifndef EVENT_EQUIP_H
+#define EVENT_EQUIP_H
 
 /* EVENT/EQUIP.OUT: menu screen overlay that runs with BATTLE. */
 

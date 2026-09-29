@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void world_menu_submit_icon_primitives(world_menu_icon_sprites_t* prims) {

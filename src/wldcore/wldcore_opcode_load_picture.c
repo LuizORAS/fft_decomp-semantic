@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 
 /* World-script opcode: loads picture operand_0 through 0x80068ab4, places
  * its render record at (operand_2 - 0x80, operand_1 - 0x78), uploads the

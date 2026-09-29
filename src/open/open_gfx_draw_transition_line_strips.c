@@ -6,7 +6,7 @@
  * width + 1 goes through its own variable (the target adds left afterwards).
  */
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void open_gfx_draw_transition_line_strips(s32 intensity) {

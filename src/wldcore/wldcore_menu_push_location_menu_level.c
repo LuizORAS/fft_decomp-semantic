@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 
 /* Pushes the town/location service list level (type 4) for menu id `menu`.
  *

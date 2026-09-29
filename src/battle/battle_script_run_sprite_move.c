@@ -13,7 +13,7 @@
  * polls.
  */
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* The parameters are copied into locals in this order: it is what places the

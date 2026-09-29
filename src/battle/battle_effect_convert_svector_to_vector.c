@@ -1,4 +1,4 @@
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 void battle_effect_convert_svector_to_vector(s16* src, VECTOR* dst) {

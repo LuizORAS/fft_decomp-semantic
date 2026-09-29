@@ -6,11 +6,11 @@ s32 open_card_poll_info_result(void) {
     s32 result;
 
     if (g_open_card_info_pending == 0) {
-        card_info(g_open_card_slot << 4);
+        _card_info(g_open_card_slot << 4);
         g_open_card_info_pending = 1;
     }
 
-    status = card_status(g_open_card_slot) & 1;
+    status = _card_status(g_open_card_slot) & 1;
     result = open_card_poll_bios_event();
     if (status != 0 && result == CARD_IO_RESULT_PENDING) {
         g_open_card_info_pending = 0;

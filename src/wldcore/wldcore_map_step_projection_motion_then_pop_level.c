@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /* Provisional: the menu entry handed in; only its record index is read. */
 typedef struct {

@@ -8,7 +8,7 @@
  *   it the target's second unreferenced 8-byte slot (frame 0x60; the text loop's entry test
  *   supplies the first). */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

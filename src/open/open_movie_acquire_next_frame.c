@@ -8,8 +8,6 @@ typedef struct open_movie_frame_header {
     u16 height;
 } open_movie_frame_header_t;
 
-s32 StGetNext(void** frame_data, open_movie_frame_header_t** header);
-
 typedef struct open_movie_acquire_locals {
     void* frame_data;
     open_movie_frame_header_t* header;
@@ -24,7 +22,7 @@ void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
 
     attempts = 0;
     for (;;) {
-        if (StGetNext(&locals.frame_data, &locals.header) == 0) {
+        if (StGetNext(&locals.frame_data, (void**)&locals.header) == 0) {
             break;
         }
         VSync(0);

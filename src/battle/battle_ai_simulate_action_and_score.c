@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 
 /*
  * Simulate the current action and intervening events, then score unit state.

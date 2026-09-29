@@ -3,12 +3,34 @@
 package main
 
 import (
+	"debug/elf"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 )
+
+// undefinedObjectIdentifiers includes references introduced by header macros,
+// inline helpers and the compiler, which a scan of the source file cannot see.
+func undefinedObjectIdentifiers(path string) (map[string]struct{}, error) {
+	object, err := elf.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer object.Close()
+	symbols, err := object.Symbols()
+	if err != nil {
+		return nil, err
+	}
+	used := make(map[string]struct{})
+	for _, symbol := range symbols {
+		if symbol.Section == elf.SHN_UNDEF && symbol.Name != "" {
+			used[symbol.Name] = struct{}{}
+		}
+	}
+	return used, nil
+}
 
 // sourceIdentifiers returns the C identifiers that appear as whole tokens in a
 // source file: an over-approximation of the names its object can reference. A
@@ -127,6 +149,12 @@ func linkerScript(f *functionSpec, bindings map[string]uint32) (string, error) {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
 	for _, name := range names {
+		if name == "_gp" {
+			// GPREL relocations consult this linker symbol implicitly; PROVIDE
+			// can omit it because the object has no explicit _gp reference.
+			fmt.Fprintf(&script, "_gp = 0x%08x;\n", bindings[name])
+			continue
+		}
 		fmt.Fprintf(&script, "PROVIDE(%s = 0x%08x);\n", name, bindings[name])
 	}
 	script.WriteString("SECTIONS {\n")

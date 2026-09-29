@@ -183,7 +183,11 @@ func (p project) functionLinker(resolver symbolResolver, m *moduleSpec, f *funct
 	if err != nil {
 		return "", "", fmt.Errorf("read source: %w", err)
 	}
-	script, err := linkerScript(f, resolver.linkerBindings(m, f, used))
+	bindings := resolver.linkerBindings(m, f, used)
+	if profile, ok := compilerProfileNamed(m.profileOf(f)); ok && profile.smallDataLimit != 0 {
+		bindings["_gp"] = profile.globalPointer
+	}
+	script, err := linkerScript(f, bindings)
 	return source, script, err
 }
 
@@ -206,6 +210,27 @@ func (p project) compileFunction(resolver symbolResolver, m *moduleSpec, f *func
 	sections, err := p.compileHistoricalSections(source, linker, filepath.Join(workDir, f.Name), profile)
 	if err == nil {
 		return sections, nil
+	}
+	// Header macros can introduce names absent from the source scan. Bind only
+	// actual undefined object symbols that resolve in this module's context;
+	// unknown names still fail the link, and overrides keep their usual priority.
+	object := filepath.Join(workDir, f.Name, profile.name+".o")
+	if used, objectErr := undefinedObjectIdentifiers(object); objectErr == nil {
+		sourceUsed, readErr := sourceIdentifiers(source)
+		if readErr == nil {
+			for name := range sourceUsed {
+				used[name] = struct{}{}
+			}
+			bindings := resolver.linkerBindings(m, f, used)
+			if profile.smallDataLimit != 0 {
+				bindings["_gp"] = profile.globalPointer
+			}
+			if expanded, scriptErr := linkerScript(f, bindings); scriptErr == nil && expanded != script {
+				if _, writeErr := writeLinkerScript(workDir, f.Name, expanded); writeErr == nil {
+					return p.compileHistoricalSections(source, linker, filepath.Join(workDir, f.Name), profile)
+				}
+			}
+		}
 	}
 	// A source read while an editor rewrites it can yield a script without
 	// its bindings; when a fresh read differs, relink with that once.

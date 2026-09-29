@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
     main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,

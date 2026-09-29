@@ -6,7 +6,7 @@
  * (same 0x3d8-byte frame layout and callee sequence).
  */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void world_menu_ability_panel_thread(void) {

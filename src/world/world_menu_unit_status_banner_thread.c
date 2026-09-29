@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Provisional 0x30C-byte unit-summary primitive packet, doubled back to back

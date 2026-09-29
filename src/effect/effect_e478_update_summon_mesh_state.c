@@ -1,5 +1,5 @@
 #include "fft/effect.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Builds and draws a spinning dome of 8x16 textured quads.
  *

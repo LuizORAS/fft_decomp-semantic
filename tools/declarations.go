@@ -59,6 +59,7 @@ var declarationBaseWords = map[string]bool{
 }
 
 var macroInvocationName = regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
+var mipsArchitecturalRegisterName = regexp.MustCompile(`^\$([0-9]|[12][0-9]|3[01])$`)
 
 // scanFileScopeDeclarations returns the declarations and function definitions
 // bound at file scope, plus "struct tag" -> alias mappings from typedefs.
@@ -187,6 +188,12 @@ func parseDeclaratorList(statement []cToken, definition bool) []scannedDeclarati
 	}
 	parts := splitTopLevel(statement, ",")
 	specifier, begin, implicit := parseDeclarationSpecifier(parts[0])
+	architecturalRegister := false
+	for _, token := range parts[0][:begin] {
+		if token.text == "register" {
+			architecturalRegister = true
+		}
+	}
 	var declarations []scannedDeclaration
 	for index, part := range parts {
 		declarator := part
@@ -202,6 +209,10 @@ func parseDeclaratorList(statement []cToken, definition bool) []scannedDeclarati
 			if index == 0 {
 				return nil
 			}
+			continue
+		}
+		// Global register variables reserve CPU state rather than bind linker symbols.
+		if architecturalRegister && mipsArchitecturalRegisterName.MatchString(symbol) {
 			continue
 		}
 		declarations = append(declarations, scannedDeclaration{

@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The primitive block is battle_menu_status_panel_numeric_buffer_t, double buffered

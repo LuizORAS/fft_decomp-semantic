@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Thread task 0x3b: the combined status panel for g_world_selected_unit_stat_detail. Lists the five

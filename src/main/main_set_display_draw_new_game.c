@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue) {
     RECT image_rect = { 0, 0, 1024, 512 };

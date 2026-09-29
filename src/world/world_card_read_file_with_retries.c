@@ -11,13 +11,13 @@ s32 world_card_read_file_with_retries(s32 descriptor, void* destination, s32 siz
     if (initial_position < 0) {
         return -1;
     }
-    error = FileGetError(descriptor);
+    error = _get_error(descriptor);
     if (error != 0) {
         return -1;
     }
 
     for (i = 0; i < 10; i++) {
-        result = FileRead(descriptor, destination, size);
+        result = read(descriptor, destination, size);
         if (result == size) {
             break;
         }

@@ -1,5 +1,5 @@
 #include "fft/event_debugchr.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void debugchr_gfx_build_gradient_grid_primitives(POLY_GT4* poly) {

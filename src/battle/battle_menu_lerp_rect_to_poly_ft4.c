@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Set a quad's corners to the rectangle interpolated between from and to by a 12-bit fraction. */

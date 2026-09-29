@@ -17,7 +17,7 @@
  * the prologue), so it is left uninitialised on purpose.
  */
 #include "fft/event_require.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

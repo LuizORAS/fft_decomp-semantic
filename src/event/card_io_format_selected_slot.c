@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/types.h"
 
 s32 card_io_format_selected_slot(void) {
@@ -13,8 +13,8 @@ s32 card_io_format_selected_slot(void) {
         strcpy(&path[0], g_card_file_slot_0_path);
     else
         strcpy(&path[0], g_card_file_slot_1_path);
-    result = FileFormat(&path[0]);
-    result = FileFormat(&path[0]);
-    result = FileFormat(&path[0]);
+    result = format(&path[0]);
+    result = format(&path[0]);
+    result = format(&path[0]);
     return result;
 }

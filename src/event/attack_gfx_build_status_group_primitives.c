@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Twelve-byte base-geometry record per visible entry (only its address is

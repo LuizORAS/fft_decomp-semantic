@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Pushes menu level type 0x23 with the given mode. Mode 2 only starts a
  * screen fade; any other mode copies VRAM (0x100, 0) 0x80x0x100 to

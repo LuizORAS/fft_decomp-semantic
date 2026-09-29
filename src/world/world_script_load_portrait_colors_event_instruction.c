@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Loads the 0x2000-byte portrait colour record (sector 0x164b + 4 * index) on

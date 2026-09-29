@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|extract"
+const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -220,6 +220,7 @@ func main() {
 		"build":                  true,
 		"validate":               true,
 		"diff":                   true,
+		"library-diff":           true,
 		"permute":                true,
 		"symbols":                true,
 		"declarations":           true,
@@ -246,6 +247,8 @@ func main() {
 		err = p.configFormat()
 	case "diff":
 		err = p.diffCommand(os.Args[2:])
+	case "library-diff":
+		err = p.libraryDiffCommand(os.Args[2:])
 	case "permute":
 		err = p.permuteCommand(os.Args[2:])
 	case "symbols":
@@ -532,6 +535,9 @@ type compilerProfile struct {
 	compilerPath string
 	aspsxVersion string
 	optimization string
+	// The four original Suzuki heap routines use GCC -G8 with this retail gp.
+	smallDataLimit int
+	globalPointer  uint32
 	// expandDiv makes maspsx emit ASPSX's checked division sequence (a
 	// divide-by-zero trap plus the INT_MIN/-1 overflow trap) around each
 	// division, instead of a bare div/mflo pair.
@@ -683,7 +689,7 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 		assembly = preprocessed
 	} else {
 		cc1 := append(cc1Command(profile.compilerPath), preprocessed, "-o", assembly,
-			"-G0", "-w", "-funsigned-char", "-fpeephole", "-ffunction-cse",
+			fmt.Sprintf("-G%d", profile.smallDataLimit), "-w", "-funsigned-char", "-fpeephole", "-ffunction-cse",
 			"-fpcc-struct-return", "-fcommon", "-fverbose-asm", "-msoft-float",
 			"-quiet", "-mcpu=3000", "-fgnu-linker", "-mgas", "-gcoff", profile.optimization,
 		)
@@ -705,13 +711,21 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 		}
 	}
 	maspsx := []string{"python3", "/opt/maspsx/maspsx.py", "--aspsx-version=" + profile.aspsxVersion}
+	if profile.smallDataLimit != 0 {
+		maspsx = append(maspsx, "--dont-force-G0")
+	}
 	if profile.expandDiv {
 		maspsx = append(maspsx, "--expand-div")
 	}
 	if err := transformFile(p.root, assembly, translated, maspsx...); err != nil {
 		return nil, err
 	}
-	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", "-G0", "-o", object, translated); err != nil {
+	if profile.smallDataLimit != 0 {
+		if err := correctSmallDataLoadDelays(translated, profile.smallDataLimit); err != nil {
+			return nil, err
+		}
+	}
+	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", fmt.Sprintf("-G%d", profile.smallDataLimit), "-o", object, translated); err != nil {
 		return nil, err
 	}
 	if err := runInDir(p.root, "mipsel-linux-gnu-ld", "-EL", "-T", linkPath, "-o", linkedPath, object); err != nil {
@@ -825,6 +839,9 @@ func compilationCacheKey(preprocessed, linkPath string, profile compilerProfile,
 	hash.Write([]byte("tools-historical-pipeline-v1\x00" + profile.name + "\x00" + profile.optimization + "\x00" + profile.aspsxVersion + "\x00"))
 	if profile.expandDiv {
 		hash.Write([]byte("expand-div-v1\x00"))
+	}
+	if profile.smallDataLimit != 0 {
+		fmt.Fprintf(hash, "small-data-v2:%d:%08x\x00", profile.smallDataLimit, profile.globalPointer)
 	}
 	for _, path := range []string{profile.compilerPath, "/opt/maspsx/maspsx.py"} {
 		digest, err := toolDigest(path)

@@ -1,6 +1,6 @@
 #include "fft/effect.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Phase handler for the 8x8 wave-distorted textured quad mesh.

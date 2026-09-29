@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The frame is battle_menu_status_panel_buffer_t (0x3d8 bytes, double buffered); the

@@ -1,5 +1,5 @@
-#ifndef FFT_UNIT_H
-#define FFT_UNIT_H
+#ifndef UNIT_H
+#define UNIT_H
 
 /* Unit records shared across modules: party, ENTD and battle stats, status and identity. */
 

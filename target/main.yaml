@@ -15,13 +15,16 @@ libraries:
   - {id: suzuki_sound_driver, addr: 0x800120f4, end: 0x800186c4, kind: middleware, library: "Suzuki sound driver"}
   - {id: libspu, addr: 0x800186c4, end: 0x8001bb5c, kind: psyq, library: LIBSPU}
   - {id: libgte, addr: 0x8001bb5c, end: 0x8001dad0, kind: psyq, library: LIBGTE}
-  - {id: libetc, addr: 0x8001dad0, end: 0x8001e8c4, kind: psyq, library: LIBETC}
-  - {id: libcd, addr: 0x8001e8c4, end: 0x8002228c, kind: psyq, library: LIBCD}
+  - {id: libetc, addr: 0x8001dad0, end: 0x8001e894, kind: psyq, library: LIBETC}
+  - {id: libcd, addr: 0x8001e894, end: 0x8002228c, kind: psyq, library: LIBCD}
   - {id: libc, addr: 0x8002228c, end: 0x80022c24, kind: c-runtime, library: LIBC}
-  - {id: libgpu, addr: 0x80022c24, end: 0x800275c0, kind: psyq, library: LIBGPU}
-  - {id: libcard, addr: 0x800275c0, end: 0x80028acc, kind: psyq, library: LIBCARD}
+  - {id: libgpu, addr: 0x80022c24, end: 0x80028740, kind: psyq, library: LIBGPU}
+  - {id: libcard, addr: 0x80028740, end: 0x80028acc, kind: psyq, library: LIBCARD}
 
 functions:
+  - {addr: 0x80010a30, size: 160, name: __SN_ENTRY_POINT, hash: 179da0ce7d5e763f, source: src/psyq/crt/__SN_ENTRY_POINT.c}
+  - {addr: 0x80010ad0, size: 112, name: __main, hash: 1dec58075cb55f11, source: src/psyq/crt/__main.c}
+  - {addr: 0x80010b40, size: 104, name: __do_global_dtors, hash: 30e458972df14eda, source: src/psyq/crt/__do_global_dtors.c}
   - {addr: 0x80011bb0, size: 16, name: main_system_store_stack_pointer, hash: 972f7e917252ee42}
   - {addr: 0x80011bc0, size: 16, name: main_restore_game_loop_stack_pointer, hash: 8b9c9cab30efada8, asm: "Stack-replacing ABI tail transfer to main_system_run_game_loop; ordinary C cannot assign sp."}
   - {addr: 0x80011bd0, size: 36, name: main_file_build_header_nnl, hash: 323354187cbfd5ba}
@@ -95,6 +98,10 @@ functions:
   - {addr: 0x80014180, size: 132, name: main_smd_get_instrument_attr, hash: e62ca444c99c2166}
   - {addr: 0x80014204, size: 8, name: main_return_zero_80014204, hash: 207819bf4ebe3078}
   - {addr: 0x8001420c, size: 48, name: main_sound_sum_resource_words, hash: 8eadc6f1c70f6a75}
+  - {addr: 0x8001423c, size: 60, name: main_sound_init_heap, hash: 34064af7b82b9b40, profile: gcc-2.6.3_O2_G8_aspsx-2.34, source: src/psyq/suzuki/main_sound_init_heap.c}
+  - {addr: 0x80014278, size: 224, name: main_sound_alloc, hash: ce530b24cb2e1a41, profile: gcc-2.6.3_O2_G8_aspsx-2.34, source: src/psyq/suzuki/main_sound_alloc.c}
+  - {addr: 0x80014358, size: 84, name: main_sound_free, hash: 11a2caca3233143e, profile: gcc-2.6.3_O2_G8_aspsx-2.34, source: src/psyq/suzuki/main_sound_free.c}
+  - {addr: 0x800143ac, size: 128, name: main_sound_get_largest_free_block, hash: ec544aa2d787d18d, profile: gcc-2.6.3_O2_G8_aspsx-2.34, source: src/psyq/suzuki/main_sound_get_largest_free_block.c}
   - {addr: 0x8001442c, size: 164, name: main_sound_copy_memory, hash: bcf044e1d17f66f5}
   - {addr: 0x800144d0, size: 116, name: main_sound_clear_memory, hash: 4ba829a78b79d216}
   - {addr: 0x80014544, size: 8, name: main_noop_80014544, hash: 6d64edf91449c1b1}
@@ -248,6 +255,403 @@ functions:
   - {addr: 0x80018654, size: 8, name: main_noop_80018654, hash: 6d64edf91449c1b1}
   - {addr: 0x8001865c, size: 96, name: main_sound_wait_for_spu_transfer, hash: 30625f6e920b4684}
   - {addr: 0x800186bc, size: 8, name: main_noop_800186bc, hash: 6d64edf91449c1b1}
+  - {addr: 0x800186c4, size: 32, name: SpuInit, hash: 88a4657274163f46, source: src/psyq/libspu/SpuInit.c}
+  - {addr: 0x800186e4, size: 248, name: _SpuInit, hash: 75c2d5909458014e, source: src/psyq/libspu/_SpuInit.c}
+  - {addr: 0x800187dc, size: 124, name: SpuStart, hash: 4f7e8f0f8686ff5f, source: src/psyq/libspu/SpuStart.c}
+  - {addr: 0x80018858, size: 660, name: _spu_init, hash: 5b4b0c8bc9c4594e, source: src/psyq/libspu/_spu_init.c}
+  - {addr: 0x80018aec, size: 460, name: _spu_writeByIO, hash: 6be110b62c5b356d, source: src/psyq/libspu/_spu_writeByIO.c}
+  - {addr: 0x80018cb8, size: 208, name: _spu_FiDMA, hash: c84cd607147588cc, source: src/psyq/libspu/_spu_FiDMA.c}
+  - {addr: 0x80018d88, size: 188, name: _spu_Fr_, hash: fe8080968254fcca, source: src/psyq/libspu/_spu_Fr_.c}
+  - {addr: 0x80018e44, size: 656, name: _spu_t, hash: fa006741bec45148, source: src/psyq/libspu/_spu_t.c}
+  - {addr: 0x800190d4, size: 136, name: _spu_Fw, hash: f34bb1c025a78a16, source: src/psyq/libspu/_spu_Fw.c}
+  - {addr: 0x8001915c, size: 104, name: _spu_Fr, hash: 34abd0940c2750c0, source: src/psyq/libspu/_spu_Fr.c}
+  - {addr: 0x800191c4, size: 72, name: _spu_FsetRXX, hash: 3ae768800e30d122, source: src/psyq/libspu/_spu_FsetRXX.c}
+  - {addr: 0x8001920c, size: 164, name: _spu_FsetRXXa, hash: 8f01593c5a5cfcf3, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/psyq/libspu/_spu_FsetRXXa.c}
+  - {addr: 0x800192b0, size: 60, name: _spu_FgetRXXa, hash: 8179b793cca67222, source: src/psyq/libspu/_spu_FgetRXXa.c}
+  - {addr: 0x800192ec, size: 96, name: _spu_FsetPCR, hash: 10798304497866d1, source: src/psyq/libspu/_spu_FsetPCR.c}
+  - {addr: 0x8001934c, size: 44, name: _spu_FsetDelayR, hash: d2122963ef9c846f, source: src/psyq/libspu/_spu_FsetDelayR.c}
+  - {addr: 0x80019378, size: 44, name: _spu_FsetDelayW, hash: b6f16eb0a8b8a608, source: src/psyq/libspu/_spu_FsetDelayW.c}
+  - {addr: 0x800193a4, size: 96, name: _spu_Fw1ts, hash: 3433eb702ffe5e77, source: src/psyq/libspu/_spu_Fw1ts.c}
+  - {addr: 0x80019404, size: 36, name: _SpuDataCallback, hash: 7e3de14f14b6669a, source: src/psyq/libspu/_SpuDataCallback.c}
+  - {addr: 0x80019428, size: 32, name: SpuInitHot, hash: aeaf252daf760485, source: src/psyq/libspu/SpuInitHot.c}
+  - {addr: 0x80019448, size: 124, name: SpuQuit, hash: 22720505ebae110a, source: src/psyq/libspu/SpuQuit.c}
+  - {addr: 0x800194c4, size: 84, name: SpuInitMalloc, hash: 1b6583483d24037a, source: src/psyq/libspu/SpuInitMalloc.c}
+  - {addr: 0x80019518, size: 712, name: SpuMalloc, hash: def8d00dc790adcf, source: src/psyq/libspu/SpuMalloc.c}
+  - {addr: 0x800197e0, size: 768, name: _spu_gcSPU, hash: 39bc762a38df5343, source: src/psyq/libspu/_spu_gcSPU.c}
+  - {addr: 0x80019ae0, size: 124, name: SpuFree, hash: fe04ba8d0d12d847, source: src/psyq/libspu/SpuFree.c}
+  - {addr: 0x80019b5c, size: 36, name: SpuSetNoiseVoice, hash: 87dd7799252583c1, source: src/psyq/libspu/SpuSetNoiseVoice.c}
+  - {addr: 0x80019b80, size: 520, name: _SpuSetAnyVoice, hash: 267e3e95a3a05c31, source: src/psyq/libspu/_SpuSetAnyVoice.c}
+  - {addr: 0x80019d88, size: 80, name: SpuSetNoiseClock, hash: 504cd1112e07534d, source: src/psyq/libspu/SpuSetNoiseClock.c}
+  - {addr: 0x80019dd8, size: 96, name: SpuRead, hash: 3e5f290acbf62768, source: src/psyq/libspu/SpuRead.c}
+  - {addr: 0x80019e38, size: 208, name: SpuSetReverb, hash: 923ab78625f854d1, source: src/psyq/libspu/SpuSetReverb.c}
+  - {addr: 0x80019f08, size: 128, name: _SpuIsInAllocateArea, hash: 43d38c38dcabd588, source: src/psyq/libspu/_SpuIsInAllocateArea.c}
+  - {addr: 0x80019f88, size: 140, name: _SpuIsInAllocateArea_, hash: e722546165d94c18, source: src/psyq/libspu/_SpuIsInAllocateArea_.c}
+  - {addr: 0x8001a014, size: 1296, name: SpuSetReverbModeParam, hash: 943d703dc12950f9, source: src/psyq/libspu/SpuSetReverbModeParam.c}
+  - {addr: 0x8001a524, size: 1232, name: _spu_setReverbAttr, hash: 2f622e202af21c05, source: src/psyq/libspu/_spu_setReverbAttr.c}
+  - {addr: 0x8001a9f4, size: 80, name: SpuGetReverbModeParam, hash: fec77637b98074cf, source: src/psyq/libspu/SpuGetReverbModeParam.c}
+  - {addr: 0x8001aa44, size: 120, name: SpuSetReverbDepth, hash: 12b8de6567a4aded, source: src/psyq/libspu/SpuSetReverbDepth.c}
+  - {addr: 0x8001aabc, size: 36, name: SpuSetReverbVoice, hash: c74402d87c04ae8b, source: src/psyq/libspu/SpuSetReverbVoice.c}
+  - {addr: 0x8001aae0, size: 412, name: SpuClearReverbWorkArea, hash: 9c4cfe68328eac12, source: src/psyq/libspu/SpuClearReverbWorkArea.c}
+  - {addr: 0x8001ac7c, size: 116, name: SpuReadDecodedData, hash: 0a638ff7a4509988, source: src/psyq/libspu/SpuReadDecodedData.c}
+  - {addr: 0x8001acf0, size: 516, name: SpuSetKey, hash: 9cdc32436db260dc, source: src/psyq/libspu/SpuSetKey.c}
+  - {addr: 0x8001aef4, size: 112, name: SpuGetVoiceEnvelopeAttr, hash: 642204b097291e2d, source: src/psyq/libspu/SpuGetVoiceEnvelopeAttr.c}
+  - {addr: 0x8001af64, size: 96, name: SpuWrite, hash: 4b9c7697e24159b6, source: src/psyq/libspu/SpuWrite.c}
+  - {addr: 0x8001afc4, size: 84, name: SpuSetTransferStartAddr, hash: e5f2de9e421d3583, source: src/psyq/libspu/SpuSetTransferStartAddr.c}
+  - {addr: 0x8001b018, size: 52, name: SpuSetTransferMode, hash: 6697c17ca4527b66, source: src/psyq/libspu/SpuSetTransferMode.c}
+  - {addr: 0x8001b04c, size: 36, name: SpuSetTransferCallback, hash: 030ce0272880a67d, source: src/psyq/libspu/SpuSetTransferCallback.c}
+  - {addr: 0x8001b070, size: 36, name: SpuSetPitchLFOVoice, hash: 1650a0d365d3a22b, source: src/psyq/libspu/SpuSetPitchLFOVoice.c}
+  - {addr: 0x8001b094, size: 916, name: SpuSetCommonAttr, hash: 4aa2ca3c7db4402f, source: src/psyq/libspu/SpuSetCommonAttr.c, rodata: [{addr: 0x8001008c, size: 64, hash: 7f764ad40b03825c}]}
+  - {addr: 0x8001b428, size: 136, name: SpuSetVoiceVolume, hash: 15ae272cb4942262, source: src/psyq/libspu/SpuSetVoiceVolume.c}
+  - {addr: 0x8001b4b0, size: 376, name: SpuSetVoiceVolumeAttr, hash: 5c03fea15b57bc6c, source: src/psyq/libspu/SpuSetVoiceVolumeAttr.c, rodata: [{addr: 0x800100cc, size: 60, hash: 5c84d9c5261a68a8}]}
+  - {addr: 0x8001b628, size: 124, name: SpuSetVoicePitch, hash: 8ec867081193fdf8, source: src/psyq/libspu/SpuSetVoicePitch.c}
+  - {addr: 0x8001b6a4, size: 124, name: SpuSetVoiceStartAddr, hash: 797ac6affccda135, source: src/psyq/libspu/SpuSetVoiceStartAddr.c}
+  - {addr: 0x8001b720, size: 124, name: SpuSetVoiceLoopStartAddr, hash: 51b34cb33c21495a, source: src/psyq/libspu/SpuSetVoiceLoopStartAddr.c}
+  - {addr: 0x8001b79c, size: 140, name: SpuSetVoiceDR, hash: 419df5622205f55b, source: src/psyq/libspu/SpuSetVoiceDR.c}
+  - {addr: 0x8001b828, size: 136, name: SpuSetVoiceRR, hash: 898957b659599ba5, source: src/psyq/libspu/SpuSetVoiceRR.c}
+  - {addr: 0x8001b8b0, size: 136, name: SpuSetVoiceSL, hash: 88d5c86e9249700d, source: src/psyq/libspu/SpuSetVoiceSL.c}
+  - {addr: 0x8001b938, size: 156, name: SpuSetVoiceARAttr, hash: dfaba576bcfc6717, source: src/psyq/libspu/SpuSetVoiceARAttr.c}
+  - {addr: 0x8001b9d4, size: 228, name: SpuSetVoiceSRAttr, hash: 83b100f275b7b7b9, source: src/psyq/libspu/SpuSetVoiceSRAttr.c}
+  - {addr: 0x8001bab8, size: 164, name: SpuSetVoiceRRAttr, hash: 1f745dcb59f88e44, source: src/psyq/libspu/SpuSetVoiceRRAttr.c}
+  - {addr: 0x8001bb5c, size: 60, name: rsin, hash: 829cf2a2ad370790, source: src/psyq/libgte/rsin.c}
+  - {addr: 0x8001bb98, size: 144, name: sin_1, hash: e3ee9009873e9f01, source: src/psyq/libgte/sin_1.c}
+  - {addr: 0x8001bc28, size: 160, name: rcos, hash: 9fdf529ff133f00e, source: src/psyq/libgte/rcos.c}
+  - {addr: 0x8001bcc8, size: 340, name: psyq_gte_csqrt_kernel, hash: ed1ad65a66b11cc8, source: src/psyq/libgte/psyq_gte_csqrt_kernel.c}
+  - {addr: 0x8001be1c, size: 156, name: csqrt, hash: 083206bb8d6c61eb, source: src/psyq/libgte/csqrt.c}
+  - {addr: 0x8001beb8, size: 128, name: InitGeom, hash: 2836fbf08f09d876, source: src/psyq/libgte/InitGeom.c}
+  - {addr: 0x8001bf38, size: 132, name: SquareRoot0, hash: e488d7aedb8c2ac2, source: src/psyq/libgte/SquareRoot0.c}
+  - {addr: 0x8001bfc8, size: 140, name: InvSquareRoot, hash: a79fbf5d929c82b4, source: src/psyq/libgte/InvSquareRoot.c}
+  - {addr: 0x8001c054, size: 20, name: VectorNormalS, hash: dadf449ade2ebb22, source: src/psyq/libgte/VectorNormalS.c}
+  - {addr: 0x8001c068, size: 44, name: VectorNormal, hash: 026bfa44604309ab, source: src/psyq/libgte/VectorNormal.c}
+  - {addr: 0x8001c094, size: 48, name: VectorNormalSS, hash: cfb8c4d988847451, source: src/psyq/libgte/VectorNormalSS.c}
+  - {addr: 0x8001c0c4, size: 188, name: psyq_gte_normalize_register_vector, hash: 725590a2b6e10d86, source: src/psyq/libgte/psyq_gte_normalize_register_vector.c}
+  - {addr: 0x8001c180, size: 228, name: MatrixNormal, hash: fda37d110d49b299, source: src/psyq/libgte/MatrixNormal.c}
+  - {addr: 0x8001c268, size: 148, name: SquareRoot12, hash: a31f961df6cbd645, source: src/psyq/libgte/SquareRoot12.c}
+  - {addr: 0x8001c308, size: 352, name: CompMatrix, hash: 484fff1d2984fac9, source: src/psyq/libgte/CompMatrix.c}
+  - {addr: 0x8001c468, size: 268, name: MulMatrix0, hash: 2cdd7a947dcf6593, source: src/psyq/libgte/MulMatrix0.c}
+  - {addr: 0x8001c574, size: 228, name: MulRotMatrix0, hash: 52c2c86eba59c3b3, source: src/psyq/libgte/MulRotMatrix0.c}
+  - {addr: 0x8001c658, size: 232, name: MulRotMatrix, hash: 79a376c424bab4eb, source: src/psyq/libgte/MulRotMatrix.c}
+  - {addr: 0x8001c740, size: 272, name: SetMulMatrix, hash: a009644e1a602c9b, source: src/psyq/libgte/SetMulMatrix.c}
+  - {addr: 0x8001c850, size: 352, name: ApplyMatrixLV, hash: b5cca44ff50bf0ca, source: src/psyq/libgte/ApplyMatrixLV.c}
+  - {addr: 0x8001c9b0, size: 48, name: psyq_gte_apply_rotation_ir, hash: 81613e199dfb7f10, source: src/psyq/libgte/psyq_gte_apply_rotation_ir.c}
+  - {addr: 0x8001c9e0, size: 292, name: ScaleMatrixL, hash: 1011aad3b6c547d9, source: src/psyq/libgte/ScaleMatrixL.c}
+  - {addr: 0x8001cb04, size: 160, name: PushMatrix, hash: 5bc20afcdc01182c, source: src/psyq/libgte/PushMatrix.c}
+  - {addr: 0x8001cba4, size: 160, name: PopMatrix, hash: a9f91948a92d4c10, source: src/psyq/libgte/PopMatrix.c}
+  - {addr: 0x8001cc44, size: 72, name: ReadRotMatrix, hash: 3826a102b888245f, source: src/psyq/libgte/ReadRotMatrix.c}
+  - {addr: 0x8001cc8c, size: 72, name: ReadLightMatrix, hash: aab8d08719bdd7eb, source: src/psyq/libgte/ReadLightMatrix.c}
+  - {addr: 0x8001ccd4, size: 72, name: ReadColorMatrix, hash: aae6d2765fbe29c6, source: src/psyq/libgte/ReadColorMatrix.c}
+  - {addr: 0x8001cd28, size: 268, name: MulMatrix, hash: e03fec4cdb4fe807, source: src/psyq/libgte/MulMatrix.c}
+  - {addr: 0x8001ce38, size: 268, name: MulMatrix2, hash: a734ee02e6512418, source: src/psyq/libgte/MulMatrix2.c}
+  - {addr: 0x8001cf48, size: 36, name: TransMatrix, hash: e7c83d5bccd6bc52, source: src/psyq/libgte/TransMatrix.c}
+  - {addr: 0x8001cf78, size: 292, name: ScaleMatrix, hash: 6fa6bca1ebd36af6, source: src/psyq/libgte/ScaleMatrix.c}
+  - {addr: 0x8001d0a8, size: 48, name: SetRotMatrix, hash: 095799477a23b46a, source: src/psyq/libgte/SetRotMatrix.c}
+  - {addr: 0x8001d0d8, size: 48, name: SetLightMatrix, hash: b9ce521ecd6caded, source: src/psyq/libgte/SetLightMatrix.c}
+  - {addr: 0x8001d108, size: 48, name: SetColorMatrix, hash: 32169d0ce375b3a1, source: src/psyq/libgte/SetColorMatrix.c}
+  - {addr: 0x8001d138, size: 32, name: SetTransMatrix, hash: 2f228789930df0a6, source: src/psyq/libgte/SetTransMatrix.c}
+  - {addr: 0x8001d158, size: 12, name: ReadGeomScreen, hash: 4ecf2f5bbdb450de, source: src/psyq/libgte/ReadGeomScreen.c}
+  - {addr: 0x8001d168, size: 32, name: SetBackColor, hash: e4dc8b65f4b8d01e, source: src/psyq/libgte/SetBackColor.c}
+  - {addr: 0x8001d188, size: 32, name: SetFarColor, hash: 7c5febbc8fceb4e4, source: src/psyq/libgte/SetFarColor.c}
+  - {addr: 0x8001d1a8, size: 24, name: SetGeomOffset, hash: 9aa95b09a0c5f31d, source: src/psyq/libgte/SetGeomOffset.c}
+  - {addr: 0x8001d1c8, size: 12, name: SetGeomScreen, hash: d8c79a8c2661cba5, source: src/psyq/libgte/SetGeomScreen.c}
+  - {addr: 0x8001d1d8, size: 40, name: LightColor, hash: ae4cfe9745644b12, source: src/psyq/libgte/LightColor.c}
+  - {addr: 0x8001d200, size: 40, name: DpqColorLight, hash: a9fd370295eb8d79, source: src/psyq/libgte/DpqColorLight.c}
+  - {addr: 0x8001d228, size: 60, name: DpqColor3, hash: 8e8ac1471c4c2028, source: src/psyq/libgte/DpqColor3.c}
+  - {addr: 0x8001d264, size: 36, name: Intpl, hash: 91a892c2adb57022, source: src/psyq/libgte/Intpl.c}
+  - {addr: 0x8001d288, size: 40, name: Square12, hash: 8eb49b1a6805d4a2, source: src/psyq/libgte/Square12.c}
+  - {addr: 0x8001d2b0, size: 40, name: Square0, hash: 99cb1c8d0c79529e, source: src/psyq/libgte/Square0.c}
+  - {addr: 0x8001d2d8, size: 32, name: AverageZ3, hash: 72234e789d3afcc2, source: src/psyq/libgte/AverageZ3.c}
+  - {addr: 0x8001d2f8, size: 36, name: AverageZ4, hash: ca098524f15b22f4, source: src/psyq/libgte/AverageZ4.c}
+  - {addr: 0x8001d31c, size: 88, name: OuterProduct12, hash: 51199c0b60ef58f1, source: src/psyq/libgte/OuterProduct12.c}
+  - {addr: 0x8001d374, size: 88, name: OuterProduct0, hash: b0df3db5528e3031, source: src/psyq/libgte/OuterProduct0.c}
+  - {addr: 0x8001d3cc, size: 24, name: Lzc, hash: 3ee60c6a11ec8f38, source: src/psyq/libgte/Lzc.c}
+  - {addr: 0x8001d3e8, size: 48, name: RotTransSV, hash: 59b534e4432f141e, source: src/psyq/libgte/RotTransSV.c}
+  - {addr: 0x8001d418, size: 56, name: SquareSS12, hash: 995d98a5ee25019a, source: src/psyq/libgte/SquareSS12.c}
+  - {addr: 0x8001d450, size: 56, name: SquareSS0, hash: 67bf54114c350717, source: src/psyq/libgte/SquareSS0.c}
+  - {addr: 0x8001d488, size: 48, name: SquareSL12, hash: e66be43eb3adaeb0, source: src/psyq/libgte/SquareSL12.c}
+  - {addr: 0x8001d4b8, size: 48, name: SquareSL0, hash: 60d39d1e85ac9450, source: src/psyq/libgte/SquareSL0.c}
+  - {addr: 0x8001d4e8, size: 44, name: RotTransPers, hash: bfea668424114470, source: src/psyq/libgte/RotTransPers.c}
+  - {addr: 0x8001d518, size: 84, name: RotTransPers3, hash: 6dd2d4421dbd97f4, source: src/psyq/libgte/RotTransPers3.c}
+  - {addr: 0x8001d578, size: 40, name: RotTrans, hash: b821ac83a86822b7, source: src/psyq/libgte/RotTrans.c}
+  - {addr: 0x8001d5a8, size: 36, name: NormalClip, hash: 9b05fe5b9d5d7a66, source: src/psyq/libgte/NormalClip.c}
+  - {addr: 0x8001d5d8, size: 120, name: RotTransPers4, hash: 7aabdde0f4e769f4, source: src/psyq/libgte/RotTransPers4.c}
+  - {addr: 0x8001d658, size: 652, name: RotMatrix, hash: 3e1a364bba46c417, source: src/psyq/libgte/RotMatrix.c}
+  - {addr: 0x8001d8e8, size: 384, name: ratan2, hash: 47f028705ef5f5dd, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/psyq/libgte/ratan2.c}
+  - {addr: 0x8001da68, size: 104, name: _patch_gte, hash: d038bf5af7a4ec7e, source: src/psyq/libgte/_patch_gte.c}
+  - {addr: 0x8001db08, size: 80, name: PadInit, hash: ab9304d2d327711e, source: src/psyq/libetc/PadInit.c}
+  - {addr: 0x8001db58, size: 48, name: PadRead, hash: b8bf96571af264aa, source: src/psyq/libetc/PadRead.c}
+  - {addr: 0x8001db88, size: 32, name: PadStop, hash: a910b2db5c5aa9a8, source: src/psyq/libetc/PadStop.c}
+  - {addr: 0x8001dba8, size: 328, name: VSync, hash: 52593b17cb59da9f, source: src/psyq/libetc/VSync.c}
+  - {addr: 0x8001dcf0, size: 156, name: v_wait, hash: 65614fd4dad4c750, source: src/psyq/libetc/v_wait.c}
+  - {addr: 0x8001dd8c, size: 48, name: ResetCallback, hash: 71c73a1fee1721d9, source: src/psyq/libetc/ResetCallback.c}
+  - {addr: 0x8001ddbc, size: 48, name: InterruptCallback, hash: bd12cde7cc4c8bd5, source: src/psyq/libetc/InterruptCallback.c}
+  - {addr: 0x8001ddec, size: 48, name: DMACallback, hash: b2b2afd5c043f4b0, source: src/psyq/libetc/DMACallback.c}
+  - {addr: 0x8001de1c, size: 52, name: VSyncCallback, hash: 2a21ab402eb57a1c, source: src/psyq/libetc/VSyncCallback.c}
+  - {addr: 0x8001de50, size: 48, name: VSyncCallbacks, hash: 4649a568bf1072bb, source: src/psyq/libetc/VSyncCallbacks.c}
+  - {addr: 0x8001de80, size: 48, name: StopCallback, hash: 05d56f9436d4715d, source: src/psyq/libetc/StopCallback.c}
+  - {addr: 0x8001deb0, size: 48, name: RestartCallback, hash: 1342fa9cac0aa8ff, source: src/psyq/libetc/RestartCallback.c}
+  - {addr: 0x8001dee0, size: 16, name: CheckCallback, hash: b72a44b501dee65c, source: src/psyq/libetc/CheckCallback.c}
+  - {addr: 0x8001def0, size: 24, name: GetIntrMask, hash: 8fcdae31d5d7752e, source: src/psyq/libetc/GetIntrMask.c}
+  - {addr: 0x8001df08, size: 28, name: SetIntrMask, hash: 2b60cc0be03eebf0, source: src/psyq/libetc/SetIntrMask.c}
+  - {addr: 0x8001df24, size: 220, name: startIntr, hash: af1b4691f099b32b, source: src/psyq/libetc/startIntr.c}
+  - {addr: 0x8001e000, size: 488, name: trapIntr, hash: 19847849b4768e32, source: src/psyq/libetc/trapIntr.c}
+  - {addr: 0x8001e1e8, size: 340, name: setIntr, hash: bdea0bd008a8e917, source: src/psyq/libetc/setIntr.c}
+  - {addr: 0x8001e33c, size: 172, name: stopIntr, hash: 2a6630c2e72f5752, source: src/psyq/libetc/stopIntr.c}
+  - {addr: 0x8001e3e8, size: 136, name: restartIntr, hash: 653bce24d0fb87cf, source: src/psyq/libetc/restartIntr.c}
+  - {addr: 0x8001e470, size: 44, name: psyq_etc_clear_interrupt_state_words, hash: 10a6fc24d646f22b, source: src/psyq/libetc/psyq_etc_clear_interrupt_state_words.c}
+  - {addr: 0x8001e49c, size: 88, name: startIntrVSync, hash: 6c0760e4cfa47295, source: src/psyq/libetc/startIntrVSync.c}
+  - {addr: 0x8001e4f4, size: 120, name: trapIntrVSync, hash: 21d72860e1480e43, source: src/psyq/libetc/trapIntrVSync.c}
+  - {addr: 0x8001e56c, size: 44, name: setIntrVSync, hash: 343c1b30d0419817, source: src/psyq/libetc/setIntrVSync.c}
+  - {addr: 0x8001e598, size: 44, name: psyq_etc_clear_vblank_callback_words, hash: 10a6fc24d646f22b, source: src/psyq/libetc/psyq_etc_clear_vblank_callback_words.c}
+  - {addr: 0x8001e5c4, size: 80, name: startIntrDMA, hash: 1e06eeedd3314b7f, source: src/psyq/libetc/startIntrDMA.c}
+  - {addr: 0x8001e614, size: 388, name: trapIntrDMA, hash: 6c1a415bee4243b0, source: src/psyq/libetc/trapIntrDMA.c}
+  - {addr: 0x8001e798, size: 168, name: setIntrDMA, hash: ffb6a94751436bfa, source: src/psyq/libetc/setIntrDMA.c}
+  - {addr: 0x8001e840, size: 44, name: psyq_etc_clear_dma_callback_words, hash: 10a6fc24d646f22b, source: src/psyq/libetc/psyq_etc_clear_dma_callback_words.c}
+  - {addr: 0x8001e86c, size: 24, name: SetVideoMode, hash: 45263d86bd70fcfa, source: src/psyq/libetc/SetVideoMode.c}
+  - {addr: 0x8001e884, size: 16, name: GetVideoMode, hash: ed29fc988c603726, source: src/psyq/libetc/GetVideoMode.c}
+  - {addr: 0x8001e894, size: 48, name: StSetRing, hash: 607587394bd69202, source: src/psyq/libcd/StSetRing.c}
+  - {addr: 0x8001e8c4, size: 144, name: CdInit, hash: f28364ecc021d481, source: src/psyq/libcd/CdInit.c}
+  - {addr: 0x8001e954, size: 40, name: def_cbsync, hash: 22d1b93b3aa6a95e, source: src/psyq/libcd/def_cbsync.c}
+  - {addr: 0x8001e97c, size: 40, name: def_cbready, hash: 3c193ad69b4b3233, source: src/psyq/libcd/def_cbready.c}
+  - {addr: 0x8001e9a4, size: 40, name: def_cbread, hash: 3c193ad69b4b3233, source: src/psyq/libcd/def_cbread.c}
+  - {addr: 0x8001e9cc, size: 16, name: CdStatus, hash: 04d076137e677d94, source: src/psyq/libcd/CdStatus.c}
+  - {addr: 0x8001e9dc, size: 16, name: CdMode, hash: 95d6274c0407bf66, source: src/psyq/libcd/CdMode.c}
+  - {addr: 0x8001e9ec, size: 16, name: CdLastCom, hash: d86741fe6e862979, source: src/psyq/libcd/CdLastCom.c}
+  - {addr: 0x8001e9fc, size: 16, name: CdLastPos, hash: cd6f1ca3ebd33dcc, source: src/psyq/libcd/CdLastPos.c}
+  - {addr: 0x8001ea0c, size: 108, name: CdReset, hash: cceb5e4ba4dbc3e9, source: src/psyq/libcd/CdReset.c}
+  - {addr: 0x8001ea78, size: 32, name: CdFlush, hash: 067dd11f09ae23b9, source: src/psyq/libcd/CdFlush.c}
+  - {addr: 0x8001ea98, size: 24, name: CdSetDebug, hash: 67c6a9778cfc4941, source: src/psyq/libcd/CdSetDebug.c}
+  - {addr: 0x8001eab0, size: 52, name: CdComstr, hash: 54f039b8d3b1a0ec, source: src/psyq/libcd/CdComstr.c}
+  - {addr: 0x8001eae4, size: 52, name: CdIntstr, hash: 8c216cd5350d47bc, source: src/psyq/libcd/CdIntstr.c}
+  - {addr: 0x8001eb18, size: 32, name: CdSync, hash: 8ed1c3f780541f6b, source: src/psyq/libcd/CdSync.c}
+  - {addr: 0x8001eb38, size: 32, name: CdReady, hash: c0f305867e8eea8e, source: src/psyq/libcd/CdReady.c}
+  - {addr: 0x8001eb58, size: 24, name: CdSyncCallback, hash: b31deb762cc48622, source: src/psyq/libcd/CdSyncCallback.c}
+  - {addr: 0x8001eb70, size: 24, name: CdReadyCallback, hash: 413a3c4c35a73034, source: src/psyq/libcd/CdReadyCallback.c}
+  - {addr: 0x8001eb88, size: 312, name: CdControl, hash: ca40003e460bead7, source: src/psyq/libcd/CdControl.c}
+  - {addr: 0x8001ecc0, size: 300, name: CdControlF, hash: 8c2030915b2c6293, source: src/psyq/libcd/CdControlF.c}
+  - {addr: 0x8001edec, size: 324, name: CdControlB, hash: 678de019b04bb776, source: src/psyq/libcd/CdControlB.c}
+  - {addr: 0x8001ef30, size: 36, name: CdMix, hash: c8c9bc2005edd73b, source: src/psyq/libcd/CdMix.c}
+  - {addr: 0x8001ef54, size: 36, name: CdGetSector, hash: 2317408427e8a437, source: src/psyq/libcd/CdGetSector.c}
+  - {addr: 0x8001ef78, size: 36, name: CdDataCallback, hash: 9a18b5ba472af0c8, source: src/psyq/libcd/CdDataCallback.c}
+  - {addr: 0x8001ef9c, size: 32, name: CdDataSync, hash: 361176009c84760d, source: src/psyq/libcd/CdDataSync.c}
+  - {addr: 0x8001efbc, size: 260, name: CdIntToPos, hash: 21e2164c3cd48904, source: src/psyq/libcd/CdIntToPos.c}
+  - {addr: 0x8001f0c0, size: 128, name: CdPosToInt, hash: 91ea1fb723b4ee63, source: src/psyq/libcd/CdPosToInt.c}
+  - {addr: 0x8001f140, size: 1400, name: getintr, hash: 4184b430b61bf588, source: src/psyq/libcd/getintr.c, rodata: [{addr: 0x80010380, size: 20, hash: fa2ce9e34f8154f0}]}
+  - {addr: 0x8001f6b8, size: 640, name: CD_sync, hash: 47afa88269ca9060, source: src/psyq/libcd/CD_sync.c}
+  - {addr: 0x8001f938, size: 716, name: CD_ready, hash: 22e16efb14aaa140, source: src/psyq/libcd/CD_ready.c}
+  - {addr: 0x8001fc04, size: 1096, name: CD_cw, hash: 1a7c2a6b24b014c6, source: src/psyq/libcd/CD_cw.c}
+  - {addr: 0x8002004c, size: 136, name: CD_vol, hash: 350e0c87e29feadf, source: src/psyq/libcd/CD_vol.c}
+  - {addr: 0x800200d4, size: 224, name: CD_flush, hash: e009053d83999716, source: src/psyq/libcd/CD_flush.c}
+  - {addr: 0x800201b4, size: 244, name: CD_initvol, hash: 50578ffe48a9a3b6, source: src/psyq/libcd/CD_initvol.c}
+  - {addr: 0x800202a8, size: 80, name: CD_initintr, hash: 83b6cbe2852521be, source: src/psyq/libcd/CD_initintr.c}
+  - {addr: 0x800202f8, size: 492, name: CD_init, hash: 2700890fdcc83823, source: src/psyq/libcd/CD_init.c}
+  - {addr: 0x800204e4, size: 364, name: CD_datasync, hash: de0086dd362127d9, source: src/psyq/libcd/CD_datasync.c}
+  - {addr: 0x80020650, size: 256, name: CD_getsector, hash: c77f19a0df7fcfc8, source: src/psyq/libcd/CD_getsector.c}
+  - {addr: 0x80020750, size: 16, name: CD_set_test_parmnum, hash: 8d31d7aacbbd324b, source: src/psyq/libcd/CD_set_test_parmnum.c}
+  - {addr: 0x80020760, size: 224, name: callback, hash: 2bea275034bb3573, source: src/psyq/libcd/callback.c}
+  - {addr: 0x80020840, size: 548, name: cb_read, hash: afff9ebcd2678258, source: src/psyq/libcd/cb_read.c}
+  - {addr: 0x80020a64, size: 472, name: cd_read_retry, hash: b47846391cb6ad03, source: src/psyq/libcd/cd_read_retry.c}
+  - {addr: 0x80020c3c, size: 264, name: CdRead, hash: 9dc3762ff9455568, source: src/psyq/libcd/CdRead.c}
+  - {addr: 0x80020d44, size: 204, name: CdReadSync, hash: 1e26731c4dd0aa20, source: src/psyq/libcd/CdReadSync.c}
+  - {addr: 0x80020e10, size: 24, name: CdReadCallback, hash: b0a8b6f82862a383, source: src/psyq/libcd/CdReadCallback.c}
+  - {addr: 0x80020e28, size: 148, name: CdRead2, hash: a0821a1a7b8550f3, source: src/psyq/libcd/CdRead2.c}
+  - {addr: 0x80020ebc, size: 32, name: psyq_cd_stream_ready_callback, hash: b4a8a086389a88eb, source: src/psyq/libcd/psyq_cd_stream_ready_callback.c}
+  - {addr: 0x80020edc, size: 96, name: StClearRing, hash: 498850f895eb85b1, source: src/psyq/libcd/StClearRing.c}
+  - {addr: 0x80020f3c, size: 88, name: StUnSetRing, hash: 4a88dab75255ec6a, source: src/psyq/libcd/StUnSetRing.c}
+  - {addr: 0x80020f94, size: 144, name: data_ready_callback, hash: d9c4d4d6d856c80a, source: src/psyq/libcd/data_ready_callback.c}
+  - {addr: 0x80021024, size: 96, name: StGetBackloc, hash: 428d2a0cb4dafc39, source: src/psyq/libcd/StGetBackloc.c}
+  - {addr: 0x80021084, size: 136, name: StSetStream, hash: 4a1bf53d01cbf581, source: src/psyq/libcd/StSetStream.c}
+  - {addr: 0x8002110c, size: 188, name: StFreeRing, hash: 5d8f396104902c27, source: src/psyq/libcd/StFreeRing.c}
+  - {addr: 0x800211c8, size: 64, name: init_ring_status, hash: e764a3977f38c374, source: src/psyq/libcd/init_ring_status.c}
+  - {addr: 0x80021208, size: 196, name: StGetNext, hash: c67cdd8b836113a4, source: src/psyq/libcd/StGetNext.c}
+  - {addr: 0x800212cc, size: 32, name: StSetMask, hash: 4d37663c1c8f9856, source: src/psyq/libcd/StSetMask.c}
+  - {addr: 0x800212ec, size: 2416, name: StCdInterrupt, hash: 84e5142fc7344210, source: src/psyq/libcd/StCdInterrupt.c}
+  - {addr: 0x80021c5c, size: 52, name: mem2mem, hash: d1274280a63f2579, source: src/psyq/libcd/mem2mem.c}
+  - {addr: 0x80021c90, size: 444, name: dma_execute, hash: 213392575c9189e3, source: src/psyq/libcd/dma_execute.c}
+  - {addr: 0x80021e4c, size: 200, name: StRingStatus, hash: 975766591620abaa, source: src/psyq/libcd/StRingStatus.c}
+  - {addr: 0x80021f14, size: 12, name: InitHeap, hash: 4487ee3019aae533, source: src/psyq/libapi/InitHeap.c}
+  - {addr: 0x80021f24, size: 12, name: FlushCache, hash: 86f1abc250b24950, source: src/psyq/libapi/FlushCache.c}
+  - {addr: 0x80021f34, size: 12, name: _bu_init, hash: 069d69bbe3437a86, source: src/psyq/libapi/_bu_init.c}
+  - {addr: 0x80021f44, size: 12, name: _96_remove, hash: d3eefd259eb1b5f6, source: src/psyq/libapi/_96_remove.c}
+  - {addr: 0x80021f54, size: 12, name: SetMem, hash: dc77c66c4907e06b, source: src/psyq/libapi/SetMem.c}
+  - {addr: 0x80021f64, size: 12, name: DeliverEvent, hash: 1f3d5e03478b103c, source: src/psyq/libapi/DeliverEvent.c}
+  - {addr: 0x80021f74, size: 12, name: OpenEvent, hash: 836f0e0a8413aabe, source: src/psyq/libapi/OpenEvent.c}
+  - {addr: 0x80021f84, size: 12, name: CloseEvent, hash: b1b43358d552fbe8, source: src/psyq/libapi/CloseEvent.c}
+  - {addr: 0x80021f94, size: 12, name: WaitEvent, hash: 78085ffececd5ad1, source: src/psyq/libapi/WaitEvent.c}
+  - {addr: 0x80021fa4, size: 12, name: TestEvent, hash: 5d756c5ef10f08bb, source: src/psyq/libapi/TestEvent.c}
+  - {addr: 0x80021fb4, size: 12, name: EnableEvent, hash: bb630b11b300ca13, source: src/psyq/libapi/EnableEvent.c}
+  - {addr: 0x80021fc4, size: 12, name: DisableEvent, hash: 8d198f2effdd0548, source: src/psyq/libapi/DisableEvent.c}
+  - {addr: 0x80021fd4, size: 12, name: StopPAD, hash: 9d296c458b419268, source: src/psyq/libapi/StopPAD.c}
+  - {addr: 0x80021fe4, size: 12, name: PAD_init2, hash: 1b6597442a23270a, source: src/psyq/libapi/PAD_init2.c}
+  - {addr: 0x80021ff4, size: 12, name: PAD_dr, hash: f8de0a1e37130033, source: src/psyq/libapi/PAD_dr.c}
+  - {addr: 0x80022004, size: 12, name: ReturnFromException, hash: 6403f02e44574f91, source: src/psyq/libapi/ReturnFromException.c}
+  - {addr: 0x80022014, size: 12, name: ResetEntryInt, hash: 5356791d9e12b5cf, source: src/psyq/libapi/ResetEntryInt.c}
+  - {addr: 0x80022024, size: 12, name: HookEntryInt, hash: 38790d1aeb4d336d, source: src/psyq/libapi/HookEntryInt.c}
+  - {addr: 0x80022034, size: 16, name: EnterCriticalSection, hash: 505f018057cab576, source: src/psyq/libapi/EnterCriticalSection.c}
+  - {addr: 0x80022044, size: 16, name: ExitCriticalSection, hash: 6e003f701ca62242, source: src/psyq/libapi/ExitCriticalSection.c}
+  - {addr: 0x80022054, size: 12, name: open, hash: c80c9a66c77fcad0, source: src/psyq/libapi/open.c}
+  - {addr: 0x80022064, size: 12, name: lseek, hash: 26a588252d4ade69, source: src/psyq/libapi/lseek.c}
+  - {addr: 0x80022074, size: 12, name: read, hash: 7addaf0f8cdb9c52, source: src/psyq/libapi/read.c}
+  - {addr: 0x80022084, size: 12, name: write, hash: 47b66a3af6776c60, source: src/psyq/libapi/write.c}
+  - {addr: 0x80022094, size: 12, name: close, hash: be6114370d5e7679, source: src/psyq/libapi/close.c}
+  - {addr: 0x800220a4, size: 12, name: format, hash: e777378b5d340472, source: src/psyq/libapi/format.c}
+  - {addr: 0x800220b4, size: 12, name: firstfile, hash: 3529dcee0c07ef90, source: src/psyq/libapi/firstfile.c}
+  - {addr: 0x800220c4, size: 12, name: nextfile, hash: 043d3a386e39caf9, source: src/psyq/libapi/nextfile.c}
+  - {addr: 0x800220d4, size: 12, name: erase, hash: 0815d44feb3bcaaa, source: src/psyq/libapi/erase.c}
+  - {addr: 0x800220e4, size: 12, name: _get_error, hash: cf5646756b16ad87, source: src/psyq/libapi/_get_error.c}
+  - {addr: 0x800220f4, size: 12, name: ChangeClearPAD, hash: 00edef32236c9756, source: src/psyq/libapi/ChangeClearPAD.c}
+  - {addr: 0x80022104, size: 12, name: ChangeClearRCnt, hash: 5679de6d872f74c1, source: src/psyq/libapi/ChangeClearRCnt.c}
+  - {addr: 0x80022114, size: 160, name: SetRCnt, hash: 9532442bf1acf82c, source: src/psyq/libapi/SetRCnt.c}
+  - {addr: 0x800221b4, size: 56, name: GetRCnt, hash: 0bce26c46e025902, source: src/psyq/libapi/GetRCnt.c}
+  - {addr: 0x800221ec, size: 52, name: StartRCnt, hash: 4fd752c825468cdb, source: src/psyq/libapi/StartRCnt.c}
+  - {addr: 0x80022220, size: 52, name: StopRCnt, hash: 030e8fd2dcbcb091, source: src/psyq/libapi/StopRCnt.c}
+  - {addr: 0x80022254, size: 56, name: ResetRCnt, hash: a99741952e489abc, source: src/psyq/libapi/ResetRCnt.c}
+  - {addr: 0x8002228c, size: 12, name: puts, hash: 859ccf6879a1def4, source: src/psyq/libapi/puts.c}
+  - {addr: 0x8002229c, size: 12, name: setjmp, hash: 0428ca0065f41fa0, source: src/psyq/libapi/setjmp.c}
+  - {addr: 0x800222ac, size: 12, name: strcat, hash: 67605f8a2752259e, source: src/psyq/libapi/strcat.c}
+  - {addr: 0x800222bc, size: 12, name: strcmp, hash: 06f1ee44ad98f3fd, source: src/psyq/libapi/strcmp.c}
+  - {addr: 0x800222cc, size: 12, name: strcpy, hash: e920b48b8ffc89dc, source: src/psyq/libapi/strcpy.c}
+  - {addr: 0x800222dc, size: 12, name: bcopy, hash: cbce5cfa7780f884, source: src/psyq/libapi/bcopy.c}
+  - {addr: 0x800222ec, size: 12, name: bzero, hash: 2aa8646552ae17ad, source: src/psyq/libapi/bzero.c}
+  - {addr: 0x800222fc, size: 12, name: memset, hash: f04ff290d8053868, source: src/psyq/libapi/memset.c}
+  - {addr: 0x8002230c, size: 12, name: rand, hash: db6da11224380312, source: src/psyq/libapi/rand.c}
+  - {addr: 0x8002231c, size: 12, name: srand, hash: cc10814f3017ef65, source: src/psyq/libapi/srand.c}
+  - {addr: 0x8002232c, size: 12, name: printf, hash: 698f6afd1bb5f561, source: src/psyq/libapi/printf.c}
+  - {addr: 0x8002233c, size: 2140, name: sprintf, hash: 5bbacfcd3baa0fb8, source: src/psyq/libc/sprintf.c, rodata: [{addr: 0x800104a4, size: 180, hash: 6c3b1196a40b9dbb}]}
+  - {addr: 0x80022b98, size: 12, name: strlen, hash: 9b43b77c5973b779, source: src/psyq/libc/strlen.c}
+  - {addr: 0x80022ba8, size: 12, name: memchr, hash: 8de89f69a5756fce, source: src/psyq/libc/memchr.c}
+  - {addr: 0x80022bb8, size: 108, name: memmove, hash: 259fb3d8ab0d55b8, source: src/psyq/libc/memmove.c}
+  - {addr: 0x80022c24, size: 236, name: LoadTPage, hash: 26a26ec0ded2f07a, source: src/psyq/libgpu/LoadTPage.c}
+  - {addr: 0x80022d10, size: 104, name: LoadClut, hash: 295ef2a4cb1918b3, source: src/psyq/libgpu/LoadClut.c}
+  - {addr: 0x80022d78, size: 104, name: LoadClut2, hash: 4db216fee27f0a59, source: src/psyq/libgpu/LoadClut2.c}
+  - {addr: 0x80022de0, size: 208, name: SetDefDrawEnv, hash: 6355a6ababfb6e3a, source: src/psyq/libgpu/SetDefDrawEnv.c}
+  - {addr: 0x80022eb0, size: 60, name: SetDefDispEnv, hash: 306767473184a5a9, source: src/psyq/libgpu/SetDefDispEnv.c}
+  - {addr: 0x80022eec, size: 64, name: SetDumpFnt, hash: 2af753a14da4eb18, source: src/psyq/libgpu/SetDumpFnt.c}
+  - {addr: 0x80022f2c, size: 164, name: FntLoad, hash: 4a611853d9e36491, source: src/psyq/libgpu/FntLoad.c}
+  - {addr: 0x80022fd0, size: 696, name: FntOpen, hash: 24df73292039db1d, source: src/psyq/libgpu/FntOpen.c}
+  - {addr: 0x80023288, size: 804, name: FntFlush, hash: 778ec8b007b8db48, source: src/psyq/libgpu/FntFlush.c}
+  - {addr: 0x800235ac, size: 992, name: FntPrint, hash: 61f6961d2b2f4730, source: src/psyq/libgpu/FntPrint.c, rodata: [{addr: 0x80010570, size: 132, hash: 204eef9d9663ab54}]}
+  - {addr: 0x8002398c, size: 200, name: GetTPage, hash: 3715e20bb05f6c5b, source: src/psyq/libgpu/GetTPage.c}
+  - {addr: 0x80023a54, size: 24, name: GetClut, hash: 879cc65128f4db04, source: src/psyq/libgpu/GetClut.c}
+  - {addr: 0x80023a6c, size: 208, name: DumpTPage, hash: b3c25f5136fd1d3a, source: src/psyq/libgpu/DumpTPage.c}
+  - {addr: 0x80023b3c, size: 64, name: DumpClut, hash: 6aeac19093a5b0d7, source: src/psyq/libgpu/DumpClut.c}
+  - {addr: 0x80023b7c, size: 28, name: NextPrim, hash: 3d7b89fc74cf0d4d, source: src/psyq/libgpu/NextPrim.c}
+  - {addr: 0x80023b98, size: 28, name: IsEndPrim, hash: 46cc79f409c0cbb5, source: src/psyq/libgpu/IsEndPrim.c}
+  - {addr: 0x80023bb4, size: 60, name: AddPrim, hash: 1c2e33c9e0ddfcd5, source: src/psyq/libgpu/AddPrim.c}
+  - {addr: 0x80023bf0, size: 60, name: AddPrims, hash: b8f4360e6e689e88, source: src/psyq/libgpu/AddPrims.c}
+  - {addr: 0x80023c2c, size: 36, name: CatPrim, hash: 51a187acafab89a1, source: src/psyq/libgpu/CatPrim.c}
+  - {addr: 0x80023c50, size: 24, name: TermPrim, hash: a1a7fbb88cb5521b, source: src/psyq/libgpu/TermPrim.c}
+  - {addr: 0x80023c68, size: 40, name: SetSemiTrans, hash: 2ccbf17ec10f14c8, source: src/psyq/libgpu/SetSemiTrans.c}
+  - {addr: 0x80023c90, size: 40, name: SetShadeTex, hash: 765ae0183c38ad3b, source: src/psyq/libgpu/SetShadeTex.c}
+  - {addr: 0x80023cb8, size: 20, name: SetPolyF3, hash: 468c3d3d775bcc64, source: src/psyq/libgpu/SetPolyF3.c}
+  - {addr: 0x80023ccc, size: 20, name: SetPolyFT3, hash: a3cd40c5c430cb5e, source: src/psyq/libgpu/SetPolyFT3.c}
+  - {addr: 0x80023ce0, size: 20, name: SetPolyG3, hash: 95099b43399fb9c3, source: src/psyq/libgpu/SetPolyG3.c}
+  - {addr: 0x80023cf4, size: 20, name: SetPolyGT3, hash: f1e74e7d4d9221c2, source: src/psyq/libgpu/SetPolyGT3.c}
+  - {addr: 0x80023d08, size: 20, name: SetPolyF4, hash: 882af0fa4f884e8f, source: src/psyq/libgpu/SetPolyF4.c}
+  - {addr: 0x80023d1c, size: 20, name: SetPolyFT4, hash: 5fe09f0b8bc08dd3, source: src/psyq/libgpu/SetPolyFT4.c}
+  - {addr: 0x80023d30, size: 20, name: SetPolyG4, hash: 31ff5a88a5ad8974, source: src/psyq/libgpu/SetPolyG4.c}
+  - {addr: 0x80023d44, size: 20, name: SetPolyGT4, hash: 04573c026f241145, source: src/psyq/libgpu/SetPolyGT4.c}
+  - {addr: 0x80023d58, size: 20, name: SetSprt8, hash: aefe37a869dfc639, source: src/psyq/libgpu/SetSprt8.c}
+  - {addr: 0x80023d6c, size: 20, name: SetSprt16, hash: 30456c3412a247a0, source: src/psyq/libgpu/SetSprt16.c}
+  - {addr: 0x80023d80, size: 20, name: SetSprt, hash: 586c61d6dc662b8b, source: src/psyq/libgpu/SetSprt.c}
+  - {addr: 0x80023d94, size: 20, name: SetTile1, hash: 8fbb158caf93ec8a, source: src/psyq/libgpu/SetTile1.c}
+  - {addr: 0x80023da8, size: 20, name: SetTile8, hash: 00e54834188581ca, source: src/psyq/libgpu/SetTile8.c}
+  - {addr: 0x80023dbc, size: 20, name: SetTile16, hash: dbb30802bdb26977, source: src/psyq/libgpu/SetTile16.c}
+  - {addr: 0x80023dd0, size: 20, name: SetTile, hash: 5754f7309e2ababf, source: src/psyq/libgpu/SetTile.c}
+  - {addr: 0x80023de4, size: 20, name: SetLineF2, hash: ab1d67dbb0468feb, source: src/psyq/libgpu/SetLineF2.c}
+  - {addr: 0x80023df8, size: 20, name: SetLineG2, hash: ea4d76d4b3b2baff, source: src/psyq/libgpu/SetLineG2.c}
+  - {addr: 0x80023e0c, size: 32, name: SetLineF3, hash: 1ec6958d4f755e7b, source: src/psyq/libgpu/SetLineF3.c}
+  - {addr: 0x80023e2c, size: 32, name: SetLineG3, hash: 618ce2c471188ade, source: src/psyq/libgpu/SetLineG3.c}
+  - {addr: 0x80023e4c, size: 32, name: SetLineF4, hash: dc7a80193d3424b2, source: src/psyq/libgpu/SetLineF4.c}
+  - {addr: 0x80023e6c, size: 32, name: SetLineG4, hash: 705f60b56bf69348, source: src/psyq/libgpu/SetLineG4.c}
+  - {addr: 0x80023e8c, size: 20, name: SetBlockFill, hash: 01c48a51b2ab602b, source: src/psyq/libgpu/SetBlockFill.c}
+  - {addr: 0x80023ea0, size: 28, name: SetDrawMove, hash: 8080cb76ff743270, source: src/psyq/libgpu/SetDrawMove.c}
+  - {addr: 0x80023ebc, size: 180, name: SetDrawTPage, hash: f3497bfecb36e6b2, source: src/psyq/libgpu/SetDrawTPage.c}
+  - {addr: 0x80023f70, size: 100, name: SetDrawLoad, hash: c759c40726bd6c2e, source: src/psyq/libgpu/SetDrawLoad.c}
+  - {addr: 0x80023fd4, size: 56, name: MargePrim, hash: 06fe0343437a7995, source: src/psyq/libgpu/MargePrim.c}
+  - {addr: 0x8002400c, size: 384, name: DumpDrawEnv, hash: e3dfd4b80f323fbd, source: src/psyq/libgpu/DumpDrawEnv.c}
+  - {addr: 0x8002418c, size: 172, name: DumpDispEnv, hash: c20af79eeb8c6124, source: src/psyq/libgpu/DumpDispEnv.c}
+  - {addr: 0x80024238, size: 344, name: ResetGraph, hash: 07660c27ec4f254f, source: src/psyq/libgpu/ResetGraph.c}
+  - {addr: 0x80024390, size: 276, name: SetGraphReverse, hash: 3bd6e45a7c4c883f, source: src/psyq/libgpu/SetGraphReverse.c}
+  - {addr: 0x800244a4, size: 108, name: SetGraphDebug, hash: d8b506fdfc116edd, source: src/psyq/libgpu/SetGraphDebug.c}
+  - {addr: 0x80024510, size: 172, name: SetGraphQueue, hash: 2b26af3df4b6b323, source: src/psyq/libgpu/SetGraphQueue.c}
+  - {addr: 0x800245bc, size: 16, name: GetGraphType, hash: d8e692758e7a4274, source: src/psyq/libgpu/GetGraphType.c}
+  - {addr: 0x800245cc, size: 16, name: GetGraphDebug, hash: 57f022d530ed143b, source: src/psyq/libgpu/GetGraphDebug.c}
+  - {addr: 0x800245dc, size: 92, name: DrawSyncCallback, hash: 7113f0e2673d816c, source: src/psyq/libgpu/DrawSyncCallback.c}
+  - {addr: 0x80024638, size: 156, name: SetDispMask, hash: 401a1c5eaf5efa93, source: src/psyq/libgpu/SetDispMask.c}
+  - {addr: 0x800246d4, size: 108, name: DrawSync, hash: 8dfe3158b47de899, source: src/psyq/libgpu/DrawSync.c}
+  - {addr: 0x80024740, size: 296, name: checkRECT, hash: afb8bf075ad95472, source: src/psyq/libgpu/checkRECT.c}
+  - {addr: 0x80024868, size: 148, name: ClearImage, hash: 3392d2b7a8316153, source: src/psyq/libgpu/ClearImage.c}
+  - {addr: 0x800248fc, size: 100, name: LoadImage, hash: b36ec0448d2ba6cb, source: src/psyq/libgpu/LoadImage.c}
+  - {addr: 0x80024960, size: 100, name: StoreImage, hash: 2db5cd93cda70197, source: src/psyq/libgpu/StoreImage.c}
+  - {addr: 0x800249c4, size: 196, name: MoveImage, hash: 0fc65a750dcdf768, source: src/psyq/libgpu/MoveImage.c}
+  - {addr: 0x80024a88, size: 184, name: ClearOTag, hash: 29cad5e451decb22, source: src/psyq/libgpu/ClearOTag.c}
+  - {addr: 0x80024b40, size: 152, name: ClearOTagR, hash: 9c74cb5f7937f63e, source: src/psyq/libgpu/ClearOTagR.c}
+  - {addr: 0x80024bd8, size: 96, name: DrawPrim, hash: d8526344acbd9d56, source: src/psyq/libgpu/DrawPrim.c}
+  - {addr: 0x80024c38, size: 116, name: DrawOTag, hash: 13d354023345b2fd, source: src/psyq/libgpu/DrawOTag.c}
+  - {addr: 0x80024cac, size: 196, name: PutDrawEnv, hash: d9e9e540596618e3, source: src/psyq/libgpu/PutDrawEnv.c}
+  - {addr: 0x80024d70, size: 220, name: DrawOTagEnv, hash: 37c279545b087fb3, source: src/psyq/libgpu/DrawOTagEnv.c}
+  - {addr: 0x80024e4c, size: 56, name: GetDrawEnv, hash: 38f76bd4329f0529, source: src/psyq/libgpu/GetDrawEnv.c}
+  - {addr: 0x80024e84, size: 1200, name: PutDispEnv, hash: 86bbdfe41cfb6cb9, source: src/psyq/libgpu/PutDispEnv.c}
+  - {addr: 0x80025334, size: 56, name: GetDispEnv, hash: 4a4e212ab6193b7a, source: src/psyq/libgpu/GetDispEnv.c}
+  - {addr: 0x8002536c, size: 52, name: GetODE, hash: 5bbbb31f8454c436, source: src/psyq/libgpu/GetODE.c}
+  - {addr: 0x800253a0, size: 60, name: SetTexWindow, hash: 70934921e96ce889, source: src/psyq/libgpu/SetTexWindow.c}
+  - {addr: 0x800253dc, size: 132, name: SetDrawArea, hash: d46959beff913727, source: src/psyq/libgpu/SetDrawArea.c}
+  - {addr: 0x80025460, size: 68, name: SetDrawOffset, hash: cad3068f5b180a10, source: src/psyq/libgpu/SetDrawOffset.c}
+  - {addr: 0x800254a4, size: 40, name: SetPriority, hash: 3137010d4e0f80ed, source: src/psyq/libgpu/SetPriority.c}
+  - {addr: 0x800254cc, size: 88, name: SetDrawMode, hash: 6593049fdba87050, source: src/psyq/libgpu/SetDrawMode.c}
+  - {addr: 0x80025524, size: 676, name: SetDrawEnv, hash: 1054a913d77972c8, source: src/psyq/libgpu/SetDrawEnv.c}
+  - {addr: 0x800257c8, size: 92, name: get_mode, hash: 3180debd6b041d9a, source: src/psyq/libgpu/get_mode.c}
+  - {addr: 0x80025824, size: 204, name: get_cs, hash: 15164878f944d9ba, source: src/psyq/libgpu/get_cs.c}
+  - {addr: 0x800258f0, size: 204, name: get_ce, hash: 423470e41bbb1b83, source: src/psyq/libgpu/get_ce.c}
+  - {addr: 0x800259bc, size: 72, name: get_ofs, hash: 5fd0a66d603e862b, source: src/psyq/libgpu/get_ofs.c}
+  - {addr: 0x80025a04, size: 132, name: get_tw, hash: ecb062afc095f477, source: src/psyq/libgpu/get_tw.c}
+  - {addr: 0x80025a88, size: 188, name: get_dx, hash: c5f46af59aa01012, source: src/psyq/libgpu/get_dx.c}
+  - {addr: 0x80025b44, size: 24, name: _status, hash: fa2568e3f60d8338, source: src/psyq/libgpu/_status.c}
+  - {addr: 0x80025b5c, size: 232, name: _otc, hash: 17b753fe2fc066a3, source: src/psyq/libgpu/_otc.c}
+  - {addr: 0x80025c44, size: 536, name: _clr, hash: 9632880208fe4e43, source: src/psyq/libgpu/_clr.c}
+  - {addr: 0x80025e5c, size: 596, name: _dws, hash: 79938c688b848ded, source: src/psyq/libgpu/_dws.c}
+  - {addr: 0x800260b0, size: 668, name: _drs, hash: e7a759a711597e5d, source: src/psyq/libgpu/_drs.c}
+  - {addr: 0x8002634c, size: 40, name: _ctl, hash: 89d8a44166779c85, source: src/psyq/libgpu/_ctl.c}
+  - {addr: 0x80026374, size: 20, name: _getctl, hash: d68e02b5ca12e045, source: src/psyq/libgpu/_getctl.c}
+  - {addr: 0x80026388, size: 80, name: _cwb, hash: ebab535dc1692f75, source: src/psyq/libgpu/_cwb.c}
+  - {addr: 0x800263d8, size: 76, name: _cwc, hash: 6760db2e3d66556c, source: src/psyq/libgpu/_cwc.c}
+  - {addr: 0x80026424, size: 48, name: _param, hash: 4f0d1863d3435948, source: src/psyq/libgpu/_param.c}
+  - {addr: 0x80026454, size: 36, name: _addque, hash: b9430998a52f71a5, source: src/psyq/libgpu/_addque.c}
+  - {addr: 0x80026478, size: 740, name: _addque2, hash: 5f9766e097c9c540, source: src/psyq/libgpu/_addque2.c}
+  - {addr: 0x8002675c, size: 764, name: _exeque, hash: 3fde2f70d65e489a, source: src/psyq/libgpu/_exeque.c}
+  - {addr: 0x80026a58, size: 316, name: _reset, hash: 54696e66893639fd, source: src/psyq/libgpu/_reset.c}
+  - {addr: 0x80026b94, size: 328, name: _sync, hash: 8198a16047c87730, source: src/psyq/libgpu/_sync.c}
+  - {addr: 0x80026cdc, size: 52, name: set_alarm, hash: 3f471cf484934b20, source: src/psyq/libgpu/set_alarm.c}
+  - {addr: 0x80026d10, size: 364, name: get_alarm, hash: cb1d01183d93cf87, source: src/psyq/libgpu/get_alarm.c}
+  - {addr: 0x80026e7c, size: 220, name: psyq_gpu_detect_type, hash: 933c2c43a23848bf, source: src/psyq/libgpu/psyq_gpu_detect_type.c}
+  - {addr: 0x80026f58, size: 44, name: memset2, hash: bc4c08f514cc2afd, source: src/psyq/libgpu/memset2.c}
+  - {addr: 0x80026f84, size: 12, name: GPU_cw, hash: 0a2181041688617d, source: src/psyq/libapi/GPU_cw.c}
+  - {addr: 0x80026f94, size: 12, name: psyq_api_memcpy, hash: ad7c5bc50bc07966, source: src/psyq/libapi/psyq_api_memcpy.c}
+  - {addr: 0x80026fa4, size: 16, name: OpenTIM, hash: b45ce3c5215a4a16, source: src/psyq/libgpu/OpenTIM.c}
+  - {addr: 0x80026fb4, size: 104, name: ReadTIM, hash: 6bd78bf05f0ac1c5, source: src/psyq/libgpu/ReadTIM.c}
+  - {addr: 0x8002701c, size: 64, name: OpenTMD, hash: d15aba37ed8730a5, source: src/psyq/libgpu/OpenTMD.c}
+  - {addr: 0x8002705c, size: 684, name: ReadTMD, hash: 239744ebef4f61b6, source: src/psyq/libgpu/ReadTMD.c}
+  - {addr: 0x80027308, size: 288, name: psyq_gpu_decode_tim, hash: 6694768b51e47716, source: src/psyq/libgpu/psyq_gpu_decode_tim.c}
+  - {addr: 0x80027428, size: 408, name: psyq_gpu_open_tmd_object, hash: b13bb43d6e1107c2, source: src/psyq/libgpu/psyq_gpu_open_tmd_object.c}
+  - {addr: 0x800275c0, size: 4480, name: psyq_gpu_decode_tmd_primitive, hash: e2d091cb238d6989, source: src/psyq/libgpu/psyq_gpu_decode_tmd_primitive.c}
+  - {addr: 0x80028740, size: 12, name: _card_info, hash: 53c1d988b2c0c653, source: src/psyq/libapi/_card_info.c}
+  - {addr: 0x80028750, size: 12, name: _card_load, hash: 6887fde04e1564fe, source: src/psyq/libapi/_card_load.c}
+  - {addr: 0x80028760, size: 12, name: _card_auto, hash: 9b3a16e206817268, source: src/psyq/libapi/_card_auto.c}
+  - {addr: 0x80028770, size: 12, name: _card_status, hash: f5716bf2e897fa21, source: src/psyq/libapi/_card_status.c}
+  - {addr: 0x80028780, size: 56, name: _card_clear, hash: 6c16374e1629abf8, source: src/psyq/libcard/_card_clear.c}
+  - {addr: 0x800287b8, size: 12, name: _card_write, hash: 75246fc473556dee, source: src/psyq/libapi/_card_write.c}
+  - {addr: 0x800287c8, size: 12, name: _new_card, hash: b840e8f38866a987, source: src/psyq/libapi/_new_card.c}
+  - {addr: 0x800287d8, size: 84, name: InitCARD, hash: f3587389c04c0be0, source: src/psyq/libcard/InitCARD.c}
+  - {addr: 0x8002882c, size: 56, name: StartCARD, hash: 7c553f0b1e3b9b48, source: src/psyq/libcard/StartCARD.c}
+  - {addr: 0x80028864, size: 48, name: StopCARD, hash: bbe924a4e12fd9b7, source: src/psyq/libcard/StopCARD.c}
+  - {addr: 0x80028894, size: 12, name: InitCARD2, hash: 3dc545cd2a7eb02a, source: src/psyq/libapi/InitCARD2.c}
+  - {addr: 0x800288a4, size: 12, name: StartCARD2, hash: 3265341abe40d382, source: src/psyq/libapi/StartCARD2.c}
+  - {addr: 0x800288b4, size: 12, name: StopCARD2, hash: 0bbe6cf1439cc86c, source: src/psyq/libapi/StopCARD2.c}
+  - {addr: 0x800288d8, size: 68, name: psyq_card_interrupt_tail, hash: b78f8219481dd509, source: src/psyq/libcard/psyq_card_interrupt_tail.c}
+  - {addr: 0x8002891c, size: 136, name: _patch_card, hash: 67d8245c788c8c94, source: src/psyq/libcard/_patch_card.c}
+  - {addr: 0x800289b8, size: 28, name: psyq_card_short_delay, hash: 629e1ed06635eaad, source: src/psyq/libcard/psyq_card_short_delay.c}
+  - {addr: 0x800289d4, size: 108, name: _patch_card2, hash: fe97d372338458dc, source: src/psyq/libcard/_patch_card2.c}
+  - {addr: 0x80028a40, size: 24, name: psyq_card_long_delay, hash: 3ab55a0f1f416982, source: src/psyq/libcard/psyq_card_long_delay.c}
+  - {addr: 0x80028a64, size: 104, name: psyq_card_restore_exception_prefix, hash: 1f518d7271104687, source: src/psyq/libcard/psyq_card_restore_exception_prefix.c}
   - {addr: 0x80040934, size: 64, name: main_system_stop_display_and_audio_for_game_reset, hash: c64016389ec5e4a0}
   - {addr: 0x80040974, size: 48, name: main_system_reset_game, hash: 561bc72b9357246b}
   - {addr: 0x800409a4, size: 32, name: main_overlay_call_battle_entrypoint, hash: c58eafc808ea8434}
@@ -440,238 +844,120 @@ functions:
   - {addr: 0x8005e8e8, size: 36, name: main_system_handle_battle_load_exception, hash: a531e47d7cc2ef0f}
 
 data:
+  - {addr: 0x00000000, name: g_psyq_crt_constructor_count}
+  - {addr: 0x00000000, name: g_psyq_crt_destructor_count}
   - {addr: 0x80010000, name: g_main_heap_low_overlay_load_address}
+  - {addr: 0x80010000, name: g_psyq_crt_constructor_table}
+  - {addr: 0x80010000, name: g_psyq_crt_destructor_table}
   - {addr: 0x80010004, name: g_main_heap_world_overlay_load_address}
   - {addr: 0x80010008, name: g_event_overlay_load_address}
   - {addr: 0x8001000c, name: g_battle_heap_end_address}
   - {addr: 0x80010010, name: g_main_heap_high_overlay_load_address}
-  - {addr: 0x80010a30, name: main_entry}
-  - {addr: 0x80010ad0, name: __main}
-  - {addr: 0x80010b40, name: main_system_set_game_running}
+  - {addr: 0x80010044, name: g_psyq_spu_timeout_format}
+  - {addr: 0x80010054, name: g_psyq_spu_init_timeout_name}
+  - {addr: 0x80010064, name: g_psyq_spu_fifo_ready_timeout_name}
+  - {addr: 0x80010078, name: g_psyq_spu_status_restore_timeout_name}
+  - {addr: 0x80010108, name: g_psyq_etc_vsync_timeout_message}
+  - {addr: 0x8001014c, name: g_psyq_etc_uninitialized_irq_format}
+  - {addr: 0x80010168, name: g_psyq_etc_unhandled_irq_format}
+  - {addr: 0x80010184, name: g_psyq_etc_dma_error_format}
+  - {addr: 0x800101a0, name: g_psyq_etc_dma_channel_address_format}
+  - {addr: 0x800101b0, name: g_psyq_cd_init_failure_message}
+  - {addr: 0x800101c8, name: g_psyq_cd_unknown_name}
+  - {addr: 0x8001030c, name: g_psyq_cd_timeout_message}
+  - {addr: 0x8001031c, name: g_psyq_cd_timeout_format}
+  - {addr: 0x80010338, name: g_psyq_cd_disk_error_message}
+  - {addr: 0x80010344, name: g_psyq_cd_disk_error_format}
+  - {addr: 0x80010360, name: g_psyq_cd_unknown_interrupt_message}
+  - {addr: 0x80010374, name: g_psyq_cd_unknown_interrupt_format}
+  - {addr: 0x80010394, name: g_psyq_cd_sync_timeout_name}
+  - {addr: 0x8001039c, name: g_psyq_cd_ready_timeout_name}
+  - {addr: 0x800103a8, name: g_psyq_cd_command_trace_format}
+  - {addr: 0x800103b0, name: g_psyq_cd_missing_parameters_format}
+  - {addr: 0x800103c0, name: g_psyq_cd_command_timeout_name}
+  - {addr: 0x800103fc, name: g_psyq_cd_init_message}
+  - {addr: 0x80010408, name: g_psyq_cd_init_address_format}
+  - {addr: 0x80010414, name: g_psyq_cd_data_sync_timeout_name}
+  - {addr: 0x80010420, name: g_psyq_cd_sector_error_message}
+  - {addr: 0x80010438, name: g_psyq_cd_shell_open_message}
+  - {addr: 0x80010450, name: g_psyq_cd_read_retry_message}
+  - {addr: 0x80010464, name: g_psyq_cd_dma_timeout_format}
+  - {addr: 0x8001047c, name: g_psyq_libc_uppercase_digits}
+  - {addr: 0x80010490, name: g_psyq_libc_lowercase_digits}
+  - {addr: 0x800105f4, name: g_psyq_gpu_tpage_format}
+  - {addr: 0x8001060c, name: g_psyq_gpu_clut_format}
+  - {addr: 0x8001061c, name: g_psyq_gpu_draw_clip_format}
+  - {addr: 0x80010634, name: g_psyq_gpu_draw_offset_format}
+  - {addr: 0x80010644, name: g_psyq_gpu_texture_window_format}
+  - {addr: 0x8001065c, name: g_psyq_gpu_dithering_format}
+  - {addr: 0x80010668, name: g_psyq_gpu_draw_display_enable_format}
+  - {addr: 0x80010674, name: g_psyq_gpu_display_rectangle_format}
+  - {addr: 0x80010690, name: g_psyq_gpu_screen_rectangle_format}
+  - {addr: 0x800106ac, name: g_psyq_gpu_interlace_format}
+  - {addr: 0x800106b8, name: g_psyq_gpu_rgb24_format}
+  - {addr: 0x800106f8, name: g_psyq_gpu_reset_addresses_format}
+  - {addr: 0x80010718, name: g_psyq_gpu_reset_graph_format}
+  - {addr: 0x8001072c, name: g_psyq_gpu_graph_reverse_format}
+  - {addr: 0x80010744, name: g_psyq_gpu_graph_debug_format}
+  - {addr: 0x80010770, name: g_psyq_gpu_graph_queue_format}
+  - {addr: 0x80010784, name: g_psyq_gpu_draw_sync_callback_format}
+  - {addr: 0x800107a0, name: g_psyq_gpu_display_mask_format}
+  - {addr: 0x800107b4, name: g_psyq_gpu_draw_sync_format}
+  - {addr: 0x800107c8, name: g_psyq_gpu_bad_rectangle_format}
+  - {addr: 0x800107d4, name: g_psyq_gpu_rectangle_format}
+  - {addr: 0x800107e8, name: g_psyq_gpu_rectangle_operation_format}
+  - {addr: 0x800107ec, name: g_psyq_gpu_clear_image_name}
+  - {addr: 0x800107f8, name: g_psyq_gpu_load_image_name}
+  - {addr: 0x80010804, name: g_psyq_gpu_store_image_name}
+  - {addr: 0x80010810, name: g_psyq_gpu_move_image_name}
+  - {addr: 0x8001081c, name: g_psyq_gpu_clear_otag_format}
+  - {addr: 0x80010834, name: g_psyq_gpu_clear_otag_reverse_format}
+  - {addr: 0x8001084c, name: g_psyq_gpu_draw_otag_format}
+  - {addr: 0x80010860, name: g_psyq_gpu_put_draw_env_format}
+  - {addr: 0x80010878, name: g_psyq_gpu_draw_otag_env_format}
+  - {addr: 0x80010894, name: g_psyq_gpu_put_disp_env_format}
+  - {addr: 0x800108ac, name: g_psyq_gpu_timeout_state_format}
+  - {addr: 0x800108e0, name: g_psyq_gpu_timeout_operation_format}
+  - {addr: 0x800108f8, name: g_psyq_gpu_tim_id_format}
+  - {addr: 0x80010904, name: g_psyq_gpu_tim_mode_format}
+  - {addr: 0x80010910, name: g_psyq_gpu_tim_address_format}
+  - {addr: 0x80010920, name: g_psyq_gpu_tmd_decode_message}
+  - {addr: 0x80010934, name: g_psyq_gpu_tmd_object_format}
+  - {addr: 0x8001095c, name: g_psyq_gpu_tmd_vertices_format}
+  - {addr: 0x80010974, name: g_psyq_gpu_tmd_normals_format}
+  - {addr: 0x8001098c, name: g_psyq_gpu_tmd_primitives_format}
+  - {addr: 0x800109a4, name: g_psyq_gpu_tmd_f3_lit_name}
+  - {addr: 0x800109ac, name: g_psyq_gpu_tmd_g3_lit_name}
+  - {addr: 0x800109b4, name: g_psyq_gpu_tmd_ft3_lit_name}
+  - {addr: 0x800109bc, name: g_psyq_gpu_tmd_gt3_lit_name}
+  - {addr: 0x800109c4, name: g_psyq_gpu_tmd_f3_name}
+  - {addr: 0x800109c8, name: g_psyq_gpu_tmd_g3_name}
+  - {addr: 0x800109cc, name: g_psyq_gpu_tmd_ft3_name}
+  - {addr: 0x800109d4, name: g_psyq_gpu_tmd_gt3_name}
+  - {addr: 0x800109dc, name: g_psyq_gpu_tmd_f4_lit_name}
+  - {addr: 0x800109e4, name: g_psyq_gpu_tmd_g4_lit_name}
+  - {addr: 0x800109ec, name: g_psyq_gpu_tmd_ft4_lit_name}
+  - {addr: 0x800109f4, name: g_psyq_gpu_tmd_gt4_lit_name}
+  - {addr: 0x800109fc, name: g_psyq_gpu_tmd_f4_name}
+  - {addr: 0x80010a00, name: g_psyq_gpu_tmd_g4_name}
+  - {addr: 0x80010a04, name: g_psyq_gpu_tmd_ft4_name}
+  - {addr: 0x80010a0c, name: g_psyq_gpu_tmd_gt4_name}
+  - {addr: 0x80010a14, name: g_psyq_gpu_unsupported_tmd_format}
   - {addr: 0x80010ba8, name: battle_bin_entrypoint}
   - {addr: 0x80011bd0, name: load}
   - {addr: 0x80011bf4, name: build}
-  - {addr: 0x8001423c, name: main_sound_init_heap}
-  - {addr: 0x80014278, name: main_sound_alloc}
-  - {addr: 0x80014358, name: main_sound_free}
-  - {addr: 0x800143ac, name: main_sound_get_largest_free_block}
-  - {addr: 0x800186c4, name: SsUtReverbOff}
-  - {addr: 0x800186e4, name: _SpuInit}
-  - {addr: 0x8001915c, name: _spu_Fr}
-  - {addr: 0x800192ec, name: _spu_FsetPCR}
-  - {addr: 0x8001934c, name: _spu_FsetDelayR}
-  - {addr: 0x80019378, name: _spu_FsetDelayW}
-  - {addr: 0x800193a4, name: _spu_Fw1ts}
-  - {addr: 0x80019404, name: _SpuDataCallback}
-  - {addr: 0x80019428, name: SpuInitHot}
-  - {addr: 0x80019448, name: SpuQuit}
-  - {addr: 0x800194c4, name: SpuInitMalloc}
-  - {addr: 0x80019518, name: SpuMalloc}
-  - {addr: 0x80019ae0, name: SpuFree}
-  - {addr: 0x80019b5c, name: SpuSetNoiseVoice}
-  - {addr: 0x80019b80, name: _SpuSetAnyVoice}
-  - {addr: 0x80019d88, name: SpuSetNoiseClock}
-  - {addr: 0x80019dd8, name: SpuRead}
-  - {addr: 0x80019e38, name: SpuSetReverb}
-  - {addr: 0x8001a014, name: SpuSetReverbModeParam}
-  - {addr: 0x8001a9f4, name: SpuGetReverbModeParam}
-  - {addr: 0x8001aa44, name: SpuSetReverbDepth}
-  - {addr: 0x8001aabc, name: SpuSetReverbVoice}
-  - {addr: 0x8001ac7c, name: SpuReadDecodedData}
-  - {addr: 0x8001acf0, name: SpuSetKey}
-  - {addr: 0x8001aef4, name: SpuGetVoiceEnvelopeAttr}
-  - {addr: 0x8001af64, name: SpuWrite}
-  - {addr: 0x8001afc4, name: SpuSetTransferStartAddr}
-  - {addr: 0x8001b018, name: SpuSetTransferMode}
-  - {addr: 0x8001b04c, name: SpuSetTransferCallback}
-  - {addr: 0x8001b070, name: SpuSetPitchLFOVoice}
-  - {addr: 0x8001b094, name: SpuSetCommonAttr}
-  - {addr: 0x8001b428, name: SpuSetVoiceVolume}
-  - {addr: 0x8001b4b0, name: SpuSetVoiceVolumeAttr}
-  - {addr: 0x8001b628, name: SpuSetVoicePitch}
-  - {addr: 0x8001b6a4, name: SpuSetVoiceStartAddr}
-  - {addr: 0x8001b720, name: SpuSetVoiceLoopStartAddr}
-  - {addr: 0x8001b79c, name: SpuSetVoiceDR}
-  - {addr: 0x8001b828, name: SpuSetVoiceRR}
-  - {addr: 0x8001b8b0, name: SpuSetVoiceSL}
-  - {addr: 0x8001b938, name: SpuSetVoiceARAttr}
-  - {addr: 0x8001b9d4, name: SpuSetVoiceSRAttr}
-  - {addr: 0x8001bab8, name: SpuSetVoiceRRAttr}
-  - {addr: 0x8001bb5c, name: rsin}
-  - {addr: 0x8001bc28, name: rcos}
-  - {addr: 0x8001be1c, name: csqrt}
-  - {addr: 0x8001beb8, name: InitGeom}
-  - {addr: 0x8001bf38, name: SquareRoot0}
-  - {addr: 0x8001c068, name: VectorNormal}
-  - {addr: 0x8001c268, name: SquareRoot12}
-  - {addr: 0x8001c468, name: MulMatrix0}
-  - {addr: 0x8001c850, name: ApplyMatrixLV}
-  - {addr: 0x8001c9e0, name: ScaleMatrixL}
-  - {addr: 0x8001cb04, name: PushMatrix}
-  - {addr: 0x8001cba4, name: PopMatrix}
-  - {addr: 0x8001cd28, name: MulMatrix}
-  - {addr: 0x8001ce38, name: MulMatrix2}
-  - {addr: 0x8001cf48, name: TransMatrix}
-  - {addr: 0x8001cf78, name: ScaleMatrix}
-  - {addr: 0x8001d0a8, name: SetRotMatrix}
-  - {addr: 0x8001d0d8, name: SetLightMatrix}
-  - {addr: 0x8001d108, name: SetColorMatrix}
-  - {addr: 0x8001d138, name: SetTransMatrix}
-  - {addr: 0x8001d158, name: ReadGeomScreen}
-  - {addr: 0x8001d168, name: SetBackColor}
-  - {addr: 0x8001d188, name: SetFarColor}
-  - {addr: 0x8001d1a8, name: SetGeomOffset}
-  - {addr: 0x8001d1c8, name: SetGeomScreen}
-  - {addr: 0x8001d3e8, name: RotTransSV}
-  - {addr: 0x8001d4e8, name: RotTransPers}
-  - {addr: 0x8001d518, name: RotTransPers3}
-  - {addr: 0x8001d578, name: RotTrans}
-  - {addr: 0x8001d5a8, name: NormalClip}
-  - {addr: 0x8001d5d8, name: RotTransPers4}
-  - {addr: 0x8001d658, name: RotMatrix}
-  - {addr: 0x8001d8e8, name: ratan2}
-  - {addr: 0x8001db08, name: PadInit}
-  - {addr: 0x8001db58, name: PadRead}
-  - {addr: 0x8001db88, name: PadStop}
-  - {addr: 0x8001dba8, name: VSync}
-  - {addr: 0x8001dd8c, name: ResetCallback}
-  - {addr: 0x8001ddec, name: DMACallback}
-  - {addr: 0x8001de1c, name: VSyncCallback}
-  - {addr: 0x8001de80, name: StopCallback}
-  - {addr: 0x8001e884, name: GetVideoMode}
-  - {addr: 0x8001e894, name: StSetRing}
-  - {addr: 0x8001e8c4, name: CdInit}
-  - {addr: 0x8001e9cc, name: CdStatus}
-  - {addr: 0x8001ea0c, name: CdReset}
-  - {addr: 0x8001ea78, name: CdFlush}
-  - {addr: 0x8001ea98, name: CdSetDebug}
-  - {addr: 0x8001eb18, name: CdSync}
-  - {addr: 0x8001eb38, name: CdReady}
-  - {addr: 0x8001eb70, name: CdReadyCallback}
-  - {addr: 0x8001eb88, name: CdControl}
-  - {addr: 0x8001ecc0, name: CdControlF}
-  - {addr: 0x8001edec, name: CdControlb}
-  - {addr: 0x8001ef30, name: CdMix}
-  - {addr: 0x8001ef54, name: CdGetSector}
-  - {addr: 0x8001ef9c, name: CdDataSync}
-  - {addr: 0x8001efbc, name: CdIntToPos}
-  - {addr: 0x8001f0c0, name: CdPosToInt}
-  - {addr: 0x80020c3c, name: CdRead}
-  - {addr: 0x80020d44, name: CdReadSync}
-  - {addr: 0x80020e10, name: CdReadCallback}
-  - {addr: 0x80020e28, name: CdRead2}
-  - {addr: 0x80020f3c, name: StSetDataReadyCallback}
-  - {addr: 0x80021024, name: StGetBacklog}
-  - {addr: 0x80021084, name: StSetStream}
-  - {addr: 0x8002110c, name: StFreeRing}
-  - {addr: 0x80021208, name: StGetNext}
-  - {addr: 0x800212cc, name: StSetMask}
-  - {addr: 0x800212ec, name: StCdInterrupt}
-  - {addr: 0x80021e4c, name: StRingStatus}
-  - {addr: 0x80021f34, name: _bu_init}
-  - {addr: 0x80021f54, name: SetMem}
-  - {addr: 0x80021f74, name: OpenEvent}
-  - {addr: 0x80021f84, name: CloseEvent}
-  - {addr: 0x80021fa4, name: TestEvent}
-  - {addr: 0x80021fb4, name: EnableEvent}
-  - {addr: 0x80021fc4, name: DisableEvent}
-  - {addr: 0x80021ff4, name: PAD_dr}
-  - {addr: 0x80022034, name: EnterCriticalSection}
-  - {addr: 0x80022044, name: ExitCriticalSection}
-  - {addr: 0x80022054, name: FileOpen}
-  - {addr: 0x80022064, name: FileSeek}
-  - {addr: 0x80022074, name: FileRead}
-  - {addr: 0x80022084, name: FileWrite}
-  - {addr: 0x80022094, name: FileClose}
-  - {addr: 0x800220a4, name: FileFormat}
-  - {addr: 0x800220b4, name: firstfile}
-  - {addr: 0x800220c4, name: nextfile}
-  - {addr: 0x800220d4, name: FileDelete}
-  - {addr: 0x800220e4, name: FileGetError}
-  - {addr: 0x800220f4, name: ChangeClearPad}
-  - {addr: 0x80022114, name: SetRCnt}
-  - {addr: 0x800221ec, name: StartRCnt}
-  - {addr: 0x800222ac, name: strcat}
-  - {addr: 0x800222bc, name: strcmp}
-  - {addr: 0x800222cc, name: strcpy}
-  - {addr: 0x800222dc, name: bcopy}
-  - {addr: 0x800222ec, name: bzero}
-  - {addr: 0x800222fc, name: memset}
-  - {addr: 0x8002230c, name: rand}
-  - {addr: 0x8002231c, name: srand}
-  - {addr: 0x8002232c, name: printf}
-  - {addr: 0x8002233c, name: sprintf}
-  - {addr: 0x80022c24, name: LoadTPage}
-  - {addr: 0x80022d10, name: LoadClut}
-  - {addr: 0x80022d78, name: LoadClut2}
-  - {addr: 0x80022de0, name: SetDefDrawEnv}
-  - {addr: 0x80022eb0, name: SetDefDispEnv}
-  - {addr: 0x80022eec, name: SetDumpFnt}
-  - {addr: 0x80022f2c, name: FntLoad}
+  - {addr: 0x8001dad0, name: g_psyq_gte_exception_patch_template}
+  - {addr: 0x8001db08, name: g_psyq_gte_exception_patch_template_end}
   - {addr: 0x80022f5c, name: g_fntload_clut_y_offset_immediate}
-  - {addr: 0x80022fd0, name: FntOpen}
-  - {addr: 0x80023288, name: FntFlush}
-  - {addr: 0x800235ac, name: FntPrint}
-  - {addr: 0x8002398c, name: GetTPage}
-  - {addr: 0x80023a54, name: GetClut}
-  - {addr: 0x80023bb4, name: AddPrim}
-  - {addr: 0x80023bf0, name: AddPrims}
-  - {addr: 0x80023c68, name: SetSemiTrans}
-  - {addr: 0x80023c90, name: SetShadeTex}
-  - {addr: 0x80023cb8, name: SetPolyF3}
-  - {addr: 0x80023ccc, name: SetPolyFT3}
-  - {addr: 0x80023ce0, name: SetPolyG3}
-  - {addr: 0x80023cf4, name: SetPolyGT3}
-  - {addr: 0x80023d08, name: SetPolyF4}
-  - {addr: 0x80023d1c, name: SetPolyFT4}
-  - {addr: 0x80023d30, name: SetPolyG4}
-  - {addr: 0x80023d44, name: SetPolyGT4}
-  - {addr: 0x80023d58, name: SetSprt8}
-  - {addr: 0x80023d6c, name: SetSprt16}
-  - {addr: 0x80023d80, name: SetSprt}
-  - {addr: 0x80023d94, name: SetTile1}
-  - {addr: 0x80023da8, name: SetTile8}
-  - {addr: 0x80023dbc, name: SetTile16}
-  - {addr: 0x80023dd0, name: SetTile}
-  - {addr: 0x80023de4, name: SetLineF2}
-  - {addr: 0x80023df8, name: SetLineG2}
-  - {addr: 0x80023e0c, name: SetLineF3}
-  - {addr: 0x80023e2c, name: SetLineG3}
-  - {addr: 0x80023e4c, name: SetLineF4}
-  - {addr: 0x80023e6c, name: SetLineG4}
-  - {addr: 0x80023e8c, name: SetBlockFill}
-  - {addr: 0x80023ea0, name: SetDrawMove}
-  - {addr: 0x80024238, name: ResetGraph}
-  - {addr: 0x800244a4, name: SetGraphDebug}
-  - {addr: 0x800245bc, name: GetGraphType}
-  - {addr: 0x800245dc, name: DrawSyncCallback}
-  - {addr: 0x80024638, name: SetDispMask}
-  - {addr: 0x800246d4, name: DrawSync}
-  - {addr: 0x80024868, name: ClearImage}
-  - {addr: 0x800248fc, name: LoadImage}
-  - {addr: 0x80024960, name: StoreImage}
-  - {addr: 0x800249c4, name: MoveImage}
-  - {addr: 0x80024a88, name: ClearOTag}
-  - {addr: 0x80024b40, name: ClearOTagR}
-  - {addr: 0x80024bd8, name: DrawPrim}
-  - {addr: 0x80024c38, name: DrawOTag}
-  - {addr: 0x80024cac, name: PutDrawEnv}
-  - {addr: 0x80024e4c, name: GetDrawEnv}
-  - {addr: 0x80024e84, name: PutDispEnv}
-  - {addr: 0x800253dc, name: SetDrawArea}
-  - {addr: 0x80025460, name: SetDrawOffset}
-  - {addr: 0x800254cc, name: SetDrawMode}
-  - {addr: 0x80026fa4, name: OpenTIM}
-  - {addr: 0x80026fb4, name: ReadTIM}
-  - {addr: 0x80028740, name: card_info}
-  - {addr: 0x80028750, name: card_load}
-  - {addr: 0x80028760, name: _card_auto}
-  - {addr: 0x80028770, name: card_status}
-  - {addr: 0x80028780, name: card_create_new}
-  - {addr: 0x800287d8, name: init_card_earlysafe}
-  - {addr: 0x8002882c, name: StartCARD_earlysafe}
-  - {addr: 0x80028ae8, name: g_main_heap_base}
-  - {addr: 0x80028aec, name: g_main_heap_size}
+  - {addr: 0x800288c4, name: g_psyq_card_interrupt_jump_template}
+  - {addr: 0x800288d8, name: g_psyq_card_interrupt_jump_template_end}
+  - {addr: 0x800289a4, name: g_psyq_card_delay_template}
+  - {addr: 0x800289b8, name: g_psyq_card_delay_template_end}
+  - {addr: 0x80028acc, name: g_psyq_card_restore_template}
+  - {addr: 0x80028ad8, name: g_psyq_card_restore_template_end}
+  - {addr: 0x80028ae4, name: g_psyq_crt_constructors_ran}
+  - {addr: 0x80028ae8, name: g_psyq_crt_heap_base}
+  - {addr: 0x80028aec, name: g_psyq_crt_heap_size}
   - {addr: 0x80028b08, name: g_main_gfx_loading_display_frame_counter}
   - {addr: 0x80028b0c, name: g_main_smd_opcode_handlers}
   - {addr: 0x80028d0c, name: g_main_smd_opcode_lengths}
@@ -681,17 +967,203 @@ data:
   - {addr: 0x80028fe8, name: g_main_smd_key_octaves}
   - {addr: 0x80029060, name: g_main_smd_key_semitones}
   - {addr: 0x800290d8, name: g_main_smd_pitch_table}
+  - {addr: 0x8002a8d8, name: _spu_EVdma}
+  - {addr: 0x8002a8dc, name: _spu_keystat}
+  - {addr: 0x8002a8e0, name: _spu_trans_mode}
+  - {addr: 0x8002a8e4, name: _spu_rev_flag}
+  - {addr: 0x8002a8e8, name: _spu_rev_reserve_wa}
+  - {addr: 0x8002a8ec, name: _spu_rev_offsetaddr}
   - {addr: 0x8002a8f4, name: _spu_rev_attr_mode}
   - {addr: 0x8002a8f8, name: _spu_rev_attr_depth_left}
   - {addr: 0x8002a8fa, name: _spu_rev_attr_depth_right}
   - {addr: 0x8002a8fc, name: _spu_rev_attr_delay}
   - {addr: 0x8002a900, name: _spu_rev_attr_feedback}
+  - {addr: 0x8002a904, name: _spu_RQvoice}
+  - {addr: 0x8002a908, name: _spu_RQmask}
+  - {addr: 0x8002a90c, name: _spu_voice_centerNote}
+  - {addr: 0x8002a93c, name: _spu_zerobuf}
+  - {addr: 0x8002ad3c, name: _spu_env}
+  - {addr: 0x8002ad40, name: _spu_isCalled}
   - {addr: 0x8002ad44, name: _spu_RXX}
-  - {addr: 0x8002ad54, name: g_spu_dpcr_pointer}
-  - {addr: 0x8002ad58, name: g_spu_delay_reg_pointer}
+  - {addr: 0x8002ad48, name: g_psyq_spu_dma_address_register}
+  - {addr: 0x8002ad4c, name: g_psyq_spu_dma_block_register}
+  - {addr: 0x8002ad50, name: g_psyq_spu_dma_control_register}
+  - {addr: 0x8002ad54, name: g_psyq_spu_dma_priority_register}
+  - {addr: 0x8002ad58, name: g_psyq_spu_delay_register}
+  - {addr: 0x8002ad5c, name: _spu_tsa}
+  - {addr: 0x8002ad60, name: _spu_transMode}
+  - {addr: 0x8002ad64, name: _spu_addrMode}
+  - {addr: 0x8002ad68, name: _spu_mem_mode}
+  - {addr: 0x8002ad6c, name: _spu_mem_mode_plus}
+  - {addr: 0x8002ad70, name: _spu_mem_mode_unit}
+  - {addr: 0x8002ad74, name: _spu_mem_mode_unitM}
   - {addr: 0x8002ad78, name: _spu_inTransfer}
   - {addr: 0x8002ad7c, name: _spu_transferCallback}
-  - {addr: 0x800329bc, name: g_main_start_return_address}
+  - {addr: 0x8002ad80, name: _spu_IRQCallback}
+  - {addr: 0x8002ad84, name: g_psyq_spu_init_fifo_data}
+  - {addr: 0x8002ad94, name: g_psyq_spu_dma_direction}
+  - {addr: 0x8002ad98, name: g_psyq_spu_dma_buffer}
+  - {addr: 0x8002ad9c, name: g_psyq_spu_dma_blocks}
+  - {addr: 0x8002ada0, name: _spu_AllocBlockNum}
+  - {addr: 0x8002ada4, name: _spu_AllocLastNum}
+  - {addr: 0x8002ada8, name: _spu_memList}
+  - {addr: 0x8002adac, name: _spu_rev_startaddr}
+  - {addr: 0x8002adfc, name: _spu_rev_param}
+  - {addr: 0x8002b0a4, name: g_psyq_gte_sine_quarter_table}
+  - {addr: 0x8002b8a8, name: g_psyq_gte_init_saved_ra}
+  - {addr: 0x8002b8b8, name: g_psyq_gte_sqrt_table}
+  - {addr: 0x8002ba4c, name: g_psyq_gte_inv_sqrt_table}
+  - {addr: 0x8002bbd8, name: g_psyq_gte_matrix_stack_saved_ra}
+  - {addr: 0x8002bbe4, name: g_psyq_gte_matrix_stack_offset}
+  - {addr: 0x8002bbe8, name: g_psyq_gte_matrix_stack}
+  - {addr: 0x8002be68, name: g_psyq_gte_matrix_stack_overflow_message}
+  - {addr: 0x8002be99, name: g_psyq_gte_matrix_stack_underflow_message}
+  - {addr: 0x8002bee8, name: g_psyq_gte_sin_cos_table}
+  - {addr: 0x8002fee8, name: g_psyq_gte_atan_ratio_table}
+  - {addr: 0x800306ec, name: g_psyq_etc_gpu_status}
+  - {addr: 0x800306f0, name: g_psyq_etc_timer1_count}
+  - {addr: 0x800306f4, name: g_psyq_etc_last_timer1_count}
+  - {addr: 0x800306f8, name: g_psyq_etc_last_vblank}
+  - {addr: 0x800306fc, name: g_psyq_etc_interrupt_state}
+  - {addr: 0x800306fe, name: g_psyq_etc_in_callback}
+  - {addr: 0x8003072c, name: g_psyq_etc_callback_mask}
+  - {addr: 0x8003072e, name: g_psyq_etc_saved_irq_mask}
+  - {addr: 0x80030730, name: g_psyq_etc_saved_dma_dpcr}
+  - {addr: 0x80030738, name: g_psyq_etc_saved_stack_pointer}
+  - {addr: 0x80031784, name: g_psyq_etc_dispatch}
+  - {addr: 0x80031788, name: g_psyq_etc_irq_status}
+  - {addr: 0x8003178c, name: g_psyq_etc_irq_mask}
+  - {addr: 0x80031790, name: g_psyq_etc_dma_dpcr}
+  - {addr: 0x80031794, name: g_psyq_etc_unhandled_irq_count}
+  - {addr: 0x80031798, name: g_psyq_etc_vblank_callbacks}
+  - {addr: 0x800317b8, name: g_psyq_etc_vblank_count}
+  - {addr: 0x800317bc, name: g_psyq_etc_timer1_mode}
+  - {addr: 0x800317c0, name: g_psyq_etc_dma_dicr}
+  - {addr: 0x800317c4, name: g_psyq_etc_dma_callbacks}
+  - {addr: 0x800317e4, name: g_psyq_etc_dma_channels}
+  - {addr: 0x800317e8, name: g_psyq_etc_video_mode}
+  - {addr: 0x800317fc, name: g_psyq_cd_command_uses_position}
+  - {addr: 0x8003187c, name: g_psyq_cd_sync_callback}
+  - {addr: 0x80031880, name: g_psyq_cd_ready_callback}
+  - {addr: 0x80031888, name: g_psyq_cd_debug_level}
+  - {addr: 0x8003188c, name: g_psyq_cd_status}
+  - {addr: 0x80031890, name: g_psyq_cd_status_detail}
+  - {addr: 0x80031894, name: g_psyq_cd_shell_open_count}
+  - {addr: 0x80031898, name: g_psyq_cd_last_position}
+  - {addr: 0x8003189c, name: g_psyq_cd_mode}
+  - {addr: 0x8003189d, name: g_psyq_cd_last_command}
+  - {addr: 0x800318a0, name: g_psyq_cd_command_names}
+  - {addr: 0x80031920, name: g_psyq_cd_interrupt_names}
+  - {addr: 0x80031940, name: g_psyq_cd_command_waits_for_complete}
+  - {addr: 0x800319c0, name: g_psyq_cd_command_resets_ready}
+  - {addr: 0x80031a40, name: g_psyq_cd_command_ack_updates_status}
+  - {addr: 0x80031ac0, name: g_psyq_cd_command_parameter_counts}
+  - {addr: 0x80031b24, name: g_psyq_cd_test_parameter_count}
+  - {addr: 0x80031b40, name: g_psyq_cd_index_status_register}
+  - {addr: 0x80031b44, name: g_psyq_cd_command_response_register}
+  - {addr: 0x80031b48, name: g_psyq_cd_parameter_data_register}
+  - {addr: 0x80031b4c, name: g_psyq_cd_request_interrupt_register}
+  - {addr: 0x80031b50, name: g_psyq_cd_common_delay_register}
+  - {addr: 0x80031b54, name: g_psyq_cd_spu_registers}
+  - {addr: 0x80031b58, name: g_psyq_cd_irq_state}
+  - {addr: 0x80031b58, name: g_psyq_cd_sync_interrupt}
+  - {addr: 0x80031b59, name: g_psyq_cd_ready_interrupt}
+  - {addr: 0x80031b5a, name: g_psyq_cd_second_ready_interrupt}
+  - {addr: 0x80031b5c, name: g_psyq_cd_init_irq_state_pointer}
+  - {addr: 0x80031b74, name: g_psyq_cd_access_delay_register}
+  - {addr: 0x80031b78, name: g_psyq_cd_dma_priority_register}
+  - {addr: 0x80031b7c, name: g_psyq_cd_dma_address_register}
+  - {addr: 0x80031b80, name: g_psyq_cd_dma_block_register}
+  - {addr: 0x80031b84, name: g_psyq_cd_dma_control_register}
+  - {addr: 0x80031b88, name: g_psyq_cd_read_callback}
+  - {addr: 0x80031b8c, name: g_psyq_cd_read_sectors}
+  - {addr: 0x80031b8c, name: g_psyq_cd_read_state}
+  - {addr: 0x80031b90, name: g_psyq_cd_read_first_buffer}
+  - {addr: 0x80031b94, name: g_psyq_cd_read_next_buffer}
+  - {addr: 0x80031b98, name: g_psyq_cd_read_mode}
+  - {addr: 0x80031b9c, name: g_psyq_cd_read_words}
+  - {addr: 0x80031ba0, name: g_psyq_cd_read_remaining}
+  - {addr: 0x80031ba4, name: g_psyq_cd_read_sector_clock}
+  - {addr: 0x80031ba8, name: g_psyq_cd_read_start_clock}
+  - {addr: 0x80031bac, name: g_psyq_cd_read_expected_sector}
+  - {addr: 0x80031bb0, name: g_psyq_cd_read_saved_sync_callback}
+  - {addr: 0x80031bb4, name: g_psyq_cd_read_saved_ready_callback}
+  - {addr: 0x80031bc8, name: g_psyq_cd_unset_index_register}
+  - {addr: 0x80031bd4, name: g_psyq_cd_unset_request_register}
+  - {addr: 0x80031c38, name: g_psyq_cd_stream_index_register}
+  - {addr: 0x80031c40, name: g_psyq_cd_stream_data_register}
+  - {addr: 0x80031c44, name: g_psyq_cd_stream_request_register}
+  - {addr: 0x80031c48, name: g_psyq_cd_stream_access_delay_register}
+  - {addr: 0x80031c4c, name: g_psyq_cd_stream_common_delay_register}
+  - {addr: 0x80031c50, name: g_psyq_cd_stream_dma_priority_register}
+  - {addr: 0x80031c54, name: g_psyq_cd_stream_dma_interrupt_register}
+  - {addr: 0x80031c58, name: g_psyq_cd_stream_mdec_out_dma_control_register}
+  - {addr: 0x80031c68, name: g_psyq_cd_stream_dma_control_register}
+  - {addr: 0x80031c80, name: g_psyq_cd_stream_diagnostic_code}
+  - {addr: 0x80031c98, name: g_psyq_api_interrupt_controller}
+  - {addr: 0x80031c9c, name: g_psyq_api_root_counters}
+  - {addr: 0x80031ca0, name: g_psyq_api_root_counter_irq_masks}
+  - {addr: 0x80031cb0, name: g_psyq_libc_default_format}
+  - {addr: 0x80031cbc, name: g_psyq_gpu_font_windows}
+  - {addr: 0x80031e3c, name: g_psyq_gpu_font_window_count}
+  - {addr: 0x80031e40, name: g_psyq_gpu_default_font_window}
+  - {addr: 0x80031e44, name: g_psyq_gpu_font_asset}
+  - {addr: 0x80032844, name: g_psyq_gpu_font_allocated_characters}
+  - {addr: 0x80032848, name: g_psyq_gpu_font_hex_digits}
+  - {addr: 0x8003284c, name: g_psyq_gpu_dispatch_table}
+  - {addr: 0x8003288c, name: g_psyq_gpu_dispatch}
+  - {addr: 0x80032890, name: g_psyq_gpu_printf}
+  - {addr: 0x80032894, name: g_psyq_gpu_environment}
+  - {addr: 0x80032894, name: g_psyq_gpu_graph_type}
+  - {addr: 0x80032895, name: g_psyq_gpu_queue_enabled}
+  - {addr: 0x80032896, name: g_psyq_gpu_debug_level}
+  - {addr: 0x80032897, name: g_psyq_gpu_graph_reverse}
+  - {addr: 0x80032898, name: g_psyq_gpu_vram_width}
+  - {addr: 0x8003289a, name: g_psyq_gpu_vram_height}
+  - {addr: 0x8003289c, name: g_psyq_gpu_completion_pending}
+  - {addr: 0x800328a0, name: g_psyq_gpu_draw_sync_callback}
+  - {addr: 0x800328a4, name: g_psyq_gpu_draw_environment}
+  - {addr: 0x80032900, name: g_psyq_gpu_cached_display_x}
+  - {addr: 0x80032900, name: g_psyq_gpu_display_environment}
+  - {addr: 0x80032902, name: g_psyq_gpu_cached_display_y}
+  - {addr: 0x80032904, name: g_psyq_gpu_cached_display_width}
+  - {addr: 0x80032906, name: g_psyq_gpu_cached_display_height}
+  - {addr: 0x80032908, name: g_psyq_gpu_cached_screen_x}
+  - {addr: 0x8003290a, name: g_psyq_gpu_cached_screen_y}
+  - {addr: 0x8003290c, name: g_psyq_gpu_cached_screen_width}
+  - {addr: 0x8003290e, name: g_psyq_gpu_cached_screen_height}
+  - {addr: 0x80032910, name: g_psyq_gpu_cached_display_flags}
+  - {addr: 0x80032914, name: g_psyq_gpu_vram_width_lookup}
+  - {addr: 0x80032928, name: g_psyq_gpu_vram_height_lookup}
+  - {addr: 0x8003293c, name: g_psyq_gpu_move_packet}
+  - {addr: 0x80032944, name: g_psyq_gpu_move_copy_words}
+  - {addr: 0x80032948, name: g_psyq_gpu_move_destination}
+  - {addr: 0x8003294c, name: g_psyq_gpu_move_dimensions}
+  - {addr: 0x80032950, name: g_psyq_gpu_ot_terminator}
+  - {addr: 0x80032964, name: g_psyq_gpu_gp0_port}
+  - {addr: 0x80032968, name: g_psyq_gpu_gp1_port}
+  - {addr: 0x8003296c, name: g_psyq_gpu_dma_madr}
+  - {addr: 0x80032970, name: g_psyq_gpu_dma_bcr}
+  - {addr: 0x80032974, name: g_psyq_gpu_dma_chcr}
+  - {addr: 0x80032978, name: g_psyq_gpu_otc_dma_madr}
+  - {addr: 0x8003297c, name: g_psyq_gpu_otc_dma_bcr}
+  - {addr: 0x80032980, name: g_psyq_gpu_otc_dma_chcr}
+  - {addr: 0x80032984, name: g_psyq_gpu_dma_dpcr}
+  - {addr: 0x80032988, name: g_psyq_gpu_last_operation}
+  - {addr: 0x8003298c, name: g_psyq_gpu_last_source}
+  - {addr: 0x80032990, name: g_psyq_gpu_last_argument}
+  - {addr: 0x80032998, name: g_psyq_gpu_queue_head}
+  - {addr: 0x8003299c, name: g_psyq_gpu_queue_tail}
+  - {addr: 0x800329a0, name: g_psyq_gpu_enqueue_interrupt_mask}
+  - {addr: 0x800329a4, name: g_psyq_gpu_queue_interrupt_mask}
+  - {addr: 0x800329a8, name: g_psyq_gpu_reset_interrupt_mask}
+  - {addr: 0x800329ac, name: g_psyq_gpu_sync_deadline}
+  - {addr: 0x800329b0, name: g_psyq_gpu_sync_poll_count}
+  - {addr: 0x800329bc, name: g_psyq_crt_saved_ra}
+  - {addr: 0x800329c0, name: g_psyq_gte_patch_saved_ra}
+  - {addr: 0x800329d0, name: g_psyq_card_patch_saved_ra}
+  - {addr: 0x800329d4, name: g_psyq_card_patch_continuation}
+  - {addr: 0x800329e0, name: g_psyq_card_restore_saved_ra}
   - {addr: 0x800329f0, name: g_main_sound_sfx_channel_count}
   - {addr: 0x800329f8, name: g_main_sound_heap_arena}
   - {addr: 0x800329fc, name: g_main_sound_heap_blocks}
@@ -723,13 +1195,71 @@ data:
   - {addr: 0x80032a60, name: g_main_sound_sfx_music}
   - {addr: 0x80032a64, name: g_main_sound_heap_end}
   - {addr: 0x80032a68, name: g_main_gfx_now_loading_otags}
-  - {addr: 0x80032a78, name: g_main_input_raw_buttons}
+  - {addr: 0x80032a78, name: g_psyq_etc_pad_buttons}
+  - {addr: 0x80032a7c, name: g_psyq_cd_sync_result}
+  - {addr: 0x80032a84, name: g_psyq_cd_ready_result}
+  - {addr: 0x80032a8c, name: g_psyq_cd_second_ready_result}
+  - {addr: 0x80032a94, name: g_psyq_cd_timeout}
+  - {addr: 0x80032a94, name: g_psyq_cd_timeout_deadline}
+  - {addr: 0x80032a98, name: g_psyq_cd_timeout_poll_count}
+  - {addr: 0x80032a9c, name: g_psyq_cd_timeout_description}
+  - {addr: 0x80032aa0, name: g_psyq_cd_backloc}
+  - {addr: 0x80032aa0, name: g_psyq_cd_backloc_position}
+  - {addr: 0x80032aa4, name: g_psyq_cd_backloc_frame}
+  - {addr: 0x80032aa8, name: g_psyq_cd_stream_current_header}
+  - {addr: 0x80032aac, name: g_psyq_gpu_font_text_pool}
+  - {addr: 0x80032eac, name: g_psyq_gpu_font_sprite_pool}
+  - {addr: 0x80036eac, name: g_psyq_gpu_font_tpage}
+  - {addr: 0x80036eb0, name: g_psyq_gpu_font_clut}
+  - {addr: 0x80036eb4, name: g_psyq_gpu_clear_packet_tag}
+  - {addr: 0x80036eb8, name: g_psyq_gpu_clear_packet_word_1}
+  - {addr: 0x80036ebc, name: g_psyq_gpu_clear_packet_word_2}
+  - {addr: 0x80036ec0, name: g_psyq_gpu_clear_packet_word_3}
+  - {addr: 0x80036ec4, name: g_psyq_gpu_clear_packet_word_4}
+  - {addr: 0x80036ec8, name: g_psyq_gpu_clear_packet_word_5}
+  - {addr: 0x80036ecc, name: g_psyq_gpu_clear_packet_word_6}
+  - {addr: 0x80036ed0, name: g_psyq_gpu_clear_packet_word_7}
+  - {addr: 0x80036ed4, name: g_psyq_gpu_clear_restore_tag}
+  - {addr: 0x80036ed8, name: g_psyq_gpu_clear_restore_area_start}
+  - {addr: 0x80036edc, name: g_psyq_gpu_clear_restore_area_end}
+  - {addr: 0x80036ee0, name: g_psyq_gpu_clear_restore_offset}
+  - {addr: 0x80036ef4, name: g_psyq_gpu_gp1_cache}
+  - {addr: 0x80036ef8, name: g_psyq_spu_queued_register_base}
+  - {addr: 0x80036ff4, name: g_psyq_gpu_tim_cursor}
+  - {addr: 0x80036ff8, name: g_psyq_gpu_tmd_vertices}
+  - {addr: 0x80036ffc, name: g_psyq_gpu_tmd_normals}
+  - {addr: 0x80037000, name: g_psyq_gpu_tmd_cursor}
+  - {addr: 0x80037004, name: g_psyq_gpu_tmd_primitive_count}
   - {addr: 0x80037008, name: g_main_sound_reverb_attr}
+  - {addr: 0x8003701c, name: g_psyq_cd_stream_frame_count}
   - {addr: 0x80037020, name: g_main_sound_spu_state}
+  - {addr: 0x80037068, name: g_psyq_cd_stream_expected_sector_index}
+  - {addr: 0x8003706c, name: g_psyq_cd_stream_mode}
+  - {addr: 0x80037070, name: g_psyq_cd_stream_skip_sector_position}
+  - {addr: 0x80037074, name: g_psyq_cd_stream_frame_callback}
+  - {addr: 0x80037078, name: g_psyq_cd_stream_end_callback}
+  - {addr: 0x8003707c, name: g_psyq_cd_stream_interrupt_pending}
   - {addr: 0x8003707c, name: g_st_cd_interrupt_pending}
+  - {addr: 0x80037080, name: _spu_RQ}
+  - {addr: 0x800370a4, name: g_psyq_cd_stream_requested_channel}
+  - {addr: 0x800370a8, name: g_psyq_cd_stream_start_frame}
+  - {addr: 0x800370ac, name: g_psyq_cd_stream_current_channel}
+  - {addr: 0x800370b0, name: g_psyq_etc_pad_mode}
+  - {addr: 0x800370b4, name: g_psyq_cd_stream_frame_dma_pending}
+  - {addr: 0x800370b8, name: g_psyq_cd_stream_emulation_sector_index}
   - {addr: 0x800370bc, name: g_main_sound_heap_memory}
+  - {addr: 0x8003f0bc, name: g_psyq_gpu_operation_queue}
+  - {addr: 0x800408bc, name: g_psyq_cd_stream_write_index}
+  - {addr: 0x800408c0, name: g_psyq_cd_stream_frame_start_index}
+  - {addr: 0x800408c4, name: g_psyq_cd_stream_read_index}
+  - {addr: 0x800408cc, name: g_psyq_cd_stream_emulation_base}
+  - {addr: 0x800408d0, name: g_psyq_cd_stream_end_frame}
+  - {addr: 0x800408d4, name: g_psyq_cd_stream_start_mask}
+  - {addr: 0x800408d8, name: g_psyq_cd_stream_payload}
+  - {addr: 0x800408dc, name: g_psyq_cd_stream_ring}
   - {addr: 0x800408e0, name: g_main_sound_spu_malloc_table}
-  - {addr: 0x8004091c, name: g_main_bss_end}
+  - {addr: 0x80040918, name: g_psyq_cd_stream_ring_sectors}
+  - {addr: 0x8004091c, name: g_psyq_crt_bss_end}
   - {addr: 0x80042880, name: get_entd}
   - {addr: 0x80042b1c, name: save_3_u16}
   - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
@@ -960,8 +1490,7 @@ overrides:
 
 regions:
   - {addr: 0x80011ba8, end: 0x80011bb0, kind: handwritten, why: "callable jr-ra/nop tail after deprecated-entry padding"}
-  - {addr: 0x8001423c, end: 0x8001442c, kind: blocked, why: "four Suzuki $gp-relative heap routines built with -G8 small data; left as original bytes by decision (see AGENTS.md)"}
-  - {addr: 0x8001c2e8, end: 0x8001c2f4, kind: interior, why: "inside 0x8001c2a0: branch target inside handwritten LIBGTE shift helper"}
+  - {addr: 0x8001c2e8, end: 0x8001c2f4, kind: interior, why: "inside 0x8001c268: branch target inside SquareRoot12"}
   - {addr: 0x800449ec, end: 0x800449f8, kind: blocked, why: "callable nop/jr-ra/nop stub; C omits required leading nop"}
   - {addr: 0x800454cc, end: 0x80045514, kind: data, why: "pointer plus 0x40-byte Brave Story age table and padding"}
   - {addr: 0x8004f1d0, end: 0x8004f210, kind: data, why: "Geomancy tile-to-ability lookup table"}

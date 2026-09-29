@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction) {

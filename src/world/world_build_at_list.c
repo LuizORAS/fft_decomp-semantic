@@ -3,7 +3,7 @@
  * the store, the now-empty branch survives until after reload, and the post-reload jump
  * pass deletes the branch but not its operand reload. */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

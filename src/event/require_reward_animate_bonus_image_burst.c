@@ -16,9 +16,9 @@
  * the RotMatrix/vector addresses out of the column loop.
  */
 #include "fft/event_require.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */

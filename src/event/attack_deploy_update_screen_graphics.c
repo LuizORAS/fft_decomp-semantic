@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The v/y adjustments and the tpage/clut stores address the current

@@ -1,5 +1,5 @@
-#ifndef FFT_MAP_H
-#define FFT_MAP_H
+#ifndef MAP_H
+#define MAP_H
 
 /* Map tile and surface records shared by BATTLE and WORLD. */
 

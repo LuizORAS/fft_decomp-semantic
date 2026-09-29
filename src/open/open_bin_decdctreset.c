@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 
 /* OPEN.BIN open_bin_decdctreset - wrapper around the DCT reset routine that also
  * clears the BIOS callback table when initializing from scratch. */

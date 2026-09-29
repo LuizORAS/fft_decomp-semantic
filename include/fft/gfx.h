@@ -1,9 +1,9 @@
-#ifndef FFT_GFX_H
-#define FFT_GFX_H
+#ifndef GFX_H
+#define GFX_H
 
 /* Graphics records shared across modules: points, rectangles, textures and sprites. */
 
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* geometry */

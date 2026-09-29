@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Bit view of the map weather flag word at 0x800b6698. */

@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 /* GsSortClear: register a full-screen clear tile for the active buffer. */

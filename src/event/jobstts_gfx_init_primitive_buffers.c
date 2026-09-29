@@ -1,5 +1,5 @@
 #include "fft/event_jobstts.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Initialize the POLY_FT4, TILE and DR_MOVE primitive headers of one graphics context. */

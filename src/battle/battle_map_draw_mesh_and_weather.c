@@ -1,7 +1,7 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* g_battle_map_mesh_parts viewed from vectors_a[1] (0x800fbe08), bound

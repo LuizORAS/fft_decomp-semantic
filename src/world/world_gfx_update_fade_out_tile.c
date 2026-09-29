@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Target 0x8012d5bc; sibling of world_gfx_update_fade_in_tile. Steps the

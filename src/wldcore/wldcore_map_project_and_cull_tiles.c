@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Builds the map camera matrix and projects the 13x17 grid of tile corners,

@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/pad.h"
 
 /* Input step for the type-0x14 sound-novel resume level.

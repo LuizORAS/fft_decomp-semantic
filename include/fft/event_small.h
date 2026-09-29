@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_SMALL_H
-#define FFT_EVENT_SMALL_H
+#ifndef EVENT_SMALL_H
+#define EVENT_SMALL_H
 
 /* EVENT/SMALL.OUT: menu screen overlay that runs with BATTLE. */
 

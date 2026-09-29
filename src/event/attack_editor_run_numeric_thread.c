@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 struct menu_number_entry;

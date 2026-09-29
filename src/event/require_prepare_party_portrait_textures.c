@@ -1,5 +1,5 @@
 #include "fft/event_require.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
 #define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)

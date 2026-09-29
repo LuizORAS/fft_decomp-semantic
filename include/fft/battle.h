@@ -1,5 +1,5 @@
-#ifndef FFT_BATTLE_H
-#define FFT_BATTLE_H
+#ifndef BATTLE_H
+#define BATTLE_H
 
 /* BATTLE.BIN: the battle engine. Event and effect overlays run alongside it. */
 
@@ -2752,7 +2752,7 @@ typedef struct battle_effect_sprite_frame {
     s32 corners[4]; /* 0x0c; packed x/y pairs for the four quad corners */
 } battle_effect_sprite_frame_t;
 
-/* The POLY_FT4 the slot double-buffers. include/psx/gpu.h spells the tag as one
+/* The POLY_FT4 the slot double-buffers. include/psx/libgpu.h spells the tag as one
  * word and the colour as four bytes; this routine writes the tag's length byte
  * and copies the colour as a word, so both are named here. */
 typedef struct battle_effect_quad_prim {
@@ -7817,7 +7817,6 @@ s32 battle_classify_character_identity_slot(u32 character_identity);
 s32 battle_return_zero_801842f8(void);
 s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
 void battle_process_inflict_status_commands(void);
-void* bzero(void* destination, s32 byte_length);
 s32 battle_poll_companion_executable_request(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);

@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount) {
     poly->x0 += amount;

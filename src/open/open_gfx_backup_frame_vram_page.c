@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void open_gfx_backup_frame_vram_page(void) {
     RECT source;

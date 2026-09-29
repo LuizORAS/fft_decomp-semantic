@@ -7,12 +7,12 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     s32 record;
     s32* position;
     s32 controller;
-    s32 card_status;
+    s32 _card_status;
     s32 frame_padding[2];
 
-    card_status = open_card_check_slots();
+    _card_status = open_card_check_slots();
     index = 0;
-    if (card_status != 0) {
+    if (_card_status != 0) {
         open_title_start_new_game_transition();
         return;
     }

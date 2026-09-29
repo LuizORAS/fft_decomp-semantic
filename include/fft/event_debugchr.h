@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_DEBUGCHR_H
-#define FFT_EVENT_DEBUGCHR_H
+#ifndef EVENT_DEBUGCHR_H
+#define EVENT_DEBUGCHR_H
 
 /* EVENT/DEBUGCHR.OUT: menu screen overlay that runs with BATTLE. */
 

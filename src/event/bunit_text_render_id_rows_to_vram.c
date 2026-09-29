@@ -1,5 +1,5 @@
 #include "fft/event_bunit.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Render each id of a -1 terminated text-id list as one 16-pixel row and

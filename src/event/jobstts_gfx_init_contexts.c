@@ -1,5 +1,5 @@
 #include "fft/event_jobstts.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 #define JOBSTTS_GFX_CONTEXT_COUNT 2

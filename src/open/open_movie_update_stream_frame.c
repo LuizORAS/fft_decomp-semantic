@@ -1,7 +1,7 @@
 #include "fft/open.h"
 
 typedef struct open_movie_ring_status {
-    s32 backlog;
+    CdlLOC position;
     u8 _unused_04[4];
     s16 free_sectors;
     s16 read_sectors;
@@ -18,8 +18,8 @@ void open_movie_update_stream_frame(void) {
 
     StRingStatus(&status.free_sectors, &status.read_sectors);
     if (status.free_sectors < 16) {
-        StSetMask(1, StGetBacklog(&status.backlog), -1);
-        open_movie_start_cd_stream_read(&status.backlog);
+        StSetMask(1, StGetBackloc(&status.position), -1);
+        open_movie_start_cd_stream_read(&status.position);
     }
 
     open_bin_decdctin(g_open_movie_mdec_stream_state.vlc_buffers[g_open_movie_mdec_stream_state.vlc_buffer_index], 3);

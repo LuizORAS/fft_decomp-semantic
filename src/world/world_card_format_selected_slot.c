@@ -2,8 +2,6 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-extern s32 FileFormat(char* name);
-
 /* Format the selected card slot three times once it reports ready.
  *
  * The device name is a strcpy of the "bu00:" /
@@ -20,7 +18,7 @@ s32 world_card_format_selected_slot(void) {
     } else {
         strcpy(name, "bu10:");
     }
-    FileFormat(name);
-    FileFormat(name);
-    return FileFormat(name);
+    format(name);
+    format(name);
+    return format(name);
 }

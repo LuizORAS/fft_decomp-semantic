@@ -5,6 +5,11 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 
 ## Retail bugs the source reproduces
 
+- `DrawOTagEnv`: the diagnostic string uses literal `&08x` for its second item, so it does not format the environment pointer.
+- `StCdInterrupt`: without `CdlModeSize1`, it skips the local disc-position read but still copies the uninitialized four bytes into the ring descriptor.
+- `sprintf`: unchecked precision and zero padding can overrun its 512-byte temporary segment buffer.
+- `src/psyq/libgpu/FntPrint.c`: unsupported conversions leave the field length undefined; the count limit is checked after writing, and oversized hexadecimal widths can overrun the 512-byte temporary buffer.
+- `DecDCTvlc`: the pause path saves its Y predictor at `0x80073f34`, overwriting the first four bytes of the overlapping birthday month-length table.
 - `src/battle/battle_camera_store_state_to_script_variables.c`: all three zoom
   components are stored to script word `0x20`, so the first two are lost.
 - `src/battle/battle_script_toggle_message_portrait_flip.c`,
@@ -55,6 +60,7 @@ Some calls need an erased signature or a function-pointer cast to preserve
 their register values. Others can declare ignored parameters and call directly
 without changing the bytes.
 
+- `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
 - `g_battle_thread_call_target` is the main-stack dispatch slot for callees
   with different signatures; assignments erase their function types.
 - `battle_target_set_panels_for_action` reads `$v0` after a void-returning
@@ -126,6 +132,10 @@ translation unit. Share their types and constants through headers.
 
 ## Other surprises
 
+- `main_gfx_load_efc_fnt`: patches the low immediate byte of `FntLoad` at `0x80022f5c`, changing its font CLUT placement from `y + 128` to `y + 127`.
+- `StCdInterrupt`: tracks frame numbers through the header's low `u16`, while DMA completion and OPEN retain the full `u32` frame number.
+- `psyq_gte_apply_rotation_ir`: writes saturated IR1–IR3 output words and returns its unchanged third argument.
+- `sprintf`: unsupported conversions terminate output, `%#p` prefixes `0p`, hexadecimal alternate form prefixes zero, and `%#.0o` with zero emits no digit.
 - JOBSTTS.OUT offset `0x0` and BUNIT.OUT offset `0x200` hold the literal `"%d"`
   (`g_jobstts_text_decimal_format`, `g_bunit_text_decimal_format`) used by `src/event/jobstts_menu_script_draw_formatted_number.c` and
   `src/event/bunit_cmd_draw_right_aligned_number_handler.c`.
@@ -148,3 +158,10 @@ translation unit. Share their types and constants through headers.
   the high bit, so the chosen ENTD is `entds[7 - bit]`.
 - `src/battle/battle_action_finalize_draw_out_katana_result.c`: when the
   katana breaks, the strike work's `can_earn_experience` is copied onto itself.
+- `src/psyq/libc/memmove.c`: the overlap-safe copy returns the original destination on its backward path and the advanced destination on its forward path.
+- `StartRCnt` and `StopRCnt` index the IRQ-mask table before validating a counter: selector 3 changes the VBlank mask even though `StartRCnt` returns zero; `StopRCnt` always returns one. Larger indices can read past the four-entry table.
+- `SpuGetVoiceEnvelopeAttr`: the public `s32*` key-status output is written with a halfword store; its upper half remains unchanged.
+- `InitCARD` and `StartCARD`: this linked version calls `ChangeClearPAD(0)`, while later SDK descriptions use one for startup; retain the retail value.
+- `_patch_card2`: exchanges five resident/BIOS instruction words, so calling it again reverses the exchange rather than repeating an idempotent patch.
+- `SetDrawLoad`: initializes the upload header and rectangle but leaves pixel payload storage to its caller.
+- `main_sound_get_largest_free_block`: reports the rounded gap including space needed for a new block header, rather than a directly usable payload size.

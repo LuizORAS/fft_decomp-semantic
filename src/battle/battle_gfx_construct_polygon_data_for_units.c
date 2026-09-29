@@ -1,7 +1,7 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/gte_inline.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* LDV3 and STSXY3 as this routine issues them: all three operand copies

@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Link a GPU primitive into the current ordering table entry (libgpu addPrim). */
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* prim) {

@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void bunit_gfx_load_image_and_wait(RECT* rect, u32* data) {
     LoadImage(rect, data);

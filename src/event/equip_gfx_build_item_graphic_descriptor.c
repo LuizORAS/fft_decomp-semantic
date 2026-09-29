@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Fill a 16x16 item icon descriptor: VRAM u/v, size, CLUT and texture page. */

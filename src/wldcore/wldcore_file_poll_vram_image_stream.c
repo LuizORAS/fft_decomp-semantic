@@ -1,13 +1,7 @@
 #include "fft/wldcore.h"
-#include "psx/cd.h"
-#include "psx/gpu.h"
+#include "psx/libcd.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
-
-enum {
-    CdlSetloc = 0x02,
-    CdlPause = 0x09,
-    CdlDataReady = 0x01,
-};
 
 /* Streams CD-resident image chunks to VRAM through a retrying state machine.
  *
@@ -120,7 +114,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
             return;
         }
         stream->state = 0;
-        CdControlb(CdlPause, 0, 0);
+        CdControlB(CdlPause, 0, 0);
         return;
     }
 }

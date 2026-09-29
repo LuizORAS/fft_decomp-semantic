@@ -2,7 +2,7 @@
  * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).
  */
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

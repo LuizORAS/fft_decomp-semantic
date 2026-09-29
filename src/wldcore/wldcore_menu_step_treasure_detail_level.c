@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 #include "psx/pad.h"
 
 /* Handler of the saved-record preview level: the phases mirror the

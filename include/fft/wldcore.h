@@ -1,5 +1,5 @@
-#ifndef FFT_WLDCORE_H
-#define FFT_WLDCORE_H
+#ifndef WLDCORE_H
+#define WLDCORE_H
 
 /* WORLD/WLDCORE.BIN: the world core that runs with WORLD. */
 
@@ -304,7 +304,7 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
 /* libgs GsOT descriptor: the 20-byte ordering-table records at 0x800bb364
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
  * is what wldcore_init_core indexes these globals with. */
-/* The ordering-table handle is libgs GsOT; see include/psx/gs.h. */
+/* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
 /* The 8-byte texture rectangle of a display object, and the same shape again
  * as the frame descriptor 0x8006b678 fills in. */
 typedef struct wldcore_display_rect {

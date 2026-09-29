@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* FocusSpeed event instruction: derives the camera move duration from the

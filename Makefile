@@ -79,6 +79,10 @@ diff: image ## Compare FUNC=name with the original bytes (needs the BIN)
 	@test -n "$(FUNC)" || { echo "FUNC is required: make diff FUNC=<function> [MODULE=<id>]"; exit 2; }
 	@$(TOOLS) diff $(function_args)
 
+.PHONY: library-diff
+library-diff: image ## Compare a library candidate with original bytes (ARGS="--name=... --source=... --addr=... --size=...")
+	@$(TOOLS) library-diff $(ARGS)
+
 .PHONY: permute
 permute: image ## Run decomp-permuter on FUNC=name (DURATION=300 JOBS=4)
 	@test -n "$(FUNC)" || { echo "FUNC is required: make permute FUNC=<function> [MODULE=<id>] [DURATION=300] [JOBS=4]"; exit 2; }

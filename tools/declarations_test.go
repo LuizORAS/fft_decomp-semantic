@@ -87,6 +87,36 @@ func TestDeclarationTagAliasFolding(t *testing.T) {
 	}
 }
 
+func TestArchitecturalRegisterDeclarationsKeepLinkageChecks(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, filepath.Join(root, "include", "psx", "entry.h"), []byte(`
+register u32 entry_stack __asm__("$29");
+register u32 entry_result __asm__("$2");
+register u32 linked_value __asm__("g_shared_value");
+`))
+	writeTestFile(t, filepath.Join(root, "include", "psx", "dispatch.h"), []byte(`
+register dispatch_frame_t* dispatch_stack __asm__("$29");
+register s32 dispatch_result asm("$2");
+extern s32 g_shared_value;
+`))
+	groups, err := collectDeclarationGroups(root, declarationScanDirs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	conflicts := conflictingDeclarationGroups(groups)
+	if len(conflicts) != 1 || conflicts[0].symbol != "g_shared_value" {
+		t.Fatalf("conflicts = %+v, want only the real linker-symbol conflict", conflicts)
+	}
+	writeTestFile(t, filepath.Join(root, "include", "psx", "dispatch.h"), []byte(`
+register dispatch_frame_t* dispatch_stack __asm__("$29");
+register s32 dispatch_result asm("$2");
+extern u32 g_shared_value;
+`))
+	if err := validateDeclarations(root); err != nil {
+		t.Fatalf("resolved linker declarations: %v", err)
+	}
+}
+
 func TestDeclarationAgreement(t *testing.T) {
 	split := func(text string) []string {
 		declarations, _, err := scanFileScopeDeclarations(text)

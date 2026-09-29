@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_ATTACK_H
-#define FFT_EVENT_ATTACK_H
+#ifndef EVENT_ATTACK_H
+#define EVENT_ATTACK_H
 
 /* EVENT/ATTACK.OUT: menu screen overlay that runs with BATTLE. */
 

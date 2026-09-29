@@ -1,7 +1,7 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/gte_inline.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Gouraud textured triangle (SDK POLY_GT3 layout). */

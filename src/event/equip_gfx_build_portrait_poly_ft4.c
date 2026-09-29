@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, void* poly) {

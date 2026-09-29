@@ -1,5 +1,5 @@
 #include "fft/event_debugchr.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 #define FRAME_RECT g_debugchr_character_status_frame_rect

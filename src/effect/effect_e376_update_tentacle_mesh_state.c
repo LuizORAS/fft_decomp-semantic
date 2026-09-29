@@ -1,8 +1,8 @@
 #include "fft/effect.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Run one phase of a tentacle-mesh effect: allocate its segment quads, spawn

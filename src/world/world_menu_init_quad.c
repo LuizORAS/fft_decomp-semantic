@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Initialize the fixed 4-point textured quad used by WORLD menus: a
  * 0x200-wide grey quad parked off-screen to the left, texture page 0

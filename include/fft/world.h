@@ -1,11 +1,12 @@
-#ifndef FFT_WORLD_H
-#define FFT_WORLD_H
+#ifndef WORLD_H
+#define WORLD_H
 
 /* WORLD/WORLD.BIN: world map, menus and event scripts. */
 
 #include "fft/main.h"
-#include "psx/etc.h"
-#include "psx/gs.h"
+#include "psx/libc.h"
+#include "psx/libetc.h"
+#include "psx/libgs.h"
 
 struct battle_ai_command_action;
 
@@ -585,7 +586,6 @@ void world_process_bin_load_request(void);
 void world_update_pending_file_load(void);
 void world_noop_800e7808(s32 unused_unit_id);
 void world_noop_800fd074(const u8* unused_parameters);
-void printf(const char* fmt, ...);
 
 /* thread */
 /* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
@@ -3241,7 +3241,7 @@ typedef char world_save_buffer_options_offset_must_be_0x1c84
 typedef char world_save_buffer_size_must_be_0x1e00[(sizeof(world_card_save_buffer_t) == 0x1e00) ? 1 : -1];
 
 /* Partial card-file header: WORLD 0x8013300c puts byte +3 into the upper
- * half of FileOpen's creation mode. The remaining header is not modeled. */
+ * half of open's creation mode. The remaining header is not modeled. */
 typedef struct world_card_file_header {
     u8 _unused_00[3];
     u8 allocation_blocks;

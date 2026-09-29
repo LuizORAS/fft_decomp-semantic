@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id) {
     s16 x;

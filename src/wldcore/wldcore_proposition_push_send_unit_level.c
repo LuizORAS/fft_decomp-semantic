@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Scalar view of g_wldcore_window_panel_render_state.select_text_table: as a
  * struct field its address would share the selected_index base register, but

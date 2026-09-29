@@ -1,4 +1,4 @@
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Cosine-eased interpolation from start to end at current/duration; the same

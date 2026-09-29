@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/etc.h"
-#include "psx/gpu.h"
+#include "psx/libetc.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Opcode handler 42 of the table at 0x8009ecfc, immediately after

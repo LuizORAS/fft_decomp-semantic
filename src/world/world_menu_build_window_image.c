@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Build a 4bpp menu window image from the shared menu graphics, optionally
  * with its pointer tail, and upload it to `rect` unless `keep` is set.

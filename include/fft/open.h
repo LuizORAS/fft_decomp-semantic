@@ -1,5 +1,5 @@
-#ifndef FFT_OPEN_H
-#define FFT_OPEN_H
+#ifndef OPEN_H
+#define OPEN_H
 
 /* OPEN/OPEN.BIN: opening and title. */
 

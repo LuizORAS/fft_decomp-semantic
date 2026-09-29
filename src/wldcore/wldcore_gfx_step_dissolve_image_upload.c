@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/gpu.h"
-#include "psx/gs.h"
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 
 #define BLOCK_BUFFER ((u8*)0x801EE000)
 

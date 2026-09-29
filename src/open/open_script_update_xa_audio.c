@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/cd.h"
+#include "psx/libcd.h"
 #include "psx/types.h"
 
 void open_script_update_xa_audio(void) {

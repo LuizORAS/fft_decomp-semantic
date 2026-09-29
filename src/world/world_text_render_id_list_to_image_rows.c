@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Renders each text id of a -1 terminated list into its own 16 pixel line of

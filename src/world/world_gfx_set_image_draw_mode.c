@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Select the WORLD image texture page and initialize its draw mode. */
 void world_gfx_set_image_draw_mode(DR_MODE* mode, s32 image_type) {

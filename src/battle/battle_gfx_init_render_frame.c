@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 void battle_gfx_init_render_frame(void) {
     SetGeomOffset(0, 0);

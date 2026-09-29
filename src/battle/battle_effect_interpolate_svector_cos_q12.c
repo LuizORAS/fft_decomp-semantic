@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 void battle_effect_interpolate_svector_cos_q12(const s16* from, const s16* to, s32 duration, s32 current, s16* out) {

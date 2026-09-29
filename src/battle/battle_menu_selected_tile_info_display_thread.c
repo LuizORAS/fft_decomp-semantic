@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 typedef char battle_menu_quad_page_size_must_be_0x144[sizeof(world_menu_quad_page_t) == 0x144 ? 1 : -1];

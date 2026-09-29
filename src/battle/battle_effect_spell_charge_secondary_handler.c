@@ -1,7 +1,7 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 typedef struct battle_effect_charge_params {
     s16 speed;

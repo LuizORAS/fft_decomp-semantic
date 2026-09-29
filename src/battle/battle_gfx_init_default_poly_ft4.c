@@ -1,4 +1,4 @@
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void battle_gfx_init_default_poly_ft4(POLY_FT4* poly) {

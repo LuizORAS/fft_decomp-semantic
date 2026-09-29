@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Battle twin of world_script_face_unit. FaceUnit and FaceUnit2 event instructions:

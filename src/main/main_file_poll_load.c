@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/cd.h"
+#include "psx/libcd.h"
 
 /* Advance one asynchronous CD read and keep the loading indicator current.
  *

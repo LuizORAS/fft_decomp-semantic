@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 #define P g_open_script_glyph_primitives[graphics_buffer_index][prim_index]
 

@@ -1,5 +1,5 @@
-#ifndef FFT_PSX_TYPES_H
-#define FFT_PSX_TYPES_H
+#ifndef PSX_TYPES_H
+#define PSX_TYPES_H
 
 typedef signed char s8;
 typedef unsigned char u8;

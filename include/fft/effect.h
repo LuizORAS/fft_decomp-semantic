@@ -1,5 +1,5 @@
-#ifndef FFT_EFFECT_H
-#define FFT_EFFECT_H
+#ifndef EFFECT_H
+#define EFFECT_H
 
 /* EFFECT/E*.BIN: ability effect overlays that run with BATTLE. */
 

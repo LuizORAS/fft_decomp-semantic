@@ -23,7 +23,7 @@
  * literal colours fold two constants away.
  */
 #include "fft/event_helpmenu.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

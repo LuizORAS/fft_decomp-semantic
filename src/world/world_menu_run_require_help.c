@@ -3,7 +3,7 @@
  * The register pins and scheduling boundaries are the HELPMENU twin's; see
  * src/event/helpmenu_menu_run_require_help.c for the load-bearing shapes. */
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

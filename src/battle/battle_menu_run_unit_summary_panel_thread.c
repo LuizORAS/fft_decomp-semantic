@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Unit summary panel thread, BATTLE twin of world_menu_unit_summary_panel_thread: renders the

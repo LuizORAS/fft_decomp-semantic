@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Menu-script opcode handler: pick the CLUT x/y operands from bytes 2..4 or,

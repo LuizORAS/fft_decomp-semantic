@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 /* libgs `ps_sort_sprite,bg`: the shared ordering-table insertion helper for

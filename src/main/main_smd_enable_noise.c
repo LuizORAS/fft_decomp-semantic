@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* SMD opcode 0xB4 "Enable Noise": sets the MUS noise clock,

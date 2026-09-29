@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/types.h"
 
 /* WORLD twin of card_file_close_with_retries (src/event). */
@@ -10,7 +10,7 @@ s32 world_card_close_file_with_retries(s32 descriptor) {
 
     for (i = 0; i < 10; i++) {
         wait_success = world_card_wait_for_selected_status(10) == CARD_IO_RESULT_COMPLETE;
-        close_result = FileClose(descriptor);
+        close_result = close(descriptor);
         if (close_result == descriptor) {
             break;
         } else {

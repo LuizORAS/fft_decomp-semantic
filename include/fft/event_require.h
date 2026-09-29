@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_REQUIRE_H
-#define FFT_EVENT_REQUIRE_H
+#ifndef EVENT_REQUIRE_H
+#define EVENT_REQUIRE_H
 
 /* EVENT/REQUIRE.OUT: menu screen overlay that runs with BATTLE. */
 

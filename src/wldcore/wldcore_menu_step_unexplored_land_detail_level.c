@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 
 /* Handler of the unexplored-land detail level (type 0x19).
  *

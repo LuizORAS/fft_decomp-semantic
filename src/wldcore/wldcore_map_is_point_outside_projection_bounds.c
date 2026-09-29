@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /* Test the camera projection bounds while allowing wrap-edge exceptions.
  *

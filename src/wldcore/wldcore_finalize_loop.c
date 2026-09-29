@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
-#include "psx/etc.h"
-#include "psx/gpu.h"
+#include "psx/libetc.h"
+#include "psx/libgpu.h"
 
 /* Finalize one WLDCORE loop pass and publish the world status. */
 void wldcore_finalize_loop(void) {

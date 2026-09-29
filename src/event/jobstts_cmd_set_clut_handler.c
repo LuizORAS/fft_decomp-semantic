@@ -1,5 +1,5 @@
 #include "fft/event_jobstts.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 const u8* jobstts_cmd_set_clut_handler(const u8* data) {
     g_jobstts_gfx_clut_id = GetClut(data[3] << 4, data[4] | (data[2] << 8));

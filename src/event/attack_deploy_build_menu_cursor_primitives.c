@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Build and submit the deployment menu's animated cursor primitives. */
 void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_deploy_render_buffer_t* render_buffer) {

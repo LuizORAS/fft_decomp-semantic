@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 #include "psx/pad.h"
 
 /* Provisional: the map camera block at 0x8009f2c0. The target relates the

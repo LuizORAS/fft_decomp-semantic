@@ -1,5 +1,5 @@
 #include "fft/open.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /*
  * Advance the script-controlled screen fade and tint the active fade quad.

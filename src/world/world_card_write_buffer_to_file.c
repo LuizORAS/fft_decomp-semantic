@@ -25,7 +25,7 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
     if (result < 0) {
         return -1;
     }
-    if (FileGetError(g_world_card_open_descriptor) != 0) {
+    if (_get_error(g_world_card_open_descriptor) != 0) {
         world_card_close_file_with_retries(g_world_card_open_descriptor);
         return -1;
     }
@@ -34,7 +34,7 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
         if (world_card_seek_file_with_retries(g_world_card_open_descriptor, total_written, 1) < 0) {
             break;
         }
-        result = FileWrite(g_world_card_open_descriptor, source + total_written, size - total_written);
+        result = write(g_world_card_open_descriptor, source + total_written, size - total_written);
         if (result != -1) {
             total_written += result;
             if (total_written >= size) {

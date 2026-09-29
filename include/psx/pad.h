@@ -1,5 +1,5 @@
-#ifndef FFT_PSX_PAD_H
-#define FFT_PSX_PAD_H
+#ifndef PSX_PAD_H
+#define PSX_PAD_H
 
 typedef enum psx_pad_button {
     PSX_PAD_L2 = 0x0001,
@@ -18,8 +18,5 @@ typedef enum psx_pad_button {
     PSX_PAD_LEFT = 0x8000,
     PSX_PAD_DPAD_MASK = 0xf000, /* UP | RIGHT | DOWN | LEFT */
 } psx_pad_button_e;
-
-/* libpad internal. */
-void PAD_dr(void);
 
 #endif

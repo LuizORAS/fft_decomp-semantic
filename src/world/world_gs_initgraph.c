@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/etc.h"
-#include "psx/gpu.h"
+#include "psx/libetc.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* libgs GsInitGraph counterpart. */

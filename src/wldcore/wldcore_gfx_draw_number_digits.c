@@ -4,7 +4,7 @@
  * saved y load `lh`. */
 
 #include "fft/wldcore.h"
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);

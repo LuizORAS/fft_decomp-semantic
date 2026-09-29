@@ -1,7 +1,7 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
 #include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

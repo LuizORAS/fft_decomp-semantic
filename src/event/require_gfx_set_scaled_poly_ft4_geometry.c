@@ -1,5 +1,5 @@
 #include "fft/event_require.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* The record types mirror the field widths and offsets used by the
  * instruction-identical ATTACK implementation and REQUIRE target listing;

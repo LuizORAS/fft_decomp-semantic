@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 s32 card_file_enumerate_saves(card_directory_entry_t* entries, s32 all_files) {

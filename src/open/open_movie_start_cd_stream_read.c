@@ -1,4 +1,4 @@
-#include "psx/cd.h"
+#include "psx/libcd.h"
 #include "psx/types.h"
 
 void open_movie_start_cd_stream_read(const void* location) {

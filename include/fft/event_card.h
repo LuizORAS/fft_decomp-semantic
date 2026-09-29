@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_CARD_H
-#define FFT_EVENT_CARD_H
+#ifndef EVENT_CARD_H
+#define EVENT_CARD_H
 
 /* EVENT/CARD.OUT: menu screen overlay that runs with BATTLE. */
 

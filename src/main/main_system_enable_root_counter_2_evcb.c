@@ -1,5 +1,5 @@
 #include "fft/main.h"
-#include "psx/etc.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 void main_system_enable_root_counter_2_evcb(void) {

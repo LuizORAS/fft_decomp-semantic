@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Two DR_OFFSET packets, each followed by the x/y pair SetDrawOffset reads. */

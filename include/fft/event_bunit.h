@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_BUNIT_H
-#define FFT_EVENT_BUNIT_H
+#ifndef EVENT_BUNIT_H
+#define EVENT_BUNIT_H
 
 /* EVENT/BUNIT.OUT: menu screen overlay that runs with BATTLE. */
 

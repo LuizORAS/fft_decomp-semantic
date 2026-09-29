@@ -11,6 +11,11 @@ import (
 )
 
 var compilerProfiles = map[string]compilerProfile{
+	// Original 0x8001423c-0x8001442c Suzuki heap code is gp-relative -G8.
+	"gcc-2.6.3_O2_G8_aspsx-2.34": {
+		name: "gcc-2.6.3_O2_G8_aspsx-2.34", compilerPath: "/opt/old-gcc/2.6.3-psx/cc1",
+		optimization: "-O2", aspsxVersion: "2.34", smallDataLimit: 8, globalPointer: 0x800329bc,
+	},
 	"gcc-2.6.3_O0_aspsx-2.34": {
 		name: "gcc-2.6.3_O0_aspsx-2.34", compilerPath: "/opt/old-gcc/2.6.3-psx/cc1",
 		optimization: "-O0", aspsxVersion: "2.34",

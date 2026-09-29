@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* DRAWENV setup reads these as x/y/w/h. The casts keep
  * the target's unsigned halfword loads without changing SDK RECT. */

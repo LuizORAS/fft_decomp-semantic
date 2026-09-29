@@ -1,5 +1,5 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 void card_gfx_init_primitive_lists(card_primitive_lists_t* lists) {

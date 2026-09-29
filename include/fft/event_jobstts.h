@@ -1,5 +1,5 @@
-#ifndef FFT_EVENT_JOBSTTS_H
-#define FFT_EVENT_JOBSTTS_H
+#ifndef EVENT_JOBSTTS_H
+#define EVENT_JOBSTTS_H
 
 /* EVENT/JOBSTTS.OUT: menu screen overlay that runs with BATTLE. */
 

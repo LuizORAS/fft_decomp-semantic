@@ -1,5 +1,5 @@
 #include "fft/event_bunit.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* BUNIT.OUT 001c9500 - Compute the CLUT id from a 5-byte cmd (x=data[3]<<4,
  * y=data[4]|(data[2]<<8)) and cache it; return the next command pointer. */

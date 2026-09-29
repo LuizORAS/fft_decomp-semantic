@@ -1,5 +1,5 @@
 #include "fft/event_equip.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Same double-buffered battle_menu_status_panel_buffer_t frame as equip_panel_run_equipment_list_thread and the

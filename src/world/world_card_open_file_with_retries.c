@@ -1,5 +1,5 @@
 #include "fft/world.h"
-#include "psx/api.h"
+#include "psx/libapi.h"
 #include "psx/libc.h"
 #include "psx/types.h"
 
@@ -30,7 +30,7 @@ s32 world_card_open_file_with_retries(const char* filename, s32 mode) {
         if (result != CARD_IO_RESULT_COMPLETE) {
             return -2;
         }
-        g_world_card_open_descriptor = FileOpen(path, mode);
+        g_world_card_open_descriptor = open(path, mode);
         if (g_world_card_open_descriptor != -1) {
             break;
         }

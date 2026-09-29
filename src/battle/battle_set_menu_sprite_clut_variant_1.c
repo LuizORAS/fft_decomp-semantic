@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 
 /* Select the menu-sprite palette row for the active thread context. */
 void battle_set_menu_sprite_clut_variant_1(SPRT* sprite) {

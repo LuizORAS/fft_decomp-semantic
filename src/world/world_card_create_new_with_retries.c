@@ -7,7 +7,7 @@ s32 world_card_create_new_with_retries(s32 port, s32 retry_limit) {
     s32 result;
 
     for (i = 0; i < retry_limit; i++) {
-        if (card_create_new(port) == 1) {
+        if (_card_clear(port) == 1) {
             result = world_card_wait_for_hardware_event();
             if (result >= CARD_IO_RESULT_NEW_CARD)
                 result = CARD_IO_RESULT_ERROR;

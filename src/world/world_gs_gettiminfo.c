@@ -1,4 +1,4 @@
-#include "psx/gs.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
 void world_gs_gettiminfo(u32* tim, GsIMAGE* im) {

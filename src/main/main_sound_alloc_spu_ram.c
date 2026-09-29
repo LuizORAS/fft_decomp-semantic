@@ -1,4 +1,4 @@
-#include "psx/spu.h"
+#include "psx/libspu.h"
 #include "psx/types.h"
 
 /* "SpuMalloc with extra steps": the sound code always reserves SPU RAM

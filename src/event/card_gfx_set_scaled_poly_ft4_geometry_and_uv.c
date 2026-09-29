@@ -1,6 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,

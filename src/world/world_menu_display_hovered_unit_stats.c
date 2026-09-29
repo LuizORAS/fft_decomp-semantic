@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/world.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* world_gfx_init_image_loading's signature; the WORLD build stubs the BATTLE

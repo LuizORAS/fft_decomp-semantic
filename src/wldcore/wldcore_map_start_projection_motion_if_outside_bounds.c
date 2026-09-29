@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 enum {
     WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,

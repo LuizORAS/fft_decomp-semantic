@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/gpu.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Expands the squad's 5-by-5 deployment bitmap into g_attack_deploy_valid_tiles

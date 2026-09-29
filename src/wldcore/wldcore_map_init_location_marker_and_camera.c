@@ -1,5 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/gte.h"
+#include "psx/libgte.h"
 
 /* Places the player's map marker on EVENT_SCRIPT_VAR_LOCATION, queues it for
  * drawing, picks its animation from EVENT_SCRIPT_VAR_TOWN_BACKGROUND, then

@@ -1,6 +1,6 @@
 #include "fft/world.h"
-#include "psx/gpu.h"
-#include "psx/gte.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* libgs screen-state reset: records the screen size, resets the identity,
