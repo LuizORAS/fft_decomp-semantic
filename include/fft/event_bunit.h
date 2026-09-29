@@ -12,7 +12,7 @@ extern u8* g_bunit_ability_selected_specific;
 extern s32 g_bunit_ability_type;
 extern s32 g_bunit_ability_list_menu_script;
 extern s8 g_bunit_ability_list_confirm_prompt_state;
-extern s16 g_bunit_ability_entries[];
+extern s16 g_bunit_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u16 g_bunit_ability_list_job_name_row[];
 extern u8 g_bunit_ability_list_ready;
 s32 bunit_ability_get_ct_display_value(s32 index);

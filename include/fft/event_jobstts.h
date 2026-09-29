@@ -22,7 +22,7 @@ typedef struct jobstts_ability_selection_state {
 typedef char assert_jobstts_ability_selection_state_size[sizeof(jobstts_ability_selection_state_t) == 6 ? 1 : -1];
 
 extern s16 g_jobstts_ability_category;
-extern s16 g_jobstts_ability_entries[];
+extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u8* g_jobstts_ability_selected_specific;
 extern u8* g_jobstts_ability_selected_specific_arg_alias;
 extern s32 g_jobstts_ability_type;
