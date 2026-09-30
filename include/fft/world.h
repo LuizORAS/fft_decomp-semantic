@@ -3219,7 +3219,7 @@ typedef struct world_card_save_buffer {
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];   /* 0x1884 */
     game_options_fields_t options; /* 0x1c84; copied to g_main_game_options by world_card_init_screen */
-    u8 _unknown_1c88;              /* 0x1c88 */
+    u8 _unknown_1c88;              /* 0x1c88; D_80057b1c */
     s8 item_type_order_0[0xc];     /* 0x1c89; signed, -1-terminated */
     u8 _unused_1c95[1];            /* 0x1c95; serialized and parity-covered */
     s8 item_type_order_1[8];       /* 0x1c96; signed, -1-terminated */

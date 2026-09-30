@@ -306,7 +306,7 @@ typedef struct card_save_buffer {
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];
     u8 game_options[4]; /* 0x1c84 */
-    u8 _unknown_1c88;   /* 0x1c88 */
+    u8 _unknown_1c88;   /* 0x1c88; D_80057b1c */
     s8 item_type_order_0[0xc];
     u8 _unused_1c95[1]; /* 0x1c95; serialized and parity-covered */
     s8 item_type_order_1[8];

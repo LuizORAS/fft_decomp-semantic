@@ -320,6 +320,7 @@ extern u32 g_main_saved_data_bits[40];
 extern wldcore_word_pair_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];
 extern wldcore_saved_record_t g_main_saved_records[];
+extern u8 D_80057b1c; /* 0xc5 at boot; saved at image offset 0x1c88 and restored on load, nothing else uses it */
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
 void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
@@ -1392,7 +1393,6 @@ s32 main_return_zero_80043708(void);
 /* unnamed */
 extern s32 D_800459D8;
 extern u8 D_800473A7;
-extern u8 D_80057b1c;
 extern u8 D_8005E950[];
 
 /* entry */
