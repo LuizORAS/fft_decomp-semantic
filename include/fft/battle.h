@@ -3461,6 +3461,7 @@ extern SVECTOR g_battle_effect_trajectory_position; /* final projectile position
 extern s32 g_battle_effect_trajectory_source_id;
 extern VECTOR g_battle_effect_trajectory_step; /* last step's movement */
 extern s32 g_battle_effect_trajectory_tile_flags;
+extern s32 D_801B8B98; /* set to 0x80000000 when the arrow arc handler ends early; never read */
 
 /* Self-relative animation script table: each halfword is a byte offset from
  * the table's own base to a battle_effect_anim_script_t. Declared as bytes
@@ -3486,12 +3487,18 @@ extern u8* g_battle_effect_prim_buffer;
 extern volatile s32 g_battle_effect_prim_buffer_offset;
 extern battle_effect_slot_t g_battle_effect_slots[];
 extern s32 g_battle_effect_sprite_count;
+extern s32 D_801BC0C4; /* zeroed when battle_effect_init_record_chain builds the work records; never read */
+extern s32 D_801BC0D4; /* zeroed on a battle_effect_set_ability_animation path; never read */
 extern s32 g_battle_effect_sprite_count_peak;
 extern effect_geometry_table_t* g_effect_geometry_table;
 extern effect_palette_entry_t* g_effect_palette_table;
 extern u8* g_effect_particle_system_data;
 extern effect_record_t g_effect_state_records[];
 extern effect_record_target_view_t g_effect_state_records_view[];
+
+/* Zeroed by battle_effect_update_stage and set to operand >> 4 by effect code
+ * script 05; never read. */
+extern u16 D_801BF000;
 extern s16 g_battle_effect_current_record_index;
 extern s32 g_battle_effect_work_record_peak;
 extern effect_work_record_t* g_battle_effect_free_work_record_head;
@@ -7855,11 +7862,5 @@ extern s32 D_800F668C;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
-extern s32 D_801B8B98;
-extern s32 D_801BC0C4;
-extern s32 D_801BC0D4;
-
-/* Written by battle_effect_code_script_05 but never read. */
-extern u16 D_801BF000;
 
 #endif
