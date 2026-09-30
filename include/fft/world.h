@@ -3315,7 +3315,9 @@ extern world_gfx_sprite_desc_t g_world_card_slot_quad_2;
 extern world_gfx_sprite_desc_t g_world_card_slot_quad_3;
 extern world_gfx_sprite_desc_t g_world_card_slot_quad_4;
 extern u8 g_world_card_load_failed;
+extern u8 D_801CC7D0; /* zeroed with g_world_card_load_failed when a load starts; never read */
 extern u8 g_world_card_save_failed;
+extern u8 D_801CC7D8; /* zeroed with g_world_card_save_failed when a save starts; never read */
 extern s8 g_world_card_probe_result;
 extern s8 g_world_card_scan_prompt_active;
 extern s8 g_world_card_slot_scan_index;
@@ -3697,8 +3699,6 @@ void world_block_start_thread(void);
 /* unnamed */
 extern s8 D_8018D18A;
 extern s8 D_801C833C;
-extern u8 D_801CC7D0;
-extern u8 D_801CC7D8;
 extern u8 D_801CD0EC;
 extern u8 D_801CD0F4;
 

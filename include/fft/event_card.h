@@ -363,6 +363,7 @@ extern u8 g_card_save_slot_selection_thread_state;
 extern const u16 g_card_save_slot_text_row_ids[];
 extern u8 g_card_save_title_template[0x16];
 extern u8 g_card_save_write_failed;
+extern u8 D_801ca964; /* CARD twin of D_801CC7D8 */
 extern u8 g_card_save_write_phase;
 extern u8 g_card_save_list_cursor_index;
 extern s16 g_card_save_list_scroll_anim_offset;
@@ -464,8 +465,5 @@ void card_thread_start_managed_with_delay(s32 thread_id, world_menu_entry_t* des
 /* other */
 extern u8 g_card_sound_queued_effect_id;
 extern s8 g_card_free_block_count;
-
-/* unnamed */
-extern u8 D_801ca964;
 
 #endif
