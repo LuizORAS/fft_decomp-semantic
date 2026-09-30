@@ -1223,6 +1223,12 @@ extern s32 g_world_gs_screen_height;
 extern MATRIX g_world_gs_id_matrix; /* GsIDMATRIX */
 extern MATRIX g_world_gs_ws_matrix; /* GsWSMATRIX */
 
+/* GsInit3D (world_gs_init3d) defaults: 10, 0 and 0x3fff. WORLD links only
+ * LIBGS's 2D and screen functions, and nothing on the disc reads them. */
+extern s32 D_801CD854;
+extern s32 D_801CD83C;
+extern s32 D_801CD7DC;
+
 /* libgs clip rectangle: world_gs_reset_screen_state.c writes x/y/w/h here. */
 extern RECT g_world_gs_clip_rect;
 extern u16 g_world_gfx_poly_f3_capacity;
@@ -3695,8 +3701,5 @@ extern u8 D_801CC7D0;
 extern u8 D_801CC7D8;
 extern u8 D_801CD0EC;
 extern u8 D_801CD0F4;
-extern s32 D_801CD7DC;
-extern s32 D_801CD83C;
-extern s32 D_801CD854;
 
 #endif
