@@ -1366,6 +1366,7 @@ extern u8* g_main_brave_story_ages_source;
 extern u8 g_main_menu_scroll_accel_delay;
 extern u8 g_main_menu_scroll_slow_step;
 extern u8 g_main_menu_scroll_fast_step;
+extern u8 D_800473A7; /* set to 1 with the input and scroll timings by main_save_init_state_and_options; never read */
 extern u8 g_main_accessory_page_order[0x21];
 extern u8 g_main_armor_page_order[0x25];
 extern u8 g_main_helmet_page_order[0x1d];
@@ -1397,9 +1398,6 @@ extern u8 D_8005E950[];
 
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_return_zero_80043708(void);
-
-/* unnamed */
-extern u8 D_800473A7;
 
 /* entry */
 
