@@ -7355,6 +7355,7 @@ extern s32 g_battle_menu_scroll_list_depth;
 extern s16* g_battle_menu_ability_display_flags_ptr;
 extern u16 g_battle_menu_status_visible_rows;
 extern u16 g_battle_menu_status_scroll_rows;
+extern s16 D_801669E8; /* zeroed when the idle action menu is rebuilt; never read */
 
 /* Row actions of the auto-battle setting menu (menu entry 0x80166b4c, +0x24). */
 extern s16 g_battle_menu_auto_battle_row_actions[8];
@@ -7860,8 +7861,5 @@ s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
 void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
 void battle_world_display_specific_menu_text(s32 buffer, s32 position, s32 text);
-
-/* unnamed */
-extern s16 D_801669E8;
 
 #endif
