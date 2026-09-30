@@ -1382,6 +1382,9 @@ extern u8 g_main_crystal_learnable_abilities[];
 extern u8 g_main_crystal_treasure_item_id;
 extern u8 g_main_brave_story_character_ages[0x40];
 extern s32 g_main_debug_display_enabled;
+/* Debug flag: zeroed with g_main_debug_display_enabled by event call function
+ * 0x08; never read. */
+extern s32 D_800459D8;
 extern s32 g_main_replay_story_event_index;
 extern u8 g_main_special_portrait_wldface_id;
 extern s32 g_main_deployed_unit_map_coordinates[];
@@ -1396,7 +1399,6 @@ s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_return_zero_80043708(void);
 
 /* unnamed */
-extern s32 D_800459D8;
 extern u8 D_800473A7;
 
 /* entry */
