@@ -757,7 +757,8 @@ extern u8 g_main_smd_key_semitones[120];                           /* 0x80029060
 extern u16 g_main_smd_pitch_table[12 * 256];
 
 /* Driver globals (0x800329f0-0x80032a68, gp = 0x800329bc). The heap globals
- * are only ever reached $gp-relative, by 0x8001423c-0x8001442c. */
+ * are only ever reached $gp-relative, by 0x8001423c-0x8001442c. The D_ words
+ * are write-only: no module on the disc loads them. */
 extern s16 g_main_sound_sfx_channel_count;                /* SFX request mode; the Play Sound wrappers store 2 */
 extern main_sound_resource_t* g_main_sound_resource_list; /* 0x80032a00 */
 extern s16* g_main_sound_spu_transfer_status_records;     /* SPU transfer status records, 16 bytes each */
@@ -767,9 +768,11 @@ extern u32 g_main_sound_sfx_restart_channels;             /* last SFX voice sear
 extern u32 g_main_sound_sfx_restart_voices;               /* last SFX voice search: voice mask */
 extern s32 g_main_smd_random_state;                       /* 0x80032a18 */
 extern s16 g_main_sound_sfx_instrument;
-extern u32 g_main_sound_sfx_key_off_voices;        /* SFX voices pending key-off */
-extern u32 g_main_sound_tick_count;                /* root-counter tick count; odd ticks step the ramps */
+extern u32 g_main_sound_sfx_key_off_voices; /* SFX voices pending key-off */
+extern u16 D_80032A28;                      /* set by main_sound_set_unread_value_800184e0; init and quit zero it */
+extern u32 g_main_sound_tick_count;         /* root-counter tick count; odd ticks step the ramps */
 extern u16 g_main_sound_spu_transfer_status_index; /* index into g_main_sound_spu_transfer_status_records */
+extern u32 D_80032A34;                             /* zeroed by SuzukiSPUInitialiser with g_main_sound_tick_count */
 extern CdlATV g_main_sound_cd_mix;                 /* 0x80032a3c; written by Put Sound Type */
 
 /* g_main_sound_cd_mix val1 (CD left to SPU right) and val3 (CD right to SPU
@@ -787,6 +790,7 @@ extern suzuki_music_t* g_main_sound_active_music_list; /* 0x80032a50 */
  * in progress (cleared by the transfer callback), 0x700 sound type, 0x1000
  * SFX enabled, 0x2000 apply the sound type at start-up, 0x8000 initialised. */
 extern u16 g_main_sound_driver_flags;
+extern s16 D_80032A58;                         /* zeroed by SuzukiSPUInitialiser */
 extern s32 g_main_root_counter_2_event;        /* 0x80032a5c; OpenEvent handle of main_sound_root_counter_2_handler */
 extern suzuki_music_t* g_main_sound_sfx_music; /* 0x80032a60; eight channels on SPU voices 16-23 */
 extern SpuReverbAttr g_main_sound_reverb_attr; /* 0x80037008 */
@@ -955,6 +959,7 @@ void main_sound_set_cd_volume(s16 volume, s16 time);
 void main_sound_set_cd_reverb(s32 reverb, s32 mix);
 void main_sound_commit_volume_change(void);
 void main_sound_set_vol_balance(s32 volume, SpuVolume* volume_out, u8 mode);
+void main_sound_set_unread_value_800184e0(u16 value);
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode);
 void main_suzuki_spu_callback_func(void);
 s32 main_sound_spu_event_handler(void);
@@ -1385,10 +1390,6 @@ s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_return_zero_80043708(void);
 
 /* unnamed */
-void func_800184e0(u16 value);
-extern u16 D_80032A28; /* only ever stored */
-extern u32 D_80032A34; /* only ever stored */
-extern s16 D_80032A58; /* only ever stored */
 extern s32 D_800459D8;
 extern u8 D_800473A7;
 extern u8 D_80057b1c;
