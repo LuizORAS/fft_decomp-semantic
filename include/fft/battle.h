@@ -5861,6 +5861,10 @@ extern s32 g_battle_move_pathing_resume_pass;
 extern s32 g_battle_move_pathing_tile_index;
 extern void (*g_battle_move_spread_preset_table[])(void);
 extern u8 g_battle_move_terrain_cost;
+extern u8 D_8018F4FC;  /* always 0 (never written); copied into the move config's _unknown_1a */
+extern u8 D_8018F7CC;  /* zeroed by battle_move_calculate_pathing, never read */
+extern u8 D_8018F7D0;  /* zeroed by battle_move_calculate_pathing, never read */
+extern s32 D_8018F7D8; /* zeroed by battle_move_calculate_pathing, never read */
 
 /* Height scratch record at 0x80096238; battle_calculate_unit_height_data fills
  * it in place. */
@@ -7841,10 +7845,6 @@ extern s32 D_800F668C;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
-extern u8 D_8018F4FC;
-extern u8 D_8018F7CC;
-extern u8 D_8018F7D0;
-extern s32 D_8018F7D8;
 extern u8 D_8019387C;
 extern s32* D_801B8A34;
 extern s32 D_801B8B18;
