@@ -3336,6 +3336,7 @@ extern MATRIX g_battle_effect_emitter_matrix;
 extern MATRIX g_battle_effect_projectile_matrix;
 extern s32* g_battle_effect_model_header;
 extern s32* g_battle_effect_model_vertices;
+extern s32* D_801B8A34; /* resource section at words[2], set with the other section pointers; never read */
 extern s32* g_battle_effect_model_commands;
 extern s32 g_battle_effect_model_command_index;
 extern SVECTOR g_battle_effect_camera_rotation_start;
@@ -3352,6 +3353,8 @@ extern VECTOR g_battle_effect_camera_zoom_start;
 extern VECTOR g_battle_effect_camera_zoom_target;
 extern VECTOR g_battle_effect_camera_zoom_current;
 extern VECTOR g_battle_effect_camera_zoom_saved;
+extern s32 D_801B8B18; /* zeroed with the effect camera modes; never read */
+extern s32 D_801B8B1C; /* zeroed with the effect camera modes; never read */
 extern s32 g_battle_effect_trajectory_hit_unit_id;
 extern void* g_battle_effect_trap_frame_data_ptr;
 extern s32 g_battle_effect_callback_slots[];
@@ -7852,9 +7855,6 @@ extern s32 D_800F668C;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
-extern s32* D_801B8A34;
-extern s32 D_801B8B18;
-extern s32 D_801B8B1C;
 extern s32 D_801B8B98;
 extern s32 D_801BC0C4;
 extern s32 D_801BC0D4;
