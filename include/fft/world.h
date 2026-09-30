@@ -750,6 +750,7 @@ extern u8 g_world_set_ability_window_script[];
 extern s8 g_world_set_ability_slot;               /* ability slot under the cursor: 0..4 */
 extern s8 g_world_set_ability_list_close_pending; /* close the ability list this frame */
 extern s8 g_world_set_ability_show_stat_preview;  /* show the stat preview window */
+extern s8 D_8018D18A;                             /* zeroed when the Set Ability menu opens; never read */
 extern u16 g_world_set_ability_cursor_anim;
 extern world_menu_point_t g_world_set_ability_cursor_point;
 extern u8 g_world_ability_list_script[];
@@ -1893,6 +1894,7 @@ extern u8 g_world_formation_dismiss_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
 extern u8 g_world_formation_view_quads[2][0x4b0];
 extern world_menu_point_t g_world_formation_cursor_target;
+extern s8 D_801C833C; /* zeroed with g_world_formation_scroll_velocity when the formation cursor starts; never read */
 extern world_cursor_trail_point_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
 extern u8* g_world_formation_dismiss_menu_data;
@@ -3620,7 +3622,9 @@ extern s32 g_world_shop_repurchase_price;        /* buy-back unit price */
 extern u16 g_world_shop_repurchase_item;         /* item being bought back */
 extern u8 g_world_shop_repurchase_confirm_shown; /* confirmation prompt shown */
 extern s8 g_world_shop_fur_access_granted;
+extern u8 D_801CD0EC; /* zeroed when the Soldier Office hire menu opens; never read */
 extern u8 g_world_shop_hire_result_shown;
+extern u8 D_801CD0F4; /* zeroed when the Soldier Office hire menu opens; never read */
 extern u8 g_world_shop_rename_error_shown;
 extern u8 g_world_shop_party_unit_count;
 extern const u8* g_world_shop_entered_unit_name;
@@ -3695,11 +3699,5 @@ s16 world_move_menu_cursor_horizontal(u16 count, u8 index, s32 buttons);
 void world_process_inflict_status_commands(void);
 void world_rotate_unit(const u8*);
 void world_block_start_thread(void);
-
-/* unnamed */
-extern s8 D_8018D18A;
-extern s8 D_801C833C;
-extern u8 D_801CD0EC;
-extern u8 D_801CD0F4;
 
 #endif
