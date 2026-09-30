@@ -2883,6 +2883,7 @@ extern u8 g_world_menu_buffer_arena[0x70][0x100];
 extern s32 g_world_menu_preview_target_action;
 extern world_fade_tile_frame_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */
+extern s32 D_801A668C;          /* WORLD twin of D_80173C70 */
 extern u8 g_world_menu_text_page_image[];
 extern u8 g_world_menu_window_frame_image[];
 extern s16 g_world_menu_at_list_primary_values[];
@@ -3689,7 +3690,6 @@ void world_block_start_thread(void);
 
 /* unnamed */
 extern s8 D_8018D18A;
-extern s32 D_801A668C;
 extern s8 D_801C833C;
 extern u8 D_801CC7D0;
 extern u8 D_801CC7D8;

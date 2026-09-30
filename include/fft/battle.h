@@ -7361,6 +7361,7 @@ extern s32 g_battle_help_text_id_tables_ptr;
 extern u16 g_battle_menu_anything_ability_id;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern s32 g_battle_active_menu; /* active menu */
+extern s32 D_80173C70;           /* always 0 (never written); passed to the option menu thread, which ignores it */
 extern RECT g_battle_menu_ability_list_clut_rect;
 extern s16 g_battle_menu_ability_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
@@ -7840,7 +7841,6 @@ extern s32 D_800F668C;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
-extern s32 D_80173C70;
 extern u8 D_8018F4FC;
 extern u8 D_8018F7CC;
 extern u8 D_8018F7D0;
