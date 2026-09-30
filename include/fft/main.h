@@ -1387,13 +1387,17 @@ extern u8 g_main_special_portrait_wldface_id;
 extern s32 g_main_deployed_unit_map_coordinates[];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
+
+/* 64 surface types x 2 bytes, all 0x19; copied into the selected-tile record's
+ * _unknown_02/_unknown_04, which nothing reads. */
+extern u8 D_8005E950[];
+
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_return_zero_80043708(void);
 
 /* unnamed */
 extern s32 D_800459D8;
 extern u8 D_800473A7;
-extern u8 D_8005E950[];
 
 /* entry */
 
