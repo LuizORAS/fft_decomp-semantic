@@ -5195,6 +5195,7 @@ extern battle_action_data_t* g_battle_action_target_data;
 extern battle_action_context_e g_battle_action_context;
 extern s16 g_battle_current_reaction_ability_id;
 extern s32 g_battle_distribute_target_count;
+extern u8 D_8019387C; /* written only by battle_action_store_8019387c_if_not_reacting, which nothing calls */
 extern s32 g_battle_casting_misc_id;
 extern s32 g_battle_casting_unit_id;
 extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
@@ -7851,7 +7852,6 @@ extern s32 D_800F668C;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
-extern u8 D_8019387C;
 extern s32* D_801B8A34;
 extern s32 D_801B8B18;
 extern s32 D_801B8B1C;
