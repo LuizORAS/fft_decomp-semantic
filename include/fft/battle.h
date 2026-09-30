@@ -1363,6 +1363,12 @@ extern battle_heap_owner_list_t g_battle_heap_owner_lists[];
 extern battle_heap_node_t* g_battle_heap_rover;
 extern u32 g_battle_heap_end_address;
 extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free_node-block size seen, in 8-byte units. */
+
+/* Summed as D_801BACC4 * 4 + D_801BC0D8 into the "DP %x" line of
+ * battle_heap_print_stats; never written, so it prints 0. */
+extern s32 D_801BACC4;
+extern s32 D_801BC0D8;
+
 extern s32 g_battle_game_state;
 extern s32 g_battle_state_animation_continue_check;
 extern s32 g_battle_state_game_flow_running;
@@ -7850,10 +7856,8 @@ extern s32* D_801B8A34;
 extern s32 D_801B8B18;
 extern s32 D_801B8B1C;
 extern s32 D_801B8B98;
-extern s32 D_801BACC4;
 extern s32 D_801BC0C4;
 extern s32 D_801BC0D4;
-extern s32 D_801BC0D8;
 
 /* Written by battle_effect_code_script_05 but never read. */
 extern u16 D_801BF000;
