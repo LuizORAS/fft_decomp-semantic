@@ -4544,6 +4544,8 @@ extern s32 g_battle_gfx_last_loaded_shp_id;
 extern u8* g_battle_gfx_load_data_cursor;
 extern u8* g_battle_gfx_shp_frame_data_cursor;
 extern s16 g_battle_gfx_previous_counter;
+extern s16 D_800b628c; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
+extern s16 D_800b6290; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
 extern battle_gfx_fade_overlay_t g_battle_gfx_screen_fade_overlays[]; /* one fade overlay per packet buffer */
 
 /* Overlay draw-mode primitives, one per screen polarity. */
@@ -6642,8 +6644,17 @@ extern battle_lightning_state_t g_battle_map_lightning_state;
 extern u8 g_battle_map_ambient_polygon_color[3];
 extern u8 g_battle_map_back_color_bytes[3];
 extern SVECTOR g_battle_map_command_0x96_rotation;
+extern s32 D_800F668C; /* set to 0x95 when map command 0x96 gets a duration; never read */
 extern u8 g_battle_map_gns_dispatch_held;
 extern s32 g_battle_map_gns_load_phase;
+
+/* Write-only: zeroed with the map render state and never read anywhere on
+ * the disc. The 150 x 14-byte shape suggests per-instruction parameter
+ * storage (an event opcode takes at most 14 parameters), but no code proves
+ * it, so the names stay provisional. */
+extern u8 D_800F70B4[150][14];
+extern u8 D_800F78E8[150];
+
 extern u8 g_battle_map_light_direction[4];
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
@@ -7851,16 +7862,6 @@ void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
 void battle_world_display_specific_menu_text(s32 buffer, s32 position, s32 text);
 
 /* unnamed */
-extern s16 D_800b628c;
-extern s16 D_800b6290;
-extern s32 D_800F668C;
-
-/* Write-only: zeroed with the map render state and never read anywhere on
- * the disc. The 150 x 14-byte shape suggests per-instruction parameter
- * storage (an event opcode takes at most 14 parameters), but no code proves
- * it, so the names stay provisional. */
-extern u8 D_800F70B4[150][14];
-extern u8 D_800F78E8[150];
 extern s16 D_801669E8;
 
 #endif
