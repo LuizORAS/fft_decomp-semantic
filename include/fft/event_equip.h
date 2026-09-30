@@ -273,6 +273,7 @@ void equip_gfx_enqueue_textured_quad_current_ot(
 
 /* input */
 extern u8 g_equip_input_activation_timer;
+extern s16 D_801d86ac; /* written only by equip_set_s16_801d86ac, which nothing calls */
 extern u32* g_equip_input_controller;
 extern u8 g_equip_input_lock_timer;
 extern u16 g_equip_input_newly_pressed;
@@ -796,8 +797,5 @@ void equip_collect_item_stat_deltas(
     s32 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
 
 s32 equip_entrypoint(s32 unit, void* otag);
-
-/* unnamed */
-extern s16 D_801d86ac;
 
 #endif
