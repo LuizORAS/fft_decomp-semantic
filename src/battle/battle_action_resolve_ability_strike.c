@@ -25,7 +25,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     g_battle_sort_targets_nearest_first = 0;
     g_battle_relocated_unit_count = 0;
     g_current_ability.random_fire_flag = 0;
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
     if (misc_unit_id >= 21) {
@@ -62,7 +62,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             work->continue_attack = 0;
             return -1;
         }
-        if (g_current_ability.post_action_target_id < 21
+        if (g_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
             && (g_current_ability.elemental_flags != 0 || (g_current_ability.knockback_flags & 0x80))) {
             battle_target_disable_green_panel_flags();
             count = 1;
@@ -79,7 +79,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     g_current_ability.target_count = count;
     battle_action_store_ability_data(targets);
     battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&attacker->action_actor_id);
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
             g_current_ability.defaulted_to_attack = 0;

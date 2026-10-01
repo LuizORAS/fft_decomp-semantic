@@ -197,7 +197,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
         }
         unit_id++;
-    } while (unit_id < 0x15);
+    } while (unit_id < BATTLE_UNIT_SLOT_COUNT);
 
     usable = 0;
     if (lowest_unit != 0xff) {

@@ -13,7 +13,7 @@ battle_stats_t* battle_find_unit_data_pointer_for_entd_unit_id(s32 unit_id, s32*
     battle_stats_t* unit;
     s32 i;
 
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)) {
             if (*(u16*)&unit->status_sets.current[0]
@@ -27,7 +27,7 @@ battle_stats_t* battle_find_unit_data_pointer_for_entd_unit_id(s32 unit_id, s32*
         }
     }
 
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)
             && unit->existence != unit->entd_slot) {

@@ -151,7 +151,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
             }
         }
         i++;
-    } while (i < 21);
+    } while (i < BATTLE_UNIT_SLOT_COUNT);
     g_battle_action_context = 0;
     *out_ability = 0;
     return -1;
