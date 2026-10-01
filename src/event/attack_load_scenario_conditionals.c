@@ -33,6 +33,11 @@ typedef struct attack_scenario {
  * finish-operation table is rebuilt from every scenario record, and the
  * current scenario's map, music, ENTD, squads and condition script are copied
  * into the script variables. Returns 1 when the scenario has no first squad.
+ *
+ * The next story event is normally id + 1. Partings skips the Deep Dungeon
+ * slots (0x5b..0x73) to Chapter 2 Start, and Searching for Alma jumps to
+ * Those Who Squirm in Darkness unless OLAN_SAW_RAMZA_FUNERAL selects Things
+ * Obtained.
  */
 s32 attack_load_scenario_conditionals(void) {
     /* sp+0x10 squad 1, sp+0x14 squad 2, sp+0x1c story ENTD; [2] is unused.
@@ -93,14 +98,14 @@ s32 attack_load_scenario_conditionals(void) {
     battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 1);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL) != 0
         && battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0
-        && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x12a) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12b);
+        && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_SEARCHING_FOR_ALMA) {
+        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_THINGS_OBTAINED_SETUP);
     } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
         id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if (id == 0x5a) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x74);
-        } else if (id == 0x12a) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x148);
+        if (id == EVENT_ID_PARTINGS) {
+            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_CHAPTER_2_START_SETUP);
+        } else if (id == EVENT_ID_SEARCHING_FOR_ALMA) {
+            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_THOSE_WHO_SQUIRM_IN_DARKNESS_SETUP);
         } else {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id + 1);
         }

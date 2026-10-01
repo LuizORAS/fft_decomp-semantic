@@ -57,7 +57,7 @@ void require_reward_animate_bonus_image_burst(void) {
 
     g_require_thread_suspended_id = g_battle_current_thread_id;
     g_battle_text_section_pointers[21] = g_battle_text_section_pointers[2];
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145) {
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY) {
         require_reward_load_bonus_image(0);
     } else {
         require_reward_load_bonus_image(1);
