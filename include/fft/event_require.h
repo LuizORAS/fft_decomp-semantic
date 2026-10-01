@@ -235,6 +235,13 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+/* BONUS image file loaded by require_reward_load_bonus_image: 200 rows of
+ * 64 16-bit pixels, then the palette. */
+typedef struct require_reward_bonus_image_file {
+    u16 pixels[200][64]; /* 0x0000 */
+    u16 palette[1];      /* 0x6400 */
+} require_reward_bonus_image_file_t;
+
 extern RECT g_require_reward_bonus_image_rect;
 extern RECT g_require_reward_bonus_palette_rect;
 extern s32 g_require_reward_war_trophy_entry_count;
