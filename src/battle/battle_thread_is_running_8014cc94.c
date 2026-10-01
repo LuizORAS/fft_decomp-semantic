@@ -1,8 +1,9 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /*
- * Reads g_battle_threads[thread_id].running_status (thread records are 0x400
- * bytes; the status word sits at +0x48).
+ * Reads g_battle_threads[thread_id].is_running (thread records are 0x400
+ * bytes; the flag sits at +0x48).
  *
  * The 36-byte target is not compiler output: it loads the g_battle_threads
  * pointer through $at and contains a redundant `move at,at`, so no C form can
@@ -22,7 +23,8 @@ s32 battle_thread_is_running_8014cc94(s32 thread_id) {
     thread_offset = thread_id << 10;
     global_pointer = (void*)0x80160000;
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
+    /* Raw: 0x5f98 is the low half of g_battle_threads. */
     thread_array = *(u8**)((u8*)global_pointer + 0x5f98);
     __asm__("nop\naddu $8,$8,$9" : "=r"(thread_offset) : "0"(thread_offset), "r"(thread_array));
-    return *(s32*)(thread_offset + 0x48);
+    return ((native_thread_t*)thread_offset)->is_running;
 }
