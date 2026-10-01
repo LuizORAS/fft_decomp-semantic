@@ -37,7 +37,7 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     controller = g_open_current_controller_index;
     position[0] = -4;
     position[1] = -16;
-    g_open_controller_stream_start[controller].stream_start = 0;
+    g_open_controller_stream_start[controller].title_exit.state = 0;
     g_open_controller_handler_indices[controller] = 12;
     g_open_current_controller_index = controller + 1;
 }
