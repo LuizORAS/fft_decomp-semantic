@@ -183,7 +183,7 @@ s32 world_menu_dispatch_system_function(
         g_world_menu_restore_pending = 1;
         world_menu_start_system_function_thread(value);
     } else if (command == 5) {
-        g_world_spell_quote_last_ability_id = action->ability_id & 0x1FF;
+        g_world_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
         world_thread_start(4, world_noop_800ef9d4);
         world_thread_set_parameters(4, unit_id, g_world_spell_quote_last_ability_id, 0);
     } else if (command == 7) {
@@ -197,7 +197,7 @@ s32 world_menu_dispatch_system_function(
             if (action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
                 g_world_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
-                value = action->ability_id & 0x1FF;
+                value = action->ability_id & ABILITY_ID_MASK;
                 if ((u32)(value - 0x3C) < 0x1A) {
                     g_world_text_substitution_values[0] = value + 0xB7C4;
                 } else {
