@@ -391,12 +391,12 @@ typedef struct suzuki_smd_header {
     u32 size;               /* 0x08 */
     u8 _unused_0c[4];       /* 0x0c */
     u16 id;                 /* 0x10; copied to MUS id and channel sound_id */
-    u8 _unknown_12;         /* 0x12; copied to MUS _unknown_014 */
+    u8 _unknown_12;         /* 0x12; 2 in every retail SMD; copied to MUS _unknown_014 */
     u8 tick_divisor;        /* 0x13 */
     u8 channel_count;       /* 0x14 */
-    u8 _unknown_15;         /* 0x15; copied to MUS _unknown_017 */
+    u8 _unknown_15;         /* 0x15; 0 in every retail SMD (VGMTrans: percussion count); copied to MUS _unknown_017 */
     u16 waveset_id;         /* 0x16 */
-    u16 _unknown_18;        /* 0x18; copied to MUS _unknown_01a */
+    u16 _unknown_18;        /* 0x18; 40..127 in the retail SMDs, most often 127; copied to MUS _unknown_01a */
     s8 reverb_mode;         /* 0x1a */
     u8 reverb_depth;        /* 0x1b */
     u8 reverb_delay;        /* 0x1c */
@@ -489,16 +489,16 @@ typedef struct suzuki_music_channel {
     u8* note_data;             /* 0x18; read position */
     u8* loop_note_data;        /* 0x1c; set by Loop and opcode 0x8D, jumped to by End Bar & Loop */
     u8* restart_note_data;     /* 0x20; set by main_smd_init_channel_streams */
-    u32 _unknown_024;          /* 0x24; cleared by the channel initialiser */
+    u32 _unknown_024;          /* 0x24; cleared by the channel initialisers; never read */
     u16 loop_count;            /* 0x28; End Bar & Loop */
-    u8 _unknown_02a;           /* 0x2a; cleared by the channel initialiser */
+    u8 _unknown_02a;           /* 0x2a; cleared by the channel initialisers; never read */
     u8 loop_octave_base;       /* 0x2b; octave_base saved with loop_note_data */
     u8 instrument;             /* 0x2c */
     u8 voice;                  /* 0x2d; SPU voice (opcode 0xAA); bit 0 allows the pitch LFO */
     u16 release_2e;            /* 0x2e; Release stores its byte here and in release_time */
     suzuki_waveset_t* waveset; /* 0x30; Select Sound Font */
     u32 voice_mask;            /* 0x34; SPU voice bit(s) owned by this channel */
-    u32 _unknown_038;          /* 0x38; initialised to 0xff9f */
+    u32 _unknown_038;          /* 0x38; 0xff9f for voice slots below 25, else 0; never read */
     s16 spu_volume_left;       /* 0x3c; SpuSetVoiceVolume(Attr) left, from main_smd_update_voices */
     s16 spu_volume_right;      /* 0x3e */
     s16 spu_volume_mode_left;  /* 0x40; SpuSetVoiceVolumeAttr left mode; cleared by the channel initialiser */
@@ -574,13 +574,13 @@ typedef struct suzuki_music {
     u8 _unused_00c[4];             /* 0x0c */
     u16 status;                    /* 0x10 */
     u16 id;                        /* 0x12; SMD id */
-    u8 _unknown_014;               /* 0x14; SMD _unknown_12 */
+    u8 _unknown_014;               /* 0x14; SMD _unknown_12 (1 for SFX); never read */
     u8 tick_divisor;               /* 0x15 */
     u8 channel_count;              /* 0x16 */
-    u8 _unknown_017;               /* 0x17; SMD _unknown_15 */
+    u8 _unknown_017;               /* 0x17; SMD _unknown_15; never read */
     s16 waveset_id;                /* 0x18; sound font id */
-    u16 _unknown_01a;              /* 0x1a; SMD _unknown_18, 0x7f for SFX */
-    u8 _unknown_01c;               /* 0x1c; set by opcode 0xA4, adjusted by 0xA5 */
+    u16 _unknown_01a;              /* 0x1a; SMD _unknown_18, 0x7f for SFX; never read */
+    u8 _unknown_01c;               /* 0x1c; set by opcode 0xA4, adjusted by 0xA5; nothing else reads it */
     u8 channel_select;             /* 0x1d; opcode 0x8D acts when its byte matches */
     u16 noise_clock;               /* 0x1e; opcodes 0xB4/0xB5 */
     s32 tick_20;                   /* 0x20; incremented every tick */
