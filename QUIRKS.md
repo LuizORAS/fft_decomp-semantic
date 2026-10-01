@@ -53,6 +53,13 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_action_run_pre_formula_setup.c`: both range-data bounds are
   `ABILITY_ID_ITEM_FIRST + 1`, so Potion (`0x170`) copies the item-ability item
   ids past the table as its range data; the Item menu clears it for consumables.
+- `src/world/world_item_sort_id_list.c`,
+  `src/event/equip_item_sort_list_by_criteria.c`: the evade sort keys treat
+  `0x7a`..`0x8f` as shields and `0x90`..`0xef` as accessories, so throwables
+  index the 16-entry shield table with weapon ids (122..127) and headgear and
+  body armor index the accessory table with helm/armor ids; those items sort
+  by unrelated bytes. A fix splits weapons at `ITEM_ID_SHIELD_FIRST` and keys
+  headgear and body armor, which carry HP/MP bonuses instead of evade, as 0.
 - `src/battle/battle_camera_step_real_coords_toward_target.c`: in the positive
   direction the Y (`vz`) step adds the vector component twice; X and Z add it
   once.
