@@ -41,10 +41,10 @@ s32 battle_menu_resolve_selection(void) {
                     if (menu == 0x69) {
                         command = g_dead_unit_action;
                         g_battle_menu_selected_action.item_id = (u8)g_dead_unit_result;
-                        option = 0xFFFE;
+                        option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_id_records[i].map + option + 1);
-                        option = 0xFFFE;
+                        option = MENU_SELECTION_NONE;
                     } else {
                         command = *(g_battle_menu_id_records[i].map + command + 1);
                     }
@@ -74,16 +74,18 @@ s32 battle_menu_resolve_selection(void) {
             } else {
                 command = option + 13;
             }
-            option = 0xFFFE;
-            item = 0xFFFE;
+            option = MENU_SELECTION_NONE;
+            item = MENU_SELECTION_NONE;
             g_battle_menu_resolved_command = command;
         }
         g_selected_ability = command;
         if ((option & 0xFE) != 0xFE) {
             option = g_battle_action_menu_skillsets[index];
-            if ((u32)(option - 1) < 2 || (u32)(option - 3) < 2 || (u32)(option - 0x11) < 2) {
+            /* Attack/Defend, Equip Change/0x04 and Elemental/Jump take no list entry. */
+            if ((u32)(option - SKILLSET_ID_ATTACK) < 2 || (u32)(option - SKILLSET_ID_EQUIP_CHANGE) < 2
+                || (u32)(option - SKILLSET_ID_ELEMENTAL) < 2) {
                 g_battle_menu_selected_action.ability_id = 0;
-                item = 0xFFFE;
+                item = MENU_SELECTION_NONE;
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_action_menu_build_result == 0) {
                 item = g_battle_menu_anything_ability_id;
             } else {
@@ -91,8 +93,9 @@ s32 battle_menu_resolve_selection(void) {
             }
             g_battle_menu_selected_action.skillset = option;
             g_battle_menu_used_skillset_id = option;
-            if (item != 0xFFFE) {
-                if (option == 6 || (u32)(option - 0x13) < 2) {
+            if (item != MENU_SELECTION_NONE) {
+                /* Item, Draw Out and Throw select an item. */
+                if (option == SKILLSET_ID_ITEM || (u32)(option - SKILLSET_ID_DRAW_OUT) < 2) {
                     g_battle_menu_selected_action.item_id = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;

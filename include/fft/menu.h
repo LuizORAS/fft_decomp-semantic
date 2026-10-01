@@ -256,6 +256,12 @@ typedef enum action_menu_pseudo_skillset {
     ACTION_MENU_PSEUDO_SKILLSET_ANYTHING = 0xbc,
 } action_menu_pseudo_skillset_e;
 
+/* Option and item value meaning "no selection" in the packed action-menu
+ * result; the option byte test (x & 0xfe) == 0xfe also accepts 0xff. */
+enum {
+    MENU_SELECTION_NONE = 0xfffe,
+};
+
 /* Seven-byte window command in the menu script streams. The length field
  * advances to the next command, which may have a different size. */
 typedef struct world_menu_window_command {

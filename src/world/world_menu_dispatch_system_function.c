@@ -166,13 +166,15 @@ s32 world_menu_dispatch_system_function(
             value = 0xB;
             if (option != 1) {
                 if (option == 2 || option == 4) {
-                    if (g_world_menu_resolved_ability == 0xFFFE || g_world_ability_selected_skill_target == 0) {
+                    if (g_world_menu_resolved_ability == MENU_SELECTION_NONE
+                        || g_world_ability_selected_skill_target == 0) {
                         value = 0x2D;
                     } else {
                         value = 0xC;
                     }
                 } else {
-                    if (g_world_menu_resolved_ability != 0xFFFE || g_world_ability_selected_skill_target == 0) {
+                    if (g_world_menu_resolved_ability != MENU_SELECTION_NONE
+                        || g_world_ability_selected_skill_target == 0) {
                         value = 0x2E;
                     } else {
                         value = 0xD;

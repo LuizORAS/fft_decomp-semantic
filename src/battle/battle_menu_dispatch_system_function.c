@@ -172,13 +172,13 @@ s32 battle_menu_dispatch_system_function(
             value = 0xB;
             if (option != 1) {
                 if (option == 2 || option == 4) {
-                    if (g_battle_menu_used_item_id == 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id == MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
                         value = 0x2D;
                     } else {
                         value = 0xC;
                     }
                 } else {
-                    if (g_battle_menu_used_item_id != 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id != MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
                         value = 0x2E;
                     } else {
                         value = 0xD;
