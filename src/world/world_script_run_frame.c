@@ -58,7 +58,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
                 g_world_menu_overlay_state = 0;
                 return 0;
             }
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x147) {
+            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
                 return 0x13;
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));

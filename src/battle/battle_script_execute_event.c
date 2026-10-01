@@ -158,7 +158,7 @@ restart_script:
                         battle_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x12C) {
+                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_THINGS_OBTAINED) {
                         battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -304,7 +304,7 @@ restart_script:
                 }
             }
             operand_1 = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-            if (operand_1 != 0x1AD && operand_1 != 0x1D1) {
+            if (operand_1 != EVENT_ID_DELITAS_BETRAYAL && operand_1 != EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS) {
                 battle_gfx_init_evtchr_vram_slots();
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
@@ -762,7 +762,7 @@ restart_script:
             draw_misc_id = (s16)battle_get_misc_id(first_halfword);
             if (draw_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_animate_and_set_enemy_level_data_by_misc_id(draw_misc_id);
-                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
+                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_ZALERA) {
                     battle_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
                     g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;

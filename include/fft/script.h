@@ -29,6 +29,25 @@ enum {
 
 #define EVENT_TEXT_OFFSET_PROCESSED 0xf2f2f2f2U
 
+/* TEST.EVT event slots the engine tests by number. Names follow the
+ * FFHacktics "Event Scripts and Scenario Order correlation" list, where a
+ * Setup entry is the slot before its event. */
+typedef enum event_id {
+    EVENT_ID_PARTINGS = 0x05a,
+    EVENT_ID_CHAPTER_2_START_SETUP = 0x074,
+    EVENT_ID_MEET_VELIUS = 0x0f9,
+    EVENT_ID_SEARCHING_FOR_ALMA = 0x12a,
+    EVENT_ID_THINGS_OBTAINED_SETUP = 0x12b,
+    EVENT_ID_THINGS_OBTAINED = 0x12c,
+    EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY = 0x145,
+    EVENT_ID_REUNION_AND_BEYOND = 0x147,
+    EVENT_ID_THOSE_WHO_SQUIRM_IN_DARKNESS_SETUP = 0x148,
+    EVENT_ID_ZALERA = 0x18c,
+    EVENT_ID_GAME_OVER = 0x194,
+    EVENT_ID_DELITAS_BETRAYAL = 0x1ad,
+    EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS = 0x1d1,
+} event_id_e;
+
 /* Retail scenario bytecode, reviewed against BATTLE 0x80143bd8..0x80145f78 and
  * the shared BATTLE/WORLD operand-length tables. Comments count encoded
  * operand BYTES, excluding the opcode; they do not specify parameter widths.
