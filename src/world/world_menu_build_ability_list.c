@@ -63,24 +63,20 @@ void world_menu_build_ability_list(s32 mode) {
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_display_item_inventory_ability)(
+        battle_menu_display_item_inventory_ability(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_load_throw_abilities)(
+        battle_menu_load_throw_abilities(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_ARITHMETICKS) {
         if (mode == 2) {
-            /* The definition types the id buffer parameter as s32. */
-            ((void (*)(s32, s32, u16*))battle_menu_load_math_skill_attributes)(
+            battle_menu_load_math_skill_attributes(
                 unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
         }
         if (mode == 1) {
-            /* The definition types the id buffer parameter as s32. */
-            ((void (*)(s32, s32, u16*))battle_menu_load_math_skill_multiples)(
+            battle_menu_load_math_skill_multiples(
                 unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
         }
         if (mode == 0) {
@@ -94,14 +90,11 @@ void world_menu_build_ability_list(s32 mode) {
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags);
     }
     if (type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_load_draw_out_abilities)(
+        battle_menu_load_draw_out_abilities(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_CHARGE) {
-        /* The definition types the three output buffer parameters as s32. */
-        ((void (*)(s32, s32, u16*, u8*, u8*))battle_menu_load_charge_skillset)(unit_index, skillset,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
+        battle_menu_load_charge_skillset(unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2);
         world_script_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled,
