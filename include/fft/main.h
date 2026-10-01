@@ -370,11 +370,14 @@ typedef struct suzuki_instrument {
  * header_size bytes on the Suzuki heap, linked from g_main_sound_waveset_list
  * through next. Select Sound Font (0x80016e48) matches id. */
 typedef struct suzuki_waveset {
-    u8 _unused_00[0x10];                /* 0x00; "dwdsP" magic, file size at 0x08 */
+    u8 magic[4];                        /* 0x00; "dwds" */
+    u32 _unused_04;                     /* 0x04 */
+    u32 file_size;                      /* 0x08; whole WD file (VGMTrans: instrument set size) */
+    u32 _unused_0c;                     /* 0x0c */
     u32 header_size;                    /* 0x10 */
     u32 wave_size;                      /* 0x14 */
     u32 wave_offset;                    /* 0x18 */
-    u8 _unused_1c[4];                   /* 0x1c */
+    u32 last_instrument;                /* 0x1c; index of the last instruments[] record (175: 176 records) */
     u16 id;                             /* 0x20 */
     u8 _unused_22[6];                   /* 0x22 */
     u32 spu_address;                    /* 0x28; SpuMalloc result, freed by main_sound_free_waveset */
