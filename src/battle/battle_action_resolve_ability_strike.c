@@ -138,7 +138,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         if (g_current_ability.knockback_flags != 0) {
             work->reaction_occurred = 1;
             work->animate_on_miss_flag = 1;
-            work->last_attack_id = 0x200;
+            work->last_attack_id = ABILITY_ID_KNOCKBACK;
         }
         g_current_ability.strike_counter++;
         if (g_current_ability.strike_counter < g_current_ability.strike_count) {

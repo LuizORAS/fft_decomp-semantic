@@ -29,6 +29,12 @@ enum {
     /* 0x1fe/0x1ff request a random R/S/M pick; main_unit_calculate_rsm returns
      * any smaller id unchanged. */
     ABILITY_ID_RANDOM_FIRST = 0x1fe,
+    /* Pseudo id one past the table; FFTPatcher leaves it unnamed. The strike
+     * resolver stores it as the follow-up strike of a knockback, which moves
+     * the targets to their knockback destination and has no effect file. An
+     * earlier source comment called it "Fall"; the name follows its only
+     * producer, the knockback branch of battle_action_resolve_ability_strike. */
+    ABILITY_ID_KNOCKBACK = 0x200,
 };
 
 /* The random R/S/M selector uses a different legacy bit assignment from the

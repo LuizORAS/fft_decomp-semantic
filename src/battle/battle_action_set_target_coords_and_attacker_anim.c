@@ -30,8 +30,9 @@ typedef struct battle_action_misc_data {
 
 /* Finalizes the casting unit's action and picks its attack animation.
  *
- * Each target's attack result is resolved first; for Fall (ability 0x200) in
- * the later phase the targets are moved to the knockback destination instead.
+ * Each target's attack result is resolved first; for a knockback strike
+ * (ABILITY_ID_KNOCKBACK) in the later phase the targets are moved to the
+ * knockback destination instead.
  * An ability picks the ability animation unless a reaction occurred, while a
  * plain attack or an elemental gun picks the weapon strike.
  *
@@ -77,7 +78,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
                 battle_unit_select_weapon_attack_animation(unit, 0);
             }
         }
-    } else if (unit->used_ability_id == 0x200) {
+    } else if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
         for (i = 0; i < unit->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
             if (target != 0) {

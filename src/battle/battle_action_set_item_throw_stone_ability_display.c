@@ -11,7 +11,7 @@ void battle_action_set_item_throw_stone_ability_display(void) {
     unit->state_frame_counter = 0;
     battle_target_gather_x_y_data_for_attacks(unit);
 
-    if ((ability == 0) || (ability == 0x200)) {
+    if ((ability == 0) || (ability == ABILITY_ID_KNOCKBACK)) {
         g_animation_speed = 1;
         battle_action_clear_at_list_active();
         return;

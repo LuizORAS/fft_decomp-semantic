@@ -31,7 +31,7 @@ void battle_state_update_action_execute_mode(void) {
         }
     }
 
-    if (unit->used_ability_id != 0 && unit->used_ability_id != 0x200
+    if (unit->used_ability_id != 0 && unit->used_ability_id != ABILITY_ID_KNOCKBACK
         && unit->used_ability_id != ABILITY_ID_BASIC_SKILL_THROW_STONE) {
         if (battle_effect_load_ability(unit->used_ability_id) != 0
             || (u32)(unit->used_ability_id - ABILITY_ID_CHARGE_FIRST)
@@ -69,7 +69,7 @@ void battle_state_update_action_execute_mode(void) {
                 for (i = 0; i < unit->target_count; i++) {
                     target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
                     if (target != 0) {
-                        if (unit->used_ability_id == 0x200) {
+                        if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
                             battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);
                         }
                         battle_unit_update_display_by_misc_id(target->unit_id);
