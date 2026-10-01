@@ -757,7 +757,7 @@ extern battle_ai_extended_snapshot_t* g_battle_ai_unit_snapshots; /* 0x8019f3c0 
 extern battle_ai_data_t* g_battle_ai_workspace;                   /* 0x8019f3ac */
 
 /* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
-extern void* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
+extern union battle_ai_workspace* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
 s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id);
 s32 battle_ai_set_movement_panel_data(s32 movement_taken);
 void battle_ai_set_ability_considerations(s32 action_taken);
@@ -7204,6 +7204,33 @@ typedef struct battle_menu_window_record {
     s32 _unknown_74; /* 0x74; zeroed by the builder, never read */
     s32 _unknown_78; /* 0x78; zeroed by the builder; see QUIRKS.md */
 } battle_menu_window_record_t;
+
+/* Provisional: one of the two 0x134-byte packet pages the list alternates
+ * between frames (BATTLE twin of the WORLD scroll-list page). */
+typedef struct battle_menu_scroll_list_page {
+    SPRT frame;                        /* 0x00: cursor frame */
+    SPRT arrows[2];                    /* 0x14: scroll arrows */
+    SPRT arrow_marks[2];               /* 0x3c */
+    SPRT thumb;                        /* 0x64: scroll-bar thumb */
+    DR_MODE text_mode;                 /* 0x78 */
+    DR_MODE icon_mode;                 /* 0x84 */
+    battle_menu_window_record_t icons; /* 0x90 */
+    u8 _unused_10c[0x28];
+} battle_menu_scroll_list_page_t;
+
+/* The AI data block doubles as a work area while the AI is idle: the menus
+ * build their ability list (and the outermost scroll list's page pair after
+ * it) there, and events stage unit statuses in it. */
+typedef union battle_ai_workspace {
+    battle_ai_data_t ai;
+    world_ability_list_t ability_list;
+    world_ability_skill_use_tables_t skill_use;
+    world_event_work_t event;
+    struct {
+        u8 _padding_000[0x388]; /* the ability list, rounded up for the pages */
+        battle_menu_scroll_list_page_t pages[2];
+    } scroll;
+} battle_ai_workspace_t;
 
 /* Provisional window request: VRAM source point, size, screen point and the
  * load parameters for the window background quad. */

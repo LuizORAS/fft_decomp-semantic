@@ -89,7 +89,7 @@ s32 battle_menu_resolve_selection(void) {
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_action_menu_build_result == 0) {
                 item = g_battle_menu_anything_ability_id;
             } else {
-                item = ((u16*)g_battle_ai_workspace_ptr)[item] & 0x1FF;
+                item = g_battle_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
             }
             g_battle_menu_selected_action.skillset = option;
             g_battle_menu_used_skillset_id = option;
