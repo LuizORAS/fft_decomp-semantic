@@ -335,7 +335,7 @@ extern s16 g_equip_remove_item_equipment[];
 extern point16_t g_equip_remove_item_marker_rect;
 extern s8 g_equip_remove_item_previewed_slot;
 void equip_item_clear_stat_sums(s16* summary, s16* detail);
-s32 equip_item_adjust_inventory_count(s32 g_main_item_item_flags, s32 delta);
+s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta);
 void equip_item_build_inventory_totals(void);
 equip_icon_rect_t* equip_item_build_row_icon_rect(s32 index);
 
