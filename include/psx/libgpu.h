@@ -711,7 +711,7 @@ typedef struct {
 /* A packet member repeats every 96 bytes; its tail overlaps the next entry's metadata. */
 typedef struct {
     u32 packet_words[21];
-    u32 _unknown_54[3];
+    u32 _padding_54[3]; /* size filler to the 0x60 stride: the next entry's operation, source and argument */
 } psyq_gpu_queue_packet_view_t;
 
 typedef struct {
