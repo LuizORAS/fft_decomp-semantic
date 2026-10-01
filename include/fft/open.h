@@ -667,7 +667,7 @@ extern volatile u32* g_open_dma_mdec_in_bcr;
 extern volatile u32* g_open_dma_mdec_in_chcr;
 s32 open_bin_decdctbufsize(const u16* bs);
 void open_bin_decdctin(s32* packet, s32 mode);
-void open_bin_decdctout(u32 command, u32 words);
+void open_bin_decdctout(u32 buf, u32 size);
 void open_bin_decdctoutcallback(void* callback);
 void open_bin_decdctreset(s32 mode);
 s32 open_bin_libpress_timeout(const char* operation);

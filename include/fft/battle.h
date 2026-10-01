@@ -4650,7 +4650,7 @@ void battle_gfx_init_render_buffers(void);
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
 
 void battle_gfx_append_unit_graphics_load_descriptor(u8 map_x, u8 map_y, u8 map_level, u16 map_height, s32 portrait_id,
-    u16 palette_id, u16 misc_id, struct battle_stats* g_battle_unit_stats, u32 flags);
+    u16 palette_id, u16 misc_id, struct battle_stats* battle_stats, u32 flags);
 
 s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_data* unit);
 
