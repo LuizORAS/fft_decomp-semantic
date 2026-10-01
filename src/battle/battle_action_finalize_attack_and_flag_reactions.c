@@ -87,13 +87,13 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     g_battle_action_target->hp = hp;
     g_battle_action_target->mp = mp;
     outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->sp_change, &g_battle_action_target->base_attributes[2], 50, 1);
+        g_battle_action_target_data->sp_change, &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_SPEED], 50, 1);
     outcome |= battle_unit_apply_stat_increment_decrement(
         g_battle_action_target_data->ct_change, &g_battle_action_target->ct, 255, 0);
-    outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->pa_change, &g_battle_action_target->base_attributes[0], 99, 1);
-    outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->ma_change, &g_battle_action_target->base_attributes[1], 99, 1);
+    outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->pa_change,
+        &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK], 99, 1);
+    outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->ma_change,
+        &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK], 99, 1);
     outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->brave_change,
         &g_battle_action_target->brave, 100, (g_battle_action_target->mount_info & 0x80) ? 10 : 0);
     outcome |= battle_unit_apply_stat_increment_decrement(

@@ -63,7 +63,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
                 if (!(flags & 1)) {
-                    speed = unit->attributes[2];
+                    speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
                     if (flags & 0x20) {
                         speed >>= 1;
                     } else if (flags & 0x10) {
