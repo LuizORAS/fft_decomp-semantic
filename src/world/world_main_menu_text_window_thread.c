@@ -85,7 +85,9 @@ void world_main_menu_text_window_thread(void) {
     } else if (entry->y < -0x78) {
         entry->y = -0x68;
     }
-    /* The callee types this RECT, record and SPRT as raw u16 and POLY_FT4 pointers. */
+    /* Type debt (QUIRKS.md): the callee is declared with u16 and POLY_FT4
+     * pointers but handles this RECT, entry record and SPRT; a SPRT shares the
+     * fields it writes. The cast keeps the call free of pointer warnings. */
     ((void (*)(RECT*, world_menu_text_window_entry_t*, SPRT*))world_menu_init_quad_from_record)(
         &rect, entry, &record->sprite_a);
     SetSemiTrans(&record->sprite_a, 1);

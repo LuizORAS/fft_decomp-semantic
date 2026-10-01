@@ -234,6 +234,11 @@ without changing the bytes.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
   known meaning.
+- `world_menu_init_quad_from_record` and `world_gfx_init_image_loading` take
+  `u16*`/`POLY_FT4*` but handle a `RECT`, an image record and either a
+  `POLY_FT4` or a `SPRT` (code `0x64`, whose `w`/`h` overlap `x1`/`y1`);
+  `world_main_menu_text_window_thread` passes a `SPRT` through a cast. A
+  typed version needs a primitive union or separate SPRT/POLY_FT4 paths.
 - `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.
