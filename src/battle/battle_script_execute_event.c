@@ -309,7 +309,8 @@ restart_script:
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
             finish_operation = ((g_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8);
-            if (g_battle_menu_input_disabled == 0 && finish_operation == 0 && (u32)(operand_1 - 0x190) >= 0x1AU
+            if (g_battle_menu_input_disabled == 0 && finish_operation == 0
+                && (u32)(operand_1 - EVENT_ID_GENERIC_FIRST) >= (EVENT_ID_GENERIC_END - EVENT_ID_GENERIC_FIRST)
                 && operand_1 != 0) {
                 g_battle_script_condition_unit_battle_id = 0xFF;
                 battle_script_run_scenario_conditions();

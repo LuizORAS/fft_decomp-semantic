@@ -43,10 +43,30 @@ typedef enum event_id {
     EVENT_ID_REUNION_AND_BEYOND = 0x147,
     EVENT_ID_THOSE_WHO_SQUIRM_IN_DARKNESS_SETUP = 0x148,
     EVENT_ID_ZALERA = 0x18c,
+    /* Byte-identical copy of the EVENT_ID_GAME_OVER script in TEST.EVT. The
+     * menu dispatchers start it in any battle once the player's side is wiped
+     * out or Ramza is crystallised or turned to treasure. FFHacktics lists it
+     * as "Random Battle Template (Setup)", which neither the code nor the data
+     * supports. */
+    EVENT_ID_GAME_OVER_ON_DEFEAT = 0x190,
+    EVENT_ID_RANDOM_BATTLE_INITIATE = 0x191,
+    EVENT_ID_RANDOM_BATTLE_VICTORY = 0x192,
+    /* Started instead of 0x191 while WORLD_DEBUG_BATTLE_STYLE is set;
+     * FFHacktics marks the slot "NOT USABLE". */
+    EVENT_ID_DEBUG_BATTLE_INITIATE = 0x193,
+    /* No retail code, scenario chain, BTLEVT.BIN condition, event or world
+     * script starts this slot (QUIRKS.md). */
     EVENT_ID_GAME_OVER = 0x194,
     EVENT_ID_DELITAS_BETRAYAL = 0x1ad,
     EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS = 0x1d1,
 } event_id_e;
+
+/* Random battle, Game Over and tutorial events; the interpreter chains no
+ * next story event after them. */
+enum {
+    EVENT_ID_GENERIC_FIRST = 0x190,
+    EVENT_ID_GENERIC_END = 0x1aa,
+};
 
 /* Retail scenario bytecode, reviewed against BATTLE 0x80143bd8..0x80145f78 and
  * the shared BATTLE/WORLD operand-length tables. Comments count encoded

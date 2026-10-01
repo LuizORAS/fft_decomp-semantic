@@ -297,7 +297,8 @@ restart_event:
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
             event_flags = (g_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_world_menu_input_disabled == 0 && event_flags == 0 && (u32)(operand_1 - 0x190) >= 0x1AU
+            if (g_world_menu_input_disabled == 0 && event_flags == 0
+                && (u32)(operand_1 - EVENT_ID_GENERIC_FIRST) >= (EVENT_ID_GENERIC_END - EVENT_ID_GENERIC_FIRST)
                 && operand_1 != 0) {
                 g_world_script_acting_unit_id = 0xFF;
                 world_process_scenario_conditionals();

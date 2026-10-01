@@ -290,3 +290,8 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_unit_generate_treasure.c`: outside action execution (AI simulation, preview) it returns with no value, so `$v0` still holds `g_battle_action_state` and the crystal pickup result names item 1 or 2 as the treasure.
 - `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (dead-unit panel) of `world_menu_run_main_mode` never run; the world map's Options row runs mode 0.
+- `src/battle/battle_get_misc_id.c`, `src/world/world_get_misc_id.c`: during
+  Game Over event `0x194` every unit lookup resolves to Ramza, but no retail
+  code, scenario chain, `BTLEVT.BIN` condition, event or world script starts
+  `0x194`; the engine plays the byte-identical script at `0x190` without the
+  redirect.
