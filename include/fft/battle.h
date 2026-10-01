@@ -1966,7 +1966,14 @@ typedef struct battle_unit_misc_data {
     /* Six vectors used during sprite rotation/scaling render (0x2ec);
      * battle_gfx_init_position_vector_copies seeds all six from screen_x/z/y. */
     SVECTOR display_svectors[6]; /* 0x2ec..0x31b */
-    u8 _unused_31c[0x124];       /* 0x31c..0x43f: sprite display sections */
+    /* 0x31c..0x43f: sprite display sections (wiki: Miscellaneous Unit Data),
+     * reached through the strided g_battle_gfx_*_sprite_display_data views. */
+    u8 unit_sprite_display[0x46];          /* 0x31c; header + 8 part records */
+    u8 sprite_block_displays[3][0x24];     /* 0x362; sprite_blocks[i].display: header + 3 parts */
+    u8 numeric_sprite_displays[3][0x16];   /* 0x3ce */
+    u8 status_bubble_sprite_display[0x16]; /* 0x410 */
+    u8 item_sprite_display[0x16];          /* 0x426 */
+    u8 _unused_43c[4];                     /* 0x43c; wiki: "initialization byte" */
 } battle_unit_misc_data_t;
 typedef char battle_misc_data_size_must_be_0x440[(sizeof(battle_unit_misc_data_t) == 0x440) ? 1 : -1];
 typedef char
