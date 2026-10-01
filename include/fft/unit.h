@@ -759,7 +759,8 @@ typedef struct party_data {
     u8 proposition_status;    /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color; /* 0xd2; create/save/generate unit stores */
-    u8 _unused_d3[0x2d];
+    u8 _unused_d3[0x0d];
+    u8 _unused_e0[0x20]; /* 0xe0; not saved: the save image keeps 0xe0 bytes per unit (wiki agrees) */
 } party_data_t;
 typedef char party_data_size_must_be_0x100[(sizeof(party_data_t) == 0x100) ? 1 : -1];
 
