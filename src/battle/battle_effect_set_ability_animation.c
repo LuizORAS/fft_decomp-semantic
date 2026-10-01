@@ -15,7 +15,7 @@ extern u16 g_battle_effect_event_effect_ids_biased[];
  * `packed` carries the ability instance in its low halfword and the sprite
  * palette in its high halfword. Ninja balls (0x189) pick their effect from the
  * thrown ball type. A negative table entry means the ability has no effect
- * file: only the two fixed secondary animations for the 0x8a and 0x196 ability
+ * file: only the two fixed secondary animations for the Break (0x8a) and Charge (0x196) ability
  * ranges are started, and nothing is retained.
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
@@ -55,7 +55,8 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         return;
     }
 
-    if ((u32)(ability - 0x8a) < 8)
+    if ((u32)(ability - ABILITY_ID_BATTLE_SKILL_HEAD_BREAK)
+        <= (ABILITY_ID_BATTLE_SKILL_MIND_BREAK - ABILITY_ID_BATTLE_SKILL_HEAD_BREAK))
         battle_effect_init_secondary(0x12, 0, source);
     if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST)
         || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)

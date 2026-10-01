@@ -88,8 +88,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                     break;
                 }
                 attack_id = unit->last_attack_id;
-                if (attack_id == 0 || attack_id == ABILITY_ID_FROG_ATTACK || (attack_id >= 0x8a && attack_id < 0x92)
-                    || (attack_id >= 0xd5 && attack_id < 0xd8)
+                if (attack_id == 0 || attack_id == ABILITY_ID_FROG_ATTACK
+                    || (attack_id >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK
+                        && attack_id <= ABILITY_ID_BATTLE_SKILL_MIND_BREAK)
+                    || (attack_id >= ABILITY_ID_SNIPE_LEG_AIM && attack_id <= ABILITY_ID_SNIPE_SEAL_EVIL)
                     || (attack_id >= ABILITY_ID_JUMP_FIRST && attack_id < ABILITY_ID_MATH_FIRST)) {
                     if (unit->target_count != 0) {
                         for (i = 0; i < unit->target_count; i++) {
