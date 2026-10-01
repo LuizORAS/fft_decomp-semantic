@@ -1264,7 +1264,7 @@ void world_gfx_append_poly_ft4_to_otag(world_gfx_textured_quad_source_t* source,
 void world_gfx_append_poly_g4_to_otag(s16* xy, u8* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_append_poly_gt4_to_otag(world_gfx_textured_rect_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_append_tile_to_otag(RECT* box, u8* rgb, s32 semi_trans, s32 ot_index);
-u8* world_gfx_bind_data_pointer(u32 index);
+void world_gfx_bind_data_pointer(u32 index);
 void world_gfx_build_scaled_draw_area_pair_swapped(void* packets, void* geometry, s32 step, s32 flag);
 void world_gfx_clear_sprite_slot(s32 index);
 void world_gfx_clear_sprite_slots(void);
