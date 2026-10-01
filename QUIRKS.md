@@ -47,7 +47,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_ai_evaluate_math_targets.c`: the extra known-ability call
   in the special-ID loop discards its result.
 - `src/battle/battle_action_init_current_ability_strike_data.c`: the range-data
-  guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true.
+  guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true
+  (`&&` was presumably meant), so item ids read past the table; only the
+  default-menu Item skillset `0xa1`, which no job or ENTD unit uses, holds them.
+- `src/battle/battle_action_run_pre_formula_setup.c`: both range-data bounds are
+  `ABILITY_ID_ITEM_FIRST + 1`, so Potion (`0x170`) copies the item-ability item
+  ids past the table as its range data; the Item menu clears it for consumables.
 - `src/battle/battle_camera_step_real_coords_toward_target.c`: in the positive
   direction the Y (`vz`) step adds the vector component twice; X and Z add it
   once.
