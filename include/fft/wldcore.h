@@ -1265,7 +1265,9 @@ typedef struct wldcore_menu_participant_level {
 typedef struct wldcore_menu_variable_detail_level {
     s32 value;        /* 0x00 */
     s32 render_index; /* 0x04 */
-    s32 _unknown_08;
+    /* 0x08; treasure detail: the saved record picked with Triangle. The detail
+     * steps' phase 1 also reads it as a render record; see QUIRKS.md. */
+    s32 sound_novel_slot;
     s32 phase; /* 0x0c; set to 1 at push; the detail steps switch on it */
     s32 timer; /* 0x10; cleared at push; text delay or dissolve step, counted per frame */
 } wldcore_menu_variable_detail_level_t;

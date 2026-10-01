@@ -161,6 +161,10 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_menu_run_icon_selection_loop.c` and its WORLD twin: the
   loop clears both records' `+0x78` words when they hold 0 and 2, but only the
   record builders write that word (always 0), so the reset never fires.
+- `src/wldcore/wldcore_menu_step_treasure_detail_level.c` and its unexplored-land
+  twin: phase 1 waits on the render record named by `+0x08` (`sound_novel_slot`),
+  which neither push sets, so it tests whatever the previous level in that stack
+  slot left there. Phase 3 waits on `render_index` instead.
 - `src/psyq/libc/memmove.c`: the overlap-safe copy returns the original destination on its backward path and the advanced destination on its forward path.
 - `StartRCnt` and `StopRCnt` index the IRQ-mask table before validating a counter: selector 3 changes the VBlank mask even though `StartRCnt` returns zero; `StopRCnt` always returns one. Larger indices can read past the four-entry table.
 - `SpuGetVoiceEnvelopeAttr`: the public `s32*` key-status output is written with a halfword store; its upper half remains unchanged.

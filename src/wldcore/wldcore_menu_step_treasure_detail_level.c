@@ -6,7 +6,8 @@
 /* Handler of the saved-record preview level: the phases mirror the
  * unexplored-land detail handler at 0x8007e6f4.
  *
- * Phase 1 waits for the render record at _unknown_08 to leave its 0x100 state.
+ * Phase 1 waits for the render record at sound_novel_slot to leave its 0x100
+ * state, although the push never sets that word (QUIRKS.md).
  * Phase 2, once file loading finishes, uploads the preview TIM's CLUT, binds
  * the level's render record to the VRAM image with its right edge at x -0x3e
  * and centred on y 0x10, starts the progressive upload at 0x8007f998 and
@@ -34,7 +35,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
 
     switch (level->phase) {
     case 1:
-        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & 0x100)) {
+        if (!(g_wldcore_window_render_records[level->sound_novel_slot].flags & 0x100)) {
             level->phase = 2;
         }
         break;
@@ -73,12 +74,12 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         break;
     default:
         if ((g_main_system_flags & 0xC) == 4 && world_thread_is_running(0xE) == 0) {
-            slot = level->_unknown_08;
+            slot = level->sound_novel_slot;
             g_main_system_flags ^= 4;
             g_wldcore_window_record_count -= 4;
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 6;
-            saved = level->_unknown_08;
+            saved = level->sound_novel_slot;
             g_wldcore_menu_stack_depth--;
             g_wldcore_saved_record_index = saved;
             if (slot < 5 && g_main_saved_records[slot].section != 0) {
@@ -111,7 +112,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         if (g_wldcore_new_button_presses & PSX_PAD_TRIANGLE) {
             entry = g_wldcore_treasure_sound_novel_ids[level->value];
             if (entry != 0) {
-                level->_unknown_08 = entry - 1;
+                level->sound_novel_slot = entry - 1;
                 if (entry - 1 >= 5 || g_main_saved_records[entry - 1].section == 0) {
                     wldcore_fade_start_screen(2, 0x10);
                 }

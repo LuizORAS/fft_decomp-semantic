@@ -3,7 +3,8 @@
 
 /* Handler of the unexplored-land detail level (type 0x19).
  *
- * Phase 1 waits for the render record at _unknown_08 to leave its 0x100 state.
+ * Phase 1 waits for the render record at sound_novel_slot to leave its 0x100
+ * state, although the push never sets that word (QUIRKS.md).
  * Phase 2, once file loading finishes, uploads the land picture's TIM pixels
  * and CLUT, binds the level's render record to the VRAM image at (-116, -34)
  * and makes it the scrollable text window's extra render record (position and
@@ -26,7 +27,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
 
     switch (level->phase) {
     case 1:
-        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & 0x100)) {
+        if (!(g_wldcore_window_render_records[level->sound_novel_slot].flags & 0x100)) {
             level->phase = 2;
         }
         break;
