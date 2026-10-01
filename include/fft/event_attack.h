@@ -147,8 +147,10 @@ typedef struct attack_deployed_unit_coordinate {
     u8 x;          /* 0x01 */
     u8 y;          /* 0x02 */
     u8 facing : 2; /* 0x03 */
-    u8 unk_3_2 : 3;
-    u8 unk_3_5 : 2;
+    /* Bits 2-4: BATTLE reads bits 0-3 as facing and bit 4 as unit absent
+     * (battle_unit_init_deployed_units_data); placement clears all three. */
+    u8 facing_high_and_absent : 3;
+    u8 _unused_03_bit5 : 2;
     u8 upper_level : 1;
 } attack_deployed_unit_coordinate_t;
 

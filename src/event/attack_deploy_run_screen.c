@@ -575,7 +575,7 @@ ramza_placed:
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + row - 2;
                         slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
                         slots[count].facing = 0;
-                        slots[count].unk_3_2 = 0;
+                        slots[count].facing_high_and_absent = 0;
                         count++;
                     }
                 }
@@ -589,7 +589,7 @@ ramza_placed:
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - column + 2;
                         slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
                         slots[count].facing = 3;
-                        slots[count].unk_3_2 = 0;
+                        slots[count].facing_high_and_absent = 0;
                         count++;
                     }
                 }
@@ -603,7 +603,7 @@ ramza_placed:
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - row + 2;
                         slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
                         slots[count].facing = 2;
-                        slots[count].unk_3_2 = 0;
+                        slots[count].facing_high_and_absent = 0;
                         count++;
                     }
                 }
@@ -617,7 +617,7 @@ ramza_placed:
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + column - 2;
                         slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
                         slots[count].facing = 1;
-                        slots[count].unk_3_2 = 0;
+                        slots[count].facing_high_and_absent = 0;
                         count++;
                     }
                 }

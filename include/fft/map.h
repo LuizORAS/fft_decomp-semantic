@@ -111,7 +111,7 @@ typedef union map_tile_flags_06 {
         u8 blocked : 1;
         u8 untargetable : 1;
         u8 shadow_mode : 2;
-        u8 unknown_4_6 : 3;
+        u8 _unknown_00_bit4 : 3; /* copied into g_battle_effect_trajectory_tile_flags, which nothing consumes */
         u8 cannot_stop : 1;
     } bits;
 } map_tile_flags_06_t;

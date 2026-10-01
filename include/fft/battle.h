@@ -3459,8 +3459,8 @@ extern u8 g_battle_effect_summon_ring_brightness[];
 extern battle_effect_target_t g_battle_effect_targets[];
 extern SVECTOR g_battle_effect_trajectory_position; /* final projectile position */
 extern s32 g_battle_effect_trajectory_source_id;
-extern VECTOR g_battle_effect_trajectory_step; /* last step's movement */
-extern s32 g_battle_effect_trajectory_tile_flags;
+extern VECTOR g_battle_effect_trajectory_step;    /* last step's movement */
+extern s32 g_battle_effect_trajectory_tile_flags; /* tile byte 6 bits 4-6; only copied around, never consumed */
 extern s32 D_801B8B98; /* set to 0x80000000 when the arrow arc handler ends early; never read */
 
 /* Self-relative animation script table: each halfword is a byte offset from
