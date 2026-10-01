@@ -183,6 +183,32 @@ without changing the bytes.
   second parameter.
 - `src/wldcore/wldcore_bar_handle_menu_input.c` passes the Bar's level record to `wldcore_menu_pop_level_and_rebuild_screen`, which takes no arguments.
 - `wldcore_window_build_yes_no_panel` takes its origin record by value; `wldcore_proposition_handle_accept_input` and `wldcore_list_handle_completed_propositions_input` call it through a six-word cast with x and y in `$a0`/`$a1`.
+- Calls that omit arguments the callee reads take them from whatever the
+  registers hold; a native build must pass them explicitly:
+  - the three `battle_camera_get_input_direction` callers pass only `mode`;
+    `input` is the leftover `$a1` when `g_battle_controller_input` is not 0/1;
+  - `battle_camera_call_toggle_tilt` passes nothing to
+    `battle_camera_toggle_tilt`, whose tilt-target-1 path plays its sound
+    with the leftover `$a1`;
+  - the five `battle_effect_init_data` callers pass nothing, so the states
+    it does not handle return the leftover `$a0`;
+  - `bunit_gfx_build_item_graphic_descriptor` and
+    `equip_gfx_build_item_graphic_descriptor` call
+    `battle_get_item_graphic_data` without the item id (`$a1`);
+  - `battle_map_init_units_sprites_event_and_music` and
+    `battle_map_step_init_sequence` call the background-gradient,
+    ambient-light and darkness initializers without `map_id` (`$a2`), and
+    `main_sound_stop_sfx` without its sound id (`$a0`);
+  - `battle_status_resolve_unit_changes_in_preview` calls
+    `battle_status_resolve_unit_changes` without `unit_id`/`removal_only`;
+  - `world_script_is_deployment_running` calls `world_script_run_frame`
+    without `ot`/`buttons`.
+- These calls rely on the caller's own incoming registers instead, which
+  hold the right values: `equip_thread_start_if_idle` (thread id in `$a0`)
+  for `battle_thread_is_running`, `battle_unit_start_post_attack_animation_display`
+  (both arguments) for `battle_unit_set_target_animation_from_attack_type`, and
+  the EQUIP selection wrappers (`input_mask` in `$a2`) for
+  `equip_menu_update_wrapped_horizontal_selection` and its vertical twin.
 
 ## Declaration leads
 
