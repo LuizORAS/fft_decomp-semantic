@@ -121,6 +121,12 @@ without changing the bytes.
   with different signatures; assignments erase their function types.
 - `battle_target_set_panels_for_action` reads `$v0` after a void-returning
   panel builder; the value is the callee's leftover register contents.
+- `world_card_build_save_slot_description` uses the job-name pointer that
+  `world_gfx_bind_data_pointer` leaves in `$v0`; the callee has no return
+  statement, so a native build must add one.
+- `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current`
+  return the leftover `$v0` of the void `battle_thread_exit_current` when
+  no thread slot is free.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
