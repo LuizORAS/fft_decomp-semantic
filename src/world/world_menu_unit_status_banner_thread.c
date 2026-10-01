@@ -8,7 +8,9 @@
  * DEBUGCHR twin's debugchr_editor_packet_t. */
 typedef struct world_formation_summary_packet {
     world_menu_palette_primitives_t frame; /* 0x000: world_menu_build_line_box */
-    u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+    /* Legacy decompilation placeholder, kept as a note:
+     *     u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+     * It is zero bytes long, because the frame already ends at 0x0EC. */
     DR_MODE draw_mode_a;                                  /* 0x0EC */
     DR_MODE draw_mode_b;                                  /* 0x0F8 */
     SPRT value_sprites[4];                                /* 0x104 */
@@ -23,7 +25,8 @@ typedef struct world_formation_summary_packet {
  * and 0x801C1564 (other). DEBUGCHR twin: debugchr_panel_packet_t. */
 typedef struct world_formation_status_packet {
     world_menu_palette_primitives_t frame; /* 0x000 */
-    u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+    /* Legacy zero-length unknown_frame_tail placeholder, as in
+     * world_formation_summary_packet_t: the frame ends at 0x0EC. */
     SPRT sprites[7];                                      /* 0x0EC; [6] is the zodiac/scroll cursor */
     DR_MODE draw_mode_a;                                  /* 0x178 */
     DR_MODE draw_mode_b;                                  /* 0x184 */
