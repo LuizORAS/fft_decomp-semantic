@@ -96,7 +96,7 @@ void world_shop_run_screen(s32 shop_type) {
     SetDispMask(0);
     while (DrawSync(1) != 0) { }
     world_gfx_move_image_and_wait(&g_world_shop_background_vram_rect, 0, 0);
-    tim = ((u32 * (*)(s32)) world_gfx_load_tim_by_table_index)(tim_index + buttons);
+    tim = world_gfx_load_tim_by_table_index(tim_index + buttons);
     world_gfx_load_image_sync(&g_world_shop_background_vram_rect, tim + 5);
     world_gfx_move_image_to_ram_from_vram_and_wait(&g_world_shop_vram_backup_rect, tim);
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,

@@ -46,8 +46,7 @@ s32 equip_menu_run_slot_item_browser(void) {
         g_equip_slot_item_browser_initialized = 0;
         return -1;
     }
-    /* The target uses v0 from this void callee. */
-    slot = ((s32 (*)(s32, s32, s32, s8))equip_menu_update_horizontal_selection_and_mark_change)(5, 2, input, 6);
+    slot = equip_menu_update_horizontal_selection_and_mark_change(5, 2, input, 6);
     if (slot != g_equip_selected_slot) {
         equip_menu_set_selection_record(g_equip_selected_slot, g_equip_menu_selected_list_index,
             g_equip_menu_scroll_base_index, (u16*)g_equip_item_list_entries);

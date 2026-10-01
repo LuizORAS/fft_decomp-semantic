@@ -77,9 +77,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
             return 2;
         }
         action.ability_id = ability_id;
-        /* battle_target_set_ability_panels returns nothing; the target still
-         * takes $v0 as the result. */
-        result = ((s32 (*)(const u8*))battle_target_set_ability_panels)((const u8*)&action);
+        result = battle_target_set_ability_panels((const u8*)&action);
     }
     if (mode == 2) {
         result = battle_target_calculate_ability_range_with_map_parameters(unit, range & 0xff);

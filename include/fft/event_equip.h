@@ -472,10 +472,10 @@ s32 equip_menu_get_preview_hp_bonus_display(void);
 s32 equip_menu_get_preview_mp_bonus(void);
 s32 equip_menu_get_preview_mp_bonus_display(void);
 
-void equip_menu_update_horizontal_selection_and_mark_change(
+s32 equip_menu_update_horizontal_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id);
 
-void equip_menu_update_vertical_selection_and_mark_change(
+s32 equip_menu_update_vertical_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id);
 
 s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, u16 input_mask);

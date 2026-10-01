@@ -2,8 +2,6 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
-void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);
-
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad) {
     s32 divisor;
     s32 y;

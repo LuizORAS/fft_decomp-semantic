@@ -9,8 +9,8 @@
  * level, date and location out of the loaded save image. Other nonnegative
  * modes write only the terminator; negative modes leave the buffer untouched.
  *
- * Only the negative-mode exit explicitly returns a value. Other paths fall
- * through after writing the terminator, and the caller ignores the result.
+ * Only the negative-mode exit explicitly returns a value (0). Other paths fall
+ * through after writing the terminator, and no caller reads the result.
  * An explicit return at the tail introduces an extra constant load.
  *
  * `world_gfx_bind_data_pointer` is declared void but leaves the bound table in

@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
-int main_boot_draw_squaresoft_logo(u32 otag, u32* image) {
+int main_boot_draw_squaresoft_logo(u32* otag, u32* image) {
     RECT destination;
     int elapsed;
 

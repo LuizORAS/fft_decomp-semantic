@@ -11,7 +11,7 @@ void main_unit_generate_base_raw_stats(u8* raw_stats, int unit_type) {
     u8* variance = (u8*)g_main_unit_generation_raw_stat_variance;
     volatile u8* out = raw_stats;
     u8* table = (u8*)g_main_unit_generation_base_data;
-    u8* base = (u8*)(type_index * 12 + (u32)table);
+    u8* base = table + type_index * 12;
 
     do {
         int value = base[0] << 14;

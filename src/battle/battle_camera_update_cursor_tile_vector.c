@@ -30,8 +30,7 @@ void battle_camera_update_cursor_tile_vector(void) {
             && g_battle_cursor_screen_y - height >= 0x41 && g_battle_cursor_screen_y < 0xB0) {
             battle_camera_step_focus_toward_cursor_tile(battle_camera_calculate_cursor_tile_vector_normal());
         } else {
-            /* The scaling routine is declared void but leaves the normal
-             * routine's result in $v0, which this caller consumes. */
+            /* The scaling routine passes through the normal routine's height bound. */
             battle_camera_step_focus_toward_cursor_tile(battle_camera_scale_cursor_tile_vector());
         }
     }

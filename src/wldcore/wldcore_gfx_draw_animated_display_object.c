@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -34,9 +35,6 @@ typedef union wldcore_sprite_part {
 } wldcore_sprite_part_t;
 
 extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
-
-u16 GetTPage(s32 tp, s32 abr, s32 x, s32 y);
-void world_gs_sortflipsprite(GsSPRITE* sprite, void* ot, s32 pri);
 
 /* Draw one animated display object: advance its sequence, then convert every
  * part of the current cel into a libgs sprite primitive and sort it into the

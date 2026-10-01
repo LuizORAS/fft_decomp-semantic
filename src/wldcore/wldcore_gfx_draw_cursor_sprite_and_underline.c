@@ -2,8 +2,6 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
-void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);
-
 /* Draws one cursor sprite plus its underline into the ordering table, then
  * hands the sprite to 0x8006bd84 for the trailing decoration.
  *

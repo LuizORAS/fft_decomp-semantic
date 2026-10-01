@@ -5,7 +5,7 @@
  *
  * The tile surface height is (height + depth) * 12 + half-height * 6 world
  * units above the floor, negated because world Y points down. The focus
- * offset is transformed by func_8001C068 into g_battle_current_vector and
+ * offset is normalized by VectorNormal into g_battle_current_vector and
  * tripled. Returns the negated tile height. */
 s32 battle_camera_calculate_cursor_tile_vector_normal(void) {
     map_tile_t* tile;

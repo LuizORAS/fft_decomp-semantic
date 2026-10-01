@@ -1,8 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Update a wrapped selection and request the supplied menu state on change. */
-void bunit_menu_update_horizontal_selection_and_mark_change(
+/* Update a wrapped selection, request the supplied menu state on change and
+ * return the new selection. */
+s32 bunit_menu_update_horizontal_selection_and_mark_change(
     u16 entry_count, u8 selection_index, s32 input_mask, u8 changed_state) {
     s16 previous_selection;
     s16 selection;
@@ -15,4 +16,5 @@ void bunit_menu_update_horizontal_selection_and_mark_change(
     if (previous_selection != selection) {
         g_bunit_sound_queued_effect_id = changed_state;
     }
+    return selection;
 }

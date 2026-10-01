@@ -51,9 +51,7 @@ s32 equip_menu_run_remove_mode(void) {
         equip_panel_toggle_item_numeric_thread(1);
         g_equip_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    /* The target uses v0 from this void callee. */
-    selection = ((s32 (*)(s32, s32, s32, s8))equip_menu_update_vertical_selection_and_mark_change)(
-        5, 1, g_equip_input_secondary_repeat, 6);
+    selection = equip_menu_update_vertical_selection_and_mark_change(5, 1, g_equip_input_secondary_repeat, 6);
     g_equip_remove_item_marker_rect.y = ((selection & 0xFF) << 4) + 0x90;
     equip_gfx_set_otag_index(0x28);
     equip_menu_update_and_draw_animated_marker(

@@ -45,7 +45,7 @@ void card_save_build_buffer(s32 slot) {
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
     g_card_save_buffer_pointer->format_version = 4;
 
-    card_build_save_file_header(slot, unit->level, g_card_save_buffer_pointer);
+    card_build_save_file_header(slot, unit->level, (card_save_header_t*)g_card_save_buffer_pointer);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],

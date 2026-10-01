@@ -1,10 +1,8 @@
 #include "fft/wldcore.h"
+#include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-u16 GetTPage(s32 tp, s32 abr, s32 x, s32 y);
-void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);
 
 /* Draws the HUD numeric readout at the context-value display position, laid
  * out by g_wldcore_context_value_display_mode: 1 is the labelled, underlined

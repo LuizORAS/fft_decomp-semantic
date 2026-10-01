@@ -21,7 +21,8 @@ typedef struct battle_unit_teleport_pulse_obj {
 } battle_unit_teleport_pulse_obj_t;
 
 /* Falls off the end: the original returns int, so $v0 stays live at the exit and the
- * dispatch branch's delay slot is left empty. */
+ * dispatch branch's delay slot is left empty. Nothing reads the result: the distortion
+ * dispatcher calls its handlers as void. */
 s32 battle_unit_animate_teleport_distortion(battle_unit_teleport_pulse_obj_t* pulse) {
     s32 angle;
     s32 fade;

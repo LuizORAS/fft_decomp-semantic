@@ -18,7 +18,8 @@ s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
         p2 = &g_battle_target_panel_data[idx + 0x100];
         p1->a = 0;
         p2->a = 0;
-        /* The target passes p1 to the argument-less callee. */
-        ((void (*)(targeting_panel_entry_t*))battle_target_set_all_panels_targeted_if_targetable)(p1);
+        /* The target passes p1 to the argument-less callee and returns its
+         * count of targetable panels. */
+        return ((s32 (*)(targeting_panel_entry_t*))battle_target_set_all_panels_targeted_if_targetable)(p1);
     }
 }

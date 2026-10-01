@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-void bunit_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
+world_menu_window_command_t* bunit_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
     RECT area;
     s32 frame;
     s32 scale;
@@ -21,5 +21,5 @@ void bunit_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command
     } else {
         g_bunit_gfx_otag_index_locked = 0;
     }
-    bunit_cmd_draw_window_frame_handler(command);
+    return bunit_cmd_draw_window_frame_handler(command);
 }

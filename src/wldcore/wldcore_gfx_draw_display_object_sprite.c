@@ -2,8 +2,6 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
-void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);
-
 /* Convert one display object into a libgs sprite primitive and sort it into the
  * ordering table handed down by wldcore_dispatch_display_object_list.
  *

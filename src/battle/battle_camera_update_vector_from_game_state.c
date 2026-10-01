@@ -14,8 +14,8 @@ void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* t
  * idle path is the same one battle_camera_update_cursor_tile_vector takes,
  * and 0x29 and above simply clears the vector.
  *
- * The scaling routine is declared void but leaves the normal routine's result
- * in $v0, which these callers consume.
+ * The scaling routine passes the normal routine's result through, and these
+ * callers hand it on.
  *
  * The idle path is battle_camera_update_cursor_tile_vector verbatim. The four
  * main_util_set_vector calls are one tail-merged block in the target, placed
@@ -40,7 +40,7 @@ void battle_camera_update_vector_from_game_state(void) {
             main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
             return;
         }
-        /* The void callee leaves the normal routine's result in $v0 for the target. */
+        /* The scaling routine passes through the normal routine's height bound. */
         battle_camera_step_focus_toward_cursor_tile(battle_camera_scale_cursor_tile_vector());
         return;
     }
@@ -82,7 +82,7 @@ void battle_camera_update_vector_from_game_state(void) {
                 && g_battle_cursor_screen_y - height >= 0x41 && g_battle_cursor_screen_y < 0xB0) {
                 battle_camera_step_focus_toward_cursor_tile(battle_camera_calculate_cursor_tile_vector_normal());
             } else {
-                /* The void callee leaves the normal routine's result in $v0 for the target. */
+                /* The scaling routine passes the normal routine's result through. */
                 battle_camera_step_focus_toward_cursor_tile(battle_camera_scale_cursor_tile_vector());
             }
             return;
