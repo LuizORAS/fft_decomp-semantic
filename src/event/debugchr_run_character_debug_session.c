@@ -172,7 +172,7 @@ loop_outer:
             /* Label loops: a do-while's loop notes change the allocation. */
         next_unit:
             g_debugchr_editor_selected_unit_slot += 1;
-            if (g_debugchr_editor_selected_unit_slot == 0x15) {
+            if (g_debugchr_editor_selected_unit_slot == BATTLE_UNIT_SLOT_COUNT) {
                 g_debugchr_editor_selected_unit_slot = 0;
             }
             if (EDITOR_UNIT_IDS[g_debugchr_editor_selected_unit_slot] == 0) {
