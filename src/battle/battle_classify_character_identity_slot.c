@@ -48,7 +48,7 @@ s32 battle_classify_character_identity_slot(u32 character_identity) {
         }
     }
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        party = main_get_party_data_pointer(i);
+        party = main_party_get_data_pointer(i);
         if (party->party_id != PARTY_ID_NONE && party->sprite_set == (u8)character_identity) {
             return -4;
         }

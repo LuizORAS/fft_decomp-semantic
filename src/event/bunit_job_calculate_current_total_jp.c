@@ -1,7 +1,8 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-void bunit_job_calculate_current_total_jp(s32 index) {
+/* Also returns the value: callers read it through g_bunit_menu_row_callbacks. */
+u32 bunit_job_calculate_current_total_jp(s32 index) {
     s32 generic_job;
     bunit_unit_data_t* unit;
 

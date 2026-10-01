@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-void equip_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
+world_menu_window_command_t* equip_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
     RECT area;
     s32 frame;
     s32 scale;
@@ -21,5 +21,5 @@ void equip_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command
     } else {
         g_equip_gfx_zoom_draw_area_active = 0;
     }
-    equip_cmd_draw_window_frame_handler(command);
+    return equip_cmd_draw_window_frame_handler(command);
 }

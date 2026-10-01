@@ -11,9 +11,9 @@
 /*
  * Memory card menu state 1: choose between loading and saving.
  *
- * g_world_menu_selection_results[5] receives the menu choice (0 load, 1 save, -1 cancel); a card with
- * no occupied slots forces save. Loading when every slot state is -1, or
- * saving when no slot state is 0, shows a notice thread instead of the slot
+ * g_world_menu_selection_results[5] receives the menu choice (0 save, 1 load, -1 cancel); a zero
+ * count (the title's Continue passes 0) skips the menu and loads. Saving when every slot state is -1,
+ * or loading when no slot state is 0, shows a notice thread instead of the slot
  * list (the same predicates world_card_count_selectable_save_slots counts). i is pinned to $a0: GCC otherwise swaps it
  * with the flag register.
  */

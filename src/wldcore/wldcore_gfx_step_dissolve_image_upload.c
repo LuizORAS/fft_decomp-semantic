@@ -10,7 +10,8 @@
  * given by the g_wldcore_dissolve_band_order offset table.
  *
  * Step 0 clears the buffer to 0xFF, uploads it and resets the per-band
- * progress; it returns no value (the target leaves a pointer in v0). Returns 0
+ * progress; it returns the address its clearing cursor ends on, one
+ * byte below the progress table, and no caller reads that result. Returns 0
  * once step reaches 50, otherwise 1.
  */
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* image, s32 step) {

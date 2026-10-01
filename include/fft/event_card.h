@@ -402,7 +402,7 @@ void card_save_update_slot_scan(void);
 void card_save_update_slot_scan_result(void);
 void card_save_update_slot_scroll(s32 selection);
 void card_save_update_slot_write(s32 slot);
-void card_build_save_file_header(s32 slot, s32 level, card_save_buffer_t* buffer);
+void card_build_save_file_header(s32 slot, s32 level, card_save_header_t* header);
 void card_save_run_menu(s32 unused);
 
 /* text */

@@ -268,14 +268,16 @@ typedef struct world_menu_window_command {
     u8 height;
 } world_menu_window_command_t;
 
-/* Menu text-entry task referenced at +0x30 of the wait parameter. */
+/* Menu text-entry task referenced at +0x30 of the wait parameter (the
+ * text-binding prefix: world_menu_text_binding_t). */
 typedef struct world_menu_text_entry_wait_task {
     void (*setup)(void);
     u16 text_parameter;
     u16 text_thread_id;
 } world_menu_text_entry_wait_task_t;
 
-/* Shared prefix of the menu record passed to text-entry wait threads. */
+/* Shared prefix of the menu record passed to text-entry wait threads (the
+ * world_menu_entry_t prefix up to text_binding). */
 typedef struct world_menu_text_entry_wait_param {
     u8 _unused_00[0x1c];
     u16 text_id;

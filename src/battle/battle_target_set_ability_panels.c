@@ -3,13 +3,14 @@
 
 /*
  * Seed the targeting panels for the action in `source` and apply the ability's
- * range, vertical tolerance and targeting flags.
+ * range, vertical tolerance and targeting flags. Returns the number of tiles
+ * the final pass marks as in ability range.
  *
  * The separate byte offset and register binding preserve the target's copy
  * of the location index. Direct typed indexing removes that copy and changes
  * the later register allocation; the binding emits no instructions.
  */
-void battle_target_set_ability_panels(const u8* source) {
+s32 battle_target_set_ability_panels(const u8* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
@@ -88,9 +89,8 @@ void battle_target_set_ability_panels(const u8* source) {
     if (flags_1 & 0xc0) {
         battle_target_set_state_for_all_unit_panels(unit, flags_1);
     }
-    if (!(flags_1 & 0xd0)) {
-        battle_target_set_all_panels_targeted_if_targetable();
-        return;
+    if (flags_1 & 0xd0) {
+        return battle_target_clear_selection_state_of_all_panels();
     }
-    battle_target_clear_selection_state_of_all_panels();
+    return battle_target_set_all_panels_targeted_if_targetable();
 }

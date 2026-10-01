@@ -9,9 +9,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `StCdInterrupt`: without `CdlModeSize1`, it skips the local disc-position read but still copies the uninitialized four bytes into the ring descriptor.
 - `sprintf`: unchecked precision and zero padding can overrun its 512-byte temporary segment buffer.
 - `src/psyq/libgpu/FntPrint.c`: unsupported conversions leave the field length undefined; the count limit is checked after writing, and oversized hexadecimal widths can overrun the 512-byte temporary buffer.
+- `battle_menu_build_idle_action_menu`: passes one `s16` to `battle_unit_project_misc_to_screen`, which stores x and y; the y store lands in stack padding, and `column` tests the projected x.
 - `DecDCTvlc`: the pause path saves its Y predictor at `0x80073f34`, overwriting the first four bytes of the overlapping birthday month-length table.
+- EFFECT `effect_eNNN_update_*` renderers: `battle_effect_step_emitter_timeline` sets phase 3 when a callback's keyframe window has two frames left, even if init never ran; the destroy path then reads its latch through the null work slot (kernel RAM).
 - `src/battle/battle_camera_store_state_to_script_variables.c`: all three zoom
   components are stored to script word `0x20`, so the first two are lost.
+- `battle_script_focus_speed` accumulates into an uninitialized `$s6`: the event
+  dispatcher leaves `operand_3` there, while camera fusion leaves its key count.
+  Those caller values affect the camera duration.
 - `src/battle/battle_script_toggle_message_portrait_flip.c`,
   `src/world/world_script_toggle_message_portrait_flip.c`: the record index is never
   assigned; all six passes use whatever `$s0` held. Keep the local
@@ -22,13 +27,28 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/wldcore/wldcore_proposition_determine_success.c`: the preferred-job
   check resolves the party unit once, before its loop, from the scoring loop's
   leftover (past-the-end) index, so it tests that one unit every pass.
+- `src/battle/battle_map_calculate_slope_height.c`,
+  `src/battle/battle_calculate_screen_z_from_input_coords.c`: an off-map point
+  (a unit staged outside the map, its screen coordinates read unsigned) gets no
+  tile, and the null tile is read from RAM address 0. The unit shadow, palette
+  modulation and per-frame rotation code (`battle_gfx_draw_unit_shadow`,
+  `battle_gfx_calculate_sprite_shadow_from_tile_slope`,
+  `battle_gfx_apply_misc_unit_palette_modulation`,
+  `battle_gfx_update_all_unit_rotation_and_vectors`) do the same for units
+  that chapter-end cutscenes walk off the map.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
   (`0x34`) path writes map Y into `real_z` (not `real_y`); the height branch
   then overwrites it.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
+- `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the
+  secondary-data pointer stays uninitialized, yet its `flags_3` is read before
+  the item test.
 - `src/battle/battle_map_load_mesh_variant.c`: scales the mesh header's color
   palette byte offset by four, placing the palette read past most mesh files.
+- `battle_map_queue_textured_triangles`, `battle_map_queue_textured_quads`
+  and their untextured twins pack SXY with the full signed MAC1 word; a
+  negative X therefore forces the screen Y halfword to `0xffff`.
 - `src/battle/battle_map_blend_ambient_light_color.c`,
   `src/battle/battle_map_blend_darkness_color.c`: modes `11` and above leave the
   target colour uninitialized (no default case).
@@ -53,6 +73,28 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   opens at its fixed default origin.
 - `src/main/main_party_save_unit.c` calls `main_party_remove_unit` without its
   required roster index; the callee reads the current `$a0`.
+- `src/battle/battle_gfx_build_next_action_result_display.c`: the CT-zero
+  display case reads `y_shift` without setting it; only the level-up/-down
+  cases assign it, so the sprite row depends on the leftover value.
+- `src/main/main_unit_calculate_random_equipment.c`: throwing and bomb item
+  types index past the four equipment-category bytes into the first innate
+  status byte; that adjacent byte controls their eligibility.
+- `src/event/jobstts_text_render_encoded_ids_to_image.c`,
+  `bunit_text_render_ids_into_image.c`, `equip_text_render_encoded_ids_to_image.c`
+  and `card_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
+  its glyph counter (`glyph_index`, `col`) against the line width but never
+  assigns it; the stale register stays below the width, so text never wraps.
+- `src/battle/battle_unit_init_misc_data.c`: tints the new unit's palette
+  before it clears `mount_state`, so a misc slot last held by a rider looks up
+  a mount that is gone and reads its screen data through NULL (kernel RAM).
+- `src/battle/battle_menu_display_projected_action_effect.c`: a skipped
+  preview leaves `g_battle_menu_preview_target_action` null, and its
+  `attack_accuracy` is read (from kernel RAM) before the null test.
+- `src/world/world_formation_rebuild_unit_list.c`: the Soldier Office (shop
+  0x65) lists only monsters, yet `world_formation_init_menu_state` stages unit
+  0 even when that list is empty; with no earlier list since WORLD loaded, the
+  pointer is 0, so the "restore HP/MP" stores copy kernel RAM 0x10/0x16 to
+  0x0c/0x12.
 
 ## Calls that disagree with the callee
 
@@ -76,6 +118,51 @@ without changing the bytes.
   buffer to the one-argument
   `battle_gfx_calculate_screen_z_from_misc_screen_data`, as it does to
   `_with_caller_data`; `battle_move_animate_jump_arc_to_own_tile.c` does not.
+- `g_main_smd_modulator_waveforms` entries 8-15 call the void
+  `main_smd_modulator_deactivate`; `main_smd_update_modulators` adds the
+  leftover `$v0` (the cleared modulator flags) to the channel output.
+- `main_sound_update_tunes` passes `current_music` to `SuzukiGetMusicPlaying`
+  even when no scenario music is loaded; the null record reads the status
+  halfword at address `0x10`.
+- `src/world/world_menu_animate_window_quad_crop.c` passes an uninitialized
+  source (a stale `$s5`) to `world_menu_zoom_cursor_frame`, which never reads it.
+- `src/event/equip_cmd_run_stream.c` calls each `g_equip_cmd_handlers` entry
+  without an argument; `$a0` still holds the stream.
+- `src/event/equip_entrypoint.c` calls `main_unit_refresh_stats_and_statuses`
+  without an argument; `$a0` still holds the unit's stats.
+- `g_equip_menu_list_row_callbacks` holds `s32 (*)(s32)` entries, but slots 2
+  and 3 are `equip_item_build_row_icon_rect` and
+  `equip_item_build_row_graphic_descriptor`, which return record pointers.
+- `src/event/bunit_cmd_run_stream.c` calls each `g_bunit_cmd_handlers` entry
+  without an argument; `$a0` still holds the stream.
+- `battle_unit_get_screen_data_ptr_by_misc_id` returns NULL for a missing
+  unit, but its callers test for -1 and read through it. A teleport-out with
+  removal (Wiegraf at the Fovoham windmill) fades the unit out while the
+  teleport particles still read its screen data, from kernel RAM at address 0.
+- `battle_map_get_tile_data_ptr_from_battle_id` and `_from_misc_id` read the
+  unit's map position without checking the lookup, so a unit with no misc
+  record (an arc-trajectory target in a Chapter 2 battle) is read from kernel
+  RAM at address 0.
+- `battle_menu_build_unit_portrait_poly` reads the speaker's battle record
+  through `battle_unit_get_stats_from_battle_id`, which returns NULL for a
+  speaker who is not on the field; the portrait test then reads kernel RAM.
+  `battle_menu_copy_unit_data_to_status_billboard` does the same while
+  counting units, for a misc record with no battle unit (the final battle).
+- `src/battle/battle_unit_init_misc_data.c`: stores the spritesheet-slot
+  claim (0xffff when all nine slots are taken) in the u8
+  `spritesheet_vram_slot` and tests the stored 0xff against 0xffff, so the
+  failure path never runs and a tenth sheet loads into slot 255.
+- `src/battle/battle_ai_load_ability_entry.c`: a Jump ability's CT estimate
+  for the acting unit reads `acting_unit`, which is NULL during the AI
+  workspace setup at battle start (`acting_unit_id` is 0), so slot 0's Jump
+  divides kernel-RAM bytes.
+- `src/event/bunit_text_concatenate_ids.c` passes the text section's address as
+  an `s32` (and a third argument) to `bunit_text_skip_encoded_segments`;
+  `equip_text_concatenate_ids.c` does the same to its EQUIP twin.
+- `jobstts_cmd_run_stream_with_mode` takes the input word through its `void*`
+  second parameter.
+- `src/wldcore/wldcore_bar_handle_menu_input.c` passes the Bar's level record to `wldcore_menu_pop_level_and_rebuild_screen`, which takes no arguments.
+- `wldcore_window_build_yes_no_panel` takes its origin record by value; `wldcore_proposition_handle_accept_input` and `wldcore_list_handle_completed_propositions_input` call it through a six-word cast with x and y in `$a0`/`$a1`.
 
 ## Declaration leads
 
@@ -165,3 +252,20 @@ translation unit. Share their types and constants through headers.
 - `_patch_card2`: exchanges five resident/BIOS instruction words, so calling it again reverses the exchange rather than repeating an idempotent patch.
 - `SetDrawLoad`: initializes the upload header and rectangle but leaves pixel payload storage to its caller.
 - `main_sound_get_largest_free_block`: reports the rounded gap including space needed for a new block header, rather than a directly usable payload size.
+- `battle_gfx_load_spritesheet_into_vram_slot`: its fixed 0x30d4-byte copy from SPR +0x9200 extends beyond some original file-read extents and includes retained heap bytes.
+- `battle_gfx_update_and_animate_unit_wep_eff`: when neither EVTCHR slot is free, one path tests `j` before setting it.
+- `g_battle_effect_disc_entries` (`0x801b53e8`) stores whole-sector sizes, and entry 0 repeats entry 1: effect id 0 loads E001.BIN, so E000.BIN's code is never loaded through the table.
+- `src/world/world_gfx_load_wldface_to_frame_buffer.c`: the WLDFACE rectangles (`g_world_wldface_vram_rects`) use x = 1664–1856; the GPU masks VRAM transfer coordinates, so the pages land at x = 640–832.
+- `SuzukiSPUInitialiser`: `main_sound_init_sfx_music` reaches `main_smd_insert_music`, which disables and re-enables `g_main_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `main_sound_quit` closed on a soft reset.
+- `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUT rows into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
+- EFFECT scripts never run six state handlers: E314's script names no file function, and E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires.
+- `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_set_weather_texture_overlay(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
+- `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
+- `src/world/world_script_handle_tutorial_command_end.c`: two paths fall off the end of the s32 handler and return a stale nonzero `$v0` (the fade's result, or the 1 just stored), so the formation loop keeps running.
+- `src/world/world_menu_draw_thread_status_indicators.c`: while a unit-status banner thread (8 or 7) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
+- `src/open/open_script_draw_text_records.c`: passes OT entries by value (`otag[15]`, `otag[8]`) to `AddPrim`; after `ClearOTagR` each holds the physical address of the entry below it, so the credits fade, bands and glyphs link into layers 14 and 7 through the KUSEG mirror.
+- `src/wldcore/wldcore_gfx_step_dissolve_image_upload.c`: the step-0 call (start the dissolve) has no return value of its own; `$v0` keeps its clearing cursor, the address one byte below the band-progress table. Its three callers ignore that result.
+- `src/world/world_menu_build_icon_record.c`: for the Bar's send-unit list (header 0x10) the arrow x reads the "height" of the record at the panel's value pointer, `&g_wldcore_active_menu_value` + 6, which is the upper half of `g_wldcore_proposition_dispatch_days` (0).
+- `src/battle/battle_unit_generate_treasure.c`: outside action execution (AI simulation, preview) it returns with no value, so `$v0` still holds `g_battle_action_state` and the crystal pickup result names item 1 or 2 as the treasure.
+- `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it.
+- WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (dead-unit panel) of `world_menu_run_main_mode` never run; the world map's Options row runs mode 0.

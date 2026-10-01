@@ -30,9 +30,10 @@ extern battle_menu_preview_label_panel_t g_battle_menu_projected_label_panels[2]
  * change) and sets up the value panel for the current preview action.
  *
  * Returns the display image id, or the highest-order status image when a
- * status change accompanies a damage/stat change. The early exits use a bare
- * `return;`: the target branches to the shared `move v0,s1` epilogue, which
- * `return image;` would fold to a constant 0.
+ * status change accompanies a damage/stat change. The two early exits that
+ * hide the panel return 2: the target jumps past the epilogue's `move v0,s1`
+ * with the panel state's 2 still in $v0. An explicit `return 2;` adds a second
+ * constant load, so they use a bare `return;`. The caller discards the result.
  */
 s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_image_location_t* base_load,
     const battle_image_location_t* base_screen, world_gfx_image_load_parameters_t* params) {
@@ -65,6 +66,8 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
     label->x = g_battle_menu_projected_label_panels[1].x;
     label_0c = &label->_unknown_0c;
     *label_0c = g_battle_menu_projected_label_panels[1]._unknown_0c;
+    /* A skipped preview leaves the action null, and its accuracy is read
+     * (from kernel RAM) before the null test. */
     action = g_battle_menu_preview_target_action;
     g_battle_menu_active_turn_banner.projected_hit_percent = action->attack_accuracy;
     if ((u8)g_battle_preview_target_unit_id == 0xff || action == 0) {

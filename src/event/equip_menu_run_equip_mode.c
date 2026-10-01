@@ -50,9 +50,7 @@ s32 equip_menu_run_equip_mode(void) {
             help_id = entry + 0x6800;
         }
         g_equip_text_help_message_id = help_id;
-        /* The target uses v0 from this void callee. */
-        selected_slot = ((s32 (*)(s32, s32, s32, s8))equip_menu_update_vertical_selection_and_mark_change)(
-            5, 0, g_equip_input_secondary_repeat, 6);
+        selected_slot = equip_menu_update_vertical_selection_and_mark_change(5, 0, g_equip_input_secondary_repeat, 6);
         g_equip_equip_item_slot = selected_slot;
         if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
             unit = g_equip_unit_selected_index;

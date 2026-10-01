@@ -36,7 +36,8 @@ typedef char native_thread_size_must_be_0x400[(sizeof(native_thread_t) == 0x400)
 typedef char native_thread_running_must_be_0x48[((unsigned long)&((native_thread_t*)0)->is_running == 0x48) ? 1 : -1];
 typedef char native_thread_task_must_be_0x4c[((unsigned long)&((native_thread_t*)0)->task_id == 0x4c) ? 1 : -1];
 
-/* Scheduler arrays use sixteen fixed 0x400-byte native thread slots. */
+/* Reset loops cover sixteen 0x400-byte slots. WORLD's scheduler also scans
+ * slot 16, which lies beyond this reset span. */
 enum {
     NATIVE_THREAD_SLOT_COUNT = 16,
     NATIVE_THREAD_STRIDE = 0x400,

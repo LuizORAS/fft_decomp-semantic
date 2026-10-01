@@ -7,8 +7,6 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
-void world_gs_sortfastsprite(GsSPRITE* sprite, GsOT* ot, u16 pri);
-
 /* Draws value right-aligned as digits glyphs, one 8x12 or 8x15 cell per
  * digit, stepping the sprite eight pixels right per column. Leading zeros are
  * skipped: a column only draws once the running divisor has dropped to or

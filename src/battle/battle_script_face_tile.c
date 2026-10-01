@@ -10,7 +10,7 @@
  * tile centre to pick one of 16 facings; the n-th matching unit gets
  * rotation time * n / 4.
  */
-s32 battle_script_face_tile(u8* parameters) {
+void battle_script_face_tile(u8* parameters) {
     s16 screen[3];
     s16 tile[3];
     u16 unit_id;

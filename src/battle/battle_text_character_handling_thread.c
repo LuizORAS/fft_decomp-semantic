@@ -81,7 +81,7 @@ void battle_text_character_handling_thread(void) {
     battle_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_base = 0x18;
-    thread = (native_thread_t*)((g_battle_current_thread_id << 10) + (s32)g_battle_threads);
+    thread = &g_battle_threads[g_battle_current_thread_id];
     param = (s32)battle_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {

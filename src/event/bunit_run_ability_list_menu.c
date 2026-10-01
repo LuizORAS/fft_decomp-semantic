@@ -67,9 +67,7 @@ s32 bunit_run_ability_list_menu(void) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return -1;
     }
-    /* The target uses v0 from this void callee. */
-    category = ((s32 (*)(s32, s32, s32, s32))bunit_menu_update_horizontal_selection_and_mark_change)(
-        4, 0, g_bunit_menu_input_repeat_mask, 6);
+    category = bunit_menu_update_horizontal_selection_and_mark_change(4, 0, g_bunit_menu_input_repeat_mask, 6);
     if (category != g_bunit_ability_category) {
         bunit_menu_set_selection_record(g_bunit_ability_category + 10, g_bunit_menu_list_selected_index,
             g_bunit_menu_scroll_base_index, (u16*)g_bunit_ability_entries);

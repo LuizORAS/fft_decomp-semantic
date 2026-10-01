@@ -1411,7 +1411,6 @@ data:
   - {addr: 0x800596e0, name: g_main_item_quantities}
   - {addr: 0x800597e0, name: g_card_save_slot_playtimes}
   - {addr: 0x80059810, name: g_main_secondary_saved_data_bits}
-  - {addr: 0x80059af0, name: main_get_party_data_pointer}
   - {addr: 0x80059bb0, name: save_unit_to_party}
   - {addr: 0x8005a884, name: get_item_data_pointer}
   - {addr: 0x8005e288, name: get_total_equipment_quantity}

@@ -1,10 +1,7 @@
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
 #include "psx/types.h"
 
-typedef struct {
-    u8 _unused_00[0x10];
-    u32 ot;
-} world_gs_draw_ot_arg_t;
-
-void world_gs_drawot(world_gs_draw_ot_arg_t* arg) {
-    DrawOTag(arg->ot);
+void world_gs_drawot(GsOT* ot) {
+    DrawOTag(ot->tag);
 }

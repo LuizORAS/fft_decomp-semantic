@@ -11,7 +11,7 @@ enum {
  * the 1-based save slot number and the play time as full-width Shift-JIS
  * digits, then the icon selected by the slot. `level` is not read.
  */
-void card_card_build_save_file_header(s32 slot, s32 level, card_save_header_t* header) {
+void card_build_save_file_header(s32 slot, s32 level, card_save_header_t* header) {
     s32 value;
     s32 digit;
     s32 divisor;

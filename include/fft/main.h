@@ -157,8 +157,8 @@ s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, 
 s32 main_file_call_build_header(s32 sector, s32 size, void* destination);
 int main_file_is_still_loading(void);
 void main_file_reset_cd_subsystems(void);
-void main_file_handle_cd_read_callback(void);
-void main_file_handle_cd_ready_callback(void);
+void main_file_handle_cd_read_callback(u8 event, u8* result);
+void main_file_handle_cd_ready_callback(u8 event, u8* result);
 void main_file_reset_cdrom_cpu_ram(void);
 
 int main_file_build_header(
@@ -1122,7 +1122,7 @@ void main_system_handle_vsync_callback(void);
 void main_boot_build_and_draw_sceap_logo(void);
 void main_boot_build_and_draw_squaresoft_logo(void);
 int main_boot_draw_sceap_logo(void* otag, u32* image);
-int main_boot_draw_squaresoft_logo(u32 otag, u32* image);
+int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
 void main_boot_fade_out_squaresoft_logo(void);
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
 void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);

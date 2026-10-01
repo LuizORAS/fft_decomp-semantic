@@ -9,7 +9,7 @@
  * The `fill` staging variable places the -2 load ahead of the loop counter
  * the way the target does; a literal store hoists it after the counter.
  */
-s32 battle_menu_draw_selection_data(s32 otag, s32 controller_input) {
+s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
     s32 i;
     s32 result;
     s32 fill;
@@ -23,7 +23,7 @@ s32 battle_menu_draw_selection_data(s32 otag, s32 controller_input) {
     for (i = 3; i >= 0; i--) {
         g_battle_menu_pending_selection[i] = fill;
     }
-    battle_script_run_event_frame((u32*)otag, controller_input);
+    battle_script_run_event_frame(otag, controller_input);
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
     if ((battle_thread_is_running_8014cc94(8) != 0

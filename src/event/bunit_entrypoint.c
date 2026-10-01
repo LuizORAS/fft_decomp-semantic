@@ -94,7 +94,7 @@ s32 bunit_entrypoint(void) {
         bunit_input_update_lock_timer();
         bunit_gfx_update_decreasing_fade();
         if (g_bunit_menu_input_mask & PSX_PAD_SELECT) {
-            bunit_text_start_selection_thread((u8*)3);
+            bunit_text_start_selection_thread(3);
         }
         if (g_bunit_help_screen_id != 0) {
             bunit_menu_update_node_cursor(g_bunit_unit_data[g_bunit_unit_selected_index]->uses_monster_skillset);

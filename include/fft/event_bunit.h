@@ -128,10 +128,10 @@ extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
 extern s32 g_bunit_job_list_menu_script;
 s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids);
-void bunit_job_calculate_current_jp(s32 index);
+u32 bunit_job_calculate_current_jp(s32 index);
 s32 bunit_job_calculate_current_level(s32 index);
 s32 bunit_job_calculate_current_mastered(s32 index);
-void bunit_job_calculate_current_total_jp(s32 index);
+u32 bunit_job_calculate_current_total_jp(s32 index);
 u32 bunit_job_calculate_next_level_jp_requirement(s32 index);
 s32 bunit_job_get_base(s16 unit_id);
 u32 bunit_job_get_current_jp(void);
@@ -233,7 +233,7 @@ void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 
 const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count);
-void bunit_text_start_selection_thread(u8* menu_state);
+void bunit_text_start_selection_thread(s32 thread_data);
 
 /* thread */
 extern battle_menu_status_panel_indicator_prims_t g_bunit_thread_indicator_packets[2][2];
@@ -637,7 +637,7 @@ void bunit_menu_update_and_draw_animated_cursor(u16* pos, u16* state, s32 mode);
 void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode);
 void bunit_menu_update_event_thread_state(void);
 
-void bunit_menu_update_horizontal_selection_and_mark_change(
+s32 bunit_menu_update_horizontal_selection_and_mark_change(
     u16 entry_count, u8 selection_index, s32 input_mask, u8 changed_state);
 
 void bunit_menu_update_job(void);

@@ -56,8 +56,8 @@ void bunit_menu_update_node_cursor(s16 mode) {
                 g_bunit_text_selection_id
                     = text_id + (u16)g_bunit_help_nodes_reload[g_bunit_help_node_index_reload_2].help_base;
                 /* This call site supplies literal 3 and leaves the text ID in
-                 * a1; preserve that target ABI despite the callee's pointer
-                 * interface. */
+                 * a1; preserve that target ABI despite the callee's single
+                 * parameter. */
                 ((void (*)(s32, s32))bunit_text_start_selection_thread)(3, text_id);
             }
         } else if (flags & 0x1000) {

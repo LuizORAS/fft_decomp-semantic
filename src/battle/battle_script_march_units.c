@@ -7,7 +7,7 @@
  * in frames.  A unit id above 0xff selects a group, so the misc-state loop
  * runs over all 21 unit indices.
  */
-s32 battle_script_march_units(u8* parameters) {
+void battle_script_march_units(u8* parameters) {
     u16 misc_id;
     s32 state;
     s32 unit_index;

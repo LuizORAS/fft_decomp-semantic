@@ -6,7 +6,8 @@
 suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd) {
     suzuki_music_t* music;
 
-    music = main_sound_alloc(smd->channel_count * sizeof(suzuki_music_channel_t) + 0xb8);
+    music = main_sound_alloc(smd->channel_count * sizeof(suzuki_music_channel_t)
+        + (sizeof(suzuki_music_t) - sizeof(suzuki_music_channel_t)));
     music->smd = smd;
     main_smd_transfer_music_data(music);
     main_smd_init_channels(music);

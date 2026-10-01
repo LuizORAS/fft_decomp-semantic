@@ -219,10 +219,10 @@ extern u8 g_jobstts_job_list_render_commands[];
 extern u32 g_jobstts_job_next_level_jp_requirement;
 extern u16 g_jobstts_job_selected_id;
 s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused);
-void jobstts_job_calculate_current_jp(s32 index);
+u32 jobstts_job_calculate_current_jp(s32 index);
 s32 jobstts_job_calculate_current_level(s32 index);
 s32 jobstts_job_calculate_current_mastered(s32 index);
-void jobstts_job_calculate_current_total_jp(s32 index);
+u32 jobstts_job_calculate_current_total_jp(s32 index);
 s32 jobstts_job_calculate_next_level_jp_requirement(s32 index);
 s32 jobstts_job_find_first_for_skillset(s32 skillset_id);
 s32 jobstts_job_get_base(s16 unit_id);
@@ -344,7 +344,7 @@ typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_da
 
 extern jobstts_unit_job_data_t* g_jobstts_unit_data[];
 extern jobstts_unit_job_data_t g_jobstts_unit_job_data;
-void jobstts_unit_copy_job_data(battle_stats_t* g_battle_unit_stats, jobstts_unit_job_data_t* destination);
+void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* destination);
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* other */
