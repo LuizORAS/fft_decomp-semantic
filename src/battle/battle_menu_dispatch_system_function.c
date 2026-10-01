@@ -204,8 +204,10 @@ s32 battle_menu_dispatch_system_function(
                 g_battle_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
-                if ((u32)(value - 0x3C) < 0x1A) {
-                    g_battle_text_substitution_values[0] = value + 0xB7C4;
+                if ((u32)(value - ABILITY_ID_SUMMON_MAGIC_MOOGLE)
+                    <= (ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN - ABILITY_ID_SUMMON_MAGIC_MOOGLE)) {
+                    g_battle_text_substitution_values[0]
+                        = value - ABILITY_ID_SUMMON_MAGIC_MOOGLE + TEXT_ID_SECTION_B800_BASE;
                 } else {
                     g_battle_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
                 }

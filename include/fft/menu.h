@@ -713,6 +713,7 @@ typedef enum text_id_base {
     TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE = 0x4300,
     TEXT_ID_ABILITY_NAME_BASE = 0x7000,
     TEXT_ID_SECTION_9000_BASE = 0x9000,
+    TEXT_ID_SECTION_B800_BASE = 0xb800, /* summon announcements show entries 0..25, not the ability name */
 } text_id_base_e;
 
 /* Substitution opcodes shared by battle messages and WORLD event text. */

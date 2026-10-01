@@ -64,7 +64,9 @@ typedef enum ability_list_entry_flag {
  * and PSP-only additions. */
 typedef enum ability_id {
     ABILITY_ID_BLACK_MAGIC_FROG = 0x1d,
+    ABILITY_ID_SUMMON_MAGIC_MOOGLE = 0x3c,
     ABILITY_ID_SUMMON_MAGIC_GOLEM = 0x41,
+    ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN = 0x55,
     ABILITY_ID_SONG_ANGEL_SONG = 0x56,
     ABILITY_ID_SONG_LIFE_SONG = 0x57,
     ABILITY_ID_SONG_CHEER_SONG = 0x58,
