@@ -173,12 +173,13 @@ typedef char attack_squad_data_size_must_be_0x0c[(sizeof(attack_deployment_squad
  * bobbing above the tile) and a tile-highlight diamond ([n][1]), positioned
  * from g_attack_deploy_cursor_row/column[n]. */
 typedef struct attack_deploy_render_buffer {
-    SPRT tiles[5][5];                   /* 0x000 */
-    POLY_FT4 portraits[10];             /* 0x1f4 */
-    POLY_FT4 status[30];                /* 0x384 */
-    u8 _unknown_834[0x28];              /* 0x834 */
+    SPRT tiles[5][5];       /* 0x000 */
+    POLY_FT4 portraits[10]; /* 0x1f4 */
+    POLY_FT4 status[30];    /* 0x384 */
+    /* 0x834; built by attack_deploy_build_screen_arrow through g_attack_deploy_screen_arrow */
+    POLY_FT4 banner;
     POLY_F3 arrow;                      /* 0x85c */
-    u8 _unused_870[0x14];               /* 0x870 */
+    u8 _unused_870[0x14];               /* 0x870; that view's second arrowhead: initialised, never drawn */
     POLY_FT4 menu_cursor[4];            /* 0x884 */
     POLY_FT4 cursor[2][2];              /* 0x924 */
     DR_MODE draw_mode_9c4;              /* 0x9c4 */
