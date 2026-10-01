@@ -379,6 +379,11 @@ enum {
     ITEM_ID_BODY_ARMOR_FIRST = 0xac,
     ITEM_ID_ACCESSORY_FIRST = 0xd0,
     ITEM_ID_CONSUMABLE_FIRST = 0xf0,
+    /* Item-table loops (inventory, shops, sorts, treasure) stop here: real
+     * items end with Phoenix Down (0xfd). 0xfe is a blank record (FFTPatcher
+     * "<Nothing>") that all of them skip, and 0xff is ITEM_ID_NONE, so an
+     * item added at 0xfe stays out of those lists until this bound moves. */
+    ITEM_ID_END = 0xfe,
 };
 
 /* Broad item categories shared by the WORLD and EQUIP menu classifiers.

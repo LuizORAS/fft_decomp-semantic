@@ -48,7 +48,7 @@ void world_formation_recalculate_selected_unit_stats(void) {
         = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
     for (i = 0; i < 7; i++) {
         item = unit.equipment[i];
-        if (item == ITEM_ID_NOTHING || item >= 0xfe) {
+        if (item == ITEM_ID_NOTHING || item >= ITEM_ID_END) {
             unit.equipment[i] = ITEM_ID_NONE;
         }
     }

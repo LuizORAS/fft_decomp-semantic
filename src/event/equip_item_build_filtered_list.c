@@ -21,7 +21,7 @@ s32 equip_item_build_filtered_list(s16 unit_index, u16 sort_mode, s8 category, s
     }
     item_id = 1;
     count = 0;
-    for (; item_id < 0xFE; item_id++) {
+    for (; item_id < ITEM_ID_END; item_id++) {
         entry = item_id;
         if (equip_item_get_total_count((s16)item_id) == 0) {
             continue;

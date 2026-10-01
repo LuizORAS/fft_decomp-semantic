@@ -3,7 +3,7 @@
 
 /* Sort a -1 terminated item-id list in place for a shop or equipment menu.
  *
- * Entries whose id (low 10 bits) is 0 or >= 0xFE are removed first. The rest
+ * Entries whose id (low 10 bits) is 0 or >= ITEM_ID_END are removed first. The rest
  * are bubble-sorted by the signed-byte key list g_world_sort_key_lists[mode] (-1 ends
  * it): 0 item type (0x13 ranks as 100, ascending), 1 price, 2 ranking value
  * (an id in 0x7a..0x8f, throwables and shields, compared with one outside
@@ -32,7 +32,7 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
     count = 0;
     while (list[count].value != -1) {
         id = list[count].value & 0x3ff;
-        if (id == 0 || id >= 0xfe) {
+        if (id == 0 || id >= ITEM_ID_END) {
             j = count;
             while ((list[j].value = list[j + 1].value) != -1) {
                 j++;

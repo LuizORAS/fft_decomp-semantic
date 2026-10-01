@@ -2,7 +2,7 @@
 
 /* Sort a -1 terminated item list in place (EQUIP twin of world_item_sort_id_list).
  *
- * Entries whose id (low 10 bits) is 0 or >= 0xFE are removed, then the rest
+ * Entries whose id (low 10 bits) is 0 or >= ITEM_ID_END are removed, then the rest
  * are bubble-sorted by the signed-byte criterion list
  * g_equip_item_type_order_lists[mode] (negative ends it): 0 item type (0x13
  * ranks as 100, ascending), 1 price, 2 ranking value (an id in 0x7a..0x8f,
@@ -32,7 +32,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     while (list[count] != -1) {
         entry = (s16*)(count * 2 + (s32)list);
         item_a = *entry & 0x3ff;
-        if (item_a == 0 || item_a >= 0xfe) {
+        if (item_a == 0 || item_a >= ITEM_ID_END) {
             while ((*entry = entry[1]) != -1) {
                 entry++;
             }

@@ -15,7 +15,7 @@ u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     for (i = 0; i < 7; i++) {
         buf[count] = unit->equipment[i];
         item_id = buf[count];
-        if (item_id >= 0xFE) {
+        if (item_id >= ITEM_ID_END) {
             continue;
         }
         if (item_id == 0) {

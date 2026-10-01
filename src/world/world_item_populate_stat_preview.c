@@ -15,7 +15,7 @@ void world_item_populate_stat_preview(
     u8 evade;
     world_formation_clear_stat_preview(summary, detail);
     item_entry &= WORLD_ITEM_ID_MASK;
-    if ((u32)(item_entry - 1) < 0xFD) {
+    if ((u32)(item_entry - 1) < ITEM_ID_END - 1) {
         attribute = g_main_item_primary_data[item_entry].attributes;
         if (item_entry < ITEM_ID_SHIELD_FIRST) {
             secondary = g_main_item_primary_data[item_entry].secondary_data_id;

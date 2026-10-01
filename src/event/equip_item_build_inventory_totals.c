@@ -16,7 +16,7 @@ void equip_item_build_inventory_totals(void) {
         if (unit->party_id != PARTY_ID_NONE) {
             for (j = 0; j < 7; j++) {
                 item = unit->equipment[j];
-                if (item != 0 && item < 0xFE) {
+                if (item != 0 && item < ITEM_ID_END) {
                     g_equip_item_inventory_totals[item]++;
                 }
             }
