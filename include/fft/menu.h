@@ -721,9 +721,11 @@ typedef enum text_id_base {
     TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE = 0x4300,
     TEXT_ID_ABILITY_NAME_BASE = 0x7000,
     TEXT_ID_SECTION_9000_BASE = 0x9000,
+    /* Section 21; WORLD.LZW keeps the map names there. */
+    TEXT_ID_SECTION_A800_BASE = 0xa800,
     /* Section 23. BATTLE's summon announcements show entries 0..25 instead of
-     * the ability name; WORLD keeps its tutorial messages and the location
-     * menu commands there. */
+     * the ability name; WORLD.LZW keeps the Bar/Town text there, and a running
+     * tutorial swaps in its MENU/TUTOn.MES messages. */
     TEXT_ID_SECTION_B800_BASE = 0xb800,
 } text_id_base_e;
 
