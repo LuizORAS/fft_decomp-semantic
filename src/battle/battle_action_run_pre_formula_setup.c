@@ -126,7 +126,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         formula = 1;
         id = action.item_id;
-        if (id >= 0xF0) {
+        if (id >= ITEM_ID_CONSUMABLE_FIRST) {
             g_current_ability_view.weapon_id = id;
             id += 0x10;
             item = &g_main_item_secondary_data[id];
@@ -144,7 +144,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         break;
     case ACTION_MENU_TYPE_CHARGE:
         ability_id = action.ability_id;
-        if ((u16)(ability_id - ABILITY_ID_CHARGE_FIRST) >= 8) {
+        if ((u16)(ability_id - ABILITY_ID_CHARGE_FIRST) >= (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST)) {
             ability_id = ABILITY_ID_CHARGE_FIRST;
         }
         g_current_ability.charge_power = g_main_jump_charge_ability_data_by_ability_id[ability_id * 2 + 1];
