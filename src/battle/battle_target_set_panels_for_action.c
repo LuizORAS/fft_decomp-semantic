@@ -17,7 +17,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
 
     main_util_copy_action_data(source, (u8*)&action);
     mode = 0;
-    if (action.unit_id >= 21) {
+    if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     unit = &g_battle_unit_stats[action.unit_id];

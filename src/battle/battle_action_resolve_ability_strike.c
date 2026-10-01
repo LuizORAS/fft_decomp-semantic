@@ -12,7 +12,7 @@ extern void battle_action_store_used_weapon(struct battle_action_used_weapon_con
  * the Math skillset id in the control-value test. The (u16*)/(s16*) views
  * reproduce the target's load forms and memory-access ordering. */
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
-    u8 targets[21];
+    u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
     battle_stats_t* attacker;
@@ -28,7 +28,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
-    if (misc_unit_id >= 21) {
+    if (misc_unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     attacker = &g_battle_unit_stats[misc_unit_id];

@@ -22,7 +22,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     u8 old_status_ct[16];
 
     outcome = 0;
-    if (unit_id >= 21) {
+    if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     g_current_ability.target_id = unit_id;
