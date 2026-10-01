@@ -1566,6 +1566,14 @@ void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
 
 /* formation */
+/* The extra formation record after the roster records. The fitting room and
+ * the equip/remove menus copy the selected unit into it
+ * (world_formation_copy_unit_to_temp) to preview equipment, so changes to it
+ * skip the inventory and the max-equip-at-job-change option. */
+enum {
+    WORLD_FORMATION_PREVIEW_RECORD = 20,
+};
+
 /* Provisional 12-byte formation portrait source rectangle.
  *
  * The builder replaces clut after copying a table entry. tpage selects the
