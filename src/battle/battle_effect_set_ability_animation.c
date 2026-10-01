@@ -20,7 +20,7 @@ extern u16 g_battle_effect_event_effect_ids_biased[];
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
     g_effect_load_state = 0;
-    if (ability < 0x200) {
+    if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
             s32 ball = battle_effect_get_ninja_ball(packed >> 16);
             if (ball == 1)
@@ -57,6 +57,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
 
     if ((u32)(ability - 0x8a) < 8)
         battle_effect_init_secondary(0x12, 0, source);
-    if ((u32)(ability - 0x196) < 8 || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
+    if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST)
+        || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
         battle_effect_init_secondary(0x11, 0, source);
 }

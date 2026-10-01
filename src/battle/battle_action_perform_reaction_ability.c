@@ -25,7 +25,7 @@ s32 battle_action_perform_reaction_ability(void) {
     }
     battle_action_clear_data();
     selector = (u16)g_battle_current_reaction_ability_id;
-    switch ((s16)(selector - 0x1A6)) {
+    switch ((s16)(selector - ABILITY_ID_REACTION_FIRST)) {
     case 0x0:
         g_battle_action_target_data->pa_change = 0x81;
         break;

@@ -14,7 +14,8 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
     unit2 = unit;
     item_data = get_item_data_pointer();
     palette_id = item_data[5];
-    if ((palette_id >= 0x20) || ((u32)(unit2->used_ability_id - 0x17E) < 0xC)
+    if ((palette_id >= 0x20)
+        || ((u32)(unit2->used_ability_id - ABILITY_ID_THROW_FIRST) < (ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST))
         || ((ability_id = unit->used_ability_id), ability_id == ABILITY_ID_BASIC_SKILL_THROW_STONE)) {
         palette_id = 0x15;
     }
