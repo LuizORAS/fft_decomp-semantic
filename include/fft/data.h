@@ -389,7 +389,7 @@ typedef struct item_data {
     u8 type_flags;
     u8 secondary_data_id;
     u8 type;
-    u8 _unused_06;
+    u8 _unused_06; /* wiki: "Unused Byte 1" */
     u8 attributes;
     u16 price;
     u8 shop_availability;
