@@ -3487,7 +3487,7 @@ item_menu_category_e world_item_get_menu_category(s32 item_id);
 s32 world_item_is_in_sorted_list(s32 item_id, s32 list_index);
 
 void world_item_populate_stat_preview(
-    s32 g_main_item_item_flags, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
+    s32 item_entry, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
 
 void world_item_prepend_sorted(s32 item_id, s32 list_index);
 void world_item_reconcile_sorted_list(s32 list_index);
