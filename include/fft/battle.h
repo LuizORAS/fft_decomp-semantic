@@ -7194,8 +7194,8 @@ typedef struct battle_menu_window_record {
     DR_MODE mode1;   /* 0x0c */
     SPRT sprites[4]; /* 0x18 */
     SPRT* extra[3];  /* 0x68 */
-    s32 _unknown_74; /* 0x74 */
-    s32 _unknown_78; /* 0x78 */
+    s32 _unknown_74; /* 0x74; zeroed by the builder, never read */
+    s32 _unknown_78; /* 0x78; zeroed by the builder; see QUIRKS.md */
 } battle_menu_window_record_t;
 
 /* Provisional window request: VRAM source point, size, screen point and the

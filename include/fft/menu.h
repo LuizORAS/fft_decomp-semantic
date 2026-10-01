@@ -486,8 +486,8 @@ typedef struct world_menu_text_row {
 typedef struct world_menu_icon_record {
     world_menu_icon_sprites_t base; /* 0x00 */
     SPRT* icons[3];                 /* 0x68 */
-    s32 _unknown_74;                /* 0x74 */
-    s32 _unknown_78;                /* 0x78 */
+    s32 _unknown_74;                /* 0x74; zeroed by the builder, never read */
+    s32 _unknown_78;                /* 0x78; zeroed by the builder; see QUIRKS.md */
 } world_menu_icon_record_t;
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list

@@ -158,6 +158,9 @@ translation unit. Share their types and constants through headers.
   the high bit, so the chosen ENTD is `entds[7 - bit]`.
 - `src/battle/battle_action_finalize_draw_out_katana_result.c`: when the
   katana breaks, the strike work's `can_earn_experience` is copied onto itself.
+- `src/battle/battle_menu_run_icon_selection_loop.c` and its WORLD twin: the
+  loop clears both records' `+0x78` words when they hold 0 and 2, but only the
+  record builders write that word (always 0), so the reset never fires.
 - `src/psyq/libc/memmove.c`: the overlap-safe copy returns the original destination on its backward path and the advanced destination on its forward path.
 - `StartRCnt` and `StopRCnt` index the IRQ-mask table before validating a counter: selector 3 changes the VBlank mask even though `StartRCnt` returns zero; `StopRCnt` always returns one. Larger indices can read past the four-entry table.
 - `SpuGetVoiceEnvelopeAttr`: the public `s32*` key-status output is written with a halfword store; its upper half remains unchanged.
