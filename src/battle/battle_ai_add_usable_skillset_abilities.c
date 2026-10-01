@@ -127,7 +127,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         entry->skillset_flags.bytes.skillset = skillset;
         entry->id.packed_id = ability_id;
         if (menu == ACTION_MENU_TYPE_JUMP) {
-            if (ability_id >= 0x18f) {
+            if (ability_id >= ABILITY_ID_JUMP_VERTICAL_FIRST) {
                 continue;
             }
             if (jump_found == 1) {

@@ -237,7 +237,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (AI_FLAGS_LO(ability) & 0x800) {
                     random_use++;
                 }
-                if (ability->ability_id == 0x17b) {
+                if (ability->ability_id == ABILITY_ID_ITEM_HOLY_WATER) {
                     ai->targetability.live.target_setting_flags |= 0x20000000;
                 }
                 if (AI_FLAGS_LO(ability) & 0x20) {
