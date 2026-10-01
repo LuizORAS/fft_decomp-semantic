@@ -344,7 +344,7 @@ typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_da
 
 extern jobstts_unit_job_data_t* g_jobstts_unit_data[];
 extern jobstts_unit_job_data_t g_jobstts_unit_job_data;
-void jobstts_unit_copy_job_data(battle_stats_t* g_battle_unit_stats, jobstts_unit_job_data_t* destination);
+void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* out);
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* other */

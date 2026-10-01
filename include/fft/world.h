@@ -2387,7 +2387,7 @@ extern void* g_world_text_location_names;
 extern u8* g_world_text_skillset_names;
 extern void* g_world_text_message_section;
 void world_text_message_box_thread(void);
-void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, u16* x, s32 arg3);
+void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* pixels, u16* origin, s32 color);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 u8* world_text_advance_cursor_with_backreferences_2(world_text_backreference_state_t* state, u8* cursor);

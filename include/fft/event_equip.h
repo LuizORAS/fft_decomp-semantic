@@ -441,7 +441,7 @@ void equip_menu_clear_selection_values(void);
 void equip_menu_dispatch_with_override(s32 menu, s32 state, s32 override);
 void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override);
 void equip_menu_draw_scrollable_list(const u8* script);
-void equip_menu_draw_weapon_hand_icons(s16 g_main_item_weapon_flags);
+void equip_menu_draw_weapon_hand_icons(s16 weapon_id);
 s32 equip_menu_get_event_speed(void);
 void equip_menu_init_screen(s32 battle_id);
 
