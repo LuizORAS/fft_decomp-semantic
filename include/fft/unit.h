@@ -691,7 +691,9 @@ typedef struct entd_unit {
     u8 ai_target_xy[2];   /* 0x21; AI "stay near" X, Y (copied to battle_stats_t ai_target_x onward) */
     u8 ai_flags;          /* 0x23 */
     u8 ai_target_unit_id; /* 0x24 */
-    u8 _unused_25[3];
+    u8 _unused_25;        /* 0x25; wiki: unused */
+    u8 ai_flags_2;        /* 0x26; wiki: 0x04 Conserve CT */
+    u8 _unused_27;        /* 0x27; wiki: unused */
 } entd_unit_t;
 typedef char entd_unit_size_must_be_0x28[(sizeof(entd_unit_t) == 0x28) ? 1 : -1];
 
