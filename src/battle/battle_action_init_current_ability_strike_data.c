@@ -67,7 +67,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
 
     if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_id = unit->last_ability_id;
-        if (ability_id >= 0 || ability_id < 0x170) {
+        if (ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST) {
             data = &g_main_ability_range_data[ability_id];
             g_battle_loaded_ability_flags_1 = data->flags_1;
             chance = data->x;

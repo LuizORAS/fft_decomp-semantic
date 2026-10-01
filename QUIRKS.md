@@ -46,6 +46,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   skips the reflector pointer reload and depends on the caller's `$s2`.
 - `src/battle/battle_ai_evaluate_math_targets.c`: the extra known-ability call
   in the special-ID loop discards its result.
+- `src/battle/battle_action_init_current_ability_strike_data.c`: the range-data
+  guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true.
 - `src/battle/battle_camera_step_real_coords_toward_target.c`: in the positive
   direction the Y (`vz`) step adds the vector component twice; X and Z add it
   once.
