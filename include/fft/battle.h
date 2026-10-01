@@ -6360,7 +6360,7 @@ typedef struct battle_map_mesh_triangle_positions {
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;
-    u16 _unused_16;
+    u16 _padding_16; /* spare halfword of the 8-byte vertex slot */
 } battle_map_mesh_triangle_positions_t;
 
 typedef struct battle_map_mesh_quad_positions {
@@ -6369,9 +6369,9 @@ typedef struct battle_map_mesh_quad_positions {
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;
-    u16 _unused_16;
+    u16 _padding_16; /* spare halfword of the 8-byte vertex slot */
     s16 x3, y3, z3;
-    u16 _unused_1e;
+    u16 _padding_1e; /* spare halfword of the 8-byte vertex slot */
 } battle_map_mesh_quad_positions_t;
 
 typedef struct battle_map_mesh_triangle_normals {
@@ -6384,7 +6384,7 @@ typedef struct battle_map_mesh_quad_normals {
 
 /* Per-part start indices and counts stored after the mesh transform data. */
 typedef struct battle_map_mesh_part_metadata {
-    u8 _unused_00[0x88];
+    u8 _padding_00[0x88]; /* size filler: the battle_map_mesh_part_t transform data */
     u16 textured_triangle_start;
     u16 textured_quad_start;
     u16 untextured_triangle_start;
@@ -6479,11 +6479,11 @@ typedef struct battle_map_mesh_keyframe {
     s16 value_10;       /* 0x10; scale x */
     s16 value_12;       /* 0x12; scale y */
     s16 value_14;       /* 0x14; scale z */
-    s16 _unused_16;     /* 0x16 */
+    s16 _padding_16;    /* 0x16; wiki: unknown/padding after the scale triple */
     s16 angle_start[9]; /* 0x18 */
     s16 angle_end[9];   /* 0x2a */
     u16 flags[9];       /* 0x3c */
-    u16 _unused_4e;     /* 0x4e */
+    u16 _padding_4e;    /* 0x4e; wiki: unknown/padding to the 0x50-byte record */
 } battle_map_mesh_keyframe_t;
 typedef char battle_map_mesh_keyframe_size_must_be_0x50[(sizeof(battle_map_mesh_keyframe_t) == 0x50) ? 1 : -1];
 
