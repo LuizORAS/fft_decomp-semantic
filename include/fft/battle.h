@@ -1769,10 +1769,10 @@ typedef struct battle_unit_misc_data {
     /* walk_speed and its copy are read and stored as one word
      * (battle_unit_set_idle_animation_for_movement, battle_move_init_knockback). */
     battle_move_walk_speed_t walk_speed; /* 0x038 */
-    s32 step_speed; /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
-                       jump gravity */
-    SVECTOR screen; /* 0x040; vx = x, vy = height, vz = map depth */
-    u8 _unused_048[8];
+    s32 step_speed;    /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
+                          jump gravity */
+    SVECTOR screen;    /* 0x040; vx = x, vy = height, vz = map depth */
+    u8 _unused_048[8]; /* no code reaches it through this struct; FFHacktics leaves 0x48-0x4f blank */
     /* Two more SVECTORs (vx = x, vy = height, vz = map depth) at 0x050 and
      * 0x060, used to create vectors for effects processing.
      * battle_unit_shift_forward_or_backward and
@@ -1786,7 +1786,7 @@ typedef struct battle_unit_misc_data {
      * only ever cleared with them. */
     SVECTOR screen_offset;   /* 0x058 */
     SVECTOR effect_vector_2; /* 0x060 */
-    u8 _unused_068[4];
+    u8 _unused_068[4];       /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256,
      * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
      * read as signed halfwords by battle_get_alternate_facing_quadrant_* (% 4) and
@@ -1821,18 +1821,18 @@ typedef struct battle_unit_misc_data {
      * non-zero count means the unit is still moving (unit_moving_check_by_misc_id,
      * process_unit_movement); set_unit_movement_flag ORs 0x10 into a step.
      */
-    u8 movement_path_count; /* 0x09c */
-    u8 movement_path[0x7c]; /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
-    u8 movement_flags;      /* 0x119; battle_move_effective_flags_e bits */
-    u8 _unused_11a;
-    u8 mount_byte;                /* 0x11b */
-    u8 movement_value;            /* 0x11c */
-    u8 last_path_count;           /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
-    u8 current_unit_id_plus_one;  /* 0x11e */
-    u8 previous_unit_id_plus_one; /* 0x11f */
-    s16 item_get_camera_x;        /* 0x120 */
-    s16 item_get_camera_y;        /* 0x122 */
-    u8 _unused_124[4];
+    u8 movement_path_count;            /* 0x09c */
+    u8 movement_path[0x7c];            /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
+    u8 movement_flags;                 /* 0x119; battle_move_effective_flags_e bits */
+    u8 _unused_11a;                    /* no code reaches it through this struct; FFHacktics leaves it blank */
+    u8 mount_byte;                     /* 0x11b */
+    u8 movement_value;                 /* 0x11c */
+    u8 last_path_count;                /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
+    u8 current_unit_id_plus_one;       /* 0x11e */
+    u8 previous_unit_id_plus_one;      /* 0x11f */
+    s16 item_get_camera_x;             /* 0x120 */
+    s16 item_get_camera_y;             /* 0x122 */
+    u8 _unused_124[4];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
     u32 otag_depth_index;              /* 0x128 */
     s32 status_bubble_gte_flag;        /* 0x12c; RotTrans flag output while positioning the status bubble */
     u8 mount_state;                    /* 0x130; battle_misc_mount_state_e */
@@ -1867,7 +1867,7 @@ typedef struct battle_unit_misc_data {
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
     battle_dismount_coords_t dismount; /* 0x184 */
-    u8 _unused_18a[2];
+    u8 _unused_18a[2];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Current action data, 0x18c..0x1d7. */
     u8 action_18c;           /* 0x18c; "Reaction ID / Attacking unit ID? - Used Ability ID" */
     u8 target_count;         /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
@@ -1880,7 +1880,7 @@ typedef struct battle_unit_misc_data {
     u8 continue_attack;      /* 0x1a4 */
     u8 current_hit_number;   /* 0x1a5 */
     u8 reaction_id_1a6;      /* 0x1a6 */
-    u8 _unused_1a7;
+    u8 _unused_1a7;          /* no code reaches it through this struct; FFHacktics leaves it blank */
     u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
     u8 target_new_y;         /* 0x1a9 */
     u8 target_new_map_level; /* 0x1aa */
@@ -1945,10 +1945,10 @@ typedef struct battle_unit_misc_data {
     s16 numeric_display_progress;                          /* 0x2c2; animation progress, capped at 0x15 */
     battle_gfx_sprite_display_data_t* numeric_displays[3]; /* 0x2c4, 0x2c8, 0x2cc */
     u8 item_ability_display;                               /* 0x2d0; item ability display (byte store) */
-    u8 _unused_2d1;                                        /* 0x2d1 */
-    s8 item_get_x_offset;                                  /* 0x2d2; setup_item_get_rendering reads (s8) */
-    s8 item_get_y_offset;                                  /* 0x2d3 */
-    u8 _unused_2d4[4];
+    u8 _unused_2d1;       /* 0x2d1; no code reaches it through this struct; FFHacktics leaves it blank */
+    s8 item_get_x_offset; /* 0x2d2; setup_item_get_rendering reads (s8) */
+    s8 item_get_y_offset; /* 0x2d3 */
+    u8 _unused_2d4[4];    /* no code reaches it through this struct; FFHacktics leaves it blank */
     battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
      * battle_gfx_update_status_bubble_graphic_trigger sets the flag and clears
@@ -5077,13 +5077,13 @@ typedef struct battle_current_ability {
     u8 proc_id;                                 /* 0x1a */
     u8 used_item_id;                            /* 0x1b */
     u8 base_hit;                                /* 0x1c */
-    u8 _unused_1d;                              /* 0x1d */
+    u8 _unused_1d;                              /* 0x1d; never read or written; FFHacktics skips 0x801938dd */
     u8 accessory_evade;                         /* 0x1e */
     u8 right_shield_evade;                      /* 0x1f */
     u8 left_shield_evade;                       /* 0x20 */
     u8 class_evade;                             /* 0x21 */
     u8 facing_modifier;                         /* 0x22: 0 front, 1 side, 2 back */
-    u8 _unused_23;                              /* 0x23 */
+    u8 _unused_23;                              /* 0x23; never read or written; FFHacktics skips 0x801938e3 */
     u8 charge_power;                            /* 0x24 */
     u8 formula;                                 /* 0x25 */
     u8 target_is_undead;                        /* 0x26 */

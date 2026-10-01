@@ -589,18 +589,18 @@ typedef struct battle_stats {
     u8 mount_info;                     /* 0x182 */
     u8 existence;                      /* 0x183; battle_unit_existence_state_e */
     u8 equipped_flags;                 /* 0x184; battle_unit_equipped_flags_e */
-    u8 _unused_185;
-    u8 has_turn;                 /* 0x186 */
-    u8 movement_taken;           /* 0x187 */
-    u8 action_taken;             /* 0x188 */
-    u8 ability_outcome;          /* 0x189 */
-    u8 misc_unit_id;             /* 0x18a */
-    u8 ability_ct;               /* 0x18b */
-    battle_action_data_t action; /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;      /* 0x1b8 */
-    u8 auto_battle_target;       /* 0x1b9 */
-    u8 initial_team_flags;       /* 0x1ba */
-    u8 inflicted_status[5];      /* 0x1bb */
+    u8 _unused_185;                    /* no load or store in any module touches it; FFHacktics leaves it blank */
+    u8 has_turn;                       /* 0x186 */
+    u8 movement_taken;                 /* 0x187 */
+    u8 action_taken;                   /* 0x188 */
+    u8 ability_outcome;                /* 0x189 */
+    u8 misc_unit_id;                   /* 0x18a */
+    u8 ability_ct;                     /* 0x18b */
+    battle_action_data_t action;       /* 0x18c through 0x1b7 */
+    u8 auto_battle_setting;            /* 0x1b8 */
+    u8 auto_battle_target;             /* 0x1b9 */
+    u8 initial_team_flags;             /* 0x1ba */
+    u8 inflicted_status[5];            /* 0x1bb */
 } battle_stats_t;
 typedef char battle_stats_size_must_be_0x1c0[(sizeof(battle_stats_t) == 0x1c0) ? 1 : -1];
 typedef char battle_stats_innate_status_must_be_0x4e[((unsigned long)&((battle_stats_t*)0)->status_sets.innate == 0x4e)
