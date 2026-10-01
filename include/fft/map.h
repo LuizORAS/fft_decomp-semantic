@@ -59,6 +59,13 @@ typedef enum map_surface_type {
 
 enum { MAP_SURFACE_MASK = 0x3f };
 
+/* Tile slots are indexed level * 256 + y * width + x
+ * (battle_map_calculate_location): two levels of 256 slots. */
+enum {
+    MAP_LEVEL_TILE_SLOT_COUNT = 0x100,
+    MAP_TILE_SLOT_COUNT = 0x200,
+};
+
 /* Selectors accepted by battle_map_get_tile_data_value and its setter twin.
  * Selector 14 is unsupported; setter selector 15 performs a separate operation
  * whose relationship to tile data is not established. */

@@ -53,7 +53,7 @@ void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies,
         }
     }
     if (!aoe_is_0xff) {
-        for (i = 0, mark_all = 1, panel = g_battle_target_panels; i < 0x200; i++) {
+        for (i = 0, mark_all = 1, panel = g_battle_target_panels; i < MAP_TILE_SLOT_COUNT; i++) {
             if (panel->remaining_range != 0) {
                 panel->mark = mark_all;
             }

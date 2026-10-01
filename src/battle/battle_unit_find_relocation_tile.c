@@ -43,7 +43,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
     unit = &g_battle_unit_stats[unit_index];
     origin_x = unit->x;
     origin_y = unit->position.bits.y;
-    for (n = 0x1ff * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
+    for (n = (MAP_TILE_SLOT_COUNT - 1) * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
         ((battle_target_panel_t*)((u8*)g_battle_target_panels + n))->unit_record_index = 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
