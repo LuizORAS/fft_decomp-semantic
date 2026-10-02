@@ -260,7 +260,7 @@ void equip_gfx_set_otag_index(s32 ot_index);
 void equip_gfx_set_transition_frame(s32 value);
 void equip_gfx_store_image_and_wait(RECT* rect, u32* data);
 void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
-void equip_gfx_build_item_graphic_descriptor(battle_menu_status_panel_graphic_descriptor_t* descriptor);
+void equip_gfx_build_item_graphic_descriptor(battle_menu_status_panel_graphic_descriptor_t* descriptor, s32 item_id);
 
 void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction);

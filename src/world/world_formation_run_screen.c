@@ -24,8 +24,6 @@ typedef struct world_formation_screen_packets {
 
 extern world_formation_menu_handler_t g_world_formation_menu_handlers[];
 
-extern s32 world_formation_update_and_draw_unit_grid(s16, s16, s16, s16, s16, s32 (*)(), s32 (*)());
-
 /*
  * Run the WORLD formation screen until g_world_formation_screen_running clears or the tutorial ends.
  *

@@ -85,8 +85,6 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   once.
 - `world_menu_open_entry_window` receives requested x/y origins but always
   opens at its fixed default origin.
-- `src/main/main_party_save_unit.c` calls `main_party_remove_unit` without its
-  required roster index; the callee reads the current `$a0`.
 - `src/battle/battle_gfx_build_next_action_result_display.c`: the CT-zero
   display case reads `y_shift` without setting it; only the level-up/-down
   cases assign it, so the sprite row depends on the leftover value.
@@ -118,7 +116,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `world_menu_scrolling_list_thread`: `SetSemiTrans(&frame, 1)` passes the
   address of the `frame` pointer, so the semi-transparency bit lands in a stack
   byte past the pointer and the sprite is unchanged.
-- `src/event/helpmenu_run_battle_help_menu.c`: the vertical cursor writes its
+- `src/event/helpmenu_run_battle_help_menu.c` and its REQUIRE twin
+  `src/event/helpmenu_menu_run_require_help.c`: the vertical cursor writes its
   shadow's coordinates through `vert_poly[2]`, past the two-entry
   `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
   polygon `vert_shadow_poly` addresses. One four-entry array does not reproduce
