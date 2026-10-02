@@ -214,10 +214,10 @@ without changing the bytes.
 
 - `include/fft/menu.h`: `world_menu_entry_t.window_x` is `u16`, but
   `src/world/world_menu_open_entry_window.c` needs it signed.
-- The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`)
-  is redeclared per overlay: `status_panel_gauges_t` (ATTACK, REQUIRE), the head
-  of `equip_unit_data_t`, `world_unit_status_billboard_t`, and HELPMENU's raw
-  `g_helpmenu_active_banner`.
+- The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`,
+  signed gauges) is redeclared as `world_unit_status_billboard_t` (WORLD,
+  ATTACK, REQUIRE; unsigned HP/MP), the head of `equip_unit_data_t`, and
+  HELPMENU's raw `g_helpmenu_active_banner`.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.

@@ -2031,26 +2031,6 @@ void world_formation_sort_roster(s32 index);
 s32 world_get_formation_unit_stat_by_mode(s32 unit_index, s32 fallback);
 
 /* unit */
-/* Provisional: status-billboard record filled by world_menu_copy_unit_data_to_status_billboard
- * (0x800e7c40), the WORLD twin of debugchr_panel_copy_unit_data_to_billboard. */
-typedef struct world_unit_status_billboard {
-    s16 level;      /* 0x00 */
-    s16 team_kind;  /* 0x02; 0 ally, 1 enemy, 2 neutral, 3 auto-battle */
-    s16 list_index; /* 0x04 */
-    s16 unit_count; /* 0x06 */
-    s16 experience; /* 0x08 */
-    s16 battle_id;  /* 0x0a */
-    u16 hp;         /* 0x0c */
-    s16 hp_delta;   /* 0x0e */
-    u16 max_hp;     /* 0x10 */
-    u16 mp;         /* 0x12 */
-    s16 mp_delta;   /* 0x14 */
-    u16 max_mp;     /* 0x16 */
-    s16 ct;         /* 0x18 */
-    s16 _unused_1a; /* 0x1a */
-    s16 max_ct;     /* 0x1c; always 100 */
-} world_unit_status_billboard_t;
-
 /* Provisional: one 4-byte breeding entry per monster job from 0x5e
  * (0x8018debc): the hatch-day range and the three offspring jobs by rarity
  * class (world_unit_update_monster_breeding). */

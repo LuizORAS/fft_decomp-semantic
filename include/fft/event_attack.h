@@ -26,7 +26,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table
 extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern u8 g_attack_editor_numeric_texture[];
-extern battle_menu_status_panel_gauges_t g_attack_editor_status_gauges;
+extern world_unit_status_billboard_t g_attack_editor_status_gauges;
 extern s16 g_attack_editor_team_state;
 extern s16 g_attack_editor_job_id;
 extern s16 g_attack_editor_brave;
@@ -311,7 +311,7 @@ extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
 /* panel */
-extern battle_menu_status_panel_gauges_t g_attack_panel_comparison_billboard;
+extern world_unit_status_billboard_t g_attack_panel_comparison_billboard;
 extern battle_image_location_t g_attack_panel_item_icon_texture[];
 extern battle_image_location_t g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;

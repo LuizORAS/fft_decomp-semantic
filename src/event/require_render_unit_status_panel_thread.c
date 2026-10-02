@@ -25,7 +25,7 @@ void require_render_unit_status_panel_thread(void) {
     u8* number_image;
     battle_menu_status_panel_editor_packet_t* editor_base;
     battle_menu_status_panel_numeric_entry_t* numeric_entries;
-    battle_menu_status_panel_gauges_t* state;
+    world_unit_status_billboard_t* state;
     void* portrait_arg;
     const RECT* portrait_rect;
     u8* portrait_image;
@@ -122,12 +122,12 @@ void require_render_unit_status_panel_thread(void) {
         frame += 1;
         off2 += 0x14;
     } while (frame < 4);
-    if (state->team_state >= 4) {
-        state->team_state = 0;
+    if (state->team_kind >= 4) {
+        state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
         battle_copy_bytes(
-            g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_state * 0xC, 0xC);
+            g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
     } else {
         battle_copy_bytes(g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells, 0xC);
     }
@@ -164,7 +164,7 @@ void require_render_unit_status_panel_thread(void) {
     } while (frame < 7);
     battle_gfx_init_image_loading(&panel->portrait, g_require_editor_numeric_geometry,
         &g_require_panel_frame_rect.location, g_require_panel_portrait_cell);
-    if (state->team_state == 1) {
+    if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
         panel->portrait.clut = 0x7FBD;
@@ -173,8 +173,8 @@ void require_render_unit_status_panel_thread(void) {
     battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
-    prev_unit = state->unit_index;
-    cur_unit = state->unit_index;
+    prev_unit = state->battle_id;
+    cur_unit = state->battle_id;
     for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
@@ -184,13 +184,13 @@ void require_render_unit_status_panel_thread(void) {
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(
-                g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_state * 0xC, 0xC);
+                g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
         } else {
             battle_copy_bytes(g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_require_editor_numeric_geometry,
             &g_require_gfx_portrait_origin.location, g_require_panel_editor_mode_cell);
-        if (state->team_state == 1) {
+        if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
             panel->portrait.clut = 0x7FBD;
@@ -324,12 +324,12 @@ void require_render_unit_status_panel_thread(void) {
             if (anim_state == 0) {
                 portrait_arg = *(void* volatile*)&thread->work;
                 prev_unit = cur_unit;
-                cur_unit = state->unit_index;
+                cur_unit = state->battle_id;
             } else {
                 portrait_arg = *(void* volatile*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
-                cur_unit = state->unit_index;
+                cur_unit = state->battle_id;
             }
         }
         if (cur_unit != prev_unit) {
@@ -425,7 +425,7 @@ void require_render_unit_status_panel_thread(void) {
         panel->sprites[6].h = 0x14;
         panel->sprites[6].v0 = (s16)(icon_index / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (thread->work != 0)) {
-            if (state->_04 < 0) {
+            if (state->list_index < 0) {
                 numeric_entries[6].format = 0xC00;
             } else {
                 numeric_entries[6].format = 2;

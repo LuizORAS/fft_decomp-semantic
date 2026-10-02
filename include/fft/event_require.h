@@ -171,12 +171,12 @@ void require_menu_wait_selection_threads(void);
 /* panel */
 extern u8 g_require_panel_active_unit_banner[];
 extern u8 g_require_panel_billboard_data[];
-extern battle_menu_status_panel_gauges_t g_require_panel_comparison_billboard;
+extern world_unit_status_billboard_t g_require_panel_comparison_billboard;
 extern s16 g_require_panel_comparison_unit_id;
 extern s32 g_require_panel_dim_a;
 extern s32 g_require_panel_dim_b;
 extern s32 g_require_panel_dim_c;
-extern battle_menu_status_panel_gauges_t g_require_panel_selected_billboard;
+extern world_unit_status_billboard_t g_require_panel_selected_billboard;
 extern u8 g_require_panel_status_animation[];
 extern u8 g_require_panel_status_group_bounds[];
 extern u8 g_require_panel_status_group_count;
@@ -226,7 +226,7 @@ extern u8 g_require_panel_selected_portrait_image[];
 extern RECT g_require_panel_selected_portrait_rect;
 extern u8 g_require_panel_sprite_cells[];
 extern const require_texture_page_t g_require_panel_status_texture;
-void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_menu_status_panel_gauges_t* output);
+void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, world_unit_status_billboard_t* output);
 
 void require_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);

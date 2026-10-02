@@ -8,6 +8,31 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* status */
+/* Provisional: unit status billboard (0x1e bytes) filled from battle_stats_t:
+ * WORLD's world_menu_copy_unit_data_to_status_billboard (0x800e7c40, twin of
+ * debugchr_panel_copy_unit_data_to_billboard) and the ATTACK/REQUIRE status
+ * panels. BATTLE's battle_unit_status_record_t has the same layout with signed
+ * gauge fields. */
+typedef struct world_unit_status_billboard {
+    s16 level;      /* 0x00 */
+    s16 team_kind;  /* 0x02; 0 ally, 1 enemy, 2 neutral, 3 auto-battle */
+    s16 list_index; /* 0x04 */
+    s16 unit_count; /* 0x06 */
+    s16 experience; /* 0x08 */
+    s16 battle_id;  /* 0x0a */
+    u16 hp;         /* 0x0c */
+    s16 hp_delta;   /* 0x0e */
+    u16 max_hp;     /* 0x10 */
+    u16 mp;         /* 0x12 */
+    s16 mp_delta;   /* 0x14 */
+    u16 max_mp;     /* 0x16 */
+    s16 ct;         /* 0x18 */
+    s16 _unused_1a; /* 0x1a */
+    s16 max_ct;     /* 0x1c; always 100 */
+} world_unit_status_billboard_t;
+typedef char world_unit_status_billboard_size_must_be_0x1e[(sizeof(world_unit_status_billboard_t) == 0x1e) ? 1 : -1];
+
 /* ability */
 /* Provisional: per-skill byte tables reached through g_battle_ai_workspace_ptr and indexed
  * by the skill selected in menu entry 3 (world_menu_validate_skill_selection_thread, 0x800f474c). Only the three

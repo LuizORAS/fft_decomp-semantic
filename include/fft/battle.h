@@ -7012,28 +7012,6 @@ typedef union battle_menu_status_panel_slot_storage {
 typedef char battle_menu_status_panel_slot_storage_size_must_be_0x38
     [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x38) ? 1 : -1];
 
-/* Unit gauge record (0x1e bytes) copied from battle_stats_t for the status
- * panel; the same shape as the first 0x1e bytes of battle_unit_status_record_t. */
-typedef struct battle_menu_status_panel_gauges {
-    s16 level;      /* 0x00 */
-    s16 team_state; /* 0x02 */
-    s16 _04;
-    s16 _06;
-    s16 experience; /* 0x08 */
-    s16 unit_index; /* 0x0a */
-    u16 hp;         /* 0x0c */
-    s16 _0e;
-    u16 max_hp; /* 0x10 */
-    u16 mp;     /* 0x12 */
-    s16 _14;
-    u16 max_mp; /* 0x16 */
-    s16 ct;     /* 0x18 */
-    s16 _1a;
-    s16 max_ct; /* 0x1c */
-} battle_menu_status_panel_gauges_t;
-typedef char
-    battle_menu_status_panel_gauges_size_must_be_0x1e[(sizeof(battle_menu_status_panel_gauges_t) == 0x1e) ? 1 : -1];
-
 /* One value bar: the Gouraud bar is drawn value/limit wide. */
 typedef struct battle_menu_status_panel_bar {
     s16 value;
