@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e. */
+/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e.
+ * Type debt (QUIRKS.md): it duplicates battle_ai_command_action_t, which
+ * the callers pass as `source`. */
 typedef struct battle_target_unit_action_copy {
     u8 actor_id;         /* 0x00 */
     u8 skillset_id;      /* 0x01 */

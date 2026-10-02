@@ -250,8 +250,16 @@ without changing the bytes.
   (a `u8*` text section read as halfwords), `open_gfx_load_opntex_into_frame_buffer`
   (OPNTEX bytes read as words), `world_gfx_build_scaled_draw_area_pair_at_offset`
   (the numeric editor's portrait packets as a draw-area pair),
-  `world_menu_build_sprite_page` (a `RECT` as an image location) and
-  `world_menu_init_and_load_scrollable_list` (menu scripts as a list record).
+  `world_menu_build_sprite_page` and its BATTLE twin (a `RECT` as an image
+  location), `world_menu_init_and_load_scrollable_list` (menu scripts as a list
+  record), `battle_target_build_directional_attack_panels` (a
+  `battle_ai_command_action_t`, copied into a file-local duplicate of it),
+  `equip_text_render_encoded_ids_to_image` (a `u32[]` image buffer) and
+  `world_menu_run_script_with_palette_mode` (display scripts declared as
+  `u8[]`, `s16[]` or `world_menu_window_command_t`).
+- `jobstts_menu_init_scrollable_list` passes its text-table pointer to the
+  core's `s32` parameter; pointers stored in 32-bit integers break on 64-bit
+  ports.
 - `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.
