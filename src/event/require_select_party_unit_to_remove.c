@@ -208,6 +208,8 @@ s32 require_select_party_unit_to_remove(void) {
 
             sprite_set = party_unit->sprite_set;
             sprite_group = g_require_gfx_formation_sprite_groups[0];
+            /* A goto, not a loop statement: loop.c would hoist the column
+             * count 3 out of this search, which the target keeps inside. */
         next_formation:
             for (sprite_column = 0; sprite_column < 3; sprite_column++) {
                 if (sprite_set == sprite_group[sprite_column])

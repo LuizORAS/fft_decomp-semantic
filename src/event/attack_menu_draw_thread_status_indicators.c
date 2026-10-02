@@ -38,6 +38,8 @@ void attack_menu_draw_thread_status_indicators(void) {
             }
         }
     }
+    /* Both requests jump past the fade-out updates; an if/else chain or a
+     * do/while(0) break reorders the second request's block. */
     if (active != 0) {
         if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
             g_attack_menu_indicator_state[0] = 2;
