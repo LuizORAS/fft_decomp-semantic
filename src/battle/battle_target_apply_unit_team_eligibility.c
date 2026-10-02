@@ -10,19 +10,19 @@
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff) {
     /* Retain the team comparison value in $v0 until the actor override. */
     register s32 relation __asm__("$2");
-    register s32 relation_out __asm__("$4");
+    s32 relation_out;
     s32 actor_id;
     s32 team_flags;
     s32 allowed;
     s32 panel_index;
     battle_target_panel_t* panel;
     s32 i;
-    /* The index and panel masks occupy the caller registers before each loop. */
-    register s32 actor_index __asm__("$4");
+    s32 actor_index;
     /* Keep the selected-panel marker live through the first pass. */
     register s32 mark __asm__("$18");
+    /* The team mask stays in $v0. */
     register s32 mask __asm__("$2");
-    register s32 mark_all __asm__("$4");
+    s32 mark_all;
 
     actor_index = raw_unit_id & 0xff;
     team_flags = g_battle_unit_stats[actor_index].team_flags;
