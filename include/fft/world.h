@@ -1999,6 +1999,9 @@ void world_formation_step_scroll_velocity(s8* velocity, s8* position);
 u8 world_formation_step_unit_portrait_slide(void);
 void world_formation_step_unit_selection_slide(void);
 void world_formation_stop_menu_threads(void);
+/* get_mode and get_shade take the unit slot index; NULL selects the default. */
+s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
+    s16 locked, s32 (*get_mode)(), s32 (*get_shade)());
 void world_formation_update_job_wheel_state(void);
 void world_formation_update_open_request(void);
 void world_formation_update_unit_selection(void);

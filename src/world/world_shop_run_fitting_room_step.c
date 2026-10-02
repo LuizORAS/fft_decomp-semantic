@@ -9,11 +9,6 @@
  * pointer-local-plus-absolute split src/world/world_formation_item_menu.c
  * already uses on this same pair. */
 
-/* Accepted spelling with a void callback
- * (src/world/world_shop_run_rename_unit_prompt_step.c); the sibling that
- * passes two s32 callbacks declares the other form. */
-extern void world_formation_update_and_draw_unit_grid(s32, s32, s32, s32, s32, s32 (*)(void), s32);
-
 /* Fitting-room menu step: on entry clear the trial equipment and its cost;
  * then either browse the formation (confirm opens the fitting menu, cancel
  * returns to shop step 0xC) or run the fitting menu thread and dispatch its

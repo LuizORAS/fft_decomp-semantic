@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern void world_formation_update_and_draw_unit_grid(s32, s32, s32, s32, s32, s32 (*)(s32), s32 (*)(s32));
-
 /*
  * Run one frame of the shop's "who can equip" unit browser for the item
  * under the list cursor.

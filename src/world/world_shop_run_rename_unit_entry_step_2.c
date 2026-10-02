@@ -1,8 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-extern void world_formation_update_and_draw_unit_grid(s32, s32, s32, s32, s32, s32 (*)(void), s32);
-
 /* Target 0x80138d78; sibling of world_shop_run_rename_unit_entry_step (0xF82A / 0x18). */
 void world_shop_run_rename_unit_entry_step_2(void) {
     if (g_world_shop_rename_entry_2_initialized == 0) {

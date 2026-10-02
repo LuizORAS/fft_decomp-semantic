@@ -2,8 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern void world_formation_update_and_draw_unit_grid(s32, s32, s32, s32, s32, s32 (*)(void), s32);
-
 /*
  * Menu step for the rename-unit prompt: on the first frame either leaves
  * the screen when no face button is held, or arms the prompt. Confirm
