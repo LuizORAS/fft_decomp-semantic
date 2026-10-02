@@ -37,7 +37,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
             for (target_index = 0; work.target_list[target_index] != 0xff; target_index++) {
                 target_id = work.target_list[target_index];
                 result = &g_battle_unit_stats[target_id].action;
-                if ((s16)result->attack_accuracy <= 0) {
+                if (result->attack_accuracy <= 0) {
                     continue;
                 }
                 if (!(behavior[1] & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {

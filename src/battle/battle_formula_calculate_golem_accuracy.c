@@ -18,8 +18,7 @@ s32 battle_formula_calculate_golem_accuracy(void) {
         g_current_ability.attacker_faith = 0;
     }
     action = g_battle_action_target_data;
-    /* The target reads hp_damage signed (lh). */
-    action->hp_damage = (s16)(*(s16*)&action->hp_damage * g_current_ability.attacker_faith / 100);
+    action->hp_damage = (s16)(action->hp_damage * g_current_ability.attacker_faith / 100);
     battle_formula_use_hp_damage_as_action_hit_percent();
     return g_battle_action_target_data->hit == 0;
 }

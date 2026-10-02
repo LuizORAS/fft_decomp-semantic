@@ -8,9 +8,8 @@
  * Returns -1 for an invalid or absent unit, or when a mounted target ends
  * the action dead or crystallized; otherwise 0.
  *
- * The HP/MP damage and healing fields are read signed (lh), hence the s16
- * casts on the u16 header fields. The KO test's three status-bit checks fold
- * into the target's single halfword load of current[0..1] & 0x160. */
+ * The KO test's three status-bit checks fold into the target's single
+ * halfword load of current[0..1] & 0x160. */
 s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     s32 outcome;
     s32 hp;
@@ -41,7 +40,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         g_battle_action_target->ability_outcome = 1;
     }
     battle_action_dispatch_target_reaction_ability();
-    if ((s16)g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
+    if (g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
         battle_action_increment_item_quantity_for_steal_break(
             g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
     }
@@ -52,7 +51,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         u16* golem;
 
         golem = &g_battle_team_golem[(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> 4];
-        hp = *golem - (s16)g_battle_action_target_data->hp_damage;
+        hp = *golem - g_battle_action_target_data->hp_damage;
         if (hp < 0) {
             hp = 0;
         }
@@ -66,7 +65,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_action_check_mp_switch_distribute_and_damage_split_usability();
     old_hp = g_battle_action_target->hp;
-    hp = old_hp - (s16)g_battle_action_target_data->hp_damage + (s16)g_battle_action_target_data->hp_healing;
+    hp = old_hp - g_battle_action_target_data->hp_damage + g_battle_action_target_data->hp_healing;
     if (hp < 0) {
         hp = 0;
     }
@@ -74,7 +73,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         hp = g_battle_action_target->max_hp;
     }
     old_mp = g_battle_action_target->mp;
-    mp = old_mp - (s16)g_battle_action_target_data->mp_damage + (s16)g_battle_action_target_data->mp_healing;
+    mp = old_mp - g_battle_action_target_data->mp_damage + g_battle_action_target_data->mp_healing;
     if (mp < 0) {
         mp = 0;
     }

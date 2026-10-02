@@ -15,6 +15,5 @@ void battle_formula_heal_pa_times_y_and_mp(void) {
     action->hp_damage = 0;
     action->hp_healing = amount;
     action->attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_MP_HEALING;
-    /* hp_healing is re-read signed (lh) for the halving. */
-    action->mp_healing = *(s16*)&action->hp_healing / 2;
+    action->mp_healing = action->hp_healing / 2;
 }

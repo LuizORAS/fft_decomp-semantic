@@ -44,12 +44,12 @@ typedef struct battle_action_data {
     u8 critical;     /* 0x01 */
     u8 miss_type;    /* 0x02; battle_action_miss_type_e */
     u8 item_lost;    /* 0x03; potion / break / steal / draw out */
-    u16 hp_damage;   /* 0x04 */
-    u16 hp_healing;  /* 0x06 */
-    u16 mp_damage;   /* 0x08 */
-    u16 mp_healing;  /* 0x0a */
+    s16 hp_damage;   /* 0x04 */
+    s16 hp_healing;  /* 0x06 */
+    s16 mp_damage;   /* 0x08 */
+    s16 mp_healing;  /* 0x0a */
     s16 gil_change;  /* 0x0c; stolen / lost */
-    u16 reaction_id; /* 0x0e */
+    s16 reaction_id; /* 0x0e */
     /* Target readers and writers consistently access 0x10-0x11 as one halfword. */
     u16 special_effect;       /* 0x10; battle_action_special_effect_e */
     u8 sp_change;             /* 0x12 */
@@ -69,7 +69,7 @@ typedef struct battle_action_data {
     u8 jp_change;             /* 0x29; Move-JP Up / JP stolen */
     /* Written as a halfword everywhere (battle_formula_apply_status lhu/sh,
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
-    u16 attack_accuracy; /* 0x2a */
+    s16 attack_accuracy; /* 0x2a */
 } battle_action_data_t;
 typedef char battle_action_data_size_must_be_0x2c[(sizeof(battle_action_data_t) == 0x2c) ? 1 : -1];
 

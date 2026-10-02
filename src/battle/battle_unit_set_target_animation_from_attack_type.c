@@ -70,9 +70,9 @@ void battle_unit_set_target_animation_from_attack_type(
                 break;
             default:
                 if (action->hit != 0) {
-                    if (((s16)action->hp_damage != 0) || ((s16)action->mp_damage != 0)) {
+                    if ((action->hp_damage != 0) || (action->mp_damage != 0)) {
                         animation = 0x19;
-                    } else if (((s16)action->hp_healing != 0) || ((s16)action->mp_healing != 0)) {
+                    } else if ((action->hp_healing != 0) || (action->mp_healing != 0)) {
                         animation = 0x1b;
                     }
                 }

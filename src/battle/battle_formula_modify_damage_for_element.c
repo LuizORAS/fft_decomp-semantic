@@ -21,12 +21,11 @@ void battle_formula_modify_damage_for_element(s32 element) {
     }
     if (unit->elemental_affinity[ELEMENTAL_AFFINITY_HALF] & element_mask) {
         half_action = g_battle_action_target_data;
-        /* hp_damage is read signed (lh) for the division. */
-        *(s16*)&half_action->hp_damage = *(s16*)&half_action->hp_damage / 2;
+        half_action->hp_damage = half_action->hp_damage / 2;
     }
     if (g_battle_action_target->elemental_affinity[ELEMENTAL_AFFINITY_WEAK] & element_mask) {
         weak_action = g_battle_action_target_data;
         weak_action->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_ELEMENTAL_WEAKNESS;
-        *(s16*)&weak_action->hp_damage = *(s16*)&weak_action->hp_damage * 2;
+        weak_action->hp_damage = weak_action->hp_damage * 2;
     }
 }

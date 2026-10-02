@@ -17,8 +17,6 @@ void battle_formula_damage_random_x_times_pa_plus_y_half_times_pa(void) {
     mult = &g_current_ability.random_damage_factor;
     *mult = (s32)(rnd * g_current_ability.range_data.x) / 32768 + 1;
     action = g_battle_action_target_data;
-    /* The target loads hp_damage signed (lh) here; keep the cast and the
-       multiplier deref separated so `* *` never reads as a comment. */
-    *(s16*)&action->hp_damage = *(s16*)&action->hp_damage * (*mult);
+    action->hp_damage = action->hp_damage * (*mult);
     action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
 }
