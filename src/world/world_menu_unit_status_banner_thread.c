@@ -530,18 +530,14 @@ void world_menu_unit_status_banner_thread(void) {
                 stride = &g_world_menu_text_state.stride;
                 *stride = 0x38;
                 if (g_world_preview_stats_window_active == 0) {
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, entries, (world_glyph_blit_t*)(stride - 2), 6);
+                    world_menu_draw_numeric_display_entries(render_a, entries, (world_glyph_blit_t*)(stride - 2), 6);
                 } else {
                     position = stride - 2;
-                    world_text_render_decimal_entry_list((s32)render_a, &entries[10], (world_glyph_blit_t*)position, 1);
-                    world_text_render_decimal_entry_list((s32)render_a, &entries[12], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[11], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[13], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[4], (world_glyph_blit_t*)position, 2);
+                    world_text_render_decimal_entry_list(render_a, &entries[10], (world_glyph_blit_t*)position, 1);
+                    world_text_render_decimal_entry_list(render_a, &entries[12], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[11], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[13], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[4], (world_glyph_blit_t*)position, 2);
                 }
             }
             LoadImage(&rects[0], (u32*)render_a);
@@ -549,7 +545,7 @@ void world_menu_unit_status_banner_thread(void) {
             origin = text_stride - 2;
             render_a_upper = render_a + 0x400;
             *text_stride = 0x60;
-            world_menu_draw_numeric_display_entries((s32)render_a_upper, &entries[8], (world_glyph_blit_t*)origin, 2);
+            world_menu_draw_numeric_display_entries(render_a_upper, &entries[8], (world_glyph_blit_t*)origin, 2);
             LoadImage(&rects[1], (u32*)render_a_upper);
             display->work = 0;
             world_clear_menu_render_buffer(render_c, 0x580);

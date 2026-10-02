@@ -1247,7 +1247,7 @@ extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void world_display_specific_menu_text(s32 image, s32 origin, s32 text);
-void world_display_menu_number_entry(s32 value, u8 digit_count, s32 image, u16* origin);
+void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, u16* origin);
 
 void world_gfx_build_scaled_draw_area_pair_at_offset(
     void* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread);
@@ -1961,10 +1961,10 @@ void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y);
 void world_formation_draw_cursor_trail(s16* cursor);
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y);
-void world_formation_draw_sprite_with_shadow(world_gfx_sprite_desc_t* pos, s32 rgb, s32 ot_index);
+void world_formation_draw_sprite_with_shadow(world_gfx_sprite_desc_t* pos, u8* rgb, s32 ot_index);
 
 void world_formation_draw_unit_portrait_frame(
-    world_gfx_sprite_desc_t* pos, s32 palette, s32 rgb, s32 hatch_countdown, s32 ot_index);
+    world_gfx_sprite_desc_t* pos, s32 palette, u8* rgb, s32 hatch_countdown, s32 ot_index);
 
 void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s8* rgb, s32 ot_index);
 s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s32 item_id);
@@ -2397,7 +2397,7 @@ void world_text_draw_shadowed(void* buffer, world_glyph_blit_t* dest);
 u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 
 void world_text_render_decimal_entry_list(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    void* buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
@@ -2407,7 +2407,7 @@ void world_text_render_ids_into_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph);
 
 void world_text_render_signed_gauge_entry_list(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    void* buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 s32 world_text_adjust_value_for_event_code(s32 event_code, s32 value);
 u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
@@ -2984,7 +2984,7 @@ s32 world_menu_dispatch_system_function(
 void world_menu_draw_active_window_frames(void);
 
 void world_menu_draw_numeric_display_entries(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
+    void* buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
 void world_menu_draw_pressable_button(s16 index, s32 x, s32 y, s16 pressed, u16 disabled, u16 sound_effect_id);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);

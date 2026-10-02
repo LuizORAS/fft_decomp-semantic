@@ -74,28 +74,28 @@ void world_menu_run_numeric_editor_thread(void) {
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
                 world_text_render_signed_gauge_entry_list(
-                    (s32)text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+                    text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (s32)text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+                    text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
             }
             g_world_menu_text_state.stride = 0x40;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
                 world_text_render_signed_gauge_entry_list(
-                    (s32)(text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+                    (text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+                    (text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
             }
             g_world_menu_text_state.stride = 0x64;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
                 world_text_render_signed_gauge_entry_list(
-                    (s32)(text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+                    (text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+                    (text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));

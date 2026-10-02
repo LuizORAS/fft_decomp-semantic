@@ -3,7 +3,7 @@
 
 /* Render signed gauge values with their positive, negative, or zero color. */
 void world_text_render_signed_gauge_entry_list(
-    s32 pixels, world_menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
+    void* pixels, world_menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
     s32 i;
     s32 amount;
 
@@ -23,7 +23,7 @@ void world_text_render_signed_gauge_entry_list(
             out->color = 0;
             entries->param |= MENU_DECIMAL_SIGN_MINUS;
         }
-        world_text_render_decimal_value(amount, entries->param, (void*)pixels, out);
+        world_text_render_decimal_value(amount, entries->param, pixels, out);
         out->color = 0;
     }
 }

@@ -220,7 +220,7 @@ void world_menu_scrolling_list_thread(void) {
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.origin_x);
                         }
                     } else if (layout->columns.mode[column] == 1) {
-                        world_display_menu_number_entry(layout->columns.text_ids[column][index], 2, (s32)buffer,
+                        world_display_menu_number_entry(layout->columns.text_ids[column][index], 2, buffer,
                             (u16*)&g_world_menu_text_state.origin_x);
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
