@@ -264,6 +264,27 @@ without changing the bytes.
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.
 
+## Pointers held in 32-bit integers
+
+The PS1's pointers and `s32` are both 32 bits wide, so some code passes or
+computes addresses as integers. A 64-bit build must give these pointer types.
+
+- The thread parameters (`native_thread_t.function_parameter_1`..`_4`, and the
+  `*_thread_get_current_parameter_*` getters) are `s32` but often carry record
+  pointers, e.g. into `battle_script_run_sprite_move` and
+  `world_menu_confirm_action_silently`.
+- `bunit_menu_dispatch_with_override` and `equip_menu_dispatch_with_override`
+  take a menu-record pointer as `s32`; `bunit_menu_init_scrollable_list_core`,
+  `jobstts_menu_init_scrollable_list_core` and `jobstts_menu_init_scrollable_list`
+  take a text-table pointer as `s32`.
+- Matching spellings compute addresses through `(u32)` casts, e.g.
+  `battle_script_get_variable_word_pointer_from_id` (offsets from
+  `g_battle_script_variables`) and `battle_ai_load_known_ability_flag` (the
+  learned-ability row).
+- The other direction: `battle_map_init_background_gradient`, `_ambient_light`
+  and `_darkness` pass `map_id` through the `u8*` parameter of
+  `battle_map_light_state_command`.
+
 ## Duplicated code
 
 Twins stay separate functions because each lives in its own module or

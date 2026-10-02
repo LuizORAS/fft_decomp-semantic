@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Port debt (QUIRKS.md): map_id travels through a u8* parameter. */
 void battle_map_init_ambient_light(s32 unused_0, s32 unused_1, s32 map_id) {
     /* Pin: the target copies the record pointer into $a2 (`move a2,v0`);
      * unpinned GCC uses $v0 directly, and reusing the map_id

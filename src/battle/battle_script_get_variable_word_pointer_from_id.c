@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Port debt (QUIRKS.md): the addresses are computed through u32 casts. */
 s32* battle_script_get_variable_word_pointer_from_id(s32 id) {
     s32* result;
     s32 off;

@@ -2,6 +2,7 @@
 #include "psx/types.h"
 
 /* Load the two map background gradient colours for the current map. */
+/* Port debt (QUIRKS.md): map_id travels through a u8* parameter. */
 void battle_map_init_background_gradient(s32 unused_0, s32 unused_1, s32 map_id) {
     /* Pin: the target copies the record pointer into $a2 (`move a2,v0`), as in
      * battle_map_init_ambient_light and battle_map_init_darkness;

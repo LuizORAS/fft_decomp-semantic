@@ -3,6 +3,7 @@
 
 /* BUNIT.OUT 001c85f8 - Invoke menu action `menu_id`+`state`, but clear `state` to
  * 0 whenever the override flag is set (also passed to bunit_text_set_palette_and_metrics). */
+/* Port debt (QUIRKS.md): menu_id is a menu-record pointer passed as s32. */
 void bunit_menu_dispatch_with_override(s32 menu_id, s32 state, s32 override) {
     s32 effective_state = state;
     if (override != 0) {
