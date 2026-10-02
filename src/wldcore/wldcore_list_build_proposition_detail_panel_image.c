@@ -4,7 +4,7 @@
  * the elapsed/assigned day counts and the location go into text substitution
  * words 0-2, and one 16-pixel row is drawn per participant.
  *
- * The panel's row count is the measured row count of text g_wldcore_selected_proposition_row[0].fields.location +
+ * The panel's row count is the measured row count of text g_wldcore_selected_proposition_row[0].fields.name_text +
  * 0xf7ff plus two, kept in the level record at +0x0c.
  *
  * The target stores base_x/base_y through one pointer to the pair, and reads
@@ -26,7 +26,7 @@ void wldcore_list_build_proposition_detail_panel_image(
     u16* panel_text;
     wldcore_point32_t* base;
 
-    panel_text = &g_wldcore_selected_proposition_row[0].fields.location;
+    panel_text = &g_wldcore_selected_proposition_row[0].fields.name_text;
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     level->render_index = index;

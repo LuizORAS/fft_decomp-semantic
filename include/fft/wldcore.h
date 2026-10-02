@@ -703,25 +703,34 @@ typedef struct wldcore_proposition_result_level {
 typedef union wldcore_proposition_fields {
     u16 values[23];
     struct {
-        u16 category_index; /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
-        u16 job_list_index; /* 0x02 */
-        u16 id;             /* 0x04 */
-        u16 _unused_06;     /* 0x06 */
-        u16 fee_a;          /* 0x08; remapped through data record 1 */
-        u16 fee_b;          /* 0x0a; remapped through data record 1 */
-        u16 min_days;       /* 0x0c */
-        u16 max_days;       /* 0x0e */
-        u16 location;       /* 0x10 */
-        u16 jp_reward;      /* 0x12 */
-        u16 discovery_kind; /* 0x14; 1 treasure, 2 unexplored land, else see random_bonus */
-        u16 random_bonus;   /* 0x16; 1 enables the three-tier random reward */
-        u16 gil_reward;     /* 0x18 */
-        u16 _unused_1a[6];  /* 0x1a */
-        u16 speaker_mode;   /* 0x26 */
-        u16 preferred_job;  /* 0x28 */
-        u16 _unused_2a[2];  /* 0x2a */
+        u16 category_index;         /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
+        u16 job_list_index;         /* 0x02 */
+        u16 id;                     /* 0x04 */
+        u16 _unused_06;             /* 0x06 */
+        u16 fee_a;                  /* 0x08; remapped through data record 1 */
+        u16 fee_b;                  /* 0x0a; remapped through data record 1 */
+        u16 min_days;               /* 0x0c */
+        u16 max_days;               /* 0x0e */
+        u16 name_text;              /* 0x10; 1-based errand name, text 0xf7ff + n */
+        u16 jp_reward;              /* 0x12 */
+        u16 discovery_kind;         /* 0x14; 1 treasure, 2 unexplored land, else see random_bonus */
+        u16 random_bonus;           /* 0x16; 1 enables the three-tier random reward */
+        u16 gil_reward;             /* 0x18 */
+        u16 _unused_1a[3];          /* 0x1a */
+        u16 location;               /* 0x20; 0 for any location */
+        u16 condition_flags;        /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
+        u16 _unused_24;             /* 0x24 */
+        u16 speaker_mode;           /* 0x26 */
+        u16 preferred_job;          /* 0x28 */
+        u16 required_script_var_6f; /* 0x2a */
+        u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
     } fields;
 } wldcore_proposition_fields_t;
+enum {
+    WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 1,
+    WLDCORE_PROPOSITION_CONDITION_MONTH = 2,
+    WLDCORE_PROPOSITION_CONDITION_STATUS = 4,
+};
 typedef char wldcore_proposition_fields_size_must_be_0x2e[sizeof(wldcore_proposition_fields_t) == 0x2e ? 1 : -1];
 
 /* Provisional: proposition send-unit menu level. The handler at 0x80075bd8

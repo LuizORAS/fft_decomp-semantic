@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 
 /* Pushes menu level type 0xd: a cursor window, an upper window, a 0x28x0x30
- * text record (0xb805) and a text record listing text 0xb84e, the location
- * name (0xf7ff + g_wldcore_selected_proposition_row[0].fields.location), text 0xb821 and
+ * text record (0xb805) and a text record listing text 0xb84e, the errand
+ * name (0xf7ff + g_wldcore_selected_proposition_row[0].fields.name_text), text 0xb821 and
  * g_wldcore_proposition_send_unit_count rows of text 0x4000 + g_wldcore_proposition_send_units[i]. World thread 14
  * shows message 0xb814; both windows are placed against the first text record.
  *
@@ -58,7 +58,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail._unknown_08 = index;
-    location = &g_wldcore_selected_proposition_row[0].fields.location;
+    location = &g_wldcore_selected_proposition_row[0].fields.name_text;
     world_text_measure_pixels(&size[0], &size[1], world_text_find_entry(*location + 0xF7FF));
     bounds.position.y = 0x60;
     bounds.dimensions.x = 0xF4;
