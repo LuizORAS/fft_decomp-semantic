@@ -6,7 +6,9 @@
 #include "psx/types.h"
 
 /* Callers pass different thread records; only the halfwords at offsets 0 and
- * 4 are read here. Keeping the views at each use preserves register moves. */
+ * 4 are read here. Keeping the views at each use preserves register moves.
+ * Type debt (QUIRKS.md): packets is a world_gfx_scaled_draw_area_pair_t, but
+ * the numeric editor passes its status-panel buffer's portrait packets. */
 void world_gfx_build_scaled_draw_area_pair_at_offset(
     void* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread) {
     s32 percent;

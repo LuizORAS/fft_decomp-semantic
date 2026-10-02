@@ -239,6 +239,19 @@ without changing the bytes.
   `POLY_FT4` or a `SPRT` (code `0x64`, whose `w`/`h` overlap `x1`/`y1`);
   `world_main_menu_text_window_thread` passes a `SPRT` through a cast. A
   typed version needs a primitive union or separate SPRT/POLY_FT4 paths.
+- The menu record is declared three ways: `world_menu_entry_t`,
+  `world_menu_icon_thread_param_t` and `battle_menu_idle_action_entry_t`;
+  `world_menu_run_thread` and `battle_handle_menu_cancel_input` take `void*`
+  because their callers pass all of them.
+- `void*` parameters whose callers pass another view of the data:
+  `battle_gfx_set_draw_mode_from_rect` (a window record for its `mode0`
+  `DR_MODE`), `battle_map_store_selected_tile_coordinates` (an `s16[3]` as an
+  `SVECTOR`; only three halfwords are written), `equip_menu_init_scrollable_list_core`
+  (a `u8*` text section read as halfwords), `open_gfx_load_opntex_into_frame_buffer`
+  (OPNTEX bytes read as words), `world_gfx_build_scaled_draw_area_pair_at_offset`
+  (the numeric editor's portrait packets as a draw-area pair),
+  `world_menu_build_sprite_page` (a `RECT` as an image location) and
+  `world_menu_init_and_load_scrollable_list` (menu scripts as a list record).
 - `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.
