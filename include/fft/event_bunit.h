@@ -518,7 +518,7 @@ s32 bunit_input_get_lock_timer(void);
 bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(void);
 void bunit_input_update_controller(void);
 s32 bunit_input_read_pad1_unless_locked(void);
-void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg);
+void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg);
 void bunit_input_update_lock_timer(void);
 
 /* menu */

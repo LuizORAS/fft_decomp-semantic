@@ -112,7 +112,7 @@ void open_movie_init_stream(s32 sector, void* output_callback);
 void open_movie_pause_cd_audio(void);
 void open_movie_play_end(void);
 void open_movie_present_frame(void);
-void open_movie_start_cd_stream_read(const void* location);
+void open_movie_start_cd_stream_read(const CdlLOC* location);
 void open_movie_start_fftst_or_alternate_controller(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 sound_type);

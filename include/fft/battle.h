@@ -7588,7 +7588,7 @@ s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, 
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out);
 void battle_menu_confirm_action_silently(void* menu);
 s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(s16* dst, u8* src);
-void battle_menu_copy_palette_colors(const void* source);
+void battle_menu_copy_palette_colors(const u8* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 s32 battle_menu_dispatch_system_function(

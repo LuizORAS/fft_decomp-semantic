@@ -17,7 +17,7 @@
 
 /* The parameters are copied into locals in this order: it is what places the
  * s0 copy before the s2 copy in the prologue. */
-void world_script_run_sprite_move(void* arg, s32 use_speed) {
+void world_script_run_sprite_move(u8* arg, s32 use_speed) {
     s32 pos[4][4];
     battle_screen_coords_t vec;
     u8* parameters;
@@ -37,7 +37,7 @@ void world_script_run_sprite_move(void* arg, s32 use_speed) {
     s32 elapsed;
     s32 half;
 
-    parameters = (u8*)arg;
+    parameters = arg;
     mode = use_speed;
     misc_id = world_get_misc_id(world_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
