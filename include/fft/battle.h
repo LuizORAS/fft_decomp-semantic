@@ -1879,8 +1879,7 @@ typedef struct battle_unit_misc_data {
     u8 reaction_occurred;    /* 0x1a3 */
     u8 continue_attack;      /* 0x1a4 */
     u8 current_hit_number;   /* 0x1a5 */
-    u8 reaction_id_1a6;      /* 0x1a6 */
-    u8 _unused_1a7;          /* no code reaches it through this struct; FFHacktics leaves it blank */
+    s16 reaction_id_1a6;     /* 0x1a6; battle_strike_work_t.reaction_id_1a (strike work at +0x18c) */
     u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
     u8 target_new_y;         /* 0x1a9 */
     u8 target_new_map_level; /* 0x1aa */
@@ -4990,7 +4989,7 @@ typedef struct battle_strike_work {
     u8 reaction_occurred;
     u8 continue_attack;
     u8 current_hit_number;
-    u16 reaction_id_1a;
+    s16 reaction_id_1a;
     u8 target_new_x;
     u8 target_new_y;
     u8 target_new_map_level;
