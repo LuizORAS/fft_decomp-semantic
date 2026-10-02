@@ -1954,8 +1954,8 @@ typedef struct battle_unit_misc_data {
      * the timer with a halfword store, so the timer is declared u16. */
     u8 status_bubble_active;         /* 0x2dc */
     u8 status_bubble_id;             /* 0x2dd */
-    u8 status_bubble_x;              /* 0x2de */
-    u8 status_bubble_y;              /* 0x2df */
+    s8 status_bubble_x;              /* 0x2de */
+    s8 status_bubble_y;              /* 0x2df */
     u16 status_bubble_timer;         /* 0x2e0 */
     u16 status_bubble_alternate_row; /* 0x2e2; non-zero selects the second texture row */
     void* status_bubble_display;     /* 0x2e4; pointer into the 0x410 status bubble data */
