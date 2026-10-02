@@ -12,6 +12,7 @@ void battle_camera_toggle_zoom(void) {
         g_battle_camera_zoom_action = 4;
         g_battle_map_zoom_target = 4;
         sound_id = MAIN_SFX_CAMERA_ZOOM_OUT;
+        /* Both arms share one call; a call in each arm is 8 bytes longer. */
         goto play;
     }
     sound_id = MAIN_SFX_CAMERA_ZOOM_IN;

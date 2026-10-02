@@ -112,6 +112,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = 0;
             status = 1;
+            /* Moving the level setup below into the other arm grows the function by 4 bytes. */
             goto append_graphics;
         }
         status = 0;
