@@ -26,8 +26,7 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     unit->vram_spritesheet_id = unit->spritesheet_vram_slot + 0x14;
     tile = battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags_06.bits.shadow_mode, 1);
-    /* The target reads the u16 facing field signed (lh). */
-    battle_unit_store_animation_facing_movement_data(3, (s16)unit->facing, unit);
+    battle_unit_store_animation_facing_movement_data(3, unit->facing, unit);
     battle_unit_modify_entd_unit(unit->battle_data);
     battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
 }

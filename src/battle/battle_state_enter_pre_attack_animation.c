@@ -13,8 +13,7 @@ void battle_state_enter_pre_attack_animation(void) {
     if (g_battle_ability_animation_data[ability].charge_animation_set_id != 0) {
         battle_unit_start_ability_charge_animation(unit);
     } else {
-        /* facing is read signed (lh) here. */
-        battle_unit_store_animation_facing(2, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(2, unit->facing, unit);
     }
     battle_action_clear_at_list_active();
 }

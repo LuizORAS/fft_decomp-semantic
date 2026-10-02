@@ -29,7 +29,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
         }
         battle_gfx_invalidate_sp2_vram_slot((struct battle_gfx_misc_data_header*)unit);
         if (g_action_type == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
-            facing = *(s16*)&unit->facing;
+            facing = unit->facing;
             if (facing < 0) {
                 facing += 0x3ff;
             }

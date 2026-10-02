@@ -86,7 +86,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
                 target->map_y = unit->target_new_y;
                 target->map_z = unit->target_new_map_level;
                 battle_unit_set_tile_position(target->battle_data->misc_unit_id, target->map_x, target->map_y,
-                    target->map_z, (s16)target->facing / 1024);
+                    target->map_z, target->facing / 1024);
                 battle_unit_set_move_and_screen_coords(target);
             }
         }

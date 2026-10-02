@@ -1793,7 +1793,7 @@ typedef struct battle_unit_misc_data {
      * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
     battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
     battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
-    u16 facing;                                          /* 0x070 */
+    s16 facing;                                          /* 0x070; angle, 0x1000 per turn (0x400 per quadrant) */
     s16 attack_facing;                                   /* 0x072; -1 = no saved facing */
     u16 depth_height_offset;                             /* 0x074 */
     u16 mounted_height_offset;                           /* 0x076 */
