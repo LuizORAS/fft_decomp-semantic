@@ -7,7 +7,7 @@
  */
 void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u32* otags, void* unused_2,
     void* unused_3, void* unused_4, POLY_FT4* textured_quads, void* unused_6, void* unused_7, POLY_G4* gradient_quads,
-    POLY_GT4* textured_gradient_quads, TILE* tiles_24, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
+    POLY_GT4* textured_gradient_quads, LINE_F2* flat_lines, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes) {
     s32 i;
@@ -20,7 +20,7 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
         g_world_gfx_packet_buffers[i].gradient_quads = gradient_quads + g_world_gfx_gradient_quad_capacity * i;
         g_world_gfx_packet_buffers[i].textured_gradient_quads
             = textured_gradient_quads + g_world_gfx_textured_gradient_quad_capacity * i;
-        g_world_gfx_packet_buffers[i].tiles_24 = tiles_24 + g_world_gfx_tiles_24_capacity * i;
+        g_world_gfx_packet_buffers[i].flat_lines = flat_lines + g_world_gfx_flat_line_capacity * i;
         g_world_gfx_packet_buffers[i].gradient_lines = gradient_lines + g_world_gfx_gradient_line_capacity * i;
         g_world_gfx_packet_buffers[i].tiles = tiles + g_world_gfx_tile_capacity * i;
         g_world_gfx_packet_buffers[i].draw_moves = draw_moves + g_world_gfx_draw_move_capacity * i;

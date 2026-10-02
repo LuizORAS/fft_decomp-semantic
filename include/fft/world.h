@@ -942,8 +942,8 @@ typedef struct world_gfx_packet_buffer {
     u8 _unused_14[0x1c - 0x14];
     POLY_G4* gradient_quads;           /* 0x1c; world_gfx_append_poly_g4_to_otag */
     POLY_GT4* textured_gradient_quads; /* 0x20; initialised by world_gfx_init_packet_pools */
-    TILE* tiles_24;                    /* 0x24; pool consumed by world_menu_add_tile_primitive; the
-                                          pool initialiser (0x80125e40) sets these up with SetLineF2 */
+    LINE_F2* flat_lines;               /* 0x24; set up with SetLineF2 by world_gfx_init_packet_pools (0x80125e40),
+                                          consumed by world_menu_add_flat_line_primitive */
     u8 _unused_28[0x30 - 0x28];
     LINE_G2* gradient_lines; /* 0x30; world_menu_add_gradient_line_primitive */
     u8 _unused_34[0x3c - 0x34];
@@ -1156,14 +1156,14 @@ extern u8 g_world_change_banner_text_image[];
 /* Fade tile colour: the only byte-packed triple in WORLD bss; the fade
  * updaters pass &r as the rgb pointer and store g/b. */
 extern CVECTOR g_world_fade_tile_color;
-extern u16 g_world_gfx_tiles_24_capacity; /* +0x24 line count */
+extern u16 g_world_gfx_flat_line_capacity; /* +0x24 flat line count */
 extern u16 g_world_gfx_line_f3_capacity;
 extern u16 g_world_gfx_gradient_line_capacity; /* gradient line count */
 extern u16 g_world_gfx_line_g3_capacity;
 extern u16 g_world_gfx_line_f4_capacity;
 extern u16 g_world_gfx_line_g4_capacity;
 extern u16 g_world_gfx_poly_ft3_capacity;
-extern u16 g_world_gfx_tiles_24_count;
+extern u16 g_world_gfx_flat_line_count;
 extern u16 g_world_gfx_poly_gt3_capacity;
 extern u16 g_world_gfx_textured_quad_capacity; /* textured quad count */
 extern u16 g_world_gfx_line_f3_count;
@@ -1289,7 +1289,7 @@ void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction);
 
 void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u32* otags, void* unused_2,
     void* unused_3, void* unused_4, POLY_FT4* textured_quads, void* unused_6, void* unused_7, POLY_G4* gradient_quads,
-    POLY_GT4* textured_gradient_quads, TILE* tiles_24, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
+    POLY_GT4* textured_gradient_quads, LINE_F2* flat_lines, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
@@ -3020,7 +3020,7 @@ void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);
 void world_menu_announce_entry_value_thread(void);
 void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
-void world_menu_add_tile_primitive(RECT* rect, u8* data, u8 semi_trans, s32 priority);
+void world_menu_add_flat_line_primitive(RECT* rect, u8* data, u8 semi_trans, s32 priority);
 void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* param, world_menu_icon_record_t* buffer);
 void world_menu_submit_icon_primitives(world_menu_icon_sprites_t* prims);
 void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* sprite);

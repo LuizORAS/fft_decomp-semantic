@@ -11,7 +11,7 @@ typedef void (*world_name_entry_handler_t)(void);
 typedef struct world_name_entry_screen_packets {
     POLY_FT4 textured_quads[2 * 220];     /* 0x0000: g_world_gfx_textured_quad_capacity = 220 */
     TILE tiles[2 * 4];                    /* 0x44c0: g_world_gfx_tile_capacity = 4 */
-    TILE tiles_24[2 * 4];                 /* 0x4540: g_world_gfx_tiles_24_capacity = 4 */
+    LINE_F2 flat_lines[2 * 4];            /* 0x4540: g_world_gfx_flat_line_capacity = 4 */
     DR_MOVE draw_moves[2 * 30];           /* 0x45c0: g_world_gfx_draw_move_capacity = 30 */
     DR_MODE draw_modes[2 * 30];           /* 0x4b60: g_world_gfx_draw_mode_capacity = 30 */
     DR_AREA draw_areas[2 * 10];           /* 0x4e30: g_world_gfx_draw_area_capacity = 10 */
@@ -49,7 +49,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_poly_gt3_capacity = 0;
     g_world_gfx_gradient_quad_capacity = 0;
     g_world_gfx_textured_gradient_quad_capacity = 0;
-    g_world_gfx_tiles_24_capacity = 4;
+    g_world_gfx_flat_line_capacity = 4;
     g_world_gfx_line_f3_capacity = 0;
     g_world_gfx_line_f4_capacity = 0;
     g_world_gfx_gradient_line_capacity = 0;
@@ -66,7 +66,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_draw_mode_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0,
-        packets.tiles_24, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
+        packets.flat_lines, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
         packets.draw_modes);
     g_world_shop_id = -2;
     world_formation_init_menu_display();
@@ -87,7 +87,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         g_world_gfx_poly_gt3_count = 0;
         g_world_gfx_gradient_quad_count = 0;
         g_world_gfx_textured_gradient_quad_count = 0;
-        g_world_gfx_tiles_24_count = 0;
+        g_world_gfx_flat_line_count = 0;
         g_world_gfx_line_f3_count = 0;
         g_world_gfx_line_f4_count = 0;
         g_world_gfx_gradient_line_count = 0;

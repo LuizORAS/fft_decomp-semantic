@@ -46,7 +46,7 @@ s32 world_card_run_menu_screen(s32 slot_count) {
     g_world_gfx_poly_gt3_capacity = 0;
     g_world_gfx_gradient_quad_capacity = 0;
     g_world_gfx_textured_gradient_quad_capacity = 0;
-    g_world_gfx_tiles_24_capacity = 0;
+    g_world_gfx_flat_line_capacity = 0;
     g_world_gfx_line_f3_capacity = 0;
     g_world_gfx_line_f4_capacity = 0;
     g_world_gfx_gradient_line_capacity = 0;
