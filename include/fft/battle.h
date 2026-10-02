@@ -3616,8 +3616,8 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
 void battle_effect_step_motion(battle_effect_motion_t* motion);
 void battle_effect_store_first_section_of_on_hit_data(battle_effect_on_hit_vector_t* src);
 
-s32 battle_effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc, void* obstacles);
+s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc,
+    battle_effect_obstacle_unit_list_t* obstacles);
 
 s32 battle_effect_test_position_for_obstacle(
     battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref);
@@ -3672,7 +3672,8 @@ void battle_effect_submit_sprite_to_ordering_table(
     battle_effect_sprite_block_t* set, s16* position, s16 angle, VECTOR* zoom, u32* ot);
 
 /* Steps the projectile along its trajectory, testing each obstacle. */
-s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles);
+s32 battle_effect_trace_projectile_path(
+    VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles);
 void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown);
 void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);

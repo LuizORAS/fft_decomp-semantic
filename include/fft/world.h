@@ -1353,14 +1353,14 @@ void world_gs_setdrawbuffoffset(void);
 void world_set_bitmap_bit(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
 void world_gfx_refresh_script_unit_environment_palette(const u8* parameters);
-void world_gs_sortboxfill(GsBOXF* box, void* table, s32 priority);
+void world_gs_sortboxfill(GsBOXF* box, GsOT* otp, s32 priority);
 void world_gs_sortline(GsLINE* line, GsOT* ot, u16 pri);
 void world_gs_gettiminfo(u32* tim, GsIMAGE* image);
 void world_gs_set_display_mode(u16 x, u16 y, u16 intmode, u16 dither, u16 vram);
 void world_gs_sortclear(u8 r, u8 g, u8 b, GsOT* otp);
 void world_gs_sortsprite(GsSPRITE* sp, GsOT* ot, u16 pri);
 void world_gs_sortfastsprite(const GsSPRITE* sp, GsOT* ot, u16 pri);
-void world_gs_sortflipsprite(const GsSPRITE* sp, void* otp, s32 pri);
+void world_gs_sortflipsprite(const GsSPRITE* sp, GsOT* otp, s32 pri);
 void world_gs_swapdispbuff(void);
 void world_gs_setworkbase(void* base);
 

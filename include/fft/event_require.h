@@ -111,7 +111,7 @@ void require_gfx_apply_menu_palette_for_mode(
     world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
-void require_gfx_build_portrait_poly_ft4(s32 flags, void* output);
+void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 
 void require_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
     const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);

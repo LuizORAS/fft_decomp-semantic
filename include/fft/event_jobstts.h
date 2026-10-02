@@ -70,7 +70,7 @@ extern s32 g_jobstts_cmd_stream_input;
 u8* jobstts_cmd_draw_background_tiles_handler(u8* stream);
 u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command);
 void jobstts_cmd_run_stream(u8* data, s32 flags);
-void jobstts_cmd_run_stream_with_mode(void* first, void* second, s32 event_mode);
+void jobstts_cmd_run_stream_with_mode(u8* first, void* second, s32 event_mode);
 const u8* jobstts_cmd_skip_group(const u8* data);
 
 /* gfx */
