@@ -3099,7 +3099,7 @@ void world_menu_load_text_1c18(void);
 void world_menu_narrow_halfwords_to_byte_record(s32 index, s16* source);
 void world_menu_open_scrollable_list(u8* list);
 world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command);
-void world_menu_refresh_learn_job_total_jp(s32 index);
+s32 world_menu_refresh_learn_job_total_jp(s32 index);
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value);
 void world_menu_reset_runtime(void);
 void world_menu_reset_selection_results(void);

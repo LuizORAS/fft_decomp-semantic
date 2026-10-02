@@ -42,6 +42,7 @@ void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
         raw_stat[0] = value;
         raw_stat[2] = stored_byte;
         raw_stat += UNIT_RAW_STAT_SERIALIZED_BYTES;
+        /* The signed compare is byte-required (slt, not sltu). */
     } while ((s32)raw_stat < (s32)(raw_stat_base + UNIT_RAW_STAT_DATA_BYTE_COUNT));
 
     main_unit_refresh_stats_and_statuses(unit);

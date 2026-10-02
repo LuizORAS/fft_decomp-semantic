@@ -93,6 +93,7 @@ s32 open_script_build_text_record(u8* text) {
             i--;
         } else {
             value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_bank * 0x380;
+            /* The integer sum keeps this first metrics pointer in a0. */
             mt = (open_font_metrics_t*)(value + (s32)font);
             if (mt->flags & 1) {
                 text++;

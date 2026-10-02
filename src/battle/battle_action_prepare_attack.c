@@ -57,6 +57,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         item = action.item_id;
         table = g_main_throw_ability_item_types_by_ability_id;
         for (; ability < ABILITY_ID_JUMP_FIRST; ability++) {
+            /* The index+base integer spelling is byte-required. */
             if (*(u8*)(ability + (s32)table) == g_main_item_primary_data[item].type) {
                 break;
             }

@@ -4,6 +4,9 @@ typedef struct battle_ai_wait_facing_work {
     battle_ai_coords_t target_coords;
     u8 _unused_04[4];
     u8 viable_directions[4];
+    /* Read as viable_directions[BATTLE_AI_DIRECTION_OVERLAP] and never
+     * written, so it holds a leftover stack byte (QUIRKS.md). */
+    u8 past_viable_directions;
 } battle_ai_wait_facing_work_t;
 
 /*
