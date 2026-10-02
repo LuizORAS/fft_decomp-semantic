@@ -222,9 +222,9 @@ without changing the bytes.
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
 - `g_wldcore_zodiac_start_dates[12][2]` (`include/fft/wldcore.h`) and OPEN's
-  flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
-  the OPEN name covers both bytes, and `target/opening.yaml` still names `+1`
-  `g_open_birthday_zodiac_days`.
+  `g_open_birthday_zodiac_start_dates` are the same `{month, day}` table; the
+  OPEN copy stays a flat `[24]` because the `[12][2]` spelling changes its
+  reader's code.
 - `battle_unit_misc_data_t.movement_value` (`+0x11c`, `include/fft/battle.h`)
   is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
   length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).

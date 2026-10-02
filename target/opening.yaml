@@ -180,8 +180,7 @@ data:
   - {addr: 0x80073b9c, name: g_psyq_press_vlc_limit_halfwords}
   - {addr: 0x80073f10, name: g_psyq_press_vlc_state}
   - {addr: 0x80073f34, name: g_open_birthday_month_lengths}
-  - {addr: 0x80073f40, name: g_open_birthday_zodiac_months}
-  - {addr: 0x80073f41, name: g_open_birthday_zodiac_days}
+  - {addr: 0x80073f40, name: g_open_birthday_zodiac_start_dates}
   - {addr: 0x80073f58, name: g_open_file_openbk_start_sector_offsets}
   - {addr: 0x80073f5c, name: g_open_file_openbk_end_sector_offsets}
   - {addr: 0x80073f78, name: g_open_controller_handlers}
