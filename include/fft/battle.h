@@ -1794,7 +1794,7 @@ typedef struct battle_unit_misc_data {
     battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
     battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
     u16 facing;                                          /* 0x070 */
-    u16 attack_facing;                                   /* 0x072 */
+    s16 attack_facing;                                   /* 0x072; -1 = no saved facing */
     u16 depth_height_offset;                             /* 0x074 */
     u16 mounted_height_offset;                           /* 0x076 */
     u16 float_bob_phase;                                 /* 0x078; advanced by g_animation_speed at 0x8007ea98 */
