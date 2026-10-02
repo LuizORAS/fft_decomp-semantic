@@ -525,10 +525,10 @@ void equip_render_unit_status_panel_thread(void) {
                         (struct menu_number_position*)(stride - 2), 6);
                 } else {
                     position = stride - 2;
-                    equip_text_render_decimal_entry_list((s32)number_image,
+                    equip_text_render_decimal_entry_list(number_image,
                         (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[10],
                         (battle_menu_status_panel_text_position_t*)position, 1);
-                    equip_text_render_decimal_entry_list((s32)number_image,
+                    equip_text_render_decimal_entry_list(number_image,
                         (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[12],
                         (battle_menu_status_panel_text_position_t*)position, 1);
                     battle_menu_draw_numeric_display_entries(number_image,

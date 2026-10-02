@@ -76,8 +76,7 @@ void bunit_run_numeric_editor_thread(void) {
             g_menu_text_state.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                bunit_text_render_signed_decimal_entries((s32)text_pixels,
-                    (battle_menu_status_panel_gauge_entry_t*)entries,
+                bunit_text_render_signed_decimal_entries(text_pixels, (battle_menu_status_panel_gauge_entry_t*)entries,
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 3);
             } else {
                 battle_menu_draw_numeric_display_entries(text_pixels, (struct menu_number_entry*)entries,
@@ -86,7 +85,7 @@ void bunit_run_numeric_editor_thread(void) {
             g_menu_text_state.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                bunit_text_render_signed_decimal_entries((s32)(text_pixels + 0x168),
+                bunit_text_render_signed_decimal_entries((text_pixels + 0x168),
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x24),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 4);
             } else {
@@ -97,7 +96,7 @@ void bunit_run_numeric_editor_thread(void) {
             g_menu_text_state.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                bunit_text_render_signed_decimal_entries((s32)(text_pixels + 0x468),
+                bunit_text_render_signed_decimal_entries((text_pixels + 0x468),
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x54),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 8);
             } else {

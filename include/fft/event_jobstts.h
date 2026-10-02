@@ -319,7 +319,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_
     s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,
     s32 unused_style);
 
-void jobstts_text_render_id_rows_to_vram(s32 text_table, s16* list, RECT* rect, s32 style);
+void jobstts_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style);
 
 s32 jobstts_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);

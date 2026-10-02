@@ -296,13 +296,13 @@ extern s32 g_require_numeric_editor_thread_params;
 extern require_glyph_t g_require_text_decimal_glyph;
 void require_text_clear_string_buffer(u8* data);
 
-void require_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void require_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 void require_text_render_decimal_value(
     s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
 
-void require_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void require_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 void require_text_show_battle_congratulations(void);

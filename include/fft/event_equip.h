@@ -627,7 +627,7 @@ extern u16 g_equip_text_metric_5;
 extern const char g_equip_text_decimal_format[];
 extern battle_menu_status_panel_glyph_t g_equip_text_decimal_glyph;
 
-void equip_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void equip_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void equip_text_render_decimal_value(

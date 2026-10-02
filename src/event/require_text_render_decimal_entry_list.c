@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Render gauge values with an explicit sign, colored by sign, and a zero placeholder. */
-void require_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void require_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count) {
     s32 i;
 
@@ -25,6 +25,6 @@ void require_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel
             flags &= MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK;
             flags |= MENU_DECIMAL_ZERO_PLACEHOLDER_FLAGS;
         }
-        require_text_render_decimal_value(value, flags, (void*)pixels, output);
+        require_text_render_decimal_value(value, flags, pixels, output);
     }
 }

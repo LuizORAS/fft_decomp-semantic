@@ -384,13 +384,13 @@ extern u8 g_attack_numeric_editor_thread_params[];
 extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;
 void attack_text_build_deployment_strings(void);
 
-void attack_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void attack_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void attack_text_render_decimal_value(
     s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
 
-void attack_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void attack_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void attack_text_init_battle_pointers(s32* offsets);
