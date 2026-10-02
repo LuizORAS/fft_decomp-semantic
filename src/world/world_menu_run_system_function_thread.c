@@ -31,7 +31,7 @@ void world_menu_run_system_function_thread(void) {
     g_world_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
     g_world_menu_system_function_row_actions[0] = entry->value_06;
     g_world_menu_current_id = value;
-    g_world_menu_thread_menu_data[entry->menu_entry_index].field_0x20 = entry->value_08;
+    g_world_menu_thread_menu_data[entry->menu_entry_index].cancel_thread_count = entry->value_08;
     if (id == 0x1f) {
         world_thread_start(8, world_menu_start_main_mode_2);
         world_thread_set_parameters(8, 0, D_801A668C, 0);

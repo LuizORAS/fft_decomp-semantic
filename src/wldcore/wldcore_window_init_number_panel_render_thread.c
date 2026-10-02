@@ -84,7 +84,7 @@ void wldcore_window_init_number_panel_render_thread(
     g_wldcore_window_panel_render_state._unknown_18[1] = 0;
     g_wldcore_window_panel_render_state.text_id = text_id;
     g_wldcore_window_panel_render_state.max_row_index = 0;
-    g_wldcore_window_panel_render_state.field_0x20 = 0;
+    g_wldcore_window_panel_render_state.cancel_thread_count = 0;
     g_wldcore_window_panel_render_state.header_id = 0;
     g_wldcore_window_panel_render_state.value = &g_wldcore_active_menu_value;
     g_wldcore_window_panel_render_state.selected_index = 0;

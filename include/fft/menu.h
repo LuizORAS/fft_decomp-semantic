@@ -343,7 +343,10 @@ typedef struct world_menu_entry {
     s16 _unknown_18[2]; /* 0x18: cleared with the size fields */
     s16 text_id;        /* 0x1c: passed to world_text_find_entry */
     s16 max_row_index;  /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
-    u16 field_0x20;     /* 0x20: set from the system-function table by world_menu_run_system_function_thread */
+    /* 0x20: threads, from the current one, that a cancel tells to stop
+     * (battle_handle_menu_cancel_input; -1 none); set from the system-function
+     * table by world_menu_run_system_function_thread. */
+    s16 cancel_thread_count;
     u8 _padding_22[0x24 - 0x22]; /* aligns parent_indices */
     s16* parent_indices;         /* 0x24 */
     void (*thread_entry)(void);  /* 0x28 */

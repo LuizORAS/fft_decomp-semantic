@@ -533,7 +533,7 @@ typedef struct world_system_function {
     u16 text_id;                /* 0x02; menu entry text id */
     s16 menu_entry_index;       /* 0x04; g_world_menu_thread_menu_data index */
     u16 value_06;               /* 0x06; copied to g_world_menu_system_function_row_actions */
-    u16 value_08;               /* 0x08; menu entry field_0x20 */
+    u16 value_08;               /* 0x08; menu entry cancel_thread_count */
     u8 _padding_0a[2];          /* aligns thread_entry */
     void (*thread_entry)(void); /* 0x0c; started as thread 8 */
     s16 alternate_id;           /* 0x10; replaces the id when navigation messages are not On */
