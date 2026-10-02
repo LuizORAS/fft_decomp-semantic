@@ -388,6 +388,8 @@ typedef enum event_script_variable_id {
     /* WLDCORE also uses this value to select the current-location marker's
      * animation on the world map. */
     EVENT_SCRIPT_VAR_TOWN_BACKGROUND = 0x69,
+    /* Main story progress counter. */
+    EVENT_SCRIPT_VAR_STORY_PROGRESS = 0x6e,
     EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY = 0x6f,
     /* Special misc-unit count (capped at 4) that selects the Deep Dungeon
      * map state; a change reloads the map. */
@@ -395,7 +397,14 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED = 0x90,
     EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED = 0x91,
     EVENT_SCRIPT_VAR_FACTS_ENABLED = 0x92,
+    /* Set by event 0x071. */
+    EVENT_SCRIPT_VAR_ELIDIBS_DEFEATED = 0x95,
     EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL = 0xa0,
+    /* Set by event 0x1c9, at story progress 53. */
+    EVENT_SCRIPT_VAR_DEEP_DUNGEON_UNLOCKED = 0xa4,
+    /* Set by event 0x1cf; Warjilis then draws the path to the dungeon and
+     * its dot. */
+    EVENT_SCRIPT_VAR_DEEP_DUNGEON_OPENED = 0xa5,
     /* When set, the interpreters skip the DismissUnit, CallFunction,
      * UnlockDate, and SetDateAdvance side effects. */
     EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS = 0x1fc,

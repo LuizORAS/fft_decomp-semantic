@@ -151,7 +151,7 @@ restart_event:
                         world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
-                    world_bin_load_file((void*)0xE);
+                    world_bin_load_file(0xE);
                     g_world_companion_overlay_state = 5;
                     do {
                         world_thread_yield();
@@ -932,7 +932,7 @@ restart_event:
         /* ---- Map title, dates, teleports, and status ---- */
         else if (opcode == EVENT_OPCODE_SHOW_MAP_TITLE) {
             operand_4 = world_thread_resolve_id(0x10U);
-            world_bin_load_file((void*)0xD);
+            world_bin_load_file(0xD);
             attack_map_load_title_graphic();
             world_thread_start(operand_4, attack_map_show_title);
             world_thread_set_parameters(operand_4, (s32)(s8)operand_1, (s32)(s8)operand_2, (s8)operand_3);
