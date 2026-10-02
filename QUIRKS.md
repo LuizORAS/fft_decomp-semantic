@@ -95,6 +95,29 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0 even when that list is empty; with no earlier list since WORLD loaded, the
   pointer is 0, so the "restore HP/MP" stores copy kernel RAM 0x10/0x16 to
   0x0c/0x12.
+- `src/battle/battle_ai_choose_wait_facing.c`: when the target shares the
+  acting unit's tile, `battle_ai_find_direction_of_target` returns
+  `BATTLE_AI_DIRECTION_OVERLAP` (4), which indexes `viable_directions[4]`: the
+  never-written `past_viable_directions` byte after the array holds whatever
+  the stack held and decides whether 4 is returned as the facing.
+- `battle_menu_run_scrolling_ability_list_thread` and its WORLD twin
+  `world_menu_scrolling_list_thread`: `SetSemiTrans(&frame, 1)` passes the
+  address of the `frame` pointer, so the semi-transparency bit lands in a stack
+  byte past the pointer and the sprite is unchanged.
+- `src/event/helpmenu_run_battle_help_menu.c`: the vertical cursor writes its
+  shadow's coordinates through `vert_poly[2]`, past the two-entry
+  `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
+  polygon `vert_shadow_poly` addresses. One four-entry array does not reproduce
+  the two separate stack addresses.
+- Unchecked divisions whose divisor can be zero; the R3000 `div` does not trap
+  and leaves quotient -1 (1 for a negative dividend) and the dividend as the
+  remainder: `100 / ct` in `bunit_ability_get_ct_display_value`,
+  `jobstts_ability_get_ct_display_value` and
+  `world_ability_get_ct_display_value` (CT 0 displays -1 + 1 = 0);
+  `0x20000 / battle_effect_lerp_linear(...)` for the wave steps in the eight
+  `effect_eNNN_update_wave_mesh_state` copies (E033, E035, E073, E079, E080,
+  E230, E453, E456); and the direction-times-spread products over `scale` in
+  `battle_effect_spawn_particle_motion`.
 
 ## Calls that disagree with the callee
 
