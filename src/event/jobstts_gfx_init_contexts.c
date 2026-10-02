@@ -12,8 +12,8 @@
  * stay in field order. */
 void jobstts_gfx_init_contexts(jobstts_gfx_context_t* base, u32* otag, POLY_F3* poly_f3, u8* poly_ft3, POLY_F4* poly_f4,
     POLY_FT4* textured_quads, u8* poly_g3, u8* poly_gt3, POLY_G4* poly_g4, POLY_GT4* poly_gt4, LINE_F2* line_f2,
-    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_16, u8* tiles_8,
-    u8* tiles_1, SPRT* sprites, u8* sprites_16, u8* sprites_8, DR_MOVE* draw_moves, DR_AREA* draw_areas) {
+    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_1, u8* tiles_8,
+    u8* tiles_16, SPRT* sprites, u8* sprites_8, u8* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas) {
     s32 index;
     jobstts_gfx_context_t* context;
 
@@ -39,12 +39,12 @@ void jobstts_gfx_init_contexts(jobstts_gfx_context_t* base, u32* otag, POLY_F3* 
         context->line_g3 = line_g3 + g_jobstts_gfx_line_g3_capacity * index * 0x20;
         context->line_g4 = line_g4 + (u16)g_jobstts_gfx_line_g4_capacity * index * 0x28;
         context->tiles = tiles + g_jobstts_gfx_tile_capacity * index;
-        context->tiles_16 = tiles_16 + (u16)g_jobstts_gfx_tile_16_capacity * index * 0xC;
-        context->tiles_8 = tiles_8 + (u16)g_jobstts_gfx_tile_8_capacity * index * 0xC;
         context->tiles_1 = tiles_1 + (u16)g_jobstts_gfx_tile_1_capacity * index * 0xC;
+        context->tiles_8 = tiles_8 + (u16)g_jobstts_gfx_tile_8_capacity * index * 0xC;
+        context->tiles_16 = tiles_16 + (u16)g_jobstts_gfx_tile_16_capacity * index * 0xC;
         context->sprites = sprites + (u16)g_jobstts_gfx_sprite_capacity * index;
-        context->sprites_16 = sprites_16 + (u16)g_jobstts_gfx_sprite_16_capacity * index * 0x10;
         context->sprites_8 = sprites_8 + (u16)g_jobstts_gfx_sprite_8_capacity * index * 0x10;
+        context->sprites_16 = sprites_16 + (u16)g_jobstts_gfx_sprite_16_capacity * index * 0x10;
         context->draw_moves = draw_moves + g_jobstts_gfx_draw_move_capacity * index;
         context->draw_areas = draw_areas + g_jobstts_gfx_draw_area_capacity * index;
 

@@ -118,15 +118,17 @@ typedef struct equip_gfx_context {
     u8* line_g3;              /* 0x34; 0x20-byte packet stride */
     u8* line_g4;              /* 0x38; 0x28-byte packet stride */
     TILE* tiles;              /* 0x3C */
-    u8* tiles_16;             /* 0x40; 0x0c-byte packet stride */
-    u8* tiles_8;              /* 0x44; 0x0c-byte packet stride */
-    u8* tiles_1;              /* 0x48; 0x0c-byte packet stride */
-    SPRT* sprites;            /* 0x4c */
-    u8* sprites_16;           /* 0x50; 0x10-byte packet stride */
-    u8* sprites_8;            /* 0x54; 0x10-byte packet stride */
-    DR_MOVE* moves;           /* 0x58 */
-    DR_AREA* draw_areas;      /* 0x5C */
-    DR_MODE* draw_modes;      /* 0x60 */
+    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initialises
+     * the same slots with SetTile1/8/16 and SetSprt8/16. */
+    u8* tiles_1;         /* 0x40; 0x0c-byte packet stride */
+    u8* tiles_8;         /* 0x44; 0x0c-byte packet stride */
+    u8* tiles_16;        /* 0x48; 0x0c-byte packet stride */
+    SPRT* sprites;       /* 0x4c */
+    u8* sprites_8;       /* 0x50; 0x10-byte packet stride */
+    u8* sprites_16;      /* 0x54; 0x10-byte packet stride */
+    DR_MOVE* moves;      /* 0x58 */
+    DR_AREA* draw_areas; /* 0x5C */
+    DR_MODE* draw_modes; /* 0x60 */
 } equip_gfx_context_t;
 typedef char equip_gfx_context_size_must_be_0x64[(sizeof(equip_gfx_context_t) == 0x64) ? 1 : -1];
 
@@ -206,17 +208,17 @@ extern u16 g_equip_gfx_line_g4_count;
 extern u16 g_equip_gfx_poly_ft3_count;
 extern u16 g_equip_gfx_poly_gt3_count;
 extern u16 g_equip_gfx_poly_gt4_count;
-extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_sprite_8_capacity;
+extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_draw_area_capacity;
 extern u16 g_equip_gfx_draw_mode_capacity;
 extern u16 g_equip_gfx_sprite_count;
-extern u16 g_equip_gfx_tile_16_capacity;
+extern u16 g_equip_gfx_tile_1_capacity;
 extern u16 g_equip_gfx_tile_8_capacity;
 extern u16 g_equip_gfx_tile_1_count;
 extern u16 g_equip_gfx_tile_8_count;
 extern u16 g_equip_gfx_sprite_8_count;
-extern u16 g_equip_gfx_tile_1_capacity;
+extern u16 g_equip_gfx_tile_16_capacity;
 extern u16 g_equip_gfx_tile_16_count;
 extern u16 g_equip_gfx_sprite_16_count;
 
@@ -243,8 +245,8 @@ void equip_gfx_enqueue_translucent_tile(const RECT* rect, const u8* color, s32 s
 
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, u8* poly_ft3, POLY_F4* poly_f4,
     POLY_FT4* textured_quads, u8* poly_g3, u8* poly_gt3, POLY_G4* poly_g4, POLY_GT4* poly_gt4, LINE_F2* line_f2,
-    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_16, u8* tiles_8,
-    u8* tiles_1, SPRT* sprites, u8* sprites_16, u8* sprites_8, DR_MOVE* draw_moves, DR_AREA* draw_areas,
+    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_1, u8* tiles_8,
+    u8* tiles_16, SPRT* sprites, u8* sprites_8, u8* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas,
     DR_MODE* draw_modes);
 
 u8* equip_gfx_get_draw_color(void);

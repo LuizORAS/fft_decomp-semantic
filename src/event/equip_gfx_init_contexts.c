@@ -7,8 +7,8 @@
  * Each pointer uses its pool's halfword capacity and the context index. */
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, u8* poly_ft3, POLY_F4* poly_f4,
     POLY_FT4* textured_quads, u8* poly_g3, u8* poly_gt3, POLY_G4* poly_g4, POLY_GT4* poly_gt4, LINE_F2* line_f2,
-    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_16, u8* tiles_8,
-    u8* tiles_1, SPRT* sprites, u8* sprites_16, u8* sprites_8, DR_MOVE* draw_moves, DR_AREA* draw_areas,
+    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_1, u8* tiles_8,
+    u8* tiles_16, SPRT* sprites, u8* sprites_8, u8* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas,
     DR_MODE* draw_modes) {
     s32 index;
     equip_gfx_context_t* context;
@@ -35,12 +35,12 @@ void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_
         context->line_g3 = line_g3 + g_equip_gfx_line_g3_capacity * index * 0x20;
         context->line_g4 = line_g4 + g_equip_gfx_line_g4_capacity * index * 0x28;
         context->tiles = tiles + g_equip_gfx_tile_capacity * index;
-        context->tiles_16 = tiles_16 + g_equip_gfx_tile_16_capacity * index * 0xC;
-        context->tiles_8 = tiles_8 + g_equip_gfx_tile_8_capacity * index * 0xC;
         context->tiles_1 = tiles_1 + g_equip_gfx_tile_1_capacity * index * 0xC;
+        context->tiles_8 = tiles_8 + g_equip_gfx_tile_8_capacity * index * 0xC;
+        context->tiles_16 = tiles_16 + g_equip_gfx_tile_16_capacity * index * 0xC;
         context->sprites = sprites + g_equip_gfx_sprite_capacity * index;
-        context->sprites_16 = sprites_16 + g_equip_gfx_sprite_16_capacity * index * 0x10;
         context->sprites_8 = sprites_8 + g_equip_gfx_sprite_8_capacity * index * 0x10;
+        context->sprites_16 = sprites_16 + g_equip_gfx_sprite_16_capacity * index * 0x10;
         context->moves = draw_moves + g_equip_gfx_draw_move_capacity * index;
         context->draw_areas = draw_areas + g_equip_gfx_draw_area_capacity * index;
         context->draw_modes = draw_modes + g_equip_gfx_draw_mode_capacity * index;

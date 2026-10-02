@@ -92,15 +92,17 @@ typedef struct jobstts_gfx_context {
     u8* line_g3;              /* 0x34; 0x20 stride */
     u8* line_g4;              /* 0x38; 0x28 stride */
     TILE* tiles;              /* 0x3C */
-    u8* tiles_16;             /* 0x40; 0xC stride */
-    u8* tiles_8;              /* 0x44; 0xC stride */
-    u8* tiles_1;              /* 0x48; 0xC stride */
-    SPRT* sprites;            /* 0x4C */
-    u8* sprites_16;           /* 0x50; 0x10 stride */
-    u8* sprites_8;            /* 0x54; 0x10 stride */
-    DR_MOVE* draw_moves;      /* 0x58 */
-    DR_AREA* draw_areas;      /* 0x5C */
-    u8 _unused_60[0x94];      /* 0x60 */
+    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initialises
+     * the same slots with SetTile1/8/16 and SetSprt8/16. */
+    u8* tiles_1;         /* 0x40; 0xC stride */
+    u8* tiles_8;         /* 0x44; 0xC stride */
+    u8* tiles_16;        /* 0x48; 0xC stride */
+    SPRT* sprites;       /* 0x4C */
+    u8* sprites_8;       /* 0x50; 0x10 stride */
+    u8* sprites_16;      /* 0x54; 0x10 stride */
+    DR_MOVE* draw_moves; /* 0x58 */
+    DR_AREA* draw_areas; /* 0x5C */
+    u8 _unused_60[0x94]; /* 0x60 */
 } jobstts_gfx_context_t;
 typedef char jobstts_gfx_context_size_must_be_0xf4[(sizeof(jobstts_gfx_context_t) == 0xF4) ? 1 : -1];
 
@@ -154,19 +156,19 @@ extern s16 g_jobstts_gfx_line_g4_count;
 extern s16 g_jobstts_gfx_poly_ft3_count;
 extern s16 g_jobstts_gfx_poly_gt3_count;
 extern s16 g_jobstts_gfx_poly_gt4_count;
-extern s16 g_jobstts_gfx_sprite_16_capacity;
 extern s16 g_jobstts_gfx_sprite_8_capacity;
+extern s16 g_jobstts_gfx_sprite_16_capacity;
 extern u16 g_jobstts_gfx_draw_area_capacity;
 extern u16 g_jobstts_gfx_tile_capacity;
 extern u16 g_jobstts_gfx_draw_move_capacity;
 extern s16 g_jobstts_gfx_tile_count;
 extern s16 g_jobstts_gfx_sprite_count;
-extern s16 g_jobstts_gfx_tile_16_capacity;
+extern s16 g_jobstts_gfx_tile_1_capacity;
 extern s16 g_jobstts_gfx_tile_8_capacity;
 extern s16 g_jobstts_gfx_tile_1_count;
 extern s16 g_jobstts_gfx_tile_8_count;
 extern s16 g_jobstts_gfx_sprite_8_count;
-extern s16 g_jobstts_gfx_tile_1_capacity;
+extern s16 g_jobstts_gfx_tile_16_capacity;
 extern s16 g_jobstts_gfx_tile_16_count;
 extern s16 g_jobstts_gfx_sprite_16_count;
 void jobstts_gfx_enqueue_draw_area(RECT* rect, s32 idx);
@@ -178,8 +180,8 @@ s32 jobstts_gfx_get_transition_frame(void);
 
 void jobstts_gfx_init_contexts(jobstts_gfx_context_t* base, u32* otag, POLY_F3* poly_f3, u8* poly_ft3, POLY_F4* poly_f4,
     POLY_FT4* textured_quads, u8* poly_g3, u8* poly_gt3, POLY_G4* poly_g4, POLY_GT4* poly_gt4, LINE_F2* line_f2,
-    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_16, u8* tiles_8,
-    u8* tiles_1, SPRT* sprites, u8* sprites_16, u8* sprites_8, DR_MOVE* draw_moves, DR_AREA* draw_areas);
+    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_1, u8* tiles_8,
+    u8* tiles_16, SPRT* sprites, u8* sprites_8, u8* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas);
 
 void jobstts_gfx_init_primitive_buffers(jobstts_gfx_context_t* context);
 void jobstts_gfx_load_image_and_wait(RECT* rect, u32* data);
