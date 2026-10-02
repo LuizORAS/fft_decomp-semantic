@@ -26,6 +26,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
             /* Two label columns per entry; the lower half of the screen uses the second. */
             column = screen_y >= 0x101;
             do {
+                /* The offset-plus-base integer sum is byte-required (addu operand order). */
                 u8* label = (u8*)((u32)column + (u32)label_table);
 
                 column += 2;

@@ -36,6 +36,7 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
                 *learned |= *crystal_bits;
                 learned++;
                 crystal_bits++;
+                /* The signed compare is byte-required (slt, not sltu). */
             } while ((s32)learned < (s32)end);
             src += 3;
             i++;

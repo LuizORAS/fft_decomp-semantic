@@ -148,6 +148,14 @@ without changing the bytes.
   speaker who is not on the field; the portrait test then reads kernel RAM.
   `battle_menu_copy_unit_data_to_status_billboard` does the same while
   counting units, for a misc record with no battle unit (the final battle).
+- `world_item_sort_id_list`: it counts each unit's five equipment ids into a
+  256-byte local array, but the ids are halfwords and an item tried on in the
+  shop's fitting room carries flag bits above the low byte, so sorting the
+  list then increments a byte far past the array.
+- `battle_get_misc_id`: for the active-turn selector 0x69 with no unit
+  holding the turn, it falls back to ENTD units 1 and 2 and tests the Jump
+  status of whatever the finder returned; with neither on the field that is
+  NULL, so it reads kernel RAM at address 0x58.
 - `src/battle/battle_unit_init_misc_data.c`: stores the spritesheet-slot
   claim (0xffff when all nine slots are taken) in the u8
   `spritesheet_vram_slot` and tests the stored 0xff against 0xffff, so the
@@ -262,7 +270,7 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_set_weather_texture_overlay(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
 - `src/world/world_script_handle_tutorial_command_end.c`: two paths fall off the end of the s32 handler and return a stale nonzero `$v0` (the fade's result, or the 1 just stored), so the formation loop keeps running.
-- `src/world/world_menu_draw_thread_status_indicators.c`: while a unit-status banner thread (8 or 7) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
+- `src/world/world_menu_draw_thread_status_indicators.c` and its BUNIT, ATTACK and EQUIP twins: while a unit-status banner thread (8 or 7; 13 or 14 in EQUIP) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
 - `src/open/open_script_draw_text_records.c`: passes OT entries by value (`otag[15]`, `otag[8]`) to `AddPrim`; after `ClearOTagR` each holds the physical address of the entry below it, so the credits fade, bands and glyphs link into layers 14 and 7 through the KUSEG mirror.
 - `src/wldcore/wldcore_gfx_step_dissolve_image_upload.c`: the step-0 call (start the dissolve) has no return value of its own; `$v0` keeps its clearing cursor, the address one byte below the band-progress table. Its three callers ignore that result.
 - `src/world/world_menu_build_icon_record.c`: for the Bar's send-unit list (header 0x10) the arrow x reads the "height" of the record at the panel's value pointer, `&g_wldcore_active_menu_value` + 6, which is the upper half of `g_wldcore_proposition_dispatch_days` (0).

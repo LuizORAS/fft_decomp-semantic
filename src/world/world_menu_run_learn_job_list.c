@@ -17,7 +17,7 @@ s32 world_menu_run_learn_job_list(void) {
         g_world_menu_script_callbacks[0] = world_menu_get_learn_job_level;
         g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_menu_get_learn_job_jp;
         g_world_menu_script_callbacks[5] = world_job_refresh_next_level_jp_requirement;
-        g_world_menu_script_callbacks[6] = (s32 (*)(s32))world_menu_refresh_learn_job_total_jp;
+        g_world_menu_script_callbacks[6] = world_menu_refresh_learn_job_total_jp;
         g_world_menu_script_callbacks[13] = world_menu_refresh_learn_skillset_empty;
         world_gfx_get_sprite_slot(9, &x, &y, g_world_menu_learn_unlocked_jobs);
         world_menu_init_scrollable_list(g_world_menu_learn_unlocked_jobs, x, y, (u32)g_world_text_job_names);

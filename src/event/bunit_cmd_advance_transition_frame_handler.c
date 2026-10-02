@@ -1,9 +1,10 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-s32 bunit_cmd_advance_transition_frame_handler(s32 value) {
+/* Command 0x16: step the portrait transition, then skip the one-byte command. */
+u8* bunit_cmd_advance_transition_frame_handler(u8* data) {
     if (g_bunit_gfx_transition_frame < 4) {
         g_bunit_gfx_transition_frame++;
     }
-    return value + 1;
+    return data + 1;
 }
