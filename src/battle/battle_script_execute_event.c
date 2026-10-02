@@ -914,7 +914,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
             if ((battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
                 date_month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-                battle_script_unlockdate_event_instruction((s32)g_main_treasure_acquisition_date_bits, operand_1 - 1,
+                battle_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1,
                     date_month, battle_script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {

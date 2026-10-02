@@ -458,12 +458,12 @@ void bunit_render_unit_status_panel_thread(void) {
             origin = win - 2;
             *win = 0x38;
             battle_menu_draw_numeric_display_entries(
-                (s32)render_a, (struct menu_number_entry*)env_a, (struct menu_number_position*)origin, 6);
+                render_a, (struct menu_number_entry*)env_a, (struct menu_number_position*)origin, 6);
             LoadImage(&rects[0], (u32*)render_a);
             cur2 = render_a + 0x400;
             *win = 0x60;
             battle_menu_draw_numeric_display_entries(
-                (s32)cur2, (struct menu_number_entry*)&env_a[6], (struct menu_number_position*)origin, 4);
+                cur2, (struct menu_number_entry*)&env_a[6], (struct menu_number_position*)origin, 4);
             LoadImage(&rects[1], (u32*)cur2);
             thread->work = 0;
             battle_clear_menu_render_buffer(render_c, 0x580);

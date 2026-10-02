@@ -434,13 +434,13 @@ void require_render_unit_status_panel_thread(void) {
             window_width = &g_menu_inner_window_width;
             text_position = window_width - 2;
             *window_width = 0x38;
-            battle_menu_draw_numeric_display_entries((s32)number_image, (struct menu_number_entry*)numeric_entries,
+            battle_menu_draw_numeric_display_entries(number_image, (struct menu_number_entry*)numeric_entries,
                 (struct menu_number_position*)text_position, 6);
             LoadImage(&rects[0], (u32*)number_image);
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_image_lower,
-                (struct menu_number_entry*)&numeric_entries[8], (struct menu_number_position*)text_position, 2);
+            battle_menu_draw_numeric_display_entries(number_image_lower, (struct menu_number_entry*)&numeric_entries[8],
+                (struct menu_number_position*)text_position, 2);
             LoadImage(&rects[1], (u32*)number_image_lower);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_image, 0x580);

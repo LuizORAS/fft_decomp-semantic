@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-s32 battle_state_sync_frame(u32 ordering_table) {
+s32 battle_state_sync_frame(u32* ordering_table) {
     s32 wait;
     s32 sync_wait;
     s32 timer;
@@ -39,7 +39,7 @@ s32 battle_state_sync_frame(u32 ordering_table) {
 
     PutDispEnv(&g_main_gfx_display_envs[g_main_gfx_screen_polarity]);
     PutDrawEnv(&g_main_gfx_draw_envs[g_main_gfx_screen_polarity]);
-    DrawOTag((u32*)ordering_table);
+    DrawOTag(ordering_table);
     FntFlush(-1);
     return sync_result;
 }

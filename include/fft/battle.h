@@ -1183,7 +1183,7 @@ void battle_script_switch_tutorial_thread_for_event_instructions(void);
 void battle_script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void battle_script_teleportout_event_instruction(s32 arg, s32 remove);
 void battle_script_unit_animation_rotate_event_instruction(const u8* parameters);
-void battle_script_unlockdate_event_instruction(s32 bitset, s32 date_index, s32 month, s32 day);
+void battle_script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
 void battle_script_wait_value_event_instruction(u8* parameters);
 void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void battle_script_waitspritemove_event_instruction(s32 unit_id);
@@ -1483,7 +1483,7 @@ void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
 void battle_state_start_game_flow(void);
 void battle_state_stop_game_flow(void);
-s32 battle_state_sync_frame(u32 ordering_table);
+s32 battle_state_sync_frame(u32* ordering_table);
 s32 battle_state_update_controller_input(void);
 s32 battle_state_announce_next_charged_action(void);
 void battle_state_enter_target_display_start(void);
@@ -1498,7 +1498,7 @@ void battle_state_start_battle_message_display(void);
 void battle_state_start_change_map_jump_in(s32 duration);
 void battle_state_start_map_jump_out(s32 map_id, s32 duration);
 void battle_state_start_change_map_jump_out(s32 map_id, s32 duration);
-s32 battle_state_sync_and_submit_deployment_frame(u32 ordering_table);
+s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table);
 s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
 void battle_noop_80133150(s32 unused_unit_id);
@@ -4218,7 +4218,7 @@ s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_add_signed_byte_to_height(battle_unit_misc_data_t* unit, s32 delta);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
-s32 battle_unit_build_deployed_units_data(s32 formation);
+s32 battle_unit_build_deployed_units_data(battle_deployed_coords_t* formation);
 s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
@@ -4249,7 +4249,7 @@ s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const battle_screen_coo
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
 void battle_unit_init_coordinates(struct battle_unit_misc_data* unit);
 void battle_unit_init_coordinates_animation_facing(battle_unit_misc_data_t* unit);
-void battle_unit_init_deployed_units_data_for_debug_red_team(s32 value);
+void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* value);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data);
@@ -5501,7 +5501,7 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, s32 action, s32 at_list);
+s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
@@ -7577,7 +7577,7 @@ s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* ou
 s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_ability_ids);
 
 void battle_menu_draw_numeric_display_entries(
-    s32 buffer, menu_number_entry_t* entries, menu_number_position_t* position, s32 count);
+    void* buffer, menu_number_entry_t* entries, menu_number_position_t* position, s32 count);
 
 void battle_menu_free_buffer(s32 buffer);
 s32 battle_menu_get_dead_unit_selection(s32 battle_id);

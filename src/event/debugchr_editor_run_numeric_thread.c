@@ -79,7 +79,7 @@ void debugchr_editor_run_numeric_thread(void) {
                     (battle_menu_status_panel_gauge_entry_t*)entries,
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 3);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
+                battle_menu_draw_numeric_display_entries(text_pixels, (struct menu_number_entry*)entries,
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
             }
             g_menu_text_state.stride = 0x40;
@@ -89,7 +89,7 @@ void debugchr_editor_run_numeric_thread(void) {
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x24),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x168),
                     (struct menu_number_entry*)(entries + 0x24),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
             }
@@ -100,7 +100,7 @@ void debugchr_editor_run_numeric_thread(void) {
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x54),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x468),
                     (struct menu_number_entry*)(entries + 0x54),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
             }
