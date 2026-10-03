@@ -28,7 +28,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
         rectangle.rect.w = value;
         dimension = (u16)env->clip.h;
         rectangle.rect.h = dimension;
-        __asm__("" : "=r"(value) : "0"(value)); /* Keep separate unsigned load and signed narrowing. */
         value = (u32)value << 16;
         dimension = value >> 16;
         value = 0;
@@ -38,7 +37,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
             value = *limit;
             __asm__("" : "=r"(value) : "0"(value));
             value = (s16)value;
-            __asm__("" : "=r"(value) : "0"(value));
             maximum = value - 1;
             if (maximum < dimension)
                 dimension = maximum;
@@ -52,7 +50,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
             value = *limit;
             __asm__("" : "=r"(value) : "0"(value));
             value = (s16)value;
-            __asm__("" : "=r"(value) : "0"(value));
             maximum = value - 1;
             if (maximum < dimension)
                 dimension = maximum;

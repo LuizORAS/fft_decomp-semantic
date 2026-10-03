@@ -14,7 +14,6 @@ int get_alarm(void) {
         control = g_psyq_gpu_gp1_port;
         __asm__("" : "=r"(control) : "0"(control)); /* Preserve the original MMIO pointer before diagnostic setup. */
         discarded = *control;
-        __asm__("" : "=r"(discarded) : "0"(discarded)); /* The retail MMIO sample occurs before the queue loads. */
         head = g_psyq_gpu_queue_head;
         printf(g_psyq_gpu_timeout_state_format, (head - g_psyq_gpu_queue_tail) & 63, *control, *g_psyq_gpu_dma_chcr,
             *g_psyq_gpu_dma_madr);

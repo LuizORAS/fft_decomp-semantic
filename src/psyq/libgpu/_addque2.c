@@ -33,7 +33,6 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
         u32 sample;
         do {
             sample = *status;
-            __asm__("" : "=r"(sample) : "0"(sample)); /* Preserve sample-then-mask operand order. */
             sample &= ready;
         } while (!sample);
         operation(source, argument);

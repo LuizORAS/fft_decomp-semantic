@@ -24,7 +24,6 @@ int _clr(void* rectangle, u32 color) {
         value = *limit;
         __asm__("" : "=r"(value) : "0"(value));
         value = (s16)value;
-        __asm__("" : "=r"(value) : "0"(value));
         maximum = value - 1;
         if (maximum < dimension)
             dimension = maximum;
@@ -39,7 +38,6 @@ int _clr(void* rectangle, u32 color) {
         value = *limit;
         __asm__("" : "=r"(value) : "0"(value));
         value = (s16)value;
-        __asm__("" : "=r"(value) : "0"(value));
         maximum = value - 1;
         if (maximum < dimension)
             dimension = maximum;
@@ -51,7 +49,6 @@ int _clr(void* rectangle, u32 color) {
         area_end = (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_BOTTOM_RIGHT) | PSYQ_GPU_PARAMETER_MASK);
         terminator = 0x03ffffff;
         restore = &g_psyq_gpu_clear_restore_tag;
-        __asm__("" : "=r"(restore) : "0"(restore)); /* Retail materializes the linked restore packet in a2. */
         coordinate = (u32)restore & mask;
         coordinate |= 0x07000000;
         area_start = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_TOP_LEFT);
@@ -68,7 +65,6 @@ int _clr(void* rectangle, u32 color) {
         g_psyq_gpu_clear_packet_word_2 = area_end;
         g_psyq_gpu_clear_packet_word_3 = offset;
         coordinate = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
-        __asm__("" : "=r"(mask) : "0"(mask), "r"(coordinate)); /* Retain command setup before masking RGB. */
         g_psyq_gpu_clear_packet_word_4 = coordinate;
         mask = rgb & mask;
         g_psyq_gpu_clear_packet_word_5 = mask | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TILE);
@@ -86,7 +82,6 @@ int _clr(void* rectangle, u32 color) {
         g_psyq_gpu_clear_packet_tag = coordinate;
         fill_color = PSYQ_GPU_RGB_MASK;
         coordinate = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
-        __asm__("" : "=r"(fill_color) : "0"(fill_color), "r"(coordinate));
         g_psyq_gpu_clear_packet_word_1 = coordinate;
         fill_color = rgb & fill_color;
         g_psyq_gpu_clear_packet_word_2 = fill_color | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_BLOCK_FILL);
