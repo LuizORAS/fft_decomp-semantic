@@ -675,12 +675,12 @@ typedef struct equip_unit_data {
     s16 unit_count;          /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
     s16 experience;          /* 0x08; capped at 99 */
     s16 entd_slot_0a;        /* 0x0a; same source as entd_slot */
-    u16 hp;                  /* 0x0c; capped at 999 */
+    s16 hp;                  /* 0x0c; capped at 999 */
     s16 _unused_0e;          /* 0x0e */
-    u16 max_hp;              /* 0x10; capped at 999 */
-    u16 mp;                  /* 0x12; capped at 999 */
+    s16 max_hp;              /* 0x10; capped at 999 */
+    s16 mp;                  /* 0x12; capped at 999 */
     s16 _unused_14;          /* 0x14 */
-    u16 max_mp;              /* 0x16; capped at 999 */
+    s16 max_mp;              /* 0x16; capped at 999 */
     s16 ct;                  /* 0x18; 100 while the unit has its turn */
     s16 _unused_1a;          /* 0x1a */
     s16 max_ct;              /* 0x1c; always 100 */
