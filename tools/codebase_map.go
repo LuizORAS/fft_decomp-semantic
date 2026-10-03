@@ -37,8 +37,13 @@ func (p project) mapCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	pages := newMapVault(index).render()
+	vault := newMapVault(index)
+	vault.renames, vault.upstreamAvailable, vault.upstreamErr = upstreamRenames(p.root, config)
+	pages := vault.render()
 	if err := writeMapVault(target, pages); err != nil {
+		return err
+	}
+	if _, err := writeSymbolMaps(p.root, config); err != nil {
 		return err
 	}
 	relative, _ := filepath.Rel(p.root, target)
@@ -50,6 +55,10 @@ func (p project) mapCommand(args []string) error {
 		quirks += len(section.entries)
 	}
 	fmt.Fprintf(p.stdout(), "map: %d QUIRKS.md entries, %d debt comments, %d stale mentions\n", quirks, len(index.debts), len(index.stale))
+	if vault.upstreamAvailable {
+		fmt.Fprintf(p.stdout(), "map: %d names differ from upstream\n", len(vault.renames))
+	}
+	fmt.Fprintf(p.stdout(), "map: PCSX-Redux symbol maps in build/symbols\n")
 	return nil
 }
 
@@ -114,6 +123,11 @@ func writeMapVault(target string, pages map[string]string) error {
 // case-insensitively for Windows and macOS.
 type mapVault struct {
 	index *codebaseIndex
+
+	renames           []mapRename // upstream names that differ from ours
+	upstreamAvailable bool
+	upstreamErr       error
+
 	names map[string]string // page key -> file name without .md
 	paths map[string]string // page key -> vault-relative path
 	taken map[string]bool   // lower-cased file names in use
@@ -157,6 +171,7 @@ func newMapVault(index *codebaseIndex) *mapVault {
 	vault.assign("report:backlog", mapBacklogPage, "report", "reports")
 	vault.assign("report:stale", mapStalePage, "report", "reports")
 	vault.assign("report:metrics", mapMetricsPage, "report", "reports")
+	vault.assign("report:upstream", mapUpstreamPage, "report", "reports")
 	return vault
 }
 
@@ -253,6 +268,7 @@ func (vault *mapVault) render() map[string]string {
 	pages[vault.paths["report:backlog"]] = vault.backlogPage()
 	pages[vault.paths["report:stale"]] = vault.stalePage()
 	pages[vault.paths["report:metrics"]] = vault.metricsPage()
+	pages[vault.paths["report:upstream"]] = vault.upstreamPage(vault.renames, vault.upstreamAvailable, vault.upstreamErr)
 	for name, content := range mapBases {
 		pages["bases/"+name] = content
 	}
@@ -690,7 +706,7 @@ func (vault *mapVault) homePage() string {
 	if len(quirkLinks) > 0 {
 		b.WriteString("`QUIRKS.md`: " + strings.Join(quirkLinks, " · ") + "\n\n")
 	}
-	fmt.Fprintf(&b, "Reports: [[%s]] · [[%s]] (%d debt comments) · [[%s]] (%d)\n", mapMetricsPage, mapBacklogPage, len(index.debts), mapStalePage, len(index.stale))
+	fmt.Fprintf(&b, "Reports: [[%s]] · [[%s]] (%d debt comments) · [[%s]] (%d) · [[%s]]\n", mapMetricsPage, mapBacklogPage, len(index.debts), mapStalePage, len(index.stale), mapUpstreamPage)
 	b.WriteString("\nViews: [[Functions.base|Functions]] · [[Types.base|Types]] · [[Globals.base|Globals]] · `functions.tsv` (one line per function, for grep)\n")
 	b.WriteString("\n## Headers\n\n")
 	b.WriteString(joinLinks(sortedKeys(index.headers), vault.headerLink) + "\n")

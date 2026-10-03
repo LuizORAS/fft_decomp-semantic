@@ -89,6 +89,44 @@ func TestCodebaseMapRegions(t *testing.T) {
 	}
 }
 
+func TestMapSymbolMapsAndUpstreamRenames(t *testing.T) {
+	p := testMapProject(t)
+	// Upstream still calls main_second "main_old_second" and g_battle_value
+	// "g_battle_old_value".
+	writeTestFile(t, filepath.Join(p.root, "build", "upstream", "target", "main.yaml"),
+		[]byte(strings.Replace(testMainYAML, "name: main_second,", "name: main_old_second,", 1)))
+	writeTestFile(t, filepath.Join(p.root, "build", "upstream", "target", "battle.yaml"),
+		[]byte(strings.Replace(testBattleYAML, "name: g_battle_value}", "name: g_battle_old_value}", 1)))
+	if err := p.mapCommand(nil); err != nil {
+		t.Fatal(err)
+	}
+	read := func(path string) string {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return string(data)
+	}
+	battle := read(filepath.Join(p.root, "build", "symbols", "fft_battle.map"))
+	want := "80010000 main_first\n80010008 main_second\n80010100 g_main_value\n80010200 memset\n" +
+		"80067000 battle_helper\n80067100 g_battle_value\n80067104 g_main_value\n80067200 battle_asm_routine\n"
+	if battle != want {
+		t.Fatalf("fft_battle.map:\n%s\nwant:\n%s", battle, want)
+	}
+	page := read(filepath.Join(p.root, "build", "map", "reports", "Upstream renames.md"))
+	for _, row := range []string{
+		"| battle | `0x80067100` | `g_battle_old_value` | [[g_battle_value]] |",
+		"| main | `0x80010008` | `main_old_second` | [[main_second]] |",
+	} {
+		if !strings.Contains(page, row) {
+			t.Fatalf("upstream page lacks %q:\n%s", row, page)
+		}
+	}
+	if match := mapWarningLine.FindStringSubmatch("/tmp/x.i:12: warning: unused variable `t1'"); match == nil || match[1] != "warning: unused variable `t1'" {
+		t.Fatalf("warning line parse: %v", match)
+	}
+}
+
 const testMapQuirks = `# Target quirks
 
 Facts about the retail code.

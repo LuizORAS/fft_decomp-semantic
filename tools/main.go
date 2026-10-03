@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|map [--out=build/DIR]|extract"
+const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|map [--out=build/DIR]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -225,6 +225,7 @@ func main() {
 		"symbols":                true,
 		"declarations":           true,
 		"map":                    true,
+		"warnings":               true,
 		"compile-permuter-input": true,
 	}
 	if !commandsWithArguments[os.Args[1]] && len(os.Args) != 2 {
@@ -258,6 +259,8 @@ func main() {
 		err = p.declarationsCommand(os.Args[2:])
 	case "map":
 		err = p.mapCommand(os.Args[2:])
+	case "warnings":
+		err = p.warningsCommand(os.Args[2:])
 	case "extract":
 		err = p.extractDisc()
 	case "analyze":
