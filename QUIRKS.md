@@ -131,6 +131,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `effect_eNNN_update_wave_mesh_state` copies (E033, E035, E073, E079, E080,
   E230, E453, E456); and the direction-times-spread products over `scale` in
   `battle_effect_spawn_particle_motion`.
+  More generally, GCC 2.6.3 turns a division by a constant into a multiply,
+  so nearly every `div`/`divu` in the game divides by a variable: 1192 in
+  game code, of which 84 carry the compiler's zero check (`break 7`) and 33
+  follow a branch on the divisor. The other 1060, in 109 distinct functions
+  (726 in five routines copied across the EFFECT overlays), rely on the
+  divisor never being zero or on the R3000 result when it is. A native build
+  must give each the R3000 result through a helper or guard it: x86 raises
+  SIGFPE and ARM64 returns 0.
 
 ## Calls that disagree with the callee
 
