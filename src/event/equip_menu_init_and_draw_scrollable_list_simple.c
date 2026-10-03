@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-void equip_menu_init_and_draw_scrollable_list_simple(s32 a0, s32 a1, s32 a2, s32 script) {
-    equip_menu_init_scrollable_list_core((s16*)a0, a1, (const void*)a2);
-    equip_menu_draw_scrollable_list((u8*)script);
+void equip_menu_init_and_draw_scrollable_list_simple(s16* entries, s32 selected_index, void* text_table, u8* script) {
+    equip_menu_init_scrollable_list_core(entries, selected_index, text_table);
+    equip_menu_draw_scrollable_list(script);
 }

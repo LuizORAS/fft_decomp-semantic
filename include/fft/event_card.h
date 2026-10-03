@@ -226,7 +226,7 @@ extern u32 g_card_input_primary_repeat;
 void card_input_clear_state(void);
 void card_input_update_controller(void);
 void card_input_update_suppressed_during_fade(void);
-void card_input_update_event_state(void* state, u32 input, s32 count_frame);
+void card_input_update_event_state(u32* otag, u32 input, s32 count_frame);
 
 /* menu */
 /* Window rectangle source record; only the RECT at +6 is known. */
@@ -306,7 +306,7 @@ typedef struct card_save_buffer {
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];
     u8 game_options[4]; /* 0x1c84 */
-    u8 _unknown_1c88;   /* 0x1c88 */
+    u8 _unknown_1c88;   /* 0x1c88; D_80057b1c */
     s8 item_type_order_0[0xc];
     u8 _unused_1c95[1]; /* 0x1c95; serialized and parity-covered */
     s8 item_type_order_1[8];
@@ -363,6 +363,7 @@ extern u8 g_card_save_slot_selection_thread_state;
 extern const u16 g_card_save_slot_text_row_ids[];
 extern u8 g_card_save_title_template[0x16];
 extern u8 g_card_save_write_failed;
+extern u8 D_801ca964; /* CARD twin of D_801CC7D8 */
 extern u8 g_card_save_write_phase;
 extern u8 g_card_save_list_cursor_index;
 extern s16 g_card_save_list_scroll_anim_offset;
@@ -464,8 +465,5 @@ void card_thread_start_managed_with_delay(s32 thread_id, world_menu_entry_t* des
 /* other */
 extern u8 g_card_sound_queued_effect_id;
 extern s8 g_card_free_block_count;
-
-/* unnamed */
-extern u8 D_801ca964;
 
 #endif

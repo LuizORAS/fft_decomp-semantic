@@ -236,8 +236,8 @@ void world_build_options_menu(void) {
                             world_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_world_menu_text_state.origin_x);
                         } else {
-                            world_display_menu_number_entry(layout->text_ids[column][index], 2, (s32)image,
-                                (u16*)&g_world_menu_text_state.origin_x);
+                            world_display_menu_number_entry(
+                                layout->text_ids[column][index], 2, image, (u16*)&g_world_menu_text_state.origin_x);
                         }
                     }
                 }

@@ -70,7 +70,7 @@ void battle_move_start_unit_climb_hop_step(
     if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
         animation = 0x31;
     }
-    battle_unit_store_animation_facing(animation, (s16)unit->facing, unit);
+    battle_unit_store_animation_facing(animation, unit->facing, unit);
     word = unit->movement.word;
     unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
     unit->movement.bytes.destination_z = (*step >> 5) & 1;

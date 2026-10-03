@@ -521,21 +521,21 @@ void equip_render_unit_status_panel_thread(void) {
                 stride = &g_menu_inner_window_width;
                 *stride = 0x38;
                 if (g_equip_item_numeric_thread_enabled == 0) {
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
-                        (struct menu_number_entry*)numeric_entries, (struct menu_number_position*)(stride - 2), 6);
+                    battle_menu_draw_numeric_display_entries(number_image, (struct menu_number_entry*)numeric_entries,
+                        (struct menu_number_position*)(stride - 2), 6);
                 } else {
                     position = stride - 2;
-                    equip_text_render_decimal_entry_list((s32)number_image,
+                    equip_text_render_decimal_entry_list(number_image,
                         (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[10],
                         (battle_menu_status_panel_text_position_t*)position, 1);
-                    equip_text_render_decimal_entry_list((s32)number_image,
+                    equip_text_render_decimal_entry_list(number_image,
                         (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[12],
                         (battle_menu_status_panel_text_position_t*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
+                    battle_menu_draw_numeric_display_entries(number_image,
                         (struct menu_number_entry*)&numeric_entries[11], (struct menu_number_position*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
+                    battle_menu_draw_numeric_display_entries(number_image,
                         (struct menu_number_entry*)&numeric_entries[13], (struct menu_number_position*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
+                    battle_menu_draw_numeric_display_entries(number_image,
                         (struct menu_number_entry*)&numeric_entries[4], (struct menu_number_position*)position, 2);
                 }
             }
@@ -544,8 +544,8 @@ void equip_render_unit_status_panel_thread(void) {
             text_position = window_width - 2;
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_image_lower,
-                (struct menu_number_entry*)&numeric_entries[6], (struct menu_number_position*)text_position, 4);
+            battle_menu_draw_numeric_display_entries(number_image_lower, (struct menu_number_entry*)&numeric_entries[6],
+                (struct menu_number_position*)text_position, 4);
             LoadImage(&rects[1], number_image_lower);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_image, 0x580);

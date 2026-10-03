@@ -23,8 +23,8 @@ void open_opcode_create_positioned_text_record(const s16* command) {
     if (index != 0) {
         index -= 1;
         if (x == -1) {
-            /* Pins required (all three blocks): unpinned, the -1 sentinel and the offsets rotate among a0/a2/v0/v1 and
-             * an extra move appears. */
+            /* Pins required (this block and the y block): unpinned, the -1 sentinel and the offsets rotate among
+             * a0/a2/v0/v1 and an extra move appears. */
             register s32 record_offset __asm__("$3");
             register s32 glyph_offset __asm__("$2");
 
@@ -49,8 +49,8 @@ void open_opcode_create_positioned_text_record(const s16* command) {
                     / 2;
         }
         if (x & 0x100) {
-            register s32 glyph_offset __asm__("$4");
-            register s32 width __asm__("$2");
+            s32 glyph_offset;
+            s32 width;
             s32 record_offset;
 
             glyph_offset = (x & 0xFF) * sizeof(open_script_glyph_t);

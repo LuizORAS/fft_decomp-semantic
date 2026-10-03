@@ -39,8 +39,6 @@ s32 SpuMalloc(s32 size) {
             /* Integer address addition retains the original operand order. */
             scan = (psyq_spu_heap_record_t*)(offset + (u32)table);
             for (; index < limit; index++, scan++) {
-                /* Without the tie GCC recomputes the record offset in each iteration. */
-                __asm__("" : "=r"(scan) : "0"(scan));
                 if ((scan->address & PSYQ_SPU_HEAP_TAIL)
                     || ((scan->address & PSYQ_SPU_HEAP_FREE) && scan->size >= (u32)requested)) {
                     selected = index;
@@ -57,8 +55,6 @@ s32 SpuMalloc(s32 size) {
         register psyq_spu_heap_record_t* table __asm__("$7") = _spu_memList;
         psyq_spu_heap_record_t* record = (psyq_spu_heap_record_t*)(index + (u32)table);
         register u32 address __asm__("$3");
-        /* The tie retains a2 as the record base. */
-        __asm__("" : "=r"(record) : "0"(record));
         address = record->address;
         /* Volatile ordering keeps the tail-flag immediate after this address load. */
         __asm__ volatile("" : "=r"(address) : "0"(address));
@@ -70,12 +66,8 @@ s32 SpuMalloc(s32 size) {
                 return -1;
             if (record->size - reserved < (u32)requested)
                 return -1;
-            /* Without the barrier GCC reverses the error branch and adds a jump. */
-            __asm__ volatile("");
             {
                 u32 mask = PSYQ_SPU_HEAP_ADDRESS_MASK;
-                /* This tie completes the mask immediate before the new-tail index. */
-                __asm__("" : : "r"(mask));
                 new_tail = selected + 1;
                 /* Without the tie GCC destructively increments the selected record index. */
                 __asm__("" : "=r"(new_tail) : "0"(new_tail));
@@ -87,12 +79,8 @@ s32 SpuMalloc(s32 size) {
                 record->size = requested;
                 record->address &= mask;
                 _spu_gcSPU();
-                /* The barrier retains this path's separate post-compaction return. */
-                __asm__ volatile("");
                 {
                     psyq_spu_heap_record_t* returned = (psyq_spu_heap_record_t*)(index + (u32)_spu_memList);
-                    /* Keeping the old byte index live prevents the two return paths merging. */
-                    __asm__ volatile("" : "=r"(returned) : "0"(returned), "r"(index));
                     return returned->address;
                 }
             }
@@ -112,20 +100,14 @@ s32 SpuMalloc(s32 size) {
                     address = requested + address;
                     next = (psyq_spu_heap_record_t*)((u32)(old_tail * sizeof(*next)) + (u32)table);
                     address |= PSYQ_SPU_HEAP_FREE;
-                    /* This tie keeps the free-flag construction before the saved tail fields. */
-                    __asm__("" : "=r"(address) : "0"(address));
                     old_address = next->address;
                     old_size = next->size;
                     /* These ties retain the original saved-field registers and store order. */
                     __asm__("" : "=r"(old_address), "=r"(old_size) : "0"(old_address), "1"(old_size));
                     next->address = address;
                     value = free_size - requested;
-                    /* The tie retains v1 without destructively updating the source value. */
-                    __asm__("" : "=r"(value) : "0"(value));
                     next->size = value;
                     value = old_tail + 1;
-                    /* The tie retains v1 without destructively updating the source value. */
-                    __asm__("" : "=r"(value) : "0"(value));
                     _spu_AllocLastNum = value;
                     next[1].address = old_address;
                     next[1].size = old_size;
@@ -146,8 +128,6 @@ s32 SpuMalloc(s32 size) {
         address_mask |= 0xffff;
         record->size = requested;
         address &= address_mask;
-        /* This tie keeps the cleared address in v0 for the call-delay store. */
-        __asm__("" : "=r"(address) : "0"(address));
         record->address = address;
         _spu_gcSPU();
         index += (u32)_spu_memList;

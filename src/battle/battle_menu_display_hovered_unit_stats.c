@@ -308,20 +308,20 @@ void battle_menu_display_hovered_unit_stats(
             inner_width = &g_menu_inner_window_width;
             *inner_width = 0x28;
             battle_menu_draw_numeric_display_entries(
-                (s32)buffer, entries, (struct menu_number_position*)(inner_width - 2), 6);
+                buffer, entries, (struct menu_number_position*)(inner_width - 2), 6);
             LoadImage(&rects[0], (u32*)buffer);
             i = g_battle_menu_hide_numeric_values;
             *inner_width = 0x60;
             g_battle_menu_hide_numeric_values = 0;
             if (mode == 0 || mode == 3) {
                 battle_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 6, (struct menu_number_position*)(inner_width - 2), 2);
+                    (buffer + 0x400), entries + 6, (struct menu_number_position*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
                 battle_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 8, (struct menu_number_position*)(inner_width - 2), 2);
+                    (buffer + 0x400), entries + 8, (struct menu_number_position*)(inner_width - 2), 2);
             } else if (mode == 1) {
                 battle_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 6, (struct menu_number_position*)(inner_width - 2), 2);
+                    (buffer + 0x400), entries + 6, (struct menu_number_position*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 battle_menu_set_text_origin(2, 0);

@@ -193,13 +193,13 @@ void debugchr_panel_run_character_status_thread(void);
 extern battle_menu_status_panel_glyph_t g_debugchr_text_decimal_glyph;
 void debugchr_text_clear_string_buffer(u8* output);
 
-void debugchr_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void debugchr_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 void debugchr_text_render_decimal_value(
     s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
 
-void debugchr_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void debugchr_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 /* thread */

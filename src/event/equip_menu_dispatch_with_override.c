@@ -2,6 +2,7 @@
 #include "psx/types.h"
 
 /* Run the menu command stream `menu` with `state`, forcing state 0 whenever `override` is set. */
+/* Port debt (QUIRKS.md): menu is a menu-record pointer passed as s32. */
 void equip_menu_dispatch_with_override(s32 menu, s32 state, s32 override) {
     s32 effective_state;
 

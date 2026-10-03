@@ -17,6 +17,7 @@
  * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
  * remaining saved context/stack stays provisional. */
 typedef struct native_thread {
+    /* The four parameters are s32 but often carry pointers (QUIRKS.md). */
     s32 function_parameter_1; /* 0x00 */
     s32 function_parameter_2; /* 0x04 */
     s32 function_parameter_3; /* 0x08 */

@@ -43,7 +43,8 @@ s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* o
     for (i = 0; i < count; i++) {
         id = main_ability_get_id_from_skillset(skillset, i);
         ability = id;
-        if ((berserk == 0 || id == ABILITY_ID_BLACK_MAGIC_FROG) && id != 0 && (u16)(id - 1) < 0x16F) {
+        if ((berserk == 0 || id == ABILITY_ID_BLACK_MAGIC_FROG) && id != 0
+            && (u16)(id - 1) < (ABILITY_ID_ITEM_FIRST - 1)) {
             flags = g_main_ability_range_data[id].flags_3;
             *flags_out++ = (flags >> 7) | ((flags & ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE) >> 4);
             *out = ability;

@@ -5,7 +5,7 @@
 /* WORLD copy of libgs GsSortSprite for unscaled, unrotated sprites: attribute
  * bits 22/23 flip the texture, bits 24-25 and 28-29 select the texture page
  * depth and blend mode, bit 30 shading and bit 6 semi-transparency. */
-void world_gs_sortflipsprite(const GsSPRITE* sp, void* otp, s32 pri) {
+void world_gs_sortflipsprite(const GsSPRITE* sp, GsOT* otp, s32 pri) {
     world_poly_ft4_packet_t* p;
     s32 attr;
     s32 x;

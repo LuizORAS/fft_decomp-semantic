@@ -31,7 +31,7 @@ s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* un
     }
     count = 0;
     tile = g_battle_map_tile_data;
-    for (i = 0, panels = g_battle_target_panels; i < 0x200; i++) {
+    for (i = 0, panels = g_battle_target_panels; i < MAP_TILE_SLOT_COUNT; i++) {
         if (panels->remaining_range != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
             tile[i].ceiling_depth_and_marks |= MAP_TILE_FLAG_ABILITY_RANGE;
             count++;

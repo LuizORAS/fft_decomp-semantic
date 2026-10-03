@@ -48,7 +48,9 @@ void main_system_run_game_loop(void) {
             main_sound_stop_weather_sfx_music();
             main_sound_unload_scenario_music_and_tunes();
             battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12A);
+            /* With NEXT_SCENARIO set, the ATTACK scenario loader advances this
+             * event to Things Obtained or Those Who Squirm in Darkness. */
+            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_SEARCHING_FOR_ALMA);
             main_overlay_exec_open_bin_ending();
             main_overlay_exec_battle_bin();
             main_gfx_load_zodiac_frame();

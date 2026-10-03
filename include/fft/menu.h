@@ -8,6 +8,31 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* status */
+/* Provisional: unit status billboard (0x1e bytes) filled from battle_stats_t:
+ * WORLD's world_menu_copy_unit_data_to_status_billboard (0x800e7c40, twin of
+ * debugchr_panel_copy_unit_data_to_billboard) and the ATTACK/REQUIRE status
+ * panels. BATTLE's battle_unit_status_record_t has the same layout with signed
+ * gauge fields. */
+typedef struct world_unit_status_billboard {
+    s16 level;      /* 0x00 */
+    s16 team_kind;  /* 0x02; 0 ally, 1 enemy, 2 neutral, 3 auto-battle */
+    s16 list_index; /* 0x04 */
+    s16 unit_count; /* 0x06 */
+    s16 experience; /* 0x08 */
+    s16 battle_id;  /* 0x0a */
+    u16 hp;         /* 0x0c */
+    s16 hp_delta;   /* 0x0e */
+    u16 max_hp;     /* 0x10 */
+    u16 mp;         /* 0x12 */
+    s16 mp_delta;   /* 0x14 */
+    u16 max_mp;     /* 0x16 */
+    s16 ct;         /* 0x18 */
+    s16 _unused_1a; /* 0x1a */
+    s16 max_ct;     /* 0x1c; always 100 */
+} world_unit_status_billboard_t;
+typedef char world_unit_status_billboard_size_must_be_0x1e[(sizeof(world_unit_status_billboard_t) == 0x1e) ? 1 : -1];
+
 /* ability */
 /* Provisional: per-skill byte tables reached through g_battle_ai_workspace_ptr and indexed
  * by the skill selected in menu entry 3 (world_menu_validate_skill_selection_thread, 0x800f474c). Only the three
@@ -256,6 +281,12 @@ typedef enum action_menu_pseudo_skillset {
     ACTION_MENU_PSEUDO_SKILLSET_ANYTHING = 0xbc,
 } action_menu_pseudo_skillset_e;
 
+/* Option and item value meaning "no selection" in the packed action-menu
+ * result; the option byte test (x & 0xfe) == 0xfe also accepts 0xff. */
+enum {
+    MENU_SELECTION_NONE = 0xfffe,
+};
+
 /* Seven-byte window command in the menu script streams. The length field
  * advances to the next command, which may have a different size. */
 typedef struct world_menu_window_command {
@@ -337,7 +368,10 @@ typedef struct world_menu_entry {
     s16 _unknown_18[2]; /* 0x18: cleared with the size fields */
     s16 text_id;        /* 0x1c: passed to world_text_find_entry */
     s16 max_row_index;  /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
-    u16 field_0x20;     /* 0x20: set from the system-function table by world_menu_run_system_function_thread */
+    /* 0x20: threads, from the current one, that a cancel tells to stop
+     * (battle_handle_menu_cancel_input; -1 none); set from the system-function
+     * table by world_menu_run_system_function_thread. */
+    s16 cancel_thread_count;
     u8 _padding_22[0x24 - 0x22]; /* aligns parent_indices */
     s16* parent_indices;         /* 0x24 */
     void (*thread_entry)(void);  /* 0x28 */
@@ -488,8 +522,8 @@ typedef struct world_menu_text_row {
 typedef struct world_menu_icon_record {
     world_menu_icon_sprites_t base; /* 0x00 */
     SPRT* icons[3];                 /* 0x68 */
-    s32 _unknown_74;                /* 0x74 */
-    s32 _unknown_78;                /* 0x78 */
+    s32 _unknown_74;                /* 0x74; zeroed by the builder, never read */
+    s32 _unknown_78;                /* 0x78; zeroed by the builder; see QUIRKS.md */
 } world_menu_icon_record_t;
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
@@ -715,6 +749,12 @@ typedef enum text_id_base {
     TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE = 0x4300,
     TEXT_ID_ABILITY_NAME_BASE = 0x7000,
     TEXT_ID_SECTION_9000_BASE = 0x9000,
+    /* Section 21; WORLD.LZW keeps the map names there. */
+    TEXT_ID_SECTION_A800_BASE = 0xa800,
+    /* Section 23. BATTLE's summon announcements show entries 0..25 instead of
+     * the ability name; WORLD.LZW keeps the Bar/Town text there, and a running
+     * tutorial swaps in its MENU/TUTOn.MES messages. */
+    TEXT_ID_SECTION_B800_BASE = 0xb800,
 } text_id_base_e;
 
 /* Substitution opcodes shared by battle messages and WORLD event text. */

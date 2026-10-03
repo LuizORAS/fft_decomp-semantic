@@ -81,7 +81,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                             rect.unsigned_rect.h = height;
                             *ids = id;
                             jobstts_text_render_id_rows_to_vram(
-                                (s32)g_jobstts_menu_list_text_table, (s16*)ids, &rect.signed_rect, 0);
+                                g_jobstts_menu_list_text_table, (s16*)ids, &rect.signed_rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
@@ -105,7 +105,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                             rect.unsigned_rect.w = g_jobstts_menu_list_vram_width;
                             rect.unsigned_rect.h = g_jobstts_menu_list_row_height;
                             jobstts_text_render_id_rows_to_vram(
-                                (s32)g_jobstts_menu_list_text_table, (s16*)entry_ids, &rect.signed_rect, 0);
+                                g_jobstts_menu_list_text_table, (s16*)entry_ids, &rect.signed_rect, 0);
                         }
                     }
                 } else if ((g_jobstts_menu_list_selected_index < (g_jobstts_menu_list_entry_count - 1))

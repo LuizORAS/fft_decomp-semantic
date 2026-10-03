@@ -63,9 +63,9 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
             selected = &g_wldcore_window_panel_render_state.selected_index;
             values = g_wldcore_list_entry_values;
             value = values[*selected];
-            if ((value & 0xF800) == 0xB800) {
+            if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_SECTION_B800_BASE) {
                 g_main_system_flags ^= 4;
-                value &= 0x7FF;
+                value &= TEXT_ID_ENTRY_MASK;
                 switch (value) {
                 case 0x5D:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
@@ -110,7 +110,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
             g_main_system_flags ^= 1;
-            value = values[*selected] & 0x7FF;
+            value = values[*selected] & TEXT_ID_ENTRY_MASK;
             g_wldcore_next_map_id[0] = value + 1;
             return;
         }
@@ -121,7 +121,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
-        if ((value & 0xF800) == 0xB800) {
+        if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_SECTION_B800_BASE) {
             wldcore_sound_play_effect(MAIN_SFX_CANCEL);
             level->slots.result = 0;
             world_thread_set_parameters(0xC, 0, 0, 1);
@@ -130,10 +130,13 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     } else if (g_wldcore_new_button_presses & PSX_PAD_SELECT) {
         wldcore_window_set_render_state_2_from_arg_0x10((s32*)level);
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
-        if ((value & 0xF800) == 0xA800) {
-            wldcore_menu_push_message_level((value & 0x7FF) + 0x8801, 1);
+        if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_SECTION_A800_BASE) {
+            /* Map name n: WLDHELP.LZW 0x8801 + n describes the map. */
+            wldcore_menu_push_message_level((value & TEXT_ID_ENTRY_MASK) + 0x8801, 1);
         } else {
-            value &= 0x7FF;
+            /* Bar/Town entry n: its WLDHELP.LZW help is 0x1000 + n - 0x12 (Bar
+             * 0x5d -> 0x104b), and 0x1000 + n - 0x5d from entry 0xed on. */
+            value &= TEXT_ID_ENTRY_MASK;
             text = value + 0xFEE;
             if (value >= 0xED) {
                 text = value + 0xFA3;

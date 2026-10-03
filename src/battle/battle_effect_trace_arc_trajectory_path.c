@@ -16,8 +16,8 @@
  * `hit` is deliberately left uninitialised: the target reads $s6 after a
  * zero-step loop without ever writing it.
  */
-s32 battle_effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc, void* obstacles) {
+s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc,
+    battle_effect_obstacle_unit_list_t* obstacles) {
     SVECTOR rotation;
     SVECTOR step;
     VECTOR position;

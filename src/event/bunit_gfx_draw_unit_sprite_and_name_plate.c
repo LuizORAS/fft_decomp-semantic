@@ -23,7 +23,7 @@ typedef struct {
     s8 dy;
     u16 cell : 10;
     u16 size : 4;
-    u16 unk_2_14 : 2;
+    u16 _unused_02_bit14 : 2;
 } bunit_sprite_cell_t;
 
 /* Draw a unit's current SHP frame at (x, y), then its two name-plate quads.

@@ -1,6 +1,7 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Port debt (QUIRKS.md): data is a text-table pointer passed as s32. */
 void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 data) {
     g_jobstts_menu_list_entries = (u16*)entries;
     g_jobstts_menu_list_text_table = (u16*)data;

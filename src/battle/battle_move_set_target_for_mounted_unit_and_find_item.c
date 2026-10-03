@@ -38,8 +38,7 @@ u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) 
         }
     }
     find_item = target->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
-    tile = ((battle_move_find_result_data_t * (*)(u8, u8, u32)) battle_map_set_item_trap_data)(
-        unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
+    tile = battle_map_set_item_trap_data(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
     if (find_item && (tile->flags & BATTLE_MOVE_FIND_RESULT_ITEM)) {
         flags |= BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
     } else if (tile->flags & BATTLE_MOVE_FIND_RESULT_TRAP) {

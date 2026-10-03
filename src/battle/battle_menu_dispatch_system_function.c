@@ -53,21 +53,22 @@ s32 battle_menu_dispatch_system_function(
             } else {
                 count = 0;
                 g_battle_script_condition_unit_battle_id = unit_id;
-                for (i = 0; i < 3; i++) {
-                    if (battle_classify_character_identity_slot(i + 1) == -3) {
+                /* Any Ramza form crystallised or turned to treasure. */
+                for (i = 0; i < CHARACTER_IDENTITY_RAMZA_END - CHARACTER_IDENTITY_RAMZA_CHAPTER_1; i++) {
+                    if (battle_classify_character_identity_slot(i + CHARACTER_IDENTITY_RAMZA_CHAPTER_1) == -3) {
                         count++;
                     }
                 }
                 if ((battle_action_check_battle_outcome() < 0 || count != 0)
                     && battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) == 0) {
                     if (option != 2) {
-                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x190);
+                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER_ON_DEFEAT);
                         battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
                         g_option_menu_submenu_state = 1;
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
                     } else {
-                        g_battle_next_event_id = 0x190;
+                        g_battle_next_event_id = EVENT_ID_GAME_OVER_ON_DEFEAT;
                     }
                     return 2;
                 }
@@ -92,24 +93,24 @@ s32 battle_menu_dispatch_system_function(
                         battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
                         g_option_menu_submenu_state = 1;
                         if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
-                            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x193);
+                            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_DEBUG_BATTLE_INITIATE);
                         } else {
-                            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x191);
+                            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_RANDOM_BATTLE_INITIATE);
                         }
                         battle_script_start_current_event_thread();
                     } else {
-                        g_battle_next_event_id = 0x191;
+                        g_battle_next_event_id = EVENT_ID_RANDOM_BATTLE_INITIATE;
                     }
                     return 2;
                 } else if (battle_action_check_battle_outcome() == 0) {
                     if (option != 2) {
                         battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
                         g_option_menu_submenu_state = 1;
-                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x192);
+                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_RANDOM_BATTLE_VICTORY);
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
                     } else {
-                        g_battle_next_event_id = 0x192;
+                        g_battle_next_event_id = EVENT_ID_RANDOM_BATTLE_VICTORY;
                     }
                     return 2;
                 } else {
@@ -172,13 +173,13 @@ s32 battle_menu_dispatch_system_function(
             value = 0xB;
             if (option != 1) {
                 if (option == 2 || option == 4) {
-                    if (g_battle_menu_used_item_id == 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id == MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
                         value = 0x2D;
                     } else {
                         value = 0xC;
                     }
                 } else {
-                    if (g_battle_menu_used_item_id != 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id != MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
                         value = 0x2E;
                     } else {
                         value = 0xD;
@@ -189,7 +190,7 @@ s32 battle_menu_dispatch_system_function(
         g_battle_menu_restore_pending = 1;
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
-        g_battle_spell_quote_last_ability_id = action->ability_id & 0x1FF;
+        g_battle_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
         battle_thread_start(4, battle_text_run_unit_message_thread);
         battle_thread_set_parameters(4, unit_id, g_battle_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
@@ -203,9 +204,11 @@ s32 battle_menu_dispatch_system_function(
             if (action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
                 g_battle_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
-                value = action->ability_id & 0x1FF;
-                if ((u32)(value - 0x3C) < 0x1A) {
-                    g_battle_text_substitution_values[0] = value + 0xB7C4;
+                value = action->ability_id & ABILITY_ID_MASK;
+                if ((u32)(value - ABILITY_ID_SUMMON_MAGIC_MOOGLE)
+                    <= (ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN - ABILITY_ID_SUMMON_MAGIC_MOOGLE)) {
+                    g_battle_text_substitution_values[0]
+                        = value - ABILITY_ID_SUMMON_MAGIC_MOOGLE + TEXT_ID_SECTION_B800_BASE;
                 } else {
                     g_battle_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
                 }

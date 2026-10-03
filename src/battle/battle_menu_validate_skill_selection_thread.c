@@ -16,7 +16,7 @@ void battle_menu_validate_skill_selection_thread(void) {
 
     skill = g_battle_menu_thread_menu_data[3].selected_index;
     parameter = (void*)battle_thread_get_current_parameter_1();
-    skill_tables = (world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr;
+    skill_tables = &g_battle_ai_workspace_ptr->skill_use;
     target = skill_tables->target[skill];
     entry = g_battle_menu_ability_display_flags_ptr[skill];
     mp_cost = skill_tables->mp_cost[skill];

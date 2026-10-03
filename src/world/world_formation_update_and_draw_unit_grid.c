@@ -200,7 +200,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
                 world_formation_draw_unit_portrait_frame(
-                    (world_gfx_sprite_desc_t*)&pos, unit->egg_color, (s32)rgb, unit->birthday & 0xf, 6);
+                    (world_gfx_sprite_desc_t*)&pos, unit->egg_color, rgb, unit->birthday & 0xf, 6);
             } else {
                 world_formation_draw_unit_sprite(i, (world_menu_point_t*)&pos, (s8*)rgb, 6);
             }

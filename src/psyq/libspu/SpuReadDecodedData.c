@@ -23,6 +23,5 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
     _spu_Fr_(d_data, address, blocks);
     status = _spu_RXX->status & 0x800;
     /* A natural narrow-field test becomes srl/andi instead of retail andi/sltu. */
-    __asm__("" : "=r"(status) : "0"(status));
     return status != 0;
 }

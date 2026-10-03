@@ -120,7 +120,7 @@ void battle_move_encode_path_steps(void) {
         }
     }
     g_battle_move_path[0] = state->path_length - 1;
-    if (config->unit_id >= 0x15) {
+    if (config->unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         g_battle_move_effective_flags = 0;
     } else {
         g_battle_move_effective_flags = battle_move_get_effective_flags(&g_battle_unit_stats[config->unit_id]);

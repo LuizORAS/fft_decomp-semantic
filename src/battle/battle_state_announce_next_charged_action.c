@@ -32,7 +32,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 command.skillset = 0;
                 actor_stats = actor->battle_data;
                 battle_text_determine_spell_quote((world_unit_command_action_t*)&command, actor_stats->misc_unit_id, 1);
-                ability_id = *(s16*)&command.ability_id;
+                ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;
                 g_battle_action_post_action = 0;
@@ -47,7 +47,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 g_battle_casting_unit_id = unit->unit_id;
                 battle_text_determine_spell_quote((world_unit_command_action_t*)&unit->battle_data->action_actor_id,
                     unit->battle_data->misc_unit_id, 1);
-                ability_id = *(s16*)&unit->command_state.ai.data.action.ability_id;
+                ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;
                 g_battle_action_post_action = 0;
                 unit->sp2_ability_id = ability_id;
@@ -72,7 +72,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 command.skillset = 0;
                 actor_stats = actor->battle_data;
                 battle_text_determine_spell_quote((world_unit_command_action_t*)&command, actor_stats->misc_unit_id, 1);
-                ability_id = *(s16*)&command.ability_id;
+                ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;
                 g_battle_action_post_action = 0;

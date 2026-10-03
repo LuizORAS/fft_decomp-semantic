@@ -178,7 +178,7 @@ enum {
 typedef struct battle_ai_command_action {
     u8 unit_id;
     u8 skillset;
-    u16 ability_id;
+    s16 ability_id;
     u16 calculator_type;
     u16 calculator_multiplier;
     u8 item_id;
@@ -351,7 +351,7 @@ typedef struct battle_ai_action_data {
     u8 _unused_1a[2];
     u8 rank_byte;        /* 0x1c; first comparison key at 0x80196db0; meaning unresolved. */
     u8 base_hit_percent; /* 0x1d */
-    u16 priority;        /* 0x1e */
+    s16 priority;        /* 0x1e */
 } battle_ai_action_data_t;
 typedef char battle_ai_action_data_size_must_be_0x20[(sizeof(battle_ai_action_data_t) == 0x20) ? 1 : -1];
 
@@ -757,7 +757,7 @@ extern battle_ai_extended_snapshot_t* g_battle_ai_unit_snapshots; /* 0x8019f3c0 
 extern battle_ai_data_t* g_battle_ai_workspace;                   /* 0x8019f3ac */
 
 /* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
-extern void* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
+extern union battle_ai_workspace* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
 s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id);
 s32 battle_ai_set_movement_panel_data(s32 movement_taken);
 void battle_ai_set_ability_considerations(s32 action_taken);
@@ -1183,7 +1183,7 @@ void battle_script_switch_tutorial_thread_for_event_instructions(void);
 void battle_script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void battle_script_teleportout_event_instruction(s32 arg, s32 remove);
 void battle_script_unit_animation_rotate_event_instruction(const u8* parameters);
-void battle_script_unlockdate_event_instruction(s32 bitset, s32 date_index, s32 month, s32 day);
+void battle_script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
 void battle_script_wait_value_event_instruction(u8* parameters);
 void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void battle_script_waitspritemove_event_instruction(s32 unit_id);
@@ -1363,6 +1363,12 @@ extern battle_heap_owner_list_t g_battle_heap_owner_lists[];
 extern battle_heap_node_t* g_battle_heap_rover;
 extern u32 g_battle_heap_end_address;
 extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free_node-block size seen, in 8-byte units. */
+
+/* Summed as D_801BACC4 * 4 + D_801BC0D8 into the "DP %x" line of
+ * battle_heap_print_stats; never written, so it prints 0. */
+extern s32 D_801BACC4;
+extern s32 D_801BC0D8;
+
 extern s32 g_battle_game_state;
 extern s32 g_battle_state_animation_continue_check;
 extern s32 g_battle_state_game_flow_running;
@@ -1477,7 +1483,7 @@ void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
 void battle_state_start_game_flow(void);
 void battle_state_stop_game_flow(void);
-s32 battle_state_sync_frame(u32 ordering_table);
+s32 battle_state_sync_frame(u32* ordering_table);
 s32 battle_state_update_controller_input(void);
 s32 battle_state_announce_next_charged_action(void);
 void battle_state_enter_target_display_start(void);
@@ -1492,7 +1498,7 @@ void battle_state_start_battle_message_display(void);
 void battle_state_start_change_map_jump_in(s32 duration);
 void battle_state_start_map_jump_out(s32 map_id, s32 duration);
 void battle_state_start_change_map_jump_out(s32 map_id, s32 duration);
-s32 battle_state_sync_and_submit_deployment_frame(u32 ordering_table);
+s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table);
 s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
 void battle_noop_80133150(s32 unused_unit_id);
@@ -1763,10 +1769,10 @@ typedef struct battle_unit_misc_data {
     /* walk_speed and its copy are read and stored as one word
      * (battle_unit_set_idle_animation_for_movement, battle_move_init_knockback). */
     battle_move_walk_speed_t walk_speed; /* 0x038 */
-    s32 step_speed; /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
-                       jump gravity */
-    SVECTOR screen; /* 0x040; vx = x, vy = height, vz = map depth */
-    u8 _unused_048[8];
+    s32 step_speed;    /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
+                          jump gravity */
+    SVECTOR screen;    /* 0x040; vx = x, vy = height, vz = map depth */
+    u8 _unused_048[8]; /* no code reaches it through this struct; FFHacktics leaves 0x48-0x4f blank */
     /* Two more SVECTORs (vx = x, vy = height, vz = map depth) at 0x050 and
      * 0x060, used to create vectors for effects processing.
      * battle_unit_shift_forward_or_backward and
@@ -1780,15 +1786,15 @@ typedef struct battle_unit_misc_data {
      * only ever cleared with them. */
     SVECTOR screen_offset;   /* 0x058 */
     SVECTOR effect_vector_2; /* 0x060 */
-    u8 _unused_068[4];
+    u8 _unused_068[4];       /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256,
      * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
      * read as signed halfwords by battle_get_alternate_facing_quadrant_* (% 4) and
      * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
     battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
     battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
-    u16 facing;                                          /* 0x070 */
-    u16 attack_facing;                                   /* 0x072 */
+    s16 facing;                                          /* 0x070; angle, 0x1000 per turn (0x400 per quadrant) */
+    s16 attack_facing;                                   /* 0x072; -1 = no saved facing */
     u16 depth_height_offset;                             /* 0x074 */
     u16 mounted_height_offset;                           /* 0x076 */
     u16 float_bob_phase;                                 /* 0x078; advanced by g_animation_speed at 0x8007ea98 */
@@ -1815,18 +1821,18 @@ typedef struct battle_unit_misc_data {
      * non-zero count means the unit is still moving (unit_moving_check_by_misc_id,
      * process_unit_movement); set_unit_movement_flag ORs 0x10 into a step.
      */
-    u8 movement_path_count; /* 0x09c */
-    u8 movement_path[0x7c]; /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
-    u8 movement_flags;      /* 0x119; battle_move_effective_flags_e bits */
-    u8 _unused_11a;
-    u8 mount_byte;                /* 0x11b */
-    u8 movement_value;            /* 0x11c */
-    u8 last_path_count;           /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
-    u8 current_unit_id_plus_one;  /* 0x11e */
-    u8 previous_unit_id_plus_one; /* 0x11f */
-    s16 item_get_camera_x;        /* 0x120 */
-    s16 item_get_camera_y;        /* 0x122 */
-    u8 _unused_124[4];
+    u8 movement_path_count;            /* 0x09c */
+    u8 movement_path[0x7c];            /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
+    u8 movement_flags;                 /* 0x119; battle_move_effective_flags_e bits */
+    u8 _unused_11a;                    /* no code reaches it through this struct; FFHacktics leaves it blank */
+    u8 mount_byte;                     /* 0x11b */
+    u8 movement_value;                 /* 0x11c */
+    u8 last_path_count;                /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
+    u8 current_unit_id_plus_one;       /* 0x11e */
+    u8 previous_unit_id_plus_one;      /* 0x11f */
+    s16 item_get_camera_x;             /* 0x120 */
+    s16 item_get_camera_y;             /* 0x122 */
+    u8 _unused_124[4];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
     u32 otag_depth_index;              /* 0x128 */
     s32 status_bubble_gte_flag;        /* 0x12c; RotTrans flag output while positioning the status bubble */
     u8 mount_state;                    /* 0x130; battle_misc_mount_state_e */
@@ -1861,7 +1867,7 @@ typedef struct battle_unit_misc_data {
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
     battle_dismount_coords_t dismount; /* 0x184 */
-    u8 _unused_18a[2];
+    u8 _unused_18a[2];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Current action data, 0x18c..0x1d7. */
     u8 action_18c;           /* 0x18c; "Reaction ID / Attacking unit ID? - Used Ability ID" */
     u8 target_count;         /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
@@ -1873,8 +1879,7 @@ typedef struct battle_unit_misc_data {
     u8 reaction_occurred;    /* 0x1a3 */
     u8 continue_attack;      /* 0x1a4 */
     u8 current_hit_number;   /* 0x1a5 */
-    u8 reaction_id_1a6;      /* 0x1a6 */
-    u8 _unused_1a7;
+    s16 reaction_id_1a6;     /* 0x1a6; battle_strike_work_t.reaction_id_1a (strike work at +0x18c) */
     u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
     u8 target_new_y;         /* 0x1a9 */
     u8 target_new_map_level; /* 0x1aa */
@@ -1939,18 +1944,18 @@ typedef struct battle_unit_misc_data {
     s16 numeric_display_progress;                          /* 0x2c2; animation progress, capped at 0x15 */
     battle_gfx_sprite_display_data_t* numeric_displays[3]; /* 0x2c4, 0x2c8, 0x2cc */
     u8 item_ability_display;                               /* 0x2d0; item ability display (byte store) */
-    u8 _unused_2d1;                                        /* 0x2d1 */
-    s8 item_get_x_offset;                                  /* 0x2d2; setup_item_get_rendering reads (s8) */
-    s8 item_get_y_offset;                                  /* 0x2d3 */
-    u8 _unused_2d4[4];
+    u8 _unused_2d1;       /* 0x2d1; no code reaches it through this struct; FFHacktics leaves it blank */
+    s8 item_get_x_offset; /* 0x2d2; setup_item_get_rendering reads (s8) */
+    s8 item_get_y_offset; /* 0x2d3 */
+    u8 _unused_2d4[4];    /* no code reaches it through this struct; FFHacktics leaves it blank */
     battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
      * battle_gfx_update_status_bubble_graphic_trigger sets the flag and clears
      * the timer with a halfword store, so the timer is declared u16. */
     u8 status_bubble_active;         /* 0x2dc */
     u8 status_bubble_id;             /* 0x2dd */
-    u8 status_bubble_x;              /* 0x2de */
-    u8 status_bubble_y;              /* 0x2df */
+    s8 status_bubble_x;              /* 0x2de */
+    s8 status_bubble_y;              /* 0x2df */
     u16 status_bubble_timer;         /* 0x2e0 */
     u16 status_bubble_alternate_row; /* 0x2e2; non-zero selects the second texture row */
     void* status_bubble_display;     /* 0x2e4; pointer into the 0x410 status bubble data */
@@ -1960,7 +1965,14 @@ typedef struct battle_unit_misc_data {
     /* Six vectors used during sprite rotation/scaling render (0x2ec);
      * battle_gfx_init_position_vector_copies seeds all six from screen_x/z/y. */
     SVECTOR display_svectors[6]; /* 0x2ec..0x31b */
-    u8 _unused_31c[0x124];       /* 0x31c..0x43f: sprite display sections */
+    /* 0x31c..0x43f: sprite display sections (wiki: Miscellaneous Unit Data),
+     * reached through the strided g_battle_gfx_*_sprite_display_data views. */
+    u8 unit_sprite_display[0x46];          /* 0x31c; header + 8 part records */
+    u8 sprite_block_displays[3][0x24];     /* 0x362; sprite_blocks[i].display: header + 3 parts */
+    u8 numeric_sprite_displays[3][0x16];   /* 0x3ce */
+    u8 status_bubble_sprite_display[0x16]; /* 0x410 */
+    u8 item_sprite_display[0x16];          /* 0x426 */
+    u8 _unused_43c[4];                     /* 0x43c; wiki: "initialization byte" */
 } battle_unit_misc_data_t;
 typedef char battle_misc_data_size_must_be_0x440[(sizeof(battle_unit_misc_data_t) == 0x440) ? 1 : -1];
 typedef char
@@ -3330,6 +3342,7 @@ extern MATRIX g_battle_effect_emitter_matrix;
 extern MATRIX g_battle_effect_projectile_matrix;
 extern s32* g_battle_effect_model_header;
 extern s32* g_battle_effect_model_vertices;
+extern s32* D_801B8A34; /* resource section at words[2], set with the other section pointers; never read */
 extern s32* g_battle_effect_model_commands;
 extern s32 g_battle_effect_model_command_index;
 extern SVECTOR g_battle_effect_camera_rotation_start;
@@ -3346,6 +3359,8 @@ extern VECTOR g_battle_effect_camera_zoom_start;
 extern VECTOR g_battle_effect_camera_zoom_target;
 extern VECTOR g_battle_effect_camera_zoom_current;
 extern VECTOR g_battle_effect_camera_zoom_saved;
+extern s32 D_801B8B18; /* zeroed with the effect camera modes; never read */
+extern s32 D_801B8B1C; /* zeroed with the effect camera modes; never read */
 extern s32 g_battle_effect_trajectory_hit_unit_id;
 extern void* g_battle_effect_trap_frame_data_ptr;
 extern s32 g_battle_effect_callback_slots[];
@@ -3450,8 +3465,9 @@ extern u8 g_battle_effect_summon_ring_brightness[];
 extern battle_effect_target_t g_battle_effect_targets[];
 extern SVECTOR g_battle_effect_trajectory_position; /* final projectile position */
 extern s32 g_battle_effect_trajectory_source_id;
-extern VECTOR g_battle_effect_trajectory_step; /* last step's movement */
-extern s32 g_battle_effect_trajectory_tile_flags;
+extern VECTOR g_battle_effect_trajectory_step;    /* last step's movement */
+extern s32 g_battle_effect_trajectory_tile_flags; /* tile byte 6 bits 4-6; only copied around, never consumed */
+extern s32 D_801B8B98; /* set to 0x80000000 when the arrow arc handler ends early; never read */
 
 /* Self-relative animation script table: each halfword is a byte offset from
  * the table's own base to a battle_effect_anim_script_t. Declared as bytes
@@ -3477,12 +3493,18 @@ extern u8* g_battle_effect_prim_buffer;
 extern volatile s32 g_battle_effect_prim_buffer_offset;
 extern battle_effect_slot_t g_battle_effect_slots[];
 extern s32 g_battle_effect_sprite_count;
+extern s32 D_801BC0C4; /* zeroed when battle_effect_init_record_chain builds the work records; never read */
+extern s32 D_801BC0D4; /* zeroed on a battle_effect_set_ability_animation path; never read */
 extern s32 g_battle_effect_sprite_count_peak;
 extern effect_geometry_table_t* g_effect_geometry_table;
 extern effect_palette_entry_t* g_effect_palette_table;
 extern u8* g_effect_particle_system_data;
 extern effect_record_t g_effect_state_records[];
 extern effect_record_target_view_t g_effect_state_records_view[];
+
+/* Zeroed by battle_effect_update_stage and set to operand >> 4 by effect code
+ * script 05; never read. */
+extern u16 D_801BF000;
 extern s16 g_battle_effect_current_record_index;
 extern s32 g_battle_effect_work_record_peak;
 extern effect_work_record_t* g_battle_effect_free_work_record_head;
@@ -3593,8 +3615,8 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
 void battle_effect_step_motion(battle_effect_motion_t* motion);
 void battle_effect_store_first_section_of_on_hit_data(battle_effect_on_hit_vector_t* src);
 
-s32 battle_effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc, void* obstacles);
+s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc,
+    battle_effect_obstacle_unit_list_t* obstacles);
 
 s32 battle_effect_test_position_for_obstacle(
     battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref);
@@ -3649,7 +3671,8 @@ void battle_effect_submit_sprite_to_ordering_table(
     battle_effect_sprite_block_t* set, s16* position, s16 angle, VECTOR* zoom, u32* ot);
 
 /* Steps the projectile along its trajectory, testing each obstacle. */
-s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles);
+s32 battle_effect_trace_projectile_path(
+    VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles);
 void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown);
 void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
@@ -4194,7 +4217,7 @@ s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_add_signed_byte_to_height(battle_unit_misc_data_t* unit, s32 delta);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
-s32 battle_unit_build_deployed_units_data(s32 a0);
+s32 battle_unit_build_deployed_units_data(battle_deployed_coords_t* formation);
 s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
@@ -4225,7 +4248,7 @@ s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const battle_screen_coo
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
 void battle_unit_init_coordinates(struct battle_unit_misc_data* unit);
 void battle_unit_init_coordinates_animation_facing(battle_unit_misc_data_t* unit);
-void battle_unit_init_deployed_units_data_for_debug_red_team(s32 value);
+void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* value);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data);
@@ -4528,6 +4551,8 @@ extern s32 g_battle_gfx_last_loaded_shp_id;
 extern u8* g_battle_gfx_load_data_cursor;
 extern u8* g_battle_gfx_shp_frame_data_cursor;
 extern s16 g_battle_gfx_previous_counter;
+extern s16 D_800b628c; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
+extern s16 D_800b6290; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
 extern battle_gfx_fade_overlay_t g_battle_gfx_screen_fade_overlays[]; /* one fade overlay per packet buffer */
 
 /* Overlay draw-mode primitives, one per screen polarity. */
@@ -4632,7 +4657,7 @@ void battle_gfx_init_render_buffers(void);
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
 
 void battle_gfx_append_unit_graphics_load_descriptor(u8 map_x, u8 map_y, u8 map_level, u16 map_height, s32 portrait_id,
-    u16 palette_id, u16 misc_id, struct battle_stats* g_battle_unit_stats, u32 flags);
+    u16 palette_id, u16 misc_id, struct battle_stats* unit, u32 flags);
 
 s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_data* unit);
 
@@ -4964,7 +4989,7 @@ typedef struct battle_strike_work {
     u8 reaction_occurred;
     u8 continue_attack;
     u8 current_hit_number;
-    u16 reaction_id_1a;
+    s16 reaction_id_1a;
     u8 target_new_x;
     u8 target_new_y;
     u8 target_new_map_level;
@@ -5052,13 +5077,13 @@ typedef struct battle_current_ability {
     u8 proc_id;                                 /* 0x1a */
     u8 used_item_id;                            /* 0x1b */
     u8 base_hit;                                /* 0x1c */
-    u8 _unused_1d;                              /* 0x1d */
+    u8 _unused_1d;                              /* 0x1d; never read or written; FFHacktics skips 0x801938dd */
     u8 accessory_evade;                         /* 0x1e */
     u8 right_shield_evade;                      /* 0x1f */
     u8 left_shield_evade;                       /* 0x20 */
     u8 class_evade;                             /* 0x21 */
     u8 facing_modifier;                         /* 0x22: 0 front, 1 side, 2 back */
-    u8 _unused_23;                              /* 0x23 */
+    u8 _unused_23;                              /* 0x23; never read or written; FFHacktics skips 0x801938e3 */
     u8 charge_power;                            /* 0x24 */
     u8 formula;                                 /* 0x25 */
     u8 target_is_undead;                        /* 0x26 */
@@ -5189,6 +5214,7 @@ extern battle_action_data_t* g_battle_action_target_data;
 extern battle_action_context_e g_battle_action_context;
 extern s16 g_battle_current_reaction_ability_id;
 extern s32 g_battle_distribute_target_count;
+extern u8 D_8019387C; /* written only by battle_action_store_8019387c_if_not_reacting, which nothing calls */
 extern s32 g_battle_casting_misc_id;
 extern s32 g_battle_casting_unit_id;
 extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
@@ -5419,7 +5445,7 @@ void battle_target_clear_panel_spread_flags(void);
 void battle_target_disable_green_panel_flags(void);
 s32 battle_target_disable_green_panel_on_all_but_target_tile(const u8* source);
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
-s32 battle_target_get_unit_id_if_tile_targetable(s32 a0, s32 a1, s32 a2);
+s32 battle_target_get_unit_id_if_tile_targetable(s32 x, s32 y, s32 level);
 void battle_target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
 void battle_target_remove_close_range(s32 x, s32 y, s32 range);
 void battle_target_select_random_tile_for_random_fire_abilities(void);
@@ -5474,7 +5500,7 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, s32 action, s32 at_list);
+s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
@@ -5861,6 +5887,10 @@ extern s32 g_battle_move_pathing_resume_pass;
 extern s32 g_battle_move_pathing_tile_index;
 extern void (*g_battle_move_spread_preset_table[])(void);
 extern u8 g_battle_move_terrain_cost;
+extern u8 D_8018F4FC;  /* always 0 (never written); copied into the move config's _unknown_1a */
+extern u8 D_8018F7CC;  /* zeroed by battle_move_calculate_pathing, never read */
+extern u8 D_8018F7D0;  /* zeroed by battle_move_calculate_pathing, never read */
+extern s32 D_8018F7D8; /* zeroed by battle_move_calculate_pathing, never read */
 
 /* Height scratch record at 0x80096238; battle_calculate_unit_height_data fills
  * it in place. */
@@ -6330,7 +6360,7 @@ typedef struct battle_map_mesh_triangle_positions {
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;
-    u16 _unused_16;
+    u16 _padding_16; /* spare halfword of the 8-byte vertex slot */
 } battle_map_mesh_triangle_positions_t;
 
 typedef struct battle_map_mesh_quad_positions {
@@ -6339,9 +6369,9 @@ typedef struct battle_map_mesh_quad_positions {
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;
-    u16 _unused_16;
+    u16 _padding_16; /* spare halfword of the 8-byte vertex slot */
     s16 x3, y3, z3;
-    u16 _unused_1e;
+    u16 _padding_1e; /* spare halfword of the 8-byte vertex slot */
 } battle_map_mesh_quad_positions_t;
 
 typedef struct battle_map_mesh_triangle_normals {
@@ -6354,7 +6384,7 @@ typedef struct battle_map_mesh_quad_normals {
 
 /* Per-part start indices and counts stored after the mesh transform data. */
 typedef struct battle_map_mesh_part_metadata {
-    u8 _unused_00[0x88];
+    u8 _padding_00[0x88]; /* size filler: the battle_map_mesh_part_t transform data */
     u16 textured_triangle_start;
     u16 textured_quad_start;
     u16 untextured_triangle_start;
@@ -6449,11 +6479,11 @@ typedef struct battle_map_mesh_keyframe {
     s16 value_10;       /* 0x10; scale x */
     s16 value_12;       /* 0x12; scale y */
     s16 value_14;       /* 0x14; scale z */
-    s16 _unused_16;     /* 0x16 */
+    s16 _padding_16;    /* 0x16; wiki: unknown/padding after the scale triple */
     s16 angle_start[9]; /* 0x18 */
     s16 angle_end[9];   /* 0x2a */
     u16 flags[9];       /* 0x3c */
-    u16 _unused_4e;     /* 0x4e */
+    u16 _padding_4e;    /* 0x4e; wiki: unknown/padding to the 0x50-byte record */
 } battle_map_mesh_keyframe_t;
 typedef char battle_map_mesh_keyframe_size_must_be_0x50[(sizeof(battle_map_mesh_keyframe_t) == 0x50) ? 1 : -1];
 
@@ -6621,8 +6651,17 @@ extern battle_lightning_state_t g_battle_map_lightning_state;
 extern u8 g_battle_map_ambient_polygon_color[3];
 extern u8 g_battle_map_back_color_bytes[3];
 extern SVECTOR g_battle_map_command_0x96_rotation;
+extern s32 D_800F668C; /* set to 0x95 when map command 0x96 gets a duration; never read */
 extern u8 g_battle_map_gns_dispatch_held;
 extern s32 g_battle_map_gns_load_phase;
+
+/* Write-only: zeroed with the map render state and never read anywhere on
+ * the disc. The 150 x 14-byte shape suggests per-instruction parameter
+ * storage (an event opcode takes at most 14 parameters), but no code proves
+ * it, so the names stay provisional. */
+extern u8 D_800F70B4[150][14];
+extern u8 D_800F78E8[150];
+
 extern u8 g_battle_map_light_direction[4];
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
@@ -6972,28 +7011,6 @@ typedef union battle_menu_status_panel_slot_storage {
 typedef char battle_menu_status_panel_slot_storage_size_must_be_0x38
     [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x38) ? 1 : -1];
 
-/* Unit gauge record (0x1e bytes) copied from battle_stats_t for the status
- * panel; the same shape as the first 0x1e bytes of battle_unit_status_record_t. */
-typedef struct battle_menu_status_panel_gauges {
-    s16 level;      /* 0x00 */
-    s16 team_state; /* 0x02 */
-    s16 _04;
-    s16 _06;
-    s16 experience; /* 0x08 */
-    s16 unit_index; /* 0x0a */
-    u16 hp;         /* 0x0c */
-    s16 _0e;
-    u16 max_hp; /* 0x10 */
-    u16 mp;     /* 0x12 */
-    s16 _14;
-    u16 max_mp; /* 0x16 */
-    s16 ct;     /* 0x18 */
-    s16 _1a;
-    s16 max_ct; /* 0x1c */
-} battle_menu_status_panel_gauges_t;
-typedef char
-    battle_menu_status_panel_gauges_size_must_be_0x1e[(sizeof(battle_menu_status_panel_gauges_t) == 0x1e) ? 1 : -1];
-
 /* One value bar: the Gouraud bar is drawn value/limit wide. */
 typedef struct battle_menu_status_panel_bar {
     s16 value;
@@ -7162,9 +7179,36 @@ typedef struct battle_menu_window_record {
     DR_MODE mode1;   /* 0x0c */
     SPRT sprites[4]; /* 0x18 */
     SPRT* extra[3];  /* 0x68 */
-    s32 _unknown_74; /* 0x74 */
-    s32 _unknown_78; /* 0x78 */
+    s32 _unknown_74; /* 0x74; zeroed by the builder, never read */
+    s32 _unknown_78; /* 0x78; zeroed by the builder; see QUIRKS.md */
 } battle_menu_window_record_t;
+
+/* Provisional: one of the two 0x134-byte packet pages the list alternates
+ * between frames (BATTLE twin of the WORLD scroll-list page). */
+typedef struct battle_menu_scroll_list_page {
+    SPRT frame;                        /* 0x00: cursor frame */
+    SPRT arrows[2];                    /* 0x14: scroll arrows */
+    SPRT arrow_marks[2];               /* 0x3c */
+    SPRT thumb;                        /* 0x64: scroll-bar thumb */
+    DR_MODE text_mode;                 /* 0x78 */
+    DR_MODE icon_mode;                 /* 0x84 */
+    battle_menu_window_record_t icons; /* 0x90 */
+    u8 _unused_10c[0x28];
+} battle_menu_scroll_list_page_t;
+
+/* The AI data block doubles as a work area while the AI is idle: the menus
+ * build their ability list (and the outermost scroll list's page pair after
+ * it) there, and events stage unit statuses in it. */
+typedef union battle_ai_workspace {
+    battle_ai_data_t ai;
+    world_ability_list_t ability_list;
+    world_ability_skill_use_tables_t skill_use;
+    world_event_work_t event;
+    struct {
+        u8 _padding_000[0x388]; /* the ability list, rounded up for the pages */
+        battle_menu_scroll_list_page_t pages[2];
+    } scroll;
+} battle_ai_workspace_t;
 
 /* Provisional window request: VRAM source point, size, screen point and the
  * load parameters for the window background quad. */
@@ -7323,6 +7367,7 @@ extern s32 g_battle_menu_scroll_list_depth;
 extern s16* g_battle_menu_ability_display_flags_ptr;
 extern u16 g_battle_menu_status_visible_rows;
 extern u16 g_battle_menu_status_scroll_rows;
+extern s16 D_801669E8; /* zeroed when the idle action menu is rebuilt; never read */
 
 /* Row actions of the auto-battle setting menu (menu entry 0x80166b4c, +0x24). */
 extern s16 g_battle_menu_auto_battle_row_actions[8];
@@ -7361,6 +7406,7 @@ extern s32 g_battle_help_text_id_tables_ptr;
 extern u16 g_battle_menu_anything_ability_id;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern s32 g_battle_active_menu; /* active menu */
+extern s32 D_80173C70;           /* always 0 (never written); passed to the option menu thread, which ignores it */
 extern RECT g_battle_menu_ability_list_clut_rect;
 extern s16 g_battle_menu_ability_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
@@ -7520,7 +7566,7 @@ s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, 
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out);
 void battle_menu_confirm_action_silently(void* menu);
 s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(s16* dst, u8* src);
-void battle_menu_copy_palette_colors(const void* source);
+void battle_menu_copy_palette_colors(const u8* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 s32 battle_menu_dispatch_system_function(
@@ -7530,7 +7576,7 @@ s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* ou
 s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_ability_ids);
 
 void battle_menu_draw_numeric_display_entries(
-    s32 buffer, menu_number_entry_t* entries, menu_number_position_t* position, s32 count);
+    void* buffer, menu_number_entry_t* entries, menu_number_position_t* position, s32 count);
 
 void battle_menu_free_buffer(s32 buffer);
 s32 battle_menu_get_dead_unit_selection(s32 battle_id);
@@ -7827,35 +7873,5 @@ s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
 void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
 void battle_world_display_specific_menu_text(s32 buffer, s32 position, s32 text);
-
-/* unnamed */
-extern s16 D_800b628c;
-extern s16 D_800b6290;
-extern s32 D_800F668C;
-
-/* Write-only: zeroed with the map render state and never read anywhere on
- * the disc. The 150 x 14-byte shape suggests per-instruction parameter
- * storage (an event opcode takes at most 14 parameters), but no code proves
- * it, so the names stay provisional. */
-extern u8 D_800F70B4[150][14];
-extern u8 D_800F78E8[150];
-extern s16 D_801669E8;
-extern s32 D_80173C70;
-extern u8 D_8018F4FC;
-extern u8 D_8018F7CC;
-extern u8 D_8018F7D0;
-extern s32 D_8018F7D8;
-extern u8 D_8019387C;
-extern s32* D_801B8A34;
-extern s32 D_801B8B18;
-extern s32 D_801B8B1C;
-extern s32 D_801B8B98;
-extern s32 D_801BACC4;
-extern s32 D_801BC0C4;
-extern s32 D_801BC0D4;
-extern s32 D_801BC0D8;
-
-/* Written by battle_effect_code_script_05 but never read. */
-extern u16 D_801BF000;
 
 #endif

@@ -17,7 +17,7 @@ void battle_state_enter_status_execute(void) {
         battle_text_set_message_duration_frames(0x3C);
         battle_menu_init_system_function(
             0xA, 0x183A, unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);
-        battle_unit_store_animation_facing_movement_data(0x16, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(0x16, unit->facing, unit);
         return;
     }
     battle_text_set_message_duration_frames(0xB4);

@@ -215,7 +215,7 @@ typedef struct psyq_spu_registers {
     u16 reverb_high;
     u16 voice_status_low;
     u16 voice_status_high;
-    u16 _unknown_1a0;
+    u16 _unknown_1a0; /* psx-spx: "Unused?" */
     u16 reverb_start;
     u16 irq_address;
     u16 transfer_address;
@@ -229,7 +229,7 @@ typedef struct psyq_spu_registers {
     u16 external_volume_right;
     u16 current_main_volume_left;
     u16 current_main_volume_right;
-    u16 _unknown_1bc;
+    u16 _unknown_1bc; /* psx-spx: "Unused?" (0x1dbc-0x1dbf) */
     u16 _unknown_1be;
     u16 reverb_parameters[32]; /* 0x1c0 */
 } psyq_spu_registers_t;

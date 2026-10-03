@@ -14,6 +14,7 @@ libraries:
   - {id: libgs, addr: 0x800e03ec, end: 0x800e1a98, kind: psyq, library: LIBGS}
 
 functions:
+  - {addr: 0x800e0228, size: 452, name: world_gs_sortpoly, hash: 9a10ac6f8c76b4ec}
   - {addr: 0x800e03ec, size: 148, name: world_ps_sort_sprite_bg, hash: 33eb380bed08096b}
   - {addr: 0x800e0480, size: 1276, name: world_gs_sortsprite, hash: 8e76bcf090d5aa77}
   - {addr: 0x800e097c, size: 380, name: world_gs_sortfastsprite, hash: a5429d5475642a68}
@@ -793,7 +794,7 @@ functions:
   - {addr: 0x801266e8, size: 416, name: world_menu_script_if_else, hash: 3fbe8187bcee91a7, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126888, size: 224, name: world_menu_script_draw_tile, hash: 421cc7a32abed7db, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126968, size: 304, name: world_menu_script_draw_sprite, hash: 4a873d36faa2542a, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80126a98, size: 124, name: world_menu_script_draw_menu_tile, hash: f0545118219cdcfc, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80126a98, size: 124, name: world_menu_script_draw_menu_line, hash: f0545118219cdcfc, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126b14, size: 284, name: world_menu_script_draw_callback_sprite, hash: cb30f26ba1aafc43, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126c30, size: 2216, name: world_menu_parse_draw_window_frame, hash: 0ba3477aee89496b, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801274d8, size: 328, name: world_menu_handle_window_command_with_scaled_clip, hash: 1dc44983c009e572, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -869,7 +870,7 @@ functions:
   - {addr: 0x8012bdbc, size: 256, name: world_gfx_append_tile_to_otag, hash: 9f150427cc8f609b}
   - {addr: 0x8012bebc, size: 344, name: world_gfx_append_poly_f4_to_otag, hash: 7a9732f67b0bc603}
   - {addr: 0x8012c014, size: 460, name: world_gfx_append_poly_g4_to_otag, hash: 40fb9a0164d41558}
-  - {addr: 0x8012c1e0, size: 260, name: world_menu_add_tile_primitive, hash: fccfcca88962f07d}
+  - {addr: 0x8012c1e0, size: 260, name: world_menu_add_flat_line_primitive, hash: fccfcca88962f07d}
   - {addr: 0x8012c2e4, size: 332, name: world_menu_add_gradient_line_primitive, hash: c5632e60e658e9b0}
   - {addr: 0x8012c430, size: 632, name: world_gfx_add_sprite_cell_quads, hash: 42f1804f3ad39011}
   - {addr: 0x8012c6a8, size: 532, name: world_gfx_enqueue_textured_quad, hash: 078cc1e65b7f2166}
@@ -1028,7 +1029,6 @@ data:
   - {addr: 0x800e0070, name: g_world_script_pause_message}
   - {addr: 0x800e007c, name: g_world_text_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
-  - {addr: 0x800e0228, name: world_gs_sortpoly}
   - {addr: 0x800e1524, name: world_gs_get_active_buffer}
   - {addr: 0x800e18dc, name: world_gs_draw_ot}
   - {addr: 0x800e1900, name: world_gs_clear_ot}
@@ -2218,14 +2218,14 @@ data:
   - {addr: 0x801cd16c, name: g_world_name_confirm_result}
   - {addr: 0x801cd170, name: g_world_thread_current_id}
   - {addr: 0x801cd174, name: g_world_thread_inner_subroutine_result}
-  - {addr: 0x801cd178, name: g_world_gfx_tiles_24_capacity}
+  - {addr: 0x801cd178, name: g_world_gfx_flat_line_capacity}
   - {addr: 0x801cd17c, name: g_world_gfx_line_f3_capacity}
   - {addr: 0x801cd180, name: g_world_gfx_gradient_line_capacity}
   - {addr: 0x801cd184, name: g_world_gfx_line_g3_capacity}
   - {addr: 0x801cd188, name: g_world_gfx_line_f4_capacity}
   - {addr: 0x801cd18c, name: g_world_gfx_line_g4_capacity}
   - {addr: 0x801cd194, name: g_world_gfx_poly_ft3_capacity}
-  - {addr: 0x801cd198, name: g_world_gfx_tiles_24_count}
+  - {addr: 0x801cd198, name: g_world_gfx_flat_line_count}
   - {addr: 0x801cd19c, name: g_world_gfx_poly_gt3_capacity}
   - {addr: 0x801cd1a0, name: g_world_gfx_textured_quad_capacity}
   - {addr: 0x801cd1a4, name: g_world_gfx_line_f3_count}

@@ -13,7 +13,7 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     s16* unused;
     s32 result;
 
-    g_battle_ai_workspace_ptr = g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (battle_ai_workspace_t*)g_battle_ai_workspace;
     if (g_world_menu_input_disabled != 0) {
         input = g_world_input_unfiltered_controller;
     }

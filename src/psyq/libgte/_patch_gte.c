@@ -12,7 +12,7 @@ typedef struct {
  * Critical-section/cache calls and BIOS dispatch remain actual interfaces. */
 void _patch_gte(void) {
     /* The copy loop retains the handwritten word and template-bound registers. */
-    register psyq_bios_c0_table_t* table __asm__("$2");
+    psyq_bios_c0_table_t* table;
     u32* destination;
     register u32 word __asm__("$3");
     register u32* source __asm__("$10");
@@ -23,7 +23,6 @@ void _patch_gte(void) {
     PSYQ_CPU_ADDRESS_HIGH(source, g_psyq_gte_exception_patch_template);
     PSYQ_CPU_ADDRESS_HIGH(end, g_psyq_gte_exception_patch_template_end);
     destination = table->exception_handler;
-    __asm__ volatile("" : : "r"(destination));
     PSYQ_CPU_ADDRESS_LOW(source, g_psyq_gte_exception_patch_template);
     PSYQ_CPU_ADDRESS_LOW(end, g_psyq_gte_exception_patch_template_end);
     do {

@@ -1,7 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Points one of the graphics-data pointers at its resident copy. */
+/* Points one of the graphics-data pointers at its resident copy.
+ *
+ * Each case leaves the bound address in $v0, and
+ * world_card_build_save_slot_description reads it for case 1 through a
+ * function-pointer cast. A native build must return the pointer (QUIRKS.md). */
 void world_gfx_bind_data_pointer(u32 index) {
     switch (index) {
     case 0:

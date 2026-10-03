@@ -71,7 +71,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_ite
         progression = world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY);
         item_id = 0;
         shop_mask = 0x8000 >> shop_id;
-        for (; item_id < 0xfe; item_id++) {
+        for (; item_id < ITEM_ID_END; item_id++) {
             __asm__("" : "=r"(primary_category) : "0"(primary_category));
             item_category = world_item_get_menu_category((s16)item_id);
             entry = item_id;
@@ -99,7 +99,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_ite
             count++;
         }
     } else {
-        for (item_id = 0; item_id < 0xfe; item_id++) {
+        for (item_id = 0; item_id < ITEM_ID_END; item_id++) {
             item_category = world_item_get_menu_category((s16)item_id);
             entry = item_id;
             if ((u16)primary_category != (u16)item_category && secondary_category != item_category) {

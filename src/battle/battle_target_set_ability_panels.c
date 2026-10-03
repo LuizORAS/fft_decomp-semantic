@@ -35,7 +35,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
 
     main_util_copy_action_data(source, (u8*)&action);
     unit = &g_battle_unit_stats[action.unit_id];
-    ability = &g_main_ability_range_data[(s16)action.ability_id];
+    ability = &g_main_ability_range_data[action.ability_id];
     range = ability->range;
     aoe = ability->aoe;
     flags_1 = ability->flags_1;
@@ -51,12 +51,12 @@ s32 battle_target_set_ability_panels(const u8* source) {
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);
     index = y * g_map_max_x + x;
     if (range == 0xff) {
-        for (i = 0; i < 0x200; i++) {
+        for (i = 0; i < MAP_TILE_SLOT_COUNT; i++) {
             panels[i].remaining_range = 1;
             panels[i].mark = 0;
         }
     } else {
-        for (i = 0; i < 0x200; i++) {
+        for (i = 0; i < MAP_TILE_SLOT_COUNT; i++) {
             panels[i].remaining_range = 0;
             panels[i].mark = 0;
         }

@@ -248,7 +248,7 @@ functions:
   - {addr: 0x800183c0, size: 64, name: main_sound_set_cd_reverb, hash: 3920c543eba03b70}
   - {addr: 0x80018400, size: 140, name: main_sound_commit_volume_change, hash: 9664c665c65eb230}
   - {addr: 0x8001848c, size: 84, name: main_sound_set_vol_balance, hash: 690d749cb3ddab10}
-  - {addr: 0x800184e0, size: 16, name: func_800184e0, hash: d753dba51b973163}
+  - {addr: 0x800184e0, size: 16, name: main_sound_set_unread_value_800184e0, hash: d753dba51b973163}
   - {addr: 0x800184f0, size: 32, name: main_suzuki_spu_callback_func, hash: c1b2b4bd9f3d6f10}
   - {addr: 0x80018510, size: 8, name: main_sound_spu_event_handler, hash: 207819bf4ebe3078}
   - {addr: 0x80018518, size: 316, name: main_sound_transfer_spu_data, hash: 05f8d8da327ae08d, rodata: [{addr: 0x80010030, size: 20, hash: 70cca047fa34bab7}]}

@@ -16,12 +16,12 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
     battle_stats_t* stats;
 
     if (unit->statuses_to_add_5_6 & 2) {
-        battle_unit_store_animation_facing_movement_data(3, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(3, unit->facing, unit);
     } else if (unit->statuses_to_remove_5_6 & 2) {
         battle_unit_set_animation_based_on_status(unit);
     }
     if (unit->statuses_to_add_5_6 & 4) {
-        battle_unit_store_animation_facing_movement_data(3, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(3, unit->facing, unit);
     } else if (unit->statuses_to_remove_5_6 & 4) {
         battle_unit_set_animation_based_on_status(unit);
     }
@@ -47,34 +47,34 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_34) {
         if (unit->statuses_to_add_5_6 & 0x40) {
-            battle_unit_store_animation_facing_movement_data(0x75, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing_movement_data(0x75, unit->facing, unit);
         } else if (unit->statuses_to_remove_5_6 & 0x40) {
             battle_unit_animate_and_set_enemy_level_data_by_misc_id(unit->unit_id);
-            battle_unit_store_animation_facing_movement_data(0x76, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing_movement_data(0x76, unit->facing, unit);
         }
         if ((u32)(battle_move_validate_float_fly(unit) & 0xff) >= 2) {
             if (unit->statuses_to_add_1_4 & 4) {
-                battle_unit_store_animation_facing_movement_data(0x1a, (s16)unit->facing, unit);
+                battle_unit_store_animation_facing_movement_data(0x1a, unit->facing, unit);
                 unit->encoded_animation = 0x34;
                 unit->animation_countdown = 0;
             } else if (unit->statuses_to_remove_1_4 & 4) {
-                battle_unit_store_animation_facing_movement_data(9, (s16)unit->facing, unit);
+                battle_unit_store_animation_facing_movement_data(9, unit->facing, unit);
                 unit->encoded_animation = 0x12;
                 unit->animation_countdown = 0;
             }
         }
     } else if ((u32)(battle_move_validate_float_fly(unit) & 0xff) < 2) {
         if (unit->statuses_to_add_1_4 & 4) {
-            battle_unit_store_animation_facing(0x34, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing(0x34, unit->facing, unit);
         } else if (unit->statuses_to_remove_1_4 & 4) {
-            battle_unit_store_animation_facing(0x35, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing(0x35, unit->facing, unit);
         }
     } else if (unit->statuses_to_add_1_4 & 4) {
-        battle_unit_store_animation_facing_movement_data(0x1a, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(0x1a, unit->facing, unit);
         unit->encoded_animation = 0x34;
         unit->animation_countdown = 0;
     } else if (unit->statuses_to_remove_1_4 & 4) {
-        battle_unit_store_animation_facing_movement_data(9, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(9, unit->facing, unit);
         unit->encoded_animation = 0x12;
         unit->animation_countdown = 0;
     }

@@ -5,6 +5,7 @@ s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
 
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
+        /* The shared ret0/ret1 tails keep the target's block order; plain returns reorder it. */
         goto ret0;
     }
     if (unit->attributes[UNIT_ATTRIBUTE_SPEED] == 0) {

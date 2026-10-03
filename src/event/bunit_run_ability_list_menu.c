@@ -76,7 +76,7 @@ s32 bunit_run_ability_list_menu(void) {
             g_bunit_unit_selected_index, g_bunit_job_selected_id, (s16)category, g_bunit_ability_entries, 0);
         bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_bunit_ability_entries);
         bunit_menu_init_scrollable_list(
-            (s32)g_bunit_ability_entries, selected, scroll, (s32)g_battle_text_section_pointers[14]);
+            g_bunit_ability_entries, selected, scroll, (s32)g_battle_text_section_pointers[14]);
         bunit_gfx_set_transition_frame(10);
     }
     bunit_menu_dispatch_with_override(

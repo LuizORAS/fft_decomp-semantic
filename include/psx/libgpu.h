@@ -711,7 +711,7 @@ typedef struct {
 /* A packet member repeats every 96 bytes; its tail overlaps the next entry's metadata. */
 typedef struct {
     u32 packet_words[21];
-    u32 _unknown_54[3];
+    u32 _padding_54[3]; /* size filler to the 0x60 stride: the next entry's operation, source and argument */
 } psyq_gpu_queue_packet_view_t;
 
 typedef struct {
@@ -873,6 +873,8 @@ typedef enum {
     PSYQ_TMD_PACKET_MODE_MASK = 0xfdffffffU,
 } psyq_tmd_packet_id_e;
 
+/* Raw TMD primitive packets. Each _padding_ halfword is a pad slot of the TMD
+ * format (after u2/v2, after u3/v3, or up to a word boundary) and carries no data. */
 typedef struct {
     u32 id;
     CVECTOR color0;
@@ -903,7 +905,7 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u16 normal0;
     u16 vertex0;
     u16 vertex1;
@@ -920,7 +922,7 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u16 normal0;
     u16 vertex0;
     u16 normal1;
@@ -935,7 +937,7 @@ typedef struct {
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad to a word boundary */
 } psyq_tmd_f3_packet_t;
 
 typedef struct {
@@ -946,7 +948,7 @@ typedef struct {
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_16[2];
+    u8 _padding_16[2]; /* TMD pad to a word boundary */
 } psyq_tmd_g3_packet_t;
 
 typedef struct {
@@ -959,12 +961,12 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     CVECTOR color0;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_1a[2];
+    u8 _padding_1a[2]; /* TMD pad to a word boundary */
 } psyq_tmd_ft3_packet_t;
 
 typedef struct {
@@ -977,14 +979,14 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     CVECTOR color0;
     CVECTOR color1;
     CVECTOR color2;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_22[2];
+    u8 _padding_22[2]; /* TMD pad to a word boundary */
 } psyq_tmd_gt3_packet_t;
 
 typedef struct {
@@ -995,7 +997,7 @@ typedef struct {
     u16 vertex1;
     u16 vertex2;
     u16 vertex3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad to a word boundary */
 } psyq_tmd_f4_lit_packet_t;
 
 typedef struct {
@@ -1021,16 +1023,16 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     u16 normal0;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
     u16 vertex3;
-    u8 _unknown_1e[2];
+    u8 _padding_1e[2]; /* TMD pad to a word boundary */
 } psyq_tmd_ft4_lit_packet_t;
 
 typedef struct {
@@ -1043,10 +1045,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     u16 normal0;
     u16 vertex0;
     u16 normal1;
@@ -1088,10 +1090,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     CVECTOR color0;
     u16 vertex0;
     u16 vertex1;
@@ -1109,10 +1111,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     CVECTOR color0;
     CVECTOR color1;
     CVECTOR color2;

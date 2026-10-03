@@ -102,7 +102,7 @@ typedef struct option_menu_entry {
     u16 vram_x;       /* 0x00 */
     u16 vram_y;       /* 0x02 */
     s16 inner_width;  /* 0x04: rect width * 4 */
-    u16 inner_height; /* 0x06 */
+    s16 inner_height; /* 0x06 */
     u8 _unused_08[0x30 - 0x08];
     option_menu_text_layout_t* text_binding; /* 0x30 */
     u8 _unused_34[6];

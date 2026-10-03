@@ -2,13 +2,16 @@
 
 /* Sort a -1 terminated item list in place (EQUIP twin of world_item_sort_id_list).
  *
- * Entries whose id (low 10 bits) is 0 or >= 0xFE are removed, then the rest
+ * Entries whose id (low 10 bits) is 0 or >= ITEM_ID_END are removed, then the rest
  * are bubble-sorted by the signed-byte criterion list
  * g_equip_item_type_order_lists[mode] (negative ends it): 0 item type (0x13
- * ranks as 100, ascending), 1 price, 2 ranking value (a shield compared with a
- * non-shield ranks 0), 3 physical evade, 4 magic evade, 5 owned count; keys
- * other than 0 sort descending. The magic-evade key reads 0 for the left
- * weapon but the weapon's evade for the right one, as in the target.
+ * ranks as 100, ascending), 1 price, 2 ranking value (an id in 0x7a..0x8f,
+ * throwables and shields, compared with one outside it ranks 0), 3 physical
+ * evade, 4 magic evade, 5 owned count; keys other than 0 sort descending.
+ * The magic-evade key reads 0 for the left weapon but the weapon's evade for
+ * the right one, as in the target. The evade keys index the shield table for
+ * ids 0x7a..0x8f and the accessory table for 0x90..0xef, so throwables,
+ * headgear and body armor read unrelated entries (QUIRKS.md).
  * `diff *= -1` keeps the negation in int on the sign-extended difference, and
  * the offset-first address sum keeps the target's addu operand order. */
 void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
@@ -29,7 +32,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     while (list[count] != -1) {
         entry = (s16*)(count * 2 + (s32)list);
         item_a = *entry & 0x3ff;
-        if (item_a == 0 || item_a >= 0xfe) {
+        if (item_a == 0 || item_a >= ITEM_ID_END) {
             while ((*entry = entry[1]) != -1) {
                 entry++;
             }
@@ -59,23 +62,23 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                 } else if (criterion == 2) {
                     key_a = equip_item_get_ranking_value(item_a);
                 } else if (criterion == 3) {
-                    if (item_a < 0x7a) {
+                    if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = g_main_item_weapon_data[g_main_item_primary_data[item_a].secondary_data_id].evade;
-                    } else if (item_a < 0x90) {
+                    } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
                         key_a = g_main_item_shield_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .physical_evade;
-                    } else if (item_a < 0xf0) {
+                    } else if (item_a < ITEM_ID_CONSUMABLE_FIRST) {
                         key_a = g_main_item_accessory_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .physical_evade;
                     } else {
                         key_a = 0;
                     }
                 } else if (criterion == 4) {
-                    if (item_a < 0x7a) {
+                    if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = 0;
-                    } else if (item_a < 0x90) {
+                    } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
                         key_a = g_main_item_shield_data[g_main_item_primary_data[item_a].secondary_data_id].magic_evade;
-                    } else if (item_a < 0xf0) {
+                    } else if (item_a < ITEM_ID_CONSUMABLE_FIRST) {
                         key_a = g_main_item_accessory_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .magic_evade;
                     } else {
@@ -94,23 +97,23 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                 } else if (criterion == 2) {
                     key_b = equip_item_get_ranking_value(item_b);
                 } else if (criterion == 3) {
-                    if (item_b < 0x7a) {
+                    if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
-                    } else if (item_b < 0x90) {
+                    } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
                         key_b = g_main_item_shield_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .physical_evade;
-                    } else if (item_b < 0xf0) {
+                    } else if (item_b < ITEM_ID_CONSUMABLE_FIRST) {
                         key_b = g_main_item_accessory_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .physical_evade;
                     } else {
                         key_b = 0;
                     }
                 } else if (criterion == 4) {
-                    if (item_b < 0x7a) {
+                    if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
-                    } else if (item_b < 0x90) {
+                    } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
                         key_b = g_main_item_shield_data[g_main_item_primary_data[item_b].secondary_data_id].magic_evade;
-                    } else if (item_b < 0xf0) {
+                    } else if (item_b < ITEM_ID_CONSUMABLE_FIRST) {
                         key_b = g_main_item_accessory_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .magic_evade;
                     } else {
@@ -122,10 +125,10 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                 k++;
                 if (criterion == 2) {
                     diff = 0;
-                    if (item_a >= 0x7a && item_a < 0x90) {
+                    if (item_a >= ITEM_ID_THROWABLE_FIRST && item_a < ITEM_ID_HEADGEAR_FIRST) {
                         diff = 1;
                     }
-                    if (item_b >= 0x7a && item_b < 0x90) {
+                    if (item_b >= ITEM_ID_THROWABLE_FIRST && item_b < ITEM_ID_HEADGEAR_FIRST) {
                         diff |= 2;
                     }
                     if (diff == 1) {

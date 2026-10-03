@@ -40,7 +40,7 @@ s32 battle_move_start_next_post_movement_step(void) {
             battle_gfx_store_item_display_data((battle_gfx_render_unit_t*)source, item);
             animation = 0x39;
         }
-        battle_unit_store_animation_facing_movement_data(animation, (s16)source->facing, source);
+        battle_unit_store_animation_facing_movement_data(animation, source->facing, source);
         if (item == -1) {
             stats = source->battle_data;
             /* The target reads 0x1ba as a halfword for this test; the u8
@@ -91,7 +91,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         g_battle_move_find_display_item
             = *(battle_move_found_item_t*)battle_map_determine_rare_common_item(casting->battle_data);
         battle_gfx_store_item_display_data((battle_gfx_render_unit_t*)source, g_battle_move_find_display_item.item_id);
-        battle_unit_store_animation_facing_movement_data(0x33, (s16)source->facing, source);
+        battle_unit_store_animation_facing_movement_data(0x33, source->facing, source);
         if (!(source->team_flags & BATTLE_TEAM_MASK)) {
             battle_menu_init_system_function(
                 0xf, g_battle_move_find_display_item.item_id, source->battle_data->misc_unit_id, 0, 1);

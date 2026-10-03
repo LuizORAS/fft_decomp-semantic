@@ -42,10 +42,10 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
     battle_unit_save_facing_before_attack(unit);
     unit->facing = (ratan2(-delta.vz, delta.vx) - 0x200) & 0xc00;
     battle_unit_set_tile_position(
-        unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, (s16)unit->facing / 1024);
+        unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
         battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id)->facing = unit->facing;
         battle_unit_set_tile_position(
-            unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, (s16)unit->facing / 1024);
+            unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
     }
 }

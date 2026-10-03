@@ -16,7 +16,6 @@ s32 MoveImage(RECT* rect, s32 x, s32 y) {
     if (!rect->w || !rect->h)
         return -1;
     destination = (u32)y << 16;
-    __asm__("" : "=r"(destination) : "0"(destination)); /* Preserve the original high-half shift before the low mask. */
     low = x & 0xffff;
     destination |= low;
     body = g_psyq_gpu_move_copy_words;
@@ -41,6 +40,5 @@ s32 MoveImage(RECT* rect, s32 x, s32 y) {
     operation = dispatch->ordering_table;
     __asm__("" : "=r"(operation) : "0"(operation) : "$2");
     enqueue = dispatch->enqueue_four;
-    __asm__("" : "=r"(enqueue) : "0"(enqueue));
     return enqueue(operation, body - 2, copy_size, argument);
 }

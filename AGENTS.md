@@ -249,6 +249,11 @@ When a cleanup changes the bytes, look here first.
   the inverted branch.
 - A prologue that copies `$a2` before `$a1` means the loop walks a local copy
   (`p = param;`).
+- A loop built from a backward `goto` has no loop notes, so loop.c neither
+  hoists its constants and addresses nor strength-reduces it; a constant
+  reloaded inside the target's loop body points to one. A run-once
+  `do { } while (0)` emits nothing but weights its references one loop level
+  deeper in register allocation.
 - `switch` emits all compares (a tree under 5 cases, a jump table above), then
   the bodies; an `if` chain puts each body between compares. Write case bodies
   in the target's physical order.

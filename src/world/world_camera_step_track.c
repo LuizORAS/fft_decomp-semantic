@@ -21,9 +21,9 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
     s32 result;
     s32 segment;
     s32 key_value;
-    s32 t0;
-    s32 t1;
-    s32 t2;
+    s32 key0_time;
+    s32 key1_time;
+    s32 key2_time;
     s32 lead;
     s32 time_delta0;
     s32 time_delta1;
@@ -40,12 +40,12 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
 
     if (track->segment_frame == 0) {
         segment = track->segment;
-        t2 = track->keys[segment + 2].time;
-        t1 = track->keys[segment + 1].time;
-        t0 = track->keys[segment].time;
-        span = t2 - t1;
-        lead = t1 - t0;
-        frame = t2 - t0; /* whole two-key span */
+        key2_time = track->keys[segment + 2].time;
+        key1_time = track->keys[segment + 1].time;
+        key0_time = track->keys[segment].time;
+        span = key2_time - key1_time;
+        lead = key1_time - key0_time;
+        frame = key2_time - key0_time; /* whole two-key span */
         if (track->key_count >= 4) {
             if (segment == 0) {
                 track->segment_duration = span / 2 + lead;

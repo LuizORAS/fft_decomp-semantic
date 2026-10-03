@@ -40,43 +40,6 @@ void open_file_wait_then_build_header(
 s32 open_file_get_cd_sync_state_delta(void);
 
 /* input */
-/* One 100-byte state record per controller. The current controller c runs
- * g_open_controller_handlers[g_open_controller_handler_indices[c - 1]] on
- * g_open_controller_records[c]. A push made while the current index is c
- * fills g_open_controller_stream_start[c] (which is records[c + 1]) and
- * stores the new handler id at handler_indices[c]. Only the stream pair is
- * common; the remaining words are handler-specific (the thread-2 controller
- * keeps run_followup / result in the first two words). */
-typedef struct open_controller_record {
-    /* 0x00 */ s32 stream_start;
-    /* 0x04 */ s32 stream_length;
-    /* 0x08 */ s32 _unknown_08;
-    /* 0x0c */ s32 _unknown_0c;
-    /* 0x10 */ s32 _unknown_10;
-    /* 0x14 */ s32 _unknown_14;
-    /* 0x18 */ s32 _unused_18;
-    /* 0x1c */ s32 _unused_1c;
-    /* 0x20 */ s32 _unknown_20; /* birthday date menu: month */
-    /* 0x24 */ s32 _unknown_24; /* birthday date menu: day */
-    /* 0x28 */ s32 _unknown_28; /* birthday date menu: selecting_month */
-    /* 0x2c */ u8 _unused_2c[0x64 - 0x2c];
-} open_controller_record_t;
-typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
-
-/* Field-base view used to read birthday values from 100-byte controller records. */
-typedef struct open_controller_birthday {
-    s32 month;
-    s32 day;
-    u8 _unused_08[0x64 - 8];
-} open_controller_birthday_t;
-
-typedef void (*open_controller_handler_t)(void* record);
-
-extern open_controller_birthday_t g_open_controller_birthdays[];
-extern s32 g_open_controller_handler_indices[];
-extern open_controller_handler_t g_open_controller_handlers[];
-extern open_controller_record_t g_open_controller_records[];
-extern open_controller_record_t g_open_controller_stream_start[];
 extern u32 g_open_input_current_buttons;
 extern s32 g_open_input_direction_counter_2;
 extern s32 g_open_input_direction_counter_3;
@@ -90,14 +53,17 @@ extern volatile u32 g_open_input_new_button_presses;
 extern u32 g_open_input_polled_buttons;
 extern u32 g_open_input_previous_buttons;
 extern s32 g_open_input_up_repeat_counter;
-extern s32 g_open_controller_flags[];
-void open_controller_dispatch_current(void);
-void open_controller_start_text_message(s32 parameter, s32 run_followup);
 u32 open_input_check_repeating_directional(u32 buttons);
 void open_input_init_directional_state(void);
 void open_input_update_buttons_and_check_game_reset(void);
 
 /* movie */
+/* Movie controllers' view (handlers 0, 1, 9 and 11). */
+typedef struct open_movie_stream_controller_state {
+    s32 start_sector;
+    s32 stream_length;
+} open_movie_stream_controller_state_t;
+
 /* Shared VLC/MDEC state used by OPEN.BIN's movie-stream pipeline. */
 typedef struct open_movie_mdec_stream_state {
     void* vlc_buffers[2];    /* 0x00 */
@@ -146,7 +112,7 @@ void open_movie_init_stream(s32 sector, void* output_callback);
 void open_movie_pause_cd_audio(void);
 void open_movie_play_end(void);
 void open_movie_present_frame(void);
-void open_movie_start_cd_stream_read(const void* location);
+void open_movie_start_cd_stream_read(const CdlLOC* location);
 void open_movie_start_fftst_or_alternate_controller(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 sound_type);
@@ -279,7 +245,9 @@ extern u8 g_open_birthday_window_image[];
  * ({3, 21}, {4, 20}, ...). open_birthday_convert_to_zodiac_position indexes
  * it flat ([i * 2], [i * 2 + 1]), and it is not const: that routine reloads a
  * day after storing through its month pointer. */
-extern u8 g_open_birthday_zodiac_months[ZODIAC_SIGN_ORDINARY_COUNT * 2];
+/* {month, day} start of each sign, the same table as g_wldcore_zodiac_start_dates;
+ * indexed flat because the [12][2] spelling changes the reader's code. */
+extern u8 g_open_birthday_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
 void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* menu);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
@@ -315,6 +283,16 @@ void open_menu_update_world_formation(void);
 void open_menu_push_sound_type_controller(void);
 
 /* sound */
+/* Controller 7 (hidden Music Test menu) state, pushed by
+ * open_menu_start_music_test_controller. */
+typedef struct open_menu_sound_test_state {
+    /* 0x00 */ s32 music_id;     /* scenario music selected for playback */
+    /* 0x04 */ s32 delay;        /* frames before loading music_id */
+    /* 0x08 */ s32 music_slot;   /* slot from main_sound_open_music_into_free_slot */
+    /* 0x0c */ s32 step;         /* 0 idle, 1 exiting, 2 fading out, 3 starting track, 4 opening */
+    /* 0x10 */ s32 blink_frames; /* formation-mask blink after a selection */
+} open_menu_sound_test_state_t;
+
 /* Sound-type menu controller state (handler 3). */
 typedef struct open_sound_menu_state {
     /* 0x00 */ s32 render_records[7];
@@ -456,11 +434,83 @@ void open_script_update_screen_fade(void);
 void open_script_update_timing_and_record_values(void);
 
 /* title */
+/* Title menu controller (handler 2). */
+typedef struct open_title_controller {
+    /* 0x00 */ s32 header_record_36;
+    /* 0x04 */ s32 option_records_36[4];
+    /* 0x14 */ s32 idle_timer;
+    /* 0x18 */ s32 cd_end_position;
+    /* 0x1c */ s32 cursor;
+    /* 0x20 */ s32 state;
+    /* 0x24 */ s32 _unused_24[3];
+    /* 0x30 */ s32 exit_timer;
+    /* 0x34 */ s32 exiting;
+    /* 0x38 */ u8 _unused_38[0x64 - 0x38];
+} open_title_controller_t;
+
+/* New-game start controller (handler 4). */
+typedef struct open_title_new_game_state {
+    /* 0x00 */ u8 _unused_00[0x10];
+    /* 0x10 */ s32 step;
+    /* 0x14 */ u8 _unused_14[0x0c];
+    /* 0x20 */ s32 name_text_id;
+} open_title_new_game_state_t;
+
+/* Title exit controller (handler 12). */
+typedef struct open_title_exit_state {
+    s32 state;
+} open_title_exit_state_t;
+
 extern s32 g_open_title_demo_movie_index;
 void open_title_push_menu_controller(s32 argument);
 void open_title_init_new_game_party(s32 party_mode, s32 world_load_mode);
 void open_title_start_new_game_transition(void);
 void open_title_start_new_game_or_clear_file_buffer(void);
+
+/* controller */
+/* Text-message controller (handler 8): whether to restore the text section
+ * pointers afterwards, and the formation entry mask to restore. */
+typedef struct open_controller_thread_completion {
+    s32 run_followup;
+    s32 saved_formation_entry_mask;
+} open_controller_thread_completion_t;
+
+/* One 100-byte state record per controller. The current controller c runs
+ * g_open_controller_handlers[g_open_controller_handler_indices[c - 1]] on
+ * g_open_controller_records[c]. A push made while the current index is c
+ * fills g_open_controller_stream_start[c] (which is records[c + 1]) and
+ * stores the new handler id at handler_indices[c]; that id picks the view. */
+typedef union open_controller_record {
+    open_movie_stream_controller_state_t movie;               /* handlers 0, 1, 9, 11 */
+    open_title_controller_t title;                            /* 2 */
+    open_sound_menu_state_t sound_menu;                       /* 3 */
+    open_title_new_game_state_t new_game;                     /* 4 */
+    open_birthday_date_state_t birthday_date;                 /* 5 */
+    open_birthday_confirmation_state_t birthday_confirmation; /* 6 */
+    open_menu_sound_test_state_t sound_test;                  /* 7 */
+    open_controller_thread_completion_t text_message;         /* 8 */
+    open_title_exit_state_t title_exit;                       /* 12 */
+    u8 raw[0x64];
+} open_controller_record_t;
+typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
+
+/* Field-base view used to read birthday values from 100-byte controller records. */
+typedef struct open_controller_birthday {
+    s32 month;
+    s32 day;
+    u8 _unused_08[0x64 - 8];
+} open_controller_birthday_t;
+
+typedef void (*open_controller_handler_t)(void* record);
+
+extern open_controller_birthday_t g_open_controller_birthdays[];
+extern s32 g_open_controller_handler_indices[];
+extern open_controller_handler_t g_open_controller_handlers[];
+extern open_controller_record_t g_open_controller_records[];
+extern open_controller_record_t g_open_controller_stream_start[];
+extern s32 g_open_controller_flags[];
+void open_controller_dispatch_current(void);
+void open_controller_start_text_message(s32 parameter, s32 run_followup);
 
 /* gfx */
 /* Image transition script entry: a header word (bits 0-7 step count, bits
@@ -619,13 +669,13 @@ extern volatile u32* g_open_dma_mdec_in_bcr;
 extern volatile u32* g_open_dma_mdec_in_chcr;
 s32 open_bin_decdctbufsize(const u16* bs);
 void open_bin_decdctin(s32* packet, s32 mode);
-void open_bin_decdctout(u32 command, u32 words);
+void open_bin_decdctout(u32 buf, u32 size);
 void open_bin_decdctoutcallback(void* callback);
 void open_bin_decdctreset(s32 mode);
 s32 open_bin_libpress_timeout(const char* operation);
-void open_bin_mdec_in(u32* packet, u32 g_main_save_word_flags);
+void open_bin_mdec_in(u32* buf, u32 size);
 s32 open_bin_mdec_in_sync(void);
-void open_bin_mdec_out(u32 command, u32 g_main_save_word_flags);
+void open_bin_mdec_out(u32 buf, u32 size);
 s32 open_bin_mdec_out_sync(void);
 void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
 void open_noop_8006d7ec(void);

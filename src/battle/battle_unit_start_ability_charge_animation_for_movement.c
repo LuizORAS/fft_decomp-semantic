@@ -14,7 +14,6 @@ void battle_unit_start_ability_charge_animation_for_movement(battle_unit_misc_da
         if (movement_type < 2) {
             selected_animation = animation;
         }
-        /* facing is read signed (lh) here. */
-        battle_unit_store_animation_facing(selected_animation, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(selected_animation, unit->facing, unit);
     }
 }

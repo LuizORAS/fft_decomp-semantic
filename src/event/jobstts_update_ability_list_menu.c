@@ -41,7 +41,7 @@ s32 jobstts_update_ability_list_menu(void) {
         rect.h = 0x10;
         g_jobstts_ability_list_job_name_ids[0] = g_jobstts_job_selected_id;
         jobstts_text_render_id_rows_to_vram(
-            (s32)g_battle_text_section_pointers[6], g_jobstts_ability_list_job_name_ids, &rect, 0);
+            g_battle_text_section_pointers[6], g_jobstts_ability_list_job_name_ids, &rect, 0);
         g_jobstts_ability_category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, 0);
         jobstts_ability_build_list(
             0, g_jobstts_job_selected_id & 0x3ff, g_jobstts_ability_category, g_jobstts_ability_entries, 0);

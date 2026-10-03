@@ -53,5 +53,5 @@ void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s
             backdrop_rgb, 0, 1, ot_index + 2);
         rgb = g_world_formation_away_unit_color;
     }
-    world_formation_draw_sprite_with_shadow((world_gfx_sprite_desc_t*)&sprite, (s32)rgb, ot_index);
+    world_formation_draw_sprite_with_shadow((world_gfx_sprite_desc_t*)&sprite, rgb, ot_index);
 }
