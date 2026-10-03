@@ -100,12 +100,13 @@ type codebaseIndex struct {
 	enumerators map[string]string // enumerator -> its named enum type, when it has one
 	macros      map[string]mapMacro
 
-	identifiers      map[string]bool   // every identifier the code spells, outside comments
-	files            map[string]bool   // repo-relative paths under src/ and include/
-	fileNames        map[string]bool   // base names of those files
-	functionBySource map[string]string // source path -> function
-	headerText       map[string]string
-	commentsSeen     map[string]bool // sources whose comments were collected
+	identifiers       map[string]bool   // every identifier the code spells, outside comments
+	sortedIdentifiers []string          // identifiers, sorted on first use for prefix searches
+	files             map[string]bool   // repo-relative paths under src/ and include/
+	fileNames         map[string]bool   // base names of those files
+	functionBySource  map[string]string // source path -> function
+	headerText        map[string]string
+	commentsSeen      map[string]bool // sources whose comments were collected
 
 	comments   []mapComment
 	quirksText string

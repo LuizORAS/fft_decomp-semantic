@@ -454,8 +454,8 @@ void world_sound_edit_bg_thread(void);
 
 /* status */
 /* Per-frame status panel primitive block (0x3d8 bytes), double buffered at
- * 0x801c3d8c and 0x801c453c. Same layout as attack_status_primitives_t in the
- * ATTACK twin. */
+ * 0x801c3d8c and 0x801c453c. Same layout as battle_menu_status_panel_buffer_t,
+ * the type of the ATTACK copy (g_attack_panel_frames_a). */
 typedef struct world_status_frame {
     DR_MODE draw_modes[3];                                  /* 0x000 */
     SPRT sprites[24];                                       /* 0x024 */
@@ -2081,7 +2081,7 @@ extern world_status_frame_t g_world_stat_preview_panel_frames[2];
 extern world_unit_editor_panel_data_t g_world_unit_editor_panel_data;
 
 /* The comparison unit's flag and label_text_ids[2], copied by
- * world_gfx_init_screen_setup_2 from its editor load into the second 0x40-byte
+ * world_menu_preview_attack_target_stats from its editor load into the second 0x40-byte
  * editor record (0x8013a3c4; this view starts at its +0x0e). */
 extern world_unit_editor_panel_data_t g_world_unit_comparison_editor_panel_data;
 extern u32 g_world_companion_overlay_state;
@@ -3225,7 +3225,7 @@ typedef struct world_card_save_buffer {
     /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];   /* 0x1884 */
-    game_options_fields_t options; /* 0x1c84; copied to g_main_game_options by world_card_init_screen */
+    game_options_fields_t options; /* 0x1c84; to g_main_game_options in world_card_load_globals_from_save_image */
     u8 _unknown_1c88;              /* 0x1c88; D_80057b1c */
     s8 item_type_order_0[0xc];     /* 0x1c89; signed, -1-terminated */
     u8 _unused_1c95[1];            /* 0x1c95; serialized and parity-covered */

@@ -558,7 +558,7 @@ typedef enum wldcore_script_request_flags {
 
 /* WLDCORE script interpreter state; the opcode handlers read ip/data here.
  * One object through the choice/argument words:
- * wldcore_opcode_read_four_halfword_pairs reaches ip at -4 and the choice
+ * wldcore_opcode_load_choice_arguments reaches ip at -4 and the choice
  * values at +0x10 from its &choice_vars base. */
 typedef struct wldcore_script_state {
     s32 flags;          /* 0x00 */

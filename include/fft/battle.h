@@ -1646,7 +1646,7 @@ typedef char
 /*
  * Header of a 0x440-byte sprite display slot (unit, weapon, item, numeric and
  * status-bubble displays all share it).  The battle_gfx_sprite_part_display_data_t records
- * start at 0x0e; battle_initialize_*_sprite_display fill in the header.
+ * start at 0x0e; battle_gfx_init_*_sprite_display fill in the header.
  */
 typedef struct battle_gfx_sprite_display_data {
     u8 red;             /* 0x00 */
@@ -1789,8 +1789,8 @@ typedef struct battle_unit_misc_data {
     u8 _unused_068[4];       /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256,
      * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
-     * read as signed halfwords by battle_get_alternate_facing_quadrant_* (% 4) and
-     * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
+     * read as signed halfwords by battle_unit_get_camera_facing_quadrant_by_misc_id
+     * and _by_battle_id (% 4) and battle_unit_get_camera_facing_sixteenth_by_misc_id (% 0x10). */
     battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
     battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
     s16 facing;                                          /* 0x070; angle, 0x1000 per turn (0x400 per quadrant) */
@@ -1856,7 +1856,7 @@ typedef struct battle_unit_misc_data {
     u32 statuses_to_remove_1_4;                /* 0x150 */
     u32 statuses_to_remove_5_6;                /* 0x154 */
     battle_unit_command_state_t command_state; /* 0x158..0x16f */
-    s32 sp2_ability_id;                        /* 0x170: ability whose SP2 file battle_open_sp2 loads */
+    s32 sp2_ability_id;                        /* 0x170: ability whose SP2 file battle_gfx_open_sp2_file loads */
     s32 ability_preview_phase;                 /* 0x174: ability preview branch selector */
     /* 0x178; battle_target_calculate_for_menu_types result stored by
      * battle_target_select_tile: 0/1 preview, 2 stop, -1 back to the menu. */
@@ -1865,7 +1865,7 @@ typedef struct battle_unit_misc_data {
     s32 pending_attack_result; /* 0x180: attack result code; -1 signals death */
     /* Death-by-dismount destination (Miscellaneous unit_t Data 0x184/0x186/
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
-     * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
+     * map_x/map_z/map_y.  battle_unit_update_attack_result_animation passes &dismount. */
     battle_dismount_coords_t dismount; /* 0x184 */
     u8 _unused_18a[2];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
     /* Current action data, 0x18c..0x1d7. */

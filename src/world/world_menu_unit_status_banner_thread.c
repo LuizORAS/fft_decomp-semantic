@@ -5,7 +5,7 @@
 
 /* Provisional 0x30C-byte unit-summary primitive packet, doubled back to back
  * at 0x801C0584 (thread 8) and 0x801C0F4C (other). Same layout as the EVENT
- * DEBUGCHR twin's debugchr_editor_packet_t. */
+ * DEBUGCHR twin's type, battle_menu_status_panel_editor_packet_t. */
 typedef struct world_formation_summary_packet {
     world_menu_palette_primitives_t frame; /* 0x000: world_menu_build_line_box */
     /* Legacy decompilation placeholder, kept as a note:
@@ -22,7 +22,7 @@ typedef struct world_formation_summary_packet {
 } world_formation_summary_packet_t;
 
 /* Provisional 0x1D8-byte status-panel packet, doubled at 0x801C0B9C (thread 8)
- * and 0x801C1564 (other). DEBUGCHR twin: debugchr_panel_packet_t. */
+ * and 0x801C1564 (other). DEBUGCHR twin: battle_menu_status_panel_packet_t. */
 typedef struct world_formation_status_packet {
     world_menu_palette_primitives_t frame; /* 0x000 */
     /* Legacy zero-length unknown_frame_tail placeholder, as in

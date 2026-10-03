@@ -769,7 +769,7 @@ typedef enum text_format_code {
 } text_format_code_e;
 
 /* Provisional: text-stream cursor state shared by the two WORLD copies of
- * the back-reference cursor stepper (battle twin: 0x80130718). world_measure_text
+ * the back-reference cursor stepper (battle twin: 0x80130718). world_text_measure
  * keeps it in the scratchpad at 0x1f800000 and names the remaining fields. */
 typedef struct world_text_backreference_state {
     s32 command;         /* 0x00; current text byte */
@@ -783,7 +783,7 @@ typedef struct world_text_backreference_state {
     u8 _unused_20[4];
     s32* value_cursor; /* 0x24; next substitution value */
     s32 pending_width; /* 0x28; explicit digit width from 0xE8, 0xFFFF when none */
-    s32 glyph_page;    /* 0x2c; pending 0xDx page-prefix byte, 0 otherwise (world_measure_text_pixels) */
+    s32 glyph_page;    /* 0x2c; pending 0xDx page-prefix byte, 0 otherwise (world_text_measure_pixels) */
 } world_text_backreference_state_t;
 
 /* Dialog record handed to world_menu_render_text_image_at_record_origin;

@@ -53,7 +53,7 @@ func testMapProject(t *testing.T) project {
 		"src/main/main_first.c":      "#include \"fft/main.h\"\n\n/* Runs the second routine through a macro\n * and reads the record. */\nvoid main_first(void) {\n    g_main_value.value = MAIN_MODE_RUN;\n    MAIN_CALL_SECOND();\n}\n",
 		"src/main/main_second.c":     "#include \"fft/main.h\"\n\n/* Not a summary: a define follows. */\n#define LOCAL_STEP 1\nvoid main_second(void) { battle_helper(); }\n",
 		"src/event/attack_entry.c":   "void attack_entry(void) {\n    void (*handler)(void) = main_second;\n    s32 value = g_battle_value;\n    handler();\n}\n",
-		"src/event/card_entry.c":     "/* Port debt (QUIRKS.md): the old card_old_name\n * read a stale register. */\nvoid card_entry(void) {}\n",
+		"src/event/card_entry.c":     "/* Port debt (QUIRKS.md): the old card_old_name\n * read a stale register (see main_fi* and card_gone_*). */\nvoid card_entry(void) {}\n",
 		"src/battle/battle_helper.c": "/* main 0x80067000; layout note */\nvoid battle_helper(void) {}\n",
 		"QUIRKS.md":                  testMapQuirks,
 	})
@@ -108,7 +108,7 @@ func TestCodebaseMapQuirksDebtsAndStale(t *testing.T) {
 	for _, entry := range index.stale {
 		stale = append(stale, entry.name)
 	}
-	if !reflect.DeepEqual(stale, []string{"main_missing_name", "card_old_name"}) {
+	if !reflect.DeepEqual(stale, []string{"main_missing_name", "card_old_name", "card_gone_*"}) {
 		t.Fatalf("stale = %v", stale)
 	}
 
@@ -120,7 +120,7 @@ func TestCodebaseMapQuirksDebtsAndStale(t *testing.T) {
 	if !strings.Contains(section, "- [[main_first]]: writes [[g_main_value]] in [[main_first|src/main/main_first.c]];") {
 		t.Fatalf("section page:\n%s", section)
 	}
-	if !strings.Contains(pages["functions/event/card_entry.md"], "- **Port debt**, line 1: Port debt (QUIRKS.md): the old card_old_name read a stale register.") {
+	if !strings.Contains(pages["functions/event/card_entry.md"], "- **Port debt**, line 1: Port debt (QUIRKS.md): the old card_old_name read a stale register (see main_fi* and card_gone_*).") {
 		t.Fatalf("card_entry page:\n%s", pages["functions/event/card_entry.md"])
 	}
 	if !strings.Contains(pages["globals/fft/main/g_main_value.md"], "## Quirks (1)") {

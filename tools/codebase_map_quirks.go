@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -57,7 +58,9 @@ var (
 	mapBacktickPattern = regexp.MustCompile("`([^`]+)`")
 	mapDebtPattern     = regexp.MustCompile(`\b(Type|Port) debt\b`)
 	// mapSymbolPattern finds project symbol names written in prose.
-	mapSymbolPattern  = regexp.MustCompile(`\b(?:g_|D_)?(?:battle|world|wldcore|main|open|effect|attack|bunit|card|debugchr|equip|etc|helpmenu|jobstts|option|require|small)_[a-z0-9_]*[a-z0-9]\b(?:\.[ch]\b)?`)
+	mapSymbolPattern = regexp.MustCompile(`\b(?:g_|D_)?(?:battle|world|wldcore|main|open|effect|attack|bunit|card|debugchr|equip|etc|helpmenu|jobstts|option|require|small)_[a-z0-9_]*[a-z0-9]\b(?:\.[ch]\b)?`)
+	// mapFamilyPattern finds a family of names written as a prefix and `*`.
+	mapFamilyPattern  = regexp.MustCompile(`\b(?:g_|D_)?(?:battle|world|wldcore|main|open|effect|attack|bunit|card|debugchr|equip|etc|helpmenu|jobstts|option|require|small)_[a-z0-9_]*\*`)
 	mapIdentifierText = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*$`)
 	mapWordPattern    = regexp.MustCompile(`\b(?:[A-Za-z_][A-Za-z0-9_]{3,}|0x[0-9a-fA-F]{2,})\b`)
 )
@@ -226,7 +229,7 @@ func (index *codebaseIndex) resolveQuirk(quirk *mapQuirk) {
 	for _, match := range mapBacktickPattern.FindAllStringSubmatch(quirk.text, -1) {
 		mentions = append(mentions, match[1])
 	}
-	mentions = append(mentions, mapSymbolPattern.FindAllString(mapBacktickPattern.ReplaceAllString(quirk.text, " "), -1)...)
+	mentions = append(mentions, symbolMentions(mapBacktickPattern.ReplaceAllString(quirk.text, " "))...)
 	for _, mention := range mentions {
 		if seen[mention] {
 			continue
@@ -258,6 +261,11 @@ func (index *codebaseIndex) collectDebtsAndStale() {
 			for _, name := range quirk.missing {
 				index.stale = append(index.stale, mapStale{path: mapQuirksFile, line: quirk.line, name: name, why: "QUIRKS.md names it, but nothing in the code does"})
 			}
+			for _, family := range mapFamilyPattern.FindAllString(quirk.text, -1) {
+				if !strings.Contains(family, "NNN") && !index.hasIdentifierPrefix(strings.TrimSuffix(family, "*")) {
+					index.stale = append(index.stale, mapStale{path: mapQuirksFile, line: quirk.line, name: family, why: "QUIRKS.md names this family, but no name in the code starts that way"})
+				}
+			}
 		}
 	}
 	for _, comment := range index.comments {
@@ -268,9 +276,14 @@ func (index *codebaseIndex) collectDebtsAndStale() {
 				f.debts = append(f.debts, mapDebt{kind: strings.ToLower(match[1]), comment: comment})
 			}
 		}
-		for _, name := range mapSymbolPattern.FindAllString(comment.text, -1) {
+		for _, name := range symbolMentions(comment.text) {
 			if _, exists, ok := index.resolveMention(name); ok && !exists {
 				index.stale = append(index.stale, mapStale{path: comment.path, line: comment.line, name: name, why: "a comment names it, but nothing in the code does"})
+			}
+		}
+		for _, family := range mapFamilyPattern.FindAllString(comment.text, -1) {
+			if !strings.Contains(family, "NNN") && !index.hasIdentifierPrefix(strings.TrimSuffix(family, "*")) {
+				index.stale = append(index.stale, mapStale{path: comment.path, line: comment.line, name: family, why: "a comment names this family, but no name in the code starts that way"})
 			}
 		}
 		if strings.Contains(comment.text, "QUIRKS") && index.quirksText != "" && !index.quirksCovers(comment) {
@@ -309,6 +322,29 @@ func (index *codebaseIndex) quirksCovers(comment mapComment) bool {
 		}
 	}
 	return false
+}
+
+// symbolMentions returns the project symbol names written in prose, leaving
+// out a prefix followed by `*`, which names a family (mapFamilyPattern).
+func symbolMentions(text string) []string {
+	var names []string
+	for _, match := range mapSymbolPattern.FindAllStringIndex(text, -1) {
+		if match[1] < len(text) && text[match[1]] == '*' {
+			continue
+		}
+		names = append(names, text[match[0]:match[1]])
+	}
+	return names
+}
+
+// hasIdentifierPrefix reports whether any identifier the code spells starts
+// with prefix.
+func (index *codebaseIndex) hasIdentifierPrefix(prefix string) bool {
+	if index.sortedIdentifiers == nil {
+		index.sortedIdentifiers = sortedKeys(index.identifiers)
+	}
+	position := sort.SearchStrings(index.sortedIdentifiers, prefix)
+	return position < len(index.sortedIdentifiers) && strings.HasPrefix(index.sortedIdentifiers[position], prefix)
 }
 
 func mapCommentSubject(comment mapComment) string {

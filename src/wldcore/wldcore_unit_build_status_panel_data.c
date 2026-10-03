@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Provisional: gauge view of g_world_selected_unit_stat_summary, laid out as
- * attack_status_gauges_t. */
+ * world_unit_status_billboard_t. */
 typedef struct wldcore_unit_status_gauges {
     s16 level;      /* 0x00 */
     s16 team_state; /* 0x02 */

@@ -142,7 +142,7 @@ typedef struct open_point32 {
 
 /* Render records. open_gfx_draw_render_record_pointer_list dispatches on flags bit 0
  * (36-byte record) or bit 1 (56-byte record); bit 4 marks a visible record.
- * Both pools hold 16 entries, allocated by the open_append_render_record_*
+ * Both pools hold 16 entries, allocated by the open_gfx_append_render_record_*
  * counters. */
 typedef struct open_render_record_36 {
     /* 0x00 */ u32 flags;
@@ -406,9 +406,9 @@ typedef char open_script_state_size_must_be_0x16a8[(sizeof(open_script_state_t) 
 extern open_script_state_t g_open_script_state;
 extern open_font_metrics_t* g_open_script_font_metrics;
 
-/* Scalar views of g_open_script_state words. open_opcode_store_s16_and_advance,
- * open_script_update_timing_and_record_values and
- * open_gfx_update_opntex_sequence load and store each of these by absolute
+/* Scalar views of g_open_script_state words. open_opcode_set_timing_step
+ * (byte_offset) and open_script_update_timing_and_record_values
+ * (timing_fraction, external_counter) load and store them by absolute
  * address; the member spelling lets cse keep the address in a register. */
 extern s32 g_open_script_byte_offset;      /* dispatch.byte_offset */
 extern s32 g_open_script_timing_fraction;  /* dispatch.timing_fraction */
@@ -564,7 +564,7 @@ typedef struct open_sprite_actor {
 typedef char open_sprite_actor_size_must_be_0x24[(sizeof(open_sprite_actor_t) == 0x24) ? 1 : -1];
 
 /* Double-buffered draw/display environments at 0x800851c0, one pair per
- * frame buffer (0x70 bytes each); open_initialize_screen_environments fills
+ * frame buffer (0x70 bytes each); open_gfx_init_screen_environments fills
  * both and the movie presenter flips between them. */
 typedef struct open_screen_environment {
     DRAWENV draw; /* 0x00 */
