@@ -213,6 +213,10 @@ func (index *codebaseIndex) resolveMention(text string) (key string, exists bool
 		return "global:" + text, true, true
 	case index.types[text] != nil:
 		return "type:" + text, true, true
+	case index.interior[text] != "":
+		return "function:" + index.interior[text], true, true
+	case index.regionByName[text] != nil:
+		return index.regionByName[text].key(), true, true
 	}
 	_, enumerator := index.enumerators[text]
 	exists = index.identifiers[text] || enumerator

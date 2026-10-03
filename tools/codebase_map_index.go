@@ -36,6 +36,7 @@ type mapFunction struct {
 	calls, references, globals, types []string
 	calledBy, referencedBy            []string
 
+	locals []string    // parameter and block-level local names
 	quirks []*mapQuirk // QUIRKS.md entries that name it
 	debts  []mapDebt   // "Type debt" / "Port debt" comments in its source
 }
@@ -85,8 +86,9 @@ type mapHeader struct {
 }
 
 type mapLabel struct {
-	line int
-	name string
+	line    int
+	name    string
+	purpose bool // a block comment follows the label line
 }
 
 // codebaseIndex is everything the map pages are rendered from.
@@ -100,11 +102,14 @@ type codebaseIndex struct {
 	enumerators map[string]string // enumerator -> its named enum type, when it has one
 	macros      map[string]mapMacro
 
-	identifiers       map[string]bool   // every identifier the code spells, outside comments
-	sortedIdentifiers []string          // identifiers, sorted on first use for prefix searches
-	files             map[string]bool   // repo-relative paths under src/ and include/
-	fileNames         map[string]bool   // base names of those files
-	functionBySource  map[string]string // source path -> function
+	interior          map[string]string     // data name inside a function's bytes -> that function
+	regions           []*mapRegion          // target/ regions kept as original bytes, but interiors
+	regionByName      map[string]*mapRegion // data names starting or inside a routine region with a page
+	identifiers       map[string]bool       // every identifier the code spells, outside comments
+	sortedIdentifiers []string              // identifiers, sorted on first use for prefix searches
+	files             map[string]bool       // repo-relative paths under src/ and include/
+	fileNames         map[string]bool       // base names of those files
+	functionBySource  map[string]string     // source path -> function
 	headerText        map[string]string
 	commentsSeen      map[string]bool // sources whose comments were collected
 
@@ -135,6 +140,8 @@ func buildCodebaseIndex(p project, config *projectConfig) (*codebaseIndex, error
 		enumerators: map[string]string{},
 		macros:      map[string]mapMacro{},
 
+		interior:         map[string]string{},
+		regionByName:     map[string]*mapRegion{},
 		identifiers:      map[string]bool{},
 		files:            map[string]bool{},
 		fileNames:        map[string]bool{},
@@ -150,6 +157,7 @@ func buildCodebaseIndex(p project, config *projectConfig) (*codebaseIndex, error
 	}
 	index.addConfigFunctions()
 	index.addDataAddresses()
+	index.scanRegions()
 	for _, name := range sortedKeys(index.functions) {
 		if err := index.scanFunction(p.root, index.functions[name]); err != nil {
 			return nil, err
@@ -229,7 +237,20 @@ func (index *codebaseIndex) addConfigFunctions() {
 // never names.
 func (index *codebaseIndex) addDataAddresses() {
 	for _, m := range index.config.Modules {
+		functions := append([]functionSpec(nil), m.Functions...)
+		sort.Slice(functions, func(i, j int) bool { return functions[i].Addr < functions[j].Addr })
 		for _, data := range m.Data {
+			// A data name inside a function's bytes is an interior entry
+			// point of that function.
+			position := sort.Search(len(functions), func(i int) bool { return functions[i].Addr > data.Addr }) - 1
+			if position >= 0 {
+				f := functions[position]
+				if data.Addr > f.Addr && data.Addr < f.Addr+uint32(f.Size) && index.functions[data.Name] == nil {
+					if _, seen := index.interior[data.Name]; !seen {
+						index.interior[data.Name] = f.Name
+					}
+				}
+			}
 			index.identifiers[data.Name] = true
 			if global := index.globals[data.Name]; global != nil {
 				global.addresses = append(global.addresses, mapAddress{module: m.ID, addr: data.Addr})
@@ -305,7 +326,9 @@ func (index *codebaseIndex) scanHeader(path, source string) error {
 	index.headerText[path] = source
 	lines := newLineIndex(source)
 	for _, match := range mapLabelPattern.FindAllStringSubmatchIndex(source, -1) {
-		header.labels = append(header.labels, mapLabel{line: lines.line(match[0]), name: source[match[2]:match[3]]})
+		header.labels = append(header.labels, mapLabel{
+			line: lines.line(match[0]), name: source[match[2]:match[3]], purpose: blockPurposeComment(source[match[1]:]),
+		})
 	}
 	index.addMacros(scanMacros(source))
 	tokens, err := tokenizeC(source)
@@ -425,6 +448,22 @@ func (index *codebaseIndex) recordType(source string, statement []cToken, site f
 	index.headers[at.header].types = append(index.headers[at.header].types, name)
 }
 
+// blockPurposeComment reports whether the text after a label line opens with
+// a standalone block comment (followed by a blank line) rather than the
+// comment of the block's first declaration.
+func blockPurposeComment(after string) bool {
+	after = strings.TrimLeft(after, " \t\r\n")
+	if !strings.HasPrefix(after, "/*") {
+		return false
+	}
+	end := strings.Index(after, "*/")
+	if end < 0 {
+		return false
+	}
+	rest := strings.TrimLeft(after[end+2:], " \t\r")
+	return strings.HasPrefix(rest, "\n\n") || strings.HasPrefix(rest, "\n\r\n")
+}
+
 // addMacros indexes header macros; their names and body identifiers count as
 // names the code spells.
 func (index *codebaseIndex) addMacros(macros map[string]mapMacro) {
@@ -529,6 +568,7 @@ func (index *codebaseIndex) scanFunction(root string, f *mapFunction) error {
 		headerEnd := tokens[start+len(statement)-1].end
 		f.signature = strings.Join(strings.Fields(f.text[tokens[start].start:headerEnd]), " ")
 		index.classify(f, tokens[start:next], localMacros)
+		f.locals = index.declaredNames(f, tokens[start:next])
 		return nil
 	}
 	return fmt.Errorf("%s: no definition of %s", f.source, f.name)
@@ -557,7 +597,7 @@ func (index *codebaseIndex) classify(f *mapFunction, tokens []cToken, localMacro
 	var visit func(name string, call bool, depth int)
 	visit = func(name string, call bool, depth int) {
 		switch {
-		case index.functions[name] != nil:
+		case index.functions[name] != nil || index.regionByName[name] != nil:
 			if call {
 				calls[name] = true
 			} else {
@@ -609,10 +649,20 @@ func (index *codebaseIndex) linkUsers() {
 	for _, name := range sortedKeys(index.functions) {
 		f := index.functions[name]
 		for _, callee := range f.calls {
-			index.functions[callee].calledBy = append(index.functions[callee].calledBy, name)
+			if target := index.functions[callee]; target != nil {
+				target.calledBy = append(target.calledBy, name)
+			} else {
+				region := index.regionByName[callee]
+				region.calledBy = appendUnique(region.calledBy, name)
+			}
 		}
 		for _, callee := range f.references {
-			index.functions[callee].referencedBy = append(index.functions[callee].referencedBy, name)
+			if target := index.functions[callee]; target != nil {
+				target.referencedBy = append(target.referencedBy, name)
+			} else {
+				region := index.regionByName[callee]
+				region.referencedBy = appendUnique(region.referencedBy, name)
+			}
 		}
 		for _, global := range f.globals {
 			index.globals[global].users = append(index.globals[global].users, name)

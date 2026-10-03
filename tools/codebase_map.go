@@ -91,6 +91,17 @@ func writeMapVault(target string, pages map[string]string) error {
 		if err := os.Rename(settings, filepath.Join(staging, ".obsidian")); err != nil {
 			return err
 		}
+	} else {
+		// A new vault starts from the core-feature configuration.
+		for _, name := range sortedKeys(mapObsidianSeed) {
+			full := filepath.Join(staging, ".obsidian", name)
+			if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+				return err
+			}
+			if err := os.WriteFile(full, []byte(mapObsidianSeed[name]), 0o644); err != nil {
+				return err
+			}
+		}
 	}
 	if err := os.RemoveAll(target); err != nil {
 		return err
@@ -135,11 +146,17 @@ func newMapVault(index *codebaseIndex) *mapVault {
 	for _, m := range index.config.Modules {
 		vault.assign("module:"+m.ID, m.ID+" (module)", "module", "modules")
 	}
+	for _, region := range index.regions {
+		if key := region.key(); key != "" {
+			vault.assign(key, region.name, "region", "regions/"+region.module)
+		}
+	}
 	for _, section := range index.quirks {
 		vault.assign("quirks:"+section.title, section.title, "quirks", "quirks")
 	}
 	vault.assign("report:backlog", mapBacklogPage, "report", "reports")
 	vault.assign("report:stale", mapStalePage, "report", "reports")
+	vault.assign("report:metrics", mapMetricsPage, "report", "reports")
 	return vault
 }
 
@@ -225,11 +242,21 @@ func (vault *mapVault) render() map[string]string {
 	for _, m := range index.config.Modules {
 		pages[vault.paths["module:"+m.ID]] = vault.modulePage(m)
 	}
+	for _, region := range index.regions {
+		if key := region.key(); key != "" {
+			pages[vault.paths[key]] = vault.regionPage(region)
+		}
+	}
 	for _, section := range index.quirks {
 		pages[vault.paths["quirks:"+section.title]] = vault.quirkSectionPage(section)
 	}
 	pages[vault.paths["report:backlog"]] = vault.backlogPage()
 	pages[vault.paths["report:stale"]] = vault.stalePage()
+	pages[vault.paths["report:metrics"]] = vault.metricsPage()
+	for name, content := range mapBases {
+		pages["bases/"+name] = content
+	}
+	pages["functions.tsv"] = vault.functionsTSV()
 	pages["Home.md"] = vault.homePage()
 	return pages
 }
@@ -301,6 +328,8 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 	for _, debt := range f.debts {
 		debtKinds = appendUnique(debtKinds, debt.kind)
 	}
+	_, numbered := mapNumericSuffix(f.name)
+	weak := f.weakNames()
 	b.WriteString(frontmatter(
 		mapProperty{"type", "function"},
 		mapProperty{"module", first.module},
@@ -318,6 +347,10 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 		mapProperty{"referenced_by", len(f.referencedBy)},
 		mapProperty{"quirks", len(f.quirks)},
 		mapProperty{"debt", debtKinds},
+		mapProperty{"address_name", mapAddressName(f.name)},
+		mapProperty{"numeric_suffix", numbered},
+		mapProperty{"suffix_justified", suffixJustified(f)},
+		mapProperty{"weak_locals", len(weak)},
 	))
 	fmt.Fprintf(&b, "# %s\n\n", f.name)
 	switch {
@@ -348,6 +381,11 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 	} else {
 		fmt.Fprintf(&b, "- Source: `%s`\n", f.source)
 	}
+	for _, region := range vault.index.regions {
+		if region.function == f.name {
+			fmt.Fprintf(&b, "- Original %s code (`target/` region): %s\n", region.kind, region.why)
+		}
+	}
 	if f.signature != "" {
 		fmt.Fprintf(&b, "\n## Signature\n\n```c\n%s\n```\n", f.signature)
 	}
@@ -356,8 +394,8 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 			fmt.Fprintf(&b, "\n## %s (%d)\n\n%s\n", title, len(names), joinLinks(names, link))
 		}
 	}
-	section("Calls", f.calls, vault.functionLink)
-	section("Uses the address of", f.references, vault.functionLink)
+	section("Calls", f.calls, vault.codeLink)
+	section("Uses the address of", f.references, vault.codeLink)
 	section("Called by", f.calledBy, vault.functionLink)
 	section("Address used by", f.referencedBy, vault.functionLink)
 	if f.asm == "" && len(f.calledBy) == 0 && len(f.referencedBy) == 0 {
@@ -365,6 +403,9 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 	}
 	section("Globals", f.globals, vault.globalLink)
 	section("Types", f.types, vault.typeLink)
+	if len(weak) > 0 {
+		fmt.Fprintf(&b, "\n## Weak names (%d)\n\n`%s`: names that say nothing about the value (see [[%s]]).\n", len(weak), strings.Join(weak, "`, `"), mapMetricsPage)
+	}
 	b.WriteString(vault.quirksSection(f.quirks))
 	if len(f.debts) > 0 {
 		fmt.Fprintf(&b, "\n## Debt comments (%d)\n\nListed in the [[%s]].\n\n", len(f.debts), mapBacklogPage)
@@ -596,6 +637,7 @@ func (vault *mapVault) modulePage(m *moduleSpec) string {
 			fmt.Fprintf(&b, "| %s | %s | `%s`–`%s` |\n", library.Library, library.Kind, hex32(library.Addr), hex32(library.End))
 		}
 	}
+	b.WriteString(vault.regionsSection(m.ID))
 	b.WriteString("\n## Subsystems\n\n| Subsystem | Functions |\n|---|---|\n")
 	for _, subsystem := range sortedKeys(subsystems) {
 		b.WriteString(tableRow(vault.subsystemLink(subsystem), fmt.Sprint(subsystems[subsystem])))
@@ -648,7 +690,8 @@ func (vault *mapVault) homePage() string {
 	if len(quirkLinks) > 0 {
 		b.WriteString("`QUIRKS.md`: " + strings.Join(quirkLinks, " · ") + "\n\n")
 	}
-	fmt.Fprintf(&b, "Reports: [[%s]] (%d debt comments) · [[%s]] (%d)\n", mapBacklogPage, len(index.debts), mapStalePage, len(index.stale))
+	fmt.Fprintf(&b, "Reports: [[%s]] · [[%s]] (%d debt comments) · [[%s]] (%d)\n", mapMetricsPage, mapBacklogPage, len(index.debts), mapStalePage, len(index.stale))
+	b.WriteString("\nViews: [[Functions.base|Functions]] · [[Types.base|Types]] · [[Globals.base|Globals]] · `functions.tsv` (one line per function, for grep)\n")
 	b.WriteString("\n## Headers\n\n")
 	b.WriteString(joinLinks(sortedKeys(index.headers), vault.headerLink) + "\n")
 	b.WriteString("\n## Code subsystems\n\n| Subsystem | Functions |\n|---|---|\n")

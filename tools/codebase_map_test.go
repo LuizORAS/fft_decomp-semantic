@@ -46,19 +46,47 @@ func testMapProject(t *testing.T) project {
 	p := testProject(t, map[string]string{
 		"target/main.yaml":           testMainYAML,
 		"target/event.yaml":          testEventYAML,
-		"target/battle.yaml":         testBattleYAML,
+		"target/battle.yaml":         testBattleYAML + testMapBattleRegion,
 		"include/fft/main.h":         testMapMainHeader,
 		"include/fft/battle.h":       testMapBattleHeader,
 		"include/psx/types.h":        "typedef int s32;\n",
 		"src/main/main_first.c":      "#include \"fft/main.h\"\n\n/* Runs the second routine through a macro\n * and reads the record. */\nvoid main_first(void) {\n    g_main_value.value = MAIN_MODE_RUN;\n    MAIN_CALL_SECOND();\n}\n",
 		"src/main/main_second.c":     "#include \"fft/main.h\"\n\n/* Not a summary: a define follows. */\n#define LOCAL_STEP 1\nvoid main_second(void) { battle_helper(); }\n",
 		"src/event/attack_entry.c":   "void attack_entry(void) {\n    void (*handler)(void) = main_second;\n    s32 value = g_battle_value;\n    handler();\n}\n",
-		"src/event/card_entry.c":     "/* Port debt (QUIRKS.md): the old card_old_name\n * read a stale register (see main_fi* and card_gone_*). */\nvoid card_entry(void) {}\n",
+		"src/event/card_entry.c":     "/* Port debt (QUIRKS.md): the old card_old_name\n * read a stale register (see main_fi* and card_gone_*). */\nvoid card_entry(void) { battle_asm_routine(); }\n",
 		"src/battle/battle_helper.c": "/* main 0x80067000; layout note */\nvoid battle_helper(void) {}\n",
 		"QUIRKS.md":                  testMapQuirks,
 	})
 	p.out = io.Discard
 	return p
+}
+
+// testMapBattleRegion appends a handwritten routine, kept as bytes, to the
+// battle module's data rows.
+const testMapBattleRegion = `  - {addr: 0x80067200, name: battle_asm_routine}
+
+regions:
+  - {addr: 0x80067200, end: 0x80067240, kind: handwritten, why: "handwritten test routine"}
+`
+
+func TestCodebaseMapRegions(t *testing.T) {
+	p := testMapProject(t)
+	if err := p.mapCommand(nil); err != nil {
+		t.Fatal(err)
+	}
+	pages := readTree(t, filepath.Join(p.root, "build", "map"))
+	region := pages["regions/battle/battle_asm_routine.md"]
+	for _, want := range []string{"kind: \"handwritten\"", "Original handwritten code kept as bytes", "## Called by (1)\n\n[[card_entry]]"} {
+		if !strings.Contains(region, want) {
+			t.Fatalf("region page lacks %q:\n%s", want, region)
+		}
+	}
+	if !strings.Contains(pages["functions/event/card_entry.md"], "## Calls (1)\n\n[[battle_asm_routine]]") {
+		t.Fatalf("card_entry page:\n%s", pages["functions/event/card_entry.md"])
+	}
+	if !strings.Contains(pages["modules/battle (module).md"], "| `0x80067200`–`0x80067240` | handwritten | [[battle_asm_routine]] | handwritten test routine |") {
+		t.Fatalf("battle module page:\n%s", pages["modules/battle (module).md"])
+	}
 }
 
 const testMapQuirks = `# Target quirks
@@ -257,6 +285,15 @@ func TestMapCommandWritesDeterministicVault(t *testing.T) {
 		}
 	}
 
+	if !strings.Contains(first[".obsidian/core-plugins.json"], `"bases": true`) {
+		t.Fatal("a new vault is not seeded with the core-feature configuration")
+	}
+	for _, path := range []string{"reports/Metrics.md", "bases/Functions.base", "functions.tsv"} {
+		if _, ok := first[path]; !ok {
+			t.Fatalf("missing %s", path)
+		}
+	}
+
 	// Obsidian settings survive a rebuild, and the pages come out identical.
 	settings := filepath.Join(vault, ".obsidian", "app.json")
 	writeTestFile(t, settings, []byte("{}"))
@@ -267,9 +304,59 @@ func TestMapCommandWritesDeterministicVault(t *testing.T) {
 	if second[".obsidian/app.json"] != "{}" {
 		t.Fatal(".obsidian was not kept")
 	}
-	delete(second, ".obsidian/app.json")
+	for _, tree := range []map[string]string{first, second} {
+		for path := range tree {
+			if strings.HasPrefix(path, ".obsidian/") {
+				delete(tree, path)
+			}
+		}
+	}
 	if !reflect.DeepEqual(first, second) {
 		t.Fatal("a second run wrote different pages")
+	}
+}
+
+func TestDeclaredNamesAndWeakNames(t *testing.T) {
+	source := "void f(s32 a0, u8* table, s32 count) {\n" +
+		"    s32 i, t1;\n" +
+		"    register s32 pinned __asm__(\"$5\");\n" +
+		"    main_record_t* p = 0;\n" +
+		"    for (i = 0; i < count; i++) {\n" +
+		"        u8 temp;\n" +
+		"        s16 unk_08 = table[i];\n" +
+		"        local_t* q;\n" +
+		"        g(a0, t1, temp, unk_08);\n" +
+		"        *table = count * 2;\n" +
+		"    }\n" +
+		"}\n"
+	tokens, err := tokenizeC(source)
+	if err != nil {
+		t.Fatal(err)
+	}
+	index := &codebaseIndex{types: map[string]*mapType{
+		"main_record_t": {name: "main_record_t"}, "s32": {name: "s32"}, "u8": {name: "u8"}, "s16": {name: "s16"},
+	}}
+	f := &mapFunction{name: "f"}
+	f.locals = index.declaredNames(f, tokens)
+	want := []string{"a0", "table", "count", "i", "t1", "pinned", "p", "temp", "unk_08", "q"}
+	if !reflect.DeepEqual(f.locals, want) {
+		t.Fatalf("locals = %v, want %v", f.locals, want)
+	}
+	if got := f.weakNames(); !reflect.DeepEqual(got, []string{"a0", "t1", "p", "unk_08", "q"}) {
+		t.Fatalf("weak = %v", got)
+	}
+	if base, ok := mapNumericSuffix("world_build_at_list_2"); !ok || base != "world_build_at_list" {
+		t.Fatalf("suffix base %q %v", base, ok)
+	}
+	if !mapAddressName("battle_return_zero_8008e6d0") || mapAddressName("battle_formula_calculate_hit") {
+		t.Fatal("address-name detection")
+	}
+	if !blockPurposeComment("\n/* How the AI picks an action. */\n\ntypedef u8 a_t;") ||
+		blockPurposeComment("\n/* The first type's own comment. */\ntypedef u8 a_t;") {
+		t.Fatal("purpose-comment detection")
+	}
+	if got := (&mapFunction{locals: []string{"value", "data2", "values", "p"}}).genericNames(); !reflect.DeepEqual(got, []string{"value", "data2"}) {
+		t.Fatalf("generic = %v", got)
 	}
 }
 
