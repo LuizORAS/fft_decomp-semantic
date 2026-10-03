@@ -87,7 +87,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     } else {
         g_current_ability_view.reaction_id = 0;
     }
-    data = &g_main_ability_data[(s16)action.ability_id];
+    data = &g_main_ability_data[action.ability_id];
     g_battle_action_target_data->status_change = data->ai_flags.bytes[0] & 3;
     if (data->ai_flags.bytes[3] & 1) {
         g_battle_action_target_data->status_change += 0x80;
@@ -104,7 +104,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_MONSTER:
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         formula = 1;
-        if ((s16)action.ability_id < ABILITY_ID_ITEM_FIRST + 1) { /* same off-by-one bound */
+        if (action.ability_id < ABILITY_ID_ITEM_FIRST + 1) { /* same off-by-one bound */
             if ((g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
                 && g_current_ability_view.elemental_flags == 0) {
@@ -112,7 +112,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
                 main_util_copy_byte_data(
                     (u8*)g_main_item_weapon_data, (u8*)&g_current_ability_view.weapon_data, sizeof(weapon_data_t));
             }
-            ability = &g_main_ability_range_data[(s16)action.ability_id];
+            ability = &g_main_ability_range_data[action.ability_id];
             main_util_copy_byte_data(ability, &g_current_ability_view.range_data, sizeof(ability_secondary_data_t));
             g_current_ability.proc_id = ability->status_infliction_id;
             formula = ability->formula;

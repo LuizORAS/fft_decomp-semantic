@@ -21,7 +21,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     if (reaction_mode == 0 && battle_action_init_current_data(action->unit_id) != 0) {
         return;
     }
-    behavior = g_main_ability_data[(s16)action->ability_id].ai_flags.bytes;
+    behavior = g_main_ability_data[action->ability_id].ai_flags.bytes;
     if (g_battle_ai_data_base.hit_counter != 0xff) {
         self_hit = 0;
         positive = 0;

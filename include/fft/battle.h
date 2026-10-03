@@ -178,7 +178,7 @@ enum {
 typedef struct battle_ai_command_action {
     u8 unit_id;
     u8 skillset;
-    u16 ability_id;
+    s16 ability_id;
     u16 calculator_type;
     u16 calculator_multiplier;
     u8 item_id;
@@ -351,7 +351,7 @@ typedef struct battle_ai_action_data {
     u8 _unused_1a[2];
     u8 rank_byte;        /* 0x1c; first comparison key at 0x80196db0; meaning unresolved. */
     u8 base_hit_percent; /* 0x1d */
-    u16 priority;        /* 0x1e */
+    s16 priority;        /* 0x1e */
 } battle_ai_action_data_t;
 typedef char battle_ai_action_data_size_must_be_0x20[(sizeof(battle_ai_action_data_t) == 0x20) ? 1 : -1];
 
