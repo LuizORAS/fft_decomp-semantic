@@ -45,6 +45,7 @@ jobs:
       - run: make fmt-check
       - run: make check-config
       - run: make test
+      - run: make map
 
   validate:
     runs-on: ubuntu-latest
