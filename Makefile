@@ -109,6 +109,10 @@ symbols: image ## Rename a symbol: ACTION=rename-function|rename-global ARGS="--
 	@test -n "$(ACTION)" || { echo "ACTION is required: rename-function or rename-global"; exit 2; }
 	@$(TOOLS) symbols "$(ACTION)" $(ARGS)
 
+.PHONY: map
+map: image ## Generate the Obsidian codebase map in build/map (ARGS="--out=build/DIR")
+	@$(TOOLS) map $(ARGS)
+
 .PHONY: test
 test: image ## Vet and test the Go tooling
 	@$(DOCKER_RUN) $(IMAGE) sh -c 'cd tools && go vet ./... && go test ./...'
