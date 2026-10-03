@@ -53,11 +53,88 @@ func testMapProject(t *testing.T) project {
 		"src/main/main_first.c":      "#include \"fft/main.h\"\n\n/* Runs the second routine through a macro\n * and reads the record. */\nvoid main_first(void) {\n    g_main_value.value = MAIN_MODE_RUN;\n    MAIN_CALL_SECOND();\n}\n",
 		"src/main/main_second.c":     "#include \"fft/main.h\"\n\n/* Not a summary: a define follows. */\n#define LOCAL_STEP 1\nvoid main_second(void) { battle_helper(); }\n",
 		"src/event/attack_entry.c":   "void attack_entry(void) {\n    void (*handler)(void) = main_second;\n    s32 value = g_battle_value;\n    handler();\n}\n",
-		"src/event/card_entry.c":     "void card_entry(void) {}\n",
+		"src/event/card_entry.c":     "/* Port debt (QUIRKS.md): the old card_old_name\n * read a stale register. */\nvoid card_entry(void) {}\n",
 		"src/battle/battle_helper.c": "/* main 0x80067000; layout note */\nvoid battle_helper(void) {}\n",
+		"QUIRKS.md":                  testMapQuirks,
 	})
 	p.out = io.Discard
 	return p
+}
+
+const testMapQuirks = `# Target quirks
+
+Facts about the retail code.
+
+## Retail bugs the source reproduces
+
+- ` + "`main_first`" + `: writes ` + "`g_main_value`" + ` in ` + "`src/main/main_first.c`" + `; the
+  ` + "`div`" + ` result and ` + "`main_missing_name`" + ` are named here.
+- ` + "`battle_helper`" + ` and its twin ` + "`main_second`" + `.
+
+## Calls that disagree with the callee
+
+- ` + "`card_entry`" + ` passes nothing.
+`
+
+func TestCodebaseMapQuirksDebtsAndStale(t *testing.T) {
+	p := testMapProject(t)
+	config, err := p.loadProjectConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	index, err := buildCodebaseIndex(p, config)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(index.quirks) != 2 || len(index.quirks[0].entries) != 2 || index.quirks[0].intro != "" {
+		t.Fatalf("sections %+v", index.quirks)
+	}
+	first := index.quirks[0].entries[0]
+	if first.line != 7 || !strings.Contains(first.text, "\n  `div`") {
+		t.Fatalf("first entry at line %d: %q", first.line, first.text)
+	}
+	if !reflect.DeepEqual(first.missing, []string{"main_missing_name"}) {
+		t.Fatalf("missing = %v (instructions such as div are not names)", first.missing)
+	}
+	for name, want := range map[string]int{"main_first": 1, "main_second": 1, "battle_helper": 1, "card_entry": 1, "attack_entry": 0} {
+		if got := len(index.functions[name].quirks); got != want {
+			t.Fatalf("%s has %d quirks, want %d", name, got, want)
+		}
+	}
+	if len(index.debts) != 1 || index.debts[0].kind != "port" || index.debts[0].comment.function != "card_entry" {
+		t.Fatalf("debts %+v", index.debts)
+	}
+	var stale []string
+	for _, entry := range index.stale {
+		stale = append(stale, entry.name)
+	}
+	if !reflect.DeepEqual(stale, []string{"main_missing_name", "card_old_name"}) {
+		t.Fatalf("stale = %v", stale)
+	}
+
+	if err := p.mapCommand(nil); err != nil {
+		t.Fatal(err)
+	}
+	pages := readTree(t, filepath.Join(p.root, "build", "map"))
+	section := pages["quirks/Retail bugs the source reproduces.md"]
+	if !strings.Contains(section, "- [[main_first]]: writes [[g_main_value]] in [[main_first|src/main/main_first.c]];") {
+		t.Fatalf("section page:\n%s", section)
+	}
+	if !strings.Contains(pages["functions/event/card_entry.md"], "- **Port debt**, line 1: Port debt (QUIRKS.md): the old card_old_name read a stale register.") {
+		t.Fatalf("card_entry page:\n%s", pages["functions/event/card_entry.md"])
+	}
+	if !strings.Contains(pages["globals/fft/main/g_main_value.md"], "## Quirks (1)") {
+		t.Fatal("global page lacks its quirk")
+	}
+	backlog := pages["reports/Build 3 backlog.md"]
+	for _, want := range []string{"port_debt_comments: 1", "| [[Retail bugs the source reproduces]] | 2 | FIX_BUGS |", "| port | [[card_entry]] | 1 |"} {
+		if !strings.Contains(backlog, want) {
+			t.Fatalf("backlog lacks %q:\n%s", want, backlog)
+		}
+	}
+	if !strings.Contains(pages["reports/Stale mentions.md"], "| [[card_entry]] | 1 | `card_old_name` |") {
+		t.Fatalf("stale page:\n%s", pages["reports/Stale mentions.md"])
+	}
 }
 
 func TestCodebaseIndexReadsDefinitionsAndReferences(t *testing.T) {

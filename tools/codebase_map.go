@@ -45,6 +45,11 @@ func (p project) mapCommand(args []string) error {
 	fmt.Fprintf(p.stdout(), "map: %d pages (%d functions, %d types, %d globals, %d headers, %d modules) in %s\n",
 		len(pages), len(index.functions), len(index.types), len(index.globals), len(index.headers),
 		len(config.Modules), filepath.ToSlash(relative))
+	quirks := 0
+	for _, section := range index.quirks {
+		quirks += len(section.entries)
+	}
+	fmt.Fprintf(p.stdout(), "map: %d QUIRKS.md entries, %d debt comments, %d stale mentions\n", quirks, len(index.debts), len(index.stale))
 	return nil
 }
 
@@ -130,6 +135,11 @@ func newMapVault(index *codebaseIndex) *mapVault {
 	for _, m := range index.config.Modules {
 		vault.assign("module:"+m.ID, m.ID+" (module)", "module", "modules")
 	}
+	for _, section := range index.quirks {
+		vault.assign("quirks:"+section.title, section.title, "quirks", "quirks")
+	}
+	vault.assign("report:backlog", mapBacklogPage, "report", "reports")
+	vault.assign("report:stale", mapStalePage, "report", "reports")
 	return vault
 }
 
@@ -215,6 +225,11 @@ func (vault *mapVault) render() map[string]string {
 	for _, m := range index.config.Modules {
 		pages[vault.paths["module:"+m.ID]] = vault.modulePage(m)
 	}
+	for _, section := range index.quirks {
+		pages[vault.paths["quirks:"+section.title]] = vault.quirkSectionPage(section)
+	}
+	pages[vault.paths["report:backlog"]] = vault.backlogPage()
+	pages[vault.paths["report:stale"]] = vault.stalePage()
 	pages["Home.md"] = vault.homePage()
 	return pages
 }
@@ -282,6 +297,10 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 		}
 	}
 	first := f.instances[0]
+	debtKinds := []string{}
+	for _, debt := range f.debts {
+		debtKinds = appendUnique(debtKinds, debt.kind)
+	}
 	b.WriteString(frontmatter(
 		mapProperty{"type", "function"},
 		mapProperty{"module", first.module},
@@ -297,6 +316,8 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 		mapProperty{"calls", len(f.calls)},
 		mapProperty{"called_by", len(f.calledBy)},
 		mapProperty{"referenced_by", len(f.referencedBy)},
+		mapProperty{"quirks", len(f.quirks)},
+		mapProperty{"debt", debtKinds},
 	))
 	fmt.Fprintf(&b, "# %s\n\n", f.name)
 	switch {
@@ -344,6 +365,13 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 	}
 	section("Globals", f.globals, vault.globalLink)
 	section("Types", f.types, vault.typeLink)
+	b.WriteString(vault.quirksSection(f.quirks))
+	if len(f.debts) > 0 {
+		fmt.Fprintf(&b, "\n## Debt comments (%d)\n\nListed in the [[%s]].\n\n", len(f.debts), mapBacklogPage)
+		for _, debt := range f.debts {
+			fmt.Fprintf(&b, "- **%s debt**, line %d: %s\n", strings.ToUpper(debt.kind[:1])+debt.kind[1:], debt.comment.line, debt.comment.text)
+		}
+	}
 	language := "c"
 	if f.asm != "" {
 		language = "asm"
@@ -376,6 +404,7 @@ func (vault *mapVault) typePage(t *mapType) string {
 	} else {
 		b.WriteString("\n## Used by\n\nNo function source names this type directly.\n")
 	}
+	b.WriteString(vault.quirksSection(vault.quirksFor("type:" + t.name)))
 	return b.String()
 }
 
@@ -413,6 +442,7 @@ func (vault *mapVault) globalPage(g *mapGlobal) string {
 	} else {
 		b.WriteString("\n## Used by\n\nNo function source names this global directly.\n")
 	}
+	b.WriteString(vault.quirksSection(vault.quirksFor("global:" + g.name)))
 	return b.String()
 }
 
@@ -610,6 +640,15 @@ func (vault *mapVault) homePage() string {
 		}
 		b.WriteString(strings.Join(links, " · ") + "\n")
 	}
+	b.WriteString("\n## Quirks and reports\n\n")
+	var quirkLinks []string
+	for _, section := range index.quirks {
+		quirkLinks = append(quirkLinks, fmt.Sprintf("%s (%d)", vault.quirkSectionLink(section.title), len(section.entries)))
+	}
+	if len(quirkLinks) > 0 {
+		b.WriteString("`QUIRKS.md`: " + strings.Join(quirkLinks, " · ") + "\n\n")
+	}
+	fmt.Fprintf(&b, "Reports: [[%s]] (%d debt comments) · [[%s]] (%d)\n", mapBacklogPage, len(index.debts), mapStalePage, len(index.stale))
 	b.WriteString("\n## Headers\n\n")
 	b.WriteString(joinLinks(sortedKeys(index.headers), vault.headerLink) + "\n")
 	b.WriteString("\n## Code subsystems\n\n| Subsystem | Functions |\n|---|---|\n")

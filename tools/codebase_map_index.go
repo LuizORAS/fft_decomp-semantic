@@ -35,6 +35,9 @@ type mapFunction struct {
 
 	calls, references, globals, types []string
 	calledBy, referencedBy            []string
+
+	quirks []*mapQuirk // QUIRKS.md entries that name it
+	debts  []mapDebt   // "Type debt" / "Port debt" comments in its source
 }
 
 type mapSite struct {
@@ -96,6 +99,19 @@ type codebaseIndex struct {
 	prototypes  map[string]mapSite
 	enumerators map[string]string // enumerator -> its named enum type, when it has one
 	macros      map[string]mapMacro
+
+	identifiers      map[string]bool   // every identifier the code spells, outside comments
+	files            map[string]bool   // repo-relative paths under src/ and include/
+	fileNames        map[string]bool   // base names of those files
+	functionBySource map[string]string // source path -> function
+	headerText       map[string]string
+	commentsSeen     map[string]bool // sources whose comments were collected
+
+	comments   []mapComment
+	quirksText string
+	quirks     []*mapQuirkSection
+	debts      []mapDebt
+	stale      []mapStale
 }
 
 // mapBasicTypesHeader declares s8..u64, too common to list among the types
@@ -117,6 +133,16 @@ func buildCodebaseIndex(p project, config *projectConfig) (*codebaseIndex, error
 		prototypes:  map[string]mapSite{},
 		enumerators: map[string]string{},
 		macros:      map[string]mapMacro{},
+
+		identifiers:      map[string]bool{},
+		files:            map[string]bool{},
+		fileNames:        map[string]bool{},
+		functionBySource: map[string]string{},
+		headerText:       map[string]string{},
+		commentsSeen:     map[string]bool{},
+	}
+	if err := index.scanFiles(p.root); err != nil {
+		return nil, err
 	}
 	if err := index.scanHeaders(p.root); err != nil {
 		return nil, err
@@ -129,7 +155,42 @@ func buildCodebaseIndex(p project, config *projectConfig) (*codebaseIndex, error
 		}
 	}
 	index.linkUsers()
+	if err := index.scanQuirksAndComments(p.root); err != nil {
+		return nil, err
+	}
 	return index, nil
+}
+
+// scanFiles records the files under src/ and include/, so a file named in a
+// comment or in QUIRKS.md can be checked.
+func (index *codebaseIndex) scanFiles(root string) error {
+	for _, dir := range []string{"src", "include"} {
+		err := filepath.WalkDir(filepath.Join(root, dir), func(path string, entry fs.DirEntry, err error) error {
+			if err != nil || entry.IsDir() {
+				return err
+			}
+			relative, err := filepath.Rel(root, path)
+			if err != nil {
+				return err
+			}
+			index.files[filepath.ToSlash(relative)] = true
+			index.fileNames[entry.Name()] = true
+			return nil
+		})
+		if err != nil && !os.IsNotExist(err) {
+			return err
+		}
+	}
+	return nil
+}
+
+// addIdentifiers records the identifiers of a token stream.
+func (index *codebaseIndex) addIdentifiers(tokens []cToken) {
+	for _, token := range tokens {
+		if token.kind == cIdent {
+			index.identifiers[token.text] = true
+		}
+	}
 }
 
 func (index *codebaseIndex) addConfigFunctions() {
@@ -140,7 +201,11 @@ func (index *codebaseIndex) addConfigFunctions() {
 			if entry == nil {
 				entry = &mapFunction{name: f.Name, source: m.sourceOf(f), asm: f.Asm}
 				index.functions[f.Name] = entry
+				if _, seen := index.functionBySource[entry.source]; !seen {
+					index.functionBySource[entry.source] = f.Name
+				}
 			}
+			index.identifiers[f.Name] = true
 			entry.instances = append(entry.instances, mapInstance{
 				module: m.ID, addr: f.Addr, size: f.Size, profile: m.profileOf(f), hash: f.Hash,
 			})
@@ -164,9 +229,13 @@ func (index *codebaseIndex) addConfigFunctions() {
 func (index *codebaseIndex) addDataAddresses() {
 	for _, m := range index.config.Modules {
 		for _, data := range m.Data {
+			index.identifiers[data.Name] = true
 			if global := index.globals[data.Name]; global != nil {
 				global.addresses = append(global.addresses, mapAddress{module: m.ID, addr: data.Addr})
 			}
+		}
+		for _, imported := range m.Imports {
+			index.identifiers[imported.Name] = true
 		}
 	}
 	for _, global := range index.globals {
@@ -232,17 +301,17 @@ func (index *codebaseIndex) scanHeaders(root string) error {
 func (index *codebaseIndex) scanHeader(path, source string) error {
 	header := &mapHeader{path: path}
 	index.headers[path] = header
+	index.headerText[path] = source
 	lines := newLineIndex(source)
 	for _, match := range mapLabelPattern.FindAllStringSubmatchIndex(source, -1) {
 		header.labels = append(header.labels, mapLabel{line: lines.line(match[0]), name: source[match[2]:match[3]]})
 	}
-	for name, macro := range scanMacros(source) {
-		index.macros[name] = macro
-	}
+	index.addMacros(scanMacros(source))
 	tokens, err := tokenizeC(source)
 	if err != nil {
 		return err
 	}
+	index.addIdentifiers(tokens)
 	site := func(offset int) mapSite {
 		line := lines.line(offset)
 		return mapSite{header: path, line: line, label: header.labelAt(line)}
@@ -355,6 +424,18 @@ func (index *codebaseIndex) recordType(source string, statement []cToken, site f
 	index.headers[at.header].types = append(index.headers[at.header].types, name)
 }
 
+// addMacros indexes header macros; their names and body identifiers count as
+// names the code spells.
+func (index *codebaseIndex) addMacros(macros map[string]mapMacro) {
+	for name, macro := range macros {
+		index.macros[name] = macro
+		index.identifiers[name] = true
+		for _, identifier := range macro.identifiers {
+			index.identifiers[identifier.name] = true
+		}
+	}
+}
+
 func (header *mapHeader) labelAt(line int) string {
 	label := ""
 	for _, candidate := range header.labels {
@@ -420,8 +501,15 @@ func (index *codebaseIndex) scanFunction(root string, f *mapFunction) error {
 	if err != nil {
 		return fmt.Errorf("%s: %w", f.source, err)
 	}
+	index.addIdentifiers(tokens)
 	lines := newLineIndex(f.text)
 	localMacros := scanMacros(f.text)
+	for name, macro := range localMacros {
+		index.identifiers[name] = true
+		for _, identifier := range macro.identifiers {
+			index.identifiers[identifier.name] = true
+		}
+	}
 	for start := 0; start < len(tokens); {
 		next, statement, definition, err := sourceDefinitionStatement(tokens, start)
 		if err != nil {
