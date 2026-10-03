@@ -93,7 +93,6 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
         poly.y2 = verts[2].vy;
         poly.x3 = verts[3].vx;
         poly.y3 = verts[3].vy;
-        /* This caller sets only a0-a2, hence the three-argument cast. */
-        ((void (*)(POLY_FT4*, s32, s32))world_gs_sortpoly)(&poly, (s32)ot, 1);
+        world_gs_sortpoly(&poly, ot, 1);
     }
 }

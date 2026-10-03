@@ -14,6 +14,7 @@ libraries:
   - {id: libgs, addr: 0x800e03ec, end: 0x800e1a98, kind: psyq, library: LIBGS}
 
 functions:
+  - {addr: 0x800e0228, size: 452, name: world_gs_sortpoly, hash: 9a10ac6f8c76b4ec}
   - {addr: 0x800e03ec, size: 148, name: world_ps_sort_sprite_bg, hash: 33eb380bed08096b}
   - {addr: 0x800e0480, size: 1276, name: world_gs_sortsprite, hash: 8e76bcf090d5aa77}
   - {addr: 0x800e097c, size: 380, name: world_gs_sortfastsprite, hash: a5429d5475642a68}
@@ -1028,7 +1029,6 @@ data:
   - {addr: 0x800e0070, name: g_world_script_pause_message}
   - {addr: 0x800e007c, name: g_world_text_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
-  - {addr: 0x800e0228, name: world_gs_sortpoly}
   - {addr: 0x800e1524, name: world_gs_get_active_buffer}
   - {addr: 0x800e18dc, name: world_gs_draw_ot}
   - {addr: 0x800e1900, name: world_gs_clear_ot}

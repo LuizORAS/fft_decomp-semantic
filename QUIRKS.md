@@ -323,6 +323,8 @@ computes addresses as integers. A 64-bit build must give these pointer types.
 - The other direction: `battle_map_init_background_gradient`, `_ambient_light`
   and `_darkness` pass `map_id` through the `u8*` parameter of
   `battle_map_light_state_command`.
+- `wldcore_gfx_draw_projected_map_tiles` takes its `GsOT*` as an `s32` and
+  converts it back for `world_gs_sortpoly`.
 
 ## Duplicated code
 

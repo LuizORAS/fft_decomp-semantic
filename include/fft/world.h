@@ -1333,11 +1333,7 @@ void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
 void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_start_decreasing_fade(void);
 void world_gfx_start_increasing_fade(void);
-/* Inherited debt: not reconstructed as C. Its 452 bytes of code
- * (0x800e0228-0x800e03ec, ending in jr ra, calling world_ps_sort_sprite_bg)
- * sit in WORLD's leading data area, and target/world.yaml lists only this
- * name. The one caller is wldcore_gfx_draw_projected_map_tiles. */
-void world_gs_sortpoly(POLY_FT4* poly, s32 arg, s32 type, u32 value);
+void world_gs_sortpoly(void* prim, GsOT* ot, s32 pri);
 s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
 void world_gs_clear_ot(s32, s32, void*);
