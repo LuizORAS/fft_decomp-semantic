@@ -22,7 +22,6 @@ void _patch_card2(void) {
     PSYQ_CPU_ADDRESS_LOW(end, g_psyq_card_delay_template_end);
     do {
         old_word = destination[PSYQ_CARD_PAD_DELAY_PATCH_WORD];
-        __asm__ volatile("" : : "r"(old_word) : "memory"); /* Preserve the BIOS-word read before the template read. */
         replacement = *source++;
         source[-1] = old_word;
         __asm__ volatile("" : : : "memory"); /* The swapped template word is saved before advancing the BIOS pointer. */

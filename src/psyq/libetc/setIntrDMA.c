@@ -31,8 +31,6 @@ psyq_interrupt_callback_t setIntrDMA(s32 channel, psyq_interrupt_callback_t call
             s32 shift;
             volatile u32* dma_control = g_psyq_etc_dma_dicr;
             u32 control;
-            /* Retain the incoming callback value until the disabled-channel shift reuses a0. */
-            __asm__("" : "=r"(selected_callback) : "0"(selected_callback));
             mask |= 0xffff;
             g_psyq_etc_dma_callbacks[selected_channel] = 0;
             control = *dma_control;
