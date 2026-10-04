@@ -203,6 +203,8 @@ func (vault *mapVault) stalePage() string {
 		where := "`" + entry.path + "`"
 		if name, ok := vault.index.functionBySource[entry.path]; ok {
 			where = vault.functionLink(name)
+		} else if _, ok := vault.names["doc:"+entry.path]; ok {
+			where = vault.link("doc:"+entry.path, entry.path)
 		}
 		b.WriteString(tableRow(where, fmt.Sprint(entry.line), "`"+entry.name+"`", entry.why))
 	}

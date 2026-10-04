@@ -415,3 +415,77 @@ func TestTableRowEscapesPipes(t *testing.T) {
 		t.Fatalf("tableRow = %q", got)
 	}
 }
+
+func TestMapDocsScopesAndEditProtection(t *testing.T) {
+	p := testMapProject(t)
+	write := func(root, path, content string) {
+		t.Helper()
+		full := filepath.Join(root, filepath.FromSlash(path))
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	vaultDir := filepath.Join(p.root, "build", "map")
+	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n"
+	write(p.root, "CODEBASE.md", "# Codebase\n")
+	write(p.root, "docs/mechanics/Turns.md", turns)
+	write(p.root, "docs/guides/Retarget.md", "---\ntype: guide\nscope: [battle]\n---\n\n[[Turns]] and ![[{{title}} scope]]\n")
+	if err := p.mapCommand(nil); err != nil {
+		t.Fatal(err)
+	}
+	pages := readTree(t, vaultDir)
+	if pages["CODEBASE.md"] != "# Codebase\n" || pages["docs/mechanics/Turns.md"] != turns {
+		t.Fatal("hand-written pages were not copied unchanged")
+	}
+	functionPage := func(name string) string {
+		for path, content := range pages {
+			if strings.HasPrefix(path, "functions/") && strings.HasSuffix(path, "/"+name+".md") {
+				return content
+			}
+		}
+		t.Fatalf("no page for %s", name)
+		return ""
+	}
+	if page := functionPage("main_first"); !strings.Contains(page, `mechanic: "[[Turns]]"`) || !strings.Contains(page, "\ntier: 1\n") {
+		t.Fatalf("main_first page:\n%s", page)
+	}
+	if strings.Contains(functionPage("battle_helper"), "[[Turns]]") {
+		t.Fatal("a guide's scope assigned a mechanic")
+	}
+	for page, want := range map[string]string{
+		"scopes/Turns scope.md":     "| `main_first` | 1 |\n| `main_gone` | 0 |\n",
+		"reports/Stale mentions.md": "| [[Turns\\|docs/mechanics/Turns.md]] | 7 | `main_gone` |",
+		"Home.md":                   "| [[Turns]] | 1 | [[Turns scope]]: ",
+	} {
+		if !strings.Contains(pages[page], want) {
+			t.Fatalf("%s lacks %q:\n%s", page, want, pages[page])
+		}
+	}
+	stale := pages["reports/Stale mentions.md"]
+	if !strings.Contains(stale, "`Missing page`") || strings.Contains(stale, "in_code") || strings.Contains(stale, "{{title}}") {
+		t.Fatalf("stale page:\n%s", stale)
+	}
+
+	write(vaultDir, "docs/mechanics/Turns.md", turns+"Edited in the vault.\n")
+	write(vaultDir, "docs/guides/New.md", "# New\n")
+	if err := p.mapCommand(nil); err == nil || !strings.Contains(err.Error(), "--pull-docs") {
+		t.Fatalf("an edited copy did not stop the run: %v", err)
+	}
+	if err := p.mapCommand([]string{"--pull-docs"}); err != nil {
+		t.Fatal(err)
+	}
+	for path, want := range map[string]string{"docs/mechanics/Turns.md": turns + "Edited in the vault.\n", "docs/guides/New.md": "# New\n"} {
+		data, err := os.ReadFile(filepath.Join(p.root, filepath.FromSlash(path)))
+		if err != nil || string(data) != want {
+			t.Fatalf("%s was not pulled: %q %v", path, data, err)
+		}
+	}
+	write(p.root, "docs/guides/New.md", "# Repository\n")
+	write(vaultDir, "docs/guides/New.md", "# Vault\n")
+	if err := p.mapCommand([]string{"--pull-docs"}); err == nil || !strings.Contains(err.Error(), "both") {
+		t.Fatalf("a page changed on both sides was overwritten: %v", err)
+	}
+}

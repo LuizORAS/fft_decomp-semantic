@@ -314,6 +314,9 @@ func (vault *mapVault) metricsPage() string {
 		mapProperty{"labels_with_purpose", purposed},
 		mapProperty{"mixed_labels", len(mixed)},
 		mapProperty{"stale_mentions", len(index.stale)},
+		mapProperty{"mechanic_pages", vault.docCount("mechanic")},
+		mapProperty{"guides", vault.docCount("guide")},
+		mapProperty{"functions_in_scope", len(vault.mechanic)},
 	))
 	fmt.Fprintf(&b, "# %s\n\n", mapMetricsPage)
 	b.WriteString("The measurable build-2 \"done\" criteria, computed by `make map` from the code. Function counts are by name; a function linked into several overlays counts once.\n\n")
@@ -326,6 +329,9 @@ func (vault *mapVault) metricsPage() string {
 	b.WriteString(tableRow("Header blocks (include/fft) with a purpose comment", fmt.Sprintf("%d / %d", purposed, len(uses)), "100%"))
 	b.WriteString(tableRow("Header blocks whose prototypes mix subsystems", fmt.Sprint(len(mixed)), "0, or a documented exception"))
 	b.WriteString(tableRow("Stale mentions", fmt.Sprintf("[[%s]]: %d", mapStalePage, len(index.stale)), "0"))
+	b.WriteString(tableRow("Mechanic pages (docs/mechanics)", fmt.Sprint(vault.docCount("mechanic")), "tier 1: 8 plus Engine core, tier 2: 4, tier 3: 9, tier 4: 4"))
+	b.WriteString(tableRow("Guides (docs/guides)", fmt.Sprint(vault.docCount("guide")), "at least 8"))
+	b.WriteString(tableRow("Functions in a mechanic page scope", fmt.Sprintf("%d / %d (%s)", len(vault.mechanic), total, percent(len(vault.mechanic), total)), "every tier 1-2 function"))
 	b.WriteString(tableRow("QUIRKS.md entries linked to a page", fmt.Sprintf("%d / %d", linked, quirks), "every entry that names a symbol (general entries listed below)"))
 	b.WriteString(tableRow("Debt comments whose subject QUIRKS.md does not name", fmt.Sprint(unnamedDebts), "0"))
 
@@ -510,6 +516,10 @@ views:
 // mapObsidianSeed is written to .obsidian/ only when the vault has none, so
 // the reader's own settings are never replaced. Core features only.
 var mapObsidianSeed = map[string]string{
+	"templates.json": `{
+  "folder": "docs/templates"
+}
+`,
 	"app.json": `{
   "readableLineLength": false,
   "showLineNumber": true,
@@ -528,7 +538,7 @@ var mapObsidianSeed = map[string]string{
   "properties": true,
   "page-preview": true,
   "daily-notes": false,
-  "templates": false,
+  "templates": true,
   "note-composer": false,
   "command-palette": true,
   "slash-command": false,
