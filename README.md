@@ -4,15 +4,20 @@
 
 ## About this fork
 
-A fork of [adamrt/fft_decomp](https://github.com/adamrt/fft_decomp) focused on
-the semantic cleanup that upstream lists as its next step: naming what is still
-unnamed, documenting what each value is for, giving data its real types, and
-turning leftover `goto`s and register pins into ordinary C. The goal is source
-you can read, modify and port without reverse-engineering it again.
+A fork of [adamrt/fft_decomp](https://github.com/adamrt/fft_decomp) that makes
+the source readable, modifiable and portable without reverse-engineering it
+again. The rule is the same as upstream: every commit still builds the
+original disc byte for byte, checked with `make validate`. `master` mirrors
+upstream.
 
-The rule is the same as upstream: every commit still builds the original disc
-byte for byte. Work lands on `semantic-cleanup` in small commits, each checked
-with `make validate` before it goes in; `master` mirrors upstream.
+- **Build 1** (tag `build-1`, branch `semantic-cleanup`): names for what was
+  unnamed, real types for data, and ordinary C in place of leftover `goto`s
+  and register pins.
+- **Build 2** (branch `build-2`, in progress): a map of the codebase.
+  [`CODEBASE.md`](CODEBASE.md) explains the architecture,
+  [`docs/`](docs/README.md) explains each game mechanic and where to change
+  it, and `make map` generates an Obsidian vault with a page for every
+  function, type and global. Every function also gets a summary.
 
 A matching decompilation of the North American PlayStation release of *Final
 Fantasy Tactics* (`SCUS-94221` [redump](http://redump.org/disc/55/)). Every game
