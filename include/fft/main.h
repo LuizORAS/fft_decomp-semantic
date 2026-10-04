@@ -18,51 +18,170 @@
 
 struct battle_deployed_coords;
 
-/* ability */
-/* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
- * range and vertical reach. */
-typedef struct battle_loader_jump_record {
-    u8 range;    /* 0x00 */
-    u8 vertical; /* 0x01 */
-} battle_loader_jump_record_t;
-typedef char battle_loader_jump_record_size_must_be_2[(sizeof(battle_loader_jump_record_t) == 2) ? 1 : -1];
+/* system */
+extern s32 g_main_system_frontend_world_result;
+extern u32 g_main_system_game_flow_state;
+extern u32 g_main_system_game_loop_stack_pointer;
+extern u8 g_main_system_go_straight_to_battle;
+extern int g_main_system_graphics_error;
+extern s32 g_main_system_play_time_frames;
+extern s32 g_main_system_play_time_hours;
+extern s32 g_main_system_play_time_minutes;
+extern s32 g_main_system_play_time_seconds;
+extern u32 g_main_system_flags;
+extern s32 g_main_system_session_frames;
 
-typedef struct main_ability_human_skillset {
-    u8 high_id_bits[3];
-    u8 ability_ids[HUMAN_SKILLSET_ABILITY_COUNT];
-} main_ability_human_skillset_t;
+/* Same address as g_main_system_flags (0x8004d950). The target re-reads the
+ * flags in both arms after the (flags & 0xc) == 4 test; reading the test
+ * through this second link name keeps GCC from reusing the tested load, where
+ * a volatile declaration also reschedules the argument setup. */
+extern s32 g_main_system_flags_alias;
 
-typedef struct main_ability_monster_skillset {
-    u8 high_id_bits;
-    u8 ability_ids[MONSTER_SKILLSET_ABILITY_COUNT];
-} main_ability_monster_skillset_t;
+void main_noop_800449ec(void);
 
-extern u8 g_main_ability_aoe_data[];
-extern u8 g_main_ability_ct_data[];
-extern ability_secondary_data_t g_main_ability_range_data[];
-extern u8 g_main_jump_charge_ability_data_by_ability_id[];
-extern u8 g_main_throw_ability_item_types_by_ability_id[];
+/* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
+ * but neither their original meaning nor the hook's original name is proven. */
+void main_noop_800449f8(s32 category, s32 code);
 
-/* Pre-biased so the raw ability id indexes the SCUS secondary-data byte; see
- * main_ability_calculate_pointers_and_type. */
-extern u8 g_main_math_rsm_ability_data_by_ability_id[];
+void main_restore_game_loop_stack_pointer(u32* source);
+void main_system_handle_animation_exception(int error_code);
+void main_system_handle_battle_load_exception(s32 value);
+void main_system_handle_malloc_exception(s32 allocator_id, s32 error_code);
+void main_system_handle_pointer_exception(int error_code);
+void main_system_reset_game(void);
+void main_system_run_game_loop(void);
+void main_system_stop_display_and_audio_for_game_reset(void);
+void main_system_store_stack_pointer(u32* destination);
 
-/* Provisional: 12 item types indexed by throw ability id - 0x17e. */
-extern u8 g_main_throw_ability_item_types[];
-extern battle_loader_jump_record_t g_main_jump_ability_data[12];
-extern ability_data_t g_main_ability_data[];
+void main_system_handle_draw_sync_callback(void);
+void main_system_handle_vsync_callback(void);
 
-/* Linker alias biased so a reaction ability ID can index the 32-byte table at
- * 0x8005ebd0 directly; only IDs 0x1a6..0x1c5 are valid. */
-extern const u8 g_main_reaction_behavior_flags_by_ability_id[];
-extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
-extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
-extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
-extern u32 g_main_secondary_saved_data_bits[2];
-s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
-u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
-s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
-u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
+void main_noop_80014544(void);
+void main_system_enable_root_counter_2_evcb(void);
+void main_system_disable_root_counter_2_evcb(void);
+
+/* boot */
+extern s32 g_main_boot_startup2_has_run;
+extern u32 g_main_boot_squaresoft_logo_image_words[];
+
+void main_boot_run_startup(void);
+void main_boot_reset_game_state(void);
+
+void main_boot_build_and_draw_sceap_logo(void);
+void main_boot_build_and_draw_squaresoft_logo(void);
+int main_boot_draw_sceap_logo(void* otag, u32* image);
+int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
+void main_boot_fade_out_squaresoft_logo(void);
+
+/* overlay */
+void main_overlay_call_battle_entrypoint(void);
+void main_overlay_exec_battle_bin(void);
+int main_overlay_exec_open_bin_main_loop(int mode);
+void main_overlay_exec_open_bin_ending(void);
+int main_overlay_open_world_and_wldcore(int load_world);
+void main_overlay_open_world_bin(s32 mode);
+
+/* heap */
+/* 64 allocation tags, one per 0x800-byte block in the game arena. */
+extern u8 g_main_heap_game_allocator_table[64];
+extern u8 g_main_heap_smd_allocator_table[16];
+extern u8 g_main_heap_smd_base[];
+extern game_options_t g_main_game_options;
+extern volatile game_options_t g_main_game_options_defaults;
+
+/* The packed-word view of the options record; g_main_game_options names the
+ * same address under its union type. The scalar name is retained because GCC
+ * otherwise coalesces the saved-word load with the following bitfield writes
+ * and changes the target instruction order. */
+extern u32 g_main_game_options_raw;
+
+extern u8* g_main_heap_high_overlay_load_address;
+extern u8* g_main_heap_low_overlay_load_address;
+extern u8* g_main_heap_world_overlay_load_address;
+
+void* main_heap_alloc(u32 size);
+void* main_heap_alloc_smd(u32 size);
+void main_heap_call_free(void* allocation);
+void main_heap_clear_game_allocator_table(void);
+s32 main_heap_free(void* allocation);
+u8* main_heap_reserve_at(void* allocation, u32 size);
+s32 main_heap_free_smd(void* allocation);
+
+void* game_malloc(s32 byte_length);
+
+void main_heap_clear_smd_allocator_table(void);
+
+/* util */
+s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
+
+void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
+void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
+
+void main_util_clear_byte_data(void* destination, s32 count);
+
+/* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear), not SDK
+ * memcpy/memset. Copy takes source first;
+ * both routines do nothing for a nonpositive signed byte count. */
+void main_util_copy_byte_data(const void* source, void* destination, s32 count);
+
+void main_util_copy_action_data(const u8* source, u8* destination);
+
+void main_util_copy_bytes(const void* source, void* destination, int count);
+
+/* file */
+/* One poll advances at most one phase; recoverable CD errors restart setup. */
+typedef enum main_file_load_state {
+    MAIN_FILE_LOAD_STATE_IDLE = 0,
+    MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED = 1,
+    MAIN_FILE_LOAD_STATE_WAIT_AFTER_SET_MODE = 2,
+    MAIN_FILE_LOAD_STATE_START_SEEK = 3,
+    MAIN_FILE_LOAD_STATE_POLL_SEEK = 4,
+    MAIN_FILE_LOAD_STATE_START_READ = 5,
+    MAIN_FILE_LOAD_STATE_POLL_READ = 6,
+} main_file_load_state_e;
+
+/* Asynchronous CD read state advanced by main_file_poll_load. */
+typedef struct main_file_load_descriptor {
+    s32 _unknown_00;
+    s32 state; /* MAIN_FILE_LOAD_STATE_* */
+    s32 error_count;
+    s32 wait_frames;
+    s32 sector_count;
+    s32 lba;
+    s32 sector_index; /* 0x18; sector being read by wldcore_file_poll_vram_image_stream */
+    u8 position[4];
+    u8* destination;
+} main_file_load_descriptor_t;
+typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
+
+extern main_file_load_descriptor_t g_main_file_cd_state;
+extern u32 g_main_file_still_loading;
+
+/* File-header wrapper at 0x80011bd0 forwards build's result. */
+s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
+s32 main_file_call_build_header(s32 sector, s32 size, void* destination);
+int main_file_is_still_loading(void);
+void main_file_reset_cd_subsystems(void);
+void main_file_handle_cd_read_callback(u8 event, u8* result);
+void main_file_handle_cd_ready_callback(u8 event, u8* result);
+void main_file_reset_cdrom_cpu_ram(void);
+
+int main_file_build_header(
+    main_file_load_descriptor_t* state, int lba, int sector_count, void* destination, int loading_display_mode);
+
+void* main_file_get_bin_as_tim(int sector, int size);
+void* main_file_load_checked_to_address(int sector, int size, void* destination);
+void* main_file_get_smd(int sector, int size);
+void* main_file_get_tim(s32 sector, s32 size);
+void* main_file_load_to_address(int sector, u32 size, void* destination);
+void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
+void main_file_poll_load(main_file_load_descriptor_t* state);
+void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
+
+/* input */
+extern u8 g_main_input_repeat_initial_delay;
+extern u8 g_main_input_repeat_period;
+extern u8 g_main_input_secondary_repeat_period;
 
 /* card */
 /* Memory-card BIOS event handles opened by main_card_init_events; the CARD,
@@ -122,115 +241,6 @@ extern s8 g_card_save_slot_file_states[];
 extern u8 g_card_save_slot_metadata[][0x18];
 extern u8 g_card_save_slot_playtimes[][3];
 void main_card_init_events(void);
-
-/* file */
-/* One poll advances at most one phase; recoverable CD errors restart setup. */
-typedef enum main_file_load_state {
-    MAIN_FILE_LOAD_STATE_IDLE = 0,
-    MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED = 1,
-    MAIN_FILE_LOAD_STATE_WAIT_AFTER_SET_MODE = 2,
-    MAIN_FILE_LOAD_STATE_START_SEEK = 3,
-    MAIN_FILE_LOAD_STATE_POLL_SEEK = 4,
-    MAIN_FILE_LOAD_STATE_START_READ = 5,
-    MAIN_FILE_LOAD_STATE_POLL_READ = 6,
-} main_file_load_state_e;
-
-/* Asynchronous CD read state advanced by main_file_poll_load. */
-typedef struct main_file_load_descriptor {
-    s32 _unknown_00;
-    s32 state; /* MAIN_FILE_LOAD_STATE_* */
-    s32 error_count;
-    s32 wait_frames;
-    s32 sector_count;
-    s32 lba;
-    s32 sector_index; /* 0x18; sector being read by wldcore_file_poll_vram_image_stream */
-    u8 position[4];
-    u8* destination;
-} main_file_load_descriptor_t;
-typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
-
-extern main_file_load_descriptor_t g_main_file_cd_state;
-extern u32 g_main_file_still_loading;
-
-/* File-header wrapper at 0x80011bd0 forwards build's result. */
-s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
-s32 main_file_call_build_header(s32 sector, s32 size, void* destination);
-int main_file_is_still_loading(void);
-void main_file_reset_cd_subsystems(void);
-void main_file_handle_cd_read_callback(u8 event, u8* result);
-void main_file_handle_cd_ready_callback(u8 event, u8* result);
-void main_file_reset_cdrom_cpu_ram(void);
-
-int main_file_build_header(
-    main_file_load_descriptor_t* state, int lba, int sector_count, void* destination, int loading_display_mode);
-
-void* main_file_get_bin_as_tim(int sector, int size);
-void* main_file_load_checked_to_address(int sector, int size, void* destination);
-void* main_file_get_smd(int sector, int size);
-void* main_file_get_tim(s32 sector, s32 size);
-void* main_file_load_to_address(int sector, u32 size, void* destination);
-void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
-void main_file_poll_load(main_file_load_descriptor_t* state);
-void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
-
-/* input */
-extern u8 g_main_input_repeat_initial_delay;
-extern u8 g_main_input_repeat_period;
-extern u8 g_main_input_secondary_repeat_period;
-
-/* item */
-extern u8 g_main_item_quantities[ITEM_ID_COUNT];
-extern item_attribute_t g_main_item_attributes[];
-extern u8 g_main_item_page_order[0x15];
-
-/* The first 0x40 bytes are Move-Find-Item flags; the second half is not yet
- * identified. Both halves are initialized and serialized as one block. */
-extern u8 g_main_item_location_flags[0x80];
-extern u8 g_main_item_poached_quantities[ITEM_ID_COUNT];
-extern item_secondary_data_t g_main_item_secondary_data[];
-
-/* &g_main_item_primary_data[0].secondary_data_id viewed as a stride-12 byte
- * array. main_unit_set_equipment_stats reads the secondary id through its own
- * %lo(g_main_item_primary_data+4) address while the type_flags test uses a
- * record pointer; reading both through item_data_t folds them onto one base
- * register and misses the byte-exact match. */
-extern u8 g_main_item_secondary_data_ids[];
-extern item_type_order_tables_t g_main_item_type_order_tables;
-
-/* Views of g_main_item_type_order_tables.order_1..6 for the WORLD save-image
- * copies (world_card_build_save_image, world_card_load_globals_from_save_image),
- * whose code the member spelling changes. */
-extern s8 g_main_item_type_order_1[8];
-extern u8 g_main_item_type_order_2[7];
-extern u8 g_main_item_type_order_3[5];
-extern u8 g_main_item_type_order_4[5];
-extern u8 g_main_item_type_order_5[7];
-extern u8 g_main_item_type_order_6[5];
-extern weapon_data_t g_main_item_weapon_data[]; /* 0x80063ab8 */
-extern u8 g_main_weapon_page_order[0x8a];
-extern u8 g_main_item_ability_item_ids_by_ability_id[];
-extern u8 g_main_item_ability_item_ids[14];
-extern u8 g_main_item_poach_table[48][2];
-extern accessory_data_t g_main_item_accessory_data[];
-extern armor_data_t g_main_item_helm_armor_secondary_data[];
-extern item_data_t g_main_item_primary_data[];
-extern shield_data_t g_main_item_shield_data[];
-void main_item_init_new_game_inventory(void);
-void main_item_init_order_tables(void);
-item_data_t* main_item_get_data_pointer(s32 item_id);
-s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
-
-/* job */
-extern job_data_t g_job_data[];
-extern const u16 g_job_level_jp_requirements[8];
-extern u16 g_main_job_jp_requirements_by_level[];
-extern const u8 g_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
-s32 main_job_add_proposition_jp(s32 party_index, s32 jp);
-u32 main_job_calculate_level(u16 job_jp);
-u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
-job_data_t* main_job_get_data_pointer(s32 job_id);
-s32 main_job_get_random_unlocked(const battle_stats_t* unit);
-void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
 
 /* save */
 /* Byte view of the four-byte world-script instruction word at 0x800d4848:
@@ -325,6 +335,304 @@ void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
 void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
+/* unit */
+/* Selects rows in the base-data (0x8005e90c) and variance (0x8005e93c)
+ * tables; these are not job IDs or gender bit flags. */
+typedef enum main_unit_generation_type {
+    MAIN_UNIT_TYPE_MALE = 0,
+    MAIN_UNIT_TYPE_FEMALE = 1,
+    MAIN_UNIT_TYPE_RAMZA = 2,
+    MAIN_UNIT_TYPE_MONSTER = 3,
+    MAIN_UNIT_TYPE_COUNT = 4
+} main_unit_generation_type_e;
+
+/* One row of the generation tables at 0x8005e90c and 0x8005e93c. The
+ * records are selected by main_unit_generation_type_e, not by job id. */
+typedef struct main_unit_generation_base_data {
+    u8 raw_stat_seeds[UNIT_RAW_STAT_COUNT];
+    u8 equipment[UNIT_EQUIPMENT_SLOT_COUNT];
+} main_unit_generation_base_data_t;
+typedef char main_unit_generation_base_data_size_must_be_12[(sizeof(main_unit_generation_base_data_t) == 12) ? 1 : -1];
+
+typedef struct main_unit_generation_raw_stat_variance {
+    u8 raw_stats[UNIT_RAW_STAT_COUNT];
+} main_unit_generation_raw_stat_variance_t;
+typedef char
+    main_unit_generation_raw_stat_variance_size_must_be_5[(sizeof(main_unit_generation_raw_stat_variance_t) == 5) ? 1
+                                                                                                                  : -1];
+
+/* Values accepted by main_status_set_action_state. */
+typedef enum main_unit_action_state {
+    MAIN_UNIT_ACTION_STATE_NONE = 0,
+    MAIN_UNIT_ACTION_STATE_CHARGING = 5,
+    MAIN_UNIT_ACTION_STATE_JUMPING = 6,
+    MAIN_UNIT_ACTION_STATE_DEFENDING = 7,
+    MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
+    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 0xff
+} main_unit_action_state_e;
+
+extern u8 g_highest_party_level;
+extern u8 g_party_slot_base;
+
+extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
+extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
+extern u32 g_main_unit_name_uses_world_text;
+void main_unit_update_formation_stats(battle_stats_t* unit);
+
+void main_unit_apply_equipment_move_jump_and_name(battle_stats_t* unit);
+void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down);
+void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode);
+s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd);
+void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position);
+u8 main_unit_calculate_palette_spritesheet(battle_stats_t* unit, u8* palette);
+
+s32 main_unit_calculate_random_equipment(
+    battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
+
+u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
+s32 main_unit_calculate_zodiac_symbol(u32 birthday);
+s32 main_unit_check_level_up(battle_stats_t* unit);
+void main_unit_copy_job_data(battle_stats_t* unit);
+void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
+void main_unit_copy_last_ability_ct(battle_stats_t* unit);
+void main_unit_enable_rsm_flags(battle_stats_t* unit);
+void main_unit_generate_base_raw_stats(u8* raw_stats, s32 unit_type);
+void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
+void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type);
+void main_unit_generate_raw_stats(battle_stats_t* unit);
+u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette);
+s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
+s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle);
+void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party_unit);
+s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
+s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text);
+s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels);
+void main_unit_init_status_and_rewards(battle_stats_t* unit, s32 clear_rewards);
+void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd);
+void main_unit_refresh_stats_and_statuses(battle_stats_t* unit);
+void main_unit_reset_battle_state(battle_stats_t* unit);
+void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check);
+
+/* SCUS_942.21 unit equipment/name pipeline, 0x8005ab00 and
+ * 0x8005c398..0x8005cbd0. Signatures are shared with the matching definitions. */
+void main_unit_set_equipment_stats(battle_stats_t* unit);
+void main_unit_set_equippable_items(battle_stats_t* unit);
+void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id);
+void main_unit_store_character_names(battle_stats_t* unit);
+void main_unit_store_monster_equipment(battle_stats_t* unit, const entd_unit_t* entd);
+void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit);
+void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing);
+
+void main_unit_increase_casualty_counters(battle_stats_t* unit);
+void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
+
+/* party */
+extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
+
+void main_party_clear_all(void);
+s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color);
+s32 main_party_find_free_slot(s32 save_formation, u8* palette);
+s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
+
+/* Out-of-battle generation normalizes every value except male, female and
+ * monster to Ramza. The raw-stat generator indexes the tables directly. */
+s32 main_party_generate_unit(s32 unit_type);
+party_data_t* main_party_get_data_pointer(s32 party_index);
+void main_party_init_new_game(s32 mode);
+u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta);
+void main_party_remove_unit(u32 index);
+s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest);
+
+u8 main_party_calculate_highest_level(void);
+
+/* entd */
+extern s32 g_main_entd_current_event_id;
+extern entd_file_t* g_main_entd_set;
+
+/* Current encounter, NULL while loading, or (entd_encounter_t *)-1 when
+ * no encounter is selected. */
+entd_encounter_t* main_entd_get_encounter(void);
+int main_entd_open_file(void);
+void main_entd_init_event_unit_data(int event_id);
+
+/* job */
+extern job_data_t g_job_data[];
+extern const u16 g_job_level_jp_requirements[8];
+extern u16 g_main_job_jp_requirements_by_level[];
+extern const u8 g_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
+s32 main_job_add_proposition_jp(s32 party_index, s32 jp);
+u32 main_job_calculate_level(u16 job_jp);
+u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
+job_data_t* main_job_get_data_pointer(s32 job_id);
+s32 main_job_get_random_unlocked(const battle_stats_t* unit);
+void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
+
+/* ability */
+/* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
+ * range and vertical reach. */
+typedef struct battle_loader_jump_record {
+    u8 range;    /* 0x00 */
+    u8 vertical; /* 0x01 */
+} battle_loader_jump_record_t;
+typedef char battle_loader_jump_record_size_must_be_2[(sizeof(battle_loader_jump_record_t) == 2) ? 1 : -1];
+
+typedef struct main_ability_human_skillset {
+    u8 high_id_bits[3];
+    u8 ability_ids[HUMAN_SKILLSET_ABILITY_COUNT];
+} main_ability_human_skillset_t;
+
+typedef struct main_ability_monster_skillset {
+    u8 high_id_bits;
+    u8 ability_ids[MONSTER_SKILLSET_ABILITY_COUNT];
+} main_ability_monster_skillset_t;
+
+extern u8 g_main_ability_aoe_data[];
+extern u8 g_main_ability_ct_data[];
+extern ability_secondary_data_t g_main_ability_range_data[];
+extern u8 g_main_jump_charge_ability_data_by_ability_id[];
+extern u8 g_main_throw_ability_item_types_by_ability_id[];
+
+/* Pre-biased so the raw ability id indexes the SCUS secondary-data byte; see
+ * main_ability_calculate_pointers_and_type. */
+extern u8 g_main_math_rsm_ability_data_by_ability_id[];
+
+/* Provisional: 12 item types indexed by throw ability id - 0x17e. */
+extern u8 g_main_throw_ability_item_types[];
+extern battle_loader_jump_record_t g_main_jump_ability_data[12];
+extern ability_data_t g_main_ability_data[];
+
+/* Linker alias biased so a reaction ability ID can index the 32-byte table at
+ * 0x8005ebd0 directly; only IDs 0x1a6..0x1c5 are valid. */
+extern const u8 g_main_reaction_behavior_flags_by_ability_id[];
+extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
+extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
+extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
+extern u32 g_main_secondary_saved_data_bits[2];
+s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
+u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
+s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
+u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
+
+/* item */
+extern u8 g_main_item_quantities[ITEM_ID_COUNT];
+extern item_attribute_t g_main_item_attributes[];
+extern u8 g_main_item_page_order[0x15];
+
+/* The first 0x40 bytes are Move-Find-Item flags; the second half is not yet
+ * identified. Both halves are initialized and serialized as one block. */
+extern u8 g_main_item_location_flags[0x80];
+extern u8 g_main_item_poached_quantities[ITEM_ID_COUNT];
+extern item_secondary_data_t g_main_item_secondary_data[];
+
+/* &g_main_item_primary_data[0].secondary_data_id viewed as a stride-12 byte
+ * array. main_unit_set_equipment_stats reads the secondary id through its own
+ * %lo(g_main_item_primary_data+4) address while the type_flags test uses a
+ * record pointer; reading both through item_data_t folds them onto one base
+ * register and misses the byte-exact match. */
+extern u8 g_main_item_secondary_data_ids[];
+extern item_type_order_tables_t g_main_item_type_order_tables;
+
+/* Views of g_main_item_type_order_tables.order_1..6 for the WORLD save-image
+ * copies (world_card_build_save_image, world_card_load_globals_from_save_image),
+ * whose code the member spelling changes. */
+extern s8 g_main_item_type_order_1[8];
+extern u8 g_main_item_type_order_2[7];
+extern u8 g_main_item_type_order_3[5];
+extern u8 g_main_item_type_order_4[5];
+extern u8 g_main_item_type_order_5[7];
+extern u8 g_main_item_type_order_6[5];
+extern weapon_data_t g_main_item_weapon_data[]; /* 0x80063ab8 */
+extern u8 g_main_weapon_page_order[0x8a];
+extern u8 g_main_item_ability_item_ids_by_ability_id[];
+extern u8 g_main_item_ability_item_ids[14];
+extern u8 g_main_item_poach_table[48][2];
+extern accessory_data_t g_main_item_accessory_data[];
+extern armor_data_t g_main_item_helm_armor_secondary_data[];
+extern item_data_t g_main_item_primary_data[];
+extern shield_data_t g_main_item_shield_data[];
+void main_item_init_new_game_inventory(void);
+void main_item_init_order_tables(void);
+item_data_t* main_item_get_data_pointer(s32 item_id);
+s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
+
+/* status */
+/* main_status_change_unit, 0x8005e6cc: OR, AND-not, or replacement of
+ * inflicted_status, followed by merging status_sets.innate into status_sets.current. */
+typedef enum main_status_change {
+    MAIN_STATUS_ADD = 0,
+    MAIN_STATUS_REMOVE = 1,
+    MAIN_STATUS_REPLACE = 2
+} main_status_change_e;
+
+extern status_infliction_data_t g_main_status_infliction_data[];
+extern const status_effect_data_t g_main_status_effect_data[BATTLE_STATUS_COUNT];
+
+/* Byte-stride alias of g_main_status_effect_data[0].flags_1. The target uses
+ * this address directly while walking the 0x10-byte records. */
+extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][BATTLE_STATUS_BYTE_COUNT];
+void main_status_init_check_data(void);
+void main_status_change_unit(battle_stats_t* unit, s32 status_set, u8 status_flag, s32 change_type);
+void main_status_init_ct(battle_stats_t* unit);
+void main_status_init_unit(battle_stats_t* unit);
+void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
+s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing);
+void main_status_store_current(battle_stats_t* unit);
+void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
+s32 main_status_find_action_highest_order_effect(const u8* action);
+
+/* zodiac */
+/* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */
+typedef struct main_zodiac_texture_position {
+    s16 x;
+    u16 y; /* Bits 8..11 select the texture-page row. */
+} main_zodiac_texture_position_t;
+
+typedef struct main_zodiac_screen_position {
+    u16 x;
+    u16 y;
+} main_zodiac_screen_position_t;
+
+typedef struct main_zodiac_sprite_frame {
+    u8 u;
+    u8 _unused_01;
+    u8 v;
+    u8 _padding_03; /* aligns width */
+    s16 width;
+    s16 height;
+    s16 offset_x;
+    s16 offset_y;
+} main_zodiac_sprite_frame_t;
+
+typedef struct main_zodiac_scale {
+    s16 x;
+    s16 y;
+} main_zodiac_scale_t;
+
+typedef struct main_zodiac_draw_offset {
+    u8 _unused_00[8];
+    u16 x;
+    u16 y;
+} main_zodiac_draw_offset_t;
+
+/* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
+typedef struct zodiac_draw_context {
+    u32* ot;             /* 0x00: ordering table entry the primitives link into */
+    u8 brightness;       /* 0x04: r0/g0/b0 of every sprite */
+    u8 _padding_05[3];   /* aligns link_primitives */
+    s32 link_primitives; /* 0x08: nonzero: link each sprite into the OT */
+    s16 scale_x;         /* 0x0c: 12.12 */
+    s16 scale_y;         /* 0x0e: 12.12 */
+    u8 _unused_10[8];
+    main_zodiac_draw_offset_t offset; /* 0x18 */
+} zodiac_draw_context_t;
+
+extern const u16 g_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
+extern POLY_FT4 g_main_zodiac_primitives[2][30];
+
 /* script */
 extern u16 g_scenario_event_finish_operations[];
 extern s32 g_main_script_variables[0x100];
@@ -333,7 +641,49 @@ extern u16 g_main_scenario_condition_offsets[];
 extern s16 g_main_scenario_condition_data[];
 extern event_file_block_t g_event_script_buffer[];
 
-/* sound */
+/* gfx */
+extern RECT g_main_gfx_frame_image_rect;
+extern RECT g_main_gfx_frame_palette_rect;
+extern RECT g_main_gfx_frame_palette_tail_rect;
+extern u32 g_main_gfx_now_loading_clut[];
+extern u32 g_main_gfx_now_loading_frame_counter;
+extern u32 g_main_gfx_now_loading_otags[2][2];
+
+/* Seven textured quads per screen polarity; main_gfx_add_now_loading_to_otag
+ * walks the same table as a [7][sizeof(POLY_FT4)] byte array. */
+extern POLY_FT4 g_main_gfx_now_loading_primitives[2][7];
+extern u32 g_main_gfx_now_loading_visible;
+extern main_zodiac_screen_position_t g_main_gfx_zodiac_screen_position;
+extern u8 g_main_gfx_zodiac_sprite_count;
+extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
+extern main_zodiac_scale_t g_main_gfx_zodiac_sprite_scales[];
+extern main_zodiac_texture_position_t g_main_gfx_zodiac_texture_position;
+extern s32 g_main_gfx_display_buffer_index;
+extern DISPENV g_main_gfx_display_envs[2];
+extern DRAWENV g_main_gfx_draw_envs[2];
+extern s32 g_main_gfx_loading_display_frame_counter;
+extern s32 g_main_gfx_screen_polarity;
+void main_gfx_add_now_loading_to_otag(u32* otag);
+void main_gfx_build_now_loading(u32 visible, s32 x, s32 y);
+void main_gfx_draw_now_loading_message(void);
+u32* main_gfx_get_otag(void);
+void main_gfx_load_efc_fnt(void);
+void main_gfx_load_frame_bin_into_vram(void);
+void main_gfx_load_zodiac_frame(void);
+void main_gfx_reset_display(int width, int height, int projection, u8 red, u8 green, u8 blue);
+void main_gfx_swap_and_clear_otag(void);
+int main_gfx_swap_display_area(u32 otag);
+void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
+void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
+void main_gfx_build_now_loading_center(u32 visible);
+void main_gfx_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
+void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
+
+void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
+    main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,
+    main_zodiac_draw_offset_t* offset);
+
+/* suzuki */
 /* Suzuki sound driver (SCUS_942.21 0x800120f4-0x800186c4) records, tables and
  * globals. Offsets and widths are taken from the driver code named beside
  * each field; _unknown_XX members are provisional. */
@@ -633,18 +983,6 @@ typedef struct suzuki_music {
 } suzuki_music_t;
 typedef char suzuki_music_channels_must_be_at_0xb8[(sizeof(suzuki_music_t) == 0xb8 + 0x160) ? 1 : -1];
 
-/* Loaded SED/SMD sound block ("feds" VFX resource), kept by the Suzuki driver
- * in a singly linked list through next (SuzukiAppendVFXSMD). Play VFX SMD
- * (0x80015c38) matches id and indexes channel_offsets. */
-typedef struct main_sound_resource {
-    u8 _unused_00[0xa];
-    u16 id;                           /* 0x0a */
-    u16 volume_offset;                /* 0x0c; offset of the per-sound u8 volume table */
-    u8 _padding_0e[2];                /* 0x0e; aligns next */
-    struct main_sound_resource* next; /* 0x10 */
-    u16 channel_offsets[1];           /* 0x14 */
-} main_sound_resource_t;
-
 /* Driver SPU state at 0x80037020: the common attributes passed to LIBSPU,
  * the volumes they and g_main_sound_reverb_attr (0x80037008) are built from,
  * and two volume ramps stepped by the root-counter handler (0x800149dc). The
@@ -666,6 +1004,28 @@ typedef char suzuki_spu_state_size_must_be_0x48[(sizeof(suzuki_spu_state_t) == 0
  * next read position. Handlers that ignore an argument may declare it
  * void*; the ABI is the same. */
 typedef u8* (*suzuki_smd_handler_t)(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+
+/* Elapsed play time filled by main_smd_get_play_time. The root counter runs
+ * at 240 Hz; music->ticks counts those ticks in 1/256 units. */
+typedef struct suzuki_play_time {
+    u32 tick_24;  /* 0x00; music->tick_24 */
+    u16 fraction; /* 0x04; 1/240 s */
+    u16 seconds;  /* 0x06 */
+    u16 minutes;  /* 0x08 */
+} suzuki_play_time_t;
+
+/* sound */
+/* Loaded SED/SMD sound block ("feds" VFX resource), kept by the Suzuki driver
+ * in a singly linked list through next (SuzukiAppendVFXSMD). Play VFX SMD
+ * (0x80015c38) matches id and indexes channel_offsets. */
+typedef struct main_sound_resource {
+    u8 _unused_00[0xa];
+    u16 id;                           /* 0x0a */
+    u16 volume_offset;                /* 0x0c; offset of the per-sound u8 volume table */
+    u8 _padding_0e[2];                /* 0x0e; aligns next */
+    struct main_sound_resource* next; /* 0x10 */
+    u16 channel_offsets[1];           /* 0x14 */
+} main_sound_resource_t;
 
 /* Scenario-music playback state at 0x8004d95c (SCUS_942.21). current_music
  * is the Suzuki music record of the playing scenario music:
@@ -735,30 +1095,8 @@ typedef struct main_sound_smd_file {
     s32 size;
 } main_sound_smd_file_t;
 
-/* Elapsed play time filled by main_smd_get_play_time. The root counter runs
- * at 240 Hz; music->ticks counts those ticks in 1/256 units. */
-typedef struct suzuki_play_time {
-    u32 tick_24;  /* 0x00; music->tick_24 */
-    u16 fraction; /* 0x04; 1/240 s */
-    u16 seconds;  /* 0x06 */
-    u16 minutes;  /* 0x08 */
-} suzuki_play_time_t;
-
 extern u8 g_main_sound_env_sed_data[];
 extern u8 g_main_sound_system_sed_data[];
-
-/* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
-extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80];      /* 0x80028b0c; opcodes 0x80-0xff */
-extern u8 g_main_smd_opcode_lengths[0x80];                         /* 0x80028d0c; opcode plus parameters */
-extern u8 g_main_smd_note_durations[228];                          /* 0x80028d8c; ticks per note byte */
-extern u8 g_main_smd_note_semitones[228];                          /* 0x80028e70; note byte / 19 */
-extern suzuki_modulator_step_t g_main_smd_modulator_waveforms[16]; /* 0x80028f54 */
-extern u8 g_main_smd_key_octaves[120];                             /* 0x80028fe8; key / 12 */
-extern u8 g_main_smd_key_semitones[120];                           /* 0x80029060; key % 12 */
-
-/* 0x800290d8: SPU pitch for semitone s and fine step f at index (s << 8) + f
- * (octave 6 reference); main_smd_calculate_pitch indexes it flat. */
-extern u16 g_main_smd_pitch_table[12 * 256];
 
 /* Driver globals (0x800329f0-0x80032a68, gp = 0x800329bc). The heap globals
  * are only ever reached $gp-relative, by 0x8001423c-0x8001442c. The D_ words
@@ -770,7 +1108,7 @@ extern u32 g_main_sound_music_key_off_voices;             /* voices queued for k
 extern u32 g_main_mask_exclusion;                         /* 0x80032a0c; voices reserved by SFX */
 extern u32 g_main_sound_sfx_restart_channels;             /* last SFX voice search: channel mask */
 extern u32 g_main_sound_sfx_restart_voices;               /* last SFX voice search: voice mask */
-extern s32 g_main_smd_random_state;                       /* 0x80032a18 */
+
 extern s16 g_main_sound_sfx_instrument;
 extern u32 g_main_sound_sfx_key_off_voices; /* SFX voices pending key-off */
 extern u16 D_80032A28;                      /* set by main_sound_set_unread_value_800184e0; init and quit zero it */
@@ -841,53 +1179,7 @@ void main_sound_unload_scenario_music_and_tunes(void);
 s32 main_sound_update_tunes(void);
 s32 main_sound_wait_for_scenario_smd_load(s32 scenario);
 
-/* Suzuki driver entry points. The music handle passed by the game wrappers
- * is the suzuki_music_t* that SuzukiPutPlaySMD returns. */
-void SuzukiAppendVFXSMD(main_sound_resource_t* resource);
 void main_sound_remove_vfx_resource(main_sound_resource_t* resource);
-void SuzukiCalcMusVolChange(suzuki_music_t* music, s16 volume, s16 time);
-void SuzukiDeallocateMUSChannels(suzuki_music_t* music);
-u32 SuzukiGetActiveChannels(suzuki_music_t* music);
-u32 SuzukiGetMusicPlaying(suzuki_music_t* music);
-suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd);
-void SuzukiPlaySound1(int sound_id);
-void SuzukiPlaySound2(int sound_id);
-void SuzukiPlaySoundFindChannel(s32 sound_id);
-void SuzukiSetSfxEcho(int sound_id, s16 echo);
-void SuzukiSPUInitialiser(s32 flags);
-void SuzukiTurnOffAllMusic(void);
-void SuzukiUnloadMUS(suzuki_music_t* music);
-
-/* MUS lifecycle, playback control and queue (0x800120f4-0x80014200). */
-void main_smd_reset_music(suzuki_music_t* music, s16 volume, s16 fade);
-void main_smd_resume_music(suzuki_music_t* music, s16 volume, s16 fade);
-void main_smd_pause_music(suzuki_music_t* music);
-void main_smd_stop_marked_music(void);
-void main_smd_init_channel_streams(suzuki_music_t* music, suzuki_smd_header_t* smd);
-void main_smd_set_tempo_scale(suzuki_music_t* music, s16 value, s16 time);
-void main_smd_set_pitch_shift(suzuki_music_t* music, s16 value, s16 time);
-void main_smd_set_balance_shift(suzuki_music_t* music, s16 value, s16 time);
-void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask);
-void main_smd_set_channel_select(suzuki_music_t* music, u8 value);
-void main_smd_get_play_time(suzuki_music_t* music, suzuki_play_time_t* time);
-u16* main_smd_get_min_loop_count(suzuki_music_t* music);
-u8* main_smd_get_music_filename(suzuki_music_t* music);
-void main_smd_dispatch_snapshot(suzuki_music_t* music, s32 mode);
-void main_smd_discard_snapshot(suzuki_music_t* music);
-void main_smd_save_snapshot(suzuki_music_t* music);
-void main_smd_restore_snapshot(suzuki_music_t* music);
-void main_smd_set_stop_bar(suzuki_music_t* music, u16 value);
-u32 main_smd_retrigger_held_voices(suzuki_music_t* music);
-u32 main_smd_get_held_voices(suzuki_music_t* music);
-void main_smd_transfer_music_data(suzuki_music_t* music);
-void main_smd_init_music_header(suzuki_music_t* music);
-void main_smd_init_channels(suzuki_music_t* music);
-void main_smd_free_snapshots(suzuki_music_t* music);
-void main_smd_copy_snapshot(suzuki_music_t* music, suzuki_music_t* snapshot);
-void main_smd_insert_music(suzuki_music_t* music);
-s32 main_smd_remove_music(suzuki_music_t* music);
-void main_smd_get_instrument_attr(SpuVoiceAttr* attr, s16 index);
-void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music);
 
 /* SFX (0x800124cc-0x80013f74). The SFX music record has eight channels on
  * SPU voices 16-23; the low byte of a start_sfx channel id is the first
@@ -906,7 +1198,7 @@ void main_sound_set_sfx_balance(s32 sound_id, s32 balance);
 u32 main_sound_get_sfx_channels(s32 sound_id);
 s32 main_sound_find_sfx_voice(s32 sound_id, s32 voice_count);
 suzuki_music_t* main_sound_init_sfx_music(void);
-void main_smd_init_sfx_music_header(suzuki_music_t* music);
+
 void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance);
 void main_sound_stop_all(void);
 
@@ -921,32 +1213,10 @@ s32 main_sound_root_counter_2_handler(void);
 void main_sound_update_voice_attrs(void);
 void main_sound_flush_key_on(void);
 void main_sound_flush_key_off(void);
-void main_smd_step_ramp(suzuki_ramp_t* ramp);
+
 void main_sound_calculate_pitch_lfo_voices(void);
 void main_sound_calculate_noise_voices(void);
 void main_sound_calculate_reverb_voices(void);
-void main_smd_update_channel_ramps(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
-void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
-void main_smd_update_modulators(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
-void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
-s16 main_smd_calculate_pitch(s16 key);
-void main_smd_modulator_reset(suzuki_modulator_t* modulator);
-void main_smd_modulator_deactivate(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_calculate_step(s32 depth, s16 speed, s16 waveform);
-s32 main_smd_modulator_step_square(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_alternating(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_triangle(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_triangle_centered(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_sawtooth(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_random(suzuki_modulator_t* modulator);
-s32 main_smd_modulator_step_random_bipolar(suzuki_modulator_t* modulator);
-void main_smd_seed_random(s32 value);
-s32 main_smd_random(void);
-
-/* Reprograms an SMD channel with an instrument of its waveset. */
-void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel);
-void main_smd_set_note_flags2_all_channels(u16 mask, suzuki_music_t* music);
-void main_smd_force_channel_func(suzuki_music_t* music, u16 mask);
 
 /* Driver set-up, wavesets, volume and SPU transfers (0x80017920-0x800186c4). */
 void main_sound_quit(void);
@@ -965,7 +1235,7 @@ void main_sound_commit_volume_change(void);
 void main_sound_set_vol_balance(s32 volume, SpuVolume* volume_out, u8 mode);
 void main_sound_set_unread_value_800184e0(u16 value);
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode);
-void main_suzuki_spu_callback_func(void);
+
 s32 main_sound_spu_event_handler(void);
 s16 main_sound_wait_for_spu_transfer(s32 flags);
 void main_sound_replay_weather_sfx(void);
@@ -1043,324 +1313,98 @@ static inline void main_sound_flush_key_off_inline(void) {
         SpuSetKey(0, voices);
 }
 
-/* status */
-/* main_status_change_unit, 0x8005e6cc: OR, AND-not, or replacement of
- * inflicted_status, followed by merging status_sets.innate into status_sets.current. */
-typedef enum main_status_change {
-    MAIN_STATUS_ADD = 0,
-    MAIN_STATUS_REMOVE = 1,
-    MAIN_STATUS_REPLACE = 2
-} main_status_change_e;
+/* smd */
+/* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
+extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80];      /* 0x80028b0c; opcodes 0x80-0xff */
+extern u8 g_main_smd_opcode_lengths[0x80];                         /* 0x80028d0c; opcode plus parameters */
+extern u8 g_main_smd_note_durations[228];                          /* 0x80028d8c; ticks per note byte */
+extern u8 g_main_smd_note_semitones[228];                          /* 0x80028e70; note byte / 19 */
+extern suzuki_modulator_step_t g_main_smd_modulator_waveforms[16]; /* 0x80028f54 */
+extern u8 g_main_smd_key_octaves[120];                             /* 0x80028fe8; key / 12 */
+extern u8 g_main_smd_key_semitones[120];                           /* 0x80029060; key % 12 */
 
-extern status_infliction_data_t g_main_status_infliction_data[];
-extern const status_effect_data_t g_main_status_effect_data[BATTLE_STATUS_COUNT];
+/* 0x800290d8: SPU pitch for semitone s and fine step f at index (s << 8) + f
+ * (octave 6 reference); main_smd_calculate_pitch indexes it flat. */
+extern u16 g_main_smd_pitch_table[12 * 256];
 
-/* Byte-stride alias of g_main_status_effect_data[0].flags_1. The target uses
- * this address directly while walking the 0x10-byte records. */
-extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][BATTLE_STATUS_BYTE_COUNT];
-void main_status_init_check_data(void);
-void main_status_change_unit(battle_stats_t* unit, s32 status_set, u8 status_flag, s32 change_type);
-void main_status_init_ct(battle_stats_t* unit);
-void main_status_init_unit(battle_stats_t* unit);
-void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
-s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing);
-void main_status_store_current(battle_stats_t* unit);
-void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
-s32 main_status_find_action_highest_order_effect(const u8* action);
+extern s32 g_main_smd_random_state; /* 0x80032a18 */
 
-/* system */
-/* 64 allocation tags, one per 0x800-byte block in the game arena. */
-extern u8 g_main_heap_game_allocator_table[64];
-extern u8 g_main_heap_smd_allocator_table[16];
-extern u8 g_main_heap_smd_base[];
-extern game_options_t g_main_game_options;
-extern volatile game_options_t g_main_game_options_defaults;
-extern s32 g_main_system_frontend_world_result;
-extern u32 g_main_system_game_flow_state;
-extern u32 g_main_system_game_loop_stack_pointer;
-extern u8 g_main_system_go_straight_to_battle;
-extern int g_main_system_graphics_error;
-extern s32 g_main_system_play_time_frames;
-extern s32 g_main_system_play_time_hours;
-extern s32 g_main_system_play_time_minutes;
-extern s32 g_main_system_play_time_seconds;
-extern u32 g_main_system_flags;
-extern s32 g_main_system_session_frames;
+/* Suzuki driver entry points. The music handle passed by the game wrappers
+ * is the suzuki_music_t* that SuzukiPutPlaySMD returns. */
+void SuzukiAppendVFXSMD(main_sound_resource_t* resource);
 
-/* The packed-word view of the options record; g_main_game_options names the
- * same address under its union type. The scalar name is retained because GCC
- * otherwise coalesces the saved-word load with the following bitfield writes
- * and changes the target instruction order. */
-extern u32 g_main_game_options_raw;
+void SuzukiCalcMusVolChange(suzuki_music_t* music, s16 volume, s16 time);
+void SuzukiDeallocateMUSChannels(suzuki_music_t* music);
+u32 SuzukiGetActiveChannels(suzuki_music_t* music);
+u32 SuzukiGetMusicPlaying(suzuki_music_t* music);
+suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd);
+void SuzukiPlaySound1(int sound_id);
+void SuzukiPlaySound2(int sound_id);
+void SuzukiPlaySoundFindChannel(s32 sound_id);
+void SuzukiSetSfxEcho(int sound_id, s16 echo);
+void SuzukiSPUInitialiser(s32 flags);
+void SuzukiTurnOffAllMusic(void);
+void SuzukiUnloadMUS(suzuki_music_t* music);
 
-/* Same address as g_main_system_flags (0x8004d950). The target re-reads the
- * flags in both arms after the (flags & 0xc) == 4 test; reading the test
- * through this second link name keeps GCC from reusing the tested load, where
- * a volatile declaration also reschedules the argument setup. */
-extern s32 g_main_system_flags_alias;
-extern s32 g_main_boot_startup2_has_run;
-extern u32 g_main_boot_squaresoft_logo_image_words[];
-extern u8* g_main_heap_high_overlay_load_address;
-extern u8* g_main_heap_low_overlay_load_address;
-extern u8* g_main_heap_world_overlay_load_address;
-void main_noop_800449ec(void);
+/* MUS lifecycle, playback control and queue (0x800120f4-0x80014200). */
+void main_smd_reset_music(suzuki_music_t* music, s16 volume, s16 fade);
+void main_smd_resume_music(suzuki_music_t* music, s16 volume, s16 fade);
+void main_smd_pause_music(suzuki_music_t* music);
+void main_smd_stop_marked_music(void);
+void main_smd_init_channel_streams(suzuki_music_t* music, suzuki_smd_header_t* smd);
+void main_smd_set_tempo_scale(suzuki_music_t* music, s16 value, s16 time);
+void main_smd_set_pitch_shift(suzuki_music_t* music, s16 value, s16 time);
+void main_smd_set_balance_shift(suzuki_music_t* music, s16 value, s16 time);
+void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask);
+void main_smd_set_channel_select(suzuki_music_t* music, u8 value);
+void main_smd_get_play_time(suzuki_music_t* music, suzuki_play_time_t* time);
+u16* main_smd_get_min_loop_count(suzuki_music_t* music);
+u8* main_smd_get_music_filename(suzuki_music_t* music);
+void main_smd_dispatch_snapshot(suzuki_music_t* music, s32 mode);
+void main_smd_discard_snapshot(suzuki_music_t* music);
+void main_smd_save_snapshot(suzuki_music_t* music);
+void main_smd_restore_snapshot(suzuki_music_t* music);
+void main_smd_set_stop_bar(suzuki_music_t* music, u16 value);
+u32 main_smd_retrigger_held_voices(suzuki_music_t* music);
+u32 main_smd_get_held_voices(suzuki_music_t* music);
+void main_smd_transfer_music_data(suzuki_music_t* music);
+void main_smd_init_music_header(suzuki_music_t* music);
+void main_smd_init_channels(suzuki_music_t* music);
+void main_smd_free_snapshots(suzuki_music_t* music);
+void main_smd_copy_snapshot(suzuki_music_t* music, suzuki_music_t* snapshot);
+void main_smd_insert_music(suzuki_music_t* music);
+s32 main_smd_remove_music(suzuki_music_t* music);
+void main_smd_get_instrument_attr(SpuVoiceAttr* attr, s16 index);
+void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music);
 
-/* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
- * but neither their original meaning nor the hook's original name is proven. */
-void main_noop_800449f8(s32 category, s32 code);
-void main_overlay_call_battle_entrypoint(void);
-void main_overlay_exec_battle_bin(void);
-int main_overlay_exec_open_bin_main_loop(int mode);
-void main_overlay_exec_open_bin_ending(void);
-int main_overlay_open_world_and_wldcore(int load_world);
-void main_overlay_open_world_bin(s32 mode);
-void main_restore_game_loop_stack_pointer(u32* source);
-void main_system_handle_animation_exception(int error_code);
-void main_system_handle_battle_load_exception(s32 value);
-void main_system_handle_malloc_exception(s32 allocator_id, s32 error_code);
-void main_system_handle_pointer_exception(int error_code);
-void main_system_reset_game(void);
-void main_system_run_game_loop(void);
-void main_system_stop_display_and_audio_for_game_reset(void);
-void main_system_store_stack_pointer(u32* destination);
-s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
-void main_boot_run_startup(void);
-void main_boot_reset_game_state(void);
-void main_system_handle_draw_sync_callback(void);
-void main_system_handle_vsync_callback(void);
-void main_boot_build_and_draw_sceap_logo(void);
-void main_boot_build_and_draw_squaresoft_logo(void);
-int main_boot_draw_sceap_logo(void* otag, u32* image);
-int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
-void main_boot_fade_out_squaresoft_logo(void);
-void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
-void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
-void* main_heap_alloc(u32 size);
-void* main_heap_alloc_smd(u32 size);
-void main_heap_call_free(void* allocation);
-void main_heap_clear_game_allocator_table(void);
-s32 main_heap_free(void* allocation);
-u8* main_heap_reserve_at(void* allocation, u32 size);
-s32 main_heap_free_smd(void* allocation);
-void main_util_clear_byte_data(void* destination, s32 count);
+void main_smd_init_sfx_music_header(suzuki_music_t* music);
 
-/* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear), not SDK
- * memcpy/memset. Copy takes source first;
- * both routines do nothing for a nonpositive signed byte count. */
-void main_util_copy_byte_data(const void* source, void* destination, s32 count);
-void* game_malloc(s32 byte_length);
-void main_util_copy_action_data(const u8* source, u8* destination);
-void main_heap_clear_smd_allocator_table(void);
-void main_noop_80014544(void);
-void main_system_enable_root_counter_2_evcb(void);
-void main_system_disable_root_counter_2_evcb(void);
-void main_util_copy_bytes(const void* source, void* destination, int count);
+void main_smd_step_ramp(suzuki_ramp_t* ramp);
 
-/* unit */
-/* Selects rows in the base-data (0x8005e90c) and variance (0x8005e93c)
- * tables; these are not job IDs or gender bit flags. */
-typedef enum main_unit_generation_type {
-    MAIN_UNIT_TYPE_MALE = 0,
-    MAIN_UNIT_TYPE_FEMALE = 1,
-    MAIN_UNIT_TYPE_RAMZA = 2,
-    MAIN_UNIT_TYPE_MONSTER = 3,
-    MAIN_UNIT_TYPE_COUNT = 4
-} main_unit_generation_type_e;
+void main_smd_update_channel_ramps(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
+void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
+void main_smd_update_modulators(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
+void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count);
+s16 main_smd_calculate_pitch(s16 key);
+void main_smd_modulator_reset(suzuki_modulator_t* modulator);
+void main_smd_modulator_deactivate(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_calculate_step(s32 depth, s16 speed, s16 waveform);
+s32 main_smd_modulator_step_square(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_alternating(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_triangle(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_triangle_centered(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_sawtooth(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_random(suzuki_modulator_t* modulator);
+s32 main_smd_modulator_step_random_bipolar(suzuki_modulator_t* modulator);
+void main_smd_seed_random(s32 value);
+s32 main_smd_random(void);
 
-/* One row of the generation tables at 0x8005e90c and 0x8005e93c. The
- * records are selected by main_unit_generation_type_e, not by job id. */
-typedef struct main_unit_generation_base_data {
-    u8 raw_stat_seeds[UNIT_RAW_STAT_COUNT];
-    u8 equipment[UNIT_EQUIPMENT_SLOT_COUNT];
-} main_unit_generation_base_data_t;
-typedef char main_unit_generation_base_data_size_must_be_12[(sizeof(main_unit_generation_base_data_t) == 12) ? 1 : -1];
+/* Reprograms an SMD channel with an instrument of its waveset. */
+void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel);
+void main_smd_set_note_flags2_all_channels(u16 mask, suzuki_music_t* music);
+void main_smd_force_channel_func(suzuki_music_t* music, u16 mask);
 
-typedef struct main_unit_generation_raw_stat_variance {
-    u8 raw_stats[UNIT_RAW_STAT_COUNT];
-} main_unit_generation_raw_stat_variance_t;
-typedef char
-    main_unit_generation_raw_stat_variance_size_must_be_5[(sizeof(main_unit_generation_raw_stat_variance_t) == 5) ? 1
-                                                                                                                  : -1];
-
-/* Values accepted by main_status_set_action_state. */
-typedef enum main_unit_action_state {
-    MAIN_UNIT_ACTION_STATE_NONE = 0,
-    MAIN_UNIT_ACTION_STATE_CHARGING = 5,
-    MAIN_UNIT_ACTION_STATE_JUMPING = 6,
-    MAIN_UNIT_ACTION_STATE_DEFENDING = 7,
-    MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
-    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 0xff
-} main_unit_action_state_e;
-
-extern u8 g_highest_party_level;
-extern u8 g_party_slot_base;
-extern s32 g_main_entd_current_event_id;
-extern entd_file_t* g_main_entd_set;
-extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
-extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
-extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
-extern u32 g_main_unit_name_uses_world_text;
-void main_unit_update_formation_stats(battle_stats_t* unit);
-
-/* Current encounter, NULL while loading, or (entd_encounter_t *)-1 when
- * no encounter is selected. */
-entd_encounter_t* main_entd_get_encounter(void);
-int main_entd_open_file(void);
-void main_entd_init_event_unit_data(int event_id);
-void main_party_clear_all(void);
-s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color);
-s32 main_party_find_free_slot(s32 save_formation, u8* palette);
-s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
-
-/* Out-of-battle generation normalizes every value except male, female and
- * monster to Ramza. The raw-stat generator indexes the tables directly. */
-s32 main_party_generate_unit(s32 unit_type);
-party_data_t* main_party_get_data_pointer(s32 party_index);
-void main_party_init_new_game(s32 mode);
-u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta);
-void main_party_remove_unit(u32 index);
-s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest);
-void main_unit_apply_equipment_move_jump_and_name(battle_stats_t* unit);
-void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down);
-void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode);
-s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd);
-void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position);
-u8 main_unit_calculate_palette_spritesheet(battle_stats_t* unit, u8* palette);
-
-s32 main_unit_calculate_random_equipment(
-    battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
-
-u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
-s32 main_unit_calculate_zodiac_symbol(u32 birthday);
-s32 main_unit_check_level_up(battle_stats_t* unit);
-void main_unit_copy_job_data(battle_stats_t* unit);
-void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
-void main_unit_copy_last_ability_ct(battle_stats_t* unit);
-void main_unit_enable_rsm_flags(battle_stats_t* unit);
-void main_unit_generate_base_raw_stats(u8* raw_stats, s32 unit_type);
-void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
-void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type);
-void main_unit_generate_raw_stats(battle_stats_t* unit);
-u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette);
-s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
-s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle);
-void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party_unit);
-s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
-s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text);
-s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels);
-void main_unit_init_status_and_rewards(battle_stats_t* unit, s32 clear_rewards);
-void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd);
-void main_unit_refresh_stats_and_statuses(battle_stats_t* unit);
-void main_unit_reset_battle_state(battle_stats_t* unit);
-void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check);
-
-/* SCUS_942.21 unit equipment/name pipeline, 0x8005ab00 and
- * 0x8005c398..0x8005cbd0. Signatures are shared with the matching definitions. */
-void main_unit_set_equipment_stats(battle_stats_t* unit);
-void main_unit_set_equippable_items(battle_stats_t* unit);
-void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id);
-void main_unit_store_character_names(battle_stats_t* unit);
-void main_unit_store_monster_equipment(battle_stats_t* unit, const entd_unit_t* entd);
-void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit);
-void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing);
-u8 main_party_calculate_highest_level(void);
-void main_unit_increase_casualty_counters(battle_stats_t* unit);
-void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
-
-/* zodiac */
-/* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */
-typedef struct main_zodiac_texture_position {
-    s16 x;
-    u16 y; /* Bits 8..11 select the texture-page row. */
-} main_zodiac_texture_position_t;
-
-typedef struct main_zodiac_screen_position {
-    u16 x;
-    u16 y;
-} main_zodiac_screen_position_t;
-
-typedef struct main_zodiac_sprite_frame {
-    u8 u;
-    u8 _unused_01;
-    u8 v;
-    u8 _padding_03; /* aligns width */
-    s16 width;
-    s16 height;
-    s16 offset_x;
-    s16 offset_y;
-} main_zodiac_sprite_frame_t;
-
-typedef struct main_zodiac_scale {
-    s16 x;
-    s16 y;
-} main_zodiac_scale_t;
-
-typedef struct main_zodiac_draw_offset {
-    u8 _unused_00[8];
-    u16 x;
-    u16 y;
-} main_zodiac_draw_offset_t;
-
-/* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
-typedef struct zodiac_draw_context {
-    u32* ot;             /* 0x00: ordering table entry the primitives link into */
-    u8 brightness;       /* 0x04: r0/g0/b0 of every sprite */
-    u8 _padding_05[3];   /* aligns link_primitives */
-    s32 link_primitives; /* 0x08: nonzero: link each sprite into the OT */
-    s16 scale_x;         /* 0x0c: 12.12 */
-    s16 scale_y;         /* 0x0e: 12.12 */
-    u8 _unused_10[8];
-    main_zodiac_draw_offset_t offset; /* 0x18 */
-} zodiac_draw_context_t;
-
-extern const u16 g_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
-extern POLY_FT4 g_main_zodiac_primitives[2][30];
-
-/* gfx */
-extern RECT g_main_gfx_frame_image_rect;
-extern RECT g_main_gfx_frame_palette_rect;
-extern RECT g_main_gfx_frame_palette_tail_rect;
-extern u32 g_main_gfx_now_loading_clut[];
-extern u32 g_main_gfx_now_loading_frame_counter;
-extern u32 g_main_gfx_now_loading_otags[2][2];
-
-/* Seven textured quads per screen polarity; main_gfx_add_now_loading_to_otag
- * walks the same table as a [7][sizeof(POLY_FT4)] byte array. */
-extern POLY_FT4 g_main_gfx_now_loading_primitives[2][7];
-extern u32 g_main_gfx_now_loading_visible;
-extern main_zodiac_screen_position_t g_main_gfx_zodiac_screen_position;
-extern u8 g_main_gfx_zodiac_sprite_count;
-extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
-extern main_zodiac_scale_t g_main_gfx_zodiac_sprite_scales[];
-extern main_zodiac_texture_position_t g_main_gfx_zodiac_texture_position;
-extern s32 g_main_gfx_display_buffer_index;
-extern DISPENV g_main_gfx_display_envs[2];
-extern DRAWENV g_main_gfx_draw_envs[2];
-extern s32 g_main_gfx_loading_display_frame_counter;
-extern s32 g_main_gfx_screen_polarity;
-void main_gfx_add_now_loading_to_otag(u32* otag);
-void main_gfx_build_now_loading(u32 visible, s32 x, s32 y);
-void main_gfx_draw_now_loading_message(void);
-u32* main_gfx_get_otag(void);
-void main_gfx_load_efc_fnt(void);
-void main_gfx_load_frame_bin_into_vram(void);
-void main_gfx_load_zodiac_frame(void);
-void main_gfx_reset_display(int width, int height, int projection, u8 red, u8 green, u8 blue);
-void main_gfx_swap_and_clear_otag(void);
-int main_gfx_swap_display_area(u32 otag);
-void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
-void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
-void main_gfx_build_now_loading_center(u32 visible);
-void main_gfx_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
-void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
-
-void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
-    main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,
-    main_zodiac_draw_offset_t* offset);
+void main_suzuki_spu_callback_func(void);
 
 /* other */
 extern volatile u8 g_fntload_clut_y_offset_immediate;
@@ -1401,7 +1445,5 @@ extern u8 D_8005E950[];
 
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_return_zero_80043708(void);
-
-/* entry */
 
 #endif
