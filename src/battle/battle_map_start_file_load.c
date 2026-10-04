@@ -15,7 +15,7 @@ s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 desti
         /* Makes GCC re-copy destination from $s0 into $a2 for the call; without
          * the clobber it knows $a2 still holds it and leaves a nop in the slot. */
         asm volatile("" : : : "$6");
-        if (main_file_call_build_header(*(s32*)(load_info + MAP_FILE_LOAD_LBA_OFFSET),
+        if (main_file_request_read_bytes(*(s32*)(load_info + MAP_FILE_LOAD_LBA_OFFSET),
                 *(s32*)(load_info + MAP_FILE_LOAD_BYTE_LENGTH_OFFSET), (void*)destination)
             == 0) {
             return destination;

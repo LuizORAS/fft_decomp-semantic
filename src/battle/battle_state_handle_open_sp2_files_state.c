@@ -12,7 +12,7 @@ void battle_state_handle_open_sp2_files_state(void) {
 
     unit = battle_unit_get_casting_misc_data();
     if (g_battle_gfx_sp2_data == 0) {
-        g_battle_gfx_sp2_data = game_malloc(0x8000);
+        g_battle_gfx_sp2_data = main_heap_alloc(0x8000);
         open_result = battle_gfx_open_sp2_file(unit, g_battle_gfx_sp2_data);
         if (open_result == -1) {
             main_heap_free(g_battle_gfx_sp2_data);

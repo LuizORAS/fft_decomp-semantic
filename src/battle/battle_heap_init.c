@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
-/* Turns buffer into a single free block that links to itself and empties the
- * per-owner lists; the effect stage calls this with the effect palette
- * buffer. */
+/* Turn buffer into one free block that links to itself (buffer_size / 8 - 1 units of
+ * 8 bytes) and empty the 17 owner lists. The effect stage gives it the space from the effect
+ * palette buffer up to g_battle_heap_end_address (0x801df000, MAIN's game heap). */
 void battle_heap_init(battle_heap_node_t* buffer, u32 buffer_size) {
     s32 offset;
     s16 block_count;

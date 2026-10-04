@@ -287,7 +287,7 @@ void battle_state_run_game_loop(void) {
                 }
             }
             g_frame_pacing_suppressed = 0;
-            main_noop_800449ec();
+            main_system_frame_hook();
         }
 
         battle_state_stop_map_animations();

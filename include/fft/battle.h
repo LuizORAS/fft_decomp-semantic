@@ -253,6 +253,8 @@ s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
 
 /* heap */
+/* The battle heap: a K&R-style free list in 8-byte units from the effect palette buffer up to MAIN's game heap. */
+
 /* Battle heap block header: blocks are counted in 8-byte units and linked
  * either on the circular free list (g_battle_heap_rover) or on one of the 16
  * per-owner lists in g_battle_heap_owner_lists. */
@@ -271,10 +273,10 @@ extern battle_heap_node_t* g_battle_heap_base;
 extern s16 g_battle_heap_block_count;
 extern battle_heap_owner_list_t g_battle_heap_owner_lists[];
 extern battle_heap_node_t* g_battle_heap_rover;
-extern u32 g_battle_heap_end_address;
-extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free_node-block size seen, in 8-byte units. */
+extern u32 g_battle_heap_end_address;      /* MAIN word 0x8001000c: 0x801df000, where MAIN's game heap starts */
+extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free-block size seen, in 8-byte units. */
 
-void* battle_heap_alloc_block(u32 size, s32 kind);
+void* battle_heap_alloc_block(u32 size, s32 owner);
 void battle_heap_free_block(void* ptr);
 void battle_heap_init(battle_heap_node_t* buffer, u32 buffer_size);
 void battle_heap_print_stats(void);

@@ -17,7 +17,7 @@ void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
      */
     u8 unused_scratch[0x60];
 
-    main_noop_800449ec();
+    main_system_frame_hook();
     g_bunit_gfx_poly_f3_count = 0;
     g_bunit_gfx_poly_ft3_count = 0;
     g_bunit_gfx_poly_f4_count = 0;

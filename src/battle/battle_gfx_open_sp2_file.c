@@ -23,7 +23,7 @@ s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination) {
         }
         if (animation_id >= *(u32*)(unit->seq_data + 4) >> 1) {
             byte_length = g_battle_gfx_worker8_sp2_files[index].size;
-            return main_file_call_build_header(lba, byte_length, destination) != 0;
+            return main_file_request_read_bytes(lba, byte_length, destination) != 0;
         }
     } else {
         lba = g_battle_gfx_sp2_files[spritesheet_id].sector;
@@ -32,7 +32,7 @@ s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination) {
         }
         if (animation_id >= *(u32*)(unit->seq_data + 4) >> 1) {
             byte_length = g_battle_gfx_sp2_files[spritesheet_id].size;
-            return main_file_call_build_header(lba, byte_length, destination) != 0;
+            return main_file_request_read_bytes(lba, byte_length, destination) != 0;
         }
     }
     return -1;

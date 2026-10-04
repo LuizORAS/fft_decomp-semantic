@@ -10,5 +10,5 @@ void battle_effect_load_data(void) {
         g_ability_effect_id = 1;
         battle_effect_load_lba_and_size(1, &lba, &byte_length);
     }
-    main_file_call_build_header(lba, byte_length, 0);
+    main_file_request_read_bytes(lba, byte_length, 0);
 }

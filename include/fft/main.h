@@ -39,10 +39,11 @@ extern s32 g_main_system_frame_timer;
  * a volatile declaration also reschedules the argument setup. */
 extern s32 g_main_system_flags_alias;
 
-void main_noop_800449ec(void);
+/* Empty hook (nop, jr ra, nop) that every frame loop calls once per frame: the OPEN, WLDCORE and
+ * BATTLE game loops, the WORLD, BUNIT and CARD frame presenters and MAIN's waiting disc reads. It
+ * has no C source; its bytes stay original. */
+void main_system_frame_hook(void);
 
-/* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
- * but neither their original meaning nor the hook's original name is proven. */
 void main_system_report_error_2(s32 category, s32 code);
 
 void main_restore_game_loop_stack_pointer(u32* source);
@@ -88,33 +89,29 @@ int main_overlay_exec_wldcore_and_world_bin(int load_world);
 void main_overlay_load_world_bin(s32 mode);
 
 /* heap */
-/* 64 allocation tags, one per 0x800-byte block in the game arena. */
-extern u8 g_main_heap_game_allocator_table[64];
-extern u8 g_main_heap_smd_allocator_table[16];
-extern u8 g_main_heap_smd_base[];
-extern game_options_t g_main_game_options;
-extern volatile game_options_t g_main_game_options_defaults;
+/* The game heap (64 cells of 2 KB at 0x801df000) and the SMD heap for sound files, as tables of cell tags. */
 
-/* The packed-word view of the options record; g_main_game_options names the
- * same address under its union type. The scalar name is retained because GCC
- * otherwise coalesces the saved-word load with the following bitfield writes
- * and changes the target instruction order. */
-extern u32 g_main_game_options_raw;
-
-extern u8* g_main_heap_high_overlay_load_address;
+/* MAIN's memory layout words at 0x80010000: where OPEN, WLDCORE and BATTLE load (0x80067000), where
+ * WORLD loads (0x800e0000), and the game heap's base (0x801df000), which a companion overlay also
+ * loads over once main_heap_reserve_at has claimed its cells. Between them sit the EVENT overlay
+ * address and the battle heap's end (g_event_overlay_load_address, g_battle_heap_end_address). */
 extern u8* g_main_heap_low_overlay_load_address;
 extern u8* g_main_heap_world_overlay_load_address;
+extern u8* g_main_heap_high_overlay_load_address;
+
+/* One tag per 2 KB cell, 0 when free: the game heap's 64 and the SMD heap's 16. */
+extern u8 g_main_heap_game_allocator_table[64];
+extern u8 g_main_heap_smd_allocator_table[16];
+/* The SMD heap itself: 16 cells of 2 KB in MAIN. */
+extern u8 g_main_heap_smd_base[];
 
 void* main_heap_alloc(u32 size);
-void* main_heap_alloc_smd(u32 size);
+u8* main_heap_reserve_at(void* allocation, u32 size);
+s32 main_heap_free(void* allocation);
 void main_heap_call_free(void* allocation);
 void main_heap_clear_game_allocator_table(void);
-s32 main_heap_free(void* allocation);
-u8* main_heap_reserve_at(void* allocation, u32 size);
+void* main_heap_alloc_smd(u32 size);
 s32 main_heap_free_smd(void* allocation);
-
-void* game_malloc(s32 byte_length);
-
 void main_heap_clear_smd_allocator_table(void);
 
 /* util */
@@ -135,6 +132,8 @@ void main_util_copy_action_data(const u8* source, u8* destination);
 void main_util_copy_bytes(const void* source, void* destination, int count);
 
 /* file */
+/* Disc reads: a descriptor that main_file_poll_load advances once per frame, and the loaders that wait on it. */
+
 /* One poll advances at most one phase; recoverable CD errors restart setup. */
 typedef enum main_file_load_state {
     MAIN_FILE_LOAD_STATE_IDLE = 0,
@@ -160,29 +159,32 @@ typedef struct main_file_load_descriptor {
 } main_file_load_descriptor_t;
 typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
 
+/* The descriptor shared by main_file_request_read_bytes and the loaders that wait. */
 extern main_file_load_descriptor_t g_main_file_cd_state;
+/* Second name for g_main_file_cd_state.state (0x8004eaf8): nonzero while the shared read is in
+ * flight. Spelling the field instead also matches; this name stays because the waits read
+ * better with it. */
 extern u32 g_main_file_still_loading;
 
-/* File-header wrapper at 0x80011bd0 forwards build's result. */
-s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
-s32 main_file_call_build_header(s32 sector, s32 size, void* destination);
+int main_file_request_read(
+    main_file_load_descriptor_t* descriptor, int lba, int sector_count, void* destination, int loading_display_mode);
+s32 main_file_request_read_quiet(main_file_load_descriptor_t* descriptor, s32 sector, s32 sectors, void* destination);
+s32 main_file_request_read_bytes(s32 sector, s32 size, void* destination);
+void main_file_poll_load(main_file_load_descriptor_t* descriptor);
 int main_file_is_still_loading(void);
+
+void main_file_load_data_from_disc(int sector, int sectors, void* destination, int loading_display_mode);
+void* main_file_load_to_address(int sector, u32 size, void* destination);
+void* main_file_load_to_address_checked(int sector, int size, void* destination);
+void* main_file_alloc_and_load(s32 sector, s32 size);
+void* main_file_alloc_and_load_checked(int sector, int size);
+void* main_file_alloc_smd_and_load(int sector, int size);
+
+void main_file_init_cd(void);
+void main_file_cancel_and_pause_cd(main_file_load_descriptor_t* descriptor);
 void main_file_reset_cd_subsystems(void);
 void main_file_handle_cd_read_callback(u8 event, u8* result);
 void main_file_handle_cd_ready_callback(u8 event, u8* result);
-void main_file_reset_cdrom_cpu_ram(void);
-
-int main_file_build_header(
-    main_file_load_descriptor_t* state, int lba, int sector_count, void* destination, int loading_display_mode);
-
-void* main_file_get_bin_as_tim(int sector, int size);
-void* main_file_load_checked_to_address(int sector, int size, void* destination);
-void* main_file_get_smd(int sector, int size);
-void* main_file_get_tim(s32 sector, s32 size);
-void* main_file_load_to_address(int sector, u32 size, void* destination);
-void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
-void main_file_poll_load(main_file_load_descriptor_t* state);
-void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
 
 /* input */
 extern u8 g_main_input_repeat_initial_delay;
@@ -247,6 +249,18 @@ extern s8 g_card_save_slot_file_states[];
 extern u8 g_card_save_slot_metadata[][0x18];
 extern u8 g_card_save_slot_playtimes[][3];
 void main_card_init_events(void);
+
+/* options */
+/* The player's Options menu settings, packed in one word (game_options_t in menu.h), and their defaults. */
+
+extern game_options_t g_main_game_options;
+extern volatile game_options_t g_main_game_options_defaults;
+
+/* The packed-word view of the options record; g_main_game_options names the
+ * same address under its union type. The scalar name is retained because GCC
+ * otherwise coalesces the saved-word load with the following bitfield writes
+ * and changes the target instruction order. */
+extern u32 g_main_game_options_raw;
 
 /* save */
 /* Byte view of the four-byte world-script instruction word at 0x800d4848:

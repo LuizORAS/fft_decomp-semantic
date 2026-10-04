@@ -20,7 +20,7 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     if (*(u16*)&g_battle_script_attack_entry_mode == 2) {
         g_battle_script_attack_entry_mode = 3;
     } else {
-        g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+        g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
         battle_thread_call_on_main_stack(0x990, 0x20000, g_event_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();

@@ -33,7 +33,7 @@ void battle_text_run_unit_message_thread(void) {
         window_mode = 0x12;
     }
     message_id = battle_thread_get_current_parameter_2() | 0xA800;
-    g_battle_text_message_buffer = game_malloc(0x4000);
+    g_battle_text_message_buffer = main_heap_alloc(0x4000);
     battle_menu_request_open_secondary_companion_executable(4);
     g_battle_text_section_pointers[21] = g_battle_text_message_buffer;
     battle_thread_start(8, battle_text_character_handling_thread);

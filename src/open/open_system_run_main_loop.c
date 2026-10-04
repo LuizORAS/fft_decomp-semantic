@@ -35,7 +35,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             open_input_update_buttons_and_check_game_reset();
             VSync(0);
             open_movie_present_frame();
-            main_noop_800449ec();
+            main_system_frame_hook();
         } while ((g_open_system_runtime_flags & 1) != 0);
     }
 

@@ -79,7 +79,7 @@ s32 battle_map_load_mesh_variant(s32 mesh_slot) {
             }
         }
 
-        g_battle_map_mesh_load_buffer = game_malloc(0x20000);
+        g_battle_map_mesh_load_buffer = main_heap_alloc(0x20000);
         if (g_battle_map_mesh_load_buffer == 0) {
             main_system_report_error(2, 0x3c9);
         }

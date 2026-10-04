@@ -35,7 +35,7 @@ void attack_prepare_party_portrait_textures(void) {
         if (ENTRY_MODE == 2) {
             attack_file_load_sync(0x18ba, 0x20000, file);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+            g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
             battle_thread_call_on_main_stack(0x18ba, 0x20000, file);
         }
     } else {

@@ -17,7 +17,7 @@ void main_boot_reset_game_state(void) {
         ResetGraph(1);
         SetGraphDebug(0);
         SpuInitHot();
-        main_file_reset_cdrom_cpu_ram();
+        main_file_init_cd();
         main_gfx_reset_display(256, 240, 512, 0, 0, 0);
         main_boot_fade_in_squaresoft_logo();
         main_sound_open_generic_sfx();

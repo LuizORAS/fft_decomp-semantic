@@ -19,7 +19,7 @@ s32 world_script_init_attack_resources_and_threads(void) {
     if (g_world_script_attack_entry_mode == 2) {
         g_world_script_attack_entry_mode = 3;
     } else {
-        g_world_thread_inner_subroutine_callback = main_file_load_checked_to_address;
+        g_world_thread_inner_subroutine_callback = main_file_load_to_address_checked;
         world_thread_call_on_main_stack(0x990, 0x20000, g_event_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();

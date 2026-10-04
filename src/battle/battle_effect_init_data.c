@@ -30,7 +30,7 @@ s32 battle_effect_init_data(s32 result) {
                 g_ability_effect_id = 1;
                 battle_effect_load_lba_and_size(1, &lba, &byte_length);
             }
-            result = main_file_call_build_header(lba, byte_length, destination);
+            result = main_file_request_read_bytes(lba, byte_length, destination);
             if (result == 0) {
                 g_effect_load_state = 1;
                 result = 1;

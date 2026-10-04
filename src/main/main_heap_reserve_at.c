@@ -1,5 +1,9 @@
 #include "fft/main.h"
 
+/* Claim the game-heap cells that cover size bytes from allocation, if they are all free,
+ * with the lowest tag not in use. Returns the first cell's address, or 0 when allocation is
+ * outside the heap or a cell is taken. WORLD and the EVENT overlays retry it at the heap base
+ * before loading a companion overlay or an image there. */
 u8* main_heap_reserve_at(void* allocation, u32 size) {
     u32 addr;
     u32 base;

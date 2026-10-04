@@ -8,7 +8,7 @@ s32 main_sound_wait_for_scenario_smd_load(s32 scenario) {
     if (result != 0) {
         while (main_sound_poll_scenario_smd_load() != 0) {
             VSync(0);
-            main_noop_800449ec();
+            main_system_frame_hook();
             main_file_poll_load(&g_main_file_cd_state);
         }
     }

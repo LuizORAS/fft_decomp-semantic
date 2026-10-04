@@ -10,7 +10,7 @@ void require_reward_load_bonus_image(s32 image_id) {
         allocation = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x8000);
     } while (allocation != g_main_heap_high_overlay_load_address);
 
-    build_operation = main_file_call_build_header;
+    build_operation = main_file_request_read_bytes;
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))build_operation;

@@ -48,7 +48,7 @@ void attack_gfx_prepare_formation_sprites(void) {
         if (ENTRY_MODE == 2) {
             attack_file_load_sync(0x166B, 0x10000, buffer);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+            g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
             battle_thread_call_on_main_stack(0x166B, 0x10000, buffer);
         }
     } else {

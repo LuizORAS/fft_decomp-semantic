@@ -27,9 +27,9 @@ functions:
   - {addr: 0x80010b40, size: 104, name: __do_global_dtors, hash: 30e458972df14eda, source: src/psyq/crt/__do_global_dtors.c}
   - {addr: 0x80011bb0, size: 16, name: main_system_store_stack_pointer, hash: 972f7e917252ee42}
   - {addr: 0x80011bc0, size: 16, name: main_restore_game_loop_stack_pointer, hash: 8b9c9cab30efada8, asm: "Stack-replacing ABI tail transfer to main_system_run_game_loop; ordinary C cannot assign sp."}
-  - {addr: 0x80011bd0, size: 36, name: main_file_build_header_nnl, hash: 323354187cbfd5ba}
-  - {addr: 0x80011bf4, size: 484, name: main_file_build_header, hash: 2289317868ab7dd4}
-  - {addr: 0x80011dd8, size: 64, name: main_file_reset_pause_cdrom, hash: 5c3ad6653948cd8e}
+  - {addr: 0x80011bd0, size: 36, name: main_file_request_read_quiet, hash: 323354187cbfd5ba}
+  - {addr: 0x80011bf4, size: 484, name: main_file_request_read, hash: 2289317868ab7dd4}
+  - {addr: 0x80011dd8, size: 64, name: main_file_cancel_and_pause_cd, hash: 5c3ad6653948cd8e}
   - {addr: 0x80011e18, size: 32, name: main_file_reset_cd_subsystems, hash: c344f4d9ad5576c9}
   - {addr: 0x80011e38, size: 488, name: main_file_poll_load, hash: ca5b82052b8097de, profile: gcc-2.6.3_O2_aspsx-2.21, rodata: [{addr: 0x80010014, size: 28, hash: 9b7ef4304058db91}]}
   - {addr: 0x80012020, size: 212, name: main_gfx_draw_now_loading_message, hash: dd193b96065424a5}
@@ -669,7 +669,7 @@ functions:
   - {addr: 0x80041d80, size: 280, name: main_boot_draw_sceap_logo_frame, hash: bdee131a2f49829f}
   - {addr: 0x80041e98, size: 1004, name: main_boot_show_sceap_logo, hash: 34c0ed5f4b6c9b9f, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
   - {addr: 0x80042284, size: 572, name: main_gfx_reset_display, hash: f9ff37a175b62153, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
-  - {addr: 0x800424c0, size: 72, name: main_file_reset_cdrom_cpu_ram, hash: f6a52c31a19f52c7}
+  - {addr: 0x800424c0, size: 72, name: main_file_init_cd, hash: f6a52c31a19f52c7}
   - {addr: 0x80042508, size: 124, name: main_gfx_load_zodiac_frame, hash: cece1a887e42aea4, rodata: [{addr: 0x8004092c, size: 8, hash: 35e3f82be5641d60}]}
   - {addr: 0x80042584, size: 268, name: main_boot_run_startup, hash: f89462346cd91dbc}
   - {addr: 0x80042690, size: 276, name: main_boot_reset_game_state, hash: 30bc9957e9902423}
@@ -728,13 +728,13 @@ functions:
   - {addr: 0x800444dc, size: 292, name: main_heap_reserve_at, hash: bb2cd7a4ddd3dc36}
   - {addr: 0x80044600, size: 112, name: main_heap_free, hash: 51b9936a5ea34c17}
   - {addr: 0x80044670, size: 36, name: main_heap_clear_game_allocator_table, hash: baa90df5f4fd6324}
-  - {addr: 0x80044694, size: 52, name: main_file_call_build_header, hash: 0a87b13dd21b6135}
+  - {addr: 0x80044694, size: 52, name: main_file_request_read_bytes, hash: 0a87b13dd21b6135}
   - {addr: 0x800446c8, size: 16, name: main_file_is_still_loading, hash: 2bf2cd79d5e3b972}
-  - {addr: 0x800446d8, size: 228, name: main_file_get_smd, hash: 7c3adb54cd59bad4}
-  - {addr: 0x800447bc, size: 228, name: main_file_get_tim, hash: a436e8832314d2f3}
+  - {addr: 0x800446d8, size: 228, name: main_file_alloc_smd_and_load, hash: 7c3adb54cd59bad4}
+  - {addr: 0x800447bc, size: 228, name: main_file_alloc_and_load, hash: a436e8832314d2f3}
   - {addr: 0x800448a0, size: 180, name: main_file_load_to_address, hash: 9da2049c8a2e24ac}
-  - {addr: 0x80044954, size: 60, name: main_file_load_checked_to_address, hash: e4a2578d2206edfb}
-  - {addr: 0x80044990, size: 60, name: main_file_get_bin_as_tim, hash: f704f1ec47fb6ed5}
+  - {addr: 0x80044954, size: 60, name: main_file_load_to_address_checked, hash: e4a2578d2206edfb}
+  - {addr: 0x80044990, size: 60, name: main_file_alloc_and_load_checked, hash: f704f1ec47fb6ed5}
   - {addr: 0x800449cc, size: 32, name: main_heap_call_free, hash: 68e41579281fa6e2}
   - {addr: 0x800449f8, size: 8, name: main_system_report_error_2, hash: 6d64edf91449c1b1}
   - {addr: 0x80044a00, size: 8, name: main_system_report_error, hash: 6d64edf91449c1b1}
@@ -1263,9 +1263,8 @@ data:
   - {addr: 0x80042880, name: get_entd}
   - {addr: 0x80042b1c, name: save_3_u16}
   - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
-  - {addr: 0x80044414, name: game_malloc}
   - {addr: 0x800444dc, name: game_realloc}
-  - {addr: 0x800449ec, name: main_noop_800449ec}
+  - {addr: 0x800449ec, name: main_system_frame_hook}
   - {addr: 0x80044a08, name: animation_exception_handler}
   - {addr: 0x800454cc, name: g_main_brave_story_ages_source}
   - {addr: 0x8004593c, name: _ramsize}

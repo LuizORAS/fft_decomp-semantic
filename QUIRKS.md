@@ -122,6 +122,11 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
   polygon `vert_shadow_poly` addresses. One four-entry array does not reproduce
   the two separate stack addresses.
+- `main_heap_alloc` and `main_heap_alloc_smd` tag a new block one above the highest tag in
+  the cells before it, so it can share a tag with the block right after it (allocate 62
+  cells, then 2; free the first; allocate 10, then 52: the last two blocks are both tag 2).
+  `main_heap_free` clears cells while the tag repeats, so freeing the 52-cell block frees the
+  2-cell one too, whose own free then returns 0. No retail sequence is known to do this.
 - Unchecked divisions whose divisor can be zero; the R3000 `div` does not trap
   and leaves quotient -1 (1 for a negative dividend) and the dividend as the
   remainder: `100 / ct` in `bunit_ability_get_ct_display_value`,
@@ -415,3 +420,5 @@ translation unit. Share their types and constants through headers.
   code, scenario chain, `BTLEVT.BIN` condition, event or world script starts
   `0x194`; the engine plays the byte-identical script at `0x190` without the
   redirect.
+- `battle_heap_alloc_block` has no out-of-memory exit: when no free block is large enough it
+  walks the circular free list forever.

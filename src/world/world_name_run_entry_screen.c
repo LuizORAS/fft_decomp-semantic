@@ -78,7 +78,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     world_thread_update_task_state();
     while (g_world_name_entry_state != 0xFF) {
         world_gfx_update_fade_in_tile();
-        main_noop_800449ec();
+        main_system_frame_hook();
         g_world_gfx_poly_f3_count = 0;
         g_world_gfx_poly_ft3_count = 0;
         g_world_gfx_poly_f4_count = 0;

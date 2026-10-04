@@ -30,7 +30,7 @@ void open_system_run_ending_cutscene(void) {
             open_movie_present_frame();
             current_otag = (u32*)((g_active_graphics_buffer_index ^ 1) * OPEN_OTAG_BUFFER_BYTES + (u32)otag_1);
             DrawOTag(current_otag - 1);
-            main_noop_800449ec();
+            main_system_frame_hook();
         } while ((g_open_system_runtime_flags & 1) != 0);
     }
 

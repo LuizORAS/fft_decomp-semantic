@@ -23,7 +23,7 @@ void main_boot_run_startup(void) {
     SetGraphDebug(0);
     PadInit(0);
     SpuInit();
-    main_file_reset_cdrom_cpu_ram();
+    main_file_init_cd();
     main_gfx_reset_display(256, 240, 512, 0, 0, 0);
     main_boot_show_sceap_logo();
     main_boot_fade_in_squaresoft_logo();

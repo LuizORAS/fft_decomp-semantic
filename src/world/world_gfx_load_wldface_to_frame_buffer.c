@@ -11,7 +11,7 @@
 void world_gfx_load_wldface_to_frame_buffer(void) {
     u8* image;
 
-    g_world_thread_inner_subroutine_callback = main_file_get_bin_as_tim;
+    g_world_thread_inner_subroutine_callback = main_file_alloc_and_load_checked;
     image = (u8*)world_thread_call_on_main_stack(0x18ba, 0x20000);
     LoadImage(&g_world_wldface_vram_rects, (u32*)image);
     LoadImage(&g_world_wldface_vram_rect_1, (u32*)(image + 0x8000));

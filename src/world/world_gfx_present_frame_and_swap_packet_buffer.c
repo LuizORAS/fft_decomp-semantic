@@ -14,7 +14,7 @@ void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_ota
     world_gfx_packet_buffer_t* context;
     u32* otag = g_world_gfx_active_packet_buffer->otag;
 
-    main_noop_800449ec();
+    main_system_frame_hook();
     envp = &env;
     /* Keep the stack address available before resetting the packet counters;
      * otherwise GCC moves its calculation into GetDrawEnv's delay slot. */

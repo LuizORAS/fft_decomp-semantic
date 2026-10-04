@@ -18,7 +18,7 @@ int main_sound_open_scenario_smd_files(int scenario) {
             buffer = main_heap_alloc_smd(
                 ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->size);
             if (buffer != 0) {
-                if (main_file_call_build_header(
+                if (main_file_request_read_bytes(
                         ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->sector,
                         ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->size, buffer)
                     == 0) {

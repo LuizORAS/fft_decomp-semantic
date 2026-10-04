@@ -1,8 +1,11 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-s32 main_heap_free(void* pointer) {
-    u32 page_index = (u32)((u8*)pointer - g_main_heap_high_overlay_load_address) >> 11;
+/* Free the game-heap allocation that starts at allocation by clearing its cells' tag.
+ * Returns 0, freeing nothing, when the cell before carries the same tag (allocation is not
+ * the start of a block). */
+s32 main_heap_free(void* allocation) {
+    u32 page_index = (u32)((u8*)allocation - g_main_heap_high_overlay_load_address) >> 11;
     s32 allocation_id = g_main_heap_game_allocator_table[page_index];
     s32 previous_id = g_main_heap_game_allocator_table[page_index - 1];
 

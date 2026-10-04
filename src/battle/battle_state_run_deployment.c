@@ -121,7 +121,7 @@ void battle_state_run_deployment(void) {
         g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
         g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
         main_file_poll_load(&g_main_file_cd_state);
-        main_noop_800449ec();
+        main_system_frame_hook();
     }
     fade = 0;
 done:

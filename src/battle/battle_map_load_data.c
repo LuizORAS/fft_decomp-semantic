@@ -19,7 +19,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
-            g_battle_map_data_load_buffer = game_malloc(0x20000);
+            g_battle_map_data_load_buffer = main_heap_alloc(0x20000);
             if (g_battle_map_data_load_buffer == 0) {
                 main_system_report_error(2, 0x3c2);
             }
@@ -35,7 +35,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
-            g_battle_map_data_load_buffer = game_malloc(0x20000);
+            g_battle_map_data_load_buffer = main_heap_alloc(0x20000);
             if (g_battle_map_data_load_buffer == 0) {
                 main_system_report_error(2, 0x3c2);
             }

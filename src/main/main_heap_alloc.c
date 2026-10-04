@@ -1,6 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Allocate size bytes from the game heap: 64 cells of 2 KB at
+ * g_main_heap_high_overlay_load_address (0x801df000). Takes the first run of free cells that
+ * fits and tags each with one more than the highest tag before the run; returns 0 when
+ * nothing fits. */
 void* main_heap_alloc(u32 size) {
     u32 run = 0;
     u32 needed = size >> 11;
