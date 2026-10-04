@@ -8,7 +8,7 @@
 s32 battle_map_update_deep_dungeon_and_animation(void) {
     s32 misc_id;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     if (battle_map_load_data_stage_0x76() != 0) {
         return 0;

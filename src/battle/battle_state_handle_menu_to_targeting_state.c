@@ -12,18 +12,18 @@ void battle_state_handle_menu_to_targeting_state(void) {
     s32 result;
     u16 frame;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     unit = battle_unit_get_source_misc_data();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
-        g_animation_speed = 2;
+        g_battle_state_vsync_interval = 2;
         if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
                 unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
                 battle_action_call_attack_preparation(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
-            g_animation_speed = 1;
+            g_battle_state_vsync_interval = 1;
         }
     }
     frame = unit->state_frame_counter++;

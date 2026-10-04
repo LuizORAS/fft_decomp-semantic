@@ -20,7 +20,7 @@ void battle_action_execute_ability(void) {
         break;
     case 1:
     case 3:
-        battle_state_stop_game_flow();
+        battle_state_disable_camera_pan();
         g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
         g_battle_action_post_action = 0;
         unit->ability_ct_resolved |= 2;

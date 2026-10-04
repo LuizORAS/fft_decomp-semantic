@@ -14,6 +14,6 @@ void battle_state_handle_unit_moving_state(void) {
         battle_unit_update_display_by_misc_id(casting_misc_data->unit_id);
         battle_menu_open_move_confirm();
     }
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
 }

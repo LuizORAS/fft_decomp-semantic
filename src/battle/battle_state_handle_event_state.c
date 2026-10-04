@@ -6,14 +6,17 @@
  * cell. Keep a local linker alias instead of changing the global declaration. */
 extern s16 g_battle_screen_fade_intensity_signed;
 
-/* Advances the live-map event state and submits its active screen fade.
+/* EVENT state: animate the units and camera (unless the status screen is up), run one frame of
+ * the event script and draw the screen fade. When the script ends the battle resumes; a
+ * scenario finish closes the battle with the next game flow: 9 returns to the world map (1),
+ * 0xA sets up the next battle (0), 0xB resets the game (2) and 0x13 plays the ending (3).
  *
  * The target loads the shared u16 fade cell with `lh`; the local signed view
  * preserves that use-specific access. Keeping the loaded intensity and the
  * clamped display level as separate s16 values retains the target's two moves
  * before its unsigned 0x100 comparison. The otherwise-unused 24-byte local
  * preserves the original 64-byte frame. */
-void battle_state_update_event_mode(void) {
+void battle_state_handle_event_state(void) {
     s16 intensity;
     s16 level;
     char unused[24];
@@ -39,19 +42,19 @@ void battle_state_update_event_mode(void) {
         break;
     case 9:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 1);
+        battle_state_enter_close_battle(8, 1);
         break;
     case 10:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 0);
+        battle_state_enter_close_battle(8, 0);
         break;
     case 11:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 2);
+        battle_state_enter_close_battle(8, 2);
         break;
     case 19:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 3);
+        battle_state_enter_close_battle(8, 3);
         break;
     }
 

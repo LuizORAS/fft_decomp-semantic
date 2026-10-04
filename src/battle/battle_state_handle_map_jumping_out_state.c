@@ -1,10 +1,12 @@
 #include "fft/battle.h"
 
+/* MAP_JUMPING_OUT: update the units and darken the screen by the transition step a frame;
+ * once black, clear the map's units and animations and start MAP_INITIALIZE. */
 void battle_state_handle_map_jumping_out_state(void) {
     u32 intensity;
     char unused[24];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     intensity = g_battle_screen_fade_intensity;
     if (intensity >= 0x100) {
         intensity = 0xff;

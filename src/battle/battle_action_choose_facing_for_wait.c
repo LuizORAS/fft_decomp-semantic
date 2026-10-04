@@ -5,7 +5,7 @@ void battle_action_choose_facing_for_wait(void) {
     battle_unit_misc_data_t* unit;
     s32 facing;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     unit = battle_unit_get_source_misc_data();
     facing = unit->facing;
     g_battle_game_state = BATTLE_GAME_STATE_WAIT_DIRECTION;

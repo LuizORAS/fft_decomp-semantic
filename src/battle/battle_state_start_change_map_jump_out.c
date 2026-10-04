@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Same as battle_state_start_map_jump_out, but the current state returns with the screen still
+ * black, until battle_state_start_change_map_jump_in. */
 void battle_state_start_change_map_jump_out(s32 map_id, s32 duration) {
     s32 previous_state;
 

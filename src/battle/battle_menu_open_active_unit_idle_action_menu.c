@@ -3,7 +3,7 @@
 void battle_menu_open_active_unit_idle_action_menu(void) {
     battle_unit_misc_data_t* misc_data;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     misc_data = battle_unit_get_source_misc_data();
     g_battle_casting_unit_id = misc_data->unit_id;
     battle_target_move_cursor_to_unit(misc_data);

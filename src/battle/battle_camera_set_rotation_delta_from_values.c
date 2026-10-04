@@ -4,7 +4,7 @@ void battle_camera_set_rotation_delta_from_values(const s16* values, s32 frame_c
     s32 animation_frames;
     s32 value_x;
 
-    animation_frames = (frame_count & 0xffff) / g_animation_speed;
+    animation_frames = (frame_count & 0xffff) / g_battle_state_vsync_interval;
     value_x = values[0];
     g_battle_camera_rotation_countdown = animation_frames;
     animation_frames = g_battle_camera_rotation_countdown;

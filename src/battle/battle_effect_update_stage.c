@@ -19,7 +19,7 @@ s32 battle_effect_update_stage(void) {
         battle_effect_init_palette(g_ability_effect_id);
         g_battle_effect_phase = 3;
         D_801BF000 = 0;
-        battle_state_reset_frame_pacing_timer();
+        battle_state_clear_slowdown();
         result = 1;
         break;
     case 3:
@@ -27,7 +27,7 @@ s32 battle_effect_update_stage(void) {
             g_battle_heap_end_address - (u32)g_battle_effect_palette_ptr);
         battle_effect_reset_subsystems();
         battle_effect_copy_camera_angles_and_screen_coords();
-        battle_state_clear_frame_pacing();
+        battle_state_clear_min_vsync_interval();
         battle_effect_set_frame_data_pointer(g_ability_effect_id);
         battle_effect_set_parameter_sets_pointer(g_ability_effect_id);
         battle_effect_set_motion_header_pointer(g_ability_effect_id);
@@ -76,7 +76,7 @@ s32 battle_effect_update_stage(void) {
             battle_map_configure_effect_data_state(0x87);
             battle_map_unfreeze();
             battle_menu_enable_height_display();
-            battle_state_clear_frame_pacing();
+            battle_state_clear_min_vsync_interval();
             g_battle_effect_phase = 0;
             result = 0;
         }

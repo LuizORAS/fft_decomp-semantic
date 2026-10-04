@@ -10,7 +10,7 @@ void battle_state_handle_crystal_learn_state(void) {
     battle_unit_misc_data_t* casting;
     u16 counter;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     ability = battle_menu_get_selected_ability_address();
     source = battle_unit_get_source_misc_data();

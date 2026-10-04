@@ -1284,13 +1284,13 @@ data:
   - {addr: 0x80045974, name: g_controller_stable_frames}
   - {addr: 0x80045978, name: g_main_system_frontend_world_result}
   - {addr: 0x8004597c, name: g_main_gfx_screen_polarity}
-  - {addr: 0x80045980, name: g_animation_speed}
+  - {addr: 0x80045980, name: g_battle_state_vsync_interval}
   - {addr: 0x80045984, name: g_battle_frame_measurement}
-  - {addr: 0x80045988, name: g_max_battle_frame_measurement}
-  - {addr: 0x8004598c, name: g_frame_pacing_timer}
-  - {addr: 0x80045990, name: g_frame_pacing_suppressed}
+  - {addr: 0x80045988, name: g_battle_frame_measurement_max}
+  - {addr: 0x8004598c, name: g_battle_state_slowdown_frames}
+  - {addr: 0x80045990, name: g_battle_state_slowdown_suppressed}
   - {addr: 0x80045994, name: g_battle_frame_counter}
-  - {addr: 0x80045998, name: g_frame_pacing}
+  - {addr: 0x80045998, name: g_battle_state_min_vsync_interval}
   - {addr: 0x8004599c, name: g_main_sound_weather_sfx_id}
   - {addr: 0x800459a0, name: g_main_deployed_unit_map_coordinates}
   - {addr: 0x800459b8, name: g_main_system_play_time_frames}
@@ -1348,7 +1348,7 @@ data:
   - {addr: 0x8004d950, name: g_main_system_flags}
   - {addr: 0x8004d950, name: g_main_system_flags_alias}
   - {addr: 0x8004d954, name: g_main_special_portrait_unit_id}
-  - {addr: 0x8004d958, name: g_main_saved_animation_speed}
+  - {addr: 0x8004d958, name: g_main_saved_vsync_interval}
   - {addr: 0x8004d95c, name: g_main_sound_music}
   - {addr: 0x8004d9ac, name: g_main_special_portrait_wldface_id}
   - {addr: 0x8004d9b0, name: g_main_saved_weather_variable}

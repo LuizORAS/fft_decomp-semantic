@@ -35,7 +35,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
     if (g_battle_menu_status_screen_selected != 1) {
-        g_battle_gfx_selection_cursor_bob_timer += g_animation_speed;
+        g_battle_gfx_selection_cursor_bob_timer += g_battle_state_vsync_interval;
         if (g_battle_gfx_selection_cursor_bob_timer >= duration[g_battle_gfx_selection_cursor_bob_frame]) {
             g_battle_gfx_selection_cursor_bob_frame += 1;
             g_battle_gfx_selection_cursor_bob_timer = 0;

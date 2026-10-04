@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 
-void battle_state_update_action_execute_mode(void) {
+/* ACTION_EXECUTE state: animate the units and camera, advance the caster's state counter by
+ * the VSync interval and its targets' knockback; once the animation and number display end,
+ * update the targets (reactions with their post-attack animation) and start the battle
+ * message. */
+void battle_state_handle_action_execute_state(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
     s32 i;
@@ -19,8 +23,8 @@ void battle_state_update_action_execute_mode(void) {
     battle_target_calculate_tile_coords_and_glow_from_at_list();
 
     unit = battle_unit_get_casting_misc_data();
-    /* The target reads the halfword of g_animation_speed. */
-    unit->state_frame_counter += (u16)g_animation_speed;
+    /* The target reads the halfword of g_battle_state_vsync_interval. */
+    unit->state_frame_counter += (u16)g_battle_state_vsync_interval;
     if (unit->target_count != 0) {
         for (i = 0; i < unit->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);

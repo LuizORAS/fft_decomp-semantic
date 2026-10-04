@@ -7,7 +7,7 @@ void battle_camera_set_offset_screen_coord_delta_from_value(const s32* destinati
     s32 current_y;
     s32 delta_x;
 
-    animation_frames = (frame_count & 0xffff) / g_animation_speed;
+    animation_frames = (frame_count & 0xffff) / g_battle_state_vsync_interval;
     current_x = g_battle_offset_screen_coords.vx;
     current_z = g_battle_offset_screen_coords.vy;
     current_y = g_battle_offset_screen_coords.vz;

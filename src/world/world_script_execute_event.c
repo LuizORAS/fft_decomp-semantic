@@ -851,7 +851,7 @@ restart_event:
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
             if (world_script_check_tutorial_event_slot() != 0 && first_halfword >= 3) {
-                world_thread_wait_frames(first_halfword / battle_state_get_animation_speed());
+                world_thread_wait_frames(first_halfword / battle_state_get_vsync_interval());
             } else {
                 world_thread_wait_frames(first_halfword);
             }

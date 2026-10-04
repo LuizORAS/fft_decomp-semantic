@@ -31,7 +31,7 @@ s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
         || battle_thread_is_running_2(7) != 0 || battle_thread_is_running_2(6) != 0) {
         if (g_battle_animation_speed_forced == 0) {
             g_battle_animation_speed_forced = 1;
-            g_battle_saved_animation_speed = battle_state_get_animation_speed();
+            g_battle_saved_animation_speed = battle_state_get_vsync_interval();
             battle_script_set_event_speed(2);
         }
     } else if (g_battle_animation_speed_forced == 1) {

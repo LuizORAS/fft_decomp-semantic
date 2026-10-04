@@ -3,7 +3,7 @@
 void battle_camera_set_zoom_delta_from_values(const VECTOR* values, s32 frame_count) {
     s32 animation_frames;
 
-    animation_frames = (frame_count & 0xffff) / g_animation_speed;
+    animation_frames = (frame_count & 0xffff) / g_battle_state_vsync_interval;
     g_battle_camera_zoom_countdown = animation_frames;
     animation_frames = g_battle_camera_zoom_countdown;
     g_battle_camera_zoom_delta.vx = values->vx / animation_frames;

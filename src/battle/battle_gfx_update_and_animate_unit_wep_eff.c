@@ -16,7 +16,7 @@ typedef struct battle_unit_seq_header {
  * EVTCHR VRAM slot (evicting the slot 1 owner if needed) when the SEQ data
  * keeps the animation there. Without a request a change of sixteenth refreshes
  * the walk or idle pose; otherwise the animation and the three weapon/effect
- * sprite countdowns advance by g_animation_speed frames.
+ * sprite countdowns advance by g_battle_state_vsync_interval frames.
  *
  * unit is initialized in its declaration so its copy precedes the table
  * copies, and the unread unused_10 sizes the target's frame. */
@@ -179,7 +179,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                         }
                     }
                 } else if (unit->animation_countdown != 0) {
-                    for (i = 0; i < g_animation_speed; i++) {
+                    for (i = 0; i < g_battle_state_vsync_interval; i++) {
                         if (unit->animation_countdown != 0) {
                             unit->animation_countdown--;
                             if (unit->animation_countdown == 0) {
@@ -209,7 +209,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             unit->camera_facing_sixteenth.s = sixteenth;
             battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 0);
         } else if (unit->animation_countdown != 0) {
-            for (i = 0; i < g_animation_speed; i++) {
+            for (i = 0; i < g_battle_state_vsync_interval; i++) {
                 if (unit->animation_countdown != 0) {
                     unit->animation_countdown--;
                     if (unit->animation_countdown == 0) {
@@ -221,7 +221,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             }
         }
     } else if (unit->animation_countdown != 0) {
-        for (i = 0; i < g_animation_speed; i++) {
+        for (i = 0; i < g_battle_state_vsync_interval; i++) {
             if (unit->animation_countdown != 0) {
                 unit->animation_countdown--;
                 if (unit->animation_countdown == 0) {
@@ -233,7 +233,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
     }
     for (i = 0; i < 3; i++) {
         if (unit->sprite_blocks[i].trigger != 0 && unit->sprite_blocks[i].wait != 0) {
-            for (j = 0; j < g_animation_speed; j++) {
+            for (j = 0; j < g_battle_state_vsync_interval; j++) {
                 if (unit->sprite_blocks[i].wait != 0) {
                     unit->sprite_blocks[i].wait--;
                     if (unit->sprite_blocks[i].wait == 0) {

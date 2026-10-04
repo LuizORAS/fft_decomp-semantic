@@ -3,7 +3,7 @@
 void battle_action_enter_move_range_exception(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MOVE_RANGE_EXCEPTION;
     unit = battle_unit_get_source_misc_data();
     battle_menu_init_system_function(

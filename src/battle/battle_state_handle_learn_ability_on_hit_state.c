@@ -10,7 +10,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     battle_unit_misc_data_t* target_unit;
     u8 compiler_stack_pad[8];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     selected_ability_address = battle_menu_get_selected_ability_address();
     casting_unit = battle_unit_get_casting_misc_data();

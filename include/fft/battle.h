@@ -111,11 +111,9 @@ extern s32 D_801BC0D8;
 extern s32 g_battle_game_state;
 
 extern s32 g_battle_frame_counter;
-extern s32 g_battle_frame_measurement;
+extern s32 g_battle_frame_measurement;     /* VSync's timer-1 count for the last frame */
+extern s32 g_battle_frame_measurement_max; /* its highest value */
 extern int g_battle_overlay_loaded;
-extern s32 g_frame_pacing;
-extern s32 g_frame_pacing_suppressed;
-extern s32 g_frame_pacing_timer;
 
 void battle_noop_8018ef2c(void);
 
@@ -139,11 +137,25 @@ void battle_noop_80133150(s32 unused_unit_id);
 void battle_noop_80149be4(const u8* unused_parameters);
 
 /* state */
-extern s32 g_battle_state_map_init_step;
+/* The battle state machine: battle_state_run_game_loop runs the handler of g_battle_game_state each frame. */
 
+extern s32 g_battle_state_map_init_step; /* step of the map, unit and event setup; 0xd when done */
+/* 2 while an effect runs this frame, plus any action target still off its tile centre. */
 extern s32 g_battle_state_animation_continue_check;
-extern s32 g_battle_state_game_flow_running;
+/* The d-pad pans the camera over the map instead of the camera following the cursor. */
+extern s32 g_battle_state_camera_pan_enabled;
+/* Screen fade change per frame during a map change or the battle's close: 0x100 / duration. */
 extern s32 g_battle_state_map_transition_step;
+/* Vertical blanks per frame: 1 (60 fps) or 2 (30 fps). Animation counters advance by it, so
+ * they keep real time at both rates. */
+extern s32 g_battle_state_vsync_interval;
+/* Frames left of the slowdown a slow effect frame starts: 4 vertical blanks a frame while
+ * above 15, then 3. */
+extern s32 g_battle_state_slowdown_frames;
+/* Set for the frame an EVTCHR sprite load makes slow, so that frame starts no slowdown. */
+extern s32 g_battle_state_slowdown_suppressed;
+/* Minimum vertical blanks per effect frame (3-9), set by effect scripts. */
+extern s32 g_battle_state_min_vsync_interval;
 
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
@@ -152,7 +164,7 @@ void battle_state_enter_open_sp2_files(void);
 
 void battle_state_enter_pre_attack_animation(void);
 
-void battle_state_run_deployment(void);
+void battle_state_run_battle_setup(void);
 void battle_state_enter_action_execution_setup(void);
 void battle_state_enter_after_command(void);
 void battle_state_enter_highlight_units_by_team(void);
@@ -165,12 +177,12 @@ void battle_state_enter_target_select_confirm(void);
 void battle_state_enter_target_select_denied(void);
 void battle_state_enter_unit_moving(void);
 void battle_state_stop_map_animations(void);
-s32 battle_state_get_animation_speed(void);
+s32 battle_state_get_vsync_interval(void);
 void battle_state_handle_ability_preview_help_state(void);
 void battle_state_handle_ability_preview_state(void);
 void battle_state_handle_action_cast_state(void);
 void battle_state_handle_action_execute_setup_state(void);
-void battle_state_update_action_execute_mode(void);
+void battle_state_handle_action_execute_state(void);
 void battle_state_handle_action_help_menu_state(void);
 void battle_state_handle_active_turn_state(void);
 void battle_state_handle_after_command_state(void);
@@ -185,13 +197,13 @@ void battle_state_handle_deep_dungeon_mesh_finish_state(void);
 void battle_state_handle_deep_dungeon_mesh_load_state(void);
 
 /* Per-frame handlers dispatched by battle_state_run_game_loop. */
-void battle_state_handle_default_state(void);
+void battle_state_handle_free_cursor_state(void);
 void battle_state_handle_display_move_area_state(void);
 void battle_state_handle_effect_damage_display_state(void);
 void battle_state_handle_effect_state(void);
-void battle_state_update_event_mode(void);
+void battle_state_handle_event_state(void);
 void battle_state_handle_free_cursor_help_state(void);
-void battle_state_handle_free_cursor_input(void);
+void battle_state_update_units(void);
 void battle_state_handle_highlight_units_state(void);
 void battle_state_handle_idling_action_menus_state(void);
 void battle_state_handle_illegal_move_menu_state(void);
@@ -231,24 +243,24 @@ void battle_state_handle_wait_menu_state(void);
 void battle_state_restart_menu_to_targeting(void);
 void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
-void battle_state_start_game_flow(void);
-void battle_state_stop_game_flow(void);
+void battle_state_enable_camera_pan(void);
+void battle_state_disable_camera_pan(void);
 s32 battle_state_sync_frame(u32* ordering_table);
 s32 battle_state_update_controller_input(void);
 s32 battle_state_announce_next_charged_action(void);
 void battle_state_enter_target_display_start(void);
 void battle_state_enter_target_select_start(void);
 s32 battle_state_get_animation_continue_check(void);
-void battle_state_halve_animation_speed_and_queue_close(s32 transition_step, s32 close_flow_state);
-void battle_state_init_deployment_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue);
-s32 battle_state_set_animation_speed(s32 speed);
+void battle_state_enter_close_battle(s32 transition_step, s32 close_flow_state);
+void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue);
+s32 battle_state_set_vsync_interval(s32 speed);
 void battle_state_set_free_cursor(void);
-void battle_state_set_time_scale(s32 value);
+void battle_state_set_min_vsync_interval(s32 value);
 void battle_state_start_battle_message_display(void);
 void battle_state_start_change_map_jump_in(s32 duration);
 void battle_state_start_map_jump_out(s32 map_id, s32 duration);
 void battle_state_start_change_map_jump_out(s32 map_id, s32 duration);
-s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table);
+s32 battle_state_sync_setup_frame(u32* ordering_table);
 s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
 
@@ -1534,7 +1546,6 @@ typedef struct battle_keyframe_effect_state {
 
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
-extern s32 g_animation_speed;
 void animation_exception_handler(s32 exception_id);
 void battle_rotate_unit(const u8* parameters);
 
@@ -1778,12 +1789,12 @@ typedef struct battle_unit_misc_data {
     s16 attack_facing;                                   /* 0x072; -1 = no saved facing */
     u16 depth_height_offset;                             /* 0x074 */
     u16 mounted_height_offset;                           /* 0x076 */
-    u16 float_bob_phase;                                 /* 0x078; advanced by g_animation_speed at 0x8007ea98 */
-    s16 special_graphic_y_offset;                        /* 0x07a */
-    u8 map_x;                                            /* 0x07c */
-    u8 map_y;                                            /* 0x07d */
-    u8 map_z;                                            /* 0x07e */
-    u8 centre_tile_offset;                               /* 0x07f */
+    u16 float_bob_phase;          /* 0x078; advanced by g_battle_state_vsync_interval at 0x8007ea98 */
+    s16 special_graphic_y_offset; /* 0x07a */
+    u8 map_x;                     /* 0x07c */
+    u8 map_y;                     /* 0x07d */
+    u8 map_z;                     /* 0x07e */
+    u8 centre_tile_offset;        /* 0x07f */
     battle_move_destination_t movement;
     u8 previous_map_x;          /* 0x084 */
     u8 previous_map_y;          /* 0x085 */
@@ -5458,7 +5469,7 @@ extern s32 g_battle_gfx_status_bubble_status_masks[];
 extern u8 g_battle_gfx_targeted_frame_back[];
 extern u8 g_battle_gfx_targeted_frame_front[];
 
-/* Advanced by g_animation_speed once per call and sampled with bit 5 to blink
+/* Advanced by g_battle_state_vsync_interval once per call and sampled with bit 5 to blink
  * the highlighted arrow. */
 extern u32 g_battle_gfx_wait_arrow_blink_timer;
 
@@ -7918,7 +7929,6 @@ extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 extern u8 g_geomancy_terrain_ability_table[];
 extern job_data_t* g_job_data_pointer;
-extern s32 g_max_battle_frame_measurement;
 s32 battle_classify_character_identity_slot(u32 character_identity);
 s32 battle_return_zero_801842f8(void);
 s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);

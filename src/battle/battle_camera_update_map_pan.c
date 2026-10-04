@@ -4,7 +4,7 @@ void battle_camera_update_map_pan(void) {
     s32* coord;
     s32 limit;
 
-    if (g_battle_state_game_flow_running != 0) {
+    if (g_battle_state_camera_pan_enabled != 0) {
         /* The target passes only the mode; the definition's second parameter is a matching device. */
         switch (((s32 (*)(s32))battle_camera_get_input_direction)(0)) {
         case 0x800:

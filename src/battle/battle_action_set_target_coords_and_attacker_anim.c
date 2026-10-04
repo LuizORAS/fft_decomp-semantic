@@ -44,7 +44,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
     battle_action_misc_data_t* action;
     s32 i;
 
-    g_animation_speed = 1;
+    g_battle_state_vsync_interval = 1;
     g_battle_game_state = BATTLE_GAME_STATE_SECONDARY_EFFECT;
     unit = battle_unit_get_casting_misc_data();
     unit->state_frame_counter = 0;

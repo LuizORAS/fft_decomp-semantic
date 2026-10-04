@@ -19,7 +19,7 @@ void battle_state_handle_close_move_help_state(void) {
 
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     if (source->team_flags & 8) {
         battle_target_move_cursor_by_input();

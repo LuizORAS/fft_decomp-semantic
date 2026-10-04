@@ -51,6 +51,6 @@ void battle_camera_update_zoom(void) {
         return;
     }
     if (increment < 0x300) {
-        g_battle_camera_zoom_increment = g_animation_speed * 4 + increment;
+        g_battle_camera_zoom_increment = g_battle_state_vsync_interval * 4 + increment;
     }
 }

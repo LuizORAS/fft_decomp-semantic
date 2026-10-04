@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 
+/* Same as battle_state_handle_map_jumping_out_state, leading to MAP_INITIALIZE_2. */
 void battle_state_handle_change_map_jumping_out_state(void) {
     u32 intensity;
     char unused[24];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     intensity = g_battle_screen_fade_intensity;
     if (intensity >= 0x100) {
         intensity = 0xff;

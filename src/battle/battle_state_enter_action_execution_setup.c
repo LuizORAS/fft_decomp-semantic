@@ -9,7 +9,7 @@
 void battle_state_enter_action_execution_setup(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP;
     unit = battle_unit_get_source_misc_data();
     if (unit->ability_preview_phase == 3)

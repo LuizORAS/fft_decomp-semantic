@@ -8,7 +8,7 @@ void battle_state_handle_confirm_action_state(void) {
     battle_unit_misc_data_t* target;
     s32 selected_ability;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     selected_ability_address = battle_menu_get_selected_ability_address();
     unit = battle_unit_get_source_misc_data();

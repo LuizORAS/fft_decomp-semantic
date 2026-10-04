@@ -6,7 +6,7 @@ void battle_state_enter_target_display(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* target;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY;
     cast = battle_unit_get_casting_misc_data()->battle_data;
     unit = battle_unit_get_misc_data_by_battle_id(cast->auto_battle_target);

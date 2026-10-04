@@ -12,7 +12,7 @@ void battle_state_enter_commence_attack_phase(void) {
     battle_stats_t** stats_pointer;
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
     unit = battle_unit_get_source_misc_data();
     stats_pointer = &unit->battle_data;

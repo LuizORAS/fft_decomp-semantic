@@ -14,7 +14,7 @@ void battle_state_start_battle_message_display(void) {
     s32 i;
 
     g_battle_game_state = BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY;
-    g_animation_speed = 1;
+    g_battle_state_vsync_interval = 1;
     g_battle_action_post_action = 0;
     unit = battle_unit_get_casting_misc_data();
     battle_action_build_targets_post_action_message();

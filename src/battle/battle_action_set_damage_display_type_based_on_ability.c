@@ -7,7 +7,7 @@ void battle_action_set_damage_display_type_based_on_ability(void) {
     s32 ability;
     s32 target;
 
-    g_animation_speed = 1;
+    g_battle_state_vsync_interval = 1;
     misc = battle_unit_get_casting_misc_data();
     battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, (battle_strike_work_t*)&misc->action_18c);
     raw = misc->last_attack_id;

@@ -43,6 +43,6 @@ void battle_camera_update_rotation(void) {
         return;
     }
     if (g_battle_camera_rotation_increment < 0x30) {
-        g_battle_camera_rotation_increment = (g_animation_speed * 2) + g_battle_camera_rotation_increment;
+        g_battle_camera_rotation_increment = (g_battle_state_vsync_interval * 2) + g_battle_camera_rotation_increment;
     }
 }

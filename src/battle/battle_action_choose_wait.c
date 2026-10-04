@@ -3,7 +3,7 @@
 void battle_action_choose_wait(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     unit = battle_unit_get_source_misc_data();
     if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
         && battle_script_get_event_finish_operation() != 0) {

@@ -5,7 +5,7 @@ void battle_menu_close_move_help(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* casting;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     unit = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {

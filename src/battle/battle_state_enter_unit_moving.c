@@ -4,7 +4,7 @@
 void battle_state_enter_unit_moving(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING;
     battle_target_store_cursor_unit_name_and_data();
     unit = battle_unit_get_casting_misc_data();

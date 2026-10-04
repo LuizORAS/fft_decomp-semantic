@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
-/* Free-cursor game state: camera and cursor input, then the button actions
+/* FREE_CURSOR state, also any unknown state: camera and cursor input, then the button actions
  * (help, team highlight, act menu, move range, AT list and mini menu). */
-void battle_state_handle_default_state(void) {
+void battle_state_handle_free_cursor_state(void) {
     battle_unit_misc_data_t* unit;
     s32 input;
     s32 unused[2]; /* dead 8-byte local; keeps the target's 0x20 frame */
@@ -12,7 +12,7 @@ void battle_state_handle_default_state(void) {
     battle_camera_call_zoom_map();
     battle_camera_call_toggle_tilt();
     battle_target_move_cursor_by_input();
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     input = g_controller_input_pressed;
     (void)&unused;

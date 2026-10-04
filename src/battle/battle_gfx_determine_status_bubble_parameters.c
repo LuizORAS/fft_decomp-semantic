@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advances one unit's status bubble by g_animation_speed frames.
+/* Advances one unit's status bubble by g_battle_state_vsync_interval frames.
  *
  * Every 16 timer ticks the bubble id walks forward to the next status the unit
  * carries, wrapping at 0x16, and the bubble's x/y offsets are chosen from the
@@ -16,7 +16,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
     u32 status_flags;
     s32 animation;
 
-    for (frame = 0; frame < g_animation_speed; frame++) {
+    for (frame = 0; frame < g_battle_state_vsync_interval; frame++) {
         bubble = unit->status_bubble_id;
         if (bubble == 9) {
             unit->status_bubble_alternate_row = (unit->status_bubble_timer & 8) >> 3;

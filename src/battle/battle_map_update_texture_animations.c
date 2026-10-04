@@ -11,7 +11,7 @@
  * palette modes (3 loops, 4/0x81 ping-pong, 0xD-0x14 play once) reload
  * CLUT row canvas_x / 16 from palette frame frame_x + frame. Mode 0x1D
  * starts a mesh texture animation over polygons canvas_x..canvas_x + width - 1.
- * Only the low byte of g_animation_speed is read (lbu), and the start call
+ * Only the low byte of g_battle_state_vsync_interval is read (lbu), and the start call
  * passes the polygon range unmasked, as the target does.
  */
 void battle_map_update_texture_animations(void) {
@@ -50,7 +50,7 @@ void battle_map_update_texture_animations(void) {
             AddPrim(g_battle_data->otag, &g_battle_map_texture_animation_moves[i]);
             break;
         case 2:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame++;
@@ -72,7 +72,7 @@ void battle_map_update_texture_animations(void) {
             }
             break;
         case 0x80:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame--;
@@ -113,7 +113,7 @@ void battle_map_update_texture_animations(void) {
                 0, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             break;
         case 4:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame++;
@@ -127,7 +127,7 @@ void battle_map_update_texture_animations(void) {
             }
             break;
         case 0x81:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame--;
@@ -167,7 +167,7 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].mode = 0x82;
             /* fall through */
         case 0x82:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame--;
@@ -199,7 +199,7 @@ void battle_map_update_texture_animations(void) {
         case 0xA:
         case 0xB:
         case 0xC:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 if (g_battle_map_texture_animations[i].column != 0) {
                     g_battle_map_texture_animation_moves[i].x0 += g_battle_map_texture_animations[i].width;
@@ -236,7 +236,7 @@ void battle_map_update_texture_animations(void) {
         case 0x12:
         case 0x13:
         case 0x14:
-            g_battle_map_texture_animations[i].timer += (u8)g_animation_speed;
+            g_battle_map_texture_animations[i].timer += (u8)g_battle_state_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
                 battle_map_load_palette_data(

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_state_handle_free_cursor_input(void) {
+/* Per-frame unit update most states run: rotation and animation (not while the status screen
+ * is up), status bubbles and the AT-list tile glow. */
+void battle_state_update_units(void) {
     battle_gfx_update_all_unit_rotation_and_vectors();
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();

@@ -31,7 +31,7 @@ void battle_target_select_tile(void) {
     switch (result) {
     case 0:
     case 1:
-        battle_state_start_game_flow();
+        battle_state_enable_camera_pan();
         prev = g_battle_controller_input;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
         g_battle_controller_input = 2;
@@ -43,7 +43,7 @@ void battle_target_select_tile(void) {
         }
         break;
     case 2:
-        battle_state_stop_game_flow();
+        battle_state_disable_camera_pan();
         battle_state_enter_pre_attack_animation();
         battle_target_store_cursor_casting_unit_name_and_data();
         break;

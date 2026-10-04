@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Fade the screen back in over duration frames after battle_state_start_change_map_jump_out,
+ * running the event script meanwhile. */
 void battle_state_start_change_map_jump_in(s32 duration) {
     s32 previous_state;
 

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 void battle_action_set_casting_unit_id_ff(void) {
-    g_animation_speed = 2;
+    g_battle_state_vsync_interval = 2;
     g_battle_game_state = BATTLE_GAME_STATE_EVENT;
     battle_gfx_reset_jumping_unit_graphic_triggers();
     battle_script_reset_event_state();

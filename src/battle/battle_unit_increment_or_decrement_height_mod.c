@@ -30,16 +30,16 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit
     }
     if (unit->movement.word & BATTLE_MOTION_FLAG_FLOAT) {
         if ((s16)unit->depth_height_offset < 12) {
-            unit->depth_height_offset += g_animation_speed;
+            unit->depth_height_offset += g_battle_state_vsync_interval;
         } else if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
-            phase = unit->float_bob_phase += g_animation_speed;
+            phase = unit->float_bob_phase += g_battle_state_vsync_interval;
             unit->mounted_height_offset = wave.offsets[phase % 48 / 2];
         } else {
             unit->mounted_height_offset = 0;
         }
     } else if (g_battle_game_state != BATTLE_GAME_STATE_CRYSTAL_LEARN) {
         if ((s16)unit->depth_height_offset != 0) {
-            unit->depth_height_offset -= g_animation_speed;
+            unit->depth_height_offset -= g_battle_state_vsync_interval;
             if ((s16)unit->depth_height_offset < 0) {
                 unit->depth_height_offset = 0;
             }

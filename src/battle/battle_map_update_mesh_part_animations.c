@@ -19,7 +19,8 @@ void battle_map_update_mesh_part_animations(void) {
 
     for (i = 1; i < 9; i++) {
         if (g_battle_map_mesh_animation_instructions[i].states[0][1].next != 0) {
-            g_battle_map_mesh_parts[i].value_80 += (g_battle_map_mesh_parts[i].value_84 >> 4) * g_animation_speed;
+            g_battle_map_mesh_parts[i].value_80
+                += (g_battle_map_mesh_parts[i].value_84 >> 4) * g_battle_state_vsync_interval;
             if (g_battle_map_mesh_parts[i].value_82 < g_battle_map_mesh_parts[i].value_80) {
                 next = g_battle_map_mesh_parts[i].value_85;
                 g_battle_map_mesh_parts[i].value_87 = 0;

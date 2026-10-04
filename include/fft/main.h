@@ -334,7 +334,7 @@ typedef struct wldcore_word_pair {
 } wldcore_word_pair_t;
 
 extern u8 g_main_save_proposition_count;
-extern s32 g_main_saved_animation_speed;
+extern s32 g_main_saved_vsync_interval; /* BATTLE's VSync interval, saved by battle_state_enter_effect_playback */
 extern s32 g_main_saved_weather_variable;
 
 /* Word-indexed RAM bitmaps; the save serializer copies only their packed data

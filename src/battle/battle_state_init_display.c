@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 
-void battle_state_init_deployment_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue) {
+/* Reset the GPU and set up both display buffers for a width x height screen with the given
+ * background colour and GTE projection; the draw area extends 128 pixels left of the screen.
+ * Loads the debug font when g_font_print_enabled is set. */
+void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue) {
     RECT clear_rect;
     s32 second_y;
 

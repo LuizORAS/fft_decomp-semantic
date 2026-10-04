@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 
-s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table) {
+/* Same as battle_state_sync_frame at a fixed one blank a frame, for the setup screens. */
+s32 battle_state_sync_setup_frame(u32* ordering_table) {
     s32 sync_result;
 
     DrawSync(0);

@@ -8,7 +8,7 @@ void battle_state_enter_status_execute(void) {
     battle_unit_misc_data_t* unit;
     u32 statuses;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_STATUS_EXECUTE;
     unit = battle_unit_get_source_misc_data();
     battle_action_clear_at_list_active();

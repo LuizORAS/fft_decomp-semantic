@@ -4,7 +4,7 @@
 
 void battle_state_handle_target_display_state(void) {
     s32 flags;
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     flags = g_controller_input_pressed;
     if ((flags & PSX_PAD_CIRCLE) || (flags & PSX_PAD_CROSS)) {

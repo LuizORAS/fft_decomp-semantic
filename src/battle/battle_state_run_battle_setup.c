@@ -2,14 +2,16 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Fade in the deployment banner, run map initialisation until it reaches step
- * 0xd, then fade the screen back in.
+/* Set up the display and one battle: load the ATTACK resources and threads, then step
+ * battle_map_init_units_sprites_event_and_music (map, units, sprites, event, music and the
+ * deployment screen) to step 0xd under the Now Loading message or, when the battle starts
+ * straight from the title outside a save, under a banner faded in and out.
  *
  * banner_p and the loop's fade = 0xff reproduce the target's preheader order and
  * register choice for the hoisted colour. The dead fade = 0 before done keeps the
  * step-0xd exit inline ahead of the per-frame path, as in the target; with a
  * plain break GCC moves that block to the loop tail. */
-void battle_state_run_deployment(void) {
+void battle_state_run_battle_setup(void) {
     RECT window = { 0, 0, 0, 0 };
     POLY_FT4 banner[2];
     u8 fade_enabled;
@@ -17,7 +19,7 @@ void battle_state_run_deployment(void) {
     s16 fade;
     POLY_FT4* banner_p;
 
-    battle_state_init_deployment_display(0x100, 0xf0, 0x200, 0, 0, 0);
+    battle_state_init_display(0x100, 0xf0, 0x200, 0, 0, 0);
     fade_enabled = g_main_system_go_straight_to_battle;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS) != 0) {
         fade_enabled = 0;
@@ -87,7 +89,7 @@ void battle_state_run_deployment(void) {
             AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
             AddPrim(main_gfx_get_otag(), &banner[g_main_gfx_screen_polarity]);
             g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-            g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+            g_battle_frame_measurement = battle_state_sync_setup_frame(main_gfx_get_otag() + 0x17f);
             fade -= 8;
         } while (fade >= 0);
     }
@@ -119,7 +121,7 @@ void battle_state_run_deployment(void) {
         AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
         AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
         g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-        g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+        g_battle_frame_measurement = battle_state_sync_setup_frame(main_gfx_get_otag() + 0x17f);
         main_file_poll_load(&g_main_file_cd_state);
         main_system_frame_hook();
     }
@@ -139,7 +141,7 @@ done:
             AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
             AddPrim(main_gfx_get_otag(), &banner[g_main_gfx_screen_polarity]);
             g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-            g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+            g_battle_frame_measurement = battle_state_sync_setup_frame(main_gfx_get_otag() + 0x17f);
             fade += 8;
         } while (fade < 0x100);
     }

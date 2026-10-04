@@ -29,7 +29,7 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
         || world_thread_is_running_2(7) != 0 || world_thread_is_running_2(6) != 0) {
         if (g_world_animation_speed_forced == 0) {
             g_world_animation_speed_forced = 1;
-            g_world_saved_animation_speed = battle_state_get_animation_speed();
+            g_world_saved_animation_speed = battle_state_get_vsync_interval();
             world_script_set_event_speed(2);
         }
     } else if (g_world_animation_speed_forced == 1) {

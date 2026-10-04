@@ -875,7 +875,7 @@ restart_script:
             battle_thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
             if (battle_script_is_tutorial_event_slot() != 0 && first_halfword >= 3) {
-                battle_thread_wait_frames(first_halfword / battle_state_get_animation_speed());
+                battle_thread_wait_frames(first_halfword / battle_state_get_vsync_interval());
             } else {
                 battle_thread_wait_frames(first_halfword);
             }

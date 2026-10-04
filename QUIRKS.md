@@ -430,3 +430,7 @@ translation unit. Share their types and constants through headers.
   and `world_thread_find_running_by_task` scan to 16 (BATTLE stops at 15). The array has room for
   the 17th slot (`g_world_gfx_texture_allocation_grid` starts right after it), but
   `world_thread_reset_scheduler` clears only slots 0-15, so slot 16 keeps its state across a reset.
+- `battle_state_handle_change_map_jumping_in_state` turns event results 9 and 0xA into game flow
+  0 and 1, the reverse of `battle_state_handle_event_state`, and ignores 0xB and 0x13, so a
+  scenario that finishes during an event map change's fade-in would take the other exit (or
+  none).

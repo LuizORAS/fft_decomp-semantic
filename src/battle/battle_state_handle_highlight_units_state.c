@@ -10,5 +10,5 @@ void battle_state_handle_highlight_units_state(void) {
     battle_camera_handle_rotation_input();
     battle_camera_call_zoom_map();
     battle_camera_call_toggle_tilt();
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
 }

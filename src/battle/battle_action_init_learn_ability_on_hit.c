@@ -11,7 +11,7 @@ void battle_action_init_learn_ability_on_hit(void) {
     u16 ability_id;
 
     g_battle_game_state = BATTLE_GAME_STATE_LEARN_ABILITY_ON_HIT;
-    g_animation_speed = 1;
+    g_battle_state_vsync_interval = 1;
     unit = battle_unit_get_source_misc_data();
     battle_menu_init_system_function(0xA, 0, unit->battle_data->misc_unit_id, 0, 0);
     battle_text_set_message_duration_frames(0x1E);

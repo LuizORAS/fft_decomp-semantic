@@ -9,7 +9,7 @@ void battle_action_check_between_turn_events(void) {
         return;
     }
     battle_action_clear_at_list_id();
-    g_animation_speed = 1;
+    g_battle_state_vsync_interval = 1;
     battle_action_run_between_turn_events();
     unit = battle_unit_get_source_misc_data();
     if (unit == 0) {

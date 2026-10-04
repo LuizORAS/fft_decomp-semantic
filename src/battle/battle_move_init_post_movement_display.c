@@ -3,7 +3,7 @@
 void battle_move_init_post_movement_display(void) {
     battle_stats_t* stats;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     stats = battle_unit_get_casting_misc_data()->battle_data;
     if (stats != 0) {
         g_battle_move_find_result = battle_move_set_target_for_mounted_unit_and_find_item(stats);

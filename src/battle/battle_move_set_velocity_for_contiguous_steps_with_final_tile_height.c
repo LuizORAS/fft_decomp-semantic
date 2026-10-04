@@ -94,7 +94,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     direction.vz = end_y - start_y;
     direction.vy = end_z - start_z;
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_battle_state_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_battle_state_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_battle_state_vsync_interval;
 }

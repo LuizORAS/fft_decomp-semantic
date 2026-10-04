@@ -33,7 +33,7 @@ void battle_move_set_unit_step_delta_edge_to_center(
         break;
     }
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_battle_state_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_battle_state_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_battle_state_vsync_interval;
 }

@@ -3,8 +3,8 @@
 void battle_state_set_free_cursor(void) {
     battle_unit_misc_data_t* unit;
 
-    g_animation_speed = 1;
-    battle_state_stop_game_flow();
+    g_battle_state_vsync_interval = 1;
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_FREE_CURSOR;
     g_battle_menu_help_opening = 0;
     battle_target_store_cursor_unit_name_and_data();
