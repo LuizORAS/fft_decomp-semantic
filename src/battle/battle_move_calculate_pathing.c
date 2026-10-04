@@ -150,7 +150,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
                     state->current_tile = &g_battle_map_tile_data[state->tile_index];
                     state->current_panel = &g_battle_target_panels[state->tile_index];
                     if (frontier_snapshot[state->tile_index]) {
-                        battle_move_check_and_spread_one_tile_around();
+                        battle_move_spread_to_adjacent_tiles();
                         if (!config->fly_or_teleport) {
                             battle_move_spread_horizontal_jump();
                         }

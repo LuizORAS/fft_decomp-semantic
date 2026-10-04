@@ -23,7 +23,7 @@ void battle_unit_set_target_animation_from_attack_type(
     if ((target->encoded_animation >> 1) == 0x34) {
         return;
     }
-    float_fly = (u8)battle_move_validate_float_fly(target);
+    float_fly = (u8)battle_move_get_water_animation_mode(target);
     animation = 9;
     if (float_fly < 2) {
         stats = target->battle_data;

@@ -35,7 +35,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         if (!(*destination_flags & 8))
             return 17;
     } else {
-        if (!(*destination_flags & 0x10))
+        if (!(*destination_flags & FRONTIER_FLAG_REACHABLE))
             return 2;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);
@@ -44,7 +44,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         state->destination_side_height_delta = state->destination_opposite_height - state->destination_entry_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
             state->work_x, state->work_y, state->destination_side_shift, state->destination_entry_height);
-        if (state->destination_side_height_delta > 0 && (*destination_flags & 0x40))
+        if (state->destination_side_height_delta > 0 && (*destination_flags & FRONTIER_FLAG_STEEP))
             return 3;
     }
     if (state->destination_ceiling_height < state->source_exit_height + config->unit_size)
@@ -97,7 +97,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         state->destination_panel->max_height_delta = state->height_delta;
     }
     if (state->candidate_remaining_range.value >= 2) {
-        g_battle_move_frontier_flags_ptr[state->destination_index] |= 1;
+        g_battle_move_frontier_flags_ptr[state->destination_index] |= FRONTIER_FLAG_QUEUED;
         if (state->candidate_remaining_range.bytes.low > state->frontier_max_remaining_range)
             state->frontier_max_remaining_range = state->candidate_remaining_range.bytes.low;
     }

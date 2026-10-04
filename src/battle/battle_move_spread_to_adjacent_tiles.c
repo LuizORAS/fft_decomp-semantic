@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_move_check_and_spread_one_tile_around(void) {
+/* Spread the range from the current tile to its four neighbours, then (directions 4-7) from on
+ * top of a unit standing there, through battle_move_propagate_destination. */
+void battle_move_spread_to_adjacent_tiles(void) {
     battle_move_spread_state_t* state;
     s32 i;
     s32 j;

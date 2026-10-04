@@ -11,7 +11,7 @@ void battle_unit_set_level_up_animation(battle_unit_misc_data_t* unit) {
         battle_unit_store_animation_facing(LEVEL_UP_ANIMATION_SMALL_HOPS, unit->facing, unit);
         return;
     }
-    switch ((u8)battle_move_validate_float_fly(unit)) {
+    switch ((u8)battle_move_get_water_animation_mode(unit)) {
     case 0:
         battle_unit_store_animation_facing(LEVEL_UP_ANIMATION_WALKING, unit->facing, unit);
         break;

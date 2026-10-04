@@ -52,7 +52,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
             battle_unit_animate_and_set_enemy_level_data_by_misc_id(unit->unit_id);
             battle_unit_store_animation_facing_movement_data(0x76, unit->facing, unit);
         }
-        if ((u32)(battle_move_validate_float_fly(unit) & 0xff) >= 2) {
+        if ((u32)(battle_move_get_water_animation_mode(unit) & 0xff) >= 2) {
             if (unit->statuses_to_add_1_4 & 4) {
                 battle_unit_store_animation_facing_movement_data(0x1a, unit->facing, unit);
                 unit->encoded_animation = 0x34;
@@ -63,7 +63,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
                 unit->animation_countdown = 0;
             }
         }
-    } else if ((u32)(battle_move_validate_float_fly(unit) & 0xff) < 2) {
+    } else if ((u32)(battle_move_get_water_animation_mode(unit) & 0xff) < 2) {
         if (unit->statuses_to_add_1_4 & 4) {
             battle_unit_store_animation_facing(0x34, unit->facing, unit);
         } else if (unit->statuses_to_remove_1_4 & 4) {

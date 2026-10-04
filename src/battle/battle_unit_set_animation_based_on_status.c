@@ -12,7 +12,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     s32 float_fly;
     u8 spritesheet_id;
 
-    float_fly = battle_move_validate_float_fly(unit) & 0xff;
+    float_fly = battle_move_get_water_animation_mode(unit) & 0xff;
     animation = 0;
     /* A combined 0..1 range test folds to one unsigned compare; the target
      * tests the sign first, so that path jumps into the airborne arm. */

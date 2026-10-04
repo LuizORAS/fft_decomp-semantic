@@ -86,7 +86,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             move_flags = &g_battle_move_effective_flags;
             *move_flags |= 2;
         }
-        if (battle_move_calculate_teleport_chances() != 0) {
+        if (battle_move_roll_teleport_success() != 0) {
             g_battle_move_path[0] = 0xfe;
             g_battle_move_path[1] = x;
             g_battle_move_path[2] = y;

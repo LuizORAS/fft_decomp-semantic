@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Load the current tile's doubled height, half height and slope as the source tile of the
+ * next spread. */
 void battle_move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void) {
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     state->source_base_height_times_two = state->current_tile->height << 1;

@@ -8,7 +8,7 @@ void battle_unit_set_animation_based_on_mounted_state(battle_unit_misc_data_t* u
 
     anim = 0x32;
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
-        fv = battle_move_validate_float_fly(unit) & 0xFF;
+        fv = battle_move_get_water_animation_mode(unit) & 0xFF;
         if (fv < 0) {
             s1v = 9;
         } else if (fv < 2) {

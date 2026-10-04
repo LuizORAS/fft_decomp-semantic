@@ -4673,10 +4673,13 @@ enum {
  * distinct from map_tile_t::ceiling_depth_and_marks and are consumed by the
  * reachable-tile and path-propagation helpers. */
 enum {
+    FRONTIER_FLAG_QUEUED = 0x01, /* spread from this tile in the next pass */
     FRONTIER_FLAG_LOW_CORNER = 0x02,
     FRONTIER_FLAG_UNIT_ON_TILE = 0x04,
     FRONTIER_FLAG_REACHABLE = 0x10,
     FRONTIER_FLAG_VALID_DESTINATION = 0x20,
+    /* The high side is too tall to climb or leave: half height above Jump, or 3+ on a slope. */
+    FRONTIER_FLAG_STEEP = 0x40,
 };
 
 /* Composite event work produced after movement. This is separate from the
@@ -4978,10 +4981,10 @@ void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
 s32 battle_move_update_candidate(s32 extra_span);
 void battle_move_update_knockback_after_animation(battle_unit_misc_data_t* unit);
 void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-s32 battle_move_validate_float_fly(battle_unit_misc_data_t* unit);
+s32 battle_move_get_water_animation_mode(battle_unit_misc_data_t* unit);
 void battle_move_apply_knockback(void);
-s32 battle_move_calculate_teleport_chances(void);
-void battle_move_check_and_spread_one_tile_around(void);
+s32 battle_move_roll_teleport_success(void);
+void battle_move_spread_to_adjacent_tiles(void);
 s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y);
 void battle_move_encode_path_steps(void);
 s32 battle_move_get_direction(const battle_unit_misc_data_t* unit);

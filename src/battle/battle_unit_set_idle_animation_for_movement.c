@@ -16,7 +16,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
         battle_unit_store_animation_facing(0x32, unit->facing, unit);
         return;
     }
-    movement_type = (u8)battle_move_validate_float_fly(unit);
+    movement_type = (u8)battle_move_get_water_animation_mode(unit);
     /* A combined 0..1 range test folds to one unsigned compare; the target
      * tests the sign first, so that path jumps into the mounted arm. */
     if (movement_type < 0) {
