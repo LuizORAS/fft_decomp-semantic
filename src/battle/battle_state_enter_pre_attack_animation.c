@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Enter PRE_ATTACK_ANIMATION: reset the tile colours and the source unit's counter, start the
- * ability's charge animation (or only face) and hide the AT list. */
+ * ability's charge animation (or only face) and hide the map cursor. */
 void battle_state_enter_pre_attack_animation(void) {
     battle_unit_misc_data_t* unit;
     u16 ability;
@@ -17,5 +17,5 @@ void battle_state_enter_pre_attack_animation(void) {
     } else {
         battle_unit_store_animation_facing(2, unit->facing, unit);
     }
-    battle_action_clear_at_list_active();
+    battle_target_hide_cursor();
 }

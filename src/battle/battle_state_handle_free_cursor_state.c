@@ -17,10 +17,10 @@ void battle_state_handle_free_cursor_state(void) {
     input = g_controller_input_pressed;
     (void)&unused;
     if (input & PSX_PAD_SELECT) {
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         battle_menu_open_free_cursor_help();
     } else if (input & PSX_PAD_SQUARE) {
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         battle_state_enter_highlight_units_by_team();
     } else if (input & PSX_PAD_CIRCLE) {
         battle_target_set_tile_background_color(0, 0);
@@ -36,7 +36,7 @@ void battle_state_handle_free_cursor_state(void) {
             }
         }
     } else if (input & PSX_PAD_CROSS) {
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         unit = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         if (unit != 0) {
@@ -46,11 +46,11 @@ void battle_state_handle_free_cursor_state(void) {
     } else if (input & PSX_PAD_START) {
         if (g_main_game_options.fields.multi_height_cursor_speed != GAME_MULTI_HEIGHT_CURSOR_SPEED_STOP) {
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
-            battle_action_is_at_list_unit_charging_ability();
+            battle_turn_show_next_at_entry();
             battle_target_store_cursor_unit_name_and_data();
         }
     } else if (input & PSX_PAD_TRIANGLE) {
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         battle_menu_open_free_cursor_mini_menu();
     }

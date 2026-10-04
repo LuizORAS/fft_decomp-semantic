@@ -1,21 +1,21 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Resolves the queued in-between-turn event (mimic, ability cast, traps).
- *
- * The queue word's high byte selects the action type (g_action_type) and its
- * low byte the unit; BATTLE_TURN_EVENT_NONE means nothing is queued. Unit- and
- * ability-ready events resolve an ability, while action-result events dispatch
- * the queued per-unit result. The meaning of 0x400 remains uncertain. */
-void battle_action_run_between_turn_events(void) {
+/* Take the next event from the turn clock: store its type in g_battle_turn_event and its unit
+ * as the casting unit. A turn or a due ability animates the unit and sets its enemy level data;
+ * an action result applies the staged result, relocating the unit when that returns -1
+ * (battle_unit_set_map_coords_after_death_dismount). Then clear the source unit's
+ * CT-resolution flags and move the cursor to it. The clock never returns event 0x400
+ * (QUIRKS.md). */
+void battle_turn_take_next_event(void) {
     battle_unit_misc_data_t* unit;
     s32 action;
     s32 misc_id;
 
-    action = battle_action_run_between_turn_control(0);
+    action = battle_turn_run_clock(0);
     misc_id = action & 0xff;
-    g_action_type = action & 0xff00;
-    if (g_action_type == BATTLE_TURN_EVENT_NONE) {
+    g_battle_turn_event = action & 0xff00;
+    if (g_battle_turn_event == BATTLE_TURN_EVENT_NONE) {
         return;
     }
     unit = battle_unit_get_misc_data_by_battle_id(misc_id);
@@ -24,7 +24,7 @@ void battle_action_run_between_turn_events(void) {
     } else {
         main_system_handle_pointer_exception(12);
     }
-    switch (g_action_type) {
+    switch (g_battle_turn_event) {
     case BATTLE_TURN_EVENT_UNIT_READY:
     case BATTLE_TURN_EVENT_ABILITY_READY:
         battle_unit_animate_and_set_enemy_level_data_by_misc_id(unit->unit_id);
@@ -57,7 +57,7 @@ void battle_action_run_between_turn_events(void) {
     unit = battle_unit_get_source_misc_data();
     if (unit != 0) {
         unit->ability_ct_resolved = 0;
-        if (g_action_type != BATTLE_TURN_EVENT_UNKNOWN_0400) {
+        if (g_battle_turn_event != BATTLE_TURN_EVENT_UNKNOWN_0400) {
             battle_target_move_cursor_to_unit(unit);
         }
     }

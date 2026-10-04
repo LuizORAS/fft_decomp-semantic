@@ -13,9 +13,9 @@ s32 battle_action_set_move_act_flags(s32 idx, s32 move_flag, s32 act_flag) {
     if (act_flag != 0) {
         unit->action_taken = 1;
     }
-    ret = battle_action_should_end_unit_turn(unit);
+    ret = battle_turn_should_end(unit);
     if (ret != 0) {
-        ret = battle_action_end_turn(idx);
+        ret = battle_turn_end(idx);
     }
     return ret;
 }

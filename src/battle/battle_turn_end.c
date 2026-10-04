@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_end_turn(s32 unit_id) {
+/* End the unit's turn and set its CT for the next one: what was left at the turn's start, plus
+ * 20 if it did not move and 20 if it did not act (Don't Move, Don't Act and Performing count as
+ * done), at most 60. Returns 1. */
+s32 battle_turn_end(s32 unit_id) {
     battle_stats_t* unit;
     u16 ct;
     u8 status4;

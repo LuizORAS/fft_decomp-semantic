@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* WAIT_MENU: 7 goes on to choosing a facing; 8 or cancel enters AFTER_COMMAND, unless
- * battle_action_check_change_of_turn says the turn must change, when a facing is chosen
+ * battle_turn_is_over says the turn must change, when a facing is chosen
  * anyway. */
 void battle_state_handle_wait_menu_state(void) {
     s32* command_address;
@@ -17,7 +17,7 @@ void battle_state_handle_wait_menu_state(void) {
     switch (command) {
     case 8:
     case 0xff:
-        if (battle_action_check_change_of_turn(source_misc_data->battle_data->misc_unit_id) != 1) {
+        if (battle_turn_is_over(source_misc_data->battle_data->misc_unit_id) != 1) {
             battle_state_enter_after_command();
             return;
         }

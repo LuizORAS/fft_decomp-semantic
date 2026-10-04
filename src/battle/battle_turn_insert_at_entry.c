@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_sort_at_list(s32 unit_id, s32 mode, u16 sort_key, battle_at_entry_t* list) {
+/* Insert an entry before the first one with a larger key, moving the rest down: a turn stores
+ * the unit id, an action (mode 1) the id | 0x40, plus 0x20 for a Jump or 0x80 for an ability id
+ * above 0xff, with the ability id's low byte. Returns 0 when no entry has a larger key. */
+s32 battle_turn_insert_at_entry(s32 unit_id, s32 mode, u16 sort_key, battle_at_entry_t* list) {
     battle_stats_t* unit;
     s32 i;
     s32 j;

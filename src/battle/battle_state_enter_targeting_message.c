@@ -2,7 +2,7 @@
 
 /* Enter TARGETING_MESSAGE after the ability's target panels are built: open the "specify a
  * target" message, or the cannot-execute message when no panel is in range (preview phase 3),
- * and mark the AT list active for a player-controlled unit. */
+ * and show the map cursor for a player-controlled unit (hide it for an AI unit). */
 void battle_state_enter_targeting_message(void) {
     battle_unit_misc_data_t* unit;
 
@@ -16,7 +16,7 @@ void battle_state_enter_targeting_message(void) {
         battle_menu_init_system_function(
             1, 0, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
     if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
-        battle_action_set_at_list_active();
+        battle_target_show_cursor();
     else
-        battle_action_clear_at_list_active();
+        battle_target_hide_cursor();
 }

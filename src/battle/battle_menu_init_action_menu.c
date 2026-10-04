@@ -4,9 +4,10 @@
 s32 battle_menu_init_action_menu(battle_unit_misc_data_t* unit) {
     s32 result;
 
-    if (g_action_type == BATTLE_TURN_EVENT_UNIT_READY || g_action_type == BATTLE_TURN_EVENT_NONE) {
+    if (g_battle_turn_event == BATTLE_TURN_EVENT_UNIT_READY || g_battle_turn_event == BATTLE_TURN_EVENT_NONE) {
         result = battle_menu_init_system_function(8, 0, unit->battle_data->misc_unit_id, 0, 1);
-    } else if (g_action_type == BATTLE_TURN_EVENT_ABILITY_READY || g_action_type == BATTLE_TURN_EVENT_ACTION_RESULT) {
+    } else if (g_battle_turn_event == BATTLE_TURN_EVENT_ABILITY_READY
+        || g_battle_turn_event == BATTLE_TURN_EVENT_ACTION_RESULT) {
         result = battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1);
         if (result == 2 && battle_script_get_event_finish_operation() != 0) {
             if (unit->spritesheet_id < BATTLE_SPRITESHEET_ID_RAMZA_END) {

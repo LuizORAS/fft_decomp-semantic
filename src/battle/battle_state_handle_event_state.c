@@ -38,7 +38,7 @@ void battle_state_handle_event_state(void) {
         battle_gfx_init_evtchr_vram_slots();
         g_battle_menu_status_enabled = 1;
         battle_ai_init_workspace();
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         break;
     case 9:
         battle_gfx_init_evtchr_vram_slots();

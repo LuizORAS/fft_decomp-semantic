@@ -30,7 +30,7 @@ void battle_action_init_learn_ability_on_hit(void) {
             battle_menu_init_system_function(0xB, ability_id, unit->battle_data->misc_unit_id, 0,
                 learner->battle_data->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             battle_target_move_cursor_to_unit(learner);
-            battle_action_set_at_list_active();
+            battle_target_show_cursor();
         } else {
             g_battle_action_post_action_display_phase++;
         }

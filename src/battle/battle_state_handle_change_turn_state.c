@@ -22,7 +22,7 @@ void battle_state_handle_change_turn_state(void) {
         if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
             if (g_battle_camera_rotation_action == 0) {
                 battle_unit_get_source_misc_data();
-                type = g_action_type;
+                type = g_battle_turn_event;
                 if (type == BATTLE_TURN_EVENT_ABILITY_READY) {
                     battle_state_enter_action_cast();
                     return;

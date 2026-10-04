@@ -26,7 +26,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     case 1:
         break;
     case 0:
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         break;
     case 9:
         battle_state_enter_close_battle(8, 0);

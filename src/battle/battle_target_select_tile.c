@@ -51,5 +51,5 @@ void battle_target_select_tile(void) {
         battle_menu_dispatch_idle_action_menu();
         break;
     }
-    battle_action_clear_at_list_active();
+    battle_target_hide_cursor();
 }

@@ -12,8 +12,8 @@ void battle_action_choose_wait(void) {
         battle_action_set_casting_unit_id_ff();
         return;
     }
-    if (battle_status_check_unit(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
-        battle_action_check_between_turn_events();
+    if (battle_turn_get_status_flags(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
+        battle_turn_advance();
     } else {
         g_battle_game_state = BATTLE_GAME_STATE_WAIT_MENU;
         battle_target_store_cursor_unit_name_and_data();
@@ -21,8 +21,8 @@ void battle_action_choose_wait(void) {
             3, 0, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
     }
     if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        battle_action_set_at_list_active();
+        battle_target_show_cursor();
     } else {
-        battle_action_clear_at_list_active();
+        battle_target_hide_cursor();
     }
 }

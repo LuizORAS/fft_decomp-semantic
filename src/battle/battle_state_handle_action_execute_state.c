@@ -20,7 +20,7 @@ void battle_state_handle_action_execute_state(void) {
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
-    battle_target_calculate_tile_coords_and_glow_from_at_list();
+    battle_target_update_cursor();
 
     unit = battle_unit_get_casting_misc_data();
     /* The target reads the halfword of g_battle_state_vsync_interval. */

@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_is_at_list_unit_charging_ability(void) {
+/* Show the next AT list entry (Start in the free cursor) and step past it: the cursor on a
+ * unit's turn, or the target panels of a charged action; empty entries are skipped. */
+void battle_turn_show_next_at_entry(void) {
     s32 id;
     battle_unit_misc_data_t* unit;
 
     for (;;) {
-        id = battle_action_calculate_at_list_and_get_specific_unit_id(g_battle_action_at_list_id);
+        id = battle_turn_get_at_entry_unit(g_battle_turn_at_list_index);
         if (id >= 0) {
             unit = battle_unit_get_misc_data_by_battle_id(id & 0xFF);
             if ((id & 0x100) != 0) {
@@ -19,7 +21,7 @@ void battle_action_is_at_list_unit_charging_ability(void) {
             }
             break;
         }
-        battle_action_increment_at_list_id();
+        battle_turn_next_at_list_index();
     }
-    battle_action_increment_at_list_id();
+    battle_turn_next_at_list_index();
 }

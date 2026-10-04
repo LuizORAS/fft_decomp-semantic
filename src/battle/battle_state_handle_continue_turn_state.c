@@ -17,7 +17,7 @@ void battle_state_handle_continue_turn_state(void) {
     if (g_battle_camera_rotation_action != 0) {
         return;
     }
-    if (g_action_type == BATTLE_TURN_EVENT_ABILITY_READY) {
+    if (g_battle_turn_event == BATTLE_TURN_EVENT_ABILITY_READY) {
         if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
             && battle_script_get_event_finish_operation() != 0) {
             g_previous_battle_game_state = g_battle_game_state;
@@ -25,17 +25,17 @@ void battle_state_handle_continue_turn_state(void) {
             battle_action_set_casting_unit_id_ff();
             return;
         }
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         return;
     }
-    if (battle_action_check_change_of_turn(unit->battle_data->misc_unit_id) == 1) {
+    if (battle_turn_is_over(unit->battle_data->misc_unit_id) == 1) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_actor_id;
         unit->used_ability_id = unit->battle_data->last_ability_id;
         if (unit->attack_phase_state == 3) {
             unit->attack_phase_state = 0;
             battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
-            battle_action_check_between_turn_events();
+            battle_turn_advance();
             return;
         }
         battle_action_choose_wait();

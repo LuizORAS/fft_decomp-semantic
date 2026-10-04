@@ -78,9 +78,9 @@ s32 battle_ai_simulate_action_and_score(void) {
     }
     if (ai->current_action.skillset == 0)
         ai->current_action.base_hit_percent = 100;
-    battle_action_end_turn(ai->acting_unit_id);
-    ai->saved_turn_state_0 = g_battle_between_turn_state;
-    ai->saved_turn_state_1 = g_battle_between_turn_resume_state;
+    battle_turn_end(ai->acting_unit_id);
+    ai->saved_turn_state_0 = g_battle_turn_clock_state;
+    ai->saved_turn_state_1 = g_battle_turn_clock_resume_state;
     ai->saved_turn_state_2 = g_battle_turn_unit_id;
     ai->simulated_turn_events = 0;
     for (;;) {
@@ -93,7 +93,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         ai->simulated_turn_events++;
         if (ai->simulated_turn_events >= 256)
             break;
-        unit_index = battle_action_run_between_turn_control(0);
+        unit_index = battle_turn_run_clock(0);
         status = unit_index & 0xff00;
         unit_index &= 0xff;
         unit = &g_battle_unit_stats[unit_index];
@@ -103,8 +103,8 @@ s32 battle_ai_simulate_action_and_score(void) {
             battle_action_finalize_attack_and_flag_reactions(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
             if (battle_ai_call_ability_processing((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
-                g_battle_between_turn_state = ai->saved_turn_state_0;
-                g_battle_between_turn_resume_state = ai->saved_turn_state_1;
+                g_battle_turn_clock_state = ai->saved_turn_state_0;
+                g_battle_turn_clock_resume_state = ai->saved_turn_state_1;
                 g_battle_turn_unit_id = ai->saved_turn_state_2;
                 /* An early return duplicates this shared cleanup tail. */
                 goto finish_without_scoring;
@@ -130,8 +130,8 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (unit_index == BATTLE_UNIT_ID_NONE)
             break;
     }
-    g_battle_between_turn_state = ai->saved_turn_state_0;
-    g_battle_between_turn_resume_state = ai->saved_turn_state_1;
+    g_battle_turn_clock_state = ai->saved_turn_state_0;
+    g_battle_turn_clock_resume_state = ai->saved_turn_state_1;
     g_battle_turn_unit_id = ai->saved_turn_state_2;
 score_state:
     if (VSync(1) >= 441) {

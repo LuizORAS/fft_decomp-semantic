@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 
-/* Return the unit's position on a freshly built AT list.
- *
- * Returns -1 for an empty slot, -3 for a unit that cannot act and -2 when the
- * unit is not on the list. */
-s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit) {
+/* Return the position of the unit's first entry on a freshly built AT list without charged
+ * actions (mode 1): -1 for an empty slot, -3 for a unit that cannot act, -2 when it is not
+ * listed. */
+s32 battle_turn_find_unit_in_at_list(battle_stats_t* unit) {
     battle_at_entry_t at_list[40];
     s32 i;
     battle_at_entry_t* entry;
@@ -15,7 +14,7 @@ s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit) {
     if (battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(unit) != 0)
         return -3;
     misc_unit_id = unit->misc_unit_id;
-    battle_action_calculate_at_list(at_list, 1);
+    battle_turn_build_at_list(at_list, 1);
     i = 0;
     entry = at_list;
     do {

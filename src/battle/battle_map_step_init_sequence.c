@@ -84,7 +84,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         ((void (*)(void))battle_map_init_ambient_light)();
         ((void (*)(void))battle_map_init_darkness)();
         battle_map_update_lighting();
-        battle_action_run_between_turn_control(1);
+        battle_turn_run_clock(1);
         battle_ai_init_workspace();
         step++;
         break;

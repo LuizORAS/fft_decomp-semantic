@@ -14,7 +14,7 @@
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
- * g_world_menu_preview_action, run battle_action_preview_at_list for the stored unit on the
+ * g_world_menu_preview_action, run battle_turn_preview_at_list for the stored unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
  * then write the name text and the four halfword columns and size menu entry
  * 52 around them.
@@ -81,7 +81,7 @@ void world_menu_build_ability_preview_at_list(void) {
     action = &g_world_menu_preview_action;
     action->unit_id = (u8)g_world_unit_view_battle_id;
     stats = world_unit_get_battle_stats_for_stored();
-    g_world_thread_call_target = (void (*)(void))battle_action_preview_at_list;
+    g_world_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = world_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {
         work->descriptors[0].flags |= 0x40;

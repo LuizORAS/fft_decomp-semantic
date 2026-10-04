@@ -6,7 +6,7 @@
  * Runs the attack preparation for action in the preview state, rebuilds
  * at_list and counts the turns until the action resolves, then restores the
  * unit's action data, CT, move/act flags and statuses. */
-s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list) {
+s32 battle_turn_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list) {
     u8 saved_action[0x18];
     u8* action_data;
     s32 old_state;
@@ -27,10 +27,9 @@ s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_en
     if (battle_action_call_attack_preparation_at_preview(action) == 1) {
         unit->charged_ability_ct = 0;
     }
-    turns = battle_action_calculate_at_list(at_list, 3);
+    turns = battle_turn_build_at_list(at_list, 3);
     if (turns != -1) {
-        turns = battle_action_get_number_of_turns_to_resolve(unit->misc_unit_id, unit->charged_ability_ct, at_list)
-            & 0xFF;
+        turns = battle_turn_count_entries_before_action(unit->misc_unit_id, unit->charged_ability_ct, at_list) & 0xFF;
     }
     g_battle_action_state = old_state;
     unit->movement_taken = old_movement_taken;

@@ -27,11 +27,11 @@ void battle_state_handle_wait_direction_state(void) {
         battle_camera_call_toggle_tilt();
         if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
+                battle_turn_end(unit->battle_data->misc_unit_id);
                 battle_unit_update_mount_animation_display(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
-            battle_action_check_between_turn_events();
+            battle_turn_advance();
         } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
             battle_state_enter_after_command();
         }
@@ -62,10 +62,10 @@ void battle_state_handle_wait_direction_state(void) {
         frame_data = unit->state_frame_counter++;
         if (frame_data >= 0x1f) {
             if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
+                battle_turn_end(unit->battle_data->misc_unit_id);
                 battle_unit_update_mount_animation_display(unit);
             }
-            battle_action_check_between_turn_events();
+            battle_turn_advance();
         }
     }
 }

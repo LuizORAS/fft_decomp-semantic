@@ -434,3 +434,6 @@ translation unit. Share their types and constants through headers.
   0 and 1, the reverse of `battle_state_handle_event_state`, and ignores 0xB and 0x13, so a
   scenario that finishes during an event map change's fade-in would take the other exit (or
   none).
+- `battle_turn_take_next_event` handles turn event 0x400 (`BATTLE_TURN_EVENT_UNKNOWN_0400`), but
+  `g_battle_turn_event` only takes `battle_turn_run_clock`'s results, which never include it, so
+  that arm never runs.

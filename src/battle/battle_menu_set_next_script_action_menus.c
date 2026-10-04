@@ -7,7 +7,7 @@ void battle_menu_set_next_script_action_menus(void) {
     battle_state_disable_camera_pan();
     casting_unit = battle_unit_get_casting_misc_data();
     unit = battle_unit_get_source_misc_data();
-    battle_action_set_at_list_active();
+    battle_target_show_cursor();
     battle_unit_store_entd_flags_without_control_flag(casting_unit);
     if (battle_menu_init_action_menu(unit) == 0) {
         g_battle_game_state = BATTLE_GAME_STATE_OPEN_ACTION_MENUS;

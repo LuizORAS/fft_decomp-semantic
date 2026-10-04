@@ -1,10 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Tile coordinate calculation with the cursor glow, used while an AT list is
- * active (see battle_target_calculate_tile_coords_and_glow_from_at_list).
- */
+/* Project the cursor tile and draw the map cursor and its tile glow, while the cursor is
+ * visible (battle_target_update_cursor). */
 void battle_target_calculate_tile_coords_with_cursor_glow(void) {
     SVECTOR secondary;
     SVECTOR tertiary;

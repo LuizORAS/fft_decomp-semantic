@@ -32,7 +32,7 @@ void bunit_panel_copy_unit_data_to_billboard(battle_stats_t* unit, bunit_unit_da
     if (unit->auto_battle_setting != 0) {
         record->team_kind = 3;
     }
-    i = battle_action_check_at_list_for_unit_battle_id(unit);
+    i = battle_turn_find_unit_in_at_list(unit);
     list_index = -1;
     if (i >= 0) {
         list_index = i + 1;

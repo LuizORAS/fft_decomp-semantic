@@ -9,9 +9,9 @@ void battle_menu_close_move_help(void) {
     unit = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
-        battle_action_set_at_list_active();
+        battle_target_show_cursor();
     } else {
-        battle_action_clear_at_list_active();
+        battle_target_hide_cursor();
     }
 
     if (battle_move_set_reachable_tiles(

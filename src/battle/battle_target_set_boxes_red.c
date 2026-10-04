@@ -13,9 +13,9 @@ s32 battle_target_set_boxes_red(void) {
         battle_target_set_tile_background_color(2, 2);
         battle_target_store_cursor_unit_as_preview_target();
         if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
-            battle_action_set_at_list_active();
+            battle_target_show_cursor();
         } else {
-            battle_action_clear_at_list_active();
+            battle_target_hide_cursor();
         }
         break;
     case 2:

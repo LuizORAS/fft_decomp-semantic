@@ -18,7 +18,7 @@ void battle_state_handle_status_execute_state(void) {
             misc = battle_unit_get_source_misc_data();
             if (misc->numeric_display_active == 0) {
                 battle_unit_update_display_by_misc_id(misc->unit_id);
-                battle_action_check_between_turn_events();
+                battle_turn_advance();
             }
         }
     }

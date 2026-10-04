@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Enter UNIT_MOVING: save the unit's state (and its mount's) for an undo, set the walk speed,
- * start at the path's first step and hide the AT list. */
+ * start at the path's first step and hide the map cursor. */
 void battle_state_enter_unit_moving(void) {
     battle_unit_misc_data_t* unit;
 
@@ -20,5 +20,5 @@ void battle_state_enter_unit_moving(void) {
     unit->step_speed = 0x2000;
     unit->movement_path_offset = 0;
     g_battle_state_animation_continue_check = 0;
-    battle_action_clear_at_list_active();
+    battle_target_hide_cursor();
 }

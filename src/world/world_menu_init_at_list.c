@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Provisional: one 4-byte slot of the unit list filled on the main stack by
- * battle_action_calculate_at_list. Bits 0-4 of `flags` hold the battle id (0x1f ends the list);
+ * battle_turn_build_at_list. Bits 0-4 of `flags` hold the battle id (0x1f ends the list);
  * 0x40 marks a bracketed name, 0x20/0x80 select its sprite row. */
 typedef struct {
     u8 flags;
@@ -32,7 +32,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
     s32 i;
     u8* text;
 
-    g_world_thread_call_target = (void (*)(void))battle_action_calculate_at_list;
+    g_world_thread_call_target = (void (*)(void))battle_turn_build_at_list;
     world_thread_call_on_main_stack(g_world_action_target_list_slots, 0);
     for (i = 0; i < 256; i++) {
         g_world_dead_unit_menu_flags[i] = 0;

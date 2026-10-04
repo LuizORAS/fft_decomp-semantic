@@ -350,6 +350,9 @@ void battle_thread_wait_until_inactive(s32 thread_id);
 void battle_thread_yield(void);
 
 /* turn */
+/* Turn order: the turn clock that turns CT into turn events, the end of a turn and the AT
+ * list. */
+
 typedef enum battle_turn_status_flags {
     BATTLE_TURN_STATUS_CT_FROZEN = 0x01,
     BATTLE_TURN_STATUS_INCAPACITATED = 0x02,
@@ -370,12 +373,12 @@ typedef enum battle_turn_event {
     BATTLE_TURN_EVENT_NONE = 0xff00,
 } battle_turn_event_e;
 
-/* One 4-byte entry of the 40-entry AT list built by battle_action_calculate_at_list and
- * kept in key order by battle_action_sort_at_list. */
+/* One 4-byte entry of the 40-entry AT list built by battle_turn_build_at_list and
+ * kept in key order by battle_turn_insert_at_entry. */
 typedef struct battle_at_entry {
     u8 unit;      /* 0x00; unit id, biased by the entry kind */
     u8 flags;     /* 0x01; low byte of the charging ability id */
-    u16 sort_key; /* 0x02; insertion key for battle_action_sort_at_list */
+    u16 sort_key; /* 0x02; insertion key for battle_turn_insert_at_entry */
 } battle_at_entry_t;
 typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
 
@@ -401,10 +404,37 @@ extern u8 g_acting_unit_y;
 extern s32 g_battle_acting_unit_id;
 extern u8 g_battle_acting_unit_id_byte;
 extern battle_active_unit_t g_battle_active_turn_unit;
-extern s32 g_battle_between_turn_resume_state;
 extern s16 g_battle_acting_unit_used_ability_id;
-extern s32 g_battle_between_turn_state;
-extern s32 g_battle_turn_unit_id;
+
+/* Phase of battle_turn_run_clock, and the phase it resumes after a turn, a Quick turn or the
+ * Mime copies. */
+extern s32 g_battle_turn_clock_state;
+extern s32 g_battle_turn_clock_resume_state;
+extern s32 g_battle_turn_unit_id; /* unit the clock gave the last turn to; -1 after a reset */
+/* Type of the event battle_turn_take_next_event took (BATTLE_TURN_EVENT_*). */
+extern s32 g_battle_turn_event;
+/* Per unit: a pending action result (clock phases 5-6) or a Mime to copy the ability (13-14). */
+extern u8 g_battle_turn_pending_flags[21];
+extern s32 g_battle_turn_at_list_index; /* AT list entry the browse shows next */
+
+void battle_turn_advance(void);
+s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode);
+void battle_turn_clear_at_list_index(void);
+u32 battle_turn_count_entries_before_action(s32 unit_index, s32 ct, battle_at_entry_t* entries);
+s32 battle_turn_end(s32 unit_id);
+s32 battle_turn_find_unit_in_at_list(battle_stats_t* unit);
+s32 battle_turn_get_at_entry_unit(s32 unit_idx);
+s32 battle_turn_get_status_flags(battle_stats_t* unit);
+s32 battle_turn_insert_at_entry(s32 unit_id, s32 mode, u16 sort_key, battle_at_entry_t* list);
+s32 battle_turn_is_over(s32 unit_id);
+void battle_turn_next_at_list_index(void);
+s32 battle_turn_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
+s32 battle_turn_run_clock(s32 mode);
+s32 battle_turn_should_end(battle_stats_t* unit);
+void battle_turn_show_at_entry(s32 at_index);
+void battle_turn_show_next_at_entry(void);
+void battle_turn_start_at_list_browse(void);
+void battle_turn_take_next_event(void);
 
 /* input */
 extern s32 g_battle_cursor_x;
@@ -578,7 +608,6 @@ extern u8 g_battle_status_bubble_u[24];
 extern u8 g_battle_status_bubble_v[24];
 extern u8 g_battle_status_bubble_digit_u[24];
 extern u8 g_battle_status_bubble_digit_v[24];
-s32 battle_status_check_unit(battle_stats_t* unit);
 void battle_status_disable_acting(battle_stats_t* unit);
 void battle_status_enable_special_flags(s32 status_id, s32 enabled, s32 misc_unit_id);
 void battle_status_queue_current_status_graphics(s32 battle_id, s32 enabled);
@@ -4367,9 +4396,6 @@ typedef struct map_move_find_item_data {
 } map_move_find_item_data_t;
 typedef char map_move_find_item_data_size_must_be_16[(sizeof(map_move_find_item_data_t) == 16) ? 1 : -1];
 
-extern s32 g_action_type;
-extern s32 g_battle_action_at_list_active;
-extern s32 g_battle_action_at_list_id;
 extern const battle_action_display_image_rect_t g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_COUNT];
 extern const u8 g_battle_action_display_numeric_selectors[16];
 extern u16 g_battle_action_display_values[16];
@@ -4422,9 +4448,6 @@ extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 extern entd_unit_t* g_current_entd_unit;
 extern s32 g_battle_thread_current_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
-s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode);
-u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries);
-s32 battle_action_calculate_at_list_and_get_specific_unit_id(s32 unit_idx);
 s32 battle_action_calculate_chance_to_react(const battle_stats_t* unit);
 void battle_action_call_attack_preparation(battle_ai_command_action_t* action);
 s32 battle_action_can_unit_react(const battle_stats_t* unit);
@@ -4435,10 +4458,8 @@ s32 battle_action_can_unit_react(const battle_stats_t* unit);
 s32 battle_action_can_unit_react_1(battle_stats_t* unit);
 s32 battle_action_check_and_consume_mp(battle_stats_t* unit);
 void battle_action_check_arrow_guard_usability(void);
-void battle_action_check_between_turn_events(void);
 void battle_action_check_blade_grasp_usability(void);
 void battle_action_check_counter_reaction_usability(u16 reaction_id, u32 mask);
-s32 battle_action_check_change_of_turn(s32 unit_id);
 void battle_action_check_face_up_and_absorb_used_mp_usability(s16 reaction_id);
 void battle_action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(s16 reaction_id);
 void battle_action_check_damage_split_usability(void);
@@ -4449,31 +4470,22 @@ s32 battle_action_check_reaction(battle_stats_t* unit);
 void battle_action_check_reflect_reaction(void);
 void battle_action_choose_facing_for_wait(void);
 void battle_action_choose_wait(void);
-void battle_action_clear_at_list_active(void);
-void battle_action_clear_at_list_id(void);
-void battle_action_open_status_menu_at_list_start(void);
 void battle_action_clear_current_data(battle_action_data_t* action);
 void battle_action_clear_data(void);
 void battle_action_clear_knockback_flag(void);
 void battle_action_clear_status_changes(battle_action_data_t* action);
 void battle_action_confirm(void);
 void battle_action_copy_active_turn_data_from(const u8* banner, const u8* unit, const u8* billboard);
-s32 battle_action_end_turn(s32 unit_id);
 void battle_action_execute_ability(void);
 void battle_action_finalize_target_current_action(void);
-void battle_action_get_next_acting_unit(s32 arg);
 void battle_action_handle_move_command(void);
 void battle_action_handle_post_action_xp_jp_ability(void);
-void battle_action_increment_at_list_id(void);
 s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, s32 item);
 void battle_action_init_learn_ability_on_hit(void);
 s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit);
-void battle_action_is_at_list_unit_charging_ability(void);
 s32 battle_action_report_job_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_resume_attack_phase_control(void);
-void battle_action_run_between_turn_events(void);
-void battle_action_set_at_list_active(void);
 void battle_action_set_casting_unit_id_ff(void);
 void battle_action_set_current_attacker_data(battle_stats_t* unit);
 void battle_action_set_damage_display_type_based_on_ability(void);
@@ -4482,7 +4494,6 @@ s32 battle_action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);
 void battle_action_set_only_action_taken(s32 unit_id);
 void battle_action_set_only_movement_taken(s32 unit_id);
 void battle_action_set_target_variables(battle_stats_t* unit);
-s32 battle_action_should_end_unit_turn(battle_stats_t* unit);
 void battle_action_enter_move_range_exception(void);
 void battle_action_show_caster_post_effect_messages(void);
 void battle_action_switch_ability_to_default_attack(void);
@@ -4495,7 +4506,6 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* action, battle_ai_c
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(u16* reaction_id);
-s32 battle_action_run_between_turn_control(s32 mode);
 
 s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id);
 s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
@@ -4511,7 +4521,6 @@ s32 battle_action_calculate_projected_effect(
     battle_stats_t* attacker, battle_stats_t* target, battle_ai_command_action_t* command);
 
 s32 battle_action_call_attack_preparation_at_preview(u8* arg);
-s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit);
 s32 battle_action_check_battle_outcome(void);
 void battle_action_check_mp_switch_distribute_and_damage_split_usability(void);
 void battle_action_check_reflect_blade_grasp_and_arrow_guard(void);
@@ -4522,13 +4531,11 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
 void battle_action_set_casting_unit_id_ff_and_init(void);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
-s32 battle_action_sort_at_list(s32 unit_id, s32 mode, u16 sort_key, battle_at_entry_t* list);
 void battle_action_store_ability_data(u8* src);
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 
@@ -5678,6 +5685,9 @@ extern battle_target_panel_t g_battle_target_panels[];
 
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
 
+/* The map cursor and its tile glow are drawn (battle_target_update_cursor). */
+extern s32 g_battle_target_cursor_visible;
+
 s32 battle_target_set_panels_for_action(u8* action);
 
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
@@ -5686,7 +5696,6 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
 s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3);
 void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
-void battle_target_calculate_tile_coords_and_glow_from_at_list(void);
 void battle_target_calculate_tile_coords_with_cursor_glow(void);
 void battle_target_calculate_weapon_range(battle_stats_t* unit);
 void battle_target_can_select_tile(void);
@@ -5718,6 +5727,10 @@ s32 battle_target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_ind
 
 s32 battle_target_move_cursor_by_input(void);
 void battle_target_set_tile_background_color(s32 mode, s32 unused);
+
+void battle_target_hide_cursor(void);
+void battle_target_show_cursor(void);
+void battle_target_update_cursor(void);
 
 s32 battle_target_apply_reflect(battle_stats_t* unit);
 void battle_target_apply_vertical_fixed(s32 x, s32 y);
@@ -7147,7 +7160,7 @@ extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 extern s32 g_battle_menu_selected_command;
 
 /* Action command staged by the battle menu and passed whole to
- * battle_action_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
+ * battle_turn_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
 extern battle_ai_command_action_t g_battle_menu_selected_action;
 extern world_gfx_image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 extern u8 g_battle_menu_skillset_disabled_flags[]; /* per-row greyed flag */
@@ -7912,7 +7925,6 @@ extern s32 g_battle_sort_targets_nearest_first;
 extern s32 g_battle_post_battle_unit_changes_active;
 extern s16 g_battle_auto_battle_option_colors[5]; /* text colour per option */
 extern s32 g_battle_formation_display_mode;
-extern u8 g_battle_mimic_pending_flags[21];
 extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 

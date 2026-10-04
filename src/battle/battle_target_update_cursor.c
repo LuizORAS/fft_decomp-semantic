@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_target_calculate_tile_coords_and_glow_from_at_list(void) {
+/* Project the cursor tile to the screen and, while the cursor is visible, draw the cursor and
+ * its tile glow. */
+void battle_target_update_cursor(void) {
     SVECTOR secondary;
     SVECTOR tertiary;
     VECTOR primary;
 
-    if (g_battle_action_at_list_active != 0) {
+    if (g_battle_target_cursor_visible != 0) {
         battle_target_calculate_tile_coords_with_cursor_glow();
         return;
     }

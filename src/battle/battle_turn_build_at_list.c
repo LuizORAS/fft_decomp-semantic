@@ -4,11 +4,12 @@
 /* The target masks each AT key itself (andi 0xff00 / 0xffff) and passes it as
  * a full word; calling through the u16 prototype makes GCC emit its own
  * widening and a different sequence. */
-#define SORT_AT_LIST ((s32 (*)(s32, s32, s32, battle_at_entry_t*))battle_action_sort_at_list)
+#define SORT_AT_LIST ((s32 (*)(s32, s32, s32, battle_at_entry_t*))battle_turn_insert_at_entry)
 
-/* Rebuilds the 40-entry AT list: charged and performing actions first, then
- * each unit's next turns simulated tick by tick under Stop/Sleep, Slow and
- * Haste. Returns -1 when no entry was added.
+/* Rebuild the 40-entry AT list, each entry keyed by the tick it comes due, for every unit able
+ * to take part: the active unit first (not in mode 2), then charged and performing actions
+ * (not in mode 1), then each unit's next turns simulated tick by tick under Stop, Sleep, Slow
+ * and Haste (not in mode 2); mode 3 is the action preview's. Returns -1 when no entry was added.
  *
  * One u8 local holds the Sleep CT, the charging CT and the per-tick CT gain,
  * as the target's shared $v1 shows. Its early live range conflicts with $v0,
@@ -18,7 +19,7 @@
  * be a multi-set u32: a single-set shift temporary gets sched1's birth boost
  * and lands after the a1 load. The 0x50-byte array is the unreferenced frame
  * area the target reserves. */
-s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
+s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
     battle_stats_t* unit;
     u8 unused[0x50];
     s32 placed;
@@ -39,7 +40,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
     u32 key;
 
     placed = 0;
-    phase_tick = g_battle_between_turn_resume_state == 9;
+    phase_tick = g_battle_turn_clock_resume_state == 9;
     for (slot = 0; slot < 0x28; slot++) {
         list[slot].unit = 0xff;
         list[slot].flags = 0xff;
@@ -49,7 +50,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
     if (mode != 2) {
         unit = battle_unit_find_active_data_pointer();
         if (unit != 0) {
-            battle_action_sort_at_list(unit->misc_unit_id, 0, 0, list);
+            battle_turn_insert_at_entry(unit->misc_unit_id, 0, 0, list);
         }
     }
 

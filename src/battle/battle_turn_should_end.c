@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 
-/* Returns whether a unit with no remaining move or action should end its turn. */
-s32 battle_action_should_end_unit_turn(battle_stats_t* unit) {
+/* Return 1 when the unit can neither move (moved, or Don't Move) nor act (acted, or
+ * battle_formula_can_unit_evade returns nonzero) and has done one of them. */
+s32 battle_turn_should_end(battle_stats_t* unit) {
     /* Pin: unpinned, GCC builds the result in $a2 and copies it to $v0. */
     register s32 result __asm__("$2");
     u8 no_move;

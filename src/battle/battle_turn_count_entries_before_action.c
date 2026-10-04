@@ -3,9 +3,9 @@
 
 /* Count the AT-list entries that resolve before an action by unit_index
  * charging for ct; returns 0xff when no such position exists within 40. */
-u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries) {
+u32 battle_turn_count_entries_before_action(s32 unit_index, s32 ct, battle_at_entry_t* entries) {
     s32 count = 0;
-    if (g_battle_between_turn_resume_state == 9 && ct != 0) {
+    if (g_battle_turn_clock_resume_state == 9 && ct != 0) {
         ct += 1;
     }
     ct <<= 8;

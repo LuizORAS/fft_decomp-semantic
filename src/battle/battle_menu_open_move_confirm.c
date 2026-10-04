@@ -29,8 +29,8 @@ void battle_menu_open_move_confirm(void) {
         }
     }
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        battle_action_set_at_list_active();
+        battle_target_show_cursor();
     } else {
-        battle_action_clear_at_list_active();
+        battle_target_hide_cursor();
     }
 }

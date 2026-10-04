@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_status_check_unit(battle_stats_t* unit) {
+/* Return the unit's BATTLE_TURN_STATUS flags: CT frozen without an ENTD slot, under a
+ * CT-freezing status or as a ridden mount; dead (also incapacitated); otherwise asleep (also
+ * incapacitated), Haste and Slow. */
+s32 battle_turn_get_status_flags(battle_stats_t* unit) {
     s32 status1;
     s32 status4;
     s32 status5;

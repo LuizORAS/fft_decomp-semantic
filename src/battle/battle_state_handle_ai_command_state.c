@@ -106,6 +106,6 @@ void battle_state_handle_ai_command_state(void) {
         return;
     }
     unit->ability_ct_resolved |= 3;
-    battle_action_end_turn(unit->battle_data->misc_unit_id);
+    battle_turn_end(unit->battle_data->misc_unit_id);
     battle_state_enter_after_command();
 }

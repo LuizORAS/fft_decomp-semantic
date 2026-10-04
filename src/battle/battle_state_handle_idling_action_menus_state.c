@@ -33,16 +33,16 @@ void battle_state_handle_idling_action_menus_state(void) {
         } else {
             g_battle_casting_unit_id = g_battle_casting_misc_id;
         }
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         battle_action_handle_move_command();
         break;
     case 0x19:
         g_battle_casting_unit_id = g_battle_casting_misc_id;
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         battle_action_handle_move_command();
         break;
     case BATTLE_AI_COMMAND_ACT:
-        battle_action_clear_at_list_id();
+        battle_turn_clear_at_list_index();
         switch (command->data.action.skillset) {
         case SKILLSET_ID_DEFEND:
             misc->command_state.ai = *command;
@@ -105,7 +105,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         break;
     case 7:
         battle_menu_clear_status_menu_state();
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         break;
     case 0x12:
         battle_unit_store_entd_flags_without_control_flag(misc);
