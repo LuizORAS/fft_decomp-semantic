@@ -5,21 +5,45 @@
 
 #include "fft/world.h"
 
-/* calendar */
-extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
+/* system */
+/* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
+typedef struct wldcore_state_record {
+    u8 _unused_00[2];
+    u8 picture; /* 0x02; proposition picture + 1, 0 for none */
+    u8 is_town; /* 0x03; 1 offers the fixed town entries 0xb85d-0xb85f in the location menu */
+} wldcore_state_record_t;
 
-/* Music/sound selection halfword at 0x800d486a: track in the low byte, slot
- * in the high byte. */
-extern s32 g_wldcore_date_display_x;
-extern s32 g_wldcore_date_display_y;
+extern u32 g_wldcore_previous_system_flags;
 
-/* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
- * Aries (3/21) first. */
-extern u8 g_wldcore_zodiac_start_dates[12][2];
-void wldcore_advance_calendar_day(void);
-void wldcore_convert_date_to_zodiac_date(s32* month, s32* day);
-void wldcore_advance_calendar_days(s32 days);
-s32 wldcore_month_day_to_day_of_year(s32 month, s32 day);
+/* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
+ * handlers that read-modify-write it beside another record store: the member
+ * spelling shares one base register where the target uses absolute addresses. */
+extern u16 g_wldcore_state_flags;
+extern s32 g_wldcore_random_battle_entd_id;
+extern s32 g_wldcore_random_battle_map_id;
+extern s32 g_wldcore_random_battle_squad_id;
+void wldcore_restore_previous_stack(void);
+void wldcore_noop_8008d514(void);
+void wldcore_noop_8008ffd8(void);
+void wldcore_reset_game_if_special_keycode_is_pressed(void);
+
+/* thread */
+/* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
+ * 12 and 9; each thread receives its block's address as its first
+ * parameter. */
+typedef struct wldcore_thread_block {
+    s32 x; /* 0x00; panel draw x (thread 9 draws at x - 0x80); WORLD twin world_status_thread_t.x */
+    s32 y; /* 0x04; added to the panel's draw offset; thread 8's shake offset */
+    u8 _unused_08[4];
+    s32 redraw_request; /* 0x0c; scroll direction for thread 8, redraw request for 12 and 9 */
+    u8 _unused_10[4];
+} wldcore_thread_block_t;
+typedef char wldcore_thread_block_size_must_be_0x14[sizeof(wldcore_thread_block_t) == 0x14 ? 1 : -1];
+
+extern wldcore_thread_block_t g_wldcore_thread8_params;
+extern wldcore_thread_block_t g_wldcore_thread9_params;
+extern wldcore_thread_block_t g_wldcore_threadc_params;
+extern s32 g_wldcore_thread8_offset_y;
 
 /* file */
 void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream);
@@ -42,101 +66,6 @@ extern s32 g_wldcore_input_repeat_period;
 extern s32 g_wldcore_input_secondary_repeat_period;
 void wldcore_init_input_repeat_state(void);
 u32 wldcore_input_check_repeating_directional(u32 buttons);
-
-/* job */
-/* Provisional: the job-report confirmation level. The cursor window at +0x00
- * is moved between the two rows of the render record at +0x04, and +0x08
- * records which of the two rows is selected.
- * wldcore_list_handle_completed_propositions_input pushes this level (type
- * 0x0f) over the yes/no panel and stores the argument at +0x10. */
-typedef struct wldcore_job_report_confirm_level {
-    s32 cursor_window; /* 0x00; window record moved between the two rows */
-    s32 render_index;  /* 0x04; render record holding the confirmation text */
-    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
-    s32 _unused_0c;
-    s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
-} wldcore_job_report_confirm_level_t;
-
-/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
- * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
- * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
- * step_result_level reach -0x10..+0x24 from single bases. */
-typedef struct wldcore_job_selection {
-    s32 excluded_party_index; /* 0x00 */
-    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
-    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
-    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
-    s32 result;               /* 0x10; 0 success, 1 and 2 failure kinds */
-    s32 reward_type;          /* 0x14 */
-    s32 reward_index;         /* 0x18 */
-    s32 reward_value;         /* 0x1c */
-    s32 gate;                 /* 0x20; set for a dispatched proposition */
-    u8 _unused_24[0x10];
-    s32 rows[3][3]; /* 0x34; per-participant score/report rows */
-} wldcore_job_selection_t;
-typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_job_selection_t) == 0x58 ? 1 : -1];
-
-extern wldcore_job_selection_t g_wldcore_job_selection;
-void wldcore_return_from_job_determinations(s32 job_id);
-
-/* opcode */
-/* The world-script state from the instruction word at 0x800d4848 onwards
- * (the tail of wldcore_world_script_record_t). Handlers must reach it as
- * in-struct references: the target keeps each state_flags store ahead of the
- * window/render-record updates and reloads render_index after them, which GCC
- * only does for in-struct accesses. g_wldcore_opcode_instruction and
- * g_wldcore_state_flags stay scalar views of the first two words for the
- * handlers whose accesses must be scalar. */
-typedef struct wldcore_opcode_state {
-    union {
-        u32 word;
-        wldcore_opcode_instruction_bytes_t bytes;
-    } instruction;   /* 0x00 */
-    u16 state_flags; /* 0x04; g_wldcore_state_flags */
-    u8 _unused_06[0x0e];
-    s16 render_index; /* 0x14; g_wldcore_sound_novel_picture_render_index */
-    s16 picture;      /* 0x16; g_wldcore_sound_novel_picture_id */
-    u8 _unused_18[0x0e];
-    s16 x; /* 0x26 */
-    s16 y; /* 0x28 */
-} wldcore_opcode_state_t;
-
-extern wldcore_opcode_state_t g_wldcore_opcode_state;
-extern void (*g_wldcore_opcode_handlers[])(void);
-void wldcore_opcode_apply_pending_delta_and_clamp_value(void);
-void wldcore_opcode_branch_if_saved_bit(s32 expected);
-void wldcore_opcode_branch_if_local_flag(s32 expected);
-void wldcore_opcode_branch_if_savedata_bit(s32 expected);
-void wldcore_opcode_branch_if_dialog_option(s32 expected);
-void wldcore_opcode_load_deep_dungeon_entry_arguments(void);
-void wldcore_opcode_load_draw_path_arguments(void);
-void wldcore_opcode_load_erase_path_arguments(void);
-void wldcore_opcode_load_event(void);
-void wldcore_opcode_load_set_var2_arguments(void);
-void wldcore_opcode_load_text_id(void);
-void wldcore_opcode_start_pending_value_transition(void);
-void wldcore_opcode_load_picture(void);
-void wldcore_opcode_load_background_set(void);
-
-/* route */
-/* Provisional: a 16-entry world-map route path, each entry a route id with
- * bit 8 set when the route is travelled end-to-start. */
-typedef struct wldcore_route_path {
-    s32 routes[16];
-} wldcore_route_path_t;
-
-/* Provisional: world-map route record header: the segment count, the two
- * endpoint location ids and the travel cost. The 12-byte route points follow
- * at +4. */
-typedef struct wldcore_route_record {
-    u8 count;
-    u8 start_location; /* 0x01; a forward route runs start_location -> end_location */
-    u8 end_location;   /* 0x02; route | 0x100 travels it end to start */
-    u8 cost;           /* 0x03; accumulated by wldcore_map_find_best_route_path */
-} wldcore_route_record_t;
-
-extern s32 g_wldcore_route_search_depth;
-extern s32 g_wldcore_route_search_cost;
 
 /* sound */
 /* The music words at +0x8c: the first is both the music flags and slot 0 of
@@ -201,86 +130,6 @@ void wldcore_sound_novel_restore_saved_state(s32 render_index);
 void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
 s32 wldcore_sound_novel_update_countdown_timer(void);
 void wldcore_load_sound_novel_files(s32 chapter);
-
-/* story */
-/* Provisional: the slideshow page list at 0x800d3bbc. A route travel reuses
- * the record: the route id is the script variable (offset by 0x22c, the
- * route-visible variables), each page is one two-point segment of the route
- * polyline that follows the page list, shown for its length / 32 frames, and
- * page i runs from point 2i to point 2i + 2. */
-typedef struct wldcore_slideshow {
-    u16 flags;           /* 0x00; bit 0 runs the page timer, bit 1 = reversed */
-    s16 script_variable; /* 0x02; script variable base, offset by 0x22c */
-    s16 page_count;      /* 0x04 */
-    s16 page_index;      /* 0x06 */
-    s16 page_frames[16]; /* 0x08; frames each page stays up */
-    u16 frame_timer;     /* 0x28 */
-    s16 point_count;     /* 0x2a */
-    s16 coords[1];       /* 0x2c; packed (x, y) pairs */
-} wldcore_slideshow_t;
-
-extern s32* g_wldcore_rumor_location_masks;
-extern wldcore_word_pair_t g_wldcore_story_events_cursor_state;
-extern u8 (*g_wldcore_brave_story_birthdays)[2];
-extern u8 g_wldcore_brave_story_help_text_ids[];
-extern s32 g_wldcore_brave_story_saved_cursor[];
-extern u16* g_wldcore_story_event_ids;
-
-/* Provisional: milestone threshold tables at 0x8009eb34 (eight entries,
- * 1/4/8/12/16/20/24/31) and 0x8009eb3c (1/3/6/8/10/12/14/16). */
-extern u8 g_wldcore_treasure_count_milestones[];
-extern u8 g_wldcore_treasure_picture_sets[];
-extern u8 g_wldcore_treasure_sound_novel_ids[];
-extern u8 g_wldcore_unexplored_land_count_milestones[];
-extern u8 g_wldcore_unexplored_land_picture_sets[];
-void wldcore_advance_brave_story_birthdays(void);
-
-/* system */
-/* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
-typedef struct wldcore_state_record {
-    u8 _unused_00[2];
-    u8 picture; /* 0x02; proposition picture + 1, 0 for none */
-    u8 is_town; /* 0x03; 1 offers the fixed town entries 0xb85d-0xb85f in the location menu */
-} wldcore_state_record_t;
-
-extern u32 g_wldcore_previous_system_flags;
-
-/* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
- * handlers that read-modify-write it beside another record store: the member
- * spelling shares one base register where the target uses absolute addresses. */
-extern u16 g_wldcore_state_flags;
-extern s32 g_wldcore_random_battle_entd_id;
-extern s32 g_wldcore_random_battle_map_id;
-extern s32 g_wldcore_random_battle_squad_id;
-void wldcore_restore_previous_stack(void);
-void wldcore_noop_8008d514(void);
-void wldcore_noop_8008ffd8(void);
-void wldcore_reset_game_if_special_keycode_is_pressed(void);
-
-/* thread */
-/* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
- * 12 and 9; each thread receives its block's address as its first
- * parameter. */
-typedef struct wldcore_thread_block {
-    s32 x; /* 0x00; panel draw x (thread 9 draws at x - 0x80); WORLD twin world_status_thread_t.x */
-    s32 y; /* 0x04; added to the panel's draw offset; thread 8's shake offset */
-    u8 _unused_08[4];
-    s32 redraw_request; /* 0x0c; scroll direction for thread 8, redraw request for 12 and 9 */
-    u8 _unused_10[4];
-} wldcore_thread_block_t;
-typedef char wldcore_thread_block_size_must_be_0x14[sizeof(wldcore_thread_block_t) == 0x14 ? 1 : -1];
-
-extern wldcore_thread_block_t g_wldcore_thread8_params;
-extern wldcore_thread_block_t g_wldcore_thread9_params;
-extern wldcore_thread_block_t g_wldcore_threadc_params;
-extern s32 g_wldcore_thread8_offset_y;
-
-/* unit */
-extern s32 g_wldcore_participant_list_saved_cursor;
-party_data_t* wldcore_get_party_data_pointer(s32 party_index);
-s32 wldcore_get_ramza_s_roster_index(void);
-s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
-void wldcore_unit_build_status_panel_data(s32 party_index);
 
 /* gfx */
 /* Two unsigned coordinates passed together in one argument register. */
@@ -422,6 +271,42 @@ void wldcore_gfx_calculate_scaled_rectangle(
 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
+/* calendar */
+extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
+
+/* Music/sound selection halfword at 0x800d486a: track in the low byte, slot
+ * in the high byte. */
+extern s32 g_wldcore_date_display_x;
+extern s32 g_wldcore_date_display_y;
+
+/* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
+ * Aries (3/21) first. */
+extern u8 g_wldcore_zodiac_start_dates[12][2];
+void wldcore_advance_calendar_day(void);
+void wldcore_convert_date_to_zodiac_date(s32* month, s32* day);
+void wldcore_advance_calendar_days(s32 days);
+s32 wldcore_month_day_to_day_of_year(s32 month, s32 day);
+
+/* route */
+/* Provisional: a 16-entry world-map route path, each entry a route id with
+ * bit 8 set when the route is travelled end-to-start. */
+typedef struct wldcore_route_path {
+    s32 routes[16];
+} wldcore_route_path_t;
+
+/* Provisional: world-map route record header: the segment count, the two
+ * endpoint location ids and the travel cost. The 12-byte route points follow
+ * at +4. */
+typedef struct wldcore_route_record {
+    u8 count;
+    u8 start_location; /* 0x01; a forward route runs start_location -> end_location */
+    u8 end_location;   /* 0x02; route | 0x100 travels it end to start */
+    u8 cost;           /* 0x03; accumulated by wldcore_map_find_best_route_path */
+} wldcore_route_record_t;
+
+extern s32 g_wldcore_route_search_depth;
+extern s32 g_wldcore_route_search_cost;
+
 /* location */
 /* Provisional: the type-4 location list level as wldcore_menu_push_location_menu_level
  * fills it. */
@@ -497,95 +382,6 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
 s32 wldcore_location_process_entry(s32 from_location, s32 to_location);
 
-/* save */
-/* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
- * the save-slot buffer, indexed from +0x04. */
-typedef struct wldcore_save_slot_table {
-    s32 _unused_00;
-    u32 offsets[1]; /* 0x04 */
-} wldcore_save_slot_table_t;
-
-extern s16 g_wldcore_saved_record_index;
-
-/* Saved copy of g_wldcore_context_value_display_position. */
-extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
-extern wldcore_saved_record_t g_wldcore_active_saved_record;
-extern u32 g_wldcore_saved_system_flags;
-void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
-void wldcore_reset_selected_saved_record(s32 unused);
-
-/* script */
-/* The world-conditional interpreter clears this result word before each
- * block. Comparisons set CONDITION_FAILED when their predicate rejects the
- * block. Action opcodes set ACTION_REACHED to end the block and set an action
- * bit when a request is staged. */
-typedef enum wldcore_script_result_flags {
-    WLDCORE_SCRIPT_RESULT_ACTION_REACHED = 0x001,
-    WLDCORE_SCRIPT_RESULT_CONDITION_FAILED = 0x002,
-} wldcore_script_result_flags_e;
-
-typedef enum wldcore_script_action_flags {
-    WLDCORE_SCRIPT_ACTION_CHOICE = 0x004,
-    WLDCORE_SCRIPT_ACTION_LOAD_EVENT = 0x008,
-    WLDCORE_SCRIPT_ACTION_TEXT = 0x010,
-    WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY = 0x020,
-    WLDCORE_SCRIPT_ACTION_SET_VAR_2 = 0x040,
-    WLDCORE_SCRIPT_ACTION_DRAW_PATH = 0x080,
-    WLDCORE_SCRIPT_ACTION_ERASE_PATH = 0x100,
-    WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION = 0x200,
-    WLDCORE_SCRIPT_ACTION_DRAW_LOCATION = 0x400,
-    WLDCORE_SCRIPT_ACTION_ERASE_LOCATION = 0x800,
-    WLDCORE_SCRIPT_ACTION_PATH_MASK = WLDCORE_SCRIPT_ACTION_DRAW_PATH | WLDCORE_SCRIPT_ACTION_ERASE_PATH,
-    WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK
-    = WLDCORE_SCRIPT_ACTION_DRAW_LOCATION | WLDCORE_SCRIPT_ACTION_ERASE_LOCATION,
-    WLDCORE_SCRIPT_ACTION_MAP_MENU_MASK = WLDCORE_SCRIPT_ACTION_PATH_MASK | WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION
-        | WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK,
-} wldcore_script_action_flags_e;
-
-typedef enum wldcore_script_request_flags {
-    WLDCORE_SCRIPT_REQUEST_CHOICE = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_CHOICE,
-    WLDCORE_SCRIPT_REQUEST_LOAD_EVENT = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_LOAD_EVENT,
-    WLDCORE_SCRIPT_REQUEST_TEXT = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_TEXT,
-    WLDCORE_SCRIPT_REQUEST_DEEP_DUNGEON_ENTRY
-    = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY,
-    WLDCORE_SCRIPT_REQUEST_SET_VAR_2 = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_SET_VAR_2,
-    WLDCORE_SCRIPT_REQUEST_DRAW_PATH = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DRAW_PATH,
-    WLDCORE_SCRIPT_REQUEST_ERASE_PATH = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_ERASE_PATH,
-    WLDCORE_SCRIPT_REQUEST_FOCUS_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION,
-    WLDCORE_SCRIPT_REQUEST_DRAW_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DRAW_LOCATION,
-    WLDCORE_SCRIPT_REQUEST_ERASE_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_ERASE_LOCATION,
-} wldcore_script_request_flags_e;
-
-/* WLDCORE script interpreter state; the opcode handlers read ip/data here.
- * One object through the choice/argument words:
- * wldcore_opcode_load_choice_arguments reaches ip at -4 and the choice
- * values at +0x10 from its &choice_vars base. */
-typedef struct wldcore_script_state {
-    s32 flags;          /* 0x00 */
-    u16* list;          /* 0x04; script list for the current location */
-    u16* data;          /* 0x08 */
-    u16 ip;             /* 0x0c */
-    s32 choice_vars[4]; /* 0x10; staged Choice variables */
-    /* 0x20: script request arguments; the staged Choice values share them. */
-    s32 args[4];
-} wldcore_script_state_t;
-typedef char wldcore_script_state_size_must_be_0x30[sizeof(wldcore_script_state_t) == 0x30 ? 1 : -1];
-
-extern wldcore_save_slot_table_t* g_wldcore_script_slot_table;
-extern u16* g_wldcore_script_base;
-extern void (*g_wldcore_script_opcode_table[])(void);
-extern wldcore_script_state_t g_wldcore_script_state;
-
-/* Scalar view of g_wldcore_script_state.flags for the opcode handlers that
- * read-modify-write it: the member spelling there shares one base register
- * with the args/data accesses instead of the target's absolute addresses.
- * The load_* opcode handlers declare volatile views of flags/data/ip locally. */
-extern s32 g_wldcore_script_flags;
-s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask);
-void wldcore_script_read_operand_pair(s32* out_id, s32* out_value);
-void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_c, s32* out_d);
-s32 wldcore_script_run_until_yield(void);
-
 /* text */
 typedef struct wldcore_text_dimensions {
     s32 width;
@@ -656,6 +452,298 @@ void wldcore_text_get_padded_dimensions(s32 text_id, wldcore_text_dimensions_t* 
 void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state);
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
+
+/* camera */
+/* The 52-byte world map dot records at 0x800d3ca8. */
+typedef struct wldcore_map_dot {
+    s32 kind;
+    s32 sub_kind;
+    SVECTOR position; /* 0x08; world-map position, RotTrans input */
+    s32 flags;
+    s32 sprite_id;
+    s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
+    s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sprite changes */
+    s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
+    /* 0x24; CLUT row offset read as wldcore_anim_object_t.palette (0 keeps the
+     * sprite's own CLUT). The player's marker (0x8009f278) takes 0, 2 or 3 from
+     * EVENT_SCRIPT_VAR_TOWN_BACKGROUND, Ramza's chapter palette. */
+    s32 palette;
+    s32 screen_x;
+    s32 screen_y;
+    u8 rgb[3];
+    u8 _padding_33; /* tail padding to 4-byte alignment */
+} wldcore_map_dot_t;
+typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
+
+/* The world map camera projection state at 0x8009f24c: two control words
+ * followed by the player's own map dot. The marker's +8 base is what makes
+ * the views of this address agree field for field -- the camera update
+ * writes the dot's sprite_id and screen_x/screen_y and the marker init writes
+ * its kind, position and flags. For the player's marker, kind is the current
+ * location id and sub_kind the proposition picture id. */
+typedef struct wldcore_projection_state {
+    s32 flags;
+    s32 angle;
+    wldcore_map_dot_t marker;
+} wldcore_projection_state_t;
+
+/* The volatile first store preserves the target's R3000 load-delay slot. */
+typedef struct wldcore_map_clamped_point32 {
+    volatile s32 x;
+    s32 y;
+} wldcore_map_clamped_point32_t;
+
+/* The camera's in-progress wrapped projection. The three map-step routines
+ * agree on this complete 0x24-byte record; flags is the active bitfield. */
+typedef struct wldcore_projection_motion {
+    s32 flags;
+    s32 distance;
+    s32 progress;
+    VECTOR origin;
+    wldcore_map_clamped_point32_t target;
+} wldcore_projection_motion_t;
+typedef char wldcore_projection_motion_size_must_be_0x24[sizeof(wldcore_projection_motion_t) == 0x24 ? 1 : -1];
+
+/* Provisional: one axis of the accelerating map scroll stepped by
+ * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its
+ * signed limit, the acceleration and decay steps, and the exported whole-unit
+ * speed. */
+typedef struct wldcore_axis_state {
+    s32 value;
+    s32 limit;
+    s32 step;
+    s32 decay;
+    s32 output; /* 0x10; value >> 8, truncated toward zero */
+} wldcore_axis_state_t;
+
+/* Provisional: the 24-byte projected-tile table at 0x800c7320, filled by
+ * wldcore_map_init_tile_atlas and projected by the RotTrans pass. */
+typedef struct wldcore_projected_entry {
+    s32 flags;    /* 0x00; texture page */
+    s32 texture;  /* 0x04; texture rectangle packed u << 24 | v << 16 | w << 8 | h, unpacked into the poly UVs */
+    s32 map_x;    /* 0x08; tile x (-256 + widths), RotTrans vx */
+    s32 map_y;    /* 0x0c; tile y (-192 + heights), RotTrans vy */
+    s32 screen_x; /* 0x10; projected x, culled against the 0x121 screen span */
+    s32 screen_y; /* 0x14; projected y, culled against 0x111 */
+} wldcore_projected_entry_t;
+typedef char wldcore_projected_entry_size_must_be_0x18[sizeof(wldcore_projected_entry_t) == 0x18 ? 1 : -1];
+
+/* scroll */
+typedef enum wldcore_scroll_limits {
+    WLDCORE_SCROLL_MIN_X = -116,
+    WLDCORE_SCROLL_MAX_X = 128,
+    WLDCORE_SCROLL_MIN_Y = -64,
+    WLDCORE_SCROLL_MAX_Y = 80
+} wldcore_map_scroll_limits_e;
+
+typedef struct wldcore_window_render_bounds16 {
+    wldcore_xy16_t position;
+    wldcore_xy16_t dimensions;
+} wldcore_window_render_bounds16_t;
+
+extern s32 g_wldcore_scroll_text_render_record_index;
+extern wldcore_point32_t g_wldcore_scroll_text_extra_position;
+extern s32 g_wldcore_scroll_text_extra_render_index;
+extern wldcore_window_render_bounds16_t g_wldcore_scroll_text_extra_rect;
+
+/* unit */
+extern s32 g_wldcore_participant_list_saved_cursor;
+party_data_t* wldcore_get_party_data_pointer(s32 party_index);
+s32 wldcore_get_ramza_s_roster_index(void);
+s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
+void wldcore_unit_build_status_panel_data(s32 party_index);
+
+/* job */
+/* Provisional: the job-report confirmation level. The cursor window at +0x00
+ * is moved between the two rows of the render record at +0x04, and +0x08
+ * records which of the two rows is selected.
+ * wldcore_list_handle_completed_propositions_input pushes this level (type
+ * 0x0f) over the yes/no panel and stores the argument at +0x10. */
+typedef struct wldcore_job_report_confirm_level {
+    s32 cursor_window; /* 0x00; window record moved between the two rows */
+    s32 render_index;  /* 0x04; render record holding the confirmation text */
+    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
+    s32 _unused_0c;
+    s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
+} wldcore_job_report_confirm_level_t;
+
+/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
+ * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
+ * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
+ * step_result_level reach -0x10..+0x24 from single bases. */
+typedef struct wldcore_job_selection {
+    s32 excluded_party_index; /* 0x00 */
+    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
+    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
+    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
+    s32 result;               /* 0x10; 0 success, 1 and 2 failure kinds */
+    s32 reward_type;          /* 0x14 */
+    s32 reward_index;         /* 0x18 */
+    s32 reward_value;         /* 0x1c */
+    s32 gate;                 /* 0x20; set for a dispatched proposition */
+    u8 _unused_24[0x10];
+    s32 rows[3][3]; /* 0x34; per-participant score/report rows */
+} wldcore_job_selection_t;
+typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_job_selection_t) == 0x58 ? 1 : -1];
+
+extern wldcore_job_selection_t g_wldcore_job_selection;
+void wldcore_return_from_job_determinations(s32 job_id);
+
+/* story */
+/* Provisional: the slideshow page list at 0x800d3bbc. A route travel reuses
+ * the record: the route id is the script variable (offset by 0x22c, the
+ * route-visible variables), each page is one two-point segment of the route
+ * polyline that follows the page list, shown for its length / 32 frames, and
+ * page i runs from point 2i to point 2i + 2. */
+typedef struct wldcore_slideshow {
+    u16 flags;           /* 0x00; bit 0 runs the page timer, bit 1 = reversed */
+    s16 script_variable; /* 0x02; script variable base, offset by 0x22c */
+    s16 page_count;      /* 0x04 */
+    s16 page_index;      /* 0x06 */
+    s16 page_frames[16]; /* 0x08; frames each page stays up */
+    u16 frame_timer;     /* 0x28 */
+    s16 point_count;     /* 0x2a */
+    s16 coords[1];       /* 0x2c; packed (x, y) pairs */
+} wldcore_slideshow_t;
+
+extern s32* g_wldcore_rumor_location_masks;
+extern wldcore_word_pair_t g_wldcore_story_events_cursor_state;
+extern u8 (*g_wldcore_brave_story_birthdays)[2];
+extern u8 g_wldcore_brave_story_help_text_ids[];
+extern s32 g_wldcore_brave_story_saved_cursor[];
+extern u16* g_wldcore_story_event_ids;
+
+/* Provisional: milestone threshold tables at 0x8009eb34 (eight entries,
+ * 1/4/8/12/16/20/24/31) and 0x8009eb3c (1/3/6/8/10/12/14/16). */
+extern u8 g_wldcore_treasure_count_milestones[];
+extern u8 g_wldcore_treasure_picture_sets[];
+extern u8 g_wldcore_treasure_sound_novel_ids[];
+extern u8 g_wldcore_unexplored_land_count_milestones[];
+extern u8 g_wldcore_unexplored_land_picture_sets[];
+void wldcore_advance_brave_story_birthdays(void);
+
+/* map */
+/* The type-0x36 menu level pushed by wldcore_push_map_location_visibility_level
+ * and stepped by wldcore_map_step_location_visibility_change; only the first
+ * four words are known. */
+typedef struct wldcore_map_visibility_level {
+    s32 dot_index;     /* 0x00; map dot, and script variable 0x200 + dot_index */
+    s32 was_set;       /* 0x04; whether the variable was already set */
+    s32 delay;         /* 0x08; frames the step handler waits, 0x10 here */
+    s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
+    u8 _unused_10[0x4c];
+} wldcore_map_visibility_level_t;
+typedef char wldcore_map_visibility_level_size_must_be_0x5c[sizeof(wldcore_map_visibility_level_t) == 0x5c ? 1 : -1];
+
+/* Provisional: the type-0x35 menu level pushed by
+ * wldcore_menu_push_map_path_level, decoded from the four words it writes and
+ * corroborated by its step handler at
+ * 0x8006dbb8, which reads only the last two: +0x08 selects the erase
+ * direction and +0x0c is the one-shot sound flag. The two leading words are
+ * the script's path arguments, which the caller
+ * wldcore_menu_dispatch_pending_script_requests passes as g_wldcore_script_state.args[0]
+ * and g_wldcore_script_state.args[1]. The record is one menu-stack slot, so the
+ * view is 0x5c bytes wide and only the first four words are known. */
+typedef struct wldcore_map_path_level {
+    s32 path_id;       /* 0x00; g_wldcore_script_state.args[0] */
+    s32 path_id_hi;    /* 0x04; g_wldcore_script_state.args[1] */
+    s32 erase;         /* 0x08; step handler walks the path backwards when set */
+    s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
+    u8 _unused_10[0x4c];
+} wldcore_map_path_level_t;
+typedef char wldcore_map_path_level_size_must_be_0x5c[sizeof(wldcore_map_path_level_t) == 0x5c ? 1 : -1];
+
+typedef struct wldcore_window_entry_52 {
+    s32 value; /* x position for the 0x800d3cd0 column */
+    s32 y;     /* second position word, read by 0x8006d928 */
+    s8 rest[44];
+} wldcore_window_entry_52_t;
+typedef char wldcore_entry_52_size_must_be_0x34[sizeof(wldcore_window_entry_52_t) == 0x34 ? 1 : -1];
+
+extern s32 g_wldcore_map_dot_count;
+extern wldcore_map_dot_t g_wldcore_map_dots[];
+extern wldcore_projection_state_t g_wldcore_map_projection_state;
+extern wldcore_projection_motion_t g_wldcore_map_projection_motion;
+extern wldcore_projected_entry_t g_wldcore_map_projected_tiles[];
+
+/* Pointer to the 48 route polylines (array at 0x80095fb0), one per route;
+ * each is a packed s16 count followed by that many (x, y) pairs (0x80096070
+ * holds count 12 and the next record starts at 0x800960a2). A sibling of
+ * g_wldcore_map_route_tables, indexed by the same route id. */
+extern u16** g_wldcore_map_route_polylines;
+
+/* Pointer to the array of 48 route-record pointers at 0x80095000. */
+extern wldcore_route_record_t** g_wldcore_map_route_tables;
+
+/* The horizontal and vertical map scroll axes. */
+extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_x;
+extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_y;
+
+/* Screen position of the context-value display; the sound-novel menu saves
+ * and restores both words as one wldcore_point32_t. */
+extern wldcore_point32_t g_wldcore_context_value_display_position;
+extern u8 g_wldcore_map_dot_pulse_direction;
+extern u8 g_wldcore_map_dot_pulse_phase;
+extern u8 g_wldcore_map_projection_rotation_bytes[];
+extern wldcore_slideshow_t g_wldcore_map_path_animation;
+extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_y[];
+extern s32 g_wldcore_map_window_index;
+extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_x[];
+extern VECTOR g_wldcore_map_projection_origin;
+extern SVECTOR g_wldcore_map_projection_rotation;
+extern VECTOR g_wldcore_map_projection_scale;
+extern s32* g_wldcore_map_tile_descriptors;
+
+/* Provisional: the zoom animation record at 0x800d3c8c; flags bit 0 runs
+ * the animation, bit 1 selects the zoomed-out direction. */
+extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
+
+/* Indexed so the store in wldcore_location_process_entry stays behind the
+ * window-flag store (MEM_IN_STRUCT_P). */
+extern s32 g_wldcore_next_map_id[];
+void wldcore_map_init_tile_atlas(void);
+void wldcore_map_color_and_draw_dots(void);
+s32 wldcore_map_build_location_menu_entries(s32 proposition_id, s32* out);
+void wldcore_map_draw_visible_routes(GsOT* ot);
+void wldcore_map_draw_path_animation(GsOT* ot);
+void wldcore_map_find_best_route_path(s32 from, s32 to);
+void wldcore_map_step_route_travel(void);
+s32 wldcore_map_step_projection_motion(void);
+void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position);
+void wldcore_map_apply_clamped_scroll(wldcore_point32_t* amount, wldcore_point32_t* position);
+void wldcore_map_apply_clamped_vertical_scroll(wldcore_point32_t* amount, wldcore_point32_t* position);
+s32 wldcore_map_find_dot_at_point(wldcore_point32_t point);
+void wldcore_map_init_location_marker_and_camera(void);
+s32 wldcore_map_is_point_outside_projection_bounds(const wldcore_point32_t* point);
+void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clamped_point32_t* output);
+void wldcore_map_project_and_cull_dots(void);
+void wldcore_map_project_and_cull_tiles(void);
+void wldcore_map_pulse_dot_colors(void);
+s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const s16* coordinates);
+void wldcore_map_update_camera_direction_and_projection(void);
+void wldcore_map_update_scroll_axis_speed(wldcore_axis_state_t* axis, s32 direction);
+s32 wldcore_map_roll_random_encounter(s32 location, s32 route);
+void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta);
+void wldcore_push_map_location_visibility_level(s32 value, s32 flag);
+void wldcore_map_prepare_path_animation(s32 from, s32 to);
+s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y);
+
+/* save */
+/* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
+ * the save-slot buffer, indexed from +0x04. */
+typedef struct wldcore_save_slot_table {
+    s32 _unused_00;
+    u32 offsets[1]; /* 0x04 */
+} wldcore_save_slot_table_t;
+
+extern s16 g_wldcore_saved_record_index;
+
+/* Saved copy of g_wldcore_context_value_display_position. */
+extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
+extern wldcore_saved_record_t g_wldcore_active_saved_record;
+extern u32 g_wldcore_saved_system_flags;
+void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
+void wldcore_reset_selected_saved_record(s32 unused);
 
 /* proposition */
 /* Caller-owned message state prefix at 0x800794d0. Only the phase word at
@@ -798,23 +886,116 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_message_sta
 void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
-/* scroll */
-typedef enum wldcore_scroll_limits {
-    WLDCORE_SCROLL_MIN_X = -116,
-    WLDCORE_SCROLL_MAX_X = 128,
-    WLDCORE_SCROLL_MIN_Y = -64,
-    WLDCORE_SCROLL_MAX_Y = 80
-} wldcore_map_scroll_limits_e;
+/* opcode */
+/* The world-script state from the instruction word at 0x800d4848 onwards
+ * (the tail of wldcore_world_script_record_t). Handlers must reach it as
+ * in-struct references: the target keeps each state_flags store ahead of the
+ * window/render-record updates and reloads render_index after them, which GCC
+ * only does for in-struct accesses. g_wldcore_opcode_instruction and
+ * g_wldcore_state_flags stay scalar views of the first two words for the
+ * handlers whose accesses must be scalar. */
+typedef struct wldcore_opcode_state {
+    union {
+        u32 word;
+        wldcore_opcode_instruction_bytes_t bytes;
+    } instruction;   /* 0x00 */
+    u16 state_flags; /* 0x04; g_wldcore_state_flags */
+    u8 _unused_06[0x0e];
+    s16 render_index; /* 0x14; g_wldcore_sound_novel_picture_render_index */
+    s16 picture;      /* 0x16; g_wldcore_sound_novel_picture_id */
+    u8 _unused_18[0x0e];
+    s16 x; /* 0x26 */
+    s16 y; /* 0x28 */
+} wldcore_opcode_state_t;
 
-typedef struct wldcore_window_render_bounds16 {
-    wldcore_xy16_t position;
-    wldcore_xy16_t dimensions;
-} wldcore_window_render_bounds16_t;
+extern wldcore_opcode_state_t g_wldcore_opcode_state;
+extern void (*g_wldcore_opcode_handlers[])(void);
+void wldcore_opcode_apply_pending_delta_and_clamp_value(void);
+void wldcore_opcode_branch_if_saved_bit(s32 expected);
+void wldcore_opcode_branch_if_local_flag(s32 expected);
+void wldcore_opcode_branch_if_savedata_bit(s32 expected);
+void wldcore_opcode_branch_if_dialog_option(s32 expected);
+void wldcore_opcode_load_deep_dungeon_entry_arguments(void);
+void wldcore_opcode_load_draw_path_arguments(void);
+void wldcore_opcode_load_erase_path_arguments(void);
+void wldcore_opcode_load_event(void);
+void wldcore_opcode_load_set_var2_arguments(void);
+void wldcore_opcode_load_text_id(void);
+void wldcore_opcode_start_pending_value_transition(void);
+void wldcore_opcode_load_picture(void);
+void wldcore_opcode_load_background_set(void);
 
-extern s32 g_wldcore_scroll_text_render_record_index;
-extern wldcore_point32_t g_wldcore_scroll_text_extra_position;
-extern s32 g_wldcore_scroll_text_extra_render_index;
-extern wldcore_window_render_bounds16_t g_wldcore_scroll_text_extra_rect;
+/* script */
+/* The world-conditional interpreter clears this result word before each
+ * block. Comparisons set CONDITION_FAILED when their predicate rejects the
+ * block. Action opcodes set ACTION_REACHED to end the block and set an action
+ * bit when a request is staged. */
+typedef enum wldcore_script_result_flags {
+    WLDCORE_SCRIPT_RESULT_ACTION_REACHED = 0x001,
+    WLDCORE_SCRIPT_RESULT_CONDITION_FAILED = 0x002,
+} wldcore_script_result_flags_e;
+
+typedef enum wldcore_script_action_flags {
+    WLDCORE_SCRIPT_ACTION_CHOICE = 0x004,
+    WLDCORE_SCRIPT_ACTION_LOAD_EVENT = 0x008,
+    WLDCORE_SCRIPT_ACTION_TEXT = 0x010,
+    WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY = 0x020,
+    WLDCORE_SCRIPT_ACTION_SET_VAR_2 = 0x040,
+    WLDCORE_SCRIPT_ACTION_DRAW_PATH = 0x080,
+    WLDCORE_SCRIPT_ACTION_ERASE_PATH = 0x100,
+    WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION = 0x200,
+    WLDCORE_SCRIPT_ACTION_DRAW_LOCATION = 0x400,
+    WLDCORE_SCRIPT_ACTION_ERASE_LOCATION = 0x800,
+    WLDCORE_SCRIPT_ACTION_PATH_MASK = WLDCORE_SCRIPT_ACTION_DRAW_PATH | WLDCORE_SCRIPT_ACTION_ERASE_PATH,
+    WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK
+    = WLDCORE_SCRIPT_ACTION_DRAW_LOCATION | WLDCORE_SCRIPT_ACTION_ERASE_LOCATION,
+    WLDCORE_SCRIPT_ACTION_MAP_MENU_MASK = WLDCORE_SCRIPT_ACTION_PATH_MASK | WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION
+        | WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK,
+} wldcore_script_action_flags_e;
+
+typedef enum wldcore_script_request_flags {
+    WLDCORE_SCRIPT_REQUEST_CHOICE = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_CHOICE,
+    WLDCORE_SCRIPT_REQUEST_LOAD_EVENT = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_LOAD_EVENT,
+    WLDCORE_SCRIPT_REQUEST_TEXT = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_TEXT,
+    WLDCORE_SCRIPT_REQUEST_DEEP_DUNGEON_ENTRY
+    = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY,
+    WLDCORE_SCRIPT_REQUEST_SET_VAR_2 = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_SET_VAR_2,
+    WLDCORE_SCRIPT_REQUEST_DRAW_PATH = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DRAW_PATH,
+    WLDCORE_SCRIPT_REQUEST_ERASE_PATH = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_ERASE_PATH,
+    WLDCORE_SCRIPT_REQUEST_FOCUS_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION,
+    WLDCORE_SCRIPT_REQUEST_DRAW_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_DRAW_LOCATION,
+    WLDCORE_SCRIPT_REQUEST_ERASE_LOCATION = WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_ACTION_ERASE_LOCATION,
+} wldcore_script_request_flags_e;
+
+/* WLDCORE script interpreter state; the opcode handlers read ip/data here.
+ * One object through the choice/argument words:
+ * wldcore_opcode_load_choice_arguments reaches ip at -4 and the choice
+ * values at +0x10 from its &choice_vars base. */
+typedef struct wldcore_script_state {
+    s32 flags;          /* 0x00 */
+    u16* list;          /* 0x04; script list for the current location */
+    u16* data;          /* 0x08 */
+    u16 ip;             /* 0x0c */
+    s32 choice_vars[4]; /* 0x10; staged Choice variables */
+    /* 0x20: script request arguments; the staged Choice values share them. */
+    s32 args[4];
+} wldcore_script_state_t;
+typedef char wldcore_script_state_size_must_be_0x30[sizeof(wldcore_script_state_t) == 0x30 ? 1 : -1];
+
+extern wldcore_save_slot_table_t* g_wldcore_script_slot_table;
+extern u16* g_wldcore_script_base;
+extern void (*g_wldcore_script_opcode_table[])(void);
+extern wldcore_script_state_t g_wldcore_script_state;
+
+/* Scalar view of g_wldcore_script_state.flags for the opcode handlers that
+ * read-modify-write it: the member spelling there shares one base register
+ * with the args/data accesses instead of the target's absolute addresses.
+ * The load_* opcode handlers declare volatile views of flags/data/ip locally. */
+extern s32 g_wldcore_script_flags;
+s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask);
+void wldcore_script_read_operand_pair(s32* out_id, s32* out_value);
+void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_c, s32* out_d);
+s32 wldcore_script_run_until_yield(void);
 
 /* bar */
 /* Provisional: the bar's active-proposition list level
@@ -921,187 +1102,6 @@ void wldcore_list_build_proposition_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
 
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
-
-/* camera */
-/* The 52-byte world map dot records at 0x800d3ca8. */
-typedef struct wldcore_map_dot {
-    s32 kind;
-    s32 sub_kind;
-    SVECTOR position; /* 0x08; world-map position, RotTrans input */
-    s32 flags;
-    s32 sprite_id;
-    s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
-    s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sprite changes */
-    s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
-    /* 0x24; CLUT row offset read as wldcore_anim_object_t.palette (0 keeps the
-     * sprite's own CLUT). The player's marker (0x8009f278) takes 0, 2 or 3 from
-     * EVENT_SCRIPT_VAR_TOWN_BACKGROUND, Ramza's chapter palette. */
-    s32 palette;
-    s32 screen_x;
-    s32 screen_y;
-    u8 rgb[3];
-    u8 _padding_33; /* tail padding to 4-byte alignment */
-} wldcore_map_dot_t;
-typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
-
-/* The world map camera projection state at 0x8009f24c: two control words
- * followed by the player's own map dot. The marker's +8 base is what makes
- * the views of this address agree field for field -- the camera update
- * writes the dot's sprite_id and screen_x/screen_y and the marker init writes
- * its kind, position and flags. For the player's marker, kind is the current
- * location id and sub_kind the proposition picture id. */
-typedef struct wldcore_projection_state {
-    s32 flags;
-    s32 angle;
-    wldcore_map_dot_t marker;
-} wldcore_projection_state_t;
-
-/* The volatile first store preserves the target's R3000 load-delay slot. */
-typedef struct wldcore_map_clamped_point32 {
-    volatile s32 x;
-    s32 y;
-} wldcore_map_clamped_point32_t;
-
-/* The camera's in-progress wrapped projection. The three map-step routines
- * agree on this complete 0x24-byte record; flags is the active bitfield. */
-typedef struct wldcore_projection_motion {
-    s32 flags;
-    s32 distance;
-    s32 progress;
-    VECTOR origin;
-    wldcore_map_clamped_point32_t target;
-} wldcore_projection_motion_t;
-typedef char wldcore_projection_motion_size_must_be_0x24[sizeof(wldcore_projection_motion_t) == 0x24 ? 1 : -1];
-
-/* Provisional: one axis of the accelerating map scroll stepped by
- * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its
- * signed limit, the acceleration and decay steps, and the exported whole-unit
- * speed. */
-typedef struct wldcore_axis_state {
-    s32 value;
-    s32 limit;
-    s32 step;
-    s32 decay;
-    s32 output; /* 0x10; value >> 8, truncated toward zero */
-} wldcore_axis_state_t;
-
-/* Provisional: the 24-byte projected-tile table at 0x800c7320, filled by
- * wldcore_map_init_tile_atlas and projected by the RotTrans pass. */
-typedef struct wldcore_projected_entry {
-    s32 flags;    /* 0x00; texture page */
-    s32 texture;  /* 0x04; texture rectangle packed u << 24 | v << 16 | w << 8 | h, unpacked into the poly UVs */
-    s32 map_x;    /* 0x08; tile x (-256 + widths), RotTrans vx */
-    s32 map_y;    /* 0x0c; tile y (-192 + heights), RotTrans vy */
-    s32 screen_x; /* 0x10; projected x, culled against the 0x121 screen span */
-    s32 screen_y; /* 0x14; projected y, culled against 0x111 */
-} wldcore_projected_entry_t;
-typedef char wldcore_projected_entry_size_must_be_0x18[sizeof(wldcore_projected_entry_t) == 0x18 ? 1 : -1];
-
-/* map */
-/* The type-0x36 menu level pushed by wldcore_push_map_location_visibility_level
- * and stepped by wldcore_map_step_location_visibility_change; only the first
- * four words are known. */
-typedef struct wldcore_map_visibility_level {
-    s32 dot_index;     /* 0x00; map dot, and script variable 0x200 + dot_index */
-    s32 was_set;       /* 0x04; whether the variable was already set */
-    s32 delay;         /* 0x08; frames the step handler waits, 0x10 here */
-    s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
-    u8 _unused_10[0x4c];
-} wldcore_map_visibility_level_t;
-typedef char wldcore_map_visibility_level_size_must_be_0x5c[sizeof(wldcore_map_visibility_level_t) == 0x5c ? 1 : -1];
-
-/* Provisional: the type-0x35 menu level pushed by
- * wldcore_menu_push_map_path_level, decoded from the four words it writes and
- * corroborated by its step handler at
- * 0x8006dbb8, which reads only the last two: +0x08 selects the erase
- * direction and +0x0c is the one-shot sound flag. The two leading words are
- * the script's path arguments, which the caller
- * wldcore_menu_dispatch_pending_script_requests passes as g_wldcore_script_state.args[0]
- * and g_wldcore_script_state.args[1]. The record is one menu-stack slot, so the
- * view is 0x5c bytes wide and only the first four words are known. */
-typedef struct wldcore_map_path_level {
-    s32 path_id;       /* 0x00; g_wldcore_script_state.args[0] */
-    s32 path_id_hi;    /* 0x04; g_wldcore_script_state.args[1] */
-    s32 erase;         /* 0x08; step handler walks the path backwards when set */
-    s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
-    u8 _unused_10[0x4c];
-} wldcore_map_path_level_t;
-typedef char wldcore_map_path_level_size_must_be_0x5c[sizeof(wldcore_map_path_level_t) == 0x5c ? 1 : -1];
-
-typedef struct wldcore_window_entry_52 {
-    s32 value; /* x position for the 0x800d3cd0 column */
-    s32 y;     /* second position word, read by 0x8006d928 */
-    s8 rest[44];
-} wldcore_window_entry_52_t;
-typedef char wldcore_entry_52_size_must_be_0x34[sizeof(wldcore_window_entry_52_t) == 0x34 ? 1 : -1];
-
-extern s32 g_wldcore_map_dot_count;
-extern wldcore_map_dot_t g_wldcore_map_dots[];
-extern wldcore_projection_state_t g_wldcore_map_projection_state;
-extern wldcore_projection_motion_t g_wldcore_map_projection_motion;
-extern wldcore_projected_entry_t g_wldcore_map_projected_tiles[];
-
-/* Pointer to the 48 route polylines (array at 0x80095fb0), one per route;
- * each is a packed s16 count followed by that many (x, y) pairs (0x80096070
- * holds count 12 and the next record starts at 0x800960a2). A sibling of
- * g_wldcore_map_route_tables, indexed by the same route id. */
-extern u16** g_wldcore_map_route_polylines;
-
-/* Pointer to the array of 48 route-record pointers at 0x80095000. */
-extern wldcore_route_record_t** g_wldcore_map_route_tables;
-
-/* The horizontal and vertical map scroll axes. */
-extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_x;
-extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_y;
-
-/* Screen position of the context-value display; the sound-novel menu saves
- * and restores both words as one wldcore_point32_t. */
-extern wldcore_point32_t g_wldcore_context_value_display_position;
-extern u8 g_wldcore_map_dot_pulse_direction;
-extern u8 g_wldcore_map_dot_pulse_phase;
-extern u8 g_wldcore_map_projection_rotation_bytes[];
-extern wldcore_slideshow_t g_wldcore_map_path_animation;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_y[];
-extern s32 g_wldcore_map_window_index;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_x[];
-extern VECTOR g_wldcore_map_projection_origin;
-extern SVECTOR g_wldcore_map_projection_rotation;
-extern VECTOR g_wldcore_map_projection_scale;
-extern s32* g_wldcore_map_tile_descriptors;
-
-/* Provisional: the zoom animation record at 0x800d3c8c; flags bit 0 runs
- * the animation, bit 1 selects the zoomed-out direction. */
-extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
-
-/* Indexed so the store in wldcore_location_process_entry stays behind the
- * window-flag store (MEM_IN_STRUCT_P). */
-extern s32 g_wldcore_next_map_id[];
-void wldcore_map_init_tile_atlas(void);
-void wldcore_map_color_and_draw_dots(void);
-s32 wldcore_map_build_location_menu_entries(s32 proposition_id, s32* out);
-void wldcore_map_draw_visible_routes(GsOT* ot);
-void wldcore_map_draw_path_animation(GsOT* ot);
-void wldcore_map_find_best_route_path(s32 from, s32 to);
-void wldcore_map_step_route_travel(void);
-s32 wldcore_map_step_projection_motion(void);
-void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position);
-void wldcore_map_apply_clamped_scroll(wldcore_point32_t* amount, wldcore_point32_t* position);
-void wldcore_map_apply_clamped_vertical_scroll(wldcore_point32_t* amount, wldcore_point32_t* position);
-s32 wldcore_map_find_dot_at_point(wldcore_point32_t point);
-void wldcore_map_init_location_marker_and_camera(void);
-s32 wldcore_map_is_point_outside_projection_bounds(const wldcore_point32_t* point);
-void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clamped_point32_t* output);
-void wldcore_map_project_and_cull_dots(void);
-void wldcore_map_project_and_cull_tiles(void);
-void wldcore_map_pulse_dot_colors(void);
-s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const s16* coordinates);
-void wldcore_map_update_camera_direction_and_projection(void);
-void wldcore_map_update_scroll_axis_speed(wldcore_axis_state_t* axis, s32 direction);
-s32 wldcore_map_roll_random_encounter(s32 location, s32 route);
-void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta);
-void wldcore_push_map_location_visibility_level(s32 value, s32 flag);
-void wldcore_map_prepare_path_animation(s32 from, s32 to);
-s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y);
 
 /* menu */
 /* Descriptor prefix read by 0x8007df84. The word-indexed text table is at
