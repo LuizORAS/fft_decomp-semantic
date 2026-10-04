@@ -1,6 +1,8 @@
 #include "fft/world.h"
 
-s32 world_thread_find_running_at_or_after_4(void) {
+/* Return the first slot from 4 to 8 whose running flag is exactly 1, or 9 when none is.
+ * The battle help menu uses it. */
+s32 world_thread_find_running_4_to_8(void) {
     s32 thread_id;
     native_thread_t* thread;
 

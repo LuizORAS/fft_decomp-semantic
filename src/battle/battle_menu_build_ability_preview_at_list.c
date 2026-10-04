@@ -109,7 +109,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     count = 0;
     if (turn < 0 || turn == 0xff) {
         g_battle_menu_thread_menu_data[53].text_id = 0x1023;
-        battle_thread_set_parameters(g_battle_current_thread_id, (s32)&g_battle_menu_thread_menu_data[53], 0, 0);
+        battle_thread_set_parameters(g_battle_thread_current_id, (s32)&g_battle_menu_thread_menu_data[53], 0, 0);
         count = 0;
         battle_menu_icon_linked_entry_thread();
     }

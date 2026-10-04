@@ -34,7 +34,7 @@ void battle_unit_view_supervisor_thread(void) {
         mode = (s32)battle_thread_get_current_parameter_1();
         set = &g_battle_unit_view_thread_sets[mode];
         g_battle_unit_view_mode = mode;
-        g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_1 = 0xff;
+        g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_1 = 0xff;
         for (i = 15; i >= 0; i--) {
             states[i] = BATTLE_UNIT_VIEW_SLOT_IDLE;
         }

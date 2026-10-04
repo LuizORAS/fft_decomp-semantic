@@ -94,7 +94,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
         }
 
-        if (battle_thread_is_running_8014cc94(3) != 0) {
+        if (battle_thread_is_running_2(3) != 0) {
             if (sound_latched == 0) {
                 g_sound_effect_id_to_play = one;
                 sound_latched = 1;
@@ -129,15 +129,15 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
                 break;
             }
-            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_8014cc94(3) == 0
+            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_2(3) == 0
                 && (battle_menu_has_status_effect_for_status_window(g_debugchr_editor_selected_unit_id) != 0
                     || g_debugchr_editor_display_mode == 0)) {
                 g_debugchr_thread_refresh_a = one;
                 g_debugchr_thread_refresh_b = one;
                 g_debugchr_thread_refresh_c = one;
-                battle_thread_start(g_battle_current_thread_id - 1, battle_menu_build_unit_status_list);
+                battle_thread_start(g_battle_thread_current_id - 1, battle_menu_build_unit_status_list);
                 battle_thread_set_parameters(
-                    g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
+                    g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
                 animation[0] = one;
                 animation_second[0] = one;
                 animation_third[0] = one;
@@ -148,7 +148,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                         render_offset = (frame & 1) * 0x4b0;
                         debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
                     }
-                    if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_2(g_battle_thread_current_id - 1) == 0) {
                         break;
                     }
                     frame++;

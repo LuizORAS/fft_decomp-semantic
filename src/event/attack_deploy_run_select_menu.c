@@ -78,10 +78,10 @@ void attack_deploy_run_select_menu(void) {
     nodes = g_attack_deploy_select_menu_nodes;
     g_battle_text_section_pointers[26] = g_attack_deploy_unit_text_section;
     g_battle_text_section_pointers[27] = g_attack_deploy_help_text_section;
-    parent_id = g_battle_current_thread_id - 1;
+    parent_id = g_battle_thread_current_id - 1;
     input = battle_script_get_controller_input_pointer(0);
     i = 0;
-    thread = &g_battle_threads[g_battle_current_thread_id];
+    thread = &g_battle_threads[g_battle_thread_current_id];
     parent = &g_battle_threads[parent_id];
     while (1) {
         if (parent->is_running == 0) {

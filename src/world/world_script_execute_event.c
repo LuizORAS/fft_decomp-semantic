@@ -376,7 +376,7 @@ restart_event:
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_world_menu_window_buffers[work_index].thread_id;
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
-                    && (world_thread_is_running_80100164(operand_2) == 1)
+                    && (world_thread_is_running_2(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 2);
                     if ((operand_1 & 0xFFFF) != 0xFFFF) {
@@ -646,7 +646,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_DARK_SCREEN) {
             g_world_menu_hide_numeric_values = 0;
             operand_1 = world_thread_resolve_id(0x10U);
-            world_thread_start(operand_1, &world_thread_set_task_id_36);
+            world_thread_start(operand_1, &world_thread_set_current_task_dark_screen);
             world_thread_set_parameters(operand_1, 0, (s32)parameters, 0);
         } else if (opcode == EVENT_OPCODE_REMOVE_DARK_SCREEN) {
             operand_1 = world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);

@@ -27,7 +27,7 @@ s32 world_menu_check_thread_completion(s32* input) {
         return 0;
     }
     for (i = 0; i < 17; i++) {
-        if (i != g_world_thread_current_id && world_thread_is_running_80100164(i) != 0
+        if (i != g_world_thread_current_id && world_thread_is_running_2(i) != 0
             && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_STOP_REQUEST) {
             *input = 0;
             break;

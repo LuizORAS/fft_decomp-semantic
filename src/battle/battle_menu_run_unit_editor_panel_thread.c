@@ -189,7 +189,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         if (g_event_mode == 0 && g_battle_menu_help_open == 0 && battle_thread_get_current_parameter_3() != 0) {
             break;
         }
-        value = battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1);
+        value = battle_thread_is_running_2(g_battle_thread_current_id - 1);
         for (i = 0; i < 19; i++) {
             frame_record->sprites[i].clut = g_battle_unit_editor_sprite_clut_pairs[i][value];
         }
@@ -216,13 +216,13 @@ void battle_menu_run_unit_editor_panel_thread(void) {
                 battle_thread_set_parameters(0xA, 0, 0, 1);
                 break;
             }
-            if ((g_battle_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_running_8014cc94(3) == 0
+            if ((g_battle_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_running_2(3) == 0
                 && (battle_menu_has_status_effect_for_status_window(g_battle_active_turn_unit.battle_id) != 0
                     || (g_battle_unit_editor_panel_data.flag == 0
                         && g_battle_menu_active_turn_banner.team_kind != 1))) {
-                battle_thread_start(g_battle_current_thread_id - 1, battle_menu_build_unit_status_list);
+                battle_thread_start(g_battle_thread_current_id - 1, battle_menu_build_unit_status_list);
                 battle_thread_set_parameters(
-                    g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
+                    g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
             }
         }
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->cursor);

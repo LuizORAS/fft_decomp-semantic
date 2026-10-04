@@ -395,7 +395,7 @@ restart_script:
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_battle_menu_window_buffers[work_index].thread_id;
                 if ((g_battle_menu_window_buffers[work_index].dialogue_selector == operand_1)
-                    && (battle_thread_is_running_8014cc94(operand_2) == 1)
+                    && (battle_thread_is_running_2(operand_2) == 1)
                     && (existing_message_thread_offset = operand_2 << 0xA,
                         g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].task_id
                             == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {

@@ -50,10 +50,10 @@ void battle_menu_check_action_menu_restrictions(void) {
         } else if (g_battle_menu_restore_pending == 0) {
             battle_sound_set_effect_to_invalid();
             g_battle_menu_thread_menu_data[35].text_id = message;
-            battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
+            battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(
-                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[35], 0, 0);
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+                g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[35], 0, 0);
+            battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
         }
         if ((u32)(message - 0x1002) < 2) {
             battle_thread_exit_current();

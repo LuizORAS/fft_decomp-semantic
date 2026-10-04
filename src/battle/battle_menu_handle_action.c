@@ -39,9 +39,9 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
     if (!(g_battle_script_event_input & PSX_PAD_CIRCLE) || battle_menu_can_accept_input() == 0) {
         return;
     }
-    if (g_battle_thread_contexts[g_battle_current_thread_id].task_words[1] == 0) {
-        g_battle_thread_contexts[g_battle_current_thread_id].task_words[1] = 2;
-        g_battle_thread_contexts[g_battle_current_thread_id].task_words[0] = 0;
+    if (g_battle_thread_contexts[g_battle_thread_current_id].task_words[1] == 0) {
+        g_battle_thread_contexts[g_battle_thread_current_id].task_words[1] = 2;
+        g_battle_thread_contexts[g_battle_thread_current_id].task_words[0] = 0;
     }
     actions = entry->actions;
     if ((u32)((s32)actions + 15) < 15) {
@@ -60,9 +60,9 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
     }
     if (action >= 0) {
         if (action < 0x100) {
-            battle_thread_start(g_battle_current_thread_id - 1, g_battle_menu_thread_menu_data[action].thread_entry);
+            battle_thread_start(g_battle_thread_current_id - 1, g_battle_menu_thread_menu_data[action].thread_entry);
             battle_thread_set_parameters(
-                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[action], 0, 0);
+                g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[action], 0, 0);
         } else if (action == 0x4D2) {
             selected_option = -1;
         }
@@ -74,11 +74,11 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
             }
         }
         for (i = 0; i < action; i++) {
-            thread_id = i + g_battle_current_thread_id;
+            thread_id = i + g_battle_thread_current_id;
             g_battle_thread_contexts[thread_id].function_parameter_3 = 1;
             if (thread_id == 8) {
                 for (j = 0; j < action; j++) {
-                    if (battle_thread_is_running_8014cc94(8 - j) != 0) {
+                    if (battle_thread_is_running_2(8 - j) != 0) {
                         g_battle_menu_pending_selection[j]
                             = ((battle_menu_idle_action_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
                                   ->selected_index;

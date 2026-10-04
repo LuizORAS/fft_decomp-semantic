@@ -8,7 +8,7 @@ void battle_menu_release_current_thread_slot(void) {
     s32* slot_state;
 
     index = 0;
-    current_thread_id = g_battle_current_thread_id;
+    current_thread_id = g_battle_thread_current_id;
     slot_state = g_battle_menu_slot_states;
     owner_thread_id = g_battle_menu_slot_owner_thread_ids;
     for (;;) {

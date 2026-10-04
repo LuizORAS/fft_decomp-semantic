@@ -14,13 +14,13 @@ void battle_menu_run_system_function_thread(void) {
 
     g_battle_system_function_thread_busy = 1;
     battle_text_init_menu_section_pointers();
-    id = g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_1;
+    id = g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_1;
     if (g_main_game_options.fields.navigation_messages != GAME_OPTION_ON) {
         id = g_battle_system_function_table[id].alternate_id;
     }
     battle_thread_wait_until_inactive(8);
     if (g_battle_menu_input_disabled == 0) {
-        while (battle_thread_is_running_8014cc94(1) != 0) {
+        while (battle_thread_is_running_2(1) != 0) {
             if (g_battle_thread_contexts[1].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 battle_thread_exit_current();
             }

@@ -282,6 +282,8 @@ void battle_heap_init(battle_heap_node_t* buffer, u32 buffer_size);
 void battle_heap_print_stats(void);
 
 /* thread */
+/* BATTLE's cooperative threads: slot 0 is the main loop, and one scheduler pass a frame runs slots 1-15. */
+
 /* 0x8014ceb4..0x8014cf58 forwards a0-a3 to the callback in 0x80173ca8,
  * using thread 0's stack when necessary. It does not copy stacked arguments
  * across that stack switch; callers must not assume they are transferred.
@@ -307,6 +309,8 @@ extern s32 g_battle_thread_task_ids[][256];
 extern native_thread_t* g_battle_threads;
 void battle_thread_wait_for_10_to_13(void);
 void battle_block_start_thread(void);
+/* Hand-written (0x8014ceb4): call g_battle_thread_call_target on the main loop's stack (see above),
+ * since a thread's own stack is about 900 bytes. */
 s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);
 s32 battle_thread_find_running_by_task(s32 task_id);
@@ -317,7 +321,7 @@ s32 battle_thread_get_current_parameter_3(void);
 s32 battle_thread_get_current_task_id(void);
 s32 battle_thread_is_previous_running(void);
 s32 battle_thread_is_running(s32 thread_id);
-s32 battle_thread_is_running_8014cc94(s32 thread_id);
+s32 battle_thread_is_running_2(s32 thread_id);
 void battle_thread_reset_scheduler(void);
 s32 battle_thread_resolve_id(s32 requested_thread_id);
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
@@ -327,11 +331,13 @@ void battle_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 thir
 void battle_thread_set_parameters_4(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
 void battle_thread_start(s32 thread_id, void (*function)(void));
 void battle_thread_suspend(s32 thread_id);
-void battle_thread_wait_frames(s32 count);
+void battle_thread_wait_frames(s32 frames);
 void battle_thread_wait_until_inactive(s32 thread_id);
 
-/* 0x8014ca80..0x8014cbb4: save this native context and resume the next
- * active one. Shared state can change before this caller resumes. */
+/* Hand-written (0x8014ca80): save the current thread's registers in its slot and resume the next
+ * running slot, calling battle_script_route_event_input first; after slot 15 it resumes slot 0, the
+ * main loop, without testing it. The main loop yields once a frame (battle_script_run_event_frame),
+ * so shared state can change before a yield returns. */
 void battle_thread_yield(void);
 
 /* turn */
@@ -4407,7 +4413,7 @@ extern u32* g_current_otag_entry;
 extern void* g_current_effect_work;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 extern entd_unit_t* g_current_entd_unit;
-extern s32 g_battle_current_thread_id;
+extern s32 g_battle_thread_current_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
 s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode);
 u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries);

@@ -168,7 +168,7 @@ void battle_menu_display_hovered_unit_stats(
             }
         }
         running = battle_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
-        if (running != 0 && battle_thread_is_running_8014cc94(running - 1) == 0) {
+        if (running != 0 && battle_thread_is_running_2(running - 1) == 0) {
             running = 0;
         }
         page = &g_battle_unit_status_panel_pages[g_battle_unit_status_first_page_by_mode[mode] + (frame & 1)];

@@ -66,7 +66,7 @@ void bunit_render_unit_status_panel_thread(void) {
     suppress = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     cur = (u8*)battle_script_get_controller_input_pointer(0);
-    thread_id = g_battle_current_thread_id;
+    thread_id = g_battle_thread_current_id;
     threads = (u8*)g_battle_threads;
     g_bunit_input_controller = (u32*)(cur + 4);
     thread = *(battle_menu_status_panel_display_thread_t**)((thread_id * NATIVE_THREAD_STRIDE) + (u32)threads);

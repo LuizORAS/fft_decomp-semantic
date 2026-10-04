@@ -1,7 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_thread_clear_current_slot(void) {
+/* Release the message box slot (one of three) the current thread holds, if any: clear its
+ * owner and glyph counter. world_text_message_box_thread calls it as it ends. */
+void world_text_release_message_box_slot(void) {
     s32 i;
 
     for (i = 0; i < 3; i++) {

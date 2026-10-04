@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
+/* Yield until thread_id's slot stops running (at least once). */
 void world_thread_wait_until_inactive(s32 thread_id) {
     do {
         world_thread_yield();

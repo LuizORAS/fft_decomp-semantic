@@ -85,7 +85,7 @@ void equip_render_unit_status_panel_thread(void) {
     suppress = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     input_state = (u8*)battle_script_get_controller_input_pointer(0);
-    thread_id = g_battle_current_thread_id;
+    thread_id = g_battle_thread_current_id;
     threads = (u8*)g_battle_threads;
     g_equip_input_controller = (u32*)(input_state + 4);
     /* Raw index arithmetic: g_battle_threads holds one pointer per 0x400-byte

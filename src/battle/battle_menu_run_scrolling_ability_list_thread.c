@@ -189,12 +189,12 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 && layout->columns.text_ids[0][entry->selected_index] != 0x7000) {
                 battle_thread_yield();
                 battle_sound_set_effect_to_cursor_move();
-                battle_thread_start(g_battle_current_thread_id - 1, battle_menu_preview_ability_turn_at_list);
+                battle_thread_start(g_battle_thread_current_id - 1, battle_menu_preview_ability_turn_at_list);
                 battle_thread_set_parameters(
-                    g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[52], 0, 0);
+                    g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[52], 0, 0);
                 column = 0;
                 while (1) {
-                    if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_2(g_battle_thread_current_id - 1) == 0) {
                         LoadImage(&g_battle_menu_ability_list_clut_rect, (u32*)(saved_clut + 48));
                         break;
                     }
@@ -260,7 +260,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         battle_menu_display_text_entry(
                             layout->columns.text_ids[column][index], buffer, &g_menu_text_state.origin_x);
                         g_menu_text_palette_offset = layout->columns.text_colors[column][index];
-                        if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
+                        if (g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_4 != 0
                             && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
                             /* The target passes x and y as full words; the s16 prototype narrows them. */
                             ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->columns.x[column] + 0x50, 0);
@@ -409,7 +409,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         if ((s16)entry->header_id >= 5) {
             battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[0]);
             battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[1]);
-            if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0) {
+            if (g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_4 != 0) {
                 battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[2]);
             }
         }

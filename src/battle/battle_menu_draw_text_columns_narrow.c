@@ -38,7 +38,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
             }
             if (layout->mode[column] == 0) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.origin_x);
-                if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
+                if (g_battle_threads[g_battle_thread_current_id].function_parameter_4 != 0
                     && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
                     g_menu_text_palette_offset = layout->text_colors[column][index];
                     /* Full-word x and y, as above. */

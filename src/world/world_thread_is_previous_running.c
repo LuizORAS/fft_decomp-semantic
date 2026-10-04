@@ -9,6 +9,8 @@
  * instructions, so it silences the warning without affecting the output. */
 __asm__(".set noat");
 
+/* Return the running flag of the slot before the current thread's (from slot 0, the record
+ * before the array). */
 s32 world_thread_is_previous_running(void) {
     register s32 offset __asm__("$8");
     register void* global_pointer __asm__("$1") = (void*)0x801d0000;

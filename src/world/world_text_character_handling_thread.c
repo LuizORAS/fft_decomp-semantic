@@ -717,7 +717,7 @@ void world_text_character_handling_thread(void) {
             for (i = 0; i < 0x11; i++) {
                 if (g_world_thread_current_id != i
                     && g_world_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && world_thread_is_running_80100164(i)) {
+                    && world_thread_is_running_2(i)) {
                     g_world_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
                 }
             }

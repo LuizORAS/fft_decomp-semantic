@@ -162,7 +162,7 @@ void world_menu_display_hovered_unit_stats(
             }
         }
         running = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
-        if (running != 0 && world_thread_is_running_80100164(running - 1) == 0) {
+        if (running != 0 && world_thread_is_running_2(running - 1) == 0) {
             running = 0;
         }
         page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode] + (frame & 1)];

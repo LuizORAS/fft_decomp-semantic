@@ -9,8 +9,8 @@
  * instructions, so it silences the warning without affecting the output. */
 __asm__(".set noat");
 
-/* Return the full running flag for a WORLD thread slot. */
-s32 world_thread_is_running_80100164(s32 thread_id) {
+/* Same as world_thread_is_running, as a hand-assembled copy. */
+s32 world_thread_is_running_2(s32 thread_id) {
     register s32 offset __asm__("$8") = thread_id << 10;
     register void* global_pointer __asm__("$1") = (void*)0x80150000;
     register u8* thread_array __asm__("$9");

@@ -18,7 +18,7 @@ void world_menu_run_system_function_thread(void) {
     }
     world_thread_wait_until_inactive(8);
     if (g_world_menu_input_disabled == 0) {
-        while (world_thread_is_running_80100164(1) != 0) {
+        while (world_thread_is_running_2(1) != 0) {
             if (g_world_thread_contexts[1].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 world_thread_exit_current();
             }

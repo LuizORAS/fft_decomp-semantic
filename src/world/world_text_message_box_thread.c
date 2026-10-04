@@ -486,7 +486,7 @@ void world_text_message_box_thread(void) {
     win->active = 0;
     world_menu_release_window_buffer_pair(win);
     world_gfx_free_texture_grid_rect(&rec.rect);
-    world_thread_clear_current_slot();
+    world_text_release_message_box_slot();
     world_thread_yield();
     world_thread_exit_current();
 }

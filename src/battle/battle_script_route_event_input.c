@@ -8,7 +8,7 @@ void battle_script_route_event_input(void) {
     if (g_battle_menu_input_disabled != 2) {
         return;
     }
-    thread = g_battle_current_thread_id;
+    thread = g_battle_thread_current_id;
     if (thread == 0) {
         return;
     }

@@ -57,21 +57,21 @@ void etc_graphic_open(s32 graphic_id) {
             do {
                 frame++;
                 battle_thread_yield();
-                g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
+                g_battle_threads[g_battle_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x4ec);
         } else if (graphic_id == 10) {
             frame = 0;
             do {
                 frame++;
                 battle_thread_yield();
-                g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
+                g_battle_threads[g_battle_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x5a0);
         } else if (graphic_id == 11) {
             frame = 0;
             do {
                 frame++;
                 battle_thread_yield();
-                g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
+                g_battle_threads[g_battle_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x8ac);
         } else {
             frame = 0;
@@ -79,13 +79,13 @@ void etc_graphic_open(s32 graphic_id) {
                 do {
                     frame++;
                     battle_thread_yield();
-                    g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
+                    g_battle_threads[g_battle_thread_current_id].function_parameter_4 = 1;
                 } while (frame < 0x258);
             } else {
                 do {
                     frame++;
                     battle_thread_yield();
-                    g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
+                    g_battle_threads[g_battle_thread_current_id].function_parameter_4 = 1;
                 } while (frame < 0x17e8);
             }
         }

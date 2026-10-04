@@ -187,7 +187,7 @@ functions:
   - {addr: 0x800ef8d4, size: 168, name: world_bin_load_file_ptr, hash: 14905444a10b31e0}
   - {addr: 0x800ef97c, size: 8, name: world_noop_800ef97c, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef984, size: 40, name: world_script_execute_display_conditions_instruction, hash: 4d1a28bb93f77d9c}
-  - {addr: 0x800ef9ac, size: 32, name: world_thread_set_task_id_36, hash: 564fe6361f9e4ceb}
+  - {addr: 0x800ef9ac, size: 32, name: world_thread_set_current_task_dark_screen, hash: 564fe6361f9e4ceb}
   - {addr: 0x800ef9cc, size: 8, name: world_noop_800ef9cc, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef9d4, size: 8, name: world_noop_800ef9d4, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef9dc, size: 48, name: world_menu_start_main_mode_0, hash: e3dd995d2b018a16}
@@ -431,7 +431,7 @@ functions:
   - {addr: 0x801000c4, size: 52, name: world_thread_get_current_parameter_2, hash: 520e69329eb48696}
   - {addr: 0x801000f8, size: 52, name: world_thread_get_current_parameter_3, hash: 2eb16d761d6d87fe}
   - {addr: 0x8010012c, size: 56, name: world_thread_is_previous_running, hash: 0a6edd120247a375}
-  - {addr: 0x80100164, size: 36, name: world_thread_is_running_80100164, hash: d9c5668fe09910ef}
+  - {addr: 0x80100164, size: 36, name: world_thread_is_running_2, hash: d9c5668fe09910ef}
   - {addr: 0x80100348, size: 60, name: world_text_skip_to_entry, hash: 90cff8271922ef07}
   - {addr: 0x80100430, size: 480, name: world_menu_draw_text_columns_2, hash: ea0c5d112530bb05}
   - {addr: 0x80100610, size: 636, name: world_menu_redraw_text_page_on_scroll, hash: 327edc74c76a57e0}
@@ -453,7 +453,7 @@ functions:
   - {addr: 0x801041b8, size: 1652, name: world_run_option_choice_menu, hash: c92a8d3ef7a62251}
   - {addr: 0x8010482c, size: 80, name: world_text_restore_sections_and_stop_thread, hash: 6d0bc77451aa653a}
   - {addr: 0x8010487c, size: 3460, name: world_run_battle_help_menu, hash: 19f312de2ac42e56}
-  - {addr: 0x80105600, size: 60, name: world_thread_find_running_at_or_after_4, hash: 93208e88bcfad087}
+  - {addr: 0x80105600, size: 60, name: world_thread_find_running_4_to_8, hash: 93208e88bcfad087}
   - {addr: 0x8010563c, size: 1992, name: world_menu_run_require_help, hash: c7cbab664bb5a1d5}
   - {addr: 0x80105e04, size: 376, name: world_menu_build_available_item_list, hash: 349237fd5e967325}
   - {addr: 0x80105f7c, size: 240, name: world_map_confirm_destination, hash: 29b51b8a6bcdd2f0}
@@ -470,7 +470,7 @@ functions:
   - {addr: 0x80106660, size: 400, name: world_formation_restore_menu_after_core_exit, hash: b1f839992ab561c6}
   - {addr: 0x801067f0, size: 24, name: world_menu_take_and_clear_thread_result, hash: f911e25bccbe7ecc}
   - {addr: 0x80106808, size: 16, name: world_menu_get_event_state_flag, hash: 5aa3f020305cf4e4}
-  - {addr: 0x80106818, size: 28, name: world_thread_set_task_id_to_three, hash: c5d1a355242deb8b}
+  - {addr: 0x80106818, size: 28, name: world_thread_request_stop, hash: c5d1a355242deb8b}
   - {addr: 0x80106834, size: 52, name: world_text_resume_printing, hash: 48d03c8b58af46be}
   - {addr: 0x80106868, size: 36, name: world_text_is_printing, hash: 9e115a06329f757e}
   - {addr: 0x8010688c, size: 40, name: world_thread_idle_yield_forever, hash: cefbd84258a6fac2}
@@ -547,7 +547,7 @@ functions:
   - {addr: 0x8010cca4, size: 1064, name: world_formation_build_portrait_transition_primitives, hash: a5f7b7348800076e}
   - {addr: 0x8010d0cc, size: 4604, name: world_menu_unit_status_banner_thread, hash: 0b97631dce90efde}
   - {addr: 0x8010e2c8, size: 232, name: world_menu_render_text_image_at_fixed_origin, hash: be71dc6ab1cdcef5}
-  - {addr: 0x8010e3b0, size: 84, name: world_thread_clear_current_slot, hash: c06df679de8b3eaf}
+  - {addr: 0x8010e3b0, size: 84, name: world_text_release_message_box_slot, hash: c06df679de8b3eaf}
   - {addr: 0x8010e404, size: 1572, name: world_text_draw_glyph_with_typewriter_delay_2, hash: e9a9ae273a15cb88}
   - {addr: 0x8010ea28, size: 92, name: world_gfx_flip_poly_ft4_u_if_negative, hash: cce394046c44b999}
   - {addr: 0x8010ea84, size: 36, name: world_menu_lerp_fixed12_b, hash: c8c076c648585d00}

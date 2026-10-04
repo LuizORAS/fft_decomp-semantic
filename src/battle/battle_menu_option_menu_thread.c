@@ -3,10 +3,10 @@
 
 /* Thread body that swaps in companion overlay 7 behind the option menu. */
 void battle_menu_option_menu_thread(void) {
-    if (battle_thread_is_running_8014cc94(3) != 0) {
+    if (battle_thread_is_running_2(3) != 0) {
         battle_thread_exit_current();
     }
-    if (battle_thread_is_running_8014cc94(1) != 0) {
+    if (battle_thread_is_running_2(1) != 0) {
         battle_thread_exit_current();
     }
     battle_menu_set_option_menu_open();

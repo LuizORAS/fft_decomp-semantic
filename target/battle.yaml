@@ -1085,7 +1085,7 @@ functions:
   - {addr: 0x8014cbf4, size: 52, name: battle_thread_get_current_parameter_2, hash: 7ffeb5877d79f219}
   - {addr: 0x8014cc28, size: 52, name: battle_thread_get_current_parameter_3, hash: d1fc2dccdda1feee}
   - {addr: 0x8014cc5c, size: 56, name: battle_thread_is_previous_running, hash: f14ee857209e40f9}
-  - {addr: 0x8014cc94, size: 36, name: battle_thread_is_running_8014cc94, hash: 1057a9f27abe5a5a}
+  - {addr: 0x8014cc94, size: 36, name: battle_thread_is_running_2, hash: 1057a9f27abe5a5a}
   - {addr: 0x8014ce78, size: 60, name: battle_find_text_id_location, hash: 90cff8271922ef07}
   - {addr: 0x80174370, size: 88, name: battle_map_get_weather_severity, hash: 93bdb40ee3440793}
   - {addr: 0x801743c8, size: 104, name: battle_unit_check_chocobo, hash: 7fbe3284351b693c}
@@ -2660,7 +2660,7 @@ data:
   - {addr: 0x8017400c, name: g_battle_event_loaded_evtchr_buffer}
   - {addr: 0x80174010, name: g_battle_script_light_angles}
   - {addr: 0x80174018, name: g_battle_script_light_base_color_matrix}
-  - {addr: 0x80174038, name: g_battle_current_thread_id}
+  - {addr: 0x80174038, name: g_battle_thread_current_id}
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
   - {addr: 0x80174044, name: g_dead_unit_context}
   - {addr: 0x80174048, name: g_battle_ai_workspace_ptr}

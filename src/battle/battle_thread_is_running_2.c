@@ -2,9 +2,6 @@
 #include "psx/types.h"
 
 /*
- * Reads g_battle_threads[thread_id].is_running (thread records are 0x400
- * bytes; the flag sits at +0x48).
- *
  * The 36-byte target is not compiler output: it loads the g_battle_threads
  * pointer through $at and contains a redundant `move at,at`, so no C form can
  * reproduce it (the plain `g_battle_threads + (thread_id << 10)` version
@@ -15,7 +12,8 @@
  */
 __asm__(".set noat");
 
-s32 battle_thread_is_running_8014cc94(s32 thread_id) {
+/* Same as battle_thread_is_running, as a hand-assembled copy. */
+s32 battle_thread_is_running_2(s32 thread_id) {
     register void* global_pointer __asm__("$1");
     register s32 thread_offset __asm__("$8");
     register u8* thread_array __asm__("$9");

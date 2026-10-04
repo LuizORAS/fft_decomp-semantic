@@ -11,7 +11,7 @@ void equip_menu_open_submenu_thread(void) {
     u16 child_id;
     u16 task_arg;
 
-    thread = (world_menu_text_entry_wait_param_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_menu_text_entry_wait_param_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
     thread->task->setup();
 
     input = battle_script_get_controller_input_pointer(0);
@@ -26,7 +26,7 @@ void equip_menu_open_submenu_thread(void) {
 
     battle_thread_start(child_id, battle_text_character_handling_thread);
     battle_thread_set_parameters_4(child_id, header_id, text_id, task_arg, task_arg);
-    battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+    battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
     battle_thread_wait_until_inactive(child_id);
     battle_thread_exit_current();
 }

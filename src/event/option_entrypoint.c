@@ -57,12 +57,12 @@ void option_entrypoint(s32 menu_type) {
         s32 child_thread;
 
         battle_script_pulse_tutorial_wait_value(0xfd);
-        battle_thread_start(g_battle_current_thread_id - 1, option_build_options_menu);
-        child_thread = g_battle_current_thread_id;
+        battle_thread_start(g_battle_thread_current_id - 1, option_build_options_menu);
+        child_thread = g_battle_thread_current_id;
         menu->select_text_table = 1;
         menu->text_binding = g_option_menu_entry_table;
         battle_thread_set_parameters(child_thread - 1, menu, 0, 0);
-        battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+        battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
         battle_thread_exit_current();
     }
     if (menu_type == 1) {

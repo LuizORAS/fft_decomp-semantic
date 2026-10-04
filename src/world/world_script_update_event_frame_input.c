@@ -81,7 +81,7 @@ void world_script_update_event_frame_input(u32* otag, u32 input, s16 frame_arg) 
 
     thread_id = 1;
     do {
-        g_world_thread_status_snapshot[thread_id] = world_thread_is_running_80100164(thread_id);
+        g_world_thread_status_snapshot[thread_id] = world_thread_is_running_2(thread_id);
         thread_id++;
     } while (thread_id < 16);
 
@@ -89,7 +89,7 @@ void world_script_update_event_frame_input(u32* otag, u32 input, s16 frame_arg) 
     thread_id = 1;
     do {
         status = g_world_thread_status_snapshot[thread_id];
-        if (status != world_thread_is_running_80100164(thread_id)) {
+        if (status != world_thread_is_running_2(thread_id)) {
             g_world_thread_change_cooldown = 5;
         }
         thread_id++;

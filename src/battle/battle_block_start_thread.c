@@ -15,7 +15,7 @@ void battle_block_start_thread(void) {
     s16 misc_id;
     s32 thread_id;
 
-    g_battle_thread_contexts[g_battle_current_thread_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
+    g_battle_thread_contexts[g_battle_thread_current_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
     script = battle_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {

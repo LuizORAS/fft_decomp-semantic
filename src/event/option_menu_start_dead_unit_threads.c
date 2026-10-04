@@ -73,10 +73,10 @@ void option_menu_start_dead_unit_threads(void) {
     if (context->kind == 0) {
         message_id = 0x183c;
         ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
-        battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(g_battle_current_thread_id - 1,
+        battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
+        battle_thread_set_parameters(g_battle_thread_current_id - 1,
             (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_menu, 0, 0);
-        battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+        battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
         battle_thread_wait_frames(2);
         g_dead_unit_action = 0;
         g_battle_menu_thread_menu_data = previous_menu_descriptor;
@@ -98,10 +98,10 @@ void option_menu_start_dead_unit_threads(void) {
             g_dead_unit_result = context->item_id;
         }
         ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
-        battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(g_battle_current_thread_id - 1,
+        battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
+        battle_thread_set_parameters(g_battle_thread_current_id - 1,
             (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_menu, 0, 0);
-        battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+        battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
         battle_thread_wait_frames(2);
         g_dead_unit_action = 4;
         g_battle_menu_thread_menu_data = previous_menu_descriptor;
@@ -121,27 +121,27 @@ void option_menu_start_dead_unit_threads(void) {
     for (;;) {
         if (context->kind == 3) {
             g_dead_unit_secondary_result = 0xff;
-            battle_thread_start(g_battle_current_thread_id - 1, battle_menu_run_icon_selection_loop);
-            battle_thread_set_parameters(g_battle_current_thread_id - 1,
+            battle_thread_start(g_battle_thread_current_id - 1, battle_menu_run_icon_selection_loop);
+            battle_thread_set_parameters(g_battle_thread_current_id - 1,
                 (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->move_menu, 0, 0);
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+            battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
         }
 
         g_dead_unit_primary_result = 0xff;
         if ((context->kind == 3 && g_dead_unit_secondary_result == 0) || context->kind == 1) {
-            battle_thread_start(g_battle_current_thread_id - 2, option_build_at_list);
-            battle_thread_set_parameters(g_battle_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
+            battle_thread_start(g_battle_thread_current_id - 2, option_build_at_list);
+            battle_thread_set_parameters(g_battle_thread_current_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(10, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(
                 10, (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 battle_thread_yield();
-                if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 3) != 0) {
+                if (battle_thread_is_running_2(g_battle_thread_current_id - 3) != 0) {
                     battle_thread_start(9, option_thread_wait_forever);
                 } else {
                     battle_thread_suspend(9);
                 }
-                if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                if (battle_thread_is_running_2(g_battle_thread_current_id - 1) == 0) {
                     break;
                 }
                 g_dead_unit_controller_input = battle_script_get_controller_input_pointer(0);
@@ -150,7 +150,7 @@ void option_menu_start_dead_unit_threads(void) {
                 }
             }
 
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+            battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
             battle_thread_set_parameters(10, 0, 0, 1);
             battle_thread_suspend(9);
             if (g_dead_unit_primary_result == 0) {
@@ -166,10 +166,10 @@ void option_menu_start_dead_unit_threads(void) {
 
         if ((g_dead_unit_secondary_result == 1 && context->kind == 3) || context->kind == 2) {
             g_dead_unit_primary_result = 0xff;
-            battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-            battle_thread_set_parameters(g_battle_current_thread_id - 1,
+            battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
+            battle_thread_set_parameters(g_battle_thread_current_id - 1,
                 (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->confirm_menu, 0, 0);
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+            battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
             if (g_dead_unit_primary_result == 0) {
                 g_dead_unit_action = 2;
                 break;

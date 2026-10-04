@@ -12,7 +12,7 @@ void battle_script_waitspritemove_event_instruction(s32 unit_id) {
 
     do {
         for (i = 0; i < 16; i++) {
-            if (battle_thread_is_running_8014cc94(i) != 0) {
+            if (battle_thread_is_running_2(i) != 0) {
                 if (g_battle_thread_task_ids[i][0] == NATIVE_THREAD_TASK_SPRITE_MOVE) {
                     if (g_battle_thread_task_ids[i][1] == target) {
                         break;

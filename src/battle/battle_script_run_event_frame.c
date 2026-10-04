@@ -41,7 +41,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
 
     if (g_battle_script_threads_idle != 0) {
         for (i = 1; i < 16; i++) {
-            if (battle_thread_is_running_8014cc94(i) != 0) {
+            if (battle_thread_is_running_2(i) != 0) {
                 break;
             }
         }
@@ -142,11 +142,11 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         g_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_8014cc94(i);
+        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_2(i);
     }
     battle_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_8014cc94(i)) {
+        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_2(i)) {
             g_event_input_suppression_frames = 5;
         }
     }
@@ -193,7 +193,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 16; i++) {
-        if (battle_thread_is_running_8014cc94(i) != 0) {
+        if (battle_thread_is_running_2(i) != 0) {
             break;
         }
     }

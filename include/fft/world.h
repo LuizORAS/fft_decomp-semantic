@@ -72,6 +72,8 @@ void world_noop_800e7808(s32 unused_unit_id);
 void world_noop_800fd074(const u8* unused_parameters);
 
 /* thread */
+/* WORLD's cooperative threads, as in BATTLE but with slots 1-16, and state some of its threads share. */
+
 /* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
  * returned through g_world_thread_inner_subroutine_result by
  * battle_unit_generate_crystal_or_treasure. Same object as the BATTLE
@@ -104,21 +106,20 @@ extern world_crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 /* The unspecified argument list is intentional for the same stack-switching
  * callback bridge used by BATTLE. */
 extern void (*g_world_thread_call_target)(void);
-extern native_thread_t g_world_thread_contexts[];
+extern native_thread_t g_world_thread_contexts[]; /* 17 slots: g_world_gfx_texture_allocation_grid follows */
 extern s32 g_world_thread_current_id;
 
 /* WORLD's pointer slot and fixed-array binding refer to the same scheduler
  * storage through different symbols. */
 extern native_thread_t* g_world_threads;
 s32 world_lookup_thread_parameter_threshold_value(s32 mode);
-void world_thread_clear_current_slot(void);
-s32 world_thread_find_running_at_or_after_4(void);
+s32 world_thread_find_running_4_to_8(void);
 void world_thread_idle_wait_forever(void);
 void world_thread_idle_wait_forever_b(void);
 void world_thread_idle_yield_forever(void);
 s32 world_thread_is_running_by_id(s32 thread_id);
 s32 world_thread_is_task_active(void);
-void world_thread_set_task_id_36(void);
+void world_thread_set_current_task_dark_screen(void);
 void world_thread_update_task_state(void);
 void world_thread_update_task_state_2(void);
 void world_thread_wait_for_10_to_13(void);
@@ -134,7 +135,7 @@ s32 world_thread_get_current_parameter_3(void);
 s32 world_thread_get_current_task_id(void);
 s32 world_thread_is_previous_running(void);
 s32 world_thread_is_running(s32 thread_id);
-s32 world_thread_is_running_80100164(s32 thread_id);
+s32 world_thread_is_running_2(s32 thread_id);
 void world_thread_reset_scheduler(void);
 s32 world_thread_resolve_id(s32 requested_thread_id);
 s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
@@ -142,11 +143,13 @@ void world_thread_resume(s32 thread_id);
 void world_thread_set_current_task_id(s32 task_id);
 void world_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
 void world_thread_set_parameters_4(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
-void world_thread_set_task_id_to_three(s32 thread_id);
+void world_thread_request_stop(s32 thread_id);
 void world_thread_start(s32 thread_id, void (*function)(void));
 void world_thread_suspend(s32 thread_id);
-void world_thread_wait_frames(s32 ticks);
+void world_thread_wait_frames(s32 frames);
 void world_thread_wait_until_inactive(s32 thread_id);
+/* Hand-written (0x800fff50): as battle_thread_yield, calling world_script_update_event_input_state
+ * and running slots 1-16 before slot 0. */
 void world_thread_yield(void);
 
 /* input */
@@ -2207,6 +2210,7 @@ void world_text_show_message_and_play_sound(s32 message_id, s32 sound_id);
 void world_text_start_character_thread_if_idle(s32 thread_id, s32 first, s32 second, s32 third);
 void world_text_try_start_overlay_thread(void);
 void world_text_character_handling_thread(void);
+void world_text_release_message_box_slot(void);
 
 /* turn */
 /* One AT-list (turn order) descriptor. The four-byte stride is proven by the

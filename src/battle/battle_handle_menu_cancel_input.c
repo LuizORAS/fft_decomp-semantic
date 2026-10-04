@@ -47,7 +47,7 @@ void battle_handle_menu_cancel_input(void* menu) {
                and the branch is retargeted one instruction later. */
             i = 0;
             if (count > 0) {
-                thread = g_battle_current_thread_id;
+                thread = g_battle_thread_current_id;
                 do {
                     idx = i + thread;
                     g_battle_thread_contexts[idx].function_parameter_3 = 1;

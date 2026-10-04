@@ -1,16 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Same as battle_thread_resolve_id, but the search starts after the current thread's
+ * slot. */
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id) {
     s32 i;
 
     if (requested_thread_id < 0x10) {
         return requested_thread_id;
     }
-    i = g_battle_current_thread_id + 1;
+    i = g_battle_thread_current_id + 1;
     if (i < 0x10) {
         do {
-            if (battle_thread_is_running_8014cc94(i) == 0) {
+            if (battle_thread_is_running_2(i) == 0) {
                 return i;
             }
             i++;

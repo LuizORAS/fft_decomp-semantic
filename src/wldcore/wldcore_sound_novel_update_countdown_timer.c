@@ -34,7 +34,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
             g_wldcore_displayed_numeric_value = days % 24;
         }
         if (g_wldcore_sound_novel_countdown_frames == elapsed) {
-            world_thread_set_task_id_to_three(0xE);
+            world_thread_request_stop(0xE);
             g_wldcore_sound_novel_countdown_frames = -1;
         }
     }

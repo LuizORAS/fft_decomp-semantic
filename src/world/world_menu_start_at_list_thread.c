@@ -14,8 +14,8 @@ void world_menu_start_at_list_thread(void) {
     world_thread_set_parameters(g_world_thread_current_id - 2, (s32)&g_world_menu_at_list_state, 0, 0);
     do {
         world_thread_yield();
-    } while (world_thread_is_running_80100164(g_world_thread_current_id - 2) != 0
-        || world_thread_is_running_80100164(g_world_thread_current_id - 3) != 0);
+    } while (world_thread_is_running_2(g_world_thread_current_id - 2) != 0
+        || world_thread_is_running_2(g_world_thread_current_id - 3) != 0);
     g_world_menu_thread_menu_data = saved;
     world_thread_exit_current();
 }

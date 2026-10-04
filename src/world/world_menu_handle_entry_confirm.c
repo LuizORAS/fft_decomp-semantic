@@ -56,7 +56,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
                 if (thread_id == 8) {
                     for (j = 0; j < target; j++) {
                         menu_thread_id = 8 - j;
-                        if (world_thread_is_running_80100164(menu_thread_id) != 0) {
+                        if (world_thread_is_running_2(menu_thread_id) != 0) {
                             g_world_menu_pending_selection[j]
                                 = ((world_menu_entry_t*)g_world_thread_contexts[menu_thread_id].function_parameter_1)
                                       ->selected_index;

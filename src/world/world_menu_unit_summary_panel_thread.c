@@ -153,7 +153,7 @@ void world_menu_unit_summary_panel_thread(void) {
         SetDrawOffset(frame_record->draw_offset_b, frame_record->offset_b);
         world_gfx_draw_or_append_gpu_primitive(frame_record->draw_offset_b);
         value = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
-        if (value != 0 && world_thread_is_running_80100164(value - 1) == 0) {
+        if (value != 0 && world_thread_is_running_2(value - 1) == 0) {
             value = 0;
         }
         if (value != 0) {

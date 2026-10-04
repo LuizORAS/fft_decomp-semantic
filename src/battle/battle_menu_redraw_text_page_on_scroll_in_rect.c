@@ -34,7 +34,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     rect.h = area->h;
     changed = 0;
     if (g_battle_menu_input_disabled == 0
-        && ((*input2 & PSX_PAD_SQUARE) || g_battle_threads[g_battle_current_thread_id].task_words[4] != 0)) {
+        && ((*input2 & PSX_PAD_SQUARE) || g_battle_threads[g_battle_thread_current_id].task_words[4] != 0)) {
         if ((*input & PSX_PAD_UP) && *row_offset != 0) {
             offset = *row_offset - layout->row_count;
             *row_offset = offset;
@@ -51,9 +51,9 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             }
             g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
-        } else if (g_battle_threads[g_battle_current_thread_id].task_words[4] != 0) {
+        } else if (g_battle_threads[g_battle_thread_current_id].task_words[4] != 0) {
             changed = 1;
-            g_battle_threads[g_battle_current_thread_id].task_words[4] = 0;
+            g_battle_threads[g_battle_thread_current_id].task_words[4] = 0;
         }
         if (changed != 0) {
             if (g_battle_menu_scroll_list_depth == 2) {

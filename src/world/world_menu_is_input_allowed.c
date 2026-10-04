@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 s32 world_menu_is_input_allowed(void) {
-    if ((world_thread_is_running_80100164(1) && (g_world_thread_contexts[1].function_parameter_1 & 0x70) == 0x30)
-        || (world_thread_is_running_80100164(2) && (g_world_thread_contexts[2].function_parameter_1 & 0x70) == 0x30)) {
+    if ((world_thread_is_running_2(1) && (g_world_thread_contexts[1].function_parameter_1 & 0x70) == 0x30)
+        || (world_thread_is_running_2(2) && (g_world_thread_contexts[2].function_parameter_1 & 0x70) == 0x30)) {
         g_world_menu_input_block_frames = 5;
         return 0;
     }

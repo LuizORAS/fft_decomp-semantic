@@ -78,7 +78,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
-        if (battle_thread_is_running_8014cc94(6) != 0) {
+        if (battle_thread_is_running_2(6) != 0) {
             for (i = 17; i >= 0; i--) {
                 record->sprites[i].clut = 0x7D3C;
             }

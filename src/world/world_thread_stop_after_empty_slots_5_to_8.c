@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
+/* For each stopped slot from 8 down to 5, suspend the slot after it (9 down to 6). */
 void world_thread_stop_after_empty_slots_5_to_8(void) {
     s32 thread_id = 8;
 

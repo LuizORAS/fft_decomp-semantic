@@ -26,9 +26,9 @@ s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
     battle_script_run_event_frame(otag, controller_input);
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
-    if ((battle_thread_is_running_8014cc94(8) != 0
+    if ((battle_thread_is_running_2(8) != 0
             && g_battle_thread_contexts[8].task_id != NATIVE_THREAD_TASK_MENU_SOUND_DELAY)
-        || battle_thread_is_running_8014cc94(7) != 0 || battle_thread_is_running_8014cc94(6) != 0) {
+        || battle_thread_is_running_2(7) != 0 || battle_thread_is_running_2(6) != 0) {
         if (g_battle_animation_speed_forced == 0) {
             g_battle_animation_speed_forced = 1;
             g_battle_saved_animation_speed = battle_state_get_animation_speed();

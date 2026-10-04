@@ -41,7 +41,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
 
     if (g_world_event_finish_check_pending != 0) {
         for (i = 1; i < 17; i++) {
-            if (world_thread_is_running_80100164(i) != 0) {
+            if (world_thread_is_running_2(i) != 0) {
                 break;
             }
         }
@@ -137,11 +137,11 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_thread_change_cooldown = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_world_event_thread_status_snapshot[i] = world_thread_is_running_80100164(i);
+        g_world_event_thread_status_snapshot[i] = world_thread_is_running_2(i);
     }
     world_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_80100164(i)) {
+        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_2(i)) {
             g_world_thread_change_cooldown = 5;
         }
     }
@@ -188,7 +188,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 17; i++) {
-        if (world_thread_is_running_80100164(i) != 0) {
+        if (world_thread_is_running_2(i) != 0) {
             break;
         }
     }

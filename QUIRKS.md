@@ -159,9 +159,13 @@ without changing the bytes.
 - `world_card_build_save_slot_description` uses the job-name pointer that the
   void `world_gfx_bind_data_pointer` leaves in `$v0`; a native build must
   return it.
-- `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current`
-  return the leftover `$v0` of the void `battle_thread_exit_current` when
-  no thread slot is free.
+- `battle_thread_resolve_id`, `battle_thread_resolve_id_after_current`,
+  `world_thread_resolve_id` and `world_thread_resolve_id_after_current` return
+  the leftover `$v0` of the void `battle_thread_exit_current` or
+  `world_thread_exit_current` when no thread slot is free (the WORLD source
+  falls off its end). The caller has exited by then, but the scheduler
+  resumes slot 0 without testing it, so a main-loop caller gets that value
+  on the next frame.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
@@ -422,3 +426,7 @@ translation unit. Share their types and constants through headers.
   redirect.
 - `battle_heap_alloc_block` has no out-of-memory exit: when no free block is large enough it
   walks the circular free list forever.
+- WORLD runs threads in slots 1-16: `world_thread_yield` wraps at 17, and `world_thread_resolve_id`
+  and `world_thread_find_running_by_task` scan to 16 (BATTLE stops at 15). The array has room for
+  the 17th slot (`g_world_gfx_texture_allocation_grid` starts right after it), but
+  `world_thread_reset_scheduler` clears only slots 0-15, so slot 16 keeps its state across a reset.

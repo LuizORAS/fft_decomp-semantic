@@ -112,8 +112,8 @@ void option_build_at_list(void) {
     buffer = g_option_menu_render_buffer;
     battle_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
-    battle_thread_start(g_battle_current_thread_id + 1, option_menu_run_dead_unit_panel_a);
-    battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+    battle_thread_start(g_battle_thread_current_id + 1, option_menu_run_dead_unit_panel_a);
+    battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
     option_menu_render_entries((option_menu_entry_t*)entry, &row_offset, buffer);
     ring = 0;
     image_rect.w = g_menu_text_state.stride >> 2;
@@ -136,9 +136,9 @@ void option_build_at_list(void) {
         page = &g_option_at_list_pages[i & 1];
         frame = &page->frame;
         if (battle_thread_is_previous_running() != 0 && g_event_mode == 0) {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 1, 0);
+            battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 1, 0);
         } else {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+            battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0 && i != 0) {
             /* Dead store (column is reinitialised before use); only the reload
@@ -294,7 +294,7 @@ void option_build_at_list(void) {
         page->icons.base.sprites[2].y0 += 4;
         battle_menu_submit_frame_primitives((battle_menu_window_record_t*)&page->icons.base);
     }
-    battle_thread_set_parameters(g_battle_current_thread_id + 1, 0, 0, 1);
+    battle_thread_set_parameters(g_battle_thread_current_id + 1, 0, 0, 1);
     battle_thread_yield();
     battle_thread_exit_current();
 }

@@ -44,7 +44,7 @@ s32 battle_menu_dispatch_system_function(
             }
             return 1;
         } else if (option != 1) {
-            if (battle_thread_is_running_8014cc94(1) != 0) {
+            if (battle_thread_is_running_2(1) != 0) {
                 main_system_report_error_2(7, 3);
                 if (option != 2) {
                     battle_menu_start_system_function_thread(8);

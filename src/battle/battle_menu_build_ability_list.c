@@ -220,7 +220,7 @@ void battle_menu_build_ability_list(s32 mode) {
         g_battle_menu_thread_menu_data[3].window_y += (6 - count) * 8;
     }
     /* The menu thread's redraw, cursor and refresh parameters. */
-    g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_2 = 1;
-    g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_3 = 0;
-    g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 = 1;
+    g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_2 = 1;
+    g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_3 = 0;
+    g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_4 = 1;
 }
