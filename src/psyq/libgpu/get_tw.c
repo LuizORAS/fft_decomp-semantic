@@ -23,7 +23,6 @@ u32 get_tw(RECT* rect) {
         y = ((u8)rectangle->y) >> 3;
         fields[1] = y;
         height = -rectangle->h & 0xff;
-        __asm__("" : "=r"(height) : "0"(height)); /* Preserve the original signed shift after masking. */
         height >>= 3;
         fields[3] = height;
         x <<= 10;

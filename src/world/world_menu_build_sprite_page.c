@@ -4,7 +4,9 @@
 
 /* Build one of the two double-buffered menu sprite pages: five draw-mode
  * packets (texture window per sprite) followed by five sprites placed from
- * the parameter table, then submit them all in reverse order. */
+ * the parameter table, then submit them all in reverse order. Type debt
+ * (QUIRKS.md): base_screen is read as a world_image_location_t, but the
+ * hovered-unit panel passes a RECT. */
 void world_menu_build_sprite_page(s32 page_index, void* base_screen) {
     s32 i;
     menu_sprite_page_t* page = &g_world_menu_panel_buffer.sprite_pages[page_index & 1];

@@ -3,7 +3,7 @@
 
 /* Builds and draws a spinning stack of 8 rings of 8 textured quads.
  *
- * The 5,368-byte sibling of the ring mesh renderer (effect_ring_mesh.h), using
+ * The 5,368-byte sibling of the ring mesh renderer (effect_eNNN_update_ring_mesh_state), using
  * the same geometry view and work block with the 64 quads of each buffer
  * indexed ring * 8 + segment. Nine lattice rows of eight points (45 degrees
  * apart, mirrored from two rsin/rcos pairs) grow in radius and height by

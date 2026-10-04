@@ -186,7 +186,7 @@ s32 require_select_party_unit_to_remove(void) {
         {
             battle_stats_t* battle_unit;
 
-            for (party_index = 0; party_index < 0x15; party_index++) {
+            for (party_index = 0; party_index < BATTLE_UNIT_SLOT_COUNT; party_index++) {
                 battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
                 selected_battle_unit
                     = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &message_id);
@@ -208,6 +208,8 @@ s32 require_select_party_unit_to_remove(void) {
 
             sprite_set = party_unit->sprite_set;
             sprite_group = g_require_gfx_formation_sprite_groups[0];
+            /* A goto, not a loop statement: loop.c would hoist the column
+             * count 3 out of this search, which the target keeps inside. */
         next_formation:
             for (sprite_column = 0; sprite_column < 3; sprite_column++) {
                 if (sprite_set == sprite_group[sprite_column])
@@ -254,7 +256,7 @@ s32 require_select_party_unit_to_remove(void) {
         s32 name_character_index;
 
         text = g_battle_text_section_pointers[8];
-        for (party_index = 0; party_index < 0x15; party_index++) {
+        for (party_index = 0; party_index < BATTLE_UNIT_SLOT_COUNT; party_index++) {
             selected_battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
             for (name_character_index = 0; name_character_index < 0x10; name_character_index++) {
                 *text = selected_battle_unit->name[name_character_index];

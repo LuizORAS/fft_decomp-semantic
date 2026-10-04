@@ -39,7 +39,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
             if (layout->mode[column] == 0) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.origin_x);
                 if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
-                    && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
+                    && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
                     g_menu_text_palette_offset = layout->text_colors[column][index];
                     /* Full-word x and y, as above. */
                     ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column] + 0x50, row * 0x10);
@@ -50,8 +50,8 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_menu_text_state.origin_x);
             } else if (layout->mode[column] == 3) {
                 if ((column == 2 || (column == 1 && layout->mode[2] == 2)) && (u16)layout->text_ids[column][index] < 2
-                    && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0xFF
-                        || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0)) {
+                    && (g_battle_ai_workspace_ptr->skill_use.target[index] == 0xFF
+                        || g_battle_ai_workspace_ptr->skill_use.target[index] == 0)) {
                     g_menu_text_state.origin_y += 2;
                     battle_menu_draw_stacked_glyph_pair(
                         buffer, (struct battle_menu_text_position*)&g_menu_text_state.origin_x);

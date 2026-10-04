@@ -2,6 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Port debt (QUIRKS.md): entry is a menu-record pointer, often a thread parameter. */
 void world_menu_confirm_action_silently(s32 entry) {
     g_world_menu_sound_muted = 1;
     g_world_menu_new_button_input = PSX_PAD_CIRCLE;

@@ -361,7 +361,8 @@ void battle_text_character_handling_thread(void) {
     g_battle_text_current_line = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+        if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
+            && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
         } else {
             s32 line_width = g_battle_text_line_widths[0] + 0x18;
@@ -581,7 +582,8 @@ void battle_text_character_handling_thread(void) {
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-                if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+                if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
+                    && g_battle_etc_graphics_enabled == 0) {
                     cursor_x = rec.x;
                 } else {
                     s32 line_width;

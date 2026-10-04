@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 void battle_unit_decide_facing_direction(battle_unit_misc_data_t* unit, s32 facing) {
-    s16* cur = (s16*)&unit->facing;
+    s16* cur = &unit->facing;
 
     switch (facing) {
     case 0x800:

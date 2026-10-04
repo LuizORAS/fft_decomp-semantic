@@ -110,7 +110,8 @@ s32 world_formation_run_equip_item_menu(void) {
         }
         if (g_world_menu_option_count != 0 && g_world_equip_item_previewed_cursor != g_world_menu_cursor_position) {
             g_world_equip_item_previewed_cursor = g_world_menu_cursor_position;
-            if (world_formation_equip_item_to_unit_slot(20, g_world_equip_item_slot, item) == 1) {
+            if (world_formation_equip_item_to_unit_slot(WORLD_FORMATION_PREVIEW_RECORD, g_world_equip_item_slot, item)
+                == 1) {
                 g_world_equip_item_preview_active = 1;
                 g_world_preview_stats_thread_params.redraw_request = 1;
                 world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,

@@ -86,7 +86,7 @@ void equip_editor_run_numeric_thread(void) {
                 equip_text_render_signed_decimal_entries(
                     text_pixels, (equip_stat_entry_t*)entries, (equip_stat_out_t*)&g_menu_text_state.origin_x, 3);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
+                battle_menu_draw_numeric_display_entries(text_pixels, (struct menu_number_entry*)entries,
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
             }
             g_menu_text_state.stride = 0x40;
@@ -95,7 +95,7 @@ void equip_editor_run_numeric_thread(void) {
                 equip_text_render_signed_decimal_entries(text_pixels + 0x168, (equip_stat_entry_t*)(entries + 0x24),
                     (equip_stat_out_t*)&g_menu_text_state.origin_x, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x168),
                     (struct menu_number_entry*)(entries + 0x24),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
             }
@@ -105,7 +105,7 @@ void equip_editor_run_numeric_thread(void) {
                 equip_text_render_signed_decimal_entries(text_pixels + 0x468, (equip_stat_entry_t*)(entries + 0x54),
                     (equip_stat_out_t*)&g_menu_text_state.origin_x, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x468),
                     (struct menu_number_entry*)(entries + 0x54),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
             }

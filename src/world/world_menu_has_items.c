@@ -12,7 +12,7 @@ s32 world_menu_has_items(s32 mode) {
 
     has_inventory = 0;
     has_equipment = 0;
-    for (i = 1; i < 254; i++) {
+    for (i = 1; i < ITEM_ID_END; i++) {
         if (g_main_item_quantities[i]) {
             has_inventory = 1;
             break;

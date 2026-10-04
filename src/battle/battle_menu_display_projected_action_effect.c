@@ -80,18 +80,18 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
     }
 
     if (action->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
-        value = (s16)action->hp_damage;
+        value = action->hp_damage;
         image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_HP_HEALING) {
-        value = (s16)action->hp_healing;
+        value = action->hp_healing;
         image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
         g_battle_menu_projected_value_panel.format = 0x403;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_DAMAGE) {
-        value = (s16)action->mp_damage;
+        value = action->mp_damage;
         image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_HEALING) {
         image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
-        value = (s16)action->mp_healing;
+        value = action->mp_healing;
         g_battle_menu_projected_value_panel.format = 0x403;
     } else if (action->gil_change != 0 && (action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
         value = action->gil_change;

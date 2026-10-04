@@ -147,7 +147,7 @@ restart_event:
                         world_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x12C) {
+                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_THINGS_OBTAINED) {
                         world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -290,14 +290,15 @@ restart_event:
                 }
             }
             operand_1 = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-            if (operand_1 != 0x1AD) {
-                if (operand_1 != 0x1D1) {
+            if (operand_1 != EVENT_ID_DELITAS_BETRAYAL) {
+                if (operand_1 != EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS) {
                     battle_gfx_init_evtchr_vram_slots();
                 }
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
             event_flags = (g_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_world_menu_input_disabled == 0 && event_flags == 0 && (u32)(operand_1 - 0x190) >= 0x1AU
+            if (g_world_menu_input_disabled == 0 && event_flags == 0
+                && (u32)(operand_1 - EVENT_ID_GENERIC_FIRST) >= (EVENT_ID_GENERIC_END - EVENT_ID_GENERIC_FIRST)
                 && operand_1 != 0) {
                 g_world_script_acting_unit_id = 0xFF;
                 world_process_scenario_conditionals();
@@ -738,7 +739,7 @@ restart_event:
             zalera_misc_id = (s16)world_get_misc_id(first_halfword);
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_animate_and_set_enemy_level_data_by_misc_id(zalera_misc_id);
-                if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
+                if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_ZALERA) {
                     world_unit_apply_zalera_draw_status_flags(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
                     g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;

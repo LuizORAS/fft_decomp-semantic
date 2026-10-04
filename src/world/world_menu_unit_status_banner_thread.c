@@ -5,10 +5,12 @@
 
 /* Provisional 0x30C-byte unit-summary primitive packet, doubled back to back
  * at 0x801C0584 (thread 8) and 0x801C0F4C (other). Same layout as the EVENT
- * DEBUGCHR twin's debugchr_editor_packet_t. */
+ * DEBUGCHR twin's type, battle_menu_status_panel_editor_packet_t. */
 typedef struct world_formation_summary_packet {
     world_menu_palette_primitives_t frame; /* 0x000: world_menu_build_line_box */
-    u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+    /* Legacy decompilation placeholder, kept as a note:
+     *     u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+     * It is zero bytes long, because the frame already ends at 0x0EC. */
     DR_MODE draw_mode_a;                                  /* 0x0EC */
     DR_MODE draw_mode_b;                                  /* 0x0F8 */
     SPRT value_sprites[4];                                /* 0x104 */
@@ -20,10 +22,11 @@ typedef struct world_formation_summary_packet {
 } world_formation_summary_packet_t;
 
 /* Provisional 0x1D8-byte status-panel packet, doubled at 0x801C0B9C (thread 8)
- * and 0x801C1564 (other). DEBUGCHR twin: debugchr_panel_packet_t. */
+ * and 0x801C1564 (other). DEBUGCHR twin: battle_menu_status_panel_packet_t. */
 typedef struct world_formation_status_packet {
     world_menu_palette_primitives_t frame; /* 0x000 */
-    u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
+    /* Legacy zero-length unknown_frame_tail placeholder, as in
+     * world_formation_summary_packet_t: the frame ends at 0x0EC. */
     SPRT sprites[7];                                      /* 0x0EC; [6] is the zodiac/scroll cursor */
     DR_MODE draw_mode_a;                                  /* 0x178 */
     DR_MODE draw_mode_b;                                  /* 0x184 */
@@ -527,18 +530,14 @@ void world_menu_unit_status_banner_thread(void) {
                 stride = &g_world_menu_text_state.stride;
                 *stride = 0x38;
                 if (g_world_preview_stats_window_active == 0) {
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, entries, (world_glyph_blit_t*)(stride - 2), 6);
+                    world_menu_draw_numeric_display_entries(render_a, entries, (world_glyph_blit_t*)(stride - 2), 6);
                 } else {
                     position = stride - 2;
-                    world_text_render_decimal_entry_list((s32)render_a, &entries[10], (world_glyph_blit_t*)position, 1);
-                    world_text_render_decimal_entry_list((s32)render_a, &entries[12], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[11], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[13], (world_glyph_blit_t*)position, 1);
-                    world_menu_draw_numeric_display_entries(
-                        (s32)render_a, &entries[4], (world_glyph_blit_t*)position, 2);
+                    world_text_render_decimal_entry_list(render_a, &entries[10], (world_glyph_blit_t*)position, 1);
+                    world_text_render_decimal_entry_list(render_a, &entries[12], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[11], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[13], (world_glyph_blit_t*)position, 1);
+                    world_menu_draw_numeric_display_entries(render_a, &entries[4], (world_glyph_blit_t*)position, 2);
                 }
             }
             LoadImage(&rects[0], (u32*)render_a);
@@ -546,7 +545,7 @@ void world_menu_unit_status_banner_thread(void) {
             origin = text_stride - 2;
             render_a_upper = render_a + 0x400;
             *text_stride = 0x60;
-            world_menu_draw_numeric_display_entries((s32)render_a_upper, &entries[8], (world_glyph_blit_t*)origin, 2);
+            world_menu_draw_numeric_display_entries(render_a_upper, &entries[8], (world_glyph_blit_t*)origin, 2);
             LoadImage(&rects[1], (u32*)render_a_upper);
             display->work = 0;
             world_clear_menu_render_buffer(render_c, 0x580);

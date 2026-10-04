@@ -205,7 +205,7 @@ void world_build_at_list_2(void) {
                             layout->text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
                     } else if (layout->mode[column] == 1) {
                         world_display_menu_number_entry(
-                            layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_world_menu_text_state.origin_x);
+                            layout->text_ids[column][index], 2, buffer, (u16*)&g_world_menu_text_state.origin_x);
                     } else if (layout->mode[column] == 3) {
                         world_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer,
                             (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);

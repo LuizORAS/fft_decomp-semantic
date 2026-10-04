@@ -8,7 +8,7 @@
 
 /* Measure a WORLD text entry in pixels: the widest line and the line count.
  *
- * Pixel-width sibling of world_measure_text. Spaces (0xFA) are 4 pixels,
+ * Pixel-width sibling of world_text_measure. Spaces (0xFA) are 4 pixels,
  * substituted digits 6, and other glyphs come from the per-page width table,
  * where a 0xDx prefix byte selects the page for the following glyph. Each
  * line's width is also recorded in g_world_text_line_widths. */

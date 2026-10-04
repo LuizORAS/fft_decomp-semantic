@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Provisional: one command of the effect resource's fourth section
- * (g_battle_effect_model_commands, see battle_init_effect_resource_sections). The top header
+ * (g_battle_effect_model_commands, see battle_effect_init_resource_sections). The top header
  * byte is the opcode and header byte 1 the word count after the header. */
 typedef union battle_effect_command {
     u32 header;

@@ -32,7 +32,7 @@ void battle_formula_unfaith_magical_damage(void) {
                 g_current_ability.target_faith = 100;
             }
             action = g_battle_action_target_data;
-            action->hp_damage = (s16)action->hp_damage * (100 - g_current_ability.target_faith)
+            action->hp_damage = action->hp_damage * (100 - g_current_ability.target_faith)
                 * (100 - g_current_ability.attacker_faith) / 10000;
             if (battle_formula_apply_elemental_absorption_and_status_proc() == 0) {
                 battle_formula_apply_status();

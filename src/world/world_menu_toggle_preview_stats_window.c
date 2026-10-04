@@ -1,8 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Built at -O1, like its neighbours world_menu_toggle_thread_9 /
- * world_menu_toggle_thread_10_alt. */
+/* Built at -O1, like its neighbours world_menu_toggle_stat_preview_panel_thread /
+ * world_menu_toggle_ability_panel_thread. */
 
 void world_menu_toggle_preview_stats_window(s32 flag) {
     s32 stored;

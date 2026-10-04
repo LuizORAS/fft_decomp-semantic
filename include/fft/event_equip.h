@@ -118,15 +118,17 @@ typedef struct equip_gfx_context {
     u8* line_g3;              /* 0x34; 0x20-byte packet stride */
     u8* line_g4;              /* 0x38; 0x28-byte packet stride */
     TILE* tiles;              /* 0x3C */
-    u8* tiles_16;             /* 0x40; 0x0c-byte packet stride */
-    u8* tiles_8;              /* 0x44; 0x0c-byte packet stride */
-    u8* tiles_1;              /* 0x48; 0x0c-byte packet stride */
-    SPRT* sprites;            /* 0x4c */
-    u8* sprites_16;           /* 0x50; 0x10-byte packet stride */
-    u8* sprites_8;            /* 0x54; 0x10-byte packet stride */
-    DR_MOVE* moves;           /* 0x58 */
-    DR_AREA* draw_areas;      /* 0x5C */
-    DR_MODE* draw_modes;      /* 0x60 */
+    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initialises
+     * the same slots with SetTile1/8/16 and SetSprt8/16. */
+    u8* tiles_1;         /* 0x40; 0x0c-byte packet stride */
+    u8* tiles_8;         /* 0x44; 0x0c-byte packet stride */
+    u8* tiles_16;        /* 0x48; 0x0c-byte packet stride */
+    SPRT* sprites;       /* 0x4c */
+    u8* sprites_8;       /* 0x50; 0x10-byte packet stride */
+    u8* sprites_16;      /* 0x54; 0x10-byte packet stride */
+    DR_MOVE* moves;      /* 0x58 */
+    DR_AREA* draw_areas; /* 0x5C */
+    DR_MODE* draw_modes; /* 0x60 */
 } equip_gfx_context_t;
 typedef char equip_gfx_context_size_must_be_0x64[(sizeof(equip_gfx_context_t) == 0x64) ? 1 : -1];
 
@@ -206,17 +208,17 @@ extern u16 g_equip_gfx_line_g4_count;
 extern u16 g_equip_gfx_poly_ft3_count;
 extern u16 g_equip_gfx_poly_gt3_count;
 extern u16 g_equip_gfx_poly_gt4_count;
-extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_sprite_8_capacity;
+extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_draw_area_capacity;
 extern u16 g_equip_gfx_draw_mode_capacity;
 extern u16 g_equip_gfx_sprite_count;
-extern u16 g_equip_gfx_tile_16_capacity;
+extern u16 g_equip_gfx_tile_1_capacity;
 extern u16 g_equip_gfx_tile_8_capacity;
 extern u16 g_equip_gfx_tile_1_count;
 extern u16 g_equip_gfx_tile_8_count;
 extern u16 g_equip_gfx_sprite_8_count;
-extern u16 g_equip_gfx_tile_1_capacity;
+extern u16 g_equip_gfx_tile_16_capacity;
 extern u16 g_equip_gfx_tile_16_count;
 extern u16 g_equip_gfx_sprite_16_count;
 
@@ -225,7 +227,7 @@ extern u16 g_equip_gfx_sprite_16_count;
  * enqueue. */
 extern equip_gfx_marker_rect_t g_equip_gfx_blank_cell_rect;
 void equip_gfx_apply_menu_palette_for_mode(world_menu_palette_primitives_t* primitives, s32* thread);
-void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, void* poly);
+void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
 void equip_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
     const void* source, s32 scale_index, s32 lower_half, const s16* offset);
@@ -243,8 +245,8 @@ void equip_gfx_enqueue_translucent_tile(const RECT* rect, const u8* color, s32 s
 
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, u8* poly_ft3, POLY_F4* poly_f4,
     POLY_FT4* textured_quads, u8* poly_g3, u8* poly_gt3, POLY_G4* poly_g4, POLY_GT4* poly_gt4, LINE_F2* line_f2,
-    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_16, u8* tiles_8,
-    u8* tiles_1, SPRT* sprites, u8* sprites_16, u8* sprites_8, DR_MOVE* draw_moves, DR_AREA* draw_areas,
+    u8* line_f3, u8* line_f4, LINE_G2* line_g2, u8* line_g3, u8* line_g4, TILE* tiles, u8* tiles_1, u8* tiles_8,
+    u8* tiles_16, SPRT* sprites, u8* sprites_8, u8* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas,
     DR_MODE* draw_modes);
 
 u8* equip_gfx_get_draw_color(void);
@@ -273,6 +275,7 @@ void equip_gfx_enqueue_textured_quad_current_ot(
 
 /* input */
 extern u8 g_equip_input_activation_timer;
+extern s16 D_801d86ac; /* written only by equip_set_s16_801d86ac, which nothing calls */
 extern u32* g_equip_input_controller;
 extern u8 g_equip_input_lock_timer;
 extern u16 g_equip_input_newly_pressed;
@@ -334,7 +337,7 @@ extern s16 g_equip_remove_item_equipment[];
 extern point16_t g_equip_remove_item_marker_rect;
 extern s8 g_equip_remove_item_previewed_slot;
 void equip_item_clear_stat_sums(s16* summary, s16* detail);
-s32 equip_item_adjust_inventory_count(s32 g_main_item_item_flags, s32 delta);
+s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta);
 void equip_item_build_inventory_totals(void);
 equip_icon_rect_t* equip_item_build_row_icon_rect(s32 index);
 
@@ -440,7 +443,7 @@ void equip_menu_clear_selection_values(void);
 void equip_menu_dispatch_with_override(s32 menu, s32 state, s32 override);
 void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override);
 void equip_menu_draw_scrollable_list(const u8* script);
-void equip_menu_draw_weapon_hand_icons(s16 g_main_item_weapon_flags);
+void equip_menu_draw_weapon_hand_icons(s16 weapon_id);
 s32 equip_menu_get_event_speed(void);
 void equip_menu_init_screen(s32 battle_id);
 
@@ -624,7 +627,7 @@ extern u16 g_equip_text_metric_5;
 extern const char g_equip_text_decimal_format[];
 extern battle_menu_status_panel_glyph_t g_equip_text_decimal_glyph;
 
-void equip_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void equip_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void equip_text_render_decimal_value(
@@ -672,12 +675,12 @@ typedef struct equip_unit_data {
     s16 unit_count;          /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
     s16 experience;          /* 0x08; capped at 99 */
     s16 entd_slot_0a;        /* 0x0a; same source as entd_slot */
-    u16 hp;                  /* 0x0c; capped at 999 */
+    s16 hp;                  /* 0x0c; capped at 999 */
     s16 _unused_0e;          /* 0x0e */
-    u16 max_hp;              /* 0x10; capped at 999 */
-    u16 mp;                  /* 0x12; capped at 999 */
+    s16 max_hp;              /* 0x10; capped at 999 */
+    s16 mp;                  /* 0x12; capped at 999 */
     s16 _unused_14;          /* 0x14 */
-    u16 max_mp;              /* 0x16; capped at 999 */
+    s16 max_mp;              /* 0x16; capped at 999 */
     s16 ct;                  /* 0x18; 100 while the unit has its turn */
     s16 _unused_1a;          /* 0x1a */
     s16 max_ct;              /* 0x1c; always 100 */
@@ -796,8 +799,5 @@ void equip_collect_item_stat_deltas(
     s32 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
 
 s32 equip_entrypoint(s32 unit, void* otag);
-
-/* unnamed */
-extern s16 D_801d86ac;
 
 #endif

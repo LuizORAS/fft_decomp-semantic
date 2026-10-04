@@ -7,7 +7,7 @@ s32 battle_formula_calculate_dance_song_hit(void) {
     u8 hit_percent = g_current_ability.range_data.x;
     s32 action_state = g_battle_action_state;
 
-    action->attack_accuracy = (s16)action->attack_accuracy * hit_percent / 100;
+    action->attack_accuracy = action->attack_accuracy * hit_percent / 100;
     if (action_state != BATTLE_ACTION_STATE_EXECUTE || main_util_roll_pass_fail(100, hit_percent) == 0) {
         return 0;
     }

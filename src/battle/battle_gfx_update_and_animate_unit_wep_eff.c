@@ -45,7 +45,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
     if (unit->position_copies_active != 0) {
         battle_gfx_shift_and_fill_display_svectors((battle_gfx_render_unit_t*)unit);
     }
-    direction = (g_battle_camera_render_state.vy + (s16)unit->facing) & 0xfff;
+    direction = (g_battle_camera_render_state.vy + unit->facing) & 0xfff;
     quadrant = direction / 1024;
     sixteenth = direction / 256;
     if (unit->requested_animation != 0) {

@@ -111,7 +111,7 @@ void require_gfx_apply_menu_palette_for_mode(
     world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
-void require_gfx_build_portrait_poly_ft4(s32 flags, void* output);
+void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 
 void require_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
     const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
@@ -171,12 +171,12 @@ void require_menu_wait_selection_threads(void);
 /* panel */
 extern u8 g_require_panel_active_unit_banner[];
 extern u8 g_require_panel_billboard_data[];
-extern battle_menu_status_panel_gauges_t g_require_panel_comparison_billboard;
+extern world_unit_status_billboard_t g_require_panel_comparison_billboard;
 extern s16 g_require_panel_comparison_unit_id;
 extern s32 g_require_panel_dim_a;
 extern s32 g_require_panel_dim_b;
 extern s32 g_require_panel_dim_c;
-extern battle_menu_status_panel_gauges_t g_require_panel_selected_billboard;
+extern world_unit_status_billboard_t g_require_panel_selected_billboard;
 extern u8 g_require_panel_status_animation[];
 extern u8 g_require_panel_status_group_bounds[];
 extern u8 g_require_panel_status_group_count;
@@ -226,7 +226,7 @@ extern u8 g_require_panel_selected_portrait_image[];
 extern RECT g_require_panel_selected_portrait_rect;
 extern u8 g_require_panel_sprite_cells[];
 extern const require_texture_page_t g_require_panel_status_texture;
-void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_menu_status_panel_gauges_t* output);
+void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, world_unit_status_billboard_t* output);
 
 void require_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
@@ -235,6 +235,13 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+/* BONUS image file loaded by require_reward_load_bonus_image: 200 rows of
+ * 64 16-bit pixels, then the palette. */
+typedef struct require_reward_bonus_image_file {
+    u16 pixels[200][64]; /* 0x0000 */
+    u16 palette[1];      /* 0x6400 */
+} require_reward_bonus_image_file_t;
+
 extern RECT g_require_reward_bonus_image_rect;
 extern RECT g_require_reward_bonus_palette_rect;
 extern s32 g_require_reward_war_trophy_entry_count;
@@ -289,13 +296,13 @@ extern s32 g_require_numeric_editor_thread_params;
 extern require_glyph_t g_require_text_decimal_glyph;
 void require_text_clear_string_buffer(u8* data);
 
-void require_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void require_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 void require_text_render_decimal_value(
     s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
 
-void require_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void require_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
 void require_text_show_battle_congratulations(void);

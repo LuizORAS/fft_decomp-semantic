@@ -42,14 +42,10 @@ void DecDCTvlc(void* frame_data, void* decode_buffer) {
     /* Shared-delay scopes preserve the handwritten machine slots. Empty register
      * captures read the values those slots supplied on either architectural path;
      * tied captures additionally retain C liveness across a continuation. */
-    __asm__("" : "=r"(zero)); /* Keep original CPU clear/constant instruction forms. */
-    __asm__("" : "=r"(input), "=r"(output) : "0"(input), "1"(output));
     limit = &g_psyq_press_vlc_limit_halfwords;
-    __asm__("" : "=r"(limit) : "0"(limit));
     primary = g_psyq_press_ac_primary_table;
     __asm__ volatile("" : "=r"(primary) : "0"(primary) : "memory");
     secondary = g_psyq_press_ac_secondary_table;
-    __asm__ volatile("" : "=r"(secondary) : "0"(secondary) : "memory");
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (input != 0)
         goto fresh_frame;
@@ -67,7 +63,6 @@ void DecDCTvlc(void* frame_data, void* decode_buffer) {
     predictor_cb = state->predictor_cb;
     predictor_y = state->predictor_y;
     PSYQ_CPU_TRAP_ADD(first, first, first);
-    __asm__("" : "=r"(zero));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto decode_ac;
@@ -105,7 +100,6 @@ decode_dc:
     if (component == 0)
         goto decode_dc_v2;
     condition = scratch ^ PSYQ_PRESS_END_FRAME_V3;
-    __asm__("" : "=r"(condition) : "0"(condition)); /* Retain the handwritten XORI and zero test. */
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (condition == 0)
         goto frame_complete;
@@ -120,13 +114,11 @@ decode_dc:
     PSYQ_PRESS_TRAP_ADDI(dc_base, dc_base, -PSYQ_PRESS_DC_LUMA_BACK_BYTES);
 dc_table_ready:
     __asm__("" : "=r"(window) : "0"(window)); /* Block SRL from replacing the trapping ADDI delay. */
-    __asm__("" : "=r"(dc_base));
     scratch = window >> 24;
     scratch <<= 2;
     PSYQ_CPU_TRAP_ADD(dc_entry, scratch, dc_base);
     first = dc_entry->prefix_bits;
     second = dc_entry->magnitude_bits;
-    __asm__("" : "=r"(zero), "=r"(other_zero));
     scratch = zero & other_zero; /* Two zero operands retain the original AND encoding. */
     window <<= first;
     if (second == 0)
@@ -134,7 +126,6 @@ dc_table_ready:
     PSYQ_PRESS_TRAP_CONSTANT(condition, 32);
     PSYQ_CPU_TRAP_SUB(condition, condition, second);
     scratch = window >> condition;
-    __asm__("" : "=r"(scratch) : "0"(scratch));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if ((s32)window < 0)
         goto dc_positive_magnitude;
@@ -144,7 +135,6 @@ dc_table_ready:
     extra >>= condition;
     PSYQ_CPU_TRAP_SUB(scratch, scratch, extra);
 dc_positive_magnitude:
-    __asm__("" : "=r"(window) : "0"(window)); /* Keep the bit-window shift in the sign-test delay. */
     PSYQ_CPU_TRAP_ADD(consumed, consumed, second);
 dc_magnitude_ready:
     PSYQ_CPU_TRAP_ADD(consumed, consumed, first);
@@ -169,7 +159,6 @@ dc_refill_ready:
     PSYQ_CPU_TRAP_ADD(first, predictor_cb, scratch);
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_ADD(first, predictor_cr, scratch);
-    __asm__("" : "=r"(zero));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto dc_predictor_ready;
@@ -177,7 +166,6 @@ dc_refill_ready:
     PSYQ_CPU_SHARED_DELAY_END();
 dc_update_cb:
     __asm__("" : "=r"(first));
-    __asm__("" : "=r"(zero));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto dc_predictor_ready;
@@ -197,7 +185,6 @@ dc_predictor_ready:
     *output = first;
     if (condition != 0)
         goto check_budget;
-    __asm__("" : "=r"(zero));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto check_budget;
@@ -205,7 +192,6 @@ dc_predictor_ready:
     PSYQ_CPU_SHARED_DELAY_END();
 decode_dc_v2:
     condition = scratch ^ PSYQ_PRESS_END_FRAME_V2;
-    __asm__("" : "=r"(condition) : "0"(condition)); /* Retain XORI rather than a materialized comparison constant. */
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (condition == 0)
         goto frame_complete;
@@ -265,7 +251,6 @@ ac_secondary_refill_ready:
     first = *secondary_entry;
     PSYQ_CPU_TRAP_ADD(extra, zero, zero);
     condition = first & 0xff;
-    __asm__("" : "=r"(zero));
     if (zero >= 0)
         goto ac_advance;
 ac_primary_ready:
@@ -285,11 +270,9 @@ ac_advance:
 ac_refill_ready:
     first >>= 16;
     condition = first ^ PSYQ_PRESS_ESCAPE_CODE;
-    __asm__("" : "=r"(condition) : "0"(condition));
     if (condition == 0)
         goto escaped_code;
     condition = first ^ PSYQ_PRESS_END_BLOCK;
-    __asm__("" : "=r"(condition) : "0"(condition));
     *output = first;
     if (condition == 0)
         goto decode_dc;
@@ -300,11 +283,9 @@ ac_refill_ready:
     PSYQ_CPU_SHARED_DELAY_END();
     second = extra & 0xffff;
     condition = second ^ PSYQ_PRESS_ESCAPE_CODE;
-    __asm__("" : "=r"(condition) : "0"(condition));
     if (condition == 0)
         goto escaped_code;
     condition = second ^ PSYQ_PRESS_END_BLOCK;
-    __asm__("" : "=r"(condition) : "0"(condition));
     *output = second;
     if (condition == 0)
         goto decode_dc;
@@ -315,15 +296,12 @@ ac_refill_ready:
     PSYQ_PRESS_TRAP_ADDI(output, output, 2);
     PSYQ_CPU_SHARED_DELAY_END();
     condition = second ^ PSYQ_PRESS_ESCAPE_CODE;
-    __asm__("" : "=r"(condition) : "0"(condition));
     if (condition == 0)
         goto escaped_code;
     condition = second ^ PSYQ_PRESS_END_BLOCK;
-    __asm__("" : "=r"(condition) : "0"(condition));
     *output = second;
     if (condition == 0)
         goto decode_dc;
-    __asm__("" : "=r"(zero));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto decode_ac;
@@ -337,7 +315,6 @@ escaped_code:
     PSYQ_PRESS_TRAP_ADDI(input, input, 2);
     window <<= 16;
     scratch <<= consumed;
-    __asm__("" : "=r"(zero));
     window |= scratch;
     if (zero >= 0)
         goto decode_ac;
@@ -345,7 +322,6 @@ frame_complete:
     scratch = PSYQ_PRESS_END_BLOCK;
     PSYQ_PRESS_TRAP_CONSTANT(window, PSYQ_PRESS_PADDING_LAST_INDEX);
 pad_end_blocks:
-    __asm__("" : "=r"(window)); /* Counter decrements in the back-branch delay; zero still stores. */
     *output = scratch;
     PSYQ_PRESS_TRAP_ADDI(output, output, 2);
     PSYQ_CPU_SHARED_DELAY_BEGIN();
@@ -361,7 +337,6 @@ pad_end_blocks:
     goto* psyq_cpu_return_address;
 decoder_paused:
     PSYQ_CPU_SHARED_DELAY_END();
-    __asm__("" : "=r"(output));
     state = &g_psyq_press_vlc_state;
     __asm__("" : "=r"(state) : "0"(state));
     state->input = input;

@@ -6,8 +6,7 @@ void battle_action_check_mp_switch_usability(void) {
     battle_action_data_t* action;
     battle_action_data_t* action2;
 
-    /* The target reads hp_damage / mp_damage signed (lh). */
-    if (*(s16*)&g_battle_action_target_data->hp_damage == 0) {
+    if (g_battle_action_target_data->hp_damage == 0) {
         return;
     }
     unit = g_battle_action_target;
@@ -22,7 +21,7 @@ void battle_action_check_mp_switch_usability(void) {
     }
     action = g_battle_action_target_data;
     action->mp_damage = action->mp_damage + action->hp_damage;
-    if (*(s16*)&action->mp_damage >= 0x3E8) {
+    if (action->mp_damage >= 0x3E8) {
         action->mp_damage = 0x3E7;
     }
     action2 = g_battle_action_target_data;

@@ -30,7 +30,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x1D:
         if (unit->animation_countdown == 0) {
             unit->centre_tile_offset++;
-            battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing(0x1F, unit->facing, unit);
             battle_sound_play_movement_sfx(unit, 0x27);
             battle_unit_dismount_rider(unit);
         }

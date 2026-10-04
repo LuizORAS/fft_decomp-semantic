@@ -3,19 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: one of the two 0x134-byte packet pages the list alternates
- * between frames (BATTLE twin of the WORLD scroll-list page). */
-typedef struct battle_menu_scroll_list_page {
-    SPRT frame;                        /* 0x00: cursor frame */
-    SPRT arrows[2];                    /* 0x14: scroll arrows */
-    SPRT arrow_marks[2];               /* 0x3c */
-    SPRT thumb;                        /* 0x64: scroll-bar thumb */
-    DR_MODE text_mode;                 /* 0x78 */
-    DR_MODE icon_mode;                 /* 0x84 */
-    battle_menu_window_record_t icons; /* 0x90 */
-    u8 _unused_10c[0x28];
-} battle_menu_scroll_list_page_t;
-
 struct battle_menu_text_position;
 extern void battle_menu_draw_stacked_glyph_pair(void* pixels, struct battle_menu_text_position* position);
 
@@ -84,7 +71,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
-        page = (battle_menu_scroll_list_page_t*)((u8*)g_battle_ai_workspace_ptr + 0x388);
+        page = g_battle_ai_workspace_ptr->scroll.pages;
         base = page;
     }
     toggle = 0;
@@ -274,7 +261,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                             layout->columns.text_ids[column][index], buffer, &g_menu_text_state.origin_x);
                         g_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
+                            && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
                             /* The target passes x and y as full words; the s16 prototype narrows them. */
                             ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->columns.x[column] + 0x50, 0);
                             battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
@@ -285,9 +272,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
                             && (u16)layout->columns.text_ids[column][index] < 2
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0xFF
-                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index]
-                                    == 0)) {
+                            && (g_battle_ai_workspace_ptr->skill_use.target[index] == 0xFF
+                                || g_battle_ai_workspace_ptr->skill_use.target[index] == 0)) {
                             g_menu_text_state.origin_y += 2;
                             battle_menu_draw_stacked_glyph_pair(
                                 buffer, (struct battle_menu_text_position*)&g_menu_text_state.origin_x);

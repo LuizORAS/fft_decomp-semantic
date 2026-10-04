@@ -14,7 +14,7 @@ s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
     s32 result;
     s32 fill;
 
-    g_battle_ai_workspace_ptr = (void*)g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (battle_ai_workspace_t*)g_battle_ai_workspace;
     if (g_battle_menu_input_disabled != 0) {
         controller_input = g_battle_script_unfiltered_controller_input;
     }

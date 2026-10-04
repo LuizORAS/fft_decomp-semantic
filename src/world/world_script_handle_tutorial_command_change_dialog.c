@@ -13,7 +13,7 @@ void world_script_handle_tutorial_command_change_dialog(void) {
     if (world_text_is_printing(0x10) != 1) {
         world_thread_set_parameters(0x10, 0x99,
             (s32)((u8*)(g_world_script_tutorial_command_ptr[2] * 0x100)
-                + (g_world_script_tutorial_command_ptr[1] + 0xB800)),
+                + (g_world_script_tutorial_command_ptr[1] + TEXT_ID_SECTION_B800_BASE)),
             0);
         g_world_script_tutorial_command_ptr += 3;
         /* Thread 16's task_id; the typed member access splits the address at -O0. */

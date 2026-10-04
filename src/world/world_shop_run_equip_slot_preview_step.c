@@ -22,7 +22,7 @@ void world_shop_run_equip_slot_preview_step(void) {
     s8 slot;
     s32 index;
     s32 value;
-    s32 g_main_item_item_flags;
+    s32 item_entry;
     s16* cursor_y;
     s16 unit;
 
@@ -60,12 +60,11 @@ void world_shop_run_equip_slot_preview_step(void) {
     world_menu_draw_animated_cursor(&g_world_shop_equip_slot_cursor_point, &g_world_shop_equip_slot_cursor_anim,
         ((s32 (*)(s32))world_thread_is_task_active)(0));
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
-        g_main_item_item_flags
-            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot];
-        if ((g_main_item_item_flags >> 15) == 0) {
+        item_entry = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot];
+        if ((item_entry >> 15) == 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
         } else {
-            world_shop_add_fitting_room_cost(-world_item_get_price(g_main_item_item_flags & WORLD_ITEM_ID_MASK));
+            world_shop_add_fitting_room_cost(-world_item_get_price(item_entry & WORLD_ITEM_ID_MASK));
             world_shop_finalize_unit_equips_from_fitting_room(g_world_formation_selected_unit_index, slot & 0xFF);
             world_formation_recalculate_selected_unit_stats();
             g_world_menu_sound_effect_id = MAIN_SFX_UNEQUIP;
@@ -74,14 +73,12 @@ void world_shop_run_equip_slot_preview_step(void) {
     }
     index = (u8)slot;
     if (g_world_shop_previewed_equip_slot != index) {
-        g_main_item_item_flags
-            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[index];
+        item_entry = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[index];
         g_world_shop_previewed_equip_slot = slot;
-        if ((g_main_item_item_flags >> 15) != 0) {
+        if ((item_entry >> 15) != 0) {
             world_menu_toggle_preview_stats_window(1);
             world_item_calculate_swap_stat_delta(&g_world_item_preview_stat_detail, &g_world_selected_unit_stat_summary,
-                (s16)g_main_item_item_flags,
-                g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][index], index);
+                (s16)item_entry, g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][index], index);
             g_world_preview_stats_thread_params.redraw_request = 1;
         } else {
             world_menu_toggle_preview_stats_window(0);

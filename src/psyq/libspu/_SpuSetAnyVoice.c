@@ -91,12 +91,8 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
             clear = ~voices;
             bits &= clear;
             high_offset = reg_index_high << 1;
-            /* The input dependence keeps address addition after the low-word read. */
-            __asm__ volatile("" : "=r"(high_offset) : "0"(high_offset), "r"(bits));
             /* Pointer arithmetic reverses the retail integer-add operand order. */
             high = (u16*)(high_offset + (u32)registers);
-            /* The tie prevents destructive reuse of the bank pointer for this address. */
-            __asm__("" : "=r"(high) : "0"(high));
             *low = bits;
             *high &= ~((voices >> 16) & 0xff);
         }

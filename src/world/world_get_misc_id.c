@@ -74,7 +74,7 @@ s32 world_get_misc_id(s32 unit_id) {
         }
     }
 
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x194) {
+    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_GAME_OVER) {
         for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
             unit = battle_unit_get_stats_from_battle_id(battle_id);
             if (unit->character_identity != CHARACTER_IDENTITY_ENTD_NONE
@@ -93,7 +93,8 @@ s32 world_get_misc_id(s32 unit_id) {
         }
     } else {
         unit = battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &unit_state);
-        if (unit_state >= 0 || unit_state == -2 || world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x194) {
+        if (unit_state >= 0 || unit_state == -2
+            || world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_GAME_OVER) {
             for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
                 if (battle_unit_get_stats_from_battle_id(battle_id) == unit)
                     break;

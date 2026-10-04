@@ -9,12 +9,12 @@ void battle_formula_use_hp_damage_as_action_hit_percent(void) {
     battle_action_data_t* act;
 
     act = g_battle_action_target_data;
-    pct = (s16)act->hp_damage;
+    pct = act->hp_damage;
     if (pct >= 100) {
         act->hp_damage = 0;
         return;
     }
-    xa = (s16)act->attack_accuracy;
+    xa = act->attack_accuracy;
     state = g_battle_action_state;
     amount = pct * xa / 100;
     act->hp_damage = 0;

@@ -9,12 +9,14 @@ void _patch_card(void);
 void _patch_card2(void);
 void psyq_card_restore_exception_prefix(void);
 
-/* BIOS supplies the live v1 base; its absolute value is not assumed here. */
+/* The BIOS supplies the live v1 base. The /ACK wait on bit 7 of +0x1044
+ * (psx-spx early_card_irq_patch: JOY_STAT.7) puts it at the I/O base
+ * 0x1f800000. */
 typedef struct {
     u8 _unknown_0000[0x1044];
-    u32 _unknown_1044;
+    u32 joy_status; /* 0x1044: JOY_STAT; bit 7 is the /ACK input level */
     u8 _unknown_1048[0x2c];
-    u32 _unknown_1074;
+    u32 interrupt_mask; /* 0x1074: I_MASK by the same base; psx-spx labels this load I_STAT.7 */
 } psyq_card_interrupt_view_t;
 
 typedef struct {

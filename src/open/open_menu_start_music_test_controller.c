@@ -23,11 +23,11 @@ void open_menu_start_music_test_controller(void) {
     open_gfx_start_overlay_fade_out(0x20);
 
     controller = g_open_current_controller_index;
-    g_open_controller_stream_start[controller].stream_start = 0;
-    g_open_controller_stream_start[controller].stream_length = 0;
-    g_open_controller_stream_start[controller]._unknown_08 = 0;
-    g_open_controller_stream_start[controller]._unknown_0c = four;
-    g_open_controller_stream_start[controller]._unknown_10 = 0;
+    g_open_controller_stream_start[controller].sound_test.music_id = 0;
+    g_open_controller_stream_start[controller].sound_test.delay = 0;
+    g_open_controller_stream_start[controller].sound_test.music_slot = 0;
+    g_open_controller_stream_start[controller].sound_test.step = four;
+    g_open_controller_stream_start[controller].sound_test.blink_frames = 0;
     g_open_controller_handler_indices[controller] = 7;
     g_open_current_controller_index = controller + 1;
 }

@@ -48,7 +48,7 @@ void world_formation_recalculate_selected_unit_stats(void) {
         = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
     for (i = 0; i < 7; i++) {
         item = unit.equipment[i];
-        if (item == ITEM_ID_NOTHING || item >= 0xfe) {
+        if (item == ITEM_ID_NOTHING || item >= ITEM_ID_END) {
             unit.equipment[i] = ITEM_ID_NONE;
         }
     }
@@ -62,6 +62,6 @@ void world_formation_recalculate_selected_unit_stats(void) {
     bcopy(&record.move, &g_world_selected_unit_stat_detail, 0x40);
     world_item_sum_equipment_stat_details(&g_world_selected_unit_stat_detail,
         g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment);
-    world_formation_copy_unit_to_temp(g_world_formation_selected_unit_index, 20);
+    world_formation_copy_unit_to_temp(g_world_formation_selected_unit_index, WORLD_FORMATION_PREVIEW_RECORD);
     world_menu_enable_all_order_entries();
 }

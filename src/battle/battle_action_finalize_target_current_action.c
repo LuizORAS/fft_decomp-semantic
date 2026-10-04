@@ -39,22 +39,22 @@ void battle_action_finalize_target_current_action(void) {
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
         return;
     }
-    if ((s16)g_battle_action_target_data->attack_accuracy == 0) {
+    if (g_battle_action_target_data->attack_accuracy == 0) {
         g_battle_action_target_data->hit = 0;
     }
-    if ((s16)g_battle_action_target_data->hp_damage >= 1000) {
+    if (g_battle_action_target_data->hp_damage >= 1000) {
         g_battle_action_target_data->hp_damage = 999;
     }
-    if ((s16)g_battle_action_target_data->hp_healing >= 1000) {
+    if (g_battle_action_target_data->hp_healing >= 1000) {
         g_battle_action_target_data->hp_healing = 999;
     }
-    if ((s16)g_battle_action_target_data->mp_damage >= 1000) {
+    if (g_battle_action_target_data->mp_damage >= 1000) {
         g_battle_action_target_data->mp_damage = 999;
     }
-    if ((s16)g_battle_action_target_data->mp_healing >= 1000) {
+    if (g_battle_action_target_data->mp_healing >= 1000) {
         g_battle_action_target_data->mp_healing = 999;
     }
-    if ((s16)g_battle_action_target_data->hp_damage >= g_battle_action_target->hp) {
+    if (g_battle_action_target_data->hp_damage >= g_battle_action_target->hp) {
         battle_action_clear_knockback_flag();
         battle_formula_clear_nullify_flags();
     }

@@ -55,7 +55,7 @@ void open_menu_start_music_test_list_thread(
     g_open_music_test_list_params.text_id = 0;
     g_open_music_test_list_params.window_y = bottom;
     ey = extent->y;
-    g_open_music_test_list_params.field_0x20 = 0;
+    g_open_music_test_list_params.cancel_thread_count = 0;
     g_open_music_test_list_params.parent_indices = g_open_music_test_row_actions;
     /* Keeps the overall_width store below the zero stores ahead of it. */
     __asm__ volatile("");

@@ -558,7 +558,7 @@ typedef enum wldcore_script_request_flags {
 
 /* WLDCORE script interpreter state; the opcode handlers read ip/data here.
  * One object through the choice/argument words:
- * wldcore_opcode_read_four_halfword_pairs reaches ip at -4 and the choice
+ * wldcore_opcode_load_choice_arguments reaches ip at -4 and the choice
  * values at +0x10 from its &choice_vars base. */
 typedef struct wldcore_script_state {
     s32 flags;          /* 0x00 */
@@ -1182,7 +1182,7 @@ typedef struct wldcore_menu_message_level {
     s32 reload_text;
     s32 saved_menu_result; /* 0x04; g_wldcore_menu_result at push time */
     s32 window_index;      /* 0x08; window record appended by the type-2 push; cleared by the type-3 push */
-    s32 _unknown_0c;       /* 0x0c; set to 8 at push */
+    s32 _unknown_0c;       /* 0x0c; set to 8 at push; no level handler reads it */
 } wldcore_menu_message_level_t;
 
 /* Provisional: the type-1 world-map close/return level pushed by
@@ -1262,7 +1262,7 @@ typedef struct wldcore_menu_variable_list_level {
 typedef struct wldcore_menu_participant_level {
     s32 left_window;  /* 0x00 */
     s32 right_window; /* 0x04 */
-    s32 _unknown_08;  /* 0x08; cleared at push */
+    s32 _unknown_08;  /* 0x08; cleared at push; no level handler reads it */
     s32 _unused_0c;   /* 0x0c; cleared at push */
     s32 proposition;  /* 0x10; index into g_main_active_propositions */
     s32 participant;  /* 0x14; slot in participant_indices */
@@ -1274,7 +1274,9 @@ typedef struct wldcore_menu_participant_level {
 typedef struct wldcore_menu_variable_detail_level {
     s32 value;        /* 0x00 */
     s32 render_index; /* 0x04 */
-    s32 _unknown_08;
+    /* 0x08; treasure detail: the saved record picked with Triangle. The detail
+     * steps' phase 1 also reads it as a render record; see QUIRKS.md. */
+    s32 sound_novel_slot;
     s32 phase; /* 0x0c; set to 1 at push; the detail steps switch on it */
     s32 timer; /* 0x10; cleared at push; text delay or dissolve step, counted per frame */
 } wldcore_menu_variable_detail_level_t;
@@ -1333,7 +1335,7 @@ typedef struct wldcore_menu_save_confirm_level {
     s32 _unused_0c;
     s32 fade_out;    /* 0x10 */
     s32 fade_in;     /* 0x14 */
-    s32 _unknown_18; /* 0x18; cleared at push */
+    s32 _unknown_18; /* 0x18; cleared at push; no level handler reads it */
     s32 choice;      /* 0x1c */
 } wldcore_menu_save_confirm_level_t;
 
@@ -1419,7 +1421,7 @@ typedef struct wldcore_menu_sound_novel_level {
     s32 overlay_window; /* 0x0c; footer window */
     u8 _unused_10[0xc];
     s32 message;     /* 0x1c; argument of the push */
-    s32 _unknown_20; /* 0x20; set to 1 at push */
+    s32 _unknown_20; /* 0x20; set to 1 at push; no level handler reads it */
     s32 countdown;   /* 0x24; 9999 at push */
     s32 phase;       /* 0x28; cleared at push */
     s32 fade_timer;  /* 0x2c; cleared at push */

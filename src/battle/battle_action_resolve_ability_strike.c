@@ -12,7 +12,7 @@ extern void battle_action_store_used_weapon(struct battle_action_used_weapon_con
  * the Math skillset id in the control-value test. The (u16*)/(s16*) views
  * reproduce the target's load forms and memory-access ordering. */
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
-    u8 targets[21];
+    u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
     battle_stats_t* attacker;
@@ -25,10 +25,10 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     g_battle_sort_targets_nearest_first = 0;
     g_battle_relocated_unit_count = 0;
     g_current_ability.random_fire_flag = 0;
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
-    if (misc_unit_id >= 21) {
+    if (misc_unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     attacker = &g_battle_unit_stats[misc_unit_id];
@@ -62,7 +62,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             work->continue_attack = 0;
             return -1;
         }
-        if (g_current_ability.post_action_target_id < 21
+        if (g_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
             && (g_current_ability.elemental_flags != 0 || (g_current_ability.knockback_flags & 0x80))) {
             battle_target_disable_green_panel_flags();
             count = 1;
@@ -79,7 +79,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     g_current_ability.target_count = count;
     battle_action_store_ability_data(targets);
     battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&attacker->action_actor_id);
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
             g_current_ability.defaulted_to_attack = 0;
@@ -125,7 +125,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else {
         work->last_attack_id = attacker->last_ability_id;
     }
-    *(s16*)&work->reaction_id_1a = g_current_ability.reaction_id;
+    work->reaction_id_1a = g_current_ability.reaction_id;
     if (g_current_ability.knockback_flags != 0) {
         work->knockback_flags = g_current_ability.knockback_flags & 0x7f;
         work->target_new_x = g_current_ability.target_x;
@@ -138,7 +138,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         if (g_current_ability.knockback_flags != 0) {
             work->reaction_occurred = 1;
             work->animate_on_miss_flag = 1;
-            work->last_attack_id = 0x200;
+            work->last_attack_id = ABILITY_ID_KNOCKBACK;
         }
         g_current_ability.strike_counter++;
         if (g_current_ability.strike_counter < g_current_ability.strike_count) {

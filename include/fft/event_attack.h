@@ -26,7 +26,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table
 extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern u8 g_attack_editor_numeric_texture[];
-extern battle_menu_status_panel_gauges_t g_attack_editor_status_gauges;
+extern world_unit_status_billboard_t g_attack_editor_status_gauges;
 extern s16 g_attack_editor_team_state;
 extern s16 g_attack_editor_job_id;
 extern s16 g_attack_editor_brave;
@@ -147,8 +147,10 @@ typedef struct attack_deployed_unit_coordinate {
     u8 x;          /* 0x01 */
     u8 y;          /* 0x02 */
     u8 facing : 2; /* 0x03 */
-    u8 unk_3_2 : 3;
-    u8 unk_3_5 : 2;
+    /* Bits 2-4: BATTLE reads bits 0-3 as facing and bit 4 as unit absent
+     * (battle_unit_init_deployed_units_data); placement clears all three. */
+    u8 facing_high_and_absent : 3;
+    u8 _unused_03_bit5 : 2;
     u8 upper_level : 1;
 } attack_deployed_unit_coordinate_t;
 
@@ -173,12 +175,13 @@ typedef char attack_squad_data_size_must_be_0x0c[(sizeof(attack_deployment_squad
  * bobbing above the tile) and a tile-highlight diamond ([n][1]), positioned
  * from g_attack_deploy_cursor_row/column[n]. */
 typedef struct attack_deploy_render_buffer {
-    SPRT tiles[5][5];                   /* 0x000 */
-    POLY_FT4 portraits[10];             /* 0x1f4 */
-    POLY_FT4 status[30];                /* 0x384 */
-    u8 _unknown_834[0x28];              /* 0x834 */
+    SPRT tiles[5][5];       /* 0x000 */
+    POLY_FT4 portraits[10]; /* 0x1f4 */
+    POLY_FT4 status[30];    /* 0x384 */
+    /* 0x834; built by attack_deploy_build_screen_arrow through g_attack_deploy_screen_arrow */
+    POLY_FT4 banner;
     POLY_F3 arrow;                      /* 0x85c */
-    u8 _unused_870[0x14];               /* 0x870 */
+    u8 _unused_870[0x14];               /* 0x870; that view's second arrowhead: initialised, never drawn */
     POLY_FT4 menu_cursor[4];            /* 0x884 */
     POLY_FT4 cursor[2][2];              /* 0x924 */
     DR_MODE draw_mode_9c4;              /* 0x9c4 */
@@ -308,7 +311,7 @@ extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
 /* panel */
-extern battle_menu_status_panel_gauges_t g_attack_panel_comparison_billboard;
+extern world_unit_status_billboard_t g_attack_panel_comparison_billboard;
 extern battle_image_location_t g_attack_panel_item_icon_texture[];
 extern battle_image_location_t g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;
@@ -381,13 +384,13 @@ extern u8 g_attack_numeric_editor_thread_params[];
 extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;
 void attack_text_build_deployment_strings(void);
 
-void attack_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void attack_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void attack_text_render_decimal_value(
     s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
 
-void attack_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void attack_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void attack_text_init_battle_pointers(s32* offsets);

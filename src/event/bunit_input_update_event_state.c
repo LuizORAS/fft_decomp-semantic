@@ -13,7 +13,7 @@ extern u16 g_battle_menu_input_block_frames;
  * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls bunit_menu_draw_thread_status_indicators after the
  * yield. Needs the _divcheck profile for the three repeat-period divisions.
  */
-void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg) {
+void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg) {
     u32 filtered_input;
     s32 initial_delay;
     s32 repeat_delay;
@@ -23,7 +23,7 @@ void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_current_otag_entry = (u32*)state;
+    g_current_otag_entry = otag;
     g_bunit_frame_arg = frame_arg;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     g_battle_menu_hide_numeric_values = 0;

@@ -142,6 +142,6 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
         }
     }
     if (animation != 0) {
-        battle_unit_store_animation_facing(animation, (s16)unit->facing, unit);
+        battle_unit_store_animation_facing(animation, unit->facing, unit);
     }
 }

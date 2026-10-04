@@ -175,7 +175,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         record[i].unit_id_flags = mount;
     }
     count = 0;
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (count >= 16) {
             break;
         }

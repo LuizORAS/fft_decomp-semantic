@@ -47,7 +47,7 @@ void battle_formula_select_magic_gun_ability(void) {
     }
     current_ability = &g_current_ability.ability_id;
     *current_ability = id;
-    src = (u8*)current_ability + 0x1A;
+    src = (u8*)&g_current_ability.range_data;
     attacker = g_battle_action_attacker;
     attacker->last_ability_id = id;
     main_util_copy_byte_data(&g_main_ability_range_data[id], src, 14);

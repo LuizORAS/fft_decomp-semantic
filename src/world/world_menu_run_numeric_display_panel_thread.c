@@ -24,14 +24,14 @@ void world_menu_run_numeric_display_panel_thread(void) {
     g_world_menu_text_state.stride = 0x14;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        (s32)buffer, g_world_numeric_display_entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+        buffer, g_world_numeric_display_entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
     g_world_menu_text_state.stride = 0x40;
     world_menu_set_text_origin(0, 0);
-    world_menu_draw_numeric_display_entries((s32)(buffer + 0x168), &g_world_numeric_display_entries[3],
+    world_menu_draw_numeric_display_entries((buffer + 0x168), &g_world_numeric_display_entries[3],
         (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
     g_world_menu_text_state.stride = 0x64;
     world_menu_set_text_origin(0, 0);
-    world_menu_draw_numeric_display_entries((s32)(buffer + 0x468), &g_world_numeric_display_entries[7],
+    world_menu_draw_numeric_display_entries((buffer + 0x468), &g_world_numeric_display_entries[7],
         (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
     LoadImage(&g_world_numeric_display_text_rect_a, (u32*)buffer);
     LoadImage(&g_world_numeric_display_text_rect_b, (u32*)(buffer + 0x168));

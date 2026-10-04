@@ -1,7 +1,7 @@
 /*
  * Setter twin of battle_map_get_tile_data_value: stores one packed field of the
  * tile at (x, y, layer) and returns 0, or -2 for an unknown selector.
- * Selector 15 instead retries battle_clear_r2_2 up to 1000 times, raising
+ * Selector 15 instead retries battle_return_zero_801842f8 up to 1000 times, raising
  * exception 0x80 on exhaustion, and returns its last result. The shifted
  * selectors reassign `value` first; an inline shift swaps the `or` operands
  * and breaks the target's shared or/sb tails.

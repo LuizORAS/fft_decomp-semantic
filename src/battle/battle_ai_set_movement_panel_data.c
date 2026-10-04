@@ -94,7 +94,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             }
         }
     }
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && i != ai->acting_unit_id
             && !(*(u16*)&unit->status_sets.current[0] & 0x140)) {

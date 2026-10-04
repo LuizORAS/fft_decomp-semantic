@@ -7,7 +7,7 @@ typedef struct battle_unit_height_copy {
     u8 x;
     u8 y;
     u8 elevation : 7;
-    u8 unknown_bit7 : 1;
+    u8 _unused_02_bit7 : 1;
     u8 unit_flags;
     s8 unit_height;
     s8 walking_height;

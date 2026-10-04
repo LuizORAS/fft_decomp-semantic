@@ -18,6 +18,7 @@
 
 /* The parameters are copied into locals in this order: it is what places the
  * s0 copy before the s2 copy in the prologue. */
+/* Port debt (QUIRKS.md): parameter_address arrives as a thread parameter (s32). */
 void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
     s32 pos[4][4];
     battle_screen_coords_t vec;

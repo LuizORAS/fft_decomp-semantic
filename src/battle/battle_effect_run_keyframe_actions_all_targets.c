@@ -48,12 +48,13 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_TARGET_ANIMATION) {
         if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
             if (misc_id != -1) {
+                /* misc_id is an s32 here; the u16 prototype would add an andi the target lacks. */
                 ((s32 (*)(s32))battle_unit_set_target_anim_by_misc_id)(misc_id);
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
                 if (g_battle_effect_targets[i].target_type == 0) {
-                    ((s32 (*)(s32))battle_unit_set_target_anim_by_misc_id)(g_battle_effect_targets[i].id.misc_id);
+                    battle_unit_set_target_anim_by_misc_id(g_battle_effect_targets[i].id.misc_id);
                 }
             }
         }

@@ -213,7 +213,7 @@ extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_text_reorder_list_buffer[];
 void bunit_run_numeric_editor_thread(void);
 
-void bunit_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void bunit_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void bunit_text_render_decimal_value(
@@ -222,7 +222,7 @@ void bunit_text_render_decimal_value(
 s32 bunit_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void bunit_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void bunit_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void bunit_text_set_palette_and_metrics(s32 mode);
@@ -518,7 +518,7 @@ s32 bunit_input_get_lock_timer(void);
 bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(void);
 void bunit_input_update_controller(void);
 s32 bunit_input_read_pad1_unless_locked(void);
-void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg);
+void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg);
 void bunit_input_update_lock_timer(void);
 
 /* menu */
@@ -626,7 +626,7 @@ void bunit_menu_set_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
 void bunit_menu_dispatch_with_override(s32 menu_id, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id);
-void bunit_menu_init_scrollable_list(s32 entries, s32 selected_index, s16 scroll_base_index, s32 text_table);
+void bunit_menu_init_scrollable_list(s16* entries, s32 selected_index, s16 scroll_base_index, s32 text_table);
 void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 text_table);
 void bunit_menu_init_unit_list(void);
 s32 bunit_menu_is_active_or_transitioning(void);

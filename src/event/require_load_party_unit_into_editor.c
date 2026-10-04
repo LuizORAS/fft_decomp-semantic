@@ -37,9 +37,9 @@ void require_load_party_unit_into_editor(s32 unused, s32 party_index) {
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         g_require_editor_team_state = 2;
     }
-    g_require_panel_selected_billboard._04 = 0;
-    g_require_panel_selected_billboard._06 = 0;
-    g_require_panel_selected_billboard.unit_index = party_index + 0x100;
+    g_require_panel_selected_billboard.list_index = 0;
+    g_require_panel_selected_billboard.unit_count = 0;
+    g_require_panel_selected_billboard.battle_id = party_index + 0x100;
     g_require_panel_selected_billboard.level = unit->level;
     g_require_panel_selected_billboard.experience = unit->experience;
     maximum_hp = unit->max_hp;

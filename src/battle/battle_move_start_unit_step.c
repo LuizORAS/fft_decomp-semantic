@@ -3,7 +3,8 @@
 
 /* Start the unit's next movement step from the current tile centre.
  *
- * Variant of battle_move_start_unit_step_and_dismount_rider without the rider dismount: the step byte's top
+ * Variant of battle_move_start_fly_step without the rider dismount, storing the
+ * facing directly rather than through animation 0x12: the step byte's top
  * two bits pick the direction, which sets the facing and edge offset; its low
  * two bits extend the destination tile coordinate. An out-of-range direction
  * keeps the caller's facing, and game state 0x2d leaves the facing unchanged. */

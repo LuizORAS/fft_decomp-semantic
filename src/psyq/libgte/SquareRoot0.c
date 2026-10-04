@@ -15,7 +15,6 @@ long SquareRoot0(long value) {
     register s32 limit __asm__("$1");
     register u32 table_base __asm__("$13");
     register s32 zero __asm__("$0");
-    __asm__("" : "=r"(zero)); /* Physical zero retains the signed-immediate load spelling. */
     PSYQ_GTE_LZCS(value, psyq_cpu_return_value);
     PSYQ_CPU_SIGNED_CONSTANT(limit, 32);
     if (psyq_cpu_return_value == limit)
@@ -37,7 +36,6 @@ long SquareRoot0(long value) {
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
         normalized = (u32)value << difference;
-        __asm__ volatile("" : : "r"(normalized)); /* Finish normalization before the following branch. */
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -48,19 +46,16 @@ long SquareRoot0(long value) {
     normalized = (s32)value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
-    __asm__("" : "=r"(normalized) : "0"(normalized)); /* Preserve normalization before the paired relocation. */
     normalized <<= 1;
     PSYQ_GTE_TABLE_HIGH_PAIRED(table_base, g_psyq_gte_sqrt_table);
     table_base += normalized;
     __asm__("" : "=r"(table_base) : "0"(table_base)); /* Keep the low-half table load as the relocation target. */
     factor = *(s16*)table_base;                       /* Retail splits this symbol relocation across LUI and LH. */
-    __asm__("" : "=r"(factor) : "0"(factor));
     factor = (u32)factor << exponent;
     psyq_cpu_return_value = (u32)factor >> 12;
     __asm__ volatile("" : : "r"(psyq_cpu_return_value));
     goto* psyq_cpu_return_address;
 zero_result:
-    __asm__ volatile("" : : : "memory"); /* Keep the separate retail invalid-result return. */
     PSYQ_CPU_RETURN_ZERO();
 }
 

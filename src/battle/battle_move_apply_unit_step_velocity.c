@@ -70,7 +70,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
                 unit->centre_tile_offset = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
             }
         }
@@ -99,7 +99,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
                 unit->centre_tile_offset = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
             }
         }
@@ -126,7 +126,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
                 unit->centre_tile_offset = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
             }
         }
@@ -156,7 +156,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
                 unit->centre_tile_offset = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
             }
         }

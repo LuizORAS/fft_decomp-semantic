@@ -4,7 +4,8 @@
 /* Render encoded menu text IDs into a 4-bpp image.
  *
  * Twin of card_text_render_encoded_ids_to_image; inline controls wrap lines,
- * move the cursor, and select glyph shading.
+ * move the cursor, and select glyph shading. Type debt (QUIRKS.md):
+ * equip_text_render_id_rows_to_vram passes a u32[] image buffer.
  */
 void equip_text_render_encoded_ids_to_image(void* image, const battle_menu_text_image_bounds_t* bounds,
     s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,

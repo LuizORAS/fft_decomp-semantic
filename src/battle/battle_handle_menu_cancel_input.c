@@ -12,6 +12,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Type debt (QUIRKS.md): a view of world_menu_entry_t (count is its
+ * cancel_thread_count, cursor its value cell); callers pass three different views
+ * of that record, so the parameter stays void*. */
 typedef struct battle_menu_cancel_context {
     u8 _unused_00[0x20];
     s16 count; /* 0x20 */

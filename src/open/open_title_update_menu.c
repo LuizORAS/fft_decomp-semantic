@@ -4,19 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef struct open_title_controller {
-    /* 0x00 */ s32 header_record_36;
-    /* 0x04 */ s32 option_records_36[4];
-    /* 0x14 */ s32 idle_timer;
-    /* 0x18 */ s32 cd_end_position;
-    /* 0x1c */ s32 cursor;
-    /* 0x20 */ s32 state;
-    /* 0x24 */ s32 _unused_24[3];
-    /* 0x30 */ s32 exit_timer;
-    /* 0x34 */ s32 exiting;
-    /* 0x38 */ u8 _unused_38[0x64 - 0x38];
-} open_title_controller_t;
-
 /* Per-frame handler for the OPEN title menu controller.
  *
  * While the attract CD track plays it watches the current sector and stops

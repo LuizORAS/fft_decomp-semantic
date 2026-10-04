@@ -45,7 +45,6 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             register u32* start_address __asm__("$4") = &_spu_rev_startaddr[current_mode];
             u32 start;
             source = (u8*)&_spu_rev_param[current_mode];
-            __asm__("" : "=r"(start_address) : "0"(start_address));
             start = *start_address;
             _spu_rev_offsetaddr = start;
             destination = (u8*)&parameters;

@@ -3,7 +3,7 @@
 /* Builds and draws a four-fold symmetric polar mesh of textured quads anchored
  * to an effect target.
  *
- * The same renderer as the 6,012-byte polar mesh (effect_polar_mesh.h), with
+ * The same renderer as the 6,012-byte polar mesh (effect_eNNN_update_polar_mesh_state), with
  * two differences: the mesh centre is offset by the camera-space position of
  * the record's coordinate target (resolved to render coordinates, offset by
  * the unit's secondary coordinate vector, then RotTrans'd through the battle

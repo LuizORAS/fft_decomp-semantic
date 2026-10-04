@@ -21,7 +21,7 @@ void battle_formula_apply_status_to_action(void) {
 
     type = g_current_ability.status_infliction.type;
     if (type & BATTLE_STATUS_INFLICTION_TYPE_SEPARATE) {
-        *(s16*)&g_battle_action_target_data->attack_accuracy /= 4;
+        g_battle_action_target_data->attack_accuracy /= 4;
     }
     if (type & (BATTLE_STATUS_INFLICTION_TYPE_SEPARATE | BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE)) {
         if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
