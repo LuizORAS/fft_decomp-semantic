@@ -113,8 +113,11 @@ MAP_UPSTREAM ?= upstream/master
 
 # The upstream target/ files are exported on the host, where git runs, so the
 # map can translate upstream names; a clone without that ref skips the page.
-# MAP_EXPORT copies the vault to a directory outside build/ (a Windows drive,
-# for example), keeping that copy's own .obsidian/ settings.
+# MAP_EXPORT copies the vault to a directory outside build/ (a Windows drive:
+# Obsidian cannot watch a vault inside WSL), keeping that copy's own .obsidian/
+# settings. The copy's docs/ pages, CODEBASE.md and hash manifest come back
+# into build/map first, so edits made there get the same protection; only
+# changed files are rewritten, so Obsidian re-reads only those.
 .PHONY: map
 map: image ## Generate the Obsidian codebase map in build/map (MAP_EXPORT=dir also copies it)
 	@rm -rf build/upstream
@@ -124,13 +127,18 @@ map: image ## Generate the Obsidian codebase map in build/map (MAP_EXPORT=dir al
 			git show "$(MAP_UPSTREAM):$$file" > "build/upstream/$$file" || exit 1; \
 		done; \
 	fi
+	@if [ -n "$(MAP_EXPORT)" ] && [ -f "$(MAP_EXPORT)/.docs.sha256" ] && [ -d "$(MAP_EXPORT)/docs" ]; then \
+		mkdir -p build/map/docs && \
+		rsync -r --checksum --delete "$(MAP_EXPORT)/docs/" build/map/docs/ && \
+		rsync -r --checksum --ignore-missing-args "$(MAP_EXPORT)/CODEBASE.md" "$(MAP_EXPORT)/.docs.sha256" build/map/ || exit 1; \
+	fi
 	@$(TOOLS) map $(ARGS)
 	@if [ -n "$(MAP_EXPORT)" ]; then \
 		if [ -d "$(MAP_EXPORT)" ] && [ -n "$$(ls -A "$(MAP_EXPORT)")" ] && [ ! -f "$(MAP_EXPORT)/Home.md" ]; then \
 			echo "map: $(MAP_EXPORT) is not empty and holds no earlier map; not copying"; exit 1; \
 		fi; \
 		mkdir -p "$(MAP_EXPORT)" && \
-		rsync -a --delete --exclude .obsidian build/map/ "$(MAP_EXPORT)/" && \
+		rsync -r --checksum --delete --exclude .obsidian build/map/ "$(MAP_EXPORT)/" && \
 		rsync -a --ignore-existing build/map/.obsidian "$(MAP_EXPORT)/" && \
 		echo "map: copied to $(MAP_EXPORT)"; \
 	fi

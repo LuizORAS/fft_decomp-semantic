@@ -42,8 +42,13 @@ the next `make map` notices the change (it keeps each copy's hash in
 the edit back here before regenerating. A new page created under the vault's
 `docs/` folder is pulled the same way; pages created anywhere else in the
 vault are lost on the next run. When the repository's page changed too, the
-run stops and the two versions are merged by hand. A copy exported with
-`MAP_EXPORT` is not protected: the next export replaces it.
+run stops and the two versions are merged by hand.
+
+On Windows, Obsidian cannot open a vault inside WSL (it cannot watch that
+folder), so export one to a Windows drive with
+`make map MAP_EXPORT=/mnt/d/fft-map` and open that folder instead. Every run
+with the same `MAP_EXPORT` updates it, and its `docs/` pages have the same
+protection.
 
 To start a page in Obsidian, use the core Templates plugin with
 `docs/templates` as its folder (a new vault is set up that way). Elsewhere,

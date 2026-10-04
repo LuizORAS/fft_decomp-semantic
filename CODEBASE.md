@@ -178,7 +178,8 @@ All of these libraries are reconstructed C, matched like the game code.
 ## Finding things
 
 - **The vault:** `make map` writes an Obsidian vault to `build/map/`; open
-  that folder as a vault.
+  that folder as a vault. On Windows, Obsidian cannot open a vault inside
+  WSL: add `MAP_EXPORT=/mnt/d/fft-map` and open that copy.
   - **Home** lists modules, code subsystems, mechanics and reports.
   - **Function pages:** each one shows the summary, the code, callers and
     callees, the globals and types it uses, and its `QUIRKS.md` entries.
