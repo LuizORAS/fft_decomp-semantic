@@ -5,6 +5,13 @@
 
 #include "fft/battle.h"
 
+/* thread */
+extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];
+extern s32 g_debugchr_thread_refresh_a;
+extern s32 g_debugchr_thread_refresh_b;
+extern s32 g_debugchr_thread_refresh_c;
+s32 debugchr_thread_is_running(s32 thread_id);
+
 /* editor */
 /* Inclusive value range for one editable field row. */
 typedef struct debug_range {
@@ -113,12 +120,6 @@ void debugchr_gfx_apply_menu_palette_for_mode(
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction);
 
-/* menu */
-extern s32 g_debugchr_menu_indicator_brightness[2];
-extern s32 g_debugchr_menu_indicator_fade_work[2];
-extern s32 g_debugchr_menu_indicator_packet_index[2];
-extern s32 g_debugchr_menu_indicator_state[2];
-
 /* panel */
 extern battle_menu_status_panel_editor_state_t g_debugchr_panel_comparison_billboard;
 extern s16 g_debugchr_panel_comparison_unit_id;
@@ -202,12 +203,11 @@ void debugchr_text_render_decimal_value(
 void debugchr_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* output, s32 count);
 
-/* thread */
-extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];
-extern s32 g_debugchr_thread_refresh_a;
-extern s32 g_debugchr_thread_refresh_b;
-extern s32 g_debugchr_thread_refresh_c;
-s32 debugchr_thread_is_running(s32 thread_id);
+/* menu */
+extern s32 g_debugchr_menu_indicator_brightness[2];
+extern s32 g_debugchr_menu_indicator_fade_work[2];
+extern s32 g_debugchr_menu_indicator_packet_index[2];
+extern s32 g_debugchr_menu_indicator_state[2];
 
 /* other */
 extern u32* g_debugchr_input_controller;

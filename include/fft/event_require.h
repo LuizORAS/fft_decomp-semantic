@@ -5,11 +5,95 @@
 
 #include "fft/battle.h"
 
+/* thread */
+extern battle_menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
+extern s32 g_require_thread_suspended_id;
+void require_thread_exit_current(void);
+s32 require_thread_is_running(s32 thread_id);
+
 /* character */
 extern RECT g_require_character_status_frame_rect[];
 extern RECT g_require_character_status_draw_area_rect;
 extern s32 g_require_character_status_frame_config;
 extern s32 g_require_character_status_redraw_request;
+
+/* party */
+extern u8 g_require_active_unit_data[];
+extern s32 g_require_party_affected_battle_unit_indices[];
+extern s32 g_require_party_affected_unit_count;
+extern s32 g_require_party_affected_unit_message_args[];
+extern s32 g_require_party_affected_unit_message_ids[];
+
+/* x and y of the palette MoveImage destination (a RECT at 0x801d0d44). Read as two scalar symbols: a RECT view lets
+   GCC keep the struct address live in a saved register and changes the allocation. */
+extern s16 g_require_party_palette_destination;
+extern s16 g_require_party_palette_destination_y;
+extern RECT g_require_party_palette_move_rect;
+extern s16 g_require_party_portrait_destination;
+extern RECT g_require_party_portrait_move_rect;
+extern u8 g_require_party_removable_flags[];
+
+/* Six consecutive 0x3c-byte menu records; the target derives entry [4]'s
+   address from entry [2], so they are one array. */
+extern world_menu_entry_t g_require_party_removal_menus[6];
+extern s16 g_require_party_removal_result;
+void require_party_apply_permanent_brave_faith_changes(void);
+s32 require_party_find_low_brave_high_faith_departures(void);
+void require_party_remove_low_brave_high_faith_units(void);
+s32 require_party_sell_equipment_over_limit(s32 unit_id);
+s32 require_party_store_equipment_or_sell_overflow(s32 unit_id);
+void require_party_update_bio_variable_for_unit_class(s32 unit_class, s32 value);
+void require_load_party_unit_into_editor(s32 unused, s32 party_index);
+s32 require_party_find_join_candidates(void);
+s32 require_party_get_free_slot_status(s32 unit_id);
+s32 require_party_restore_item_counts(s32 party_index);
+void require_prepare_party_portrait_textures(void);
+void require_render_unit_status_panel_thread(void);
+s32 require_select_party_unit_to_remove(void);
+
+/* reward */
+/* BONUS image file loaded by require_reward_load_bonus_image: 200 rows of
+ * 64 16-bit pixels, then the palette. */
+typedef struct require_reward_bonus_image_file {
+    u16 pixels[200][64]; /* 0x0000 */
+    u16 palette[1];      /* 0x6400 */
+} require_reward_bonus_image_file_t;
+
+extern RECT g_require_reward_bonus_image_rect;
+extern RECT g_require_reward_bonus_palette_rect;
+extern s32 g_require_reward_war_trophy_entry_count;
+extern s32 g_require_reward_war_trophy_entry_types[];
+extern s32 g_require_reward_war_trophy_entry_values[];
+extern u8 g_require_reward_war_trophy_item_count;
+extern battle_war_result_t g_require_reward_war_trophy_search_result;
+extern DR_MODE g_require_reward_burst_draw_modes[2];
+extern POLY_F4 g_require_reward_burst_flash_polys[2];
+extern MATRIX g_require_reward_burst_matrix;
+extern VECTOR g_require_reward_burst_offset;
+extern VECTOR g_require_reward_burst_rotated_offset;
+extern SVECTOR g_require_reward_burst_rotation;
+extern RECT g_require_reward_money_clip_rect_0;
+extern RECT g_require_reward_money_clip_rect_1;
+extern POLY_FT4 g_require_reward_money_comma_polys[2];
+extern u32 g_require_reward_money_digit_initial_speeds[6];
+extern POLY_FT4 g_require_reward_money_digit_polys[2][6];
+extern u32 g_require_reward_money_digit_positions[6];
+extern s32 g_require_reward_money_digit_settling[6];
+extern u32 g_require_reward_money_digit_speeds[6];
+extern s32 g_require_reward_money_digit_targets[6];
+extern POLY_FT4 g_require_reward_money_next_digit_polys[2][6];
+extern POLY_FT4 g_require_reward_money_sign_polys[2];
+extern RECT g_require_reward_screen_clip_rect_0;
+extern RECT g_require_reward_screen_clip_rect_1;
+extern RECT g_require_reward_war_trophy_clear_rect;
+
+/* Upload rectangle for the current entry's text image. */
+extern RECT g_require_reward_war_trophy_image_rect;
+void require_reward_collect_war_trophies_and_bonus_money(void);
+s32 require_reward_get_war_trophy_column_x(s32 value, s32 index);
+s32 require_reward_get_war_trophy_entry_offset(s32 value, s32 index);
+void require_reward_load_bonus_image(s32 image_id);
+void require_reward_animate_bonus_image_burst(void);
 
 /* editor */
 extern s16 g_require_editor_brave;
@@ -159,15 +243,6 @@ void require_condition_show_ready_bugged(void);
 /* REQUIRE 0x801cafd4, invoked by both BATTLE and WORLD event dispatch. */
 void require_condition_dispatch(void);
 
-/* menu */
-extern s32 g_require_menu_indicator_brightness[2];
-extern s32 g_require_menu_indicator_fade_work[2];
-extern s32 g_require_menu_indicator_packet_index[2];
-extern s32 g_require_menu_indicator_state[2];
-extern s16 g_require_menu_selection_result;
-void require_menu_run_simple_selection_thread(void);
-void require_menu_wait_selection_threads(void);
-
 /* panel */
 extern u8 g_require_panel_active_unit_banner[];
 extern u8 g_require_panel_billboard_data[];
@@ -234,50 +309,6 @@ void require_panel_set_primitive_colors(
 void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
-/* reward */
-/* BONUS image file loaded by require_reward_load_bonus_image: 200 rows of
- * 64 16-bit pixels, then the palette. */
-typedef struct require_reward_bonus_image_file {
-    u16 pixels[200][64]; /* 0x0000 */
-    u16 palette[1];      /* 0x6400 */
-} require_reward_bonus_image_file_t;
-
-extern RECT g_require_reward_bonus_image_rect;
-extern RECT g_require_reward_bonus_palette_rect;
-extern s32 g_require_reward_war_trophy_entry_count;
-extern s32 g_require_reward_war_trophy_entry_types[];
-extern s32 g_require_reward_war_trophy_entry_values[];
-extern u8 g_require_reward_war_trophy_item_count;
-extern battle_war_result_t g_require_reward_war_trophy_search_result;
-extern DR_MODE g_require_reward_burst_draw_modes[2];
-extern POLY_F4 g_require_reward_burst_flash_polys[2];
-extern MATRIX g_require_reward_burst_matrix;
-extern VECTOR g_require_reward_burst_offset;
-extern VECTOR g_require_reward_burst_rotated_offset;
-extern SVECTOR g_require_reward_burst_rotation;
-extern RECT g_require_reward_money_clip_rect_0;
-extern RECT g_require_reward_money_clip_rect_1;
-extern POLY_FT4 g_require_reward_money_comma_polys[2];
-extern u32 g_require_reward_money_digit_initial_speeds[6];
-extern POLY_FT4 g_require_reward_money_digit_polys[2][6];
-extern u32 g_require_reward_money_digit_positions[6];
-extern s32 g_require_reward_money_digit_settling[6];
-extern u32 g_require_reward_money_digit_speeds[6];
-extern s32 g_require_reward_money_digit_targets[6];
-extern POLY_FT4 g_require_reward_money_next_digit_polys[2][6];
-extern POLY_FT4 g_require_reward_money_sign_polys[2];
-extern RECT g_require_reward_screen_clip_rect_0;
-extern RECT g_require_reward_screen_clip_rect_1;
-extern RECT g_require_reward_war_trophy_clear_rect;
-
-/* Upload rectangle for the current entry's text image. */
-extern RECT g_require_reward_war_trophy_image_rect;
-void require_reward_collect_war_trophies_and_bonus_money(void);
-s32 require_reward_get_war_trophy_column_x(s32 value, s32 index);
-s32 require_reward_get_war_trophy_entry_offset(s32 value, s32 index);
-void require_reward_load_bonus_image(s32 image_id);
-void require_reward_animate_bonus_image_burst(void);
-
 /* text */
 typedef struct require_glyph {
     s16 source_x;
@@ -308,45 +339,14 @@ void require_text_render_signed_decimal_entries(void* pixels, battle_menu_status
 void require_text_show_battle_congratulations(void);
 void require_text_build_battle_nicknames(void);
 
-/* thread */
-extern battle_menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
-extern s32 g_require_thread_suspended_id;
-void require_thread_exit_current(void);
-s32 require_thread_is_running(s32 thread_id);
-
-/* unit */
-extern u8 g_require_active_unit_data[];
-extern s32 g_require_party_affected_battle_unit_indices[];
-extern s32 g_require_party_affected_unit_count;
-extern s32 g_require_party_affected_unit_message_args[];
-extern s32 g_require_party_affected_unit_message_ids[];
-
-/* x and y of the palette MoveImage destination (a RECT at 0x801d0d44). Read as two scalar symbols: a RECT view lets
-   GCC keep the struct address live in a saved register and changes the allocation. */
-extern s16 g_require_party_palette_destination;
-extern s16 g_require_party_palette_destination_y;
-extern RECT g_require_party_palette_move_rect;
-extern s16 g_require_party_portrait_destination;
-extern RECT g_require_party_portrait_move_rect;
-extern u8 g_require_party_removable_flags[];
-
-/* Six consecutive 0x3c-byte menu records; the target derives entry [4]'s
-   address from entry [2], so they are one array. */
-extern world_menu_entry_t g_require_party_removal_menus[6];
-extern s16 g_require_party_removal_result;
-void require_party_apply_permanent_brave_faith_changes(void);
-s32 require_party_find_low_brave_high_faith_departures(void);
-void require_party_remove_low_brave_high_faith_units(void);
-s32 require_party_sell_equipment_over_limit(s32 unit_id);
-s32 require_party_store_equipment_or_sell_overflow(s32 unit_id);
-void require_party_update_bio_variable_for_unit_class(s32 unit_class, s32 value);
-void require_load_party_unit_into_editor(s32 unused, s32 party_index);
-s32 require_party_find_join_candidates(void);
-s32 require_party_get_free_slot_status(s32 unit_id);
-s32 require_party_restore_item_counts(s32 party_index);
-void require_prepare_party_portrait_textures(void);
-void require_render_unit_status_panel_thread(void);
-s32 require_select_party_unit_to_remove(void);
+/* menu */
+extern s32 g_require_menu_indicator_brightness[2];
+extern s32 g_require_menu_indicator_fade_work[2];
+extern s32 g_require_menu_indicator_packet_index[2];
+extern s32 g_require_menu_indicator_state[2];
+extern s16 g_require_menu_selection_result;
+void require_menu_run_simple_selection_thread(void);
+void require_menu_wait_selection_threads(void);
 
 /* other */
 extern char g_jobstts_text_wait_for_allocation_message[];

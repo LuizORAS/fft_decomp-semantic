@@ -5,6 +5,7 @@
 
 #include "psx/types.h"
 
+/* map */
 /* Low six bits of a terrain tile's first byte. */
 typedef enum map_surface_type {
     MAP_SURFACE_NATURAL = 0x00,

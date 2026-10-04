@@ -5,6 +5,7 @@
 
 #include "fft/battle.h"
 
+/* graphic */
 /* ETC uses byte loads for texture coordinates and halfword loads for screen
  * geometry. Preserve both views of each little-endian dimension component. */
 typedef union etc_graphic_dimension_component {
@@ -57,6 +58,7 @@ void etc_graphic_show_async(void);
 void etc_graphic_show_chapter_title(s32 graphic_id);
 void etc_graphic_show_game_over(s32 graphic_id);
 
+/* other */
 extern const char g_etc_allocation_wait_message[];
 
 #endif

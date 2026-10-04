@@ -5,6 +5,7 @@
 
 #include "psx/types.h"
 
+/* thread */
 /* Native cooperative scheduler context, not scenario bytecode or its operand
  * buffer. BATTLE 0x8014c8a0 and WORLD 0x800ffd70 initialize the same layout;
  * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.

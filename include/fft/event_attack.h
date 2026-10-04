@@ -11,6 +11,37 @@ extern RECT g_attack_character_status_draw_area_rect;
 extern s32 g_attack_character_status_redraw_request;
 extern u8 g_attack_character_status_frame_config[];
 
+/* unit */
+extern s16 g_attack_active_unit_data;
+
+/* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
+extern battle_menu_status_panel_slot_storage_t g_attack_unit_editor_state;
+void attack_load_party_unit_into_editor(s32 mode, s32 roster_index);
+void attack_prepare_party_portrait_textures(void);
+void attack_render_unit_status_panel_thread(void);
+
+/* formation */
+extern job_data_t* g_attack_formation_job_data;
+extern RECT g_attack_formation_sheet_rect;
+extern RECT g_attack_formation_sheet_source_rect;
+extern u8 g_attack_formation_sprite_staging[];
+extern u8 g_attack_formation_sprite_tall_cell[];
+
+/* map */
+extern s32 g_attack_map_title_image_rect;
+extern s32 g_attack_map_title_palette_data;
+extern s32 g_attack_map_title_palette_rect;
+extern s32 g_attack_map_title_closing_past_midpoint;
+
+/* Two buffers of the four shaded title-panel strips. */
+extern POLY_GT4 g_attack_map_title_sprites[2][4];
+
+/* Scenario interpreter interfaces shared by battle_script_execute_event and
+ * world_script_execute_event. Signatures are as the interpreters bind them;
+ * unverified names stay provisional. */
+void attack_map_load_title_graphic(void);
+void attack_map_show_title(void);
+
 /* editor */
 extern u8 g_attack_editor_numeric_descriptor_a[];
 extern u8 g_attack_editor_numeric_descriptor_b[];
@@ -43,13 +74,6 @@ extern u8 g_attack_editor_fourth_ability_bytes[];
 extern s16 g_attack_editor_item_and_ability_ids[10];
 extern struct battle_stats g_attack_editor_party_unit_stats;
 void attack_editor_run_numeric_thread(void);
-
-/* formation */
-extern job_data_t* g_attack_formation_job_data;
-extern RECT g_attack_formation_sheet_rect;
-extern RECT g_attack_formation_sheet_source_rect;
-extern u8 g_attack_formation_sprite_staging[];
-extern u8 g_attack_formation_sprite_tall_cell[];
 
 /* gfx */
 /* Sprite-cell geometry shared by ATTACK.OUT's scaled POLY_FT4 builders. */
@@ -289,27 +313,6 @@ void attack_init_deployment_cursor_primitives(void);
 void attack_update_deployment_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer);
 void* attack_deploy_get_coordinate_slots(void);
 
-/* map */
-extern s32 g_attack_map_title_image_rect;
-extern s32 g_attack_map_title_palette_data;
-extern s32 g_attack_map_title_palette_rect;
-extern s32 g_attack_map_title_closing_past_midpoint;
-
-/* Two buffers of the four shaded title-panel strips. */
-extern POLY_GT4 g_attack_map_title_sprites[2][4];
-
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
- * world_script_execute_event. Signatures are as the interpreters bind them;
- * unverified names stay provisional. */
-void attack_map_load_title_graphic(void);
-void attack_map_show_title(void);
-
-/* menu */
-extern s32 g_attack_menu_indicator_brightness[2];
-extern s32 g_attack_menu_indicator_fade_work[2];
-extern s32 g_attack_menu_indicator_packet_index[2];
-extern s32 g_attack_menu_indicator_state[2];
-
 /* panel */
 extern world_unit_status_billboard_t g_attack_panel_comparison_billboard;
 extern battle_image_location_t g_attack_panel_item_icon_texture[];
@@ -395,14 +398,11 @@ void attack_text_render_signed_decimal_entries(void* pixels, battle_menu_status_
 
 void attack_text_init_battle_pointers(s32* offsets);
 
-/* unit */
-extern s16 g_attack_active_unit_data;
-
-/* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
-extern battle_menu_status_panel_slot_storage_t g_attack_unit_editor_state;
-void attack_load_party_unit_into_editor(s32 mode, s32 roster_index);
-void attack_prepare_party_portrait_textures(void);
-void attack_render_unit_status_panel_thread(void);
+/* menu */
+extern s32 g_attack_menu_indicator_brightness[2];
+extern s32 g_attack_menu_indicator_fade_work[2];
+extern s32 g_attack_menu_indicator_packet_index[2];
+extern s32 g_attack_menu_indicator_state[2];
 
 /* other */
 extern u32* g_attack_input_controller;

@@ -5,6 +5,74 @@
 
 #include "fft/battle.h"
 
+/* bits */
+extern u8 g_jobstts_bits_primary_reset;
+extern const u8* g_jobstts_bits_primary_source;
+extern s32 g_jobstts_bits_reader_1_index;
+extern s32 g_jobstts_bits_reader_2_index;
+extern u8 g_jobstts_bits_secondary_reset;
+extern const u8* g_jobstts_bits_secondary_source;
+void jobstts_bits_init_primary_reader(const u8* data);
+u32 jobstts_bits_read_primary(s32 count);
+
+/* command */
+/* Render-command stream callbacks: every handler consumes and returns a
+ * command pointer; every condition is indexed by a row or literal operand. */
+typedef u8* (*jobstts_command_handler_t)(u8*);
+
+typedef s32 (*jobstts_condition_t)(s32);
+
+extern world_menu_window_command_t g_jobstts_cmd_window_interior_command;
+extern jobstts_condition_t g_jobstts_cmd_conditions[];
+extern jobstts_command_handler_t g_jobstts_cmd_handlers[];
+extern s32 g_jobstts_cmd_stream_input;
+u8* jobstts_cmd_draw_background_tiles_handler(u8* stream);
+u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command);
+void jobstts_cmd_run_stream(u8* data, s32 flags);
+void jobstts_cmd_run_stream_with_mode(u8* first, void* second, s32 event_mode);
+const u8* jobstts_cmd_skip_group(const u8* data);
+
+/* input */
+typedef enum jobstts_page_scroll_direction {
+    JOBSTTS_PAGE_SCROLL_UP = -1,
+    JOBSTTS_PAGE_SCROLL_NONE = 0,
+    JOBSTTS_PAGE_SCROLL_DOWN = 1,
+} jobstts_menu_page_scroll_direction_e;
+
+extern u16 g_jobstts_input_newly_pressed;
+extern u16 g_jobstts_input_page_scroll_hold_frames;
+extern s32 g_jobstts_input_primary_repeat;
+extern s32 g_jobstts_input_secondary_repeat;
+extern u16 g_jobstts_input_latched_button;
+extern u8 g_jobstts_input_lock_timer;
+extern volatile u32 g_jobstts_input_repeat_counters[16];
+extern u16 g_jobstts_input_previous;
+extern u8 g_jobstts_input_activation_timer;
+jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);
+void jobstts_input_update_with_message_state(void);
+void jobstts_update_controller_input(void);
+
+/* unit */
+/* Job and ability data copied into JOBSTTS.OUT for the selected unit. */
+typedef struct jobstts_unit_job_data {
+    s16 job_id;               /* 0x00 */
+    s16 entd_slot;            /* 0x02 */
+    u16 primary_skillset;     /* 0x04 */
+    u8 unit_flags;            /* 0x06 */
+    u8 character_identity;    /* 0x07 */
+    u8 unlocked_jobs[3];      /* 0x08 */
+    u8 learned_abilities[57]; /* 0x0B */
+    u8 job_levels[10];        /* 0x44 */
+    u16 job_points[20];       /* 0x4E */
+    u16 total_job_points[20]; /* 0x76 */
+} jobstts_unit_job_data_t;
+typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_data_t) == 0x9E) ? 1 : -1];
+
+extern jobstts_unit_job_data_t* g_jobstts_unit_data[];
+extern jobstts_unit_job_data_t g_jobstts_unit_job_data;
+void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* out);
+void jobstts_unit_init_job_data(s32 unit_id);
+
 /* ability */
 typedef enum jobstts_ability_category {
     JOBSTTS_ABILITY_CATEGORY_ACTION = 0,
@@ -46,32 +114,32 @@ s32 jobstts_ability_is_reaction_tab(void);
 s32 jobstts_ability_is_support_tab(void);
 s32 jobstts_update_ability_list_menu(void);
 
-/* bits */
-extern u8 g_jobstts_bits_primary_reset;
-extern const u8* g_jobstts_bits_primary_source;
-extern s32 g_jobstts_bits_reader_1_index;
-extern s32 g_jobstts_bits_reader_2_index;
-extern u8 g_jobstts_bits_secondary_reset;
-extern const u8* g_jobstts_bits_secondary_source;
-void jobstts_bits_init_primary_reader(const u8* data);
-u32 jobstts_bits_read_primary(s32 count);
-
-/* command */
-/* Render-command stream callbacks: every handler consumes and returns a
- * command pointer; every condition is indexed by a row or literal operand. */
-typedef u8* (*jobstts_command_handler_t)(u8*);
-
-typedef s32 (*jobstts_condition_t)(s32);
-
-extern world_menu_window_command_t g_jobstts_cmd_window_interior_command;
-extern jobstts_condition_t g_jobstts_cmd_conditions[];
-extern jobstts_command_handler_t g_jobstts_cmd_handlers[];
-extern s32 g_jobstts_cmd_stream_input;
-u8* jobstts_cmd_draw_background_tiles_handler(u8* stream);
-u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command);
-void jobstts_cmd_run_stream(u8* data, s32 flags);
-void jobstts_cmd_run_stream_with_mode(u8* first, void* second, s32 event_mode);
-const u8* jobstts_cmd_skip_group(const u8* data);
+/* job */
+extern u32 g_jobstts_job_current_jp;
+extern s32 g_jobstts_job_current_level;
+extern s32 g_jobstts_job_current_mastered;
+extern u32 g_jobstts_job_current_total_jp;
+extern s16 g_jobstts_job_ids[];
+extern s32 g_jobstts_job_list_menu_initialized;
+extern u8 g_jobstts_job_list_render_commands[];
+extern u32 g_jobstts_job_next_level_jp_requirement;
+extern u16 g_jobstts_job_selected_id;
+s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused);
+u32 jobstts_job_calculate_current_jp(s32 index);
+s32 jobstts_job_calculate_current_level(s32 index);
+s32 jobstts_job_calculate_current_mastered(s32 index);
+u32 jobstts_job_calculate_current_total_jp(s32 index);
+s32 jobstts_job_calculate_next_level_jp_requirement(s32 index);
+s32 jobstts_job_find_first_for_skillset(s32 skillset_id);
+s32 jobstts_job_get_base(s16 unit_id);
+u32 jobstts_job_get_current_jp(void);
+s32 jobstts_job_get_current_level(void);
+u32 jobstts_job_get_current_total_jp(void);
+s32 jobstts_job_get_generic_index(s32 job_id);
+u32 jobstts_job_get_next_level_jp_requirement(void);
+s32 jobstts_job_get_skillset(s32 job_id);
+s32 jobstts_job_is_current_mastered(void);
+s32 jobstts_job_is_special_monster(s32 job_id);
 
 /* gfx */
 /* Per-buffer primitive-pool pointers used by JOBSTTS.OUT's renderer. */
@@ -190,52 +258,47 @@ void jobstts_gfx_store_image_and_wait(RECT* rect, u32* data);
 void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag);
 void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
-/* input */
-typedef enum jobstts_page_scroll_direction {
-    JOBSTTS_PAGE_SCROLL_UP = -1,
-    JOBSTTS_PAGE_SCROLL_NONE = 0,
-    JOBSTTS_PAGE_SCROLL_DOWN = 1,
-} jobstts_menu_page_scroll_direction_e;
+/* text */
+typedef struct jobstts_text_image_position {
+    u16 x;
+    s16 y;
+    s16 row_stride;
+} jobstts_text_image_position_t;
 
-extern u16 g_jobstts_input_newly_pressed;
-extern u16 g_jobstts_input_page_scroll_hold_frames;
-extern s32 g_jobstts_input_primary_repeat;
-extern s32 g_jobstts_input_secondary_repeat;
-extern u16 g_jobstts_input_latched_button;
-extern u8 g_jobstts_input_lock_timer;
-extern volatile u32 g_jobstts_input_repeat_counters[16];
-extern u16 g_jobstts_input_previous;
-extern u8 g_jobstts_input_activation_timer;
-jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);
-void jobstts_input_update_with_message_state(void);
-void jobstts_update_controller_input(void);
+extern u8 g_jobstts_text_color[3];
+extern u8 g_jobstts_text_thread_running_state;
+extern u16 g_jobstts_text_clut_2_mode0;
+extern u16 g_jobstts_text_clut_2_mode1;
+extern u16 g_jobstts_text_clut_1_mode1;
+extern u16 g_jobstts_text_clut_1_mode0;
+extern u16 g_jobstts_text_clut_3_mode0;
+extern u16 g_jobstts_text_clut_3_mode1;
+extern u16 g_jobstts_text_clut_0_mode1;
+extern u16 g_jobstts_text_clut_0_mode0;
+extern u8 g_jobstts_text_layout_mode;
+extern u16 g_jobstts_text_metric_3;
+extern u16 g_jobstts_text_metric_1;
+extern u16 g_jobstts_text_metric_0;
+extern u16 g_jobstts_text_metric_4;
+extern u16 g_jobstts_text_metric_5;
 
-/* job */
-extern u32 g_jobstts_job_current_jp;
-extern s32 g_jobstts_job_current_level;
-extern s32 g_jobstts_job_current_mastered;
-extern u32 g_jobstts_job_current_total_jp;
-extern s16 g_jobstts_job_ids[];
-extern s32 g_jobstts_job_list_menu_initialized;
-extern u8 g_jobstts_job_list_render_commands[];
-extern u32 g_jobstts_job_next_level_jp_requirement;
-extern u16 g_jobstts_job_selected_id;
-s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused);
-u32 jobstts_job_calculate_current_jp(s32 index);
-s32 jobstts_job_calculate_current_level(s32 index);
-s32 jobstts_job_calculate_current_mastered(s32 index);
-u32 jobstts_job_calculate_current_total_jp(s32 index);
-s32 jobstts_job_calculate_next_level_jp_requirement(s32 index);
-s32 jobstts_job_find_first_for_skillset(s32 skillset_id);
-s32 jobstts_job_get_base(s16 unit_id);
-u32 jobstts_job_get_current_jp(void);
-s32 jobstts_job_get_current_level(void);
-u32 jobstts_job_get_current_total_jp(void);
-s32 jobstts_job_get_generic_index(s32 job_id);
-u32 jobstts_job_get_next_level_jp_requirement(void);
-s32 jobstts_job_get_skillset(s32 job_id);
-s32 jobstts_job_is_current_mastered(void);
-s32 jobstts_job_is_special_monster(s32 job_id);
+/* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the
+ * three data bytes ahead of the first function. */
+extern const char g_jobstts_text_decimal_format[];
+extern s32 g_jobstts_text_selected_job_id;
+
+void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds,
+    s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,
+    s32 unused_style);
+
+void jobstts_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style);
+
+s32 jobstts_text_render_glyph_to_4bpp_image(
+    s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);
+
+void jobstts_text_set_palette_and_metrics(s32 mode);
+const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators);
+void jobstts_text_start_help_thread(s32 thread_data);
 
 /* menu */
 extern s8 g_jobstts_menu_event_speed;
@@ -285,69 +348,6 @@ s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 bu
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
 void jobstts_menu_update_and_draw_animated_marker(urect16_t* anchor, u16* state, s32 mode);
-
-/* text */
-typedef struct jobstts_text_image_position {
-    u16 x;
-    s16 y;
-    s16 row_stride;
-} jobstts_text_image_position_t;
-
-extern u8 g_jobstts_text_color[3];
-extern u8 g_jobstts_text_thread_running_state;
-extern u16 g_jobstts_text_clut_2_mode0;
-extern u16 g_jobstts_text_clut_2_mode1;
-extern u16 g_jobstts_text_clut_1_mode1;
-extern u16 g_jobstts_text_clut_1_mode0;
-extern u16 g_jobstts_text_clut_3_mode0;
-extern u16 g_jobstts_text_clut_3_mode1;
-extern u16 g_jobstts_text_clut_0_mode1;
-extern u16 g_jobstts_text_clut_0_mode0;
-extern u8 g_jobstts_text_layout_mode;
-extern u16 g_jobstts_text_metric_3;
-extern u16 g_jobstts_text_metric_1;
-extern u16 g_jobstts_text_metric_0;
-extern u16 g_jobstts_text_metric_4;
-extern u16 g_jobstts_text_metric_5;
-
-/* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the
- * three data bytes ahead of the first function. */
-extern const char g_jobstts_text_decimal_format[];
-extern s32 g_jobstts_text_selected_job_id;
-
-void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds,
-    s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,
-    s32 unused_style);
-
-void jobstts_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style);
-
-s32 jobstts_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);
-
-void jobstts_text_set_palette_and_metrics(s32 mode);
-const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators);
-void jobstts_text_start_help_thread(s32 thread_data);
-
-/* unit */
-/* Job and ability data copied into JOBSTTS.OUT for the selected unit. */
-typedef struct jobstts_unit_job_data {
-    s16 job_id;               /* 0x00 */
-    s16 entd_slot;            /* 0x02 */
-    u16 primary_skillset;     /* 0x04 */
-    u8 unit_flags;            /* 0x06 */
-    u8 character_identity;    /* 0x07 */
-    u8 unlocked_jobs[3];      /* 0x08 */
-    u8 learned_abilities[57]; /* 0x0B */
-    u8 job_levels[10];        /* 0x44 */
-    u16 job_points[20];       /* 0x4E */
-    u16 total_job_points[20]; /* 0x76 */
-} jobstts_unit_job_data_t;
-typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_data_t) == 0x9E) ? 1 : -1];
-
-extern jobstts_unit_job_data_t* g_jobstts_unit_data[];
-extern jobstts_unit_job_data_t g_jobstts_unit_job_data;
-void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* out);
-void jobstts_unit_init_job_data(s32 unit_id);
 
 /* other */
 enum {
