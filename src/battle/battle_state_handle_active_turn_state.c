@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* ACTIVE_TURN: Circle or Cross opens the mini menu. */
 void battle_state_handle_active_turn_state(void) {
     s32 controller_input;
 

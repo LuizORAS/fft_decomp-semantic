@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* MINI_MENU_HELP: once the help window has closed, reopen the free-cursor mini menu. */
 void battle_state_handle_mini_menu_help_state(void) {
     if (battle_menu_is_still_building() != 2) {
         g_battle_menu_help_opening = 0;

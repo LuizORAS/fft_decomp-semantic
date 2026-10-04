@@ -11,7 +11,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability = *battle_menu_get_selected_ability_address();
+    selected_ability = *battle_menu_get_selected_command_address();
     if (selected_ability >= 7 && (selected_ability < 9 || selected_ability == 0xff)) {
         g_battle_action_post_action = 1;
     }

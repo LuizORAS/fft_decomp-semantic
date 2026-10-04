@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter HIGHLIGHT_UNITS: let the d-pad pan the camera (saving the d-pad mode), tint every unit
+ * by team and hide the AT list. */
 void battle_state_enter_highlight_units_by_team(void) {
     battle_state_enable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_HIGHLIGHT_UNITS;

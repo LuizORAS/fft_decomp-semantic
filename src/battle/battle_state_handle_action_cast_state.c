@@ -6,7 +6,7 @@ void battle_state_handle_action_cast_state(void) {
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability = *battle_menu_get_selected_ability_address();
+    selected_ability = *battle_menu_get_selected_command_address();
     /* Selections 7, 8 and 0xff are the ones ACTION_EXECUTE_SETUP handles;
      * they mark the action as finished (same test as the
      * BATTLE_MESSAGE_DISPLAY handler). */

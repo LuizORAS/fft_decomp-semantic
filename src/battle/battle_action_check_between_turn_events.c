@@ -43,6 +43,6 @@ void battle_action_check_between_turn_events(void) {
         }
         g_battle_menu_status_requested = 0;
     } else {
-        battle_state_set_free_cursor();
+        battle_state_enter_free_cursor();
     }
 }

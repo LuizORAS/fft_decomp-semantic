@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
-/* Free-cursor movement step. With the acting unit under player control the
- * confirm button routes the cursor to the pathfinder and, on a reachable
- * destination, installs the returned step list on the casting record and
- * enters the moving state. Without player control the same happens from the
- * unit's own stored target after 0x1f frames. */
-void battle_state_handle_close_move_help_state(void) {
+/* SELECT_MOVE_TILE: choose where the casting unit moves. Under player control the d-pad moves
+ * the cursor, Circle builds a path to its tile (a window explains an unreachable one), Cross
+ * returns to the action menu and Triangle recentres the cursor; an AI unit takes its stored
+ * destination after 31 frames. The path is copied to the unit before the move confirmation. */
+void battle_state_handle_select_move_tile_state(void) {
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* casting;
     u8* path;

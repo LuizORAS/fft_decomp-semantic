@@ -2,12 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* IdlingActionMenus game-state handler: act on the selected menu command.
- *
- * Move (0) and the 0x19 variant hand off to the move command, Act (1)
- * dispatches Defend, Equip Change and ordinary abilities on the command's
- * skillset, Wait (2) chooses a facing, and the remaining commands enter
- * target selection/display, the event check or scripted menus.
+/* IDLING_ACTION_MENUS: act on the command chosen in the player's action menu. Move (0) and 0x19
+ * start the move command, Act (1) runs Defend, Equip Change or an ability of the command's
+ * skillset, Wait (2) chooses a facing, and the other commands enter target selection or display,
+ * the between-turn event check or scripted menus.
  *
  * The kind is switched as s32: the unsigned enum type makes GCC emit sltiu
  * where the target has slti. The empty 0xfe/0xff range is provisional: some
@@ -19,14 +17,14 @@ void battle_state_handle_idling_action_menus_state(void) {
     s32 result;
 
     if (battle_menu_is_still_building() == 0) {
-        battle_state_set_free_cursor();
+        battle_state_enter_free_cursor();
     }
     if (g_controller_input_pressed & PSX_PAD_SELECT) {
         battle_menu_open_help();
     }
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    command = (battle_ai_command_t*)battle_menu_get_selected_ability_address();
+    command = (battle_ai_command_t*)battle_menu_get_selected_command_address();
     misc = battle_unit_get_casting_misc_data();
     switch ((s32)command->kind) {
     case BATTLE_AI_COMMAND_MOVE:

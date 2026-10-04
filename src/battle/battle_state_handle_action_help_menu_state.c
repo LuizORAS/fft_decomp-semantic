@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* ACTION_HELP_MENU: once the help window has closed, reopen the idle action menu of the active
+ * or the other unit. */
 void battle_state_handle_action_help_menu_state(void) {
     battle_unit_misc_data_t* misc_data;
 

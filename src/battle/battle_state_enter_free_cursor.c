@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 
-void battle_state_set_free_cursor(void) {
+/* Enter FREE_CURSOR at 60 fps with the camera following the cursor: store the cursor unit's
+ * name and data, mark the AT list active and store the source unit's ENTD flags without the
+ * control flag. */
+void battle_state_enter_free_cursor(void) {
     battle_unit_misc_data_t* unit;
 
     g_battle_state_vsync_interval = 1;

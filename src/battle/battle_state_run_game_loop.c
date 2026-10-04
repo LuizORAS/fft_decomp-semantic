@@ -80,8 +80,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_IDLING_ACTION_MENUS:
                 battle_state_handle_idling_action_menus_state();
                 break;
-            case BATTLE_GAME_STATE_MENU_TO_TARGETING:
-                battle_state_handle_menu_to_targeting_state();
+            case BATTLE_GAME_STATE_AI_COMMAND:
+                battle_state_handle_ai_command_state();
                 break;
             case BATTLE_GAME_STATE_ACTION_HELP_MENU:
                 battle_state_handle_action_help_menu_state();
@@ -113,8 +113,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_UNIT_MOVE:
                 battle_state_handle_unit_move_state();
                 break;
-            case BATTLE_GAME_STATE_CLOSE_MOVE_HELP:
-                battle_state_handle_close_move_help_state();
+            case BATTLE_GAME_STATE_SELECT_MOVE_TILE:
+                battle_state_handle_select_move_tile_state();
                 break;
             case BATTLE_GAME_STATE_MOVE_RANGE_EXCEPTION:
                 battle_state_handle_move_range_exception_state();

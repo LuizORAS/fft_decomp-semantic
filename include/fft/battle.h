@@ -20,7 +20,7 @@ typedef enum battle_game_state {
     BATTLE_GAME_STATE_HIGHLIGHT_UNITS = 0x02,
     BATTLE_GAME_STATE_OPEN_ACTION_MENUS = 0x03,
     BATTLE_GAME_STATE_IDLING_ACTION_MENUS = 0x04,
-    BATTLE_GAME_STATE_MENU_TO_TARGETING = 0x05,
+    BATTLE_GAME_STATE_AI_COMMAND = 0x05,
     BATTLE_GAME_STATE_ACTION_HELP_MENU = 0x06,
     BATTLE_GAME_STATE_DISPLAY_MOVE_AREA = 0x07,
     BATTLE_GAME_STATE_MINI_MENU = 0x08,
@@ -28,7 +28,7 @@ typedef enum battle_game_state {
     BATTLE_GAME_STATE_ACTIVE_TURN = 0x0a,
     BATTLE_GAME_STATE_STATUS_EXECUTE = 0x0b,
     BATTLE_GAME_STATE_UNIT_MOVE = 0x0c,
-    BATTLE_GAME_STATE_CLOSE_MOVE_HELP = 0x0d,
+    BATTLE_GAME_STATE_SELECT_MOVE_TILE = 0x0d,
     BATTLE_GAME_STATE_MOVE_RANGE_EXCEPTION = 0x0e,
     BATTLE_GAME_STATE_ILLEGAL_MOVE_MENU = 0x0f,
     BATTLE_GAME_STATE_UNIT_MOVING_SETUP = 0x10,
@@ -189,7 +189,7 @@ void battle_state_handle_after_command_state(void);
 void battle_state_handle_battle_message_display_state(void);
 void battle_state_handle_change_turn_state(void);
 void battle_state_handle_close_battle_state(void);
-void battle_state_handle_close_move_help_state(void);
+void battle_state_handle_select_move_tile_state(void);
 void battle_state_handle_commence_attack_phase_state(void);
 void battle_state_handle_confirm_action_state(void);
 void battle_state_handle_crystal_learn_state(void);
@@ -216,7 +216,7 @@ void battle_state_handle_change_map_jumping_in_state(void);
 void battle_state_handle_map_jumping_in_state(void);
 void battle_state_handle_change_map_jumping_out_state(void);
 void battle_state_handle_map_jumping_out_state(void);
-void battle_state_handle_menu_to_targeting_state(void);
+void battle_state_handle_ai_command_state(void);
 void battle_state_handle_mini_menu_help_state(void);
 void battle_state_handle_mini_menu_state(void);
 void battle_state_handle_move_confirm_menu_state(void);
@@ -240,7 +240,7 @@ void battle_state_handle_unit_moving_setup_state(void);
 void battle_state_handle_unit_moving_state(void);
 void battle_state_handle_wait_direction_state(void);
 void battle_state_handle_wait_menu_state(void);
-void battle_state_restart_menu_to_targeting(void);
+void battle_state_enter_ai_command(void);
 void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
 void battle_state_enable_camera_pan(void);
@@ -254,7 +254,7 @@ s32 battle_state_get_animation_continue_check(void);
 void battle_state_enter_close_battle(s32 transition_step, s32 close_flow_state);
 void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue);
 s32 battle_state_set_vsync_interval(s32 speed);
-void battle_state_set_free_cursor(void);
+void battle_state_enter_free_cursor(void);
 void battle_state_set_min_vsync_interval(s32 value);
 void battle_state_start_battle_message_display(void);
 void battle_state_start_change_map_jump_in(s32 duration);
@@ -538,7 +538,6 @@ extern u8 g_battle_ability_charge_animation_sets[BATTLE_CHARGE_ANIMATION_SET_COU
                                                 [BATTLE_CHARGE_ANIMATION_VARIANT_COUNT];
 
 extern s16 g_ability_effect_id;
-extern s32 g_selected_ability;
 extern s32 g_battle_spell_quote_last_ability_id;
 extern u8 g_battle_loaded_ability_flags_1;
 
@@ -7144,6 +7143,12 @@ extern u8 g_battle_menu_restriction_message_ids[];
 extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
 extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 
+/* The player's last menu answer, written by battle_menu_resolve_selection: an action-menu
+ * command kind, or a window's answer (7 to go on, 8 or 0xff for cancel to go back). With
+ * g_battle_menu_selected_action right after it, it forms the battle_ai_command_t that
+ * battle_state_handle_idling_action_menus_state reads through its address. */
+extern s32 g_battle_menu_selected_command;
+
 /* Action command staged by the battle menu and passed whole to
  * battle_action_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
 extern battle_ai_command_action_t g_battle_menu_selected_action;
@@ -7210,7 +7215,7 @@ void battle_menu_enter_status_screen_selection(void);
 void battle_menu_fade_out_thread(void);
 void battle_menu_free_high_overlay(void);
 s32 battle_menu_get_cursor_bob_offset(s32 mode);
-s32* battle_menu_get_selected_ability_address(void);
+s32* battle_menu_get_selected_command_address(void);
 void battle_menu_icon_linked_entry_thread(void);
 s32 battle_menu_init_action_menu(battle_unit_misc_data_t* unit);
 void battle_menu_init_buffer_allocator(void);

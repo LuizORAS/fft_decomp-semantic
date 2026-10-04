@@ -1,21 +1,22 @@
 #include "fft/battle.h"
 
-/*
- * Post-action state tick: apply the selected ability's outcome, then once the
- * caster's wait counter passes 0x1f, retire one pending move-find result.
- */
+/* CRYSTAL_LEARN: apply the crystal choice (0, 1, 2 or 4 for battle_unit_learn_from_crystal; 2
+ * also finishes the action; 7, 8 or cancel learn nothing), then, once the casting unit's
+ * counter passes 31 frames and the number displays end, clear one pending bit of
+ * g_battle_move_find_result per pass (with its display) and start the next post-move step.
+ * What each bit means is not known yet. */
 void battle_state_handle_crystal_learn_state(void) {
-    s32* ability;
+    s32* choice;
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* casting;
     u16 counter;
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    ability = battle_menu_get_selected_ability_address();
+    choice = battle_menu_get_selected_command_address();
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
-    switch (*ability) {
+    switch (*choice) {
     case 2:
         battle_unit_learn_from_crystal(source->battle_data, 2);
         g_battle_action_post_action = 1;
@@ -26,7 +27,7 @@ void battle_state_handle_crystal_learn_state(void) {
     case 0:
     case 1:
     case 4:
-        battle_unit_learn_from_crystal(source->battle_data, *ability);
+        battle_unit_learn_from_crystal(source->battle_data, *choice);
         g_battle_action_post_action = 1;
         break;
     case 7:

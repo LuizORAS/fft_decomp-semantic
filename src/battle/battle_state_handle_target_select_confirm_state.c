@@ -7,7 +7,7 @@ void battle_state_handle_target_select_confirm_state(void) {
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    switch (*battle_menu_get_selected_ability_address()) {
+    switch (*battle_menu_get_selected_command_address()) {
     case 7:
         caster = battle_unit_get_casting_misc_data();
         target = battle_unit_get_selectable_misc_data_at_map_coords(

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter UNIT_MOVING_SETUP and open the move confirmation window, with variants for a mounted
+ * unit, a crystal on the destination tile and a path count of 0xfe or 0xff (another window
+ * when navigation messages are on). */
 void battle_state_enter_unit_moving_setup(void) {
     battle_unit_misc_data_t* src;
     battle_unit_misc_data_t* cast;

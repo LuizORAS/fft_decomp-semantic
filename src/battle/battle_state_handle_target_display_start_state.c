@@ -6,7 +6,7 @@ void battle_state_handle_target_display_start_state(void) {
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    id = *battle_menu_get_selected_ability_address();
+    id = *battle_menu_get_selected_command_address();
     if ((id >= 7) && ((id < 9) || (id == 0xFF))) {
         g_battle_action_post_action = 1;
     }

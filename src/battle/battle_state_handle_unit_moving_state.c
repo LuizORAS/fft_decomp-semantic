@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* UNIT_MOVING: walk the casting unit along its path, the camera free to rotate, zoom and tilt;
+ * at the destination, refresh its display and open the move confirmation. */
 void battle_state_handle_unit_moving_state(void) {
     battle_unit_misc_data_t* casting_misc_data;
 

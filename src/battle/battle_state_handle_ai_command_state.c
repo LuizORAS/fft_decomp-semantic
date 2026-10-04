@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Advance menu-to-targeting state and consume the unit's renderer command.
+/* AI_COMMAND: after 31 frames, build the source unit's command with battle_ai_build_command (at
+ * 30 fps while that takes more frames), then carry it out: a move, Defend, Equip Change, an
+ * ability (target panels, then execution setup or tile selection) or the end of the turn.
  *
- * AI setup may suspend before the command is ready. Keep each special
- * skillset's completion explicit so its distinct call tail is preserved.
- */
-void battle_state_handle_menu_to_targeting_state(void) {
+ * Keep each special skillset's completion explicit so its distinct call tail is preserved. */
+void battle_state_handle_ai_command_state(void) {
     battle_unit_misc_data_t* unit;
     s32 kind;
     s32 result;

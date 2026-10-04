@@ -25,7 +25,7 @@ void battle_target_update_free_cursor_selection(battle_unit_misc_data_t* unit, b
     if (((g_battle_cursor_x != old_x) | (g_battle_cursor_z != old_z) | (g_battle_cursor_y != old_y)) != 0) {
         switch (g_battle_game_state) {
         case BATTLE_GAME_STATE_FREE_CURSOR:
-        case BATTLE_GAME_STATE_CLOSE_MOVE_HELP:
+        case BATTLE_GAME_STATE_SELECT_MOVE_TILE:
         case BATTLE_GAME_STATE_TARGET_SELECT:
             battle_target_store_cursor_unit_name_and_data();
             break;

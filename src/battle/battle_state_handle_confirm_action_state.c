@@ -10,7 +10,7 @@ void battle_state_handle_confirm_action_state(void) {
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability_address = battle_menu_get_selected_ability_address();
+    selected_ability_address = battle_menu_get_selected_command_address();
     unit = battle_unit_get_source_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         selected_ability = *selected_ability_address;

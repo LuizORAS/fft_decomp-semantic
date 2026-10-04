@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* WAIT_DIRECTION: under player control the d-pad turns the unit (and its mount) with a sound,
+ * Circle ends the turn and checks the between-turn events, and Cross goes back to
+ * AFTER_COMMAND; an AI unit turns to its facing hint and ends its turn after 31 frames. */
 void battle_state_handle_wait_direction_state(void) {
     s32 facing;
     s32 facing_hint;
