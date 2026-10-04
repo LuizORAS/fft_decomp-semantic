@@ -29,6 +29,6 @@ s32 battle_effect_allocate_secondary_slot(void) {
         }
         return id;
     }
-    main_noop_800449f8(1, 0x66);
+    main_system_report_error_2(1, 0x66);
     return id;
 }

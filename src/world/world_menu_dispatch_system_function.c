@@ -38,7 +38,7 @@ s32 world_menu_dispatch_system_function(
             return 1;
         } else if (option != 1) {
             if (world_thread_is_running_80100164(1) != 0) {
-                main_noop_800449f8(7, 3);
+                main_system_report_error_2(7, 3);
                 if (option != 2) {
                     world_menu_start_system_function_thread(8);
                 }
@@ -310,7 +310,7 @@ s32 world_menu_dispatch_system_function(
             world_menu_start_system_function_thread(8);
         }
     } else {
-        main_noop_800449f8(7, 5);
+        main_system_report_error_2(7, 5);
         world_menu_start_system_function_thread(8);
         g_world_menu_last_dispatched_command = command;
         g_world_menu_last_dispatched_option = option;

@@ -15,11 +15,11 @@ void main_file_poll_load(main_file_load_descriptor_t* header) {
     case MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED:
         mode = CdlModeSpeed;
         CdControl(CdlSetmode, &mode, 0);
-        g_main_system_session_frames = 0;
+        g_main_system_frame_timer = 0;
         header->state++;
         break;
     case MAIN_FILE_LOAD_STATE_WAIT_AFTER_SET_MODE:
-        if (g_main_system_session_frames >= 4) {
+        if (g_main_system_frame_timer >= 4) {
             header->state++;
         }
         break;
@@ -44,7 +44,7 @@ void main_file_poll_load(main_file_load_descriptor_t* header) {
         if (CdRead(header->sector_count, (u32*)header->destination, CdlModeSpeed) == 0) {
             header->error_count = header->error_count + 1;
         } else {
-            g_main_system_session_frames = 0;
+            g_main_system_frame_timer = 0;
             header->wait_frames = 0;
             header->state++;
         }
@@ -54,8 +54,8 @@ void main_file_poll_load(main_file_load_descriptor_t* header) {
         if (result == 0) {
             header->state = MAIN_FILE_LOAD_STATE_IDLE;
         } else if (result == header->sector_count || result == -1) {
-            if (g_main_system_session_frames > 0x100) {
-                g_main_system_session_frames = 0;
+            if (g_main_system_frame_timer > 0x100) {
+                g_main_system_frame_timer = 0;
                 header->wait_frames = 0;
                 main_file_reset_cd_subsystems();
                 header->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;

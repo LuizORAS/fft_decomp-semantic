@@ -1,6 +1,8 @@
 #include "fft/main.h"
 
-void main_boot_build_and_draw_squaresoft_logo(void) {
+/* Fade the Squaresoft logo (180x16, g_main_boot_squaresoft_logo_image_words) in from black. It
+ * stays on screen until main_boot_fade_out_squaresoft_logo. */
+void main_boot_fade_in_squaresoft_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];
     u32 otags[2][2];
@@ -52,7 +54,7 @@ void main_boot_build_and_draw_squaresoft_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(otags[buffer], &polygons[g_main_gfx_screen_polarity]);
         AddPrim(otags[buffer], &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_squaresoft_logo(otags[buffer], g_main_boot_squaresoft_logo_image_words);
+        main_boot_draw_squaresoft_logo_frame(otags[buffer], g_main_boot_squaresoft_logo_image_words);
         intensity -= 8;
     }
 

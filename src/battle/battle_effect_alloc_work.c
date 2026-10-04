@@ -19,7 +19,7 @@ effect_work_record_t* battle_effect_alloc_work(s16 record_index, s32 kind) {
         g_battle_effect_work_record_peak = g_battle_effect_work_record_count;
     }
     if (work == 0) {
-        main_noop_800449f8(1, 0x3E);
+        main_system_report_error_2(1, 0x3E);
     }
     g_battle_effect_free_work_record_head = work->next;
     switch (kind & EFFECT_WORK_KIND_MASK) {

@@ -2,6 +2,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Top-level loop, never returns: the OPEN.BIN title, then the world map (WLDCORE and WORLD) and
+ * BATTLE.BIN in turn until a reset (flow state 2) or the ending (flow state 3). A world result of 5
+ * returns to the title without resetting the game state. */
 void main_system_run_game_loop(void) {
     int open_mode;
 
@@ -26,7 +29,7 @@ void main_system_run_game_loop(void) {
 
         do {
             if (g_main_system_go_straight_to_battle == 0) {
-                g_main_system_frontend_world_result = main_overlay_open_world_and_wldcore(1);
+                g_main_system_frontend_world_result = main_overlay_exec_wldcore_and_world_bin(1);
             }
 
             if (g_main_system_frontend_world_result == 5) {

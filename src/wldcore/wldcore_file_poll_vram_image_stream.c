@@ -25,11 +25,11 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     case 1:
         mode[0] = CdlModeSpeed;
         CdControl(CdlSetmode, mode, 0);
-        g_main_system_session_frames = 0;
+        g_main_system_frame_timer = 0;
         stream->state++;
         break;
     case 2:
-        if (g_main_system_session_frames < 4) {
+        if (g_main_system_frame_timer < 4) {
             return;
         }
         stream->state++;

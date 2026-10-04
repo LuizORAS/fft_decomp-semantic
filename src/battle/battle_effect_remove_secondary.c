@@ -37,5 +37,5 @@ void battle_effect_remove_secondary(u8 id) {
         slot->phase = 0;
         return;
     }
-    main_noop_800449f8(1, 0x67);
+    main_system_report_error_2(1, 0x67);
 }

@@ -255,7 +255,7 @@ void battle_map_update_texture_animations(void) {
                     g_battle_map_texture_animations[i].duration, 0, g_battle_map_texture_animations[i].canvas_x,
                     g_battle_map_texture_animations[i].canvas_x + g_battle_map_texture_animations[i].width - 1);
                 if (g_battle_map_texture_animation_handles[i] == 0) {
-                    main_system_handle_malloc_exception(2, 0x3CC);
+                    main_system_report_error(2, 0x3CC);
                 }
             }
             break;

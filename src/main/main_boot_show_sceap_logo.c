@@ -1,6 +1,8 @@
 #include "fft/main.h"
 
-void main_boot_build_and_draw_sceap_logo(void) {
+/* Show the SCEA logo from SCEAP.DAT (sector 198, 320x32): fade it in through a subtractive black
+ * quad, hold it 180 frames, fade it out and clear VRAM. */
+void main_boot_show_sceap_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];
     u32 otags[2][2];
@@ -53,7 +55,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_sceap_logo(current_otag, g_main_heap_high_overlay_load_address);
+        main_boot_draw_sceap_logo_frame(current_otag, g_main_heap_high_overlay_load_address);
         intensity -= 8;
     }
 
@@ -74,7 +76,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_sceap_logo(current_otag, g_main_heap_high_overlay_load_address);
+        main_boot_draw_sceap_logo_frame(current_otag, g_main_heap_high_overlay_load_address);
         intensity += 8;
     }
 

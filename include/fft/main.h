@@ -19,6 +19,8 @@
 struct battle_deployed_coords;
 
 /* system */
+/* The top-level game loop and its soft reset, the VSync play-time counter and the empty error hooks. */
+
 extern s32 g_main_system_frontend_world_result;
 extern u32 g_main_system_game_flow_state;
 extern u32 g_main_system_game_loop_stack_pointer;
@@ -29,7 +31,7 @@ extern s32 g_main_system_play_time_hours;
 extern s32 g_main_system_play_time_minutes;
 extern s32 g_main_system_play_time_seconds;
 extern u32 g_main_system_flags;
-extern s32 g_main_system_session_frames;
+extern s32 g_main_system_frame_timer;
 
 /* Same address as g_main_system_flags (0x8004d950). The target re-reads the
  * flags in both arms after the (flags & 0xc) == 4 test; reading the test
@@ -41,12 +43,12 @@ void main_noop_800449ec(void);
 
 /* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
  * but neither their original meaning nor the hook's original name is proven. */
-void main_noop_800449f8(s32 category, s32 code);
+void main_system_report_error_2(s32 category, s32 code);
 
 void main_restore_game_loop_stack_pointer(u32* source);
 void main_system_handle_animation_exception(int error_code);
-void main_system_handle_battle_load_exception(s32 value);
-void main_system_handle_malloc_exception(s32 allocator_id, s32 error_code);
+void main_system_handle_battle_load_exception(s32 error_code);
+void main_system_report_error(s32 category, s32 code);
 void main_system_handle_pointer_exception(int error_code);
 void main_system_reset_game(void);
 void main_system_run_game_loop(void);
@@ -61,25 +63,29 @@ void main_system_enable_root_counter_2_evcb(void);
 void main_system_disable_root_counter_2_evcb(void);
 
 /* boot */
-extern s32 g_main_boot_startup2_has_run;
+/* Cold boot, the per-session game state reset and the startup logos. */
+
+extern s32 g_main_boot_game_state_initialized;
 extern u32 g_main_boot_squaresoft_logo_image_words[];
 
 void main_boot_run_startup(void);
 void main_boot_reset_game_state(void);
 
-void main_boot_build_and_draw_sceap_logo(void);
-void main_boot_build_and_draw_squaresoft_logo(void);
-int main_boot_draw_sceap_logo(void* otag, u32* image);
-int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
+void main_boot_show_sceap_logo(void);
+void main_boot_fade_in_squaresoft_logo(void);
+int main_boot_draw_sceap_logo_frame(void* otag, u32* image);
+int main_boot_draw_squaresoft_logo_frame(u32* otag, u32* image);
 void main_boot_fade_out_squaresoft_logo(void);
 
 /* overlay */
+/* Load OPEN, WLDCORE and WORLD, and BATTLE from fixed disc sectors and run them. */
+
 void main_overlay_call_battle_entrypoint(void);
 void main_overlay_exec_battle_bin(void);
 int main_overlay_exec_open_bin_main_loop(int mode);
 void main_overlay_exec_open_bin_ending(void);
-int main_overlay_open_world_and_wldcore(int load_world);
-void main_overlay_open_world_bin(s32 mode);
+int main_overlay_exec_wldcore_and_world_bin(int load_world);
+void main_overlay_load_world_bin(s32 mode);
 
 /* heap */
 /* 64 allocation tags, one per 0x800-byte block in the game arena. */

@@ -20,7 +20,7 @@ void open_title_init_new_game_party(s32 party_mode, s32 world_load_mode) {
     initial_flags = g_open_system_runtime_flags;
     if ((initial_flags & OPEN_FLAG_WORLD_OVERLAY_LOADED) == 0) {
         g_open_system_runtime_flags = initial_flags | OPEN_FLAG_WORLD_OVERLAY_LOADED;
-        main_overlay_open_world_bin(world_load_mode);
+        main_overlay_load_world_bin(world_load_mode);
     }
 
     value = OPEN_PARTY_MODE_FLAG_BASE;

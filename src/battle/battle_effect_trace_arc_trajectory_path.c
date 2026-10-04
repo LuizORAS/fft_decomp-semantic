@@ -42,7 +42,7 @@ s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* d
     if (advance != 0) {
         steps = ((advance + *distance) - 1) / advance;
     } else {
-        main_noop_800449f8(1, 0);
+        main_system_report_error_2(1, 0);
         steps = 0;
     }
 

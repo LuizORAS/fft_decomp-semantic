@@ -52,7 +52,9 @@ is swapped out. A file offset is the address minus the module's `load`.
    - opens the memory card events and the generic sound effects;
    - loads the zodiac frame and seeds `rand` with 1.
 2. **Saves its stack pointer**, which
-   `main_restore_game_loop_stack_pointer.s` (the one assembly file) restores.
+   `main_restore_game_loop_stack_pointer.s` (the one assembly file) restores on a
+   reset (`main_system_reset_game`) before jumping back to the top of the game
+   loop.
 3. **Enters [`main_system_run_game_loop`](src/main/main_system_run_game_loop.c)**,
    which never returns:
 
@@ -60,7 +62,7 @@ is swapped out. A file offset is the address minus the module's `load`.
 forever:
     OPEN.BIN: opening and title         main_overlay_exec_open_bin_main_loop
     repeat:
-        WLDCORE + WORLD: world map      main_overlay_open_world_and_wldcore
+        WLDCORE + WORLD: world map      main_overlay_exec_wldcore_and_world_bin
         BATTLE.BIN: battle or scene     main_overlay_exec_battle_bin
                                         battle_state_run_game_loop
     until a reset (back to OPEN) or the ending
@@ -92,7 +94,7 @@ works like this:
 The sectors are constants in the code:
 - 1000 for BATTLE.BIN, in `main_overlay_exec_battle_bin`;
 - 84041 (`0x14849`) for WLDCORE.BIN and 84261 (`0x14925`) for WORLD.BIN, in
-  `main_overlay_open_world_and_wldcore`.
+  `main_overlay_exec_wldcore_and_world_bin`.
 
 So a file that moves or grows on the disc breaks these reads. This is one
 reason today's build cannot change file sizes (see
