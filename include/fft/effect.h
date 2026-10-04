@@ -7,6 +7,25 @@
 
 struct effect_timeline_header;
 
+/* system */
+/* Shared layout of the EFFECT/E###.BIN overlay state handlers.
+ *
+ * Every native overlay routine is a state handler
+ *     handler(s16 record_index, s32 byte_offset, s32 entry_index, s32 frame)
+ * over one 0xf8-byte record of g_effect_state_records. The state block
+ * addressed by byte_offset carries the phase byte (1 init, 2 update, 3 destroy);
+ * the record's work-slot table at +0xe4 is indexed by the same byte_offset.
+ * Field names are provisional: only offsets proven by matched code are named. */
+typedef struct effect_state {
+    u8 _unused_00[0x22];
+    u8 phase; /* 0x22: 1 init, 2 update, 3 destroy, 0 idle */
+} effect_state_t;
+
+extern u8 g_effect_e454_particle_work_offset_scale_16;
+extern u8 g_effect_e454_particle_work_offset_scale_64;
+extern u8 g_effect_e464_particle_work_offset_scale_16;
+extern u8 g_effect_e464_particle_work_offset_scale_64;
+
 /* helpers */
 /* Reads curve `nibble` (0 = none, otherwise palette row + 1) at `frame`. The
  * separate decrement keeps the target's compare against -1. */
@@ -713,25 +732,6 @@ extern u32 g_effect_e373_summon_mesh_brightness_table[][9];
 extern u32 g_effect_e452_summon_mesh_brightness_table[][9];
 extern u32 g_effect_e474_summon_mesh_brightness_table[][9];
 extern u32 g_effect_summon_mesh_brightness_table[][9];
-
-/* system */
-/* Shared layout of the EFFECT/E###.BIN overlay state handlers.
- *
- * Every native overlay routine is a state handler
- *     handler(s16 record_index, s32 byte_offset, s32 entry_index, s32 frame)
- * over one 0xf8-byte record of g_effect_state_records. The state block
- * addressed by byte_offset carries the phase byte (1 init, 2 update, 3 destroy);
- * the record's work-slot table at +0xe4 is indexed by the same byte_offset.
- * Field names are provisional: only offsets proven by matched code are named. */
-typedef struct effect_state {
-    u8 _unused_00[0x22];
-    u8 phase; /* 0x22: 1 init, 2 update, 3 destroy, 0 idle */
-} effect_state_t;
-
-extern u8 g_effect_e454_particle_work_offset_scale_16;
-extern u8 g_effect_e454_particle_work_offset_scale_64;
-extern u8 g_effect_e464_particle_work_offset_scale_16;
-extern u8 g_effect_e464_particle_work_offset_scale_64;
 
 /* tentacle mesh */
 /* Shared records of two emitter-driven EFFECT renderers compiled from one
