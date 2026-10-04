@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter TARGET_SELECT_START: open the command's prompt (an enemy for Auto-Battle command 0xc,
+ * an ally for 0xe) and mark the AT list active. */
 void battle_state_enter_target_select_start(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;

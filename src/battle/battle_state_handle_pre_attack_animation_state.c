@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* PRE_ATTACK_ANIMATION: once the source unit's animation ends (or its counter reaches 61) and
+ * the camera has stopped, run the ability (battle_action_execute_ability): it starts charging,
+ * acts now or jumps. */
 void battle_state_handle_pre_attack_animation_state(void) {
     battle_unit_misc_data_t* unit;
 

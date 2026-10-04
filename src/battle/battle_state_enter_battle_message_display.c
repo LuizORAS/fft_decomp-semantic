@@ -1,13 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY.
- *
- * Confirms the ability's targets, then opens the system message window for the
- * first target whose action actually connected.  The message id comes from the
- * ability animation table's third byte; 0x06 (and only 0x06) also plays tune 2,
- * and 0x06/0x2b are the two messages that name both units. */
-void battle_state_start_battle_message_display(void) {
+/* Enter BATTLE_MESSAGE_DISPLAY at 60 fps after the strike: build the targets' result messages
+ * and animations, then show the ability's message for 60 frames. Formulas 6 and 9 play tune 2
+ * with messages 0x1838 and 0x1828; otherwise the first target hit gives the message from the
+ * ability animation table (text_display), where 6 also plays tune 2 and 6 and 0x2b name both
+ * units. */
+void battle_state_enter_battle_message_display(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
     s32 message;

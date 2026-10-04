@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter TARGET_SELECT_CONFIRM: store the names of the unit under the cursor and open the
+ * confirmation window. */
 void battle_state_enter_target_select_confirm(void) {
     battle_unit_misc_data_t* misc;
     battle_stats_t* stats;

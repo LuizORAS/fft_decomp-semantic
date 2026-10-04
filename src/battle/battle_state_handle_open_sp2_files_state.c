@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* OPEN_SP2_FILES: read the casting unit's SP2 file (attack frames beyond its SEQ) into a
+ * 0x8000-byte heap buffer, retrying a refused read request, and once read upload it (64x256) to
+ * a free one of the two SP2 VRAM slots; then, or straight away when there is no SP2 to load,
+ * prepare the strike (battle_action_set_damage_display_type_based_on_ability). */
 void battle_state_handle_open_sp2_files_state(void) {
     RECT image_rect;
     battle_unit_misc_data_t* unit;

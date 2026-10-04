@@ -2,14 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Per-frame handler for the BattleTargetSelectMode game state.
- *
- * Circle accepts the unit under the cursor. Selected ability 0xc requires a
- * unit outside the caster's non-player team and 0xe one inside it; any other
- * value leaves the selection pending. X returns to the caster and the script
- * action menus; triangle only recentres the cursor on the caster.
- */
+/* TARGET_SELECT: choose the casting unit's Auto-Battle target. The camera can rotate, zoom and
+ * tilt and the d-pad moves the cursor; Circle on a unit of the other team (command 0xc) or of
+ * the same team (0xe) asks for confirmation, and any other tile or unit is refused. Cross
+ * returns to the action menus and Triangle recentres the cursor on the caster. */
 void battle_state_handle_target_select_state(void) {
     battle_unit_misc_data_t* caster;
     battle_unit_misc_data_t* target;

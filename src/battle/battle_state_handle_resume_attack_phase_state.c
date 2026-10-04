@@ -3,16 +3,21 @@
 struct battle_gfx_misc_data_header;
 extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_header*);
 
+/* RESUME_ATTACK_PHASE: show the queued effect messages one by one; when none is left and the
+ * numbers are gone, strike again for a continued attack, or free the SP2 data, store the acting
+ * unit's data, set the animations and go on to the next action phase
+ * (battle_state_announce_next_ability). After a First Strike (phase 0), or when no phase is
+ * left, go on to the action's EXP and JP (battle_action_handle_post_action_xp_jp_ability). */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;
-    s32 selected_ability;
+    s32 command;
     battle_unit_misc_data_t* unit;
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability = *battle_menu_get_selected_command_address();
-    if (selected_ability >= 7 && (selected_ability < 9 || selected_ability == 0xff)) {
+    command = *battle_menu_get_selected_command_address();
+    if (command >= 7 && (command < 9 || command == 0xff)) {
         g_battle_action_post_action = 1;
     }
     unit = battle_unit_get_casting_misc_data();
@@ -46,7 +51,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
             if (g_battle_action_phase != 2) {
                 g_battle_action_phase += 1;
             }
-            if (battle_state_announce_next_charged_action() != 0) {
+            if (battle_state_announce_next_ability() != 0) {
                 return;
             }
         }

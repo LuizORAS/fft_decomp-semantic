@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter AFTER_COMMAND at 60 fps: move the cursor to the source unit and open no window
+ * (command 6 runs system function 8, the one used when a window is turned off). */
 void battle_state_enter_after_command(void) {
     g_battle_state_vsync_interval = 1;
     g_battle_game_state = BATTLE_GAME_STATE_AFTER_COMMAND;

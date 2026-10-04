@@ -101,8 +101,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_AFTER_COMMAND:
                 battle_state_handle_after_command_state();
                 break;
-            case BATTLE_GAME_STATE_JP_EXP_GAIN:
-                battle_state_handle_jp_exp_gain_state();
+            case BATTLE_GAME_STATE_CONTINUE_TURN:
+                battle_state_handle_continue_turn_state();
                 break;
             case BATTLE_GAME_STATE_CHANGE_TURN:
                 battle_state_handle_change_turn_state();
@@ -140,8 +140,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_CRYSTAL_LEARN:
                 battle_state_handle_crystal_learn_state();
                 break;
-            case BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP:
-                battle_state_handle_action_execute_setup_state();
+            case BATTLE_GAME_STATE_TARGETING_MESSAGE:
+                battle_state_handle_targeting_message_state();
                 break;
             case BATTLE_GAME_STATE_TARGETING_RANGE:
                 battle_state_handle_targeting_range_state();
@@ -167,8 +167,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE:
                 battle_state_handle_commence_attack_phase_state();
                 break;
-            case BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY:
-                battle_state_handle_effect_damage_display_state();
+            case BATTLE_GAME_STATE_ANNOUNCE_ABILITY:
+                battle_state_handle_announce_ability_state();
                 break;
             case BATTLE_GAME_STATE_OPEN_SP2_FILES:
                 battle_state_handle_open_sp2_files_state();
@@ -176,8 +176,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN:
                 battle_state_handle_start_effect_file_open_state();
                 break;
-            case BATTLE_GAME_STATE_SECONDARY_EFFECT:
-                battle_state_handle_secondary_effect_state();
+            case BATTLE_GAME_STATE_START_ACTION_EXECUTE:
+                battle_state_handle_start_action_execute_state();
                 break;
             case BATTLE_GAME_STATE_ACTION_EXECUTE:
                 battle_state_handle_action_execute_state();

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* COMMENCE_ATTACK_PHASE: for a Jump (attack phase state 3) wait for its animation, mark the
+ * action taken and end the command; otherwise run the action from phase 0
+ * (battle_state_announce_next_ability). */
 void battle_state_handle_commence_attack_phase_state(void) {
     battle_unit_misc_data_t* unit;
 
@@ -13,6 +16,6 @@ void battle_state_handle_commence_attack_phase_state(void) {
         }
     } else {
         g_battle_action_phase = 0;
-        battle_state_announce_next_charged_action();
+        battle_state_announce_next_ability();
     }
 }

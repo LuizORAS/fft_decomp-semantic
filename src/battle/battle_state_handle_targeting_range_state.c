@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* TARGETING_RANGE: choose the target tile. Under player control the d-pad moves the cursor and
+ * the camera can rotate, zoom and tilt; Circle on a tile in range selects it
+ * (battle_target_select_tile), elsewhere enters ILLEGAL_RANGE, and Cross returns to the action
+ * menu. An AI unit aims at its stored tile (targeting type 5) or unit (6) and selects it after
+ * 31 frames, or reopens its menus when that unit is gone. */
 void battle_state_handle_targeting_range_state(void) {
     u16 frame_data;
     battle_unit_misc_data_t* unit;
@@ -27,7 +32,7 @@ void battle_state_handle_targeting_range_state(void) {
                 battle_target_select_tile();
                 return;
             }
-            battle_state_enter_target_out_of_range();
+            battle_state_enter_illegal_range();
         }
     } else {
         switch (unit->command_state.ai.data.action.targeting_type) {

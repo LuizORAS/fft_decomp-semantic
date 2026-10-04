@@ -1,17 +1,20 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* CHANGE_TURN: once the event check has answered and the camera has stopped, start the turn
+ * event: a charged ability (ACTION_CAST), an action result or Mime event (STATUS_EXECUTE), or a
+ * unit's turn (its action menus). */
 void battle_state_handle_change_turn_state(void) {
-    s32 ability;
+    s32 command;
     s32 type;
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    ability = *battle_menu_get_selected_command_address();
-    if (ability >= 7) {
-        if (ability < 9) {
+    command = *battle_menu_get_selected_command_address();
+    if (command >= 7) {
+        if (command < 9) {
             g_battle_action_post_action = 1;
-        } else if (ability == 0xFF) {
+        } else if (command == 0xFF) {
             g_battle_action_post_action = 1;
         }
     }

@@ -2,6 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* TARGET_DISPLAY: Circle or Cross returns the cursor to the casting unit and reopens its action
+ * menus. */
 void battle_state_handle_target_display_state(void) {
     s32 flags;
     battle_state_update_units();

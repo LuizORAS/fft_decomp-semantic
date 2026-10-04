@@ -1,16 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Enter action-execution setup after panel preparation.
- *
- * Panel result 3 selects the alternate setup argument. AT-list state
- * follows the unit's control flag after the setup call returns.
- */
-void battle_state_enter_action_execution_setup(void) {
+/* Enter TARGETING_MESSAGE after the ability's target panels are built: open the "specify a
+ * target" message, or the cannot-execute message when no panel is in range (preview phase 3),
+ * and mark the AT list active for a player-controlled unit. */
+void battle_state_enter_targeting_message(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_disable_camera_pan();
-    g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP;
+    g_battle_game_state = BATTLE_GAME_STATE_TARGETING_MESSAGE;
     unit = battle_unit_get_source_misc_data();
     if (unit->ability_preview_phase == 3)
         battle_menu_init_system_function(

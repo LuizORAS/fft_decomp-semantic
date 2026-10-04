@@ -92,7 +92,7 @@ void battle_state_handle_ai_command_state(void) {
             case 0:
             case 1:
             case 3:
-                battle_state_enter_action_execution_setup();
+                battle_state_enter_targeting_message();
                 return;
             case 2:
             default:

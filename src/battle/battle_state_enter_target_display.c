@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter TARGET_DISPLAY: move the cursor to the casting unit's Auto-Battle target, turning the
+ * camera to it when its tile is hidden, and store its names for the menus. */
 void battle_state_enter_target_display(void) {
     battle_stats_t* cast;
     battle_unit_misc_data_t* unit;

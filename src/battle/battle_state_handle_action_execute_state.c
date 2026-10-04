@@ -62,7 +62,7 @@ void battle_state_handle_action_execute_state(void) {
                     }
                 }
             }
-            battle_state_start_battle_message_display();
+            battle_state_enter_battle_message_display();
         }
     } else {
         battle_camera_update_cursor_tile_vector();
@@ -80,7 +80,7 @@ void battle_state_handle_action_execute_state(void) {
                     }
                 }
             }
-            battle_state_start_battle_message_display();
+            battle_state_enter_battle_message_display();
         }
     }
 }

@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_state_enter_target_out_of_range(void) {
+/* Enter ILLEGAL_RANGE and open the out-of-range message. */
+void battle_state_enter_illegal_range(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;
 

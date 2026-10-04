@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter ACTION_CAST when a charged ability comes due: run the event check
+ * (battle_menu_init_action_menu) and, when no event starts, turn the camera to the unit if its
+ * tile is hidden. */
 void battle_state_enter_action_cast(void) {
     battle_unit_misc_data_t* unit;
 

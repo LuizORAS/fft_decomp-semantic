@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter TARGET_SELECT_DENIED and open the refusal: no unit under the cursor, or a unit of the
+ * wrong team for command 0xc or 0xe. */
 void battle_state_enter_target_select_denied(void) {
     battle_unit_misc_data_t* misc;
     battle_unit_misc_data_t* unit;

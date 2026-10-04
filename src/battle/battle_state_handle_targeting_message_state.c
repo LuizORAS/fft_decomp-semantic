@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-void battle_state_handle_action_execute_setup_state(void) {
-    s32 selected_ability;
+/* TARGETING_MESSAGE: 7 goes on to choosing the target (battle_target_set_boxes_red), 8 or
+ * cancel returns to the action menu. */
+void battle_state_handle_targeting_message_state(void) {
+    s32 command;
 
     battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability = *battle_menu_get_selected_command_address();
-    switch (selected_ability) {
+    command = *battle_menu_get_selected_command_address();
+    switch (command) {
     case 7:
         battle_target_set_boxes_red();
         return;

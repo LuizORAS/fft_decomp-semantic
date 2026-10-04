@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 
-/* Finish the JP/EXP gain state once the camera and map rotation settle.
- *
- * Event actions (type 0x200) hand off to the event system; otherwise a unit
- * whose turn continues reloads its last command into the misc command state
- * and resumes the pending attack phase or the wait-direction prompt. */
-void battle_state_handle_jp_exp_gain_state(void) {
+/* CONTINUE_TURN: once the camera has stopped, decide what follows the command; EXP and JP were
+ * already granted in RESUME_ATTACK_PHASE. After a charged ability (0x200) a scenario event may
+ * start, or else the between-turn events run. When the unit's turn is over, its command is
+ * restored from its battle record and a Jump ends the turn, while other commands go on to Wait
+ * (battle_action_choose_wait). Otherwise its action menus reopen. */
+void battle_state_handle_continue_turn_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_update_units();

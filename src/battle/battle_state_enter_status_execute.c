@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 
-/* Enters the status-execute state for the source unit and shows its message:
- * action type 0x500 shows message 0x183a with animation 0x16; otherwise the
- * statuses to add select message 0x183d, 0x183c or none, followed by the
- * post-action display. */
+/* Enter STATUS_EXECUTE for a turn event that is no unit's turn: a Mime event (0x500) shows
+ * message 0x183a for 60 frames and plays animation 0x16; an action result shows the crystal
+ * (0x183d) or treasure (0x183c) message, or none, for 180 frames and refreshes the unit's
+ * display. */
 void battle_state_enter_status_execute(void) {
     battle_unit_misc_data_t* unit;
     u32 statuses;

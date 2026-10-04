@@ -181,20 +181,20 @@ functions:
   - {addr: 0x80072928, size: 232, name: battle_unit_set_rider_mount_x_y_facing, hash: f982d5fccfa0a305}
   - {addr: 0x80072a10, size: 120, name: battle_unit_face_attacker_toward_targets, hash: 67354609471f52d5}
   - {addr: 0x80072a88, size: 72, name: battle_unit_sync_all_rider_mount_positions, hash: be3d20f8e3dc8465}
-  - {addr: 0x80072ad0, size: 68, name: battle_state_enter_jp_xp_gain, hash: 6914defc81960bcd}
+  - {addr: 0x80072ad0, size: 68, name: battle_state_enter_continue_turn, hash: 6914defc81960bcd}
   - {addr: 0x80072b14, size: 60, name: battle_unit_update_post_command_animation_display, hash: 59b5613e79037c80}
-  - {addr: 0x80072b50, size: 160, name: battle_state_enter_action_execution_setup, hash: 45704c837e9b243f}
+  - {addr: 0x80072b50, size: 160, name: battle_state_enter_targeting_message, hash: 45704c837e9b243f}
   - {addr: 0x80072bf0, size: 248, name: battle_action_set_item_throw_stone_ability_display, hash: 71b6fd19ff0115e6}
   - {addr: 0x80072ce8, size: 164, name: battle_action_resume_attack_phase_control, hash: 22d79e5fe6057ffd}
   - {addr: 0x80072d8c, size: 984, name: battle_action_queue_post_effect_messages_for_unit, hash: 8db4f8dcabcf7ccf, rodata: [{addr: 0x80067548, size: 44, hash: 1af5cb5a7e7364f8}]}
   - {addr: 0x80073164, size: 116, name: battle_action_build_targets_post_action_message, hash: 771640634472c38d}
   - {addr: 0x800731d8, size: 120, name: battle_action_show_caster_post_effect_messages, hash: 0a768787da84133a}
   - {addr: 0x80073250, size: 120, name: battle_unit_update_attack_result_animation, hash: fbdeab2100f0f08c}
-  - {addr: 0x800732c8, size: 516, name: battle_state_start_battle_message_display, hash: 541d6cea9b29210b}
+  - {addr: 0x800732c8, size: 516, name: battle_state_enter_battle_message_display, hash: 541d6cea9b29210b}
   - {addr: 0x800734cc, size: 364, name: battle_action_init_learn_ability_on_hit, hash: e551c21a9821d20b}
   - {addr: 0x80073638, size: 156, name: battle_action_handle_post_action_xp_jp_ability, hash: 456b7725f61e8fba}
   - {addr: 0x800736d4, size: 760, name: battle_effect_store_targets_and_display_types, hash: ee114fa591ed5353}
-  - {addr: 0x800739cc, size: 464, name: battle_state_announce_next_charged_action, hash: d04d02e5eefb309d}
+  - {addr: 0x800739cc, size: 464, name: battle_state_announce_next_ability, hash: d04d02e5eefb309d}
   - {addr: 0x80073b9c, size: 848, name: battle_action_set_target_coords_and_attacker_anim, hash: 43832a9b522382fb}
   - {addr: 0x80073eec, size: 204, name: battle_action_set_damage_display_type_based_on_ability, hash: d022b2bd59993dd1}
   - {addr: 0x80073fb8, size: 40, name: battle_state_enter_open_sp2_files, hash: 416d101007313491}
@@ -204,7 +204,7 @@ functions:
   - {addr: 0x80074204, size: 196, name: battle_state_enter_commence_attack_phase, hash: 0dbec42f259df8e9}
   - {addr: 0x800742c8, size: 64, name: battle_menu_start_help_thread, hash: 134f635e218e1369}
   - {addr: 0x80074308, size: 360, name: battle_target_select_tile, hash: 27945184eb7d8306}
-  - {addr: 0x80074470, size: 88, name: battle_state_enter_target_out_of_range, hash: c2bbd66b2d92eb3d}
+  - {addr: 0x80074470, size: 88, name: battle_state_enter_illegal_range, hash: c2bbd66b2d92eb3d}
   - {addr: 0x800744c8, size: 228, name: battle_target_set_boxes_red, hash: cbd25a950ec48844, rodata: [{addr: 0x80067578, size: 20, hash: 78916b1d116d9124}]}
   - {addr: 0x800745ac, size: 256, name: battle_action_confirm, hash: 8eafbbeb1286c9c1}
   - {addr: 0x800746ac, size: 268, name: battle_gfx_highlight_all_units_blue_or_red, hash: a46a624b87d79960}
@@ -245,7 +245,7 @@ functions:
   - {addr: 0x80076358, size: 216, name: battle_unit_update_mount_animation_display, hash: 8d69457b2c4ca6d3}
   - {addr: 0x80076430, size: 552, name: battle_state_handle_wait_direction_state, hash: fc378448f788593e}
   - {addr: 0x80076658, size: 708, name: battle_state_handle_crystal_learn_state, hash: 9a482bcd9c8f3d47}
-  - {addr: 0x8007691c, size: 148, name: battle_state_handle_action_execute_setup_state, hash: 473a7b5c326da0bb}
+  - {addr: 0x8007691c, size: 148, name: battle_state_handle_targeting_message_state, hash: 473a7b5c326da0bb}
   - {addr: 0x800769b0, size: 460, name: battle_state_handle_targeting_range_state, hash: b0f7018dfb8a4a5c}
   - {addr: 0x80076b7c, size: 108, name: battle_state_handle_illegal_range_state, hash: 03f887e0a006924b}
   - {addr: 0x80076be8, size: 104, name: battle_state_handle_ability_preview_help_state, hash: 68a1af12c7f257e0}
@@ -254,10 +254,10 @@ functions:
   - {addr: 0x80076f14, size: 188, name: battle_state_handle_pre_attack_animation_state, hash: 66531068b8831455}
   - {addr: 0x80076fd0, size: 200, name: battle_state_handle_action_cast_state, hash: b0bb1cfe6911887e}
   - {addr: 0x80077098, size: 156, name: battle_state_handle_commence_attack_phase_state, hash: 591e498d9a92f133}
-  - {addr: 0x80077134, size: 108, name: battle_state_handle_effect_damage_display_state, hash: ffcacfc2479c2ab1}
+  - {addr: 0x80077134, size: 108, name: battle_state_handle_announce_ability_state, hash: ffcacfc2479c2ab1}
   - {addr: 0x800771a0, size: 372, name: battle_state_handle_open_sp2_files_state, hash: b9f97343e0e6f004}
   - {addr: 0x80077314, size: 100, name: battle_state_handle_start_effect_file_open_state, hash: a4fe687278ecc684}
-  - {addr: 0x80077378, size: 60, name: battle_state_handle_secondary_effect_state, hash: 8c5640222288b940}
+  - {addr: 0x80077378, size: 60, name: battle_state_handle_start_action_execute_state, hash: 8c5640222288b940}
   - {addr: 0x800773b4, size: 68, name: battle_unit_start_post_attack_animation_display, hash: 2e1c6df99f8b345a}
   - {addr: 0x800773f8, size: 872, name: battle_state_handle_action_execute_state, hash: ec2ed9bb264c30e0}
   - {addr: 0x80077760, size: 140, name: battle_state_handle_battle_message_display_state, hash: 81d6f3342d7bee0d}
@@ -273,7 +273,7 @@ functions:
   - {addr: 0x80077f68, size: 200, name: battle_state_handle_target_display_start_state, hash: 88b71245f1185d31}
   - {addr: 0x80078030, size: 112, name: battle_state_handle_target_display_state, hash: 75d3145a3f8a6b46}
   - {addr: 0x800780a0, size: 168, name: battle_state_handle_after_command_state, hash: 7dd5447b231adff5}
-  - {addr: 0x80078148, size: 480, name: battle_state_handle_jp_exp_gain_state, hash: f79284c170215e08}
+  - {addr: 0x80078148, size: 480, name: battle_state_handle_continue_turn_state, hash: f79284c170215e08}
   - {addr: 0x80078328, size: 276, name: battle_state_handle_change_turn_state, hash: 05f900b70b25776d}
   - {addr: 0x8007843c, size: 200, name: battle_state_handle_status_execute_state, hash: ee7ac680bfb6ce7b}
   - {addr: 0x80078504, size: 168, name: battle_state_handle_effect_state, hash: dfad0950f3c8b95d}

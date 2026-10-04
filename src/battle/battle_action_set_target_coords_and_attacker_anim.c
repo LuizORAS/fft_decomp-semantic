@@ -45,7 +45,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
     s32 i;
 
     g_battle_state_vsync_interval = 1;
-    g_battle_game_state = BATTLE_GAME_STATE_SECONDARY_EFFECT;
+    g_battle_game_state = BATTLE_GAME_STATE_START_ACTION_EXECUTE;
     unit = battle_unit_get_casting_misc_data();
     unit->state_frame_counter = 0;
     if (unit->continue_attack_count == 0) {

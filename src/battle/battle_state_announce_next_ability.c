@@ -3,15 +3,15 @@
 
 extern void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled);
 
-enum { BATTLE_GAME_STATE_ANNOUNCE_ABILITY = 0x29, BATTLE_ACTION_PHASE_COUNT = 3 };
+enum { BATTLE_ACTION_PHASE_COUNT = 3 };
 
-/* Announce the next unit whose charged or performing action comes due.
- *
- * Each of the three action phases is polled in turn; a phase that produces a
- * unit id publishes the announcement state, resolves the spell quote and stops
- * the scan.  Returns 1 once an announcement was set up, 0 when all three phases
- * had nothing pending. */
-s32 battle_state_announce_next_charged_action(void) {
+/* Announce the next part of the action (ANNOUNCE_ABILITY, with its name or spell quote): phase
+ * 0 a First Strike from the single target, phase 1 the action itself, phase 2 each reaction in
+ * turn. When the action cannot go ahead (after a First Strike, or when
+ * battle_action_check_and_consume_mp refuses it) its unit shows a number sprite for results 0-3
+ * and finishes its animation. Returns 1 when an ability was announced, 0 when the three phases
+ * are done. */
+s32 battle_state_announce_next_ability(void) {
     battle_ai_command_action_t command;
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* actor;
