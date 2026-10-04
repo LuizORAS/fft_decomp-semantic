@@ -196,6 +196,8 @@ All of these libraries are reconstructed C, matched like the game code.
   the emulator.
 - **Upstream names:** the vault's Upstream renames page translates
   upstream's names to this fork's, by address.
+  [`docs/upstream-renames.tsv`](docs/upstream-renames.tsv) is its committed
+  copy, which GitHub shows as a searchable table.
 
 ## What can change today
 

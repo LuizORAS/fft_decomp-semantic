@@ -11,6 +11,7 @@ and module) into `build/map/`, an Obsidian vault.
 | `mechanics/` | One page per game mechanic (movement, formulas, AI...) with the `scope` of code it covers |
 | `guides/` | Walkthroughs of a common change ("where to change X") |
 | `templates/` | The skeleton of each kind of page |
+| `upstream-renames.tsv` | Generated, not hand-written: each upstream name that differs from this fork's at the same module and address. `make map` rewrites it when the clone has the `upstream/master` ref |
 
 Pages link to generated pages with wikilinks such as `[[name]]`. A generated
 page is named after its function, type or global, so on GitHub a link still

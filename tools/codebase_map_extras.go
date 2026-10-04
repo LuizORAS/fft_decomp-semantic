@@ -1,6 +1,7 @@
 // codebase_map_extras.go writes the by-products of `make map` that are not
-// vault pages: PCSX-Redux symbol maps in build/symbols/, and the page that
-// translates upstream names into ours by address.
+// vault pages: PCSX-Redux symbol maps in build/symbols/, and the table that
+// translates upstream names into ours by address (a vault page and its
+// committed copy).
 package main
 
 import (
@@ -11,7 +12,10 @@ import (
 	"strings"
 )
 
-const mapUpstreamPage = "Upstream renames"
+const (
+	mapUpstreamPage  = "Upstream renames"
+	mapUpstreamTable = "docs/upstream-renames.tsv" // the committed copy of the page's table
+)
 
 // mapSymbolScenes are the module sets resident together; overlays share
 // addresses, so each PCSX-Redux map covers one scene.
@@ -131,12 +135,31 @@ func upstreamRenames(root string, ours *projectConfig) (renames []mapRename, ok 
 	return renames, true, nil
 }
 
+// writeUpstreamRenames writes the committed copy of the rename table, a TSV
+// that GitHub shows as a table, and reports whether its content changed.
+func writeUpstreamRenames(root string, renames []mapRename) (bool, error) {
+	var b strings.Builder
+	b.WriteString("module\taddress\tupstream\tours\n")
+	for _, rename := range renames {
+		fmt.Fprintf(&b, "%s\t%s\t%s\t%s\n", rename.module, hex32(rename.addr), rename.upstream, rename.ours)
+	}
+	path := filepath.Join(root, filepath.FromSlash(mapUpstreamTable))
+	if current, err := os.ReadFile(path); err == nil && string(current) == b.String() {
+		return false, nil
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return false, err
+	}
+	return true, atomicWrite(path, []byte(b.String()))
+}
+
 func (vault *mapVault) upstreamPage(renames []mapRename, available bool, readErr error) string {
 	var b strings.Builder
 	b.WriteString(frontmatter(mapProperty{"type", "report"}, mapProperty{"renames", len(renames)}))
 	fmt.Fprintf(&b, "# %s\n\n", mapUpstreamPage)
 	b.WriteString("Upstream function and data names that differ from ours at the same module and address: the table to translate an upstream commit into this tree. ")
-	b.WriteString("`make map` exports upstream's `target/` from the `upstream/master` ref (`MAP_UPSTREAM=` picks another) before it runs.\n\n")
+	b.WriteString("`make map` exports upstream's `target/` from the `upstream/master` ref (`MAP_UPSTREAM=` picks another) before it runs, ")
+	fmt.Fprintf(&b, "and keeps the committed copy `%s` up to date while that ref exists.\n\n", mapUpstreamTable)
 	switch {
 	case readErr != nil:
 		fmt.Fprintf(&b, "The upstream `target/` files could not be read: %v\n", readErr)

@@ -37,11 +37,23 @@ func (p project) mapCommand(args []string) error {
 	for _, path := range pulled {
 		fmt.Fprintf(p.stdout(), "map: pulled %s from the vault\n", path)
 	}
-	docs, err := loadMapDocs(p.root)
+	config, err := p.loadProjectConfig()
 	if err != nil {
 		return err
 	}
-	config, err := p.loadProjectConfig()
+	// The rename table's committed copy lives in docs/, so it is written
+	// before docs/ is read and copied into the vault.
+	renames, upstreamAvailable, upstreamErr := upstreamRenames(p.root, config)
+	if upstreamAvailable && upstreamErr == nil {
+		changed, err := writeUpstreamRenames(p.root, renames)
+		if err != nil {
+			return err
+		}
+		if changed {
+			fmt.Fprintf(p.stdout(), "map: %s updated\n", mapUpstreamTable)
+		}
+	}
+	docs, err := loadMapDocs(p.root)
 	if err != nil {
 		return err
 	}
@@ -53,7 +65,7 @@ func (p project) mapCommand(args []string) error {
 	if err := vault.addDocs(docs); err != nil {
 		return err
 	}
-	vault.renames, vault.upstreamAvailable, vault.upstreamErr = upstreamRenames(p.root, config)
+	vault.renames, vault.upstreamAvailable, vault.upstreamErr = renames, upstreamAvailable, upstreamErr
 	pages := vault.render()
 	if err := writeMapVault(target, pages); err != nil {
 		return err

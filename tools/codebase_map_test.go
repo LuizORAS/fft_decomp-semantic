@@ -91,6 +91,14 @@ func TestCodebaseMapRegions(t *testing.T) {
 
 func TestMapSymbolMapsAndUpstreamRenames(t *testing.T) {
 	p := testMapProject(t)
+	table := filepath.Join(p.root, filepath.FromSlash(mapUpstreamTable))
+	// Without an upstream export the committed copy is left alone.
+	if err := p.mapCommand(nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(table); !os.IsNotExist(err) {
+		t.Fatalf("%s written without an upstream export: %v", mapUpstreamTable, err)
+	}
 	// Upstream still calls main_second "main_old_second" and g_battle_value
 	// "g_battle_old_value".
 	writeTestFile(t, filepath.Join(p.root, "build", "upstream", "target", "main.yaml"),
@@ -121,6 +129,12 @@ func TestMapSymbolMapsAndUpstreamRenames(t *testing.T) {
 		if !strings.Contains(page, row) {
 			t.Fatalf("upstream page lacks %q:\n%s", row, page)
 		}
+	}
+	wantTable := "module\taddress\tupstream\tours\n" +
+		"battle\t0x80067100\tg_battle_old_value\tg_battle_value\n" +
+		"main\t0x80010008\tmain_old_second\tmain_second\n"
+	if got := read(table); got != wantTable {
+		t.Fatalf("%s:\n%s\nwant:\n%s", mapUpstreamTable, got, wantTable)
 	}
 	if match := mapWarningLine.FindStringSubmatch("/tmp/x.i:12: warning: unused variable `t1'"); match == nil || match[1] != "warning: unused variable `t1'" {
 		t.Fatalf("warning line parse: %v", match)
