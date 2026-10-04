@@ -77,8 +77,9 @@ Three globals steer the loop:
 - **`g_main_system_game_flow_state`:** 2 resets the game, 3 plays the ending.
 
 Each overlay then runs its own loop. BATTLE runs a state machine
-(`battle_state_*`, about 110 functions). WLDCORE starts at `wldcore_entrypoint`
-and returns the world result to MAIN.
+(`battle_state_*`, about 100 functions) and a turn clock (`battle_turn_*`); the
+[Battle flow](docs/mechanics/Battle%20flow.md) page walks through both. WLDCORE
+starts at `wldcore_entrypoint` and returns the world result to MAIN.
 
 ## Engine services
 

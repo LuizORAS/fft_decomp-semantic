@@ -342,7 +342,8 @@ func (vault *mapVault) addDocs(docs []*mapDoc) error {
 				continue
 			}
 			for _, match := range mapWikilinkPattern.FindAllStringSubmatch(mapCodeSpanPattern.ReplaceAllString(line, ""), -1) {
-				name := strings.TrimSpace(match[1])
+				// A table cell escapes the alias pipe: [[name\|alias]].
+				name := strings.TrimSuffix(strings.TrimSpace(match[1]), "\\")
 				target := strings.ToLower(name[strings.LastIndex(name, "/")+1:])
 				if strings.Contains(target, "{{") || known[target] || known[strings.TrimSuffix(target, ".md")] {
 					continue

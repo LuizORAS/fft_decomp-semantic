@@ -452,7 +452,7 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		}
 	}
 	vaultDir := filepath.Join(p.root, "build", "map")
-	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_second()\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n"
+	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_second()\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n\n| [[main_first\\|first]] |\n"
 	write(p.root, "CODEBASE.md", "# Codebase\n")
 	write(p.root, "docs/mechanics/Turns.md", turns)
 	write(p.root, "docs/guides/Retarget.md", "---\ntype: guide\nscope: [battle]\n---\n\n[[Turns]] and ![[{{title}} scope]]\n")
@@ -488,7 +488,8 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		}
 	}
 	stale := pages["reports/Stale mentions.md"]
-	if !strings.Contains(stale, "`Missing page`") || strings.Contains(stale, "in_code") || strings.Contains(stale, "{{title}}") {
+	if !strings.Contains(stale, "`Missing page`") || strings.Contains(stale, "in_code") || strings.Contains(stale, "{{title}}") ||
+		strings.Contains(stale, "main_first") {
 		t.Fatalf("stale page:\n%s", stale)
 	}
 
