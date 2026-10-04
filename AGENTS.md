@@ -61,6 +61,8 @@ remain excluded. Never modify `meta/`.
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
 | `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
+| `CODEBASE.md` | Architecture guide: disc modules, boot and game loop, engine services, how to find things |
+| `docs/` | Hand-written mechanic pages and guides; `make map` copies them into the map vault |
 | `build/` | Ignored: extracted disc, caches, outputs, scratch work |
 
 | Module | File | Load | Role |
@@ -97,6 +99,9 @@ make diff FUNC=f           # compare one function with the original bytes (needs
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
 make test                  # vet and test the Go tooling
+make map                   # write the codebase map (Obsidian vault) to build/map; ARGS=--pull-docs copies docs edited in the vault back
+make warnings              # list cc1 -Wall warnings per function in build/warnings [MODULE=x]
+make check                 # fmt-check, check-config and validate
 make fmt                   # clang-format src/ and include/ in place
 make fmt-check             # fail on any formatting drift
 make shell                 # interactive shell in the image
@@ -118,7 +123,7 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config` and `test` in one job and `validate` in four module shards,
+`check-config`, `test` and `map` in one job and `validate` in four module shards,
 without the BIN. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
@@ -212,8 +217,8 @@ function that matches only that way.
   includes every shared header. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
   then functions.
-- Comments: an optional short summary above a function, then only the
-  rationale needed to read the code. State facts, not history. Record retail
+- Comments: a short summary above every function (what it does, in a line or
+  two), then only the rationale needed to read the code. State facts, not history. Record retail
   bugs and caller/callee disagreements with one line in `QUIRKS.md`.
 - Run `make fmt` after editing C or headers, then `make validate`: cc1 emits
   line notes, so formatting can change the bytes.
