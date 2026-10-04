@@ -89,6 +89,15 @@ func TestCodebaseMapRegions(t *testing.T) {
 	}
 }
 
+func TestMapAsmSourceSummary(t *testing.T) {
+	if got := asmSourceSummary("/* Restore sp,\n * then jump.\n *\n * Assembly. */\n\t.text\n"); got != "Restore sp, then jump.\n\nAssembly." {
+		t.Fatalf("summary %q", got)
+	}
+	if got := asmSourceSummary("\t.text\n/* Not at the top. */\n"); got != "" {
+		t.Fatalf("summary %q for a file that opens with code", got)
+	}
+}
+
 func TestMapSymbolMapsAndUpstreamRenames(t *testing.T) {
 	p := testMapProject(t)
 	table := filepath.Join(p.root, filepath.FromSlash(mapUpstreamTable))
@@ -443,7 +452,7 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		}
 	}
 	vaultDir := filepath.Join(p.root, "build", "map")
-	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n"
+	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_second()\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n"
 	write(p.root, "CODEBASE.md", "# Codebase\n")
 	write(p.root, "docs/mechanics/Turns.md", turns)
 	write(p.root, "docs/guides/Retarget.md", "---\ntype: guide\nscope: [battle]\n---\n\n[[Turns]] and ![[{{title}} scope]]\n")
@@ -470,8 +479,8 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		t.Fatal("a guide's scope assigned a mechanic")
 	}
 	for page, want := range map[string]string{
-		"scopes/Turns scope.md":     "| `main_first` | 1 |\n| `main_gone` | 0 |\n",
-		"reports/Stale mentions.md": "| [[Turns\\|docs/mechanics/Turns.md]] | 7 | `main_gone` |",
+		"scopes/Turns scope.md":     "| `main_first` | 1 |\n| `main_second()` | 1 |\n| `main_gone` | 0 |\n",
+		"reports/Stale mentions.md": "| [[Turns\\|docs/mechanics/Turns.md]] | 8 | `main_gone` |",
 		"Home.md":                   "| [[Turns]] | 1 | [[Turns scope]]: ",
 	} {
 		if !strings.Contains(pages[page], want) {

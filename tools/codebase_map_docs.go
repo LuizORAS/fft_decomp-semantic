@@ -158,6 +158,15 @@ func (doc *mapDoc) readFrontmatter() error {
 	return fmt.Errorf("%s: the frontmatter has no closing ---", doc.path)
 }
 
+// mapScopeRank orders the scope entries that match one function: an exact
+// entry (name()) wins, then the longest prefix.
+func mapScopeRank(entry string) int {
+	if strings.HasSuffix(entry, "()") {
+		return 1 << 16
+	}
+	return len(entry)
+}
+
 func (doc *mapDoc) addScope(item string, line int) {
 	if item = strings.Trim(strings.TrimSpace(item), `"'`); item != "" {
 		doc.scope = append(doc.scope, mapScopeEntry{item, line})
@@ -291,13 +300,15 @@ func (vault *mapVault) addDocs(docs []*mapDoc) error {
 		}
 		vault.assign("scope:"+doc.path, doc.title+" scope", "scope", "scopes")
 		for _, entry := range doc.scope {
+			exact := strings.HasSuffix(entry.name, "()")
+			key := strings.TrimSuffix(entry.name, "()")
 			matched := false
 			for _, name := range names {
-				if name != entry.name && !strings.HasPrefix(name, entry.name+"_") {
+				if name != key && (exact || !strings.HasPrefix(name, key+"_")) {
 					continue
 				}
 				matched = true
-				if len(entry.name) > len(vault.mechanicEntry[name]) {
+				if mapScopeRank(entry.name) > mapScopeRank(vault.mechanicEntry[name]) {
 					vault.mechanic[name] = doc
 					vault.mechanicEntry[name] = entry.name
 				}
@@ -405,7 +416,7 @@ func (vault *mapVault) scopePage(doc *mapDoc) string {
 		mapProperty{"prose_summaries", summarized},
 	))
 	fmt.Fprintf(&b, "# %s scope\n\n", doc.title)
-	fmt.Fprintf(&b, "The functions that the `scope` of [[%s]] matches: %d, %d with a prose summary. A function that several entries match belongs to the longest one.\n\n", doc.title, len(functions), summarized)
+	fmt.Fprintf(&b, "The functions that the `scope` of [[%s]] matches: %d, %d with a prose summary. A function that several entries match belongs to an exact entry (`name()`), or else to the longest prefix.\n\n", doc.title, len(functions), summarized)
 	b.WriteString("| Scope entry | Functions |\n|---|---|\n")
 	for _, entry := range doc.scope {
 		b.WriteString(tableRow("`"+entry.name+"`", fmt.Sprint(perEntry[entry.name])))

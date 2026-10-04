@@ -535,6 +535,7 @@ func (index *codebaseIndex) scanFunction(root string, f *mapFunction) error {
 	}
 	f.text = string(data)
 	if f.asm != "" {
+		f.summary = asmSourceSummary(f.text)
 		return nil
 	}
 	tokens, err := tokenizeC(f.text)
@@ -671,6 +672,17 @@ func (index *codebaseIndex) linkUsers() {
 			index.types[typeName].users = append(index.types[typeName].users, name)
 		}
 	}
+}
+
+// asmSourceSummary returns the block comment that opens an assembly source:
+// the summary of a function written in assembly, which has no C definition.
+func asmSourceSummary(text string) string {
+	text = strings.TrimLeft(text, " \t\r\n")
+	end := strings.Index(text, "*/")
+	if !strings.HasPrefix(text, "/*") || end < 0 {
+		return ""
+	}
+	return definitionComment(text[:end+2])
 }
 
 // definitionComment returns the text of the block comment that ends the gap

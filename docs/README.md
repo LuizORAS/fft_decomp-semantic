@@ -25,11 +25,12 @@ page under `mechanics/` it reads two frontmatter properties:
 - `tier`: the priority tier. 1 is the battle rules and the engine core, 2
   units, items and jobs, 3 menus, the world map and the rest of the game, 4
   effects and libraries.
-- `scope`: name prefixes (`battle_move` matches every `battle_move_*`
-  function) or single function names. Every matched function gets the
-  `mechanic` and `tier` properties, and the vault gains a `<page> scope` page
-  that lists them. A function that several entries match belongs to the
-  longest one.
+- `scope`: name prefixes (`battle_move` matches `battle_move` and every
+  `battle_move_*` function) or exact function names written with `()`
+  (`main()` matches `main` only). Every matched function gets the `mechanic`
+  and `tier` properties, and the vault gains a `<page> scope` page that lists
+  them. A function that several entries match belongs to an exact entry, or
+  else to the longest prefix.
 
 The vault's Metrics page counts mechanic pages, guides and the functions in
 a scope. Its Stale mentions page lists scope entries that match no function

@@ -82,6 +82,9 @@ and returns the world result to MAIN.
 
 ## Engine services
 
+The [Engine core](docs/mechanics/Engine%20core.md) page covers these services
+in more depth, with the memory map and where to change each one.
+
 ### Disc reads
 
 [`main_file_load_data_from_disc`](src/main/main_file_load_data_from_disc.c)
@@ -117,14 +120,23 @@ sound driver keeps a separate CPU heap.
 ### Threads
 
 BATTLE and WORLD each schedule cooperative native threads:
-- **Slots:** 16 slots of `0x400` bytes, each with its own stack
+- **Slots:** `0x400` bytes each, with about 900 bytes of stack
   (`native_thread_t` in [`include/fft/thread.h`](include/fft/thread.h)).
-- **Starting and identifying:** `battle_thread_start` and
-  `world_thread_start` start them, and a `task_id` identifies each one.
-- **Yielding:** a thread runs until it yields. `battle_thread_yield` is
-  hand-written and kept as original bytes; 141 functions call it.
+  Slot 0 is the overlay's main loop; BATTLE runs threads in slots 1–15 and
+  WORLD in slots 1–16.
+- **A frame:** the main loop yields once a frame
+  (`battle_script_run_event_frame`, `world_script_run_frame`). The
+  hand-written `battle_thread_yield` and `world_thread_yield` save the
+  thread's registers in its slot and resume the next running slot, returning
+  to slot 0 after the last. So every running thread advances once a frame,
+  and `*_thread_wait_frames(n)` waits n frames.
+- **Starting and identifying:** `*_thread_resolve_id` finds a free slot,
+  `*_thread_set_parameters` passes the inputs, `battle_thread_start` and
+  `world_thread_start` start the function, and a `task_id` lets other threads
+  find it.
+- **Large calls:** a thread runs disc reads and overlay loads through
+  `*_thread_call_on_main_stack`, on the main loop's stack.
 - **What runs this way:** menu cursors, event unit moves and dialogue text.
-  The two schedulers share one slot layout.
 
 ### Data tables
 
