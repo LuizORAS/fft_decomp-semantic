@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Place a unit at the tile centre (x, y) moved by delta along g_battle_move_displacement_direction
+ * (0 -y, 1 +x, 2 +y, 3 -x), at the height of the ground there, and mark its shadow for redraw. Dead,
+ * crystallized, treasure and jumping units stay put. */
 void battle_move_displace_unit_along_step_direction(battle_unit_misc_data_t* unit, s32 x, s32 y, s32 delta) {
     s16 axis;
     s16 screen_z;

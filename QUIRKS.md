@@ -447,3 +447,7 @@ translation unit. Share their types and constants through headers.
 - `battle_turn_take_next_event` handles turn event 0x400 (`BATTLE_TURN_EVENT_UNKNOWN_0400`), but
   `g_battle_turn_event` only takes `battle_turn_run_clock`'s results, which never include it, so
   that arm never runs.
+- `battle_move_start_next_post_move_event` and `battle_state_handle_crystal_learn_state` handle
+  post-move event `0x200` (`BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY`, a display refresh of the
+  mover), but `g_battle_move_post_move_events` only takes `battle_move_get_post_move_events`'
+  results, which never include it, so that arm never runs.

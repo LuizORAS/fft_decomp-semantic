@@ -1,14 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Build the end-of-move event flags for a unit.
- *
- * A mounted rider targets its mount and clears the mount's status set 9;
- * the tile's Move-Find Item entry then reports a found item (Move-Find Item
- * holders only) or a trap.
- */
-u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) {
+/* Build the post-move events (BATTLE_MOVE_POST_EVENT_*) of a unit that has just moved: a crystal or
+ * treasure chest on its tile; for a rider, the statuses that mounting removes from its mount
+ * (MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL, applied through the action target); a found item when the
+ * unit (a rider: its mount) has Move-Find Item and the tile holds one, else the tile's trap; a
+ * charged action the move cancels; and its movement abilities
+ * (battle_move_get_movement_ability_events). */
+u32 battle_move_get_post_move_events(battle_stats_t* unit) {
     battle_stats_t* target;
     u32 flags;
     s32 i;
@@ -47,6 +46,6 @@ u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) 
     if (battle_status_remove_charging_ability_ct(unit, 0) != 0) {
         flags |= BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL;
     }
-    flags |= battle_move_get_support_flags(unit);
+    flags |= battle_move_get_movement_ability_events(unit);
     return flags;
 }

@@ -1,14 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Advance a knocked-back or path-moving unit by one frame.
- *
- * While a step is in progress (step_phase non-zero) the walk speed
- * decays by a quarter towards 0x1000 and the step phase handler runs. Once
- * no step is active, the next path byte starts a new step, or the mount
- * animation coordinates are stored when the path is exhausted.
- */
+/* Advance a knocked-back target by one frame (battle_state_handle_action_execute_state runs it for
+ * every target of the action). A cut-down battle_move_update_path_step: while a step is in progress
+ * its speed slows by a quarter per frame down to ONE (battle_move_init_knockback starts it at 8.0)
+ * and the walk, jump and landing phase handlers run; then the next path step starts, or, once the
+ * path is done, battle_unit_store_coordinate_mount_animation_data runs. */
 void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
     u32 offset;
     s32 speed;
@@ -35,7 +32,7 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
         case 0x18:
         case 0x1C:
         case 0x20:
-            battle_move_update_knockback_after_animation(unit);
+            battle_move_update_landing_phase(unit);
             break;
         case 0x12:
         case 0x16:

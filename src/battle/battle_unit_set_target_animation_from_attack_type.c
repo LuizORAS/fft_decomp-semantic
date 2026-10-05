@@ -87,7 +87,7 @@ void battle_unit_set_target_animation_from_attack_type(
                 }
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK) {
-                battle_move_transfer_target_coordinates(attacker, target);
+                battle_move_start_knockback(attacker, target);
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_POACH) {
                 target->status_flags_5_6 |= BATTLE_MISC_STATUS_POACHED;

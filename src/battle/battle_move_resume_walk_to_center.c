@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_move_advance_display_unit_step(battle_unit_misc_data_t* unit) {
+/* Walk on from the tile edge to the centre after a jump has landed (battle_move_update_landing_phase):
+ * start the step with battle_move_start_unit_step, or at climb speed when it carries
+ * BATTLE_MOVE_STEP_DESTINATION_CLIMB, and go straight to its edge-to-centre phase for the unit's
+ * direction. */
+void battle_move_resume_walk_to_center(battle_unit_misc_data_t* unit) {
     s32 direction;
 
     direction = battle_move_get_direction(unit);

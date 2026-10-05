@@ -43,7 +43,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         return 0;
     }
     if (g_current_ability.knockback_flags & 0x80) {
-        battle_move_apply_knockback();
+        battle_move_set_knockback_fall_damage();
         return 0;
     }
     g_current_ability_view.terrain

@@ -1,7 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_move_apply_knockback(void) {
+/* Resolve a pending knockback (knockback_flags bit 0x80, cleared here) as the target's action
+ * result: no damage, unless a ground knockback (kind 1; kind 2 is a flier) of a target that is not
+ * crystallized, dead or petrified falls more levels than its Jump: (levels - Jump) * Max HP / 10, at
+ * most 999. battle_move_check_knockback_destination records the fall in half levels, and
+ * battle_action_run_pre_formula_setup calls this while bit 0x80 is set. */
+void battle_move_set_knockback_fall_damage(void) {
     u8* flags;
     battle_stats_t* unit;
     battle_action_data_t* action;

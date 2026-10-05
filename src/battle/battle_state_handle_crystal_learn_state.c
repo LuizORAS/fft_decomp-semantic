@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 
-/* CRYSTAL_LEARN: apply the crystal choice (0, 1, 2 or 4 for battle_unit_learn_from_crystal; 2
- * also finishes the action; 7, 8 or cancel learn nothing), then, once the casting unit's
- * counter passes 31 frames and the number displays end, clear one pending bit of
- * g_battle_move_find_result per pass (with its display) and start the next post-move step.
- * What each bit means is not known yet. */
+/* CRYSTAL_LEARN, the post-move event state: apply the crystal choice (0, 1, 2 or 4 for
+ * battle_unit_learn_from_crystal; 2 also finishes the action; 7, 8 or cancel learn nothing), then,
+ * once the casting unit's counter passes 31 frames and the number displays end, wait for the first
+ * pending event (BATTLE_MOVE_POST_EVENT_* in g_battle_move_post_move_events) to finish (the crystal
+ * or chest gone, both reward phases shown, the item animation over), clear its bit and start the
+ * next (battle_move_start_next_post_move_event). */
 void battle_state_handle_crystal_learn_state(void) {
     s32* choice;
     battle_unit_misc_data_t* source;
@@ -55,35 +56,35 @@ void battle_state_handle_crystal_learn_state(void) {
         return;
     }
 
-    if (g_battle_move_find_result & 1) {
+    if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_CRYSTAL_OR_TREASURE) {
         if (battle_unit_get_crystal_or_treasure_at_map_coords(source->map_x, source->map_y, source->map_z) != 0) {
             return;
         }
-        g_battle_move_find_result &= ~1;
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_CRYSTAL_OR_TREASURE;
         battle_ai_init_selected_action();
-    } else if (g_battle_move_find_result & 2) {
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT) {
         g_battle_action_post_action_display_phase += 1;
         if (g_battle_action_post_action_display_phase >= 2) {
-            g_battle_move_find_result &= ~2;
+            g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT;
         }
-    } else if (g_battle_move_find_result & 4) {
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
         if ((source->animation_countdown != 0) && ((u32)(source->encoded_animation >> 1) >= 0xc)) {
             return;
         }
         source->item_ability_display = 0;
-        g_battle_move_find_result &= ~4;
-    } else if (g_battle_move_find_result & 8) {
-        g_battle_move_find_result &= ~8;
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED) {
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED;
         battle_ai_init_selected_action();
         battle_unit_update_display_by_misc_id(source->unit_id);
-    } else if (g_battle_move_find_result & 0x10) {
-        g_battle_move_find_result &= ~0x10;
-    } else if (g_battle_move_find_result & 0x200) {
-        g_battle_move_find_result &= ~0x200;
-    } else if (g_battle_move_find_result & 0x400) {
-        g_battle_move_find_result &= ~0x400;
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL;
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY) {
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY;
+    } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_MOUNT_STATUS_CHANGE) {
+        g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_MOUNT_STATUS_CHANGE;
     } else {
         return;
     }
-    battle_move_start_next_post_movement_step();
+    battle_move_start_next_post_move_event();
 }

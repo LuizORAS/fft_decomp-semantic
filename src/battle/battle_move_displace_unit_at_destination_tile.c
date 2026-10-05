@@ -1,15 +1,19 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Pushes a unit sharing the mover's destination tile aside, mirroring
- * battle_move_displace_overlapping_unit but keyed on the pending step's
- * destination tile instead of the unit's current map square.  The trailing
- * loop only advances the shared direction counter g_battle_move_displacement_direction; it has no other
- * effect.
+/* Push aside a unit standing on the tile the mover is stepping onto: within 7 units of that tile's
+ * centre the occupant moves off it by (7 - distance) * 3 / 2, up to 10 units at the centre
+ * (battle_move_displace_unit_along_step_direction). Skipped on the last path step and on a step onto
+ * a unit (BATTLE_MOVE_STEP_ON_UNIT).
  *
- * The case order and the reused `dist` temporary reproduce the target's
- * cross-jumped tails and its s1 allocation; spelling the second path index as
- * offset + base reproduces the offset-before-base address add. */
+ * It also chooses the push direction, g_battle_move_displacement_direction, which
+ * battle_move_displace_overlapping_unit reuses while the mover leaves: on a straight path the first
+ * direction (by index) across it; on a turn the first that is neither the side the mover comes from
+ * nor opposite the next step.
+ *
+ * The case order and the reused `dist` temporary reproduce the target's cross-jumped tails and its s1
+ * allocation; spelling the second path index as offset + base reproduces the offset-before-base
+ * address add. */
 void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction) {
     battle_unit_misc_data_t* other;
     s32 dist;

@@ -38,5 +38,5 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
     }
     battle_gfx_update_unit_palettes();
-    battle_move_init_post_movement_display();
+    battle_move_start_post_move_events();
 }

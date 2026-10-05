@@ -20,7 +20,7 @@ s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit) {
     battle_action_clear_current_data(&unit->action);
     if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
         return -1;
-    flags = battle_move_get_support_flags(unit);
+    flags = battle_move_get_movement_ability_events(unit);
     if (flags & BATTLE_MOVE_POST_EVENT_MOVE_HP_UP) {
         amount = (unit->max_hp + 9) / 10;
         action = g_battle_action_target_data;
