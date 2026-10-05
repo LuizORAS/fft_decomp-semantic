@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Return whether the unit still has a path to walk (0 and a pointer exception for a missing
+ * unit). */
 s32 battle_move_is_unit_moving_by_misc_id(u32 misc_id) {
     battle_unit_misc_data_t* unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
 

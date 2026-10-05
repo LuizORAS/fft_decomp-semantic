@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Move the unit by its velocity for one frame: take the destination's layer on reaching its
+ * tile, apply gravity in jumps and falls, and on landing start the next half of the step for its
+ * phase; a unit 42 or more above the ground starts falling. Then redraw its shadow and carry a
+ * rider with its mount. */
 void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     s16 tile[2];
     u8 layer;
@@ -17,7 +21,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         && unit->map_z != unit->movement.bytes.destination_z) {
         layer = unit->map_z = unit->movement.bytes.destination_z;
     }
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 2:
     case 4:
     case 6:
@@ -49,7 +53,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     unit->screen.vz = unit->real.vz / 4096;
     ground_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
     move_ground_z = battle_gfx_calculate_screen_z_from_misc_move_data(unit);
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 1:
     case 3:
     case 5:
@@ -68,7 +72,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1A;
+                unit->step_phase = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
@@ -97,7 +101,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1A;
+                unit->step_phase = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
@@ -124,7 +128,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1B;
+                unit->step_phase = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }
@@ -154,7 +158,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1B;
+                unit->step_phase = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(0x1F, unit->facing, unit);
                 }

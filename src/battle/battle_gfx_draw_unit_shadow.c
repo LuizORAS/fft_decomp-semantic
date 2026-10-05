@@ -99,7 +99,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     } else {
         tile = battle_map_get_tile_data_pointer((s16)(position.vx / 28), (s16)(position.vz / 28), unit->map_z);
         position.vy -= (tile->depth_half_height >> 5) * 12;
-        if (unit->centre_tile_offset != 0) {
+        if (unit->step_phase != 0) {
             if (tile->surface.value & 0x40) {
                 battle_camera_calculate_relative_offset_5((u16*)&position, &offset.vx);
             } else {

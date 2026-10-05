@@ -30,7 +30,7 @@ void battle_state_handle_action_execute_state(void) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
             if (target != 0) {
                 battle_move_update_knockback_step(target);
-                g_battle_state_animation_continue_check |= target->centre_tile_offset;
+                g_battle_state_animation_continue_check |= target->step_phase;
             }
         }
     }

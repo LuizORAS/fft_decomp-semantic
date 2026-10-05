@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Starts a unit's hop to a nearby tile (called from the knockback handler at
- * 0x8006cc94): derives the launch rise and flight frames from the landing
- * height, then sets the facing, destination tile and horizontal velocity for
- * the direction in bits 6-7 of `movement_value`.
+/* Start a unit's hop onto a nearby tile (from battle_move_update_walking_step_at_tile_edge):
+ * derive the launch rise and flight frames from the landing height, then set the step phase,
+ * facing, destination tile and horizontal velocity for the step's direction.
  *
  * Case bodies store the destination before clearing the other velocity axis;
  * that order gives the target's map_x/step load order. */
@@ -34,21 +33,21 @@ void battle_move_start_unit_climb_hop_step(
     frames = rise / g_battle_move_jump_gravity;
     switch (*step >> 6) {
     case 0:
-        unit->centre_tile_offset = 0x16;
+        unit->step_phase = 0x16;
         unit->facing = 0xC00;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
     case 1:
-        unit->centre_tile_offset = 0x1E;
+        unit->step_phase = 0x1E;
         unit->facing = 0x400;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
     case 2:
-        unit->centre_tile_offset = 0x12;
+        unit->step_phase = 0x12;
         unit->facing = 0;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
         unit->velocity.vx = 0;
@@ -59,7 +58,7 @@ void battle_move_start_unit_climb_hop_step(
          * `beq a1,3` delay slot, where the target keeps a nop; an asm insn
          * stops fill_slots_from_thread's scan (stop_search_p). */
         __asm__ volatile("");
-        unit->centre_tile_offset = 0x1A;
+        unit->step_phase = 0x1A;
         unit->facing = 0x800;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
         unit->velocity.vx = 0;

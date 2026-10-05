@@ -4,7 +4,7 @@
 /*
  * Advance a knocked-back or path-moving unit by one frame.
  *
- * While a step is in progress (centre_tile_offset non-zero) the walk speed
+ * While a step is in progress (step_phase non-zero) the walk speed
  * decays by a quarter towards 0x1000 and the step phase handler runs. Once
  * no step is active, the next path byte starts a new step, or the mount
  * animation coordinates are stored when the path is exhausted.
@@ -15,10 +15,10 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
 
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->movement_value;
-    if (unit->centre_tile_offset != 0) {
+    if (unit->step_phase != 0) {
         speed = unit->walk_speed.word;
         unit->walk_speed.word = (speed > ONE) ? speed / 4 * 3 : ONE;
-        switch (unit->centre_tile_offset) {
+        switch (unit->step_phase) {
         case 2:
         case 4:
         case 6:
@@ -50,7 +50,7 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
             battle_move_finish_unit_step_at_tile_edge(unit);
             break;
         }
-        if (unit->centre_tile_offset != 0) {
+        if (unit->step_phase != 0) {
             return;
         }
     }

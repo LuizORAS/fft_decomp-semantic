@@ -21,10 +21,10 @@ void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit) {
     step = &unit->movement_value;
     value = unit->movement_value;
     if ((value & 3) >= 2) {
-        unit->centre_tile_offset = jump_offsets[(u8)value >> 6];
+        unit->step_phase = jump_offsets[(u8)value >> 6];
         battle_unit_store_animation_facing(0x1E, facings[unit->movement_value >> 6], unit);
     } else {
-        unit->centre_tile_offset = hop_offsets[(u8)value >> 6];
+        unit->step_phase = hop_offsets[(u8)value >> 6];
         battle_unit_dismount_rider(unit);
         animation = 0x30;
         if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {

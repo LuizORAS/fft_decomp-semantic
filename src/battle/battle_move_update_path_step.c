@@ -23,13 +23,13 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
 
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->movement_value;
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 0x11:
     case 0x15:
     case 0x19:
     case 0x1D:
         if (unit->animation_countdown == 0) {
-            unit->centre_tile_offset++;
+            unit->step_phase++;
             battle_unit_store_animation_facing(0x1F, unit->facing, unit);
             battle_sound_play_movement_sfx(unit, 0x27);
             battle_unit_dismount_rider(unit);
@@ -110,7 +110,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         battle_move_finalize_path_after_animation(unit);
         break;
     }
-    if (unit->centre_tile_offset == 0) {
+    if (unit->step_phase == 0) {
         count = unit->movement_path_count;
         if (count == 0xFE) {
             battle_unit_dismount_rider_and_update_display(unit);

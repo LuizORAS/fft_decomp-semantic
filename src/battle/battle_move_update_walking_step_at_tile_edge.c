@@ -47,7 +47,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
                 + (g_battle_move_current_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK)
                     * unit->current_edge_height;
             g_battle_move_current_edge_height
-                += battle_move_calculate_float_fly_slope(unit, g_battle_move_current_tile);
+                += battle_move_get_water_standing_offset(unit, g_battle_move_current_tile);
         }
 
         if (g_battle_move_step_value & 0x10) {
@@ -70,7 +70,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
                 + (g_battle_move_destination_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK)
                     * unit->destination_edge_height;
             g_battle_move_current_edge_height
-                += battle_move_calculate_float_fly_slope(unit, g_battle_move_destination_tile);
+                += battle_move_get_water_standing_offset(unit, g_battle_move_destination_tile);
         }
 
         if (g_battle_move_current_edge_height + 1 >= (s32)g_battle_move_destination_edge_height) {
@@ -79,12 +79,12 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             case 0:
                 START_STEP(battle_move_start_unit_step)
                 (unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->centre_tile_offset = 6;
+                unit->step_phase = 6;
                 return;
             case 1:
                 START_STEP(battle_move_start_unit_step_at_climb_speed)
                 (unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->centre_tile_offset = 0xe;
+                unit->step_phase = 0xe;
                 return;
             }
             return;

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-s32 battle_move_calculate_float_fly_slope(battle_unit_misc_data_t* unit, map_tile_t* tile) {
+/* Return how far above the tile's floor the unit stands in water: on the surface (depth * 2)
+ * with Float or Walk on Water, one level lower with Move in Water, else 0. */
+s32 battle_move_get_water_standing_offset(battle_unit_misc_data_t* unit, map_tile_t* tile) {
     s32 movement_flags;
 
     if (unit->battle_data != 0) {

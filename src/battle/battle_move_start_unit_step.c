@@ -5,7 +5,7 @@
  *
  * Variant of battle_move_start_fly_step without the rider dismount, storing the
  * facing directly rather than through animation 0x12: the step byte's top
- * two bits pick the direction, which sets the facing and edge offset; its low
+ * two bits pick the direction, which sets the facing and step phase; its low
  * two bits extend the destination tile coordinate. An out-of-range direction
  * keeps the caller's facing, and game state 0x2d leaves the facing unchanged. */
 void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, s16 facing) {
@@ -17,22 +17,22 @@ void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t
     switch (unit->movement_value >> 6) {
     case 0:
         facing = BATTLE_FACING_EAST;
-        unit->centre_tile_offset = 3;
+        unit->step_phase = 3;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value & 3);
         break;
     case 1:
         facing = BATTLE_FACING_WEST;
-        unit->centre_tile_offset = 7;
+        unit->step_phase = 7;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value & 3);
         break;
     case 2:
         facing = BATTLE_FACING_SOUTH;
-        unit->centre_tile_offset = 1;
+        unit->step_phase = 1;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value & 3);
         break;
     case 3:
         facing = BATTLE_FACING_NORTH;
-        unit->centre_tile_offset = 5;
+        unit->step_phase = 5;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value & 3);
         break;
     }

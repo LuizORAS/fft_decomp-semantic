@@ -37,28 +37,28 @@ void battle_move_start_unit_climb_jump_step(
     time += SquareRoot12(((*step & 3) + 1) * (12 * g_battle_move_jump_gravity) * 2) / g_battle_move_jump_gravity;
     switch (*step >> 6) {
     case 0:
-        unit->centre_tile_offset = 0x15;
+        unit->step_phase = 0x15;
         battle_unit_store_animation_facing(0x1e, 0xc00, unit);
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
         unit->velocity.vx = 0xe000 / time;
         unit->velocity.vz = 0;
         break;
     case 1:
-        unit->centre_tile_offset = 0x1d;
+        unit->step_phase = 0x1d;
         battle_unit_store_animation_facing(0x1e, 0x400, unit);
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
         unit->velocity.vx = -0xe000 / time;
         unit->velocity.vz = 0;
         break;
     case 2:
-        unit->centre_tile_offset = 0x11;
+        unit->step_phase = 0x11;
         battle_unit_store_animation_facing(0x1e, 0, unit);
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
         unit->velocity.vz = -0xe000 / time;
         unit->velocity.vx = 0;
         break;
     case 3:
-        unit->centre_tile_offset = 0x19;
+        unit->step_phase = 0x19;
         battle_unit_store_animation_facing(0x1e, 0x800, unit);
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
         unit->velocity.vz = 0xe000 / time;

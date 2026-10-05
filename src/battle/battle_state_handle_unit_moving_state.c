@@ -10,7 +10,7 @@ void battle_state_handle_unit_moving_state(void) {
     battle_camera_call_toggle_tilt();
     casting_misc_data = battle_unit_get_casting_misc_data();
     battle_move_update_path_step(casting_misc_data);
-    if (casting_misc_data->centre_tile_offset == 0
+    if (casting_misc_data->step_phase == 0
         && casting_misc_data->movement_path_offset >= casting_misc_data->movement_path_count
         && g_battle_state_animation_continue_check == 0) {
         battle_unit_update_display_by_misc_id(casting_misc_data->unit_id);

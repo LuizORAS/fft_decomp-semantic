@@ -133,7 +133,7 @@ functions:
   - {addr: 0x800700bc, size: 552, name: battle_camera_step_real_coords_toward_target, hash: 63d787b3bf771af2}
   - {addr: 0x800702e4, size: 860, name: battle_camera_update_vector_from_game_state, hash: f10c1905f3df6a82}
   - {addr: 0x80070640, size: 388, name: battle_camera_update_cursor_tile_vector, hash: 7ae372d7966333c2}
-  - {addr: 0x800707c4, size: 92, name: battle_move_update_unit_by_misc_id, hash: 05a421859b3c54a8}
+  - {addr: 0x800707c4, size: 92, name: battle_move_update_all_walking_units, hash: 05a421859b3c54a8}
   - {addr: 0x80070820, size: 376, name: battle_camera_rotate_when_unit_tile_not_visible, hash: a4c844fe42a3da62}
   - {addr: 0x80070998, size: 100, name: battle_action_set_casting_unit_id_ff, hash: b417fbd711f37448}
   - {addr: 0x800709fc, size: 60, name: battle_action_set_casting_unit_id_ff_and_init, hash: b99900388d26af6f}
@@ -328,7 +328,7 @@ functions:
   - {addr: 0x8007b9d0, size: 2676, name: battle_gfx_calculate_sprite_shadow_from_tile_slope, hash: 3475e2d67a51ce4a}
   - {addr: 0x8007c444, size: 968, name: battle_target_calculate_cursor_tile_polygon, hash: bc44eec17053cffa}
   - {addr: 0x8007c80c, size: 2028, name: battle_map_calculate_slope_height, hash: 7f1884b516395823}
-  - {addr: 0x8007cff8, size: 168, name: battle_move_calculate_float_fly_slope, hash: c398ca9d4e529fe6}
+  - {addr: 0x8007cff8, size: 168, name: battle_move_get_water_standing_offset, hash: c398ca9d4e529fe6}
   - {addr: 0x8007d0a0, size: 52, name: battle_unit_get_mount_misc_data, hash: 4fc2e5238f65613f}
   - {addr: 0x8007d0d4, size: 520, name: battle_calculate_screen_z_from_input_coords, hash: e56faab820b8cd61}
   - {addr: 0x8007d2dc, size: 116, name: battle_gfx_calculate_screen_z_with_caller_data, hash: d51b5c3e99b7faa7}
@@ -1921,11 +1921,11 @@ data:
   - {addr: 0x80067c5c, name: g_battle_numeric_digit_1_critical_zoom_curve}
   - {addr: 0x80067c88, name: g_battle_numeric_digit_2_critical_zoom_curve}
   - {addr: 0x800683b8, name: g_deployment_clear_rect}
-  - {addr: 0x80093c98, name: g_battle_move_entry_edge_centre_offsets}
-  - {addr: 0x80093c9c, name: g_battle_move_step_centre_offsets}
-  - {addr: 0x80093ca0, name: g_battle_move_climb_step_centre_offsets}
-  - {addr: 0x80093ca4, name: g_battle_move_ascent_centre_offsets}
-  - {addr: 0x80093ca8, name: g_battle_move_landing_centre_offsets}
+  - {addr: 0x80093c98, name: g_battle_move_float_to_centre_phases}
+  - {addr: 0x80093c9c, name: g_battle_move_walk_to_centre_phases}
+  - {addr: 0x80093ca0, name: g_battle_move_climb_to_centre_phases}
+  - {addr: 0x80093ca4, name: g_battle_move_descent_phases}
+  - {addr: 0x80093ca8, name: g_battle_move_landing_phases}
   - {addr: 0x80093cac, name: g_battle_map_deep_dungeon_load_in_progress}
   - {addr: 0x80093cb0, name: g_battle_gfx_wait_arrow_blink_timer}
   - {addr: 0x80093cb4, name: g_battle_gfx_status_bubble_status_masks}

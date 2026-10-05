@@ -1819,7 +1819,12 @@ typedef struct battle_unit_misc_data {
     u8 map_x;                     /* 0x07c */
     u8 map_y;                     /* 0x07d */
     u8 map_z;                     /* 0x07e */
-    u8 centre_tile_offset;        /* 0x07f */
+    /* 0x07f; step phase, run each frame by battle_move_update_path_step. Each group holds one
+     * phase per direction (south, east, north, west): 0 idle; 0x01-0x08 walk (odd: centre to edge,
+     * even: edge to centre); 0x09-0x10 the same at climb speed; 0x11-0x20 jumps, four per
+     * direction (crouch, rise, fall, landing); 0x22-0x29 fly; 0x2b-0x39 float; 0x3b reset the
+     * coordinates; 0x3c end of the walk. */
+    u8 step_phase;
     battle_move_destination_t movement;
     u8 previous_map_x;          /* 0x084 */
     u8 previous_map_y;          /* 0x085 */
@@ -4866,10 +4871,11 @@ extern u8 g_battle_move_destination_edge_height;
 extern s32 g_battle_move_jump_gravity;
 extern u8 g_battle_move_step_value;
 extern s16 g_battle_move_target_screen_z;
-extern u8 g_battle_move_entry_edge_centre_offsets[];
-extern u8 g_battle_move_step_centre_offsets[];
-extern u8 g_battle_move_climb_step_centre_offsets[];
-extern u8 g_battle_move_ascent_centre_offsets[];
+/* Step phases by direction (south, east, north, west); see battle_unit_misc_data_t.step_phase. */
+extern u8 g_battle_move_float_to_centre_phases[];
+extern u8 g_battle_move_walk_to_centre_phases[];
+extern u8 g_battle_move_climb_to_centre_phases[];
+extern u8 g_battle_move_descent_phases[];
 extern battle_unit_misc_data_t* g_battle_move_tile_occupant;
 extern s32 g_battle_move_displacement_direction;
 extern u8* g_battle_move_terrain_costs_ptr;
@@ -4898,7 +4904,8 @@ extern battle_move_spread_state_t* g_battle_move_scratch_pad_ptr;
 extern u8 g_battle_move_path_height_offsets;
 extern u8 g_battle_move_destination_unit_record;
 extern u8 g_battle_move_effective_flags;
-extern u8 g_battle_move_landing_centre_offsets[];
+/* Step phases by direction (south, east, north, west); see battle_unit_misc_data_t.step_phase. */
+extern u8 g_battle_move_landing_phases[];
 extern u8* g_battle_move_pathing_frontier;
 extern s32 g_battle_move_pathing_resume_pass;
 extern s32 g_battle_move_pathing_tile_index;
@@ -5030,7 +5037,7 @@ void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit);
 void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile, s32 destination_tile);
 void battle_move_transfer_target_coordinates(battle_unit_misc_data_t* src, battle_unit_misc_data_t* dst);
 void battle_move_update_knockback_step(battle_unit_misc_data_t* unit);
-void battle_move_update_unit_by_misc_id(void);
+void battle_move_update_all_walking_units(void);
 void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit);

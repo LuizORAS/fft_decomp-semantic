@@ -15,7 +15,7 @@ void battle_move_update_unit_step_to_destination_tile_entry_edge(battle_unit_mis
         if (unit->screen.vy >= (s16)battle_gfx_calculate_screen_z_from_misc_screen_data(unit)) {
             unit->velocity.vy = 0;
             battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-            unit->centre_tile_offset = g_battle_move_entry_edge_centre_offsets[direction];
+            unit->step_phase = g_battle_move_float_to_centre_phases[direction];
         }
     }
 }

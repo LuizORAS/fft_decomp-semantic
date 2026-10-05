@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_unit_init_coordinates_animation_facing(battle_unit_misc_data_t* unit) {
-    unit->centre_tile_offset = 0x3C;
+    unit->step_phase = 0x3C;
     battle_unit_store_animation_facing(0x3C, unit->facing, unit);
     if (unit->movement_path_count == 0xFE) {
         unit->movement.bytes.destination_x = unit->movement_path[0];

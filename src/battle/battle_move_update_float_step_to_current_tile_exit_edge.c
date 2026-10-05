@@ -25,7 +25,7 @@ void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_da
                 * unit->destination_edge_height;
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-            unit->centre_tile_offset = g_battle_move_entry_edge_centre_offsets[direction];
+            unit->step_phase = g_battle_move_float_to_centre_phases[direction];
         } else {
             unit->step_speed = 0x2000;
             battle_move_start_float_climb_jump_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
