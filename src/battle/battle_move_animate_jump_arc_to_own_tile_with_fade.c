@@ -1,14 +1,12 @@
-/*
- * Sibling of battle_move_animate_jump_arc_to_own_tile (0x8008a118): the same
- * distortion-animation shape (timer/velocity copy, switch on
- * distortion_phase, velocity write-back then
- * battle_unit_set_screen_coords_from_real_coords), with a palette fade around
- * the arc and a second saved field (distortion_target) used as the frame threshold.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data_t* unit) {
+/* Distortion 0x10 (BATTLE_DISTORTION_JUMP_TO_OWN_TILE_FADED): battle_move_animate_jump_arc_to_own_tile
+ * with a fade. It hides the shadow, sets display flags 0x61 and darkens the palette for the arc,
+ * restores the palette when 4 flight frames remain, then falls to the ground, snaps to the tile,
+ * shows the shadow again, and clears the jump-height status and display flag bit 0.
+ * distortion_target holds the 4-frame threshold. */
+void battle_move_animate_jump_arc_to_own_tile_with_fade(battle_unit_misc_data_t* unit) {
     /* Unreferenced 8-byte frame slot below the target point, like the one in
      * battle_move_animate_jump_arc_to_own_tile; it puts `target` at sp+0x20. */
     battle_screen_coords_t unused_18;

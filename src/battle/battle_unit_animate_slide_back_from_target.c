@@ -1,16 +1,14 @@
 #include "fft/battle.h"
 
-/* Distortion animation 0x0f: slide a unit toward its target over
- * distortion_timer frames (used by Rush).
+/* Distortion 0xf (BATTLE_DISTORTION_SLIDE_BACK): slide the unit away from its first target, or from
+ * the centre of the action target tile, over distortion_timer frames, by seven eighths of the
+ * distance between them wrapped into 0xe000 (half a tile), at a constant height. A unit with no
+ * battle record ends at once.
  *
- * Phase 0 aims at the first unit in the target list, or at the centre of the
- * action target tile (28 screen units per tile), reduces each horizontal step
- * by an eighth, wraps it into one 0xe000 span, and divides it into per-frame
- * velocity. Phase 1 applies that velocity until the timer runs out. Clearing
- * velocity.vy in each branch keeps its division, which GCC folds away when the
- * zero is stored once after the branches. `unused_10` reproduces an
- * unreferenced 8-byte frame slot below the velocity copy. */
-void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* unit) {
+ * Clearing velocity.vy in each branch keeps its division, which GCC folds away when the zero is
+ * stored once after the branches. `unused_10` reproduces an unreferenced 8-byte frame slot below
+ * the velocity copy. */
+void battle_unit_animate_slide_back_from_target(battle_unit_misc_data_t* unit) {
     s32 unused_10[2];
     VECTOR velocity;
     battle_unit_misc_data_t* target;

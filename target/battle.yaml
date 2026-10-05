@@ -438,15 +438,15 @@ functions:
   - {addr: 0x80089554, size: 40, name: battle_unit_set_real_coords_from_screen_coords, hash: 35c0d40971b6b85c}
   - {addr: 0x8008957c, size: 72, name: battle_unit_set_screen_coords_from_real_coords, hash: 538380e271146aba}
   - {addr: 0x800895c4, size: 116, name: battle_unit_set_real_coords_from_map_coords, hash: 11a5c251452f82d5}
-  - {addr: 0x80089638, size: 8, name: battle_noop_80089638, hash: 6d64edf91449c1b1}
-  - {addr: 0x80089640, size: 264, name: battle_unit_animate_teleport_distortion, hash: bae7728d7c29e85a}
-  - {addr: 0x80089748, size: 148, name: battle_move_interpolate_height_toward_fixed_drop, hash: 7383759ffc39f989}
-  - {addr: 0x800897dc, size: 196, name: battle_unit_update_distortion_height, hash: ed1cea88e2b0439d}
+  - {addr: 0x80089638, size: 8, name: battle_unit_animate_no_distortion, hash: 6d64edf91449c1b1}
+  - {addr: 0x80089640, size: 264, name: battle_unit_animate_squeeze_out, hash: bae7728d7c29e85a}
+  - {addr: 0x80089748, size: 148, name: battle_move_animate_fixed_rise, hash: 7383759ffc39f989}
+  - {addr: 0x800897dc, size: 196, name: battle_unit_animate_descent_to_ground, hash: ed1cea88e2b0439d}
   - {addr: 0x800898a0, size: 768, name: battle_unit_move_toward_action_target, hash: a7d6c5f817f8a5bf}
   - {addr: 0x80089ba0, size: 512, name: battle_move_step_unit_to_map_tile_center, hash: cbd0f0942b8018fc}
-  - {addr: 0x80089da0, size: 32, name: battle_move_accelerate_unit_to_destination_with_height_change, hash: 58c357527617a47e}
+  - {addr: 0x80089da0, size: 32, name: battle_move_glide_to_action_target_with_height_change, hash: 58c357527617a47e}
   - {addr: 0x80089dc0, size: 32, name: battle_move_step_unit_to_map_tile_center_with_height_change, hash: d0f791170877f59f}
-  - {addr: 0x80089de0, size: 32, name: battle_move_accelerate_unit_to_destination_no_height_change, hash: e1f9cb0c47b316a9}
+  - {addr: 0x80089de0, size: 32, name: battle_move_glide_to_action_target_no_height_change, hash: e1f9cb0c47b316a9}
   - {addr: 0x80089e00, size: 32, name: battle_move_step_unit_to_map_tile_center_no_height_change, hash: dafb0cf92c1de137}
   - {addr: 0x80089e20, size: 260, name: battle_move_calculate_jump_arc_velocity, hash: 9ef479171b689d58}
   - {addr: 0x80089f24, size: 500, name: battle_move_animate_jump_arc_to_target, hash: 99794f4e4bfb31fb}
@@ -455,14 +455,14 @@ functions:
   - {addr: 0x8008a354, size: 8, name: battle_unit_clear_distortion_animation_2, hash: def93663c6264fbb}
   - {addr: 0x8008a35c, size: 336, name: battle_move_animate_jump_start, hash: bb62a5f295ca10b1}
   - {addr: 0x8008a4ac, size: 556, name: battle_move_animate_fall_to_target_tile, hash: 9e8b3a7ac6400491}
-  - {addr: 0x8008a6d8, size: 40, name: battle_effect_init_altima_teleport_data, hash: b09dc6968bac0a52}
-  - {addr: 0x8008a700, size: 128, name: battle_effect_start_altima_teleport_departure, hash: 8ed9b6b54379371d}
-  - {addr: 0x8008a780, size: 128, name: battle_effect_start_altima_teleport_arrival, hash: 7e471afe5dac3872}
-  - {addr: 0x8008a800, size: 132, name: battle_effect_start_altima_teleport_white_flash, hash: 7f3c5bfb3a67eac6}
-  - {addr: 0x8008a884, size: 160, name: battle_effect_start_altima_teleport_fade_out, hash: 6716120dbf337fd0}
-  - {addr: 0x8008a924, size: 528, name: battle_unit_advance_altima_teleport_distortion, hash: a09a8cf66624f944, rodata: [{addr: 0x80068208, size: 32, hash: aa8ca34facf06f33}]}
-  - {addr: 0x8008ab34, size: 708, name: battle_unit_advance_slide_to_target_distortion, hash: 768a25feb9e467f8}
-  - {addr: 0x8008adf8, size: 720, name: battle_move_animate_jump_arc_to_target_tile_with_fade, hash: 68cb8b1bcb33f553}
+  - {addr: 0x8008a6d8, size: 40, name: battle_effect_init_teleport_data, hash: b09dc6968bac0a52}
+  - {addr: 0x8008a700, size: 128, name: battle_effect_start_teleport_departure, hash: 8ed9b6b54379371d}
+  - {addr: 0x8008a780, size: 128, name: battle_effect_start_teleport_arrival, hash: 7e471afe5dac3872}
+  - {addr: 0x8008a800, size: 132, name: battle_effect_start_teleport_white_flash, hash: 7f3c5bfb3a67eac6}
+  - {addr: 0x8008a884, size: 160, name: battle_effect_start_teleport_fade_out, hash: 6716120dbf337fd0}
+  - {addr: 0x8008a924, size: 528, name: battle_unit_animate_teleport_to_destination, hash: a09a8cf66624f944, rodata: [{addr: 0x80068208, size: 32, hash: aa8ca34facf06f33}]}
+  - {addr: 0x8008ab34, size: 708, name: battle_unit_animate_slide_back_from_target, hash: 768a25feb9e467f8}
+  - {addr: 0x8008adf8, size: 720, name: battle_move_animate_jump_arc_to_own_tile_with_fade, hash: 68cb8b1bcb33f553}
   - {addr: 0x8008b0c8, size: 364, name: battle_move_animate_jump_rise_with_sfx, hash: 84618fc8cafcdcfb}
   - {addr: 0x8008b234, size: 88, name: battle_unit_dispatch_distortion_animation, hash: 7a7ca22b7fbfef5b}
   - {addr: 0x8008b28c, size: 56, name: battle_camera_copy_current_real_coords, hash: 699c791ffa8fb096}

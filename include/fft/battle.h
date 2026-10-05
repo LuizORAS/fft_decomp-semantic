@@ -1780,8 +1780,8 @@ typedef struct battle_unit_misc_data {
     u16 layer_priority;
     u8 _padding_016[2]; /* aligns real */
     VECTOR real;        /* 0x018; vx = x, vy = height, vz = map depth */
-    /* Per-frame real-coordinate velocity; the jump-start distortion animation
-     * (0x8008a35c) copies all four words as one block. */
+    /* Per-frame real-coordinate velocity; the distortion animation handlers copy all four
+     * words as one block. */
     VECTOR velocity; /* 0x028 */
     /* walk_speed and its copy are read and stored as one word
      * (battle_unit_set_idle_animation_for_movement, battle_move_init_knockback). */
@@ -1829,9 +1829,9 @@ typedef struct battle_unit_misc_data {
     u8 previous_map_x;          /* 0x084 */
     u8 previous_map_y;          /* 0x085 */
     u8 previous_map_z;          /* 0x086 */
-    u8 distortion_animation_id; /* 0x087; dispatcher 0x8008b234 */
-    s32 distortion_phase;       /* 0x088; distortion animation state (0x8008a35c, 0x80089640) */
-    s32 distortion_timer;       /* 0x08c; frames left in the jump-start rise (0x8008a35c) */
+    u8 distortion_animation_id; /* 0x087; BATTLE_DISTORTION_* queued by SEQ opcode 0xc1, 0 when none */
+    s32 distortion_phase;       /* 0x088; state of the distortion handler, reset by SEQ 0xc1 */
+    s32 distortion_timer;       /* 0x08c; frames queued by SEQ 0xc1 (most handlers count them down) */
     s32 distortion_target;      /* 0x090; target real.vy or frame threshold of the distortion step */
     u16 previous_facing;        /* 0x094 */
     u8 destination_edge_height; /* 0x096; destination slope corner, as g_battle_move_destination_edge_height */
@@ -2284,7 +2284,35 @@ enum {
     BATTLE_UNIT_POSITION_STEPPING_STONE = 0x4000,
 };
 
+/* Unit motions queued by SEQ opcode 0xc1 (operand + 2) and run each frame by
+ * battle_unit_dispatch_distortion_animation through g_battle_unit_distortion_animation_handlers.
+ * Ids marked unused appear in no SEQ file. */
+typedef enum battle_distortion_animation {
+    BATTLE_DISTORTION_NONE = 0,
+    BATTLE_DISTORTION_SQUEEZE_OUT = 1, /* unused */
+    BATTLE_DISTORTION_RISE = 2,
+    BATTLE_DISTORTION_DESCEND_TO_GROUND = 3,
+    BATTLE_DISTORTION_GLIDE_TO_TARGET = 4,
+    BATTLE_DISTORTION_RETURN_TO_TILE = 5,
+    BATTLE_DISTORTION_JUMP_TO_TARGET = 6,
+    BATTLE_DISTORTION_JUMP_TO_OWN_TILE = 7,
+    BATTLE_DISTORTION_GLIDE_TO_TARGET_LEVEL = 8,
+    BATTLE_DISTORTION_RETURN_TO_TILE_LEVEL = 9, /* unused */
+    BATTLE_DISTORTION_STOP = 0xa,               /* unused */
+    BATTLE_DISTORTION_STOP_2 = 0xb,             /* unused */
+    BATTLE_DISTORTION_JUMP_UP = 0xc,
+    BATTLE_DISTORTION_FALL_TO_TARGET = 0xd,
+    BATTLE_DISTORTION_TELEPORT = 0xe,
+    BATTLE_DISTORTION_SLIDE_BACK = 0xf,
+    BATTLE_DISTORTION_JUMP_TO_OWN_TILE_FADED = 0x10,
+    BATTLE_DISTORTION_JUMP_UP_WITH_SOUND = 0x11,
+    BATTLE_DISTORTION_COUNT = 0x12,
+} battle_distortion_animation_e;
+
+typedef void (*battle_distortion_animation_handler_t)(battle_unit_misc_data_t* unit);
+
 extern const u32 g_battle_misc_status_mask_by_handler_index[BATTLE_STATUS_COUNT + 1];
+extern battle_distortion_animation_handler_t g_battle_unit_distortion_animation_handlers[];
 extern void* g_battle_unit_last_misc_init_byte;
 extern battle_unit_misc_data_t g_battle_unit_misc_data[16];
 extern battle_unit_misc_slot_flag_t g_battle_unit_misc_slot_flags[];
@@ -3778,18 +3806,17 @@ void battle_effect_build_secondary_init_from_action(
 
 void battle_effect_call_build_secondary_init(battle_unit_misc_data_t* unit);
 
-void battle_effect_init_altima_teleport_data(
-    battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);
+void battle_effect_init_teleport_data(battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);
 
 s32 battle_effect_init_ninja_ball_secondary(s32 elements, battle_effect_secondary_init_t* source);
 void battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
-s32 battle_effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
-s32 battle_effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
-void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
-void battle_effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
+s32 battle_effect_start_teleport_arrival(battle_unit_misc_data_t* unit);
+s32 battle_effect_start_teleport_departure(battle_unit_misc_data_t* unit);
+void battle_effect_start_teleport_fade_out(battle_unit_misc_data_t* unit);
+void battle_effect_start_teleport_white_flash(battle_unit_misc_data_t* unit);
 s32 battle_effect_init_resource_sections(battle_effect_resource_t* resource);
 s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, battle_effect_motion_t* motion);
 void battle_effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
@@ -4937,8 +4964,8 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
 void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
 s32 battle_move_start_next_post_movement_step(void);
-void battle_move_accelerate_unit_to_destination_with_height_change(battle_unit_misc_data_t* unit);
-void battle_move_accelerate_unit_to_destination_no_height_change(battle_unit_misc_data_t* unit);
+void battle_move_glide_to_action_target_with_height_change(battle_unit_misc_data_t* unit);
+void battle_move_glide_to_action_target_no_height_change(battle_unit_misc_data_t* unit);
 void battle_move_store_unit_movement_to_scratchpad(s32 unit_id);
 s32 battle_move_set_reachable_tiles(s32 unit_id, s32 map_x, s32 map_y, s32 map_z);
 void battle_move_set_tile_flags_for_pathfinding(s32 mode);
@@ -5570,7 +5597,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit_m
 s32 battle_gfx_calculate_screen_z_from_misc_move_data(struct battle_unit_misc_data* unit);
 
 /* Returns (s16), but an s16 prototype makes callers such as
- * battle_unit_update_distortion_height re-extend the result; keep s32. */
+ * battle_unit_animate_descent_to_ground re-extend the result; keep s32. */
 s32 battle_gfx_calculate_screen_z_from_misc_screen_data(struct battle_unit_misc_data* unit);
 
 s32 battle_gfx_calculate_screen_z_with_caller_data(
@@ -7791,8 +7818,8 @@ typedef enum battle_seq_opcode {
     BATTLE_SEQ_OP_PREFIX = 0xff,
     BATTLE_SEQ_OP_UNKNOWN_BE = 0xbe,
     BATTLE_SEQ_OP_UNKNOWN_BF = 0xbf,
-    BATTLE_SEQ_OP_WAIT_FOR_DISTORT = 0xc0,
-    BATTLE_SEQ_OP_QUEUE_DISTORT_ANIM = 0xc1,
+    BATTLE_SEQ_OP_WAIT_FOR_DISTORT = 0xc0,   /* loops until distortion_animation_id is 0 */
+    BATTLE_SEQ_OP_QUEUE_DISTORT_ANIM = 0xc1, /* operands: distortion id - 2, frames */
     BATTLE_SEQ_OP_UNKNOWN_C2 = 0xc2,
     BATTLE_SEQ_OP_UNLOAD_MF_ITEM = 0xc3,
     BATTLE_SEQ_OP_MF_ITEM_POS = 0xc4,

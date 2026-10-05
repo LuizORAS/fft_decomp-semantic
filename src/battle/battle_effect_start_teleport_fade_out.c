@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit) {
+/* Teleport step: play the pending effect (Altima's forms only), retint the unit for its tile, start
+ * darkening its palette (-31), then advance distortion_phase and reset distortion_timer. */
+void battle_effect_start_teleport_fade_out(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
 
     if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM

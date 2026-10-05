@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_unit_update_distortion_height(battle_unit_misc_data_t* misc) {
+/* Distortion 3 (BATTLE_DISTORTION_DESCEND_TO_GROUND): lower the unit to the ground under it at a
+ * constant speed over the queued frames, then end; a unit that is not above the ground snaps to it
+ * at once. */
+void battle_unit_animate_descent_to_ground(battle_unit_misc_data_t* misc) {
     s32 step;
     s32 z;
     s32 real_z;
