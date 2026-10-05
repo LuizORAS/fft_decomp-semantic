@@ -47,6 +47,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   jump is due.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
+- `src/battle/battle_target_clear_panels_on_untargetable_tiles.c`: visits only the lower layer's 256
+  panels, so an untargetable upper-layer tile stays in range of a single-tile or DIRECT_TARGETING
+  ability (the weapon range's `battle_target_clear_range_on_untargetable_tiles` covers both layers).
+- `src/battle/battle_target_mark_unit_panels_by_team.c`: its loop never advances the unit pointer,
+  so it marks only the caster's tile; no retail ability sets the flags that call it
+  (`ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES`, `_ENEMY_UNIT_TILES`).
 - `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the
   secondary-data pointer stays uninitialized, yet its `flags_3` is read before
   the item test.

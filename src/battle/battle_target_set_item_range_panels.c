@@ -1,12 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Spread an ability range from the unit's tile and mark the reachable panels.
- *
- * Range bits 0-6 seed the unit's panel on both map levels and bit 7 excludes
- * the unit's own tile afterwards. Panels flagged in flags_06 bits 0-1 are never
- * marked. Returns the number of marked panels. */
-s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range) {
+/* Item and Throw: mark the tiles within `range` steps of the unit (bits 0-6; bit 7 leaves out the
+ * unit's own tile), on both layers, except blocked and untargetable tiles. Returns their count. */
+s32 battle_target_set_item_range_panels(battle_stats_t* unit, u8 range) {
     battle_target_panel_t* panel;
     battle_target_panel_t* upper;
     battle_target_panel_t* panels;

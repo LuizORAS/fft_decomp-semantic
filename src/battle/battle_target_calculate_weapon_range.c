@@ -1,14 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Mark the targeting panels in range of the unit's weapon.
+/* Mark the tiles in range of the unit's weapon (its weapon_data_t): striking and lunging weapons
+ * their fixed shapes (battle_target_calculate_strike_lunge_range), direct weapons their range
+ * spread out less the tiles within 2 steps, the others the arc range
+ * (battle_target_calculate_arc_range); untargetable tiles are then dropped.
  *
- * Frog uses the bare-hand entry; an empty right hand falls back to the left
- * hand, and non-weapon items also use entry 0. Striking, lunging, and direct
- * weapon flags select the special range shapes; direct also removes the close
- * range.
- */
+ * Frog uses the bare-hand entry; an empty right hand falls back to the left hand, and non-weapon
+ * items also use entry 0. */
 void battle_target_calculate_weapon_range(battle_stats_t* unit) {
     s32 y;
     s32 x;
@@ -52,5 +51,5 @@ void battle_target_calculate_weapon_range(battle_stats_t* unit) {
     } else {
         battle_target_calculate_arc_range(unit, range, flags);
     }
-    battle_target_can_select_tile();
+    battle_target_clear_range_on_untargetable_tiles();
 }

@@ -1,15 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Seed the targeting panels for the action in `source` and apply the ability's
- * range, vertical tolerance and targeting flags. Returns the number of tiles
- * the final pass marks as in ability range.
+/* Mark the tiles in range of the action's ability (its ability_secondary_data_t): spread its range
+ * from the unit's tile on both layers, use the weapon's range for WEAPON_RANGE abilities, or take
+ * every tile for range 0xff (no retail ability). Then drop the unit's own tile (CANNOT_TARGET_SELF),
+ * keep only the unit's row and column (VERTICAL_FIXED) and, per square, only the layer within
+ * `vertical` levels of the unit's height (VERTICAL_TOLERANCE), and clear untargetable tiles for
+ * single-tile and DIRECT_TARGETING abilities. Returns the number of tiles flagged
+ * MAP_TILE_FLAG_ABILITY_RANGE.
  *
- * The separate byte offset and register binding preserve the target's copy
- * of the location index. Direct typed indexing removes that copy and changes
- * the later register allocation; the binding emits no instructions.
- */
+ * The separate byte offset and register binding preserve the target's copy of the location index.
+ * Direct typed indexing removes that copy and changes the later register allocation; the binding
+ * emits no instructions. */
 s32 battle_target_set_ability_panels(const u8* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
@@ -76,21 +78,23 @@ s32 battle_target_set_ability_panels(const u8* source) {
     if (flags_1 & ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF) {
         origin->remaining_range = 0;
     }
-    if (flags_1 & 0x10) {
+    if (flags_1 & ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED) {
         location = x;
         battle_target_apply_vertical_fixed(location, y);
     }
-    if (flags_1 & 0x08) {
+    if (flags_1 & ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE) {
         battle_target_apply_vertical_tolerance(elevation, vertical, 0);
     }
-    if (aoe == 0 || (flags_4 & 0x20)) {
+    if (aoe == 0 || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING)) {
         battle_target_clear_panels_on_untargetable_tiles();
     }
-    if (flags_1 & 0xc0) {
-        battle_target_set_state_for_all_unit_panels(unit, flags_1);
+    if (flags_1 & (ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES)) {
+        battle_target_mark_unit_panels_by_team(unit, flags_1);
     }
-    if (flags_1 & 0xd0) {
-        return battle_target_clear_selection_state_of_all_panels();
+    if (flags_1
+        & (ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES
+            | ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED)) {
+        return battle_target_set_ability_range_flags_from_marks();
     }
-    return battle_target_set_all_panels_targeted_if_targetable();
+    return battle_target_set_ability_range_flags();
 }

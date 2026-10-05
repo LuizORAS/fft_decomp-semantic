@@ -189,7 +189,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         return 0;
     }
     g_battle_move_pathing_frontier = frontier;
-    battle_target_clear_panel_spread_flags();
+    battle_target_clear_panel_marks();
     g_battle_move_path_height_offsets = 0;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;

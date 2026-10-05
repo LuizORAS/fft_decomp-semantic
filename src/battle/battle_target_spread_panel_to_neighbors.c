@@ -6,7 +6,7 @@
  * refreshed to one less, on both map levels, and marked as a new frontier when
  * enough budget is left to keep spreading. Returns 1 when any neighbour was
  * marked. */
-s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x) {
+s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x) {
     battle_target_panel_t* panel;
     s32 changed;
     s32 i;

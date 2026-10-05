@@ -5,6 +5,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Mark the tiles an action can target, by the menu type of its skillset (the
+ * battle_ai_command_action_t in `source`): an ability's own range (battle_target_set_ability_panels;
+ * Geomancy takes the ability of the unit's surface type, Draw Out the katana's), Attack and Charge
+ * the weapon's (battle_target_set_weapon_attack_panels), Jump the learned Jumps'
+ * (battle_target_set_jump_ability_panels), and Item and Throw a plain range
+ * (battle_target_set_item_range_panels: 1, or 4 with Throw Item or for a Mime; Throw reaches Move
+ * tiles, not the unit's own). Returns 1 or 0 when the player picks a tile (1 when flags_2 bit 0x10
+ * is set, and for weapons, Jump and items), 2 when there is nothing to pick (other menu types, or an
+ * Auto ability without range), 3 when no tile is in range, and -1 for an invalid unit, menu or
+ * ability.
+ *
+ * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the target's table. */
 s32 battle_target_set_panels_for_action(u8* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
@@ -31,7 +43,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         mode = 1;
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        range = ((unit->support_abilities[2] & 8) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
+        range = ((unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
         mode = 2;
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
@@ -73,14 +85,15 @@ s32 battle_target_set_panels_for_action(u8* source) {
         ability = &g_main_ability_range_data[ability_id];
         range = ability->range;
         flags = ability->flags_2;
-        if ((ability->flags_1 & 2) && range == 0 && !(ability->flags_1 & 0x20)) {
+        if ((ability->flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO) && range == 0
+            && !(ability->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
             return 2;
         }
         action.ability_id = ability_id;
         result = battle_target_set_ability_panels((const u8*)&action);
     }
     if (mode == 2) {
-        result = battle_target_calculate_ability_range_with_map_parameters(unit, range & 0xff);
+        result = battle_target_set_item_range_panels(unit, range & 0xff);
         flags = 0x10;
     }
     if (result != 0) {

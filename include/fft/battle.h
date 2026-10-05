@@ -539,7 +539,11 @@ typedef enum ability_secondary_flags_1 {
     ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
     ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
     ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
     ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
+    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES = 0x40, /* no retail ability sets it */
+    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES = 0x80,  /* no retail ability sets it */
 } ability_secondary_flags_1_e;
 
 typedef enum ability_secondary_flags_2 {
@@ -4271,15 +4275,6 @@ typedef struct battle_target_panel {
 } battle_target_panel_t;
 typedef char battle_targeting_panel_size_must_be_5[(sizeof(battle_target_panel_t) == 5) ? 1 : -1];
 
-/* One five-byte targeting panel entry, 0x200 of them, indexed in parallel with
- * the map tile data. Nine routines walk the table with `+= 5` byte arithmetic. */
-typedef struct targeting_panel_entry {
-    s8 a;
-    s8 b;
-    s8 c[3];
-} targeting_panel_entry_t;
-typedef char targeting_panel_entry_size_must_be_5[(sizeof(targeting_panel_entry_t) == 5) ? 1 : -1];
-
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's
  * secondary data, the weapon's data and the status-infliction record that
@@ -5702,17 +5697,14 @@ s32 battle_gfx_step_queued_unit_graphics_load(void);
 
 /* target */
 extern u8 g_battle_target_ability_targets_list[16];
-extern targeting_panel_entry_t g_battle_target_panel_data[0x200];
 extern u8 g_battle_target_tile_targetable_flags[];
-
-extern battle_target_panel_t g_battle_target_panel_last;
 
 extern u16 g_battle_target_color_tile_x;
 extern u16 g_battle_target_color_tile_y;
 extern s16 g_battle_target_tile_mark_modes[3];
 
-/* Typed alias of targeting_panel_data: 512 map panels followed by 16 auxiliary
- * panels, all initialized at 0x80174e84. This declaration allocates no storage. */
+/* One panel per map tile (two layers of 256, indexed like g_battle_map_tile_data), then 16
+ * for the pathfinding unit records; all 528 are initialized at 0x80174e84. */
 extern battle_target_panel_t g_battle_target_panels[];
 
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
@@ -5723,16 +5715,16 @@ extern s32 g_battle_target_cursor_visible;
 s32 battle_target_set_panels_for_action(u8* action);
 
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
-void battle_target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi);
+void battle_target_mark_tile_in_height_band(s32 x, s32 y, s32 lo, s32 hi);
 void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags);
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
 s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3);
 void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
 void battle_target_calculate_tile_coords_with_cursor_glow(void);
 void battle_target_calculate_weapon_range(battle_stats_t* unit);
-void battle_target_can_select_tile(void);
+void battle_target_clear_range_on_untargetable_tiles(void);
 void battle_target_clear_panel_data(void);
-void battle_target_clear_panel_spread_flags(void);
+void battle_target_clear_panel_marks(void);
 void battle_target_disable_green_panel_flags(void);
 s32 battle_target_disable_green_panel_on_all_but_target_tile(const u8* source);
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
@@ -5767,7 +5759,7 @@ void battle_target_update_cursor(void);
 s32 battle_target_apply_reflect(battle_stats_t* unit);
 void battle_target_apply_vertical_fixed(s32 x, s32 y);
 void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
-s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range);
+s32 battle_target_set_item_range_panels(battle_stats_t* unit, u8 range);
 s32 battle_target_calculate_for_menu_types(const u8* source);
 s32 battle_target_count_hit_by_ability(u8* out);
 s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin);
@@ -5775,7 +5767,7 @@ s32 battle_target_move_cursor_to_battle_id(u32 battle_id);
 void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
 s32 battle_target_run_calculator(const battle_ai_command_action_t* source);
 s32 battle_target_set_ability_panels(const u8* source);
-s32 battle_target_set_all_panels_targeted_if_targetable(void);
+s32 battle_target_set_ability_range_flags(void);
 void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
 s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source);
 s32 battle_target_set_jump_ability_panels(const u8* source);
@@ -7984,7 +7976,7 @@ void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(void);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
-s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x);
+s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
 void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
 void battle_world_display_specific_menu_text(s32 buffer, s32 position, s32 text);
