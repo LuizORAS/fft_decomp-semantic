@@ -130,13 +130,13 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             && state->tile_level == config->high_elevation) {
             break;
         }
-        battle_move_spread_to_neighbors();
+        battle_move_search_adjacent_candidates();
         previous = state->candidate_remaining_range.value;
         if (previous != value) {
             state->outer_count = 4;
             continue;
         }
-        battle_move_calculate_spread();
+        battle_move_search_jump_candidates();
         current = state->candidate_remaining_range.value;
         if (current != previous) {
             state->outer_count = 4;
@@ -144,12 +144,12 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         }
         if (config->source_tile_occupied != 0) {
             state->inner_count = 7;
-            battle_move_spread_to_neighbors();
+            battle_move_search_adjacent_candidates();
             previous = state->candidate_remaining_range.value;
             if (previous != current) {
                 continue;
             }
-            battle_move_calculate_spread();
+            battle_move_search_jump_candidates();
             if (state->candidate_remaining_range.value != previous) {
                 continue;
             }

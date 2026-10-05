@@ -1115,9 +1115,9 @@ functions:
   - {addr: 0x80177180, size: 568, name: battle_move_init_source_geometry, hash: ae0ef0dce079fdc4}
   - {addr: 0x801773b8, size: 988, name: battle_move_init_destination_geometry, hash: bc43942fa8e058ba}
   - {addr: 0x80177794, size: 584, name: battle_move_update_candidate, hash: 700cb4151df1ebef}
-  - {addr: 0x801779dc, size: 392, name: battle_move_spread_to_neighbors, hash: b8fb933637edd01b}
+  - {addr: 0x801779dc, size: 392, name: battle_move_search_adjacent_candidates, hash: b8fb933637edd01b}
   - {addr: 0x80177b64, size: 164, name: battle_move_apply_selected_candidate, hash: c72be7039dbb5c85}
-  - {addr: 0x80177c08, size: 604, name: battle_move_calculate_spread, hash: 70e7248b50a3f825}
+  - {addr: 0x80177c08, size: 604, name: battle_move_search_jump_candidates, hash: 70e7248b50a3f825}
   - {addr: 0x80177e64, size: 564, name: battle_move_save_selected_candidate, hash: 01a9e6c9521a2918}
   - {addr: 0x80178098, size: 84, name: battle_move_calculate_pathing_time_sliced, hash: b7031cddc9b24430}
   - {addr: 0x801780ec, size: 80, name: battle_move_calculate_walkto_pathing, hash: bbd0407c9488dc4d}

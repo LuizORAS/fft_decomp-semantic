@@ -1839,11 +1839,11 @@ typedef struct battle_unit_misc_data {
      * process_unit_movement); set_unit_movement_flag ORs 0x10 into a step.
      */
     u8 movement_path_count;            /* 0x09c */
-    u8 movement_path[0x7c];            /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
+    u8 movement_path[0x7c];            /* 0x09d..0x118; battle_move_step_bits_e steps */
     u8 movement_flags;                 /* 0x119; battle_move_effective_flags_e bits */
     u8 _unused_11a;                    /* no code reaches it through this struct; FFHacktics leaves it blank */
     u8 mount_byte;                     /* 0x11b */
-    u8 movement_value;                 /* 0x11c */
+    u8 movement_value;                 /* 0x11c; the step being walked (battle_move_step_bits_e) */
     u8 last_path_count;                /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
     u8 current_unit_id_plus_one;       /* 0x11e */
     u8 previous_unit_id_plus_one;      /* 0x11f */
@@ -4659,10 +4659,22 @@ typedef enum battle_movement_set_3 {
     BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM = 0x01,
 } battle_unit_movement_set_3_e;
 
-/* The 0x80-byte movement-path block at Misc Unit Data 0x9c..0x11b. */
+/* The 0x80-byte movement-path block at Misc Unit Data 0x9c..0x11b: byte 0 holds the step count,
+ * then one battle_move_step_bits_e byte per step. A teleport stores 0xfe, x, y and level instead,
+ * and a failed one 0xff. */
 typedef struct battle_walk_path {
     u8 bytes[0x80];
 } battle_walk_path_t;
+
+/* One step of a movement path, as battle_move_encode_path_steps builds it. */
+typedef enum battle_move_step_bits {
+    BATTLE_MOVE_STEP_DISTANCE_MASK = 0x03, /* distance - 1, for jumps across a gap */
+    BATTLE_MOVE_STEP_SOURCE_CLIMB = 0x04,
+    BATTLE_MOVE_STEP_DESTINATION_CLIMB = 0x08,
+    BATTLE_MOVE_STEP_ON_UNIT = 0x10,
+    BATTLE_MOVE_STEP_HIGH_LEVEL = 0x20,
+    BATTLE_MOVE_STEP_DIRECTION_SHIFT = 6, /* 0 +x, 1 -x, 2 -y, 3 +y */
+} battle_move_step_bits_e;
 
 enum {
     BATTLE_MOVEMENT_SAVED_SOURCE_HEIGHT = 1,
@@ -4931,7 +4943,7 @@ void battle_move_get_current_and_destination_tiles(
 void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra_span);
 void battle_move_advance_display_unit_step(battle_unit_misc_data_t* unit);
 void battle_move_apply_selected_candidate(battle_move_spread_state_t* state);
-void battle_move_calculate_spread(void);
+void battle_move_search_jump_candidates(void);
 u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, s32 exit_height);
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
 s32 battle_move_check_spreading_tile_coordinates(void);
@@ -4972,7 +4984,7 @@ void battle_move_set_reachable_tile_flags(void);
 void battle_move_set_spreading_tile_x_and_y_coordinates(void);
 void battle_move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
-void battle_move_spread_to_neighbors(void);
+void battle_move_search_adjacent_candidates(void);
 s32 battle_move_start_unit_walk_to(s32 misc_id, s16* coordinates, s32 elevation_addend, s32 mode, s32 speed);
 void battle_move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
 void battle_move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);

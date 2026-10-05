@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Turn the traced path into g_battle_move_path: byte 0 holds the step count, then one
+ * battle_move_step_bits_e byte per step from the unit's tile, found through the trace marks the
+ * panels hold. Also stores the unit's effective movement flags. */
 void battle_move_encode_path_steps(void) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;

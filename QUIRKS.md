@@ -166,6 +166,9 @@ without changing the bytes.
   falls off its end). The caller has exited by then, but the scheduler
   resumes slot 0 without testing it, so a main-loop caller gets that value
   on the next frame.
+- `battle_move_calculate_walkto_pathing` has no return statement;
+  `battle_move_start_unit_walk_to` uses the path that `battle_move_calculate_pathing` leaves in
+  `$v0`, which a native build must return.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
@@ -274,8 +277,9 @@ without changing the bytes.
   OPEN copy stays a flat `[24]` because the `[12][2]` spelling changes its
   reader's code.
 - `battle_unit_misc_data_t.movement_value` (`+0x11c`, `include/fft/battle.h`)
-  is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
-  length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).
+  is a plain `u8` holding a packed step (`battle_move_step_bits_e`): direction in
+  bits 6–7, layer in bit 5, length in bits 0–1; its readers shift and mask it by hand
+  (`src/battle/battle_move_get_current_and_destination_tiles.c`).
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_formation_build_view_primitives.c` reads its first 4 bytes
   as a screen point.

@@ -21,7 +21,7 @@ void battle_move_get_current_and_destination_tiles(
     movement = unit->movement_value;
     *out_current = battle_map_get_tile_data_pointer(x, y, layer);
     flags = movement;
-    dir = flags >> 6;
+    dir = flags >> BATTLE_MOVE_STEP_DIRECTION_SHIFT;
     switch (dir) {
     case 0:
         layer = flags >> 5;
@@ -29,7 +29,7 @@ void battle_move_get_current_and_destination_tiles(
         x = unit->map_x;
         x += 1;
         y = unit->map_y;
-        x += flags & 3;
+        x += flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
     case 1:
         layer = flags >> 5;
@@ -37,7 +37,7 @@ void battle_move_get_current_and_destination_tiles(
         x = unit->map_x;
         x -= 1;
         y = unit->map_y;
-        x -= flags & 3;
+        x -= flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
     case 2:
         layer = flags >> 5;
@@ -45,7 +45,7 @@ void battle_move_get_current_and_destination_tiles(
         y = unit->map_y;
         y -= 1;
         x = unit->map_x;
-        y -= flags & 3;
+        y -= flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
     case 3:
         layer = flags >> 5;
@@ -53,7 +53,7 @@ void battle_move_get_current_and_destination_tiles(
         y = unit->map_y;
         y += 1;
         x = unit->map_x;
-        y += flags & 3;
+        y += flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
     default:
         return;

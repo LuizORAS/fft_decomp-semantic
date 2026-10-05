@@ -21,12 +21,15 @@ typedef struct {
  * share the two bases. */
 extern battle_move_path_tile_view_t g_battle_map_tile_data_view[512];
 
-/* Pathfinding pass for a generic unit (id 0x7f) from (x, y, level) to the target
- * tile; returns the route buffer, or 0 when either tile is invalid or unreachable.
+/* Build a path for a scripted walk: spread the range of a generic unit (id 0x7f, Move 124, the
+ * given Jump up to 7, normal terrain costs, or cost 1 everywhere with flags bit 0x100) from (x,
+ * y, level), ignoring other units, mark where it can stop, then trace back from the target tile
+ * and encode the steps into g_battle_move_path. With check_budget the spread stops when the
+ * frame's time runs out and resumes on the next call (suspended). Returns the path, or 0 when a
+ * tile is invalid, blocked or unreachable.
  *
  * The 0xff record fill is an s32 local: a literal fill becomes a single-set
- * hoisted pseudo that sched1 places after `li s2,0xf`.
- */
+ * hoisted pseudo that sched1 places after `li s2,0xf`. */
 u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x, s32 target_y,
     u32 target_level, s32 initialize, s32* suspended, s32 check_budget) {
     u8 frontier_snapshot[512];
@@ -210,9 +213,9 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
             && state->tile_level == config->high_elevation) {
             break;
         }
-        battle_move_spread_to_neighbors();
+        battle_move_search_adjacent_candidates();
         if (state->candidate_remaining_range.value == g_battle_move_pathing_scratch) {
-            battle_move_calculate_spread();
+            battle_move_search_jump_candidates();
             if (state->candidate_remaining_range.value == g_battle_move_pathing_scratch) {
                 return 0;
             }

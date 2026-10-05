@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_move_calculate_spread(void) {
+/* Same as battle_move_search_adjacent_candidates for tiles across a gap of 1 to Jump / 2 tiles
+ * whose tiles in between are clear (battle_move_check_horizontal_jump). */
+void battle_move_search_jump_candidates(void) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     s32 outer_index;

@@ -1,11 +1,10 @@
 #include "fft/battle.h"
 
-/* Spread movement to ordinary neighboring candidates.
- *
- * Direction callbacks prepare each candidate; accepted movement updates use
- * zero extra span. Outside AI mode, candidate_saved enables the common finalizer.
- */
-void battle_move_spread_to_neighbors(void) {
+/* Try the tiles next to the current one (and, with more directions, the heights on top of
+ * units) as the next step: in AI propagation mode spread the range to them
+ * (battle_move_update_candidate); otherwise keep the best tile whose range is the current one
+ * plus the step's cost and move the trace there (battle_move_apply_selected_candidate). */
+void battle_move_search_adjacent_candidates(void) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     s32 direction;
