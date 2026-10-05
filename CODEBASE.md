@@ -201,7 +201,11 @@ All of these libraries are reconstructed C, matched like the game code.
     (`grep -i formula build/map/functions.tsv`).
 - **Mechanics and guides:** [`docs/mechanics/`](docs/README.md) pages give
   the purpose, data, flow and "where to change" of each mechanic, with the
-  list of functions in its scope. The guides walk through common changes.
+  list of functions in its scope: [Battle flow](docs/mechanics/Battle%20flow.md),
+  [Movement](docs/mechanics/Movement.md) and
+  [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
+  through common changes, such as the
+  [Movement rules](docs/guides/Movement%20rules.md).
 - **Calls through tables:** they do not appear in C, so about 1300 functions
   have no C caller. Their pages say so.
 - **Debugging:** `make map` also writes PCSX-Redux symbol maps to

@@ -4948,131 +4948,113 @@ extern s32 D_8018F7D8; /* zeroed by battle_move_calculate_pathing, never read */
  * it in place. */
 extern battle_unit_height_data_t g_battle_move_tile_occupant_height;
 extern u8 g_battle_move_weather_severity;
-s32 battle_move_check_horizontal_jump(s32, u8, u8, u8);
-
+void battle_move_apply_selected_candidate(battle_move_spread_state_t* state);
+void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit);
+u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation);
+s32 battle_move_calculate_jump_arc_velocity(
+    const battle_screen_coords_t* from, const battle_screen_coords_t* to, VECTOR* out);
 u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x, s32 target_y,
     u32 target_level, s32 initialize, s32* suspended, s32 check_budget);
-
-void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit);
-void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change);
-void battle_move_undo_unit_move(battle_unit_misc_data_t* unit);
-
-void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
-    battle_unit_misc_data_t* unit, const u8* path, const u8* step);
-
-void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit);
-void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction);
-void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit);
-void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
-s32 battle_move_start_next_post_move_event(void);
-void battle_move_glide_to_action_target_with_height_change(battle_unit_misc_data_t* unit);
-void battle_move_glide_to_action_target_no_height_change(battle_unit_misc_data_t* unit);
-void battle_move_store_unit_movement_to_scratchpad(s32 unit_id);
-s32 battle_move_set_reachable_tiles(s32 unit_id, s32 map_x, s32 map_y, s32 map_z);
-void battle_move_set_tile_flags_for_pathfinding(s32 mode);
-void battle_move_update_path_step(battle_unit_misc_data_t* unit);
-
-void battle_move_get_current_and_destination_tiles(
-    battle_unit_misc_data_t* unit, map_tile_t** current_tile, map_tile_t** destination_tile);
-
-void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra_span);
-void battle_move_resume_walk_to_center(battle_unit_misc_data_t* unit);
-void battle_move_apply_selected_candidate(battle_move_spread_state_t* state);
-void battle_move_search_jump_candidates(void);
 u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, s32 exit_height);
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
+battle_walk_path_t* battle_move_calculate_walkto_pathing(
+    s32 a, s32 b, s32 x, s32 y, s32 z, s32 destination_x, s32 destination_y, s32 destination_z);
+s32 battle_move_check_horizontal_jump(s32, u8, u8, u8);
+s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y);
+void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra_span);
 s32 battle_move_check_spreading_tile_coordinates(void);
+s32 battle_move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
 void battle_move_clear_reachable_flags_under_dead_or_jumping_units(void);
 void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction);
 void battle_move_displace_unit_along_step_direction(battle_unit_misc_data_t* unit, s32 x, s32 y, s32 delta);
+void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction);
+void battle_move_encode_path_steps(void);
 void battle_move_finalize_path_after_animation(battle_unit_misc_data_t* unit);
+void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit);
+void battle_move_get_current_and_destination_tiles(
+    battle_unit_misc_data_t* unit, map_tile_t** current_tile, map_tile_t** destination_tile);
+s32 battle_move_get_direction(const battle_unit_misc_data_t* unit);
 battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats_t* unit);
 s32 battle_move_get_movement_ability_events(battle_stats_t* unit);
+u32 battle_move_get_post_move_events(battle_stats_t* unit);
+s32 battle_move_get_water_animation_mode(battle_unit_misc_data_t* unit);
+void battle_move_glide_to_action_target_no_height_change(battle_unit_misc_data_t* unit);
+void battle_move_glide_to_action_target_with_height_change(battle_unit_misc_data_t* unit);
 s32 battle_move_has_reached_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
 s32 battle_move_has_reached_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
 s32 battle_move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_misc_data_t* unit);
 s32 battle_move_init_destination_geometry(s32 candidate);
 void battle_move_init_knockback(battle_unit_misc_data_t* unit);
-void battle_move_start_post_move_events(void);
 s32 battle_move_init_source_geometry(s32 direction);
 s32 battle_move_init_source_panel(s32 direction);
 void battle_move_init_spread_scratch(void);
-
-s32 battle_move_calculate_jump_arc_velocity(
-    const battle_screen_coords_t* from, const battle_screen_coords_t* to, VECTOR* out);
-
-battle_walk_path_t* battle_move_calculate_walkto_pathing(
-    s32 a, s32 b, s32 x, s32 y, s32 z, s32 destination_x, s32 destination_y, s32 destination_z);
-
 /* Scales the three velocity words at misc-unit offsets 0x28/0x2c/0x30; the
  * definition indexes them as a word array. */
 void battle_move_interpolate_partial(s32* velocity_words, s32 scale);
-u32 battle_move_get_post_move_events(battle_stats_t* unit);
-void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, s16 facing);
-void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-void battle_move_start_unit_step_at_climb_speed(battle_unit_misc_data_t* unit, const map_tile_t* from);
 s32 battle_move_is_unit_moving_by_misc_id(u32 misc_id);
 s32 battle_move_propagate_destination(s32 candidate, s32 extra_span);
+void battle_move_resume_walk_to_center(battle_unit_misc_data_t* unit);
 void battle_move_return_to_previous_map_square(battle_unit_misc_data_t* unit);
-void battle_move_save_selected_candidate(s32 direction, s32 candidate, s32 extra_span);
-void battle_move_set_reachable_tile_flags(void);
-void battle_move_set_spreading_tile_x_and_y_coordinates(void);
-void battle_move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
-void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
-void battle_move_search_adjacent_candidates(void);
-s32 battle_move_start_unit_walk_to(s32 misc_id, s16* coordinates, s32 elevation_addend, s32 mode, s32 speed);
-void battle_move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
-void battle_move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);
-void battle_move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);
-void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
-s32 battle_move_update_candidate(s32 extra_span);
-void battle_move_update_landing_phase(battle_unit_misc_data_t* unit);
-void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-s32 battle_move_get_water_animation_mode(battle_unit_misc_data_t* unit);
-void battle_move_set_knockback_fall_damage(void);
 s32 battle_move_roll_teleport_success(void);
-void battle_move_spread_to_adjacent_tiles(void);
-s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y);
-void battle_move_encode_path_steps(void);
-s32 battle_move_get_direction(const battle_unit_misc_data_t* unit);
-void battle_move_set_unit_path_flag(battle_unit_misc_data_t* unit);
-
-void battle_move_set_unit_step_delta_center_to_edge(
-    battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
-
+void battle_move_save_selected_candidate(s32 direction, s32 candidate, s32 extra_span);
+void battle_move_search_adjacent_candidates(void);
+void battle_move_search_jump_candidates(void);
 void battle_move_set_float_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
-
-void battle_move_set_unit_step_delta_edge_to_center(
-    battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
-
 void battle_move_set_float_step_delta_edge_to_center(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
-
+void battle_move_set_knockback_fall_damage(void);
+void battle_move_set_reachable_tile_flags(void);
+s32 battle_move_set_reachable_tiles(s32 unit_id, s32 map_x, s32 map_y, s32 map_z);
+void battle_move_set_spreading_tile_x_and_y_coordinates(void);
+void battle_move_set_tile_flags_for_pathfinding(s32 mode);
+void battle_move_set_unit_path_flag(battle_unit_misc_data_t* unit);
+void battle_move_set_unit_step_delta_center_to_edge(
+    battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
+void battle_move_set_unit_step_delta_edge_to_center(
+    battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count);
+void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit);
 void battle_move_set_velocity_for_contiguous_clamped_steps(
     battle_unit_misc_data_t* unit, const u8* path, const u8* step);
-
+void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
+    battle_unit_misc_data_t* unit, const u8* path, const u8* step);
+void battle_move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
+void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_spread_horizontal_jump(void);
-void battle_move_start_unit_climb_hop_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
-void battle_move_start_unit_climb_jump_step(
-    battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
+void battle_move_spread_to_adjacent_tiles(void);
 void battle_move_start_float_climb_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
-void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit);
+void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
 void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile, s32 destination_tile);
 void battle_move_start_knockback(battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target);
-void battle_move_update_knockback_step(battle_unit_misc_data_t* unit);
+s32 battle_move_start_next_post_move_event(void);
+void battle_move_start_post_move_events(void);
+void battle_move_start_unit_climb_hop_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
+void battle_move_start_unit_climb_jump_step(
+    battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
+void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit);
+void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, s16 facing);
+void battle_move_start_unit_step_at_climb_speed(battle_unit_misc_data_t* unit, const map_tile_t* from);
+s32 battle_move_start_unit_walk_to(s32 misc_id, s16* coordinates, s32 elevation_addend, s32 mode, s32 speed);
+void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change);
+void battle_move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
+void battle_move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);
+void battle_move_store_unit_movement_to_scratchpad(s32 unit_id);
+void battle_move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);
+void battle_move_undo_unit_move(battle_unit_misc_data_t* unit);
+void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
 void battle_move_update_all_walking_units(void);
-void battle_move_update_fly_step_to_exit_edge(battle_unit_misc_data_t* unit);
+s32 battle_move_update_candidate(s32 extra_span);
+void battle_move_update_float_jump_to_entry_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-void battle_move_update_float_jump_to_entry_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_fly_step_to_center(battle_unit_misc_data_t* unit);
-u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation);
-s32 battle_move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
+void battle_move_update_fly_step_to_exit_edge(battle_unit_misc_data_t* unit);
+void battle_move_update_knockback_step(battle_unit_misc_data_t* unit);
+void battle_move_update_landing_phase(battle_unit_misc_data_t* unit);
+void battle_move_update_path_step(battle_unit_misc_data_t* unit);
+void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
+void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
 
 /* camera */
 /* Script-variable word indices that mirror the live camera. Proven by
