@@ -57,7 +57,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x31:
     case 0x35:
     case 0x39:
-        battle_move_update_unit_step_to_destination_tile_entry_edge(unit);
+        battle_move_update_float_jump_to_entry_edge(unit);
         break;
     case 2:
     case 4:
@@ -79,7 +79,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x25:
     case 0x27:
     case 0x29:
-        battle_move_update_unit_vertical_step_to_destination_tile_center(unit);
+        battle_move_update_fly_step_to_center(unit);
         break;
     case 1:
     case 3:
@@ -101,7 +101,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x24:
     case 0x26:
     case 0x28:
-        battle_move_update_unit_step_to_current_tile_exit_edge(unit);
+        battle_move_update_fly_step_to_exit_edge(unit);
         break;
     case 0x3B:
         battle_unit_init_coordinates(unit);

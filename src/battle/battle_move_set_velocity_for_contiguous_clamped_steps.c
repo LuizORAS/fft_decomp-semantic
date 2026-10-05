@@ -12,8 +12,9 @@ enum {
  * Builds the per-frame velocity for a run of identical movement steps: walks
  * the remaining path while the steps keep the same direction quadrant and the
  * clamped ground height stays at the unit's current height, then hands the
- * accumulated edge-to-edge delta to the velocity solver.  The 0x80069744 twin
- * does the same for the final step, where it reads the tile directly.
+ * accumulated edge-to-edge delta to the velocity solver.
+ * battle_move_set_velocity_for_contiguous_steps_with_final_tile_height does the
+ * same, but aims the path's last step at the destination tile's surface.
  *
  * The case-3 form first preserves the prior y coordinate in `next`, then reuses
  * y for the path byte before forming the new coordinate. This is equivalent to

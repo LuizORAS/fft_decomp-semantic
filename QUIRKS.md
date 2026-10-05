@@ -39,6 +39,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
   (`0x34`) path writes map Y into `real_z` (not `real_y`); the height branch
   then overwrites it.
+- `src/battle/battle_move_update_walking_step_at_tile_edge.c`: adds the
+  destination tile's water standing offset to the current edge height instead
+  of the destination's, so for a unit that floats on, walks on or moves in
+  water the step test sees a water destination lower than its surface, not
+  higher: a step up onto deep water can take a plain walk where a climb hop or
+  jump is due.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
 - `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the

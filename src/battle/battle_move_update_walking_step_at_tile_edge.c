@@ -7,17 +7,16 @@
  * tile pointers, so the calls go through a cast. */
 #define START_STEP(f) ((void (*)(battle_unit_misc_data_t*, const map_tile_t*, const map_tile_t*))(f))
 
-/* Per-frame movement step for a unit walking between two tiles.
- *
- * Once the unit reaches the exit edge of the tile it occupies, the step is
- * re-planned: a jumping unit (step value bits 0-1) restarts a jump step, and
- * otherwise the edge heights of the current and destination tiles are recomputed
- * from the tile height/depth pair scaled by the unit's per-step scales, taking
- * a mount's walking height into account when one is present and float/fly slope
- * otherwise.  A height difference of at most one step starts an ordinary step
- * (centre offset 6) or a climb-speed step (centre offset 0xe); up to seven
- * starts the dismounting climb at 0x8006aa80, and anything higher the fall at
- * 0x8006a7c0. */
+/* Walk phases 1-15 (odd; centre to edge). At the current tile's exit edge, a step across a gap
+ * (step bits 0-1) starts a jump step. Otherwise it compares the two edge heights, in half-heights:
+ * each is the top of the unit standing there (the one the walker stands on, or the one it steps
+ * onto) when that unit's height is available, else the tile edge; with no unit under the walker,
+ * the current edge also adds its water standing offset. Up to +1 starts the walk to the next centre
+ * (phase 6, or 0xe at climb speed when the step's destination-climb bit is set), up to +7 a climb
+ * hop (battle_move_start_unit_climb_hop_step), more a climb jump
+ * (battle_move_start_unit_climb_jump_step). A step down is always a walk; falling comes from
+ * battle_move_apply_unit_step_velocity. The destination's water offset is added to the current
+ * height (QUIRKS.md). */
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     s32 direction;
     u8 rider;

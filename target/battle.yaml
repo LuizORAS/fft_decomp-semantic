@@ -90,9 +90,9 @@ functions:
   - {addr: 0x8006cc94, size: 972, name: battle_move_update_walking_step_at_tile_edge, hash: b104d79ea6df4de4}
   - {addr: 0x8006d060, size: 320, name: battle_move_update_float_step_to_current_tile_exit_edge, hash: 64e2f966ac09a2d2}
   - {addr: 0x8006d1a0, size: 232, name: battle_move_update_float_step_to_destination_tile_center, hash: 40ca7386f33adef6}
-  - {addr: 0x8006d288, size: 188, name: battle_move_update_unit_step_to_destination_tile_entry_edge, hash: 5971d7a96b4a4108}
-  - {addr: 0x8006d344, size: 240, name: battle_move_update_unit_step_to_current_tile_exit_edge, hash: f936c5cb65acae5f}
-  - {addr: 0x8006d434, size: 356, name: battle_move_update_unit_vertical_step_to_destination_tile_center, hash: 82bf1fcb590c101f}
+  - {addr: 0x8006d288, size: 188, name: battle_move_update_float_jump_to_entry_edge, hash: 5971d7a96b4a4108}
+  - {addr: 0x8006d344, size: 240, name: battle_move_update_fly_step_to_exit_edge, hash: f936c5cb65acae5f}
+  - {addr: 0x8006d434, size: 356, name: battle_move_update_fly_step_to_center, hash: 82bf1fcb590c101f}
   - {addr: 0x8006d598, size: 516, name: battle_move_set_unit_step_slope_scales, hash: a8b8669869f1fac1}
   - {addr: 0x8006d79c, size: 40, name: battle_move_finalize_path_after_animation, hash: 6a53eeadce63e268}
   - {addr: 0x8006d7c4, size: 32, name: battle_unit_init_coordinates, hash: 3a4f82f5de1993be}

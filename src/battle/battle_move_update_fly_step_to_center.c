@@ -1,17 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Advance a unit's final vertical step onto its destination tile centre.
+/* Fly phases 0x23-0x29 (odd): carry the flying unit on to its destination tile's centre, and on
+ * the path's last step down (or up) to its landing height.
  *
- * Once the tile centre is reached, the target height is the tile's screen Z,
- * or 10 above the mount's when the path is complete and mount_byte bit 0x80
- * names a mount. The step ends when the unit reaches that height in its
- * direction of vertical travel (velocity.vy) or when path steps remain; it
- * then snaps to the centre, clears velocity, adopts the destination map
- * coordinates and sets shadow_dirty bit 0.
- */
-void battle_move_update_unit_vertical_step_to_destination_tile_center(battle_unit_misc_data_t* unit) {
+ * Once the tile centre is reached, the target height is the tile's screen Z, or 10 above the
+ * mount's when the path is complete and mount_byte bit 0x80 names a mount. The step ends when the
+ * unit reaches that height in its direction of vertical travel (velocity.vy) or when path steps
+ * remain; it then snaps to the centre, clears velocity, adopts the destination map coordinates
+ * and sets shadow_dirty bit 0. */
+void battle_move_update_fly_step_to_center(battle_unit_misc_data_t* unit) {
     s32 done;
     s32 direction;
     battle_unit_misc_data_t* mount;

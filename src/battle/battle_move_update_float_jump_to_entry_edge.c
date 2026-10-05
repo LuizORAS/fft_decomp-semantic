@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_move_update_unit_step_to_destination_tile_entry_edge(battle_unit_misc_data_t* unit) {
+/* Float climb-jump phases 0x2d-0x39 (stride 4; set by battle_move_start_float_climb_jump_step):
+ * move, displace a unit standing on the destination tile (outside events), and at the
+ * destination's entry edge, once down on the ground, float on to the tile centre
+ * (battle_move_start_float_step). */
+void battle_move_update_float_jump_to_entry_edge(battle_unit_misc_data_t* unit) {
     s32 direction;
 
     direction = battle_move_get_direction(unit);

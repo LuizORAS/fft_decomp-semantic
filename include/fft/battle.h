@@ -5038,11 +5038,11 @@ void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile,
 void battle_move_transfer_target_coordinates(battle_unit_misc_data_t* src, battle_unit_misc_data_t* dst);
 void battle_move_update_knockback_step(battle_unit_misc_data_t* unit);
 void battle_move_update_all_walking_units(void);
-void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
+void battle_move_update_fly_step_to_exit_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void battle_move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-void battle_move_update_unit_step_to_destination_tile_entry_edge(battle_unit_misc_data_t* unit);
-void battle_move_update_unit_vertical_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
+void battle_move_update_float_jump_to_entry_edge(battle_unit_misc_data_t* unit);
+void battle_move_update_fly_step_to_center(battle_unit_misc_data_t* unit);
 u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation);
 s32 battle_move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
 

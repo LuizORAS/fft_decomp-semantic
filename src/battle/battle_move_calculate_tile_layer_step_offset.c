@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Return the headroom, in half-heights, between a point 3 levels above the surface of the tile
+ * at (x, y) on layer and the underside (height minus ceiling depth) of a higher tile on the other
+ * layer, or 0x40 when the other layer holds no higher unblocked tile.
+ * battle_move_clamp_z_to_tile_headroom uses it as the flying ceiling. */
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer) {
     map_tile_t* from;
     map_tile_t* to;
