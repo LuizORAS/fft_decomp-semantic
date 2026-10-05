@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 
-void battle_action_choose_facing_for_wait(void) {
+/* Enter WAIT_DIRECTION, where the unit picks the facing that ends its turn, starting from its
+ * current facing (g_current_facing_direction). A rider first turns to its mount's facing. An AI unit
+ * gets its facing from battle_ai_choose_wait_facing (cursor.facing_hint). */
+void battle_state_enter_wait_direction(void) {
     battle_unit_misc_data_t* mounted_unit;
     battle_unit_misc_data_t* unit;
     s32 facing;

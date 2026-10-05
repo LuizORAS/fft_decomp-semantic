@@ -177,7 +177,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_action_copy_active_turn_data_from(
+            battle_menu_set_active_turn_panels(
                 unit_type_ptr - 5, selected_unit - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
             g_debugchr_panel_refresh_a = one;
             g_debugchr_panel_refresh_b = one;
@@ -198,7 +198,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_action_copy_active_turn_data_from(
+            battle_menu_set_active_turn_panels(
                 unit_type_ptr - 5, selected_unit - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
             g_debugchr_panel_refresh_a = 2;
             g_debugchr_panel_refresh_b = one;
@@ -220,7 +220,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *comparison_ptr = g_debugchr_editor_unit_ids[0];
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
-        battle_action_copy_active_turn_data_from(
+        battle_menu_set_active_turn_panels(
             unit_type_id_ptr - 5, selected_unit_ptr - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
     }
 }

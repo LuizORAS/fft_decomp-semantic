@@ -98,7 +98,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         *(s16*)(action + 0xC) = unit->x;
                         *(s16*)(action + 0x10) = unit->position.bits.y;
                         *(u16*)(action + 0xE) = unit->position.raw >> 15;
-                        result = battle_action_call_attack_preparation_at_preview(action);
+                        result = battle_action_commit_command(action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->last_ability_id = ABILITY_ID_REACTION_AUTO_POTION;
                         if (result == -1 || (u32)(result - 2) < 2) {

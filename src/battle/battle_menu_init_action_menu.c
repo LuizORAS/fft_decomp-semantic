@@ -23,7 +23,7 @@ s32 battle_menu_init_action_menu(battle_unit_misc_data_t* unit) {
     }
     if (result == 2) {
         g_previous_battle_game_state = g_battle_game_state;
-        battle_action_set_casting_unit_id_ff();
+        battle_state_enter_event();
         return 1;
     }
     return 0;

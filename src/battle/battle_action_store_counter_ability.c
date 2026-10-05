@@ -37,7 +37,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     *(s16*)(action + 0x10) = acting_unit->position.bits.y;
     *(u16*)(action + 0xe) = acting_unit->position.raw >> 15;
     saved_charged_ability_ct = unit->charged_ability_ct;
-    result = battle_action_call_attack_preparation_at_preview(action);
+    result = battle_action_commit_command(action);
     unit->charged_ability_ct = saved_charged_ability_ct;
     if (result == -1 || (preview_result = (u32)(result - 2) < 2, preview_result != 0)) {
         preview_result = -3;

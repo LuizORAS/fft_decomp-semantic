@@ -34,12 +34,12 @@ void battle_state_handle_idling_action_menus_state(void) {
             g_battle_casting_unit_id = g_battle_casting_misc_id;
         }
         battle_turn_clear_at_list_index();
-        battle_action_handle_move_command();
+        battle_state_enter_unit_move();
         break;
     case 0x19:
         g_battle_casting_unit_id = g_battle_casting_misc_id;
         battle_turn_clear_at_list_index();
-        battle_action_handle_move_command();
+        battle_state_enter_unit_move();
         break;
     case BATTLE_AI_COMMAND_ACT:
         battle_turn_clear_at_list_index();
@@ -68,7 +68,7 @@ void battle_state_handle_idling_action_menus_state(void) {
             misc->command_state.ai = *command;
             misc->command_state.ai.data.action.unit_id = misc->battle_data->misc_unit_id;
             misc->command_state.ai.data.action.targeting_type = 5;
-            battle_action_call_attack_preparation(&misc->command_state.ai.data.action);
+            battle_action_resolve_command_ability(&misc->command_state.ai.data.action);
             misc->used_ability_id = misc->command_state.ai.data.action.ability_id;
             result = battle_target_set_panels_for_action((u8*)&misc->command_state.ai.data.action);
             misc->ability_preview_phase = result;
@@ -87,7 +87,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         }
         break;
     case BATTLE_AI_COMMAND_END_TURN:
-        battle_action_choose_wait();
+        battle_state_enter_wait();
         break;
     case 0xc:
     case 0xe:

@@ -1,11 +1,26 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
+/* Attack preparation: check a command and turn it into the ability that runs, with its charge
+ * time. The command is copied from source to dest with the resolved ability_id; -1 rejects a missing
+ * unit or unit target and an invalid choice. By the skillset's menu type: Item uses the item ability
+ * (item id + 0x80) and Throw the Throw ability for the item's type, both acting at once; Math Skill
+ * and Attack (ability 0) act at once; Geomancy takes the ability of the unit's terrain and Draw Out
+ * the katana's (item id + 0x26); Jump's CT is 50 / Speed (at least 1) and it returns 3; Charge takes
+ * its CT from the Charge table, unaffected by Short Charge and Non-Charge; Defend returns 0 and
+ * Change Equipment 2, storing nothing. Any other ability takes its table CT, halved (rounding up) by
+ * Short Charge and zeroed by Non-Charge unless it is a Persevere (performed) ability.
+ *
+ * A nonzero phase stores the CT in charged_ability_ct, and an odd phase commits: the unit has acted
+ * (for an ability with a table or Charge CT, only in a primary action, and it then starts Charging,
+ * or Performing for Persevere, when the CT is not 0); Item, Throw and Draw Out take the item from the
+ * party (Draw Out gets the katana back when it does not break); Jump also uses up the Move and starts
+ * Jumping, and Charge uses up the Move. Returns 1 when the ability acts at once (CT 0), 0 when it
+ * charges.
+ *
  * The one-trip loop around `skip = 1` counts that set one loop level deeper,
  * so global-alloc ranks `skip` above `persevere` and gives them s6/s7 as in
- * the target.
- */
+ * the target. */
 s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_command_action_t* dest, s32 phase) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;

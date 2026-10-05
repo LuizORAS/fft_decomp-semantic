@@ -4,7 +4,7 @@
  * already granted in RESUME_ATTACK_PHASE. After a charged ability (0x200) a scenario event may
  * start, or else the between-turn events run. When the unit's turn is over, its command is
  * restored from its battle record and a Jump ends the turn, while other commands go on to Wait
- * (battle_action_choose_wait). Otherwise its action menus reopen. */
+ * (battle_state_enter_wait). Otherwise its action menus reopen. */
 void battle_state_handle_continue_turn_state(void) {
     battle_unit_misc_data_t* unit;
 
@@ -22,7 +22,7 @@ void battle_state_handle_continue_turn_state(void) {
             && battle_script_get_event_finish_operation() != 0) {
             g_previous_battle_game_state = g_battle_game_state;
             battle_menu_init_system_function(8, 0, unit->battle_data->misc_unit_id, 0, 1);
-            battle_action_set_casting_unit_id_ff();
+            battle_state_enter_event();
             return;
         }
         battle_turn_advance();
@@ -38,7 +38,7 @@ void battle_state_handle_continue_turn_state(void) {
             battle_turn_advance();
             return;
         }
-        battle_action_choose_wait();
+        battle_state_enter_wait();
         return;
     }
     battle_menu_set_next_script_action_menus();

@@ -3,7 +3,7 @@
 
 /* ABILITY_PREVIEW_HANDLING: the preview of the ability on the chosen tile. Under player
  * control the camera can rotate, zoom and tilt, Circle asks for confirmation
- * (battle_action_confirm) and Cross returns to target selection, or to the action menu for an
+ * (battle_state_enter_confirm_action) and Cross returns to target selection, or to the action menu for an
  * ability aimed at the unit's own tile (preview phase 2); an AI unit confirms after 31 frames. */
 void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
@@ -17,7 +17,7 @@ void battle_state_handle_ability_preview_state(void) {
         if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
             g_battle_controller_input = g_controller_input_copy_12;
             battle_gfx_update_unit_palettes();
-            battle_action_confirm();
+            battle_state_enter_confirm_action();
         } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
             g_battle_controller_input = g_controller_input_copy_12;
             battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_CLEAR_TARGETED, 3);
@@ -37,7 +37,7 @@ void battle_state_handle_ability_preview_state(void) {
         if (frame_data >= 0x1f) {
             g_battle_controller_input = g_controller_input_copy_12;
             battle_gfx_update_unit_palettes();
-            battle_action_confirm();
+            battle_state_enter_confirm_action();
         }
     }
     battle_state_update_units();

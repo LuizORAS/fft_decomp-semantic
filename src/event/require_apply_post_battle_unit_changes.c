@@ -78,7 +78,7 @@ void require_apply_post_battle_unit_changes(void) {
             g_require_status_display_thread_params = -0x100;
             g_require_numeric_editor_thread_params = -0x100;
             *transition_c_ptr = -0x100;
-            battle_action_copy_active_turn_data_from(
+            battle_menu_set_active_turn_panels(
                 g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
 
             /* This zero feeds the else-arm fade and fills the `bnez` delay
@@ -110,7 +110,7 @@ void require_apply_post_battle_unit_changes(void) {
                 *(u16*)(unit_display_data + 0x0a) = index_value;
                 *(u16*)(unit_display_data + 0) = index_value;
                 require_editor_load_selected_unit();
-                battle_action_copy_active_turn_data_from(
+                battle_menu_set_active_turn_panels(
                     g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
                 index_value = *(u16*)unit_index_ptr;
                 g_require_status_display_redraw_request = one;
@@ -237,7 +237,7 @@ void require_apply_post_battle_unit_changes(void) {
                     if (g_require_party_removal_result == 0) {
                         require_panel_set_transition_value(1);
                     }
-                    battle_action_copy_active_turn_data_from(
+                    battle_menu_set_active_turn_panels(
                         g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
                     g_battle_screen_fade = screen_fade_max;
                     do {

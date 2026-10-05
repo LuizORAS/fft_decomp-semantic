@@ -1,8 +1,12 @@
 #include "fft/battle.h"
 
-/* Starts the acting unit's confirmed ability: marks the action taken, faces the
- * cursor and runs the attack preview. A preview result of 1 or 3 enters the
- * commence-attack phase; 0 starts the charge animation. */
+/* Run the acting unit's confirmed command: switch the unit panels to mode 0, mark the unit as having
+ * acted (which can end its turn), face it toward the cursor and commit the command
+ * (battle_action_commit_command). The result goes to attack_phase_state: 0 (charging) shows the
+ * charge pose and ends the command (AFTER_COMMAND, through
+ * battle_unit_update_post_command_animation_display); 1 (acts now) or 3 (Jump) enters
+ * COMMENCE_ATTACK_PHASE, with the charge pose when the ability has a charge animation; 2 (Change
+ * Equipment) or another value reports pointer exception 0x13 and ends the command. */
 void battle_action_execute_ability(void) {
     battle_unit_misc_data_t* unit;
     s32 result;
@@ -12,7 +16,7 @@ void battle_action_execute_ability(void) {
     battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
     unit->ability_ct_resolved |= 2;
     battle_unit_face_toward_cursor(unit);
-    result = battle_action_call_attack_preparation_at_preview((u8*)&unit->command_state.ai.data);
+    result = battle_action_commit_command((u8*)&unit->command_state.ai.data);
     unit->attack_phase_state = result;
     switch (result) {
     case 0:

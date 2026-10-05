@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 
-void battle_action_confirm(void) {
+/* Enter CONFIRM_ACTION and open the "Execute?" window (system command 4). The option follows the
+ * range result in ability_preview_phase and the unit under the cursor: with a selectable unit there,
+ * 1 for result 0, 4 for result 1 (cannot follow target) and 3 for result 2; 2 with no unit; 0 for
+ * any other result. battle_menu_dispatch_system_function maps them to the window variants. */
+void battle_state_enter_confirm_action(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
     s32 mode;

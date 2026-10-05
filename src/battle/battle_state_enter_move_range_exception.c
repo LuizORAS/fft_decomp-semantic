@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 
-void battle_action_enter_move_range_exception(void) {
+/* Enter MOVE_RANGE_EXCEPTION when the mover has no tile to reach (battle_menu_close_move_help):
+ * system command 1 with option 2 opens a message in place of the destination choice (system function
+ * 0x31 for the Move command). */
+void battle_state_enter_move_range_exception(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_disable_camera_pan();

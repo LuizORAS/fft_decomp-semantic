@@ -74,7 +74,7 @@ s32 require_select_party_unit_to_remove(void) {
         selected_party_index = party_index;
         break;
     }
-    battle_action_copy_active_turn_data_from(
+    battle_menu_set_active_turn_panels(
         g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
     g_require_status_display_redraw_request = 1;
     g_require_numeric_editor_redraw_request = 1;
@@ -161,7 +161,7 @@ s32 require_select_party_unit_to_remove(void) {
                 g_require_character_status_redraw_request = should_restore;
                 require_load_party_unit_into_editor(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_set_active_turn_panels(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             } else if (*g_require_input_controller & PSX_PAD_L1) {
                 g_require_panel_status_animation[0] = 7;
@@ -176,7 +176,7 @@ s32 require_select_party_unit_to_remove(void) {
                 g_require_character_status_redraw_request = should_restore;
                 require_load_party_unit_into_editor(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_set_active_turn_panels(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             }
             if (*g_require_input_controller & PSX_PAD_CIRCLE)

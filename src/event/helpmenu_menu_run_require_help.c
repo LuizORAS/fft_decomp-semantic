@@ -136,7 +136,7 @@ void helpmenu_menu_run_require_help(void) {
            this handler drives (per-task words, see fft/thread.h). */
         native_thread_t* self_thread;
         self_thread = (native_thread_t*)((g_battle_thread_current_id << 0xA) + (s32)g_battle_threads);
-        battle_action_copy_at_and_cursor_to(banner, unit_data, billboard, cursor_tile);
+        battle_menu_get_active_turn_panels(banner, unit_data, billboard, cursor_tile);
         if ((g_helpmenu_selected_unit_panel_mode != 0) || (g_battle_post_battle_unit_changes_active != 0)) {
             g_helpmenu_require_navigation[2].destination[2] = 7;
             g_helpmenu_require_navigation[7].destination[3] = 2;

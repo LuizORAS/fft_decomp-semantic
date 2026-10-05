@@ -166,10 +166,14 @@ void battle_state_enter_ai_command(void);
 void battle_state_enter_battle_message_display(void);
 void battle_state_enter_close_battle(s32 transition_step, s32 close_flow_state);
 void battle_state_enter_commence_attack_phase(void);
+void battle_state_enter_confirm_action(void);
 void battle_state_enter_continue_turn(void);
+void battle_state_enter_event(void);
+void battle_state_enter_event_at_battle_start(void);
 void battle_state_enter_free_cursor(void);
 void battle_state_enter_highlight_units_by_team(void);
 void battle_state_enter_illegal_range(void);
+void battle_state_enter_move_range_exception(void);
 void battle_state_enter_open_sp2_files(void);
 void battle_state_enter_pre_attack_animation(void);
 void battle_state_enter_status_execute(void);
@@ -180,8 +184,11 @@ void battle_state_enter_target_select_confirm(void);
 void battle_state_enter_target_select_denied(void);
 void battle_state_enter_target_select_start(void);
 void battle_state_enter_targeting_message(void);
+void battle_state_enter_unit_move(void);
 void battle_state_enter_unit_moving(void);
 void battle_state_enter_unit_moving_setup(void);
+void battle_state_enter_wait(void);
+void battle_state_enter_wait_direction(void);
 s32 battle_state_get_animation_continue_check(void);
 s32 battle_state_get_vsync_interval(void);
 void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue);
@@ -383,8 +390,8 @@ typedef struct battle_at_entry {
 typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
 
 /* Provisional 0xe-byte active-unit record at 0x8014d080, saved and restored
- * whole by battle_action_copy_at_and_cursor_to and
- * battle_action_copy_active_turn_data_from.
+ * whole by battle_menu_get_active_turn_panels and
+ * battle_menu_set_active_turn_panels (out and in).
  * battle_menu_store_units_small_in_battle_display_data fills job_id..zodiac
  * for the unit named by battle_id. */
 typedef struct battle_active_unit {
@@ -2244,7 +2251,7 @@ enum {
  * status billboard at 0x8014d05c. battle_menu_copy_unit_data_to_status_billboard
  * (and its DEBUGCHR twin) fills the first 0x1e bytes,
  * battle_menu_display_hovered_unit_stats draws it, and
- * battle_action_copy_at_and_cursor_to saves the banner whole as 0x22 bytes. */
+ * battle_menu_get_active_turn_panels copies the banner whole as 0x22 bytes. */
 typedef struct battle_unit_status_record {
     s16 level;                            /* 0x00 */
     s16 team_kind;                        /* 0x02: 0-3 from team flags, 3 = auto-battle; selects the status icon */
@@ -4481,7 +4488,7 @@ extern entd_unit_t* g_current_entd_unit;
 extern s32 g_battle_thread_current_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
 s32 battle_action_calculate_chance_to_react(const battle_stats_t* unit);
-void battle_action_call_attack_preparation(battle_ai_command_action_t* action);
+void battle_action_resolve_command_ability(battle_ai_command_action_t* action);
 s32 battle_action_can_unit_react(const battle_stats_t* unit);
 
 /* Provisional: the definition falls off the end after the tail call to
@@ -4500,17 +4507,12 @@ void battle_action_check_mp_switch_usability(void);
 void battle_action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(s16 reaction_id);
 s32 battle_action_check_reaction(battle_stats_t* unit);
 void battle_action_check_reflect_reaction(void);
-void battle_action_choose_facing_for_wait(void);
-void battle_action_choose_wait(void);
 void battle_action_clear_current_data(battle_action_data_t* action);
 void battle_action_clear_data(void);
 void battle_action_clear_knockback_flag(void);
 void battle_action_clear_status_changes(battle_action_data_t* action);
-void battle_action_confirm(void);
-void battle_action_copy_active_turn_data_from(const u8* banner, const u8* unit, const u8* billboard);
 void battle_action_execute_ability(void);
 void battle_action_finalize_target_current_action(void);
-void battle_action_handle_move_command(void);
 void battle_action_handle_post_action_xp_jp_ability(void);
 s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, s32 item);
 void battle_action_init_learn_ability_on_hit(void);
@@ -4518,7 +4520,6 @@ s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit);
 s32 battle_action_report_job_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_resume_attack_phase_control(void);
-void battle_action_set_casting_unit_id_ff(void);
 void battle_action_set_current_attacker_data(battle_stats_t* unit);
 void battle_action_set_damage_display_type_based_on_ability(void);
 void battle_action_set_item_throw_stone_ability_display(void);
@@ -4526,7 +4527,6 @@ s32 battle_action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);
 void battle_action_set_only_action_taken(s32 unit_id);
 void battle_action_set_only_movement_taken(s32 unit_id);
 void battle_action_set_target_variables(battle_stats_t* unit);
-void battle_action_enter_move_range_exception(void);
 void battle_action_show_caster_post_effect_messages(void);
 void battle_action_switch_ability_to_default_attack(void);
 
@@ -4534,7 +4534,7 @@ s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* wor
 
 void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* unit);
 
-s32 battle_action_prepare_attack(battle_ai_command_action_t* action, battle_ai_command_action_t* target, s32 flag);
+s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_command_action_t* dest, s32 phase);
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(u16* reaction_id);
@@ -4543,7 +4543,6 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id);
 s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
 
 void battle_action_set_target_coords_and_attacker_anim(void);
-void battle_action_copy_at_and_cursor_to(void* banner, void* unit, void* billboard, void* cursor_tile);
 s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id);
 s32 battle_action_apply_tile_trap(battle_stats_t* unit);
 void battle_action_build_targets_post_action_message(void);
@@ -4552,12 +4551,12 @@ void battle_action_build_targets_post_action_message(void);
 s32 battle_action_calculate_projected_effect(
     battle_stats_t* attacker, battle_stats_t* target, battle_ai_command_action_t* command);
 
-s32 battle_action_call_attack_preparation_at_preview(u8* arg);
+s32 battle_action_commit_command(u8* command);
 s32 battle_action_check_battle_outcome(void);
 void battle_action_check_mp_switch_distribute_and_damage_split_usability(void);
 void battle_action_check_reflect_blade_grasp_and_arrow_guard(void);
 void battle_action_check_stat_save_and_restore_reaction_usability(void);
-s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 always_one);
+s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 consume);
 void battle_action_dispatch_target_reaction_ability(void);
 s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
@@ -4566,7 +4565,6 @@ s32 battle_action_perform_reaction_ability(void);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
-void battle_action_set_casting_unit_id_ff_and_init(void);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
 void battle_action_store_ability_data(u8* src);
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
@@ -7263,6 +7261,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
 void battle_menu_enter_status_screen_selection(void);
 void battle_menu_fade_out_thread(void);
 void battle_menu_free_high_overlay(void);
+void battle_menu_get_active_turn_panels(void* banner, void* unit, void* billboard, void* cursor_tile);
 s32 battle_menu_get_cursor_bob_offset(s32 mode);
 s32* battle_menu_get_selected_command_address(void);
 void battle_menu_icon_linked_entry_thread(void);
@@ -7303,6 +7302,7 @@ void battle_menu_run_numeric_display_panel_thread(void);
 void battle_menu_run_skillset_thread(void);
 void battle_menu_run_system_function_thread(void);
 void battle_menu_selected_tile_info_display_thread(void);
+void battle_menu_set_active_turn_panels(const u8* banner, const u8* unit, const u8* billboard);
 void battle_menu_set_next_script_action_menus(void);
 void battle_menu_set_option_transition_finished(void);
 void battle_menu_start_building_thread(void);

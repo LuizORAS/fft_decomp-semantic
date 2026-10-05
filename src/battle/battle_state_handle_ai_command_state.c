@@ -19,7 +19,7 @@ void battle_state_handle_ai_command_state(void) {
         if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
                 unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
-                battle_action_call_attack_preparation(&unit->command_state.ai.data.action);
+                battle_action_resolve_command_ability(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
             g_battle_state_vsync_interval = 1;
@@ -33,13 +33,13 @@ void battle_state_handle_ai_command_state(void) {
     case BATTLE_AI_COMMAND_MOVE:
         if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
             g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id)->unit_id;
-            battle_action_handle_move_command();
+            battle_state_enter_unit_move();
             return;
         }
         /* fallthrough */
     case 0x19:
         g_battle_casting_unit_id = g_battle_casting_misc_id;
-        battle_action_handle_move_command();
+        battle_state_enter_unit_move();
         return;
     case BATTLE_AI_COMMAND_ACT:
         switch (unit->command_state.ai.data.action.skillset) {

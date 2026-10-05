@@ -22,7 +22,7 @@ void battle_state_handle_wait_menu_state(void) {
             return;
         }
     case 7:
-        battle_action_choose_facing_for_wait();
+        battle_state_enter_wait_direction();
         return;
     }
 }

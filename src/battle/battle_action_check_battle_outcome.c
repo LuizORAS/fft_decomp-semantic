@@ -5,10 +5,11 @@ enum {
     BATTLE_OUTCOME_SPECIAL_CLASS = 0x03,
 };
 
-/* Determine whether either side has met its battle-ending condition.
- *
- * Returns -1 when the blue side is defeated, 0 when all opposing units are
- * defeated, and 1 while both sides can continue. */
+/* Decide whether the battle is over. First the units carrying both team flag bits 0x03 (set on
+ * Ramza): one that has left the field (existence DISABLED) or is crystallized, invited or treasure
+ * (MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY) ends it, as a defeat (-1) when blue and a
+ * victory (0) otherwise. Then the units present: -1 when no blue unit is outside the KO set, 0 when
+ * no other unit is, 1 while both sides fight on. */
 s32 battle_action_check_battle_outcome(void) {
     s32 player_unit_count;
     s32 enemy_unit_count;

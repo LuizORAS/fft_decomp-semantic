@@ -108,7 +108,7 @@ void battle_state_run_battle_setup(void) {
                 battle_script_is_deployment_running(main_gfx_get_otag(), g_controller_input_raw));
         if (g_battle_state_map_init_step == 0xd) {
             battle_gfx_extract_deployed_unit_palettes();
-            battle_action_set_casting_unit_id_ff_and_init();
+            battle_state_enter_event_at_battle_start();
             g_battle_screen_fade_intensity = fade;
             /* Not `break`: jump optimization would move this exit block
              * past the loop end, which the target keeps inline. */

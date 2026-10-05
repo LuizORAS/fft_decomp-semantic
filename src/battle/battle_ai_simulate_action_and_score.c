@@ -49,7 +49,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     if (ai->current_action.target_flags_set) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
+            if (battle_action_commit_command((u8*)action) == 1
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->decision_state = 0;
@@ -62,7 +62,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         battle_ai_simulate_movement_and_pickup();
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
+            if (battle_action_commit_command((u8*)action) == 1
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->decision_state = 0;

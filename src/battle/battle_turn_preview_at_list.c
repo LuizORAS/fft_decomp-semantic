@@ -24,7 +24,7 @@ s32 battle_turn_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entr
     old_action_taken = unit->action_taken;
     old_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    if (battle_action_call_attack_preparation_at_preview(action) == 1) {
+    if (battle_action_commit_command(action) == 1) {
         unit->charged_ability_ct = 0;
     }
     turns = battle_turn_build_at_list(at_list, 3);

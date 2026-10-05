@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_action_handle_move_command(void) {
+/* Enter UNIT_MOVE and open the Move window (system command 1, option 0) for the source unit. The
+ * action menus and the AI command call it for the Move command. */
+void battle_state_enter_unit_move(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_disable_camera_pan();
