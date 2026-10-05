@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Filters unit-occupied targeting panels by team eligibility.
+/* Ally-only and enemy-only abilities (CAN_TARGET_ALLIES, CAN_TARGET_ENEMIES): take out of the area
+ * the tiles of units whose team is not allowed, and mark the allowed units' tiles.
  *
- * The low byte of `raw_unit_id` selects the acting unit, which is treated as
- * same-team even if its initial and live team fields differ. `allow_allies`
- * and `allow_enemies` are raw nonzero flag values. Unless the ability AoE is
- * `0xff`, every nonempty panel left after filtering is marked selected. */
+ * The low byte of `raw_unit_id` selects the acting unit, which is treated as same-team even if its
+ * initial and live team fields differ. `allow_allies` and `allow_enemies` are raw nonzero flag
+ * values. Unless the ability AoE is `0xff`, every nonempty panel left after filtering is marked
+ * selected. */
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff) {
     /* Retain the team comparison value in $v0 until the actor override. */
     register s32 relation __asm__("$2");

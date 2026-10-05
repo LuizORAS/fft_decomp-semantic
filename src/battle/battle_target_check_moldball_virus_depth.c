@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* For Moldball Virus, clear the targeting panel of every tile with depth. */
+/* Moldball Virus cannot reach water: take every tile with depth out of its area. */
 void battle_target_check_moldball_virus_depth(s16 ability_id) {
     map_tile_t* tile;
     battle_target_panel_t* panel;

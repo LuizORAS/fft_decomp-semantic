@@ -19,7 +19,7 @@ s32 battle_action_calculate_projected_effect(
     saved_action_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
     if (!(g_battle_loaded_ability_flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO)) {
-        result = battle_target_calculate_map_for_action(command, &flags_3);
+        result = battle_target_mark_hit_tiles(command, &flags_3);
         if (result != -1
             && (g_battle_target_tile_targetable_flags[battle_map_calculate_location(target) * 8] >> 7) == 0) {
             result = -1;

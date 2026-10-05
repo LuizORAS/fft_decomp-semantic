@@ -13,7 +13,7 @@ void battle_turn_show_next_at_entry(void) {
             unit = battle_unit_get_misc_data_by_battle_id(id & 0xFF);
             if ((id & 0x100) != 0) {
                 battle_target_gather_x_y_data_for_attacks(unit);
-                battle_target_calculate_for_menu_types(&unit->battle_data->action_actor_id);
+                battle_target_mark_action_area(&unit->battle_data->action_actor_id);
                 battle_target_set_tile_background_color(7, 3);
             } else {
                 battle_target_move_cursor_to_unit(unit);

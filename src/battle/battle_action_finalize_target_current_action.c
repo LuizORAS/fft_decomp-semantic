@@ -30,7 +30,7 @@ void battle_action_finalize_target_current_action(void) {
         invalid = 1;
     }
     if (invalid != 0) {
-        battle_target_sort_list(g_battle_action_target->misc_unit_id);
+        battle_target_remove_ability_target(g_battle_action_target->misc_unit_id);
         battle_action_clear_data();
         battle_formula_clear_nullify_flags();
         battle_action_clear_knockback_flag();

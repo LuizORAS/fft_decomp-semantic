@@ -6,7 +6,7 @@
  *
  * During ability-preview phase 2 the target is the unit's own tile; for
  * player-controlled units it is the current cursor tile.
- * battle_target_calculate_for_menu_types's result
+ * battle_target_mark_action_area's result
  * picks the next step: 0/1 enter the ability-preview state, 2 restores the
  * unit and stops game flow, and -1 returns to the idle action menu.
  */
@@ -26,7 +26,7 @@ void battle_target_select_tile(void) {
             g_battle_cursor_z, g_battle_cursor_y);
         unit->command_state.ai.data.action.targeting_type = 5;
     }
-    result = battle_target_calculate_for_menu_types(&unit->command_state.ai.data.action.unit_id);
+    result = battle_target_mark_action_area(&unit->command_state.ai.data.action.unit_id);
     unit->target_select_result = result;
     switch (result) {
     case 0:

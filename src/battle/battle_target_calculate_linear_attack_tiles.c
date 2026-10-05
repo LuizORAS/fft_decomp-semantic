@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Mark the in-range tiles, on both layers, on the line from (x, y) in direction `dir` (0 +x, 2 -x,
+ * 6 +y, 4 -y), up to 32 tiles or the map edge. */
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
     s32 i;
     s32 dx;

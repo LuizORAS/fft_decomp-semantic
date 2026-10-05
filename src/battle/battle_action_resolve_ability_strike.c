@@ -56,15 +56,14 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         work->control_value_19f = 1;
     }
     if (!reaction_targeted) {
-        if (battle_target_calculate_map_for_action((battle_ai_command_action_t*)&attacker->action_actor_id, &flags_3)
-            == -1) {
+        if (battle_target_mark_hit_tiles((battle_ai_command_action_t*)&attacker->action_actor_id, &flags_3) == -1) {
             work->target_count = 0;
             work->continue_attack = 0;
             return -1;
         }
         if (g_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
             && (g_current_ability.elemental_flags != 0 || (g_current_ability.knockback_flags & 0x80))) {
-            battle_target_disable_green_panel_flags();
+            battle_target_clear_targeted_flags();
             count = 1;
             targets[0] = g_current_ability.post_action_target_id;
             for (i = 1; i < 16; i++) {
@@ -87,7 +86,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         }
     }
     battle_status_remove_transparent_if_jump_used(attacker);
-    count = battle_target_count_hit_by_ability(work->target_list);
+    count = battle_target_copy_ability_targets(work->target_list);
     work->target_count = count;
     g_current_ability.target_count = count;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
@@ -99,7 +98,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     work->used_weapon_id = g_current_ability.weapon_id;
     work->reaction_occurred = 0;
     work->current_hit_number = g_current_ability.strike_counter;
-    battle_target_set_coordinates_for_ability(attacker, work);
+    battle_target_store_strike_destination(attacker, work);
     if (count == 0) {
         g_current_ability.strike_counter++;
         work->last_attack_id = *(u16*)&attacker->last_ability_id;

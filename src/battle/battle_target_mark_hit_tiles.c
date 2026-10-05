@@ -1,14 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Compute target tiles for the action and report its ability flags_3 byte.
- *
- * Attack, Charge, item-inventory, weapon-inventory, direct-targeting, and
- * weapon-range actions use the weapon/direct resolver. Random-fire selection
- * runs only after successful ordinary targeting outside AI simulation.
- */
-s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3) {
+/* Mark the tiles an action hits once its target is chosen (MAP_TILE_FLAG_TARGETED): weapon-style
+ * actions (Attack, Charge, Item, Throw, and DIRECT_TARGETING or WEAPON_RANGE abilities) mark the one
+ * unit their weapon reaches (battle_target_validate_weapon_target), the others their area
+ * (battle_target_mark_action_area), and during execution a Random Fire ability then keeps one random
+ * tile of it. Also stores the ability's flags_3 in *flags_3. */
+s32 battle_target_mark_hit_tiles(battle_ai_command_action_t* action, u8* flags_3) {
     ability_secondary_data_t* ability;
     s32 menu_type;
     u8 flags_4;
@@ -40,7 +38,7 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
         result = ((s32 (*)(battle_ai_command_action_t*, u8*, u8, u8))battle_target_validate_weapon_target)(
             action, flags_3, menu_type, flags_1);
     } else {
-        result = ((s32 (*)(battle_ai_command_action_t*, u8*, u8, u8))battle_target_calculate_for_menu_types)(
+        result = ((s32 (*)(battle_ai_command_action_t*, u8*, u8, u8))battle_target_mark_action_area)(
             action, flags_3, menu_type, flags_1);
         if (result != -1 && (flags_2 & ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE)
             && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {

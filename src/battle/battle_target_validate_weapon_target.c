@@ -1,19 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Re-validate the acting unit's stored target and mark the target's tile.
+/* Re-validate the acting unit's stored target and mark the tile of the unit it hits.
  *
- * The weapon's flags select the trajectory test: ARC takes 0x801aff18,
- * DIRECT the direct-weapon check (skipped for an adjacent tile when the
- * skillset menu type is ITEM_INVENTORY), LUNGING 0x8017afc0, and anything else
- * the plain height-overlap test. Attack and Charge skillsets, and abilities
- * flagged 0x20, use the equipped weapon; other skillsets use DIRECT and first
- * copy the target unit's position into the action for targeting type 6.
- * Returns 0 once a valid unit is marked, else -1.
+ * The weapon's flags select the trajectory test: ARC battle_effect_set_and_validate_arc_trajectory,
+ * DIRECT the direct-trajectory check (skipped for an Item on the unit's own or an adjacent tile), LUNGING
+ * battle_target_validate_lunging_target, and anything else the plain height-overlap test. Attack,
+ * Charge and WEAPON_RANGE abilities use the equipped weapon (bare hands for Frog and monsters);
+ * other skillsets use DIRECT and, for a unit target (type 6), aim at that unit's square. Returns 0,
+ * or -1 for an absent unit, a non-weapon item or a missing target unit.
  *
- * One `hand` variable carries both hands, so the right-hand load stays after
- * the left-hand mask; `target` is reused for the result unit, which keeps it a
- * global pseudo and gives the target's v1 for the copied position. */
+ * One `hand` variable carries both hands, so the right-hand load stays after the left-hand mask;
+ * `target` is reused for the result unit, which keeps it a global pseudo and gives the target's v1
+ * for the copied position. */
 s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source) {
     battle_ai_command_action_t action;
     s16 x;
@@ -50,7 +49,8 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_flags = g_main_ability_range_data[(u8)action.ability_id].flags_1;
     }
-    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE || (ability_flags & 0x20)) {
+    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE
+        || (ability_flags & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         /* An empty left hand contributes 0; an equipped right hand wins. */
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
         mask = -(hand != 0xff);
@@ -84,7 +84,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     x = unit->action_target_x;
     y = unit->action_target_y;
     elevation = unit->action_target_elevation;
-    target_id = battle_target_get_unit_id_if_tile_targetable(x, y, elevation);
+    target_id = battle_target_get_unit_at_tile(x, y, elevation);
     if (target_id < 0) {
         target_id = -1;
     }
@@ -111,7 +111,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     } else {
         result = battle_target_validate_height_overlap(unit_id, x, y, elevation, target_id);
     }
-    battle_target_disable_green_panel_flags();
+    battle_target_clear_targeted_flags();
     if ((u32)result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];

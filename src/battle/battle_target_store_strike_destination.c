@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out) {
+/* Store where the strike lands in the strike work (target_new_x, target_new_y,
+ * target_new_map_level, which a knockback reads): the Random Fire tile, the target unit's square for
+ * a unit target, else the target tile. Also clears animate_on_miss_flag. */
+void battle_target_store_strike_destination(battle_stats_t* acting, battle_strike_work_t* out) {
     battle_stats_t* target;
 
     out->animate_on_miss_flag = 0;

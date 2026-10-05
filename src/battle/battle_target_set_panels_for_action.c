@@ -66,11 +66,11 @@ s32 battle_target_set_panels_for_action(u8* source) {
     case ACTION_MENU_TYPE_ATTACK:
     case ACTION_MENU_TYPE_CHARGE:
         result = battle_target_set_weapon_attack_panels(&action);
-        flags = 0x10;
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_JUMP:
         result = battle_target_set_jump_ability_panels((const u8*)&action);
-        flags = 0x10;
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:
@@ -94,11 +94,11 @@ s32 battle_target_set_panels_for_action(u8* source) {
     }
     if (mode == 2) {
         result = battle_target_set_item_range_panels(unit, range & 0xff);
-        flags = 0x10;
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
     }
     if (result != 0) {
         /* The named temporary is load-bearing; the direct test compiles differently. */
-        s32 flag_result = flags & 0x10;
+        s32 flag_result = flags & ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
 
         return flag_result != 0;
     }

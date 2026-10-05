@@ -1,14 +1,18 @@
 #include "fft/battle.h"
 
-/*
- * Mark the panels an AI action would affect and return how many are
- * targetable.
+/* Mark the area an ability hits (MAP_TILE_FLAG_TARGETED) and return the number of tiles. It centres
+ * on the unit's own tile for linear and three-direction abilities, on the target unit for a unit
+ * target (targeting type 6), else on the chosen tile; the aoe spreads from there (the whole map for
+ * 0xff, the tile alone for WEAPON_RANGE and DIRECT_TARGETING abilities) within `vertical` levels of
+ * its height (the upper layer only with UPPER_LAYER_ONLY), and Moldball Virus skips water. Then the
+ * caster's tile drops out (CANNOT_HIT_CASTER), lines replace the area (LINEAR_ATTACK,
+ * THREE_DIRECTIONS), and ally-only or enemy-only abilities drop the other team's units. Returns -1
+ * for an off-map or blocked centre.
  *
- * `location` carries the column into the index sum: the extra copies give the
- * index pseudo the allocation priority the target needs (a2), while keeping the
- * `(elevation * 256 + y * width) + x` operand order.
- */
-s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action) {
+ * `location` carries the column into the index sum: the extra copies give the index pseudo the
+ * allocation priority the target needs (a2), while keeping the `(elevation * 256 + y * width) + x`
+ * operand order. */
+s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     battle_ai_command_action_t action_copy;
     ability_secondary_data_t* ability;
     battle_stats_t* unit;
@@ -40,11 +44,12 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     vertical = ability->vertical;
     unit_id = action_copy.unit_id;
     unit = &g_battle_unit_stats[unit_id];
-    if (ability->flags_4 & 0x20) {
-        flags_1 |= 0x20;
-        flags_2 &= 0x39;
+    if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
+        flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;
+        flags_2 &= (u8) ~(ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK
+            | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES);
     }
-    if (flags_2 & 6) {
+    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
         y = unit->position.bits.y;
         elevation = unit->position.bits.higher_elevation;
@@ -68,7 +73,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags_06.value & 1) {
+    if (tile->flags_06.value & MAP_TILE_FLAG_BLOCKED) {
         return -1;
     }
     height = tile->height * 2 + (tile->depth_half_height & 0x1f) + (tile->depth_half_height >> 5) * 2;
@@ -94,29 +99,31 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
             other_panel->mark = 1;
         }
         g_battle_target_panels[index & 0xff].mark = 1;
-        if (!(flags_1 & 0x20)) {
+        if (!(flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
             panel->remaining_range = aoe + 1;
             other_panel->remaining_range = aoe + 1;
             battle_target_spread_panels(aoe, 0);
+            /* UPPER_LAYER_ONLY, as 0 or 1. */
             battle_target_apply_vertical_tolerance(height, vertical, (flags_2 >> 5) & 1);
             battle_target_check_moldball_virus_depth(action_copy.ability_id);
         }
     }
     cursor = &g_battle_target_panels[battle_map_calculate_location(unit)];
-    if (flags_2 & 1) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER) {
         cursor->remaining_range = 0;
     }
-    if (flags_2 & 4) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK) {
         battle_target_build_directional_attack_panels(&action_copy, 1);
     }
-    if (flags_2 & 2) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS) {
         battle_target_build_directional_attack_panels(&action_copy, 3);
     }
-    if (flags_2 & 0xc0) {
-        battle_target_apply_unit_team_eligibility(unit_id, flags_2 & 0x80, flags_2 & 0x40, aoe == 0xff);
+    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES)) {
+        battle_target_apply_unit_team_eligibility(unit_id, flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES,
+            flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES, aoe == 0xff);
     }
     count = 0;
-    if (!(flags_2 & 0xc0)) {
+    if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES))) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
             if (marked->remaining_range != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {

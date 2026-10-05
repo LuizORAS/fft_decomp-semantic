@@ -548,7 +548,12 @@ typedef enum ability_secondary_flags_1 {
 
 typedef enum ability_secondary_flags_2 {
     ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
+    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
+    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
     ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
+    ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET = 0x10, /* the action keeps the tile, not the unit on it */
+    ABILITY_SECONDARY_FLAG_2_UPPER_LAYER_ONLY = 0x20,     /* the area's height window ignores the lower layer */
+    /* With either of these, the other team's units drop out of the area. */
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
 } ability_secondary_flags_2_e;
@@ -1884,7 +1889,7 @@ typedef struct battle_unit_misc_data {
     battle_unit_command_state_t command_state; /* 0x158..0x16f */
     s32 sp2_ability_id;                        /* 0x170: ability whose SP2 file battle_gfx_open_sp2_file loads */
     s32 ability_preview_phase;                 /* 0x174: ability preview branch selector */
-    /* 0x178; battle_target_calculate_for_menu_types result stored by
+    /* 0x178; battle_target_mark_action_area result stored by
      * battle_target_select_tile: 0/1 preview, 2 stop, -1 back to the menu. */
     s32 target_select_result;
     s32 attack_phase_state;    /* 0x17c: 3 == commence, else pre-phase */
@@ -5718,23 +5723,23 @@ void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies,
 void battle_target_mark_tile_in_height_band(s32 x, s32 y, s32 lo, s32 hi);
 void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags);
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
-s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3);
+s32 battle_target_mark_hit_tiles(battle_ai_command_action_t* action, u8* flags_3);
 void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
 void battle_target_calculate_tile_coords_with_cursor_glow(void);
 void battle_target_calculate_weapon_range(battle_stats_t* unit);
 void battle_target_clear_range_on_untargetable_tiles(void);
 void battle_target_clear_panel_data(void);
 void battle_target_clear_panel_marks(void);
-void battle_target_disable_green_panel_flags(void);
-s32 battle_target_disable_green_panel_on_all_but_target_tile(const u8* source);
+void battle_target_clear_targeted_flags(void);
+s32 battle_target_mark_only_target_tile(const u8* source);
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
-s32 battle_target_get_unit_id_if_tile_targetable(s32 x, s32 y, s32 level);
+s32 battle_target_get_unit_at_tile(s32 x, s32 y, s32 level);
 void battle_target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
 void battle_target_remove_close_range(s32 x, s32 y, s32 range);
 void battle_target_select_random_tile_for_random_fire_abilities(void);
 void battle_target_select_tile(void);
 void battle_target_show_move_range_in_free_cursor(void);
-void battle_target_sort_list(s32 target_battle_id);
+void battle_target_remove_ability_target(s32 target_battle_id);
 void battle_target_spread_panels(u8 passes, s32 unused);
 void battle_target_store_cursor_casting_unit_name_and_data(void);
 void battle_target_store_cursor_unit_name_and_data(void);
@@ -5746,7 +5751,7 @@ s32 battle_target_validate_height_overlap(
     s32 attacker_id, s32 target_x, s32 target_y, s32 target_elevation, s32 target_id);
 
 s32 battle_target_calculate_cursor_tile_polygon(battle_screen_coords_t* coords, u8 layer, SVECTOR* quad);
-s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action);
+s32 battle_target_mark_ability_area(battle_ai_command_action_t* action);
 s32 battle_target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index);
 
 s32 battle_target_move_cursor_by_input(void);
@@ -5760,15 +5765,15 @@ s32 battle_target_apply_reflect(battle_stats_t* unit);
 void battle_target_apply_vertical_fixed(s32 x, s32 y);
 void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
 s32 battle_target_set_item_range_panels(battle_stats_t* unit, u8 range);
-s32 battle_target_calculate_for_menu_types(const u8* source);
-s32 battle_target_count_hit_by_ability(u8* out);
+s32 battle_target_mark_action_area(const u8* source);
+s32 battle_target_copy_ability_targets(u8* out);
 s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin);
 s32 battle_target_move_cursor_to_battle_id(u32 battle_id);
 void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
 s32 battle_target_run_calculator(const battle_ai_command_action_t* source);
 s32 battle_target_set_ability_panels(const u8* source);
 s32 battle_target_set_ability_range_flags(void);
-void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
+void battle_target_store_strike_destination(battle_stats_t* acting, battle_strike_work_t* out);
 s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source);
 s32 battle_target_set_jump_ability_panels(const u8* source);
 s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);

@@ -1,14 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Validates a copied action and runs the targeting routine for its menu type.
+/* Mark the tiles an action hits, by the menu type of its skillset: an ability's area
+ * (battle_target_mark_ability_area, with the ability Geomancy or Draw Out picks), the units that pass
+ * an Arithmeticks test (battle_target_run_calculator), and only the target tile for items, weapons
+ * and Jump (battle_target_mark_only_target_tile).
  *
- * Returns -1 for an absent actor, an out-of-range unit target or an invalid
- * ability, 2 for menu types with no targeting, otherwise 1 when the routine
- * returns 0, -1 when it returns -1, and 0 for any other result. The target
- * reads the actor's stats pointer in $a0 as battle_action_get_elemental_ability_id's
- * argument, so it is declared with one here. */
-s32 battle_target_calculate_for_menu_types(const u8* source) {
+ * Returns -1 for an absent actor, an out-of-range unit target or an invalid ability, 2 for menu
+ * types with no targeting, otherwise 1 when the routine returns 0, -1 when it returns -1, and 0 for
+ * any other result. The target reads the actor's stats pointer in $a0 as
+ * battle_action_get_elemental_ability_id's argument, so it is declared with one here. */
+s32 battle_target_mark_action_area(const u8* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
     u16 ability_id;
@@ -63,10 +65,10 @@ s32 battle_target_calculate_for_menu_types(const u8* source) {
             return -1;
         }
         action.ability_id = ability_id;
-        result = battle_target_set_green_panels_for_action(&action);
+        result = battle_target_mark_ability_area(&action);
     }
     if (mode == 2) {
-        result = battle_target_disable_green_panel_on_all_but_target_tile((u8*)&action);
+        result = battle_target_mark_only_target_tile((u8*)&action);
     }
     if (result == 0) {
         return 1;

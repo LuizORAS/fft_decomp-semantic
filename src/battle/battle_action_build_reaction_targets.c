@@ -30,7 +30,7 @@ s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* wor
         work->target_new_y = target_y;
         target_elevation = actor->action_target_elevation;
         work->target_new_map_level = target_elevation;
-        target_or_count = battle_target_get_unit_id_if_tile_targetable(target_x, target_y, target_elevation);
+        target_or_count = battle_target_get_unit_at_tile(target_x, target_y, target_elevation);
         if (target_or_count < 0) {
             break;
         }
