@@ -17,10 +17,10 @@ void battle_menu_close_move_help(void) {
     if (battle_move_set_reachable_tiles(
             casting->battle_data->misc_unit_id, casting->map_x, casting->map_y, casting->map_z)
         > 0) {
-        battle_target_set_tile_background_color(1, 1);
+        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_MOVE_RANGE, 1);
         g_battle_game_state = BATTLE_GAME_STATE_SELECT_MOVE_TILE;
         casting->state_frame_counter = 0;
-        battle_target_store_cursor_unit_name_and_data();
+        battle_target_show_cursor_unit_panel();
     } else {
         battle_action_enter_move_range_exception();
     }

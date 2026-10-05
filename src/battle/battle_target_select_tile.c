@@ -1,15 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Seed the source unit's pending action target and run target-tile selection.
- *
- * During ability-preview phase 2 the target is the unit's own tile; for
- * player-controlled units it is the current cursor tile.
- * battle_target_mark_action_area's result
- * picks the next step: 0/1 enter the ability-preview state, 2 restores the
- * unit and stops game flow, and -1 returns to the idle action menu.
- */
+/* Take the chosen tile as the action's target and mark the area it hits
+ * (battle_target_mark_action_area): the unit's own tile when no choice is needed (phase 2), else the
+ * cursor tile for a player-controlled unit (an AI unit's target is already set). On 0 or 1 enter
+ * ABILITY_PREVIEW_HANDLING with the hit tiles tinted, the acting unit and its target in the status
+ * panels and, with the Target Flashing option, the units tinted by team; on 2 go straight to the
+ * charge animation (PRE_ATTACK_ANIMATION); on -1 return to the action menu. The cursor is hidden
+ * either way. */
 void battle_target_select_tile(void) {
     battle_unit_misc_data_t* unit;
     s32 result;
@@ -36,8 +34,8 @@ void battle_target_select_tile(void) {
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
         g_battle_controller_input = 2;
         g_controller_input_copy_12 = prev;
-        battle_target_set_tile_background_color(7, 3);
-        battle_target_store_cursor_casting_unit_name_and_data();
+        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_TARGETED, 3);
+        battle_target_show_actor_and_target_panels();
         if (g_main_game_options.fields.target_flashing == GAME_OPTION_ON) {
             battle_gfx_tint_all_units_by_team();
         }
@@ -45,7 +43,7 @@ void battle_target_select_tile(void) {
     case 2:
         battle_state_disable_camera_pan();
         battle_state_enter_pre_attack_animation();
-        battle_target_store_cursor_casting_unit_name_and_data();
+        battle_target_show_actor_and_target_panels();
         break;
     case -1:
         battle_menu_dispatch_idle_action_menu();

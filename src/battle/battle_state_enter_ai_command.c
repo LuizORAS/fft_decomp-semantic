@@ -10,7 +10,7 @@ void battle_state_enter_ai_command(void) {
     unit = battle_unit_get_source_misc_data();
     unit->state_frame_counter = 0;
     unit->command_ready = 0;
-    battle_target_set_tile_background_color(0, 0);
+    battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 0);
     if (unit != 0 && unit->battle_data != 0) {
         battle_menu_store_unit_names_and_event_block_data(3, unit->battle_data->misc_unit_id, 0);
     }

@@ -9,7 +9,7 @@ void battle_target_update_cursor(void) {
     VECTOR primary;
 
     if (g_battle_target_cursor_visible != 0) {
-        battle_target_calculate_tile_coords_with_cursor_glow();
+        battle_target_draw_cursor_and_tile_glow();
         return;
     }
     battle_target_project_cursor_tile_to_screen(&primary, &secondary, &tertiary);

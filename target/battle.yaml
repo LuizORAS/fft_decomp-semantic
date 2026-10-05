@@ -12,7 +12,7 @@ functions:
   - {addr: 0x800683c0, size: 20, name: battle_target_show_cursor, hash: 8a8a6eec590a8201}
   - {addr: 0x800683d4, size: 16, name: battle_target_hide_cursor, hash: 4f307990a5cb2cc0}
   - {addr: 0x800683e4, size: 52, name: battle_target_move_cursor_to_unit, hash: 76d1367bddeedb3b}
-  - {addr: 0x80068418, size: 124, name: battle_target_gather_x_y_data_for_attacks, hash: 6a31a1745175dea2}
+  - {addr: 0x80068418, size: 124, name: battle_target_move_cursor_to_action_target, hash: 6a31a1745175dea2}
   - {addr: 0x80068494, size: 160, name: battle_gfx_update_unit_palettes, hash: 3bbcc6db0fd8d488}
   - {addr: 0x80068534, size: 256, name: battle_gfx_modify_palette_based_on_team, hash: 400571530b63cf6d}
   - {addr: 0x80068634, size: 72, name: battle_gfx_tint_all_units_by_team, hash: dc6488bcdac16694}
@@ -102,10 +102,10 @@ functions:
   - {addr: 0x8006dc8c, size: 288, name: battle_move_init_knockback, hash: b34366cb9ab1493b}
   - {addr: 0x8006ddac, size: 64, name: battle_move_start_knockback, hash: 6d8765992e04a9a9}
   - {addr: 0x8006ddec, size: 1904, name: battle_camera_get_input_direction, hash: e05f5aa2ab12948a}
-  - {addr: 0x8006e55c, size: 100, name: battle_target_store_cursor_unit_name_and_data, hash: b6444da65f91a1d7}
-  - {addr: 0x8006e5c0, size: 116, name: battle_target_store_cursor_unit_as_preview_target, hash: cf1646ac56c4b41b}
-  - {addr: 0x8006e634, size: 124, name: battle_target_store_cursor_casting_unit_name_and_data, hash: edf5332fa790b5a9}
-  - {addr: 0x8006e6b0, size: 280, name: battle_target_update_free_cursor_selection, hash: 7a8f8eede4e7fb4c}
+  - {addr: 0x8006e55c, size: 100, name: battle_target_show_cursor_unit_panel, hash: b6444da65f91a1d7}
+  - {addr: 0x8006e5c0, size: 116, name: battle_target_show_cursor_target_panel, hash: cf1646ac56c4b41b}
+  - {addr: 0x8006e634, size: 124, name: battle_target_show_actor_and_target_panels, hash: edf5332fa790b5a9}
+  - {addr: 0x8006e6b0, size: 280, name: battle_target_move_cursor_to_selection, hash: 7a8f8eede4e7fb4c}
   - {addr: 0x8006e7c8, size: 1812, name: battle_target_move_cursor_by_input, hash: 5c26cacc8045aa1f}
   - {addr: 0x8006eedc, size: 20, name: battle_state_enable_camera_pan, hash: f2080fa71cd521a5}
   - {addr: 0x8006eef0, size: 16, name: battle_state_disable_camera_pan, hash: da30eb65c0b4f396}
@@ -205,7 +205,7 @@ functions:
   - {addr: 0x800742c8, size: 64, name: battle_menu_start_help_thread, hash: 134f635e218e1369}
   - {addr: 0x80074308, size: 360, name: battle_target_select_tile, hash: 27945184eb7d8306}
   - {addr: 0x80074470, size: 88, name: battle_state_enter_illegal_range, hash: c2bbd66b2d92eb3d}
-  - {addr: 0x800744c8, size: 228, name: battle_target_set_boxes_red, hash: cbd25a950ec48844, rodata: [{addr: 0x80067578, size: 20, hash: 78916b1d116d9124}]}
+  - {addr: 0x800744c8, size: 228, name: battle_target_begin_tile_selection, hash: cbd25a950ec48844, rodata: [{addr: 0x80067578, size: 20, hash: 78916b1d116d9124}]}
   - {addr: 0x800745ac, size: 256, name: battle_action_confirm, hash: 8eafbbeb1286c9c1}
   - {addr: 0x800746ac, size: 268, name: battle_gfx_highlight_all_units_blue_or_red, hash: a46a624b87d79960}
   - {addr: 0x800747b8, size: 92, name: battle_state_enter_target_select_start, hash: 9be9960b5c1b28d9}
@@ -431,7 +431,7 @@ functions:
   - {addr: 0x80088904, size: 1512, name: battle_gfx_step_queued_unit_graphics_load, hash: a6dc10f03754655b}
   - {addr: 0x80088eec, size: 460, name: battle_gfx_update_unit_palette_animation, hash: 3096c0877e2a9f57}
   - {addr: 0x800890b8, size: 404, name: battle_target_project_cursor_tile_to_screen, hash: efd32868dc5dc1d2}
-  - {addr: 0x8008924c, size: 312, name: battle_target_calculate_tile_coords_with_cursor_glow, hash: 9295a5a6cb93e468}
+  - {addr: 0x8008924c, size: 312, name: battle_target_draw_cursor_and_tile_glow, hash: 9295a5a6cb93e468}
   - {addr: 0x80089384, size: 216, name: battle_gfx_draw_wait_direction_unit, hash: f50e5cccbee03f9a}
   - {addr: 0x8008945c, size: 204, name: battle_gfx_configure_misc_unit_palette_modulation, hash: a3126fe92f84ac7e}
   - {addr: 0x80089528, size: 44, name: battle_gfx_configure_misc_unit_palette_modulation_1f, hash: 8e2742a704326a02}
@@ -668,7 +668,7 @@ functions:
   - {addr: 0x800e78c0, size: 2256, name: battle_map_light_matrix_command, hash: 37c482541519987f, rodata: [{addr: 0x800e6ac0, size: 48, hash: 703df976344c80e3}]}
   - {addr: 0x800e8190, size: 636, name: battle_map_light_state_command, hash: 7af1d67ddb0c7993, rodata: [{addr: 0x800e6af0, size: 64, hash: 446e000b7b4b66a2}]}
   - {addr: 0x800e840c, size: 17164, name: battle_map_draw_mesh_and_weather, hash: 28d68d300acda80d}
-  - {addr: 0x800ec718, size: 6636, name: battle_target_set_tile_background_color, hash: 915b4dbff52c8f4e, rodata: [{addr: 0x800e6b70, size: 36, hash: 0d4d235b4acf51b8}]}
+  - {addr: 0x800ec718, size: 6636, name: battle_target_tint_marked_tiles, hash: 915b4dbff52c8f4e, rodata: [{addr: 0x800e6b70, size: 36, hash: 0d4d235b4acf51b8}]}
   - {addr: 0x800ee104, size: 820, name: battle_gfx_init_render_buffers, hash: 317ff53fdb8d7b3f}
   - {addr: 0x800ee438, size: 1316, name: battle_map_reset_mesh_render_state, hash: 754fbb12f9ec340d}
   - {addr: 0x800ee95c, size: 412, name: battle_camera_update_matrices, hash: 29602e281d343d33}

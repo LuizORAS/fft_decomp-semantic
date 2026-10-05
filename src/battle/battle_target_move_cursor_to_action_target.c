@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit) {
+/* Put the map cursor on the unit's action target: its tile, or the target unit's square. */
+void battle_target_move_cursor_to_action_target(battle_unit_misc_data_t* unit) {
     battle_stats_t* bd;
 
     bd = unit->battle_data;

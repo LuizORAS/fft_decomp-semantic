@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_target_store_cursor_unit_name_and_data(void) {
+/* Show the unit under the map cursor in the unit status panel (panel mode 2); with no unit there,
+ * panel mode 1. */
+void battle_target_show_cursor_unit_panel(void) {
     battle_unit_misc_data_t* misc;
     s32 mode;
     s32 unit_id;

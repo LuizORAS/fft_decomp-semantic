@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_target_store_cursor_casting_unit_name_and_data(void) {
+/* Show the acting unit, and the unit under the map cursor as its target (panel mode 5), or the
+ * acting unit alone (mode 2). */
+void battle_target_show_actor_and_target_panels(void) {
     battle_unit_misc_data_t* target;
     battle_unit_misc_data_t* source;
 

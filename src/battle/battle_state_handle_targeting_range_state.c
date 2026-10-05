@@ -20,7 +20,7 @@ void battle_state_handle_targeting_range_state(void) {
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
         if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
-            battle_target_set_tile_background_color(0, 2);
+            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 2);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }
@@ -37,7 +37,7 @@ void battle_state_handle_targeting_range_state(void) {
     } else {
         switch (unit->command_state.ai.data.action.targeting_type) {
         case 5:
-            battle_target_update_free_cursor_selection(unit, 0);
+            battle_target_move_cursor_to_selection(unit, 0);
             frame_data = unit->state_frame_counter++;
             if (frame_data >= 0x1f) {
                 battle_map_get_tile_data_pointer(unit->command_state.cursor.target_panel.vx,
@@ -48,7 +48,7 @@ void battle_state_handle_targeting_range_state(void) {
         case 6:
             target = battle_unit_get_misc_data_by_battle_id(unit->command_state.ai.data.action.target_id);
             if (target != 0) {
-                battle_target_update_free_cursor_selection(unit, target);
+                battle_target_move_cursor_to_selection(unit, target);
                 frame_data = unit->state_frame_counter++;
                 if (frame_data >= 0x1f) {
                     battle_map_get_tile_data_pointer(target->map_x, target->map_y, target->map_z);

@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* TARGETING_MESSAGE: 7 goes on to choosing the target (battle_target_set_boxes_red), 8 or
+/* TARGETING_MESSAGE: 7 goes on to choosing the target (battle_target_begin_tile_selection), 8 or
  * cancel returns to the action menu. */
 void battle_state_handle_targeting_message_state(void) {
     s32 command;
@@ -10,7 +10,7 @@ void battle_state_handle_targeting_message_state(void) {
     command = *battle_menu_get_selected_command_address();
     switch (command) {
     case 7:
-        battle_target_set_boxes_red();
+        battle_target_begin_tile_selection();
         return;
     case 8:
     case 0xff:

@@ -8,7 +8,7 @@ void battle_state_enter_unit_moving(void) {
 
     battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING;
-    battle_target_store_cursor_unit_name_and_data();
+    battle_target_show_cursor_unit_panel();
     unit = battle_unit_get_casting_misc_data();
     battle_unit_save_previous_state(unit);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {

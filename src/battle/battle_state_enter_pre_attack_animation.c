@@ -7,7 +7,7 @@ void battle_state_enter_pre_attack_animation(void) {
     battle_unit_misc_data_t* unit;
     u16 ability;
 
-    battle_target_set_tile_background_color(0, 2);
+    battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 2);
     g_battle_game_state = BATTLE_GAME_STATE_PRE_ATTACK_ANIMATION;
     unit = battle_unit_get_source_misc_data();
     ability = unit->used_ability_id;

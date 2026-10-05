@@ -3,7 +3,7 @@
 
 /* Project the cursor tile and draw the map cursor and its tile glow, while the cursor is
  * visible (battle_target_update_cursor). */
-void battle_target_calculate_tile_coords_with_cursor_glow(void) {
+void battle_target_draw_cursor_and_tile_glow(void) {
     SVECTOR secondary;
     SVECTOR tertiary;
     SVECTOR corner0;

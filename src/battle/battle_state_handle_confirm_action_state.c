@@ -40,8 +40,8 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(0, 3);
-            battle_target_set_boxes_red();
+            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 3);
+            battle_target_begin_tile_selection();
             return;
         default:
             break;
@@ -56,8 +56,8 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(0, 3);
-            battle_target_set_boxes_red();
+            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 3);
+            battle_target_begin_tile_selection();
             return;
         default:
             break;

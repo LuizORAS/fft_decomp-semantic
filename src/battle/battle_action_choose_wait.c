@@ -16,7 +16,7 @@ void battle_action_choose_wait(void) {
         battle_turn_advance();
     } else {
         g_battle_game_state = BATTLE_GAME_STATE_WAIT_MENU;
-        battle_target_store_cursor_unit_name_and_data();
+        battle_target_show_cursor_unit_panel();
         battle_menu_init_system_function(
             3, 0, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
     }

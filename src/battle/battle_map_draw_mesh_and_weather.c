@@ -575,7 +575,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     /* The ambient colour restores use pointer arithmetic on the decayed arrays
      * rather than GT3(i)/GT4(i) indexing: that keeps the target's
-     * `addu offset, base` operand order (as in battle_target_set_tile_background_color). */
+     * `addu offset, base` operand order (as in battle_target_tint_marked_tiles). */
     if (g_battle_map_ambient_restored_buffer != 0) {
         if (g_battle_map_ambient_restored_buffer != g_battle_data) {
             for (i = 0; i < g_battle_map_textured_triangle_count; i++) {

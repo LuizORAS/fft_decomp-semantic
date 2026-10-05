@@ -36,5 +36,5 @@ void battle_action_init_learn_ability_on_hit(void) {
         }
         break;
     }
-    battle_target_store_cursor_unit_name_and_data();
+    battle_target_show_cursor_unit_panel();
 }

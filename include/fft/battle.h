@@ -5701,11 +5701,24 @@ s32 battle_gfx_poll_unit_graphics_load(void);
 s32 battle_gfx_step_queued_unit_graphics_load(void);
 
 /* target */
+/* What battle_target_tint_marked_tiles does to the map polygons: tint the tiles that
+ * carry one map mark, restore them, or reset every tile. */
+typedef enum battle_target_tile_tint {
+    BATTLE_TARGET_TINT_RESET = 0,
+    BATTLE_TARGET_TINT_MOVE_RANGE = 1,          /* MAP_TILE_FLAG_MOVE_DESTINATION, in blue */
+    BATTLE_TARGET_TINT_ABILITY_RANGE = 2,       /* MAP_TILE_FLAG_ABILITY_RANGE */
+    BATTLE_TARGET_TINT_CLEAR_ABILITY_RANGE = 3, /* no C caller */
+    BATTLE_TARGET_TINT_CLEAR_MOVE_RANGE = 5,    /* no C caller */
+    BATTLE_TARGET_TINT_TARGETED = 7,            /* MAP_TILE_FLAG_TARGETED */
+    BATTLE_TARGET_TINT_CLEAR_TARGETED = 8,
+} battle_target_tile_tint_e;
+
 extern u8 g_battle_target_ability_targets_list[16];
 extern u8 g_battle_target_tile_targetable_flags[];
 
 extern u16 g_battle_target_color_tile_x;
 extern u16 g_battle_target_color_tile_y;
+/* The tint each mark is in (battle_target_tile_tint_e): move range, ability range, targeted. */
 extern s16 g_battle_target_tile_mark_modes[3];
 
 /* One panel per map tile (two layers of 256, indexed like g_battle_map_tile_data), then 16
@@ -5725,14 +5738,14 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
 s32 battle_target_mark_hit_tiles(battle_ai_command_action_t* action, u8* flags_3);
 void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
-void battle_target_calculate_tile_coords_with_cursor_glow(void);
+void battle_target_draw_cursor_and_tile_glow(void);
 void battle_target_calculate_weapon_range(battle_stats_t* unit);
 void battle_target_clear_range_on_untargetable_tiles(void);
 void battle_target_clear_panel_data(void);
 void battle_target_clear_panel_marks(void);
 void battle_target_clear_targeted_flags(void);
 s32 battle_target_mark_only_target_tile(const u8* source);
-void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
+void battle_target_move_cursor_to_action_target(battle_unit_misc_data_t* unit);
 s32 battle_target_get_unit_at_tile(s32 x, s32 y, s32 level);
 void battle_target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
 void battle_target_remove_close_range(s32 x, s32 y, s32 range);
@@ -5741,11 +5754,11 @@ void battle_target_select_tile(void);
 void battle_target_show_move_range_in_free_cursor(void);
 void battle_target_remove_ability_target(s32 target_battle_id);
 void battle_target_spread_panels(u8 passes, s32 unused);
-void battle_target_store_cursor_casting_unit_name_and_data(void);
-void battle_target_store_cursor_unit_name_and_data(void);
-s32 battle_target_set_boxes_red(void);
-void battle_target_store_cursor_unit_as_preview_target(void);
-void battle_target_update_free_cursor_selection(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* selected_unit);
+void battle_target_show_actor_and_target_panels(void);
+void battle_target_show_cursor_unit_panel(void);
+s32 battle_target_begin_tile_selection(void);
+void battle_target_show_cursor_target_panel(void);
+void battle_target_move_cursor_to_selection(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* selected_unit);
 
 s32 battle_target_validate_height_overlap(
     s32 attacker_id, s32 target_x, s32 target_y, s32 target_elevation, s32 target_id);
@@ -5755,7 +5768,7 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action);
 s32 battle_target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index);
 
 s32 battle_target_move_cursor_by_input(void);
-void battle_target_set_tile_background_color(s32 mode, s32 unused);
+void battle_target_tint_marked_tiles(s32 mode, s32 unused);
 
 void battle_target_hide_cursor(void);
 void battle_target_show_cursor(void);
@@ -5773,6 +5786,8 @@ void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* pos
 s32 battle_target_run_calculator(const battle_ai_command_action_t* source);
 s32 battle_target_set_ability_panels(const u8* source);
 s32 battle_target_set_ability_range_flags(void);
+s32 battle_target_set_ability_range_flags_from_marks(void);
+void battle_target_mark_unit_panels_by_team(battle_stats_t* unit, s32 flags);
 void battle_target_store_strike_destination(battle_stats_t* acting, battle_strike_work_t* out);
 s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source);
 s32 battle_target_set_jump_ability_panels(const u8* source);

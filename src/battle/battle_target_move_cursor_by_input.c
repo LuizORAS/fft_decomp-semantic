@@ -166,10 +166,10 @@ s32 battle_target_move_cursor_by_input(void) {
         case BATTLE_GAME_STATE_FREE_CURSOR:
         case BATTLE_GAME_STATE_SELECT_MOVE_TILE:
         case BATTLE_GAME_STATE_TARGET_SELECT:
-            battle_target_store_cursor_unit_name_and_data();
+            battle_target_show_cursor_unit_panel();
             break;
         case BATTLE_GAME_STATE_TARGETING_RANGE:
-            battle_target_store_cursor_unit_as_preview_target();
+            battle_target_show_cursor_target_panel();
             break;
         }
         return 1;
