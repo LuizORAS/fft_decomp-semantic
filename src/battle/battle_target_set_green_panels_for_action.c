@@ -58,15 +58,15 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
         y = target->position.bits.y;
         elevation = target->position.bits.higher_elevation;
     }
-    if (x >= g_map_max_x) {
+    if (x >= g_battle_map_max_x) {
         return -1;
     }
-    if (y >= g_map_max_y || elevation >= 2) {
+    if (y >= g_battle_map_max_y || elevation >= 2) {
         return -1;
     }
     location = x;
     index = location;
-    index = elevation * 256 + y * g_map_max_x + location;
+    index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
     if (tile->flags_06.value & 1) {
         return -1;

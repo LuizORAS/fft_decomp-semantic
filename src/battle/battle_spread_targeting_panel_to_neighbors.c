@@ -20,7 +20,7 @@ s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x) {
     s32 spread_range;
 
     changed = 0;
-    range = g_battle_target_panels[y * g_map_max_x + x].remaining_range;
+    range = g_battle_target_panels[y * g_battle_map_max_x + x].remaining_range;
     spread_range = range - 1;
     for (i = 0; i < 4; i++) {
         switch (i) {
@@ -43,13 +43,13 @@ s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x) {
         }
         next_x = x + dx;
         next_y = y + dy;
-        if ((next_x >= 0) && (next_y >= 0) && (next_x < g_map_max_x) && (next_y < g_map_max_y)) {
-            index = next_y * g_map_max_x + next_x;
+        if ((next_x >= 0) && (next_y >= 0) && (next_x < g_battle_map_max_x) && (next_y < g_battle_map_max_y)) {
+            index = next_y * g_battle_map_max_x + next_x;
             panel = &g_battle_target_panels[index];
             if (panel->remaining_range < range) {
                 panel->remaining_range = spread_range;
                 upper_x = next_x + 0x100;
-                g_battle_target_panels[next_y * g_map_max_x + upper_x].remaining_range = spread_range;
+                g_battle_target_panels[next_y * g_battle_map_max_x + upper_x].remaining_range = spread_range;
                 if (range >= 3) {
                     panel->mark = 1;
                     changed = 1;

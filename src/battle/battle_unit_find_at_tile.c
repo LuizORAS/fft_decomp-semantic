@@ -22,11 +22,11 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
     unit_filters = filters;
     dry_filters = filters;
 
-    if (x < 0 || x >= g_map_max_x || y < 0 || y >= g_map_max_y || level >= 2) {
+    if (x < 0 || x >= g_battle_map_max_x || y < 0 || y >= g_battle_map_max_y || level >= 2) {
         return -2;
     }
 
-    tile = &g_battle_map_tile_data[(level << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
     if (tile->flags_06.value & MAP_TILE_COLLISION_MASK) {
         return -2;
     }

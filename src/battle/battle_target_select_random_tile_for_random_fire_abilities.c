@@ -41,7 +41,7 @@ void battle_target_select_random_tile_for_random_fire_abilities(void) {
     g_battle_map_tile_data[tile].ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
     g_current_ability.random_fire_flag = 1;
     g_current_ability.target_elevation = tile / 256;
-    g_current_ability.target_y = (tile & 0xFF) / g_map_max_x;
-    g_current_ability.target_x = (tile & 0xFF) % g_map_max_x;
+    g_current_ability.target_y = (tile & 0xFF) / g_battle_map_max_x;
+    g_current_ability.target_x = (tile & 0xFF) % g_battle_map_max_x;
     battle_target_clear_panel_spread_flags();
 }

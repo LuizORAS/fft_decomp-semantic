@@ -69,7 +69,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     result = battle_target_set_panels_for_action((u8*)&action);
     if (result == -1 || result == 3
         || (result < 2
-            && !(g_battle_map_tile_data[saved_state = (z << 8) + (g_map_max_x * y) + x].ceiling_depth_and_marks
+            && !(g_battle_map_tile_data[saved_state = (z << 8) + (g_battle_map_max_x * y) + x].ceiling_depth_and_marks
                 & MAP_TILE_FLAG_ABILITY_RANGE))) {
         self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
         self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;

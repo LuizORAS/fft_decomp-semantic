@@ -27,7 +27,7 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
         has_rider = 1;
     }
 
-    tile_flags = g_battle_map_tile_data[(level << 8) + y * g_map_max_x + x].flags_06.value;
+    tile_flags = g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x].flags_06.value;
     if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
         return -1;
     }

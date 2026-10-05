@@ -1,14 +1,13 @@
-/*
- * Setter twin of battle_map_get_tile_data_value: stores one packed field of the
- * tile at (x, y, layer) and returns 0, or -2 for an unknown selector.
- * Selector 15 instead retries battle_return_zero_801842f8 up to 1000 times, raising
- * exception 0x80 on exhaustion, and returns its last result. The shifted
- * selectors reassign `value` first; an inline shift swaps the `or` operands
- * and breaks the target's shared or/sb tails.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Setter twin of battle_map_get_tile_data_value, used by event scripts: store one packed field of
+ * the tile at (x, y, layer) and return 0, or -2 for an unknown selector. Selector 15 instead retries
+ * battle_return_zero_801842f8 up to 1000 times, raising exception 0x80 on exhaustion, and returns
+ * its last result.
+ *
+ * The shifted selectors reassign `value` first; an inline shift swaps the `or` operands and breaks
+ * the target's shared or/sb tails. */
 s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value) {
     map_tile_t* tile;
     s32 attempts;
@@ -16,7 +15,7 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
 
     attempts = 0;
     result = 0;
-    tile = &g_battle_map_tile_data[(layer << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(layer << 8) + y * g_battle_map_max_x + x];
     switch (field) {
     case MAP_TILE_DATA_SURFACE_TYPE:
         tile->surface.value = (tile->surface.value & ~MAP_SURFACE_MASK) | (value & MAP_SURFACE_MASK);

@@ -65,7 +65,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         }
     }
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
-        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_map_max_x
+        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_battle_map_max_x
             + g_battle_relocated_unit_coords[i][0];
         panel = &g_battle_target_panels[index];
         panel->unit_record_index = 1;
@@ -78,7 +78,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         for (i = 1; i < limit; i++) {
             for (dx = -i; dx <= i; dx++) {
                 x = origin_x + dx;
-                if (x < 0 || x >= g_map_max_x) {
+                if (x < 0 || x >= g_battle_map_max_x) {
                     continue;
                 }
                 if (dx > 0) {
@@ -89,10 +89,10 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                 side = -1;
                 found_x = x;
                 for (y = origin_y - dy; side < 2; side += 2) {
-                    if (y >= 0 && y < g_map_max_y) {
+                    if (y >= 0 && y < g_battle_map_max_y) {
                         found_y = y;
                         for (level = 0; level < 2; level++) {
-                            index = level * 256 + g_map_max_x * y + x;
+                            index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
                             depth = tile->depth_half_height;
                             if ((s32)(depth >> 5) >= 3) {

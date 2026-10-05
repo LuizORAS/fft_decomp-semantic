@@ -43,14 +43,14 @@ s32 battle_map_resolve_rotated_offset_layer(
     }
     *out_x = unit->x + dx;
     *out_y = unit->position.bits.y + dy;
-    if (*out_x < 0 || *out_x >= g_map_max_x) {
+    if (*out_x < 0 || *out_x >= g_battle_map_max_x) {
         return -1;
     }
-    if (*out_y < 0 || *out_y >= g_map_max_y) {
+    if (*out_y < 0 || *out_y >= g_battle_map_max_y) {
         return -1;
     }
     current = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
-    index = g_map_max_x * *out_y + *out_x;
+    index = g_battle_map_max_x * *out_y + *out_x;
     upper_index = index + 0x100;
     /* Builds index + 0x100 in $v1 before scaling instead of in $a2. */
     __asm__("" : "=r"(upper_index) : "0"(upper_index));

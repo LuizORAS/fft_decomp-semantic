@@ -1,14 +1,12 @@
 #include "fft/battle.h"
 
-/*
- * Fill the move-find result record for tile (x, y, layer): flag 4 and the
- * unit id when a unit stands there, then, for a matching move-find tile, its
- * index, flag 1 and the rare/common items when the item is still unfound,
- * and flag 2 with the trap number (0 degenerator, 1 deathtrap, 2 sleeping gas,
- * 3 steel needle) unless the trap is disabled. The final flag
- * update must go through a pointer to keep the target's register address.
- */
-battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 layer) {
+/* Fill and return the Move-Find result record (g_battle_move_find_result_flags and the bytes after
+ * it) for tile (x, y, layer): BATTLE_MOVE_FIND_RESULT_OCCUPIED and the unit id when a unit stands
+ * there; for one of the map's four Move-Find tiles, its index, then ITEM with the rare and common
+ * items while the item is still unfound, and TRAP with the trap number (0 degenerator, 1 deathtrap,
+ * 2 sleeping gas, 3 steel needle) unless the tile has none. The final flag update must go through a
+ * pointer to keep the target's register address. */
+battle_move_find_result_data_t* battle_map_get_move_find_result(u8 x, u8 y, u8 layer) {
     map_move_find_item_entry_t* tile;
     s32 unit;
     s32 i;

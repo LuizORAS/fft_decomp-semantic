@@ -32,10 +32,10 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     x = unit->x;
     y = unit->position.bits.y;
     higher_elevation = unit->position.bits.higher_elevation;
-    if (x >= g_map_max_x) {
+    if (x >= g_battle_map_max_x) {
         return -1;
     }
-    if (y >= g_map_max_y) {
+    if (y >= g_battle_map_max_y) {
         return -1;
     }
     tile = (battle_unit_placement_tile_bits_t*)&g_battle_map_tile_data[battle_map_calculate_location(unit)];

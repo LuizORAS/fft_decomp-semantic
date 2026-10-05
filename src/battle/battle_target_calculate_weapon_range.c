@@ -23,7 +23,7 @@ void battle_target_calculate_weapon_range(battle_stats_t* unit) {
     y = unit->position.bits.y;
     weapon = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     x = unit->x;
-    index = x + y * g_map_max_x;
+    index = x + y * g_battle_map_max_x;
     if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
         weapon = ITEM_ID_NOTHING;
     }

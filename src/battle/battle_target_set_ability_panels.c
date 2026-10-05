@@ -49,7 +49,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
     panels = g_battle_target_panels;
     origin_offset = location * sizeof(battle_target_panel_t);
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);
-    index = y * g_map_max_x + x;
+    index = y * g_battle_map_max_x + x;
     if (range == 0xff) {
         for (i = 0; i < MAP_TILE_SLOT_COUNT; i++) {
             panels[i].remaining_range = 1;

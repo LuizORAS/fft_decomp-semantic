@@ -16,7 +16,7 @@ s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* un
     s32 count;
     u8 remaining;
 
-    index = unit->position.bits.y * g_map_max_x + unit->x;
+    index = unit->position.bits.y * g_battle_map_max_x + unit->x;
     battle_target_clear_panel_data();
     remaining = (range & 0x7f) + 1;
     panel = &g_battle_target_panels[index];

@@ -24,9 +24,9 @@ void battle_target_spread_panels(u8 passes, s32 unused) {
             break;
         }
         changed = 0;
-        for (y = 0; y < g_map_max_y; y++) {
-            for (x = 0; x < g_map_max_x; x++) {
-                panel = &g_battle_target_panels[y * g_map_max_x + x];
+        for (y = 0; y < g_battle_map_max_y; y++) {
+            for (x = 0; x < g_battle_map_max_x; x++) {
+                panel = &g_battle_target_panels[y * g_battle_map_max_x + x];
                 if (panel->mark != 0) {
                     panel->mark = 0;
                     changed += battle_spread_targeting_panel_to_neighbors(y, x);

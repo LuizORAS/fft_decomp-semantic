@@ -8,7 +8,7 @@ s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
 
     main_util_copy_action_data((const u8*)source, action);
     unit = &g_battle_unit_stats[action[0]];
-    idx = unit->position.bits.y * g_map_max_x + unit->x;
+    idx = unit->position.bits.y * g_battle_map_max_x + unit->x;
     battle_target_clear_panel_data();
     battle_target_calculate_weapon_range(unit);
     {

@@ -37,7 +37,7 @@ u32 battle_move_get_post_move_events(battle_stats_t* unit) {
         }
     }
     find_item = target->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
-    tile = battle_map_set_item_trap_data(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
+    tile = battle_map_get_move_find_result(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
     if (find_item && (tile->flags & BATTLE_MOVE_FIND_RESULT_ITEM)) {
         flags |= BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
     } else if (tile->flags & BATTLE_MOVE_FIND_RESULT_TRAP) {

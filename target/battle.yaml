@@ -1208,7 +1208,7 @@ functions:
   - {addr: 0x80180178, size: 152, name: battle_status_remove_charging_ability_ct, hash: ac19fa42e1f8f0f5}
   - {addr: 0x80180210, size: 32, name: battle_status_disable_acting, hash: e0a0d57c93fe02c6}
   - {addr: 0x80180230, size: 152, name: battle_map_determine_rare_common_item, hash: 1735317ad82e3f6a}
-  - {addr: 0x801802c8, size: 508, name: battle_map_set_item_trap_data, hash: 688d0d48a68d6f5d}
+  - {addr: 0x801802c8, size: 508, name: battle_map_get_move_find_result, hash: 688d0d48a68d6f5d}
   - {addr: 0x801804c4, size: 108, name: battle_map_calculate_move_find_item_flag, hash: a65065e5c33c97dd}
   - {addr: 0x80180530, size: 980, name: battle_unit_generate_crystal_or_treasure, hash: f5e4235eb6a6aec5}
   - {addr: 0x80180904, size: 260, name: battle_unit_learn_from_crystal, hash: f516d14fbca7eaa8}
@@ -1266,7 +1266,7 @@ functions:
   - {addr: 0x80183e00, size: 60, name: battle_status_inflict_defending_to_battle_id, hash: d0e7c54fa7c5eaec}
   - {addr: 0x80183e3c, size: 88, name: battle_unit_check_exists, hash: 532560a45165d4c6}
   - {addr: 0x80183e94, size: 12, name: battle_action_activate_move_act, hash: 3a68b6987427585b}
-  - {addr: 0x80183ea0, size: 192, name: battle_map_copy_xy_coords_and_tile_data, hash: 308fc7a7c1c0cadb}
+  - {addr: 0x80183ea0, size: 192, name: battle_map_copy_size_and_tile_data, hash: 308fc7a7c1c0cadb}
   - {addr: 0x80183f60, size: 84, name: battle_map_load_move_find_item_data, hash: 20df832db91fa4ca}
   - {addr: 0x80183fb4, size: 104, name: battle_map_get_tile_data_pointer, hash: d20d4eca5e0c109c}
   - {addr: 0x8018401c, size: 304, name: battle_map_get_tile_data_value, hash: 76b2083e858cf6dd, rodata: [{addr: 0x801741c4, size: 56, hash: a9baa9062de74326}]}
@@ -2134,9 +2134,7 @@ data:
   - {addr: 0x800e4e94, name: g_battle_cursor_previous_z}
   - {addr: 0x800e4e98, name: g_battle_cursor_previous_y}
   - {addr: 0x800e4e9c, name: g_battle_map_max_x}
-  - {addr: 0x800e4e9c, name: g_map_max_x}
   - {addr: 0x800e4ea0, name: g_battle_map_max_y}
-  - {addr: 0x800e4ea0, name: g_map_max_y}
   - {addr: 0x800e4ea4, name: g_battle_map_palette_modified_colors}
   - {addr: 0x800e4ea4, name: g_battle_map_palette_upload_words}
   - {addr: 0x800e6aa4, name: g_battle_map_data_load_complete}

@@ -6338,6 +6338,7 @@ extern u32 g_battle_map_gns_lba[];
 extern s32 g_battle_map_gns_record_cursor;
 extern gns_file_record_t g_battle_map_gns_records[];
 extern s32 g_battle_map_id;
+/* Map width and depth in tiles (GNS terrain resource 0x1a). */
 extern u8 g_battle_map_max_x;
 extern u8 g_battle_map_max_y;
 extern s32 g_battle_map_mesh_data_buffer;
@@ -6358,8 +6359,6 @@ extern s32 g_battle_map_untextured_quad_render_record_count;
 extern s32 g_battle_map_untextured_triangle_count;
 extern s32 g_battle_map_untextured_triangle_render_record_count;
 extern s32 g_battle_map_zoom_target;
-extern u8 g_map_max_x;
-extern u8 g_map_max_y;
 extern u16 g_battle_map_weather_particle_palette[];
 extern MATRIX g_battle_map_light_color_matrix;
 extern MATRIX g_battle_map_light_matrix;
@@ -6567,7 +6566,7 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 palette_index, const u16* colors);
 void* battle_map_determine_rare_common_item(battle_stats_t* unit);
-battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 layer);
+battle_move_find_result_data_t* battle_map_get_move_find_result(u8 x, u8 y, u8 layer);
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
 void battle_map_update_animations(void);
 void battle_map_update_lighting(void);
@@ -6598,7 +6597,7 @@ void battle_map_update_palette_colors(
 u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 u8* battle_map_light_state_command(s32 command, u8* data);
 void battle_map_append_mesh_geometry(u16* geometry_data, battle_map_mesh_part_metadata_t* metadata);
-void battle_map_copy_xy_coords_and_tile_data(u8* p);
+void battle_map_copy_size_and_tile_data(u8* p);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
 s32 battle_map_get_weather_severity(void);

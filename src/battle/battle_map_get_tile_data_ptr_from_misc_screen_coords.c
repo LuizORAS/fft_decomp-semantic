@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* The tile under the unit's screen position (28 screen units per tile) on its layer, which differs
+ * from its map square while it moves. */
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id) {
     battle_unit_misc_data_t* unit;
 

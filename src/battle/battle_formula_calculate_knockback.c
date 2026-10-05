@@ -78,7 +78,7 @@ void battle_formula_calculate_knockback(void) {
     if (level < 0) {
         return;
     }
-    tile = &g_battle_map_tile_data[(level << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
     surface = tile->surface.bits.type;
     if (tile->flags_06.bits.untargetable) {
         return;

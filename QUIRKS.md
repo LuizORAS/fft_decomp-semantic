@@ -175,6 +175,10 @@ without changing the bytes.
 - `battle_move_calculate_walkto_pathing` has no return statement;
   `battle_move_start_unit_walk_to` uses the path that `battle_move_calculate_pathing` leaves in
   `$v0`, which a native build must return.
+- `battle_map_load_gns_and_move_find_items` has no return statement for a map whose GNS sector is
+  0 (map ids 120-124, 126 and 127 in the retail table); `battle_map_load_data` compares the
+  leftover `$v0` of the BIOS `bzero` with `g_battle_map_gns_records`. A native build must return
+  a value there.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
