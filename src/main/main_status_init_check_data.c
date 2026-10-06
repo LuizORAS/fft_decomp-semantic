@@ -1,5 +1,10 @@
 #include "fft/main.h"
 
+/* Build the status check sets (g_main_status_check_sets) from the status data flags: KO, the two
+ * team-loss sets, CT freeze, no reactions, immortal and formation immunity, two provisional sets and
+ * mount removal; plus the fixed unmountable set (Crystal, Dead, Petrify, Blood Suck, Treasure,
+ * Berserk, Chicken, Frog, Charm). It also clears the Move-Find flags (g_main_item_location_flags); the
+ * game reset (main_boot_reset_game_state) calls it. */
 void main_status_init_check_data(void) {
     int status;
     u8 flags4;

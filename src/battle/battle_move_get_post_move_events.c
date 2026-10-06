@@ -43,7 +43,7 @@ u32 battle_move_get_post_move_events(battle_stats_t* unit) {
     } else if (tile->flags & BATTLE_MOVE_FIND_RESULT_TRAP) {
         flags |= BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED;
     }
-    if (battle_status_remove_charging_ability_ct(unit, 0) != 0) {
+    if (battle_status_check_charging_charge(unit, 0) != 0) {
         flags |= BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL;
     }
     flags |= battle_move_get_movement_ability_events(unit);

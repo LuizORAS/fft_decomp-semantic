@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 
-/* Return 1 when the unit cannot participate in the AT list. */
+/* Return 1 when the unit has no place in the AT list: no unit in the slot, Crystal, Dead, Petrify
+ * or Treasure, or a mount carrying its rider; otherwise 0. */
 s32 battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 1;

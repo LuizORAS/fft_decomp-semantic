@@ -1413,7 +1413,6 @@ data:
   - {addr: 0x80059bb0, name: save_unit_to_party}
   - {addr: 0x8005a884, name: get_item_data_pointer}
   - {addr: 0x8005e288, name: get_total_equipment_quantity}
-  - {addr: 0x8005e7a8, name: update_unit_action_statuses}
   - {addr: 0x8005e90c, name: g_main_unit_generation_base_data}
   - {addr: 0x8005e93c, name: g_main_unit_generation_raw_stat_variance}
   - {addr: 0x8005e950, name: D_8005E950}
@@ -1480,7 +1479,7 @@ data:
   - {addr: 0x8013b590, name: battle_script_get_variable}
   - {addr: 0x8013b644, name: battle_script_set_variable}
   - {addr: 0x8014a81c, name: battle_return_zero}
-  - {addr: 0x8018e9bc, name: battle_status_enable_special_flags}
+  - {addr: 0x8018e9bc, name: battle_status_queue_graphics_change_if_executing}
   - {addr: 0x801908cc, name: g_battle_unit_stats}
 
 overrides:

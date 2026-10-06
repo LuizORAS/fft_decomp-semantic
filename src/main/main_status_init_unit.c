@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Set up a unit's statuses for battle: inflicted = current minus innate, the counts and death
+ * counter cleared (main_status_init_ct), then the flags reconciled
+ * (main_status_update_unit_flags_and_ct). */
 void main_status_init_unit(battle_stats_t* unit) {
     s32 status_set;
 

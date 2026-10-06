@@ -116,7 +116,7 @@ s32 battle_move_start_next_post_move_event(void) {
         return 1;
     }
     if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {
-        battle_status_remove_charging_ability_ct(casting->battle_data, 1);
+        battle_status_check_charging_charge(casting->battle_data, 1);
         battle_menu_init_system_function(0xc, 0, source->battle_data->misc_unit_id, 0, 0);
         return 1;
     }

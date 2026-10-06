@@ -14,12 +14,12 @@
  * Brave (0-100, at least 10 for a rider, so a rider never turns Chicken) and Faith (0-100) change;
  * broken or stolen equipment leaves; an unbroken Draw Out katana returns; gil, EXP and JP change;
  * Level Up/Down applies; a Poach adds the monster's item to the Fur Shop; and the MORBOL effect, while
- * executing, reapplies the target's status flags (battle_status_reapply_active_flags).
+ * executing, reapplies the target's status flags (battle_status_clear_all).
  *
  * A target brought to 0 HP gets Dead (its KO count grows while executing) and returns -1 when it is a
  * rider, else 0. Otherwise Critical follows HP <= max HP / 5, Chicken follows Brave < 10, HP damage
  * removes Charm, Sleep, Transparent and Confusion, a knockback can cancel the target's charge
- * (battle_status_remove_charging_ability_ct), and the status changes resolve. The outcome (2 newly
+ * (battle_status_check_charging_charge), and the status changes resolve. The outcome (2 newly
  * dead, 1 anything changed, 0 nothing) goes to the attacker's EXP award
  * (battle_unit_update_attacker_earned_experience), ability_outcome becomes 2 when something changed,
  * and the stat-save and restore reactions get their chance. Returns -1 when a rider ends dead or
@@ -131,7 +131,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_MORBOL) {
         outcome |= 1;
         if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
-            battle_status_reapply_active_flags(g_battle_action_target);
+            battle_status_clear_all(g_battle_action_target);
         }
     }
     if (hp == 0 && !(g_battle_action_target->status_sets.current[0] & STATUS_MASK(CRYSTAL))
@@ -162,7 +162,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
         g_battle_action_target_data->status_removal[1] |= STATUS_MASK(CONFUSION);
     }
     if ((g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK)
-        && battle_status_remove_charging_ability_ct(g_battle_action_target, 0) != 0) {
+        && battle_status_check_charging_charge(g_battle_action_target, 0) != 0) {
         g_battle_action_target_data->status_removal[0] |= STATUS_MASK(CHARGING);
         g_battle_action_target->charged_ability_ct = 0xff;
     }

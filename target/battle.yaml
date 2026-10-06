@@ -1205,8 +1205,8 @@ functions:
   - {addr: 0x8017fddc, size: 484, name: battle_unit_set_tile_position, hash: 0002990ce21c35ea}
   - {addr: 0x8017ffc0, size: 372, name: battle_move_get_post_move_events, hash: 170df71853f7047a}
   - {addr: 0x80180134, size: 68, name: battle_move_get_movement_ability_events, hash: 74dd3cecd820c160}
-  - {addr: 0x80180178, size: 152, name: battle_status_remove_charging_ability_ct, hash: ac19fa42e1f8f0f5}
-  - {addr: 0x80180210, size: 32, name: battle_status_disable_acting, hash: e0a0d57c93fe02c6}
+  - {addr: 0x80180178, size: 152, name: battle_status_check_charging_charge, hash: ac19fa42e1f8f0f5}
+  - {addr: 0x80180210, size: 32, name: battle_status_clear_action_state_2, hash: e0a0d57c93fe02c6}
   - {addr: 0x80180230, size: 152, name: battle_map_determine_rare_common_item, hash: 1735317ad82e3f6a}
   - {addr: 0x801802c8, size: 508, name: battle_map_get_move_find_result, hash: 688d0d48a68d6f5d}
   - {addr: 0x801804c4, size: 108, name: battle_map_calculate_move_find_item_flag, hash: a65065e5c33c97dd}
@@ -1218,7 +1218,7 @@ functions:
   - {addr: 0x80180c90, size: 288, name: battle_find_unit_data_pointer_for_entd_unit_id, hash: d281a4ed17f14bc3, profile: gcc-2.6.3_O2_aspsx-2.21}
   - {addr: 0x80180db0, size: 80, name: battle_unit_set_enemy_level_data, hash: 6a61e1e649890419}
   - {addr: 0x80180e00, size: 320, name: battle_unit_find_war_trophies_and_bonus_money, hash: 96bcca3f5912fedd}
-  - {addr: 0x80180f40, size: 164, name: battle_status_reapply_active_flags, hash: c848dacc8c483afd}
+  - {addr: 0x80180f40, size: 164, name: battle_status_clear_all, hash: c848dacc8c483afd}
   - {addr: 0x80180fe4, size: 188, name: battle_status_init_special_flag_enabling, hash: dc0a98cacee730e9}
   - {addr: 0x801810a0, size: 52, name: battle_map_calculate_location, hash: 3200325a78320b2b}
   - {addr: 0x801810d4, size: 64, name: battle_unit_get_existing_pointer, hash: de4f9699c976d608}
@@ -1262,7 +1262,7 @@ functions:
   - {addr: 0x80183c6c, size: 164, name: battle_turn_end, hash: 046d38c9f09aca39}
   - {addr: 0x80183d10, size: 96, name: battle_turn_should_end, hash: 9125c03679a7afe5}
   - {addr: 0x80183d70, size: 112, name: battle_turn_is_over, hash: efe334f1598ac023}
-  - {addr: 0x80183de0, size: 32, name: battle_status_enable_disable_acting, hash: e0a0d57c93fe02c6}
+  - {addr: 0x80183de0, size: 32, name: battle_status_clear_action_state, hash: e0a0d57c93fe02c6}
   - {addr: 0x80183e00, size: 60, name: battle_status_inflict_defending_to_battle_id, hash: d0e7c54fa7c5eaec}
   - {addr: 0x80183e3c, size: 88, name: battle_unit_check_exists, hash: 532560a45165d4c6}
   - {addr: 0x80183e94, size: 12, name: battle_action_activate_move_act, hash: 3a68b6987427585b}
@@ -1486,7 +1486,7 @@ functions:
   - {addr: 0x8018af2c, size: 840, name: battle_reaction_apply_effect, hash: 444cf78c62cd1481, rodata: [{addr: 0x8017429c, size: 100, hash: 7c47c77aa09eba56}]}
   - {addr: 0x8018b274, size: 216, name: battle_action_store_used_weapon, hash: d2b52d870f0e59f6, rodata: [{addr: 0x80174304, size: 64, hash: 608a00d2e1692024}]}
   - {addr: 0x8018b34c, size: 1708, name: battle_action_run_pre_formula_setup, hash: 48143423d1ae501f, rodata: [{addr: 0x80174344, size: 44, hash: 8dbd62702444125e}]}
-  - {addr: 0x8018b9f8, size: 76, name: battle_status_remove, hash: 4e301fa3f6d3b78a}
+  - {addr: 0x8018b9f8, size: 76, name: battle_status_store_ability_cancellations, hash: 4e301fa3f6d3b78a}
   - {addr: 0x8018ba44, size: 684, name: battle_action_finalize_target_current_action, hash: 96161cc564236dec}
   - {addr: 0x8018bcf0, size: 68, name: battle_formula_cancel_weapon_spell, hash: d63c553967caf2a6}
   - {addr: 0x8018bd34, size: 64, name: battle_action_cancel_knockback, hash: bbfdf95f106fba09}
@@ -1530,14 +1530,14 @@ functions:
   - {addr: 0x8018dff8, size: 132, name: battle_action_apply_jp_change, hash: 7e6b861377b0d37b}
   - {addr: 0x8018e07c, size: 308, name: battle_status_resolve_unit_changes, hash: 6c58d24f0b43b44f}
   - {addr: 0x8018e1b0, size: 152, name: battle_status_remove_control, hash: 0fa45d3d5c21d978}
-  - {addr: 0x8018e248, size: 200, name: battle_status_set_inflicted_ct_and_transfer_last_used_ct, hash: a5d7d939d7c7bf82}
-  - {addr: 0x8018e310, size: 724, name: battle_status_store_for_current_attack, hash: 7bf5667111fecdad}
+  - {addr: 0x8018e248, size: 200, name: battle_status_apply_pending_removals, hash: a5d7d939d7c7bf82}
+  - {addr: 0x8018e310, size: 724, name: battle_status_apply_pending_inflictions, hash: 7bf5667111fecdad}
   - {addr: 0x8018e5e4, size: 68, name: battle_ai_store_considered_action_data, hash: fe5832bd488feff2}
   - {addr: 0x8018e628, size: 56, name: battle_ai_restore_considered_action_data, hash: e8fd203a8ad070a3}
   - {addr: 0x8018e660, size: 88, name: battle_map_get_effective_weather, hash: 83cb512131bff44c}
   - {addr: 0x8018e6b8, size: 500, name: battle_ability_find_learn_on_hit_unit, hash: 78408e9469d00e1a, profile: gcc-2.6.3_O2_aspsx-2.21}
   - {addr: 0x8018e8ac, size: 272, name: battle_unit_learn_used_ability, hash: 98bc0928423ea1a9}
-  - {addr: 0x8018e9bc, size: 44, name: battle_status_enable_special_flags, hash: ae28f5eb0645fce2}
+  - {addr: 0x8018e9bc, size: 44, name: battle_status_queue_graphics_change_if_executing, hash: ae28f5eb0645fce2}
   - {addr: 0x8018e9e8, size: 176, name: battle_action_add_party_item, hash: a77514b9289587a0}
   - {addr: 0x8018ea98, size: 184, name: battle_action_add_war_funds, hash: 9c493bc4b6f1f741}
   - {addr: 0x8018eb50, size: 192, name: battle_action_apply_exp_change, hash: 5311cbc14afdaaa7}

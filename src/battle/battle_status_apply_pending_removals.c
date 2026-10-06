@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_status_set_inflicted_ct_and_transfer_last_used_ct(s32 unit_idx) {
+/* Apply the removals in unit_idx's action record: clear each status from the inflicted set, end its
+ * count (main_status_set_ct) and queue its removal graphics; then rebuild the current set
+ * (main_status_store_current). Innate statuses stay. */
+void battle_status_apply_pending_removals(s32 unit_idx) {
     battle_stats_t* unit;
     s32 i;
     s32 mask;
@@ -14,7 +17,7 @@ void battle_status_set_inflicted_ct_and_transfer_last_used_ct(s32 unit_idx) {
         if (unit->action.status_removal[idx] & mask) {
             unit->inflicted_status[idx] = (u8)(unit->inflicted_status[idx] & ~mask);
             if (main_status_set_ct(unit, i, 1) == 0) {
-                battle_status_enable_special_flags(BATTLE_STATUS_HANDLER_INDEX(i), 0, unit_idx);
+                battle_status_queue_graphics_change_if_executing(BATTLE_STATUS_HANDLER_INDEX(i), 0, unit_idx);
             }
         }
     }

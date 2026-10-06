@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Disable the renderer flags of every current status, then clear the unit's
- * innate, immune, current, status CT and inflicted status bytes (Morbol
- * transformation preparation). */
-void battle_status_reapply_active_flags(battle_stats_t* unit) {
+/* Remove every status for a Morbol transformation: queue the removal graphics of each current
+ * status, then clear the unit's innate, immunity and current sets, status CTs and inflicted statuses
+ * (battle_action_apply_target_result, MORBOL effect, while executing). */
+void battle_status_clear_all(battle_stats_t* unit) {
     s32 i;
     s32 misc_unit_id = unit->misc_unit_id;
 

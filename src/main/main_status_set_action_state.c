@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
-/* Sets the unit's charging/jump/defending/performing status bit for
- * `action_state` (clearing the other three) and notifies the battle status
- * handlers about every bit that changed.  0xff keeps performing only when the
- * unit is already performing. */
+/* Set the unit's action state: Charging, Jump, Defending or Performing as the one status of those
+ * four, or none; MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING keeps Performing only when it is on. None and
+ * Defending clear the charged CT (0xff), Performing loads it from the last ability. Each of the four
+ * statuses that changed queues its graphics (battle_status_queue_graphics_change_if_executing). */
 void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     s32 old_status;
     s32 misc_unit_id;
@@ -58,9 +58,9 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     for (; status_id <= BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_PERFORMING); status_id++) {
         if (changed & mask) {
             if ((old_status & mask) != 0) {
-                battle_status_enable_special_flags(status_id, 0, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 0, misc_unit_id);
             } else {
-                battle_status_enable_special_flags(status_id, 1, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 1, misc_unit_id);
             }
         }
         mask >>= 1;

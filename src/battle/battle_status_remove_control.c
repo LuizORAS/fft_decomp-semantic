@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Restore control after a control status: under Confusion, Blood Suck, Berserk, Chicken or Charm
+ * the unit loses player control, otherwise it regains its initial player control; without Charm its
+ * team returns to its initial team. */
 void battle_status_remove_control(battle_stats_t* unit) {
     if ((unit->status_sets.current[1]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)

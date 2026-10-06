@@ -52,7 +52,7 @@ void battle_state_handle_ai_command_state(void) {
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
             unit->ability_ct_resolved |= 2;
-            battle_status_enable_disable_acting(unit->battle_data);
+            battle_status_clear_action_state(unit->battle_data);
             battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
             battle_unit_update_display_by_misc_id(unit->unit_id);
             battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);

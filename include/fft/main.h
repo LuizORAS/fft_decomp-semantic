@@ -602,7 +602,7 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
 s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing);
 void main_status_store_current(battle_stats_t* unit);
 void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
-s32 main_status_find_action_highest_order_effect(const u8* action);
+s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action);
 
 /* zodiac */
 /* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */

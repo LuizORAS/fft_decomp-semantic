@@ -1,14 +1,12 @@
 #include "fft/battle.h"
 
-/*
- * Queue the renderer-side status flags associated with a simulation status.
- *
- * The status argument is the callback-table index (canonical status ID + 1).
- * Crystal removal deliberately stages the Chicken transformation bit, as in
- * the original transition logic. Rebuilding the unit's AI ability data when
- * Frog changes keeps its usable-ability list synchronized with the graphics
- * transition.
- */
+/* Stage the graphics of a status change on the unit's misc record: status is the handler index
+ * (status ID + 1), enabled 1 adds and 0 removes. Crystal, Chicken, Frog, Treasure, Jump, Float and
+ * Transparent use statuses_to_add_5_6 and statuses_to_remove_5_6, the others the 1_4 pair through
+ * g_battle_misc_status_mask_by_handler_index; status 0, Invite and Wall have no graphics, and
+ * Treasure none on removal. Removing Crystal removes the Chicken graphic. A Frog change also rebuilds
+ * the unit's AI ability list (battle_ai_init_unit_abilities). Returns 0 for a unit with no misc
+ * record, else 1. */
 s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_id) {
     battle_unit_misc_data_t* unit;
 

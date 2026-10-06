@@ -185,7 +185,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     }
     main_util_copy_byte_data(&g_main_status_infliction_data[id], &g_current_ability_view.status_infliction,
         sizeof(status_infliction_data_t));
-    battle_status_remove();
+    battle_status_store_ability_cancellations();
     g_current_ability.formula = formula;
     battle_reaction_check_before_formula();
     if (g_battle_action_target_data->hit == 0) {

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Turn-clock count of the timed statuses 0x18-0x26 (Poison up to the one before Death Sentence):
+ * each inflicted, non-innate one loses 1 CT and is staged for removal at 0; the result becomes a
+ * status change when anything is left after filtering (battle_status_modify_inflictions). */
 void battle_status_update_expiring(s32 unit_id) {
     s32 i;
     s32 byte_idx;

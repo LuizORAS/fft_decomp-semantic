@@ -272,7 +272,7 @@ without changing the bytes.
     `battle_map_step_init_sequence` call the background-gradient,
     ambient-light and darkness initializers without `map_id` (`$a2`), and
     `main_sound_stop_sfx` without its sound id (`$a0`);
-  - `battle_status_resolve_unit_changes_in_preview` calls
+  - `battle_status_resolve_unit_changes_in_preview` (referenced nowhere on the disc) calls
     `battle_status_resolve_unit_changes` without `unit_id`/`removal_only`;
   - `world_script_is_deployment_running` calls `world_script_run_frame`
     without `ot`/`buttons`.
