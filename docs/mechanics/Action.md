@@ -28,8 +28,8 @@ it provokes and the rewards.
 - **Strikes.** An action strikes once; twice with Two Swords (Attack, Charge
   and abilities that use the weapon's range, with weapons in both hands or in
   neither); 1 to X times at random (formulas 0x1e and 0x1f) or X + 1 times
-  (formula 0x5e). A weapon's spell that replaces its hit and a knockback each
-  take a strike of their own.
+  (formula 0x5e). A weapon's spell, which follows its hit, and a knockback
+  each take a strike of their own.
 - **Each target** gets the command's formula: the ability's, the item's,
   0x63 for Throw, 0x64 for Jump, or the weapon's for Attack and Charge (with
   Charge's power, and Two Hands when the weapon allows it). The result is then
@@ -157,8 +157,8 @@ reacts.
 - **How many strikes an action makes:**
   [[battle_action_init_current_ability_strike_data]].
 - **Which formula a command uses, Two Hands and Charge's power:**
-  [[battle_action_run_pre_formula_setup]]. The formulas themselves have their
-  own page.
+  [[battle_action_run_pre_formula_setup]]. The formulas themselves are on
+  the [[Formulas]] page.
 - **Which units a strike hits:** [[battle_action_resolve_ability_strike]] and
   the [[Targeting]] page.
 - **Stat limits, KO, Critical, Chicken, the statuses a hit removes, Golem:**
@@ -194,9 +194,7 @@ reacts.
   [[battle_action_load_last_used_ability]] and
   [[battle_action_store_8019387c_if_not_reacting]] are never called or
   referenced on the disc.
-- `battle_unit_get_action_block` returns nonzero when the unit cannot act;
-  the formulas page revisits its name. Reaction bit `0x04` of the third
-  byte is unidentified.
+- Reaction bit `0x04` of the third byte is unidentified.
 
 ## Functions in scope
 

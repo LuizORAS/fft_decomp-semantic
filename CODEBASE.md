@@ -204,10 +204,12 @@ All of these libraries are reconstructed C, matched like the game code.
   list of functions in its scope: [Battle flow](docs/mechanics/Battle%20flow.md),
   [Movement](docs/mechanics/Movement.md),
   [Targeting](docs/mechanics/Targeting.md),
-  [Action](docs/mechanics/Action.md) and
+  [Action](docs/mechanics/Action.md),
+  [Formulas](docs/mechanics/Formulas.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
-  [Movement rules](docs/guides/Movement%20rules.md).
+  [Movement rules](docs/guides/Movement%20rules.md) and
+  [Changing a formula](docs/guides/Changing%20a%20formula.md).
 - **Calls through tables:** they do not appear in C, so about 1300 functions
   have no C caller. Their pages say so.
 - **Debugging:** `make map` also writes PCSX-Redux symbol maps to

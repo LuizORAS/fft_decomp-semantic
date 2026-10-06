@@ -144,10 +144,10 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         }
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
-        formula = 0x63;
+        formula = BATTLE_FORMULA_THROW;
         break;
     case ACTION_MENU_TYPE_JUMP:
-        formula = 0x64;
+        formula = BATTLE_FORMULA_JUMP;
         break;
     case ACTION_MENU_TYPE_CHARGE:
         ability_id = action.ability_id;
@@ -176,11 +176,11 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     }
     g_current_ability_view.weapon_spell_pending = 0;
     g_current_ability.knockback_flags = 0;
-    if (formula == 0 || formula >= 0x65) {
-        formula = 1;
+    if (formula == 0 || formula >= BATTLE_FORMULA_LAST + 1) {
+        formula = BATTLE_FORMULA_WEAPON_DAMAGE;
     }
     id = g_current_ability_view.proc_id;
-    if (formula == 3) {
+    if (formula == BATTLE_FORMULA_GUN_DAMAGE) {
         id = 0;
     }
     main_util_copy_byte_data(&g_main_status_infliction_data[id], &g_current_ability_view.status_infliction,
@@ -192,10 +192,10 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         return 1;
     }
     g_battle_formula_handlers[formula]();
-    if (formula < 7) {
+    if (formula < BATTLE_FORMULA_WEAPON_HEAL) {
         battle_formula_apply_poach_and_train();
     }
-    if (formula == 0x64) {
+    if (formula == BATTLE_FORMULA_JUMP) {
         g_current_ability_view.weapon_id = ITEM_ID_NOTHING;
     }
     battle_action_finalize_target_current_action();

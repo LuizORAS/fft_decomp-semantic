@@ -31,7 +31,7 @@ typedef union {
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     ability_secondary_data_t* data;
     u8 menu_type;
-    u8 weapon_kind;
+    u8 formula;
     u8 chance;
     s16 ability_id;
     u8 support;
@@ -41,7 +41,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     g_current_ability.strike_counter = 0;
     g_current_ability.weapon_spell_pending = 0;
     g_current_ability.knockback_flags = 0;
-    weapon_kind = 0;
+    formula = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
         g_current_ability.can_earn_exp_jp = 0;
         g_current_ability.earned_experience = 0;
@@ -70,15 +70,15 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
             data = &g_main_ability_range_data[ability_id];
             g_battle_loaded_ability_flags_1 = data->flags_1;
             chance = data->x;
-            weapon_kind = data->formula;
+            formula = data->formula;
         }
-        if (weapon_kind == 0x1e || weapon_kind == 0x1f) {
+        if (formula == BATTLE_FORMULA_TRUTH || formula == BATTLE_FORMULA_UNTRUTH) {
             if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
                 g_current_ability.strike_count = ((chance * rand()) / 32768) + 1;
                 return;
             }
         }
-        if (weapon_kind == 0x5e) {
+        if (formula == BATTLE_FORMULA_REPEATED_MAGIC) {
             g_current_ability.strike_count = chance + 1;
             return;
         }

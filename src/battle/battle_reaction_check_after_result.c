@@ -1,9 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 7 never triggers these reactions. */
-#define ABILITY_FORMULA_NO_STAT_SAVE_REACTION 7
-
 /* Give the target its reactions to the applied result: the first it has of PA Save, MA Save, Speed
  * Save, Regenerator, HP Restore, MP Restore, Critical Quick, Meatbone Slash, Gilgame Heart and Auto
  * Potion. Formula 7 and a unit that cannot react skip them. */
@@ -11,7 +8,7 @@ void battle_reaction_check_after_result(void) {
     battle_stats_t* target;
     u8 reaction_flags;
 
-    if (g_current_ability.formula == ABILITY_FORMULA_NO_STAT_SAVE_REACTION
+    if (g_current_ability.formula == BATTLE_FORMULA_WEAPON_HEAL
         || battle_reaction_is_blocked(g_battle_action_target) != 0) {
         return;
     }
