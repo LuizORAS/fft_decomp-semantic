@@ -1,19 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Queue the post-action "effect message" popups for one unit.
- *
- * Walks the 11 reportable outcomes recorded in the unit's
- * battle_action_data_t and appends one 8-byte record per outcome to the
- * queue at g_battle_action_post_effect_msgs: message code at +0, the acting unit's misc ID at +1,
- * and the reported value at +4. g_battle_action_post_effect_msg_counter is
- * the record count, drained by battle_action_resume_attack_phase_control.
+/* Queue the post-action effect messages of one unit that was hit, one 8-byte record (message code,
+ * unit, value) per change in g_battle_action_post_effect_msgs, in this order: Speed 0x28, CT 0x27,
+ * Brave 0x29, Faith 0x2a, PA 0x2b, MA 0x2c, gil gained 0x2e, EXP lost 0x2f, a level up or down 0x2d,
+ * a broken item 0x1d (value bit 0x8000 for a broken katana) and a stolen item 0x1c. A unit is skipped
+ * once 16 messages wait. battle_action_show_next_effect_message takes them from the end, so the last
+ * one queued shows first.
  *
  * The 11-way dispatch really is a jump table in the target (at 0x80067548),
- * which is why the .ld places a .rodata output section there.
- */
-void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* misc) {
+ * which is why the .ld places a .rodata output section there. */
+void battle_action_queue_unit_effect_messages(battle_unit_misc_data_t* misc) {
     battle_action_data_t* action;
     s32 i;
     s32 queued;
@@ -93,7 +90,8 @@ void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* 
             }
             break;
         case 8:
-            if (action->special_effect & 0x180) {
+            if (action->special_effect
+                & (BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP | BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN)) {
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x2d;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].value
                     = action->special_effect;
@@ -101,18 +99,20 @@ void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* 
             }
             break;
         case 9:
-            if (action->special_effect & 0x1004) {
+            if (action->special_effect
+                & (BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT
+                    | BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN)) {
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x1d;
                 off = g_battle_action_post_effect_msg_counter;
                 g_battle_action_post_effect_msgs[off].value = action->item_lost;
-                if (action->special_effect & 0x1000) {
+                if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN) {
                     g_battle_action_post_effect_msgs[off].value = action->item_lost | 0x8000;
                 }
                 queued = 1;
             }
             break;
         case 10:
-            if (action->special_effect & 0x10) {
+            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
                 queued = 1;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x1c;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].value = action->item_lost;

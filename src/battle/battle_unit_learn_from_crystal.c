@@ -13,7 +13,7 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
     unit->action.hit = 0;
     if (flags & 4) {
-        return battle_action_increment_item_quantity_for_steal_break(unit, g_main_crystal_treasure_item_id);
+        return battle_action_add_party_item(unit, g_main_crystal_treasure_item_id);
     }
     if (flags & 2) {
         unit->action.hit = 1;

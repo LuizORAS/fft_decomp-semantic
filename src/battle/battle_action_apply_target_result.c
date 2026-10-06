@@ -3,14 +3,31 @@
 
 #define STATUS_MASK(id) BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_##id)
 
-/* Apply the target's pending action results and flag reactions.
+/* Apply the target's pending result (its result record) to the unit, and give it its reactions.
  *
- * Returns -1 for an invalid or absent unit, or when a mounted target ends
- * the action dead or crystallized; otherwise 0.
+ * An absent unit returns -1, and a dead target that the action crystallizes or turns to treasure only
+ * has its statuses resolved. In a primary action ability_outcome becomes 1; the target's reaction is
+ * dispatched (battle_action_dispatch_target_reaction_ability) and a Catch returns the caught item to
+ * the party. A miss stops there, and a Golem guard takes the damage from the team's Golem HP instead.
+ * Otherwise, in order: a Golem is set to the target's max HP; MP Switch, Distribute and Damage Split
+ * get their chance; HP and MP change (clamped to 0..max); Speed (1-50), CT (0-255), PA and MA (1-99),
+ * Brave (0-100, at least 10 for a rider, so a rider never turns Chicken) and Faith (0-100) change;
+ * broken or stolen equipment leaves; an unbroken Draw Out katana returns; gil, EXP and JP change;
+ * Level Up/Down applies; a Poach adds the monster's item to the Fur Shop; and the MORBOL effect, while
+ * executing, reapplies the target's status flags (battle_status_reapply_active_flags).
  *
- * The KO test's three status-bit checks fold into the target's single
- * halfword load of current[0..1] & 0x160. */
-s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
+ * A target brought to 0 HP gets Dead (its KO count grows while executing) and returns -1 when it is a
+ * rider, else 0. Otherwise Critical follows HP <= max HP / 5, Chicken follows Brave < 10, HP damage
+ * removes Charm, Sleep, Transparent and Confusion, a knockback can cancel the target's charge
+ * (battle_status_remove_charging_ability_ct), and the status changes resolve. The outcome (2 newly
+ * dead, 1 anything changed, 0 nothing) goes to the attacker's EXP award
+ * (battle_unit_update_attacker_earned_experience), ability_outcome becomes 2 when something changed,
+ * and the stat-save and restore reactions get their chance. Returns -1 when a rider ends dead or
+ * crystallized, else 0.
+ *
+ * The KO test's three status-bit checks fold into the target's single halfword load of
+ * current[0..1] & 0x160. */
+s32 battle_action_apply_target_result(s32 unit_id) {
     s32 outcome;
     s32 hp;
     s32 mp;
@@ -41,8 +58,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_action_dispatch_target_reaction_ability();
     if (g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
-        battle_action_increment_item_quantity_for_steal_break(
-            g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
+        battle_action_add_party_item(g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
     }
     if (g_battle_action_target_data->hit == 0) {
         return 0;
@@ -94,21 +110,21 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->ma_change,
         &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK], 99, 1);
     outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->brave_change,
-        &g_battle_action_target->brave, 100, (g_battle_action_target->mount_info & 0x80) ? 10 : 0);
+        &g_battle_action_target->brave, 100,
+        (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) ? 10 : 0);
     outcome |= battle_unit_apply_stat_increment_decrement(
         g_battle_action_target_data->faith_change, &g_battle_action_target->faith, 100, 0);
     outcome |= battle_action_remove_broken_or_stolen_equipment();
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN) {
-        battle_action_increment_item_quantity_for_steal_break(
-            g_battle_action_target, (u8)g_battle_action_target->used_item_or_equipment);
+        battle_action_add_party_item(g_battle_action_target, (u8)g_battle_action_target->used_item_or_equipment);
     }
     if (g_battle_action_target_data->gil_change != 0 || g_battle_action_target_data->exp_change != 0) {
         outcome |= 1;
     }
     battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, 0);
-    battle_action_handle_steal_exp(g_battle_action_target, g_battle_action_target_data->exp_change);
+    battle_action_apply_exp_change(g_battle_action_target, g_battle_action_target_data->exp_change);
     if (g_battle_action_target_data->jp_change != 0) {
-        battle_action_run_main_reaction_and_flag_job_level_change(g_battle_action_target);
+        battle_action_apply_jp_change(g_battle_action_target);
     }
     outcome |= battle_unit_apply_level_up_down_ability();
     outcome |= battle_action_add_poached_item_to_fur_shop_inventory();
@@ -140,7 +156,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     } else {
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CHICKEN);
     }
-    if (g_battle_action_target_data->attack_type & 0x80) {
+    if (g_battle_action_target_data->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
         g_battle_action_target_data->status_removal[4] |= STATUS_MASK(CHARM) | STATUS_MASK(SLEEP);
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(TRANSPARENT);
         g_battle_action_target_data->status_removal[1] |= STATUS_MASK(CONFUSION);
@@ -183,7 +199,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_action_check_stat_save_and_restore_reaction_usability();
     if (g_battle_action_target->status_sets.current[0] & (STATUS_MASK(CRYSTAL) | STATUS_MASK(DEAD))) {
-        if (g_battle_action_target->mount_info & 0x80) {
+        if (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             return -1;
         }
     }

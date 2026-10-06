@@ -26,7 +26,7 @@ s32 battle_action_remove_broken_or_stolen_equipment(void) {
                     g_battle_action_target->equipment[i] = ITEM_ID_NONE;
                     count++;
                     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-                        battle_action_increment_item_quantity_for_steal_break(g_battle_action_attacker, item);
+                        battle_action_add_party_item(g_battle_action_attacker, item);
                     }
                 }
             }

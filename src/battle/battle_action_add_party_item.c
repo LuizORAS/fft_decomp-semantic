@@ -1,9 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Add a stolen or broken-off item to the player inventory while executing,
- * or its price / 4 in gil once the stock is already at 99. */
-s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, s32 item) {
+/* Add one of an item to the party inventory for a blue unit while executing: a stolen item, a caught
+ * one (Catch), a Draw Out katana that did not break, or a picked-up treasure's item. Nothing and an empty
+ * slot are skipped. With 99 already owned (equipped ones counted), the item becomes its price / 4 in
+ * war funds instead. */
+s32 battle_action_add_party_item(battle_stats_t* unit, s32 item) {
     s32 item_id;
 
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {

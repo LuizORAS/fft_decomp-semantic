@@ -30,14 +30,14 @@ void battle_turn_take_next_event(void) {
         battle_unit_animate_and_set_enemy_level_data_by_misc_id(unit->unit_id);
         break;
     case BATTLE_TURN_EVENT_ACTION_RESULT:
-        unit->pending_attack_result = battle_action_finalize_attack_and_flag_reactions(misc_id);
+        unit->pending_attack_result = battle_action_apply_target_result(misc_id);
         if (unit->pending_attack_result == -1) {
             battle_unit_find_relocation_tile(misc_id, &unit->dismount);
             battle_unit_set_map_coords_after_death_dismount(unit);
         }
         break;
     case BATTLE_TURN_EVENT_UNKNOWN_0400:
-        unit->pending_attack_result = battle_action_finalize_attack_and_flag_reactions(misc_id);
+        unit->pending_attack_result = battle_action_apply_target_result(misc_id);
         if (unit->pending_attack_result == -1) {
             battle_unit_find_relocation_tile(misc_id, &unit->dismount);
             battle_unit_set_map_coords_after_death_dismount(unit);

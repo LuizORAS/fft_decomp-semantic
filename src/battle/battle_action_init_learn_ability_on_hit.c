@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter the post-action report state for the source unit's current phase.
- *
- * Phase 0 reports a level up, phase 1 a job level up, and phase 2 looks for a
- * unit that learns the used ability on hit; without one the phase advances. */
+/* Enter LEARN_ABILITY_ON_HIT at 60 fps and show the post-action report of the current phase
+ * (g_battle_action_post_action_display_phase): 0 a level up, 1 a job level up, 2 a unit that learns
+ * the ability it was hit with (battle_ability_find_learn_on_hit_unit), with the cursor on it. Without
+ * one the phase advances. A message lasts 30 frames unless the report sets its own. */
 void battle_action_init_learn_ability_on_hit(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* learner;

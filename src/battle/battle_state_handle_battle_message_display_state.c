@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* BATTLE_MESSAGE_DISPLAY: once the message has been answered, queue and show the casting unit's
- * effect messages (battle_action_show_caster_post_effect_messages). */
+ * effect messages (battle_action_start_effect_messages). */
 void battle_state_handle_battle_message_display_state(void) {
     s32 command;
 
@@ -13,6 +13,6 @@ void battle_state_handle_battle_message_display_state(void) {
         g_battle_action_post_action = 1;
     }
     if (g_battle_action_post_action != 0) {
-        battle_action_show_caster_post_effect_messages();
+        battle_action_start_effect_messages();
     }
 }

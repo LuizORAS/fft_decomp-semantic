@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_handle_post_action_xp_jp_ability(void) {
+/* Grant the source unit the EXP and JP of its action (battle_unit_apply_action_rewards; a refusal
+ * zeroes the amounts shown), after syncing riders with their mounts; set up the EXP/JP display and
+ * start the reports at phase 0 with the cursor on the unit (battle_action_init_learn_ability_on_hit).
+ * RESUME_ATTACK_PHASE calls it once the effect messages are done. */
+void battle_action_grant_rewards(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;
 

@@ -53,7 +53,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                         continue;
                     }
                 }
-                battle_action_finalize_attack_and_flag_reactions(target_id);
+                battle_action_apply_target_result(target_id);
                 if (ai->hit_counter == 0xff) {
                     continue;
                 }

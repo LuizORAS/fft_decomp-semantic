@@ -16,7 +16,7 @@ void battle_state_enter_battle_message_display(void) {
     g_battle_state_vsync_interval = 1;
     g_battle_action_post_action = 0;
     unit = battle_unit_get_casting_misc_data();
-    battle_action_build_targets_post_action_message();
+    battle_action_queue_target_effect_messages();
     battle_unit_update_attack_result_animation(unit);
     unit->item_ability_display = 0;
     battle_text_set_message_duration_frames(0x3c);

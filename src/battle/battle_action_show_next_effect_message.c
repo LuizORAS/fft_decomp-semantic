@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_resume_attack_phase_control(void) {
+/* Enter RESUME_ATTACK_PHASE at 60 fps and show the next queued effect message (system command 0x11
+ * with its code, unit and value), taken from the end of the queue. Returns 1 when one was shown, 0
+ * when the queue is empty. */
+s32 battle_action_show_next_effect_message(void) {
     s32 idx;
 
     g_battle_game_state = BATTLE_GAME_STATE_RESUME_ATTACK_PHASE;

@@ -100,7 +100,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (status == BATTLE_TURN_EVENT_NONE)
             break;
         if (status == BATTLE_TURN_EVENT_ACTION_RESULT) {
-            battle_action_finalize_attack_and_flag_reactions(unit_index);
+            battle_action_apply_target_result(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
             if (battle_ai_call_ability_processing((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
                 g_battle_turn_clock_state = ai->saved_turn_state_0;

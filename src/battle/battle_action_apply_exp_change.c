@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount) {
+/* Apply an EXP change while executing. With bit 0x80 the low seven bits are taken away (at least 0);
+ * otherwise the amount is added (capped at 255) and a level up is checked,
+ * setting level_gained_flag when the unit is the acting unit. */
+void battle_action_apply_exp_change(battle_stats_t* unit, u8 amount) {
     s32 total;
     u8 capped;
     s16 reduced;

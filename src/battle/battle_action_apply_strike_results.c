@@ -7,7 +7,7 @@
 
 /* Apply a strike's results and pick the actor's animation, entering START_ACTION_EXECUTE at 60 fps.
  * The first strike turns the actor toward its target. Each target's pending result applies
- * (battle_action_finalize_attack_and_flag_reactions), and a target whose result is -1 (death) gets a
+ * (battle_action_apply_target_result), and a target whose result is -1 (death) gets a
  * relocation tile (battle_unit_find_relocation_tile). In the action phase an ability (not an
  * elemental gun) shown without a reaction plays its ability animation, and a plain attack or an
  * elemental gun the weapon strike. In the other phases (First Strike, reactions) a knockback strike
@@ -31,8 +31,7 @@ void battle_action_apply_strike_results(void) {
         for (i = 0; i < action->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
             if (target != 0) {
-                target->pending_attack_result
-                    = battle_action_finalize_attack_and_flag_reactions(target->battle_data->misc_unit_id);
+                target->pending_attack_result = battle_action_apply_target_result(target->battle_data->misc_unit_id);
                 if (target->pending_attack_result == -1) {
                     battle_unit_find_relocation_tile(target->battle_data->misc_unit_id, &target->dismount);
                 }

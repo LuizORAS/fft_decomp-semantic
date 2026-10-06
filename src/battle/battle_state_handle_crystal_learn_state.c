@@ -21,7 +21,7 @@ void battle_state_handle_crystal_learn_state(void) {
     case 2:
         battle_unit_learn_from_crystal(source->battle_data, 2);
         g_battle_action_post_action = 1;
-        battle_action_finalize_attack_and_flag_reactions(source->battle_data->misc_unit_id);
+        battle_action_apply_target_result(source->battle_data->misc_unit_id);
         battle_gfx_prepare_post_action_display(source);
         battle_unit_update_display_by_misc_id(source->unit_id);
         break;

@@ -7,7 +7,7 @@ extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_head
  * numbers are gone, strike again for a continued attack, or free the SP2 data, store the acting
  * unit's data, set the animations and go on to the next action phase
  * (battle_state_announce_next_ability). After a First Strike (phase 0), or when no phase is
- * left, go on to the action's EXP and JP (battle_action_handle_post_action_xp_jp_ability). */
+ * left, go on to the action's EXP and JP (battle_action_grant_rewards). */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;
@@ -21,7 +21,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
         g_battle_action_post_action = 1;
     }
     unit = battle_unit_get_casting_misc_data();
-    if (g_battle_action_post_action != 0 && battle_action_resume_attack_phase_control() == 0
+    if (g_battle_action_post_action != 0 && battle_action_show_next_effect_message() == 0
         && unit->numeric_display_active == 0) {
         if (unit->continue_attack != 0) {
             unit->continue_attack_count += 1;
@@ -55,6 +55,6 @@ void battle_state_handle_resume_attack_phase_state(void) {
                 return;
             }
         }
-        battle_action_handle_post_action_xp_jp_ability();
+        battle_action_grant_rewards();
     }
 }

@@ -49,7 +49,7 @@ s32 battle_move_start_next_post_move_event(void) {
             } else {
                 battle_menu_init_system_function(0xc, stats->misc_unit_id, stats->misc_unit_id, 0, 0);
                 battle_unit_learn_from_crystal(source->battle_data, 2);
-                battle_action_finalize_attack_and_flag_reactions(source->battle_data->misc_unit_id);
+                battle_action_apply_target_result(source->battle_data->misc_unit_id);
                 battle_gfx_prepare_post_action_display(source);
                 battle_unit_update_display_by_misc_id(source->unit_id);
             }
@@ -103,8 +103,7 @@ s32 battle_move_start_next_post_move_event(void) {
     }
     if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED) {
         trap = battle_action_apply_tile_trap(casting->battle_data);
-        if ((source->pending_attack_result
-                = battle_action_finalize_attack_and_flag_reactions(source->battle_data->misc_unit_id))
+        if ((source->pending_attack_result = battle_action_apply_target_result(source->battle_data->misc_unit_id))
             == -1) {
             battle_unit_find_relocation_tile(source->battle_data->misc_unit_id, &source->dismount);
             battle_unit_set_map_coords_after_death_dismount(source);

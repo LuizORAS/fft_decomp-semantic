@@ -2693,7 +2693,7 @@ typedef struct battle_effect_secondary_animation {
 } battle_effect_secondary_animation_t;
 
 /* Queue of post-action "effect message" popups, drained newest-first by
- * battle_action_resume_attack_phase_control. The stride is 8: the producer at
+ * battle_action_show_next_effect_message. The stride is 8: the producer at
  * 0x80072d8c indexes the array directly and the consumer walks it by
  * `idx * 8`, and only these three fields are ever read or written. */
 typedef struct battle_post_effect_msg {
@@ -4526,13 +4526,13 @@ void battle_action_cancel_knockback(void);
 void battle_action_clear_status_changes(battle_action_data_t* action);
 void battle_action_execute_ability(void);
 void battle_action_finalize_target_current_action(void);
-void battle_action_handle_post_action_xp_jp_ability(void);
-s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, s32 item);
+void battle_action_grant_rewards(void);
+s32 battle_action_add_party_item(battle_stats_t* unit, s32 item);
 void battle_action_init_learn_ability_on_hit(void);
 s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit);
 s32 battle_action_report_job_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc);
-s32 battle_action_resume_attack_phase_control(void);
+s32 battle_action_show_next_effect_message(void);
 void battle_action_set_current_attacker_data(battle_stats_t* unit);
 void battle_action_start_strike(void);
 void battle_action_play_ability_effect(void);
@@ -4540,12 +4540,12 @@ s32 battle_action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);
 void battle_action_set_only_action_taken(s32 unit_id);
 void battle_action_set_only_movement_taken(s32 unit_id);
 void battle_action_set_target_unit(battle_stats_t* unit);
-void battle_action_show_caster_post_effect_messages(void);
+void battle_action_start_effect_messages(void);
 void battle_action_switch_ability_to_default_attack(void);
 
 s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 
-void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* unit);
+void battle_action_queue_unit_effect_messages(battle_unit_misc_data_t* unit);
 
 s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_command_action_t* dest, s32 phase);
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
@@ -4553,12 +4553,12 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(u16* reaction_id);
 
 s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id);
-s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
+s32 battle_action_apply_target_result(s32 misc_id);
 
 void battle_action_apply_strike_results(void);
 s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id);
 s32 battle_action_apply_tile_trap(battle_stats_t* unit);
-void battle_action_build_targets_post_action_message(void);
+void battle_action_queue_target_effect_messages(void);
 
 /* Preview action calculation entry run on the main stack. */
 s32 battle_action_calculate_projected_effect(
@@ -4573,10 +4573,10 @@ s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_
 void battle_action_dispatch_target_reaction_ability(void);
 s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
-void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
+void battle_action_apply_exp_change(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
-void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
+void battle_action_apply_jp_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
 void battle_action_store_used_weapon(const battle_ai_command_action_t* action);
