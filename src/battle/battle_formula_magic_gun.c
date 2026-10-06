@@ -12,7 +12,7 @@ void battle_formula_magic_gun(void) {
     g_current_ability.ya = ability_y;
     battle_formula_apply_charge();
     battle_formula_apply_weapon_element_strengthen();
-    battle_formula_apply_magical_support_status_compatibility();
+    battle_formula_apply_magical_xa_modifiers();
     if (battle_formula_calculate_elemental_xa_times_ya() == 0) {
         battle_formula_calculate_faith();
         battle_formula_apply_elemental_absorption();

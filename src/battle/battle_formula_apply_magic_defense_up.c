@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* The target's Magic Defense Up: XA * 2 / 3. */
 void battle_formula_apply_magic_defense_up(void) {
     s16* xa;
     /* Battle Stats 0x90 bit 0x02 is Magic Defense Up. */

@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_formula_store_xa_plus_ya_status_damage(void) {
+/* Store the hit chance XA + YA in the target's hp_damage, where the accuracy steps keep it until
+ * battle_formula_use_hp_damage_as_action_hit_percent rolls it. YA gets the zodiac compatibility too,
+ * except for the Golem summon. */
+void battle_formula_store_hit_chance(void) {
     u16 original_xa;
 
     if (g_current_ability.ability_id != ABILITY_ID_SUMMON_MAGIC_GOLEM) {

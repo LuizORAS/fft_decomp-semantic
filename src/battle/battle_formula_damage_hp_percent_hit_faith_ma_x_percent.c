@@ -21,7 +21,7 @@ void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
         battle_formula_apply_target_magical_status_xa_modifiers();
     }
     battle_formula_apply_zodiac_compatibility();
-    battle_formula_store_xa_plus_ya_status_damage();
+    battle_formula_store_hit_chance();
     battle_formula_calculate_faith();
     battle_formula_use_hp_damage_as_action_hit_percent();
     if (g_battle_action_target_data->hit == 0) {

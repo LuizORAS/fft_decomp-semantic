@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Damage of a weapon strike: XA and YA by weapon type (battle_formula_calculate_base_xa), Charge's
+ * power, the weapon element's strengthen, the physical modifiers, a critical hit and XA * YA, then the
+ * element's effect on the damage. Returns 1 on a miss, else the status roll's result
+ * (battle_formula_roll_conditional_status_proc). */
 s32 battle_formula_calculate_weapon_damage(void) {
     battle_formula_calculate_base_xa();
     battle_formula_apply_charge();

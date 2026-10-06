@@ -3,7 +3,9 @@
 /* volatile view: the target reloads this global at every use. */
 extern battle_stats_t* volatile g_battle_action_target;
 
-void battle_formula_apply_target_xa_affecting_statuses(void) {
+/* The target's statuses on a physical XA: Protect * 2 / 3; asleep or charging * 3 / 2; Chicken or
+ * Frog * 3 / 2. */
+void battle_formula_apply_target_physical_status_xa_modifiers(void) {
     battle_stats_t* target;
 
     if (g_battle_action_target->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PROTECT)) {

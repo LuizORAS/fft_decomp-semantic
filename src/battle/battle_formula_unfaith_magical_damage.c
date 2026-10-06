@@ -13,7 +13,7 @@ void battle_formula_unfaith_magical_damage(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         battle_formula_store_ma_and_ma_plus_y_divided_by_two();
         battle_formula_apply_elemental_strengthen();
-        battle_formula_apply_magical_support_status_compatibility();
+        battle_formula_apply_magical_xa_modifiers();
         if (battle_formula_calculate_elemental_xa_times_ya() == 0) {
             if (g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FAITH)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FAITH)) {

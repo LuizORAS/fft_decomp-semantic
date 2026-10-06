@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Set XA and YA from the current weapon's item type.
+/* Set XA and YA for a weapon strike from the weapon's type. Bare hands: XA = PA and YA = PA * Brave
+ * / 100 (at least 1). Otherwise YA is the weapon's power and XA is PA for swords, crossbows, rods and
+ * spears; (PA + Speed) / 2 for knives, ninja blades, bows and throwing weapons; PA * Brave / 100 (at
+ * least 1) for knight swords and katanas; MA for staves and poles; a random 1 to PA for axes, flails
+ * and bags (PA / 2 + 1 outside an executing action); (PA + MA) / 2 for instruments, books and cloths.
+ * Other types (guns) leave XA as it was.
  *
- * Bare hands give
- * XA = PA and YA = PA * Brave / 100 (at least 1); otherwise YA is the weapon
- * power and XA depends on the type (PA; (PA + Speed) / 2; PA * Brave / 100;
- * MA; random PA; (PA + MA) / 2), leaving XA unchanged for other types.
- * The attacker's stats must be u8 locals for the (PA + MA) zero-extension.
- */
+ * The attacker's stats must be u8 locals for the (PA + MA) zero-extension. */
 void battle_formula_calculate_base_xa(void) {
     u8 type;
     u8 pa;

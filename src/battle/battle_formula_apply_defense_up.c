@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* The target's Defense Up: XA * 2 / 3. */
 void battle_formula_apply_defense_up(void) {
     s16* xa;
     /* Battle Stats 0x90 bit 0x08 is Defense Up. */

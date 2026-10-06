@@ -14,7 +14,7 @@ void battle_formula_set_morbol(void) {
     battle_formula_apply_elemental_strengthen();
     battle_formula_apply_magic_attack_up();
     battle_formula_apply_zodiac_compatibility();
-    battle_formula_store_xa_plus_ya_status_damage();
+    battle_formula_store_hit_chance();
     battle_formula_use_hp_damage_as_action_hit_percent();
     action = g_battle_action_target_data;
     if (action->hit == 0)

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-void battle_formula_init_weapon_xa_ya(void) {
+/* Set XA and YA for Jump (formula 0x64, which only Jump uses): XA = PA, or PA * 3 / 2 with a spear;
+ * YA = the weapon's power, or PA * Brave / 100 (at least 1) bare-handed. */
+void battle_formula_store_jump_xa_ya(void) {
     u8 weapon_type = g_main_item_primary_data[g_current_ability.weapon_id].type;
 
     if (weapon_type == ITEM_TYPE_POLEARM) {

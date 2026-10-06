@@ -10,9 +10,9 @@ void battle_formula_damage_random_x_times_pa_plus_y_half_times_pa(void) {
         return;
     battle_formula_store_pa_and_pa_plus_y_divided_by_two();
     battle_formula_apply_attack_up_and_martial_arts();
-    battle_formula_apply_physical_status_support_compatibility();
+    battle_formula_apply_physical_status_xa_modifiers();
     battle_formula_calculate_critical_hit();
-    battle_formula_store_xa_plus_ya_status_damage();
+    battle_formula_store_hit_chance();
     rnd = battle_formula_get_random_0_7fff();
     mult = &g_current_ability.random_damage_factor;
     *mult = (s32)(rnd * g_current_ability.range_data.x) / 32768 + 1;

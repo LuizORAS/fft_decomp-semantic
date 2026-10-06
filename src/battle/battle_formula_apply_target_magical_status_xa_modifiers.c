@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Scale magical XA by the target's Shell, Frog, and Chicken statuses. */
+/* The target's statuses on a magical XA: Shell * 2 / 3; Chicken or Frog * 3 / 2. */
 void battle_formula_apply_target_magical_status_xa_modifiers(void) {
     if (g_battle_action_target->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SHELL)) {
         s16* xa = (s16*)&g_current_ability.xa;

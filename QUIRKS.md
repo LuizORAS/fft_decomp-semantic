@@ -185,6 +185,8 @@ without changing the bytes.
   a value there.
 - `src/battle/battle_reaction_try_distribute.c` passes the unit twice to the one-parameter
   `battle_reaction_fails_brave_roll` through a function-pointer cast; the second argument is ignored.
+- `src/battle/battle_formula_calculate_critical_hit.c` calls the argument-less
+  `battle_formula_calculate_knockback` through a cast with XA's address in `$a0`; the callee ignores it.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
