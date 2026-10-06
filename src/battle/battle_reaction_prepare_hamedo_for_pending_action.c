@@ -6,7 +6,7 @@
  * is only tested) with a weapon strike (Attack, Charge, Throw or a weapon-range ability) on a valid
  * target, and exactly one other unit must stand on the hit tiles; that unit needs Hamedo, a successful
  * Brave roll and the freedom to react. It then counters with Attack at the actor and pays its MP;
- * g_current_ability_hamedo_flag cancels the actor's action, and a Mime actor gives back its lent
+ * g_battle_reaction_first_strike_cancels cancels the actor's action, and a Mime actor gives back its lent
  * weapons. Returns the reacting unit's slot, or -1 when nothing reacts.
  *
  * battle_target_validate_weapon_target takes only the action record (it copies the record and
@@ -30,7 +30,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
 
     unit = &g_battle_unit_stats[id];
     base = g_battle_unit_stats;
-    g_current_ability_hamedo_flag = 0;
+    g_battle_reaction_first_strike_cancels = 0;
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
@@ -87,21 +87,21 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
     }
 
     g_battle_action_context = count;
-    main_util_copy_action_data(action, g_reaction_unit_action_data_16e);
-    g_battle_current_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
+    main_util_copy_action_data(action, g_battle_action_saved_command);
+    g_battle_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
     target->action_actor_id = tid;
     if (battle_reaction_set_counter_command(target, SKILLSET_ID_ATTACK, 0, 1) == 0
         && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);
-        *out_ability = *(u16*)&g_battle_current_reaction_ability_id;
-        g_current_ability_hamedo_flag = count;
+        *out_ability = *(u16*)&g_battle_reaction_ability_id;
+        g_battle_reaction_first_strike_cancels = count;
         if (unit->job_id == JOB_ID_MIME) {
             unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
             unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
         }
         return tid;
     }
-    main_util_copy_action_data(g_reaction_unit_action_data_16e, action);
+    main_util_copy_action_data(g_battle_action_saved_command, action);
     return -1;
 }

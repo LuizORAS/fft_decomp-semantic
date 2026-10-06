@@ -46,9 +46,9 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     work->reaction_ability_id = 0;
     reaction_targeted = 0;
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY) {
-        work->reaction_ability_id = g_battle_current_reaction_ability_id;
+        work->reaction_ability_id = g_battle_reaction_ability_id;
         if (battle_reaction_build_targets(misc_unit_id, work, &count, targets)) {
-            if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
+            if (g_battle_reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
                 flags_3 = 1;
             } else {
                 flags_3 = 0;

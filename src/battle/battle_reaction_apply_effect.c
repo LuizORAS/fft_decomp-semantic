@@ -23,7 +23,7 @@ s32 battle_reaction_apply_effect(void) {
     s32 count;
 
     attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
-    ability_id = g_battle_current_reaction_ability_id;
+    ability_id = g_battle_reaction_ability_id;
     if (ability_id == ABILITY_ID_REACTION_REFLECT) {
         g_battle_action_attacker = &g_battle_unit_stats[g_battle_acting_unit_id];
     }
@@ -33,7 +33,7 @@ s32 battle_reaction_apply_effect(void) {
         return 0;
     }
     battle_action_clear_target_and_actor_data();
-    selector = (u16)g_battle_current_reaction_ability_id;
+    selector = (u16)g_battle_reaction_ability_id;
     switch ((s16)(selector - ABILITY_ID_REACTION_FIRST)) {
     case REACTION_CASE(PA_SAVE):
         g_battle_action_target_data->pa_change = BATTLE_ACTION_STAT_CHANGE_INCREASE | 1;
@@ -102,7 +102,7 @@ s32 battle_reaction_apply_effect(void) {
         g_battle_action_target_data->gil_change = g_battle_action_target_data->last_received_attack;
         break;
     case REACTION_CASE(DISTRIBUTE):
-        count = g_battle_distribute_target_count;
+        count = g_battle_reaction_distribute_count;
         if (count != 0) {
             healing = (g_battle_action_attacker->action.last_received_attack + count - 1) / count;
         } else {

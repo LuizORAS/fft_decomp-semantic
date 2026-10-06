@@ -2726,23 +2726,23 @@ data:
   - {addr: 0x80192d90, name: g_battle_action_target_data}
   - {addr: 0x80192d94, name: g_battle_action_attacker}
   - {addr: 0x80192d98, name: g_battle_action_target}
-  - {addr: 0x80192d9c, name: g_battle_current_reaction_ability_id}
+  - {addr: 0x80192d9c, name: g_battle_reaction_ability_id}
   - {addr: 0x80192da0, name: g_current_action_data}
   - {addr: 0x80192dcc, name: g_acting_unit_x}
   - {addr: 0x80192dd0, name: g_acting_unit_y}
   - {addr: 0x80192dd4, name: g_acting_unit_elevation}
   - {addr: 0x80192dd8, name: g_battle_target_panels}
   - {addr: 0x80193844, name: g_enemy_level_sum}
-  - {addr: 0x80193848, name: g_reaction_unit_action_data_16e}
-  - {addr: 0x8019384a, name: g_reaction_unit_last_ability_id}
+  - {addr: 0x80193848, name: g_battle_action_saved_command}
+  - {addr: 0x8019384a, name: g_battle_action_saved_ability_id}
   - {addr: 0x80193860, name: g_current_ability_canceled_statuses}
   - {addr: 0x80193868, name: g_battle_target_ability_targets_list}
-  - {addr: 0x80193878, name: g_battle_distribute_target_count}
+  - {addr: 0x80193878, name: g_battle_reaction_distribute_count}
   - {addr: 0x8019387c, name: D_8019387C}
   - {addr: 0x80193880, name: g_battle_relocated_unit_coords}
   - {addr: 0x80193898, name: g_battle_player_unit_fallen}
   - {addr: 0x8019389c, name: g_current_ability_attacker}
-  - {addr: 0x801938bc, name: g_current_ability_hamedo_flag}
+  - {addr: 0x801938bc, name: g_battle_reaction_first_strike_cancels}
   - {addr: 0x801938c0, name: g_current_ability}
   - {addr: 0x801938c0, name: g_current_ability_view}
   - {addr: 0x80193910, name: g_battle_current_map_move_find_item_data}

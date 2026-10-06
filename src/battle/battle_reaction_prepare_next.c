@@ -58,11 +58,11 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         || ability == ABILITY_ID_REACTION_REFLECT)
                     && ability != 0) {
                     g_battle_action_context = BATTLE_ACTION_CONTEXT_REACTION_OR_SIMULATION;
-                    main_util_copy_action_data(action, g_reaction_unit_action_data_16e);
-                    g_battle_current_reaction_ability_id = ability;
+                    main_util_copy_action_data(action, g_battle_action_saved_command);
+                    g_battle_reaction_ability_id = ability;
                     action[0] = i;
                     action[1] = 0;
-                    reaction_id = *(u16*)&g_battle_current_reaction_ability_id;
+                    reaction_id = *(u16*)&g_battle_reaction_ability_id;
                     outcome = BATTLE_REACTION_OUTCOME_ABILITY;
                     *(u16*)(action + 2) = reaction_id;
                     last_attack = unit->action.last_received_attack;
@@ -123,7 +123,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         break;
                     default:
                         outcome
-                            = -((g_main_reaction_behavior_flags_by_ability_id[g_battle_current_reaction_ability_id]
+                            = -((g_main_reaction_behavior_flags_by_ability_id[g_battle_reaction_ability_id]
                                     & (BATTLE_REACTION_BEHAVIOR_FLAG_PASSIVE | BATTLE_REACTION_BEHAVIOR_FLAG_ACTIVE))
                                 == 0);
                         break;
@@ -132,7 +132,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         outcome = BATTLE_REACTION_OUTCOME_NONE;
                     }
                     if (outcome == BATTLE_REACTION_OUTCOME_NONE) {
-                        main_util_copy_action_data(g_reaction_unit_action_data_16e, action);
+                        main_util_copy_action_data(g_battle_action_saved_command, action);
                         i++;
                         continue;
                     }
@@ -148,7 +148,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         action[1] = 0;
                         action[0xA] = BATTLE_ACTION_TARGET_TILE;
                         action[0xB] = i;
-                        if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_DAMAGE_SPLIT) {
+                        if (g_battle_reaction_ability_id == ABILITY_ID_REACTION_DAMAGE_SPLIT) {
                             action[0xB] = g_battle_acting_unit_id_byte;
                             unit = &g_battle_unit_stats[g_battle_acting_unit_id];
                         }
@@ -156,7 +156,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         *(s16*)(action + 0x10) = unit->position.bits.y;
                         *(u16*)(action + 0xE) = unit->position.raw >> 15;
                     }
-                    *out_ability = *(u16*)&g_battle_current_reaction_ability_id;
+                    *out_ability = *(u16*)&g_battle_reaction_ability_id;
                     action[0] = i;
                     return i;
                 }

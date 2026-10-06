@@ -22,7 +22,7 @@ s32 battle_action_begin(s32 id) {
         || (unit = &g_battle_unit_stats[id], base = g_battle_unit_stats, unit->entd_slot == BATTLE_ENTD_SLOT_NONE)) {
         return -1;
     }
-    if (g_current_ability_hamedo_flag != 0) {
+    if (g_battle_reaction_first_strike_cancels != 0) {
         battle_action_store_acting_unit_data(unit);
         return 6;
     }

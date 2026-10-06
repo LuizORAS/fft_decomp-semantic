@@ -2,7 +2,7 @@
 
 /* Build the target list of a reaction's strike. Reflect: the unit on the action's tile (a mount's
  * rider), when targetable. Distribute: the injured allies of the reacting unit's team that are not
- * mounts, crystallized, dead, jumping, petrified or treasure (g_battle_distribute_target_count).
+ * mounts, crystallized, dead, jumping, petrified or treasure (g_battle_reaction_distribute_count).
  * Damage Split: the acting unit. Others follow the reaction's behaviour flags: TARGET_SELF the unit
  * itself, TARGET_ATTACKER returns 0 so the hit tiles decide. Returns 1 when the list is built (it may
  * be empty). */
@@ -14,7 +14,7 @@ s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32*
     s32 target_or_count;
     u8 flags;
 
-    switch (g_battle_current_reaction_ability_id) {
+    switch (g_battle_reaction_ability_id) {
     case ABILITY_ID_REACTION_REFLECT: {
         /* Pin: unpinned, GCC builds the target pointer in $v1 instead of $a1. */
         register battle_stats_t* target_unit __asm__("$5");
@@ -94,7 +94,7 @@ s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32*
             unit_id++;
             unit++;
         } while (unit_id < BATTLE_UNIT_SLOT_COUNT);
-        g_battle_distribute_target_count = target_or_count;
+        g_battle_reaction_distribute_count = target_or_count;
         *target_count = target_or_count;
         goto success;
     }
@@ -118,7 +118,7 @@ s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32*
     }
 
     default:
-        flags = g_main_reaction_behavior_flags_by_ability_id[g_battle_current_reaction_ability_id];
+        flags = g_main_reaction_behavior_flags_by_ability_id[g_battle_reaction_ability_id];
         if (flags & BATTLE_REACTION_BEHAVIOR_FLAG_TARGET_SELF) {
             result = 1;
             *target_count = result;
