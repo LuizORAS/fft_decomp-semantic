@@ -1,8 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x53: damage (X)% of max HP, hit (MA+X)%. */
-void battle_formula_damage_x_percent_hit_ma_x_percent(void) {
+/* Formula 0x53, Hurricane and Triple Bracelet: the magical evade check and the hit chance MA + X
+ * without Faith, then damage of Y% of the target's max HP with the weather and the element, the
+ * absorption and the 19% status roll. */
+void battle_formula_damage_y_percent_hit_ma_x_percent(void) {
     if (battle_formula_calculate_magical_evade() != 0) {
         return;
     }

@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x55: -PA (Y), hit (MA+X)%. */
+/* Formula 0x55, Beaking: the magical evade check and the hit chance MA + X without Faith, then PA
+ * lowered by Y. */
 void battle_formula_lower_pa_y(void) {
     if (battle_formula_calculate_magical_evade() != 0) {
         return;

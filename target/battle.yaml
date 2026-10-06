@@ -1456,11 +1456,11 @@ functions:
   - {addr: 0x8018a3a0, size: 48, name: battle_formula_heal_ma_times_y, hash: 666cebf1e4e1cc86}
   - {addr: 0x8018a3d0, size: 80, name: battle_formula_absorb_hp_y_percent_hit_ma_x_percent, hash: 3f9bac758e860e0a}
   - {addr: 0x8018a420, size: 56, name: battle_formula_damage_ma_times_y, hash: f8835609337a9a53}
-  - {addr: 0x8018a458, size: 72, name: battle_formula_damage_caster_missing_hp, hash: d4f6e0f560642764}
+  - {addr: 0x8018a458, size: 72, name: battle_formula_damage_caster_missing_hp_hit_ma_x_percent, hash: d4f6e0f560642764}
   - {addr: 0x8018a4a0, size: 72, name: battle_formula_hit_ma_x_percent, hash: 6e24148b09e6cf07}
   - {addr: 0x8018a4e8, size: 108, name: battle_formula_51_hit_ma_x_percent, hash: 4ffe264f014edda6}
   - {addr: 0x8018a554, size: 144, name: battle_formula_damage_caster_missing_hp_self_sacrifice, hash: ba86441611c20782}
-  - {addr: 0x8018a5e4, size: 132, name: battle_formula_damage_x_percent_hit_ma_x_percent, hash: d98e764a447e035e}
+  - {addr: 0x8018a5e4, size: 132, name: battle_formula_damage_y_percent_hit_ma_x_percent, hash: d98e764a447e035e}
   - {addr: 0x8018a668, size: 48, name: battle_formula_heal_mp_ma_times_y, hash: 6531167411cafa8a}
   - {addr: 0x8018a698, size: 96, name: battle_formula_lower_pa_y, hash: 4d9e9aae23bd441f}
   - {addr: 0x8018a6f8, size: 96, name: battle_formula_lower_ma_y, hash: 6e771a8462efd9d0}
@@ -1468,16 +1468,16 @@ functions:
   - {addr: 0x8018a824, size: 228, name: battle_formula_set_morbol, hash: 28c109ad986f022e}
   - {addr: 0x8018a908, size: 120, name: battle_formula_lower_level_by_one, hash: 26b51718b2884a02}
   - {addr: 0x8018a980, size: 68, name: battle_formula_dragon_hit_100, hash: a579bda9f0002e5e}
-  - {addr: 0x8018a9c4, size: 76, name: battle_formula_dragon_heal_y_percent_add_status, hash: 94e68ee9ca063221}
+  - {addr: 0x8018a9c4, size: 76, name: battle_formula_dragon_wish_add_status, hash: 94e68ee9ca063221}
   - {addr: 0x8018aa10, size: 68, name: battle_formula_dragon_brave_x_stats_y, hash: 4aeb0f400363cd0b}
   - {addr: 0x8018aa54, size: 68, name: battle_formula_dragon_set_quick, hash: e3f95f8dfb07f544}
   - {addr: 0x8018aa98, size: 48, name: battle_formula_5e_damage_ma_plus_y_half_times_ma, hash: cd23e5d4ae3deda3}
   - {addr: 0x8018aac8, size: 48, name: battle_formula_5f_damage_ma_plus_y_half_times_ma, hash: cd23e5d4ae3deda3}
-  - {addr: 0x8018aaf8, size: 32, name: battle_formula_damage_ma_plus_y_half_times_ma_status, hash: 745ea22d2495e99e}
+  - {addr: 0x8018aaf8, size: 32, name: battle_formula_60_damage_ma_plus_y_half_times_ma, hash: 745ea22d2495e99e}
   - {addr: 0x8018ab18, size: 64, name: battle_formula_lower_brave_y, hash: 9615711393abaae9}
   - {addr: 0x8018ab58, size: 64, name: battle_formula_lower_brave_y_without_faith, hash: 9ab05173ce7cc826}
-  - {addr: 0x8018ab98, size: 172, name: battle_formula_damage_sp_times_wp, hash: a9334582c1a5c49d}
-  - {addr: 0x8018ac44, size: 48, name: battle_formula_damage_pa_times_wp, hash: 40f050d9561b0355}
+  - {addr: 0x8018ab98, size: 172, name: battle_formula_throw_damage_sp_times_wp, hash: a9334582c1a5c49d}
+  - {addr: 0x8018ac44, size: 48, name: battle_formula_jump_damage_pa_times_wp, hash: 40f050d9561b0355}
   - {addr: 0x8018ac74, size: 104, name: battle_status_remove_transparent_if_jump_used, hash: ce1be0a3793d8340}
   - {addr: 0x8018acdc, size: 124, name: battle_formula_apply_status_and_check_undead, hash: 7e43893b9dc201c3}
   - {addr: 0x8018ad58, size: 156, name: battle_action_switch_ability_to_default_attack, hash: 5ed037b233f770da}

@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x45: damage equal to the target's missing HP (MaxHP - CurHP). */
+/* Formula 0x45, Climhazzard: HP damage equal to the target's max HP - current HP; no evade or hit
+ * roll. */
 void battle_formula_damage_target_missing_hp(void) {
     battle_stats_t* unit = g_battle_action_target;
     battle_action_data_t* action = g_battle_action_target_data;

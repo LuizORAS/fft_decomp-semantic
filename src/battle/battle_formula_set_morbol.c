@@ -1,11 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x58 "Set Morbol: Hit(MA+X)%". */
-
-/* Generic character identities are 0x80 male, 0x81 female, 0x82 monster;
- * Morbol-type jobs are 0x82 Morbol, 0x83 Ochu, 0x84 Great Morbol; the target
- * biases the job test with +0x7e rather than -0x82. */
+/* Formula 0x58, Moldball Virus: no evade check; hit chance MA + X with the element's Strengthen,
+ * Magic Attack Up and the zodiac, without Faith; a hit turns a generic, mortal, unmounted target that
+ * is not of the Morbol family into a Morbol (MORBOL special effect); others fail.
+ *
+ * Generic character identities are 0x80 male, 0x81 female, 0x82 monster; Morbol-type jobs are 0x82
+ * Morbol, 0x83 Ochu, 0x84 Great Morbol; the target biases the job test with +0x7e rather than
+ * -0x82. */
 void battle_formula_set_morbol(void) {
     battle_action_data_t* action;
     battle_stats_t* target;
