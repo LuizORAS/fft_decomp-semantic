@@ -200,7 +200,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     }
     battle_action_finalize_target_current_action();
     if (g_battle_action_target_data->special_effect != 0) {
-        g_battle_action_target_data->attack_type |= 1;
+        g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_PSEUDO_STATUS;
     }
     return 0;
 }

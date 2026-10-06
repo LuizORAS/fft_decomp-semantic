@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_formula_calculate_magic_accuracy without the element's Strengthen. */
+/* Same as battle_formula_calculate_magic_accuracy, without the element's Strengthen. */
 s32 battle_formula_calculate_magic_accuracy_without_strengthen(void) {
     battle_formula_store_ma_and_x();
     battle_formula_apply_magical_xa_modifiers();

@@ -4,7 +4,10 @@
 /* volatile view: the target reloads this global at every use. */
 extern battle_stats_t* volatile g_battle_action_attacker;
 
-/* Selects a Fire, Lightning, or Ice spell and installs its ability data. */
+/* Magic Gun (formula 0x04): pick the spell from the gun's element, fire (Fire), lightning (Bolt) or
+ * else ice (Ice): level 3 on a 0-99 roll below 10, level 2 below 40, else level 1 (an estimate's
+ * middle roll picks level 1). The spell's data becomes the current ability and the attacker's last
+ * ability. */
 void battle_formula_select_magic_gun_ability(void) {
     u8 element;
     u8 pct;

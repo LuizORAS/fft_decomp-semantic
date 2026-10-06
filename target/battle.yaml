@@ -1344,7 +1344,7 @@ functions:
   - {addr: 0x80187248, size: 264, name: battle_formula_apply_hp_absorption, hash: 12be881fecadca11}
   - {addr: 0x80187350, size: 136, name: battle_formula_apply_undead_reversal, hash: 0c1d46bb9be220ea}
   - {addr: 0x801873d8, size: 148, name: battle_formula_apply_undead_absorb_attack, hash: a23d869edab6196c}
-  - {addr: 0x8018746c, size: 128, name: battle_formula_apply_mp_recovery, hash: 6947e4ac0585ebc3}
+  - {addr: 0x8018746c, size: 128, name: battle_formula_apply_mp_absorption, hash: 6947e4ac0585ebc3}
   - {addr: 0x801874ec, size: 36, name: battle_formula_convert_hp_damage_to_mp_recovery, hash: 69ecb124225604e2}
   - {addr: 0x80187510, size: 172, name: battle_formula_roll_hit_chance, hash: 628d00ea13c8754d}
   - {addr: 0x801875bc, size: 64, name: battle_formula_check_dragon, hash: cc2acf558a3f41f6}
@@ -1355,8 +1355,8 @@ functions:
   - {addr: 0x80187730, size: 268, name: battle_formula_select_magic_gun_ability, hash: d28f46ca3dc63488}
   - {addr: 0x8018783c, size: 36, name: battle_formula_apply_quick_effect, hash: d44e57f5a3edf580}
   - {addr: 0x80187860, size: 176, name: battle_formula_determine_reduced_stat, hash: 206b4a18443e690b}
-  - {addr: 0x80187910, size: 184, name: battle_formula_calculate_katana_break_chance, hash: a5e0f5599c12f8d8}
-  - {addr: 0x801879c8, size: 728, name: battle_formula_apply_steal_break_might_sword_hardcoding, hash: 455287e6df9bfdfe}
+  - {addr: 0x80187910, size: 184, name: battle_formula_roll_katana_break, hash: a5e0f5599c12f8d8}
+  - {addr: 0x801879c8, size: 728, name: battle_formula_select_target_equipment, hash: 455287e6df9bfdfe}
   - {addr: 0x80187ca0, size: 532, name: battle_formula_apply_poach_and_train, hash: c76a5a1a24eca582}
   - {addr: 0x80187eb4, size: 112, name: battle_formula_apply_status, hash: 7b84444a4587202b}
   - {addr: 0x80187f24, size: 868, name: battle_formula_apply_status_to_action, hash: 55cb61c643335384}

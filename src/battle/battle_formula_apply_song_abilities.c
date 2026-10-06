@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* The Song effects on a target the song hit (XA = MA, YA = Y): Angel Song restores MA + Y MP and
+ * Life Song MA + Y HP; Cheer Song, Battle Song and Magic Song raise Speed, PA and MA by 1; Last Song
+ * gives Quick; Nameless Song adds its status (battle_formula_apply_status_to_action). */
 void battle_formula_apply_song_abilities(void) {
     switch (g_current_ability.ability_id) {
     case ABILITY_ID_SONG_ANGEL_SONG:

@@ -1,15 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Picks the equipment slot a Steal, Break or Might Sword ability targets.
- *
- * Helmet (0x6e/0x8a/0xa1), armor (0x6f/0x8b/0xa0), shield (0x70/0x8c: right
- * hand shield, else left), accessory (0x72/0xa3) and weapon (0x71/0x8d/0xa2:
- * the hand whose item has the higher level, right on ties) abilities record
- * the slot bit in equipment_destroyed and the item in item_lost, returning 0.
- * Monsters, empty slots and other abilities clear equipment_destroyed and
- * return -1. */
-s32 battle_formula_apply_steal_break_might_sword_hardcoding(void) {
+/* Pick the piece of equipment a Steal, Break or Might Sword ability takes: helmet (0x6e/0x8a/0xa1),
+ * armor (0x6f/0x8b/0xa0), shield (0x70/0x8c: the right hand's, else the left's), accessory
+ * (0x72/0xa3) or weapon (0x71/0x8d/0xa2: the hand whose item needs the higher level, right on ties).
+ * It records the slot bit in equipment_destroyed and the item in item_lost and returns 0. Monsters,
+ * empty slots and other abilities clear equipment_destroyed and return -1: Steal and Might Sword then
+ * fail, and Break becomes a plain Attack (battle_action_switch_ability_to_default_attack). */
+s32 battle_formula_select_target_equipment(void) {
     u16 ability;
     s32 right_level;
     s32 left_level;

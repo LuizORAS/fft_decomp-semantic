@@ -5,7 +5,7 @@ void battle_formula_draw_out_mp_damage(void) {
     u32 damage;
     battle_action_data_t* action;
 
-    battle_formula_calculate_katana_break_chance();
+    battle_formula_roll_katana_break();
     battle_formula_store_ma_and_y();
     battle_formula_apply_magical_xa_modifiers();
     damage = g_current_ability.xa * g_current_ability.ya;

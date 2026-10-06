@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_formula_calculate_physical_evade without the weather and night penalty on bows; only Charge
- * (formula 0x05) uses it. */
+/* Same as battle_formula_calculate_physical_evade, without the weather and night penalty on bows;
+ * only Charge (formula 0x05) uses it. */
 s32 battle_formula_calculate_physical_evade_without_weather(void) {
     battle_formula_store_physical_evade_values();
     battle_formula_calculate_concentrate();

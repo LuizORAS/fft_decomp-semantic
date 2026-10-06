@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Dance/Song hit check: accuracy scaled by X%, then an X% roll to hit. */
+/* The Dance and Song hit chance: the shown accuracy scales by X%; while executing, a 0-99 roll at or
+ * above X misses (battle_formula_set_accuracy_miss). Returns 1 on a miss; an estimate always hits. */
 s32 battle_formula_calculate_dance_song_hit(void) {
     battle_action_data_t* action = g_battle_action_target_data;
     u8 hit_percent = g_current_ability.range_data.x;

@@ -698,20 +698,17 @@ void battle_formula_apply_defense_up(void);
 void battle_formula_apply_ability_element(void);
 void battle_formula_apply_elemental_absorption(void);
 s32 battle_formula_apply_elemental_absorption_and_status(void);
-
-/* Provisional: the definition falls off the end after
- * battle_formula_roll_conditional_status_proc, so v0 carries that result and
- * every caller tests it. */
 s32 battle_formula_apply_elemental_absorption_and_status_proc(void);
 void battle_formula_apply_ability_element_strengthen(void);
 void battle_formula_apply_evasion_changes_due_to_statuses(void);
+void battle_formula_apply_finger_guard(void);
 void battle_formula_apply_full_hp_mp_heal(void);
 void battle_formula_apply_hp_absorption(void);
 void battle_formula_apply_magic_attack_up(void);
 void battle_formula_apply_magic_defense_up(void);
 void battle_formula_apply_magical_xa_modifiers(void);
 void battle_formula_apply_maintenance(void);
-void battle_formula_apply_mp_recovery(void);
+void battle_formula_apply_mp_absorption(void);
 void battle_formula_apply_physical_attack_supports(void);
 void battle_formula_apply_physical_status_xa_modifiers(void);
 void battle_formula_apply_physical_xa_modifiers(void);
@@ -720,7 +717,8 @@ void battle_formula_apply_song_abilities(void);
 void battle_formula_apply_status(void);
 void battle_formula_apply_status_to_action(void);
 s32 battle_formula_apply_status_and_check_undead(void);
-s32 battle_formula_apply_steal_break_might_sword_hardcoding(void);
+s32 battle_formula_select_target_equipment(void);
+void battle_formula_apply_talk_skill(void);
 void battle_formula_apply_target_magical_status_xa_modifiers(void);
 void battle_formula_apply_target_physical_status_xa_modifiers(void);
 void battle_formula_apply_undead_absorb_attack(void);
@@ -740,7 +738,7 @@ void battle_formula_calculate_faith(void);
 void battle_formula_calculate_final_hit_percent(void);
 void battle_formula_calculate_damage_leaving_one_hp(void);
 void battle_formula_calculate_hp_percent_damage(void);
-void battle_formula_calculate_katana_break_chance(void);
+void battle_formula_roll_katana_break(void);
 s32 battle_formula_calculate_magic_accuracy_without_faith(void);
 s32 battle_formula_calculate_magical_evade(void);
 void battle_formula_calculate_magical_xa_times_ya(void);
@@ -4064,7 +4062,7 @@ typedef enum battle_action_special_effect {
     BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE = 0x0040,
     BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP = 0x0080,
     BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN = 0x0100,
-    BATTLE_ACTION_SPECIAL_EFFECT_NULLIFIED = 0x0200,
+    BATTLE_ACTION_SPECIAL_EFFECT_PROC_TRIGGERED = 0x0200, /* the 19% added status or weapon spell triggered */
     BATTLE_ACTION_SPECIAL_EFFECT_ELEMENTAL_ABSORPTION = 0x0400,
     BATTLE_ACTION_SPECIAL_EFFECT_ELEMENTAL_WEAKNESS = 0x0800,
     BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN = 0x1000,

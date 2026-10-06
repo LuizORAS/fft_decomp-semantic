@@ -1,8 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Draw Out: roll the katana's break chance for the attacker's used item. */
-void battle_formula_calculate_katana_break_chance(void) {
+/* Draw Out's katana, on the attacker's own result (hit, the katana as item_lost): while executing, a
+ * 0-99 roll below the katana's power (WP) breaks it (DRAW_OUT_KATANA_BROKEN), otherwise it stays
+ * (DRAW_OUT_KATANA_NOT_BROKEN); an estimate always records it broken. A Mime uses no katana and skips
+ * the roll. */
+void battle_formula_roll_katana_break(void) {
     if (g_battle_action_attacker->job_id == JOB_ID_MIME) {
         return;
     }

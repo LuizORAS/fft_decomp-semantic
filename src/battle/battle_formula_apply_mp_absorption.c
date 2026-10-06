@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Convert the pending MP-cost field into an actual MP recovery event on
-   the current action and mirror the amount onto the linked reaction
-   record so the animation reports "MP restored". */
-void battle_formula_apply_mp_recovery(void) {
+/* Drain MP: the stored amount becomes MP damage on the target; once its result is finalized
+ * (battle_action_finalize_target_current_action), a hit target loses that MP and the attacker
+ * restores the same. Unlike battle_formula_apply_hp_absorption, an undead target does not reverse
+ * it. */
+void battle_formula_apply_mp_absorption(void) {
     u16 mp_amount;
     battle_action_data_t* action;
     battle_action_data_t* action_after;

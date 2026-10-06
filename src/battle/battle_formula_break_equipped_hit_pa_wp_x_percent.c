@@ -4,7 +4,7 @@
 void battle_formula_break_equipped_hit_pa_wp_x_percent(void) {
     battle_action_data_t* action;
 
-    if (battle_formula_apply_steal_break_might_sword_hardcoding() != 0) {
+    if (battle_formula_select_target_equipment() != 0) {
         g_current_ability.defaulted_to_attack = 1;
         battle_action_switch_ability_to_default_attack();
         return;

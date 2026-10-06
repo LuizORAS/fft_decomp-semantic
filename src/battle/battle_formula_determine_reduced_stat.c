@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Power Break and Power Ruin lower the target's PA by X, Mind Break and Mind Ruin its MA, Speed Break
+ * and Speed Ruin its Speed, as a pseudo-status result; any other ability changes nothing. */
 void battle_formula_determine_reduced_stat(void) {
     u16 ability;
 
