@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x16, Mute: the magical evade check and hit chance (MA + X with both Faiths, no
+ * Strengthen), then MP damage equal to the target's current MP. */
 void battle_formula_damage_target_mp(void) {
     battle_stats_t* target;
     battle_action_data_t* action;

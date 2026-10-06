@@ -1391,18 +1391,18 @@ functions:
   - {addr: 0x80188ba4, size: 64, name: battle_formula_weapon_damage_with_proc, hash: 3f0faae8eb9cd182}
   - {addr: 0x80188be4, size: 64, name: battle_formula_gun_damage, hash: d2d3eaa8fa1097e5}
   - {addr: 0x80188c24, size: 120, name: battle_formula_magic_gun, hash: fd658ca80d8d279e}
-  - {addr: 0x80188c9c, size: 88, name: battle_formula_weapon_damage_charge, hash: 8d0bbead2cf733ef}
+  - {addr: 0x80188c9c, size: 88, name: battle_formula_weapon_damage_without_element, hash: 8d0bbead2cf733ef}
   - {addr: 0x80188cf4, size: 72, name: battle_formula_weapon_absorb_hp, hash: 16cdf5d294543a0e}
   - {addr: 0x80188d3c, size: 72, name: battle_formula_weapon_heal, hash: 34a8e41547c5ebdf}
   - {addr: 0x80188d84, size: 112, name: battle_formula_magical_damage, hash: 35a8a49c28162f48}
   - {addr: 0x80188df4, size: 132, name: battle_formula_magic_hp_percent_damage, hash: d22824035b1d6e97}
   - {addr: 0x80188e78, size: 64, name: battle_formula_hit_faith_ma_x_percent, hash: 5ad89ec50c4e6784}
-  - {addr: 0x80188eb8, size: 64, name: battle_formula_friendly_magic_accuracy, hash: 8bbd97d7fec027d6}
+  - {addr: 0x80188eb8, size: 64, name: battle_formula_friendly_hit_faith_ma_x_percent, hash: 8bbd97d7fec027d6}
   - {addr: 0x80188ef8, size: 64, name: battle_formula_magical_heal, hash: c6e7dba2c1b5d8aa}
   - {addr: 0x80188f38, size: 88, name: battle_formula_heal_y_percent_faith, hash: 6f48986e20ac63a0}
   - {addr: 0x80188f90, size: 244, name: battle_formula_damage_hp_percent_hit_faith_ma_x_percent, hash: 9d90268df0c1982b}
   - {addr: 0x80189084, size: 88, name: battle_formula_absorb_mp_y_percent, hash: f9802c59e4bc7480}
-  - {addr: 0x801890dc, size: 72, name: battle_formula_magic_hp_absorb, hash: 576e420925738ff6}
+  - {addr: 0x801890dc, size: 72, name: battle_formula_absorb_hp_y_percent, hash: 576e420925738ff6}
   - {addr: 0x80189124, size: 8, name: battle_formula_11_unused, hash: 6d64edf91449c1b1}
   - {addr: 0x8018912c, size: 56, name: battle_formula_set_quick, hash: 89f4d804c5ac3ad1}
   - {addr: 0x80189164, size: 8, name: battle_formula_13_unused, hash: 6d64edf91449c1b1}
@@ -1412,7 +1412,7 @@ functions:
   - {addr: 0x8018925c, size: 64, name: battle_formula_damage_target_hp_minus_one, hash: f111946517004a48}
   - {addr: 0x8018929c, size: 8, name: battle_formula_18_unused, hash: 6d64edf91449c1b1}
   - {addr: 0x801892a4, size: 8, name: battle_formula_19_unused, hash: 6d64edf91449c1b1}
-  - {addr: 0x801892ac, size: 144, name: battle_formula_status_reduction, hash: fb27a385cb7b66d8}
+  - {addr: 0x801892ac, size: 144, name: battle_formula_lower_stat_x_hit_faith_ma_y_percent, hash: fb27a385cb7b66d8}
   - {addr: 0x8018933c, size: 64, name: battle_formula_damage_mp_percent, hash: 0eb3a00741f3d700}
   - {addr: 0x8018937c, size: 92, name: battle_formula_song, hash: f97b3b87d358b673}
   - {addr: 0x801893d8, size: 92, name: battle_formula_dance, hash: 0fb2fa7d2c3e4b4f}

@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* 0x801938e6: set when the current target is undead, read by this formula to
- * skip the magic-defense stage. */
-
+/* Formula 0x0E, Death: the magical evade check, which an undead target skips along with Magic Defense
+ * Up and its Shell, Frog and Chicken; hit chance MA + X with Magic Attack Up, the zodiac and both
+ * Faiths; the status must change something unless the target is undead; then damage of Y% of max
+ * HP, which an undead target takes as healing (battle_formula_apply_undead_absorb_attack). */
 void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
     if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
         g_current_ability.target_is_undead = 1;

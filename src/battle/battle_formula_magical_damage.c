@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Formula 0x08, most attack magic (41 abilities: Fire, Bolt and Ice and their levels, Holy, Flare,
+ * Meteor, Bio, Melt, Tornado, Quake, Ultima, the summons Shiva to Zodiac): the magical evade check,
+ * XA = MA and YA = Y, the element's Strengthen, the magical XA modifiers, XA * YA with the weather
+ * and the element, both Faiths, the elemental absorption and, on the 19% roll, the spell's status. */
 void battle_formula_magical_damage(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         battle_formula_store_ma_and_y();

@@ -11,7 +11,7 @@ void battle_formula_apply_talk_skill(void) {
         battle_formula_calculate_stolen_gil();
         return;
     case ABILITY_ID_TALK_PERSUADE:
-        g_battle_action_target_data->ct_change = 0x7F;
+        g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_ZERO;
         break;
     case ABILITY_ID_TALK_PRAISE:
         g_battle_action_target_data->brave_change = g_current_ability.range_data.y | BATTLE_ACTION_STAT_CHANGE_INCREASE;

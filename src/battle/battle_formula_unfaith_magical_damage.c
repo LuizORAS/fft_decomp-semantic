@@ -5,8 +5,12 @@
 extern battle_stats_t* volatile g_battle_action_attacker;
 extern battle_stats_t* volatile g_battle_action_target;
 
-/* Formula 1F: damage (MA + Y) * MA / 2 scaled by (100 - caster faith) and
- * (100 - target faith), with Faith treated as 0 and Innocent as 100. */
+/* Formula 0x1F, Malak's Un-Truth abilities (Heaven Bolt Back, Asura Back, Diamond Sword Back,
+ * Hydragon Pit Back, Space Storage Back, Sky Demon Back): the magical evade check, XA = MA and YA =
+ * (MA + Y) / 2 with the element's Strengthen and the magical XA modifiers, XA * YA with the weather
+ * and the element, then scaled by (100 - target Faith) * (100 - attacker Faith) / 10000, the Faith
+ * status counting as 0 and Innocent as 100; the elemental absorption and the 19% status roll. Like
+ * formula 0x1E it strikes 1 to X times at random. */
 void battle_formula_unfaith_magical_damage(void) {
     battle_action_data_t* action;
 

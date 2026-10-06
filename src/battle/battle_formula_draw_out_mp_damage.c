@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x21, Bizen Boat: the katana break roll (battle_formula_roll_katana_break), then MA * Y as
+ * MP damage after the magical XA modifiers. No evade or hit roll, element or Faith. */
 void battle_formula_draw_out_mp_damage(void) {
     u32 damage;
     battle_action_data_t* action;

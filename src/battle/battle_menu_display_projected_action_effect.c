@@ -131,7 +131,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
         }
         panel->x += 12;
     } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
-        && g_battle_menu_preview_target_action->ct_change == 0xff) {
+        && g_battle_menu_preview_target_action->ct_change == BATTLE_ACTION_CT_CHANGE_QUICK) {
         /* The three shifted-label tails are duplicated in the original and
          * merged by cross-jumping; a shared goto tail allocates differently. */
         image = BATTLE_ACTION_DISPLAY_IMAGE_QUICK;

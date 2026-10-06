@@ -28,7 +28,7 @@ void battle_formula_apply_dance_abilities(void) {
         battle_formula_apply_status_to_action();
         return;
     case ABILITY_ID_DANCE_LAST_DANCE:
-        g_battle_action_target_data->ct_change = 0x7F;
+        g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_ZERO;
         break;
     }
     g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;

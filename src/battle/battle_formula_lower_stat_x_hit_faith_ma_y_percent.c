@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_formula_status_reduction(void) {
+/* Formula 0x1A, Speed Ruin, Power Ruin and Mind Ruin: the magical evade check; hit chance MA + Y with
+ * the element's Strengthen, the magical XA modifiers and both Faiths; a hit lowers Speed, PA or MA by
+ * X (battle_formula_determine_reduced_stat), a miss clears the BREAK_EQUIPMENT flag. */
+void battle_formula_lower_stat_x_hit_faith_ma_y_percent(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         battle_formula_store_ma_and_y();
         battle_formula_apply_ability_element_strengthen();

@@ -4222,6 +4222,13 @@ typedef enum battle_action_stat_change {
     BATTLE_ACTION_STAT_CHANGE_INCREASE = 0x80,
 } battle_action_stat_change_e;
 
+/* The CT changes the result displays name Quick and CT 0: the largest raise and cut
+ * (battle_unit_apply_stat_increment_decrement keeps CT within 0..255). */
+typedef enum battle_action_ct_change {
+    BATTLE_ACTION_CT_CHANGE_ZERO = 0x7f,  /* CT - 127, at least 0 */
+    BATTLE_ACTION_CT_CHANGE_QUICK = 0xff, /* CT + 127 */
+} battle_action_ct_change_e;
+
 /* Bit order mirrors the seven serialized battle_stats_t equipment slots. */
 typedef enum battle_action_equipment_slot_mask {
     BATTLE_ACTION_EQUIPMENT_SLOT_HEAD = 0x80,

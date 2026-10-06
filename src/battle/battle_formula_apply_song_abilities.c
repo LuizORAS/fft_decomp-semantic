@@ -27,7 +27,7 @@ void battle_formula_apply_song_abilities(void) {
         battle_formula_apply_status_to_action();
         return;
     case ABILITY_ID_SONG_LAST_SONG:
-        g_battle_action_target_data->ct_change = 0xFF;
+        g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_QUICK;
         break;
     }
     g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
