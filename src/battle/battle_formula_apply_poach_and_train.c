@@ -39,8 +39,8 @@ void battle_formula_apply_poach_and_train(void) {
         if ((u32)(target->job_id - JOB_ID_MONSTER_FIRST) >= JOB_ID_MONSTER_COUNT) {
             return;
         }
-        battle_action_clear_knockback_flag();
-        battle_formula_clear_nullify_flags();
+        battle_action_cancel_knockback();
+        battle_formula_cancel_weapon_spell();
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_POACH;
         g_current_ability.post_formula_flag = 6;
         return;

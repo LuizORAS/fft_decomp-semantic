@@ -1,7 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_init_current_data(s32 id) {
+/* Begin the unit's action in the primary context. An absent unit returns -1, an action that a
+ * First Strike (Hamedo) cancelled returns 6, and a refusal from battle_action_check_and_consume_mp
+ * returns its code (2 Silence, 3 not enough MP, 5 Frog, 7 and up cannot act); in those two cases the
+ * actor's position or command is saved (battle_action_store_acting_unit_data). Otherwise the unit
+ * becomes the acting unit with its ability, every unit's reaction id and outcome is cleared, the
+ * strike data is set up and the command is recorded for Mimes; returns 0.
+ * battle_state_announce_next_ability shows codes 2 and 3 over the unit; the AI simulation runs it
+ * too. */
+s32 battle_action_begin(s32 id) {
     battle_stats_t* unit;
     s32 i;
     battle_stats_t* base;

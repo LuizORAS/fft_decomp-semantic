@@ -1,16 +1,19 @@
 #include "fft/battle.h"
 
-struct battle_action_used_weapon_context;
-
-extern void battle_action_store_used_weapon(struct battle_action_used_weapon_context* action);
-
-/* Resolve one strike of the current ability: build the target list, run the
- * per-target formula setup and fill the strike work record.
+/* Resolve one strike of the current ability: build the target list, run the per-target formula
+ * setup and fill the strike work record.
  *
- * Returns -1 for an invalid actor or targeting, 1 when nothing was hit and 0
- * otherwise. After the clearing loop i holds 21, which the target reuses as
- * the Math skillset id in the control-value test. The (u16*)/(s16*) views
- * reproduce the target's load forms and memory-access ordering. */
+ * The targets are the units on the hit tiles (battle_target_mark_hit_tiles); a reaction builds its
+ * own list, and a pending weapon spell or knockback strikes only post_action_target_id. Each target
+ * runs battle_action_run_pre_formula_setup. The strike work gets the targets, the weapon, the landing
+ * tile, the attack shown (the reaction, a plain attack when the ability fell back to one, or
+ * ABILITY_ID_KNOCKBACK for a knockback's own strike), control_value_19f for Math Skill, and
+ * continue_attack, set while strikes remain or a weapon spell or knockback waits for its own strike.
+ * Returns -1 for an invalid actor or targeting, 1 when nothing was hit and 0 otherwise.
+ *
+ * After the clearing loop i holds 21, which the target reuses as the Math skillset id in the
+ * control-value test. The (u16*)/(s16*) views reproduce the target's load forms and memory-access
+ * ordering. */
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
@@ -62,7 +65,8 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             return -1;
         }
         if (g_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
-            && (g_current_ability.elemental_flags != 0 || (g_current_ability.knockback_flags & 0x80))) {
+            && (g_current_ability.weapon_spell_pending != 0
+                || (g_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING))) {
             battle_target_clear_targeted_flags();
             count = 1;
             targets[0] = g_current_ability.post_action_target_id;
@@ -76,8 +80,8 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         count = battle_target_list_units_on_panels(targets, attacker);
     }
     g_current_ability.target_count = count;
-    battle_action_store_ability_data(targets);
-    battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&attacker->action_actor_id);
+    battle_target_set_ability_targets(targets);
+    battle_action_store_used_weapon((battle_ai_command_action_t*)&attacker->action_actor_id);
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
@@ -116,7 +120,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     work->ability_formula = g_current_ability.post_formula_flag;
     work->animate_on_miss_flag = 0;
     reaction_id = g_current_ability.reaction_id;
-    if (reaction_id != 0 && g_current_ability.elemental_flags == 0) {
+    if (reaction_id != 0 && g_current_ability.weapon_spell_pending == 0) {
         work->last_attack_id = reaction_id;
         work->reaction_occurred = 1;
     } else if (g_current_ability.defaulted_to_attack != 0) {
@@ -126,12 +130,12 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     }
     work->reaction_id_1a = g_current_ability.reaction_id;
     if (g_current_ability.knockback_flags != 0) {
-        work->knockback_flags = g_current_ability.knockback_flags & 0x7f;
+        work->knockback_flags = g_current_ability.knockback_flags & BATTLE_KNOCKBACK_KIND_MASK;
         work->target_new_x = g_current_ability.target_x;
         work->target_new_y = g_current_ability.target_y;
         work->target_new_map_level = g_current_ability.target_elevation;
     }
-    if (g_current_ability.elemental_flags != 0 || (g_current_ability.knockback_flags & 0x80)) {
+    if (g_current_ability.weapon_spell_pending != 0 || (g_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING)) {
         work->continue_attack = 1;
     } else {
         if (g_current_ability.knockback_flags != 0) {

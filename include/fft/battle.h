@@ -761,7 +761,7 @@ void battle_formula_modify_damage_for_element(s32 element);
 void battle_formula_nullify_action(void);
 void battle_formula_cause_action_miss(void);
 void battle_formula_check_dragon(void);
-void battle_formula_clear_nullify_flags(void);
+void battle_formula_cancel_weapon_spell(void);
 void battle_formula_convert_hp_damage_to_mp_recovery(void);
 void battle_formula_determine_reduced_stat(void);
 void battle_formula_force_attack_miss(void);
@@ -785,7 +785,7 @@ void battle_formula_store_pa_and_weapon_power(void);
 void battle_formula_store_pa_and_weapon_power_plus_y(void);
 void battle_formula_store_pa_and_x(void);
 void battle_formula_store_pa_and_y(void);
-void battle_formula_store_reaction_proc_id_and_target(void);
+void battle_formula_queue_weapon_spell(void);
 void battle_formula_store_speed_and_x(void);
 void battle_formula_store_xa_plus_ya_status_damage(void);
 void battle_formula_store_xa_times_ya_damage(void);
@@ -1918,7 +1918,7 @@ typedef struct battle_unit_misc_data {
     u8 continue_attack;      /* 0x1a4 */
     u8 current_hit_number;   /* 0x1a5 */
     s16 reaction_id_1a6;     /* 0x1a6; battle_strike_work_t.reaction_id_1a (strike work at +0x18c) */
-    u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
+    u8 target_new_x;         /* 0x1a8; post-action knockback destination (battle_move_start_knockback) */
     u8 target_new_y;         /* 0x1a9 */
     u8 target_new_map_level; /* 0x1aa */
     u8 used_weapon_id;       /* 0x1ab */
@@ -4242,7 +4242,7 @@ typedef struct battle_strike_work {
     u8 target_new_y;
     u8 target_new_map_level;
     u8 used_weapon_id;
-    u16 reaction_ability_id; /* 0x20; misc 0x1ac */
+    s16 reaction_ability_id; /* 0x20; misc 0x1ac */
     /* 0x22; misc 0x1ae. g_current_ability.knockback_flags & 0x7f, stored with
      * the knockback destination. */
     u8 knockback_flags;
@@ -4287,19 +4287,32 @@ typedef struct battle_target_panel {
 } battle_target_panel_t;
 typedef char battle_targeting_panel_size_must_be_5[(sizeof(battle_target_panel_t) == 5) ? 1 : -1];
 
+/* g_current_ability.knockback_flags. battle_formula_calculate_knockback sets PENDING with the
+ * kind; the strike that follows the hit lands the target (battle_move_set_knockback_fall_damage
+ * clears PENDING), and the strike work keeps the kind. */
+typedef enum battle_knockback_flags {
+    BATTLE_KNOCKBACK_KIND_GROUND = 0x01, /* takes fall damage */
+    BATTLE_KNOCKBACK_KIND_FLIER = 0x02,  /* a flier that is neither Frog nor Chicken */
+    BATTLE_KNOCKBACK_KIND_MASK = 0x7f,
+    BATTLE_KNOCKBACK_PENDING = 0x80,
+} battle_knockback_flags_e;
+
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's
  * secondary data, the weapon's data and the status-infliction record that
  * battle_action_run_pre_formula_setup loads. */
 typedef struct battle_current_ability {
-    u8 attacker_id;                             /* 0x00 */
-    u8 target_id;                               /* 0x01 */
-    u8 strike_count;                            /* 0x02 */
-    u8 strike_counter;                          /* 0x03: weapon hand, 0 = right, 1 = left */
-    u8 primary_weapon_id;                       /* 0x04 */
-    u8 secondary_weapon_id;                     /* 0x05 */
-    u16 reaction_id;                            /* 0x06 */
-    u16 elemental_flags;                        /* 0x08 */
+    u8 attacker_id;         /* 0x00 */
+    u8 target_id;           /* 0x01 */
+    u8 strike_count;        /* 0x02 */
+    u8 strike_counter;      /* 0x03: weapon hand, 0 = right, 1 = left */
+    u8 primary_weapon_id;   /* 0x04 */
+    u8 secondary_weapon_id; /* 0x05 */
+    u16 reaction_id;        /* 0x06 */
+    /* 0x08: 1 while a weapon's spell waits for its strike: the spell replaced the weapon's hit
+     * (battle_formula_queue_weapon_spell) and the next strike casts reaction_id
+     * at post_action_target_id. */
+    u16 weapon_spell_pending;
     u8 target_x;                                /* 0x0a */
     u8 target_y;                                /* 0x0b */
     u8 target_elevation;                        /* 0x0c */
@@ -4508,8 +4521,8 @@ void battle_action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilg
 s32 battle_action_check_reaction(battle_stats_t* unit);
 void battle_action_check_reflect_reaction(void);
 void battle_action_clear_current_data(battle_action_data_t* action);
-void battle_action_clear_data(void);
-void battle_action_clear_knockback_flag(void);
+void battle_action_clear_target_and_actor_data(void);
+void battle_action_cancel_knockback(void);
 void battle_action_clear_status_changes(battle_action_data_t* action);
 void battle_action_execute_ability(void);
 void battle_action_finalize_target_current_action(void);
@@ -4521,12 +4534,12 @@ s32 battle_action_report_job_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc);
 s32 battle_action_resume_attack_phase_control(void);
 void battle_action_set_current_attacker_data(battle_stats_t* unit);
-void battle_action_set_damage_display_type_based_on_ability(void);
-void battle_action_set_item_throw_stone_ability_display(void);
+void battle_action_start_strike(void);
+void battle_action_play_ability_effect(void);
 s32 battle_action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);
 void battle_action_set_only_action_taken(s32 unit_id);
 void battle_action_set_only_movement_taken(s32 unit_id);
-void battle_action_set_target_variables(battle_stats_t* unit);
+void battle_action_set_target_unit(battle_stats_t* unit);
 void battle_action_show_caster_post_effect_messages(void);
 void battle_action_switch_ability_to_default_attack(void);
 
@@ -4542,7 +4555,7 @@ s32 battle_reaction_prepare_next(u16* reaction_id);
 s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id);
 s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
 
-void battle_action_set_target_coords_and_attacker_anim(void);
+void battle_action_apply_strike_results(void);
 s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id);
 s32 battle_action_apply_tile_trap(battle_stats_t* unit);
 void battle_action_build_targets_post_action_message(void);
@@ -4566,14 +4579,14 @@ s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
-void battle_action_store_ability_data(u8* src);
+void battle_action_store_used_weapon(const battle_ai_command_action_t* action);
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 
 s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability);
 
-s32 battle_action_init_current_data(s32 unit_id);
+s32 battle_action_begin(s32 unit_id);
 void battle_action_store_acting_unit_data(battle_stats_t* unit);
-s32 battle_action_store_target_stats_pointer_data(s32 unit_id);
+s32 battle_action_apply_actor_result(s32 unit_id);
 
 /* move */
 typedef enum battle_move_find_result_flags {
@@ -5771,6 +5784,7 @@ void battle_target_select_tile(void);
 s32 battle_target_set_ability_panels(const u8* source);
 s32 battle_target_set_ability_range_flags(void);
 s32 battle_target_set_ability_range_flags_from_marks(void);
+void battle_target_set_ability_targets(u8* src);
 s32 battle_target_set_item_range_panels(battle_stats_t* unit, u8 range);
 s32 battle_target_set_jump_ability_panels(const u8* source);
 s32 battle_target_set_panels_for_action(u8* action);

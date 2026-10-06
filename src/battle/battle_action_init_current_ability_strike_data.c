@@ -12,13 +12,13 @@ typedef union {
 
 #define WEAPON_IDS (*(battle_action_ability_weapon_ids_t*)&g_current_ability.primary_weapon_id)
 
-/*
- * Seed the per-action "strike" state from the acting unit before an attack
- * resolves: reset the strike counter, elemental and knockback scratch, clear
- * the experience/level-up flags when no action context is live, latch the
- * unit's two weapon slots, and decide how many strikes the action gets
- * (g_current_ability.strike_count). Two-swords and the 0x20 ability flag are what allow a second
- * strike; menu type 2 (item) only records the consumed item.
+/* Set up the strike data of the unit's action: one strike, counter 0, no pending weapon spell or
+ * knockback; in a primary action the EXP/JP and level-up flags are cleared too. The two weapon hands
+ * are latched (the left weapon moves to the first slot when the right hand is empty); Throw strikes
+ * with the thrown item instead. Formulas 0x1e and 0x1f strike 1 to X times at random while executing,
+ * and formula 0x5e X + 1 times. Attack, Charge and abilities that use the weapon's range strike twice
+ * with Two Swords when both hands hold weapons or both are empty; a Frog or a monster fights
+ * bare-handed.
  *
  * The `ability_id >= 0 || ability_id < 0x170` guard is the target's own: the
  * second arm is unreachable, so the table read is never actually skipped.
@@ -27,8 +27,7 @@ typedef union {
  * BEFORE the 0xff store, which costs it the menu-type zero-extension in $v1
  * and makes it re-emit `andi v1,a2,0xff` after the block. Reading the slot
  * straight into the global instead sinks the load past the store and drops
- * that instruction.
- */
+ * that instruction. */
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     ability_secondary_data_t* data;
     u8 menu_type;
@@ -40,10 +39,10 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
 
     g_current_ability.strike_count = 1;
     g_current_ability.strike_counter = 0;
-    g_current_ability.elemental_flags = 0;
+    g_current_ability.weapon_spell_pending = 0;
     g_current_ability.knockback_flags = 0;
     weapon_kind = 0;
-    if (g_battle_action_context == 0) {
+    if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
         g_current_ability.can_earn_exp_jp = 0;
         g_current_ability.earned_experience = 0;
         g_current_ability.level_gained_flag = 0;
@@ -65,7 +64,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         return;
     }
 
-    if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_MONSTER) {
+    if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_id = unit->last_ability_id;
         if (ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST) {
             data = &g_main_ability_range_data[ability_id];
@@ -74,7 +73,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
             weapon_kind = data->formula;
         }
         if (weapon_kind == 0x1e || weapon_kind == 0x1f) {
-            if (g_battle_action_state == 0) {
+            if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
                 g_current_ability.strike_count = ((chance * rand()) / 32768) + 1;
                 return;
             }
@@ -89,20 +88,22 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         return;
     }
     if (menu_type != ACTION_MENU_TYPE_ATTACK && menu_type != ACTION_MENU_TYPE_CHARGE) {
-        if ((g_battle_loaded_ability_flags_1 & 0x20) == 0) {
+        if ((g_battle_loaded_ability_flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) == 0) {
             return;
         }
     }
 
     support = unit->support_abilities[2];
-    if ((unit->status_sets.current[2] & 2) || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+        || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
         g_current_ability.primary_weapon_id = ITEM_ID_NONE;
         g_current_ability.secondary_weapon_id = ITEM_ID_NONE;
     }
 
     if (WEAPON_IDS.pair == 0xffff
         || (WEAPON_IDS.primary != ITEM_ID_NONE && g_current_ability.secondary_weapon_id != ITEM_ID_NONE)) {
-        if (support & 1) {
+        if (support & BATTLE_SUPPORT_SET_3_TWO_SWORDS) {
             g_current_ability.strike_count = 2;
         }
     }

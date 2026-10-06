@@ -23,7 +23,7 @@ s32 battle_action_perform_reaction_ability(void) {
     if ((g_main_reaction_behavior_flags_by_ability_id[ability_id] & 3) == 1) {
         return 0;
     }
-    battle_action_clear_data();
+    battle_action_clear_target_and_actor_data();
     selector = (u16)g_battle_current_reaction_ability_id;
     switch ((s16)(selector - ABILITY_ID_REACTION_FIRST)) {
     case 0x0:

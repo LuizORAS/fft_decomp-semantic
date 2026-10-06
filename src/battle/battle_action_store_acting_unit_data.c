@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Save the actor's position or restore its pre-reaction action command.
+/* Save the actor's place before its action, or end a reaction. A Mime's weapon slots are emptied;
+ * another actor's facing goes to g_current_ability_attacker in a primary action. A primary action
+ * saves the actor's x, y and elevation (g_acting_unit_x, _y, _elevation); a reaction restores the
+ * actor's command bytes from the reaction snapshot (g_reaction_unit_action_data_16e) and returns to
+ * the primary context.
  *
- * A Mime's weapons are cleared first. Normal actions save X/Y, elevation,
- * and facing; reactions restore the 20 saved command bytes at 0x16e.
  * The facing read goes through a raw halfword so the lhu stays below the
- * preceding stores (struct-member loads hoist above scalar-global stores).
- */
+ * preceding stores (struct-member loads hoist above scalar-global stores). */
 void battle_action_store_acting_unit_data(battle_stats_t* unit) {
     if (unit->job_id == JOB_ID_MIME) {
         unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE; /* right hand */

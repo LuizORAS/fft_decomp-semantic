@@ -6,17 +6,24 @@
  * which changes this function's code. */
 extern battle_current_ability_t g_current_ability_view;
 
-struct battle_action_used_weapon_context;
-extern void battle_action_store_used_weapon(struct battle_action_used_weapon_context* action);
-
-/* Pre-formula setup: loads the current ability, weapon and item data for one
- * attacker/target pair and runs the formula handler.
+/* Pre-formula setup: load the ability, weapon and item data for one attacker/target pair and run
+ * the formula handler.
  *
- * Returns 1 when the target was already missed before the formula (reflect,
- * Blade Grasp, Arrow Guard) and 0 otherwise, including the reaction and
- * knockback early exits. id holds the weapon, then the thrown item, then the
- * status-infliction index. The fields the target addresses through a base
- * register, plus ability_id, go through g_current_ability_view; the others
+ * A reaction that battle_action_perform_reaction_ability resolves and a pending knockback
+ * (battle_move_set_knockback_fall_damage) return 0 before any formula. Otherwise it loads the
+ * target's terrain, the strike's weapon (Draw Out's katana; a non-weapon item counts as none), the
+ * ability's range data, the weapon data and both faiths, and picks the formula by the skillset's menu
+ * type: the ability's formula (a Frog fights bare-handed, and an ability that neither uses the
+ * weapon's range nor strikes with it drops the weapon), a consumable's item formula, 0x63 for Throw,
+ * 0x64 for Jump, and the weapon's formula for Attack and Charge (Charge adds its power from the
+ * Charge table; Two Hands applies when the weapon allows it and a hand is free). A pending weapon
+ * spell runs as an ordinary ability with its spell id. A formula of 0 or above 0x64 becomes 1, and
+ * formula 3 inflicts no status. Reflect, Blade Grasp and Arrow Guard may miss the target first
+ * (returns 1); then the formula runs, formulas below 7 check Poach and Train, Jump drops its weapon,
+ * and the result is finalized (battle_action_finalize_target_current_action). Returns 0.
+ *
+ * id holds the weapon, then the thrown item, then the status-infliction index. The fields the target
+ * addresses through a base register, plus ability_id, go through g_current_ability_view; the others
  * use g_current_ability. */
 s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     battle_ai_command_action_t action;
@@ -39,10 +46,10 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_attacker_data = &g_current_action_data;
     g_battle_action_attacker = &g_battle_unit_stats[g_current_ability_view.attacker_id];
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY && battle_action_perform_reaction_ability() != 0) {
-        battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&action);
+        battle_action_store_used_weapon(&action);
         return 0;
     }
-    if (g_current_ability.knockback_flags & 0x80) {
+    if (g_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING) {
         battle_move_set_knockback_fall_damage();
         return 0;
     }
@@ -76,11 +83,11 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_current_ability.formula = 1;
     g_current_ability.attacker_faith = g_battle_action_attacker->faith;
     g_current_ability.target_faith = g_battle_action_target->faith;
-    battle_action_clear_data();
+    battle_action_clear_target_and_actor_data();
     skillset = action.skillset;
     g_current_ability.skillset = skillset;
     menu_type = g_main_action_menu_types_by_skillset[skillset];
-    if (g_current_ability_view.elemental_flags != 0) {
+    if (g_current_ability_view.weapon_spell_pending != 0) {
         action.ability_id = g_current_ability_view.reaction_id;
         g_current_ability_view.ability_id = action.ability_id;
         menu_type = ACTION_MENU_TYPE_DEFAULT;
@@ -107,7 +114,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         if (action.ability_id < ABILITY_ID_ITEM_FIRST + 1) { /* same off-by-one bound */
             if ((g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-                && g_current_ability_view.elemental_flags == 0) {
+                && g_current_ability_view.weapon_spell_pending == 0) {
                 g_current_ability_view.weapon_id = ITEM_ID_NOTHING;
                 main_util_copy_byte_data(
                     (u8*)g_main_item_weapon_data, (u8*)&g_current_ability_view.weapon_data, sizeof(weapon_data_t));
@@ -167,7 +174,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         formula = 1;
         break;
     }
-    g_current_ability_view.elemental_flags = 0;
+    g_current_ability_view.weapon_spell_pending = 0;
     g_current_ability.knockback_flags = 0;
     if (formula == 0 || formula >= 0x65) {
         formula = 1;

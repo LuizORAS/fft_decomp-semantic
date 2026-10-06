@@ -18,7 +18,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     s32 positive;
     s32 negative;
 
-    if (reaction_mode == 0 && battle_action_init_current_data(action->unit_id) != 0) {
+    if (reaction_mode == 0 && battle_action_begin(action->unit_id) != 0) {
         return;
     }
     behavior = g_main_ability_data[action->ability_id].ai_flags.bytes;
@@ -77,7 +77,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 }
             }
         }
-        battle_action_store_target_stats_pointer_data(action->unit_id);
+        battle_action_apply_actor_result(action->unit_id);
     } while (work.continue_attack != 0);
     if (ai->hit_counter != 0xff && ai->weapon_range_flag != 0) {
         if (ai->ability_effect_on_self == 1 && self_hit != 0) {

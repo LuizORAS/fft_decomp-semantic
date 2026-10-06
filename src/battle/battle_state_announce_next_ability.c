@@ -41,7 +41,7 @@ s32 battle_state_announce_next_ability(void) {
             }
             break;
         case 1:
-            result = battle_action_init_current_data(unit->battle_data->misc_unit_id);
+            result = battle_action_begin(unit->battle_data->misc_unit_id);
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ANNOUNCE_ABILITY;
                 g_battle_casting_unit_id = unit->unit_id;

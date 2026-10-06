@@ -129,7 +129,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                     } else {
                         g_current_ability.strike_count = 1;
                         g_current_ability.strike_counter = 0;
-                        g_current_ability.elemental_flags = 0;
+                        g_current_ability.weapon_spell_pending = 0;
                         g_current_ability.knockback_flags = 0;
                         g_current_ability.primary_weapon_id = unit->equipment[3];
                         g_current_ability.secondary_weapon_id = unit->equipment[5];

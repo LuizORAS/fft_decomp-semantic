@@ -7,7 +7,7 @@ s32 battle_status_remove_transparent(battle_stats_t* unit) {
     if (battle_status_check_crystal_dead_jump_petrify_treasure(unit) != 0) {
         return 0;
     }
-    battle_action_set_target_variables(unit);
+    battle_action_set_target_unit(unit);
     if (unit->action_taken != 0) {
         target = g_battle_action_target;
         if ((target->inflicted_status[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT)) != 0) {

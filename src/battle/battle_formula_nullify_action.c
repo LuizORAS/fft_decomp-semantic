@@ -14,6 +14,6 @@ void battle_formula_nullify_action(void) {
     target_data->attack_accuracy = 0;
     target_data->special_effect = 0;
     target_data_reload->attack_type = 0;
-    battle_formula_clear_nullify_flags();
-    battle_action_clear_knockback_flag();
+    battle_formula_cancel_weapon_spell();
+    battle_action_cancel_knockback();
 }

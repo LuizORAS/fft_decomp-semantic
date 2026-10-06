@@ -1,7 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_store_target_stats_pointer_data(s32 unit_id) {
+/* Apply the actor's own result (g_current_action_data, the attacker record that the formulas fill)
+ * to unit_id: copy it into the unit's result record and apply it
+ * (battle_action_finalize_attack_and_flag_reactions); a miss is marked CANCELLED. Returns -1 for an
+ * absent unit, else the apply result. The AI simulation and
+ * battle_unit_update_attack_result_animation call it. */
+s32 battle_action_apply_actor_result(s32 unit_id) {
     battle_stats_t* stats;
     battle_action_data_t* action;
     s32 result;

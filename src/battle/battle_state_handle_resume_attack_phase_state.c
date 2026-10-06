@@ -25,7 +25,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
         && unit->numeric_display_active == 0) {
         if (unit->continue_attack != 0) {
             unit->continue_attack_count += 1;
-            battle_action_set_damage_display_type_based_on_ability();
+            battle_action_start_strike();
             return;
         }
         if (g_battle_gfx_sp2_data != 0) {

@@ -1,47 +1,22 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Current action block of Miscellaneous unit_t Data (0x18c..0x1ad), reached
- * through one pointer: the target addresses these fields relative to
- * misc + 0x18c. */
-typedef struct battle_action_misc_data {
-    u8 action_18c;           /* 0x00 (misc 0x18c) */
-    u8 target_count;         /* 0x01 (misc 0x18d) */
-    u8 target_list[0x10];    /* 0x02 (misc 0x18e) */
-    u8 animate_on_miss_flag; /* 0x12 (misc 0x19e) */
-    u8 control_value_19f;    /* 0x13 */
-    u16 last_attack_id;      /* 0x14 */
-    u8 ability_formula;      /* 0x16 */
-    u8 reaction_occurred;    /* 0x17 (misc 0x1a3) */
-    u8 continue_attack;      /* 0x18 */
-    u8 current_hit_number;   /* 0x19 */
-    u8 reaction_id_1a6;      /* 0x1a */
-    u8 _unused_1b;           /* 0x1b */
-    u8 target_new_x;         /* 0x1c */
-    u8 target_new_y;         /* 0x1d */
-    u8 target_new_map_level; /* 0x1e */
-    u8 used_weapon_id;       /* 0x1f */
-    s16 reaction_ability_id; /* 0x20 (misc 0x1ac) */
-} battle_action_misc_data_t;
-
 /* Blaze Gun, Glacier Gun and Blast Gun (item ids 0x4a..0x4c) play the weapon
  * strike even when an ability is used. */
 #define IS_ELEMENTAL_GUN(id) (((id) == 0x4a || (id) == 0x4b) || (id) == 0x4c)
 
-/* Finalizes the casting unit's action and picks its attack animation.
- *
- * Each target's attack result is resolved first; for a knockback strike
- * (ABILITY_ID_KNOCKBACK) in the later phase the targets are moved to the
- * knockback destination instead.
- * An ability picks the ability animation unless a reaction occurred, while a
- * plain attack or an elemental gun picks the weapon strike.
- *
- * continue_attack_count is nonzero on the follow-up strikes of a continued
- * attack. */
-void battle_action_set_target_coords_and_attacker_anim(void) {
+/* Apply a strike's results and pick the actor's animation, entering START_ACTION_EXECUTE at 60 fps.
+ * The first strike turns the actor toward its target. Each target's pending result applies
+ * (battle_action_finalize_attack_and_flag_reactions), and a target whose result is -1 (death) gets a
+ * relocation tile (battle_unit_find_relocation_tile). In the action phase an ability (not an
+ * elemental gun) shown without a reaction plays its ability animation, and a plain attack or an
+ * elemental gun the weapon strike. In the other phases (First Strike, reactions) a knockback strike
+ * moves its targets to the knockback tile, and otherwise the same choice applies to the first strike,
+ * except after Reflect. */
+void battle_action_apply_strike_results(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
-    battle_action_misc_data_t* action;
+    battle_strike_work_t* action;
     s32 i;
 
     g_battle_state_vsync_interval = 1;
@@ -51,7 +26,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
     if (unit->continue_attack_count == 0) {
         battle_unit_face_towards_action_target(unit, 0);
     }
-    action = (battle_action_misc_data_t*)&unit->action_18c;
+    action = (battle_strike_work_t*)&unit->action_18c;
     if (action->target_count != 0) {
         for (i = 0; i < action->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);

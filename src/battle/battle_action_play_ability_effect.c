@@ -1,7 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_set_item_throw_stone_ability_display(void) {
+/* Enter ACTION_EXECUTE and play the casting unit's ability effect, with the cursor moved to its
+ * target. A plain attack, a knockback or an ability without an effect file plays nothing at 60 fps.
+ * Accumulate and the Charge abilities play theirs unless they are item abilities; any other ability
+ * plays it unless it is an item ability (one whose unit animation is 0x39 plays anyway), pauses the
+ * tracked sound effects and runs at 30 fps. The map cursor hides. */
+void battle_action_play_ability_effect(void) {
     battle_unit_misc_data_t* unit;
     s32 ability;
 

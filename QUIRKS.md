@@ -326,6 +326,10 @@ without changing the bytes.
 - `jobstts_menu_init_scrollable_list` passes its text-table pointer to the
   core's `s32` parameter; pointers stored in 32-bit integers break on 64-bit
   ports.
+- `battle_unit_misc_data_t` (`include/fft/battle.h`) repeats `battle_strike_work_t` field by field
+  at `0x18c`..`0x1b3` (the strike work's last four bytes are the misc record's `action_rewards`);
+  `battle_action_start_strike` and `battle_action_resolve_ability_strike` reach it through a cast
+  of `&misc->action_18c`, and `battle_action_apply_strike_results` through another.
 - `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.

@@ -1,7 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_set_damage_display_type_based_on_ability(void) {
+/* Start a strike of the casting unit's action at 60 fps: resolve it into the unit's strike work
+ * (battle_action_resolve_ability_strike), show the attack it reports (used_ability_id) and the
+ * thrown item's palette. A plain attack, a knockback, a strike whose reaction id differs from the
+ * attack it shows, or an ability without an effect file applies the results at once
+ * (battle_action_apply_strike_results); otherwise the battle opens the effect file
+ * (START_EFFECT_FILE_OPEN) with the targets and their display types. */
+void battle_action_start_strike(void) {
     battle_unit_misc_data_t* misc;
     u16 raw;
     s32 ability;
@@ -17,7 +23,7 @@ void battle_action_set_damage_display_type_based_on_ability(void) {
     battle_gfx_set_thrown_item_graphic_palette(misc->used_weapon_id, misc);
     if (((target != 0) && (ability != target)) || (ability == ABILITY_ID_KNOCKBACK) || (ability == 0)
         || (battle_effect_load_ability(ability) != 0)) {
-        battle_action_set_target_coords_and_attacker_anim();
+        battle_action_apply_strike_results();
         return;
     }
     g_battle_game_state = BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN;

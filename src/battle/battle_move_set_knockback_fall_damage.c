@@ -13,9 +13,9 @@ void battle_move_set_knockback_fall_damage(void) {
     s32 amount;
     s32 diff;
 
-    battle_action_clear_data();
+    battle_action_clear_target_and_actor_data();
     flags = &g_current_ability.knockback_flags;
-    *flags &= 0x7F;
+    *flags &= BATTLE_KNOCKBACK_KIND_MASK;
     g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
     unit = g_battle_action_target;
     amount = 0;
@@ -23,7 +23,7 @@ void battle_move_set_knockback_fall_damage(void) {
             & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD)
                 | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)))
         == 0) {
-        if (*flags == 1) {
+        if (*flags == BATTLE_KNOCKBACK_KIND_GROUND) {
             diff = (g_current_ability.knockback_fall_height >> 1) - unit->jump;
             if (diff > 0) {
                 amount = (diff * unit->max_hp) / 10;
