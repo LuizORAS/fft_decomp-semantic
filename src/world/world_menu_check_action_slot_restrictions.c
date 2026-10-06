@@ -33,7 +33,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
     message = 0;
     unit = world_unit_get_battle_stats_for_stored();
     if (check_unit != 0) {
-        if (battle_formula_can_unit_evade(unit) == 2) {
+        if (battle_unit_get_action_block(unit) == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
             message = 0x1003;
             mode = 2;
         } else {

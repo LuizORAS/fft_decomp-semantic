@@ -1225,7 +1225,7 @@ functions:
   - {addr: 0x80181114, size: 56, name: battle_unit_find_active_data_pointer, hash: d7f961fbc5ac8bde}
   - {addr: 0x8018114c, size: 172, name: battle_menu_get_id_based_on_mount_moveable_actable, hash: 71aa48ca5448983c}
   - {addr: 0x801811f8, size: 276, name: battle_menu_get_unit_action_menu_id, hash: 34b72967c7d1fbbe}
-  - {addr: 0x8018130c, size: 180, name: battle_formula_can_unit_evade, hash: 7415096654c7109d}
+  - {addr: 0x8018130c, size: 180, name: battle_unit_get_action_block, hash: 7415096654c7109d}
   - {addr: 0x801813c0, size: 452, name: battle_menu_build_unit_action_menus, hash: bc322084cf70da64}
   - {addr: 0x80181584, size: 412, name: battle_menu_load_skillset, hash: 9b1afa0da3dd945e, rodata: [{addr: 0x80174144, size: 44, hash: 2aa44194e1919be4}]}
   - {addr: 0x80181720, size: 160, name: battle_turn_count_entries_before_action, hash: 2a5b1849a8fd06d9}
@@ -1273,7 +1273,7 @@ functions:
   - {addr: 0x8018414c, size: 428, name: battle_map_set_tile_data_value, hash: 53353ae1a060082b, rodata: [{addr: 0x801741fc, size: 64, hash: 3be3de88e710441d}]}
   - {addr: 0x801842f8, size: 20, name: battle_return_zero_801842f8, hash: def2f9c06f5203fb}
   - {addr: 0x8018430c, size: 48, name: battle_formula_force_attack_miss, hash: c4a705e8091a8683}
-  - {addr: 0x8018433c, size: 36, name: battle_formula_cause_action_miss, hash: 0c3f4b4ac3a1aa90}
+  - {addr: 0x8018433c, size: 36, name: battle_formula_set_accuracy_miss, hash: 0c3f4b4ac3a1aa90}
   - {addr: 0x80184360, size: 140, name: battle_formula_calculate_dance_song_hit, hash: 2f58bba7c54f0b89}
   - {addr: 0x801843ec, size: 548, name: battle_formula_calculate_knockback, hash: 30c933b534bf5a2b, profile: gcc-2.6.3_O2_aspsx-2.21}
   - {addr: 0x80184610, size: 712, name: battle_move_check_knockback_destination, hash: fb9351b2bfdb7550}
@@ -1346,7 +1346,7 @@ functions:
   - {addr: 0x801873d8, size: 148, name: battle_formula_apply_undead_absorb_attack, hash: a23d869edab6196c}
   - {addr: 0x8018746c, size: 128, name: battle_formula_apply_mp_recovery, hash: 6947e4ac0585ebc3}
   - {addr: 0x801874ec, size: 36, name: battle_formula_convert_hp_damage_to_mp_recovery, hash: 69ecb124225604e2}
-  - {addr: 0x80187510, size: 172, name: battle_formula_use_hp_damage_as_action_hit_percent, hash: 628d00ea13c8754d}
+  - {addr: 0x80187510, size: 172, name: battle_formula_roll_hit_chance, hash: 628d00ea13c8754d}
   - {addr: 0x801875bc, size: 64, name: battle_formula_check_dragon, hash: cc2acf558a3f41f6}
   - {addr: 0x801875fc, size: 60, name: battle_formula_force_sleeping_target_miss, hash: 5ec97cea4b65fa8a}
   - {addr: 0x80187638, size: 88, name: battle_formula_apply_maintenance, hash: 8d2d3d3a288513d5}
@@ -1364,10 +1364,10 @@ functions:
   - {addr: 0x801882c8, size: 48, name: battle_formula_apply_full_hp_mp_heal, hash: 609c4b69f8f3d928}
   - {addr: 0x801882f8, size: 180, name: battle_formula_apply_finger_guard, hash: f08d19021384c308}
   - {addr: 0x801883ac, size: 220, name: battle_formula_apply_catch, hash: 93b16a73f824bdfb}
-  - {addr: 0x80188488, size: 56, name: battle_formula_calculate_hit, hash: 4e6e56d3fbee1379}
+  - {addr: 0x80188488, size: 56, name: battle_formula_roll_evades, hash: 4e6e56d3fbee1379}
   - {addr: 0x801884c0, size: 80, name: battle_formula_roll_conditional_status_proc, hash: 6af7bd37b8b6ddfe}
   - {addr: 0x80188510, size: 88, name: battle_formula_calculate_physical_evade, hash: a91a0c3b819e2925}
-  - {addr: 0x80188568, size: 80, name: battle_formula_calculate_physical_evade_charge, hash: 34f8a4db5b523940}
+  - {addr: 0x80188568, size: 80, name: battle_formula_calculate_physical_evade_without_weather, hash: 34f8a4db5b523940}
   - {addr: 0x801885b8, size: 64, name: battle_formula_calculate_magical_evade, hash: fd840af8aa493e15}
   - {addr: 0x801885f8, size: 64, name: battle_formula_apply_physical_xa_modifiers, hash: caf0fc3b0aeeebd9}
   - {addr: 0x80188638, size: 108, name: battle_formula_calculate_weapon_damage, hash: 80e17426a7add5d7}
@@ -1382,7 +1382,7 @@ functions:
   - {addr: 0x80188888, size: 220, name: battle_formula_calculate_golem_accuracy, hash: fd3de29223a7cfc1}
   - {addr: 0x80188964, size: 64, name: battle_formula_calculate_magical_damage_without_faith, hash: b88ff0ac6143bcf4}
   - {addr: 0x801889a4, size: 40, name: battle_formula_calculate_truth_damage, hash: 9dbedf8aefbe5dd6}
-  - {addr: 0x801889cc, size: 88, name: battle_formula_calculate_magic_accuracy_no_elemental, hash: 12c16eb5925971e7}
+  - {addr: 0x801889cc, size: 88, name: battle_formula_calculate_magic_accuracy_without_strengthen, hash: 12c16eb5925971e7}
   - {addr: 0x80188a24, size: 96, name: battle_formula_calculate_magic_accuracy, hash: 93b39f1715163636}
   - {addr: 0x80188a84, size: 88, name: battle_formula_calculate_magic_accuracy_without_faith, hash: 8b89ef84ff9d82c4}
   - {addr: 0x80188adc, size: 56, name: battle_formula_apply_physical_status_xa_modifiers, hash: 4434021d0802a29e}

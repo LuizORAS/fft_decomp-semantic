@@ -17,7 +17,7 @@ void battle_menu_build_skillset_entries(void) {
     g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
         g_battle_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
     rows = (world_menu_text_row_t*)battle_text_init_entry(0x5010);
-    if (battle_formula_can_unit_evade(battle_unit_get_attacker_data_pointer()) == 2) {
+    if (battle_unit_get_action_block(battle_unit_get_attacker_data_pointer()) == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
         for (i = 0; i < 6; i++) {
             g_battle_menu_skillset_disabled_flags[i] = 1;
             if (g_battle_action_menu_row_types[i] == ACTION_MENU_TYPE_UNKNOWN_0D) {

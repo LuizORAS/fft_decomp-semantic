@@ -4,7 +4,7 @@
 /* Collects the current target's physical evade sources for the ability being
  * resolved: class evade, accessory evade and one value per hand. A hand
  * contributes its weapon's evade when Weapon Guard is active and the unit can
- * still evade, otherwise its shield's evade. Monsters contribute nothing past
+ * act (battle_unit_get_action_block), otherwise its shield's evade. Monsters contribute nothing past
  * the class value.
  *
  * Two spellings in the left-hand block are both needed for one local-allocation
@@ -30,7 +30,7 @@ void battle_formula_store_physical_evade_values(void) {
 
     weapon_guard = 0;
     if ((g_battle_action_target->reaction_abilities[3] & BATTLE_REACTION_SET_4_WEAPON_GUARD) != 0) {
-        weapon_guard = battle_formula_can_unit_evade(g_battle_action_target) == 0;
+        weapon_guard = battle_unit_get_action_block(g_battle_action_target) == 0;
     }
     g_current_ability.base_hit = 100;
     g_current_ability.accessory_evade = 0;

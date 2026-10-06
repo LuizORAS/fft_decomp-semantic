@@ -6,7 +6,7 @@ void battle_formula_absorb_mp_y_percent(void) {
     if (battle_formula_calculate_magical_evade() != 0) {
         return;
     }
-    if (battle_formula_calculate_magic_accuracy_no_elemental() != 0) {
+    if (battle_formula_calculate_magic_accuracy_without_strengthen() != 0) {
         return;
     }
     battle_formula_calculate_mp_percent_damage();

@@ -20,7 +20,7 @@ void battle_menu_check_action_menu_restrictions(void) {
     unit = battle_unit_get_attacker_data_pointer();
     menu = g_battle_menu_current_id;
     if ((u32)(menu - 0x13) < 2 || (u32)(menu - 0x30) < 2) {
-        result = battle_formula_can_unit_evade(unit);
+        result = battle_unit_get_action_block(unit);
         if (result == 0) {
             battle_sound_set_effect_to_invalid();
             battle_thread_exit_current();

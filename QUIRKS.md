@@ -472,3 +472,6 @@ translation unit. Share their types and constants through headers.
   post-move event `0x200` (`BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY`, a display refresh of the
   mover), but `g_battle_move_post_move_events` only takes `battle_move_get_post_move_events`'
   results, which never include it, so that arm never runs.
+- `src/battle/battle_formula_apply_weather_effects_on_bows.c` reads the weather script variable
+  instead of `battle_map_get_effective_weather`, so a snowstorm also cuts bow and crossbow hits and
+  the map's ignore-weather flag is not checked; the element modifiers use the effective weather.

@@ -11,6 +11,6 @@ s32 battle_formula_calculate_dance_song_hit(void) {
     if (action_state != BATTLE_ACTION_STATE_EXECUTE || main_util_roll_pass_fail(100, hit_percent) == 0) {
         return 0;
     }
-    battle_formula_cause_action_miss();
+    battle_formula_set_accuracy_miss();
     return 1;
 }

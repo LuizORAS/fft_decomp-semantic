@@ -19,7 +19,7 @@ void world_menu_check_action_restrictions(void) {
     unit = world_unit_get_battle_stats_for_stored();
     menu = g_world_menu_current_id;
     if ((u32)(menu - 0x13) < 2 || (u32)(menu - 0x30) < 2) {
-        result = battle_formula_can_unit_evade(unit);
+        result = battle_unit_get_action_block(unit);
         if (result == 0) {
             world_sound_set_effect_to_invalid();
             world_thread_exit_current();

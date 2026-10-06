@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Store the hit chance XA + YA in the target's hp_damage, where the accuracy steps keep it until
- * battle_formula_use_hp_damage_as_action_hit_percent rolls it. YA gets the zodiac compatibility too,
+ * battle_formula_roll_hit_chance rolls it. YA gets the zodiac compatibility too,
  * except for the Golem summon. */
 void battle_formula_store_hit_chance(void) {
     u16 original_xa;

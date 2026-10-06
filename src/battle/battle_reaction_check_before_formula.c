@@ -26,7 +26,7 @@ void battle_reaction_check_before_formula(void) {
     if (battle_reaction_is_prevented(g_battle_action_target) != 0) {
         return;
     }
-    if (battle_formula_can_unit_evade(g_battle_action_target) != 0) {
+    if (battle_unit_get_action_block(g_battle_action_target) != 0) {
         return;
     }
     reaction_flags = g_battle_action_target->reaction_abilities[3];

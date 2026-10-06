@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_formula_use_hp_damage_as_action_hit_percent(void) {
+/* Roll the hit chance that the accuracy steps left in hp_damage: 100 or more always hits; otherwise
+ * it scales the shown accuracy and, while executing, a roll of 0-99 at or above it misses
+ * (battle_formula_set_accuracy_miss); 0 always misses, even in an estimate. hp_damage is cleared
+ * either way. */
+void battle_formula_roll_hit_chance(void) {
     s32 pct;
     s32 amount;
     s32 state;
@@ -23,7 +27,7 @@ void battle_formula_use_hp_damage_as_action_hit_percent(void) {
         return;
     }
     if (main_util_roll_pass_fail(100, pct) != 0) {
-        battle_formula_cause_action_miss();
+        battle_formula_set_accuracy_miss();
         g_battle_action_target_data->hp_damage = 0;
     }
 }

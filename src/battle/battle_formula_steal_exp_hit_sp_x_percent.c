@@ -10,7 +10,7 @@ void battle_formula_steal_exp_hit_sp_x_percent(void) {
         battle_formula_apply_target_physical_status_xa_modifiers();
         battle_formula_apply_zodiac_compatibility();
         battle_formula_store_hit_chance();
-        battle_formula_use_hp_damage_as_action_hit_percent();
+        battle_formula_roll_hit_chance();
         if (g_battle_action_target_data->hit != 0 || g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
             battle_formula_set_exp_stolen();
         }

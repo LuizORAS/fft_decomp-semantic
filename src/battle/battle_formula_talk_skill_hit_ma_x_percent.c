@@ -13,7 +13,7 @@ void battle_formula_talk_skill_hit_ma_x_percent(void) {
             battle_formula_store_ma_and_x();
             battle_formula_apply_zodiac_compatibility();
             battle_formula_store_hit_chance();
-            battle_formula_use_hp_damage_as_action_hit_percent();
+            battle_formula_roll_hit_chance();
             if (g_battle_action_target_data->hit != 0) {
                 battle_formula_apply_talk_skill();
             }

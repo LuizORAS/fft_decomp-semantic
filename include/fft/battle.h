@@ -751,15 +751,14 @@ void battle_formula_calculate_stolen_gil(void);
 void battle_formula_calculate_transparent(void);
 void battle_formula_calculate_truth_damage(void);
 void battle_formula_calculate_magical_damage_without_faith(void);
-s32 battle_formula_can_unit_evade(battle_stats_t* unit);
-s32 battle_formula_calculate_hit(void);
+s32 battle_formula_roll_evades(void);
 
-/* Provisional: falls off the end after battle_formula_calculate_hit, whose
+/* Provisional: falls off the end after battle_formula_roll_evades, whose
  * result stays in v0 for the caller's test. */
-s32 battle_formula_calculate_physical_evade_charge(void);
+s32 battle_formula_calculate_physical_evade_without_weather(void);
 void battle_formula_apply_element_affinities(s32 element);
 void battle_formula_nullify_action(void);
-void battle_formula_cause_action_miss(void);
+void battle_formula_set_accuracy_miss(void);
 void battle_formula_check_dragon(void);
 void battle_formula_cancel_weapon_spell(void);
 void battle_formula_convert_hp_damage_to_mp_recovery(void);
@@ -789,7 +788,7 @@ void battle_formula_queue_weapon_spell(void);
 void battle_formula_store_speed_and_x(void);
 void battle_formula_store_hit_chance(void);
 void battle_formula_store_xa_times_ya_damage(void);
-void battle_formula_use_hp_damage_as_action_hit_percent(void);
+void battle_formula_roll_hit_chance(void);
 
 void battle_formula_calculate_knockback(void);
 void battle_formula_apply_zodiac_compatibility(void);
@@ -801,7 +800,7 @@ s32 battle_formula_calculate_elemental_xa_times_ya(void);
 s32 battle_formula_calculate_friendly_magic_accuracy(void);
 s32 battle_formula_calculate_golem_accuracy(void);
 s32 battle_formula_calculate_magic_accuracy(void);
-s32 battle_formula_calculate_magic_accuracy_no_elemental(void);
+s32 battle_formula_calculate_magic_accuracy_without_strengthen(void);
 s32 battle_formula_calculate_physical_accuracy(void);
 s32 battle_formula_calculate_physical_status_accuracy(void);
 s32 battle_formula_calculate_weapon_damage(void);
@@ -2081,6 +2080,14 @@ typedef enum battle_unit_height_flags {
     BATTLE_UNIT_HEIGHT_UNAVAILABLE = 0x80,
 } battle_unit_height_flags_e;
 
+/* Why a unit cannot act (battle_unit_get_action_block): menus grey its action out, and evasion,
+ * Weapon Guard, Abandon and reactions need BATTLE_UNIT_ACTION_BLOCK_NONE. */
+typedef enum battle_unit_action_block {
+    BATTLE_UNIT_ACTION_BLOCK_NONE = 0,
+    BATTLE_UNIT_ACTION_BLOCK_DISABLED = 1,  /* Don't Act, or a mount carrying its rider */
+    BATTLE_UNIT_ACTION_BLOCK_SUBMERGED = 2, /* in water at depth 2 or more */
+} battle_unit_action_block_e;
+
 /* Selection policy for battle_unit_find_at_tile.  Status bits are inclusive
  * alternatives; the Chocobo bit is an additional requirement. */
 typedef enum battle_unit_tile_filter {
@@ -2423,6 +2430,7 @@ void battle_unit_project_misc_to_screen(u32 misc_id, s16* screen_coordinates);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
 s32 battle_unit_set_target_anim_by_misc_id(u16 misc_id);
 void battle_unit_set_facing_update_suppression(u32 misc_id);
+s32 battle_unit_get_action_block(battle_stats_t* unit);
 s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id);
 s32 battle_unit_get_battle_index_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_by_unit_id(s32 unit_id);

@@ -2,7 +2,7 @@
 
 /* Check whether the unit can use its command's ability, and pay the MP. In a primary action the unit
  * first stops Charging, Jumping and Defending (it keeps Performing). Returns 0 when allowed, or the
- * refusal: 6 + battle_formula_can_unit_evade's result when it cannot act (Don't Act counts as 1); 5
+ * refusal: 6 + battle_unit_get_action_block's result when it cannot act (Don't Act counts as 1); 5
  * for a Frog using anything but Attack, Frog Attack and the Frog spell, or a Charge; 2 when Silence
  * stops a silence-affected ability from the ordinary or monster menu; 3 without the MP. Only an
  * ordinary-menu ability of a unit that is not a Mime costs MP, halved (rounding down) by Half of MP;
@@ -21,7 +21,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
     g_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);
-    result = battle_formula_can_unit_evade(unit);
+    result = battle_unit_get_action_block(unit);
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
         result = 1;

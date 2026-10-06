@@ -7,7 +7,7 @@ void battle_formula_damage_target_mp(void) {
     u16 mp;
 
     if (battle_formula_calculate_magical_evade() == 0) {
-        if (battle_formula_calculate_magic_accuracy_no_elemental() == 0) {
+        if (battle_formula_calculate_magic_accuracy_without_strengthen() == 0) {
             target = g_battle_action_target;
             action = g_battle_action_target_data;
             mp = target->mp;

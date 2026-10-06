@@ -194,7 +194,7 @@ reacts.
   [[battle_action_load_last_used_ability]] and
   [[battle_action_store_8019387c_if_not_reacting]] are never called or
   referenced on the disc.
-- `battle_formula_can_unit_evade` returns nonzero when the unit cannot act;
+- `battle_unit_get_action_block` returns nonzero when the unit cannot act;
   the formulas page revisits its name. Reaction bit `0x04` of the third
   byte is unidentified.
 
