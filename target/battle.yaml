@@ -343,7 +343,7 @@ functions:
   - {addr: 0x8007e9a8, size: 484, name: battle_unit_increment_or_decrement_height_mod, hash: 96b86101ded896f3}
   - {addr: 0x8007eb8c, size: 820, name: battle_gfx_determine_status_bubble_parameters, hash: 8bfc26d6145db3c7, rodata: [{addr: 0x80067810, size: 32, hash: ad2214d99b338656}]}
   - {addr: 0x8007eec0, size: 788, name: battle_gfx_draw_status_bubble, hash: cdfdf07e5db4ed12}
-  - {addr: 0x8007f1d4, size: 108, name: battle_gfx_init_status_bubble, hash: c0eec83698c25e63}
+  - {addr: 0x8007f1d4, size: 108, name: battle_gfx_update_float_height_and_status_bubble, hash: c0eec83698c25e63}
   - {addr: 0x8007f240, size: 108, name: battle_gfx_init_position_vector_copies, hash: e2f2880ec8d81f30}
   - {addr: 0x8007f2ac, size: 340, name: battle_gfx_draw_unit_sprite_position_copies, hash: 026967f572294b7e}
   - {addr: 0x8007f400, size: 92, name: battle_gfx_shift_and_fill_display_svectors, hash: 8bb1133d61cd9a55}
@@ -372,7 +372,7 @@ functions:
   - {addr: 0x80082110, size: 428, name: battle_gfx_modify_misc_unit_palette, hash: 66ad0e1e4663f614}
   - {addr: 0x800822bc, size: 428, name: battle_gfx_update_misc_unit_status_palette, hash: ce9969f0807cf7f3}
   - {addr: 0x80082468, size: 160, name: battle_gfx_check_tile_status_palette_mod, hash: b280713ab1d453da}
-  - {addr: 0x80082508, size: 72, name: battle_gfx_update_status_bubble_graphic_trigger, hash: 1c11a4663f86f576}
+  - {addr: 0x80082508, size: 72, name: battle_gfx_refresh_status_bubble, hash: 1c11a4663f86f576}
   - {addr: 0x80082550, size: 60, name: battle_gfx_update_sprite_transparency_flag, hash: a8f89982a732364e}
   - {addr: 0x8008258c, size: 148, name: battle_unit_update_float_and_jump_height, hash: f05be917e6b96262}
   - {addr: 0x80082620, size: 364, name: battle_sound_select_weapon_hit, hash: cf66671c0bc307f1, rodata: [{addr: 0x80067e60, size: 52, hash: d3464a1da9a6f832}]}

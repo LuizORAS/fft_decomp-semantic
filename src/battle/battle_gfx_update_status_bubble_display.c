@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Draw the unit's status bubble (battle_gfx_draw_status_bubble) when it is active and the unit is on
+ * screen, within the ordering table's depth range, visible, and not a mount carrying its rider. */
 void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     u16 screen_coords[2];
     u16 screen_x;

@@ -2002,7 +2002,7 @@ typedef struct battle_unit_misc_data {
     u8 _unused_2d4[4];    /* no code reaches it through this struct; FFHacktics leaves it blank */
     battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
-     * battle_gfx_update_status_bubble_graphic_trigger sets the flag and clears
+     * battle_gfx_refresh_status_bubble sets the flag and clears
      * the timer with a halfword store, so the timer is declared u16. */
     u8 status_bubble_active;         /* 0x2dc */
     u8 status_bubble_id;             /* 0x2dd */
@@ -2521,7 +2521,7 @@ s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min
 s32 battle_unit_build_deployed_units_data(battle_deployed_coords_t* formation);
 s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
-void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
+void battle_unit_call_set_animation_based_on_status(battle_unit_misc_data_t* unit);
 s32 battle_unit_check_chocobo(battle_stats_t* unit);
 s32 battle_unit_check_facing_relative_to_camera(s32 unit_id);
 battle_unit_misc_data_t* battle_unit_claim_misc_slot(s16 unit_id);
@@ -5587,7 +5587,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 unit_i
 battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(
     s32 unit_index, s32 display_section, battle_gfx_sprite_display_data_t* default_display);
 
-void battle_gfx_init_status_bubble(battle_unit_misc_data_t* unit);
+void battle_gfx_update_float_height_and_status_bubble(battle_unit_misc_data_t* unit);
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index);
 battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type);
 
@@ -5673,7 +5673,7 @@ void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s
 void battle_gfx_update_screen_color_modulation_fade(void);
 void battle_gfx_update_sprite_transparency_flag(struct battle_unit_misc_data* unit);
 void battle_gfx_update_status_bubble_display(struct battle_unit_misc_data* unit);
-void battle_gfx_update_status_bubble_graphic_trigger(struct battle_unit_misc_data* unit);
+void battle_gfx_refresh_status_bubble(struct battle_unit_misc_data* unit);
 void battle_gfx_update_status_bubbles_and_graphics(void);
 void battle_gfx_update_unit_palette_animation(void);
 void battle_gfx_update_unit_palettes(void);

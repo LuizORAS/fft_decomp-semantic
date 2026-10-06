@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Set up unit_index's status bubble sprite in g_battle_gfx_status_bubble_sprite_display_data: one
+ * 14x12 part from row 0xb0 of the FRAME spritesheet, CLUT 0x7887, neutral color and scale. Returns
+ * the display record; battle_unit_init_misc_data calls it. */
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index) {
     s32 part_width;
     s32 part_height;

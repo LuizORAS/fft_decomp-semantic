@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advances one unit's status bubble by g_battle_state_vsync_interval frames.
+/* Advance one unit's status bubble by g_battle_state_vsync_interval frames. Every 16 timer ticks the
+ * bubble moves on to the next of the unit's 22 possible bubbles, wrapping at 0x16: each id stands for
+ * a status (g_battle_gfx_status_bubble_status_masks), 0 shows the death counter, 20 Death Sentence's
+ * count and 21 marks the unit of the current turn event; with none left the bubble turns off. Bubble
+ * 9 blinks twice as fast. The x/y offsets come from the unit's SHP type and animation.
  *
- * Every 16 timer ticks the bubble id walks forward to the next status the unit
- * carries, wrapping at 0x16, and the bubble's x/y offsets are chosen from the
- * unit's SHP type and animation.
- *
- * The block-scoped bubble_mask keeps GCC from rotating the loop's leading exit
- * tests to the bottom, and indexing g_battle_gfx_status_bubble_status_masks inside the loop lets loop.c
- * strength-reduce it into the target's pointer walk. */
+ * The block-scoped bubble_mask keeps GCC from rotating the loop's leading exit tests to the bottom,
+ * and indexing g_battle_gfx_status_bubble_status_masks inside the loop lets loop.c strength-reduce it
+ * into the target's pointer walk. */
 void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit) {
     s32 frame;
     s32 bubble;
