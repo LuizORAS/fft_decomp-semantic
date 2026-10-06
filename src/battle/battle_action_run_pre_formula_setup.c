@@ -9,7 +9,7 @@ extern battle_current_ability_t g_current_ability_view;
 /* Pre-formula setup: load the ability, weapon and item data for one attacker/target pair and run
  * the formula handler.
  *
- * A reaction that battle_action_perform_reaction_ability resolves and a pending knockback
+ * A reaction that battle_reaction_apply_effect resolves and a pending knockback
  * (battle_move_set_knockback_fall_damage) return 0 before any formula. Otherwise it loads the
  * target's terrain, the strike's weapon (Draw Out's katana; a non-weapon item counts as none), the
  * ability's range data, the weapon data and both faiths, and picks the formula by the skillset's menu
@@ -45,7 +45,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_current_ability_view.attacker_id = action.unit_id;
     g_battle_action_attacker_data = &g_current_action_data;
     g_battle_action_attacker = &g_battle_unit_stats[g_current_ability_view.attacker_id];
-    if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY && battle_action_perform_reaction_ability() != 0) {
+    if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY && battle_reaction_apply_effect() != 0) {
         battle_action_store_used_weapon(&action);
         return 0;
     }
@@ -187,7 +187,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         sizeof(status_infliction_data_t));
     battle_status_remove();
     g_current_ability.formula = formula;
-    battle_action_check_reflect_blade_grasp_and_arrow_guard();
+    battle_reaction_check_before_formula();
     if (g_battle_action_target_data->hit == 0) {
         return 1;
     }

@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 
-/* Writes the acting unit's tile into unit's action fields (0x16e..) as the
- * target of skillset/ability and runs the attack preview.  Returns -1 when the
- * action itself fails, -2 when the acting unit's tile is not targetable and
- * -3 when the preview fails; otherwise the preview result. */
-s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target) {
+/* Aim the reacting unit's command at the acting unit's tile with skillset_id and ability_id. With
+ * validate_target the command's range must reach the actor: -1 when it is invalid or nothing is in
+ * range, -2 when the actor's tile is outside it. The command is then committed
+ * (battle_action_commit_command) with the unit's charge time kept: -3 when that fails, else 0. */
+s32 battle_reaction_set_counter_command(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target) {
     u8* action;
     battle_stats_t* acting_unit;
     s32 result;

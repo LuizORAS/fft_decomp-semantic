@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Record the actor's command for a Mime to copy (g_current_ability_attacker, read by
- * battle_action_set_mimic_ability): the command, the offset from the actor to its target (the
+ * battle_action_prepare_mimic): the command, the offset from the actor to its target (the
  * target unit's tile, or the low bytes of the target tile), its facing, team and two weapons. A
  * Mime's own action is not recorded. */
 void battle_action_set_current_attacker_data(battle_stats_t* unit) {
@@ -33,5 +33,5 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     g_current_ability_attacker.team = unit->team_flags & BATTLE_TEAM_MASK;
     g_current_ability_attacker.right_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     g_current_ability_attacker.left_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-    g_current_ability_attacker.data_initialized = 1;
+    g_current_ability_attacker.mimic_pending = 1;
 }

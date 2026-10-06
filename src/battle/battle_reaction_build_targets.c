@@ -1,13 +1,12 @@
 #include "fft/battle.h"
 
-/*
- * Build the target list for a reaction ability.
- *
- * Reflect redirects to the unit on the action tile, Distribute selects
- * injured allies, and Damage Split selects the acting unit. The remaining
- * reactions follow the target policy stored in the reaction flags table.
- */
-s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids) {
+/* Build the target list of a reaction's strike. Reflect: the unit on the action's tile (a mount's
+ * rider), when targetable. Distribute: the injured allies of the reacting unit's team that are not
+ * mounts, crystallized, dead, jumping, petrified or treasure (g_battle_distribute_target_count).
+ * Damage Split: the acting unit. Others follow the reaction's behaviour flags: TARGET_SELF the unit
+ * itself, TARGET_ATTACKER returns 0 so the hit tiles decide. Returns 1 when the list is built (it may
+ * be empty). */
+s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids) {
     battle_stats_t* actor = &g_battle_unit_stats[actor_id];
     battle_stats_t* unit_base = g_battle_unit_stats;
     s32 tile_index;

@@ -39,7 +39,7 @@ s32 battle_turn_run_clock(s32 mode) {
         for (i = 3; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
-        g_current_ability_attacker.data_initialized = 0;
+        g_current_ability_attacker.mimic_pending = 0;
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             unit = &g_battle_unit_stats[i];
             unit->ct = 0;
@@ -295,7 +295,7 @@ s32 battle_turn_run_clock(s32 mode) {
             }
             break;
         case 13:
-            if (g_current_ability_attacker.data_initialized != 0) {
+            if (g_current_ability_attacker.mimic_pending != 0) {
                 i = 0;
                 do {
                     unit = &g_battle_unit_stats[i];
@@ -311,12 +311,12 @@ s32 battle_turn_run_clock(s32 mode) {
             }
             break;
         case 14:
-            g_current_ability_attacker.data_initialized = 0;
+            g_current_ability_attacker.mimic_pending = 0;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (g_battle_turn_pending_flags[i] != 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                     g_battle_turn_pending_flags[i] = 0;
-                    ret = battle_action_set_mimic_ability(unit);
+                    ret = battle_action_prepare_mimic(unit);
                     if (ret == 1) {
                         result = i | BATTLE_TURN_EVENT_ABILITY_READY;
                         return result;

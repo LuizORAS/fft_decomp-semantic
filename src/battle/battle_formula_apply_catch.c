@@ -11,7 +11,7 @@ void battle_formula_apply_catch(void) {
     s32 weapon_id;
     s32 chance;
 
-    if (battle_action_can_unit_react_1(g_battle_action_target) != 0)
+    if (battle_reaction_is_blocked(g_battle_action_target) != 0)
         return;
     if (g_battle_action_attacker->job_id == JOB_ID_MIME)
         return;
@@ -22,7 +22,7 @@ void battle_formula_apply_catch(void) {
     /* The target stores the accuracy as a halfword (0x2a..0x2b). */
     g_battle_action_target_data->attack_accuracy = (s16)chance;
     if (chance != 0) {
-        if (battle_action_calculate_chance_to_react(unit) != 0)
+        if (battle_reaction_fails_brave_roll(unit) != 0)
             return;
         if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE)
             return;

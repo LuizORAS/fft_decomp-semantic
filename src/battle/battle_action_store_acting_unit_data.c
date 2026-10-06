@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Save the actor's place before its action, or end a reaction. A Mime's weapon slots are emptied;
- * another actor's facing goes to g_current_ability_attacker in a primary action. A primary action
- * saves the actor's x, y and elevation (g_acting_unit_x, _y, _elevation); a reaction restores the
- * actor's command bytes from the reaction snapshot (g_reaction_unit_action_data_16e) and returns to
- * the primary context.
+/* Save the actor's place before its action, or end a reaction. A Mime gives back the weapons its
+ * Mimic lent it (battle_action_prepare_mimic); another actor's facing goes to
+ * g_current_ability_attacker in a primary action. A primary action saves the actor's x, y and
+ * elevation (g_acting_unit_x, _y, _elevation); a reaction restores the actor's command bytes from the
+ * reaction snapshot (g_reaction_unit_action_data_16e) and returns to the primary context.
  *
  * The facing read goes through a raw halfword so the lhu stays below the
  * preceding stores (struct-member loads hoist above scalar-global stores). */

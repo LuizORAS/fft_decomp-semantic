@@ -183,6 +183,8 @@ without changing the bytes.
   0 (map ids 120-124, 126 and 127 in the retail table); `battle_map_load_data` compares the
   leftover `$v0` of the BIOS `bzero` with `g_battle_map_gns_records`. A native build must return
   a value there.
+- `src/battle/battle_reaction_try_distribute.c` passes the unit twice to the one-parameter
+  `battle_reaction_fails_brave_roll` through a function-pointer cast; the second argument is ignored.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
@@ -396,7 +398,7 @@ translation unit. Share their types and constants through headers.
 - CallFunction (`battle_script_execute_event.c`, `world_script_execute_event.c`)
   tests selectors in sequence against one operand that the arms modify. So
   `0x06` also runs the `0x0f` warp, and `0x0e` can fall into later arms.
-- `src/battle/battle_action_dispatch_target_reaction_ability.c`: formula 7
+- `src/battle/battle_reaction_check_when_targeted.c`: formula 7
   suppresses reactions. Counter Magic (`0x1b3`) is tested last, after byte
   `+0x8d`, so Counter (`0x1ba`) wins.
 - `g_main_debug_display_enabled` is only ever cleared by retail code; the

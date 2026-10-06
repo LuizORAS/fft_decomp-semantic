@@ -4362,11 +4362,11 @@ typedef char battle_current_ability_size_must_be_0x50[(sizeof(battle_current_abi
 
 /* Current attacker record at 0x8019389c, filled by
  * battle_action_set_current_attacker_data and read by
- * battle_action_set_mimic_ability. The AI saves and restores it whole as 30
+ * battle_action_prepare_mimic. The AI saves and restores it whole as 30
  * bytes (battle_ai_store_considered_action_data). */
 typedef struct battle_current_attacker_data {
     u8 facing;                         /* 0x00 */
-    u8 data_initialized;               /* 0x01: set once the fields below are filled; no stronger meaning yet */
+    u8 mimic_pending;                  /* 0x01: an action was recorded for the Mimes (battle_turn_run_clock) */
     u8 right_hand_weapon_id;           /* 0x02 */
     u8 left_hand_weapon_id;            /* 0x03 */
     u8 team;                           /* 0x04 */
@@ -4500,26 +4500,26 @@ extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 extern entd_unit_t* g_current_entd_unit;
 extern s32 g_battle_thread_current_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
-s32 battle_action_calculate_chance_to_react(const battle_stats_t* unit);
+s32 battle_reaction_fails_brave_roll(const battle_stats_t* unit);
 void battle_action_resolve_command_ability(battle_ai_command_action_t* action);
-s32 battle_action_can_unit_react(const battle_stats_t* unit);
+s32 battle_reaction_is_prevented(const battle_stats_t* unit);
 
 /* Provisional: the definition falls off the end after the tail call to
  * battle_formula_can_unit_evade, so v0 carries that result; every caller reads
  * it as an s32 status. */
-s32 battle_action_can_unit_react_1(battle_stats_t* unit);
+s32 battle_reaction_is_blocked(battle_stats_t* unit);
 s32 battle_action_check_and_consume_mp(battle_stats_t* unit);
-void battle_action_check_arrow_guard_usability(void);
-void battle_action_check_blade_grasp_usability(void);
-void battle_action_check_counter_reaction_usability(u16 reaction_id, u32 mask);
-void battle_action_check_face_up_and_absorb_used_mp_usability(s16 reaction_id);
-void battle_action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(s16 reaction_id);
-void battle_action_check_damage_split_usability(void);
-void battle_action_check_distribute_usability(void);
-void battle_action_check_mp_switch_usability(void);
-void battle_action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(s16 reaction_id);
-s32 battle_action_check_reaction(battle_stats_t* unit);
-void battle_action_check_reflect_reaction(void);
+void battle_reaction_try_arrow_guard(void);
+void battle_reaction_try_blade_grasp(void);
+void battle_reaction_try_counter(u16 reaction_id, u32 mask);
+void battle_reaction_try_on_mp_cost(s16 reaction_id);
+void battle_reaction_try_while_critical(s16 reaction_id);
+void battle_reaction_try_damage_split(void);
+void battle_reaction_try_distribute(void);
+void battle_reaction_try_mp_switch(void);
+void battle_reaction_try_on_hp_damage(s16 reaction_id);
+s32 battle_reaction_get_pending(battle_stats_t* unit);
+void battle_reaction_mark_reflected(void);
 void battle_action_clear_current_data(battle_action_data_t* action);
 void battle_action_clear_target_and_actor_data(void);
 void battle_action_cancel_knockback(void);
@@ -4543,7 +4543,7 @@ void battle_action_set_target_unit(battle_stats_t* unit);
 void battle_action_start_effect_messages(void);
 void battle_action_switch_ability_to_default_attack(void);
 
-s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
+s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 
 void battle_action_queue_unit_effect_messages(battle_unit_misc_data_t* unit);
 
@@ -4566,21 +4566,21 @@ s32 battle_action_calculate_projected_effect(
 
 s32 battle_action_commit_command(u8* command);
 s32 battle_action_check_battle_outcome(void);
-void battle_action_check_mp_switch_distribute_and_damage_split_usability(void);
-void battle_action_check_reflect_blade_grasp_and_arrow_guard(void);
-void battle_action_check_stat_save_and_restore_reaction_usability(void);
+void battle_reaction_check_before_hp_change(void);
+void battle_reaction_check_before_formula(void);
+void battle_reaction_check_after_result(void);
 s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 consume);
-void battle_action_dispatch_target_reaction_ability(void);
+void battle_reaction_check_when_targeted(void);
 s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, s32 hit_count);
 void battle_action_apply_exp_change(battle_stats_t* unit, u8 amount);
-s32 battle_action_perform_reaction_ability(void);
+s32 battle_reaction_apply_effect(void);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_apply_jp_change(battle_stats_t* unit);
-s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
-s32 battle_action_set_mimic_ability(battle_stats_t* unit);
+s32 battle_reaction_select_auto_potion_item(battle_stats_t* unit);
+s32 battle_action_prepare_mimic(battle_stats_t* unit);
 void battle_action_store_used_weapon(const battle_ai_command_action_t* action);
-s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
+s32 battle_reaction_set_counter_command(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 
 s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability);
 

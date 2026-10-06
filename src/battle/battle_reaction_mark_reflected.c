@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_action_check_reflect_reaction(void) {
+/* Reflect the strike off the target: for a reflectable ability that is not a Math Skill, the target's
+ * result becomes a reflected miss (accuracy 0) with reaction id ABILITY_ID_REACTION_REFLECT and the
+ * ability in last_received_attack. battle_reaction_prepare_next later sends the spell on
+ * (battle_target_apply_reflect). */
+void battle_reaction_mark_reflected(void) {
     battle_action_data_t* action;
     /* Loaded through a pointer so the reaction_id store stays above it. */
     u16* ability_ptr = &g_current_ability.ability_id;

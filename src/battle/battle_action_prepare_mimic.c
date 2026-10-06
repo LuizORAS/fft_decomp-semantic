@@ -1,15 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Builds and previews a reaction using the current attacker's action and weapons.
+/* Set up a Mime's copy of the action recorded in g_current_ability_attacker (battle_turn_run_clock,
+ * once per Mime after an action). Only a Mime of the actor's team that can react, other than the
+ * actor, copies it, and not an ordinary, Math Skill or monster ability flagged Can't Mimic. The target
+ * offset turns with the Mime's facing (Jump keeps its own, bit 0x100), the actor's weapons are lent
+ * to the Mime, and the copied command must reach its tile; it is then committed at preview state, the
+ * Mime's charge time becomes 0xff and main_status_change_unit(self, 0, 0xd, 1) runs. Returns 1 when
+ * set, 0 for a unit that does not copy, -1 when the copy fails (the lent weapons go back).
  *
- * Returns 0 for an ineligible unit, -1 if targeting or preview fails, and 1
- * on success. Failed targeting or preview clears both borrowed weapon slots.
  * The menu type stays byte-sized, and the facing subtraction and action-field
  * assignments retain the target's evaluation order. The tile index and saved
- * action state share a temporary because their lifetimes do not overlap.
- */
-s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
+ * action state share a temporary because their lifetimes do not overlap. */
+s32 battle_action_prepare_mimic(battle_stats_t* unit) {
     battle_stats_t* self;
     battle_ai_command_action_t action;
     battle_ai_command_action_t* current;
@@ -28,10 +31,10 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
 
     self = unit;
     current = &g_current_ability_attacker.action;
-    if (battle_action_can_unit_react(self) != 0) {
+    if (battle_reaction_is_prevented(self) != 0) {
         return 0;
     }
-    if ((self->team_flags & 0x30) != g_current_ability_attacker.team) {
+    if ((self->team_flags & BATTLE_TEAM_MASK) != g_current_ability_attacker.team) {
         return 0;
     }
     if (self->misc_unit_id == current->unit_id) {
@@ -39,8 +42,9 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     menu_type = g_main_action_menu_types_by_skillset[current->skillset];
     ability_id = g_current_ability_attacker.action.ability_id;
-    if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_ARITHMETICKS || menu_type == ACTION_MENU_TYPE_MONSTER) {
-        if (g_main_ability_range_data[ability_id].flags_3 & 0x10) {
+    if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_ARITHMETICKS
+        || menu_type == ACTION_MENU_TYPE_MONSTER) {
+        if (g_main_ability_range_data[ability_id].flags_3 & ABILITY_SECONDARY_FLAG_3_CANNOT_MIMIC) {
             return 0;
         }
     }
@@ -56,7 +60,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
         return -1;
     }
     main_util_copy_action_data((const u8*)current, (u8*)&action);
-    action.targeting_type = 5;
+    action.targeting_type = BATTLE_ACTION_TARGET_TILE;
     action.unit_id = self->misc_unit_id;
     unit_id = self->misc_unit_id;
     action.target_x = x;

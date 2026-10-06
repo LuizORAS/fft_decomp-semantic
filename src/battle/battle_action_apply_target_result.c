@@ -7,7 +7,7 @@
  *
  * An absent unit returns -1, and a dead target that the action crystallizes or turns to treasure only
  * has its statuses resolved. In a primary action ability_outcome becomes 1; the target's reaction is
- * dispatched (battle_action_dispatch_target_reaction_ability) and a Catch returns the caught item to
+ * dispatched (battle_reaction_check_when_targeted) and a Catch returns the caught item to
  * the party. A miss stops there, and a Golem guard takes the damage from the team's Golem HP instead.
  * Otherwise, in order: a Golem is set to the target's max HP; MP Switch, Distribute and Damage Split
  * get their chance; HP and MP change (clamped to 0..max); Speed (1-50), CT (0-255), PA and MA (1-99),
@@ -56,7 +56,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
         g_battle_action_target->ability_outcome = 1;
     }
-    battle_action_dispatch_target_reaction_ability();
+    battle_reaction_check_when_targeted();
     if (g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
         battle_action_add_party_item(g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
     }
@@ -79,7 +79,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
         g_battle_team_golem[(g_battle_action_target->team_flags & BATTLE_TEAM_MASK) >> 4]
             = g_battle_action_target->max_hp;
     }
-    battle_action_check_mp_switch_distribute_and_damage_split_usability();
+    battle_reaction_check_before_hp_change();
     old_hp = g_battle_action_target->hp;
     hp = old_hp - g_battle_action_target_data->hp_damage + g_battle_action_target_data->hp_healing;
     if (hp < 0) {
@@ -197,7 +197,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
     if (outcome != 0) {
         g_battle_action_target->ability_outcome = 2;
     }
-    battle_action_check_stat_save_and_restore_reaction_usability();
+    battle_reaction_check_after_result();
     if (g_battle_action_target->status_sets.current[0] & (STATUS_MASK(CRYSTAL) | STATUS_MASK(DEAD))) {
         if (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             return -1;

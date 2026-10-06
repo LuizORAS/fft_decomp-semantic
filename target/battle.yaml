@@ -1164,7 +1164,7 @@ functions:
   - {addr: 0x8017c90c, size: 72, name: battle_unit_check_party_member_exists, hash: 634ad7b57bde65a1}
   - {addr: 0x8017c954, size: 100, name: battle_action_decrement_player_item_quantity, hash: f8b152a038d07ca4}
   - {addr: 0x8017c9b8, size: 276, name: battle_action_begin, hash: eec4d9e61a8f97e0}
-  - {addr: 0x8017cacc, size: 600, name: battle_action_build_reaction_targets, hash: a29b38b099ff5c67}
+  - {addr: 0x8017cacc, size: 600, name: battle_reaction_build_targets, hash: a29b38b099ff5c67}
   - {addr: 0x8017cd24, size: 288, name: battle_target_mark_hit_tiles, hash: 2ce73ee2009d72ac}
   - {addr: 0x8017ce44, size: 1292, name: battle_action_resolve_ability_strike, hash: ab1cf7015ac93794}
   - {addr: 0x8017d350, size: 192, name: battle_target_store_strike_destination, hash: ced4864806a420ec}
@@ -1180,8 +1180,8 @@ functions:
   - {addr: 0x8017defc, size: 636, name: battle_reaction_prepare_hamedo_for_pending_action, hash: 77b0bc123d833970}
   - {addr: 0x8017e178, size: 1048, name: battle_reaction_prepare_next, hash: d38787cfe525c889, rodata: [{addr: 0x80174120, size: 36, hash: 5cb78bb4b7a12ac2}]}
   - {addr: 0x8017e590, size: 192, name: battle_target_apply_reflect, hash: 11088b81bcc255d7}
-  - {addr: 0x8017e650, size: 304, name: battle_action_store_counter_ability, hash: 9c30b2fca821ab51}
-  - {addr: 0x8017e780, size: 100, name: battle_action_select_auto_potion_item, hash: 58156c1bac52c97e}
+  - {addr: 0x8017e650, size: 304, name: battle_reaction_set_counter_command, hash: 9c30b2fca821ab51}
+  - {addr: 0x8017e780, size: 100, name: battle_reaction_select_auto_potion_item, hash: 58156c1bac52c97e}
   - {addr: 0x8017e7e4, size: 580, name: battle_unit_apply_action_rewards, hash: 6359d7c9a9d30dc1}
   - {addr: 0x8017ea28, size: 88, name: battle_unit_load_job_level, hash: 2e3d9a9f07f48186}
   - {addr: 0x8017ea80, size: 408, name: battle_unit_store_jp_and_calculate_unlocked_jobs, hash: 4f72b628a4f25612}
@@ -1483,7 +1483,7 @@ functions:
   - {addr: 0x8018ad58, size: 156, name: battle_action_switch_ability_to_default_attack, hash: 5ed037b233f770da}
   - {addr: 0x8018adf4, size: 72, name: battle_action_clear_target_and_actor_data, hash: 4b546e6c03ff4f55}
   - {addr: 0x8018ae3c, size: 240, name: battle_move_set_knockback_fall_damage, hash: 19142825be8e5b20}
-  - {addr: 0x8018af2c, size: 840, name: battle_action_perform_reaction_ability, hash: 444cf78c62cd1481, rodata: [{addr: 0x8017429c, size: 100, hash: 7c47c77aa09eba56}]}
+  - {addr: 0x8018af2c, size: 840, name: battle_reaction_apply_effect, hash: 444cf78c62cd1481, rodata: [{addr: 0x8017429c, size: 100, hash: 7c47c77aa09eba56}]}
   - {addr: 0x8018b274, size: 216, name: battle_action_store_used_weapon, hash: d2b52d870f0e59f6, rodata: [{addr: 0x80174304, size: 64, hash: 608a00d2e1692024}]}
   - {addr: 0x8018b34c, size: 1708, name: battle_action_run_pre_formula_setup, hash: 48143423d1ae501f, rodata: [{addr: 0x80174344, size: 44, hash: 8dbd62702444125e}]}
   - {addr: 0x8018b9f8, size: 76, name: battle_status_remove, hash: 4e301fa3f6d3b78a}
@@ -1496,24 +1496,24 @@ functions:
   - {addr: 0x8018c680, size: 216, name: battle_action_add_poached_item_to_fur_shop_inventory, hash: 72538317d3c0172a}
   - {addr: 0x8018c758, size: 260, name: battle_unit_modify_entd_unit, hash: 76e82657d702035b}
   - {addr: 0x8018c85c, size: 196, name: battle_unit_apply_level_up_down_ability, hash: 8a382a349b37ab95}
-  - {addr: 0x8018c920, size: 72, name: battle_action_can_unit_react_1, hash: 3a0a9aae99ebf4c4}
-  - {addr: 0x8018c968, size: 56, name: battle_action_can_unit_react, hash: ce6b4744b8afaf88}
-  - {addr: 0x8018c9a0, size: 68, name: battle_action_check_reaction, hash: 3295dc9e786a8c8d}
-  - {addr: 0x8018c9e4, size: 284, name: battle_action_check_reflect_blade_grasp_and_arrow_guard, hash: 4ba6d979790df352}
-  - {addr: 0x8018cb00, size: 308, name: battle_action_dispatch_target_reaction_ability, hash: 22b584c1310567f5}
-  - {addr: 0x8018cc34, size: 164, name: battle_action_check_mp_switch_distribute_and_damage_split_usability, hash: c770d9f4b929635b}
-  - {addr: 0x8018ccd8, size: 300, name: battle_action_check_stat_save_and_restore_reaction_usability, hash: 8a73859772c73614}
-  - {addr: 0x8018ce04, size: 132, name: battle_action_check_counter_reaction_usability, hash: 4cb43fddb3836d4d}
-  - {addr: 0x8018ce88, size: 108, name: battle_action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability, hash: a52343b2c56ef777}
-  - {addr: 0x8018cef4, size: 128, name: battle_action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability, hash: 13ec4007f30cf847}
-  - {addr: 0x8018cf74, size: 116, name: battle_action_check_face_up_and_absorb_used_mp_usability, hash: 4278f583f86c5806}
-  - {addr: 0x8018cfe8, size: 104, name: battle_action_check_reflect_reaction, hash: 78e31b80740318de}
-  - {addr: 0x8018d050, size: 152, name: battle_action_check_blade_grasp_usability, hash: 2d4a98de063b9af4}
-  - {addr: 0x8018d0e8, size: 208, name: battle_action_check_arrow_guard_usability, hash: 3000c3617a5a5478}
-  - {addr: 0x8018d1b8, size: 240, name: battle_action_check_mp_switch_usability, hash: 8df0078be33d10a7}
-  - {addr: 0x8018d2a8, size: 112, name: battle_action_check_distribute_usability, hash: 240dd189e85d023b}
-  - {addr: 0x8018d318, size: 108, name: battle_action_check_damage_split_usability, hash: a41992db4c272eb3}
-  - {addr: 0x8018d384, size: 60, name: battle_action_calculate_chance_to_react, hash: 41349308c55e02f1}
+  - {addr: 0x8018c920, size: 72, name: battle_reaction_is_blocked, hash: 3a0a9aae99ebf4c4}
+  - {addr: 0x8018c968, size: 56, name: battle_reaction_is_prevented, hash: ce6b4744b8afaf88}
+  - {addr: 0x8018c9a0, size: 68, name: battle_reaction_get_pending, hash: 3295dc9e786a8c8d}
+  - {addr: 0x8018c9e4, size: 284, name: battle_reaction_check_before_formula, hash: 4ba6d979790df352}
+  - {addr: 0x8018cb00, size: 308, name: battle_reaction_check_when_targeted, hash: 22b584c1310567f5}
+  - {addr: 0x8018cc34, size: 164, name: battle_reaction_check_before_hp_change, hash: c770d9f4b929635b}
+  - {addr: 0x8018ccd8, size: 300, name: battle_reaction_check_after_result, hash: 8a73859772c73614}
+  - {addr: 0x8018ce04, size: 132, name: battle_reaction_try_counter, hash: 4cb43fddb3836d4d}
+  - {addr: 0x8018ce88, size: 108, name: battle_reaction_try_on_hp_damage, hash: a52343b2c56ef777}
+  - {addr: 0x8018cef4, size: 128, name: battle_reaction_try_while_critical, hash: 13ec4007f30cf847}
+  - {addr: 0x8018cf74, size: 116, name: battle_reaction_try_on_mp_cost, hash: 4278f583f86c5806}
+  - {addr: 0x8018cfe8, size: 104, name: battle_reaction_mark_reflected, hash: 78e31b80740318de}
+  - {addr: 0x8018d050, size: 152, name: battle_reaction_try_blade_grasp, hash: 2d4a98de063b9af4}
+  - {addr: 0x8018d0e8, size: 208, name: battle_reaction_try_arrow_guard, hash: 3000c3617a5a5478}
+  - {addr: 0x8018d1b8, size: 240, name: battle_reaction_try_mp_switch, hash: 8df0078be33d10a7}
+  - {addr: 0x8018d2a8, size: 112, name: battle_reaction_try_distribute, hash: 240dd189e85d023b}
+  - {addr: 0x8018d318, size: 108, name: battle_reaction_try_damage_split, hash: a41992db4c272eb3}
+  - {addr: 0x8018d384, size: 60, name: battle_reaction_fails_brave_roll, hash: 41349308c55e02f1}
   - {addr: 0x8018d3c0, size: 432, name: battle_action_remove_broken_or_stolen_equipment, hash: 1ad59475c5c5b72b}
   - {addr: 0x8018d570, size: 176, name: battle_unit_apply_stat_increment_decrement, hash: 5871c068d1c862bc}
   - {addr: 0x8018d620, size: 236, name: battle_unit_update_attacker_earned_experience, hash: d24db026b04c112d}
@@ -1551,7 +1551,7 @@ functions:
   - {addr: 0x8018eed8, size: 84, name: battle_formula_roll_random_at_least, hash: c99dd3d0cdcbbc3a}
   - {addr: 0x8018ef2c, size: 8, name: battle_noop_8018ef2c, hash: 6d64edf91449c1b1}
   - {addr: 0x8018ef34, size: 260, name: battle_action_set_current_attacker_data, hash: bb46dff727b8a164}
-  - {addr: 0x8018f038, size: 632, name: battle_action_set_mimic_ability, hash: 25e4112e546a10b9}
+  - {addr: 0x8018f038, size: 632, name: battle_action_prepare_mimic, hash: 25e4112e546a10b9}
   - {addr: 0x8018f2b0, size: 536, name: battle_map_resolve_rotated_offset_layer, hash: 372085b3eb1ac8b7}
   - {addr: 0x8018f4c8, size: 16, name: battle_action_load_last_used_ability, hash: 773e1ab4afb742aa}
   - {addr: 0x80193e50, size: 936, name: battle_ai_build_command, hash: 38386545cdedf7e9}
