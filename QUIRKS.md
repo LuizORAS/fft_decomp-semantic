@@ -475,3 +475,7 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_formula_apply_weather_effects_on_bows.c` reads the weather script variable
   instead of `battle_map_get_effective_weather`, so a snowstorm also cuts bow and crossbow hits and
   the map's ignore-weather flag is not checked; the element modifiers use the effective weather.
+- `src/battle/battle_formula_damage_pa_times_wp_plus_y_status.c` (Holy Sword) and
+  `battle_formula_break_equipped_damage_pa_times_wp.c` (Might Sword) apply the Strengthen and
+  affinities of the weapon's element only; the element in the ability's own data (Holy for the
+  Holy Sword abilities) is never read.

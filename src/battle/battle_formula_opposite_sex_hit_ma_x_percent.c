@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x29: opposite sex only, hit (MA+X)%. */
+/* Formula 0x29, Steal Heart, Allure and Nose Bracelet: no evade check; hit chance MA + X with the
+ * zodiac; a hit fails (forced failure) when the target's monster, female and male flags equal the
+ * caster's, so the same sex or two monsters, and otherwise adds the ability's status
+ * (battle_formula_apply_status_to_action). */
 void battle_formula_opposite_sex_hit_ma_x_percent(void) {
     battle_formula_store_ma_and_x();
     battle_formula_apply_zodiac_compatibility();

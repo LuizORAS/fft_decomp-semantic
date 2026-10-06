@@ -1,7 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_formula_damage_random_x_times_pa_plus_y_half_times_pa(void) {
+/* Formula 0x32, Repeating Fist: the physical evade check; XA = PA and YA = (PA + Y) / 2 with Attack
+ * Up and Martial Arts, the physical status modifiers and a critical hit; then damage XA + YA (YA with
+ * the zodiac, stored by battle_formula_store_hit_chance and never rolled as a hit chance) times a
+ * random 1 to X, kept in random_damage_factor. With Y 0 that is about 1.5 * PA times 1 to 9. There is
+ * no hit roll. */
+void battle_formula_damage_random_x_times_pa_plus_pa_plus_y_half(void) {
     battle_action_data_t* action;
     u8* mult;
     s32 rnd;

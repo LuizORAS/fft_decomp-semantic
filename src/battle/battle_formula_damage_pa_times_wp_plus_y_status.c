@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x2D: damage (PA * (WP + Y)), 100% status. */
+/* Formula 0x2D, Holy Sword (Stasis Sword, Split Punch, Crush Punch, Lightning Stab, Holy
+ * Explosion): the physical evade check, XA = PA and YA = WP + Y with the weapon element's Strengthen,
+ * the physical damage, the target's affinities for the weapon's element and the absorption, then the
+ * ability's status on every hit (battle_formula_apply_status). The ability's own element is not
+ * read (QUIRKS.md). */
 void battle_formula_damage_pa_times_wp_plus_y_status(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_pa_and_weapon_power_plus_y();

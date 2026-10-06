@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x40: undead targets only, hit (SP+X)%. */
+/* Formula 0x40, Seal Evil: formula 0x3F's hit chance, but a target that is not undead fails (forced
+ * failure). */
 void battle_formula_undead_hit_sp_x_percent(void) {
     battle_formula_store_speed_and_x();
     battle_formula_apply_physical_xa_modifiers();

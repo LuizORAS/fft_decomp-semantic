@@ -1423,29 +1423,29 @@ functions:
   - {addr: 0x80189654, size: 40, name: battle_formula_draw_out_status, hash: e4677d6d66c0d973}
   - {addr: 0x8018967c, size: 56, name: battle_formula_draw_out_heal, hash: 99e3296540d07aa7}
   - {addr: 0x801896b4, size: 56, name: battle_formula_ma_pa_half_damage, hash: 3311ba219b1592fd}
-  - {addr: 0x801896ec, size: 168, name: battle_formula_break_equipped_hit_pa_wp_x_percent, hash: c4370090ee9c6785}
+  - {addr: 0x801896ec, size: 168, name: battle_formula_break_equipped_hit_pa_wp_y_percent, hash: c4370090ee9c6785}
   - {addr: 0x80189794, size: 148, name: battle_formula_steal_equipment, hash: 495f466453133c22}
   - {addr: 0x80189828, size: 72, name: battle_formula_steal_gil, hash: 7562ecdc4ae00a45}
   - {addr: 0x80189870, size: 160, name: battle_formula_steal_exp_hit_sp_x_percent, hash: e12062f412c50b37}
   - {addr: 0x80189910, size: 148, name: battle_formula_opposite_sex_hit_ma_x_percent, hash: 8c25bec110dc3e13}
   - {addr: 0x801899a4, size: 236, name: battle_formula_talk_skill_hit_ma_x_percent, hash: 75acbbbc278b8022}
-  - {addr: 0x80189a90, size: 72, name: battle_formula_physical_status_reduction, hash: 1970f8954ca50f6e}
+  - {addr: 0x80189a90, size: 72, name: battle_formula_lower_stat_x_hit_pa_y_percent, hash: 1970f8954ca50f6e}
   - {addr: 0x80189ad8, size: 72, name: battle_formula_physical_mp_percent_damage, hash: 01e6a7a9d35e8a3b}
   - {addr: 0x80189b20, size: 116, name: battle_formula_damage_pa_times_wp_plus_y_status, hash: e28b12a943b7ac77}
   - {addr: 0x80189b94, size: 188, name: battle_formula_break_equipped_damage_pa_times_wp, hash: ecbe82aee27f4971}
   - {addr: 0x80189c50, size: 64, name: battle_formula_absorb_mp_pa_times_wp, hash: 88f777c9cc1f2ce3}
   - {addr: 0x80189c90, size: 64, name: battle_formula_absorb_hp_pa_times_wp, hash: 4e96d1438f271114}
   - {addr: 0x80189cd0, size: 164, name: battle_formula_damage_pa_plus_y_half_times_pa, hash: 8fa0f750e9792e16}
-  - {addr: 0x80189d74, size: 180, name: battle_formula_damage_random_x_times_pa_plus_y_half_times_pa, hash: a3453083943dfa90}
+  - {addr: 0x80189d74, size: 180, name: battle_formula_damage_random_x_times_pa_plus_pa_plus_y_half, hash: a3453083943dfa90}
   - {addr: 0x80189e28, size: 108, name: battle_formula_hit_pa_x_percent, hash: 8f74cda3eb7fcbb0}
   - {addr: 0x80189e94, size: 116, name: battle_formula_heal_pa_times_y_and_mp, hash: 21f47d91cb2015b4}
   - {addr: 0x80189f08, size: 124, name: battle_formula_heal_y_percent_hit_pa_x_percent, hash: b0405134ede8c43f}
   - {addr: 0x80189f84, size: 72, name: battle_formula_damage_random_y_times_pa, hash: 7cd7c303a86196dc}
   - {addr: 0x80189fcc, size: 64, name: battle_formula_3d_hit_ma_x_percent, hash: 0749e4ae38ced5a9}
-  - {addr: 0x8018a00c, size: 32, name: battle_formula_damage_target_max_hp_minus_one, hash: 6e0511aab3d57f42}
+  - {addr: 0x8018a00c, size: 32, name: battle_formula_3e_damage_target_hp_minus_one, hash: 6e0511aab3d57f42}
   - {addr: 0x8018a02c, size: 92, name: battle_formula_hit_sp_x_percent, hash: 894d33724c6cf021}
   - {addr: 0x8018a088, size: 140, name: battle_formula_undead_hit_sp_x_percent, hash: 5b75e9d04498078e}
-  - {addr: 0x8018a114, size: 104, name: battle_formula_41_hit_ma_x_percent_enemy_only, hash: 352e19ad2a054160}
+  - {addr: 0x8018a114, size: 104, name: battle_formula_41_hit_ma_x_percent_other_sign, hash: 352e19ad2a054160}
   - {addr: 0x8018a17c, size: 156, name: battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x, hash: 3ce2529c4c9a6fdc}
   - {addr: 0x8018a218, size: 8, name: battle_formula_46_unused, hash: 6d64edf91449c1b1}
   - {addr: 0x8018a220, size: 48, name: battle_formula_absorb_hp_y_percent_status, hash: ca12d2aead28b804}

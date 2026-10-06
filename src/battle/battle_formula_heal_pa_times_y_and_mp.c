@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x34: heal (PA*Y) HP and (PA*Y/2) MP. */
+/* Formula 0x34, Chakra: no evade or hit roll; PA * Y with Attack Up and Martial Arts and the zodiac,
+ * restored as HP, and half of it as MP. There is no undead reversal, so an undead target heals too. */
 void battle_formula_heal_pa_times_y_and_mp(void) {
     battle_action_data_t* action;
     u16 amount;

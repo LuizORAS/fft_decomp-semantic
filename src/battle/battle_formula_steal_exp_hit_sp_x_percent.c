@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x28, Steal Exp: the physical evade check; hit chance Speed + X with Attack Up and Martial
+ * Arts, the attacker's Berserk and Frog, the target's Defense Up and statuses, and the zodiac; a hit,
+ * or any estimate, takes Speed + Y EXP (battle_formula_set_exp_stolen). */
 void battle_formula_steal_exp_hit_sp_x_percent(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_speed_and_x();

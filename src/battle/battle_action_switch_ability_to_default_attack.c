@@ -3,7 +3,7 @@
 
 /* Run the formula setup again as a plain Attack (skillset Attack, ability 0) against the current
  * target, then restore the strike counter, skillset and ability and drop any pending weapon spell.
- * The Break formula (battle_formula_break_equipped_hit_pa_wp_x_percent) falls back to it when
+ * The Break formula (battle_formula_break_equipped_hit_pa_wp_y_percent) falls back to it when
  * the target has nothing to break (battle_formula_select_target_equipment). */
 void battle_action_switch_ability_to_default_attack(void) {
     battle_stats_t* unit;

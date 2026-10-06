@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x42, Destroy, Compress, Dispose and Crush: no evade or hit roll; PA * Y with the zodiac
+ * as damage to the target, and that damage / X to the caster. */
 void battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x(void) {
     s16 damage;
     battle_action_data_t* action;

@@ -1,7 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_formula_break_equipped_hit_pa_wp_x_percent(void) {
+/* Formula 0x25, Head Break, Armor Break, Shield Break and Weapon Break: with no piece to break (a
+ * monster, an empty slot) the action becomes a plain Attack (battle_formula_select_target_equipment);
+ * otherwise the physical evade check, the hit chance PA + WP + Y with the physical modifiers
+ * (battle_formula_calculate_physical_accuracy), Maintenance, and a hit breaks the piece
+ * (BREAK_EQUIPMENT); a miss clears the special effects. */
+void battle_formula_break_equipped_hit_pa_wp_y_percent(void) {
     battle_action_data_t* action;
 
     if (battle_formula_select_target_equipment() != 0) {

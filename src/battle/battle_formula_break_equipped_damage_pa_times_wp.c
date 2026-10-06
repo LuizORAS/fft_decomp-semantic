@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x2E, Might Sword (Shellbust Stab, Blastar Punch, Hellcry Punch, Icewolf Bite): the
+ * physical evade check; with no piece to break (a monster, an empty slot) or against Maintenance the
+ * action fails; otherwise the piece breaks (BREAK_EQUIPMENT) and XA = PA, YA = WP give physical
+ * damage with the weapon element's Strengthen and affinities and the absorption. */
 void battle_formula_break_equipped_damage_pa_times_wp(void) {
     battle_action_data_t* action;
 

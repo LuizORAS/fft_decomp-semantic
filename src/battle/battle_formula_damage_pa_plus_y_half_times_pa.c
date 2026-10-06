@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x31, Spin Fist, Wave Fist, Earth Slash, Small Bomb, Choco Ball, Turn Punch, Wave Around,
+ * Sudden Cry and Snake Carrier: the physical evade check; XA = PA and YA = (PA + Y) / 2 with the
+ * element's Strengthen, Attack Up and Martial Arts, the physical status modifiers and a critical hit;
+ * XA * YA with the weather and the element, the absorption and the 19% status roll. */
 void battle_formula_damage_pa_plus_y_half_times_pa(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_pa_and_pa_plus_y_divided_by_two();
