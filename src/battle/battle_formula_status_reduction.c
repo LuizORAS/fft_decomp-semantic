@@ -4,7 +4,7 @@
 void battle_formula_status_reduction(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         battle_formula_store_ma_and_y();
-        battle_formula_apply_elemental_strengthen();
+        battle_formula_apply_ability_element_strengthen();
         battle_formula_apply_magical_xa_modifiers();
         battle_formula_store_hit_chance();
         battle_formula_calculate_faith();

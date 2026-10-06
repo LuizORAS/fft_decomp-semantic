@@ -695,7 +695,7 @@ void battle_formula_apply_charge(void);
 void battle_formula_apply_damage_and_knockback(void);
 void battle_formula_apply_dance_abilities(void);
 void battle_formula_apply_defense_up(void);
-void battle_formula_apply_elemental(void);
+void battle_formula_apply_ability_element(void);
 void battle_formula_apply_elemental_absorption(void);
 s32 battle_formula_apply_elemental_absorption_and_status(void);
 
@@ -703,7 +703,7 @@ s32 battle_formula_apply_elemental_absorption_and_status(void);
  * battle_formula_roll_conditional_status_proc, so v0 carries that result and
  * every caller tests it. */
 s32 battle_formula_apply_elemental_absorption_and_status_proc(void);
-void battle_formula_apply_elemental_strengthen(void);
+void battle_formula_apply_ability_element_strengthen(void);
 void battle_formula_apply_evasion_changes_due_to_statuses(void);
 void battle_formula_apply_full_hp_mp_heal(void);
 void battle_formula_apply_hp_absorption(void);
@@ -738,7 +738,7 @@ void battle_formula_calculate_dark_confuse(void);
 void battle_formula_calculate_facing_evade(void);
 void battle_formula_calculate_faith(void);
 void battle_formula_calculate_final_hit_percent(void);
-void battle_formula_calculate_gravi2_damage(void);
+void battle_formula_calculate_damage_leaving_one_hp(void);
 void battle_formula_calculate_hp_percent_damage(void);
 void battle_formula_calculate_katana_break_chance(void);
 s32 battle_formula_calculate_magic_accuracy_without_faith(void);
@@ -750,14 +750,14 @@ s32 battle_formula_calculate_physical_evade(void);
 void battle_formula_calculate_stolen_gil(void);
 void battle_formula_calculate_transparent(void);
 void battle_formula_calculate_truth_damage(void);
-void battle_formula_calculate_truth_magical_damage(void);
+void battle_formula_calculate_magical_damage_without_faith(void);
 s32 battle_formula_can_unit_evade(battle_stats_t* unit);
 s32 battle_formula_calculate_hit(void);
 
 /* Provisional: falls off the end after battle_formula_calculate_hit, whose
  * result stays in v0 for the caller's test. */
 s32 battle_formula_calculate_physical_evade_charge(void);
-void battle_formula_modify_damage_for_element(s32 element);
+void battle_formula_apply_element_affinities(s32 element);
 void battle_formula_nullify_action(void);
 void battle_formula_cause_action_miss(void);
 void battle_formula_check_dragon(void);
@@ -769,7 +769,7 @@ void battle_formula_force_sleeping_target_miss(void);
 s32 battle_formula_get_random_0_7fff(void);
 void battle_formula_heal_mp_z_times_ten(void);
 void battle_formula_store_jump_xa_ya(void);
-void battle_formula_modify_elemental_damage(void);
+void battle_formula_apply_weapon_element(void);
 void battle_formula_roll_conditional_status_proc_inner(void);
 s32 battle_formula_roll_conditional_status_proc(void);
 s32 battle_formula_roll_random_at_least(s32 limit, s32 threshold);

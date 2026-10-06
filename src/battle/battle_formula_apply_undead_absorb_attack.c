@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Status byte 1: 0x20 Dead, 0x10 Undead. */
+/* The HP part of Death (formula 0x0e): an undead target heals the HP damage instead and gets no
+ * status from the first byte (Dead); a target immune to Dead is missed; any other target takes the
+ * HP damage. */
 void battle_formula_apply_undead_absorb_attack(void) {
     battle_stats_t* unit = g_battle_action_target;
 

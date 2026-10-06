@@ -14,7 +14,7 @@ void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
         }
     }
     battle_formula_store_ma_and_x();
-    battle_formula_apply_elemental_strengthen();
+    battle_formula_apply_ability_element_strengthen();
     battle_formula_apply_magic_attack_up();
     if (g_current_ability.target_is_undead == 0) {
         battle_formula_apply_magic_defense_up();

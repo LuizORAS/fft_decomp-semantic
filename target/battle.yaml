@@ -1281,7 +1281,7 @@ functions:
   - {addr: 0x80184964, size: 448, name: battle_formula_apply_zodiac_compatibility, hash: aa5ea5e4e7c4fa1d}
   - {addr: 0x80184b24, size: 796, name: battle_status_modify_inflictions, hash: d22a41e561e729ae}
   - {addr: 0x80184e40, size: 88, name: battle_formula_nullify_action, hash: fe97cf5fa8c71c21}
-  - {addr: 0x80184e98, size: 260, name: battle_formula_modify_damage_for_element, hash: 1246bf9fcb0de648}
+  - {addr: 0x80184e98, size: 260, name: battle_formula_apply_element_affinities, hash: 1246bf9fcb0de648}
   - {addr: 0x80184f9c, size: 552, name: battle_formula_store_physical_evade_values, hash: b4852851b6e3d787}
   - {addr: 0x801851c4, size: 288, name: battle_formula_store_magical_evade_values, hash: ecf9ae84a056565b}
   - {addr: 0x801852e4, size: 68, name: battle_formula_calculate_concentrate, hash: 8a5a6c0b912bc4d1}
@@ -1306,7 +1306,7 @@ functions:
   - {addr: 0x80185e94, size: 236, name: battle_formula_store_jump_xa_ya, hash: 434d5ef331229ed1}
   - {addr: 0x80185f80, size: 36, name: battle_formula_apply_charge, hash: 6002cec17e1cc620}
   - {addr: 0x80185fa4, size: 88, name: battle_formula_apply_weapon_element_strengthen, hash: 0fb240f00ad442b6}
-  - {addr: 0x80185ffc, size: 88, name: battle_formula_apply_elemental_strengthen, hash: 42b74312c13089c9}
+  - {addr: 0x80185ffc, size: 88, name: battle_formula_apply_ability_element_strengthen, hash: 42b74312c13089c9}
   - {addr: 0x80186054, size: 248, name: battle_formula_apply_physical_attack_supports, hash: 9f1bdc4db989d39e}
   - {addr: 0x8018614c, size: 184, name: battle_formula_apply_attack_up_and_martial_arts, hash: 9c71bf82b11e6870}
   - {addr: 0x80186204, size: 80, name: battle_formula_apply_magic_attack_up, hash: 256e8af77b4efc2b}
@@ -1320,7 +1320,7 @@ functions:
   - {addr: 0x8018659c, size: 136, name: battle_formula_store_hit_chance, hash: 34f74861bb791ce1}
   - {addr: 0x80186624, size: 104, name: battle_formula_calculate_hp_percent_damage, hash: fbd9033b617345a3}
   - {addr: 0x8018668c, size: 96, name: battle_formula_calculate_mp_percent_damage, hash: 35af0565285d2fd6}
-  - {addr: 0x801866ec, size: 88, name: battle_formula_calculate_gravi2_damage, hash: 6804086c15a9d8a2}
+  - {addr: 0x801866ec, size: 88, name: battle_formula_calculate_damage_leaving_one_hp, hash: 6804086c15a9d8a2}
   - {addr: 0x80186744, size: 208, name: battle_formula_calculate_stolen_gil, hash: 562507cf4ddf1b15}
   - {addr: 0x80186814, size: 220, name: battle_formula_set_exp_stolen, hash: e5c15126b58064e7}
   - {addr: 0x801868f0, size: 44, name: battle_formula_add_pa_y, hash: 1c38bc686de761a1}
@@ -1337,8 +1337,8 @@ functions:
   - {addr: 0x80186e78, size: 44, name: battle_formula_damage_target_missing_hp, hash: aeec8464c74ad5c3}
   - {addr: 0x80186ea4, size: 44, name: battle_formula_apply_y_brave, hash: c33db6df89772a17}
   - {addr: 0x80186ed0, size: 256, name: battle_formula_apply_weather_elemental_effects, hash: 67bc5f454dd4dcc6}
-  - {addr: 0x80186fd0, size: 40, name: battle_formula_modify_elemental_damage, hash: 0e63aead82382650}
-  - {addr: 0x80186ff8, size: 260, name: battle_formula_apply_elemental, hash: bcc5c45352ec9962}
+  - {addr: 0x80186fd0, size: 40, name: battle_formula_apply_weapon_element, hash: 0e63aead82382650}
+  - {addr: 0x80186ff8, size: 260, name: battle_formula_apply_ability_element, hash: bcc5c45352ec9962}
   - {addr: 0x801870fc, size: 84, name: battle_formula_apply_elemental_absorption, hash: a4da38a8c28fee60}
   - {addr: 0x80187150, size: 248, name: battle_formula_calculate_faith, hash: 2ee629ef8667424d}
   - {addr: 0x80187248, size: 264, name: battle_formula_apply_hp_absorption, hash: 12be881fecadca11}
@@ -1380,7 +1380,7 @@ functions:
   - {addr: 0x80188800, size: 88, name: battle_formula_calculate_friendly_magic_accuracy, hash: ab9efbe8205fa8f9}
   - {addr: 0x80188858, size: 48, name: battle_formula_calculate_magical_xa_times_ya, hash: 8263857d6512b882}
   - {addr: 0x80188888, size: 220, name: battle_formula_calculate_golem_accuracy, hash: fd3de29223a7cfc1}
-  - {addr: 0x80188964, size: 64, name: battle_formula_calculate_truth_magical_damage, hash: b88ff0ac6143bcf4}
+  - {addr: 0x80188964, size: 64, name: battle_formula_calculate_magical_damage_without_faith, hash: b88ff0ac6143bcf4}
   - {addr: 0x801889a4, size: 40, name: battle_formula_calculate_truth_damage, hash: 9dbedf8aefbe5dd6}
   - {addr: 0x801889cc, size: 88, name: battle_formula_calculate_magic_accuracy_no_elemental, hash: 12c16eb5925971e7}
   - {addr: 0x80188a24, size: 96, name: battle_formula_calculate_magic_accuracy, hash: 93b39f1715163636}

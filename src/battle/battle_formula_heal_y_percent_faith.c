@@ -4,7 +4,7 @@
 /* Formula 0x0D: heal (Y)% of max HP, hit F(MA+X)%. */
 void battle_formula_heal_y_percent_faith(void) {
     battle_formula_store_ma_and_x();
-    battle_formula_apply_elemental_strengthen();
+    battle_formula_apply_ability_element_strengthen();
     if (battle_formula_calculate_friendly_magic_accuracy() != 0) {
         return;
     }

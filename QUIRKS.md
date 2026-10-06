@@ -78,6 +78,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   skips the reflector pointer reload and depends on the caller's `$s2`.
 - `src/battle/battle_ai_evaluate_math_targets.c`: the extra known-ability call
   in the special-ID loop discards its result.
+- `src/battle/battle_formula_apply_ability_element.c`: Oil doubles XA against fire, but every
+  caller has already stored XA * YA as the HP damage, so Oil never raises fire damage (it is still
+  marked for removal). Players know this as Oil having no effect in the PlayStation version.
 - `src/battle/battle_action_init_current_ability_strike_data.c`: the range-data
   guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true
   (`&&` was presumably meant), so item ids read past the table; only the
@@ -187,6 +190,8 @@ without changing the bytes.
   `battle_reaction_fails_brave_roll` through a function-pointer cast; the second argument is ignored.
 - `src/battle/battle_formula_calculate_critical_hit.c` calls the argument-less
   `battle_formula_calculate_knockback` through a cast with XA's address in `$a0`; the callee ignores it.
+- `src/battle/battle_formula_apply_ability_element.c` calls the argument-less
+  `battle_formula_nullify_action` through a cast with `mount_info` in `$a0`; the callee ignores it.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to

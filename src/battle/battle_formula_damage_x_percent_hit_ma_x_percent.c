@@ -11,7 +11,7 @@ void battle_formula_damage_x_percent_hit_ma_x_percent(void) {
     }
     battle_formula_calculate_hp_percent_damage();
     battle_formula_apply_weather_elemental_effects();
-    battle_formula_apply_elemental();
+    battle_formula_apply_ability_element();
     if (g_battle_action_target_data->hit != 0 && battle_formula_apply_elemental_absorption_and_status_proc() == 0) {
         battle_formula_apply_status();
     }

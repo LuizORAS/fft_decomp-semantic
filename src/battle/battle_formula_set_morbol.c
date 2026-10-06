@@ -11,7 +11,7 @@ void battle_formula_set_morbol(void) {
     battle_stats_t* target;
 
     battle_formula_store_ma_and_x();
-    battle_formula_apply_elemental_strengthen();
+    battle_formula_apply_ability_element_strengthen();
     battle_formula_apply_magic_attack_up();
     battle_formula_apply_zodiac_compatibility();
     battle_formula_store_hit_chance();

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 
-void battle_formula_modify_damage_for_element(s32 element) {
+/* The target's affinities for element, on the stored HP damage: Absorb marks the action for
+ * battle_formula_apply_elemental_absorption, Null nullifies it (battle_formula_nullify_action), Half
+ * halves the damage, and Weak doubles it and flags the weakness. Half and Weak together cancel out. */
+void battle_formula_apply_element_affinities(s32 element) {
     u8 element_mask;
     battle_stats_t* unit;
     battle_action_data_t* absorb_action;
