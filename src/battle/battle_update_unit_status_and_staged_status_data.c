@@ -1,15 +1,17 @@
 #include "fft/battle.h"
 
-/* Snapshot a unit into the event staging record and queue its status removal.
+/* Snapshot battle unit unit_id into the event staging record (statuses, counts, charged CT,
+ * death counter, HP, team) and strip the statuses an event hides; returns 0 when the unit is already
+ * staged, else 1. With script variable 0x1fd set (the PRE_BATTLE masks) every status goes except
+ * Crystal, Dead, Invite, Cursed, Treasure and Critical, and monsters, Altima and the undead jobs also
+ * keep Undead and Float; otherwise (BATTLE_STARTED) Undead, Jump, Petrify, Darkness, Confusion,
+ * Transparent, Chicken, Frog, Haste, Slow, Charm, Sleep and Death Sentence go. The stripped set is
+ * kept for the restore, a lost Jump (1) or Float (2) is noted in the staging flags, a charmed unit
+ * returns to its initial team, and the removal runs on the main stack
+ * (battle_status_apply_unit_action_removal).
  *
- * Returns 0 when the slot is already staged. Otherwise the unit's statuses,
- * timers, HP and team are saved, the removal mask is chosen by the pending
- * staged-status variable and the unit type (monsters, Altima and the undead
- * jobs use their own mask), and the removal is applied on the main stack.
- *
- * Each mask branch repeats the whole store tail; cross-jumping merges the
- * copies, and the repeated tail uses give the strength-reduced status walker
- * the target's s1 over the stats pointer. */
+ * Each mask branch repeats the whole store tail; cross-jumping merges the copies, and the repeated
+ * tail uses give the strength-reduced status walker the target's s1 over the stats pointer. */
 s32 battle_update_unit_status_and_staged_status_data(s32 unit_id) {
     battle_stats_t* stats;
     s32 i;

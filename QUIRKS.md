@@ -479,3 +479,10 @@ translation unit. Share their types and constants through headers.
   `battle_formula_break_equipped_damage_pa_times_wp.c` (Might Sword) apply the Strengthen and
   affinities of the weapon's element only; the element in the ability's own data (Holy for the
   Holy Sword abilities) is never read.
+- `src/battle/battle_menu_display_projected_action_effect.c`: the 0x100 bit that
+  `main_status_find_action_highest_order_effect` adds for a status flagged
+  `STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED` changes nothing. The preview tests 0x80 (a removal) first, so
+  its 0x180 test, which would pick marker image 0x1e, never passes.
+- `src/battle/battle_unit_set_animation_based_on_status.c` picks animation 0x21 for bit 0x01 of the
+  status mirror `status_flags_1_4`, but no status sets that bit
+  (`g_battle_misc_status_mask_by_handler_index`), so the animation never plays.

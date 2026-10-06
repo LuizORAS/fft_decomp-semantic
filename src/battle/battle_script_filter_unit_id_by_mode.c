@@ -7,10 +7,10 @@
  *   0  the id is always accepted
  *   1  the unit exists
  *   2  the unit is on the blue team
- *   3  blue team and free of the check-set 8 statuses
+ *   3  blue team and free of the MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED statuses
  *   4  the unit is on a non-blue team
- *   5  non-blue team and free of the check-set 8 statuses, ignoring 0x10 in
- *      the first status byte
+ *   5  non-blue team and free of those statuses except Undead (0x10 in the
+ *      first status byte)
  *
  * The switch has no default: an unknown mode falls off the end and returns the
  * 5 left in $v0 by the last comparison, which is what the target does.
@@ -56,7 +56,7 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
             return 1;
         }
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i])
+            if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i])
                 != 0) {
                 break;
             }
@@ -77,7 +77,7 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         if (index == -1) {
             return 0;
         }
-        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][0];
+        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
                 s32 masked;
@@ -88,7 +88,7 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 blocked = first & masked;
             } else {
                 blocked
-                    = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i];
+                    = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i];
             }
             if (blocked != 0) {
                 break;

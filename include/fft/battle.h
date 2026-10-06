@@ -2159,7 +2159,7 @@ typedef struct battle_unit_anim_state {
 /* Renderer-side Misc-unit status mirror. These packed masks do not use the
  * canonical battle_status_id_e byte order. */
 typedef enum battle_misc_status_flags_1_4 {
-    /* Misc +0x140. Bit 0x00000001 remains unknown. */
+    /* Misc +0x140. No status sets bit 0x00000001 (g_battle_misc_status_mask_by_handler_index). */
     BATTLE_MISC_STATUS_CONFUSION = 0x00000080,
     BATTLE_MISC_STATUS_SLEEP = 0x00000040,
     BATTLE_MISC_STATUS_PETRIFY = 0x00000020,
@@ -2188,7 +2188,7 @@ typedef enum battle_misc_status_flags_1_4 {
     BATTLE_MISC_STATUS_BLOOD_SUCK = 0x00020000,
     BATTLE_MISC_STATUS_INNOCENT = 0x00010000,
 
-    /* Misc +0x143. Bit 0x80000000 remains unknown. */
+    /* Misc +0x143. No status sets bit 0x80000000. */
     BATTLE_MISC_STATUS_UNDEAD = 0x40000000,
     BATTLE_MISC_STATUS_REGEN = 0x20000000,
     BATTLE_MISC_STATUS_RERAISE = 0x10000000,

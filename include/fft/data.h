@@ -775,8 +775,8 @@ enum {
 
 typedef struct status_effect_data {
     u8 _unused_00[2];
-    u8 order;
-    u8 ct;
+    u8 order; /* 0x02; the action preview shows the status change of highest order */
+    u8 ct;    /* 0x03; a timed status's count (Poison onwards): clock ticks, Death Sentence turns */
     u8 flags_1;
     u8 flags_2;
     u8 cancels[BATTLE_STATUS_BYTE_COUNT];    /* 0x06; statuses removed when this one is inflicted */
@@ -784,21 +784,24 @@ typedef struct status_effect_data {
 } status_effect_data_t;
 typedef char status_effect_data_size_must_be_0x10[(sizeof(status_effect_data_t) == 0x10) ? 1 : -1];
 
-/* Flags that build the shared status-check sets during main initialization.
- * Provisional names remain for sets whose common runtime policy is not yet
- * established. */
+/* Status data flags that build the status check sets (main_status_init_check_data,
+ * main_status_check_set_e). The retail data also sets flags_1 0x08 (Confusion, Transparent, Charm,
+ * Sleep), 0x10 (Poison, Regen), 0x20 (Defending, Performing) and 0x40 (Crystal, Treasure), which no
+ * code reads. */
 typedef enum status_effect_flags_1 {
     STATUS_EFFECT_FLAG_1_KO = 0x01,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ENEMY = 0x02,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ALLY = 0x04,
+    STATUS_EFFECT_FLAG_1_LOST = 0x02,
+    STATUS_EFFECT_FLAG_1_UNUSED_SET_2 = 0x04,
     STATUS_EFFECT_FLAG_1_FREEZE_CT = 0x80,
 } status_effect_flags_1_e;
 
+/* IGNORE_ATTACKS (the FFHacktics name; Crystal, Dead, Jump, Petrify, Treasure and Wall in the retail
+ * data) builds no check set and no code reads it; no status sets 0x40. */
 typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IMMORTAL_IMMUNITY = 0x01,
     STATUS_EFFECT_FLAG_2_FORMATION_IMMUNITY = 0x02,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_7 = 0x04,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8 = 0x08,
+    STATUS_EFFECT_FLAG_2_UNUSED_SET_7 = 0x04,
+    STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED = 0x08,
     STATUS_EFFECT_FLAG_2_MOUNT_REMOVAL = 0x10,
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,

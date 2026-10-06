@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 
-/* Run staged status commands for units whose Float or Jump state needs a
- * dedicated update thread.
- *
- * BATTLE twin of world_process_inflict_status_commands; the instruction scan
- * and status-byte layout match the WORLD routine. */
+/* At the start of an event that stages no statuses (script variable 0x1fd clear), run each
+ * Inflict Status command (EVENT_OPCODE_INFLICT_STATUS) in the event block whose unit has Float or
+ * Jump, each in its own thread (battle_script_inflict_status_thread), waiting for it to end. The WORLD
+ * twin is world_process_inflict_status_commands; the instruction scan and status-byte layout match. */
 void battle_process_inflict_status_commands(void) {
     s32 instruction_offset;
     s32 misc_id;

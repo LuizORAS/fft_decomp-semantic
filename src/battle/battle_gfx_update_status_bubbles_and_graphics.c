@@ -1,14 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Per-frame status-bubble and unit-graphics update.
- *
- * In the listed game states, bubbles are held off for 0x3c frames whenever the
- * camera zooms, tilts, rotates or moves, and processed for every Misc unit_t
- * Data record once the countdown has run out. Every state then reloads the
- * casting unit's graphics and runs battle_gfx_draw_unit_sprite_layers on every record.
- */
+/* Per-frame status bubbles and unit graphics. In the menu, move and targeting states the status
+ * bubbles are drawn (battle_gfx_update_status_bubble_display on every misc record) once the camera has
+ * been still for 0x3c frames; a zoom, tilt, rotation or camera move restarts that delay. In every
+ * state the casting unit's graphics are loaded and each unit's sprite layers drawn
+ * (battle_gfx_draw_unit_sprite_layers). */
 void battle_gfx_update_status_bubbles_and_graphics(void) {
     battle_unit_misc_data_t* unit;
 

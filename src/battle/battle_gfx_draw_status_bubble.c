@@ -1,15 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Queue the unit's status bubble into the ordering table.
+/* Queue the unit's status bubble into the ordering table.
  *
- * The bubble's texture coordinates are chosen from the status bubble id: the
- * "dying" bubble (id 0) and the status-CT bubble (id 20) show a counter digit,
- * and ids 9, 10 and 21 have a second texture row selected by status_bubble_alternate_row.  The
- * bubble is drawn one tile above the unit's feet and offset by status_bubble_x
- * and status_bubble_y.
- */
+ * The bubble's texture coordinates are chosen from the status bubble id: the death counter bubble
+ * (id 0) and the Death Sentence bubble (id 20) show a counter digit, and ids 9, 10 and 21 have a
+ * second texture row selected by status_bubble_alternate_row. The bubble is drawn one tile above the
+ * unit's feet and offset by status_bubble_x and status_bubble_y. */
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords) {
     SVECTOR position;
     SVECTOR zoom = g_battle_status_bubble_zoom;

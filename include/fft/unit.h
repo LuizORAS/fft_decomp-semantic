@@ -373,16 +373,21 @@ typedef enum battle_status_id {
 
 #define BATTLE_STATUS_BYTE_MASK(id) ((u8)(0x80U >> ((id) & 7)))
 
+/* The status check sets (g_main_status_check_sets) that main_status_init_check_data builds from the
+ * status data flags. LOST holds Crystal, Invite and Treasure (battle_action_check_battle_outcome);
+ * EVENT_EXCLUDED holds the statuses that team-wide event commands skip
+ * (battle_script_filter_unit_id_by_mode); sets 2 (Crystal, Treasure) and 7 are built but read by
+ * nothing. */
 typedef enum main_status_check_set {
     MAIN_STATUS_CHECK_SET_KO = 0,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY = 1,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ALLY = 2,
+    MAIN_STATUS_CHECK_SET_LOST = 1,
+    MAIN_STATUS_CHECK_SET_UNUSED_2 = 2,
     MAIN_STATUS_CHECK_SET_FREEZE_CT = 3,
     MAIN_STATUS_CHECK_SET_PREVENT_REACTION = 4,
     MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY = 5,
     MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY = 6,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_7 = 7,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_8 = 8,
+    MAIN_STATUS_CHECK_SET_UNUSED_7 = 7,
+    MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED = 8,
     MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL = 9,
     MAIN_STATUS_CHECK_SET_UNMOUNTABLE = 10,
     MAIN_STATUS_CHECK_SET_COUNT = 11,
