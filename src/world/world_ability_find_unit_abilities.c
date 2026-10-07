@@ -79,7 +79,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         }
         if (mode == 0) {
             if (!learned) {
-                if (!(g_main_ability_data[id].type_flags >> 7)) {
+                if (!(g_main_ability_data[id].type_flags >> ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT)) {
                     id |= 0x4000;
                 } else {
                     id |= 0x6000;
@@ -94,7 +94,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
             }
         } else if (mode == 2) {
             if (!learned) {
-                if (g_main_ability_data[id].type_flags >> 7) {
+                if (g_main_ability_data[id].type_flags >> ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT) {
                     continue;
                 }
                 if (jp < g_main_ability_data[id].jp_cost) {

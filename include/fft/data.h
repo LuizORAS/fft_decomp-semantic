@@ -37,6 +37,21 @@ enum {
     ABILITY_ID_KNOCKBACK = 0x200,
 };
 
+/* An ability's class, from its id range (main_ability_calculate_pointers_and_type): the table that
+ * holds its class data (ability_secondary_data_t for the default abilities, one or two bytes for the
+ * others). */
+typedef enum ability_type {
+    ABILITY_TYPE_DEFAULT = 0,
+    ABILITY_TYPE_ITEM = 1,
+    ABILITY_TYPE_THROW = 2,
+    ABILITY_TYPE_JUMP = 3,
+    ABILITY_TYPE_CHARGE = 4,
+    ABILITY_TYPE_MATH = 5,
+    ABILITY_TYPE_REACTION = 6,
+    ABILITY_TYPE_SUPPORT = 7,
+    ABILITY_TYPE_MOVEMENT = 8,
+} ability_type_e;
+
 /* The random R/S/M selector uses a different legacy bit assignment from the
  * skillset-list filter: support and movement are reversed. */
 typedef enum rsm_ability_filter {
@@ -60,8 +75,9 @@ typedef enum ability_list_entry_flag {
     ABILITY_LIST_ENTRY_DISABLED = 0x4000,
 } ability_list_entry_flag_e;
 
-/* Named PSX ability IDs. The R/S/M span is complete except for unnamed slots
- * and PSP-only additions. */
+/* Named PSX ability IDs. The R/S/M span is complete: reaction 0x1bb and support 0x1e1, 0x1e4 and
+ * 0x1e5 have blank names in the game's text and no code tests them, and 0x1f1 is
+ * BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER (FFTPatcher's "(Cannot enter water)"). */
 typedef enum ability_id {
     ABILITY_ID_BLACK_MAGIC_FROG = 0x1d,
     ABILITY_ID_SUMMON_MAGIC_MOOGLE = 0x3c,
@@ -157,6 +173,7 @@ typedef enum ability_id {
     ABILITY_ID_SUPPORT_EQUIP_ARMOR = 0x1c6,
     ABILITY_ID_SUPPORT_EQUIP_SHIELD = 0x1c7,
     ABILITY_ID_SUPPORT_EQUIP_SWORD = 0x1c8,
+    /* The game's name; the ability lets a unit equip katanas (BATTLE_SUPPORT_SET_1_EQUIP_KATANA). */
     ABILITY_ID_SUPPORT_EQUIP_KNIFE = 0x1c9,
     ABILITY_ID_SUPPORT_EQUIP_CROSSBOW = 0x1ca,
     ABILITY_ID_SUPPORT_EQUIP_SPEAR = 0x1cb,
@@ -198,6 +215,9 @@ typedef enum ability_id {
     ABILITY_ID_MOVEMENT_TELEPORT_2 = 0x1f3,
     ABILITY_ID_MOVEMENT_ANY_WEATHER = 0x1f4,
     ABILITY_ID_MOVEMENT_ANY_GROUND = 0x1f5,
+    /* The game's names of these two are swapped: "Move in Water" (the Ninja's) walks on the
+     * surface (BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) and "Walk on Water" (the Samurai's) moves in the
+     * water (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER); the bit names follow what they do. */
     ABILITY_ID_MOVEMENT_MOVE_IN_WATER = 0x1f6,
     ABILITY_ID_MOVEMENT_WALK_ON_WATER = 0x1f7,
     ABILITY_ID_MOVEMENT_MOVE_ON_LAVA = 0x1f8,
@@ -207,6 +227,31 @@ typedef enum ability_id {
     ABILITY_ID_MOVEMENT_SILENT_WALK = 0x1fc,
     ABILITY_ID_MOVEMENT_MOVE_FIND_ITEM = 0x1fd,
 } ability_id_e;
+
+/* Behavior flags in the four secondary bytes of a default ability record.
+ * Only meanings confirmed by reconstructed target consumers are named here. */
+typedef enum ability_secondary_flags_1 {
+    ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
+    ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
+    ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
+    ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
+    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES = 0x40, /* no retail ability sets it */
+    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES = 0x80,  /* no retail ability sets it */
+} ability_secondary_flags_1_e;
+
+typedef enum ability_secondary_flags_2 {
+    ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
+    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
+    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
+    ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
+    ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET = 0x10, /* the action keeps the tile, not the unit on it */
+    ABILITY_SECONDARY_FLAG_2_UPPER_LAYER_ONLY = 0x20,     /* the area's height window ignores the lower layer */
+    /* With either of these, the other team's units drop out of the area. */
+    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
+    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
+} ability_secondary_flags_2_e;
 
 typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
@@ -218,10 +263,15 @@ typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_REFLECTABLE = 0x80,
 } ability_secondary_flags_3_e;
 
-/* Flags in byte 0x03 of the eight-byte primary ability records. */
-typedef enum ability_data_flags {
-    ABILITY_DATA_FLAG_SPELL_QUOTE = 0x40,
-} ability_data_flags_e;
+typedef enum ability_secondary_flags_4 {
+    ABILITY_SECONDARY_FLAG_4_EVADEABLE = 0x02,
+    ABILITY_SECONDARY_FLAG_4_REQUIRES_MATERIA_BLADE = 0x04,
+    ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD = 0x08,
+    ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE = 0x10,
+    ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING = 0x20,
+    ABILITY_SECONDARY_FLAG_4_COUNTER_MAGIC = 0x40,
+    ABILITY_SECONDARY_FLAG_4_COUNTER_FLOOD = 0x80,
+} ability_secondary_flags_4_e;
 
 /* Default-ability secondary records at 0x8005fbf0.
  * The 14-byte stride/range are used by main_ability_get_range; BATTLE
@@ -245,6 +295,23 @@ typedef struct ability_secondary_data {
     u8 mp_cost;              /* 0x0d; ability-list eligibility compares this with max MP at 0x8019a89c */
 } ability_secondary_data_t;
 typedef char ability_secondary_data_size_must_be_14[(sizeof(ability_secondary_data_t) == 14) ? 1 : -1];
+
+/* Byte 3 of an ability record (ability_data_t.type_flags). Its low four bits hold the class in
+ * FFTPatcher's numbering (1 normal ... 9 movement, 0 in an empty record), which the code never reads:
+ * it takes the class from the id (ability_type_e). */
+typedef enum ability_type_flag {
+    /* Learned by being hit by it, with the record's learn rate (battle_ability_find_learn_on_hit_unit). */
+    ABILITY_TYPE_FLAG_LEARN_ON_HIT = 0x20,
+    /* The ability's name shows in a window when it is used, with the Ability Names option on
+     * (battle_text_determine_spell_quote); Item and Throw abilities show theirs anyway. */
+    ABILITY_TYPE_FLAG_SHOW_NAME = 0x40,
+    /* Missing from the JP learning lists (WORLD, BUNIT, JOBSTTS): Zodiac and Ultima. */
+    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP = 0x80,
+} ability_type_flag_e;
+
+enum {
+    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT = 7,
+};
 
 /* Eight-byte ability records at 0x8005ebf0. Bytes 4..7 hold the AI behaviour
  * flags: the AI loaders copy them as halfwords, the strike simulator reads

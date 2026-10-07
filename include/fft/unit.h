@@ -7,9 +7,10 @@
 #include "psx/types.h"
 
 /* ability flags */
-/* A unit's reaction, support and movement abilities as MSB-first bitsets in battle_stats_t
+/* A unit's active reaction, support and movement abilities as MSB-first bitsets in battle_stats_t
  * (reaction_abilities, support_abilities, movement_abilities): one bit per ability, in id order
- * from 0x1a6, 0x1c6 and 0x1e6. The four support bytes are copied to party_data_t at 0x124, so MAIN,
+ * from 0x1a6, 0x1c6 and 0x1e6, set from its four innate abilities and its three equipped ones
+ * (main_unit_enable_rsm_flags). The four support bytes are copied to party_data_t at 0x124, so MAIN,
  * BATTLE and WORLD share these values; the reaction values are checked against the target's
  * reaction dispatchers. */
 typedef enum battle_unit_reaction_set_1 {
@@ -40,7 +41,7 @@ typedef enum battle_unit_reaction_set_3 {
     BATTLE_REACTION_SET_3_REFLECT = 0x20,
     BATTLE_REACTION_SET_3_AUTO_POTION = 0x10,
     BATTLE_REACTION_SET_3_COUNTER = 0x08,
-    /* 0x04 is present in the bitset but remains unidentified. */
+    /* 0x04 (0x1bb) has a blank name and no code tests it. */
     BATTLE_REACTION_SET_3_DISTRIBUTE = 0x02,
     BATTLE_REACTION_SET_3_MP_SWITCH = 0x01,
 } battle_unit_reaction_set_3_e;
@@ -60,7 +61,7 @@ typedef enum battle_support_set_1 {
     BATTLE_SUPPORT_SET_1_EQUIP_ARMOR = 0x80,
     BATTLE_SUPPORT_SET_1_EQUIP_SHIELD = 0x40,
     BATTLE_SUPPORT_SET_1_EQUIP_SWORD = 0x20,
-    BATTLE_SUPPORT_SET_1_EQUIP_KATANA = 0x10,
+    BATTLE_SUPPORT_SET_1_EQUIP_KATANA = 0x10, /* the game's "Equip Knife" (0x1c9) */
     BATTLE_SUPPORT_SET_1_EQUIP_CROSSBOW = 0x08,
     BATTLE_SUPPORT_SET_1_EQUIP_SPEAR = 0x04,
     BATTLE_SUPPORT_SET_1_EQUIP_AXE = 0x02,
@@ -93,6 +94,7 @@ typedef enum battle_support_set_4 {
     BATTLE_SUPPORT_SET_4_MONSTER_SKILL = 0x80,
     BATTLE_SUPPORT_SET_4_DEFEND = 0x40,
     BATTLE_SUPPORT_SET_4_EQUIP_CHANGE = 0x20,
+    /* 0x10, 0x02 and 0x01 (0x1e1, 0x1e4, 0x1e5) have blank names and no code tests them. */
     BATTLE_SUPPORT_SET_4_SHORT_CHARGE = 0x08,
     BATTLE_SUPPORT_SET_4_NON_CHARGE = 0x04,
 } battle_unit_support_set_4_e;
@@ -120,8 +122,8 @@ typedef enum battle_movement_set_2 {
 } battle_unit_movement_set_2_e;
 
 typedef enum battle_movement_set_3 {
-    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x80,
-    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x40,
+    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x80, /* the game's "Move in Water" (0x1f6) */
+    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x40, /* the game's "Walk on Water" (0x1f7) */
     BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA = 0x20,
     BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER = 0x10,
     BATTLE_MOVEMENT_SET_3_FLOAT = 0x08,

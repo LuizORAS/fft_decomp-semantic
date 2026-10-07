@@ -1,8 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Caches the ability record pointers for one ability list entry and reports
- * whether it is an action ability (entry bits 14-15 clear). */
+/* Cache the record pointers and the class (g_world_ability_selected_type, ability_type_e) of
+ * ability list entry index, and return 1 for an ability outside the default class whose entry has no
+ * flag in bits 14-15, else 0; menu script callback 4 of the view and learn lists. */
 s32 world_ability_cache_entry_pointers(s32 index) {
     s32 result;
 

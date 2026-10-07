@@ -29,8 +29,11 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     battle_ai_coords_t* coords;
 
     if (g_battle_ai_data_base.decision_state == 0) {
-        if ((g_battle_ai_data_base.acting_unit->movement_abilities[2] & 0xc8)
-            || (g_battle_ai_data_base.acting_unit->status_sets.current[2] & 0x40)) {
+        if ((g_battle_ai_data_base.acting_unit->movement_abilities[2]
+                & (BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER
+                    | BATTLE_MOVEMENT_SET_3_FLOAT))
+            || (g_battle_ai_data_base.acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
             g_battle_ai_data_base.water_penalty = 0;
         } else {
             g_battle_ai_data_base.water_penalty = 1;
@@ -73,7 +76,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
                 tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
-                if (ai->acting_unit->movement_abilities[1] & 0x08) {
+                if (ai->acting_unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
                     if (!(ai->acting_unit->mount_info & 0x80)) {
                         i = ai->acting_unit_coords.bytes.x - x;
                         if (i < 0) {

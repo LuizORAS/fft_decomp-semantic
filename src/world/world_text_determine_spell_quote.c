@@ -1,24 +1,12 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Leading bytes of an Ability Data 1 record (8 bytes each at 0x8005ebf0). */
-typedef struct world_text_spell_quote_ability_data {
-    u16 jp_cost;     /* 0x00 */
-    u8 learn_chance; /* 0x02 */
-    u8 flags;        /* 0x03; 0x40 is tested before the no-quote path */
-} world_text_spell_quote_ability_data_t;
-
 struct battle_ai_command_action;
 
-/* Chooses whether an ability announcement shows a spell quote.
- *
- * Unknown skillsets (not in the list and not the unit's flagged primary/secondary)
- * get quote command 5 unless the ability repeats the last quote
- * (g_world_spell_quote_last_ability_id), the unit is a Calculator or Mime, the ability is >= 0x170 or
- * lacks the spell-quote flag, status blocks it, options disable it, or
- * EVENT_SCRIPT_VAR_RANDOM_VALUE is 4 or more. Everything else uses command 7. */
+/* Same as battle_text_determine_spell_quote, in WORLD's copy of the battle menus; its only caller,
+ * world_menu_init_system_function, is never called (QUIRKS.md). */
 void world_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled) {
-    world_text_spell_quote_ability_data_t* ability;
+    ability_data_t* ability;
     ability_secondary_data_t* secondary;
     battle_stats_t* unit;
     s32 known;
@@ -54,7 +42,7 @@ void world_text_determine_spell_quote(world_unit_command_action_t* action, s32 u
     } else {
         known = 0;
     }
-    if ((known == 0 && (ability->flags & ABILITY_DATA_FLAG_SPELL_QUOTE)
+    if ((known == 0 && (ability->type_flags & ABILITY_TYPE_FLAG_SHOW_NAME)
             && g_main_game_options.fields.ability_names == GAME_OPTION_ON)
         || action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
         world_menu_dispatch_system_function(7, 0, unit_id, 0, enabled, (struct battle_ai_command_action*)action);

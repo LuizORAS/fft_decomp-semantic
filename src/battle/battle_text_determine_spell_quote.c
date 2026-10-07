@@ -1,22 +1,17 @@
 #include "fft/battle.h"
 
-/* Leading bytes of an Ability Data 1 record (8 bytes each at 0x8005ebf0). */
-typedef struct battle_text_ability_primary_prefix {
-    u16 jp_cost;     /* 0x00 */
-    u8 learn_chance; /* 0x02 */
-    u8 flags;        /* 0x03; 0x40 is tested before the no-quote path */
-} battle_text_ability_primary_prefix_t;
-
-/* Chooses whether an ability announcement shows a spell quote.
- *
- * Battle twin of world_text_determine_spell_quote. Unknown
- * skillsets (not in the list and not the unit's flagged primary/secondary)
- * get quote command 5 unless the ability repeats the last quote
- * (g_battle_spell_quote_last_ability_id), the unit is a Calculator or Mime, the ability is >= 0x170 or
- * lacks the spell-quote flag, status blocks it, options disable it, or
- * EVENT_SCRIPT_VAR_RANDOM_VALUE is 4 or more. Everything else uses command 7. */
+/* Announce the ability a unit is about to use (battle_state_announce_next_ability). A spell quote
+ * (system command 5: the unit speaks a line) comes for a default ability flagged
+ * ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE from a skillset that is neither in
+ * g_battle_spell_quote_exception_skillsets nor a primary or secondary skillset the unit marks
+ * (spell_quote_skillsets), unless it repeats the last quote (g_battle_spell_quote_last_ability_id),
+ * the unit is a Calculator or Mime, Transparent or a Frog, the Ability Names option is off, or the
+ * random script variable's low nibble is 4 or more. Otherwise command 7 shows the ability's name (the
+ * item's for Item and Throw) when the record has ABILITY_TYPE_FLAG_SHOW_NAME, its skillset is not an
+ * exception and the option is on, and always for Item and Throw; anything else passes 0, which opens
+ * no window (system function 8). Battle twin of world_text_determine_spell_quote. */
 void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled) {
-    battle_text_ability_primary_prefix_t* ability;
+    ability_data_t* ability;
     ability_secondary_data_t* secondary;
     battle_stats_t* unit;
     s32 known;
@@ -53,7 +48,7 @@ void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 
     } else {
         known = 0;
     }
-    if ((known == 0 && (ability->flags & ABILITY_DATA_FLAG_SPELL_QUOTE)
+    if ((known == 0 && (ability->type_flags & ABILITY_TYPE_FLAG_SHOW_NAME)
             && g_main_game_options.fields.ability_names == GAME_OPTION_ON)
         || action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
         battle_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT, 0, unit_id, 0, enabled,

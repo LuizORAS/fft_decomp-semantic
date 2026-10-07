@@ -499,65 +499,6 @@ enum {
     BATTLE_ATTACK_ANIMATION_USE_ITEM = 1,
 };
 
-/* Primary ability-record byte 3 at 0x8005ebf0. Learn-on-hit is consumed at
- * 0x8018e6b8; WORLD 0x80122b08 and JOBSTTS 0x801e03bc prove the JP-learning
- * flag's negative polarity. */
-typedef enum ability_type_flag {
-    ABILITY_TYPE_FLAG_LEARN_ON_HIT = 0x20,
-    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP = 0x80,
-} ability_type_flag_e;
-
-enum {
-    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT = 7,
-};
-
-typedef enum ability_type {
-    ABILITY_TYPE_DEFAULT = 0,
-    ABILITY_TYPE_ITEM = 1,
-    ABILITY_TYPE_THROW = 2,
-    ABILITY_TYPE_JUMP = 3,
-    ABILITY_TYPE_CHARGE = 4,
-    ABILITY_TYPE_MATH = 5,
-    ABILITY_TYPE_REACTION = 6,
-    ABILITY_TYPE_SUPPORT = 7,
-    ABILITY_TYPE_MOVEMENT = 8,
-} ability_type_e;
-
-/* Behavior flags in the four secondary bytes of a default ability record.
- * Only meanings confirmed by reconstructed target consumers are named here. */
-typedef enum ability_secondary_flags_1 {
-    ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
-    ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
-    ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
-    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
-    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
-    ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
-    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES = 0x40, /* no retail ability sets it */
-    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES = 0x80,  /* no retail ability sets it */
-} ability_secondary_flags_1_e;
-
-typedef enum ability_secondary_flags_2 {
-    ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
-    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
-    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
-    ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
-    ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET = 0x10, /* the action keeps the tile, not the unit on it */
-    ABILITY_SECONDARY_FLAG_2_UPPER_LAYER_ONLY = 0x20,     /* the area's height window ignores the lower layer */
-    /* With either of these, the other team's units drop out of the area. */
-    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
-    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
-} ability_secondary_flags_2_e;
-
-typedef enum ability_secondary_flags_4 {
-    ABILITY_SECONDARY_FLAG_4_EVADEABLE = 0x02,
-    ABILITY_SECONDARY_FLAG_4_REQUIRES_MATERIA_BLADE = 0x04,
-    ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD = 0x08,
-    ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE = 0x10,
-    ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING = 0x20,
-    ABILITY_SECONDARY_FLAG_4_COUNTER_MAGIC = 0x40,
-    ABILITY_SECONDARY_FLAG_4_COUNTER_FLOOD = 0x80,
-} ability_secondary_flags_4_e;
-
 extern battle_ability_animation_data_t g_battle_ability_animation_data[BATTLE_ABILITY_ANIMATION_COUNT];
 
 extern u8 g_battle_ability_charge_animation_sets[BATTLE_CHARGE_ANIMATION_SET_COUNT]
