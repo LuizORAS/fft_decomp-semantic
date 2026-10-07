@@ -580,6 +580,9 @@ item_data_t* main_item_get_data_pointer(s32 item_id);
 s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
 
 /* status */
+/* Status changes that BATTLE and WORLD share: a unit's current set, the timed status counts and
+ * the death counter, the action state, the status check sets and the preview's status pick. */
+
 /* main_status_change_unit, 0x8005e6cc: OR, AND-not, or replacement of
  * inflicted_status, followed by merging status_sets.innate into status_sets.current. */
 typedef enum main_status_change {

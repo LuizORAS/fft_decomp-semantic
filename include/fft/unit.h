@@ -313,6 +313,9 @@ enum {
 };
 
 /* status */
+/* A unit's three status sets, the 40 status ids with their byte and mask, and the status check
+ * sets. */
+
 /* SCUS 0x8005b5dc copies these three consecutive sets as one 15-byte block.
  * Keep a named aggregate so whole-block byte copies do not walk beyond the
  * first five-byte array. Individual status readers still use named sets. */

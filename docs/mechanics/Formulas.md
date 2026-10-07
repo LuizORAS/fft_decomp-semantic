@@ -38,8 +38,8 @@ runs that id's handler once per target and strike.
   evades in turn, each as evade / base hit (100). From the side the class
   evade is lost, from behind the shields too. Concentrate and Transparent
   remove the evades; the attacker's Darkness or Confusion, the target's
-  Abandon and Defending double them; a sleeping, stopped, confused, charging
-  or performing target loses them. Bows and crossbows lose a quarter of the
+  Abandon and Defending double them; a sleeping, stopped, confused, charging,
+  performing or Don't Act target loses them. Bows and crossbows lose a quarter of the
   base hit at night and another quarter in a storm. Magic rolls only the
   accessory and shield magic evades, whatever the direction. Only the basic
   attack and abilities flagged evadeable are evaded.

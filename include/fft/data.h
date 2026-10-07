@@ -767,6 +767,9 @@ typedef enum skillset_ability_filter {
 } skillset_ability_filter_e;
 
 /* status */
+/* The status data (g_main_status_effect_data): each status's preview order, count, check-set
+ * flags, cancels and blockers. */
+
 enum {
     BATTLE_STATUS_COUNT = 40,
     BATTLE_STATUS_BYTE_COUNT = 5,

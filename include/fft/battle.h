@@ -592,6 +592,10 @@ extern u8 g_battle_spell_quote_exception_skillsets[];
 s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id);
 
 /* status */
+/* Status rules in battle: how a status set lands (infliction types, an action record's pending
+ * inflictions and removals), the turn clock's status upkeep, the event's Inflict Status and the
+ * status graphics queue (docs/mechanics/Status.md). */
+
 /* Bit flags in status_infliction_data_t.type and the active-ability copy. The
  * target status applicator checks these in descending-bit precedence. */
 typedef enum battle_status_infliction_type {
@@ -624,29 +628,29 @@ extern u8 g_battle_status_bubble_u[24];
 extern u8 g_battle_status_bubble_v[24];
 extern u8 g_battle_status_bubble_digit_u[24];
 extern u8 g_battle_status_bubble_digit_v[24];
-void battle_status_clear_action_state_2(battle_stats_t* unit);
-void battle_status_queue_graphics_change_if_executing(s32 status_id, s32 enabled, s32 misc_unit_id);
-void battle_status_queue_current_status_graphics(s32 battle_id, s32 enabled);
-s32 battle_status_inflict_defending_to_battle_id(s32 unit_id);
-s32 battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit);
-s32 battle_status_modify_inflictions(s32 removal_only);
-s32 battle_status_check_charging_charge(battle_stats_t* unit, s32 cancel);
-void battle_status_remove_control(battle_stats_t* unit);
-s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only);
-void battle_status_apply_pending_removals(s32 unit_idx);
 void battle_status_apply_pending_inflictions(s32 unit_id, s32 removal_only);
+void battle_status_apply_pending_removals(s32 unit_idx);
 s32 battle_status_apply_poison_and_regen(battle_stats_t* unit);
 void battle_status_apply_unit_action_removal(battle_stats_t* unit);
 s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit);
+s32 battle_status_check_charging_charge(battle_stats_t* unit, s32 cancel);
 s32 battle_status_check_crystal_dead_jump_petrify_treasure(battle_stats_t* unit);
 void battle_status_clear_action_state(battle_stats_t* unit);
-void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 arg);
-s32 battle_status_init_special_flag_enabling(s32 unit_id);
-s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_id);
+void battle_status_clear_action_state_2(battle_stats_t* unit);
 void battle_status_clear_all(battle_stats_t* unit);
-void battle_status_store_ability_cancellations(void);
+void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 arg);
+s32 battle_status_inflict_defending_to_battle_id(s32 unit_id);
+s32 battle_status_init_special_flag_enabling(s32 unit_id);
+s32 battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit);
+s32 battle_status_modify_inflictions(s32 removal_only);
+void battle_status_queue_current_status_graphics(s32 battle_id, s32 enabled);
+void battle_status_queue_graphics_change_if_executing(s32 status_id, s32 enabled, s32 misc_unit_id);
+s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_id);
+void battle_status_remove_control(battle_stats_t* unit);
 s32 battle_status_remove_transparent(battle_stats_t* unit);
 void battle_status_remove_transparent_if_jump_used(battle_stats_t* unit);
+s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only);
+void battle_status_store_ability_cancellations(void);
 void battle_status_update_expiring(s32 unit_id);
 
 /* item */
