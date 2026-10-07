@@ -1,18 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Build the parallel ability lists for one of a unit's skillsets.
+/* Build the parallel ability lists for one of a unit's skillsets: each of the 16 action slots the
+ * unit has learned goes into ability_ids, terminated with -1, and the count is returned. A monster, or
+ * a skillset that is neither a generic job's nor the unit's own, counts as fully learned. Default
+ * abilities also report their MP cost (halved, rounding up, by Half of MP), CT (halved, rounding up,
+ * by Short Charge and 0 with Non-Charge, unless the ability perseveres), the reflectable (bit 0) and
+ * silenced (bit 1) flags and how many AT entries resolve before it; Charge abilities report their CT
+ * and that count only. A Frog lists only the Frog spell, and an ability that needs a sword or a
+ * Materia Blade is skipped without one.
  *
- * Every learned slot of the skillset is listed in ability_ids (terminated with
- * -1); the count is returned. Ordinary abilities also report MP cost (halved
- * by Half of MP), CT (halved by Short Charge, zeroed by Non-Charge unless the
- * ability perseveres), reflectable/silence flags and the number of turns until
- * it resolves; Charge abilities (0x196-0x19d) report CT and turns only. A Frog
- * may list only Frog (0x1d), and abilities requiring a sword or Materia Blade
- * are skipped when the unit lacks one.
- *
- * The two flag bytes need separate locals: sharing one keeps the attribute
- * byte in a globally allocated register, which the target does not. */
+ * The two flag bytes need separate locals: sharing one keeps the attribute byte in a globally
+ * allocated register, which the target does not. */
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out) {
     battle_at_entry_t at_list[40];
@@ -45,7 +44,8 @@ s32 battle_menu_get_unit_skillset_ability_data(
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[2] & 2) { /* Frog */
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
         frog = 1;
     }
     if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
@@ -77,7 +77,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     } else {
         known = main_ability_get_known(unit, skillset_index);
     }
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < HUMAN_SKILLSET_ACTION_ABILITY_COUNT; i++) {
         if (!(known & (0x800000 >> i))) {
             continue;
         }

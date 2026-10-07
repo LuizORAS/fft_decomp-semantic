@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Returns whether a same-team Monster Skill supporter occupies the supplied tile. */
+/* Return 1 when a unit on tile (x, y) of team team_flags has the Monster Skill support, can react
+ * (battle_reaction_is_prevented) and stands within 5 of total_height; 0 otherwise, also off the
+ * map. */
 s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y, s32 total_height) {
     battle_unit_height_data_t height;
     s32 reference_height;

@@ -815,6 +815,8 @@ typedef enum status_effect_flags_2 {
  * shared scratch list reserves 24 entries for either representation. */
 enum {
     HUMAN_SKILLSET_ABILITY_COUNT = 22,
+    /* The first 16 slots hold action abilities, the last 6 reaction, support and movement ones. */
+    HUMAN_SKILLSET_ACTION_ABILITY_COUNT = 16,
     MONSTER_SKILLSET_ABILITY_COUNT = 4,
     SKILLSET_ABILITY_LIST_COUNT = 24,
 };

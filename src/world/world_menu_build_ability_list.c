@@ -1,3 +1,7 @@
+#include "fft/battle.h"
+#include "fft/world.h"
+#include "psx/types.h"
+
 /* Builds the ability list for the active skillset menu entry (menu entry 4's
  * selected_index selects the skillset; g_battle_action_menu_row_types gives its list type). Each type
  * fills the 0x52-row work buffer at *g_battle_ai_workspace_ptr through its own loader, then
@@ -10,10 +14,6 @@
  * separate local from the unit index, and its updates follow the loader
  * calls in each arm. The ff-terminated copy takes an ignored third argument
  * (0 or the row count), as the target's call sites load $a2. */
-#include "fft/battle.h"
-#include "fft/world.h"
-#include "psx/types.h"
-
 void world_menu_build_ability_list(s32 mode) {
     s32 unit_index;
     s32 window_x;

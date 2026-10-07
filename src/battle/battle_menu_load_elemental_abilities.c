@@ -1,8 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Returns the Elemental (Geomancy) ability for the surface under the unit when
- * the unit knows and can use it, otherwise 0. */
+/* Return the one Elemental (Geomancy) ability the unit can use: the one for the surface type of
+ * its tile (g_geomancy_terrain_ability_table), when it has learned it; otherwise 0, also for a
+ * missing unit or another skillset. */
 s32 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
     battle_stats_t* unit;
     s16 abilities[0x14];

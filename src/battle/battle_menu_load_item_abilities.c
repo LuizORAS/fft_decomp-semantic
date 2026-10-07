@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Collects the item abilities the unit can use into out_item_ids, terminated
- * by 0xff, and returns 0x100 plus the number of entries (0 when the unit or
- * the skillset is wrong, or the menu is empty).
+/* Collect the items the unit's Item skillset lets it use: each learned item ability (0x170-0x17d)
+ * gives its item id (g_main_item_ability_item_ids) into out_item_ids, terminated by 0xff. Returns
+ * 0x100 plus the count, or 0 when the unit is missing, the skillset is not Item or nothing is learned.
  *
  * Loading the ability id into `item_index` before subtracting ABILITY_ID_ITEM_FIRST
  * keeps the table index in its own s16 pseudo, so GCC emits the target's fresh
@@ -12,8 +11,7 @@
  * masked `id + 0xfe90` sum the range test already holds (the two differ only
  * above bit 15); spelled as one expression it is one instruction short. The
  * `+ 0x10000` in the range test forces that sum into a register, matching the
- * target's hoisted `li t0,0xfe90`.
- */
+ * target's hoisted `li t0,0xfe90`. */
 s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) {
     battle_stats_t* unit;
     u16 abilities[0x14];

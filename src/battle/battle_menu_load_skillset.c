@@ -1,11 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Loads the unit's usable abilities for an action menu type into scratch lists.
- *
- * A frog only keeps the default, blank, monster and attack menus. Returns the
- * menu loader's result, or whether the menu type is below 15 for menus without
- * a loader. */
+/* Load the unit's usable entries of one skillset for its action menu type into scratch lists,
+ * through the type's loader: the ability list (default), the Item abilities, the throwable items
+ * (Throw), Math Skill's attributes, then multiples, then the Calculator abilities, the Elemental
+ * ability of the unit's tile, the Draw Out katanas or the Charge abilities. A Frog gets 0 for every
+ * type but the default, blank, monster and attack menus. Returns the loader's result, 0 when nothing
+ * is usable, or for types without a loader whether the type is below 15;
+ * battle_menu_build_unit_action_menus marks a skillset empty on 0. */
 s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
     u8 items[0x58];
     s16 abilities[0x44];

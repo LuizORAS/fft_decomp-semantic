@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Return how many of the four tiles next to the unit hold a same-team Monster Skill supporter
+ * (battle_menu_has_monster_skill_supporter_at_tile), or 0 for a unit not on the field; nonzero gives a
+ * monster its fourth ability. */
 s32 battle_menu_init_monster_skill_check(battle_stats_t* unit) {
     battle_unit_height_data_t height_data;
     s32 team;
