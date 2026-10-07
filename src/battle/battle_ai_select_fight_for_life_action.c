@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Select an AI action around the unit's designated target.
- *
- * Preserve the target across the staged movement and ability passes. Return
- * -1 to suspend and 0 when selection completes.
- */
-s32 battle_ai_select_targeted_action(void) {
+/* Fight for life: attack the Auto-Battle target. When the target is out of play or not an enemy,
+ * the unit drops its ENTD special behaviour and takes the rider of a ridden mount (unless both are
+ * Transparent), else the nearest eligible enemy, else the first Transparent enemy present. It then
+ * scores the tiles, moves around the target (battle_ai_build_targeted_movement), keeps a charged action
+ * when that scores better, ranks its abilities on the target, then on every unit worth targeting, and
+ * takes the first pass's ranked action; with none, it only moves (and Defends when Defend is its
+ * support ability). Returns -1 to suspend, else 0. */
+s32 battle_ai_select_fight_for_life_action(void) {
     s32 target = g_battle_ai_temp_unit_data->auto_battle_target;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
@@ -74,7 +75,7 @@ movement:
         return -1;
     }
     ai->movement_scenario = 2;
-    battle_ai_invert_target_priority();
+    battle_ai_set_movement_baseline();
     ai->movement_scenario = 0;
 charging:
     result = battle_ai_evaluate_charging_movement();
@@ -88,7 +89,7 @@ charging:
     ai->movement_scenario = 0;
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, target)) {
     target_abilities:
-        if (battle_ai_choose_move_from_move_list() == -1) {
+        if (battle_ai_evaluate_ability_list() == -1) {
             ai->action_selection_phase = 3;
             return -1;
         }
@@ -98,7 +99,7 @@ charging:
     ai->movement_scenario = 1;
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 0)) {
     other_abilities:
-        if (battle_ai_choose_move_from_move_list() == -1) {
+        if (battle_ai_evaluate_ability_list() == -1) {
             ai->action_selection_phase = 4;
             return -1;
         }

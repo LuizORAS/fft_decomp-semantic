@@ -10,9 +10,9 @@ void battle_menu_confirm_auto_battle_selection_thread(void) {
     attacker = battle_unit_get_attacker_data_pointer();
     menu = g_battle_menu_thread_menu_data[1].selected_index;
     if (menu == 3) {
-        attacker->auto_battle_setting = 0x10;
+        attacker->auto_battle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;
     } else if (menu == 4) {
-        attacker->auto_battle_setting = 0x11;
+        attacker->auto_battle_setting = BATTLE_AUTO_BATTLE_RUN_LIKE_A_RABBIT;
     }
     g_battle_menu_set_auto_battle_row_actions = -3;
     battle_menu_confirm_action_silently((void*)parameter);

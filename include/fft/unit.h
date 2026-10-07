@@ -611,6 +611,17 @@ typedef union battle_unit_position {
 } battle_unit_position_t;
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
+/* Battle Stats 0x1b8, set from the Auto-Battle menu (texts 0x5009-0x500d): Manual, then the four modes
+ * that battle_ai_handle_autobattle runs. The AI gives a computer unit the same modes from its ENTD AI
+ * flags (battle_ai_init_unit_abilities). */
+typedef enum battle_auto_battle_setting {
+    BATTLE_AUTO_BATTLE_MANUAL = 0x00,
+    BATTLE_AUTO_BATTLE_FIGHT_FOR_LIFE = 0x0c, /* attack auto_battle_target */
+    BATTLE_AUTO_BATTLE_PROTECT_ALLIES = 0x0e, /* guard auto_battle_target */
+    BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE = 0x10,
+    BATTLE_AUTO_BATTLE_RUN_LIKE_A_RABBIT = 0x11,
+} battle_auto_battle_setting_e;
+
 typedef struct battle_stats {
     u8 character_identity;            /* 0x000 */
     u8 entd_slot;                     /* 0x001; 0xff means absent */
@@ -708,8 +719,8 @@ typedef struct battle_stats {
     u8 misc_unit_id;                   /* 0x18a */
     u8 ability_ct;                     /* 0x18b */
     battle_action_data_t action;       /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;            /* 0x1b8 */
-    u8 auto_battle_target;             /* 0x1b9 */
+    u8 auto_battle_setting;            /* 0x1b8; battle_auto_battle_setting_e */
+    u8 auto_battle_target;             /* 0x1b9; the unit Fight for life attacks or Protect allies guards */
     u8 initial_team_flags;             /* 0x1ba */
     u8 inflicted_status[5];            /* 0x1bb */
 } battle_stats_t;

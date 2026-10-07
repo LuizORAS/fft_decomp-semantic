@@ -87,7 +87,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
             decision->targeting_flags_1
                 &= (u8) ~(BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_HEALER);
-            for (i = 0; i < 0x22; i++) {
+            for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
                 entry = &ai->ability_lists[ai->unit_battle_ids[unit_id]][i];
                 entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
@@ -232,7 +232,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     for (i = 0; i < 5; i++) {
         ai->status_to_cancel[i] = 0;
     }
-    for (i = 0; i < 0x22; i++) {
+    for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
         entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_battle_id][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
             break;

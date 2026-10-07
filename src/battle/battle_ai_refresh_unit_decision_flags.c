@@ -4,8 +4,9 @@
  * unit only gets BATTLE_AI_TARGET_UNTARGETABLE; the others get the enemy flag (another team than the
  * acting unit's), dead with or without Reraise, HP below half or three quarters, MP constrained for a
  * unit with MP abilities (below half, or for a team other than the player's below its costliest
- * ability) and flag 0x80 (not an enemy, or charging). The scoring is
- * battle_ai_simulate_action_and_score with no action, and it can suspend (-1) and resume. */
+ * ability) and BATTLE_AI_DECISION_WORTH_TARGETING when not an enemy or charging. The scoring
+ * (battle_ai_simulate_action_and_score with no action) rebuilds the dead, petrified and jumping bits
+ * and adds WORTH_TARGETING for an enemy still in the fight; it can suspend (-1) and resume. */
 s32 battle_ai_refresh_unit_decision_flags(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
@@ -26,7 +27,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
             decision->enemy_flag = 1;
         else
             decision->enemy_flag = 0;
-        decision->targeting_flags_2 &= BATTLE_AI_TARGET_CONSERVE_CT | BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE;
+        decision->targeting_flags_2 &= BATTLE_AI_TARGET_RUN_LIKE_A_RABBIT | BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE;
         if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
             if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))
                 decision->targeting_flags_2 |= BATTLE_AI_TARGET_DEAD_WITH_RERAISE;
@@ -45,9 +46,9 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
         /* Cross-multiply the strict three-quarter HP threshold. */
         if (unit->hp * 4 < unit->max_hp * 4 - unit->max_hp)
             decision->targeting_flags_2 |= BATTLE_AI_TARGET_HP_BELOW_THREE_QUARTERS;
-        decision->flags &= 0x7f;
+        decision->flags &= (u8)~BATTLE_AI_DECISION_WORTH_TARGETING;
         if (!decision->enemy_flag || unit->charged_ability_ct != 0xff)
-            decision->flags |= 0x80;
+            decision->flags |= BATTLE_AI_DECISION_WORTH_TARGETING;
     }
     ai->current_action.act_before_move = 1;
     ai->current_action.skillset = 0;

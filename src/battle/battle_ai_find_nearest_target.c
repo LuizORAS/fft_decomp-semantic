@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 
 /* Return the nearest unit (Manhattan distance; the first slot on ties) that the mode admits, or the
- * acting unit when none does. Every mode skips untargetable and petrified units, and every mode but 4 the
- * dead: 0 skips Blood Suck; 1 takes targetable enemies that act before the acting unit and are not
- * disabled by then, unless they stand next to it more than 2 levels lower; 2 takes any enemy; 3 any unit;
- * 4 takes targetable enemies with flag 0x80 that are not dead without Reraise, and skips Blood Suck; 5
- * takes allied healers, and crystals. */
+ * acting unit when none does. Every mode skips untargetable and petrified units, and every mode but 4
+ * the dead: 0 skips Blood Suck; 1 takes targetable enemies that act before the acting unit and are not
+ * disabled by then, unless they stand next to it more than 2 levels lower; 2 takes any enemy; 3 any
+ * unit; 4 takes targetable enemies worth targeting (BATTLE_AI_DECISION_WORTH_TARGETING) that are not
+ * dead without Reraise, and skips Blood Suck; 5 takes allied healers, and crystals. */
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
     s32 nearest_distance = 0x7fffffff;
     s32 nearest_id = g_battle_ai_acting_unit_id;
@@ -49,7 +49,8 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
             case BATTLE_AI_NEAREST_ELIGIBLE_ENEMY:
                 if (!decision->enemy_flag || (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE))
                     continue;
-                if (!ai->targetability.live.unit_targetable[i] || !(decision->flags & 0x80))
+                if (!ai->targetability.live.unit_targetable[i]
+                    || !(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING))
                     continue;
             case BATTLE_AI_NEAREST_WITHOUT_BLOOD_SUCK:
                 if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK))

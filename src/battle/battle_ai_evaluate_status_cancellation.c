@@ -1,12 +1,12 @@
 #include "fft/battle.h"
 
-/* Evaluate the actor's abilities for removing one status from a target.
- *
- * The return value distinguishes suspension (-1), no usable ability (0), a
- * retry-worthy result (1), and a selected action (2). The Blood Suck path
- * deliberately tests the transient Jump flag, preserving the shipped AI
- * quirk.
- */
+/* Look for an ability that removes status_id (Dead, Petrify or Blood Suck) from unit_id, for Protect
+ * allies. Dead and Petrify are tried only when the decision record marks the unit dead without Reraise
+ * or petrified, and Blood Suck only when it marks the unit jumping (QUIRKS.md). The search ranks the
+ * acting unit's abilities that cancel the status, leaving out Faith ones on an innately Innocent unit,
+ * reflectable ones on an innately Reflecting unit and Silence-bound ones while the actor is Silenced.
+ * Returns 2 with the best ranked action selected; 0 when no ability can remove it (none, or all too
+ * costly with no way to restore MP); 1 to go on to the next status; -1 to suspend. */
 s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
@@ -29,21 +29,21 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
 
     switch (status_id) {
     case BATTLE_STATUS_ID_DEAD:
-        if (!(decision->flags & BATTLE_AI_DECISION_TRANSIENT_DEAD))
+        if (!(decision->flags & BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE))
             return 1;
         break;
     case BATTLE_STATUS_ID_PETRIFY:
-        if (!(decision->flags & BATTLE_AI_DECISION_TRANSIENT_PETRIFIED))
+        if (!(decision->flags & BATTLE_AI_DECISION_PETRIFIED))
             return 1;
         break;
     case BATTLE_STATUS_ID_BLOOD_SUCK:
-        if (!(decision->flags & BATTLE_AI_DECISION_TRANSIENT_JUMP))
+        if (!(decision->flags & BATTLE_AI_DECISION_JUMPING))
             return 1;
         break;
     }
 
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, unit_id) != 0) {
-        for (ai->ability_counter = 0; ai->ability_counter < 0x22; ai->ability_counter++) {
+        for (ai->ability_counter = 0; ai->ability_counter < BATTLE_AI_ABILITY_LIST_LENGTH; ai->ability_counter++) {
             entry = &ai->ability_lists[ai->acting_unit_battle_id][ai->ability_counter];
             if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
                 break;

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-s32 battle_ai_choose_move_from_move_list(void) {
+/* Have battle_ai_evaluate_ability_outcome evaluate every entry of the acting unit's AI ability list
+ * against the active units, resuming at the entry that suspended. Returns -1 to suspend, else 0. */
+s32 battle_ai_evaluate_ability_list(void) {
     battle_ai_data_t* ai;
     battle_ai_ability_entry_t* entry;
 
@@ -20,7 +22,7 @@ s32 battle_ai_choose_move_from_move_list(void) {
             return -1;
         }
         ai->ability_counter += 1;
-        if (ai->ability_counter >= 0x22) {
+        if (ai->ability_counter >= BATTLE_AI_ABILITY_LIST_LENGTH) {
             return 0;
         }
     }

@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-/*
- * Select an action for the recovery-oriented AI policy.
- *
- * Check urgent statuses before the designated-target, enemy and ally passes.
- * Return -1 to suspend and 0 when selection completes.
- */
-s32 battle_ai_select_recovery_action(void) {
+/* Protect allies: guard the Auto-Battle target, or the ally most in peril
+ * (battle_ai_select_peril_target) when the target is out of play or an enemy. After scoring the tiles
+ * and moving around the target (battle_ai_build_targeted_movement), it tries to remove the target's
+ * Dead, Petrify and Blood Suck (battle_ai_evaluate_status_cancellation), unless the target is dead with
+ * Reraise; when one of them has no ability that can, it switches to the ally most in peril and skips
+ * this pass. Then it keeps a charged action when that scores better and ranks its abilities on the
+ * target, then on enemies, then on allies, taking the first pass's ranked action; with none, it only
+ * moves (and Defends when Defend is its support ability). Returns -1 to suspend, else 0. */
+s32 battle_ai_select_protect_allies_action(void) {
     battle_stats_t* acting = g_battle_ai_temp_unit_data;
     battle_ai_recovery_status_list_t statuses = g_battle_ai_recovery_status_ids;
     s32 target = acting->auto_battle_target;
@@ -53,7 +55,7 @@ movement:
         return -1;
     }
     ai->movement_scenario = 2;
-    battle_ai_invert_target_priority();
+    battle_ai_set_movement_baseline();
     ai->movement_scenario = 0;
     if (!g_battle_ai_recovery_status_retry
         && !((ai->unit_decisions[target].targeting_flags_2 >> 6) & (BATTLE_AI_TARGET_DEAD_WITH_RERAISE >> 6))) {
@@ -96,7 +98,7 @@ charging:
     ai->movement_scenario = 0;
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, target)) {
     target_abilities:
-        if (battle_ai_choose_move_from_move_list() == -1) {
+        if (battle_ai_evaluate_ability_list() == -1) {
             ai->action_selection_phase = 3;
             return -1;
         }
@@ -106,7 +108,7 @@ charging:
     ai->movement_scenario = 1;
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ENEMIES, 0)) {
     enemy_abilities:
-        if (battle_ai_choose_move_from_move_list() == -1) {
+        if (battle_ai_evaluate_ability_list() == -1) {
             ai->action_selection_phase = 4;
             return -1;
         }
@@ -115,7 +117,7 @@ charging:
     }
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ALLIES, 0)) {
     ally_abilities:
-        if (battle_ai_choose_move_from_move_list() != -1) {
+        if (battle_ai_evaluate_ability_list() != -1) {
             if (battle_ai_select_ranked_action())
                 return 0;
         } else {

@@ -143,21 +143,21 @@ score_state:
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             decision = &ai->unit_decisions[unit_index];
             unit = &g_battle_unit_stats[unit_index];
-            decision->flags &= ~(BATTLE_AI_DECISION_TRANSIENT_DEAD | BATTLE_AI_DECISION_TRANSIENT_PETRIFIED
-                | BATTLE_AI_DECISION_TRANSIENT_JUMP);
+            decision->flags &= ~(
+                BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE | BATTLE_AI_DECISION_PETRIFIED | BATTLE_AI_DECISION_JUMPING);
             if ((unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
                 && !(unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
-                decision->flags |= BATTLE_AI_DECISION_TRANSIENT_DEAD;
+                decision->flags |= BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE;
             if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-                decision->flags |= BATTLE_AI_DECISION_TRANSIENT_PETRIFIED;
+                decision->flags |= BATTLE_AI_DECISION_PETRIFIED;
             if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
-                decision->flags |= BATTLE_AI_DECISION_TRANSIENT_JUMP;
-            if (!(decision->flags & 0x80)
+                decision->flags |= BATTLE_AI_DECISION_JUMPING;
+            if (!(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING)
                 && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 && (!(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
                     || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
-                decision->flags |= 0x80;
+                decision->flags |= BATTLE_AI_DECISION_WORTH_TARGETING;
         }
     } else {
         battle_ai_clear_current_action_rank_byte();

@@ -6,7 +6,7 @@
  * (more than 16 units). Otherwise, unless an action is already chosen and the unit has not acted, it
  * plans again: it enters AI simulation (battle_ai_begin_simulation), refreshes the decision flags, marks
  * the usable abilities, builds the movement panels, sets the team targeting flags and the target, and
- * chooses the action (battle_ai_select_initial_action). Then the unit moves first, unless the action is
+ * chooses the action (battle_ai_select_action). Then the unit moves first, unless the action is
  * done from its own tile (act_before_move) or it has already acted; it ends the turn after acting or
  * with no action. A stage that runs out of the frame's time returns -1 (here VSync(1) above 440 at
  * entry) and the next call resumes it; a command returns 0 and is kept in g_battle_ai_command_history. */
@@ -72,7 +72,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         battle_ai_update_team_targeting_flags();
         battle_ai_init_target_consideration();
     choose:
-        if (battle_ai_select_initial_action() == -1) {
+        if (battle_ai_select_action() == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_CHOOSE_ACTION;
             ai->decision_state = 1;
             return -1;

@@ -12,7 +12,7 @@ void battle_ai_insert_ranked_action(void) {
     s32 j;
 
     if (battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->best_action.rank_byte,
-            (battle_ai_action_rank_t*)&ai->inverted_priority_action.rank_byte)
+            (battle_ai_action_rank_t*)&ai->movement_baseline_action.rank_byte)
         == BATTLE_AI_RANK_ABOVE) {
         if (battle_ai_is_action_higher_ranked(&ai->best_action, &ai->ranked_actions[7])) {
             for (i = 0; i < 8; i++) {

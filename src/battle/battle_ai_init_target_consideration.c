@@ -29,7 +29,7 @@ void battle_ai_init_target_consideration(void) {
     flags = decision->flags;
     if (flags & BATTLE_AI_DECISION_SPECIAL_BEHAVIOR) {
         if (!(ai->acting_unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE))) {
-            if (decision->targeting_flags_2 & BATTLE_AI_TARGET_CONSERVE_CT)
+            if (decision->targeting_flags_2 & BATTLE_AI_TARGET_RUN_LIKE_A_RABBIT)
                 return;
             if (ai->autobattle_setting)
                 return;
@@ -70,5 +70,5 @@ void battle_ai_init_target_consideration(void) {
     return;
 
 save_fading_life: /* the target places this exit after the shared tail */
-    ai->autobattle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;
+    ai->autobattle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;
 }

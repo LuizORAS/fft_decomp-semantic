@@ -9,9 +9,9 @@ void world_menu_set_auto_battle_thread(void) {
     world_menu_thread_data_t* menu = (world_menu_thread_data_t*)g_world_menu_thread_menu_data;
 
     if (menu->selection == 3) {
-        unit->auto_battle_setting = 0x10;
+        unit->auto_battle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;
     } else if (menu->selection == 4) {
-        unit->auto_battle_setting = 0x11;
+        unit->auto_battle_setting = BATTLE_AUTO_BATTLE_RUN_LIKE_A_RABBIT;
     }
     g_world_menu_set_auto_battle_row_actions = -3;
     world_menu_confirm_action_silently(entry);

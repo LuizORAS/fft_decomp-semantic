@@ -39,7 +39,7 @@ prepare:
     distance = distance_rows[ai->acting_unit_coords.bytes.y][ai->acting_unit_coords.bytes.x];
     within_two_tiles = distance < 3;
     ai->movement_scenario = 0;
-    if (ai->autobattle_setting == BATTLE_AI_AUTOBATTLE_RECOVERY && !within_two_tiles) {
+    if (ai->autobattle_setting == BATTLE_AUTO_BATTLE_PROTECT_ALLIES && !within_two_tiles) {
         limit = 2;
     }
     if (ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION) {

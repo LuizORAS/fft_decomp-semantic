@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Choose a random action from the candidate movement and target masks.
- *
- * Math Skill first chooses learned ability and parameter combinations. Return
- * 1 after copying the current action, including fields unchanged by this pass,
- * or 0 when selection fails.
- */
+/* Make a random valid use of the considered ability the selected action, for the statuses that take
+ * control. Math Skill first draws a learned, AI-usable, Calculator-eligible spell from one of the four
+ * source skillsets, then a learned type (CT, Level, Exp, Height) and multiplier (Prime Number, 5, 4,
+ * 3). A map-tile ability takes a random reachable tile that battle_ai_check_ability_use_at_coords
+ * accepts. Any other takes a random origin around the targetable units
+ * (battle_ai_evaluate_linear_ability_behaviors) and a random tile in range, facing it, aimed at a unit
+ * or at the tile (an ability that can follow its target picks one of the two at random). Returns 1
+ * after copying the action, 0 when no origin and target work. */
 s32 battle_ai_choose_random_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 value, skillset;
@@ -21,7 +22,7 @@ s32 battle_ai_choose_random_action(void) {
         do {
             skillset = g_battle_math_source_skillsets[rand() % 4];
             abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
-            index_or_count = rand() % 16;
+            index_or_count = rand() % HUMAN_SKILLSET_ACTION_ABILITY_COUNT;
             value = abilities[index_or_count];
         } while (value == 0 || !(g_main_ability_data[value].ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)
             || !(g_main_ability_range_data[value].flags_3 & ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE)
@@ -37,7 +38,8 @@ s32 battle_ai_choose_random_action(void) {
         ai->current_action.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
-        battle_ai_transfer_halfword_values(ai->targetable_tiles, (u16*)ai->reachable_tiles[0], 72);
+        battle_ai_transfer_halfword_values(
+            ai->targetable_tiles, (u16*)ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
         ai->movable_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
         if (!ai->movable_tile_count)
             return 0;

@@ -1033,17 +1033,23 @@ typedef enum battle_ai_weapon_kind {
     BATTLE_AI_WEAPON_KIND_HEAL = 4,   /* BATTLE_FORMULA_WEAPON_HEAL */
 } battle_ai_weapon_kind_e;
 
-/* Per-unit AI behavior flags copied from ENTD data to decision +0x04. The
- * three transient status bits are rebuilt during action simulation. Bit 0x80
- * is deliberately unnamed: refresh and simulation give it overlapping uses. */
+/* Decision +0x04: the unit's ENTD AI flags (FFTPatcher's "AI Flags 1"). For each plan,
+ * battle_ai_refresh_unit_decision_flags rebuilds the three low status bits and 0x80 from the present
+ * state. SPECIAL_BEHAVIOR (FFTPatcher's "Defensive") turns on an ENTD unit's Auto-Battle mode
+ * (battle_ai_init_unit_abilities): Run like a rabbit with BATTLE_AI_TARGET_RUN_LIKE_A_RABBIT, or with
+ * FOCUS_TARGET and AGGRESSIVE, Fight for life against an enemy or Protect allies for its own team. */
 typedef enum battle_ai_decision_flags {
-    BATTLE_AI_DECISION_TRANSIENT_DEAD = 0x01,
-    BATTLE_AI_DECISION_TRANSIENT_PETRIFIED = 0x02,
-    BATTLE_AI_DECISION_TRANSIENT_JUMP = 0x04,
+    BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE = 0x01,
+    BATTLE_AI_DECISION_PETRIFIED = 0x02,
+    /* Built from Jump; battle_ai_evaluate_status_cancellation reads it for Blood Suck (QUIRKS.md). */
+    BATTLE_AI_DECISION_JUMPING = 0x04,
     BATTLE_AI_DECISION_SPECIAL_BEHAVIOR = 0x08,
     BATTLE_AI_DECISION_AGGRESSIVE = 0x10,
     BATTLE_AI_DECISION_STAY_NEAR_COORDINATES = 0x20,
     BATTLE_AI_DECISION_FOCUS_TARGET = 0x40,
+    /* The ability search takes the unit: every non-enemy, a charging enemy, and an enemy that is not
+     * petrified, dead without Reraise or under Death Sentence. */
+    BATTLE_AI_DECISION_WORTH_TARGETING = 0x80,
 } battle_ai_decision_flags_e;
 
 /* Targeting policy copied from ENTD AI Flags 2 to decision +0x07. The low
@@ -1052,7 +1058,9 @@ typedef enum battle_ai_decision_flags {
 typedef enum battle_ai_targeting_flags_2 {
     BATTLE_AI_TARGET_HP_BELOW_HALF = 0x01,
     BATTLE_AI_TARGET_MP_CONSTRAINED = 0x02,
-    BATTLE_AI_TARGET_CONSERVE_CT = 0x04,
+    /* FFTPatcher's "Conserve CT". With BATTLE_AI_DECISION_SPECIAL_BEHAVIOR the ENTD unit runs like a
+     * rabbit; nothing else reads it. */
+    BATTLE_AI_TARGET_RUN_LIKE_A_RABBIT = 0x04,
     BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE = 0x08,
     BATTLE_AI_TARGET_UNTARGETABLE = 0x10,
     BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE = 0x20,
@@ -1109,12 +1117,17 @@ typedef union battle_ai_targetability {
 } battle_ai_targetability_t;
 typedef char battle_ai_targetability_size_must_be_64[(sizeof(battle_ai_targetability_t) == 64) ? 1 : -1];
 
+enum {
+    /* Entries per unit in battle_ai_data_t.ability_lists; a SKILLSET_ID_NONE entry ends a shorter list. */
+    BATTLE_AI_ABILITY_LIST_LENGTH = 0x22,
+};
+
 typedef struct battle_ai_data {
     battle_ai_considered_ability_t considered_ability; /* 0x0000 */
     battle_ai_action_data_t current_action;            /* 0x0014 */
     battle_ai_action_data_t best_action;               /* 0x0034 */
     battle_ai_action_data_t ranked_actions[8];         /* 0x0054 */
-    battle_ai_action_data_t inverted_priority_action;  /* 0x0154 */
+    battle_ai_action_data_t movement_baseline_action;  /* 0x0154; only moving: a ranked action must beat it */
     u8 tile_foe_proximity[2][18][16];                  /* 0x0174; level/y/x, strides
                                                         * 288/16/1 at 0x80196e68..0x80196ebc */
     u8 tile_target_distance[2][18][16];                /* 0x03b4; level/y/x, strides 288/16/1 */
@@ -1195,13 +1208,14 @@ typedef struct battle_ai_data {
     u8 math_type_index;       /* 0x0ede; 0..3 */
     u8 math_multiplier_index; /* 0x0edf; 4..7 */
     /* Turn-controller globals saved/restored by 0x8019d37c–0x8019db80. */
-    s32 saved_turn_state_0;                            /* 0x0ee0; snapshot of 0x8018f518 */
-    s32 saved_turn_state_1;                            /* 0x0ee4; snapshot of 0x8018f51c */
-    s32 saved_turn_state_2;                            /* 0x0ee8; snapshot of 0x8018f520 */
-    u16 simulated_turn_events;                         /* 0x0eec; interturn loop stops at 256 */
-    u8 action_simulation_phase;                        /* 0x0eee; battle_ai_simulation_phase_e */
-    u8 _padding_0eef;                                  /* aligns ability_lists */
-    battle_ai_ability_entry_t ability_lists[16][0x22]; /* 0x0ef0; 0x88 bytes per unit */
+    s32 saved_turn_state_0;     /* 0x0ee0; snapshot of 0x8018f518 */
+    s32 saved_turn_state_1;     /* 0x0ee4; snapshot of 0x8018f51c */
+    s32 saved_turn_state_2;     /* 0x0ee8; snapshot of 0x8018f520 */
+    u16 simulated_turn_events;  /* 0x0eec; interturn loop stops at 256 */
+    u8 action_simulation_phase; /* 0x0eee; battle_ai_simulation_phase_e */
+    u8 _padding_0eef;           /* aligns ability_lists */
+    /* 0x0ef0; 0x88 bytes per unit */
+    battle_ai_ability_entry_t ability_lists[16][BATTLE_AI_ABILITY_LIST_LENGTH];
     /* Blood Suck/Frog IDs start without unit bits; 0x8019729c/0x80197510
      * OR the acting physical slot into bits 10..15 before loading the entry. */
     battle_ai_ability_entry_t hardcoded_status_abilities[2]; /* 0x1770 */
@@ -1216,8 +1230,8 @@ typedef struct battle_ai_data {
      * restores it only after the child finishes, not when it suspends. */
     battle_ai_unit_decision_t saved_acting_unit_decision; /* 0x197c */
     u8 unit_battle_ids[BATTLE_UNIT_SLOT_COUNT];           /* 0x198c */
-    u8 unit_behaviour[BATTLE_UNIT_SLOT_COUNT];            /* 0x19a1; battle_ai_autobattle_mode_e from the ENTD flags */
-    u8 autobattle_setting;                                /* 0x19b6 */
+    u8 unit_behaviour[BATTLE_UNIT_SLOT_COUNT];            /* 0x19a1; battle_auto_battle_setting_e from the ENTD flags */
+    u8 autobattle_setting;                                /* 0x19b6; battle_auto_battle_setting_e of this plan */
     u8 decision_state;                                    /* 0x19b7 */
     u8 random_use_threshold;                              /* 0x19b8; 0x80195778..0x80195788 stores
                                                            * floor(128 * random-use entries / eligible entries).
@@ -1287,13 +1301,6 @@ typedef enum battle_ai_tile_mask_mode {
     BATTLE_AI_TILE_MASK_EXPLICIT = 3,
 } battle_ai_tile_mask_mode_e;
 
-typedef enum battle_ai_autobattle_mode {
-    BATTLE_AI_AUTOBATTLE_TARGETED = 0x0C,
-    BATTLE_AI_AUTOBATTLE_RECOVERY = 0x0E,
-    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 0x10,
-    BATTLE_AI_AUTOBATTLE_RETREAT = 0x11,
-} battle_ai_autobattle_mode_e;
-
 typedef enum battle_ai_command_build_stage {
     BATTLE_AI_COMMAND_BUILD_REFRESH = 0,
     BATTLE_AI_COMMAND_BUILD_MOVEMENT = 1,
@@ -1343,8 +1350,9 @@ typedef union battle_ai_facing_tile_offsets {
     u8 by_direction[4][2];
 } battle_ai_facing_tile_offsets_t;
 
-/* 0x80193d70: copied to the stack at 0x801984ec, then read as unsigned
- * status IDs. Signed byte fields retain the target's three-byte copy. */
+/* 0x80193d70: Dead, Petrify and Blood Suck, the statuses Protect allies first tries to remove from
+ * its target; battle_ai_select_protect_allies_action copies them to the stack and reads them
+ * unsigned. Signed byte fields retain the target's three-byte copy. */
 enum {
     BATTLE_AI_RECOVERY_STATUS_COUNT = 3,
 };
@@ -1365,7 +1373,7 @@ extern battle_ai_command_t g_battle_ai_command_history[2];             /* 0x801a
 extern battle_ai_ability_flags_t g_battle_ai_considered_ability_flags; /* data.considered_ability.ai_flags */
 extern u8 g_battle_ai_considered_ability_flags_1;
 extern battle_ai_coords_t g_battle_ai_considered_coords; /* 0x801a0038; data.considered_unit_coords */
-extern s32 g_battle_ai_cowardly_movement_step;
+extern s32 g_battle_ai_retreat_movement_step;
 extern u8 g_battle_ai_current_ability_data_backup[];
 extern u8 g_battle_ai_current_action_base_hit_percent;
 extern u8 g_battle_ai_current_action_rank_byte; /* 0x8019f3f4; data.current_action.rank_byte */
@@ -1435,7 +1443,7 @@ s32 battle_ai_check_set_highest_unit_priority(void);
 s32 battle_ai_is_unit_out_of_play(s32 unit_id);
 void battle_ai_check_unit_for_crystal_or_treasure_status(void);
 s32 battle_ai_check_unit_gets_turn_without_status(battle_stats_t* unit, s32 status);
-s32 battle_ai_choose_move_from_move_list(void);
+s32 battle_ai_evaluate_ability_list(void);
 s32 battle_ai_choose_random_action(void);
 s32 battle_ai_choose_status_action(void);
 s32 battle_ai_choose_wait_facing(void);
@@ -1471,7 +1479,7 @@ void battle_ai_init_target_consideration(void);
 void battle_ai_init_unit_abilities(s32 unit_id);
 void battle_ai_init_workspace(void);
 void battle_ai_insert_ranked_action(void);
-void battle_ai_invert_target_priority(void);
+void battle_ai_set_movement_baseline(void);
 s32 battle_ai_is_action_higher_ranked(battle_ai_action_data_t* a, battle_ai_action_data_t* b);
 s32 battle_ai_is_vsync_hblank_past_threshold(void);
 void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry);
@@ -1485,10 +1493,10 @@ s32 battle_ai_refresh_unit_decision_flags(void);
 void battle_ai_reset_action_ranking_fields(battle_ai_action_data_t* action);
 void battle_ai_end_simulation(void);
 void battle_ai_restore_unit_state(s32 mode);
-s32 battle_ai_run_cowardly_movement(void);
-s32 battle_ai_run_non_specific_autobattle(void);
+s32 battle_ai_build_retreat_movement(void);
+s32 battle_ai_select_general_action(void);
 void battle_ai_move_temp_unit_to_coords(battle_ai_coords_t* coordinates);
-s32 battle_ai_save_fading_life_auto_battle(void);
+s32 battle_ai_select_save_fading_life_action(void);
 void battle_ai_save_unit_state(s32 mode);
 s32 battle_ai_score_reachable_tiles(void);
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id);
@@ -1496,12 +1504,12 @@ void battle_ai_select_candidate_coords_and_check_crystal(void);
 s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e order);
 void battle_ai_select_destination_with_nearest_fallback(s32 range);
 void battle_ai_select_destination_with_range_floor(s32 range);
-s32 battle_ai_select_initial_action(void);
+s32 battle_ai_select_action(void);
 s32 battle_ai_select_peril_target(void);
 s32 battle_ai_select_ranked_action(void);
-s32 battle_ai_select_recovery_action(void);
+s32 battle_ai_select_protect_allies_action(void);
 s32 battle_ai_select_retreat_action(void);
-s32 battle_ai_select_targeted_action(void);
+s32 battle_ai_select_fight_for_life_action(void);
 s32 battle_ai_simulate_action_and_score(void);
 void battle_ai_set_candidate_and_actor_reachable_tiles(void);
 s32 battle_ai_exclude_enemies_acting_before_ct(void);

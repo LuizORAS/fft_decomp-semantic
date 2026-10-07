@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Select active units for the AI ability search.
- *
- * Rebuild all per-unit flags and return whether any unit was selected.
- * target_id == 0xff excludes the acting unit. Confusion bypasses decision
- * flag 0x80, but does not bypass untargetability. Unknown modes allow either side.
- */
+/* Mark the units the ability search takes for mode and return 1 when there is one. A unit qualifies
+ * when it is targetable and worth targeting (BATTLE_AI_DECISION_WORTH_TARGETING) or Confused, and is
+ * not the acting unit when target_id is 0xff. The modes take any unit, enemies, allies, the unit
+ * target_id, or (mode 4, which no caller passes) a unit dead, petrified, Critical or under Death
+ * Sentence. */
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
     s32 any_active = 0;
     s32 i;
@@ -20,7 +18,7 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
         if (decision->targeting_flags_2 & BATTLE_AI_TARGET_UNTARGETABLE)
             continue;
         if (!(g_battle_unit_stats[i].status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
-            && !(decision->flags & 0x80))
+            && !(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING))
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
             continue;

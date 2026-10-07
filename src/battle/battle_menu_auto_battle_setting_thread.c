@@ -10,11 +10,11 @@
 
 /* Auto-battle setting menu thread.
  *
- * The cursor starts at the attacker's auto_battle_setting (0, 0xC, 0xE,
- * 0x10 map to options 1-4 after "none" at 0). Whenever circle is pressed the
- * five option texts (0x5009-0x500D) are redrawn with the selected one
- * highlighted; choosing option 0 clears the setting and restarts the idle
- * action menu if the unit's menu id changes. */
+ * The cursor starts at the attacker's auto_battle_setting: Manual, Fight for
+ * life, Protect allies, Save fading life or Run like a rabbit (options 0-4).
+ * Whenever circle is pressed the five option texts (0x5009-0x500D) are redrawn
+ * with the selected one highlighted; choosing option 0 (Manual) clears the
+ * setting and restarts the idle action menu if the unit's menu id changes. */
 void battle_menu_auto_battle_setting_thread(void) {
     RECT rect;
     battle_menu_window_record_t records[2];
@@ -35,13 +35,13 @@ void battle_menu_auto_battle_setting_thread(void) {
     param = (world_menu_icon_thread_param_t*)battle_thread_get_current_parameter_1();
     cursor = param->cursor;
     stats = battle_unit_get_attacker_data_pointer();
-    if (stats->auto_battle_setting == 0) {
+    if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_MANUAL) {
         cursor = 0;
-    } else if (stats->auto_battle_setting == 0xC) {
+    } else if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_FIGHT_FOR_LIFE) {
         cursor = 1;
-    } else if (stats->auto_battle_setting == 0xE) {
+    } else if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_PROTECT_ALLIES) {
         cursor = 2;
-    } else if (stats->auto_battle_setting == 0x10) {
+    } else if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE) {
         cursor = 3;
     } else {
         cursor = 4;
@@ -62,7 +62,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 selected = cursor;
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_battle_active_turn_unit.battle_id);
-                    stats->auto_battle_setting = 0;
+                    stats->auto_battle_setting = BATTLE_AUTO_BATTLE_MANUAL;
                     g_battle_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
                     colour[1] = 4;

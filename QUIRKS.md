@@ -68,7 +68,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   Monster Skill (`0x80`) and Defend (`0x40`) support bits; Short Charge and
   Non-Charge were presumably intended.
 - `src/battle/battle_ai_evaluate_status_cancellation.c`: the Blood Suck branch
-  tests decision bit `0x04`, which is built from Jump.
+  tests `BATTLE_AI_DECISION_JUMPING`, built from Jump (bit `0x04` of status
+  byte 0; Blood Suck is bit `0x04` of byte 1), so Protect allies skips Blood
+  Suck on a target that is not jumping.
 - `src/battle/battle_ai_build_monster_skill_tile_mask.c`: the `-1` neighbour
   offsets are loaded unsigned (+255), so only `+x`/`+y` survive, and the level
   loop runs for level 0 only.
@@ -503,3 +505,5 @@ translation unit. Share their types and constants through headers.
   an ability by it, but `battle_action_check_and_consume_mp` and the AI use the half rounded down. Seven
   abilities have odd costs (Zodiac 99; Toad 2, Gravi 2, Flare 2, Blind 2, Confuse 2 and Sleep 2 at 35),
   so a unit with exactly the lower half sees them greyed.
+- `src/battle/battle_ai_handle_autobattle.c`: Protect allies falls back to Run like a rabbit when
+  `battle_ai_select_protect_allies_action` returns -2, which it never does.

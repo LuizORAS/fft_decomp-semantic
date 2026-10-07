@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Initialize and dispatch the AI action-selection passes.
- *
- * Resume the selected pass without repeating action-record initialization.
- * Return -1 to suspend and 0 when that pass completes.
- */
-s32 battle_ai_select_initial_action(void) {
+/* Choose the acting unit's action for battle_ai_build_command, resuming the pass that suspended. A
+ * fresh choice clears the ranked actions and the movement baseline and fills the foe proximity grid. A
+ * status that takes control decides first (battle_ai_choose_status_action). A Frog or Critical unit
+ * with retreat support (BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE), or a Don't Act unit with a
+ * focus target, runs away (battle_ai_select_retreat_action) and gets its decision record back
+ * afterwards. Otherwise the unit's Auto-Battle mode decides (battle_ai_handle_autobattle), and without
+ * one the general search (battle_ai_select_general_action). Returns -1 to suspend, else 0. */
+s32 battle_ai_select_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 result;
 
@@ -27,7 +28,7 @@ s32 battle_ai_select_initial_action(void) {
         battle_ai_reset_action_ranking_fields(&ai->ranked_actions[result]);
     battle_ai_reset_action_ranking_fields(&ai->current_action);
     battle_ai_reset_action_ranking_fields(&ai->best_action);
-    battle_ai_reset_action_ranking_fields(&ai->inverted_priority_action);
+    battle_ai_reset_action_ranking_fields(&ai->movement_baseline_action);
     battle_ai_reset_action_ranking_fields(&ai->selected_action);
     battle_ai_fill_foe_proximity_grid();
 status_action:
@@ -65,7 +66,7 @@ native_action:
         return 0;
     ai->decision_state = 0;
 general_action:
-    if (battle_ai_run_non_specific_autobattle() == -1) {
+    if (battle_ai_select_general_action() == -1) {
         ai->initial_targeting_state = 7;
         return -1;
     }
