@@ -20,7 +20,7 @@ void battle_action_execute_ability(void) {
     unit->attack_phase_state = result;
     switch (result) {
     case 0:
-        battle_unit_start_ability_charge_animation_for_movement(unit);
+        battle_unit_start_ability_charging_animation(unit);
         break;
     case 1:
     case 3:
@@ -29,7 +29,7 @@ void battle_action_execute_ability(void) {
         g_battle_action_post_action = 0;
         unit->ability_ct_resolved |= 2;
         if (g_battle_ability_animation_data[unit->used_ability_id].charge_animation_set_id != 0) {
-            battle_unit_start_ability_charge_animation_for_movement(unit);
+            battle_unit_start_ability_charging_animation(unit);
         }
         return;
     case 2:

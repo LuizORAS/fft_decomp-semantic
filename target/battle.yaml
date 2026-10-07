@@ -379,8 +379,8 @@ functions:
   - {addr: 0x8008278c, size: 256, name: battle_move_get_water_animation_mode, hash: 709c9eb1dc6a2866}
   - {addr: 0x8008288c, size: 440, name: battle_unit_select_weapon_attack_animation, hash: 1029a6d78051fa69}
   - {addr: 0x80082a44, size: 216, name: battle_unit_set_animation_for_item_abilities, hash: 83066ecf5f74a9c2}
-  - {addr: 0x80082b1c, size: 100, name: battle_unit_start_ability_charge_animation, hash: af132c835c2a20d7}
-  - {addr: 0x80082b80, size: 144, name: battle_unit_start_ability_charge_animation_for_movement, hash: 90bbb3852a7b79aa}
+  - {addr: 0x80082b1c, size: 100, name: battle_unit_start_ability_pre_attack_animation, hash: af132c835c2a20d7}
+  - {addr: 0x80082b80, size: 144, name: battle_unit_start_ability_charging_animation, hash: 90bbb3852a7b79aa}
   - {addr: 0x80082c10, size: 180, name: battle_unit_select_attack_animation_for_ability, hash: 06c4df3d74f37cf4}
   - {addr: 0x80082cc4, size: 140, name: battle_unit_set_level_up_animation, hash: 4c95343d6653ccb0}
   - {addr: 0x80082d50, size: 168, name: battle_unit_set_animation_based_on_mounted_state, hash: 762e4b18e7a18b7e}

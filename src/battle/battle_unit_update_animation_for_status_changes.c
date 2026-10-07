@@ -3,11 +3,11 @@
 
 /* Play this frame's status graphics changes on a unit (battle_unit_update_display calls it).
  * Becoming a Chicken or Frog starts animation 3; losing either picks the status animation again
- * (battle_unit_set_animation_based_on_status). Dying raises the death smoke (spritesheets with SEQ id
- * 2 or 3) and, outside events, the death sound of a male, female or monster (0x9a, 0x45, 0x46).
- * Becoming a Crystal or Treasure shows the zodiac poof. During an event, gaining or losing Jump plays
- * animation 0x75 or 0x76. Then a death or revival plays its fall or rise: 0x34 or 0x35 on land, the
- * submerged pair (0x1a, 9) in deep water; during an event only in deep water. */
+ * (battle_unit_set_animation_based_on_status). Dying raises the death smoke (chocobo and monster SEQs,
+ * BATTLE_GFX_SEQ_ID_CYOKO and _MON) and, outside events, the death sound of a male, female or monster (0x9a, 0x45,
+ * 0x46). Becoming a Crystal or Treasure shows the zodiac poof. During an event, gaining or losing Jump plays animation
+ * 0x75 or 0x76. Then a death or revival plays its fall or rise: 0x34 or 0x35 on land, the submerged pair (0x1a, 9) in
+ * deep water; during an event only in deep water. */
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit) {
     battle_stats_t* stats;
 
@@ -22,7 +22,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         battle_unit_set_animation_based_on_status(unit);
     }
     if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
-        if ((u32)(g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id - 2) < 2) {
+        if ((u32)(g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id - BATTLE_GFX_SEQ_ID_CYOKO) < 2) {
             battle_effect_set_secondary_death_smoke(unit);
         }
         if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {

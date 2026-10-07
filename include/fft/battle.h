@@ -493,28 +493,11 @@ enum {
     BATTLE_ABILITY_ANIMATION_COUNT = 0x1c6,
     BATTLE_CHARGE_ANIMATION_SET_COUNT = 20,
     BATTLE_CHARGE_ANIMATION_VARIANT_COUNT = 2,
+    BATTLE_CHARGE_ANIMATION_PRE_ATTACK = 0, /* the release, at PRE_ATTACK_ANIMATION */
+    BATTLE_CHARGE_ANIMATION_CHARGING = 1,   /* the pose held while charging or performing */
     BATTLE_ATTACK_ANIMATION_USE_WEAPON = 0,
     BATTLE_ATTACK_ANIMATION_USE_ITEM = 1,
 };
-
-typedef enum battle_support_set_2 {
-    BATTLE_SUPPORT_SET_2_HALF_MP = 0x80,
-    BATTLE_SUPPORT_SET_2_GAINED_JP_UP = 0x40,
-    BATTLE_SUPPORT_SET_2_GAINED_EXP_UP = 0x20,
-    BATTLE_SUPPORT_SET_2_ATTACK_UP = 0x10,
-    BATTLE_SUPPORT_SET_2_DEFENSE_UP = 0x08,
-    BATTLE_SUPPORT_SET_2_MAGIC_ATTACK_UP = 0x04,
-    BATTLE_SUPPORT_SET_2_MAGIC_DEFENSE_UP = 0x02,
-    BATTLE_SUPPORT_SET_2_CONCENTRATE = 0x01,
-} battle_unit_support_set_2_e;
-
-typedef enum battle_support_set_4 {
-    BATTLE_SUPPORT_SET_4_MONSTER_SKILL = 0x80,
-    BATTLE_SUPPORT_SET_4_DEFEND = 0x40,
-    BATTLE_SUPPORT_SET_4_EQUIP_CHANGE = 0x20,
-    BATTLE_SUPPORT_SET_4_SHORT_CHARGE = 0x08,
-    BATTLE_SUPPORT_SET_4_NON_CHARGE = 0x04,
-} battle_unit_support_set_4_e;
 
 /* Primary ability-record byte 3 at 0x8005ebf0. Learn-on-hit is consumed at
  * 0x8018e6b8; WORLD 0x80122b08 and JOBSTTS 0x801e03bc prove the JP-learning
@@ -2479,8 +2462,8 @@ void battle_unit_set_real_coords_from_map_coords(battle_unit_misc_data_t* unit);
 void battle_unit_set_rider_mount_x_y_facing(battle_unit_misc_data_t* unit);
 void battle_unit_set_specific_animation_value_on_battle_init(s32 misc_id, u32 value);
 void battle_unit_snap_all_facings_to_quadrants(void);
-void battle_unit_start_ability_charge_animation(battle_unit_misc_data_t* unit);
-void battle_unit_start_ability_charge_animation_for_movement(battle_unit_misc_data_t* unit);
+void battle_unit_start_ability_pre_attack_animation(battle_unit_misc_data_t* unit);
+void battle_unit_start_ability_charging_animation(battle_unit_misc_data_t* unit);
 void battle_unit_store_animation_facing(u32 animation, s32 facing, battle_unit_misc_data_t* unit);
 void battle_unit_store_coordinate_mount_animation_data(battle_unit_misc_data_t* unit);
 s32 battle_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* state);
@@ -4524,53 +4507,6 @@ void battle_action_switch_ability_to_default_attack(void);
  * before HP and MP move and after the result, and the reaction phase (First Strike, counters and
  * each reaction's effect). */
 
-/* Active reaction abilities occupy four MSB-first bytes at
- * battle_stats_t + 0x08b. These values are verified against the target's
- * reaction dispatchers. */
-typedef enum battle_unit_reaction_set_1 {
-    BATTLE_REACTION_SET_1_PA_SAVE = 0x80,
-    BATTLE_REACTION_SET_1_MA_SAVE = 0x40,
-    BATTLE_REACTION_SET_1_SPEED_SAVE = 0x20,
-    BATTLE_REACTION_SET_1_SUNKEN_STATE = 0x10,
-    BATTLE_REACTION_SET_1_CAUTION = 0x08,
-    BATTLE_REACTION_SET_1_DRAGON_SPIRIT = 0x04,
-    BATTLE_REACTION_SET_1_REGENERATOR = 0x02,
-    BATTLE_REACTION_SET_1_BRAVE_UP = 0x01,
-} battle_unit_reaction_set_1_e;
-
-typedef enum battle_unit_reaction_set_2 {
-    BATTLE_REACTION_SET_2_FAITH_UP = 0x80,
-    BATTLE_REACTION_SET_2_HP_RESTORE = 0x40,
-    BATTLE_REACTION_SET_2_MP_RESTORE = 0x20,
-    BATTLE_REACTION_SET_2_CRITICAL_QUICK = 0x10,
-    BATTLE_REACTION_SET_2_MEATBONE_SLASH = 0x08,
-    BATTLE_REACTION_SET_2_COUNTER_MAGIC = 0x04,
-    BATTLE_REACTION_SET_2_COUNTER_TACKLE = 0x02,
-    BATTLE_REACTION_SET_2_COUNTER_FLOOD = 0x01,
-} battle_unit_reaction_set_2_e;
-
-typedef enum battle_unit_reaction_set_3 {
-    BATTLE_REACTION_SET_3_ABSORB_USED_MP = 0x80,
-    BATTLE_REACTION_SET_3_GILGAME_HEART = 0x40,
-    BATTLE_REACTION_SET_3_REFLECT = 0x20,
-    BATTLE_REACTION_SET_3_AUTO_POTION = 0x10,
-    BATTLE_REACTION_SET_3_COUNTER = 0x08,
-    /* 0x04 is present in the bitset but remains unidentified. */
-    BATTLE_REACTION_SET_3_DISTRIBUTE = 0x02,
-    BATTLE_REACTION_SET_3_MP_SWITCH = 0x01,
-} battle_unit_reaction_set_3_e;
-
-typedef enum battle_unit_reaction_set_4 {
-    BATTLE_REACTION_SET_4_DAMAGE_SPLIT = 0x80,
-    BATTLE_REACTION_SET_4_WEAPON_GUARD = 0x40,
-    BATTLE_REACTION_SET_4_FINGER_GUARD = 0x20,
-    BATTLE_REACTION_SET_4_ABANDON = 0x10,
-    BATTLE_REACTION_SET_4_CATCH = 0x08,
-    BATTLE_REACTION_SET_4_BLADE_GRASP = 0x04,
-    BATTLE_REACTION_SET_4_ARROW_GUARD = 0x02,
-    BATTLE_REACTION_SET_4_HAMEDO = 0x01,
-} battle_unit_reaction_set_4_e;
-
 /* Reaction behavior flags indexed by ability ID through the biased linker
  * alias g_main_reaction_behavior_flags_by_ability_id. */
 typedef enum battle_reaction_behavior_flag {
@@ -4691,39 +4627,6 @@ typedef struct battle_move_pathfind_scratch {
     u8 movement_set_2;      /* 0x24 */
     u8 can_pass_lava;       /* 0x25 */
 } battle_move_pathfind_scratch_t;
-
-typedef enum battle_movement_set_1 {
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_1 = 0x80,
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_2 = 0x40,
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_3 = 0x20,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_1 = 0x10,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_2 = 0x08,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_3 = 0x04,
-    BATTLE_MOVEMENT_SET_1_IGNORE_HEIGHT = 0x02,
-    BATTLE_MOVEMENT_SET_1_MOVE_HP_UP = 0x01,
-} battle_unit_movement_set_1_e;
-
-typedef enum battle_movement_set_2 {
-    BATTLE_MOVEMENT_SET_2_MOVE_MP_UP = 0x80,
-    BATTLE_MOVEMENT_SET_2_MOVE_GET_EXP = 0x40,
-    BATTLE_MOVEMENT_SET_2_MOVE_GET_JP = 0x20,
-    BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER = 0x10,
-    BATTLE_MOVEMENT_SET_2_TELEPORT = 0x08,
-    BATTLE_MOVEMENT_SET_2_TELEPORT_2 = 0x04,
-    BATTLE_MOVEMENT_SET_2_ANY_WEATHER = 0x02,
-    BATTLE_MOVEMENT_SET_2_ANY_GROUND = 0x01,
-} battle_unit_movement_set_2_e;
-
-typedef enum battle_movement_set_3 {
-    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x80,
-    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x40,
-    BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA = 0x20,
-    BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER = 0x10,
-    BATTLE_MOVEMENT_SET_3_FLOAT = 0x08,
-    BATTLE_MOVEMENT_SET_3_FLY = 0x04,
-    BATTLE_MOVEMENT_SET_3_SILENT_WALK = 0x02,
-    BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM = 0x01,
-} battle_unit_movement_set_3_e;
 
 /* The 0x80-byte movement-path block at Misc Unit Data 0x9c..0x11b: byte 0 holds the step count,
  * then one battle_move_step_bits_e byte per step. A teleport stores 0xfe, x, y and level instead,
@@ -5381,6 +5284,20 @@ typedef struct battle_gfx_spritesheet_data {
     u8 graphic_height;
 } battle_gfx_spritesheet_data_t;
 typedef char battle_gfx_spritesheet_data_size_must_be_4[(sizeof(battle_gfx_spritesheet_data_t) == 4) ? 1 : -1];
+
+/* The SEQ animation sets (battle_gfx_spritesheet_data_t.seq_id), named after their disc files
+ * (BATTLE/TYPE1.SEQ ... KANZEN.SEQ). */
+typedef enum battle_gfx_seq_id {
+    BATTLE_GFX_SEQ_ID_TYPE1 = 0,
+    BATTLE_GFX_SEQ_ID_TYPE2 = 1,
+    BATTLE_GFX_SEQ_ID_CYOKO = 2, /* chocobos */
+    BATTLE_GFX_SEQ_ID_MON = 3,   /* monsters */
+    BATTLE_GFX_SEQ_ID_OTHER = 4,
+    BATTLE_GFX_SEQ_ID_RUKA = 5,   /* the Lucavi */
+    BATTLE_GFX_SEQ_ID_ARUTE = 6,  /* Altima */
+    BATTLE_GFX_SEQ_ID_KANZEN = 7, /* Altima's last form */
+    BATTLE_GFX_SEQ_ID_COUNT = 8,
+} battle_gfx_seq_id_e;
 
 enum { BATTLE_SPRITESHEET_ID_COUNT = 0x9f };
 

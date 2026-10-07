@@ -13,7 +13,7 @@ void battle_state_enter_pre_attack_animation(void) {
     ability = unit->used_ability_id;
     unit->state_frame_counter = 0;
     if (g_battle_ability_animation_data[ability].charge_animation_set_id != 0) {
-        battle_unit_start_ability_charge_animation(unit);
+        battle_unit_start_ability_pre_attack_animation(unit);
     } else {
         battle_unit_store_animation_facing(2, unit->facing, unit);
     }

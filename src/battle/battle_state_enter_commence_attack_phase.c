@@ -21,6 +21,6 @@ void battle_state_enter_commence_attack_phase(void) {
     unit->used_ability_id = *(u16*)&(*stats_pointer)->last_ability_id;
     unit->ability_ct_resolved |= 2;
     if (unit->used_ability_id != 0) {
-        battle_unit_start_ability_charge_animation_for_movement(unit);
+        battle_unit_start_ability_charging_animation(unit);
     }
 }

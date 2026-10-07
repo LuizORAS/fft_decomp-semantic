@@ -4,8 +4,8 @@
 /* Pick a unit's standing animation from its status mirror and start it with its facing. Out of
  * deep water (battle_move_get_water_animation_mode below 2): Crystal or Treasure first; with no
  * animation status the plain stance (6 on flying spritesheets, 3 otherwise); else the first of Dead,
- * Mounted and Critical (these two only on spritesheets with a SEQ id below 5, Critical not on a
- * mount), Stop, Sleep, Petrify, Confusion, Performing or Charging (the last ability's charge
+ * Mounted and Critical (these two not for the Lucavi and Altima, BATTLE_GFX_SEQ_ID_RUKA and up;
+ * Critical not on a mount), Stop, Sleep, Petrify, Confusion, Performing or Charging (the last ability's charge
  * animation), Defending, Slow, Haste and Cursed, or the plain stance. In deep water: Crystal or Treasure, else Dead,
  * Mounted, Haste, Slow or the submerged stance (9).
  *
@@ -36,7 +36,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
             }
         } else {
             spritesheet_id = unit->spritesheet_id;
-            if (g_battle_gfx_spritesheet_data[spritesheet_id].seq_id >= 5) {
+            if (g_battle_gfx_spritesheet_data[spritesheet_id].seq_id >= BATTLE_GFX_SEQ_ID_RUKA) {
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
                     animation = 0x1a;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_STOP) {
@@ -49,10 +49,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     animation = 0x25;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charging_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CHARGING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charging_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
                     animation = 0x17;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
@@ -93,10 +93,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     animation = 0x25;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charging_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CHARGING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charging_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
                     animation = 0x17;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
