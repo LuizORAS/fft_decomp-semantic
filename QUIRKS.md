@@ -479,6 +479,9 @@ translation unit. Share their types and constants through headers.
   `battle_formula_break_equipped_damage_pa_times_wp.c` (Might Sword) apply the Strengthen and
   affinities of the weapon's element only; the element in the ability's own data (Holy for the
   Holy Sword abilities) is never read.
+- `src/main/main_ability_store_skillset_abilities.c`: the support filter takes ids below `0x1e7`, so
+  Move+1 (`0x1e6`) counts as a support ability and not a movement one. Every caller asks for action
+  abilities or for all of them, so nothing shows it.
 - `src/battle/battle_menu_display_projected_action_effect.c`: the 0x100 bit that
   `main_status_find_action_highest_order_effect` adds for a status flagged
   `STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED` changes nothing. The preview tests 0x80 (a removal) first, so

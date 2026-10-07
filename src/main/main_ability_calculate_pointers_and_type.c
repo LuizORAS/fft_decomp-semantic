@@ -2,6 +2,11 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Point *out_ability_data at the ability's 8-byte record (g_main_ability_data: JP cost, learn rate,
+ * type flags, AI flags) and *out_secondary_data at its class's own data, and return the class
+ * (ability_type_e) from the id range: default abilities below 0x170 (the 14-byte range data), item
+ * abilities (the item id), Throw (the thrown item type), Jump and Charge (two bytes each), Math
+ * Skill, reaction, support and movement abilities (one byte each). */
 s32 main_ability_calculate_pointers_and_type(s32 ability_id, u8** out_ability_data, u8** out_secondary_data) {
     ability_id &= ABILITY_ID_MASK;
     /* 0x8005ebf0: Ability Data 1, 8 bytes each. */

@@ -8,13 +8,12 @@ enum {
     BATTLE_LEARNED_ABILITIES_OFFSET = 0x99
 };
 
-/* Find a unit that learns the ability it was just hit with.
- *
- * Every hit unit whose ability outcome is still pending is demoted to outcome 4
- * first.  Monsters, units whose status prevents a reaction, and units that
- * already know the ability are skipped; the remaining candidates roll the
- * ability's learn rate out of 100.  Returns the learning unit's slot and writes
- * the ability id through `ability_id`, or -1 when nobody learns it. */
+/* Find a unit that learns the ability it was just hit with. Nothing is learned when a First
+ * Strike cancelled the action, no ability was used or the ability lacks the learn-on-hit type flag.
+ * Every other unit the action reached (ability_outcome bit 2) is marked done (4); a human not under a
+ * status that prevents reactions can learn the ability when it is in its current job's skillset and
+ * not learned yet, on a roll of the ability's learn rate out of 100. Returns the learning unit's slot
+ * and writes the ability id through ability_id, or -1 when nobody learns it. */
 s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     u8 known[BATTLE_LEARN_ON_HIT_ROW_BYTES];
     ability_data_t* ability;

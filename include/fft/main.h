@@ -510,6 +510,19 @@ typedef struct main_ability_monster_skillset {
     u8 ability_ids[MONSTER_SKILLSET_ABILITY_COUNT];
 } main_ability_monster_skillset_t;
 
+/* The crystal or chest a unit stepped on (battle_unit_generate_crystal_or_treasure,
+ * g_main_crystal_pickup_result): the CRYSTAL_LEARN state applies it and the pickup panel
+ * (option_menu_start_dead_unit_threads) offers its choices. */
+typedef struct main_crystal_pickup_result {
+    s32 result;          /* 0x00; -1 nothing there, 2 crystal, 3 crystal offering abilities, 4 chest */
+    u8 _unused_04[0x14]; /* 0x04 */
+    /* 0x18: the abilities the crystal offers, in the job rows of learned_abilities */
+    u8 learned[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
+    u8 unit_index;              /* 0x51; the crystal's or chest's battle unit */
+    u8 treasure_item;           /* 0x52 */
+    u8 learned_abilities[0x40]; /* 0x53; the offered abilities by ability id, low bit first */
+} main_crystal_pickup_result_t;
+
 extern u8 g_main_ability_aoe_data[];
 extern u8 g_main_ability_ct_data[];
 extern ability_secondary_data_t g_main_ability_range_data[];
@@ -531,11 +544,12 @@ extern const u8 g_main_reaction_behavior_flags_by_ability_id[];
 extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
 extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
+extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
 extern u32 g_main_secondary_saved_data_bits[2];
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
-u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
+u32 main_ability_get_known(battle_stats_t* unit, u32 job_row);
 
 /* item */
 extern u8 g_main_item_quantities[ITEM_ID_COUNT];
@@ -1449,8 +1463,6 @@ extern u8 g_main_special_portrait_unit_id;
 extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
 extern u16 g_main_month_start_day_offsets[13];
 extern struct battle_deployed_coords* g_main_current_formation_entry;
-extern u8 g_main_crystal_learnable_abilities[];
-extern u8 g_main_crystal_treasure_item_id;
 extern u8 g_main_brave_story_character_ages[0x40];
 extern s32 g_main_debug_display_enabled;
 /* Debug flag: zeroed with g_main_debug_display_enabled by event call function

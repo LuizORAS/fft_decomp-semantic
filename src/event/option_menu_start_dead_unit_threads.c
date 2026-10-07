@@ -18,7 +18,7 @@
  *     through into the next case instead of being cross-jumped to the shared
  *     tail. */
 void option_menu_start_dead_unit_threads(void) {
-    dead_unit_context_t* context = g_dead_unit_context;
+    main_crystal_pickup_result_t* context = g_dead_unit_context;
     world_menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
     dead_unit_menu_t* menu;
     s32 value_count;
@@ -39,10 +39,10 @@ void option_menu_start_dead_unit_threads(void) {
     value_count = 0;
     for (byte_index = 0; byte_index < 0x40; byte_index++) {
         s32 mask = 1;
-        /* A pointer local, not `context->flags[byte_index]` in the test: the
+        /* A pointer local, not `context->learned_abilities[byte_index]` in the test: the
          * indexed form folds 0x53 into the load displacement, while the
          * target biases the index and loads at 0(reg). */
-        u8* flag_byte = &context->flags[byte_index];
+        u8* flag_byte = &context->learned_abilities[byte_index];
 
         for (bit_index = 0; bit_index < 8; bit_index++) {
             if ((*flag_byte & mask) != 0) {
@@ -70,7 +70,7 @@ void option_menu_start_dead_unit_threads(void) {
         menu->entries->overflow_count = value_count - 8;
     }
 
-    if (context->kind == 0) {
+    if (context->result == 0) {
         message_id = 0x183c;
         ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
         battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
@@ -85,17 +85,17 @@ void option_menu_start_dead_unit_threads(void) {
     }
 
     g_dead_unit_result = 0;
-    if (context->kind == 4) {
-        if (main_item_get_total_equipment_quantity(context->item_id, 1) == 0x63) {
-            g_dead_unit_roster_id = context->item_id;
-            g_dead_unit_roster_id_copy = context->item_id;
+    if (context->result == 4) {
+        if (main_item_get_total_equipment_quantity(context->treasure_item, 1) == 0x63) {
+            g_dead_unit_roster_id = context->treasure_item;
+            g_dead_unit_roster_id_copy = context->treasure_item;
             message_id = 0x101b;
-            g_dead_unit_item_value = main_item_get_data_pointer(context->item_id)->price >> 2;
-            g_dead_unit_result = context->item_id;
+            g_dead_unit_item_value = main_item_get_data_pointer(context->treasure_item)->price >> 2;
+            g_dead_unit_result = context->treasure_item;
         } else {
             message_id = 0x101a;
-            g_dead_unit_roster_id = context->item_id;
-            g_dead_unit_result = context->item_id;
+            g_dead_unit_roster_id = context->treasure_item;
+            g_dead_unit_result = context->treasure_item;
         }
         ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
         battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
@@ -119,7 +119,7 @@ void option_menu_start_dead_unit_threads(void) {
     battle_thread_wait_until_inactive(13);
 
     for (;;) {
-        if (context->kind == 3) {
+        if (context->result == 3) {
             g_dead_unit_secondary_result = 0xff;
             battle_thread_start(g_battle_thread_current_id - 1, battle_menu_run_icon_selection_loop);
             battle_thread_set_parameters(g_battle_thread_current_id - 1,
@@ -128,7 +128,7 @@ void option_menu_start_dead_unit_threads(void) {
         }
 
         g_dead_unit_primary_result = 0xff;
-        if ((context->kind == 3 && g_dead_unit_secondary_result == 0) || context->kind == 1) {
+        if ((context->result == 3 && g_dead_unit_secondary_result == 0) || context->result == 1) {
             battle_thread_start(g_battle_thread_current_id - 2, option_build_at_list);
             battle_thread_set_parameters(g_battle_thread_current_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(10, battle_menu_icon_linked_entry_thread);
@@ -158,13 +158,13 @@ void option_menu_start_dead_unit_threads(void) {
                 break;
             }
             if (g_dead_unit_primary_result == 1 || (g_dead_unit_primary_result & 0xff) == 0xff) {
-                if (context->kind == 3) {
+                if (context->result == 3) {
                     continue;
                 }
             }
         }
 
-        if ((g_dead_unit_secondary_result == 1 && context->kind == 3) || context->kind == 2) {
+        if ((g_dead_unit_secondary_result == 1 && context->result == 3) || context->result == 2) {
             g_dead_unit_primary_result = 0xff;
             battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(g_battle_thread_current_id - 1,
@@ -174,7 +174,7 @@ void option_menu_start_dead_unit_threads(void) {
                 g_dead_unit_action = 2;
                 break;
             }
-            if (context->kind != 2) {
+            if (context->result != 2) {
                 continue;
             }
         }

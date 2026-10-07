@@ -143,7 +143,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     }
     detail->monster = unit->unit_flags & UNIT_FLAG_MONSTER;
     if (detail->monster != 0) {
-        abilities = main_ability_store_skillset_abilities(unit->primary_skillset, 1);
+        abilities = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         for (i = 0; i < 5; i++) {
             detail->abilities[i] = *abilities++;
         }

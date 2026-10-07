@@ -1459,8 +1459,6 @@ data:
   - {addr: 0x80066234, name: g_main_current_formation_entry}
   - {addr: 0x80066238, name: g_current_entd_unit}
   - {addr: 0x8006623c, name: g_main_crystal_pickup_result}
-  - {addr: 0x80066254, name: g_main_crystal_learnable_abilities}
-  - {addr: 0x8006628e, name: g_main_crystal_treasure_item_id}
   - {addr: 0x800662d0, name: g_main_status_check_sets}
   - {addr: 0x80066308, name: g_highest_party_level}
   - {addr: 0x800670f0, name: open_system_run_main_loop}

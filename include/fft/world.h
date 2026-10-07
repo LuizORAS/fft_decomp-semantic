@@ -74,18 +74,6 @@ void world_noop_800fd074(const u8* unused_parameters);
 /* thread */
 /* WORLD's cooperative threads, as in BATTLE but with slots 1-16, and state some of its threads share. */
 
-/* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
- * returned through g_world_thread_inner_subroutine_result by
- * battle_unit_generate_crystal_or_treasure. Same object as the BATTLE
- * crystal_pickup_result_t view. */
-typedef struct world_crystal_pickup_result {
-    s32 result;          /* 0x00; -1 none, 4 treasure, 2 crystal, |1 learned */
-    u8 _unused_04[0x14]; /* 0x04 */
-    u8 learned[19][3];   /* 0x18 */
-    u8 unit_index;       /* 0x51 */
-    u8 treasure_item;    /* 0x52 */
-} world_crystal_pickup_result_t;
-
 extern u16 g_world_thread_change_cooldown;
 
 /* Inner-subroutine continuation invoked by the WORLD thread scheduler. Five call
@@ -101,7 +89,7 @@ extern u8 g_world_thread_status_snapshot[16];
 extern s32 g_world_thread_task_active;
 extern s32 g_world_thread_task_ids[][256];
 extern battle_menu_status_panel_indicator_prims_t g_world_thread_indicator_packets[2][2];
-extern world_crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
+extern main_crystal_pickup_result_t* g_world_thread_inner_subroutine_result; /* the crystal pickup */
 
 /* The unspecified argument list is intentional for the same stack-switching
  * callback bridge used by BATTLE. */
@@ -2262,14 +2250,6 @@ typedef struct world_dead_unit_menu {
     u8 _unused_14a[0x1e];
     u8 move_menu[4]; /* 0x168 */
 } world_dead_unit_menu_t;
-
-/* 0x00 selects which panel variant runs; 0x52 is the roster/item id. */
-typedef struct world_dead_unit_context {
-    s32 kind; /* 0x00 */
-    u8 _unused_04[0x4e];
-    u8 item_id;     /* 0x52 */
-    u8 flags[0x40]; /* 0x53 */
-} world_dead_unit_context_t;
 
 extern s32 g_world_dead_unit_action; /* committed action */
 extern s32 g_world_dead_unit_result;

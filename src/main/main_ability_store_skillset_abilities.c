@@ -1,8 +1,9 @@
 #include "fft/main.h"
 
-/* 0x80066204: scratch list of a skillset's usable ability ids. */
-/* Copies the skillset's ability ids into g_main_ability_temp_list, keeping only the
- * classes selected by skillset_ability_filter_e. */
+/* Copy the 24 ability slots of a skillset (skillset 0 for an id of 0x100 or more) into
+ * g_main_ability_temp_list, keeping the classes that filters selects (skillset_ability_filter_e) and
+ * zeroing the others; returns the list. The support test takes ids below 0x1e7, so Move+1 counts as a
+ * support ability (QUIRKS.md); every caller asks for the action abilities or for all of them. */
 u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
     s32 output_count;
     s32 ability_index;

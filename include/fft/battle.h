@@ -676,16 +676,8 @@ extern u16 g_battle_deployed_unit_palettes[2][16];
 extern s32 g_battle_deployment_skipped;
 
 /* dead unit */
-/* 0x00 selects which panel variant runs; 0x52 is the roster/item id. */
-typedef struct dead_unit_context {
-    s32 kind; /* 0x00 */
-    u8 _unused_04[0x4e];
-    u8 item_id;     /* 0x52 */
-    u8 flags[0x40]; /* 0x53 */
-} dead_unit_context_t;
-
 extern s32 g_dead_unit_action;
-extern dead_unit_context_t* g_dead_unit_context;
+extern main_crystal_pickup_result_t* g_dead_unit_context; /* the pickup the panel shows */
 extern s32 g_dead_unit_result;
 
 /* formula */
@@ -2592,6 +2584,7 @@ void battle_unit_update_attack_result_animation(battle_unit_misc_data_t* unit);
 void battle_unit_update_facing_and_pending_animations(void);
 void battle_unit_start_post_attack_animation_display(s32 flag, u8* ctx);
 u8 battle_unit_generate_treasure(battle_stats_t* unit);
+main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
 battle_screen_coords_t* battle_copy_misc_unit_screen_coords(u32 misc_id);
 struct battle_unit_misc_data* battle_unit_get_mount_misc_data(struct battle_unit_misc_data* unit);
 battle_screen_coords_t* battle_unit_get_screen_data_ptr_by_misc_id(u32 misc_id);

@@ -37,7 +37,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     if (world_job_find_by_skillset(skillset) == -1) {
         skillset = (u16)g_world_formation_unit_pointers[unit]->primary_skillset;
     }
-    abilities = (s16*)main_ability_store_skillset_abilities(skillset, 0xF);
+    abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     if (kind == 0) {
         lo = 1;
         hi = ABILITY_ID_REACTION_FIRST - 1;

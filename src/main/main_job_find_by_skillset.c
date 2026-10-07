@@ -2,6 +2,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Return the first job (below JOB_ID_COUNT - 1) whose job data names skillset_id, or 0 when none
+ * does. Referenced nowhere on the disc; WORLD's world_job_find_by_skillset does the same job for the
+ * formation's ability lists. */
 s32 main_job_find_by_skillset(s32 skillset_id) {
     s32 job_id;
     s32 result;

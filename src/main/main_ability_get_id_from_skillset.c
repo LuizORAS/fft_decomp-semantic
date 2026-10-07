@@ -1,5 +1,9 @@
 #include "fft/main.h"
 
+/* Return the ability id in slot ability_index of a skillset: a human skillset (below
+ * SKILLSET_ID_MONSTER_FIRST) has 22 slots and a monster skillset 4, each a byte plus a ninth bit from
+ * the skillset's high-bit bytes, read from the top bit down. Returns 0 past the slots or for a
+ * skillset id past the monster skillsets. */
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index) {
     if (skillset_id < SKILLSET_ID_MONSTER_FIRST) {
         main_ability_human_skillset_t* table_base;

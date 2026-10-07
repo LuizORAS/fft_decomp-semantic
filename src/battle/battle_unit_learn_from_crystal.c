@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Apply the choice made at a crystal or chest (flags, from the CRYSTAL_LEARN state and the
+ * post-move events): 4 takes the chest's item into the party (battle_action_add_party_item, whose
+ * result it returns); 2 restores all HP and MP as the unit's action result; 1 adds the abilities the
+ * crystal offered (g_main_crystal_pickup_result.learned) to the unit's learned abilities. The unit's
+ * action record is cleared first; returns 0 unless a chest's item was taken. */
 s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     s32 i;
     u8* dst;
@@ -13,7 +18,7 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
     unit->action.hit = 0;
     if (flags & 4) {
-        return battle_action_add_party_item(unit, g_main_crystal_treasure_item_id);
+        return battle_action_add_party_item(unit, g_main_crystal_pickup_result.treasure_item);
     }
     if (flags & 2) {
         unit->action.hit = 1;
@@ -26,7 +31,7 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
         /* OR the crystal's ability bits into learned_abilities, three bytes
          * per job for 19 jobs; walked as raw bytes to keep the biased pointers. */
         i = 0;
-        src = g_main_crystal_learnable_abilities;
+        src = g_main_crystal_pickup_result.learned[0];
         dst = (u8*)unit;
         do {
             learned = dst + 0x99;
