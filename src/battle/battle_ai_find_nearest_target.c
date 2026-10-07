@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Select the nearest unit admitted by the requested target filter.
- *
- * Manhattan-distance ties keep the first slot. If none qualify, return the
- * acting unit's ID. Mode 5 admits crystals before ordinary targetability
- * checks, while mode 4 shares mode 0's Blood Suck exclusion.
- */
+/* Return the nearest unit (Manhattan distance; the first slot on ties) that the mode admits, or the
+ * acting unit when none does. Every mode skips untargetable and petrified units, and every mode but 4 the
+ * dead: 0 skips Blood Suck; 1 takes targetable enemies that act before the acting unit and are not
+ * disabled by then, unless they stand next to it more than 2 levels lower; 2 takes any enemy; 3 any unit;
+ * 4 takes targetable enemies with flag 0x80 that are not dead without Reraise, and skips Blood Suck; 5
+ * takes allied healers, and crystals. */
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
     s32 nearest_distance = 0x7fffffff;
     s32 nearest_id = g_battle_ai_acting_unit_id;
@@ -31,7 +30,7 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
                 continue;
             switch (mode) {
             case BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL:
-                if (decision->enemy_flag || !(decision->targeting_flags_1 & 2))
+                if (decision->enemy_flag || !(decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_HEALER))
                     continue;
                 break;
             case BATTLE_AI_NEAREST_IMMINENT_ENEMY:

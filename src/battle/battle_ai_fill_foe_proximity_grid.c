@@ -20,7 +20,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         ai->targetability.live.unit_targetable[i] = 0;
-        if (battle_ai_check_target_type(i) == 0 && battle_ai_should_exclude_from_imminent_enemies(i) == 0) {
+        if (battle_ai_is_unit_out_of_play(i) == 0 && battle_ai_should_exclude_from_imminent_enemies(i) == 0) {
             ai->targetability.live.unit_targetable[i] = 1;
         }
     }

@@ -1,10 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Rejects a unit from the AI's imminent-enemy set.
- *
- * The unit must be an enemy that acts no later than the acting unit and will
- * no longer be disabled by Stop, Don't Act, Sleep, Chicken, or Charm then. */
+/* Return 1 when unit_id is no imminent enemy: not an enemy, acting after the acting unit's next turn,
+ * or still under Stop, Don't Act, Sleep, Chicken or Charm by then. */
 s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id) {
     battle_stats_t* unit;
     s32 limit;

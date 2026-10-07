@@ -76,7 +76,7 @@ s32 battle_ai_choose_status_action(void) {
         if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 255)) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 ai->targetability.live.unit_targetable[i] = 0;
-                if (!battle_ai_check_target_type(i))
+                if (!battle_ai_is_unit_out_of_play(i))
                     ai->targetability.live.unit_targetable[i] = ai->targetability.live.unit_active[i];
             }
             /* The aligned skillset/usage halfword preserves target LHU/SH;

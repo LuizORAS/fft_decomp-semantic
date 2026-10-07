@@ -1,13 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Select the allied target with the highest recovery-priority score.
- *
- * Keep the actor as fallback and retain the earlier slot on equal scores.
- * Status-helper checks require the actor's aggregate cancellation capability;
- * the HP-recovery flag enables dead-with-Reraise, Critical and low-HP scoring.
- * Return 1 only when the best signed score exceeds 0x02000000.
- */
+/* Pick the ally in most peril as the acting unit's Auto-Battle target, the unit itself by default.
+ * Peril ranks: dead without Reraise and revivable by the unit, then for a healer dead with Reraise or
+ * Critical, then Blood Suck, Petrify, Confusion and Frog the unit can cancel, then for a healer HP below
+ * half; ties go to the nearest, then the most hurt. With none, the most hurt non-supporter is taken,
+ * the nearest on ties (the unit itself counts as farthest). Clears the special behaviour and returns 1
+ * only when a peril was found. */
 s32 battle_ai_select_peril_target(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 best_score = 0;
@@ -31,7 +29,7 @@ s32 battle_ai_select_peril_target(void) {
         if (battle_ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_DEAD)
             && (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE)) {
             status_score = 0x78;
-        } else if ((ai->acting_unit_decision->targeting_flags_1 & 2)
+        } else if ((ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_HEALER)
             && ((decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITH_RERAISE)
                 || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))) {
             status_score = 0x77;
@@ -45,12 +43,12 @@ s32 battle_ai_select_peril_target(void) {
             status_score = 0x73;
         } else {
             status_score = 0;
-            if (ai->acting_unit_decision->targeting_flags_1 & 2) {
+            if (ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_HEALER) {
                 status_score = -(decision->targeting_flags_2 & BATTLE_AI_TARGET_HP_BELOW_HALF) & 0x72;
             }
         }
         if (status_score == 0) {
-            if (decision->targeting_flags_1 & 4) {
+            if (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_SUPPORTER) {
                 continue;
             }
             if (ai->acting_unit_id == i) {

@@ -1575,7 +1575,7 @@ functions:
   - {addr: 0x80196908, size: 52, name: battle_ai_select_destination_with_nearest_fallback, hash: 35313188f8107c26}
   - {addr: 0x8019693c, size: 416, name: battle_ai_select_destination, hash: 005953b3a80b40c8}
   - {addr: 0x80196adc, size: 432, name: battle_ai_filter_reachable_tiles_by_target_distance, hash: 91a249b987c1a46e}
-  - {addr: 0x80196c8c, size: 92, name: battle_ai_check_target_type, hash: f7149729c18d0cb2}
+  - {addr: 0x80196c8c, size: 92, name: battle_ai_is_unit_out_of_play, hash: f7149729c18d0cb2}
   - {addr: 0x80196ce8, size: 200, name: battle_ai_can_unit_be_targeted_cryst_trea_mount_trans, hash: cf7b80ddaa6588a6}
   - {addr: 0x80196db0, size: 112, name: battle_ai_compare_target_priority_and_hit_rate, hash: b4962e4eb03b44e5}
   - {addr: 0x80196e20, size: 212, name: battle_ai_is_action_higher_ranked, hash: 7769374ed90ef8cb}

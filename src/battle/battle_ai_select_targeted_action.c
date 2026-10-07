@@ -27,7 +27,7 @@ s32 battle_ai_select_targeted_action(void) {
             goto other_abilities;
         }
     }
-    if (battle_ai_check_target_type(target) || !ai->unit_decisions[target].enemy_flag) {
+    if (battle_ai_is_unit_out_of_play(target) || !ai->unit_decisions[target].enemy_flag) {
         g_battle_ai_data_base.acting_unit_decision->flags &= ~BATTLE_AI_DECISION_SPECIAL_BEHAVIOR;
         unit = &g_battle_unit_stats[target];
         if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {

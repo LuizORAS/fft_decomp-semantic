@@ -1,12 +1,12 @@
 #include "fft/battle.h"
 
-/*
- * Prepare the acting unit's automatic targeting policy and focused target.
- *
- * Player-team units under direct control retain their configured automatic
- * behavior. Other units may abandon special focus behavior when its target is
- * no longer eligible, then select an appropriate nearby unit.
- */
+/* Choose the acting unit's Auto-Battle mode and main target. A player-controlled unit keeps its own
+ * Auto-Battle setting; any other takes its ENTD behaviour, and keeps its special behaviour while it is
+ * not Invited and its focus unit is still in play (without a focus unit, while more than one enemy is
+ * left). Otherwise the player's team (guests) heads for the nearest healer or crystal below 45/128 HP
+ * and for the nearest eligible enemy above; another team's supporter switches to Save Fading Life
+ * while team support is available, and the rest target the nearest eligible enemy
+ * (battle_ai_find_nearest_target, battle_ai_store_main_target_id_and_focus_on_target_flag). */
 void battle_ai_init_target_consideration(void) {
     battle_ai_unit_decision_t* decision;
     battle_ai_data_t* ai;
@@ -35,7 +35,7 @@ void battle_ai_init_target_consideration(void) {
                 return;
             if (flags & BATTLE_AI_DECISION_FOCUS_TARGET) {
                 battle_ai_transfer_unit_coordinates(decision->main_target_id, &decision->target);
-                target = battle_ai_check_target_type(decision->main_target_id);
+                target = battle_ai_is_unit_out_of_play(decision->main_target_id);
             } else {
                 target = ai->targetable_override;
             }
@@ -56,7 +56,7 @@ void battle_ai_init_target_consideration(void) {
         }
     } else {
         /* Nested: a combined && folds both byte tests into one word test. */
-        if (decision->targeting_flags_1 & 4) {
+        if (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_SUPPORTER) {
             if (!(decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE))
                 goto save_fading_life;
         }
@@ -70,5 +70,5 @@ void battle_ai_init_target_consideration(void) {
     return;
 
 save_fading_life: /* the target places this exit after the shared tail */
-    ai->autobattle_setting = 0x10;
+    ai->autobattle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;
 }

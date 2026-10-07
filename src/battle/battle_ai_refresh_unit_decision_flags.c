@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Refresh cached unit decision flags before AI simulation.
- *
- * Keep the simulation flag set across suspension; clear it on completion.
- */
+/* Refresh every unit's decision record for the plan, then score the present state: an untargetable
+ * unit only gets BATTLE_AI_TARGET_UNTARGETABLE; the others get the enemy flag (another team than the
+ * acting unit's), dead with or without Reraise, HP below half or three quarters, MP constrained for a
+ * unit with MP abilities (below half, or for a team other than the player's below its costliest
+ * ability) and flag 0x80 (not an enemy, or charging). The scoring is
+ * battle_ai_simulate_action_and_score with no action, and it can suspend (-1) and resume. */
 s32 battle_ai_refresh_unit_decision_flags(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;

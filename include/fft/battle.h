@@ -792,6 +792,10 @@ enum {
     BATTLE_AI_ABILITY_UNDEAD_REVERSE = 0x00002000,
     BATTLE_AI_ABILITY_REFLECTABLE = 0x00004000,
     BATTLE_AI_ABILITY_TARGET_MAP_TILES = 0x00008000,
+    /* The FFHacktics wiki's "Defense UP" and "Magic Defense UP": a physical or a magical ability. The AI
+     * counts the enemies' ones to judge Protect and Shell (battle_ai_set_ability_considerations). */
+    BATTLE_AI_ABILITY_PHYSICAL = 0x00010000,
+    BATTLE_AI_ABILITY_MAGICAL = 0x00020000,
     BATTLE_AI_ABILITY_LINEAR_TRAJECTORY = 0x00200000,
     BATTLE_AI_ABILITY_DIRECT_TRAJECTORY = 0x00400000,
     BATTLE_AI_ABILITY_ARC_TRAJECTORY = 0x00800000,
@@ -1059,6 +1063,7 @@ typedef enum battle_ai_targeting_flags_2 {
 typedef enum battle_ai_target_setting_flags {
     BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS = 0x01000000,
     BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS = 0x02000000,
+    BATTLE_AI_TARGET_SETTING_HOLY_WATER_USABLE = 0x20000000, /* set by the usable-ability pass; read by nothing */
     BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE = 0x40000000,
 } battle_ai_target_setting_flags_e;
 
@@ -1070,17 +1075,16 @@ typedef struct battle_ai_unit_decision {
     battle_ai_coords_t target; /* 0x00..0x03; x, level, y, 0 */
     u8 flags;                  /* 0x04; battle_ai_decision_flags_e */
     u8 main_target_id;         /* 0x05 */
-    u8 targeting_flags_1; /* 0x06; 0x08 selected reflected action; 0x04 helpful-ability ratio >= 77/128, cleared for
-                             the lowest-ratio nonenemy (0x8019537c..0x80195408) */
-    u8 targeting_flags_2; /* 0x07; battle_ai_targeting_flags_2_e */
-    u8 enemy_flag;        /* 0x08 */
-    u8 highest_mp_cost;   /* 0x09 */
-    u8 lowest_mp_cost;    /* 0x0a */
-    u8 mp_ability_mod;    /* 0x0b */
-    u8 silence_mod;       /* 0x0c */
-    u8 evade_mod;         /* 0x0d */
-    u8 lowest_range;      /* 0x0e; plus unit move */
-    u8 highest_range;     /* 0x0f; plus unit move */
+    u8 targeting_flags_1;      /* 0x06; battle_ai_targeting_flags_1_e */
+    u8 targeting_flags_2;      /* 0x07; battle_ai_targeting_flags_2_e */
+    u8 enemy_flag;             /* 0x08 */
+    u8 highest_mp_cost;        /* 0x09 */
+    u8 lowest_mp_cost;         /* 0x0a */
+    u8 mp_ability_mod;         /* 0x0b */
+    u8 silence_mod;            /* 0x0c */
+    u8 evade_mod;              /* 0x0d */
+    u8 enemy_reach;            /* 0x0e; Move + the shortest reach of its abilities against enemies */
+    u8 ally_reach;             /* 0x0f; Move + the shortest reach of its abilities for allies */
 } battle_ai_unit_decision_t;
 typedef char battle_ai_unit_decision_size_must_be_0x10[(sizeof(battle_ai_unit_decision_t) == 0x10) ? 1 : -1];
 
@@ -1305,7 +1309,13 @@ typedef enum battle_ai_direction {
     BATTLE_AI_DIRECTION_CHOOSE_AT_WAIT = 5,
 } battle_ai_direction_e;
 
+/* Decision byte 6, rebuilt for every unit by battle_ai_set_ability_considerations from its usable
+ * abilities. */
 typedef enum battle_ai_targeting_flags_1 {
+    BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY = 0x01, /* an arc or direct one: keep 3 tiles from an enemy */
+    BATTLE_AI_TARGETING_FLAG_1_HEALER = 0x02,         /* one restores allies' HP */
+    /* At least 77 of 128 of its abilities help allies; the least helpful non-enemy never has it. */
+    BATTLE_AI_TARGETING_FLAG_1_SUPPORTER = 0x04,
     BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION = 0x08,
 } battle_ai_targeting_flags_1_e;
 
@@ -1422,7 +1432,7 @@ s32 battle_ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
 s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
 s32 battle_ai_check_map_allows_use_and_find_highest_target(void);
 s32 battle_ai_check_set_highest_unit_priority(void);
-s32 battle_ai_check_target_type(s32 unit_id);
+s32 battle_ai_is_unit_out_of_play(s32 unit_id);
 void battle_ai_check_unit_for_crystal_or_treasure_status(void);
 s32 battle_ai_check_unit_gets_turn_without_status(battle_stats_t* unit, s32 status);
 s32 battle_ai_choose_move_from_move_list(void);

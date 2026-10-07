@@ -1,18 +1,20 @@
 #include "fft/battle.h"
 
-/*
- * Disable an AI ability that does nothing except add one unwanted status.
+/* Clear entry's usable bit when the considered ability only adds statuses (no HP, MP, cancel, stat or
+ * unequip effect and no enemy target) and it adds no status but status_id: the usable-ability pass
+ * drops Shell, Protect, Reflect and Float this way when the enemies give them no use.
  *
- * The halfword update spans skillset and usage_flags so GCC emits the target's
- * single lhu/andi/sh sequence while clearing only the usable bit. A direct
- * status_infliction pointer folds +7 into its base; byte-stepping the typed AI
- * container retains the target's base pointer and named field access.
- */
+ * The halfword update spans skillset and usage_flags so GCC emits the target's single lhu/andi/sh
+ * sequence while clearing only the usable bit. A direct status_infliction pointer folds +7 into its base;
+ * byte-stepping the typed AI container retains the target's base pointer and named field access. */
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id) {
     if ((g_battle_ai_considered_ability_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) == 0) {
         return;
     }
-    if ((g_battle_ai_considered_ability_flags_1 & 0xEE) != 0) {
+    if ((g_battle_ai_considered_ability_flags_1
+            & (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_AFFECTS_MP | BATTLE_AI_ABILITY_CANCEL_STATUS
+                | BATTLE_AI_ABILITY_AFFECTS_STATS | BATTLE_AI_ABILITY_UNEQUIP | BATTLE_AI_ABILITY_TARGET_ENEMIES))
+        != 0) {
         return;
     }
 
@@ -43,5 +45,5 @@ void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t
             cursor = (battle_ai_data_t*)((u8*)cursor + 1);
         }
     }
-    entry->skillset_flags.packed &= 0x7FFF;
+    entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
 }
