@@ -89,7 +89,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     if (g_battle_ai_status_candidate_count == 0)
         return 0;
     result = 1;
-    if (g_battle_ai_status_insufficient_mp != 0 && ai->ability_targets_enemies_or_mp == 0)
+    if (g_battle_ai_status_insufficient_mp != 0 && ai->has_mp_recovery_ability == 0)
         result = g_battle_ai_status_sufficient_mp != 0;
     return result;
 }

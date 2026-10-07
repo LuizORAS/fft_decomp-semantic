@@ -1197,7 +1197,7 @@ functions:
   - {addr: 0x8017f640, size: 132, name: battle_unit_set_placement_and_validate, hash: d6b7dbb8cbf28936}
   - {addr: 0x8017f6c4, size: 476, name: battle_unit_validate_placement, hash: 94a845cbf36cb14d}
   - {addr: 0x8017f8a0, size: 844, name: battle_load_entd_units, hash: c815ebc8f5e0bb81}
-  - {addr: 0x8017fbec, size: 220, name: battle_ai_add_unique_value_to_list, hash: a5f9a1ed7eb441bf}
+  - {addr: 0x8017fbec, size: 220, name: battle_unit_add_entd_spritesheet, hash: a5f9a1ed7eb441bf}
   - {addr: 0x8017fcc8, size: 64, name: battle_unit_disable_remove, hash: 453b6bf51cb5b253}
   - {addr: 0x8017fd08, size: 120, name: battle_unit_set_enemy_level_data_by_battle_id, hash: 8cce4fbda94e785e}
   - {addr: 0x8017fd80, size: 44, name: battle_unit_set_cannot_exist, hash: 1174d9c31ff78cea}
@@ -1532,8 +1532,8 @@ functions:
   - {addr: 0x8018e1b0, size: 152, name: battle_status_remove_control, hash: 0fa45d3d5c21d978}
   - {addr: 0x8018e248, size: 200, name: battle_status_apply_pending_removals, hash: a5d7d939d7c7bf82}
   - {addr: 0x8018e310, size: 724, name: battle_status_apply_pending_inflictions, hash: 7bf5667111fecdad}
-  - {addr: 0x8018e5e4, size: 68, name: battle_ai_store_considered_action_data, hash: fe5832bd488feff2}
-  - {addr: 0x8018e628, size: 56, name: battle_ai_restore_considered_action_data, hash: e8fd203a8ad070a3}
+  - {addr: 0x8018e5e4, size: 68, name: battle_ai_begin_simulation, hash: fe5832bd488feff2}
+  - {addr: 0x8018e628, size: 56, name: battle_ai_end_simulation, hash: e8fd203a8ad070a3}
   - {addr: 0x8018e660, size: 88, name: battle_map_get_effective_weather, hash: 83cb512131bff44c}
   - {addr: 0x8018e6b8, size: 500, name: battle_ability_find_learn_on_hit_unit, hash: 78408e9469d00e1a, profile: gcc-2.6.3_O2_aspsx-2.21}
   - {addr: 0x8018e8ac, size: 272, name: battle_unit_learn_used_ability, hash: 98bc0928423ea1a9}
@@ -1623,7 +1623,7 @@ functions:
   - {addr: 0x8019abb4, size: 448, name: battle_ai_choose_wait_facing, hash: 973e56c289cb4289}
   - {addr: 0x8019ad74, size: 188, name: battle_ai_check_facing_tile, hash: 135a5e2ce5e9febf}
   - {addr: 0x8019ae30, size: 40, name: battle_ai_init_selected_action, hash: 9545f9d85017e9ff}
-  - {addr: 0x8019ae58, size: 152, name: battle_ai_record_considered_coords, hash: e691b9d21adf6ad3}
+  - {addr: 0x8019ae58, size: 152, name: battle_ai_record_sprung_trap, hash: e691b9d21adf6ad3}
   - {addr: 0x8019aef0, size: 40, name: battle_ai_is_vsync_hblank_past_threshold, hash: aff84ed05931c150}
   - {addr: 0x8019af18, size: 1012, name: battle_ai_evaluate_ability_outcome, hash: 963caa337e1e1c7a, rodata: [{addr: 0x80193db0, size: 36, hash: 8a91fa7090317da7}]}
   - {addr: 0x8019b30c, size: 488, name: battle_ai_evaluate_self_target_origins, hash: 98555857b62c3032}
@@ -2705,8 +2705,8 @@ data:
   - {addr: 0x8018f86d, name: g_battle_move_effective_flags}
   - {addr: 0x8018f86e, name: g_battle_move_path_height_offsets}
   - {addr: 0x8018f86f, name: g_battle_move_destination_unit_record}
-  - {addr: 0x8018f870, name: g_battle_unique_value_list}
-  - {addr: 0x8018f89c, name: g_battle_unique_value_list_length}
+  - {addr: 0x8018f870, name: g_battle_unit_entd_spritesheets}
+  - {addr: 0x8018f89c, name: g_battle_unit_entd_spritesheet_count}
   - {addr: 0x8018f8a0, name: g_battle_map_rare_item_result}
   - {addr: 0x8018f8a8, name: g_battle_move_find_result_flags}
   - {addr: 0x8018f8a9, name: g_battle_move_find_entry_index}

@@ -46,7 +46,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     }
     ai->current_action.priority = 0;
     ai->current_action.base_hit_percent = 0xff;
-    if (ai->current_action.target_flags_set) {
+    if (ai->current_action.act_before_move) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
             if (battle_action_commit_command((u8*)action) == 1

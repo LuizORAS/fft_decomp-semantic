@@ -32,7 +32,7 @@ s32 battle_ai_choose_status_action(void) {
         battle_ai_clear_words((s32*)ai->tile_target_distance, sizeof(ai->tile_target_distance));
         battle_ai_select_destination(255, BATTLE_AI_DESTINATION_DISTANCE_FIRST);
         coords = ai->candidate_coords[0];
-        ai->selected_action.target_flags_set = 0;
+        ai->selected_action.act_before_move = 0;
         goto save_movement;
     }
     if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)) {
@@ -65,7 +65,7 @@ s32 battle_ai_choose_status_action(void) {
         }
         battle_ai_select_destination(0x7fffffff, BATTLE_AI_DESTINATION_DISTANCE_FIRST);
         coords = ai->candidate_coords[ai->movement_scenario];
-        ai->selected_action.target_flags_set = 0;
+        ai->selected_action.act_before_move = 0;
     save_movement:
         /* Movement-only selection leaves the other action fields unchanged. */
         ai->selected_action.skillset = 0;

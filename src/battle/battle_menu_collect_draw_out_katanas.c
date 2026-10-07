@@ -5,13 +5,8 @@
  * usable Draw Out abilities into out_item_ids, 0xff-terminated, and returns
  * 0x100 plus their count (0 when the unit or skillset is wrong or the list is
  * empty). */
-enum {
-    /* A Draw Out ability's id minus this is its katana's item id (Asura 0x4c, Asura Knife 0x26). */
-    BATTLE_MENU_DRAW_OUT_KATANA_ITEM_OFFSET = 0x26,
-};
-
 /* Collect the katana of each Draw Out ability the unit has learned (the ability id minus
- * BATTLE_MENU_DRAW_OUT_KATANA_ITEM_OFFSET) into out_item_ids, terminated by 0xff. Returns 0x100 plus
+ * ABILITY_ID_DRAW_OUT_ITEM_OFFSET) into out_item_ids, terminated by 0xff. Returns 0x100 plus
  * the count, or 0 when the unit is missing, the skillset is not Draw Out or nothing is learned; the
  * ability list then shows how many of each katana the party has. */
 s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_ids) {
@@ -43,7 +38,7 @@ s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_
     for (i = 0; i < ability_count; i++) {
         ability_id = abilities[i];
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
-            item_id = ability_id - BATTLE_MENU_DRAW_OUT_KATANA_ITEM_OFFSET;
+            item_id = ability_id - ABILITY_ID_DRAW_OUT_ITEM_OFFSET;
             *out_item_ids = item_id;
             out_item_ids++;
             count++;

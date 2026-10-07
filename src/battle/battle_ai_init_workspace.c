@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Initialize AI workspace defaults and present-unit indexing.
- *
- * Average maximum HP includes all present slots and is capped at 255.
- */
+/* Set up the AI workspace (battle setup and the event state): number the present units in slot order
+ * (unit_battle_ids; only 0-15 get an ability list, battle_ai_init_unit_abilities), store their average
+ * max HP (at most 255), install the fixed Blood Suck and Frog Attack entries, empty the sprung-trap list
+ * and default the generic Throw entry to Knife with a Dagger. */
 void battle_ai_init_workspace(void) {
     s32 i = 0;
     s32 present_count = 0;
@@ -47,7 +46,7 @@ void battle_ai_init_workspace(void) {
     {
         s32 empty = 0xff;
         for (i = 3; i >= 0; i--) {
-            ai->coords_181c[i].bytes.x = empty;
+            ai->sprung_trap_tiles[i].bytes.x = empty;
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;

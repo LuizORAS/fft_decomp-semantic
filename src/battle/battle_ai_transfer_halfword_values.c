@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Copy byte_count / 2 halfwords from src to dst. */
 void battle_ai_transfer_halfword_values(u16* dst, u16* src, s32 byte_count) {
     s32 count = byte_count / 2;
     s32 i;

@@ -159,6 +159,10 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   divisor never being zero or on the R3000 result when it is. A native build
   must give each the R3000 result through a helper or guard it: x86 raises
   SIGFPE and ARM64 returns 0.
+- `src/battle/battle_ai_add_usable_skillset_abilities.c`: the Faith test reads the AI flags of the
+  ability considered last (`g_battle_ai_data_base.considered_ability`), not of the one being added, so
+  for an innately Innocent unit (the Steel Giant job) it keeps or drops all of a skillset's default
+  abilities at once, by whatever that stale ability was.
 
 ## Calls that disagree with the callee
 
@@ -489,3 +493,13 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_unit_set_animation_based_on_status.c` picks animation 0x21 for bit 0x01 of the
   status mirror `status_flags_1_4`, but no status sets that bit
   (`g_battle_misc_status_mask_by_handler_index`), so the animation never plays.
+- `src/battle/battle_ai_add_usable_skillset_abilities.c`: for a Jump skillset with no learned Level Jump,
+  the bare Jump entry is written past the list's count, so the next entry (the next skillset's or Frog
+  Attack) overwrites it and the unit has no Jump entry.
+- `src/battle/battle_ai_build_unit_ability_list.c`: the weapon kinds of both hands are ORed and only one
+  kind at a time is handled (none, damage, absorb, heal), so a unit holding two kinds (a Blood Sword with
+  another weapon under Two Swords) gets no target-team flag on its Attack entry.
+- Half of MP: `battle_menu_get_unit_skillset_ability_data` lists the half rounded up and the menu greys
+  an ability by it, but `battle_action_check_and_consume_mp` and the AI use the half rounded down. Seven
+  abilities have odd costs (Zodiac 99; Toad 2, Gravi 2, Flare 2, Blind 2, Confuse 2 and Sleep 2 at 35),
+  so a unit with exactly the lower half sees them greyed.

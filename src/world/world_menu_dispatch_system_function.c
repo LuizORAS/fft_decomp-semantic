@@ -202,7 +202,7 @@ s32 world_menu_dispatch_system_function(
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
                 if ((u32)(value - ABILITY_ID_SUMMON_MAGIC_MOOGLE)
-                    <= (ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN - ABILITY_ID_SUMMON_MAGIC_MOOGLE)) {
+                    <= (ABILITY_ID_DRAW_OUT_CHIRIJIRADEN - ABILITY_ID_SUMMON_MAGIC_MOOGLE)) {
                     g_world_text_substitution_values[0]
                         = value - ABILITY_ID_SUMMON_MAGIC_MOOGLE + TEXT_ID_SECTION_B800_BASE;
                 } else {

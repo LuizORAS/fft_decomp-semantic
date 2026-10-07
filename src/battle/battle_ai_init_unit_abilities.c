@@ -1,11 +1,15 @@
 #include "fft/battle.h"
 
-/*
- * Initialize a unit's ability-use statistics and scenario targeting.
- *
- * Monster Skill-dependent entries count toward totals but not the MP,
- * Silence, or evasion numerators. Behavior updates depend on scenario flags.
- */
+/* Rebuild a present unit's AI ability list (battle_ai_build_unit_ability_list) and the figures read from
+ * it: its lowest and highest MP cost and the share, in quarters, of its abilities that cost MP, are
+ * stopped by Silence or can be evaded (Monster Skill entries count only in the total). Each entry's search
+ * mode is reset: an exhaustive origin scan for a linear or similar ability and for an evadable default
+ * ability reaching less than 3 tiles, consumed origins for a default ability flagged CANNOT_HIT_CASTER or
+ * CAN_TARGET_ENEMIES and for any ability with no area. The unit's five ENTD AI bytes and AI target tile
+ * become its decision record; with the special-behaviour flag, targeting flag CONSERVE_CT makes it
+ * retreat, and a focus unit found on the field makes it attack that unit (another team) or protect it
+ * (its team), as Auto-Battle modes. The turn states, status changes and a Morbol transformation call it
+ * again. */
 void battle_ai_init_unit_abilities(s32 unit_id) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
@@ -91,7 +95,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
         return;
     }
     if (decision->targeting_flags_2 & BATTLE_AI_TARGET_CONSERVE_CT) {
-        ai->unit_behaviour[unit_id] = 0x11;
+        ai->unit_behaviour[unit_id] = BATTLE_AI_AUTOBATTLE_RETREAT;
         return;
     }
     if (!(decision->flags & BATTLE_AI_DECISION_FOCUS_TARGET)) {
@@ -109,9 +113,9 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
         unit->auto_battle_target = i;
         if ((g_battle_unit_stats[i].initial_team_flags & BATTLE_TEAM_MASK)
             != (unit->initial_team_flags & BATTLE_TEAM_MASK)) {
-            ai->unit_behaviour[unit_id] = 0x0c;
+            ai->unit_behaviour[unit_id] = BATTLE_AI_AUTOBATTLE_TARGETED;
         } else {
-            ai->unit_behaviour[unit_id] = 0x0e;
+            ai->unit_behaviour[unit_id] = BATTLE_AI_AUTOBATTLE_RECOVERY;
         }
         return;
     }

@@ -207,7 +207,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     }
     random_use = 0;
     decision = g_battle_ai_data_base.acting_unit_decision;
-    ai->ability_targets_enemies_or_mp = 0;
+    ai->has_mp_recovery_ability = 0;
     ai->targetability.live.target_setting_flags &= 0xdfffffff;
     decision->highest_range = 0xff;
     decision->lowest_range = 0xff;
@@ -248,7 +248,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     }
                 }
                 if ((AI_FLAGS_LO(ability) & 0x42) == 0x40) {
-                    ai->ability_targets_enemies_or_mp = 1;
+                    ai->has_mp_recovery_ability = 1;
                 }
                 range = ability->parameters.bytes.range + ability->parameters.bytes.aoe;
                 if ((AI_FLAGS_LO(ability) & 2) && range < decision->lowest_range) {

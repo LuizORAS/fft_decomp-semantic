@@ -100,7 +100,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         g_battle_action_target_data->status_change += 0x80;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        action.ability_id = action.item_id + 0x26;
+        action.ability_id = action.item_id + ABILITY_ID_DRAW_OUT_ITEM_OFFSET;
     }
     switch (menu_type) {
     case ACTION_MENU_TYPE_ELEMENTS:

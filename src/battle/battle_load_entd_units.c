@@ -25,7 +25,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     s32 status;
     u8 next_unused_unit_id = 0xfe;
     u8 palette_id;
-    u8 portrait_id;
+    u8 spritesheet_id;
     s32 unit_id;
     u8 presence;
     battle_stats_t* unit;
@@ -40,7 +40,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     party_limit = (party_limit < 10) ? 9 - party_limit : 0;
     enemy_limit = party_limit + 7;
     enemy_count = 0;
-    battle_ai_add_unique_value_to_list(0xff, 0, 0);
+    battle_unit_add_entd_spritesheet(0xff, 0, 0);
     for (battle_id = 0, entd = entd_list; battle_id < ENTD_UNITS_PER_ENCOUNTER; entd++, battle_id++) {
         unit = &g_battle_unit_stats[battle_id];
         unit->misc_unit_id = battle_id;
@@ -57,7 +57,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         if (status != 0) {
             main_system_handle_battle_load_exception(battle_id + 600);
         }
-        portrait_id = main_unit_calculate_palette_spritesheet(unit, &palette_id);
+        spritesheet_id = main_unit_calculate_palette_spritesheet(unit, &palette_id);
         main_unit_init_status_and_rewards(unit, 0);
         /* s32 so the fallback id is zero-extended once here and passed on
          * unmasked, like the target. */
@@ -85,7 +85,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (battle_ai_add_unique_value_to_list(battle_id, portrait_id, party_limit) != 0) {
+        if (battle_unit_add_entd_spritesheet(battle_id, spritesheet_id, party_limit) != 0) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = 0;
             if (duplicate_message_shown != 0) {
@@ -120,7 +120,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
 
     append_graphics:
         battle_gfx_append_unit_graphics_load_descriptor(unit->x, (u8)unit->position.raw, unit->position.raw >> 15,
-            (unit->position.raw >> 8) & 0xf, portrait_id, palette_id, unit_id, unit, status);
+            (unit->position.raw >> 8) & 0xf, spritesheet_id, palette_id, unit_id, unit, status);
         if (presence != ENTD_PRESENCE_MASK) {
             enemy_count++;
         }

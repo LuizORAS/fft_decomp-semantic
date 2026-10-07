@@ -8,11 +8,15 @@ typedef char battle_ai_loader_charge_record_must_be_2[sizeof(battle_ai_loader_ch
 
 extern battle_ai_loader_charge_record_t g_main_charge_ability_data[8];
 
-/*
- * Load an ability-list entry into the considered AI ability.
- *
- * Decode its physical unit and specialize inventory, weapon and timing data.
- */
+/* Load an AI ability-list entry into the considered ability (g_battle_ai_data_base.considered_ability):
+ * skillset, id and owner (entry bits 10-15), CT, range, area, element, MP cost, statuses and AI flags.
+ * Attack and Charge take the owner's weapon summary (Charge adds its CT); Jump does too, with its range,
+ * enemies as targets and a CT estimate from the unit's CT and Speed; an item reaches 1 tile, or the
+ * unit's Move with Throw Item; Throw reaches the unit's Move with the chosen shuriken, ball or weapon;
+ * Draw Out names its katana; Math Skill gets every effect flag and map-tile targeting. A default ability
+ * takes its 14-byte data, a weapon-range ability the weapon's range, and Half of MP halves its MP cost
+ * (rounding down). Unless a default ability perseveres, the CT is halved with the Monster Skill bit and
+ * zeroed with the Defend bit, the neighbours of Short Charge and Non-Charge (QUIRKS.md). */
 void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 ability_id, unit_id, menu, status_id;
@@ -42,7 +46,9 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ai_flags.bytes.flags_3 = weapon->bytes.flags_3;
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         if (menu == ACTION_MENU_TYPE_JUMP)
-            ai->considered_ability.ai_flags.word = (ai->considered_ability.ai_flags.word | 2) & ~1;
+            ai->considered_ability.ai_flags.word
+                = (ai->considered_ability.ai_flags.word | BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                & ~BATTLE_AI_ABILITY_TARGET_ALLIES;
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         status_id = g_main_item_secondary_data[ability_id - ABILITY_ID_ITEM_FIRST].status_infliction_id;
@@ -55,13 +61,13 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             = g_main_item_ability_item_ids[ability_id - ABILITY_ID_ITEM_FIRST];
         goto common;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        ai->considered_ability.parameters.bytes.item_id = ability_id - 0x26;
+        ai->considered_ability.parameters.bytes.item_id = ability_id - ABILITY_ID_DRAW_OUT_ITEM_OFFSET;
         goto common;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY: {
         s32 thrown_ability_id;
-        if ((u32)(ability_id - 0x7a) < 3)
+        if ((u32)(ability_id - ITEM_ID_SHURIKEN) < 3)
             thrown_ability_id = ABILITY_ID_THROW_SHURIKEN;
-        else if ((u32)(ability_id - 0x7d) < 3)
+        else if ((u32)(ability_id - ITEM_ID_FIRE_BALL) < 3)
             thrown_ability_id = ABILITY_ID_THROW_BALL;
         else
             goto ordinary_throw;
@@ -115,7 +121,9 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             value--;
             status_cursor--;
         } while (value >= 0);
-        ai->considered_ability.ai_flags.bytes.flags_1 = 0xfc;
+        ai->considered_ability.ai_flags.bytes.flags_1 = BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_AFFECTS_MP
+            | BATTLE_AI_ABILITY_CANCEL_STATUS | BATTLE_AI_ABILITY_ADD_STATUS | BATTLE_AI_ABILITY_AFFECTS_STATS
+            | BATTLE_AI_ABILITY_UNEQUIP;
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_TARGET_MAP_TILES;
         break;

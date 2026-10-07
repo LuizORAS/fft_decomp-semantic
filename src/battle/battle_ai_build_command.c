@@ -1,12 +1,15 @@
 #include "fft/battle.h"
 
-/*
- * Prepare the next AI movement, action or end-turn command.
- *
- * Resume suspended setup stages before resolving the selected action. Return
- * -1 while suspended, or 0 after writing a command. Early end-turn paths skip
- * coordinate restoration and command-history updates.
- */
+/* Build the AI command for unit_id's turn (battle_state_handle_ai_command_state): MOVE to a tile, ACT with
+ * the chosen action, or END_TURN. The turn ends at once when the chosen action is spent and the unit has
+ * neither moved nor acted since the last command, and when the unit or any present unit has no AI slot
+ * (more than 16 units). Otherwise, unless an action is already chosen and the unit has not acted, it
+ * plans again: it enters AI simulation (battle_ai_begin_simulation), refreshes the decision flags, marks
+ * the usable abilities, builds the movement panels, sets the team targeting flags and the target, and
+ * chooses the action (battle_ai_select_initial_action). Then the unit moves first, unless the action is
+ * done from its own tile (act_before_move) or it has already acted; it ends the turn after acting or
+ * with no action. A stage that runs out of the frame's time returns -1 (here VSync(1) above 440 at
+ * entry) and the next call resumes it; a command returns 0 and is kept in g_battle_ai_command_history. */
 s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     battle_ai_data_t* ai;
     battle_stats_t* unit;
@@ -51,7 +54,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     if (ai->acting_unit->charged_ability_ct == 0xff)
         ai->acting_unit_decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
     if (!ai->selected_action.rank_byte || ai->acting_unit->action_taken) {
-        battle_ai_store_considered_action_data();
+        battle_ai_begin_simulation();
     refresh:
         if (battle_ai_refresh_unit_decision_flags() == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_REFRESH;
@@ -78,9 +81,9 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         ai->selected_action.rank_byte = 0xff;
         if (ai->selected_action.reflected_action)
             ai->acting_unit_decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
-        battle_ai_restore_considered_action_data();
+        battle_ai_end_simulation();
     }
-    if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.target_flags_set)) {
+    if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.act_before_move)) {
         ai->selected_action.coords.bytes.zero = 0;
         if (ai->selected_action.coords.word != ai->acting_unit_coords.word) {
             command->kind = BATTLE_AI_COMMAND_MOVE;

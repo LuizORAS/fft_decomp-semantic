@@ -756,11 +756,19 @@ typedef enum battle_ai_simulation_phase {
     BATTLE_AI_SIMULATION_SCORE_STATE = 2,
 } battle_ai_simulation_phase_e;
 
+/* Byte views of the AI behaviour flags below: flags_1 is the word's low byte, flags_4 its high byte. */
 enum {
-    BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES = 0x01,
+    BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
+    BATTLE_AI_ABILITY_FLAG_1_AFFECTS_HP = 0x80,
+    BATTLE_AI_ABILITY_FLAG_2_EVADEABLE = 0x02,
+    BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE = 0x20,
     BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES = 0x80,
+    /* The FFHacktics wiki's "Defense UP": a physical ability (a weapon strike is one). */
+    BATTLE_AI_ABILITY_FLAG_3_PHYSICAL = 0x01,
     BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK = 0x3c,
+    BATTLE_AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY = 0x40,
+    BATTLE_AI_ABILITY_FLAG_3_ARC_TRAJECTORY = 0x80,
     BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
 
@@ -951,7 +959,7 @@ typedef char battle_ai_status_tail_must_be_at_offset_8
  * inverted-priority scratch at +0x154 and the selected action at +0x17fc.
  */
 typedef struct battle_ai_action_data {
-    u8 target_flags_set; /* 0x00; set to 1; name provisional */
+    u8 act_before_move;  /* 0x00; 1: act from the unit's own tile, then move to coords */
     u8 reflected_action; /* 0x01; set while evaluating reflected-origin candidates */
     u8 _unused_02;
     u8 wait_facing_hint;       /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
@@ -1011,6 +1019,15 @@ typedef union battle_ai_weapon_data {
     } bytes;
 } battle_ai_weapon_data_t;
 typedef char battle_ai_weapon_data_must_be_8[sizeof(battle_ai_weapon_data_t) == 8 ? 1 : -1];
+
+/* What battle_ai_store_weapon_attack_data reports for each weapon hand, ORed over both hands: the
+ * Attack entry's target team follows from it (battle_ai_build_unit_ability_list). */
+typedef enum battle_ai_weapon_kind {
+    BATTLE_AI_WEAPON_KIND_NONE = 0,   /* bare hands, or a monster */
+    BATTLE_AI_WEAPON_KIND_DAMAGE = 1, /* any other formula */
+    BATTLE_AI_WEAPON_KIND_ABSORB = 2, /* BATTLE_FORMULA_WEAPON_ABSORB_HP */
+    BATTLE_AI_WEAPON_KIND_HEAL = 4,   /* BATTLE_FORMULA_WEAPON_HEAL */
+} battle_ai_weapon_kind_e;
 
 /* Per-unit AI behavior flags copied from ENTD data to decision +0x04. The
  * three transient status bits are rebuilt during action simulation. Bit 0x80
@@ -1116,13 +1133,13 @@ typedef struct battle_ai_data {
     battle_ai_coords_t considered_unit_coords; /* 0x0c74 */
     battle_ai_targetability_t targetability;   /* 0x0c78 */
     /* Included target/strike pairs, not unique units; 0xff disables counting. */
-    u16 total_hit_percent;            /* 0x0cb8 */
-    u8 hit_counter;                   /* 0x0cba */
-    u8 attack_origin_tile_count;      /* 0x0cbb */
-    u8 movable_tile_count;            /* 0x0cbc */
-    u8 ability_counter;               /* 0x0cbd */
-    u8 ability_targets_enemies_or_mp; /* 0x0cbe; provisional name: any usable ability has (flags & 0x42) == 0x40 */
-    u8 crystal_treasure_status;       /* 0x0cbf; 1 crystal, 2 treasure */
+    u16 total_hit_percent;       /* 0x0cb8 */
+    u8 hit_counter;              /* 0x0cba */
+    u8 attack_origin_tile_count; /* 0x0cbb */
+    u8 movable_tile_count;       /* 0x0cbc */
+    u8 ability_counter;          /* 0x0cbd */
+    u8 has_mp_recovery_ability;  /* 0x0cbe; a usable ability affects MP without targeting enemies */
+    u8 crystal_treasure_status;  /* 0x0cbf; 1 crystal, 2 treasure */
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
@@ -1187,15 +1204,15 @@ typedef struct battle_ai_data {
     battle_ai_weapon_data_t unit_weapon_data[16];            /* 0x1778 */
     battle_stats_t* acting_unit;                             /* 0x17f8 */
     battle_ai_action_data_t selected_action;                 /* 0x17fc */
-    /* 0x8019aea0 compares/copies coordinate words; 0x80194da4 consumes
-     * x/elevation/y to clear reachable tiles. The list's broader policy is unknown. */
-    battle_ai_coords_t coords_181c[4];                                /* 0x181c; x == 0xff terminates the list */
+    /* Up to four tiles where a unit sprang a trap this battle (battle_ai_record_sprung_trap); the AI
+     * leaves them out of its reachable tiles (battle_ai_set_movement_panel_data). x == 0xff ends it. */
+    battle_ai_coords_t sprung_trap_tiles[4];                          /* 0x181c */
     battle_ai_unit_decision_t unit_decisions[BATTLE_UNIT_SLOT_COUNT]; /* 0x182c */
     /* 0x80195ed4 saves the complete decision before retreat; 0x80195efc
      * restores it only after the child finishes, not when it suspends. */
     battle_ai_unit_decision_t saved_acting_unit_decision; /* 0x197c */
     u8 unit_battle_ids[BATTLE_UNIT_SLOT_COUNT];           /* 0x198c */
-    u8 unit_behaviour[BATTLE_UNIT_SLOT_COUNT];            /* 0x19a1; 0x11 coward, 0x0e/0x0c aggressive */
+    u8 unit_behaviour[BATTLE_UNIT_SLOT_COUNT];            /* 0x19a1; battle_ai_autobattle_mode_e from the ENTD flags */
     u8 autobattle_setting;                                /* 0x19b6 */
     u8 decision_state;                                    /* 0x19b7 */
     u8 random_use_threshold;                              /* 0x19b8; 0x80195778..0x80195788 stores
@@ -1453,10 +1470,10 @@ s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit);
 s32 battle_ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
 
-void battle_ai_record_considered_coords(s32 x, s32 y, s32 level);
+void battle_ai_record_sprung_trap(s32 x, s32 y, s32 level);
 s32 battle_ai_refresh_unit_decision_flags(void);
 void battle_ai_reset_action_ranking_fields(battle_ai_action_data_t* action);
-void battle_ai_restore_considered_action_data(void);
+void battle_ai_end_simulation(void);
 void battle_ai_restore_unit_state(s32 mode);
 s32 battle_ai_run_cowardly_movement(void);
 s32 battle_ai_run_non_specific_autobattle(void);
@@ -1480,7 +1497,7 @@ void battle_ai_set_candidate_and_actor_reachable_tiles(void);
 s32 battle_ai_exclude_enemies_acting_before_ct(void);
 void battle_ai_simulate_movement_and_pickup(void);
 void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction_mode);
-void battle_ai_store_considered_action_data(void);
+void battle_ai_begin_simulation(void);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 void battle_ai_take_next_movement_origin(void);
@@ -1490,7 +1507,6 @@ void battle_ai_transfer_byte_values(u8* destination, const u8* source, s32 byte_
 void battle_ai_transfer_halfword_values(u16* destination, u16* source, s32 byte_count);
 void battle_ai_transfer_unit_coordinates(s32 unit_index, battle_ai_coords_t* destination);
 void battle_ai_update_team_targeting_flags(void);
-s32 battle_ai_add_unique_value_to_list(s32 mode, s16 value, s32 limit);
 s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count);
 void battle_ai_clear_words(s32* destination, s32 byte_count);
 
@@ -2338,12 +2354,16 @@ extern world_unit_editor_panel_data_t g_battle_unit_editor_panel_data;
 extern world_unit_editor_panel_data_t g_battle_unit_comparison_editor_panel_data;
 extern u8 g_battle_unit_editor_line_colors[8 * WORLD_UNIT_EDITOR_LINE_SIZE];
 extern s32 g_unit_graphics_load_count;
+/* The distinct spritesheets of the encounter's ENTD units (battle_unit_add_entd_spritesheet). */
+extern s16 g_battle_unit_entd_spritesheets[];
+extern s32 g_battle_unit_entd_spritesheet_count;
 battle_unit_height_data_t* battle_calculate_unit_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_find_unit_data_pointer_for_entd_unit_id(s32 unit_id, s32* out_battle_id);
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
 s32 battle_get_misc_id(s32 unit_id);
 void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
+s32 battle_unit_add_entd_spritesheet(s32 mode, s16 value, s32 limit);
 s32 battle_unit_animate_and_set_enemy_level_data_by_misc_id(u32 misc_id);
 void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit);
 void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
@@ -4320,7 +4340,7 @@ typedef char battle_current_ability_size_must_be_0x50[(sizeof(battle_current_abi
 /* Current attacker record at 0x8019389c, filled by
  * battle_action_set_current_attacker_data and read by
  * battle_action_prepare_mimic. The AI saves and restores it whole as 30
- * bytes (battle_ai_store_considered_action_data). */
+ * bytes (battle_ai_begin_simulation). */
 typedef struct battle_current_attacker_data {
     u8 facing;                         /* 0x00 */
     u8 mimic_pending;                  /* 0x01: an action was recorded for the Mimes (battle_turn_run_clock) */
@@ -7847,8 +7867,6 @@ extern s32 g_battle_destination_camera_yaw;
 extern u8 g_battle_job_level_gained_flag;
 extern u8 g_battle_math_source_skillsets[4];
 extern VECTOR g_battle_offset_screen_coords;
-extern s16 g_battle_unique_value_list[];
-extern s32 g_battle_unique_value_list_length;
 extern u16 g_enemy_level_sum;
 extern u8 g_highest_enemy_level;
 extern s32 g_previous_battle_game_state;

@@ -39,6 +39,8 @@ enum {
      * earlier source comment called it "Fall"; the name follows its only
      * producer, the knockback branch of battle_action_resolve_ability_strike. */
     ABILITY_ID_KNOCKBACK = 0x200,
+    /* A Draw Out ability's id is its katana's item id plus this (Asura Knife 0x26, Asura 0x4c). */
+    ABILITY_ID_DRAW_OUT_ITEM_OFFSET = 0x26,
 };
 
 /* An ability's class, from its id range (main_ability_calculate_pointers_and_type): the table that
@@ -86,7 +88,8 @@ typedef enum ability_id {
     ABILITY_ID_BLACK_MAGIC_FROG = 0x1d,
     ABILITY_ID_SUMMON_MAGIC_MOOGLE = 0x3c,
     ABILITY_ID_SUMMON_MAGIC_GOLEM = 0x41,
-    ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN = 0x55,
+    ABILITY_ID_DRAW_OUT_ASURA = 0x4c,
+    ABILITY_ID_DRAW_OUT_CHIRIJIRADEN = 0x55,
     ABILITY_ID_SONG_ANGEL_SONG = 0x56,
     ABILITY_ID_SONG_LIFE_SONG = 0x57,
     ABILITY_ID_SONG_CHEER_SONG = 0x58,
@@ -417,6 +420,10 @@ typedef enum weapon_flag {
 typedef enum item_id {
     ITEM_ID_NOTHING = 0x00,
     ITEM_ID_DAGGER = 0x01,
+    ITEM_ID_ROMANDA_GUN = 0x47, /* the guns run to Blast Gun */
+    ITEM_ID_BLAST_GUN = 0x4c,
+    ITEM_ID_SHURIKEN = 0x7a,  /* then Magic Shuriken and Yagyu Darkness */
+    ITEM_ID_FIRE_BALL = 0x7d, /* then Water Ball and Lightning Ball */
     ITEM_ID_POTION = 0xf0,
     ITEM_ID_HI_POTION = 0xf1,
     ITEM_ID_X_POTION = 0xf2,

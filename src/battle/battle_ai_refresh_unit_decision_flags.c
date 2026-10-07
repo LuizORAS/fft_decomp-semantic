@@ -48,7 +48,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
         if (!decision->enemy_flag || unit->charged_ability_ct != 0xff)
             decision->flags |= 0x80;
     }
-    ai->current_action.target_flags_set = 1;
+    ai->current_action.act_before_move = 1;
     ai->current_action.skillset = 0;
     ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS;
 simulate:

@@ -13,7 +13,7 @@ void battle_ai_transfer_ability_data_and_set_defend_flag(void) {
     u32 coords;
     s32 support;
 
-    g_battle_ai_data_base.selected_action.target_flags_set = 0;
+    g_battle_ai_data_base.selected_action.act_before_move = 0;
     coords = g_battle_ai_data_base.candidate_coords[scenario].word;
     support = unit->support_ability;
     g_battle_ai_data_base.selected_action.coords.word = coords;

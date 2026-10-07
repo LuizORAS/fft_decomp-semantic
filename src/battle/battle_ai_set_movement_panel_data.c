@@ -110,7 +110,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         return 0;
     }
     for (i = 0; i < 4; i++) {
-        coords = &ai->coords_181c[i];
+        coords = &ai->sprung_trap_tiles[i];
         if (coords->bytes.x == 0xff) {
             break;
         }

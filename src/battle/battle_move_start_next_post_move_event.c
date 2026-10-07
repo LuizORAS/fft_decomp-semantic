@@ -112,7 +112,7 @@ s32 battle_move_start_next_post_move_event(void) {
         battle_unit_set_target_animation_from_attack_type(0, source);
         battle_effect_set_secondary_venom_trap(source);
         battle_menu_init_system_function(0xe, trap, source->battle_data->misc_unit_id, 0, 1);
-        battle_ai_record_considered_coords(casting->map_x, casting->map_z, casting->map_y);
+        battle_ai_record_sprung_trap(casting->map_x, casting->map_z, casting->map_y);
         return 1;
     }
     if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {

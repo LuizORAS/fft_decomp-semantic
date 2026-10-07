@@ -47,7 +47,7 @@ s32 battle_turn_run_clock(s32 mode) {
             unit->ability_outcome = 0;
             unit->charged_ability_ct = 0xff;
         }
-        battle_ai_restore_considered_action_data();
+        battle_ai_end_simulation();
         return 0xe000;
     }
     if (mode == 2) {

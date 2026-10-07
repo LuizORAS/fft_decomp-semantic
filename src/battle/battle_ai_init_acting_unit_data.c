@@ -1,10 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Populate the AI block acting-unit fields for the unit whose turn is being prepared.
- *
- * A mounted rider uses its mount's movement allowance.
- */
+/* Fill the workspace's acting-unit fields for the unit whose turn is planned: its record and decision
+ * pointers, tile, compact id, team, the clock ticks until it acts
+ * (battle_ai_calculate_clockticks_until_unit_acts) and its Move, a rider's being its mount's. */
 void battle_ai_init_acting_unit_data(void) {
     battle_ai_data_t* ai;
     battle_stats_t* unit;

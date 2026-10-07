@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Copy len bytes from src to dst (nothing when len is 0 or less). */
 void battle_ai_transfer_byte_values(u8* dst, const u8* src, s32 len) {
     s32 end;
     if (len > 0) {

@@ -74,7 +74,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
                         << ai->current_action.coords.bytes.x)
                     & 0x8000) {
                     battle_ai_check_unit_for_crystal_or_treasure_status();
-                    ai->current_action.target_flags_set = 1;
+                    ai->current_action.act_before_move = 1;
                     ai->reflected_origin_phase = 0;
                     for (;;) {
                         if (battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
@@ -85,7 +85,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
                         if (ai->reflected_origin_phase != 0)
                             break;
                         ai->reflected_origin_phase = 1;
-                        ai->current_action.target_flags_set = 0;
+                        ai->current_action.act_before_move = 0;
                     }
                 }
             }

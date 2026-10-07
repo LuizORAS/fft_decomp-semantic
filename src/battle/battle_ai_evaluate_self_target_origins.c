@@ -24,7 +24,7 @@ s32 battle_ai_evaluate_self_target_origins(void) {
     if ((g_battle_ai_data_base.considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
         && !(g_main_ability_range_data[g_battle_ai_data_base.considered_ability.ability_id].flags_1
             & ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF)) {
-        g_battle_ai_data_base.current_action.target_flags_set = 1;
+        g_battle_ai_data_base.current_action.act_before_move = 1;
         g_battle_ai_data_base.current_action.targeting_type = 6;
         g_battle_ai_data_base.current_action.target_id = g_battle_ai_data_base.acting_unit_id;
     evaluate_map:
@@ -35,7 +35,7 @@ s32 battle_ai_evaluate_self_target_origins(void) {
     }
     ai->current_action.targeting_type = 5;
     g_battle_ai_self_target_origin_stage = 0;
-    ai->current_action.target_flags_set = 1;
+    ai->current_action.act_before_move = 1;
     /* The first-member word view keeps this load after the phase store.
      * Direct .word or whole-union assignment changes target scheduling. */
     ai->considered_unit_coords.word = *(u32*)&ai->acting_unit_coords;
@@ -53,7 +53,7 @@ prepare_origin:
         }
     }
     if (g_battle_ai_self_target_origin_stage == 0) {
-        ai->current_action.target_flags_set = 0;
+        ai->current_action.act_before_move = 0;
         ai->considered_unit_coords.word = ai->current_action.coords.word;
         g_battle_ai_self_target_origin_stage++;
         /* A goto retry, not a loop: GCC's loop pass would move the suspend

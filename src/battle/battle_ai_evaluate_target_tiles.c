@@ -39,7 +39,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
         return -1;
     }
     ai->decision_state = 0;
-    if (ai->current_action.target_flags_set)
+    if (ai->current_action.act_before_move)
         origin = &ai->acting_unit_coords;
     else
         origin = &ai->current_action.coords;
