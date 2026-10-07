@@ -7,6 +7,9 @@
 #include "psx/types.h"
 
 /* ability flags */
+/* A unit's active reaction, support and movement abilities; docs/mechanics/Abilities.md lists
+ * where each one is implemented. */
+
 /* A unit's active reaction, support and movement abilities as MSB-first bitsets in battle_stats_t
  * (reaction_abilities, support_abilities, movement_abilities): one bit per ability, in id order
  * from 0x1a6, 0x1c6 and 0x1e6, set from its four innate abilities and its three equipped ones

@@ -470,6 +470,9 @@ extern u32 g_controller_previous_copy_3;
 extern u32 g_controller_stable_frames;
 
 /* ability */
+/* Abilities in battle: their animation data, the announcement (name window or spell quote), the
+ * ability-list layout and learning on hit (docs/mechanics/Abilities.md). */
+
 typedef enum battle_ability_facing_modifier {
     BATTLE_ABILITY_FACING_FRONT = 0,
     BATTLE_ABILITY_FACING_SIDE = 1,

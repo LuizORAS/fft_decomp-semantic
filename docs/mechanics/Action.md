@@ -194,7 +194,8 @@ reacts.
   [[battle_action_load_last_used_ability]] and
   [[battle_action_store_8019387c_if_not_reacting]] are never called or
   referenced on the disc.
-- Reaction bit `0x04` of the third byte is unidentified.
+- Reaction bit `0x04` of the third byte (id 0x1bb) has a blank name and no
+  code tests it ([[Abilities]]).
 
 ## Functions in scope
 

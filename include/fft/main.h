@@ -492,6 +492,9 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit);
 void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
 
 /* ability */
+/* The class data of the item, Throw, Jump, Charge, Math Skill and R/S/M abilities, the skillset
+ * lists, the crystal pickup record and the lookups every module uses (docs/mechanics/Abilities.md). */
+
 /* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
  * range and vertical reach. */
 typedef struct battle_loader_jump_record {
@@ -546,10 +549,10 @@ extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
 extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
 extern u32 g_main_secondary_saved_data_bits[2];
-s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
-u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
+s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u32 main_ability_get_known(battle_stats_t* unit, u32 job_row);
+u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 
 /* item */
 extern u8 g_main_item_quantities[ITEM_ID_COUNT];

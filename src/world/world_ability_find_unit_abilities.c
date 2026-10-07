@@ -1,21 +1,17 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * List the abilities of `job`'s skillset for a formation unit and return the
- * number listed.
+/* List the abilities of `job`'s skillset for a formation unit and return the number listed.
  *
- * `kind` selects the ability id range (0 action, 1 reaction, 2 support,
- * 3 movement, otherwise all). `mode` 0 lists every ability and tags unlearned
- * ones with 0x4000/0x6000; 1 lists learned ones (with kind 0 it defers to
- * world_get_known_skillsets); 2 tags learned ones 0x1000 and marks
- * unaffordable JP abilities 0x4000; 3 only counts unlearned ones. Lists
- * other than mode 3 are -1 terminated.
+ * `kind` selects the ability id range (0 action, 1 reaction, 2 support, 3 movement, otherwise all).
+ * `mode` 0 lists every ability and tags the unlearned ones ABILITY_LIST_ENTRY_DISABLED, plus
+ * _HIDE_DETAILS for one that cannot be learned with JP (Zodiac, Ultima); 1 lists the learned ones
+ * (with kind 0 it defers to world_get_known_skillsets); 2, the learn list, tags the learned ones
+ * _LEARNED, marks the ones the job's JP cannot pay _DISABLED and leaves out the ones that cannot be
+ * learned with JP; 3 only counts the unlearned ones. Lists other than mode 3 end with -1.
  *
- * The second loop indexes `abilities` and `out` rather than walking pointers:
- * the target's cursors are the loop optimizer's reduced induction variables,
- * set after the unit-pointer address is formed.
- */
+ * The second loop indexes `abilities` and `out` rather than walking pointers: the target's cursors
+ * are the loop optimizer's reduced induction variables, set after the unit-pointer address is formed. */
 s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32 mode) {
     s32 skillset;
     s16 generic;
@@ -80,9 +76,9 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         if (mode == 0) {
             if (!learned) {
                 if (!(g_main_ability_data[id].type_flags >> ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT)) {
-                    id |= 0x4000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED;
                 } else {
-                    id |= 0x6000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED | ABILITY_LIST_ENTRY_HIDE_DETAILS;
                 }
             }
             out[count] = id;
@@ -98,10 +94,10 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
                     continue;
                 }
                 if (jp < g_main_ability_data[id].jp_cost) {
-                    id |= 0x4000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED;
                 }
             } else {
-                id |= 0x1000;
+                id |= ABILITY_LIST_ENTRY_LEARNED;
             }
             out[count] = id;
             count++;

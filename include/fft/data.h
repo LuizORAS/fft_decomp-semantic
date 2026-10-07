@@ -6,6 +6,10 @@
 #include "psx/types.h"
 
 /* ability */
+/* The ability tables in MAIN, which every module reads: ability ids and their classes, each
+ * ability's 8-byte record and the 14-byte data of the default abilities, with their flags
+ * (docs/mechanics/Abilities.md). */
+
 /*
  * Ability ID classes.  The class boundaries are the SCUS Data Tables
  * "Ability Secondary Data" ranges (Default 0x000-0x16f, Item 0x170-0x17d,
@@ -787,6 +791,9 @@ enum {
 };
 
 /* skillset */
+/* Skillset ids and the filters of a skillset's slots; the skillset lists themselves are
+ * g_main_ability_human_skillset_abilities and _monster_ in main.h (docs/mechanics/Abilities.md). */
+
 /* PSX skillset IDs established by the main executable's table at 0x80064a94.
  * IDs after Mimic are character- and enemy-specific, often with duplicate
  * display names, so they remain unnamed until a consumer distinguishes them. */
