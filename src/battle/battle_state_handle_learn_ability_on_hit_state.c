@@ -1,8 +1,12 @@
 #include "fft/battle.h"
 
+/* LEARN_ABILITY_ON_HIT: the post-action reports, one per answer: level up (phase 0), job level
+ * up (1) and a unit learning the ability on hit (2, learned on 7). After phase 2, once no
+ * effect runs and the number displays end, set the source unit's animation and finish the
+ * command. */
 void battle_state_handle_learn_ability_on_hit_state(void) {
-    s32* selected_ability_address;
-    s32 selected_ability;
+    s32* command_address;
+    s32 command;
     s32 counter;
     s32 skip_animation;
     s32 hit_count;
@@ -10,12 +14,12 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     battle_unit_misc_data_t* target_unit;
     u8 compiler_stack_pad[8];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability_address = battle_menu_get_selected_ability_address();
+    command_address = battle_menu_get_selected_command_address();
     casting_unit = battle_unit_get_casting_misc_data();
-    selected_ability = *selected_ability_address;
-    switch (selected_ability) {
+    command = *command_address;
+    switch (command) {
     case 7:
         if (g_battle_action_post_action_display_phase == 2) {
             target_unit = battle_unit_get_misc_data_by_battle_id(*(u16*)&g_battle_action_post_action_unit_id);

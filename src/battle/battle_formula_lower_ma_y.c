@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x56: -MA (Y), hit (MA+X)%. */
+/* Formula 0x56, Circle: the magical evade check and the hit chance MA + X without Faith, then MA
+ * lowered by Y. */
 void battle_formula_lower_ma_y(void) {
     if (battle_formula_calculate_magical_evade() != 0) {
         return;

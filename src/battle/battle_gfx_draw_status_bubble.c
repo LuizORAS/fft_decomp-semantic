@@ -1,15 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Queue the unit's status bubble into the ordering table.
+/* Queue the unit's status bubble into the ordering table.
  *
- * The bubble's texture coordinates are chosen from the status bubble id: the
- * "dying" bubble (id 0) and the status-CT bubble (id 20) show a counter digit,
- * and ids 9, 10 and 21 have a second texture row selected by status_bubble_alternate_row.  The
- * bubble is drawn one tile above the unit's feet and offset by status_bubble_x
- * and status_bubble_y.
- */
+ * The bubble's texture coordinates are chosen from the status bubble id: the death counter bubble
+ * (id 0) and the Death Sentence bubble (id 20) show a counter digit, and ids 9, 10 and 21 have a
+ * second texture row selected by status_bubble_alternate_row. The bubble is drawn one tile above the
+ * unit's feet and offset by status_bubble_x and status_bubble_y. */
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords) {
     SVECTOR position;
     SVECTOR zoom = g_battle_status_bubble_zoom;
@@ -79,10 +76,9 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
     main_util_set_svector(&base, unit->screen.vx + unit->effect_vector_2.vx,
-        unit->screen.vy + unit->effect_vector_2.vy + (s8)unit->status_bubble_y,
-        unit->screen.vz + unit->effect_vector_2.vz);
+        unit->screen.vy + unit->effect_vector_2.vy + unit->status_bubble_y, unit->screen.vz + unit->effect_vector_2.vz);
     RotTrans(&base, &transformed, &unit->status_bubble_gte_flag);
-    position.vx = (s8)unit->status_bubble_x + (transformed.vx + unit->screen_offset.vx);
+    position.vx = unit->status_bubble_x + (transformed.vx + unit->screen_offset.vx);
     y = transformed.vy + unit->screen_offset.vy;
     position.vy = y;
     if (unit->status_bubble_timer & 0x10) {

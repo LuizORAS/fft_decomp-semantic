@@ -7,9 +7,9 @@ void MatrixNormal(MATRIX* input, MATRIX* output) {
     MATRIX* source = input;
     MATRIX* destination = output;
     /* The GTE transport and private worker fix these scratch-register roles. */
-    register s32 x __asm__("$8");
-    register s32 y __asm__("$9");
-    register s32 z __asm__("$10");
+    s32 x;
+    s32 y;
+    s32 z;
     register s32 second_x __asm__("$11");
     register s32 second_y __asm__("$12");
     register s32 second_z __asm__("$13");
@@ -19,7 +19,7 @@ void MatrixNormal(MATRIX* input, MATRIX* output) {
     s32 diagonal0;
     register s32 diagonal1 __asm__("$3");
     register s32 diagonal2 __asm__("$6");
-    register s32 sum __asm__("$2");
+    s32 sum;
     register u32 saved_ra __asm__("$7");
     x = source->m[0][0];
     y = source->m[0][1];

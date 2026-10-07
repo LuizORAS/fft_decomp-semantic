@@ -58,9 +58,9 @@ void battle_menu_icon_timed_thread(void) {
             break;
         }
         if (unset >= 0) {
-            g_battle_current_thread_id--;
+            g_battle_thread_current_id--;
             battle_menu_configure_frame_cluts(&records[i & 1]);
-            g_battle_current_thread_id++;
+            g_battle_thread_current_id++;
         } else {
             battle_menu_configure_frame_cluts(&records[i & 1]);
         }

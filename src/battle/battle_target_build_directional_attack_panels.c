@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e. */
+/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e.
+ * Type debt (QUIRKS.md): it duplicates battle_ai_command_action_t, which
+ * the callers pass as `source`. */
 typedef struct battle_target_unit_action_copy {
     u8 actor_id;         /* 0x00 */
     u8 skillset_id;      /* 0x01 */
@@ -16,6 +18,9 @@ typedef struct battle_target_unit_action_copy {
     u8 _unused_12[2];
 } battle_target_unit_action_copy_t;
 
+/* Linear and three-direction abilities: keep in the area only the tiles on the line from the unit
+ * toward the target (mode 1), or on that line and the two at right angles to it (mode 3), and have
+ * the hit units listed nearest first (g_battle_sort_targets_nearest_first). */
 void battle_target_build_directional_attack_panels(const void* source, u8 mode) {
     battle_target_unit_action_copy_t action;
     battle_stats_t* unit;

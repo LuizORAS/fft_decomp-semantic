@@ -23,10 +23,10 @@ void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_i
     }
     formula = weapon->formula;
     switch (formula) {
-    case 6:
+    case BATTLE_FORMULA_WEAPON_ABSORB_HP:
         *flags_out |= 2;
         break;
-    case 7:
+    case BATTLE_FORMULA_WEAPON_HEAL:
         *flags_out |= 4;
         break;
     default:

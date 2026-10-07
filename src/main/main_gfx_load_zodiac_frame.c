@@ -8,7 +8,7 @@ void main_gfx_load_zodiac_frame(void) {
     RECT destination = { 640, 0, 128, 256 };
     u32* image;
 
-    image = main_file_get_bin_as_tim(0xec61, 0x10000);
+    image = main_file_alloc_and_load_checked(0xec61, 0x10000);
     LoadImage(&destination, image);
     DrawSync(0);
     main_heap_free(image);

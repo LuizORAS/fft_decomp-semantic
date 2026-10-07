@@ -2,10 +2,12 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Apply Float and reconcile the unit's status flags and status CT.
+/* Reconcile a unit's statuses: the Float movement ability becomes innate Float, immunities to
+ * innate statuses drop, the inflicted statuses join the current set, and each inflicted timed status
+ * without a count starts one (main_status_set_ct).
  *
- * The byte loop retains unit-relative offsets: named status fields move the
- * pointer increment ahead of the loads and break the exact match. */
+ * The byte loop retains unit-relative offsets: named status fields move the pointer increment ahead
+ * of the loads and break the exact match. */
 void main_status_update_unit_flags_and_ct(battle_stats_t* unit) {
     s32 status;
     /* Pins: without them the loop body is identical up to a permutation of

@@ -34,7 +34,7 @@ s32 wldcore_entrypoint(void) {
             } else {
                 SetDispMask(1);
             }
-            main_noop_800449ec();
+            main_system_frame_hook();
         }
         if (g_main_system_flags & 0x10000) {
             continue;

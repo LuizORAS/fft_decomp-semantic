@@ -6,7 +6,7 @@ void equip_item_rebuild_category_list(s32 category) {
     s32 type;
     s32 cat;
 
-    for (i = 1; i < 0xFE; i++) {
+    for (i = 1; i < ITEM_ID_END; i++) {
         item = i;
         type = equip_item_get_category(item);
         cat = 0;

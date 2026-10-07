@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Bows and crossbows lose a quarter of the base hit at night and another quarter in a storm, which
+ * raises the target's evades by a third each. It reads the weather variable itself, not
+ * battle_map_get_effective_weather, so a snowstorm counts too and the map's ignore-weather flag is
+ * not checked (QUIRKS.md). */
 void battle_formula_apply_weather_effects_on_bows(void) {
     u8* base_hit;
     s32 weather;

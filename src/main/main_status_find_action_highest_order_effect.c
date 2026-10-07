@@ -1,11 +1,11 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/*
- * Return the highest-order status changed by an action. Bits 0-6 encode the
- * one-based status index, 0x80 marks removal, and 0x100 reflects flags_2 bit 3.
- */
-s32 main_status_find_action_highest_order_effect(const u8* action) {
+/* Pick the status change of an action result to show: among its inflictions and removals, the one
+ * whose status has the highest order in the status data. Returns the status index + 1, plus 0x80 for
+ * a removal and 0x100 when the status has STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED (the preview never acts
+ * on it, QUIRKS.md); 0 when there is none. The preview display calls it on the main stack. */
+s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action) {
     s32 highest_order;
     s32 result;
     s32 status_index;
@@ -22,24 +22,24 @@ s32 main_status_find_action_highest_order_effect(const u8* action) {
         mask = 0x80 >> (status_index & 7);
         /* Keeps the shift ahead of the status-byte load instead of in its delay slot. */
         __asm__("" : : "r"(mask));
-        status_change = (action + byte_index)[0x20] & mask;
+        status_change = action->status_removal[byte_index] & mask;
         status_mask = mask;
         if (status_change != 0) {
             current_order = g_main_status_effect_data[status_index].order;
             if (current_order > highest_order) {
                 highest_order = current_order;
                 result = status_index + 0x81;
-                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8) {
+                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED) {
                     result = status_index + 0x181;
                 }
             }
         }
-        if (status_mask & (action + byte_index)[0x1b]) {
+        if (status_mask & action->status_infliction[byte_index]) {
             current_order = g_main_status_effect_data[status_index].order;
             if (current_order > highest_order) {
                 highest_order = current_order;
                 result = status_index + 1;
-                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8) {
+                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED) {
                     result = status_index + 0x101;
                 }
             }

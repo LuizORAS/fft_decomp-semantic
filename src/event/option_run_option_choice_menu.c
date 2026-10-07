@@ -30,7 +30,7 @@ void option_run_option_choice_menu(void) {
 
     input = battle_script_get_controller_input_pointer(0);
     battle_script_get_controller_input_pointer(1);
-    thread = &g_battle_threads[g_battle_current_thread_id];
+    thread = &g_battle_threads[g_battle_thread_current_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_option_menu_icon_thread_param;
     param = &g_option_menu_icon_thread_param;

@@ -12,7 +12,7 @@ int main_sound_open_music_into_free_slot(int scenario) {
 
     do {
         if (*loaded_smd == 0) {
-            smd = main_file_get_smd(
+            smd = main_file_alloc_smd_and_load(
                 ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->sector,
                 ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->size);
             *loaded_smd = smd;

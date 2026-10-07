@@ -89,5 +89,6 @@ void world_formation_sort_roster(s32 index) {
     for (i = 0; i < g_world_formation_record_count; i++) {
         g_world_formation_unit_pointers[i] = &g_world_formation_unit_records[g_world_formation_record_order[i]];
     }
-    g_world_formation_unit_pointers[20] = &g_world_formation_unit_records[20];
+    g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_RECORD]
+        = &g_world_formation_unit_records[WORLD_FORMATION_PREVIEW_RECORD];
 }

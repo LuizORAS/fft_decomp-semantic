@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* MAP_INITIALIZE_2: as battle_state_handle_map_init_state, but at step 0xd return to the saved
+ * state with the screen still black. */
 void battle_state_handle_change_map_init_state(void) {
     s32 old_state;
     char unused[24]; /* unreferenced; sizes the target's 0x30-byte frame */

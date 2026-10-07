@@ -130,7 +130,7 @@ void world_run_battle_help_menu(void) {
         g_world_help_require_navigation[7].neighbors[3] = 2;
     }
     quad_index = 0;
-    help_thread_id = world_thread_find_running_at_or_after_4();
+    help_thread_id = world_thread_find_running_4_to_8();
     controller_state = (s32*)world_input_get_menu_controller(0);
     quad_offset = 0;
     g_world_help_controller_state_ptr = controller_state;

@@ -11,7 +11,7 @@ typedef struct world_formation_screen_packets {
     POLY_FT4 textured_quads[2 * 500];         /* 0x0000: g_world_gfx_textured_quad_capacity = 500 */
     POLY_G4 gradient_quads[2 * 90];           /* 0x9c40: g_world_gfx_gradient_quad_capacity = 90 */
     LINE_G2 gradient_lines[2 * 130];          /* 0xb590: g_world_gfx_gradient_line_capacity = 130 */
-    TILE tiles_24[2 * 10];                    /* 0xc9e0: g_world_gfx_tiles_24_capacity = 10 */
+    LINE_F2 flat_lines[2 * 10];               /* 0xc9e0: g_world_gfx_flat_line_capacity = 10 */
     POLY_GT4 textured_gradient_quads[2 * 60]; /* 0xcb20: g_world_gfx_textured_gradient_quad_capacity = 60 */
     TILE tiles[2 * 30];                       /* 0xe380: g_world_gfx_tile_capacity = 30 */
     DR_MOVE draw_moves[2 * 30];               /* 0xe740: g_world_gfx_draw_move_capacity = 30 */
@@ -47,14 +47,14 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     g_world_gfx_textured_quad_capacity = 0x1F4;
     g_world_gfx_gradient_quad_capacity = 0x5A;
     g_world_gfx_textured_gradient_quad_capacity = 0x3C;
-    g_world_gfx_tiles_24_capacity = 0xA;
+    g_world_gfx_flat_line_capacity = 0xA;
     g_world_gfx_gradient_line_capacity = 0x82;
     g_world_gfx_tile_capacity = 0x1E;
     g_world_gfx_draw_move_capacity = 0x1E;
     g_world_gfx_draw_area_capacity = 0x1E;
     g_world_gfx_draw_mode_capacity = 0x1E;
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,
-        packets.gradient_quads, packets.textured_gradient_quads, packets.tiles_24, 0, 0, packets.gradient_lines, 0, 0,
+        packets.gradient_quads, packets.textured_gradient_quads, packets.flat_lines, 0, 0, packets.gradient_lines, 0, 0,
         packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
     g_world_shop_id = -1;
     world_formation_init_menu_state();

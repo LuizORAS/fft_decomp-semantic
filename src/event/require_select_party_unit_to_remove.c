@@ -74,7 +74,7 @@ s32 require_select_party_unit_to_remove(void) {
         selected_party_index = party_index;
         break;
     }
-    battle_action_copy_active_turn_data_from(
+    battle_menu_set_active_turn_panels(
         g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
     g_require_status_display_redraw_request = 1;
     g_require_numeric_editor_redraw_request = 1;
@@ -161,7 +161,7 @@ s32 require_select_party_unit_to_remove(void) {
                 g_require_character_status_redraw_request = should_restore;
                 require_load_party_unit_into_editor(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_set_active_turn_panels(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             } else if (*g_require_input_controller & PSX_PAD_L1) {
                 g_require_panel_status_animation[0] = 7;
@@ -176,7 +176,7 @@ s32 require_select_party_unit_to_remove(void) {
                 g_require_character_status_redraw_request = should_restore;
                 require_load_party_unit_into_editor(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_set_active_turn_panels(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             }
             if (*g_require_input_controller & PSX_PAD_CIRCLE)
@@ -186,7 +186,7 @@ s32 require_select_party_unit_to_remove(void) {
         {
             battle_stats_t* battle_unit;
 
-            for (party_index = 0; party_index < 0x15; party_index++) {
+            for (party_index = 0; party_index < BATTLE_UNIT_SLOT_COUNT; party_index++) {
                 battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
                 selected_battle_unit
                     = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &message_id);
@@ -208,6 +208,8 @@ s32 require_select_party_unit_to_remove(void) {
 
             sprite_set = party_unit->sprite_set;
             sprite_group = g_require_gfx_formation_sprite_groups[0];
+            /* A goto, not a loop statement: loop.c would hoist the column
+             * count 3 out of this search, which the target keeps inside. */
         next_formation:
             for (sprite_column = 0; sprite_column < 3; sprite_column++) {
                 if (sprite_set == sprite_group[sprite_column])
@@ -254,7 +256,7 @@ s32 require_select_party_unit_to_remove(void) {
         s32 name_character_index;
 
         text = g_battle_text_section_pointers[8];
-        for (party_index = 0; party_index < 0x15; party_index++) {
+        for (party_index = 0; party_index < BATTLE_UNIT_SLOT_COUNT; party_index++) {
             selected_battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
             for (name_character_index = 0; name_character_index < 0x10; name_character_index++) {
                 *text = selected_battle_unit->name[name_character_index];

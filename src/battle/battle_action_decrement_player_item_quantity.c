@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 always_one) {
+/* Use one of an item from the party inventory. Only blue units draw on it: -1 when the party has
+ * none, and with consume set during an executing action (not an AI simulation or preview) one is
+ * taken. Returns 0 otherwise, also for other teams, whose items are not counted.
+ * battle_menu_collect_throwable_items passes consume 0 to test what can be thrown. */
+s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 consume) {
     u32 idx;
     s32 qty;
 
@@ -11,7 +15,7 @@ s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_
         if (qty == 0) {
             return -1;
         }
-        if (always_one == 0) {
+        if (consume == 0) {
             return 0;
         }
         if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {

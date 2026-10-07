@@ -16,7 +16,7 @@ void battle_script_load_portrait_colors_event_instruction(s32 portrait_id) {
     buffer = battle_menu_alloc_memory(0x2000);
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
+        g_battle_thread_call_target = (void (*)(void))main_file_request_read_bytes;
     } while (battle_thread_call_on_main_stack(portrait_id * 4 + 0x164B, 0x2000, buffer) != 0);
     do {
         battle_thread_yield();

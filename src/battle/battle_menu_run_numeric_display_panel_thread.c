@@ -42,16 +42,16 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_clear_menu_render_buffer(buffer, 0x918);
     g_menu_text_state.stride = 0x14;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)buffer, (struct menu_number_entry*)g_battle_numeric_display_entries,
+    battle_menu_draw_numeric_display_entries(buffer, (struct menu_number_entry*)g_battle_numeric_display_entries,
         (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
     g_menu_text_state.stride = 0x40;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)(buffer + 0x168),
+    battle_menu_draw_numeric_display_entries((buffer + 0x168),
         (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x24),
         (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
     g_menu_text_state.stride = 0x64;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)(buffer + 0x468),
+    battle_menu_draw_numeric_display_entries((buffer + 0x468),
         (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x54),
         (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
     LoadImage(&g_battle_numeric_display_text_rect_a, (u32*)buffer);
@@ -78,7 +78,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
-        if (battle_thread_is_running_8014cc94(6) != 0) {
+        if (battle_thread_is_running_2(6) != 0) {
             for (i = 17; i >= 0; i--) {
                 record->sprites[i].clut = 0x7D3C;
             }

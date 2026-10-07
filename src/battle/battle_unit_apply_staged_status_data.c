@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Restore the saved unit state and replay status changes made during an event.
- *
- * The status masks track additions and removals relative to the snapshot.
- * Each changed status is applied through the main-thread dispatcher before
- * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
- */
+/* Undo an event's status changes on a staged unit (state 1), unless the scenario's finish operation
+ * has bit 0x8000: restore its saved statuses, counts, HP, team and death counter, queue the graphics
+ * of what the event added or removed, then apply the exit mode that the Inflict Status command left
+ * (1 revive at 1 HP with Critical, 2 Crystal, 3 Poison) through battle_status_resolve_unit_changes,
+ * restore the charged CT and refresh the graphics. State 2 marks the unit done. */
 void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
     /* Pin: unpinned, GCC swaps unit ($s4) and unit_id ($s5) throughout. */
     register battle_stats_t* unit __asm__("$20");

@@ -12,7 +12,6 @@ s32 VSync(s32 mode) {
         return elapsed;
     if (mode > 0) {
         target = g_psyq_etc_last_vblank - 1; /* Keep subtraction before mode addition and the original branch delay. */
-        __asm__("" : "=r"(target) : "0"(target));
         target += mode;
     } else
         target = g_psyq_etc_last_vblank;

@@ -5,27 +5,27 @@
 
 #include "psx/types.h"
 
-/* Native cooperative scheduler context, not scenario bytecode or its operand
- * buffer. BATTLE 0x8014c8a0 and WORLD 0x800ffd70 initialize the same layout;
- * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.
- * The parameter stores at BATTLE 0x8014ca38 and WORLD's corresponding
- * three/four-parameter helpers establish full 32-bit payload words.
- * The seven task words at 0x50 are zeroed by battle_thread_start /
- * world_thread_start; each task gives them its own meaning: menu blink/icon
- * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
- * keep the misc id in [0], and DisplayMessage text threads use [2] x offset,
- * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
- * remaining saved context/stack stays provisional. */
+/* thread */
+/* The thread record both schedulers use, and the task ids threads publish. */
+
+/* Native cooperative thread slot, 0x400 bytes. *_thread_start zeroes the task words and sets the
+ * stack to the slot's top (0x3f0), leaving about 900 bytes of stack; each *_thread_yield saves
+ * s0-s7, k0 and k1 (saved_registers), gp, sp, fp and ra (code_pointer) here. The parameters and
+ * task words are the thread's inputs: menu blink/icon cursor threads use [0] timer and [1] state,
+ * event unit/sprite-move threads keep the misc id in [0], DisplayMessage text threads use [2] x
+ * offset, [3] y offset, [4] arrow offset, [5] opening type and [6] width override, and the
+ * scrolling text page reads [4] as a redraw request. */
 typedef struct native_thread {
-    s32 function_parameter_1; /* 0x00 */
-    s32 function_parameter_2; /* 0x04 */
-    s32 function_parameter_3; /* 0x08 */
-    s32 function_parameter_4; /* 0x0c; set by WORLD's four-parameter helper */
-    u8 _unused_010[0x28];
+    /* The four parameters are s32 but often carry pointers (QUIRKS.md). */
+    s32 function_parameter_1;   /* 0x00 */
+    s32 function_parameter_2;   /* 0x04 */
+    s32 function_parameter_3;   /* 0x08 */
+    s32 function_parameter_4;   /* 0x0c; set by WORLD's four-parameter helper */
+    u32 saved_registers[10];    /* 0x10: s0-s7, k0, k1 */
     void* global_pointer;       /* 0x38 */
     u32* stack_pointer;         /* 0x3c */
     u32* frame_pointer;         /* 0x40 */
-    void (*code_pointer)(void); /* 0x44 */
+    void (*code_pointer)(void); /* 0x44: resume address: the start function, then each yield's ra */
     s32 is_running;             /* 0x48 */
     s32 task_id;                /* 0x4c */
     s32 task_words[7];          /* 0x50: per-task words, see above */

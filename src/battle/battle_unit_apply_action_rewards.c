@@ -30,7 +30,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
     result->level_for_display = 0;
     result->job_level_for_display = 0;
 
-    if (g_current_ability_hamedo_flag != 0) {
+    if (g_battle_reaction_first_strike_cancels != 0) {
         return -1;
     }
     if (g_current_ability.can_earn_exp_jp == 0) {

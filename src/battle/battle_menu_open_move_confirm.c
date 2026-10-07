@@ -5,7 +5,7 @@ void battle_menu_open_move_confirm(void) {
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* caster;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MOVE_CONFIRM_MENU;
     source = battle_unit_get_source_misc_data();
     caster = battle_unit_get_casting_misc_data();
@@ -29,8 +29,8 @@ void battle_menu_open_move_confirm(void) {
         }
     }
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        battle_action_set_at_list_active();
+        battle_target_show_cursor();
     } else {
-        battle_action_clear_at_list_active();
+        battle_target_hide_cursor();
     }
 }

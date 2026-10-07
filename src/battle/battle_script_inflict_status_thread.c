@@ -1,13 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_inflict_status_thread: Inflict Status event command thread.
- *
- * Parameters: ENTD unit id halfword, mode byte, then a wait-frame halfword.
- * Mode 0 revives a dead unit at 1 HP with Critical (or refreshes its mounted
- * animation when it is neither dead nor critical). Mode 1 clears Dead/Critical
- * and inflicts Crystal. Mode 2 inflicts Poison with animation 0x16. Each mode
- * records the matching staged exit mode for the later status-application pass. */
+/* The event's Inflict Status command as a thread (task NATIVE_THREAD_TASK_INFLICT_STATUS). Its
+ * parameter points at the operands: ENTD unit id halfword, mode byte, wait-frame halfword. The unit
+ * is staged first (battle_unit_update_staged_status_data). Mode 0 revives a dead unit at 1 HP with
+ * Critical (sound 0x41), or refreshes the mounted animation of a unit neither dead nor critical;
+ * mode 1 removes Dead and Critical and adds Crystal; mode 2 adds Poison with animation 0x16. Each
+ * records the exit mode (1, 2 or 3) that battle_unit_apply_staged_status_data applies when the event
+ * ends. Then it waits the frames and exits. The WORLD twin is world_script_inflict_status_thread. */
 void battle_script_inflict_status_thread(void) {
     u8* parameters;
     s32 unit_id;

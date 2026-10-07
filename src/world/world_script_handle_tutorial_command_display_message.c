@@ -12,7 +12,7 @@ void world_script_handle_tutorial_command_display_message(void) {
     world_thread_start(0x10, world_text_character_handling_thread);
     world_thread_set_parameters(0x10, 0x99,
         (s32)((u8*)(g_world_script_tutorial_command_ptr[2] * 0x100)
-            + (g_world_script_tutorial_command_ptr[1] + 0xB800)),
+            + (g_world_script_tutorial_command_ptr[1] + TEXT_ID_SECTION_B800_BASE)),
         0);
     /* The raw byte displacement preserves the target's single +0x405c address
      * calculation; the equivalent typed member access splits it at -O0. */

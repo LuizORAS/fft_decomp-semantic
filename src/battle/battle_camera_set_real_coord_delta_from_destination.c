@@ -3,7 +3,7 @@
 void battle_camera_set_real_coord_delta_from_destination(const VECTOR* destination, s32 frame_count) {
     s32 animation_frames;
 
-    animation_frames = (frame_count & 0xffff) / g_animation_speed;
+    animation_frames = (frame_count & 0xffff) / g_battle_state_vsync_interval;
     g_battle_camera_real_coord_countdown = animation_frames;
     animation_frames = g_battle_camera_real_coord_countdown;
     g_battle_camera_real_coord_delta.vx = (destination->vx - g_battle_camera_current_real_coords.vx) / animation_frames;

@@ -6,7 +6,7 @@
  * transform while no thread occupies slot 1. */
 void battle_script_reset_event_state(void) {
     battle_unit_reset_animation_states();
-    if (battle_thread_is_running_8014cc94(1) == 0) {
+    if (battle_thread_is_running_2(1) == 0) {
         battle_camera_store_state_to_script_variables();
         battle_camera_reset_script_transform();
         g_battle_camera_speed_curve = 0;

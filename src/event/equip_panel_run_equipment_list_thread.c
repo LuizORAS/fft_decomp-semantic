@@ -29,9 +29,9 @@ void equip_panel_run_equipment_list_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
     thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
-    if (g_battle_current_thread_id == 10) {
+    if (g_battle_thread_current_id == 10) {
         text = g_equip_panel_text_image_a;
         screen = g_equip_panel_frames_a;
         state = (battle_menu_status_panel_slot_state_t*)g_equip_unit_editor_stats;

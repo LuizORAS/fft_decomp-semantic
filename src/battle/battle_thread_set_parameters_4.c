@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Same as battle_thread_set_parameters, plus parameter 4. */
 void battle_thread_set_parameters_4(s32 slot, s32 first, s32 second, s32 third, s32 fourth) {
     native_thread_t* thread = &g_battle_threads[slot];
     thread->function_parameter_1 = first;

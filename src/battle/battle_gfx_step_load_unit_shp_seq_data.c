@@ -31,7 +31,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_sprite_shp_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_sprite_shp_files[*index].sector,
                     g_battle_gfx_sprite_shp_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -46,7 +46,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_sprite_seq_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_sprite_seq_files[*index].sector,
                     g_battle_gfx_sprite_seq_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -61,7 +61,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_weapon_shp_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_weapon_shp_files[*index].sector,
                     g_battle_gfx_weapon_shp_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -76,7 +76,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_weapon_seq_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_weapon_seq_files[*index].sector,
                     g_battle_gfx_weapon_seq_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -91,7 +91,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_effect_shp_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_effect_shp_files[*index].sector,
                     g_battle_gfx_effect_shp_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -106,7 +106,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (buffer == 0) {
                 break;
             }
-            if (main_file_call_build_header(g_battle_gfx_effect_seq_files[*index].sector,
+            if (main_file_request_read_bytes(g_battle_gfx_effect_seq_files[*index].sector,
                     g_battle_gfx_effect_seq_files[*index].size, (void*)buffer)
                 == 0) {
                 g_battle_gfx_state_words[1]++;
@@ -119,7 +119,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (*slot == 0) {
                 break;
             }
-            if (main_file_call_build_header(0xdefa, 0x15000, (void*)*slot) == 0) {
+            if (main_file_request_read_bytes(0xdefa, 0x15000, (void*)*slot) == 0) {
                 g_battle_gfx_state_words[1]++;
             } else {
                 main_heap_call_free((void*)*slot);
@@ -130,7 +130,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             if (*slot == 0) {
                 break;
             }
-            if (main_file_call_build_header(0xdf24, 0x8800, (void*)*slot) == 0) {
+            if (main_file_request_read_bytes(0xdf24, 0x8800, (void*)*slot) == 0) {
                 g_battle_gfx_state_words[1]++;
             } else {
                 main_heap_call_free((void*)*slot);

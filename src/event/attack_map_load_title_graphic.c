@@ -20,7 +20,7 @@ void attack_map_load_title_graphic(void) {
 
     if (adjusted != 0xff) {
         title = group_input * 5 + 0xdac;
-        g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+        g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
         battle_thread_call_on_main_stack(title, 0x2800, image);
     }
 

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* A unit that jumped (last skillset Jump) with an inflicted Transparent loses it; the removal goes
+ * into the actor's own result (g_current_action_data). */
 void battle_status_remove_transparent_if_jump_used(battle_stats_t* unit) {
     battle_action_data_t* action = &g_current_action_data;
     g_battle_action_attacker_data = action;

@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Type debt (QUIRKS.md): callers pass world_menu_entry_t and
+ * world_menu_icon_thread_param_t views of the same menu record. */
 s32 world_menu_run_thread(s32 thread_id, void* arg) {
     s32 status;
     if (g_world_menu_thread_running_status == 0) {

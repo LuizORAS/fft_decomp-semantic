@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Float phases 0x2c-0x38 (stride 4; edge to centre): the same as
+ * battle_move_update_unit_step_to_destination_tile_center, except that it displaces a unit the
+ * floating unit overlaps (battle_move_displace_overlapping_unit). */
 void battle_move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit) {
     s32 direction;
     s16 screen_z;
@@ -22,7 +25,7 @@ void battle_move_update_float_step_to_destination_tile_center(battle_unit_misc_d
             unit->velocity.vy = 0;
             unit->real.vy = g_battle_move_target_screen_z << 12;
             unit->screen.vy = unit->real.vy / ONE;
-            unit->centre_tile_offset = 0;
+            unit->step_phase = 0;
             unit->shadow_dirty |= 1;
         }
     }

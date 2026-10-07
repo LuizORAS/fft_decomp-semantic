@@ -73,13 +73,13 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->battle_data = stats;
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
-    unit->camera_facing_sixteenth.s = unit->camera_facing_quadrant.s = *(s16*)& unit->attack_facing = -1;
+    unit->camera_facing_sixteenth.s = unit->camera_facing_quadrant.s = unit->attack_facing = -1;
     unit->mount_state = 0;
     unit->horizontal_flip_flag = 0;
     unit->depth_height_offset = 0;
     unit->mounted_height_offset = 0;
     unit->float_bob_phase = 0;
-    unit->centre_tile_offset = 0;
+    unit->step_phase = 0;
     unit->movement_path_count = 0;
     unit->sprite_display_flags.half = 0;
     unit->layer_priority = 0;

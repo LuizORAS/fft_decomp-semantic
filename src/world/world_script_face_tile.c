@@ -5,7 +5,7 @@
  *
  * Parameters: unit id halfword, tile x, tile y, unused byte, rotate mode, speed index
  * into g_world_rotation_speed_frames, and a delay multiplier that staggers successive units by a quarter
- * of its value each. The second argument to world_process_unit_misc_state_value is
+ * of its value each. The second argument to world_script_filter_unit_id_by_mode is
  * taken from the g_world_unit_face_slot_order halfword table rather than a local counter. */
 void world_script_face_tile(const u8* parameters) {
     s16 position[3];

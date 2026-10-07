@@ -12,8 +12,9 @@ enum {
  * Builds the per-frame velocity for a run of identical movement steps: walks
  * the remaining path while the steps keep the same direction quadrant and the
  * clamped ground height stays at the unit's current height, then hands the
- * accumulated edge-to-edge delta to the velocity solver.  The 0x80069744 twin
- * does the same for the final step, where it reads the tile directly.
+ * accumulated edge-to-edge delta to the velocity solver.
+ * battle_move_set_velocity_for_contiguous_steps_with_final_tile_height does the
+ * same, but aims the path's last step at the destination tile's surface.
  *
  * The case-3 form first preserves the prior y coordinate in `next`, then reuses
  * y for the path byte before forming the new coordinate. This is equivalent to
@@ -93,7 +94,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
     direction.vz = end_y - start_y;
     direction.vy = end_z - start_z;
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_battle_state_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_battle_state_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_battle_state_vsync_interval;
 }

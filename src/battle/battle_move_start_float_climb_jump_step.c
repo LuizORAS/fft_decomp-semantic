@@ -6,7 +6,7 @@
  * The rise velocity is sqrt(2 * gravity * height) for the height difference in
  * half-tile steps (6 screen units each) plus two half-steps per tile of jump
  * length; a second apex term extends the frame count. The step byte's top two
- * bits pick the direction, which sets the centre-tile offset, facing, the
+ * bits pick the direction, which sets the step phase, facing, the
  * destination coordinate, and the +-0xe000 horizontal velocity spread over the
  * frame count. `from` is unused. `unused` reproduces an unreferenced 24-byte
  * frame slot. The separate `height -=`/`height +=` statements keep the target's
@@ -35,28 +35,28 @@ void battle_move_start_float_climb_jump_step(
     frames += SquareRoot12(apex * g_battle_move_jump_gravity * 2) / g_battle_move_jump_gravity;
     switch (unit->movement_value >> 6) {
     case 0:
-        unit->centre_tile_offset = 0x31;
+        unit->step_phase = 0x31;
         unit->facing = 0xC00;
         unit->velocity.vz = 0;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value & 3);
         unit->velocity.vx = 0xE000 / frames;
         break;
     case 1:
-        unit->centre_tile_offset = 0x39;
+        unit->step_phase = 0x39;
         unit->facing = 0x400;
         unit->velocity.vz = 0;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value & 3);
         unit->velocity.vx = -0xE000 / frames;
         break;
     case 2:
-        unit->centre_tile_offset = 0x2D;
+        unit->step_phase = 0x2D;
         unit->facing = 0;
         unit->velocity.vx = 0;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value & 3);
         unit->velocity.vz = -0xE000 / frames;
         break;
     case 3:
-        unit->centre_tile_offset = 0x35;
+        unit->step_phase = 0x35;
         unit->facing = 0x800;
         unit->velocity.vx = 0;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value & 3);

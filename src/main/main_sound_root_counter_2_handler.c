@@ -12,7 +12,7 @@
  * is stopped when its master volume fades to zero or its bar count reaches
  * stop_bar, and stops playing once no channel is running.
  *
- * Both key flushes are inlined from main_sound_key_flush.h; the generated
+ * Both key flushes are inlined from fft/main.h; the generated
  * linker script only binds names that appear in this file, so the ones they
  * add are listed here: g_main_mask_exclusion, g_main_sound_music_key_off_voices, g_main_sound_sfx_key_off_voices,
  * SpuSetVoiceRRAttr and SpuSetKey. */

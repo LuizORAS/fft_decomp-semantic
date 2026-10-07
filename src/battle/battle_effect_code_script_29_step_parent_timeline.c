@@ -71,7 +71,8 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
             g_battle_effect_misc_data->sound_tracks[0][2], &state->track_keyframe[6][0], &state->track_remaining[6][0],
             &state->sound_state[2][0][1]);
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE1) {
-            battle_state_set_time_scale(battle_effect_get_timing_curve_value((battle_effect_timing_entry_t*)record));
+            battle_state_set_min_vsync_interval(
+                battle_effect_get_timing_curve_value((battle_effect_timing_entry_t*)record));
         }
     }
     i = g_battle_effect_misc_data->phase1_duration

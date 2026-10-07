@@ -1,10 +1,12 @@
 #include "fft/battle.h"
 
+/* Enter HIGHLIGHT_UNITS: let the d-pad pan the camera (saving the d-pad mode), tint every unit
+ * by team and hide the map cursor. */
 void battle_state_enter_highlight_units_by_team(void) {
-    battle_state_start_game_flow();
+    battle_state_enable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_HIGHLIGHT_UNITS;
     g_controller_input_copy_12 = g_battle_controller_input;
     g_battle_controller_input = 2;
     battle_gfx_tint_all_units_by_team();
-    battle_action_clear_at_list_active();
+    battle_target_hide_cursor();
 }

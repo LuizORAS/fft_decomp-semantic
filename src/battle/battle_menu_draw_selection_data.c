@@ -14,7 +14,7 @@ s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
     s32 result;
     s32 fill;
 
-    g_battle_ai_workspace_ptr = (void*)g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (battle_ai_workspace_t*)g_battle_ai_workspace;
     if (g_battle_menu_input_disabled != 0) {
         controller_input = g_battle_script_unfiltered_controller_input;
     }
@@ -26,12 +26,12 @@ s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input) {
     battle_script_run_event_frame(otag, controller_input);
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
-    if ((battle_thread_is_running_8014cc94(8) != 0
+    if ((battle_thread_is_running_2(8) != 0
             && g_battle_thread_contexts[8].task_id != NATIVE_THREAD_TASK_MENU_SOUND_DELAY)
-        || battle_thread_is_running_8014cc94(7) != 0 || battle_thread_is_running_8014cc94(6) != 0) {
+        || battle_thread_is_running_2(7) != 0 || battle_thread_is_running_2(6) != 0) {
         if (g_battle_animation_speed_forced == 0) {
             g_battle_animation_speed_forced = 1;
-            g_battle_saved_animation_speed = battle_state_get_animation_speed();
+            g_battle_saved_animation_speed = battle_state_get_vsync_interval();
             battle_script_set_event_speed(2);
         }
     } else if (g_battle_animation_speed_forced == 1) {

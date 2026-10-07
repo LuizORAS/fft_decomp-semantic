@@ -5,10 +5,13 @@ enum {
     POACH_ITEM_RARE = 1,
 };
 
-/* Add a poached monster's common or rare item to the Fur Shop inventory.
+/* While executing, give the Fur Shop the item of a poached monster (POACH special effect, monster jobs
+ * Chocobo to Tiamat): the rare one with a chance of 31 in 256, else the common one
+ * (g_main_item_poach_table). The stock saturates at 255. Returns the new stock, or 0 when nothing
+ * was added.
  *
  * The first job read is volatile because the target performs eligibility and
- * table-index reads separately. Inventory quantities saturate at 0xff. */
+ * table-index reads separately. */
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void) {
     battle_stats_t* unit;
     s32 idx;

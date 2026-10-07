@@ -19,7 +19,7 @@ s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle
     g_current_ability.job_level_gained_flag = 0;
     g_battle_action_context = BATTLE_ACTION_CONTEXT_REACTION_OR_SIMULATION;
     g_battle_acting_unit_id = unit_id;
-    result = battle_action_finalize_attack_and_flag_reactions(unit->misc_unit_id);
+    result = battle_action_apply_target_result(unit->misc_unit_id);
     g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
     rewards->earned_experience = unit->action.exp_change;
     rewards->earned_jp = unit->action.jp_change;

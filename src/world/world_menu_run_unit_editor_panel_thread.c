@@ -189,7 +189,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
             && world_thread_get_current_parameter_3() != 0) {
             break;
         }
-        value = world_thread_is_running_80100164(g_world_thread_current_id - 1);
+        value = world_thread_is_running_2(g_world_thread_current_id - 1);
         for (i = 0; i < 19; i++) {
             frame_record->sprites[i].clut = g_world_unit_editor_sprite_clut_pairs[i][value];
         }
@@ -216,7 +216,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
                 world_thread_set_parameters(0xA, 0, 0, 1);
                 break;
             }
-            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_running_80100164(3) == 0
+            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_running_2(3) == 0
                 && (world_unit_has_any_current_status(g_world_unit_view_battle_id) != 0
                     || (g_world_unit_editor_panel_data.flag == 0
                         && g_world_unit_selected_status_billboard.status_icon != 1))) {

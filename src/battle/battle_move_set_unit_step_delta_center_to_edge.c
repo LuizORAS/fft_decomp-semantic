@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Writes the scaled step direction into the unit's per-frame velocity. */
-
 enum {
     BATTLE_MOVE_STEP_WIDTH = 28,
     BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
 };
 
+/* Set the unit's velocity for the half step from the tile centre to its exit edge: a unit
+ * vector toward the step's direction (path byte bits 6-7), tilted by the tile's slope so that it
+ * rises toward an edge whose corner scale (step_count) is above 1 and falls toward one below, times
+ * the VSync interval. The caller scales it by the walk or step speed
+ * (battle_move_interpolate_partial). */
 void battle_move_set_unit_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count) {
     VECTOR direction;
@@ -33,7 +36,7 @@ void battle_move_set_unit_step_delta_center_to_edge(
         break;
     }
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_battle_state_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_battle_state_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_battle_state_vsync_interval;
 }

@@ -11,7 +11,7 @@ void world_menu_load_text_1bd8_with_face(void) {
     world_init_scene_bindings();
     world_menu_load_common_graphics(1);
     world_gfx_load_wldface_to_frame_buffer();
-    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_checked_to_address;
+    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_to_address_checked;
     world_thread_call_on_main_stack(0x1BD8, 0xE800, g_world_menu_text_file_buffer);
     world_menu_reset_runtime();
     world_script_set_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE, 0);

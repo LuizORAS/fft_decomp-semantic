@@ -2,6 +2,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Start or clear a status's count: Dead resets the death counter (3, or 0xff for immortal and
+ * formation units); a timed status (Poison onwards, BATTLE_STATUS_CT_INDEX) gets its CT from the
+ * status data, or 0 when removing. Returns -1, keeping the count, when Death Sentence is already
+ * counting; otherwise 0. */
 s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing) {
     battle_stats_t* stats = unit;
     s32 ct_index;

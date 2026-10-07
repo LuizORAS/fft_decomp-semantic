@@ -16,7 +16,7 @@ void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 
     s16 frames;
 
     if (duration != 0) {
-        frames = duration / g_animation_speed;
+        frames = duration / g_battle_state_vsync_interval;
         g_battle_gfx_screen_color_modulation_target[0] = red;
         g_battle_gfx_screen_color_modulation_target[1] = green;
         g_battle_gfx_screen_color_modulation_target[2] = blue;

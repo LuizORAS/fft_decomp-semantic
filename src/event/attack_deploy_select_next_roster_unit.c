@@ -12,7 +12,7 @@ void attack_deploy_select_next_roster_unit(void) {
     } else {
         do {
             g_attack_deploy_selected_roster_index++;
-            if (g_attack_deploy_selected_roster_index >= 20) {
+            if (g_attack_deploy_selected_roster_index >= PARTY_ROSTER_SLOT_COUNT) {
                 g_attack_deploy_selected_roster_index = 0;
             }
         } while (g_attack_deploy_roster_unit_deployable[g_attack_deploy_selected_roster_index] == 0);

@@ -48,7 +48,6 @@ void battle_unit_set_attacker_animation_for_shield_block(
         }
     }
     if (anim != 0) {
-        /* The target reads the u16 facing field signed (lh). */
-        battle_unit_store_animation_facing_movement_data(anim, (s16)attacker->facing, attacker);
+        battle_unit_store_animation_facing_movement_data(anim, attacker->facing, attacker);
     }
 }

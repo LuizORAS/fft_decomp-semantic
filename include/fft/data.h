@@ -19,6 +19,8 @@ enum {
     ABILITY_ID_ITEM_FIRST = 0x170,
     ABILITY_ID_THROW_FIRST = 0x17e,
     ABILITY_ID_JUMP_FIRST = 0x18a,
+    /* Vertical Jump2..8; 0x18a-0x18e are the Level Jumps. */
+    ABILITY_ID_JUMP_VERTICAL_FIRST = 0x18f,
     ABILITY_ID_CHARGE_FIRST = 0x196,
     ABILITY_ID_MATH_FIRST = 0x19e,
     ABILITY_ID_REACTION_FIRST = 0x1a6,
@@ -27,6 +29,12 @@ enum {
     /* 0x1fe/0x1ff request a random R/S/M pick; main_unit_calculate_rsm returns
      * any smaller id unchanged. */
     ABILITY_ID_RANDOM_FIRST = 0x1fe,
+    /* Pseudo id one past the table; FFTPatcher leaves it unnamed. The strike
+     * resolver stores it as the follow-up strike of a knockback, which moves
+     * the targets to their knockback destination and has no effect file. An
+     * earlier source comment called it "Fall"; the name follows its only
+     * producer, the knockback branch of battle_action_resolve_ability_strike. */
+    ABILITY_ID_KNOCKBACK = 0x200,
 };
 
 /* The random R/S/M selector uses a different legacy bit assignment from the
@@ -56,7 +64,9 @@ typedef enum ability_list_entry_flag {
  * and PSP-only additions. */
 typedef enum ability_id {
     ABILITY_ID_BLACK_MAGIC_FROG = 0x1d,
+    ABILITY_ID_SUMMON_MAGIC_MOOGLE = 0x3c,
     ABILITY_ID_SUMMON_MAGIC_GOLEM = 0x41,
+    ABILITY_ID_SUMMON_MAGIC_CHIRIJIRADEN = 0x55,
     ABILITY_ID_SONG_ANGEL_SONG = 0x56,
     ABILITY_ID_SONG_LIFE_SONG = 0x57,
     ABILITY_ID_SONG_CHEER_SONG = 0x58,
@@ -91,6 +101,7 @@ typedef enum ability_id {
     ABILITY_ID_BATTLE_SKILL_POWER_BREAK = 0x90,
     ABILITY_ID_BATTLE_SKILL_MIND_BREAK = 0x91,
     ABILITY_ID_BASIC_SKILL_ACCUMULATE = 0x92,
+    ABILITY_ID_BASIC_SKILL_DASH = 0x93,
     ABILITY_ID_BASIC_SKILL_THROW_STONE = 0x94,
     ABILITY_ID_BASIC_SKILL_YELL = 0x96,
     ABILITY_ID_MIGHT_SWORD_SHELLBUST_STAB = 0xa0,
@@ -101,8 +112,11 @@ typedef enum ability_id {
     ABILITY_ID_MONSTER_SKILL_POWER_RUIN = 0xc6,
     ABILITY_ID_MONSTER_SKILL_MIND_RUIN = 0xc7,
     ABILITY_ID_ELMDOR_BLOOD_SUCK = 0xc8,
+    ABILITY_ID_SNIPE_LEG_AIM = 0xd5,
+    ABILITY_ID_SNIPE_SEAL_EVIL = 0xd7,
     ABILITY_ID_MONSTER_SKILL_MOLDBALL_VIRUS = 0x149,
     ABILITY_ID_FROG_ATTACK = 0x16f,
+    ABILITY_ID_ITEM_HOLY_WATER = 0x17b,
     ABILITY_ID_THROW_SHURIKEN = 0x17e,
     ABILITY_ID_THROW_KNIFE = 0x17f,
     ABILITY_ID_THROW_BALL = 0x189,
@@ -198,6 +212,7 @@ typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
     ABILITY_SECONDARY_FLAG_3_PERSEVERE = 0x04,
     ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM = 0x08,
+    ABILITY_SECONDARY_FLAG_3_CANNOT_MIMIC = 0x10,
     ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE = 0x20,
     ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE = 0x40,
     ABILITY_SECONDARY_FLAG_3_REFLECTABLE = 0x80,
@@ -368,6 +383,11 @@ enum {
     ITEM_ID_BODY_ARMOR_FIRST = 0xac,
     ITEM_ID_ACCESSORY_FIRST = 0xd0,
     ITEM_ID_CONSUMABLE_FIRST = 0xf0,
+    /* Item-table loops (inventory, shops, sorts, treasure) stop here: real
+     * items end with Phoenix Down (0xfd). 0xfe is a blank record (FFTPatcher
+     * "<Nothing>") that all of them skip, and 0xff is ITEM_ID_NONE, so an
+     * item added at 0xfe stays out of those lists until this bound moves. */
+    ITEM_ID_END = 0xfe,
 };
 
 /* Broad item categories shared by the WORLD and EQUIP menu classifiers.
@@ -389,7 +409,7 @@ typedef struct item_data {
     u8 type_flags;
     u8 secondary_data_id;
     u8 type;
-    u8 _unused_06;
+    u8 _unused_06; /* wiki: "Unused Byte 1" */
     u8 attributes;
     u16 price;
     u8 shop_availability;
@@ -747,6 +767,9 @@ typedef enum skillset_ability_filter {
 } skillset_ability_filter_e;
 
 /* status */
+/* The status data (g_main_status_effect_data): each status's preview order, count, check-set
+ * flags, cancels and blockers. */
+
 enum {
     BATTLE_STATUS_COUNT = 40,
     BATTLE_STATUS_BYTE_COUNT = 5,
@@ -755,8 +778,8 @@ enum {
 
 typedef struct status_effect_data {
     u8 _unused_00[2];
-    u8 order;
-    u8 ct;
+    u8 order; /* 0x02; the action preview shows the status change of highest order */
+    u8 ct;    /* 0x03; a timed status's count (Poison onwards): clock ticks, Death Sentence turns */
     u8 flags_1;
     u8 flags_2;
     u8 cancels[BATTLE_STATUS_BYTE_COUNT];    /* 0x06; statuses removed when this one is inflicted */
@@ -764,21 +787,24 @@ typedef struct status_effect_data {
 } status_effect_data_t;
 typedef char status_effect_data_size_must_be_0x10[(sizeof(status_effect_data_t) == 0x10) ? 1 : -1];
 
-/* Flags that build the shared status-check sets during main initialization.
- * Provisional names remain for sets whose common runtime policy is not yet
- * established. */
+/* Status data flags that build the status check sets (main_status_init_check_data,
+ * main_status_check_set_e). The retail data also sets flags_1 0x08 (Confusion, Transparent, Charm,
+ * Sleep), 0x10 (Poison, Regen), 0x20 (Defending, Performing) and 0x40 (Crystal, Treasure), which no
+ * code reads. */
 typedef enum status_effect_flags_1 {
     STATUS_EFFECT_FLAG_1_KO = 0x01,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ENEMY = 0x02,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ALLY = 0x04,
+    STATUS_EFFECT_FLAG_1_LOST = 0x02,
+    STATUS_EFFECT_FLAG_1_UNUSED_SET_2 = 0x04,
     STATUS_EFFECT_FLAG_1_FREEZE_CT = 0x80,
 } status_effect_flags_1_e;
 
+/* IGNORE_ATTACKS (the FFHacktics name; Crystal, Dead, Jump, Petrify, Treasure and Wall in the retail
+ * data) builds no check set and no code reads it; no status sets 0x40. */
 typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IMMORTAL_IMMUNITY = 0x01,
     STATUS_EFFECT_FLAG_2_FORMATION_IMMUNITY = 0x02,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_7 = 0x04,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8 = 0x08,
+    STATUS_EFFECT_FLAG_2_UNUSED_SET_7 = 0x04,
+    STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED = 0x08,
     STATUS_EFFECT_FLAG_2_MOUNT_REMOVAL = 0x10,
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,

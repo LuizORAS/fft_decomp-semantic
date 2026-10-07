@@ -5,50 +5,6 @@
 
 #include "fft/battle.h"
 
-/* dead unit */
-/* Provisional layouts for the dead-unit ("treasure/crystal") result panel
- * started by option_menu_start_dead_unit_threads. Only the fields that routine
- * touches are named; the surrounding bytes stay anonymous. dead_unit_menu_t
- * opens with the 0x3c menu record and uses the world_menu_entry_t names (WORLD
- * twin world_dead_unit_menu_t). */
-typedef struct dead_unit_entry_counts {
-    s16 visible_count;  /* 0x00 */
-    s16 overflow_count; /* 0x02 */
-} dead_unit_entry_counts_t;
-
-typedef struct dead_unit_menu {
-    u8 _unused_000[4];
-    s16 inner_width; /* 0x04 */
-    u8 _unused_006[2];
-    s16 window_x;     /* 0x08 */
-    s16 window_y;     /* 0x0a */
-    s16 window_width; /* 0x0c */
-    u8 _unused_00e[6];
-    s16 overall_width; /* 0x14 */
-    u8 _unused_016[0x18];
-    dead_unit_entry_counts_t* entries; /* 0x30 */
-    u8 _unused_034[6];
-    s16 menu_type;         /* 0x3a */
-    u8 at_list_menu[0x78]; /* 0x3c */
-    u8 confirm_menu[0x78]; /* 0xb4 */
-    u8 message_menu[0x1c]; /* 0x12c */
-    s16 message_id;        /* 0x148 */
-    u8 _unused_14a[0x1e];
-    u8 move_menu[4]; /* 0x168 */
-} dead_unit_menu_t;
-typedef char dead_unit_menu_size_must_be_0x16c[sizeof(dead_unit_menu_t) == 0x16c ? 1 : -1];
-
-extern u32* g_dead_unit_controller_input;
-extern s32 g_dead_unit_item_value;
-extern dead_unit_menu_t g_dead_unit_menu;
-extern dead_unit_entry_counts_t g_dead_unit_menu_entries;
-extern s16 g_dead_unit_menu_flags[];
-extern s16 g_dead_unit_menu_values[];
-extern s16 g_dead_unit_primary_result;
-extern s32 g_dead_unit_roster_id;
-extern s32 g_dead_unit_roster_id_copy;
-extern s16 g_dead_unit_secondary_result;
-
 /* gfx */
 extern const u16 g_option_gfx_draw_area_scale_percent[12];
 extern RECT g_option_gfx_draw_area_template;
@@ -57,6 +13,25 @@ void option_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait
     const void* source, s32 scale_index, s32 lower_half, const s16* offset);
 
 void option_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet);
+
+/* text */
+/* The two glyph blit descriptors at 0x801c9ce4 and 0x801c9cf4, filled by
+ * option_text_set_blit_source_rect and option_text_set_blit_destination. Each
+ * is 0x10 bytes: the second starts 0x10 past the first, and
+ * g_option_menu_panel_pixels starts 0x10 past the second. The stride is the
+ * surface width in pixels: 0x100 for the glyph sheet, 0x80 for the dead-unit
+ * panels' scratch image. */
+typedef struct option_glyph_blit {
+    RECT rect;
+    s32 stride;
+    u8 _unused_0c[4];
+} option_glyph_blit_t;
+typedef char option_glyph_blit_size_must_be_0x10[sizeof(option_glyph_blit_t) == 0x10 ? 1 : -1];
+
+extern option_glyph_blit_t g_option_text_glyph_dest;
+extern option_glyph_blit_t g_option_text_glyph_source;
+void option_text_set_blit_destination(s16 destination_x, s16 destination_y);
+void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height);
 
 /* menu */
 /* Record types hoisted out of the defining .c files so that callers and
@@ -102,7 +77,7 @@ typedef struct option_menu_entry {
     u16 vram_x;       /* 0x00 */
     u16 vram_y;       /* 0x02 */
     s16 inner_width;  /* 0x04: rect width * 4 */
-    u16 inner_height; /* 0x06 */
+    s16 inner_height; /* 0x06 */
     u8 _unused_08[0x30 - 0x08];
     option_menu_text_layout_t* text_binding; /* 0x30 */
     u8 _unused_34[6];
@@ -163,24 +138,49 @@ void option_menu_start_dead_unit_threads(void);
 void option_menu_run_dead_unit_panel_a(void);
 void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending);
 
-/* text */
-/* The two glyph blit descriptors at 0x801c9ce4 and 0x801c9cf4, filled by
- * option_text_set_blit_source_rect and option_text_set_blit_destination. Each
- * is 0x10 bytes: the second starts 0x10 past the first, and
- * g_option_menu_panel_pixels starts 0x10 past the second. The stride is the
- * surface width in pixels: 0x100 for the glyph sheet, 0x80 for the dead-unit
- * panels' scratch image. */
-typedef struct option_glyph_blit {
-    RECT rect;
-    s32 stride;
-    u8 _unused_0c[4];
-} option_glyph_blit_t;
-typedef char option_glyph_blit_size_must_be_0x10[sizeof(option_glyph_blit_t) == 0x10 ? 1 : -1];
+/* dead unit */
+/* Provisional layouts for the dead-unit ("treasure/crystal") result panel
+ * started by option_menu_start_dead_unit_threads. Only the fields that routine
+ * touches are named; the surrounding bytes stay anonymous. dead_unit_menu_t
+ * opens with the 0x3c menu record and uses the world_menu_entry_t names (WORLD
+ * twin world_dead_unit_menu_t). */
+typedef struct dead_unit_entry_counts {
+    s16 visible_count;  /* 0x00 */
+    s16 overflow_count; /* 0x02 */
+} dead_unit_entry_counts_t;
 
-extern option_glyph_blit_t g_option_text_glyph_dest;
-extern option_glyph_blit_t g_option_text_glyph_source;
-void option_text_set_blit_destination(s16 destination_x, s16 destination_y);
-void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height);
+typedef struct dead_unit_menu {
+    u8 _unused_000[4];
+    s16 inner_width; /* 0x04 */
+    u8 _unused_006[2];
+    s16 window_x;     /* 0x08 */
+    s16 window_y;     /* 0x0a */
+    s16 window_width; /* 0x0c */
+    u8 _unused_00e[6];
+    s16 overall_width; /* 0x14 */
+    u8 _unused_016[0x18];
+    dead_unit_entry_counts_t* entries; /* 0x30 */
+    u8 _unused_034[6];
+    s16 menu_type;         /* 0x3a */
+    u8 at_list_menu[0x78]; /* 0x3c */
+    u8 confirm_menu[0x78]; /* 0xb4 */
+    u8 message_menu[0x1c]; /* 0x12c */
+    s16 message_id;        /* 0x148 */
+    u8 _unused_14a[0x1e];
+    u8 move_menu[4]; /* 0x168 */
+} dead_unit_menu_t;
+typedef char dead_unit_menu_size_must_be_0x16c[sizeof(dead_unit_menu_t) == 0x16c ? 1 : -1];
+
+extern u32* g_dead_unit_controller_input;
+extern s32 g_dead_unit_item_value;
+extern dead_unit_menu_t g_dead_unit_menu;
+extern dead_unit_entry_counts_t g_dead_unit_menu_entries;
+extern s16 g_dead_unit_menu_flags[];
+extern s16 g_dead_unit_menu_values[];
+extern s16 g_dead_unit_primary_result;
+extern s32 g_dead_unit_roster_id;
+extern s32 g_dead_unit_roster_id_copy;
+extern s16 g_dead_unit_secondary_result;
 
 /* other */
 extern s32 g_option_current_values[];

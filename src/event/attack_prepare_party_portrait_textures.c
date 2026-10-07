@@ -35,7 +35,7 @@ void attack_prepare_party_portrait_textures(void) {
         if (ENTRY_MODE == 2) {
             attack_file_load_sync(0x18ba, 0x20000, file);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+            g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
             battle_thread_call_on_main_stack(0x18ba, 0x20000, file);
         }
     } else {
@@ -53,17 +53,17 @@ void attack_prepare_party_portrait_textures(void) {
         }
         if (i != 20) {
             unit = main_party_get_data_pointer(value);
-            if (unit->sprite_set < 0x80) {
+            if (unit->sprite_set < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 value = unit->sprite_set;
             } else {
                 if (unit->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
-                    base = (unit->job_id - 0x4a) * 2;
+                    base = (unit->job_id - JOB_ID_SQUIRE) * 2;
                     value = base + 0x60;
                     if (unit->job_id == JOB_ID_MIME) {
                         value = base + 0x5e;
                     }
                 } else if (unit->sprite_set == CHARACTER_IDENTITY_GENERIC_FEMALE) {
-                    base = (unit->job_id - 0x4a) * 2;
+                    base = (unit->job_id - JOB_ID_SQUIRE) * 2;
                     value = base + 0x61;
                     if (unit->job_id == JOB_ID_MIME) {
                         value = base + 0x5f;

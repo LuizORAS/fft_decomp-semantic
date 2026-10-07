@@ -8,7 +8,7 @@ void world_update_pending_file_load(void) {
     s32 idx = g_world_pending_bin_load_index;
 
     if (idx != 0 && g_world_pending_bin_load_in_progress == 0) {
-        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_call_build_header;
+        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_request_read_bytes;
         if (world_thread_call_on_main_stack(g_world_pending_bin_load_sectors[idx], g_world_pending_bin_load_sizes[idx],
                 g_world_pending_bin_load_destination)
             == 0) {

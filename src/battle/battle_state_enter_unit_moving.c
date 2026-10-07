@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter UNIT_MOVING: save the unit's state (and its mount's) for an undo, set the walk speed,
+ * start at the path's first step and hide the map cursor. */
 void battle_state_enter_unit_moving(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING;
-    battle_target_store_cursor_unit_name_and_data();
+    battle_target_show_cursor_unit_panel();
     unit = battle_unit_get_casting_misc_data();
     battle_unit_save_previous_state(unit);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
@@ -18,5 +20,5 @@ void battle_state_enter_unit_moving(void) {
     unit->step_speed = 0x2000;
     unit->movement_path_offset = 0;
     g_battle_state_animation_continue_check = 0;
-    battle_action_clear_at_list_active();
+    battle_target_hide_cursor();
 }

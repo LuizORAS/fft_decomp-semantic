@@ -10,7 +10,7 @@ void require_reward_load_bonus_image(s32 image_id) {
         allocation = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x8000);
     } while (allocation != g_main_heap_high_overlay_load_address);
 
-    build_operation = main_file_call_build_header;
+    build_operation = main_file_request_read_bytes;
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))build_operation;
@@ -26,8 +26,7 @@ void require_reward_load_bonus_image(s32 image_id) {
 
     /* The 256-row upload includes the reserved suffix beyond the 0x6800-byte file. */
     LoadImage(&g_require_reward_bonus_image_rect, (u32*)allocation);
-    /* The file stores 200 rows of 64 halfwords (0x6400 bytes) of pixels, then the palette. */
-    LoadImage(&g_require_reward_bonus_palette_rect, (u32*)((u8*)allocation + 0x6400));
+    LoadImage(&g_require_reward_bonus_palette_rect, (u32*)((require_reward_bonus_image_file_t*)allocation)->palette);
     battle_thread_yield();
     main_heap_free(allocation);
 }

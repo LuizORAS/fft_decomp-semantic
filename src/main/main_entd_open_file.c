@@ -34,7 +34,7 @@ int main_entd_open_file(void) {
             lba = ENTD4_LBA;
         }
 
-        if (main_file_call_build_header(lba, ENTD_SET_BYTES, entd_set) != 0) {
+        if (main_file_request_read_bytes(lba, ENTD_SET_BYTES, entd_set) != 0) {
             main_heap_call_free(g_main_entd_set);
             return 0;
         }

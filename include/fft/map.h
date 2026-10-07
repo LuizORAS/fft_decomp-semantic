@@ -5,6 +5,7 @@
 
 #include "psx/types.h"
 
+/* map */
 /* Low six bits of a terrain tile's first byte. */
 typedef enum map_surface_type {
     MAP_SURFACE_NATURAL = 0x00,
@@ -59,6 +60,13 @@ typedef enum map_surface_type {
 
 enum { MAP_SURFACE_MASK = 0x3f };
 
+/* Tile slots are indexed level * 256 + y * width + x
+ * (battle_map_calculate_location): two levels of 256 slots. */
+enum {
+    MAP_LEVEL_TILE_SLOT_COUNT = 0x100,
+    MAP_TILE_SLOT_COUNT = 0x200,
+};
+
 /* Selectors accepted by battle_map_get_tile_data_value and its setter twin.
  * Selector 14 is unsupported; setter selector 15 performs a separate operation
  * whose relationship to tile data is not established. */
@@ -111,7 +119,7 @@ typedef union map_tile_flags_06 {
         u8 blocked : 1;
         u8 untargetable : 1;
         u8 shadow_mode : 2;
-        u8 unknown_4_6 : 3;
+        u8 _unknown_00_bit4 : 3; /* copied into g_battle_effect_trajectory_tile_flags, which nothing consumes */
         u8 cannot_stop : 1;
     } bits;
 } map_tile_flags_06_t;

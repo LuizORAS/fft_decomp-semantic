@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Return 1 when the unit takes no status upkeep: no unit in the slot, or Crystal, Dead, Jump,
+ * Petrify or Treasure; otherwise 0. */
 s32 battle_status_check_crystal_dead_jump_petrify_treasure(battle_stats_t* unit) {
     s32 result;
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)

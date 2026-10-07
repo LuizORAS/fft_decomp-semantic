@@ -1,11 +1,12 @@
 #include "fft/battle.h"
 
-/* Moves a unit toward its action target over distortion_timer frames.
+/* Move a unit toward its action target at a constant speed over distortion_timer frames
+ * (distortions 4 and 8, through the battle_move_glide_to_action_target_* wrappers).
  *
- * Phase 0 picks the destination and splits the remaining distance into equal
- * Q12 steps: during an event the unit's own map tile, else the first entry of
- * the target list, else the recorded action target panel.  Phase 1 applies the
- * steps (height only when allow_height_change is set). */
+ * Phase 0 picks the destination and splits the remaining distance into equal Q12 steps: during an
+ * event the unit's own map tile, else the first entry of the target list, else the recorded action
+ * target panel. Phase 1 applies the steps (height only when allow_height_change is set) and ends when
+ * the timer runs out. A unit with no battle record ends at once. */
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;

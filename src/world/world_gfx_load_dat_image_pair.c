@@ -8,7 +8,7 @@ void world_gfx_load_dat_image_pair(s32 index) {
     u8* buffer;
 
     buffer = world_menu_alloc_ui_buffer(0x2000);
-    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_checked_to_address;
+    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_to_address_checked;
     world_thread_call_on_main_stack(index * 4 + 0x164B, 0x2000, buffer);
     LoadImage(&g_world_menu_portrait_pixel_rect, buffer);
     LoadImage(&g_world_menu_portrait_palette_rect, buffer + 0x1800);

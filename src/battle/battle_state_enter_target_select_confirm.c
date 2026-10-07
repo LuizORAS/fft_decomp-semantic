@@ -1,10 +1,12 @@
 #include "fft/battle.h"
 
+/* Enter TARGET_SELECT_CONFIRM: store the names of the unit under the cursor and open the
+ * confirmation window. */
 void battle_state_enter_target_select_confirm(void) {
     battle_unit_misc_data_t* misc;
     battle_stats_t* stats;
 
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_CONFIRM;
     misc = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (misc != 0) {

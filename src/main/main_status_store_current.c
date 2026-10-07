@@ -1,5 +1,6 @@
 #include "fft/main.h"
 
+/* Rebuild the unit's current statuses, byte by byte: innate | inflicted. */
 void main_status_store_current(battle_stats_t* unit) {
     battle_stats_t* unit_data = unit;
     s32 status_set;

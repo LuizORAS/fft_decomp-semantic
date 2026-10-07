@@ -138,15 +138,15 @@ void world_text_character_handling_thread(void) {
             rec.portrait = thread->function_parameter_4;
         }
         party = main_party_get_data_pointer(rec.portrait);
-        if (party->sprite_set >= 0x80) {
+        if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
-                s32 base = (party->job_id - 0x4A) * 2;
+                s32 base = (party->job_id - JOB_ID_SQUIRE) * 2;
                 portrait_id = base + 0x60;
                 if (party->job_id == JOB_ID_MIME) {
                     portrait_id = base + 0x5E;
                 }
             } else if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_FEMALE) {
-                s32 base = (party->job_id - 0x4A) * 2;
+                s32 base = (party->job_id - JOB_ID_SQUIRE) * 2;
                 portrait_id = base + 0x61;
                 if (party->job_id == JOB_ID_MIME) {
                     portrait_id = base + 0x5F;
@@ -717,7 +717,7 @@ void world_text_character_handling_thread(void) {
             for (i = 0; i < 0x11; i++) {
                 if (g_world_thread_current_id != i
                     && g_world_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && world_thread_is_running_80100164(i)) {
+                    && world_thread_is_running_2(i)) {
                     g_world_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
                 }
             }

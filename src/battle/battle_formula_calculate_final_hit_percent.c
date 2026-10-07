@@ -30,10 +30,10 @@ void battle_formula_calculate_final_hit_percent(void) {
         g_battle_action_target_data->attack_accuracy
             = ((hit - accessory) * 100 / hit * ((hit - right) * 100 / hit) * ((hit - left) * 100 / hit)
                   * ((hit - evade) * 100 / hit) / 1000000)
-            * (s16)g_battle_action_target_data->attack_accuracy / 100;
+            * g_battle_action_target_data->attack_accuracy / 100;
     }
-    if (battle_formula_calculate_attack_evaded(
-            g_current_ability.accessory_evade, hit, 1, g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY])
+    if (battle_formula_calculate_attack_evaded(g_current_ability.accessory_evade, hit,
+            BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE, g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY])
         != 0) {
         return;
     }
@@ -41,15 +41,20 @@ void battle_formula_calculate_final_hit_percent(void) {
     if (item == ITEM_ID_NONE) {
         item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
     }
-    if (battle_formula_calculate_attack_evaded(g_current_ability.right_shield_evade, hit, 2, item) != 0) {
+    if (battle_formula_calculate_attack_evaded(
+            g_current_ability.right_shield_evade, hit, BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE, item)
+        != 0) {
         return;
     }
     item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
     if (item == ITEM_ID_NONE) {
         item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
     }
-    if (battle_formula_calculate_attack_evaded(g_current_ability.left_shield_evade, hit, 3, item) != 0) {
+    if (battle_formula_calculate_attack_evaded(
+            g_current_ability.left_shield_evade, hit, BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE, item)
+        != 0) {
         return;
     }
-    battle_formula_calculate_attack_evaded(g_current_ability.class_evade, hit, 4, ITEM_ID_NONE);
+    battle_formula_calculate_attack_evaded(
+        g_current_ability.class_evade, hit, BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD, ITEM_ID_NONE);
 }

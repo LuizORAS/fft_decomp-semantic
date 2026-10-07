@@ -25,14 +25,13 @@ void world_rotate_unit(const u8* parameters) {
     order = 1;
     unit_id = world_script_load_halfword(parameters);
     if (world_unit_try_get_misc_data_by_id(&unit_id, &misc_index) != 0) {
-        for (i = 0; i < 21; i++) {
+        for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&g_world_unit_face_slot_order[i], &misc_index)
                 != 0) {
                 facing = parameters[2];
                 if ((u32)(facing - 0x11) < 3) {
                     facing = facing & 0xF;
-                    /* The definition's u32 parameter and s16 return conversions would change this call's codegen. */
-                    facing = ((s32 (*)(s32))battle_unit_get_facing_nibble_by_misc_id)(unit_id) + facing * 4;
+                    facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
                     facing = facing & 0xF;
                 } else if (facing == 0x10) {
                     facing = g_world_rotation_speed_frames[4 + ((world_camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;

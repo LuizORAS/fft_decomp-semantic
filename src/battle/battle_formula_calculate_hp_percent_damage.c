@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* HP damage of Y% of the target's max HP, rounded up; adds the HP damage type. */
 void battle_formula_calculate_hp_percent_damage(void) {
     battle_action_data_t* action;
     s32 damage;

@@ -39,6 +39,6 @@ void battle_camera_update_tilt(void) {
         return;
     }
     if (g_battle_camera_tilt_increment < 0x30) {
-        g_battle_camera_tilt_increment += g_animation_speed * 2;
+        g_battle_camera_tilt_increment += g_battle_state_vsync_interval * 2;
     }
 }

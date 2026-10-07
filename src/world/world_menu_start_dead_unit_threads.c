@@ -137,12 +137,12 @@ void world_menu_start_dead_unit_threads(void) {
                 10, (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 world_thread_yield();
-                if (world_thread_is_running_80100164(g_world_thread_current_id - 3) != 0) {
+                if (world_thread_is_running_2(g_world_thread_current_id - 3) != 0) {
                     world_thread_start(9, world_thread_yield_forever);
                 } else {
                     world_thread_suspend(9);
                 }
-                if (world_thread_is_running_80100164(g_world_thread_current_id - 1) == 0) {
+                if (world_thread_is_running_2(g_world_thread_current_id - 1) == 0) {
                     break;
                 }
                 g_world_dead_unit_controller_input = world_input_get_menu_controller(0);

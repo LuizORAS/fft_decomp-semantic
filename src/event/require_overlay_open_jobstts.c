@@ -4,7 +4,7 @@
 void require_overlay_open_jobstts(void) {
     void* allocation;
 
-    battle_action_copy_active_turn_data_from(
+    battle_menu_set_active_turn_panels(
         g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
     while (1) {
         allocation = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x1f000);

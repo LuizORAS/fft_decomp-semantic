@@ -1,13 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Apply the current ability's status set to the target action.
- *
- * All-or-nothing copies the full set, random chooses one status, separate
- * rolls each status independently, and cancel writes the removal set. Preview
- * and AI evaluation force probabilistic modes through the all-or-nothing path.
- */
+/* Add the ability's status set to the target's result: formula 0x38 itself, with no evade check or
+ * hit roll (Heal, Shadow Stitch, Stop Bracelet, Grand Cross, Lick and 17 more), and the status step
+ * of most formulas. All or Nothing adds the whole set; Random adds one of its statuses; Separate
+ * keeps each status on a 0-99 roll below 24 and quarters the shown accuracy; Cancel adds the set to
+ * the statuses to remove. Outside execution Random and Separate act as All or Nothing, so estimates
+ * show the whole set. When nothing is left to add or remove (battle_status_modify_inflictions) the
+ * action is a forced failure; otherwise it is a status change, and Invitation also marks a team
+ * change. */
 void battle_formula_apply_status_to_action(void) {
     s32 status_ids[BATTLE_STATUS_COUNT];
     s32 type;
@@ -21,7 +22,7 @@ void battle_formula_apply_status_to_action(void) {
 
     type = g_current_ability.status_infliction.type;
     if (type & BATTLE_STATUS_INFLICTION_TYPE_SEPARATE) {
-        *(s16*)&g_battle_action_target_data->attack_accuracy /= 4;
+        g_battle_action_target_data->attack_accuracy /= 4;
     }
     if (type & (BATTLE_STATUS_INFLICTION_TYPE_SEPARATE | BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE)) {
         if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {

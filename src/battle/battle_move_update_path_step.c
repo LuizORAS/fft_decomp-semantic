@@ -3,19 +3,17 @@
 
 extern void battle_unit_init_coordinates(battle_unit_misc_data_t* unit);
 
-/*
- * Advance a walking unit by one frame: the elaborate sibling of
- * battle_move_update_knockback_step at 0x8006db10, with the full 0x3c-entry
- * step-phase table instead of the knockback subset.
+/* Advance a moving unit by one frame: run the handler of its step phase
+ * (battle_unit_misc_data_t.step_phase), and when no step is active, start the next path step or end
+ * the move. battle_move_update_knockback_step is the cut-down copy for knockback.
  *
- * Phase 0x11/0x15/0x19/0x1d ends a mount ride once the attack animation has
- * run out; phases 0x3b and 0x3c close out the path. When no step is active
- * the path byte count selects the ending: 0xfe dismounts, 0xff dismounts and
- * restarts the AI action, 0 or an exhausted path mounts the pending mount,
- * and otherwise the next path byte starts a step (flag 0x80 and 0x40 of
- * movement_flags pick their own starters, and bit 2 of the step byte picks the
- * climb speed).
- */
+ * Phase 0x11/0x15/0x19/0x1d (jump crouch) starts the rise once the crouch animation has run out
+ * (animation 0x1f, sound 0x27) and takes a rider off its mount; 0x3b resets the coordinates and 0x3c
+ * ends the walk. With no step active the path count selects the ending: 0xfe (a teleport) and 0xff
+ * (a failed one) dismount and start the effect, and 0xff also restarts the AI action; 0 or an
+ * exhausted path mounts the pending mount. Otherwise the next path byte starts a step: fly and float
+ * units (movement_flags 0x80, 0x40) have their own starters, BATTLE_MOVE_STEP_SOURCE_CLIMB picks the
+ * climb speed, and battle_move_set_unit_path_flag marks the last step. */
 void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     u32 offset;
     u8 count;
@@ -23,14 +21,14 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
 
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->movement_value;
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 0x11:
     case 0x15:
     case 0x19:
     case 0x1D:
         if (unit->animation_countdown == 0) {
-            unit->centre_tile_offset++;
-            battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+            unit->step_phase++;
+            battle_unit_store_animation_facing(0x1F, unit->facing, unit);
             battle_sound_play_movement_sfx(unit, 0x27);
             battle_unit_dismount_rider(unit);
         }
@@ -39,7 +37,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x18:
     case 0x1C:
     case 0x20:
-        battle_move_update_knockback_after_animation(unit);
+        battle_move_update_landing_phase(unit);
         break;
     case 0x12:
     case 0x16:
@@ -57,7 +55,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x31:
     case 0x35:
     case 0x39:
-        battle_move_update_unit_step_to_destination_tile_entry_edge(unit);
+        battle_move_update_float_jump_to_entry_edge(unit);
         break;
     case 2:
     case 4:
@@ -79,7 +77,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x25:
     case 0x27:
     case 0x29:
-        battle_move_update_unit_vertical_step_to_destination_tile_center(unit);
+        battle_move_update_fly_step_to_center(unit);
         break;
     case 1:
     case 3:
@@ -101,7 +99,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case 0x24:
     case 0x26:
     case 0x28:
-        battle_move_update_unit_step_to_current_tile_exit_edge(unit);
+        battle_move_update_fly_step_to_exit_edge(unit);
         break;
     case 0x3B:
         battle_unit_init_coordinates(unit);
@@ -110,7 +108,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         battle_move_finalize_path_after_animation(unit);
         break;
     }
-    if (unit->centre_tile_offset == 0) {
+    if (unit->step_phase == 0) {
         count = unit->movement_path_count;
         if (count == 0xFE) {
             battle_unit_dismount_rider_and_update_display(unit);

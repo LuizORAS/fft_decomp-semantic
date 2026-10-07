@@ -27,8 +27,7 @@ void StRingStatus(s16* free_sectors, s16* read_sectors) {
     }
     while ((offset = --index * sizeof(psyq_cd_ring_record_t)), index >= 0) {
         psyq_cd_ring_record_t* record;
-        /* Separate byte induction and its tied use preserve the original branch-slot shift. */
-        __asm__("" : "=r"(offset) : "0"(offset));
+        /* The separate byte induction preserves the original branch-slot shift. */
         record = (psyq_cd_ring_record_t*)((u8*)g_psyq_cd_stream_ring + offset);
         if (record->status == StFREE) {
             /* The stored count is read as an unsigned halfword. */

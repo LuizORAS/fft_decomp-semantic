@@ -1,6 +1,8 @@
 #include "fft/main.h"
 
-/* Add, remove, or replace a status-set flag and refresh the unit's current status. */
+/* Change one byte of the unit's inflicted statuses (MAIN_STATUS_ADD sets status_flag, MAIN_STATUS_REMOVE
+ * clears it, MAIN_STATUS_REPLACE stores it) and refresh that byte of the current set (innate |
+ * inflicted). No count or graphics change. */
 void main_status_change_unit(battle_stats_t* unit, s32 status_set, u8 status_flag, s32 change_type) {
     u8 flag = status_flag;
     u8 updated;

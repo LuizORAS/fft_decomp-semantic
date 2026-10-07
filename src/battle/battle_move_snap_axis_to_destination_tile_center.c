@@ -12,7 +12,6 @@ enum {
  * of its movement destination tile: south/north (0, 2) set Y, west/east (1, 3)
  * set X.
  */
-/* Target 0x8006ca3c. */
 void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit) {
     s16 coordinate;
 

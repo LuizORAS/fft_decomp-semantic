@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Zeroes all 16 thread records (16 * 0x400 bytes), resets the current
- * thread id and marks thread 0's word 0x12 (offset 0x48). */
+/* Clear the 16 thread slots and the current id, and mark slot 0, the main loop, running.
+ * battle_menu_reset_subsystems calls it. */
 void battle_thread_reset_scheduler(void) {
     s32* word;
     s32 index;
@@ -14,6 +14,6 @@ void battle_thread_reset_scheduler(void) {
         index -= 1;
         word -= 1;
     } while (index >= 0);
-    g_battle_current_thread_id = 0;
+    g_battle_thread_current_id = 0;
     g_battle_threads[0].is_running = 1;
 }

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Walk phases 2-16 (even; edge to centre): move, displace a unit standing on the destination
+ * tile (outside events), and at the centre snap to it; once the unit is down on the ground, take
+ * the destination tile and end the step (phase 0). */
 void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit) {
     s32 direction;
     s16 screen_z;
@@ -22,7 +25,7 @@ void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_da
             unit->velocity.vy = 0;
             unit->real.vy = g_battle_move_target_screen_z << 12;
             unit->screen.vy = unit->real.vy / ONE;
-            unit->centre_tile_offset = 0;
+            unit->step_phase = 0;
             unit->shadow_dirty |= 1;
         }
     }

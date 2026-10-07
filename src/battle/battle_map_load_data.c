@@ -19,9 +19,9 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
-            g_battle_map_data_load_buffer = game_malloc(0x20000);
+            g_battle_map_data_load_buffer = main_heap_alloc(0x20000);
             if (g_battle_map_data_load_buffer == 0) {
-                main_system_handle_malloc_exception(2, 0x3c2);
+                main_system_report_error(2, 0x3c2);
             }
             battle_map_load_gns_and_move_find_items(map_id & 0xffff);
             g_battle_map_resource_load_state = 0x74;
@@ -35,9 +35,9 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
-            g_battle_map_data_load_buffer = game_malloc(0x20000);
+            g_battle_map_data_load_buffer = main_heap_alloc(0x20000);
             if (g_battle_map_data_load_buffer == 0) {
-                main_system_handle_malloc_exception(2, 0x3c2);
+                main_system_report_error(2, 0x3c2);
             }
             g_battle_map_texture_quarter_0_pending = 0;
             g_battle_map_texture_quarter_1_pending = 0;
@@ -211,7 +211,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         (s32)g_battle_map_data_load_buffer, g_battle_map_gns_record_cursor);
                     g_battle_map_resource_load_state = 0x78;
                 } else if (g_battle_map_pending_gns_records[18].resource_type != 0) {
-                    main_system_handle_malloc_exception(2, 0x3cb);
+                    main_system_report_error(2, 0x3cb);
                     g_battle_map_pending_gns_records[18].resource_type = 0;
                 } else if (g_battle_map_pending_gns_records[19].resource_type != 0) {
                     g_battle_map_pending_gns_records[19].resource_type = 0;

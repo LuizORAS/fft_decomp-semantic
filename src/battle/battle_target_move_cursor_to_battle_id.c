@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Put the map cursor on the unit with that battle id; returns 0 when there is none. */
 s32 battle_target_move_cursor_to_battle_id(u32 battle_id) {
     battle_unit_misc_data_t* unit;
 

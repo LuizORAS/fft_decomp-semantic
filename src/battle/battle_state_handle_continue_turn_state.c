@@ -1,0 +1,45 @@
+#include "fft/battle.h"
+
+/* CONTINUE_TURN: once the camera has stopped, decide what follows the command; EXP and JP were
+ * already granted in RESUME_ATTACK_PHASE. After a charged ability (0x200) a scenario event may
+ * start, or else the between-turn events run. When the unit's turn is over, its command is
+ * restored from its battle record and a Jump ends the turn, while other commands go on to Wait
+ * (battle_state_enter_wait). Otherwise its action menus reopen. */
+void battle_state_handle_continue_turn_state(void) {
+    battle_unit_misc_data_t* unit;
+
+    battle_state_update_units();
+    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    unit = battle_unit_get_source_misc_data();
+    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
+        return;
+    }
+    if (g_battle_camera_rotation_action != 0) {
+        return;
+    }
+    if (g_battle_turn_event == BATTLE_TURN_EVENT_ABILITY_READY) {
+        if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
+            && battle_script_get_event_finish_operation() != 0) {
+            g_previous_battle_game_state = g_battle_game_state;
+            battle_menu_init_system_function(8, 0, unit->battle_data->misc_unit_id, 0, 1);
+            battle_state_enter_event();
+            return;
+        }
+        battle_turn_advance();
+        return;
+    }
+    if (battle_turn_is_over(unit->battle_data->misc_unit_id) == 1) {
+        /* battle_stats_t +0x16e holds the same 20-byte command payload. */
+        unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_actor_id;
+        unit->used_ability_id = unit->battle_data->last_ability_id;
+        if (unit->attack_phase_state == 3) {
+            unit->attack_phase_state = 0;
+            battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
+            battle_turn_advance();
+            return;
+        }
+        battle_state_enter_wait();
+        return;
+    }
+    battle_menu_set_next_script_action_menus();
+}

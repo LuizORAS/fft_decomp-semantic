@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_menu_start_building_thread(void) {
-    if (battle_thread_is_running_8014cc94(8) != 0 || battle_thread_is_running_8014cc94(3) != 0) {
+    if (battle_thread_is_running_2(8) != 0 || battle_thread_is_running_2(3) != 0) {
         if (g_battle_menu_current_id != 10) {
             g_battle_menu_building_thread_started = 1;
         }
@@ -19,7 +19,7 @@ void battle_menu_start_building_thread(void) {
     if (g_companion_overlay_state != 0) {
         return;
     }
-    if (battle_thread_is_running_8014cc94(3) != 0) {
+    if (battle_thread_is_running_2(3) != 0) {
         return;
     }
     g_battle_menu_help_open = 1;

@@ -12,6 +12,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Type debt (QUIRKS.md): a view of world_menu_entry_t (count is its
+ * cancel_thread_count, cursor its value cell); callers pass three different views
+ * of that record, so the parameter stays void*. */
 typedef struct battle_menu_cancel_context {
     u8 _unused_00[0x20];
     s16 count; /* 0x20 */
@@ -44,7 +47,7 @@ void battle_handle_menu_cancel_input(void* menu) {
                and the branch is retargeted one instruction later. */
             i = 0;
             if (count > 0) {
-                thread = g_battle_current_thread_id;
+                thread = g_battle_thread_current_id;
                 do {
                     idx = i + thread;
                     g_battle_thread_contexts[idx].function_parameter_3 = 1;

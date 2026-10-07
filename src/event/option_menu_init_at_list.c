@@ -46,7 +46,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
     s32 index;
     u8* text;
 
-    g_battle_thread_call_target = (void (*)(void))battle_action_calculate_at_list;
+    g_battle_thread_call_target = (void (*)(void))battle_turn_build_at_list;
     battle_thread_call_on_main_stack((u8*)g_option_menu_at_list_descriptors, 0);
 
     for (index = 0; index < 0x100; index++) {

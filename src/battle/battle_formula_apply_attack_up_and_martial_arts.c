@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Attack Up (XA * 4 / 3) and, bare-handed, Martial Arts (XA * 3 / 2) for the physical abilities
+ * that use PA; weapon strikes take battle_formula_apply_physical_attack_supports instead. */
 void battle_formula_apply_attack_up_and_martial_arts(void) {
     if (g_battle_action_attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
         s16* xa = (s16*)&g_current_ability.xa;

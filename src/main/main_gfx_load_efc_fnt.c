@@ -11,7 +11,7 @@ void main_gfx_load_efc_fnt(void) {
     FntLoad(0x280, 0);
 
     while (!loaded) {
-        data = main_file_get_bin_as_tim(0xdea8, 0x8800);
+        data = main_file_alloc_and_load_checked(0xdea8, 0x8800);
         if (data != 0) {
             if (OpenTIM(data) == 0 && ReadTIM(&image) != 0) {
                 LoadTPage(image.paddr, 0, 0, 0x280, 0, image.prect->w * 4, image.prect->h);

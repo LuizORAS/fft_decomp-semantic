@@ -4,10 +4,10 @@
 /* Thread body: loads companion overlay file 7 and runs it with state 3 until
  * it reports completion. */
 void world_menu_run_companion_overlay_7_thread(void) {
-    if (world_thread_is_running_80100164(3) != 0) {
+    if (world_thread_is_running_2(3) != 0) {
         world_thread_exit_current();
     }
-    if (world_thread_is_running_80100164(1) != 0) {
+    if (world_thread_is_running_2(1) != 0) {
         world_thread_exit_current();
     }
     world_menu_set_transition_active_flag();

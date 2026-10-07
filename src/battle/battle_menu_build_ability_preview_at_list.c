@@ -50,7 +50,7 @@ typedef char battle_menu_at_list_work_descriptors_offset_must_be_0x684
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
- * g_battle_menu_selected_action, run battle_action_preview_at_list for the selected unit on the
+ * g_battle_menu_selected_action, run battle_turn_preview_at_list for the selected unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
  * then write the name text and the four halfword columns and size menu entry
  * 52 around them.
@@ -83,7 +83,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     u16 text_id;
     const u16* at_table;
 
-    at_table = (const u16*)g_battle_ai_workspace_ptr;
+    at_table = g_battle_ai_workspace_ptr->ability_list.ids;
     work = (battle_menu_at_list_work_t*)g_event_overlay_load_address;
     g_battle_menu_thread_menu_data[52].select_text_table = 0x13;
     g_battle_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_battle_menu_at_list_layout;
@@ -100,7 +100,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     action = &g_battle_menu_selected_action;
     action->unit_id = (u8)g_battle_active_turn_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
-    g_battle_thread_call_target = (void (*)(void))battle_action_preview_at_list;
+    g_battle_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = battle_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {
         work->descriptors[0].flags |= 0x40;
@@ -109,7 +109,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     count = 0;
     if (turn < 0 || turn == 0xff) {
         g_battle_menu_thread_menu_data[53].text_id = 0x1023;
-        battle_thread_set_parameters(g_battle_current_thread_id, (s32)&g_battle_menu_thread_menu_data[53], 0, 0);
+        battle_thread_set_parameters(g_battle_thread_current_id, (s32)&g_battle_menu_thread_menu_data[53], 0, 0);
         count = 0;
         battle_menu_icon_linked_entry_thread();
     }

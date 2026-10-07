@@ -24,7 +24,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     u32 prims;
     s32 polarity;
 
-    g_battle_ai_workspace_ptr = g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (battle_ai_workspace_t*)g_battle_ai_workspace;
     if (g_world_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
@@ -41,7 +41,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
 
     if (g_world_event_finish_check_pending != 0) {
         for (i = 1; i < 17; i++) {
-            if (world_thread_is_running_80100164(i) != 0) {
+            if (world_thread_is_running_2(i) != 0) {
                 break;
             }
         }
@@ -58,7 +58,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
                 g_world_menu_overlay_state = 0;
                 return 0;
             }
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x147) {
+            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
                 return 0x13;
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
@@ -137,11 +137,11 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_thread_change_cooldown = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_world_event_thread_status_snapshot[i] = world_thread_is_running_80100164(i);
+        g_world_event_thread_status_snapshot[i] = world_thread_is_running_2(i);
     }
     world_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_80100164(i)) {
+        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_2(i)) {
             g_world_thread_change_cooldown = 5;
         }
     }
@@ -188,7 +188,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 17; i++) {
-        if (world_thread_is_running_80100164(i) != 0) {
+        if (world_thread_is_running_2(i) != 0) {
             break;
         }
     }

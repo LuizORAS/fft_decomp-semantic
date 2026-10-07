@@ -78,9 +78,9 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
                 if (initializing != 0) {
                     main_status_set_ct(unit, i, 0);
                 }
-                battle_status_enable_special_flags(status_id, 1, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 1, misc_unit_id);
             } else {
-                battle_status_enable_special_flags(status_id, 0, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 0, misc_unit_id);
             }
         }
         i++;

@@ -12,7 +12,7 @@ void battle_unit_update_display(battle_unit_misc_data_t* unit) {
         unit->status_flags_5_6 |= unit->statuses_to_add_5_6;
         battle_unit_set_map_coords_after_death_dismount(unit);
         battle_gfx_update_sprite_transparency_flag(unit);
-        battle_gfx_update_status_bubble_graphic_trigger(unit);
+        battle_gfx_refresh_status_bubble(unit);
         if (g_battle_state_animation_continue_check != 0) {
             battle_gfx_check_tile_status_palette_mod(
                 unit, (tile->flags_06.value >> MAP_TILE_SHADOW_MODE_SHIFT) & MAP_TILE_SHADOW_MODE_VALUE_MASK, 0);

@@ -5,6 +5,16 @@
 
 #include "fft/battle.h"
 
+/* thread */
+extern s32 g_card_thread_active_key;
+extern s32 g_card_thread_state;
+extern u8 g_card_thread_status_snapshot[16];
+void card_thread_request_stop(s32 id);
+void card_thread_stop_and_clear_state(s32 id);
+void card_thread_wait_and_clear_state(s32 thread_id);
+s32 card_thread_start_managed(s32 thread_id, world_menu_entry_t* descriptor);
+void card_thread_start_managed_with_delay(s32 thread_id, world_menu_entry_t* descriptor);
+
 /* bits */
 extern u8 g_card_bits_primary_reset;
 extern s32 g_card_bits_reader_1_index;
@@ -18,6 +28,37 @@ u32 card_bits_read_primary(s32 count);
 u32 card_bits_read_secondary(s32 count);
 void card_bits_write_primary(s32 value);
 void card_bits_init_secondary_reader(const u8* data);
+
+/* command */
+extern world_menu_window_command_t g_card_cmd_window_interior_command;
+u8* card_cmd_draw_decimal_number_handler(u8* command);
+world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
+u8* card_cmd_draw_tiled_rectangle_handler(u8* command);
+
+/* input */
+extern void* g_card_input_controller;
+extern u32 g_card_input_current;
+extern u32 g_card_input_event;
+extern u32 g_card_input_initial_repeat_counter;
+extern u16 g_card_input_latched_button;
+extern u16 g_card_input_newly_pressed;
+extern u16 g_card_input_previous;
+extern u32 g_card_input_repeat_counter;
+extern volatile u32 g_card_input_repeat_counters[16];
+extern u32 g_card_input_secondary_repeat;
+extern u32 g_card_input_secondary_repeat_counter;
+extern u32 g_card_previous_input;
+extern u8 g_card_input_activation_timer;
+
+/* g_card_input_display_state.scale_x/.scale_y as their own symbols: the initial stores use absolute addresses, and the
+ * member spelling lets GCC derive the later `state` pointer from the scale_x address instead. */
+extern s16 g_card_input_display_scale_x;
+extern u16 g_card_input_display_scale_y;
+extern u32 g_card_input_primary_repeat;
+void card_input_clear_state(void);
+void card_input_update_controller(void);
+void card_input_update_suppressed_during_fade(void);
+void card_input_update_event_state(u32* otag, u32 input, s32 count_frame);
 
 /* card */
 /* BIOS directory entry as returned by firstfile/nextfile and consumed by
@@ -48,12 +89,6 @@ void card_io_set_selected_slot(s32 value);
 s32 card_io_wait_bios_event_result(void);
 s32 card_io_wait_hardware_event_result(void);
 s32 card_io_wait_operation_result(s32 retry_limit);
-
-/* command */
-extern world_menu_window_command_t g_card_cmd_window_interior_command;
-u8* card_cmd_draw_decimal_number_handler(u8* command);
-world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
-u8* card_cmd_draw_tiled_rectangle_handler(u8* command);
 
 /* file */
 extern const char g_card_file_all_pattern[];
@@ -203,30 +238,51 @@ void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 u
 void card_gfx_init_primitive_lists(card_primitive_lists_t* lists);
 void card_gfx_load_image_and_wait(RECT* rect, u32* data);
 
-/* input */
-extern void* g_card_input_controller;
-extern u32 g_card_input_current;
-extern u32 g_card_input_event;
-extern u32 g_card_input_initial_repeat_counter;
-extern u16 g_card_input_latched_button;
-extern u16 g_card_input_newly_pressed;
-extern u16 g_card_input_previous;
-extern u32 g_card_input_repeat_counter;
-extern volatile u32 g_card_input_repeat_counters[16];
-extern u32 g_card_input_secondary_repeat;
-extern u32 g_card_input_secondary_repeat_counter;
-extern u32 g_card_previous_input;
-extern u8 g_card_input_activation_timer;
+/* text */
+/* Pen position and row stride card_text_render_glyph_to_4bpp_image draws
+ * one glyph at. */
+typedef struct card_text_image_position {
+    u16 x;
+    s16 y;
+    s16 row_stride;
+} card_text_image_position_t;
 
-/* g_card_input_display_state.scale_x/.scale_y as their own symbols: the initial stores use absolute addresses, and the
- * member spelling lets GCC derive the later `state` pointer from the scale_x address instead. */
-extern s16 g_card_input_display_scale_x;
-extern u16 g_card_input_display_scale_y;
-extern u32 g_card_input_primary_repeat;
-void card_input_clear_state(void);
-void card_input_update_controller(void);
-void card_input_update_suppressed_during_fade(void);
-void card_input_update_event_state(void* state, u32 input, s32 count_frame);
+extern u8 g_card_text_color[3];
+extern const u8 g_card_text_command_help[];
+extern u8 g_card_text_data[];
+extern const char g_card_text_decimal_format[];
+extern u16 g_card_text_digit_clut;
+extern u16 g_card_text_digit_texture_page;
+extern const u8* g_card_text_glyph_bitmap_data;
+extern const u8 g_card_text_glyph_widths[];
+extern const u8 g_card_text_job_name[];
+extern s8 g_card_text_layout_mode;
+extern const u8 g_card_text_location_name[];
+extern u16 g_card_text_metric_0;
+extern u16 g_card_text_metric_1;
+extern u16 g_card_text_metric_2;
+extern u16 g_card_text_metric_3;
+extern u16 g_card_text_metric_4;
+extern u16 g_card_text_metric_5;
+extern s16 g_card_text_otag_index;
+extern u16 g_card_text_clut_2_mode0;
+extern u16 g_card_text_clut_2_mode1;
+extern u16 g_card_text_clut_1_mode1;
+extern u16 g_card_text_clut_1_mode0;
+extern u16 g_card_text_clut_3_mode0;
+extern u16 g_card_text_clut_3_mode1;
+extern u16 g_card_text_clut_0_mode1;
+extern u16 g_card_text_clut_0_mode0;
+
+void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds, s32 glyph_spacing,
+    s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_glyphs, s32 terminator, s32 unused_style);
+
+s32 card_text_render_glyph_to_4bpp_image(
+    s32 glyph_id, u8* image, const card_text_image_position_t* position, s32 style);
+
+void card_text_render_id_rows_to_vram(void* glyph_data, const u16* text_ids, const RECT* destination, s32 flags);
+void card_text_set_palette_and_metrics(s32 mode);
+const u8* card_text_skip_encoded_segments(const u8* data, s16 count);
 
 /* menu */
 /* Window rectangle source record; only the RECT at +6 is known. */
@@ -306,7 +362,7 @@ typedef struct card_save_buffer {
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];
     u8 game_options[4]; /* 0x1c84 */
-    u8 _unknown_1c88;   /* 0x1c88 */
+    u8 _unknown_1c88;   /* 0x1c88; D_80057b1c */
     s8 item_type_order_0[0xc];
     u8 _unused_1c95[1]; /* 0x1c95; serialized and parity-covered */
     s8 item_type_order_1[8];
@@ -363,6 +419,7 @@ extern u8 g_card_save_slot_selection_thread_state;
 extern const u16 g_card_save_slot_text_row_ids[];
 extern u8 g_card_save_title_template[0x16];
 extern u8 g_card_save_write_failed;
+extern u8 D_801ca964; /* CARD twin of D_801CC7D8 */
 extern u8 g_card_save_write_phase;
 extern u8 g_card_save_list_cursor_index;
 extern s16 g_card_save_list_scroll_anim_offset;
@@ -405,67 +462,8 @@ void card_save_update_slot_write(s32 slot);
 void card_build_save_file_header(s32 slot, s32 level, card_save_header_t* header);
 void card_save_run_menu(s32 unused);
 
-/* text */
-/* Pen position and row stride card_text_render_glyph_to_4bpp_image draws
- * one glyph at. */
-typedef struct card_text_image_position {
-    u16 x;
-    s16 y;
-    s16 row_stride;
-} card_text_image_position_t;
-
-extern u8 g_card_text_color[3];
-extern const u8 g_card_text_command_help[];
-extern u8 g_card_text_data[];
-extern const char g_card_text_decimal_format[];
-extern u16 g_card_text_digit_clut;
-extern u16 g_card_text_digit_texture_page;
-extern const u8* g_card_text_glyph_bitmap_data;
-extern const u8 g_card_text_glyph_widths[];
-extern const u8 g_card_text_job_name[];
-extern s8 g_card_text_layout_mode;
-extern const u8 g_card_text_location_name[];
-extern u16 g_card_text_metric_0;
-extern u16 g_card_text_metric_1;
-extern u16 g_card_text_metric_2;
-extern u16 g_card_text_metric_3;
-extern u16 g_card_text_metric_4;
-extern u16 g_card_text_metric_5;
-extern s16 g_card_text_otag_index;
-extern u16 g_card_text_clut_2_mode0;
-extern u16 g_card_text_clut_2_mode1;
-extern u16 g_card_text_clut_1_mode1;
-extern u16 g_card_text_clut_1_mode0;
-extern u16 g_card_text_clut_3_mode0;
-extern u16 g_card_text_clut_3_mode1;
-extern u16 g_card_text_clut_0_mode1;
-extern u16 g_card_text_clut_0_mode0;
-
-void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds, s32 glyph_spacing,
-    s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_glyphs, s32 terminator, s32 unused_style);
-
-s32 card_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const card_text_image_position_t* position, s32 style);
-
-void card_text_render_id_rows_to_vram(void* glyph_data, const u16* text_ids, const RECT* destination, s32 flags);
-void card_text_set_palette_and_metrics(s32 mode);
-const u8* card_text_skip_encoded_segments(const u8* data, s16 count);
-
-/* thread */
-extern s32 g_card_thread_active_key;
-extern s32 g_card_thread_state;
-extern u8 g_card_thread_status_snapshot[16];
-void card_thread_request_stop(s32 id);
-void card_thread_stop_and_clear_state(s32 id);
-void card_thread_wait_and_clear_state(s32 thread_id);
-s32 card_thread_start_managed(s32 thread_id, world_menu_entry_t* descriptor);
-void card_thread_start_managed_with_delay(s32 thread_id, world_menu_entry_t* descriptor);
-
 /* other */
 extern u8 g_card_sound_queued_effect_id;
 extern s8 g_card_free_block_count;
-
-/* unnamed */
-extern u8 D_801ca964;
 
 #endif

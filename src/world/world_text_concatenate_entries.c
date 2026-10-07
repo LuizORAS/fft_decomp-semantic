@@ -27,8 +27,7 @@ void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* 
         current_id = text_ids;
         do {
             call_index = *(u16*)current_id;
-            source = ((u8 * (*)(u8*, s32, s32)) world_text_find_entry_by_index)(
-                text_table, call_index & TEXT_ID_ENTRY_MASK, 1);
+            source = world_text_find_entry_by_index(text_table, call_index & TEXT_ID_ENTRY_MASK, 1);
             compare_v1 = *source;
             if (compare_v1 != WORLD_TEXT_ENTRY_END) {
                 compare_v1 = WORLD_TEXT_ENTRY_END;

@@ -158,7 +158,7 @@ restart_script:
                         battle_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x12C) {
+                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_THINGS_OBTAINED) {
                         battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -304,12 +304,13 @@ restart_script:
                 }
             }
             operand_1 = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-            if (operand_1 != 0x1AD && operand_1 != 0x1D1) {
+            if (operand_1 != EVENT_ID_DELITAS_BETRAYAL && operand_1 != EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS) {
                 battle_gfx_init_evtchr_vram_slots();
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
             finish_operation = ((g_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8);
-            if (g_battle_menu_input_disabled == 0 && finish_operation == 0 && (u32)(operand_1 - 0x190) >= 0x1AU
+            if (g_battle_menu_input_disabled == 0 && finish_operation == 0
+                && (u32)(operand_1 - EVENT_ID_GENERIC_FIRST) >= (EVENT_ID_GENERIC_END - EVENT_ID_GENERIC_FIRST)
                 && operand_1 != 0) {
                 g_battle_script_condition_unit_battle_id = 0xFF;
                 battle_script_run_scenario_conditions();
@@ -394,7 +395,7 @@ restart_script:
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_battle_menu_window_buffers[work_index].thread_id;
                 if ((g_battle_menu_window_buffers[work_index].dialogue_selector == operand_1)
-                    && (battle_thread_is_running_8014cc94(operand_2) == 1)
+                    && (battle_thread_is_running_2(operand_2) == 1)
                     && (existing_message_thread_offset = operand_2 << 0xA,
                         g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].task_id
                             == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
@@ -762,7 +763,7 @@ restart_script:
             draw_misc_id = (s16)battle_get_misc_id(first_halfword);
             if (draw_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_animate_and_set_enemy_level_data_by_misc_id(draw_misc_id);
-                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
+                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_ZALERA) {
                     battle_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
                     g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
@@ -874,7 +875,7 @@ restart_script:
             battle_thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
             if (battle_script_is_tutorial_event_slot() != 0 && first_halfword >= 3) {
-                battle_thread_wait_frames(first_halfword / battle_state_get_animation_speed());
+                battle_thread_wait_frames(first_halfword / battle_state_get_vsync_interval());
             } else {
                 battle_thread_wait_frames(first_halfword);
             }
@@ -913,7 +914,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
             if ((battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
                 date_month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-                battle_script_unlockdate_event_instruction((s32)g_main_treasure_acquisition_date_bits, operand_1 - 1,
+                battle_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1,
                     date_month, battle_script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {

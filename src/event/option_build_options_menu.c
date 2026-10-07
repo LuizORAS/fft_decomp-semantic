@@ -72,7 +72,7 @@ void option_build_options_menu(void) {
     input0 = battle_script_get_controller_input_pointer(0);
     input1 = battle_script_get_controller_input_pointer(1);
     do {
-        thread = &g_battle_threads[g_battle_current_thread_id];
+        thread = &g_battle_threads[g_battle_thread_current_id];
         entry = (world_menu_entry_t*)thread->function_parameter_1;
     } while (0);
     page = g_option_menu_pages;
@@ -170,10 +170,10 @@ void option_build_options_menu(void) {
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
     battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window_x, 8);
-    battle_thread_start(g_battle_current_thread_id + 1, option_menu_run_dead_unit_panel_a);
+    battle_thread_start(g_battle_thread_current_id + 1, option_menu_run_dead_unit_panel_a);
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
-    battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
+    battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
     battle_thread_yield();
     battle_menu_init_semitransparent_sprt(&base->value);
     battle_text_configure_sprite_vram(&g_option_menu_value_image_rect, 0x3C, 0x10, &base->value, 0);
@@ -244,8 +244,8 @@ void option_build_options_menu(void) {
                 if (battle_menu_can_accept_input() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    battle_thread_start(g_battle_current_thread_id - 1, option_run_option_choice_menu);
-                    battle_thread_set_parameters(g_battle_current_thread_id - 1, index, 0, 0);
+                    battle_thread_start(g_battle_thread_current_id - 1, option_run_option_choice_menu);
+                    battle_thread_set_parameters(g_battle_thread_current_id - 1, index, 0, 0);
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
@@ -322,9 +322,9 @@ void option_build_options_menu(void) {
             battle_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+            battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
         } else {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 1, 0);
+            battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 1, 0);
         }
         battle_menu_build_zoom_draw_area_pair(&page->title_area, &entry->window_x, i, g_main_gfx_screen_polarity);
         battle_menu_build_zoom_draw_area_pair(&page->value_area, &value_rect, i, g_main_gfx_screen_polarity);
@@ -370,6 +370,6 @@ void option_build_options_menu(void) {
     battle_gfx_free_tpage7_vram(&g_option_menu_title_image_rect);
     battle_gfx_free_tpage7_vram(&g_option_menu_value_image_rect);
     battle_thread_wait_frames(1);
-    battle_thread_set_parameters(g_battle_current_thread_id + 1, 0, 0, 1);
+    battle_thread_set_parameters(g_battle_thread_current_id + 1, 0, 0, 1);
     battle_thread_exit_current();
 }

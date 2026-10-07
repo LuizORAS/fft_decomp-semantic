@@ -32,7 +32,7 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
     s32 ot_s3 = ot;
     s32 row_s2;
     s32 column_s1;
-    register s32 store_tmp __asm__("$2");
+    register s32 paired_uv __asm__("$2");
     s32 index;
 
     SetPolyFT4(&poly);
@@ -56,10 +56,10 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
         for (column_s1 = 0; column_s1 < WLDCORE_MAP_TILE_COLUMNS; column_s1++, index++) {
             s32 flags = g_wldcore_map_projected_tiles[index].flags;
             u32 texture;
-            s32 u0;
-            s32 u1;
-            s32 v0;
-            s32 v1;
+            s32 height;
+            s32 width;
+            s32 top_v;
+            s32 left_u;
             register s32 edge_u __asm__("$3");
             register s32 edge_v __asm__("$6");
             register s32 ot_a1 __asm__("$5");
@@ -78,34 +78,34 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
             /* Emits nothing; the target masks the loaded word, and without
              * this the byte fields narrow into separate lbu loads. */
             __asm__("" : "=r"(texture) : "0"(texture));
-            u1 = (texture & 0xff00) >> 8;
-            v1 = texture >> 24;
-            v0 = (texture >> 16) & 0xff;
-            if (v1 + u1 >= 0x100) {
-                u1--;
+            width = (texture & 0xff00) >> 8;
+            left_u = texture >> 24;
+            top_v = (texture >> 16) & 0xff;
+            if (left_u + width >= 0x100) {
+                width--;
             }
-            edge_u = v1 + u1;
-            u0 = texture & 0xff;
-            if (v0 + u0 >= 0x100) {
-                u0--;
+            edge_u = left_u + width;
+            height = texture & 0xff;
+            if (top_v + height >= 0x100) {
+                height--;
             }
-            edge_v = v0 + u0;
+            edge_v = top_v + height;
             poly_a0 = &poly;
             /* Emits nothing; keeps `addiu a0,sp,0x10` here, ahead of the UV
              * stores, instead of next to the call. */
             __asm__("" : "=r"(poly_a0) : "0"(poly_a0));
             ot_a1 = ot_s3;
-            store_tmp = v1;
-            poly.u2 = store_tmp;
-            poly.u0 = store_tmp;
+            paired_uv = left_u;
+            poly.u2 = paired_uv;
+            poly.u0 = paired_uv;
             poly.v3 = edge_v;
             poly.v2 = edge_v;
-            store_tmp = v0;
-            poly.v1 = store_tmp;
-            poly.v0 = store_tmp;
+            paired_uv = top_v;
+            poly.v1 = paired_uv;
+            poly.v0 = paired_uv;
             poly.u3 = edge_u;
             poly.u1 = edge_u;
-            world_gs_sortpoly(poly_a0, ot_a1, 2, v1);
+            world_gs_sortpoly(poly_a0, (GsOT*)ot_a1, 2);
         }
     }
 }

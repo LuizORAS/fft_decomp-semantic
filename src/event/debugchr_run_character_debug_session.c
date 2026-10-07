@@ -95,7 +95,7 @@ void debugchr_run_character_debug_session(void) {
 
     g_debugchr_editor_active = 1;
     g_debugchr_panel_status_group_count = 2;
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         battle_find_unit_data_pointer_for_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
         if ((battle_id >= 0) && (i == battle_id)) {
             EDITOR_UNIT_IDS[i] = 1;
@@ -103,7 +103,7 @@ void debugchr_run_character_debug_session(void) {
             EDITOR_UNIT_IDS[i] = 0;
         }
     }
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (EDITOR_UNIT_IDS[i] != 0) {
             g_debugchr_panel_selected_unit_data[5] = i;
             g_debugchr_panel_selected_unit_data[0] = i;
@@ -172,7 +172,7 @@ loop_outer:
             /* Label loops: a do-while's loop notes change the allocation. */
         next_unit:
             g_debugchr_editor_selected_unit_slot += 1;
-            if (g_debugchr_editor_selected_unit_slot == 0x15) {
+            if (g_debugchr_editor_selected_unit_slot == BATTLE_UNIT_SLOT_COUNT) {
                 g_debugchr_editor_selected_unit_slot = 0;
             }
             if (EDITOR_UNIT_IDS[g_debugchr_editor_selected_unit_slot] == 0) {

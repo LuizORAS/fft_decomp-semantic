@@ -109,7 +109,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                             && main_util_roll_pass_fail(100, g_main_ability_data[ability_id].learn_rate) == 0) {
                             gained[byte_index] = mask | gained[byte_index];
                             learned_count++;
-                            if (ability_id < 0x200) {
+                            if (ability_id < ABILITY_ID_COUNT) {
                                 g_main_crystal_pickup_result.learned_abilities[ability_id >> 3] = (1 << (ability & 7))
                                     | g_main_crystal_pickup_result.learned_abilities[ability_id >> 3];
                             }

@@ -55,9 +55,9 @@ void require_reward_animate_bonus_image_burst(void) {
     require_reward_burst_tile_t* tile;
     POLY_F4* poly;
 
-    g_require_thread_suspended_id = g_battle_current_thread_id;
+    g_require_thread_suspended_id = g_battle_thread_current_id;
     g_battle_text_section_pointers[21] = g_battle_text_section_pointers[2];
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145) {
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY) {
         require_reward_load_bonus_image(0);
     } else {
         require_reward_load_bonus_image(1);
@@ -239,7 +239,7 @@ void require_reward_animate_bonus_image_burst(void) {
             g_require_reward_burst_flash_polys[frame & 1].b0 = g_require_gfx_fade_rgb[2];
             battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_flash_polys[frame & 1]);
             battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
-            if (g_battle_threads[g_battle_current_thread_id].task_id == NATIVE_THREAD_TASK_DARK_SCREEN) {
+            if (g_battle_threads[g_battle_thread_current_id].task_id == NATIVE_THREAD_TASK_DARK_SCREEN) {
                 break;
             }
             frame++;

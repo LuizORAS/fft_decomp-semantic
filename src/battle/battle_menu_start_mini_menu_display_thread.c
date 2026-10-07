@@ -6,10 +6,10 @@ enum {
 };
 
 void battle_menu_start_mini_menu_display_thread(void) {
-    if (battle_thread_is_running_8014cc94(MINI_MENU_THREAD_ID) != 0) {
+    if (battle_thread_is_running_2(MINI_MENU_THREAD_ID) != 0) {
         return;
     }
-    if (battle_thread_is_running_8014cc94(7) != 0) {
+    if (battle_thread_is_running_2(7) != 0) {
         return;
     }
     if (g_option_menu_submenu_state != 0) {

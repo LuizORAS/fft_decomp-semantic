@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* HP damage of a random 1 to Y times XA ((Y / 2 + 1) * XA in an estimate). While executing, the
+ * hit knocks the target back (battle_formula_calculate_knockback) when a random 0 to the target's
+ * Brave - 1 falls below a random 0 to the attacker's Brave - 1. */
 void battle_formula_apply_damage_and_knockback(void) {
     battle_action_data_t* action;
     s32 damage;

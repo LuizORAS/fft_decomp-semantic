@@ -131,7 +131,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         }
     } else {
         if (world_thread_is_running(0xE) != 0) {
-            world_thread_set_task_id_to_three(0xE);
+            world_thread_request_stop(0xE);
         }
         wldcore_sound_enqueue_audio_command(2, 0x20);
         main_sound_stop_weather_sfx_music();

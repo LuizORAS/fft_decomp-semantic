@@ -22,7 +22,6 @@ void _patch_card(void) {
     word = ((volatile u32*)destination)[PSYQ_CARD_EXCEPTION_ADDRESS_LOW_WORD];
     first <<= 16;
     second = word & 0xffff;
-    __asm__("" : "=r"(second) : "0"(second)); /* Prevent folding the original address ADDU into bitwise OR. */
     word = first + second;
     PSYQ_CPU_ADDRESS_HIGH(source, g_psyq_card_interrupt_jump_template);
     PSYQ_CPU_ADDRESS_HIGH(end, g_psyq_card_interrupt_jump_template_end);
@@ -32,7 +31,6 @@ void _patch_card(void) {
     do {
         word = *source++;
         destination++;
-        __asm__("" : "=r"(destination) : "0"(destination)); /* Preserve increment before the previous-word store. */
         destination[-1] = word;
     } while (source != end);
     PSYQ_CARD_FLUSH_AND_SAVE_CONTINUATION(FlushCache, g_psyq_card_patch_continuation, destination);

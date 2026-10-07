@@ -9,7 +9,8 @@
  * an obstacle stopped it. The `step` variable keeps the target's register
  * divide; a literal 0x2000 folds to a shift.
  */
-s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles) {
+s32 battle_effect_trace_projectile_path(
+    VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles) {
     VECTOR position;
     VECTOR previous;
     s32 step;

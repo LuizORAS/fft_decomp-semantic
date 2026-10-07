@@ -1,13 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Debug-print battle heap usage: total and largest free_node block on the free_node
- * ring, the low-water mark of the largest block, a "DP" value, and the bytes
- * held by each of the 16 allocation owners.
+/* Debug-print battle heap usage: total and largest free block on the free ring, the
+ * low-water mark of the largest block, a "DP" value, and the bytes held by each of the
+ * 16 allocation owners. No C caller.
  *
  * The ring-end test rereads g_battle_heap_rover; GCC hoists that load, which
- * produces the target copy of the rover into a separate register.
- */
+ * produces the target copy of the rover into a separate register. */
 void battle_heap_print_stats(void) {
     battle_heap_node_t* free_node;
     battle_heap_node_t* node;

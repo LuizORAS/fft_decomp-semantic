@@ -9,7 +9,7 @@ void battle_menu_fade_out_thread(void) {
     g_battle_menu_transition_state = 4;
     do {
         battle_thread_yield();
-    } while (battle_thread_is_running_8014cc94(6));
+    } while (battle_thread_is_running_2(6));
 
     g_companion_overlay_state = 2;
     g_battle_menu_help_open = 0;

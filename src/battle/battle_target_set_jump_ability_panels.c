@@ -3,16 +3,14 @@
 
 /* Mark every tile the acting unit's Jump abilities can reach.
  *
- * Horizontal range and vertical reach start at 1/2 (8/0x10 for job 0x5d) and
- * grow to the best learned Jump record; panels are spread from the unit's
- * tile, and each map position keeps the higher of its two layers when that
- * layer lies within the vertical window. Returns the number of tiles marked,
- * or 0 when the other layer at the unit's position is taller and passable.
+ * Horizontal range and vertical reach start at 1 and 2 half levels (8 and 16 for a Mime) and grow to
+ * the best learned Jump record; panels are spread from the unit's tile, and each map position keeps
+ * the higher of its two layers when that layer lies within the vertical window. Returns the number
+ * of tiles marked, or 0 when the other layer at the unit's position is taller and passable.
  *
- * The target initializes the lower-layer panel giv first (t1 = panels,
- * t2 = t1 + 0x500). That needs `upper_panels` derived from `panels` and the
- * per-tile panel pointers taken upper layer first, because loop.c keeps its
- * giv list in reverse discovery order. */
+ * The target initializes the lower-layer panel giv first (t1 = panels, t2 = t1 + 0x500). That needs
+ * `upper_panels` derived from `panels` and the per-tile panel pointers taken upper layer first,
+ * because loop.c keeps its giv list in reverse discovery order. */
 s32 battle_target_set_jump_ability_panels(const u8* source) {
     u16 abilities[0x14];
     u8 mp_costs[0x18];

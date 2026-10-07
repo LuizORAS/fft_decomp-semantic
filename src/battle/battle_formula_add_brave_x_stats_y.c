@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x3B: +Brave (X), +PA/MA/Speed (Y). */
+/* Formula 0x3B, Scream: raise Brave by X and PA, MA and Speed by Y; no hit roll. */
 void battle_formula_add_brave_x_stats_y(void) {
     s32 y;
 

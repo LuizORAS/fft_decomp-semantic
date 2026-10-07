@@ -26,12 +26,12 @@ s32 jobstts_entrypoint(s32 unit) {
         g_jobstts_gfx_line_g3_capacity = 0;
         g_jobstts_gfx_line_g4_capacity = 0;
         g_jobstts_gfx_tile_capacity = 0;
-        g_jobstts_gfx_tile_16_capacity = 0;
-        g_jobstts_gfx_tile_8_capacity = 0;
         g_jobstts_gfx_tile_1_capacity = 0;
+        g_jobstts_gfx_tile_8_capacity = 0;
+        g_jobstts_gfx_tile_16_capacity = 0;
         g_jobstts_gfx_sprite_capacity = 0;
-        g_jobstts_gfx_sprite_16_capacity = 0;
         g_jobstts_gfx_sprite_8_capacity = 0;
+        g_jobstts_gfx_sprite_16_capacity = 0;
         jobstts_gfx_init_contexts(g_jobstts_gfx_contexts, g_jobstts_gfx_otag_buffer, 0, 0, 0,
             g_jobstts_gfx_poly_ft4_buffer, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             g_jobstts_gfx_draw_move_buffer, g_jobstts_gfx_draw_area_buffer);

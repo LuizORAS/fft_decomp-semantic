@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 
+/* Port debt (QUIRKS.md): text_table is a text-table pointer passed as s32. */
 void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 text_table) {
     s32 first;
 

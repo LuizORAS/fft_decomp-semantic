@@ -29,7 +29,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     s32 k;
     u8 skillset;
 
-    if (g_current_ability_hamedo_flag != 0) {
+    if (g_battle_reaction_first_strike_cancels != 0) {
         return -1;
     }
     if (g_battle_acting_unit_used_ability_id == 0) {

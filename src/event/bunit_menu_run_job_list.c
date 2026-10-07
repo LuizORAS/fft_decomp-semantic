@@ -18,7 +18,7 @@ s32 bunit_menu_run_job_list(void) {
         g_bunit_menu_row_callbacks[6] = (bunit_menu_row_callback_t)bunit_job_calculate_current_total_jp;
         g_bunit_menu_row_callbacks[13] = (bunit_menu_row_callback_t)bunit_job_calculate_current_mastered;
         bunit_menu_get_selection_record(9, &out_a, &out_b, g_bunit_job_ids);
-        bunit_menu_init_scrollable_list((s32)g_bunit_job_ids, out_a, out_b, (s32)g_battle_text_section_pointers[6]);
+        bunit_menu_init_scrollable_list(g_bunit_job_ids, out_a, out_b, (s32)g_battle_text_section_pointers[6]);
         g_bunit_job_list_initialized = 1;
     }
 

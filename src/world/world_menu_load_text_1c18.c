@@ -5,7 +5,7 @@ void world_menu_load_text_1c18(void) {
     s32 i;
 
     world_init_scene_bindings();
-    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_checked_to_address;
+    g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_load_to_address_checked;
     world_thread_call_on_main_stack(0x1C18, 0x5800, g_world_menu_text_file_buffer);
     world_menu_reset_runtime();
     world_script_set_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE, 0);

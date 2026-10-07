@@ -49,7 +49,7 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         g_battle_map_texture_animations[index].frame = 0;
         break;
     fail:
-        main_system_handle_malloc_exception(2, 0x3cd);
+        main_system_report_error(2, 0x3cd);
         break;
     case MAP_DATA_COMMAND_GET_3D_OBJECT_STATE:
         result = g_battle_map_mesh_part_animation_states[index];

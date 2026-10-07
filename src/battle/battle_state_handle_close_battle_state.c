@@ -3,12 +3,15 @@
 /* volatile view: the target reloads this global at every use. */
 extern volatile s32 g_main_gfx_screen_polarity;
 
+/* CLOSE_BATTLE: update the units and darken the screen by the transition step.
+ * battle_state_run_game_loop leaves its frame loop at the end of the frame that enters this
+ * state, so no frame of that loop runs this handler. */
 void battle_state_handle_close_battle_state(void) {
     u16 intensity;
     /* The original frame reserves this otherwise-unused stack area. */
     volatile u8 stack_padding[0x18];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     intensity = g_battle_screen_fade_intensity;
     if (intensity >= 0x100) {
         intensity = 0xff;

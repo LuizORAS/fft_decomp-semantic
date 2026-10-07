@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Report the unit's level up when it gained one (action_rewards.level_for_display): message
+ * 0x183f for 180 frames, the level-up animation and effect with the cursor on the unit, and tune 1.
+ * Returns 1 when reported. A movement ability's EXP reports this way too
+ * (battle_move_start_next_post_move_event). */
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc) {
     if (misc->action_rewards.level_for_display != 0) {
         u8 battle_id;

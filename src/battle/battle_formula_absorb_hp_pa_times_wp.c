@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x30, Night Sword: the physical evade check, then PA * WP as physical damage drained as HP
+ * (battle_formula_apply_hp_absorption). */
 void battle_formula_absorb_hp_pa_times_wp(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_pa_and_weapon_power();

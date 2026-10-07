@@ -3,24 +3,29 @@
 struct battle_gfx_misc_data_header;
 extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_header*);
 
+/* RESUME_ATTACK_PHASE: show the queued effect messages one by one; when none is left and the
+ * numbers are gone, strike again for a continued attack, or free the SP2 data, store the acting
+ * unit's data, set the animations and go on to the next action phase
+ * (battle_state_announce_next_ability). After a First Strike (phase 0), or when no phase is
+ * left, go on to the action's EXP and JP (battle_action_grant_rewards). */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;
-    s32 selected_ability;
+    s32 command;
     battle_unit_misc_data_t* unit;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability = *battle_menu_get_selected_ability_address();
-    if (selected_ability >= 7 && (selected_ability < 9 || selected_ability == 0xff)) {
+    command = *battle_menu_get_selected_command_address();
+    if (command >= 7 && (command < 9 || command == 0xff)) {
         g_battle_action_post_action = 1;
     }
     unit = battle_unit_get_casting_misc_data();
-    if (g_battle_action_post_action != 0 && battle_action_resume_attack_phase_control() == 0
+    if (g_battle_action_post_action != 0 && battle_action_show_next_effect_message() == 0
         && unit->numeric_display_active == 0) {
         if (unit->continue_attack != 0) {
             unit->continue_attack_count += 1;
-            battle_action_set_damage_display_type_based_on_ability();
+            battle_action_start_strike();
             return;
         }
         if (g_battle_gfx_sp2_data != 0) {
@@ -28,8 +33,8 @@ void battle_state_handle_resume_attack_phase_state(void) {
             g_battle_gfx_sp2_data = 0;
         }
         battle_gfx_invalidate_sp2_vram_slot((struct battle_gfx_misc_data_header*)unit);
-        if (g_action_type == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
-            facing = *(s16*)&unit->facing;
+        if (g_battle_turn_event == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
+            facing = unit->facing;
             if (facing < 0) {
                 facing += 0x3ff;
             }
@@ -46,10 +51,10 @@ void battle_state_handle_resume_attack_phase_state(void) {
             if (g_battle_action_phase != 2) {
                 g_battle_action_phase += 1;
             }
-            if (battle_state_announce_next_charged_action() != 0) {
+            if (battle_state_announce_next_ability() != 0) {
                 return;
             }
         }
-        battle_action_handle_post_action_xp_jp_ability();
+        battle_action_grant_rewards();
     }
 }

@@ -4,11 +4,9 @@
 extern battle_stats_t* volatile g_battle_action_attacker;
 extern battle_stats_t* volatile g_battle_action_target;
 
-/*
- * Record the stolen EXP on both action results.
- *
- * The target's loss is encoded by adding 0x80 to the amount.
- */
+/* Steal EXP: take Speed + Y EXP, at most 100 and at most what the target has; the attacker's result
+ * gains it and the target's loses it (bit 0x80 of exp_change, battle_action_apply_exp_change). With
+ * nothing to take the action is a forced failure. */
 void battle_formula_set_exp_stolen(void) {
     u8 amount;
     u8 available_exp;
@@ -27,7 +25,7 @@ void battle_formula_set_exp_stolen(void) {
     }
     g_battle_action_attacker_data->exp_change = amount;
     g_battle_action_attacker_data->hit = 1;
-    g_battle_action_attacker_data->attack_type = 1;
+    g_battle_action_attacker_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
     g_battle_action_target_data->exp_change = amount + 0x80;
-    g_battle_action_target_data->attack_type = 1;
+    g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
 }

@@ -48,9 +48,9 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                 }
             }
             if (action->ct_change != 0) {
-                if (action->ct_change == 0xff) {
+                if (action->ct_change == BATTLE_ACTION_CT_CHANGE_QUICK) {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_QUICK;
-                } else if (action->ct_change == 0x7f) {
+                } else if (action->ct_change == BATTLE_ACTION_CT_CHANGE_ZERO) {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
                 } else if (action->ct_change & 0x80) {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CT_GAIN;

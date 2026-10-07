@@ -92,7 +92,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                        .size;
             phase = &g_battle_gfx_state_words[1];
         load:
-            if (main_file_call_build_header(sector, size, data) != 0) {
+            if (main_file_request_read_bytes(sector, size, data) != 0) {
                 main_heap_call_free((void*)g_battle_gfx_state_words[3]);
             } else {
                 (*phase)++;

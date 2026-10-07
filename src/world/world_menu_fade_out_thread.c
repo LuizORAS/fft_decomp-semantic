@@ -8,7 +8,7 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_transition_timeout = 4;
     do {
         world_thread_yield();
-    } while (world_thread_is_running_80100164(6) != 0);
+    } while (world_thread_is_running_2(6) != 0);
 
     g_world_companion_overlay_state = 2;
     g_world_text_overlay_active = 0;

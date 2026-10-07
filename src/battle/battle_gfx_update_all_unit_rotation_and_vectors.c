@@ -35,7 +35,7 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         }
 
         tile = battle_map_get_tile_data_pointer(unit->screen.vx / 28, unit->screen.vz / 28, unit->map_z);
-        if (unit->centre_tile_offset != 0) {
+        if (unit->step_phase != 0) {
             if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_6) != 0) {
                 battle_camera_calculate_relative_offset_5(&screen.vx, &adjusted.vx);
             } else {

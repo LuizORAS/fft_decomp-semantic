@@ -3,12 +3,11 @@
 
 /* Marks the tiles of every unit selected by a Calculator (Arithmeticks) action.
  *
- * The type ability picks the compared value (CT, capped at 100 and forced to
- * 100 for the caster, level, EXP, or whole-unit height, where half heights never
- * qualify); the multiplier ability tests it for primality or divisibility by
- * 5, 4 or 3. Units that are absent, crystallized, jumping, treasure, or
- * flagged 0x40 in mount_info are skipped. Returns the number of marked units,
- * or -1 when the command does not name one type and one multiplier ability. */
+ * The type ability picks the compared value (CT, capped at 100 and forced to 100 for the caster,
+ * level, EXP, or whole-unit height, where half heights never qualify); the multiplier ability tests
+ * it for primality or divisibility by 5, 4 or 3. Units that are absent, crystallized, jumping,
+ * treasure, or a mount carrying a rider are skipped. Returns the number of marked units, or -1 when
+ * the command does not name one type and one multiplier ability. */
 s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     battle_unit_height_data_t height;
     battle_ai_command_action_t action;
@@ -46,7 +45,7 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
         || (type_flags & CALCULATOR_MULTIPLE_MASK) || (multiplier_flags & CALCULATOR_ATTRIBUTE_MASK)) {
         return -1;
     }
-    battle_target_disable_green_panel_flags();
+    battle_target_clear_targeted_flags();
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {

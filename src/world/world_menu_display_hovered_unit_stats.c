@@ -162,7 +162,7 @@ void world_menu_display_hovered_unit_stats(
             }
         }
         running = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
-        if (running != 0 && world_thread_is_running_80100164(running - 1) == 0) {
+        if (running != 0 && world_thread_is_running_2(running - 1) == 0) {
             running = 0;
         }
         page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode] + (frame & 1)];
@@ -302,20 +302,20 @@ void world_menu_display_hovered_unit_stats(
             world_clear_menu_render_buffer(buffer, 0x700);
             stride = &g_world_menu_text_state.stride;
             *stride = 0x28;
-            world_menu_draw_numeric_display_entries((s32)buffer, entries, (world_glyph_blit_t*)(stride - 2), 6);
+            world_menu_draw_numeric_display_entries(buffer, entries, (world_glyph_blit_t*)(stride - 2), 6);
             LoadImage(&rects[0], (u32*)buffer);
             i = g_world_menu_hide_numeric_values;
             *stride = 0x60;
             g_world_menu_hide_numeric_values = 0;
             if (mode == 0 || mode == 3) {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 6, (world_glyph_blit_t*)(stride - 2), 2);
+                    (buffer + 0x400), entries + 6, (world_glyph_blit_t*)(stride - 2), 2);
                 g_world_menu_hide_numeric_values = i;
                 world_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 8, (world_glyph_blit_t*)(stride - 2), 2);
+                    (buffer + 0x400), entries + 8, (world_glyph_blit_t*)(stride - 2), 2);
             } else if (mode == 1) {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(buffer + 0x400), entries + 6, (world_glyph_blit_t*)(stride - 2), 2);
+                    (buffer + 0x400), entries + 6, (world_glyph_blit_t*)(stride - 2), 2);
                 g_world_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 world_menu_set_text_origin(2, 0);

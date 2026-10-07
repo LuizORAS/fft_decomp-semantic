@@ -23,7 +23,7 @@ void battle_unit_set_target_animation_from_attack_type(
     if ((target->encoded_animation >> 1) == 0x34) {
         return;
     }
-    float_fly = (u8)battle_move_validate_float_fly(target);
+    float_fly = (u8)battle_move_get_water_animation_mode(target);
     animation = 9;
     if (float_fly < 2) {
         stats = target->battle_data;
@@ -70,9 +70,9 @@ void battle_unit_set_target_animation_from_attack_type(
                 break;
             default:
                 if (action->hit != 0) {
-                    if (((s16)action->hp_damage != 0) || ((s16)action->mp_damage != 0)) {
+                    if ((action->hp_damage != 0) || (action->mp_damage != 0)) {
                         animation = 0x19;
-                    } else if (((s16)action->hp_healing != 0) || ((s16)action->mp_healing != 0)) {
+                    } else if ((action->hp_healing != 0) || (action->mp_healing != 0)) {
                         animation = 0x1b;
                     }
                 }
@@ -81,13 +81,13 @@ void battle_unit_set_target_animation_from_attack_type(
 
             if (animation != 0) {
                 if (target->spritesheet_id < 0x9b) {
-                    battle_unit_store_animation_facing_movement_data(animation, (s16)target->facing, target);
+                    battle_unit_store_animation_facing_movement_data(animation, target->facing, target);
                 } else if (animation == 0x19) {
-                    battle_unit_store_animation_facing_movement_data(0x19, (s16)target->facing, target);
+                    battle_unit_store_animation_facing_movement_data(0x19, target->facing, target);
                 }
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK) {
-                battle_move_transfer_target_coordinates(attacker, target);
+                battle_move_start_knockback(attacker, target);
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_POACH) {
                 target->status_flags_5_6 |= BATTLE_MISC_STATUS_POACHED;
@@ -105,5 +105,5 @@ void battle_unit_set_target_animation_from_attack_type(
         }
         animation = 0x19;
     }
-    battle_unit_store_animation_facing(animation, (s16)target->facing, target);
+    battle_unit_store_animation_facing(animation, target->facing, target);
 }

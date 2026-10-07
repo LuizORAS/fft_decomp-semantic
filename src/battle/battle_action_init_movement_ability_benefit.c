@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Prepare the action record for a movement ability's benefit.
- *
- * Initialize the record, then select HP, MP, EXP or JP in that order.
- * Return -1 for a blocking status and 0 otherwise, including when no
- * movement benefit is present. The caller applies and displays the result.
- */
+/* Prepare the unit's result for its movement ability after a move: Move-HP Up heals max HP / 10 and
+ * Move-MP Up max MP / 10 (both rounding up); Move-Get EXP and Move-Get JP earn
+ * battle_unit_calculate_move_exp_jp_up_to_earn, doubled by Gained EXP Up or Gained JP Up. Only the
+ * first of the four in that order applies. Returns -1 when a status prevents it (the
+ * PREVENT_REACTION set), else 0; the caller applies and shows the result. */
 s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit) {
     s32 flags;
     u8 unit_id;
@@ -20,7 +18,7 @@ s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit) {
     battle_action_clear_current_data(&unit->action);
     if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
         return -1;
-    flags = battle_move_get_support_flags(unit);
+    flags = battle_move_get_movement_ability_events(unit);
     if (flags & BATTLE_MOVE_POST_EVENT_MOVE_HP_UP) {
         amount = (unit->max_hp + 9) / 10;
         action = g_battle_action_target_data;

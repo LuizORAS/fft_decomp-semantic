@@ -24,7 +24,7 @@ void open_script_update_xa_audio(void) {
             {
                 s32* state = &g_open_script_state.control_state;
 
-                g_main_system_session_frames = 0;
+                g_main_system_frame_timer = 0;
                 (*state)++;
             }
             break;
@@ -34,7 +34,7 @@ void open_script_update_xa_audio(void) {
             s32 value = *state;
 
             *state = value + delta;
-            if (g_main_system_session_frames >= 0x79 && *state == CdlDiskError) {
+            if (g_main_system_frame_timer >= 0x79 && *state == CdlDiskError) {
                 main_file_reset_cd_subsystems();
                 *state = 0;
             }

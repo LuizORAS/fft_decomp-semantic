@@ -23,7 +23,7 @@ s32 world_item_build_category_list(s16 unit_id, u16 sort_mode, s8 category, worl
     }
     item = 1;
     count = 0;
-    for (; item < 0xFE; item++) {
+    for (; item < ITEM_ID_END; item++) {
         entry = item;
         if (mode == 3) {
             result = world_item_change_quantity_on_equip((s16)item, 0);

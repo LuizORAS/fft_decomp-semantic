@@ -22,32 +22,32 @@ void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 sin
     s32 lower_delta;
     s32 upper_delta;
     map_tile_t* tile;
-    targeting_panel_entry_t* lower_panel;
-    targeting_panel_entry_t* upper_panel;
+    battle_target_panel_t* lower_panel;
+    battle_target_panel_t* upper_panel;
 
     max_delta = tolerance * 2;
     ref = ref_height;
     for (i = 0; i < 0x100; i++) {
         tile = &g_battle_map_tile_data[i];
-        lower_panel = &g_battle_target_panel_data[i];
+        lower_panel = &g_battle_target_panels[i];
         if (!tile->flags_06.bits.blocked) {
             u32 depth = tile->depth_half_height;
             lower = tile->height * 2 + (depth & MAP_TILE_HALF_HEIGHT_MASK) + (depth >> MAP_TILE_DEPTH_SHIFT) * 2;
         } else {
             lower = -0xFF;
-            lower_panel->a = 0;
-            lower_panel->b = 0;
+            lower_panel->remaining_range = 0;
+            lower_panel->mark = 0;
         }
         j = i + 0x100;
         tile = &g_battle_map_tile_data[j];
-        upper_panel = &g_battle_target_panel_data[j];
+        upper_panel = &g_battle_target_panels[j];
         if (!tile->flags_06.bits.blocked) {
             u32 depth = tile->depth_half_height;
             upper = tile->height * 2 + (depth & MAP_TILE_HALF_HEIGHT_MASK) + (depth >> MAP_TILE_DEPTH_SHIFT) * 2;
         } else {
             upper = -0xFF;
-            upper_panel->a = 0;
-            upper_panel->b = 0;
+            upper_panel->remaining_range = 0;
+            upper_panel->mark = 0;
         }
         if (single_layer != 0) {
             if (lower >= upper) {
@@ -67,18 +67,18 @@ void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 sin
             upper_delta = ref - upper;
         }
         if (upper_delta < lower_delta) {
-            lower_panel->a = 0;
-            lower_panel->b = 0;
+            lower_panel->remaining_range = 0;
+            lower_panel->mark = 0;
             if (max_delta < upper_delta) {
-                upper_panel->a = 0;
-                upper_panel->b = 0;
+                upper_panel->remaining_range = 0;
+                upper_panel->mark = 0;
             }
         } else {
-            upper_panel->a = 0;
-            upper_panel->b = 0;
+            upper_panel->remaining_range = 0;
+            upper_panel->mark = 0;
             if (max_delta < lower_delta) {
-                lower_panel->a = 0;
-                lower_panel->b = 0;
+                lower_panel->remaining_range = 0;
+                lower_panel->mark = 0;
             }
         }
     }

@@ -1,13 +1,18 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* TARGETING_RANGE: choose the target tile. Under player control the d-pad moves the cursor and
+ * the camera can rotate, zoom and tilt; Circle on a tile in range selects it
+ * (battle_target_select_tile), elsewhere enters ILLEGAL_RANGE, and Cross returns to the action
+ * menu. An AI unit aims at its stored tile (targeting type 5) or unit (6) and selects it after
+ * 31 frames, or reopens its menus when that unit is gone. */
 void battle_state_handle_targeting_range_state(void) {
     u16 frame_data;
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
 
     unit = battle_unit_get_source_misc_data();
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_target_move_cursor_by_input();
@@ -15,7 +20,7 @@ void battle_state_handle_targeting_range_state(void) {
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
         if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
-            battle_target_set_tile_background_color(0, 2);
+            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 2);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }
@@ -27,12 +32,12 @@ void battle_state_handle_targeting_range_state(void) {
                 battle_target_select_tile();
                 return;
             }
-            battle_state_enter_target_out_of_range();
+            battle_state_enter_illegal_range();
         }
     } else {
         switch (unit->command_state.ai.data.action.targeting_type) {
         case 5:
-            battle_target_update_free_cursor_selection(unit, 0);
+            battle_target_move_cursor_to_selection(unit, 0);
             frame_data = unit->state_frame_counter++;
             if (frame_data >= 0x1f) {
                 battle_map_get_tile_data_pointer(unit->command_state.cursor.target_panel.vx,
@@ -43,7 +48,7 @@ void battle_state_handle_targeting_range_state(void) {
         case 6:
             target = battle_unit_get_misc_data_by_battle_id(unit->command_state.ai.data.action.target_id);
             if (target != 0) {
-                battle_target_update_free_cursor_selection(unit, target);
+                battle_target_move_cursor_to_selection(unit, target);
                 frame_data = unit->state_frame_counter++;
                 if (frame_data >= 0x1f) {
                     battle_map_get_tile_data_pointer(target->map_x, target->map_y, target->map_z);

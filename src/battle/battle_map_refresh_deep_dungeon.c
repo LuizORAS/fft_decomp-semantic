@@ -4,7 +4,7 @@
 s32 battle_map_refresh_deep_dungeon(void) {
     if (battle_map_check_deep_dungeon_crystal_and_init_state()) {
         g_battle_game_state = BATTLE_GAME_STATE_DEEP_DUNGEON_MESH_FINISH;
-        g_animation_speed = 1;
+        g_battle_state_vsync_interval = 1;
         return 1;
     }
     return 0;

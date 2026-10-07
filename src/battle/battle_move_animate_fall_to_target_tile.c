@@ -1,8 +1,3 @@
-/*
- * Sibling of battle_move_animate_jump_start (0x8008a35c) and
- * battle_move_animate_jump_arc_to_own_tile (0x8008a118): same
- * distortion-animation shape.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
@@ -12,6 +7,10 @@
     ((s32 (*)(                                                                                                         \
         battle_unit_misc_data_t*, const battle_screen_coords_t*))battle_gfx_calculate_screen_z_from_misc_screen_data)
 
+/* Distortion 0xd (BATTLE_DISTORTION_FALL_TO_TARGET): drop the unit under gravity, straight down
+ * from where it is, onto the ground of its first target's tile or else of the action target tile,
+ * and end there. During an event it falls onto its own tile instead, held at the tile's centre (see
+ * QUIRKS.md for the coordinate it writes). */
 void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
     battle_screen_coords_t coords;
     /* Unreferenced 8-byte frame slot above `coords`; it puts `velocity` at

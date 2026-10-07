@@ -9,8 +9,8 @@
  * blocks in address order from g_main_sound_heap_blocks. */
 typedef struct suzuki_heap_block {
     u16 flags;                      /* 0x00; 0x8000 list head, 0x2 in use */
-    u16 _unknown_02;                /* 0x02; cleared on allocation */
-    u32 _unknown_04;                /* 0x04; cleared on allocation */
+    u16 _unknown_02;                /* 0x02; cleared on allocation; never read */
+    u32 _unknown_04;                /* 0x04; cleared on allocation; never read */
     u8* end;                        /* 0x08; end of the payload */
     struct suzuki_heap_block* next; /* 0x0c */
 } suzuki_heap_block_t;

@@ -8,7 +8,7 @@
  */
 void battle_ai_store_considered_action_data(void) {
     g_battle_action_state = BATTLE_ACTION_STATE_AI_SIMULATION;
-    g_current_ability_hamedo_flag = 0;
+    g_battle_reaction_first_strike_cancels = 0;
     main_util_copy_byte_data(
         &g_current_ability_attacker, g_battle_ai_current_ability_data_backup, sizeof(g_current_ability_attacker));
 }

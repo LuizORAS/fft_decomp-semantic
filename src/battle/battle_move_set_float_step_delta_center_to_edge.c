@@ -1,13 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Writes the scaled step direction into the unit's per-frame velocity. */
-
 enum {
     BATTLE_MOVE_STEP_WIDTH = 28,
     BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
 };
 
+/* Same as battle_move_set_unit_step_delta_center_to_edge, for a floating unit's steps. */
 void battle_move_set_float_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count) {
     VECTOR direction;
@@ -33,7 +32,7 @@ void battle_move_set_float_step_delta_center_to_edge(
         break;
     }
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_battle_state_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_battle_state_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_battle_state_vsync_interval;
 }

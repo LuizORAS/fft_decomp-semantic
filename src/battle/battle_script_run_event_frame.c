@@ -24,7 +24,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     u32 prims;
     s32 polarity;
 
-    g_battle_ai_workspace_ptr = (void*)g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (battle_ai_workspace_t*)g_battle_ai_workspace;
     if (g_battle_etc_graphics_enabled != 0) {
         DrawSync(0);
         rect.w = 0x100;
@@ -41,7 +41,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
 
     if (g_battle_script_threads_idle != 0) {
         for (i = 1; i < 16; i++) {
-            if (battle_thread_is_running_8014cc94(i) != 0) {
+            if (battle_thread_is_running_2(i) != 0) {
                 break;
             }
         }
@@ -58,7 +58,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
                 g_option_menu_submenu_state = 0;
                 return 0;
             }
-            if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x147) {
+            if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
                 return 0x13;
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
@@ -142,11 +142,11 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         g_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_8014cc94(i);
+        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_2(i);
     }
     battle_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_8014cc94(i)) {
+        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_2(i)) {
             g_event_input_suppression_frames = 5;
         }
     }
@@ -193,7 +193,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 16; i++) {
-        if (battle_thread_is_running_8014cc94(i) != 0) {
+        if (battle_thread_is_running_2(i) != 0) {
             break;
         }
     }

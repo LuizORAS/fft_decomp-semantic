@@ -105,7 +105,8 @@ void world_shop_run_fitting_room_equip_menu(void) {
         if (g_world_menu_option_count != 0
             && g_world_shop_fitting_room_previewed_cursor != g_world_menu_cursor_position) {
             g_world_shop_fitting_room_previewed_cursor = g_world_menu_cursor_position;
-            result = world_formation_equip_item_to_unit_slot(20, g_world_shop_fitting_equip_slot, (s16)item);
+            result = world_formation_equip_item_to_unit_slot(
+                WORLD_FORMATION_PREVIEW_RECORD, g_world_shop_fitting_equip_slot, (s16)item);
             if (result == 1) {
                 world_menu_toggle_preview_stats_window(1);
                 g_world_preview_stats_thread_params.redraw_request = result;

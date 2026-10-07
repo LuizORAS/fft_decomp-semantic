@@ -5,6 +5,10 @@ enum {
     GNS_BUFFER_CLEAR_BYTES = 0xbb8,
 };
 
+/* Start loading a map: make its Move-Find tiles current (battle_map_load_move_find_item_data), clear
+ * the GNS record buffer and request the first 0x1000 bytes of its GNS file. Returns the record
+ * buffer, or 0 when the read cannot start; a map with no GNS sector gets no return value
+ * (QUIRKS.md). */
 gns_file_record_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
     u32 selected_map;
     gns_file_record_t* gns_records;
@@ -18,7 +22,7 @@ gns_file_record_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
 
     lba = g_battle_map_gns_lba[selected_map];
     if (lba != 0) {
-        if (main_file_call_build_header(lba, GNS_INITIAL_LOAD_BYTES, g_battle_map_data_load_buffer) != 0) {
+        if (main_file_request_read_bytes(lba, GNS_INITIAL_LOAD_BYTES, g_battle_map_data_load_buffer) != 0) {
             return 0;
         }
         return gns_records;

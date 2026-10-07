@@ -7,7 +7,7 @@
 void battle_menu_open_secondary_companion_executable(void) {
     if ((g_battle_menu_secondary_companion_executable_request_index != 0)
         && (g_battle_menu_secondary_companion_loading == 0)) {
-        g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
+        g_battle_thread_call_target = (void (*)(void))main_file_request_read_bytes;
         if (battle_thread_call_on_main_stack(g_battle_menu_secondary_companion_executable_lbas
                                                  [g_battle_menu_secondary_companion_executable_request_index],
                 g_battle_menu_secondary_companion_executable_sizes

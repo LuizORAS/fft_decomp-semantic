@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Start thread 14 on g_wldcore_active_saved_record.instruction.bytes.operand_0 | 0x8800 (as
- * wldcore_opcode_start_script_thread_flags_04 does with the opcode operand), then push
+ * wldcore_opcode_start_text_thread does with the opcode operand), then push
  * g_wldcore_active_saved_record.instruction.bytes.operand_0 onto the four-entry history
  * g_wldcore_active_saved_record.text_history_0..3. */
 void wldcore_opcode_start_text_thread_and_push_history(void) {

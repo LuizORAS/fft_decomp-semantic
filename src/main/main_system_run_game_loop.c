@@ -2,6 +2,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Top-level loop, never returns: the OPEN.BIN title, then the world map (WLDCORE and WORLD) and
+ * BATTLE.BIN in turn until a reset (flow state 2) or the ending (flow state 3). A world result of 5
+ * returns to the title without resetting the game state. */
 void main_system_run_game_loop(void) {
     int open_mode;
 
@@ -26,7 +29,7 @@ void main_system_run_game_loop(void) {
 
         do {
             if (g_main_system_go_straight_to_battle == 0) {
-                g_main_system_frontend_world_result = main_overlay_open_world_and_wldcore(1);
+                g_main_system_frontend_world_result = main_overlay_exec_wldcore_and_world_bin(1);
             }
 
             if (g_main_system_frontend_world_result == 5) {
@@ -48,7 +51,9 @@ void main_system_run_game_loop(void) {
             main_sound_stop_weather_sfx_music();
             main_sound_unload_scenario_music_and_tunes();
             battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12A);
+            /* With NEXT_SCENARIO set, the ATTACK scenario loader advances this
+             * event to Things Obtained or Those Who Squirm in Darkness. */
+            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_SEARCHING_FOR_ALMA);
             main_overlay_exec_open_bin_ending();
             main_overlay_exec_battle_bin();
             main_gfx_load_zodiac_frame();

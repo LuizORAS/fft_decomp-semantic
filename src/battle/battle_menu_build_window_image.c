@@ -87,7 +87,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
             g_battle_menu_window_sprite_position.y = 0;
         }
         g_battle_menu_window_sprite_position.stride = words * 4;
-        i = g_battle_threads[g_battle_current_thread_id].task_words[5] & 0xF0;
+        i = g_battle_threads[g_battle_thread_current_id].task_words[5] & 0xF0;
         if (i != 0) {
             if ((mode & 3) == 1) {
                 g_battle_menu_window_sprite_position.x -= 0x10;

@@ -27,9 +27,9 @@ void debugchr_editor_run_numeric_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
     thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0) + 1;
-    if (g_battle_current_thread_id == 12) {
+    if (g_battle_thread_current_id == 12) {
         buffer = g_debugchr_editor_numeric_state_a;
         buffers = buffer;
         text_pixels = g_debugchr_editor_numeric_text_a;
@@ -60,7 +60,7 @@ void debugchr_editor_run_numeric_thread(void) {
             &g_debugchr_editor_numeric_table.source.texture_origin, descriptor);
         descriptor++;
     }
-    if (g_battle_current_thread_id != 12) {
+    if (g_battle_thread_current_id != 12) {
         buffer->sprites[14].v0 += 0x4C;
         buffer->sprites[15].v0 += 0x4C;
         buffer->sprites[16].v0 += 0x4C;
@@ -74,33 +74,33 @@ void debugchr_editor_run_numeric_thread(void) {
             battle_clear_menu_render_buffer(text_pixels, 0x918);
             g_menu_text_state.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)text_pixels,
+            if (g_battle_thread_current_id != 12) {
+                debugchr_text_render_signed_decimal_entries(text_pixels,
                     (battle_menu_status_panel_gauge_entry_t*)entries,
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 3);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
+                battle_menu_draw_numeric_display_entries(text_pixels, (struct menu_number_entry*)entries,
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
             }
             g_menu_text_state.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)(text_pixels + 0x168),
+            if (g_battle_thread_current_id != 12) {
+                debugchr_text_render_signed_decimal_entries((text_pixels + 0x168),
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x24),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x168),
                     (struct menu_number_entry*)(entries + 0x24),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
             }
             g_menu_text_state.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)(text_pixels + 0x468),
+            if (g_battle_thread_current_id != 12) {
+                debugchr_text_render_signed_decimal_entries((text_pixels + 0x468),
                     (battle_menu_status_panel_gauge_entry_t*)(entries + 0x54),
                     (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
+                battle_menu_draw_numeric_display_entries((text_pixels + 0x468),
                     (struct menu_number_entry*)(entries + 0x54),
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
             }
@@ -149,7 +149,7 @@ void debugchr_editor_run_numeric_thread(void) {
         for (; i < 17; i++) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        if (g_battle_current_thread_id == 12) {
+        if (g_battle_thread_current_id == 12) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
         } else {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);

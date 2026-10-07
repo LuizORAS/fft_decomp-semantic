@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 
-/* Run deployment and advance the battle state one rendered frame at a time. */
+/* BATTLE's main loop: set up each battle with battle_state_run_battle_setup, then once a frame
+ * read the pad, draw the map, run the handler of g_battle_game_state, update the camera, map
+ * animations and music, poll the disc and present the frame, until the state is CLOSE_BATTLE;
+ * another battle follows while g_main_system_game_flow_state stays 0. A slow frame during
+ * effects or action execution slows the next ones (g_battle_state_slowdown_frames). */
 void battle_state_run_game_loop(void) {
     battle_gfx_vram_slot_t* timer_field;
     SVECTOR* camera_integer;
@@ -27,7 +31,7 @@ void battle_state_run_game_loop(void) {
     camera_fixed = &g_battle_camera_current_real_coords;
 
     do {
-        battle_state_run_deployment();
+        battle_state_run_battle_setup();
         g_battle_menu_status_enabled = 0;
         g_battle_controller_input = g_main_game_options.fields.cursor_movement;
 
@@ -62,7 +66,7 @@ void battle_state_run_game_loop(void) {
             switch (g_battle_game_state) {
             default:
             case BATTLE_GAME_STATE_FREE_CURSOR:
-                battle_state_handle_default_state();
+                battle_state_handle_free_cursor_state();
                 break;
             case BATTLE_GAME_STATE_FREE_CURSOR_HELP:
                 battle_state_handle_free_cursor_help_state();
@@ -76,8 +80,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_IDLING_ACTION_MENUS:
                 battle_state_handle_idling_action_menus_state();
                 break;
-            case BATTLE_GAME_STATE_MENU_TO_TARGETING:
-                battle_state_handle_menu_to_targeting_state();
+            case BATTLE_GAME_STATE_AI_COMMAND:
+                battle_state_handle_ai_command_state();
                 break;
             case BATTLE_GAME_STATE_ACTION_HELP_MENU:
                 battle_state_handle_action_help_menu_state();
@@ -97,8 +101,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_AFTER_COMMAND:
                 battle_state_handle_after_command_state();
                 break;
-            case BATTLE_GAME_STATE_JP_EXP_GAIN:
-                battle_state_handle_jp_exp_gain_state();
+            case BATTLE_GAME_STATE_CONTINUE_TURN:
+                battle_state_handle_continue_turn_state();
                 break;
             case BATTLE_GAME_STATE_CHANGE_TURN:
                 battle_state_handle_change_turn_state();
@@ -109,8 +113,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_UNIT_MOVE:
                 battle_state_handle_unit_move_state();
                 break;
-            case BATTLE_GAME_STATE_CLOSE_MOVE_HELP:
-                battle_state_handle_close_move_help_state();
+            case BATTLE_GAME_STATE_SELECT_MOVE_TILE:
+                battle_state_handle_select_move_tile_state();
                 break;
             case BATTLE_GAME_STATE_MOVE_RANGE_EXCEPTION:
                 battle_state_handle_move_range_exception_state();
@@ -136,8 +140,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_CRYSTAL_LEARN:
                 battle_state_handle_crystal_learn_state();
                 break;
-            case BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP:
-                battle_state_handle_action_execute_setup_state();
+            case BATTLE_GAME_STATE_TARGETING_MESSAGE:
+                battle_state_handle_targeting_message_state();
                 break;
             case BATTLE_GAME_STATE_TARGETING_RANGE:
                 battle_state_handle_targeting_range_state();
@@ -163,8 +167,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE:
                 battle_state_handle_commence_attack_phase_state();
                 break;
-            case BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY:
-                battle_state_handle_effect_damage_display_state();
+            case BATTLE_GAME_STATE_ANNOUNCE_ABILITY:
+                battle_state_handle_announce_ability_state();
                 break;
             case BATTLE_GAME_STATE_OPEN_SP2_FILES:
                 battle_state_handle_open_sp2_files_state();
@@ -172,11 +176,11 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN:
                 battle_state_handle_start_effect_file_open_state();
                 break;
-            case BATTLE_GAME_STATE_SECONDARY_EFFECT:
-                battle_state_handle_secondary_effect_state();
+            case BATTLE_GAME_STATE_START_ACTION_EXECUTE:
+                battle_state_handle_start_action_execute_state();
                 break;
             case BATTLE_GAME_STATE_ACTION_EXECUTE:
-                battle_state_update_action_execute_mode();
+                battle_state_handle_action_execute_state();
                 break;
             case BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY:
                 battle_state_handle_battle_message_display_state();
@@ -215,7 +219,7 @@ void battle_state_run_game_loop(void) {
                 battle_state_handle_effect_state();
                 break;
             case BATTLE_GAME_STATE_EVENT:
-                battle_state_update_event_mode();
+                battle_state_handle_event_state();
                 break;
             case BATTLE_GAME_STATE_MAP_JUMPING_OUT:
                 battle_state_handle_map_jumping_out_state();
@@ -257,8 +261,8 @@ void battle_state_run_game_loop(void) {
             frame_measurement = battle_state_sync_frame(main_gfx_get_otag() + 0x17f);
             g_battle_frame_measurement = frame_measurement;
             i = 0;
-            if (g_max_battle_frame_measurement < frame_measurement) {
-                g_max_battle_frame_measurement = frame_measurement;
+            if (g_battle_frame_measurement_max < frame_measurement) {
+                g_battle_frame_measurement_max = frame_measurement;
             }
             empty_timer = 0xfe;
             timer_field = g_battle_gfx_vram_slots;
@@ -276,18 +280,18 @@ void battle_state_run_game_loop(void) {
 
             if (g_battle_game_state == BATTLE_GAME_STATE_EFFECT
                 || g_battle_game_state == BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                if (g_animation_speed == 1) {
-                    g_frame_pacing_timer = 0;
-                } else if (g_frame_pacing_suppressed == 0) {
+                if (g_battle_state_vsync_interval == 1) {
+                    g_battle_state_slowdown_frames = 0;
+                } else if (g_battle_state_slowdown_suppressed == 0) {
                     if (g_battle_frame_measurement >= 0x301) {
-                        g_frame_pacing_timer = 0x1e;
-                    } else if (g_battle_frame_measurement >= 0x201 && g_frame_pacing_timer < 0x0f) {
-                        g_frame_pacing_timer = 0x0f;
+                        g_battle_state_slowdown_frames = 0x1e;
+                    } else if (g_battle_frame_measurement >= 0x201 && g_battle_state_slowdown_frames < 0x0f) {
+                        g_battle_state_slowdown_frames = 0x0f;
                     }
                 }
             }
-            g_frame_pacing_suppressed = 0;
-            main_noop_800449ec();
+            g_battle_state_slowdown_suppressed = 0;
+            main_system_frame_hook();
         }
 
         battle_state_stop_map_animations();

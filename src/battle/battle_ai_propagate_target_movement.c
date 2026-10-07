@@ -88,10 +88,10 @@ s32 battle_ai_propagate_target_movement(
                         state->current_panel = &g_battle_target_panels[state->tile_index];
                         if (frontier_snapshot[state->tile_index]) {
                             state->source_unit_record_flag = 0;
-                            battle_move_spread_to_neighbors();
+                            battle_move_search_adjacent_candidates();
                             if (!config->fly_or_teleport) {
                                 state->source_unit_record_flag = 0;
-                                battle_move_calculate_spread();
+                                battle_move_search_jump_candidates();
                             }
                         }
                     }

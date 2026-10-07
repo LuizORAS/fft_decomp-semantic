@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Turn-clock Transparent upkeep: a unit that is not absent, crystal, dead, jumping, petrified or
+ * treasure, that acted, and whose inflicted Transparent has its removal flag set loses Transparent.
+ * Returns the staged result type. */
 s32 battle_status_remove_transparent(battle_stats_t* unit) {
     battle_stats_t* target;
 
     if (battle_status_check_crystal_dead_jump_petrify_treasure(unit) != 0) {
         return 0;
     }
-    battle_action_set_target_variables(unit);
+    battle_action_set_target_unit(unit);
     if (unit->action_taken != 0) {
         target = g_battle_action_target;
         if ((target->inflicted_status[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT)) != 0) {

@@ -18,7 +18,7 @@ s32 main_sound_open_music_into_slot(s32 scenario, s32 slot) {
         suzuki_smd_header_t* data = main_heap_alloc_smd(g_main_sound_scenario_smd_files[scenario].size);
 
         if (data != 0
-            && main_file_call_build_header(g_main_sound_scenario_smd_files[scenario].sector,
+            && main_file_request_read_bytes(g_main_sound_scenario_smd_files[scenario].sector,
                    g_main_sound_scenario_smd_files[scenario].size, data)
                 == 0) {
             g_main_sound_music.slots.smd[slot] = data;

@@ -31,7 +31,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     s32 index;
     s32 upper_index;
 
-    if (x < 0 || y < 0 || x >= g_map_max_x || y >= g_map_max_y) {
+    if (x < 0 || y < 0 || x >= g_battle_map_max_x || y >= g_battle_map_max_y) {
         return -1;
     }
     switch (direction) {
@@ -54,7 +54,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     }
     tile = &g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)];
     height = TILE_EDGE_HEIGHT(tile, source_shift);
-    index = y * g_map_max_x + x;
+    index = y * g_battle_map_max_x + x;
     upper_index = index + 0x100;
     lower = &g_battle_map_tile_data[index];
     upper = &g_battle_map_tile_data[upper_index];
@@ -94,7 +94,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     if (fall < 0) {
         return -1;
     }
-    if (battle_target_get_unit_id_if_tile_targetable(x, y, level) != -1) {
+    if (battle_target_get_unit_at_tile(x, y, level) != -1) {
         return -1;
     }
     g_current_ability.knockback_fall_height = fall;

@@ -15,6 +15,10 @@ typedef struct battle_target_reflect_action {
     s16 target_y;         /* 0x17e */
 } battle_target_reflect_action_t;
 
+/* Redirect a reflected spell: the unit holding Reflect casts the last attack it received again (as
+ * Black Magic, reaction 5) at the tile that battle_map_resolve_rotated_offset_layer derives from
+ * the caster-to-unit offset. Returns -1 when the caster stands on the unit's square or that tile is
+ * off the map or blocked. */
 s32 battle_target_apply_reflect(battle_stats_t* unit) {
     battle_target_reflect_action_t* act;
     s32 x;

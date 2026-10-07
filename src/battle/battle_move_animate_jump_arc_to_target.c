@@ -1,11 +1,3 @@
-/*
- * Distortion animation 0x06 (dispatcher 0x8008b234): jump along an arc toward
- * the first target's sprite centre, or the action target tile when the unit
- * has no targets. Phase 0 builds the target point and asks
- * battle_move_calculate_jump_arc_velocity for the velocity and frame count; phase 1
- * applies the velocity to all three real coordinates, accelerating the height
- * by g_battle_move_jump_gravity.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
@@ -16,6 +8,11 @@ typedef struct battle_move_jump_target {
     u8 _unused_06[10];
 } battle_move_jump_target_t;
 
+/* Distortion 6 (BATTLE_DISTORTION_JUMP_TO_TARGET): jump along an arc toward the first target's
+ * sprite centre (half its sprite height above it), or the action target tile when the unit has no
+ * targets, and end when the flight frames run out, without landing. Phase 0 asks
+ * battle_move_calculate_jump_arc_velocity for the velocity and frame count; phase 1 applies it,
+ * accelerating the height by g_battle_move_jump_gravity. A unit with no battle record ends at once. */
 void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
     battle_move_jump_target_t target;
     VECTOR velocity;

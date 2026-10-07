@@ -12,7 +12,7 @@ void battle_menu_open_non_active_unit_idle_action_menu(void) {
     if (misc == 0) {
         return;
     }
-    battle_state_stop_game_flow();
+    battle_state_disable_camera_pan();
     unit = misc->battle_data;
     g_battle_game_state = BATTLE_GAME_STATE_IDLING_ACTION_MENUS;
     battle_menu_store_unit_names_and_event_block_data(3, unit->misc_unit_id, 0);

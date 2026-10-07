@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* TARGET_SELECT_CONFIRM: 7 stores the unit under the cursor as the casting unit's Auto-Battle
+ * target (the command as its setting) and reopens the action menus; 8 or cancel return to
+ * TARGET_SELECT. */
 void battle_state_handle_target_select_confirm_state(void) {
     battle_unit_misc_data_t* caster;
     battle_unit_misc_data_t* target;
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    switch (*battle_menu_get_selected_ability_address()) {
+    switch (*battle_menu_get_selected_command_address()) {
     case 7:
         caster = battle_unit_get_casting_misc_data();
         target = battle_unit_get_selectable_misc_data_at_map_coords(

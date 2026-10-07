@@ -32,9 +32,9 @@ void battle_text_draw_dialogue_glyph(s32 pen_x, s32 pen_y, s32 delay) {
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
-                if (g_battle_current_thread_id == g_battle_menu_slot_owner_thread_ids[i]) {
+                if (g_battle_thread_current_id == g_battle_menu_slot_owner_thread_ids[i]) {
                     slot = i;
-                    g_battle_menu_slot_owner_thread_ids[i] = g_battle_current_thread_id;
+                    g_battle_menu_slot_owner_thread_ids[i] = g_battle_thread_current_id;
                     break;
                 }
             }
@@ -42,7 +42,7 @@ void battle_text_draw_dialogue_glyph(s32 pen_x, s32 pen_y, s32 delay) {
                 for (row = 0; row < 3; row++) {
                     if (g_battle_menu_slot_owner_thread_ids[row] == 0) {
                         slot = row;
-                        g_battle_menu_slot_owner_thread_ids[row] = g_battle_current_thread_id;
+                        g_battle_menu_slot_owner_thread_ids[row] = g_battle_thread_current_id;
                         g_battle_text_slot_source_columns[slot] = 0;
                         g_battle_text_slot_row_pitches[slot] = 0;
                         break;

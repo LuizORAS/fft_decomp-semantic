@@ -11,7 +11,7 @@ typedef struct main_gfx_frame_bin {
 } main_gfx_frame_bin_t;
 
 void main_gfx_load_frame_bin_into_vram(void) {
-    main_gfx_frame_bin_t* frame = main_file_get_bin_as_tim(0xe68, 0x9800);
+    main_gfx_frame_bin_t* frame = main_file_alloc_and_load_checked(0xe68, 0x9800);
 
     LoadImage(&g_main_gfx_frame_image_rect, frame->image);
     LoadImage(&g_main_gfx_frame_palette_rect, frame->palette);

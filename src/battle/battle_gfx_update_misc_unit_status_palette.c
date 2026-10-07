@@ -5,12 +5,11 @@
  * callee never reads it. */
 typedef void (*battle_gfx_tint_4_fn)(battle_unit_misc_data_t*, s32, s32, s32);
 
-/* Tint a unit's palette for its first palette-affecting status.
- *
- * Unless the unit already has a palette modifier, tints its CLUT for the
- * first matching renderer status (mode/RGB pairs below; Undead skips Skeleton
- * and Ghoul spritesheets); otherwise, or with no tinting status, it falls back
- * to battle_gfx_tint_unit_palette_for_weather_and_tile. */
+/* Tint a unit's palette for its first tinting status, unless a palette modifier is already
+ * active: Petrify, Blood Suck, Berserk (red), Poison (green), Regen (blue), Oil (darker), Cursed
+ * (darker still) or Undead (not on the Skeleton and Ghoul spritesheets), in that order, through
+ * battle_gfx_modify_misc_unit_palette. Without one it applies the weather and tile tint
+ * (battle_gfx_tint_unit_palette_for_weather_and_tile). */
 void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s32 tile_effect_level, s32 final_value) {
     u32 status;
     s32 unit_id;

@@ -8,7 +8,7 @@ void world_script_load_event(s32 id) {
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
+        g_world_thread_call_target = (void (*)(void))main_file_request_read_bytes;
     } while (world_thread_call_on_main_stack(
                  id * EVENT_BLOCK_SECTORS + EVENT_ARCHIVE_START_SECTOR, EVENT_BLOCK_BYTES, g_event_script_buffer)
         != 0);

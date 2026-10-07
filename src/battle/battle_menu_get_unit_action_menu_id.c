@@ -27,7 +27,7 @@ s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
         return 0x12;
     }
     dont_move = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)];
-    can_evade = battle_formula_can_unit_evade(unit);
+    can_evade = battle_unit_get_action_block(unit);
     moved = unit->movement_taken | (dont_move & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE));
     acted = unit->action_taken | can_evade;
     if (unit->has_turn != 0) {

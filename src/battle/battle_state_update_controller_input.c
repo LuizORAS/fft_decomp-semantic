@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* Read pad 1 (filtered while the event variable SUPPRESS_PROGRESS_EFFECTS is set) into the
+ * pressed, released and held words, count frames without change, let Triangle request the
+ * status screen while the source unit is not player-controlled, and reset the game on
+ * START+SELECT+L1+R1. Returns 1. */
 s32 battle_state_update_controller_input(void) {
     u32 pressed;
     u32 previous;

@@ -20,7 +20,7 @@ void* battle_menu_alloc_window_buffer_pair(void) {
             buffer = g_battle_menu_buffer_slots[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
-                buffer->thread_id = g_battle_current_thread_id;
+                buffer->thread_id = g_battle_thread_current_id;
                 buffer->portrait_code = -1;
                 buffer->r = 0x80;
                 buffer->g = 0x80;

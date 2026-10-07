@@ -1,11 +1,13 @@
 #include "fft/battle.h"
 
+/* MAP_JUMPING_IN: update the units and brighten the screen by the transition step a frame;
+ * once clear, return to 60 fps and the saved state. */
 void battle_state_handle_map_jumping_in_state(void) {
     u32 intensity;
     s32 previous_state;
     char unused[24];
 
-    battle_state_handle_free_cursor_input();
+    battle_state_update_units();
     intensity = g_battle_screen_fade_intensity;
     if (intensity >= 0x100) {
         intensity = 0xff;
@@ -20,7 +22,7 @@ void battle_state_handle_map_jumping_in_state(void) {
         previous_state = g_previous_battle_game_state;
         g_battle_screen_fade_intensity = 0;
         g_previous_battle_game_state = 0;
-        g_animation_speed = 1;
+        g_battle_state_vsync_interval = 1;
         g_battle_game_state = previous_state;
     }
 }

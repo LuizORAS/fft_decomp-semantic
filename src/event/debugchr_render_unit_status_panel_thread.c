@@ -87,7 +87,7 @@ void debugchr_render_unit_status_panel_thread(void) {
     hide_portrait = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     input = (u8*)battle_script_get_controller_input_pointer(0);
-    thread_id = g_battle_current_thread_id;
+    thread_id = g_battle_thread_current_id;
     threads = (u8*)g_battle_threads;
     g_debugchr_input_controller = (u32*)(input + 4);
     /* Raw index arithmetic: g_battle_threads holds one pointer per 0x400-byte
@@ -532,13 +532,13 @@ void debugchr_render_unit_status_panel_thread(void) {
             window_width = &g_menu_inner_window_width;
             text_position = window_width - 2;
             *window_width = 0x38;
-            battle_menu_draw_numeric_display_entries((s32)number_pixels, (struct menu_number_entry*)number_entries,
+            battle_menu_draw_numeric_display_entries(number_pixels, (struct menu_number_entry*)number_entries,
                 (struct menu_number_position*)text_position, 6);
             LoadImage(&rects[0], number_pixels);
             number_pixels_b = number_pixels + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_pixels_b,
-                (struct menu_number_entry*)&number_entries[6], (struct menu_number_position*)text_position, 4);
+            battle_menu_draw_numeric_display_entries(number_pixels_b, (struct menu_number_entry*)&number_entries[6],
+                (struct menu_number_position*)text_position, 4);
             LoadImage(&rects[1], number_pixels_b);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_pixels, 0x580);

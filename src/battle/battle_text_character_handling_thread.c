@@ -81,7 +81,7 @@ void battle_text_character_handling_thread(void) {
     battle_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_base = 0x18;
-    thread = &g_battle_threads[g_battle_current_thread_id];
+    thread = &g_battle_threads[g_battle_thread_current_id];
     param = (s32)battle_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
@@ -361,7 +361,8 @@ void battle_text_character_handling_thread(void) {
     g_battle_text_current_line = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+        if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
+            && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
         } else {
             s32 line_width = g_battle_text_line_widths[0] + 0x18;
@@ -581,7 +582,8 @@ void battle_text_character_handling_thread(void) {
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-                if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+                if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
+                    && g_battle_etc_graphics_enabled == 0) {
                     cursor_x = rec.x;
                 } else {
                     s32 line_width;
@@ -685,9 +687,9 @@ void battle_text_character_handling_thread(void) {
             no_wait = 1;
         } else if (character == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x10; i++) {
-                if (g_battle_current_thread_id != i
+                if (g_battle_thread_current_id != i
                     && g_battle_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && battle_thread_is_running_8014cc94(i)) {
+                    && battle_thread_is_running_2(i)) {
                     g_battle_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
                 }
             }

@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x2A, the Talk Skill abilities (Invitation, Persuade, Praise, Threaten, Preach, Solution,
+ * Death Sentence, Negotiate, Insult, Mimic Daravon): a sleeping target fails, and so does a monster
+ * unless the speaker has Monster Talk; then Finger Guard (battle_formula_apply_finger_guard), the hit
+ * chance MA + X with the zodiac, and the talk's effect (battle_formula_apply_talk_skill). No evade
+ * check. */
 void battle_formula_talk_skill_hit_ma_x_percent(void) {
     battle_formula_force_sleeping_target_miss();
     if ((g_battle_action_target->unit_flags & UNIT_FLAG_MONSTER)
@@ -12,8 +17,8 @@ void battle_formula_talk_skill_hit_ma_x_percent(void) {
         if (g_battle_action_target_data->hit != 0) {
             battle_formula_store_ma_and_x();
             battle_formula_apply_zodiac_compatibility();
-            battle_formula_store_xa_plus_ya_status_damage();
-            battle_formula_use_hp_damage_as_action_hit_percent();
+            battle_formula_store_hit_chance();
+            battle_formula_roll_hit_chance();
             if (g_battle_action_target_data->hit != 0) {
                 battle_formula_apply_talk_skill();
             }

@@ -40,7 +40,7 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
-    g_battle_thread_call_target = (void (*)(void))battle_action_check_at_list_for_unit_battle_id;
+    g_battle_thread_call_target = (void (*)(void))battle_turn_find_unit_in_at_list;
     output->list_index = battle_thread_call_on_main_stack(unit);
     if (unit->has_turn != 0)
         output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;

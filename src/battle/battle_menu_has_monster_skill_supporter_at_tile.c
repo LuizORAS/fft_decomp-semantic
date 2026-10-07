@@ -23,7 +23,7 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
             battle_stats_t* unit = &g_battle_unit_stats[unit_index];
 
             if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || unit->x != x || unit->position.bits.y != y
-                || battle_action_can_unit_react(unit) != 0
+                || battle_reaction_is_prevented(unit) != 0
                 || !(unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
                 || ((unit->team_flags ^ unit_team_flags) & BATTLE_TEAM_MASK)) {
                 /* Rejected units continue with the shared scan tail below. */

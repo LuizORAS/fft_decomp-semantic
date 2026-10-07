@@ -15,7 +15,7 @@ void battle_menu_store_unit_names_and_event_block_data(s32 event_id, s32 unit_a,
         g_battle_preview_target_unit_id = (s16)unit_b;
         g_battle_menu_status_billboard.battle_id = (s16)unit_b;
     }
-    if (battle_thread_is_running_8014cc94(2) == 0) {
+    if (battle_thread_is_running_2(2) == 0) {
         battle_thread_start(2, (s32)battle_unit_view_supervisor_thread);
     }
     battle_thread_set_parameters(2, event_id, 0, 0);

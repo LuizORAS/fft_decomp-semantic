@@ -27,7 +27,8 @@ typedef struct {
  * pixel data. The CLUT rectangle is flattened to one row of w * h entries.
  * Reading x and w through word locals keeps the target's full-word loads. The
  * product is pinned to $a3, where the allocator would not otherwise place
- * it. */
+ * it. Type debt (QUIRKS.md): callers pass the OPNTEX bytes (u8*), read here
+ * as words. */
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data) {
     u32* tim;
     open_gfx_opntex_block_t* block;

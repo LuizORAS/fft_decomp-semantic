@@ -17,5 +17,5 @@ void battle_camera_init_defaults(void) {
     g_battle_map_zoom_target = 1;
     g_battle_camera_tilt_action = 0;
     g_battle_map_tilt_target = 1;
-    g_battle_state_game_flow_running = 0;
+    g_battle_state_camera_pan_enabled = 0;
 }

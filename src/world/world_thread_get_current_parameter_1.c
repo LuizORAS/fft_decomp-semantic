@@ -9,7 +9,7 @@
  * instructions, so it silences the warning without affecting the output. */
 __asm__(".set noat");
 
-/* Return parameter 1 from the currently selected WORLD thread record. */
+/* Return the current thread's parameter 1. */
 void* world_thread_get_current_parameter_1(void) {
     register void* global_pointer __asm__("$1");
     register s32 thread_offset __asm__("$8");

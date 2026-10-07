@@ -252,7 +252,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
             battle_camera_start_effect_keyframe_moves(state->frame);
         }
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE2) {
-            battle_state_set_time_scale(
+            battle_state_set_min_vsync_interval(
                 battle_effect_get_animation_timing_curve_value((battle_effect_timing_entry_t*)record));
         }
         state->frame++;

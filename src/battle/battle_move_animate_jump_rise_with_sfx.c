@@ -1,15 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Distortion animation 0x11: launch a unit upward during a jump landing.
- *
- * Like battle_move_animate_jump_start, phase 0 picks a rise speed of
- * sqrt(2 * gravity * (0x120 - screen z)) and a frame count, and phase 1
- * applies it to the height, decelerating by g_battle_move_jump_gravity. Here phase 0 also
- * plays sound 0x27 and ends the animation at once when the unit is already
- * high enough; the end of phase 1 only clears the animation id.
- */
+/* Distortion 0x11 (BATTLE_DISTORTION_JUMP_UP_WITH_SOUND): the rise of battle_move_animate_jump_start
+ * with sound 0x27. It sets the jump-height status and ends at once when the unit is already 0x120
+ * above the ground; otherwise it rises, and the end only clears the id (no shadow or animation
+ * change). */
 void battle_move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
     VECTOR unused_10;
     VECTOR velocity;

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Steal Gil and Negotiate: take Speed * Level gil, at most the war funds when the target is on the
+ * player's team; the attacker's result gains the amount and the target's loses it. With nothing to
+ * take the action is a forced failure. */
 void battle_formula_calculate_stolen_gil(void) {
     battle_stats_t* attacker;
     battle_action_data_t* action;

@@ -318,7 +318,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                     g_battle_map_weather_particles[i].z = g_battle_map_weather_particles[i].z - 1;
                 }
             }
-            g_battle_map_weather_particles[i].y += g_battle_map_weather_particles[i].fall_speed * g_animation_speed;
+            g_battle_map_weather_particles[i].y
+                += g_battle_map_weather_particles[i].fall_speed * g_battle_state_vsync_interval;
             RotTrans((SVECTOR*)&g_battle_map_weather_particles[i], &screen, &flag);
             depth = screen.vz / 4;
             if (depth > 0 && depth < 0x180) {
@@ -422,11 +423,13 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 }
             }
             if (g_battle_map_command_0x96_frame < g_battle_map_command_0x96_duration / 8) {
-                g_battle_map_weather_particles[i].y += g_battle_map_weather_particles[i].fall_speed * g_animation_speed
+                g_battle_map_weather_particles[i].y += g_battle_map_weather_particles[i].fall_speed
+                    * g_battle_state_vsync_interval
                     * rsin((g_battle_map_command_0x96_frame << 13) / g_battle_map_command_0x96_duration + 0x400) / 2048;
             }
             if (g_battle_map_command_0x96_duration / 8 < g_battle_map_command_0x96_frame) {
-                g_battle_map_weather_particles[i].y -= g_battle_map_weather_particles[i].fall_speed * g_animation_speed;
+                g_battle_map_weather_particles[i].y
+                    -= g_battle_map_weather_particles[i].fall_speed * g_battle_state_vsync_interval;
             }
             RotTrans((SVECTOR*)&g_battle_map_weather_particles[i], &screen, &flag);
             depth = screen.vz / 4;
@@ -477,14 +480,18 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_weather_particles[i + 32].y
                     = spawn_y - g_battle_map_weather_fall_speed - rand() % (g_battle_map_weather_primary_speed * 12);
             }
-            g_battle_map_weather_particles[i].y += g_battle_map_weather_fall_speed * g_animation_speed;
-            g_battle_map_weather_particles[i + 32].y += g_battle_map_weather_fall_speed * g_animation_speed;
+            g_battle_map_weather_particles[i].y += g_battle_map_weather_fall_speed * g_battle_state_vsync_interval;
+            g_battle_map_weather_particles[i + 32].y += g_battle_map_weather_fall_speed * g_battle_state_vsync_interval;
             if (i < 16) {
-                g_battle_map_weather_particles[i].y += g_battle_map_weather_primary_speed * g_animation_speed;
-                g_battle_map_weather_particles[i + 32].y += g_battle_map_weather_primary_speed * g_animation_speed;
+                g_battle_map_weather_particles[i].y
+                    += g_battle_map_weather_primary_speed * g_battle_state_vsync_interval;
+                g_battle_map_weather_particles[i + 32].y
+                    += g_battle_map_weather_primary_speed * g_battle_state_vsync_interval;
             } else {
-                g_battle_map_weather_particles[i].y += g_battle_map_rain_secondary_fall_speed * g_animation_speed;
-                g_battle_map_weather_particles[i + 32].y += g_battle_map_rain_secondary_fall_speed * g_animation_speed;
+                g_battle_map_weather_particles[i].y
+                    += g_battle_map_rain_secondary_fall_speed * g_battle_state_vsync_interval;
+                g_battle_map_weather_particles[i + 32].y
+                    += g_battle_map_rain_secondary_fall_speed * g_battle_state_vsync_interval;
             }
             if (g_battle_map_weather_particles[i].y >= -0x17F) {
                 if (ground < g_battle_map_weather_particles[i].y) {
@@ -568,7 +575,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     /* The ambient colour restores use pointer arithmetic on the decayed arrays
      * rather than GT3(i)/GT4(i) indexing: that keeps the target's
-     * `addu offset, base` operand order (as in battle_target_set_tile_background_color). */
+     * `addu offset, base` operand order (as in battle_target_tint_marked_tiles). */
     if (g_battle_map_ambient_restored_buffer != 0) {
         if (g_battle_map_ambient_restored_buffer != g_battle_data) {
             for (i = 0; i < g_battle_map_textured_triangle_count; i++) {

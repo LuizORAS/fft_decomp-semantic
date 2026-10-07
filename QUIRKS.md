@@ -39,8 +39,20 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
   (`0x34`) path writes map Y into `real_z` (not `real_y`); the height branch
   then overwrites it.
+- `src/battle/battle_move_update_walking_step_at_tile_edge.c`: adds the
+  destination tile's water standing offset to the current edge height instead
+  of the destination's, so for a unit that floats on, walks on or moves in
+  water the step test sees a water destination lower than its surface, not
+  higher: a step up onto deep water can take a plain walk where a climb hop or
+  jump is due.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
+- `src/battle/battle_target_clear_panels_on_untargetable_tiles.c`: visits only the lower layer's 256
+  panels, so an untargetable upper-layer tile stays in range of a single-tile or DIRECT_TARGETING
+  ability (the weapon range's `battle_target_clear_range_on_untargetable_tiles` covers both layers).
+- `src/battle/battle_target_mark_unit_panels_by_team.c`: its loop never advances the unit pointer,
+  so it marks only the caster's tile; no retail ability sets the flags that call it
+  (`ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES`, `_ENEMY_UNIT_TILES`).
 - `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the
   secondary-data pointer stays uninitialized, yet its `flags_3` is read before
   the item test.
@@ -66,6 +78,23 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   skips the reflector pointer reload and depends on the caller's `$s2`.
 - `src/battle/battle_ai_evaluate_math_targets.c`: the extra known-ability call
   in the special-ID loop discards its result.
+- `src/battle/battle_formula_apply_ability_element.c`: Oil doubles XA against fire, but every
+  caller has already stored XA * YA as the HP damage, so Oil never raises fire damage (it is still
+  marked for removal). Players know this as Oil having no effect in the PlayStation version.
+- `src/battle/battle_action_init_current_ability_strike_data.c`: the range-data
+  guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true
+  (`&&` was presumably meant), so item ids read past the table; only the
+  default-menu Item skillset `0xa1`, which no job or ENTD unit uses, holds them.
+- `src/battle/battle_action_run_pre_formula_setup.c`: both range-data bounds are
+  `ABILITY_ID_ITEM_FIRST + 1`, so Potion (`0x170`) copies the item-ability item
+  ids past the table as its range data; the Item menu clears it for consumables.
+- `src/world/world_item_sort_id_list.c`,
+  `src/event/equip_item_sort_list_by_criteria.c`: the evade sort keys treat
+  `0x7a`..`0x8f` as shields and `0x90`..`0xef` as accessories, so throwables
+  index the 16-entry shield table with weapon ids (122..127) and headgear and
+  body armor index the accessory table with helm/armor ids; those items sort
+  by unrelated bytes. A fix splits weapons at `ITEM_ID_SHIELD_FIRST` and keys
+  headgear and body armor, which carry HP/MP bonuses instead of evade, as 0.
 - `src/battle/battle_camera_step_real_coords_toward_target.c`: in the positive
   direction the Y (`vz`) step adds the vector component twice; X and Z add it
   once.
@@ -108,6 +137,11 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
   polygon `vert_shadow_poly` addresses. One four-entry array does not reproduce
   the two separate stack addresses.
+- `main_heap_alloc` and `main_heap_alloc_smd` tag a new block one above the highest tag in
+  the cells before it, so it can share a tag with the block right after it (allocate 62
+  cells, then 2; free the first; allocate 10, then 52: the last two blocks are both tag 2).
+  `main_heap_free` clears cells while the tag repeats, so freeing the 52-cell block frees the
+  2-cell one too, whose own free then returns 0. No retail sequence is known to do this.
 - Unchecked divisions whose divisor can be zero; the R3000 `div` does not trap
   and leaves quotient -1 (1 for a negative dividend) and the dividend as the
   remainder: `100 / ct` in `bunit_ability_get_ct_display_value`,
@@ -117,6 +151,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `effect_eNNN_update_wave_mesh_state` copies (E033, E035, E073, E079, E080,
   E230, E453, E456); and the direction-times-spread products over `scale` in
   `battle_effect_spawn_particle_motion`.
+  More generally, GCC 2.6.3 turns a division by a constant into a multiply,
+  so nearly every `div`/`divu` in the game divides by a variable: 1192 in
+  game code, of which 84 carry the compiler's zero check (`break 7`) and 33
+  follow a branch on the divisor. The other 1060, in 109 distinct functions
+  (726 in five routines copied across the EFFECT overlays), rely on the
+  divisor never being zero or on the R3000 result when it is. A native build
+  must give each the R3000 result through a helper or guard it: x86 raises
+  SIGFPE and ARM64 returns 0.
 
 ## Calls that disagree with the callee
 
@@ -127,8 +169,29 @@ without changing the bytes.
 - `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
 - `g_battle_thread_call_target` is the main-stack dispatch slot for callees
   with different signatures; assignments erase their function types.
-- `battle_target_set_panels_for_action` reads `$v0` after a void-returning
-  panel builder; the value is the callee's leftover register contents.
+- `world_card_build_save_slot_description` uses the job-name pointer that the
+  void `world_gfx_bind_data_pointer` leaves in `$v0`; a native build must
+  return it.
+- `battle_thread_resolve_id`, `battle_thread_resolve_id_after_current`,
+  `world_thread_resolve_id` and `world_thread_resolve_id_after_current` return
+  the leftover `$v0` of the void `battle_thread_exit_current` or
+  `world_thread_exit_current` when no thread slot is free (the WORLD source
+  falls off its end). The caller has exited by then, but the scheduler
+  resumes slot 0 without testing it, so a main-loop caller gets that value
+  on the next frame.
+- `battle_move_calculate_walkto_pathing` has no return statement;
+  `battle_move_start_unit_walk_to` uses the path that `battle_move_calculate_pathing` leaves in
+  `$v0`, which a native build must return.
+- `battle_map_load_gns_and_move_find_items` has no return statement for a map whose GNS sector is
+  0 (map ids 120-124, 126 and 127 in the retail table); `battle_map_load_data` compares the
+  leftover `$v0` of the BIOS `bzero` with `g_battle_map_gns_records`. A native build must return
+  a value there.
+- `src/battle/battle_reaction_try_distribute.c` passes the unit twice to the one-parameter
+  `battle_reaction_fails_brave_roll` through a function-pointer cast; the second argument is ignored.
+- `src/battle/battle_formula_calculate_critical_hit.c` calls the argument-less
+  `battle_formula_calculate_knockback` through a cast with XA's address in `$a0`; the callee ignores it.
+- `src/battle/battle_formula_apply_ability_element.c` calls the argument-less
+  `battle_formula_nullify_action` through a cast with `mount_info` in `$a0`; the callee ignores it.
 - `src/event/equip_unit_load_selected_data.c` passes two arguments to
   `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
@@ -193,34 +256,115 @@ without changing the bytes.
   second parameter.
 - `src/wldcore/wldcore_bar_handle_menu_input.c` passes the Bar's level record to `wldcore_menu_pop_level_and_rebuild_screen`, which takes no arguments.
 - `wldcore_window_build_yes_no_panel` takes its origin record by value; `wldcore_proposition_handle_accept_input` and `wldcore_list_handle_completed_propositions_input` call it through a six-word cast with x and y in `$a0`/`$a1`.
+- Calls that omit arguments the callee reads take them from whatever the
+  registers hold; a native build must pass them explicitly:
+  - the three `battle_camera_get_input_direction` callers pass only `mode`;
+    `input` is the leftover `$a1` when `g_battle_controller_input` is not 0/1;
+  - `battle_camera_call_toggle_tilt` passes nothing to
+    `battle_camera_toggle_tilt`, whose tilt-target-1 path plays its sound
+    with the leftover `$a1`;
+  - the five `battle_effect_init_data` callers pass nothing, so the states
+    it does not handle return the leftover `$a0`;
+  - `bunit_gfx_build_item_graphic_descriptor` and
+    `equip_gfx_build_item_graphic_descriptor` call
+    `battle_get_item_graphic_data` without the item id (`$a1`);
+  - `battle_map_init_units_sprites_event_and_music` and
+    `battle_map_step_init_sequence` call the background-gradient,
+    ambient-light and darkness initializers without `map_id` (`$a2`), and
+    `main_sound_stop_sfx` without its sound id (`$a0`);
+  - `battle_status_resolve_unit_changes_in_preview` (referenced nowhere on the disc) calls
+    `battle_status_resolve_unit_changes` without `unit_id`/`removal_only`;
+  - `world_script_is_deployment_running` calls `world_script_run_frame`
+    without `ot`/`buttons`.
+- These calls rely on the caller's own incoming registers instead, which
+  hold the right values: `equip_thread_start_if_idle` (thread id in `$a0`)
+  for `battle_thread_is_running`, `battle_unit_start_post_attack_animation_display`
+  (both arguments) for `battle_unit_set_target_animation_from_attack_type`, and
+  the EQUIP selection wrappers (`input_mask` in `$a2`) for
+  `equip_menu_update_wrapped_horizontal_selection` and its vertical twin.
 
 ## Declaration leads
 
 - `include/fft/menu.h`: `world_menu_entry_t.window_x` is `u16`, but
   `src/world/world_menu_open_entry_window.c` needs it signed.
-- The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`)
-  is redeclared per overlay: `status_panel_gauges_t` (ATTACK, REQUIRE), the head
-  of `equip_unit_data_t`, `world_unit_status_billboard_t`, and HELPMENU's raw
+- The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`,
+  signed gauges) is redeclared as `world_unit_status_billboard_t` (WORLD,
+  ATTACK, REQUIRE; unsigned HP/MP), the head of `equip_unit_data_t` (signed:
+  EQUIP compares the 999 caps signed), and HELPMENU's raw
   `g_helpmenu_active_banner`.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
 - `g_wldcore_zodiac_start_dates[12][2]` (`include/fft/wldcore.h`) and OPEN's
-  flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
-  the OPEN name covers both bytes, and `target/opening.yaml` still names `+1`
-  `g_open_birthday_zodiac_days`.
+  `g_open_birthday_zodiac_start_dates` are the same `{month, day}` table; the
+  OPEN copy stays a flat `[24]` because the `[12][2]` spelling changes its
+  reader's code.
 - `battle_unit_misc_data_t.movement_value` (`+0x11c`, `include/fft/battle.h`)
-  is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
-  length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).
+  is a plain `u8` holding a packed step (`battle_move_step_bits_e`): direction in
+  bits 6–7, layer in bit 5, length in bits 0–1; its readers shift and mask it by hand
+  (`src/battle/battle_move_get_current_and_destination_tiles.c`).
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_formation_build_view_primitives.c` reads its first 4 bytes
   as a screen point.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
   known meaning.
+- `world_menu_init_quad_from_record` and `world_gfx_init_image_loading` take
+  `u16*`/`POLY_FT4*` but handle a `RECT`, an image record and either a
+  `POLY_FT4` or a `SPRT` (code `0x64`, whose `w`/`h` overlap `x1`/`y1`);
+  `world_main_menu_text_window_thread` passes a `SPRT` through a cast. A
+  typed version needs a primitive union or separate SPRT/POLY_FT4 paths.
+- The menu record is declared three ways: `world_menu_entry_t`,
+  `world_menu_icon_thread_param_t` and `battle_menu_idle_action_entry_t`;
+  `world_menu_run_thread` and `battle_handle_menu_cancel_input` take `void*`
+  because their callers pass all of them.
+- `void*` parameters whose callers pass another view of the data:
+  `battle_gfx_set_draw_mode_from_rect` (a window record for its `mode0`
+  `DR_MODE`), `battle_map_store_selected_tile_coordinates` (an `s16[3]` as an
+  `SVECTOR`; only three halfwords are written), `equip_menu_init_scrollable_list_core`
+  (a `u8*` text section read as halfwords), `open_gfx_load_opntex_into_frame_buffer`
+  (OPNTEX bytes read as words), `world_gfx_build_scaled_draw_area_pair_at_offset`
+  (the numeric editor's portrait packets as a draw-area pair),
+  `world_menu_build_sprite_page` and its BATTLE twin (a `RECT` as an image
+  location), `world_menu_init_and_load_scrollable_list` (menu scripts as a list
+  record), `battle_target_build_directional_attack_panels` (a
+  `battle_ai_command_action_t`, copied into a file-local duplicate of it),
+  `equip_text_render_encoded_ids_to_image` (a `u32[]` image buffer) and
+  `world_menu_run_script_with_palette_mode` (display scripts declared as
+  `u8[]`, `s16[]` or `world_menu_window_command_t`).
+- `jobstts_menu_init_scrollable_list` passes its text-table pointer to the
+  core's `s32` parameter; pointers stored in 32-bit integers break on 64-bit
+  ports.
+- `battle_unit_misc_data_t` (`include/fft/battle.h`) repeats `battle_strike_work_t` field by field
+  at `0x18c`..`0x1b3` (the strike work's last four bytes are the misc record's `action_rewards`);
+  `battle_action_start_strike` and `battle_action_resolve_ability_strike` reach it through a cast
+  of `&misc->action_18c`, and `battle_action_apply_strike_results` through another.
 - `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
   `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
   its name generic.
+
+## Pointers held in 32-bit integers
+
+The PS1's pointers and `s32` are both 32 bits wide, so some code passes or
+computes addresses as integers. A 64-bit build must give these pointer types.
+
+- The thread parameters (`native_thread_t.function_parameter_1`..`_4`, and the
+  `*_thread_get_current_parameter_*` getters) are `s32` but often carry record
+  pointers, e.g. into `battle_script_run_sprite_move` and
+  `world_menu_confirm_action_silently`.
+- `bunit_menu_dispatch_with_override` and `equip_menu_dispatch_with_override`
+  take a menu-record pointer as `s32`; `bunit_menu_init_scrollable_list_core`,
+  `jobstts_menu_init_scrollable_list_core` and `jobstts_menu_init_scrollable_list`
+  take a text-table pointer as `s32`.
+- Matching spellings compute addresses through `(u32)` casts, e.g.
+  `battle_script_get_variable_word_pointer_from_id` (offsets from
+  `g_battle_script_variables`) and `battle_ai_load_known_ability_flag` (the
+  learned-ability row).
+- The other direction: `battle_map_init_background_gradient`, `_ambient_light`
+  and `_darkness` pass `map_id` through the `u8*` parameter of
+  `battle_map_light_state_command`.
+- `wldcore_gfx_draw_projected_map_tiles` takes its `GsOT*` as an `s32` and
+  converts it back for `world_gs_sortpoly`.
 
 ## Duplicated code
 
@@ -261,7 +405,7 @@ translation unit. Share their types and constants through headers.
 - CallFunction (`battle_script_execute_event.c`, `world_script_execute_event.c`)
   tests selectors in sequence against one operand that the arms modify. So
   `0x06` also runs the `0x0f` warp, and `0x0e` can fall into later arms.
-- `src/battle/battle_action_dispatch_target_reaction_ability.c`: formula 7
+- `src/battle/battle_reaction_check_when_targeted.c`: formula 7
   suppresses reactions. Counter Magic (`0x1b3`) is tested last, after byte
   `+0x8d`, so Counter (`0x1ba`) wins.
 - `g_main_debug_display_enabled` is only ever cleared by retail code; the
@@ -275,6 +419,13 @@ translation unit. Share their types and constants through headers.
   the high bit, so the chosen ENTD is `entds[7 - bit]`.
 - `src/battle/battle_action_finalize_draw_out_katana_result.c`: when the
   katana breaks, the strike work's `can_earn_experience` is copied onto itself.
+- `src/battle/battle_menu_run_icon_selection_loop.c` and its WORLD twin: the
+  loop clears both records' `+0x78` words when they hold 0 and 2, but only the
+  record builders write that word (always 0), so the reset never fires.
+- `src/wldcore/wldcore_menu_step_treasure_detail_level.c` and its unexplored-land
+  twin: phase 1 waits on the render record named by `+0x08` (`sound_novel_slot`),
+  which neither push sets, so it tests whatever the previous level in that stack
+  slot left there. Phase 3 waits on `render_index` instead.
 - `src/psyq/libc/memmove.c`: the overlap-safe copy returns the original destination on its backward path and the advanced destination on its forward path.
 - `StartRCnt` and `StopRCnt` index the IRQ-mask table before validating a counter: selector 3 changes the VBlank mask even though `StartRCnt` returns zero; `StopRCnt` always returns one. Larger indices can read past the four-entry table.
 - `SpuGetVoiceEnvelopeAttr`: the public `s32*` key-status output is written with a halfword store; its upper half remains unchanged.
@@ -299,3 +450,39 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_unit_generate_treasure.c`: outside action execution (AI simulation, preview) it returns with no value, so `$v0` still holds `g_battle_action_state` and the crystal pickup result names item 1 or 2 as the treasure.
 - `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (dead-unit panel) of `world_menu_run_main_mode` never run; the world map's Options row runs mode 0.
+- `src/battle/battle_get_misc_id.c`, `src/world/world_get_misc_id.c`: during
+  Game Over event `0x194` every unit lookup resolves to Ramza, but no retail
+  code, scenario chain, `BTLEVT.BIN` condition, event or world script starts
+  `0x194`; the engine plays the byte-identical script at `0x190` without the
+  redirect.
+- `battle_heap_alloc_block` has no out-of-memory exit: when no free block is large enough it
+  walks the circular free list forever.
+- WORLD runs threads in slots 1-16: `world_thread_yield` wraps at 17, and `world_thread_resolve_id`
+  and `world_thread_find_running_by_task` scan to 16 (BATTLE stops at 15). The array has room for
+  the 17th slot (`g_world_gfx_texture_allocation_grid` starts right after it), but
+  `world_thread_reset_scheduler` clears only slots 0-15, so slot 16 keeps its state across a reset.
+- `battle_state_handle_change_map_jumping_in_state` turns event results 9 and 0xA into game flow
+  0 and 1, the reverse of `battle_state_handle_event_state`, and ignores 0xB and 0x13, so a
+  scenario that finishes during an event map change's fade-in would take the other exit (or
+  none).
+- `battle_turn_take_next_event` handles turn event 0x400 (`BATTLE_TURN_EVENT_UNKNOWN_0400`), but
+  `g_battle_turn_event` only takes `battle_turn_run_clock`'s results, which never include it, so
+  that arm never runs.
+- `battle_move_start_next_post_move_event` and `battle_state_handle_crystal_learn_state` handle
+  post-move event `0x200` (`BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY`, a display refresh of the
+  mover), but `g_battle_move_post_move_events` only takes `battle_move_get_post_move_events`'
+  results, which never include it, so that arm never runs.
+- `src/battle/battle_formula_apply_weather_effects_on_bows.c` reads the weather script variable
+  instead of `battle_map_get_effective_weather`, so a snowstorm also cuts bow and crossbow hits and
+  the map's ignore-weather flag is not checked; the element modifiers use the effective weather.
+- `src/battle/battle_formula_damage_pa_times_wp_plus_y_status.c` (Holy Sword) and
+  `battle_formula_break_equipped_damage_pa_times_wp.c` (Might Sword) apply the Strengthen and
+  affinities of the weapon's element only; the element in the ability's own data (Holy for the
+  Holy Sword abilities) is never read.
+- `src/battle/battle_menu_display_projected_action_effect.c`: the 0x100 bit that
+  `main_status_find_action_highest_order_effect` adds for a status flagged
+  `STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED` changes nothing. The preview tests 0x80 (a removal) first, so
+  its 0x180 test, which would pick marker image 0x1e, never passes.
+- `src/battle/battle_unit_set_animation_based_on_status.c` picks animation 0x21 for bit 0x01 of the
+  status mirror `status_flags_1_4`, but no status sets that bit
+  (`g_battle_misc_status_mask_by_handler_index`), so the animation never plays.

@@ -40,19 +40,19 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, 0xF);
     if (kind == 0) {
         lo = 1;
-        hi = 0x1A5;
+        hi = ABILITY_ID_REACTION_FIRST - 1;
     } else if (kind == 1) {
-        lo = 0x1A6;
-        hi = 0x1C5;
+        lo = ABILITY_ID_REACTION_FIRST;
+        hi = ABILITY_ID_SUPPORT_FIRST - 1;
     } else if (kind == 2) {
-        lo = 0x1C6;
-        hi = 0x1E5;
+        lo = ABILITY_ID_SUPPORT_FIRST;
+        hi = ABILITY_ID_MOVEMENT_FIRST - 1;
     } else {
         lo = 1;
         if (kind == 3) {
-            lo = 0x1E6;
+            lo = ABILITY_ID_MOVEMENT_FIRST;
         }
-        hi = 0x1FD;
+        hi = ABILITY_ID_RANDOM_FIRST - 1;
     }
     for (i = 0; i < 24; i++) {
         if (abilities[i] < lo || hi < abilities[i]) {

@@ -44,12 +44,12 @@ typedef struct battle_action_data {
     u8 critical;     /* 0x01 */
     u8 miss_type;    /* 0x02; battle_action_miss_type_e */
     u8 item_lost;    /* 0x03; potion / break / steal / draw out */
-    u16 hp_damage;   /* 0x04 */
-    u16 hp_healing;  /* 0x06 */
-    u16 mp_damage;   /* 0x08 */
-    u16 mp_healing;  /* 0x0a */
+    s16 hp_damage;   /* 0x04 */
+    s16 hp_healing;  /* 0x06 */
+    s16 mp_damage;   /* 0x08 */
+    s16 mp_healing;  /* 0x0a */
     s16 gil_change;  /* 0x0c; stolen / lost */
-    u16 reaction_id; /* 0x0e */
+    s16 reaction_id; /* 0x0e */
     /* Target readers and writers consistently access 0x10-0x11 as one halfword. */
     u16 special_effect;       /* 0x10; battle_action_special_effect_e */
     u8 sp_change;             /* 0x12 */
@@ -69,7 +69,7 @@ typedef struct battle_action_data {
     u8 jp_change;             /* 0x29; Move-JP Up / JP stolen */
     /* Written as a halfword everywhere (battle_formula_apply_status lhu/sh,
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
-    u16 attack_accuracy; /* 0x2a */
+    s16 attack_accuracy; /* 0x2a */
 } battle_action_data_t;
 typedef char battle_action_data_size_must_be_0x2c[(sizeof(battle_action_data_t) == 0x2c) ? 1 : -1];
 
@@ -313,6 +313,9 @@ enum {
 };
 
 /* status */
+/* A unit's three status sets, the 40 status ids with their byte and mask, and the status check
+ * sets. */
+
 /* SCUS 0x8005b5dc copies these three consecutive sets as one 15-byte block.
  * Keep a named aggregate so whole-block byte copies do not walk beyond the
  * first five-byte array. Individual status readers still use named sets. */
@@ -373,16 +376,21 @@ typedef enum battle_status_id {
 
 #define BATTLE_STATUS_BYTE_MASK(id) ((u8)(0x80U >> ((id) & 7)))
 
+/* The status check sets (g_main_status_check_sets) that main_status_init_check_data builds from the
+ * status data flags. LOST holds Crystal, Invite and Treasure (battle_action_check_battle_outcome);
+ * EVENT_EXCLUDED holds the statuses that team-wide event commands skip
+ * (battle_script_filter_unit_id_by_mode); sets 2 (Crystal, Treasure) and 7 are built but read by
+ * nothing. */
 typedef enum main_status_check_set {
     MAIN_STATUS_CHECK_SET_KO = 0,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY = 1,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ALLY = 2,
+    MAIN_STATUS_CHECK_SET_LOST = 1,
+    MAIN_STATUS_CHECK_SET_UNUSED_2 = 2,
     MAIN_STATUS_CHECK_SET_FREEZE_CT = 3,
     MAIN_STATUS_CHECK_SET_PREVENT_REACTION = 4,
     MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY = 5,
     MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY = 6,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_7 = 7,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_8 = 8,
+    MAIN_STATUS_CHECK_SET_UNUSED_7 = 7,
+    MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED = 8,
     MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL = 9,
     MAIN_STATUS_CHECK_SET_UNMOUNTABLE = 10,
     MAIN_STATUS_CHECK_SET_COUNT = 11,
@@ -589,18 +597,18 @@ typedef struct battle_stats {
     u8 mount_info;                     /* 0x182 */
     u8 existence;                      /* 0x183; battle_unit_existence_state_e */
     u8 equipped_flags;                 /* 0x184; battle_unit_equipped_flags_e */
-    u8 _unused_185;
-    u8 has_turn;                 /* 0x186 */
-    u8 movement_taken;           /* 0x187 */
-    u8 action_taken;             /* 0x188 */
-    u8 ability_outcome;          /* 0x189 */
-    u8 misc_unit_id;             /* 0x18a */
-    u8 ability_ct;               /* 0x18b */
-    battle_action_data_t action; /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;      /* 0x1b8 */
-    u8 auto_battle_target;       /* 0x1b9 */
-    u8 initial_team_flags;       /* 0x1ba */
-    u8 inflicted_status[5];      /* 0x1bb */
+    u8 _unused_185;                    /* no load or store in any module touches it; FFHacktics leaves it blank */
+    u8 has_turn;                       /* 0x186 */
+    u8 movement_taken;                 /* 0x187 */
+    u8 action_taken;                   /* 0x188 */
+    u8 ability_outcome;                /* 0x189 */
+    u8 misc_unit_id;                   /* 0x18a */
+    u8 ability_ct;                     /* 0x18b */
+    battle_action_data_t action;       /* 0x18c through 0x1b7 */
+    u8 auto_battle_setting;            /* 0x1b8 */
+    u8 auto_battle_target;             /* 0x1b9 */
+    u8 initial_team_flags;             /* 0x1ba */
+    u8 inflicted_status[5];            /* 0x1bb */
 } battle_stats_t;
 typedef char battle_stats_size_must_be_0x1c0[(sizeof(battle_stats_t) == 0x1c0) ? 1 : -1];
 typedef char battle_stats_innate_status_must_be_0x4e[((unsigned long)&((battle_stats_t*)0)->status_sets.innate == 0x4e)
@@ -691,7 +699,9 @@ typedef struct entd_unit {
     u8 ai_target_xy[2];   /* 0x21; AI "stay near" X, Y (copied to battle_stats_t ai_target_x onward) */
     u8 ai_flags;          /* 0x23 */
     u8 ai_target_unit_id; /* 0x24 */
-    u8 _unused_25[3];
+    u8 _unused_25;        /* 0x25; wiki: unused */
+    u8 ai_flags_2;        /* 0x26; wiki: 0x04 Conserve CT */
+    u8 _unused_27;        /* 0x27; wiki: unused */
 } entd_unit_t;
 typedef char entd_unit_size_must_be_0x28[(sizeof(entd_unit_t) == 0x28) ? 1 : -1];
 
@@ -757,7 +767,8 @@ typedef struct party_data {
     u8 proposition_status;    /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color; /* 0xd2; create/save/generate unit stores */
-    u8 _unused_d3[0x2d];
+    u8 _unused_d3[0x0d];
+    u8 _unused_e0[0x20]; /* 0xe0; not saved: the save image keeps 0xe0 bytes per unit (wiki agrees) */
 } party_data_t;
 typedef char party_data_size_must_be_0x100[(sizeof(party_data_t) == 0x100) ? 1 : -1];
 

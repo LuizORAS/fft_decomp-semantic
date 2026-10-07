@@ -16,7 +16,7 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
     buffer = world_menu_alloc_ui_buffer(0x2000);
     do {
         world_thread_yield();
-        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_call_build_header;
+        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_request_read_bytes;
     } while (world_thread_call_on_main_stack(index * 4 + 0x164B, 0x2000, buffer) != 0);
     do {
         world_thread_yield();

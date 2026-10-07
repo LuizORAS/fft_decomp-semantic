@@ -1,16 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Scale the pending formula XA by the attacker/target zodiac compatibility.
- *
- * Serpentarius on either side leaves XA untouched.  The opposition entry
- * resolves by sex: monsters on either side fall back to the ordinary bad
- * result, otherwise same-sex pairs get the worst result and opposite-sex pairs
- * the best.
+/* Scale XA by the attacker's and target's zodiac compatibility: good +25%, best +50%, bad -25%,
+ * worst -50%, at least 1. Serpentarius on either side changes nothing. Opposite signs depend on the
+ * pair: opposite sexes best, the same sex worst, and bad when either is a monster.
  *
  * Casting the attacker sign to its stored 4-bit domain preserves the target's
- * distinct comparison copy without a compiler constraint.
- */
+ * distinct comparison copy without a compiler constraint. */
 void battle_formula_apply_zodiac_compatibility(void) {
     battle_stats_t* attacker;
     battle_stats_t* target;

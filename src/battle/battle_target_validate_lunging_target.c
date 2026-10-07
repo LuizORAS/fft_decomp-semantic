@@ -110,8 +110,8 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         upper = &g_battle_map_tile_data[upper_index];
         lower_height = lower->height * 2 + (lower->depth_half_height & 0x1f);
         upper_height = upper->height * 2 + (upper->depth_half_height & 0x1f);
-        lower_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 0);
-        upper_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 1);
+        lower_id = battle_target_get_unit_at_tile(mid_x, mid_y, 0);
+        upper_id = battle_target_get_unit_at_tile(mid_x, mid_y, 1);
         if (lower->flags_06.bits.blocked) {
             lower_height = 0xff;
         }
@@ -154,7 +154,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
 
     middle = (u32)(unit_walking + unit_total) >> 1;
     for (layer = 0; layer < 2; layer++) {
-        target_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, layer);
+        target_id = battle_target_get_unit_at_tile(mid_x, mid_y, layer);
         battle_calculate_unit_height_data(&height, target_id);
         if (!(height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE)) {
             target_walking = height.walking_height;

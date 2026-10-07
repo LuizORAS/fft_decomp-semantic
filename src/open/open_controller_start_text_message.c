@@ -1,12 +1,12 @@
 #include "fft/open.h"
 
-/* The thread-2 controller record reuses the first two words as
- * run_followup (0x00) and result (0x04). */
+/* Pushes the text-message controller (handler 8) on thread 2; its record
+ * keeps run_followup and the formation entry mask to restore. */
 void open_controller_start_text_message(s32 parameter, s32 run_followup) {
     {
         s32 controller = g_open_current_controller_index;
 
-        g_open_controller_stream_start[controller].stream_start = run_followup;
+        g_open_controller_stream_start[controller].text_message.run_followup = run_followup;
     }
     if (run_followup != 0) {
         world_text_save_section_pointers();
@@ -21,7 +21,7 @@ void open_controller_start_text_message(s32 parameter, s32 run_followup) {
         s32 previous_mask = g_open_menu_formation_entry_mask;
 
         g_open_menu_formation_entry_mask = -1;
-        g_open_controller_stream_start[controller].stream_length = previous_mask;
+        g_open_controller_stream_start[controller].text_message.saved_formation_entry_mask = previous_mask;
     }
     main_sound_play_sfx(MAIN_SFX_WINDOW_OPEN);
 

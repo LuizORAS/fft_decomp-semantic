@@ -5,6 +5,7 @@ enum {
     RESET_BUTTON_MASK = 0x090c,
 };
 
+/* Same pad words for the setup screens, with the soft-reset combination. Returns 1. */
 s32 battle_state_update_deployment_controller_input(void) {
     u32 previous;
     u32 current;

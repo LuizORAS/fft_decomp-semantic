@@ -37,7 +37,7 @@ void battle_script_focus(u8* parameters) {
     second = battle_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
         parameters[-1] = 0xc0;
-        main_system_handle_malloc_exception(7, 0);
+        main_system_report_error(7, 0);
         return;
     }
     battle_unit_copy_misc_screen_location(first, (VECTOR*)coords[0]);

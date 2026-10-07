@@ -2,7 +2,7 @@
 
 #include "psx/types.h"
 
-/* g_attack_editor_status_gauges.team_state. Accessed through the struct, GCC keeps its address in
+/* g_attack_editor_status_gauges.team_kind. Accessed through the struct, GCC keeps its address in
  * a register across the three stores (1276 vs 1280 bytes); the target
  * addresses it as a standalone halfword. */
 
@@ -41,9 +41,9 @@ void attack_load_party_unit_into_editor(s32 unused, s32 party_index) {
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         g_attack_editor_team_state = 2;
     }
-    g_attack_editor_status_gauges._04 = 0;
-    g_attack_editor_status_gauges._06 = 0;
-    g_attack_editor_status_gauges.unit_index = party_index + 0x200;
+    g_attack_editor_status_gauges.list_index = 0;
+    g_attack_editor_status_gauges.unit_count = 0;
+    g_attack_editor_status_gauges.battle_id = party_index + 0x200;
     g_attack_editor_status_gauges.level = unit->level;
     g_attack_editor_status_gauges.experience = unit->experience;
     maximum_hp = unit->max_hp;

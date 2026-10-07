@@ -13,7 +13,7 @@ void world_unit_start_view_thread(s32 index, s32 unit_a, s32 unit_b) {
             g_world_unit_comparison_battle_id = unit_b;
             g_world_unit_comparison_status_billboard.battle_id = unit_b;
         }
-        if (world_thread_is_running_80100164(2) == 0) {
+        if (world_thread_is_running_2(2) == 0) {
             world_thread_start(2, world_unit_view_supervisor_thread);
         }
         world_thread_set_parameters(2, index, 0, 0);

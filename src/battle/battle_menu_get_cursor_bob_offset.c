@@ -16,7 +16,7 @@ s32 battle_menu_get_cursor_bob_offset(s32 mode) {
     s32 counter;
     s32 threshold;
 
-    counter = g_battle_thread_contexts[g_battle_current_thread_id].task_words[0];
+    counter = g_battle_thread_contexts[g_battle_thread_current_id].task_words[0];
     if (mode == 0) {
         entry = g_battle_cursor_bob_thresholds;
         counter %= entry->threshold;

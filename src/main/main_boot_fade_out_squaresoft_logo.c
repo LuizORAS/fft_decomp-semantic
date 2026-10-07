@@ -1,5 +1,6 @@
 #include "fft/main.h"
 
+/* Fade the Squaresoft logo out to black, then clear its 256x480 VRAM area. */
 void main_boot_fade_out_squaresoft_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];
@@ -42,7 +43,7 @@ void main_boot_fade_out_squaresoft_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(otag_base + buffer * 2, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(otag_base + buffer * 2, &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_squaresoft_logo(otag_base + buffer * 2, g_main_boot_squaresoft_logo_image_words);
+        main_boot_draw_squaresoft_logo_frame(otag_base + buffer * 2, g_main_boot_squaresoft_logo_image_words);
         intensity += 8;
     }
 

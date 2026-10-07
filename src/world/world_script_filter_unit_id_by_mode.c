@@ -4,8 +4,8 @@
 
 /* Filter a copied misc unit ID by presence, team, and status for modes 0-5.
  *
- * Modes 3 and 5 reject the status check set 8; mode 5 ignores bit 0x10 in
- * the first status byte. The target has no defined return value for other
+ * Modes 3 and 5 reject the MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED statuses; mode 5
+ * ignores Undead (bit 0x10 in the first status byte). The target has no defined return value for other
  * modes; callers must pass 0-5. The two team-flag locals use $v1 to preserve
  * the target's branch and delay-slot allocation without emitting assembly. */
 s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
@@ -48,7 +48,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
             return 1;
         }
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i])
+            if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i])
                 != 0) {
                 break;
             }
@@ -68,7 +68,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         if (index == -1) {
             return 0;
         }
-        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][0];
+        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
                 s32 masked;
@@ -79,7 +79,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 blocked = first & masked;
             } else {
                 blocked
-                    = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i];
+                    = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i];
             }
             if (blocked != 0) {
                 break;

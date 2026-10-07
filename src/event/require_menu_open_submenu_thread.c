@@ -11,7 +11,7 @@ void require_menu_open_submenu_thread(void) {
     u16 parameter_1;
     u16 parameter_2;
 
-    state = ((u8**)g_battle_threads)[g_battle_current_thread_id << 8];
+    state = ((u8**)g_battle_threads)[g_battle_thread_current_id << 8];
     (*(void (**)(void))(*(u8**)(state + 0x30)))();
     input = battle_script_get_controller_input_pointer(0);
     parameter_1 = *(u16*)(state + 0x1c);
@@ -24,7 +24,7 @@ void require_menu_open_submenu_thread(void) {
     battle_menu_handle_action(state, 0);
     battle_thread_start(thread_id, battle_text_character_handling_thread);
     battle_thread_set_parameters_4(thread_id, parameter_0, parameter_1, parameter_2, parameter_2);
-    battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+    battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
     battle_thread_wait_until_inactive(thread_id);
     battle_thread_exit_current();
 }

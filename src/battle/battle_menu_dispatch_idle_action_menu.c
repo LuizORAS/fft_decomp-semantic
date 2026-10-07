@@ -13,7 +13,7 @@ void battle_menu_dispatch_idle_action_menu(void) {
         if ((misc->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
             battle_menu_open_active_unit_idle_action_menu();
         } else {
-            battle_state_restart_menu_to_targeting();
+            battle_state_enter_ai_command();
         }
     } else {
         battle_menu_open_non_active_unit_idle_action_menu();

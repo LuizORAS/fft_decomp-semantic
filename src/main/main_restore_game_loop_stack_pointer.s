@@ -1,7 +1,9 @@
-/* SCUS_942.21 0x80011bc0..0x80011bcf (file 0x23c0..0x23cf).
- * a0 points to a saved stack address. Restore sp and jump to main_system_run_game_loop
- * without changing ra. Assembly because replacing $sp is a stack-management
- * ABI boundary that C cannot express.
+/* Load sp from the stack address main saved at boot (a0) and jump to
+ * main_system_run_game_loop without changing ra: main_system_reset_game's way
+ * back to the top of the game loop. Assembly because replacing $sp is a
+ * stack-management ABI boundary that C cannot express.
+ *
+ * SCUS_942.21 0x80011bc0..0x80011bcf (file 0x23c0..0x23cf).
  */
 	.set	noreorder
 	.set	noat

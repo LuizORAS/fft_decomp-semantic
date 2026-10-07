@@ -17,7 +17,7 @@ void world_gfx_load_evtchr_thread(void) {
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
+        g_world_thread_call_target = (void (*)(void))main_file_request_read_bytes;
     } while (world_thread_call_on_main_stack(
                  id * EVTCHR_BLOCK_SECTORS + EVTCHR_ARCHIVE_START_SECTOR, EVTCHR_BLOCK_BYTES, buffer)
         != 0);

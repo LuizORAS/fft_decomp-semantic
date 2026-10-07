@@ -1,15 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Distortion animation 0x0c: launch a unit straight up at the start of a jump.
+/* Distortion 0xc (BATTLE_DISTORTION_JUMP_UP): launch a unit straight up at the start of a jump.
  *
- * Phase 0 picks an initial rise speed of sqrt(2 * gravity * (0x120 - screen
- * z)) and the matching frame count; phase 1 then applies the velocity to the
- * height each frame, decelerating by g_battle_move_jump_gravity, and ends the animation when
- * the count runs out. `unused_10` reproduces an unreferenced 16-byte frame
- * slot below the velocity copy.
- */
+ * Phase 0 picks a rise speed of sqrt(2 * gravity * (0x120 - ground screen z)), enough to climb
+ * 0x120 plus the ground's height, and the matching frame count, starts the position copies and sets
+ * the jump-height status; phase 1 applies the velocity to the height each frame, decelerating by
+ * g_battle_move_jump_gravity, and when the count runs out stops the position copies and the shadow
+ * and sets animation 2. `unused_10` reproduces an unreferenced 16-byte frame slot below the
+ * velocity copy. */
 void battle_move_animate_jump_start(battle_unit_misc_data_t* unit) {
     VECTOR unused_10;
     VECTOR velocity;
@@ -35,7 +34,7 @@ void battle_move_animate_jump_start(battle_unit_misc_data_t* unit) {
             unit->position_copies_active = 0;
             unit->shadow_graphic_trigger = 0;
             unit->distortion_animation_id = 0;
-            battle_unit_store_animation_facing_movement_data(2, (s16)unit->facing, unit);
+            battle_unit_store_animation_facing_movement_data(2, unit->facing, unit);
         }
         timer--;
         break;

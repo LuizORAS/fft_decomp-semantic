@@ -147,7 +147,7 @@ restart_event:
                         world_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x12C) {
+                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_THINGS_OBTAINED) {
                         world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -290,14 +290,15 @@ restart_event:
                 }
             }
             operand_1 = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-            if (operand_1 != 0x1AD) {
-                if (operand_1 != 0x1D1) {
+            if (operand_1 != EVENT_ID_DELITAS_BETRAYAL) {
+                if (operand_1 != EVENT_ID_BAR_GOLAND_COAL_CITY_OPTIONS) {
                     battle_gfx_init_evtchr_vram_slots();
                 }
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
             event_flags = (g_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_world_menu_input_disabled == 0 && event_flags == 0 && (u32)(operand_1 - 0x190) >= 0x1AU
+            if (g_world_menu_input_disabled == 0 && event_flags == 0
+                && (u32)(operand_1 - EVENT_ID_GENERIC_FIRST) >= (EVENT_ID_GENERIC_END - EVENT_ID_GENERIC_FIRST)
                 && operand_1 != 0) {
                 g_world_script_acting_unit_id = 0xFF;
                 world_process_scenario_conditionals();
@@ -375,7 +376,7 @@ restart_event:
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_world_menu_window_buffers[work_index].thread_id;
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
-                    && (world_thread_is_running_80100164(operand_2) == 1)
+                    && (world_thread_is_running_2(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 2);
                     if ((operand_1 & 0xFFFF) != 0xFFFF) {
@@ -645,7 +646,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_DARK_SCREEN) {
             g_world_menu_hide_numeric_values = 0;
             operand_1 = world_thread_resolve_id(0x10U);
-            world_thread_start(operand_1, &world_thread_set_task_id_36);
+            world_thread_start(operand_1, &world_thread_set_current_task_dark_screen);
             world_thread_set_parameters(operand_1, 0, (s32)parameters, 0);
         } else if (opcode == EVENT_OPCODE_REMOVE_DARK_SCREEN) {
             operand_1 = world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);
@@ -738,7 +739,7 @@ restart_event:
             zalera_misc_id = (s16)world_get_misc_id(first_halfword);
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_animate_and_set_enemy_level_data_by_misc_id(zalera_misc_id);
-                if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
+                if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_ZALERA) {
                     world_unit_apply_zalera_draw_status_flags(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
                     g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
@@ -850,7 +851,7 @@ restart_event:
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
             if (world_script_check_tutorial_event_slot() != 0 && first_halfword >= 3) {
-                world_thread_wait_frames(first_halfword / battle_state_get_animation_speed());
+                world_thread_wait_frames(first_halfword / battle_state_get_vsync_interval());
             } else {
                 world_thread_wait_frames(first_halfword);
             }

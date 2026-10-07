@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Fade the screen out over duration frames, load map_id and fade back in (MAP_JUMPING_OUT,
+ * MAP_INITIALIZE, MAP_JUMPING_IN), then return to the current state. */
 void battle_state_start_map_jump_out(s32 map_id, s32 duration) {
     s32 previous_state;
 

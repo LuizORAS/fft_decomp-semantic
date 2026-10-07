@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Same as world_thread_update_task_state for the memory card screen, with
+ * world_input_update_controller and its own phase word, g_world_input_blocked_state. */
 void world_thread_update_task_state_2(void) {
     s32 running = 0;
     s32 step;

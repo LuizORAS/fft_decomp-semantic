@@ -78,7 +78,7 @@ void battle_formula_calculate_knockback(void) {
     if (level < 0) {
         return;
     }
-    tile = &g_battle_map_tile_data[(level << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
     surface = tile->surface.bits.type;
     if (tile->flags_06.bits.untargetable) {
         return;
@@ -94,12 +94,12 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     if (!(battle_move_get_effective_flags(g_battle_action_target) & BATTLE_EFFECTIVE_MOVEMENT_FLY)) {
-        g_current_ability.knockback_flags = 0x81;
+        g_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_KIND_GROUND;
     } else if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        g_current_ability.knockback_flags = 0x81;
+        g_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_KIND_GROUND;
     } else {
-        g_current_ability.knockback_flags = 0x82;
+        g_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_KIND_FLIER;
     }
     g_current_ability.target_x = x;
     g_current_ability.target_y = y;

@@ -5,21 +5,22 @@
  * instead of keeping it in a register. */
 extern battle_stats_t* volatile g_battle_action_attacker;
 
+/* Golem's hit chance: XA = MA, YA = X, Magic Attack Up, then XA + YA (no zodiac) scaled by the
+ * caster's Faith alone and rolled as a percentage. Returns 1 on a miss. */
 s32 battle_formula_calculate_golem_accuracy(void) {
     battle_action_data_t* action;
 
     battle_formula_store_ma_and_x();
     battle_formula_apply_magic_attack_up();
-    battle_formula_store_xa_plus_ya_status_damage();
+    battle_formula_store_hit_chance();
     if ((g_battle_action_attacker->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FAITH)) != 0) {
-        g_current_ability.attacker_faith = 0x64;
+        g_current_ability.attacker_faith = 100;
     }
     if ((g_battle_action_attacker->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT)) != 0) {
         g_current_ability.attacker_faith = 0;
     }
     action = g_battle_action_target_data;
-    /* The target reads hp_damage signed (lh). */
-    action->hp_damage = (s16)(*(s16*)&action->hp_damage * g_current_ability.attacker_faith / 100);
-    battle_formula_use_hp_damage_as_action_hit_percent();
+    action->hp_damage = (s16)(action->hp_damage * g_current_ability.attacker_faith / 100);
+    battle_formula_roll_hit_chance();
     return g_battle_action_target_data->hit == 0;
 }

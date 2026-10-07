@@ -1,6 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Once a frame on the formation, name entry and shop screens: read the controller (with
+ * the tutorial's scripted input), then drop the input while the window scales (steps 1-3),
+ * while thread 1 runs or a grid menu is open, during a fade, and on the frame after thread 1's
+ * task ends. While thread 1 runs with g_world_thread_task_active set, g_world_text_task_phase is
+ * 1 on the first frame (queuing the window-open sound) and 2 after; once thread 1 stops, the
+ * task flag and the held sound loop are cleared. */
 void world_thread_update_task_state(void) {
     s32 running = 0;
     s32 step;

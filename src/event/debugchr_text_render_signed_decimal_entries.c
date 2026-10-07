@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Render signed gauge values with their positive, negative, or zero color. */
-void debugchr_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
+void debugchr_text_render_signed_decimal_entries(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count) {
     s32 i;
     for (i = 0; i < count;) {
@@ -25,7 +25,7 @@ void debugchr_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_
         flags = entries->flags;
         entries++;
         i++;
-        debugchr_text_render_decimal_value(amount, flags, (void*)pixels, out);
+        debugchr_text_render_decimal_value(amount, flags, pixels, out);
         out->color = 0;
     }
 }

@@ -57,7 +57,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
         if (g_battle_effect_current_secondary->allocation != 0) {
             main_heap_free(g_battle_effect_current_secondary->allocation);
         }
-        work = game_malloc(0x798);
+        work = main_heap_alloc(0x798);
         g_battle_effect_current_secondary->allocation = work;
         for (i = 0; i < 2; i++) {
             for (j = 0; j < 0x18; j++) {

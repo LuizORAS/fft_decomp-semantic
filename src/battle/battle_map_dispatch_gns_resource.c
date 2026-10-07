@@ -200,7 +200,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         battle_map_load_palette_data((u16*)data, 1, 0, 1);
         break;
     case 0x12:
-        main_system_handle_malloc_exception(2, 0x3ca);
+        main_system_report_error(2, 0x3ca);
         break;
     case 0x13:
         g_battle_map_vram_load_rect.x = 0x300;
@@ -334,7 +334,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     case 0x1a:
         g_battle_map_tile_width = data[0];
         g_battle_map_tile_depth = data[1];
-        battle_map_copy_xy_coords_and_tile_data(data);
+        battle_map_copy_size_and_tile_data(data);
         break;
     case 0x23:
         cursor = (battle_map_state_record_t*)data;

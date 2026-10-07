@@ -11,7 +11,7 @@ void open_movie_init_stream(s32 sector, void* output_callback) {
     StSetStream(1, 0, -1, 0, 0);
 
     header = &g_open_file_header;
-    main_file_build_header_nnl(header, sector, 1, 0);
+    main_file_request_read_quiet(header, sector, 1, 0);
     while (g_main_file_still_loading != 0) {
         main_file_poll_load(header);
         VSync(0);

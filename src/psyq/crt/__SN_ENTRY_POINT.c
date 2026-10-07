@@ -35,12 +35,10 @@ void __SN_ENTRY_POINT(void) {
     register s32 more __asm__("$1");
     cursor = &g_psyq_crt_saved_ra;
     end = (u32*)g_psyq_crt_bss_end;
-    __asm__("" : "=r"(end) : "0"(end)); /* Keep both BSS endpoint loads before the first store. */
 clear_bss:
     *cursor = 0;
     cursor++;
     more = (u32)cursor < (u32)end;
-    __asm__("" : "=r"(more) : "0"(more)); /* Preserve the handwritten SLTU/zero-test pair. */
     if (more != 0)
         goto clear_bss;
     ram_top = _ramsize;
@@ -50,7 +48,6 @@ clear_bss:
     psyq_crt_stack_pointer = ram_top | cached_segment;
     heap_address = (u32)g_psyq_crt_bss_end;
     heap_address <<= 3;
-    __asm__("" : "=r"(heap_address) : "0"(heap_address)); /* Keep physical-address extraction as SLL/SRL. */
     heap_address >>= 3;
     stack_size = _stacksize;
     PSYQ_CPU_LOAD_WAIT();

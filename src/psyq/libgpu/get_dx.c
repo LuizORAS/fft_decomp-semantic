@@ -12,7 +12,6 @@ int get_dx(RECT* rect) {
     /* The type-selector temporary retains v0 until coordinate dispatch. */
     __asm__("" : "=r"(type) : "0"(type)); /* The original materializes the GPU-type address. */
     value = *type;
-    __asm__("" : "=r"(value) : "0"(value)); /* The original narrows an explicitly loaded value for dispatch. */
     switch ((u8)value) {
     case 1:
         if (g_psyq_gpu_graph_reverse) {
@@ -33,7 +32,6 @@ int get_dx(RECT* rect) {
             goto mirrored;
         }
         value = (u16)rectangle->x;
-        __asm__("" : "=r"(value) : "0"(value)); /* Preserve the original unsigned load before signed division. */
         return (s16)value / 2;
     }
     return rectangle->x;

@@ -28,14 +28,14 @@ void main_sound_open_generic_sfx(void) {
     }
 
     g_main_sound_weather_sfx_id = 0;
-    g_main_sound_music.slots.smd[3]
-        = main_file_get_smd(g_main_sound_permanent_smd_files[0].sector, g_main_sound_permanent_smd_files[0].size);
-    g_main_sound_music.slots.smd[4]
-        = main_file_get_smd(g_main_sound_permanent_smd_files[1].sector, g_main_sound_permanent_smd_files[1].size);
-    g_main_sound_music.slots.smd[5]
-        = main_file_get_smd(g_main_sound_permanent_smd_files[2].sector, g_main_sound_permanent_smd_files[2].size);
-    g_main_sound_music.slots.smd[6]
-        = main_file_get_smd(g_main_sound_permanent_smd_files[3].sector, g_main_sound_permanent_smd_files[3].size);
-    g_main_sound_music.slots.smd[7]
-        = main_file_get_smd(g_main_sound_permanent_smd_files[4].sector, g_main_sound_permanent_smd_files[4].size);
+    g_main_sound_music.slots.smd[3] = main_file_alloc_smd_and_load(
+        g_main_sound_permanent_smd_files[0].sector, g_main_sound_permanent_smd_files[0].size);
+    g_main_sound_music.slots.smd[4] = main_file_alloc_smd_and_load(
+        g_main_sound_permanent_smd_files[1].sector, g_main_sound_permanent_smd_files[1].size);
+    g_main_sound_music.slots.smd[5] = main_file_alloc_smd_and_load(
+        g_main_sound_permanent_smd_files[2].sector, g_main_sound_permanent_smd_files[2].size);
+    g_main_sound_music.slots.smd[6] = main_file_alloc_smd_and_load(
+        g_main_sound_permanent_smd_files[3].sector, g_main_sound_permanent_smd_files[3].size);
+    g_main_sound_music.slots.smd[7] = main_file_alloc_smd_and_load(
+        g_main_sound_permanent_smd_files[4].sector, g_main_sound_permanent_smd_files[4].size);
 }
