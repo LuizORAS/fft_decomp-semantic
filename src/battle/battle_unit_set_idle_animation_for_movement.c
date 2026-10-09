@@ -16,7 +16,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, unit);
         return;
     }
-    switch (battle_move_validate_float_fly(unit)) {
+    switch (battle_move_get_water_depth(unit)) {
     case 0:
     case 1:
         walk_speed = unit->walk_speed.word;

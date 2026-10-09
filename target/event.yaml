@@ -340,7 +340,7 @@ functions:
   - {addr: 0x801c4124, size: 32, name: bunit_unit_get_brave, hash: 246b05d342c884b0}
   - {addr: 0x801c4144, size: 32, name: bunit_unit_get_faith, hash: 8d252f873a03e098}
   - {addr: 0x801c4164, size: 124, name: bunit_unit_get_max_stat, hash: 0582aeb905d42893}
-  - {addr: 0x801c41e0, size: 188, name: bunit_menu_is_unit_list_row_visible, hash: aa9baa00771d9394}
+  - {addr: 0x801c41e0, size: 188, name: bunit_menu_is_selected_unit_in_upper_rows, hash: aa9baa00771d9394}
   - {addr: 0x801c429c, size: 280, name: bunit_menu_update_unit_list_scroll, hash: eca581c8498c6c0a}
   - {addr: 0x801c43b4, size: 700, name: bunit_menu_draw_pressable_button, hash: f23fb25a5d33ec97}
   - {addr: 0x801c4670, size: 224, name: bunit_menu_init_unit_list, hash: 9b7cf4186658e38a}
@@ -1357,7 +1357,7 @@ functions:
   - {addr: 0x801c7de8, size: 424, name: equip_item_subtract_scaled_stats, hash: 7621477fabb93d49}
   - {addr: 0x801c7f90, size: 216, name: equip_item_calculate_equipment_swap_stat_delta, hash: f6342e487bb56d15}
   - {addr: 0x801c8068, size: 288, name: equip_item_sum_equipment_stat_details, hash: 1537c392f550f2cf}
-  - {addr: 0x801c8188, size: 68, name: equip_item_get_available_count, hash: 95bff62262fd6f25}
+  - {addr: 0x801c8188, size: 68, name: equip_item_get_equipped_count, hash: 95bff62262fd6f25}
   - {addr: 0x801c81cc, size: 24, name: equip_item_get_total_count, hash: 4d8bf16b76d8a671}
   - {addr: 0x801c81e4, size: 340, name: equip_unit_set_slot_item, hash: a7b59d29a018e1ab}
   - {addr: 0x801c8338, size: 152, name: equip_unit_can_equip_item_id, hash: ececc6829482cedf}

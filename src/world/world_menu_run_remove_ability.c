@@ -42,7 +42,7 @@ s32 world_menu_run_remove_ability(void) {
         g_world_remove_ability_unit_index = -1;
         return 0;
     }
-    lock_state = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
+    lock_state = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
     if (lock_state == WORLD_FORMATION_UNIT_UNLOCKED) {
         lock_state = 0;
     }

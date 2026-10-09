@@ -40,6 +40,6 @@ s32 open_system_run_main_loop(s32 skip_movie) {
     }
 
     SetDispMask(0);
-    open_sound_set_type_and_volume(0xc0, 0x78);
+    open_sound_set_cd_mix_and_volume(0xc0, 0x78);
     return g_open_system_result;
 }

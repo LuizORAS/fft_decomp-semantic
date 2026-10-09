@@ -25,7 +25,7 @@ s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id
     s32 other_two_swords;
     u8 flags;
 
-    result = world_formation_lock_equipment_and_abilities(unit_index);
+    result = world_formation_get_unit_lock(unit_index);
     if (result < 0) {
         return result;
     }

@@ -103,7 +103,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         battle_move_update_unit_step_to_current_tile_exit_edge(unit);
         break;
     case BATTLE_MOVE_STEP_PHASE_TELEPORT_START:
-        battle_unit_init_coordinates(unit);
+        battle_move_update_teleport_start(unit);
         break;
     case BATTLE_MOVE_STEP_PHASE_TELEPORT_ANIMATION:
         battle_move_finalize_path_after_animation(unit);
@@ -113,10 +113,10 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         count = unit->movement_path_count;
         if (count == BATTLE_MOVE_PATH_TELEPORT) {
             battle_unit_dismount_rider_and_update_display(unit);
-            battle_effect_call_build_secondary_init(unit);
+            battle_move_start_teleport_step(unit);
         } else if (count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
             battle_unit_dismount_rider_and_update_display(unit);
-            battle_effect_call_build_secondary_init(unit);
+            battle_move_start_teleport_step(unit);
             unit->pending_mount = 0;
             battle_ai_init_selected_action();
         } else if (count == 0) {

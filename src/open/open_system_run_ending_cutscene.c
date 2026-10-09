@@ -36,5 +36,5 @@ void open_system_run_ending_cutscene(void) {
 
     open_gfx_restore_frame_vram_page();
     SetDispMask(0);
-    open_sound_set_type_and_volume(0xc0, 0x78);
+    open_sound_set_cd_mix_and_volume(0xc0, 0x78);
 }

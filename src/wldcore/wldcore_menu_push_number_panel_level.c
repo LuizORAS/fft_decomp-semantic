@@ -13,7 +13,7 @@ void wldcore_menu_push_number_panel_level(void) {
     g_world_text_substitution_values[0] = x;
     g_world_text_substitution_values[1] = y;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB813, 0);
-    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS;
+    g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS;
     g_wldcore_menu_ordering_table_offset = 8;
     origin.x = 0x38;
     origin.y = 0x20;

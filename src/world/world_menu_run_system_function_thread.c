@@ -17,7 +17,7 @@ void world_menu_run_system_function_thread(void) {
         id = g_world_system_function_table[id].alternate_id;
     }
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-    if (g_world_menu_input_disabled == MENU_INPUT_PLAYER) {
+    if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
         while (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_EVENT) != 0) {
             if (g_world_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 world_thread_exit_current();

@@ -3,9 +3,9 @@
 /* Builds the -1-terminated list of owned item IDs in `category`, then sorts it.
  *
  * `equip_filter` 0 lists every owned item, 1 flags items the unit cannot equip
- * with 0x4000, and 2 omits them; filter 1 is promoted to 2 when Show
- * Unequippable is not On. `sort_mode` 1-5 with a category
- * key below 5 uses the category order list; anything else falls back to
+ * with EQUIP_ITEM_LIST_ENTRY_UNEQUIPPABLE, and 2 omits them; filter 1 is
+ * promoted to 2 when Show Unequippable is not On. `sort_mode` 1-5 with a
+ * category list index below 5 uses that category order list; anything else falls back to
  * equip_item_sort_list_by_criteria. Returns the number of listed items.
  */
 /* clang-format off */
@@ -22,7 +22,7 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     s32 entry;
     s32 item_category;
     s32 matches;
-    s32 sort_key;
+    s32 category_index;
 
     if (equip_filter == ITEM_LIST_MODE_MARK_UNEQUIPPABLE
         && g_main_game_options.fields.show_unequippable_items != GAME_OPTION_ON) {
@@ -73,7 +73,7 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
                 continue;
             }
             if (equip_filter == ITEM_LIST_MODE_MARK_UNEQUIPPABLE && matches == -1) {
-                entry |= 0x4000; /* listed but not equippable */
+                entry |= EQUIP_ITEM_LIST_ENTRY_UNEQUIPPABLE;
             }
         }
         list[count] = entry;
@@ -81,16 +81,16 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     }
     list[count] = -1;
 
-    sort_key = 100;
+    category_index = 100;
     if (category == ITEM_LIST_FILTER_HAND) {
-        sort_key = 0;
+        category_index = 0;
     } else if (category < 5) {
-        sort_key = category - 1;
+        category_index = category - 1;
     } else if (category == ITEM_LIST_FILTER_OTHER) {
-        sort_key = 4;
+        category_index = 4;
     }
-    if (sort_key < 5 && (u16)(sort_mode - 1) < 5) {
-        count = equip_item_sort_list_by_category_order(sort_key, list);
+    if (category_index < 5 && (u16)(sort_mode - 1) < 5) {
+        count = equip_item_sort_list_by_category_order(category_index, list);
     } else {
         equip_item_sort_list_by_criteria(sort_mode & 0xF, list);
     }

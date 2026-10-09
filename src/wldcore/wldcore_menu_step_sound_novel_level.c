@@ -32,7 +32,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
                 return;
             }
-            g_wldcore_menu_result = 0;
+            g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             wldcore_capture_state_and_play_time();
             fade = &g_wldcore_screen_fade_state;

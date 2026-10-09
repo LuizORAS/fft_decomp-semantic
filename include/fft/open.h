@@ -119,8 +119,8 @@ void open_input_update_buttons_and_check_game_reset(void);
 /* g_open_movie_stream_status, set as each frame header arrives. */
 typedef enum open_movie_stream_status {
     OPEN_MOVIE_STREAM_PLAYING = 0,
-    OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO = 1, /* reached g_open_movie_first_frame */
-    OPEN_MOVIE_STREAM_STOP = 2,                 /* reached g_open_movie_last_frame */
+    OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO = 1, /* reached g_open_movie_end_frame */
+    OPEN_MOVIE_STREAM_STOP = 2,                 /* reached g_open_movie_video_end_frame; the CD audio plays on */
 } open_movie_stream_status_e;
 
 /* Shared VLC/MDEC state used by OPEN.BIN's movie-stream pipeline. */
@@ -139,9 +139,9 @@ typedef char open_mdec_stream_state_size_must_be_0x38[(sizeof(open_movie_mdec_st
 extern s32 g_open_movie_aligned_height;
 extern u8 g_open_movie_cd_stream_ring_buffer[];
 extern u32 g_open_movie_current_frame;
-extern u32 g_open_movie_first_frame;
+extern u32 g_open_movie_end_frame;
 extern s32 g_open_movie_height;
-extern s32 g_open_movie_last_frame;
+extern s32 g_open_movie_video_end_frame; /* -1: none */
 extern u8 g_open_movie_mdec_output_buffer_0[];
 extern u8 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
@@ -165,14 +165,15 @@ void open_movie_present_frame(void);
 void open_movie_start_cd_stream_read(const void* location);
 void open_movie_start_fftst_or_title_menu(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
-void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 sound_type);
+void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level);
 void open_movie_stop_stream(s32 pause_cd_audio);
 void open_movie_stream_and_push_controller_1(s32 start_sector, s32 unused, s32 end_frame);
 void open_movie_stream_fftend(s32 start_sector, s32 unused, s32 end_frame);
-void open_movie_stream_fftst_and_push_controller(s32 start_sector, s32 stream_length, s32 end_frame, s32 frame_count);
+void open_movie_stream_fftst_and_push_controller(
+    s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame);
 
 void open_movie_stream_title_demo_and_push_controller(
-    s32 start_sector, s32 stream_length, s32 end_frame, s32 frame_rate);
+    s32 start_sector, s32 stream_length, s32 end_frame, s32 cd_mix_level);
 
 void open_movie_update_stream_frame(void);
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused);
@@ -352,7 +353,8 @@ void open_birthday_push_confirmation_controller(void);
 
 /* menu */
 
-extern s32 g_open_menu_formation_entry_mask;
+/* Pad buttons withheld from the WORLD menu frame (open_menu_update_world_formation); -1 blocks all. */
+extern s32 g_open_menu_blocked_buttons;
 extern s32 g_open_menu_formation_otag_index;
 
 /* The slot of the music test's list thread. */
@@ -381,7 +383,8 @@ extern s16 g_open_music_test_list_entries[96];
 extern s16 g_open_music_test_selected_option;
 extern u8 g_open_music_test_music_ids[];   /* music test entry -> scenario music id */
 extern s32 g_open_music_test_sound_handle; /* handle of the playing music test track */
-void open_sound_set_type_and_volume(s32 sound_type, s32 duration);
+/* Fades the CD audio in at the given mix level (main_sound_put_type), or out when it is 0. */
+void open_sound_set_cd_mix_and_volume(s32 cd_mix_level, s32 duration);
 
 /* text */
 /* Eight-byte glyph metrics record addressed by OPEN script text. */
@@ -621,13 +624,13 @@ void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
-void open_gfx_hide_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
 void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
-void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_hide_four_render_records(open_birthday_render_record_indices_t* group);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);
 void open_gfx_step_image_crossfade(void);
@@ -641,10 +644,10 @@ typedef enum open_system_runtime_flag {
     OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING = 0x00002,  /* cleared by open_movie_stop_stream */
     OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING = 0x00004, /* open_movie_pause_cd_audio pauses the drive and clears it */
     OPEN_SYSTEM_RUNTIME_FLAG_RENDER_RECORDS_HIDDEN = 0x00008,
-    OPEN_RUNTIME_INPUT_DISABLED = 0x00010,
+    OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED = 0x00010,
     OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED = 0x00040,
-    OPEN_FLAG_WORLD_OVERLAY_LOADED = 0x00080,
-    OPEN_FLAG_PARTY_CHOSEN = 0x00100,
+    OPEN_SYSTEM_RUNTIME_FLAG_WORLD_OVERLAY_LOADED = 0x00080,
+    OPEN_SYSTEM_RUNTIME_FLAG_PARTY_CHOSEN = 0x00100,
     OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME = 0x00400, /* the WORLD menu frame runs every loop */
     OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN = 0x01000,
     OPEN_SYSTEM_RUNTIME_FLAG_RGB24 = 0x02000,

@@ -38,7 +38,7 @@ functions:
   - {addr: 0x80068420, size: 300, name: open_birthday_convert_to_zodiac_position, hash: 9aaa68be5ea32880}
   - {addr: 0x8006854c, size: 160, name: open_menu_update_world_formation, hash: b27c035b144dee4f}
   - {addr: 0x800685ec, size: 76, name: open_birthday_month_day_to_day_of_year, hash: e796a8582427e794}
-  - {addr: 0x80068638, size: 76, name: open_sound_set_type_and_volume, hash: 3fcd975cc8b2da0c}
+  - {addr: 0x80068638, size: 76, name: open_sound_set_cd_mix_and_volume, hash: 3fcd975cc8b2da0c}
   - {addr: 0x80068684, size: 88, name: open_movie_init_and_stream_opening, hash: 7f2fe3e68306a213}
   - {addr: 0x800686dc, size: 132, name: open_movie_init_and_play_end, hash: c5005cd2d64378db}
   - {addr: 0x80068760, size: 76, name: open_gfx_restore_frame_vram_page, hash: 74303d09981cd6c2}
@@ -68,8 +68,8 @@ functions:
   - {addr: 0x8006a074, size: 108, name: open_movie_stream_and_push_controller_1, hash: 1636df55b15cecbb}
   - {addr: 0x8006a0e0, size: 148, name: open_movie_finish_controller_1_if_ready_or_skipped, hash: 5190c9b35c57fef9}
   - {addr: 0x8006a174, size: 1028, name: open_title_push_menu_controller, hash: 28b9116834e90955}
-  - {addr: 0x8006a578, size: 248, name: open_gfx_hide_four_render_records, hash: 778fee05b7f00a4b}
-  - {addr: 0x8006a670, size: 248, name: open_gfx_show_four_render_records, hash: d7c265230ad7b5f5}
+  - {addr: 0x8006a578, size: 248, name: open_gfx_show_four_render_records, hash: 778fee05b7f00a4b}
+  - {addr: 0x8006a670, size: 248, name: open_gfx_hide_four_render_records, hash: d7c265230ad7b5f5}
   - {addr: 0x8006a768, size: 1936, name: open_title_update_menu, hash: 5c0ec430bc6c2047}
   - {addr: 0x8006aef8, size: 428, name: open_menu_push_sound_type_controller, hash: 4cba2d76c26467a9}
   - {addr: 0x8006b0a4, size: 692, name: open_menu_handle_sound_type_input, hash: 0e5b70f17f26fa47}
@@ -253,9 +253,9 @@ data:
   - {addr: 0x8008642c, name: g_open_input_direction_counter_3}
   - {addr: 0x80086430, name: g_open_birthday_title_image}
   - {addr: 0x80087030, name: g_open_birthday_window_image}
-  - {addr: 0x8008e430, name: g_open_menu_formation_entry_mask}
+  - {addr: 0x8008e430, name: g_open_menu_blocked_buttons}
   - {addr: 0x8008e434, name: g_open_music_test_list_entries}
-  - {addr: 0x8008e534, name: g_open_movie_first_frame}
+  - {addr: 0x8008e534, name: g_open_movie_end_frame}
   - {addr: 0x8008e538, name: g_open_movie_width}
   - {addr: 0x8008e53c, name: g_open_system_runtime_flags}
   - {addr: 0x8008e540, name: g_open_movie_height}
@@ -267,7 +267,7 @@ data:
   - {addr: 0x8008fbf0, name: g_open_controller_handler_indices}
   - {addr: 0x8008fc00, name: g_open_gfx_primitive_count}
   - {addr: 0x8008fc04, name: g_open_current_controller_index}
-  - {addr: 0x8008fc08, name: g_open_movie_last_frame}
+  - {addr: 0x8008fc08, name: g_open_movie_video_end_frame}
   - {addr: 0x8008fc0c, name: g_open_music_test_selected_option}
   - {addr: 0x8008fc10, name: g_open_movie_aligned_height}
   - {addr: 0x8008fc14, name: g_open_system_vsync_mode}

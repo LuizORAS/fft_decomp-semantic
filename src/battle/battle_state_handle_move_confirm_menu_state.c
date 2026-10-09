@@ -2,18 +2,18 @@
 #include "psx/types.h"
 
 void battle_state_handle_move_confirm_menu_state(void) {
-    s32* selected_ability_address;
-    s32 selected_ability;
+    s32* selected_command_address;
+    s32 selected_command;
     battle_unit_misc_data_t* source_misc_data;
     battle_unit_misc_data_t* casting_misc_data;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    selected_ability_address = battle_menu_get_selected_ability_address();
+    selected_command_address = battle_menu_get_selected_command_address();
     source_misc_data = battle_unit_get_source_misc_data();
     casting_misc_data = battle_unit_get_casting_misc_data();
-    selected_ability = *selected_ability_address;
-    switch (selected_ability) {
+    selected_command = *selected_command_address;
+    switch (selected_command) {
     case 8:
     case 0xff:
         if (casting_misc_data->movement_flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {

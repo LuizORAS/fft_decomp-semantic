@@ -95,7 +95,7 @@ void open_script_update_xa_audio(void) {
                 return;
             }
             if (CdControl(0x10, 0, result) != 0 && CdPosToInt(result) > 0x3586c) {
-                open_sound_set_type_and_volume(0, 1);
+                open_sound_set_cd_mix_and_volume(0, 1);
                 g_open_script_state.control_state = 0;
                 *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STOPPING;
                 return;
@@ -134,7 +134,7 @@ void open_script_update_xa_audio(void) {
             u32* control = &g_open_script_state.dispatch.flags;
 
             *control ^= OPEN_SCRIPT_DISPATCH_XA_STOPPING;
-            open_sound_set_type_and_volume(0xc0, 1);
+            open_sound_set_cd_mix_and_volume(0xc0, 1);
         } break;
         default: {
             s32* state = &g_open_script_state.control_state;

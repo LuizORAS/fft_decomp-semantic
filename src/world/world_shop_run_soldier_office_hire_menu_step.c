@@ -11,8 +11,8 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
 
     if (g_world_shop_hire_menu_initialized == 0) {
         i = 0;
-        g_world_formation_dismiss_final_confirm_menu.selected_index = 0;
-        g_world_shop_rename_confirm_menu.selected_index = 0;
+        g_world_shop_hire_confirm_menu.selected_index = 0;
+        g_world_shop_hire_fee_confirm_menu.selected_index = 0;
         g_world_shop_hire_result_shown = 0;
         g_world_shop_hire_menu_initialized = 1;
         g_world_status_display_thread_params.y = 0;
@@ -66,8 +66,8 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
                     } else {
                         g_world_formation_selected_unit_index = slot;
                         world_formation_stage_selected_unit();
-                        g_world_formation_scroll_enabled = 0;
-                        g_world_formation_scroll_enabled_latch = 0;
+                        g_world_formation_unit_banner_at_bottom = 0;
+                        g_world_formation_unit_banner_at_bottom_latch = 0;
                         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF824, 0);
                         g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_PREVIEW;
                     }

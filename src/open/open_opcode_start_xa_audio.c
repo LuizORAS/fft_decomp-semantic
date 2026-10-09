@@ -23,5 +23,5 @@ void open_opcode_start_xa_audio(s16* command) {
                                              & ~(OPEN_SCRIPT_DISPATCH_CONTINUE | OPEN_SCRIPT_DISPATCH_XA_PLAYING
                                                  | OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING))
         | (OPEN_SCRIPT_DISPATCH_WAITING | OPEN_SCRIPT_DISPATCH_XA_STARTING);
-    open_sound_set_type_and_volume(0, 1);
+    open_sound_set_cd_mix_and_volume(0, 1);
 }

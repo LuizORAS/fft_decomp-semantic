@@ -11,9 +11,9 @@
 void battle_move_start_unit_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to) {
     u16 facings[4] = { BATTLE_FACING_EAST, BATTLE_FACING_WEST, BATTLE_FACING_SOUTH, BATTLE_FACING_NORTH };
-    u8 jump_offsets[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST,
+    u8 jump_phases[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST,
         BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH };
-    u8 hop_offsets[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST,
+    u8 hop_phases[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST,
         BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH };
     u8* step;
     s32 animation;
@@ -25,11 +25,11 @@ void battle_move_start_unit_jump_step(
     step = &unit->current_path_step.value;
     value = unit->current_path_step.value;
     if ((value & 3) >= 2) {
-        unit->step_phase = jump_offsets[(u8)value >> 6];
+        unit->step_phase = jump_phases[(u8)value >> 6];
         battle_unit_store_animation_facing(
             BATTLE_UNIT_ANIMATION_JUMP, facings[unit->current_path_step.value >> 6], unit);
     } else {
-        unit->step_phase = hop_offsets[(u8)value >> 6];
+        unit->step_phase = hop_phases[(u8)value >> 6];
         battle_unit_dismount_rider(unit);
         animation = BATTLE_UNIT_ANIMATION_HOP;
         if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {

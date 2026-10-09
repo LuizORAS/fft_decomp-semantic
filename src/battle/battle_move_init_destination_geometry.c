@@ -25,7 +25,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
         if (state->inner_count >= 5) {
             state->destination_unit_record_flag = 1;
-            if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_VALID_DESTINATION))
+            if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_MOUNTABLE_UNIT))
                 return 1;
             state->destination_entry_height = records[state->destination_unit_record_index].standing_height
                 + g_battle_move_height_offsets[candidate];
@@ -45,7 +45,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_panel_index = state->destination_unit_record_index + 512;
         state->effective_destination_panel = &g_battle_target_panels[state->destination_panel_index];
     } else {
-        if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_REACHABLE))
+        if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_ENTERABLE))
             return 4;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);

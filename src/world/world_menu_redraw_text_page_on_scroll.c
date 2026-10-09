@@ -22,7 +22,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
     rect.w = entry->inner_width >> 2;
     rect.h = entry->inner_height;
     changed = 0;
-    if (g_world_menu_input_disabled != MENU_INPUT_PLAYER) {
+    if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
     if (!(*input2 & PSX_PAD_SQUARE) && g_world_threads[g_world_thread_current_id].task_words[4] == 0) {

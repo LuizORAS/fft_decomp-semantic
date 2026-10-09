@@ -107,7 +107,7 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_shop_main_menu_thread_data.selected_index = 0;
     g_world_shop_fur_menu_thread_data.selected_index = 0;
     g_world_shop_hire_menu_thread_data.selected_index = 0;
-    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_SHOP_DIALOGUE);
+    world_text_bind_section_data(WORLD_TEXT_DATA_SHOP_DIALOGUE);
     g_world_text_section_pointers[WORLD_TEXT_SECTION_SHOP_MENU_LABELS] = g_world_text_shop_menu_labels_data;
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);

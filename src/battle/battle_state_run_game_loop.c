@@ -29,7 +29,7 @@ void battle_state_run_game_loop(void) {
     do {
         battle_state_run_deployment();
         g_battle_menu_status_enabled = 0;
-        g_battle_controller_input = g_main_game_options.fields.cursor_movement;
+        g_battle_cursor_input_mode = g_main_game_options.fields.cursor_movement;
 
         for (;;) {
             battle_state_update_controller_input();
@@ -163,8 +163,8 @@ void battle_state_run_game_loop(void) {
             case BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE:
                 battle_state_handle_commence_attack_phase_state();
                 break;
-            case BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY:
-                battle_state_handle_effect_damage_display_state();
+            case BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT:
+                battle_state_handle_action_announcement_state();
                 break;
             case BATTLE_GAME_STATE_OPEN_SP2_FILES:
                 battle_state_handle_open_sp2_files_state();

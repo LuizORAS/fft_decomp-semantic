@@ -51,8 +51,8 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
         }
         world_formation_draw_graphics_below_sprite(unit_index,
             g_world_formation_unit_pointers[unit_index]->proposition_status == WORLD_FORMATION_UNIT_PROPOSITION_LEAVING
-                ? WORLD_FORMATION_READOUT_LEAVING
-                : WORLD_FORMATION_READOUT_MISSING,
+                ? MENU_UNIT_READOUT_LEAVING
+                : MENU_UNIT_READOUT_MISSING,
             pos->x, pos->y, backdrop_rgb, 0, 1, ot_index + 2);
         rgb = g_world_formation_away_unit_color;
     }

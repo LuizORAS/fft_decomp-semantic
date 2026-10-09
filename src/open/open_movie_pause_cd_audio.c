@@ -3,7 +3,7 @@
 
 void open_movie_pause_cd_audio(void) {
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) != 0) {
-        open_sound_set_type_and_volume(0, 1);
+        open_sound_set_cd_mix_and_volume(0, 1);
 
         while (CdControlB(CdlPause, 0, 0) == 0) { }
 

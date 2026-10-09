@@ -84,14 +84,14 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     if (allow_stat_cycle != 0) {
         if (g_bunit_unit_browse_enabled == 0) {
             if (input & PSX_PAD_L2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP ? BUNIT_UNIT_STAT_BRAVE_FAITH
-                                                                                      : g_bunit_unit_stat_mode - 1;
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP ? MENU_UNIT_READOUT_BRAVE_FAITH
+                                                                                        : g_bunit_unit_stat_mode - 1;
                 input &= ~PSX_PAD_R2;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
             if (input & PSX_PAD_R2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_BRAVE_FAITH
-                    ? BUNIT_UNIT_STAT_HP
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_BRAVE_FAITH
+                    ? MENU_UNIT_READOUT_HP
                     : g_bunit_unit_stat_mode + 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
@@ -177,10 +177,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         if (mode < 3) {
             row = mode;
             col = 1;
-        } else if (mode == BUNIT_UNIT_STAT_LEVEL_EXP) {
+        } else if (mode == MENU_UNIT_READOUT_LEVEL_EXP) {
             row = 3;
             col = 2;
-        } else if (mode == BUNIT_UNIT_STAT_BRAVE_FAITH) {
+        } else if (mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
             row = 5;
             col = 3;
         }
@@ -188,7 +188,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             quads + row, 0, 0, g_bunit_menu_icon_texture_page, g_bunit_text_clut_1_mode0, 0xC, col);
     }
     row = 0;
-    g_bunit_status_banner_at_bottom = bunit_menu_is_unit_list_row_visible(g_bunit_unit_list_page_offset);
+    g_bunit_status_banner_at_bottom = bunit_menu_is_selected_unit_in_upper_rows(g_bunit_unit_list_page_offset);
     y = 0x24 + g_bunit_unit_list_page_offset + g_bunit_unit_list_scroll_step;
     cell.w = 0x38;
     cell.h = 0x30;
@@ -247,10 +247,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     rect.h = 11;
                     bunit_gfx_enqueue_textured_quad(
                         &rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page, g_bunit_text_metric_1, 8);
-                    if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP) {
+                    if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP) {
                         clut = g_bunit_unit_grid_hp_gauge_clut;
                         gradient = g_bunit_unit_grid_hp_gauge_colors;
-                    } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_MP) {
+                    } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_MP) {
                         clut = g_bunit_unit_grid_mp_gauge_clut;
                         gradient = g_bunit_unit_grid_mp_gauge_colors;
                     } else {
@@ -278,7 +278,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     bar_points[6] += bar_points[4];
                     bar_points[7] = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
                     bunit_gfx_enqueue_gouraud_quad(bar_points, gradient, 0, 8);
-                } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_LEVEL_EXP) {
+                } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y3 = top;
@@ -305,7 +305,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     g_bunit_unit_grid_experience_number.y = number_y3;
                     g_bunit_unit_grid_experience_number.value = unit_index;
                     bunit_menu_script_draw_formatted_number(&g_bunit_unit_grid_experience_number);
-                } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_BRAVE_FAITH) {
+                } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y4 = top;

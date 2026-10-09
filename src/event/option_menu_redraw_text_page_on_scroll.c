@@ -21,7 +21,7 @@ void* option_menu_redraw_text_page_on_scroll(
     source.h = menu->inner_height;
     changed = 0;
 
-    if (g_battle_menu_input_disabled != MENU_INPUT_PLAYER) {
+    if (g_battle_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
 

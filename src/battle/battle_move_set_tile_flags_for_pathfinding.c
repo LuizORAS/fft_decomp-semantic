@@ -46,7 +46,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
                 depth = tile->depth_half_height.value >> 5;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
-                    *frontier_cell |= FRONTIER_FLAG_REACHABLE;
+                    *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
                 }
             }
             tile_flags = tile->flags.value;
@@ -54,7 +54,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                 *frontier_cell |= FRONTIER_FLAG_BLOCKED;
             } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
                 && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
-                *frontier_cell |= FRONTIER_FLAG_REACHABLE;
+                *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
             }
         }
     }
@@ -66,7 +66,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                 index = (record->higher_elevation << 8) + record->y * config->map_max_x + record->x;
                 if (g_battle_unit_stats[flags & BATTLE_MOVE_RECORD_UNIT_ID_MASK].character_identity
                     == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
-                    frontier[index] = (frontier[index] | FRONTIER_FLAG_BLOCKED) & ~FRONTIER_FLAG_REACHABLE;
+                    frontier[index] = (frontier[index] | FRONTIER_FLAG_BLOCKED) & ~FRONTIER_FLAG_ENTERABLE;
                 }
                 g_battle_target_panels[index].unit_record_index = i;
                 unit_cell = &frontier[index];
@@ -79,12 +79,12 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                         *unit_cell &= ~FRONTIER_FLAG_STAND_ON_UNIT;
                     }
                     if (!(flags & BATTLE_MOVE_RECORD_FLAG_NOT_MOUNTABLE)) {
-                        frontier[index] |= FRONTIER_FLAG_VALID_DESTINATION;
+                        frontier[index] |= FRONTIER_FLAG_MOUNTABLE_UNIT;
                     } else {
-                        frontier[index] &= ~FRONTIER_FLAG_VALID_DESTINATION;
+                        frontier[index] &= ~FRONTIER_FLAG_MOUNTABLE_UNIT;
                     }
                 } else {
-                    *unit_cell &= ~(FRONTIER_FLAG_REACHABLE | FRONTIER_FLAG_VALID_DESTINATION);
+                    *unit_cell &= ~(FRONTIER_FLAG_ENTERABLE | FRONTIER_FLAG_MOUNTABLE_UNIT);
                     if (!config->move_type) {
                         *unit_cell |= FRONTIER_FLAG_STAND_ON_UNIT;
                     } else {
@@ -100,7 +100,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     }
     if (mode == BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD) {
         panel = &g_battle_target_panels[index];
-        if (frontier[index] & FRONTIER_FLAG_VALID_DESTINATION) {
+        if (frontier[index] & FRONTIER_FLAG_MOUNTABLE_UNIT) {
             state->outer_count = 0x24;
             aux = g_battle_target_panels + 0x200 + panel->unit_record_index;
             aux->remaining_range = config->move + 1;

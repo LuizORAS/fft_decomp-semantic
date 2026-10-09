@@ -29,7 +29,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
     }
     if (g_world_formation_unit_banner_enabled != 0) {
         text_id = MENU_GRID_HELP_BANNER_TOP;
-        if (g_world_formation_scroll_enabled != 0) {
+        if (g_world_formation_unit_banner_at_bottom != 0) {
             text_id = MENU_GRID_HELP_BANNER_BOTTOM;
         }
         g_world_menu_description_text_id = text_id;
@@ -46,12 +46,12 @@ void world_shop_run_rename_unit_prompt_step(void) {
         }
     }
     if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0
-        && world_formation_can_scroll_slots_back() == 0) {
+        && world_formation_is_unit_list_scroll_needed() == 0) {
         input = g_world_input_primary_repeat;
         if (input & PSX_PAD_CIRCLE) {
             if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
                 == CHARACTER_IDENTITY_REIS_DRAGON) {
-                if (g_world_formation_scroll_enabled != 0) {
+                if (g_world_formation_unit_banner_at_bottom != 0) {
                     mode = 1;
                 } else {
                     mode = 2;

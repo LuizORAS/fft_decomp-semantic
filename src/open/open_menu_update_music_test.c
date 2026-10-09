@@ -8,7 +8,7 @@ typedef struct open_menu_sound_test_state {
     /* 0x04 */ s32 delay;        /* frames before loading music_id */
     /* 0x08 */ s32 music_slot;   /* slot from main_sound_open_music_into_free_slot */
     /* 0x0c */ s32 step;         /* 0 idle, 1 exiting, 2 fading out, 3 starting track, 4 opening */
-    /* 0x10 */ s32 blink_frames; /* formation-mask blink after a selection */
+    /* 0x10 */ s32 blink_frames; /* counts ten frames after a selection, while Up and Down stay blocked */
 } open_menu_sound_test_state_t;
 
 /* Runs the hidden Music Test menu.
@@ -17,8 +17,8 @@ typedef struct open_menu_sound_test_state {
  * Cross stops playback or, when idle, closes the menu, reloads OPENBK and
  * returns to the previous controller. Select opens the thread-2 text window
  * on text id 0xC800 + entry; the Music Test track names and comments are
- * stored in OPEN.LZW, but which of them that id selects is unverified. The
- * formation entry mask blinks for ten frames after each selection.
+ * stored in OPEN.LZW, but which of them that id selects is unverified. Up and
+ * Down are withheld from the list for ten frames after each selection.
  */
 void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
     open_point32_t extent;
@@ -28,7 +28,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
     if (state->blink_frames != 0 && ++state->blink_frames >= 10) {
         state->blink_frames = 0;
         world_formation_set_display_mode(0);
-        g_open_menu_formation_entry_mask ^= PSX_PAD_UP | PSX_PAD_DOWN;
+        g_open_menu_blocked_buttons ^= PSX_PAD_UP | PSX_PAD_DOWN;
     }
 
     if (state->step == OPEN_MUSIC_TEST_STEP_OPEN) {
@@ -47,7 +47,8 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_FADE_OUT) {
         if (!(g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE)) {
-            g_open_system_runtime_flags ^= OPEN_RUNTIME_INPUT_DISABLED | OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
+            g_open_system_runtime_flags
+                ^= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED | OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
             open_file_build_openbk_header(0, g_open_file_destination);
             open_file_wait_for_pending();
             g_open_current_controller_index--;
@@ -83,7 +84,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
         if (buttons & PSX_PAD_CIRCLE) {
             world_formation_set_display_mode(1);
             state->blink_frames = 1;
-            g_open_menu_formation_entry_mask |= PSX_PAD_UP | PSX_PAD_DOWN;
+            g_open_menu_blocked_buttons |= PSX_PAD_UP | PSX_PAD_DOWN;
             if (state->music_id != 0) {
                 state->delay = 0x20;
                 main_sound_set_current_music_target(0, 0x78);
@@ -99,7 +100,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             } else {
                 state->step = OPEN_MUSIC_TEST_STEP_CLOSE;
                 world_thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
-                g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
+                g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
             }
         } else if (buttons & PSX_PAD_SELECT) {
             open_controller_start_text_message(g_open_music_test_list_params.selected_index + 0xC800, 0);

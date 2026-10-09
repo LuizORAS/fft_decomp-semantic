@@ -33,7 +33,7 @@ s32 world_formation_run_set_ability_menu(void) {
             = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
     }
     if (g_world_set_ability_initialized == 0) {
-        world_gfx_clear_sprite_slots();
+        world_menu_clear_selection_records();
         g_world_set_ability_slot = -1;
         g_world_set_ability_initialized = 1;
         g_world_set_ability_cursor = 0xFF;
@@ -53,7 +53,7 @@ s32 world_formation_run_set_ability_menu(void) {
         }
         g_world_set_ability_list_close_pending = 1;
     }
-    lock_state = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
+    lock_state = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
     if (lock_state == WORLD_FORMATION_UNIT_UNLOCKED) {
         lock_state = 0;
     }
@@ -101,7 +101,7 @@ s32 world_formation_run_set_ability_menu(void) {
             world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
             g_world_ability_panel_thread_params.style = 1;
             g_world_set_ability_cursor = 0xFF;
-            world_gfx_get_sprite_slot(g_world_set_ability_slot + 4, &x, &y, g_world_menu_entry_ids);
+            world_menu_get_selection_record(g_world_set_ability_slot + 4, &x, &y, g_world_menu_entry_ids);
             value = TEXT_SECTION_ABILITY_NAMES;
             if (g_world_set_ability_slot == 1) {
                 value = TEXT_SECTION_SKILLSET_NAMES;
@@ -176,7 +176,7 @@ s32 world_formation_run_set_ability_menu(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_set_ability_show_stat_preview = 0;
         g_world_status_display_thread_params.redraw_request = 1;
-        world_gfx_set_sprite_slot(g_world_set_ability_slot + 4, g_world_menu_cursor_position,
+        world_menu_set_selection_record(g_world_set_ability_slot + 4, g_world_menu_cursor_position,
             g_world_menu_scroll_offset, g_world_menu_entry_ids);
         world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_set_ability_list_close_pending = 0;

@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
 void battle_state_handle_learn_ability_on_hit_state(void) {
-    s32* selected_ability_address;
-    s32 selected_ability;
+    s32* selected_command_address;
+    s32 selected_command;
     s32 counter;
     s32 skip_animation;
     s32 hit_count;
@@ -12,10 +12,10 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    selected_ability_address = battle_menu_get_selected_ability_address();
+    selected_command_address = battle_menu_get_selected_command_address();
     casting_unit = battle_unit_get_casting_misc_data();
-    selected_ability = *selected_ability_address;
-    switch (selected_ability) {
+    selected_command = *selected_command_address;
+    switch (selected_command) {
     case 7:
         if (g_battle_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
             target_unit = battle_unit_get_misc_data_by_battle_id(*(u16*)&g_battle_action_learn_on_hit_unit_id);

@@ -15,7 +15,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
     s32 menu_thread_id;
     s16* row_actions;
 
-    if (g_world_menu_input_disabled == MENU_INPUT_TUTORIAL
+    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> row_index) & 1)) {
         return;
     }

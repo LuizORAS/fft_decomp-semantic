@@ -13,7 +13,7 @@ void world_formation_run_job_wheel_menu(void) {
 
     if (g_world_job_wheel_initialized == 0) {
         g_world_job_wheel_spin_progress = 0;
-        world_gfx_bind_data_pointer(WORLD_TEXT_DATA_JOB_DESCRIPTIONS);
+        world_text_bind_section_data(WORLD_TEXT_DATA_JOB_DESCRIPTIONS);
         g_world_job_wheel_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
         world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);

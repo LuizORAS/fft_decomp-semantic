@@ -14,7 +14,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
     s32 battle_unit_index;
 
     g_battle_unit_status_staging_data = &g_battle_ai_workspace_ptr->status_staging;
-    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER
+    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER
         && battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         g_battle_unit_status_staging_data->jump_float_flags = 0;

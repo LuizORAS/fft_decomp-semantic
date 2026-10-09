@@ -36,7 +36,7 @@ void battle_map_reset_mesh_render_state(void) {
         bzero(g_battle_map_loaded_gns_records[i].load_info, 14);
         bzero(&g_battle_map_pending_gns_records[i].resource_type, 14);
     }
-    battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_CLEAR);
+    battle_map_run_weather_command(MAP_WEATHER_COMMAND_CLEAR);
     g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
     weather_flags = &g_battle_map_weather_flags;
     *weather_flags &= 0x7d;

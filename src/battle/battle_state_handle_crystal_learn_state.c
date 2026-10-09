@@ -1,21 +1,21 @@
 #include "fft/battle.h"
 
 /*
- * Post-action state tick: apply the selected ability's outcome, then once the
+ * Post-action state tick: apply the selected menu command, then once the
  * caster's wait counter passes 0x1f, retire one pending move-find result.
  */
 void battle_state_handle_crystal_learn_state(void) {
-    s32* ability;
+    s32* command;
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* casting;
     u16 counter;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    ability = battle_menu_get_selected_ability_address();
+    command = battle_menu_get_selected_command_address();
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
-    switch (*ability) {
+    switch (*command) {
     case 2:
         battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_battle_action_post_action = 1;
@@ -26,7 +26,7 @@ void battle_state_handle_crystal_learn_state(void) {
     case 0:
     case 1:
     case 4:
-        battle_unit_learn_from_crystal(source->battle_data, *ability);
+        battle_unit_learn_from_crystal(source->battle_data, *command);
         g_battle_action_post_action = 1;
         break;
     case 7:

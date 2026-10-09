@@ -8,16 +8,16 @@
  */
 void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     s32 animation;
-    s32 float_fly;
+    s32 water_depth;
     u8 spritesheet_id;
 
-    float_fly = battle_move_validate_float_fly(unit) & 0xff;
+    water_depth = battle_move_get_water_depth(unit) & 0xff;
     animation = 0;
-    switch (float_fly) {
+    switch (water_depth) {
     case 0:
     case 1:
         if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-            animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
+            animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
             animation = BATTLE_UNIT_ANIMATION_TREASURE;
         } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_ANIMATION_SELECTION_MASK) == 0) {
@@ -117,7 +117,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     default:
         if ((unit->status_flags_5_6 & BATTLE_MISC_STATUS_TRANSFORMATION_MASK) != 0) {
             if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
+                animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
             } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
                 animation = BATTLE_UNIT_ANIMATION_TREASURE;
             }
@@ -127,15 +127,15 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_MOUNTED) {
                 animation = BATTLE_UNIT_ANIMATION_RIDING;
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_HASTE) {
-                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE_HASTE;
+                animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE;
             } else {
-                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
+                animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
-                    animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE_SLOW;
+                    animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW;
                 }
             }
         } else {
-            animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
+            animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         }
         break;
     }

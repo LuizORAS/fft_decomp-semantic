@@ -34,12 +34,12 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             switch (g_battle_move_step_value.bits.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->step_phase = g_battle_move_step_centre_offsets[direction];
+                unit->step_phase = g_battle_move_walk_to_centre_phases[direction];
                 break;
             case 1:
                 battle_move_start_unit_step_at_climb_speed(
                     unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->step_phase = g_battle_move_climb_step_centre_offsets[direction];
+                unit->step_phase = g_battle_move_climb_to_centre_phases[direction];
                 break;
             }
             tile = battle_map_get_tile_data_pointer(unit->movement.bytes.destination_x,
@@ -56,7 +56,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         }
         unit->velocity.vy = 0;
         unit->state_frame_counter = 2;
-        unit->step_phase = g_battle_move_landing_centre_offsets[direction];
+        unit->step_phase = g_battle_move_jump_landing_phases[direction];
         if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
         }
@@ -70,7 +70,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     }
     unit->velocity.vy = 0;
     unit->state_frame_counter = 2;
-    unit->step_phase = g_battle_move_landing_centre_offsets[direction];
+    unit->step_phase = g_battle_move_jump_landing_phases[direction];
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
     }

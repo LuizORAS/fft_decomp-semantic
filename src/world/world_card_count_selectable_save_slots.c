@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 /* Count the memory-card save slots that qualify for the current menu mode
- * (empty slots when g_world_card_save_mode is set, written ones otherwise), select the
- * last written slot, then run the slot list update until it settles for ten
+ * (occupied slots when g_world_card_save_mode is nonzero, every available slot otherwise),
+ * select the last written slot, then run the slot list update until it settles for ten
  * consecutive passes. Returns the number of qualifying slots. */
 s32 world_card_count_selectable_save_slots(void) {
     s32 count;

@@ -4,7 +4,7 @@
 /* Tint a map palette bank and stage or apply the result.
  *
  * all_colors == 1 rewrites all 256 colors of the bank; otherwise only the
- * 16-color row color_index. Commands 0-3 start from the decoded component
+ * 16-color row `row_index`. Commands 0-3 start from the decoded component
  * bank, 4-8 from the packed mirror: 0/4/9 add the bias, 1/5 halve each
  * component first, 2/6 and 3/7 add the bias to a weighted gray
  * ((2R + 3G + B) / 6 or / 12), 8 copies the packed color, and 10 clears the
@@ -13,15 +13,15 @@
  * animations with that step; zero applies the colors immediately and marks
  * the palette upload pending.
  *
- * The packed-color reads repeat `color_index * 16 + i` (no index local) and
+ * The packed-color reads repeat `row_index * 16 + i` (no index local) and
  * the gray cases use case-local temporaries: both keep the target's loop
  * strength reduction and local register allocation. */
 /* clang-format off */
-void battle_map_modify_palette(command, amount, palette_index, color_index, all_colors, red, green, blue)
+void battle_map_modify_palette(command, amount, bank, row_index, all_colors, red, green, blue)
     s32 command;
     s32 amount;
-    s32 palette_index;
-    s32 color_index;
+    s32 bank;
+    s32 row_index;
     s32 all_colors;
     u16 red;
     u16 green;
@@ -39,7 +39,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
     map_palette_animation_state_t* animation;
 
     if (all_colors == 1) {
-        components = g_battle_map_palette_state.banks[palette_index].components;
+        components = g_battle_map_palette_state.banks[bank].components;
         for (i = 0; i < 0x100; i++) {
             if (components[i].red_5bit + components[i].green_5bit + components[i].blue_5bit != 0) {
                 switch (command) {
@@ -71,28 +71,24 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                 }
                 case MAP_COLOR_MODE_BASE:
                 case MAP_COLOR_MODE_BASE_REPEAT:
-                    out_red = red + (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f);
-                    out_green
-                        = green + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0) >> 5);
-                    out_blue
-                        = blue + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 10);
+                    out_red = red + (g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f);
+                    out_green = green + ((g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0) >> 5);
+                    out_blue = blue + ((g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00) >> 10);
                     break;
                 case MAP_COLOR_MODE_BASE_HALF:
-                    red_part = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
+                    red_part = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
                     out_red = red + (red_part >> 1);
-                    out_green
-                        = green + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0) >> 6);
-                    out_blue
-                        = blue + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 11);
+                    out_green = green + ((g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0) >> 6);
+                    out_blue = blue + ((g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00) >> 11);
                     break;
                 case MAP_COLOR_MODE_BASE_GREY: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
                     s32 gray;
-                    green_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0;
-                    blue_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00;
-                    red_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
+                    green_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0;
+                    blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00;
+                    red_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
                     gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 6;
                     out_red = red + gray;
                     out_green = green + gray;
@@ -104,9 +100,9 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     u32 green_bits;
                     u32 blue_bits;
                     s32 gray;
-                    green_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0;
-                    blue_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00;
-                    red_bits = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
+                    green_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0;
+                    blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00;
+                    red_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
                     gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 12;
                     out_red = red + gray;
                     out_green = green + gray;
@@ -114,13 +110,13 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     break;
                 }
                 case MAP_COLOR_MODE_RESTORE:
-                    out_red = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
-                    out_green = (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0) >> 5;
-                    out_blue = (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 10;
+                    out_red = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
+                    out_green = (g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0) >> 5;
+                    out_blue = (g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00) >> 10;
                     break;
                 case MAP_COLOR_MODE_STOP_REPEAT:
                     for (i = 15; i >= 0; i--) {
-                        g_battle_map_palette_state.banks[palette_index].animations[i].repeat = MAP_COLOR_REPEAT_OFF;
+                        g_battle_map_palette_state.banks[bank].animations[i].repeat = MAP_COLOR_REPEAT_OFF;
                     }
                     return;
                 }
@@ -153,7 +149,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     components[i].red_5bit = out_red;
                     components[i].green_5bit = out_green;
                     components[i].blue_5bit = out_blue;
-                    g_battle_map_palette_modified_colors[palette_index][i]
+                    g_battle_map_palette_modified_colors[bank][i]
                         = out_red + (out_green << 5) + (out_blue << 10) + (components[i].alpha_bit << 15);
                 }
             } else {
@@ -163,7 +159,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
         }
         if (amount != 0) {
             for (i = 0; i < 16; i++) {
-                animation = &g_battle_map_palette_state.banks[palette_index].animations[i];
+                animation = &g_battle_map_palette_state.banks[bank].animations[i];
                 animation->active = 1;
                 animation->blend_step = 0;
                 animation->delay_counter = 0;
@@ -178,11 +174,11 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
             return;
         }
         for (i = 15; i >= 0; i--) {
-            g_battle_map_palette_state.banks[palette_index].animations[i].active = 0;
+            g_battle_map_palette_state.banks[bank].animations[i].active = 0;
         }
         g_battle_map_palette_state.upload_pending = 1;
     } else {
-        row = &g_battle_map_palette_state.banks[palette_index].components[color_index * 16];
+        row = &g_battle_map_palette_state.banks[bank].components[row_index * 16];
         for (i = 0; i < 16; i++) {
             component = &row[i];
             if (component->red_5bit + component->green_5bit + component->blue_5bit != 0) {
@@ -215,39 +211,28 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                 }
                 case MAP_COLOR_MODE_BASE:
                 case MAP_COLOR_MODE_BASE_REPEAT:
-                    out_red = red
-                        + (g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f);
+                    out_red = red + (g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f);
                     out_green = green
-                        + ((g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x3e0)
-                            >> 5);
+                        + ((g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0) >> 5);
                     out_blue = blue
-                        + ((g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i]
-                               & 0x7c00)
-                            >> 10);
+                        + ((g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00) >> 10);
                     break;
                 case MAP_COLOR_MODE_BASE_HALF:
-                    red_part
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
+                    red_part = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green = green
-                        + ((g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x3e0)
-                            >> 6);
+                        + ((g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0) >> 6);
                     out_blue = blue
-                        + ((g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i]
-                               & 0x7c00)
-                            >> 11);
+                        + ((g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00) >> 11);
                     break;
                 case MAP_COLOR_MODE_BASE_GREY: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
                     s32 gray;
-                    green_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x3e0;
-                    blue_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x7c00;
-                    red_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
+                    green_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0;
+                    blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00;
+                    red_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
                     gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 6;
                     out_red = red + gray;
                     out_green = green + gray;
@@ -259,12 +244,9 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     u32 green_bits;
                     u32 blue_bits;
                     s32 gray;
-                    green_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x3e0;
-                    blue_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x7c00;
-                    red_bits
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
+                    green_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0;
+                    blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00;
+                    red_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
                     gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 12;
                     out_red = red + gray;
                     out_green = green + gray;
@@ -272,18 +254,13 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     break;
                 }
                 case MAP_COLOR_MODE_RESTORE:
-                    out_red
-                        = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
-                    out_green
-                        = (g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x3e0)
-                        >> 5;
+                    out_red = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
+                    out_green = (g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0) >> 5;
                     out_blue
-                        = (g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x7c00)
-                        >> 10;
+                        = (g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00) >> 10;
                     break;
                 case MAP_COLOR_MODE_STOP_REPEAT:
-                    g_battle_map_palette_state.banks[palette_index].animations[color_index].repeat
-                        = MAP_COLOR_REPEAT_OFF;
+                    g_battle_map_palette_state.banks[bank].animations[row_index].repeat = MAP_COLOR_REPEAT_OFF;
                     return;
                 }
                 if (out_red >= 0x20) {
@@ -315,7 +292,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
-                    g_battle_map_palette_modified_colors[palette_index][color_index * 16 + i]
+                    g_battle_map_palette_modified_colors[bank][row_index * 16 + i]
                         = out_red + (out_green << 5) + (out_blue << 10) + (component->alpha_bit << 15);
                 }
             } else {
@@ -323,7 +300,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
             }
         }
         if (amount != 0) {
-            animation = &g_battle_map_palette_state.banks[palette_index].animations[color_index];
+            animation = &g_battle_map_palette_state.banks[bank].animations[row_index];
             animation->active = 1;
             animation->blend_step = 0;
             animation->delay_counter = 0;
@@ -336,7 +313,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
             }
             return;
         }
-        g_battle_map_palette_state.banks[palette_index].animations[color_index].active = 0;
+        g_battle_map_palette_state.banks[bank].animations[row_index].active = 0;
         g_battle_map_palette_state.upload_pending = 1;
     }
 }

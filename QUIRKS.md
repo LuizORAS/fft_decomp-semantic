@@ -329,7 +329,7 @@ written that way.
   one.
 - `battle_menu_init_system_function` returns `$v0` as the void
   `battle_text_determine_spell_quote` left it.
-- `world_gfx_bind_data_pointer` has no return statement;
+- `world_text_bind_section_data` has no return statement;
   `world_card_build_save_slot_description` uses the address its last store
   left in `$v0`.
 - `battle_effect_spawn_emitter_particles` has an `s32` result it never sets
@@ -436,7 +436,7 @@ translation unit. Share their types and constants through headers.
 - `SuzukiSPUInitialiser`: `main_sound_init_sfx_music` reaches `main_smd_insert_music`, which disables and re-enables `g_main_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `main_sound_quit` closed on a soft reset.
 - `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUT rows into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
 - EFFECT scripts never run six state handlers: E314's script names no file function, and E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires.
-- `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_set_weather_texture_overlay(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
+- `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_run_weather_command(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
 - `src/world/world_script_handle_tutorial_command_end.c`: two paths fall off the end of the s32 handler and return a stale nonzero `$v0` (the fade's result, or the 1 just stored), so the formation loop keeps running.
 - `src/world/world_menu_draw_thread_status_indicators.c` and its BUNIT, ATTACK and EQUIP twins: while a unit-status banner thread (8 or 7; 13 or 14 in EQUIP) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
@@ -453,3 +453,14 @@ translation unit. Share their types and constants through headers.
 - Skillset rows 0x86-0x8d, 0xa7 and 0xa8 have no name text but hold
   abilities; 0xa7 is the row the AI uses for a unit under Blood Suck, and
   0xa9, which it pairs with ability 0x16f, is empty.
+- The ability names "Move in Water" (0x1f6) and "Walk on Water" (0x1f7) are
+  the reverse of what the abilities do: 0x1f6 keeps the unit on the surface
+  and 0x1f7 one level below it (`battle_unit_get_effective_height`,
+  `battle_move_store_unit_movement_to_scratchpad`).
+- Selling in the fur shop adds the sold copies to the poached stock
+  (`world_shop_run_fur_sell_confirm_step`), so they can be bought back there.
+- `world_shop_run_fur_buy_quantity_menu` divides the gil on hand by
+  `price >> 1` with no lower bound, while the sell side
+  (`world_item_get_half_price`) keeps half price at 1 or more.
+- `battle_move_start_teleport_step` builds a secondary-effect record in a
+  local and never uses it.

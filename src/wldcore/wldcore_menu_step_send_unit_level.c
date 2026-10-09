@@ -34,7 +34,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     mode = level->mode;
     if (mode == WLDCORE_SEND_UNIT_MODE_CANCEL) {
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
-            g_wldcore_menu_result = 0;
+            g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
             wldcore_list_open_available_propositions();
@@ -43,7 +43,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     }
     if (mode == WLDCORE_SEND_UNIT_MODE_ACCEPT) {
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
-            g_wldcore_menu_result = 0;
+            g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
             wldcore_proposition_push_detail_level(g_wldcore_selected_proposition_row[0].fields.id - 1);
@@ -136,7 +136,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
             = g_wldcore_window_records[level->frame_window_b].palette = 0xA;
         g_wldcore_window_render_records[level->portrait_frame].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
         g_wldcore_window_render_records[level->portrait_frame].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_menu_result = -1;
+        g_wldcore_menu_blocked_buttons = -1;
         g_wldcore_window_records[level->portrait_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         level->shown_unit = -1;
         level->mode = WLDCORE_SEND_UNIT_MODE_REPLACE;

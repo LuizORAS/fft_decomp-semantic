@@ -24,14 +24,14 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     /* The selector returns a raw SHP pointer or the -1 sentinel. */
     battle_gfx_select_unit_shp_frame(unit, sprite, frame, animation, &frame_table, (s32*)&frame_data);
     if ((s32)frame_data == -1) {
-        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SHP_FRAME);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_SHP_FRAME);
     }
     display = sprite->display;
     count = display->part_count = (frame_data->part_count_and_rotation & 7) + 1;
     display->rotation = g_battle_gfx_sprite_y_rotations[frame_data->part_count_and_rotation >> 3];
     if (count > 8) {
         count = 8;
-        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_FRAME_PART_COUNT);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_FRAME_PART_COUNT);
     }
     flags = frame_data->flags;
     if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {

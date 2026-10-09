@@ -152,7 +152,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
                 && (tile->depth_half_height.bits.depth != 3 || !config->will_drown)
                 && (tile->depth_half_height.bits.depth < 4 || !config->will_sink)
                 && (tile->surface.bits.type != MAP_SURFACE_LAVA || config->move_type != BATTLE_MOVEMENT_CLASS_FLY)
-                && (frontier[i] & FRONTIER_FLAG_REACHABLE))) {
+                && (frontier[i] & FRONTIER_FLAG_ENTERABLE))) {
             state->reachable_count++;
             tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_MOVE_DESTINATION;
         }

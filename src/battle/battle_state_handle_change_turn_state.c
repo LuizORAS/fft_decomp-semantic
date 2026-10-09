@@ -2,16 +2,16 @@
 #include "psx/types.h"
 
 void battle_state_handle_change_turn_state(void) {
-    s32 ability;
+    s32 command;
     s32 type;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    ability = *battle_menu_get_selected_ability_address();
-    if (ability >= 7) {
-        if (ability < 9) {
+    command = *battle_menu_get_selected_command_address();
+    if (command >= 7) {
+        if (command < 9) {
             g_battle_action_post_action = 1;
-        } else if (ability == 0xFF) {
+        } else if (command == 0xFF) {
             g_battle_action_post_action = 1;
         }
     }

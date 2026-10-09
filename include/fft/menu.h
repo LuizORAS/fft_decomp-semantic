@@ -412,7 +412,7 @@ typedef enum action_menu_pseudo_skillset {
     ACTION_MENU_PSEUDO_SKILLSET_ANYTHING = 0xbc,
 } action_menu_pseudo_skillset_e;
 
-/* g_battle_menu_input_disabled / g_world_menu_input_disabled: who drives the
+/* g_battle_menu_input_mode / g_world_menu_input_mode: who drives the
  * battle menus. */
 typedef enum menu_input_mode {
     MENU_INPUT_PLAYER = 0,   /* the controller */
@@ -441,9 +441,9 @@ typedef enum menu_item_list_state {
     MENU_ITEM_LIST_STATE_SORT_ORDER = 5,
     MENU_ITEM_LIST_STATE_EQUIPPED_BY = 6, /* WORLD only: the units equipping the selected item */
 } menu_item_list_state_e;
-/* Ability list tab of the WORLD and BUNIT ability menus (g_world_ability_category,
- * g_bunit_ability_category) and the kind argument of their list builders.
- * JOBSTTS keeps the same values as jobstts_ability_category_e. */
+/* Ability list tab of the WORLD, BUNIT and JOBSTTS ability menus
+ * (g_world_ability_category, g_bunit_ability_category,
+ * g_jobstts_ability_category) and the kind argument of their list builders. */
 typedef enum menu_ability_category {
     MENU_ABILITY_CATEGORY_ACTION = 0,
     MENU_ABILITY_CATEGORY_REACTION = 1,
@@ -517,8 +517,27 @@ typedef enum menu_grid_help_id {
     MENU_GRID_HELP_RECRUIT_PREVIEW = 0x20003, /* WORLD: the cursor skips cell 7 */
 } menu_grid_help_id_e;
 
+/* What the unit grids draw below a unit (world_formation_draw_graphics_below_sprite,
+ * bunit_menu_update_unit_grid). L2/R2 step g_world_formation_stat_display_mode and
+ * g_bunit_unit_stat_mode through the first five, wrapping between HP and
+ * BRAVE_FAITH; WORLD picks the others per unit. */
+typedef enum menu_unit_readout {
+    MENU_UNIT_READOUT_HP = 0,
+    MENU_UNIT_READOUT_MP = 1,
+    MENU_UNIT_READOUT_CT = 2,
+    MENU_UNIT_READOUT_LEVEL_EXP = 3,
+    MENU_UNIT_READOUT_BRAVE_FAITH = 4,
+    MENU_UNIT_READOUT_EQUIP_LABEL = 8, /* "equipping", or "can't equip" below a value of 100 */
+    MENU_UNIT_READOUT_LEAVING = 9,     /* away on a proposition */
+    MENU_UNIT_READOUT_EGG = 10,        /* nothing is drawn */
+    MENU_UNIT_READOUT_MISSING = 11,
+} menu_unit_readout_e;
+
 /* Step of the job list menus (WORLD learn and view-abilities menus, BUNIT job
- * menu); each list's handler returns the next step. */
+ * menu, the JOBSTTS page); each list's handler returns the next step. In
+ * JOBSTTS, JOBS is jobstts_menu_update_job_list, ABILITIES is
+ * jobstts_update_ability_list_menu and CLOSE makes jobstts_entrypoint close
+ * the screen. */
 typedef enum menu_job_list_step {
     MENU_JOB_LIST_STEP_CLOSE = -1,
     MENU_JOB_LIST_STEP_JOBS = 0,

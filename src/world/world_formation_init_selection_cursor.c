@@ -31,7 +31,8 @@ void world_formation_init_selection_cursor(s16 formation_index) {
             count++;
         }
     } while (count < 10);
-    g_world_formation_scroll_enabled = world_formation_can_scroll_slots(g_world_formation_scroll_position);
+    g_world_formation_unit_banner_at_bottom
+        = world_formation_is_selected_unit_in_upper_rows(g_world_formation_scroll_position);
     x = formation_index % 4;
     cursor = &g_world_formation_cursor_position;
     cursor->x = x * 62 + 34;

@@ -11,7 +11,7 @@ void wldcore_menu_wait_text_then_pop_level(wldcore_menu_message_level_t* level) 
         return;
     }
     g_wldcore_current_button_input = 0;
-    g_wldcore_menu_result = level->saved_menu_result;
+    g_wldcore_menu_blocked_buttons = level->saved_blocked_buttons;
     g_wldcore_window_record_count -= 1;
     g_wldcore_window_render_object_count -= 1;
     g_wldcore_menu_stack_depth -= 1;

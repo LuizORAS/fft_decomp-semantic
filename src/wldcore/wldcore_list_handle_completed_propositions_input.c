@@ -11,7 +11,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
-        g_wldcore_menu_result = 0;
+        g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         wldcore_menu_dispatch_resume_handler();
@@ -27,13 +27,13 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_list_completed_propositions_clear_result(values);
+        wldcore_list_completed_propositions_block_all_buttons(values);
         wldcore_menu_push_message_level(0x1061, 1);
         return;
     }
     if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        wldcore_list_completed_propositions_clear_result(values);
+        wldcore_list_completed_propositions_block_all_buttons(values);
         wldcore_proposition_prepare_report(values[g_wldcore_window_panel_render_state.selected_index + 13]);
         wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_world_text_substitution_values[0]

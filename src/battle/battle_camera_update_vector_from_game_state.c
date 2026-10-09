@@ -63,7 +63,7 @@ void battle_camera_update_vector_from_game_state(void) {
         battle_camera_step_real_coords_toward_target((battle_camera_step_target_t*)unit);
         return;
     }
-    if (g_battle_game_state >= BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY) {
+    if (g_battle_game_state >= BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT) {
         main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
         return;
     }

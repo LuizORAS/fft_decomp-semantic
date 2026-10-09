@@ -16,15 +16,15 @@ void world_menu_start_entry_thread(void) {
     while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         world_thread_yield();
     }
-    if (g_world_menu_input_disabled == MENU_INPUT_PLAYER) {
+    if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
         if (world_script_check_tutorial_event_slot() != 0) {
-            g_world_menu_input_disabled = MENU_INPUT_TUTORIAL;
+            g_world_menu_input_mode = MENU_INPUT_TUTORIAL;
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             world_script_start_current_event_thread();
             world_thread_wait_frames(0x1E);
         }
-        if (g_world_menu_input_disabled != MENU_INPUT_PLAYER) {
+        if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
             world_thread_wait_frames(2);
         }
     } else {

@@ -1,0 +1,78 @@
+#include "fft/world.h"
+#include "psx/pad.h"
+
+/* Fur shop: the list of the shop's poached stock, bought at half price.
+ *
+ * Mirrors world_shop_handle_item_purchase_menu with the half-price value and
+ * the poached-stock quantity as callbacks. */
+void world_shop_run_fur_buy_list_step(void) {
+    s16 x;
+    s16 y;
+    s32 input;
+    s32 disabled;
+    s8 result;
+
+    if (g_world_shop_fur_purchase_list_initialized == 0) {
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
+            world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        }
+        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF832, 0);
+        g_world_shop_fur_purchase_list_initialized = 1;
+        world_shop_build_item_list(-1, g_world_shop_id,
+            g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
+            g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
+        world_menu_get_selection_record(g_world_shop_item_category, &x, &y, g_world_menu_entry_ids);
+        world_menu_init_scrollable_list(
+            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+        g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
+        g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
+        g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
+        g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
+        g_world_menu_script_callbacks[4] = world_menu_get_item_half_price_display_value;
+        g_world_menu_script_callbacks[5] = world_item_count_selected_equipped_by_party;
+        g_world_menu_script_callbacks[6] = world_item_count_selected_owned_and_equipped;
+        g_world_menu_script_callbacks[8] = world_shop_get_selected_poached_item_quantity;
+        g_world_shop_fur_equip_check_pending = 0;
+    }
+    world_script_set_vsync_mode_and_event_speed(2);
+    if (g_world_shop_fur_equip_check_pending != 0) {
+        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        result = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
+        g_world_shop_fur_equip_check_pending = result;
+        if (result == 0) {
+            world_menu_set_selection_record(g_world_shop_item_category, g_world_menu_cursor_position,
+                g_world_menu_scroll_offset, g_world_menu_entry_ids);
+            g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_BUY_EQUIP;
+            g_world_shop_fur_purchase_list_initialized = 0;
+        }
+        world_input_clear_state();
+    } else {
+        input = g_world_input_primary_repeat;
+        if (input & PSX_PAD_CROSS) {
+            g_world_shop_fur_purchase_list_initialized = 0;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_MENU;
+            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF830, 0);
+            g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
+        } else if ((input & PSX_PAD_TRIANGLE) && g_world_menu_option_count != 0 && g_world_shop_item_category != 4) {
+            g_world_shop_fur_equip_check_pending = 1;
+        } else if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
+            if (g_world_menu_option_count == 0) {
+                g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
+            } else {
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_BUY_CONFIRM;
+                g_world_shop_quantity_menu_data.selection = 0;
+                g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
+            }
+        }
+    }
+    disabled = 0;
+    world_menu_switch_item_category(g_world_input_secondary_repeat);
+    world_menu_run_script_with_palette_mode(
+        g_world_shop_fur_purchase_menu_script, g_world_input_primary_repeat, g_world_thread_task_active);
+    if (world_map_is_busy() != 0 || g_world_menu_option_count == 0 || g_world_shop_item_category == 4) {
+        disabled = 1;
+    }
+    world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_SHOP_LIST_TRIANGLE, 0xBA, 0x4C,
+        (u16)g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
+    world_shop_run_obtain_gil_menu();
+}

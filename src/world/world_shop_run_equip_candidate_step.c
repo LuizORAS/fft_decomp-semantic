@@ -43,7 +43,7 @@ void world_shop_run_equip_candidate_step(void) {
     }
     if (g_world_formation_unit_banner_enabled != 0 && g_world_formation_unit_browse_enabled == 0) {
         text_id = MENU_GRID_HELP_BANNER_TOP;
-        if (g_world_formation_scroll_enabled != 0) {
+        if (g_world_formation_unit_banner_at_bottom != 0) {
             text_id = MENU_GRID_HELP_BANNER_BOTTOM;
         }
         g_world_menu_description_text_id = text_id;

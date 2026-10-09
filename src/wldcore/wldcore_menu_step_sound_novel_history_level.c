@@ -103,7 +103,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             }
             level->step = 0;
             level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;
-            g_wldcore_menu_result = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
+            g_wldcore_menu_blocked_buttons = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
             g_wldcore_screen_fade_state.flags[0] ^= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_record_count -= 2;

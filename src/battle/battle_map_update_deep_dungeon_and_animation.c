@@ -10,7 +10,7 @@ s32 battle_map_update_deep_dungeon_and_animation(void) {
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    if (battle_map_load_data_stage_0x76() != 0) {
+    if (battle_map_poll_data_load() != 0) {
         return 0;
     }
     misc_id = 0;

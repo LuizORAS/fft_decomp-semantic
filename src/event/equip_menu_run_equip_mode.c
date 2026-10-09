@@ -86,7 +86,7 @@ s32 equip_menu_run_equip_mode(void) {
             : 0;
         if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
             if (g_equip_menu_list_entry_count != 0
-                && (g_equip_item_list_entries[g_equip_menu_selected_list_index] & EQUIP_ITEM_LIST_ENTRY_EQUIPPED)
+                && (g_equip_item_list_entries[g_equip_menu_selected_list_index] & EQUIP_ITEM_LIST_ENTRY_UNEQUIPPABLE)
                     == 0) {
                 item_id = item;
                 if (equip_item_adjust_inventory_count(item_id, 0) == 0) {

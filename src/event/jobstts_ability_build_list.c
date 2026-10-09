@@ -7,7 +7,7 @@
  * display flag that distinguishes whether they can be learned with JP.
  */
 s32 jobstts_ability_build_list(
-    s16 unit_index, s16 job_id, jobstts_ability_category_e ability_category, s16* list, s32 unlearned_only) {
+    s16 unit_index, s16 job_id, menu_ability_category_e ability_category, s16* list, s32 unlearned_only) {
     s16* abilities;
     s16 generic_index;
     s32 count;
@@ -27,16 +27,16 @@ s32 jobstts_ability_build_list(
     }
     abilities = (s16*)main_ability_store_skillset_abilities(i, SKILLSET_ABILITY_FILTER_ALL);
 
-    if (ability_category == JOBSTTS_ABILITY_CATEGORY_ACTION) {
+    if (ability_category == MENU_ABILITY_CATEGORY_ACTION) {
         lo = 1;
         hi = ABILITY_ID_REACTION_FIRST - 1;
-    } else if (ability_category == JOBSTTS_ABILITY_CATEGORY_REACTION) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_REACTION) {
         lo = ABILITY_ID_REACTION_FIRST;
         hi = ABILITY_ID_SUPPORT_FIRST - 1;
-    } else if (ability_category == JOBSTTS_ABILITY_CATEGORY_SUPPORT) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_SUPPORT) {
         lo = ABILITY_ID_SUPPORT_FIRST;
         hi = ABILITY_ID_MOVEMENT_FIRST - 1;
-    } else if (ability_category == JOBSTTS_ABILITY_CATEGORY_MOVEMENT) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_MOVEMENT) {
         lo = ABILITY_ID_MOVEMENT_FIRST;
         hi = ABILITY_ID_RANDOM_FIRST - 1;
     } else {

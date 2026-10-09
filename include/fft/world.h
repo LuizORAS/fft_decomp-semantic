@@ -578,7 +578,7 @@ extern s8 g_world_set_ability_show_stat_preview;  /* show the stat preview windo
 extern u16 g_world_set_ability_cursor_anim;
 extern point16_t g_world_set_ability_cursor_point;
 extern u8 g_world_ability_list_script[];
-extern s32 g_world_selected_ability;
+extern s32 g_world_menu_selected_command;
 extern world_menu_list_page_t g_world_ability_list_pages[][2];
 extern u8 g_world_ability_menu_saved_browse_enabled;
 extern s8 g_world_remove_ability_cursor;
@@ -811,15 +811,16 @@ typedef struct wldcore_window_entry_36_rgb {
 } wldcore_window_entry_36_rgb_t;
 typedef char wldcore_entry_36_rgb_size_must_be_0x24[sizeof(wldcore_window_entry_36_rgb_t) == 0x24 ? 1 : -1];
 
-/* Provisional: 6-byte sprite slot (g_world_gfx_sprite_slots, 14 entries / 0x54 bytes, cleared by
- * world_gfx_clear_sprite_slots; written by world_gfx_set_sprite_slot; read by
- * world_gfx_get_sprite_slot). Matches the local world_gfx_sprite_slot_t view in
- * world_gfx_set_sprite_slot.c. */
-typedef struct world_gfx_sprite_slot {
-    s16 x;    /* 0x00 */
-    s16 y;    /* 0x02 */
-    s16 tile; /* 0x04; low 10 bits are the tile id */
-} world_gfx_sprite_slot_t;
+/* One remembered list position (g_world_menu_selection_records, 14 entries / 0x54 bytes), the
+ * WORLD twin of bunit_menu_selection_record_t. world_menu_set_selection_record stores the cursor
+ * index, the scroll base and the masked id of the entry under the cursor;
+ * world_menu_get_selection_record reads them back and re-finds entry_id in the live list when
+ * the remembered index no longer points at the same entry. */
+typedef struct world_menu_selection_record {
+    s16 selected_index;    /* 0x00 */
+    s16 scroll_base_index; /* 0x02 */
+    s16 entry_id;          /* 0x04; list entry id, low 10 bits */
+} world_menu_selection_record_t;
 
 extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
@@ -838,7 +839,7 @@ extern u8 g_world_gfx_fade_increasing;
 extern s16 g_world_gfx_fade_intensity;
 extern world_glyph_blit_t g_world_gfx_image_blit_destination;
 extern world_glyph_blit_t g_world_gfx_image_blit_source;
-extern world_gfx_sprite_slot_t g_world_gfx_sprite_slots[];
+extern world_menu_selection_record_t g_world_menu_selection_records[];
 extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_texture_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;
@@ -960,7 +961,7 @@ void world_gfx_enqueue_gouraud_quad(s16* xy, u8* rgb, s32 semi_trans, s32 ot_ind
 void world_gfx_enqueue_gouraud_textured_quad(
     world_gfx_textured_rect_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_tile(RECT* box, u8* rgb, s32 semi_trans, s32 ot_index);
-/* The index argument of world_gfx_bind_data_pointer: the resident text data
+/* The index argument of world_text_bind_section_data: the resident text data
  * it publishes in g_world_text_section_pointers. */
 typedef enum world_text_data {
     WORLD_TEXT_DATA_SKILLSET_NAMES = 0,
@@ -972,11 +973,11 @@ typedef enum world_text_data {
     WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD = 7,
     WORLD_TEXT_DATA_SHOP_DIALOGUE = 8, /* WORLD_TEXT_SECTION_SHOP_DIALOGUE */
 } world_text_data_e;
-u8* world_gfx_bind_data_pointer(u32 index);
+u8* world_text_bind_section_data(u32 index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
     world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag);
 void world_menu_clear_selection_record(s32 index);
-void world_gfx_clear_sprite_slots(void);
+void world_menu_clear_selection_records(void);
 void world_gfx_clear_tpage7_vram_allocation_grid(void);
 
 /* Portrait primitive helpers shared with the EVENT debug character editor.
@@ -1017,7 +1018,7 @@ void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
 void world_gfx_set_primitive_brightness(void* primitive, s32 brightness);
-void world_gfx_set_sprite_slot(s32 slot_index, s32 x, s32 y, s16* tile_table);
+void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame);
 
 void world_gfx_enqueue_textured_quad(
@@ -1025,7 +1026,7 @@ void world_gfx_enqueue_textured_quad(
 
 void world_gfx_free_tpage7_vram(RECT* rect);
 s32 world_gfx_get_fade_state(void);
-void world_gfx_get_sprite_slot(s32 slot_index, s16* x, s16* y, s16* tile_table);
+void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 s32 world_gfx_get_vsync_mode_or_one(void);
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 void world_gfx_load_image_and_wait(RECT* rect, void* data);
@@ -1403,11 +1404,14 @@ extern void* g_world_formation_ordering_table;
 /* g_main_system_flags as saved by world_formation_save_and_set_system_flags (main_system_flags_e). */
 extern u32 g_world_formation_saved_system_flags;
 
-/* Majority spelling: five readers sign-extend as u8. Two files
+/* Set while the selected unit is in the upper rows of the grid: the unit banner
+ * then sits at the bottom of the screen and the stat bar at the top (BUNIT's
+ * g_bunit_status_banner_at_bottom). The latch is the value the banner was last
+ * placed for. Majority spelling: five readers sign-extend as u8. Two files
  * (world_formation_init_selection_cursor, world_formation_step_grid_transition)
  * need s8 to match and keep their own local extern. */
-extern u8 g_world_formation_scroll_enabled;
-extern u8 g_world_formation_scroll_enabled_latch;
+extern u8 g_world_formation_unit_banner_at_bottom;
+extern u8 g_world_formation_unit_banner_at_bottom_latch;
 extern s16 g_world_formation_selected_unit_index;
 extern s16 g_world_formation_selected_unit_index_latch;
 extern struct world_formation_unit* g_world_formation_temp_unit;
@@ -1421,7 +1425,7 @@ extern const world_zodiac_date_limit_t g_world_zodiac_date_limits[WORLD_ZODIAC_D
 extern s32 g_world_formation_screen_active;
 extern s16 g_world_formation_open_request_state; /* world_screen_request_state_e */
 extern world_image_location_t g_world_formation_view_texture_page;
-extern u32 g_world_formation_menu_entry_mask;
+extern u32 g_world_formation_menu_allowed_buttons; /* pad mask applied to the new presses of each menu frame */
 extern s32 g_world_formation_name_string_revision;
 extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
 extern point16_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
@@ -1457,22 +1461,7 @@ extern u8 g_world_formation_triangle_menu_open;
 extern u8 g_world_formation_triangle_menu_running;
 extern volatile u8 g_world_formation_unit_slide_frame;
 extern s8 g_world_formation_banner_slide_step;
-/* What world_formation_draw_graphics_below_sprite draws below a unit on the
- * formation grid. L2/R2 step g_world_formation_stat_display_mode through the
- * first five; the others are picked per unit. */
-typedef enum world_formation_readout {
-    WORLD_FORMATION_READOUT_HP = 0,
-    WORLD_FORMATION_READOUT_MP = 1,
-    WORLD_FORMATION_READOUT_CT = 2,
-    WORLD_FORMATION_READOUT_LEVEL_EXP = 3,
-    WORLD_FORMATION_READOUT_BRAVE_FAITH = 4,
-    WORLD_FORMATION_READOUT_EQUIP_LABEL = 8, /* "equipping", or "can't equip" below a value of 100 */
-    WORLD_FORMATION_READOUT_LEAVING = 9,     /* away on a proposition */
-    WORLD_FORMATION_READOUT_EGG = 10,        /* nothing is drawn */
-    WORLD_FORMATION_READOUT_MISSING = 11,
-} world_formation_readout_e;
-
-extern u8 g_world_formation_stat_display_mode; /* world_formation_readout_e, HP to BRAVE_FAITH */
+extern u8 g_world_formation_stat_display_mode; /* menu_unit_readout_e, HP to BRAVE_FAITH */
 extern world_draw_number_command_t g_world_formation_gauge_value_number;
 extern world_draw_number_command_t g_world_formation_level_number;
 extern world_draw_number_command_t g_world_formation_experience_number;
@@ -1511,8 +1500,8 @@ extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
 extern s8 g_world_formation_sort_field_indices[];
-extern world_menu_entry_t g_world_formation_dismiss_final_confirm_menu;
-extern u8 g_world_formation_dismiss_message_wait;
+extern world_menu_entry_t g_world_shop_hire_confirm_menu;
+extern u8 g_world_shop_hire_confirm_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
 extern u8 g_world_formation_view_quads[2][0x4b0];
 extern point16_t g_world_formation_cursor_target;
@@ -1535,7 +1524,7 @@ extern s16 g_world_formation_record_count; /* 0x801c8634 */
 extern u8 g_world_formation_unit_count;
 extern world_formation_unit_t* g_world_formation_unit_pointers[];
 void world_formation_run_screen(s32 tutorial, s32 unused);
-s32 world_formation_can_scroll_slots_back(void);
+s32 world_formation_is_unit_list_scroll_needed(void);
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
 
 void world_formation_draw_graphics_below_sprite(
@@ -1566,7 +1555,7 @@ void world_formation_build_unit_record(
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id);
-s32 world_formation_can_scroll_slots(s32 scroll_position);
+s32 world_formation_is_selected_unit_in_upper_rows(s32 scroll_position);
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment);
 void world_formation_clear_stat_preview(world_item_stat_summary_t* summary, world_item_stat_detail_t* detail);
 void world_formation_copy_unit_to_temp(s16 index, s32 unused_slot);
@@ -1603,7 +1592,7 @@ void world_formation_init_selection_cursor(s16 formation_index);
 s32 world_formation_is_job_wheel_selection_available(s32 unused_row);
 void world_formation_item_menu(void);
 void world_formation_layout_job_wheel_portrait(void);
-/* Result of world_formation_lock_equipment_and_abilities: whether the unit's
+/* Result of world_formation_get_unit_lock: whether the unit's
  * equipment and abilities can be changed, and why not. */
 typedef enum world_formation_unit_lock {
     WORLD_FORMATION_UNIT_LOCK_MIME = -6, /* a Mime can still learn abilities */
@@ -1612,7 +1601,7 @@ typedef enum world_formation_unit_lock {
     WORLD_FORMATION_UNIT_LOCK_PROPOSITION = -2, /* away on a proposition */
     WORLD_FORMATION_UNIT_UNLOCKED = 1,
 } world_formation_unit_lock_e;
-s32 world_formation_lock_equipment_and_abilities(s32 unit_id);
+s32 world_formation_get_unit_lock(s32 unit_id);
 void world_formation_place_unit_portrait_at_rest(s16 unit_index);
 s32 world_formation_process_job_change(s32 job);
 void world_formation_rebuild_unit_list(void);
@@ -1629,7 +1618,7 @@ void world_formation_run_screen_for_menu_index(s32 menu_index);
 void world_formation_save_and_set_system_flags(void);
 void world_formation_save_records_to_party_data(void);
 void world_formation_set_display_mode(s32 mode);
-void world_formation_set_menu_entry_mask(u32 mask);
+void world_formation_set_menu_allowed_buttons(u32 mask);
 void world_formation_set_ordering_table_pointer(void* ordering_table);
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment);
 void world_formation_set_unit_name(s16 formation_index, const u8* name);
@@ -1798,7 +1787,7 @@ void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
 void world_unit_reset_animation_states(void);
 void world_unit_set_animation(s32 misc_id, u32 value);
 void world_unit_set_facing(s32 misc_id, s32 rotation);
-void world_unit_start_view_thread(s32 index, s32 unit_a, s32 unit_b);
+void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 s32 world_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* misc_index);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);
@@ -2147,7 +2136,7 @@ extern s32 g_world_menu_description_text_id;
 extern s16 g_world_menu_draw_priority;
 extern s32 g_world_menu_event_state_flag;
 extern u16 g_world_menu_icon_tpage;
-extern u16 g_world_menu_input_disabled; /* menu_input_mode_e */
+extern u16 g_world_menu_input_mode; /* menu_input_mode_e */
 extern u32 g_world_menu_input_repeat_counter_0;
 extern u32 g_world_menu_input_repeat_counter_1;
 extern u32 g_world_menu_input_repeat_counter_2;
@@ -3054,13 +3043,13 @@ extern s16 g_world_shop_fur_purchase_menu_script[];
 extern s8 g_world_shop_fur_purchase_list_initialized;
 extern s8 g_world_shop_fur_equip_check_pending;
 extern s16 g_world_shop_fur_purchase_message_wait;
-extern u8 g_world_shop_repurchase_result; /* repurchase-menu thread result */
-extern world_menu_entry_t g_world_shop_rename_confirm_menu;
+extern u8 g_world_shop_fur_purchase_result; /* quantity-menu thread result */
+extern world_menu_entry_t g_world_shop_hire_fee_confirm_menu;
 extern u8 g_world_shop_recruit_preview_initialized;
-extern u8 g_world_shop_rename_entry_initialized;
-extern u8 g_world_shop_rename_message_wait;
+extern u8 g_world_shop_hire_name_entry_initialized;
+extern u8 g_world_shop_hire_fee_message_wait;
 extern u8 g_world_shop_rename_prompt_initialized;
-extern u8 g_world_shop_rename_entry_2_initialized;
+extern u8 g_world_shop_rename_name_entry_initialized;
 extern u8 g_world_shop_soldier_office_fee_menu_script[];
 extern u8 g_world_shop_roster_count_menu_script[];
 extern s32 g_world_shop_purchase_unit_price;
@@ -3088,15 +3077,15 @@ extern world_menu_entry_t* g_world_shop_checkout_prompt_menu;
 extern u8 g_world_shop_sell_equipped_prompt_active;
 extern u8 g_world_shop_sell_equipped_slot;
 extern u8 g_world_shop_sell_equipped_result_shown;
-extern s16 g_world_shop_sell_subflow_step;       /* world_shop_step_e: SELL_LIST or SELL_CONFIRM */
-extern u8 g_world_shop_fur_waiting_message;      /* waiting for message dismissal */
-extern u8 g_world_shop_fur_has_secret_hunt;      /* any unit has Secret Hunt */
-extern u8 g_world_shop_fur_has_poached_stock;    /* any poached item in stock */
-extern u16 g_world_shop_sell_quantity_item;      /* item being sold */
-extern u8 g_world_shop_sell_total_shown;         /* confirmation prompt shown */
-extern s32 g_world_shop_repurchase_price;        /* buy-back unit price */
-extern u16 g_world_shop_repurchase_item;         /* item being bought back */
-extern u8 g_world_shop_repurchase_confirm_shown; /* confirmation prompt shown */
+extern s16 g_world_shop_sell_subflow_step;         /* world_shop_step_e: SELL_LIST or SELL_CONFIRM */
+extern u8 g_world_shop_fur_waiting_message;        /* waiting for message dismissal */
+extern u8 g_world_shop_fur_has_secret_hunt;        /* any unit has Secret Hunt */
+extern u8 g_world_shop_fur_has_poached_stock;      /* any poached item in stock */
+extern u16 g_world_shop_sell_quantity_item;        /* item being sold */
+extern u8 g_world_shop_sell_total_shown;           /* confirmation prompt shown */
+extern s32 g_world_shop_fur_purchase_price;        /* half the item price */
+extern u16 g_world_shop_fur_purchase_item;         /* item being bought */
+extern u8 g_world_shop_fur_purchase_confirm_shown; /* confirmation prompt shown */
 extern s8 g_world_shop_fur_access_granted;
 extern u8 g_world_shop_hire_result_shown;
 extern u8 g_world_shop_rename_error_shown;
@@ -3131,16 +3120,16 @@ typedef enum world_shop_checkout_result {
 } world_shop_checkout_result_e;
 s32 world_shop_run_fitting_room_checkout_prompt(void);
 /* Refusals of world_shop_run_item_purchase_quantity_menu and
- * world_shop_run_item_repurchase_menu; otherwise they return whether the
+ * world_shop_run_fur_buy_quantity_menu; otherwise they return whether the
  * quantity prompt is still open. */
 enum {
     WORLD_SHOP_QUANTITY_HOLDING_MAX = -2, /* the party already holds 99 */
     WORLD_SHOP_QUANTITY_CANNOT_AFFORD = -1,
 };
 s32 world_shop_run_item_purchase_quantity_menu(void);
-s32 world_shop_run_item_repurchase_menu(void);
+s32 world_shop_run_fur_buy_quantity_menu(void);
 s32 world_shop_run_item_sell_menu(void);
-s32 world_shop_run_item_sell_menu_2(void);
+s32 world_shop_run_fur_sell_quantity_menu(void);
 void world_shop_run_obtain_gil_menu(void);
 void world_shop_run_soldier_office_fee_menu_script(void);
 void world_shop_update_unit_selection(void);

@@ -57,7 +57,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
     flags = frontier[index];
     if (flags & FRONTIER_FLAG_UNIT_ON_TILE) {
-        if (!(flags & FRONTIER_FLAG_VALID_DESTINATION)) {
+        if (!(flags & FRONTIER_FLAG_MOUNTABLE_UNIT)) {
             return 0;
         }
         config->destination_tile_occupied = 1;
@@ -69,7 +69,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
     source_flags = frontier[index];
     if (source_flags & FRONTIER_FLAG_UNIT_ON_TILE) {
-        if (!(source_flags & FRONTIER_FLAG_VALID_DESTINATION)) {
+        if (!(source_flags & FRONTIER_FLAG_MOUNTABLE_UNIT)) {
             return 0;
         }
         config->source_tile_occupied = 1;

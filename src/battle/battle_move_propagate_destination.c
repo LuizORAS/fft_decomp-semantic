@@ -24,18 +24,18 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     state->destination_slope = state->destination_tile->slope_type;
     destination_flags = &flags[state->destination_index];
     if (state->destination_unit_record_flag != 0) {
-        if (!(*destination_flags & (FRONTIER_FLAG_VALID_DESTINATION | FRONTIER_FLAG_STAND_ON_UNIT)))
+        if (!(*destination_flags & (FRONTIER_FLAG_MOUNTABLE_UNIT | FRONTIER_FLAG_STAND_ON_UNIT)))
             return 1;
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
         state->destination_entry_height = records[state->destination_unit_record_index].top_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
             state->work_x, state->work_y, state->destination_side_shift, (state->destination_entry_height - 1));
-        if (*destination_flags & FRONTIER_FLAG_VALID_DESTINATION)
+        if (*destination_flags & FRONTIER_FLAG_MOUNTABLE_UNIT)
             battle_move_check_occupied_tile_standing_height(state->destination_unit_record_index, extra_span);
         if (!(*destination_flags & FRONTIER_FLAG_STAND_ON_UNIT))
             return 17;
     } else {
-        if (!(*destination_flags & FRONTIER_FLAG_REACHABLE))
+        if (!(*destination_flags & FRONTIER_FLAG_ENTERABLE))
             return 2;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);

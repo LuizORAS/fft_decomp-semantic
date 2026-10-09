@@ -34,7 +34,7 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
-        wldcore_list_propositions_clear_result(level);
+        wldcore_list_propositions_block_all_buttons(level);
         wldcore_menu_push_message_level(0x105F, 1);
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
         && g_main_file_still_loading == 0) {

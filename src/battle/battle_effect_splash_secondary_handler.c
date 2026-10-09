@@ -2,7 +2,7 @@
 
 /*
  * Secondary effect function 0x09 (Splash) in g_battle_effect_secondary_handlers.
- * It shares the falling tar
+ * It shares the fall dust
  * handler's shape; each executing frame first lifts group 7 to the water
  * surface of the target's tile, 12 units per height and depth step above the
  * target's screen z. Returns 1 to keep animating.

@@ -25,7 +25,7 @@ s32 main_sound_open_music_into_slot(s32 scenario, s32 slot) {
             set_opened_music_slot(slot);
             return slot;
         }
-        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SMD_LOAD);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_SMD_LOAD);
         return 0;
     }
     return 0;

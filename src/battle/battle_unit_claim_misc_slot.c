@@ -34,6 +34,6 @@ battle_unit_misc_data_t* battle_unit_claim_misc_slot(s16 unit_id) {
             return &g_battle_unit_misc_data[i];
         }
     }
-    main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT);
+    main_system_handle_error(MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT);
     return 0;
 }

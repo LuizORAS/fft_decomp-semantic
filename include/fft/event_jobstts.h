@@ -6,15 +6,7 @@
 #include "fft/battle.h"
 
 /* ability */
-typedef enum jobstts_ability_category {
-    JOBSTTS_ABILITY_CATEGORY_ACTION = 0,
-    JOBSTTS_ABILITY_CATEGORY_REACTION = 1,
-    JOBSTTS_ABILITY_CATEGORY_SUPPORT = 2,
-    JOBSTTS_ABILITY_CATEGORY_MOVEMENT = 3,
-    JOBSTTS_ABILITY_CATEGORY_ALL = 15,
-} jobstts_ability_category_e;
-
-extern s16 g_jobstts_ability_category;  /* jobstts_ability_category_e */
+extern s16 g_jobstts_ability_category;  /* menu_ability_category_e */
 extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u8* g_jobstts_ability_selected_specific;
 extern u8* g_jobstts_ability_selected_specific_arg_alias;
@@ -24,7 +16,7 @@ extern u8 g_jobstts_ability_list_initialized;
 extern s16 g_jobstts_ability_list_job_name_ids[];
 
 s32 jobstts_ability_build_list(
-    s16 unit_index, s16 job_id, jobstts_ability_category_e ability_category, s16* list, s32 unlearned_only);
+    s16 unit_index, s16 job_id, menu_ability_category_e ability_category, s16* list, s32 unlearned_only);
 
 s32 jobstts_ability_get_ct_display_value(s32 index);
 s32 jobstts_ability_get_jp_cost_display_value(s32 index);
@@ -341,19 +333,12 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* d
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* other */
-/* g_jobstts_active_page: each page's function returns the next one. */
-typedef enum jobstts_page {
-    JOBSTTS_PAGE_CLOSE = -1,       /* jobstts_entrypoint closes the screen */
-    JOBSTTS_PAGE_JOB_LIST = 0,     /* jobstts_menu_update_job_list */
-    JOBSTTS_PAGE_ABILITY_LIST = 1, /* jobstts_update_ability_list_menu */
-} jobstts_page_e;
-
 enum {
     JOBSTTS_LIST_COMMAND_VISIBLE_ROWS_INDEX = 6,
 };
 
 extern u8 g_jobstts_sound_queued_effect_id; /* main_sfx_e */
-extern s8 g_jobstts_active_page;
+extern s8 g_jobstts_active_page;            /* menu_job_list_step_e; each page's function returns the next one */
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;

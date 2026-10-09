@@ -83,7 +83,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
         }
     }
 
-    g_world_formation_menu_new_buttons &= g_world_formation_menu_entry_mask;
+    g_world_formation_menu_new_buttons &= g_world_formation_menu_allowed_buttons;
     if (g_world_formation_open_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }

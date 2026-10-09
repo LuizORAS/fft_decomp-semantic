@@ -704,7 +704,7 @@ extern s32 g_wldcore_displayed_numeric_value_secondary;
 extern s32 g_wldcore_displayed_numeric_value_tertiary;
 extern s32 g_wldcore_loaded_message_block;
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row);
-void wldcore_load_message_block_if_changed(s32 chapter);
+void wldcore_load_message_block_if_changed(s32 block);
 void wldcore_text_get_padded_dimensions(s32 text_id, wldcore_text_dimensions_t* output);
 void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state);
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
@@ -1016,7 +1016,7 @@ typedef struct wldcore_menu_list_window_level {
 
 extern s32 g_wldcore_bar_menu_saved_cursor;
 extern u8 g_wldcore_bar_row_help_text_ids[];
-void wldcore_bar_active_propositions_clear_result(wldcore_menu_panel_level_t* level);
+void wldcore_bar_active_propositions_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level);
 void wldcore_bar_push_rumor_detail_level(s32 value);
 void wldcore_bar_push_menu_level(void);
@@ -1038,7 +1038,7 @@ extern s16 g_wldcore_list_row_flags[];
 
 /* Row value column of the world list panels, read signed as `value & 0x7ff`. */
 extern s16 g_wldcore_list_entry_values[];
-void wldcore_list_completed_propositions_clear_result(s32* unused);
+void wldcore_list_completed_propositions_block_all_buttons(s32* unused);
 void wldcore_list_open_script_flags_01a4_01bb(void);
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel);
 void wldcore_list_clamp_cursor_state(s32 index, s32 count, s32 visible);
@@ -1048,23 +1048,23 @@ void wldcore_list_store_cursor_state(s32 index);
 
 /* The list-level steps hand their menu level to these stubs, which read no
  * argument; the parameter is the argument the target passes in $a0. */
-void wldcore_list_rumors_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_propositions_clear_result(wldcore_menu_panel_level_t* level);
+void wldcore_list_rumors_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_propositions_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_rumors_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_propositions_close_level(wldcore_menu_panel_level_t* level);
-void wldcore_list_unexplored_lands_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_story_events_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_script_variables_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_tutorial_topics_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_formation_tutorials_clear_result(wldcore_menu_panel_level_t* level);
-void wldcore_list_script_flags_clear_result(wldcore_menu_panel_level_t* level);
+void wldcore_list_unexplored_lands_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_story_events_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_script_variables_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_open_available_propositions(void);
 void wldcore_list_open_completed_propositions(void);
 void wldcore_list_open_propositions(void);
 void wldcore_list_open_rumors(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
 void wldcore_list_open_formation_tutorials(void);
-void wldcore_list_tutorial_mask_1_clear_result(wldcore_menu_panel_level_t* unused_level);
+void wldcore_list_tutorial_mask_1_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
 void wldcore_list_open_story_events(void);
 void wldcore_list_open_unexplored_lands(void);
 void wldcore_list_open_treasures(void);
@@ -1084,9 +1084,9 @@ typedef struct wldcore_map_dot {
     s32 sub_kind;
     SVECTOR position; /* 0x08; world-map position, RotTrans input */
     s32 flags;        /* 0x10; wldcore_display_object_flag_e */
-    s32 sprite_id;    /* 0x14; wldcore_anim_sequence_id_e */
+    s32 sequence;     /* 0x14; wldcore_anim_sequence_id_e */
     s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
-    s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sprite changes */
+    s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sequence changes */
     s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
     /* 0x24; CLUT row offset read as wldcore_window_record_t.palette (0 keeps the
      * sprite's own CLUT). The player's marker (0x8009f278) takes 0, 2 or 3 from
@@ -1110,7 +1110,7 @@ typedef enum wldcore_projection_flags {
 /* The world map camera projection state at 0x8009f24c: two control words
  * followed by the player's own map dot. The marker's +8 base is what makes
  * the views of this address agree field for field -- the camera update
- * writes the dot's sprite_id and screen_x/screen_y and the marker init writes
+ * writes the dot's sequence and screen_x/screen_y and the marker init writes
  * its kind, position and flags. For the player's marker, kind is the current
  * location id and sub_kind the proposition picture id. */
 typedef struct wldcore_projection_state {
@@ -1413,9 +1413,9 @@ typedef char wldcore_window_layout_row_size_must_be_0x10[sizeof(wldcore_window_l
 /* Message menu level pushed by 0x8006e860. */
 typedef struct wldcore_menu_message_level {
     s32 reload_text;
-    s32 saved_menu_result; /* 0x04; g_wldcore_menu_result at push time */
-    s32 window_index;      /* 0x08; window record appended by the type-2 push; cleared by the type-3 push */
-    s32 _unknown_0c;       /* 0x0c; set to 8 at push */
+    s32 saved_blocked_buttons; /* 0x04; g_wldcore_menu_blocked_buttons at push time */
+    s32 window_index;          /* 0x08; window record appended by the type-2 push; cleared by the type-3 push */
+    s32 _unknown_0c;           /* 0x0c; set to 8 at push */
 } wldcore_menu_message_level_t;
 
 /* Provisional: the type-1 world-map close/return level pushed by
@@ -1588,6 +1588,15 @@ typedef struct wldcore_menu_sound_novel_resume_level {
     u8 _unused_18[8];
     s32 mode; /* 0x20; argument of the push */
 } wldcore_menu_sound_novel_resume_level_t;
+
+/* Type-0x33 scrollable text window level pushed by
+ * wldcore_menu_push_scrollable_text_window_level and stepped by
+ * wldcore_menu_step_scrollable_text_window_level. */
+typedef struct wldcore_menu_scrollable_text_level {
+    s32 window_index; /* 0x00; window record of the frame */
+    u8 _unused_04[0x1c];
+    s32 _unknown_20; /* 0x20; 0x28 at push; nothing reads it */
+} wldcore_menu_scrollable_text_level_t;
 
 /* Provisional: type-0x31 screen-transition level pushed by
  * wldcore_menu_push_screen_transition_level (0x80088308) and stepped by
@@ -1817,6 +1826,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_event_transition_level_t event_transition;
     wldcore_menu_sound_novel_resume_level_t sound_novel_resume;
     wldcore_menu_screen_transition_level_t screen_transition;
+    wldcore_menu_scrollable_text_level_t scrollable_text;
     wldcore_menu_save_confirm_level_t save_confirm;
     wldcore_menu_sound_novel_history_level_t sound_novel_history;
     wldcore_menu_location_transition_level_t location_transition;
@@ -1907,7 +1917,9 @@ extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
  * GsSortSprite (0x800e0480). */
 extern GsSPRITE g_wldcore_menu_indicator_sprite;
-extern s32 g_wldcore_menu_result;
+/* Pad buttons withheld from the WORLD menu frame (wldcore_menu_run_world_frame passes its
+ * complement to world_formation_set_menu_allowed_buttons); -1 blocks all. */
+extern s32 g_wldcore_menu_blocked_buttons;
 extern s32 g_wldcore_menu_stack_depth;
 extern wldcore_menu_stack_record_t g_wldcore_menu_stack_records[];
 extern wldcore_menu_stack_record_t g_wldcore_menu_stack_records_next[];
@@ -2027,7 +2039,7 @@ void wldcore_menu_push_brave_story_level(void);
 void wldcore_window_close_parent_list_all_windows(void);
 void wldcore_window_close_parent_list_frame_windows(void);
 void wldcore_menu_push_scrollable_text_window_level(s32 text_id);
-void wldcore_menu_run_shop_and_rebuild_screen(s32 file_slot);
+void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
 void wldcore_window_set_render_state_2_from_arg_0x10(s32* level);
 void wldcore_menu_push_variable_list_level(void);
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* level, s32 unit, s32 render_index);

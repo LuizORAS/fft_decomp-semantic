@@ -5,7 +5,7 @@
 void battle_script_route_event_input(void) {
     s32 thread;
 
-    if (g_battle_menu_input_disabled != MENU_INPUT_TUTORIAL) {
+    if (g_battle_menu_input_mode != MENU_INPUT_TUTORIAL) {
         return;
     }
     thread = g_battle_current_thread_id;

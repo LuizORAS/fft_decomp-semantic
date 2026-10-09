@@ -45,7 +45,7 @@ s32 world_menu_run_remove_item(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         return 0;
     }
-    locked = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
+    locked = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
     if (locked == WORLD_FORMATION_UNIT_UNLOCKED) {
         locked = 0;
     }

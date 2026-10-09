@@ -4,8 +4,8 @@
 
 /* Appends a window-list record for a text window: optionally reloads the
  * text-section pointers, starts the text-character thread on `text` (mode
- * 0x3b when system flag 0x20000 is set, else 0x33), moves the pending menu
- * result into the record, and plays sound 0x12. */
+ * 0x3b when system flag 0x20000 is set, else 0x33), saves the blocked
+ * buttons in the record and blocks them all, and plays sound 0x12. */
 void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
     s32 index;
 
@@ -20,8 +20,9 @@ void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
     } else {
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x33, text, 0);
     }
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.saved_menu_result = g_wldcore_menu_result;
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.saved_blocked_buttons
+        = g_wldcore_menu_blocked_buttons;
+    g_wldcore_menu_blocked_buttons = -1;
     wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);
     index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[index].message._unknown_0c = 8;

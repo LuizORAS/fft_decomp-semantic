@@ -42,8 +42,8 @@ void world_formation_init_menu_state(void) {
     g_world_formation_selected_unit_index_latch = 0;
     g_world_formation_unit_cycle_mode = 1;
     g_world_formation_unit_banner_enabled = 1;
-    g_world_formation_scroll_enabled_latch = 1;
-    g_world_formation_scroll_enabled = 1;
+    g_world_formation_unit_banner_at_bottom_latch = 1;
+    g_world_formation_unit_banner_at_bottom = 1;
     g_world_formation_unit_browse_enabled = 0;
     g_world_formation_cursor_ot_override = 0;
     g_world_formation_triangle_menu_open = 0;

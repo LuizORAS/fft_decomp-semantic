@@ -51,14 +51,14 @@ s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
         battle_text_restore_section_pointers();
     }
     jobstts_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
-    if (g_jobstts_active_page == JOBSTTS_PAGE_JOB_LIST) {
+    if (g_jobstts_active_page == MENU_JOB_LIST_STEP_JOBS) {
         g_jobstts_active_page = jobstts_menu_update_job_list();
         if (g_jobstts_input_primary_repeat & PSX_PAD_CROSS) {
             result = 0;
             g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
             g_jobstts_initialized = 0;
         }
-    } else if (g_jobstts_active_page == JOBSTTS_PAGE_ABILITY_LIST) {
+    } else if (g_jobstts_active_page == MENU_JOB_LIST_STEP_ABILITIES) {
         g_jobstts_active_page = jobstts_update_ability_list_menu();
     } else {
         result = 0;

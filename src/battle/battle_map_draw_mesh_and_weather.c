@@ -419,7 +419,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         if (g_battle_map_command_0x96_frame == g_battle_map_command_0x96_duration) {
-            battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
+            battle_map_run_weather_command(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
             g_battle_map_weather_scale.vx = ONE;
             g_battle_map_weather_scale.vy = ONE;
             g_battle_map_weather_scale.vz = ONE;

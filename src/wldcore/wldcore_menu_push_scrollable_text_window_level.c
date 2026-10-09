@@ -4,10 +4,7 @@
  * 0x33: it appends one window record for the frame, measures the text, sizes
  * the window around it (at most four rows), initialises the scrollable text
  * state, hides the text render record and the parent level's window, and sets
- * system flags 0x08002000.
- *
- * The +0x20 word of the new level has no catalogued struct for type 0x33;
- * wldcore_menu_event_transition_level_t.mode is the only named field at that offset. */
+ * system flags 0x08002000. */
 void wldcore_menu_push_scrollable_text_window_level(s32 text) {
     s16 width;
     s16 rows;
@@ -60,7 +57,7 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         g_wldcore_menu_stack_depth = depth + 1;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_menu_stack_records_next[depth].event_transition.mode = 0x28;
+        g_wldcore_menu_stack_records_next[depth].scrollable_text._unknown_20 = 0x28;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW;
     }
 }

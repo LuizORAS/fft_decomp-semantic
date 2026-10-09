@@ -35,7 +35,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
             return;
         }
         g_wldcore_menu_ordering_table_offset = 1;
-        g_wldcore_menu_result = 0;
+        g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES);
@@ -48,7 +48,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
-        wldcore_list_tutorial_mask_1_clear_result(level);
+        wldcore_list_tutorial_mask_1_block_all_buttons(level);
         wldcore_menu_push_message_level(0x108C, 1);
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);

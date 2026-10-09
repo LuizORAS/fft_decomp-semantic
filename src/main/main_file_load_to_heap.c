@@ -10,7 +10,7 @@ void* main_file_load_to_heap(s32 sector, u32 size) {
 
     destination = main_heap_alloc(size);
     if (destination == 0) {
-        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_HEAP_ALLOC);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_HEAP_ALLOC);
     }
     while (main_file_build_header_nnl(&g_main_file_cd_state, sector, (size >> 11), destination) != 0) {
         VSync(0);

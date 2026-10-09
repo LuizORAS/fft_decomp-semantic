@@ -7,7 +7,7 @@
  * component bank and rebuilds the upload copy while preserving each stored
  * alpha bit. Other modes store biased component deltas and arm the row's
  * animation state. */
-void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 palette_index, const u16* colors) {
+void battle_map_update_palette_colors_inner(s32 mode, s32 bank, s32 row, const u16* colors) {
     s32 index;
     s16 green_for_packing;
     u32 blue_delta;
@@ -25,8 +25,8 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 pal
         u32 red_value;
         u8 blue;
 
-        color_index = palette_index * 16 + index;
-        component = &g_battle_map_palette_state.banks[palette_group].components[color_index];
+        color_index = row * 16 + index;
+        component = &g_battle_map_palette_state.banks[bank].components[color_index];
         color = *colors;
         red_value = color & 0x1f;
         red_for_packing = red_value;
@@ -46,7 +46,7 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 pal
             component->green_5bit = green;
             component->red_5bit = red;
             component->blue_5bit = blue;
-            g_battle_map_palette_modified_colors[palette_group][color_index]
+            g_battle_map_palette_modified_colors[bank][color_index]
                 = red_for_packing + (green_for_packing << 5) + (blue_value << 10) + (component->alpha_bit << 15);
         }
 
@@ -57,12 +57,12 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 pal
     if (mode != 0) {
         map_palette_animation_state_t* animation;
 
-        animation = &g_battle_map_palette_state.banks[palette_group].animations[palette_index];
+        animation = &g_battle_map_palette_state.banks[bank].animations[row];
         animation->active = 1;
         animation->blend_step = 0;
         animation->delay_counter = 0;
         animation->mode = mode;
     } else {
-        g_battle_map_palette_state.banks[palette_group].animations[palette_index].active = 0;
+        g_battle_map_palette_state.banks[bank].animations[row].active = 0;
     }
 }

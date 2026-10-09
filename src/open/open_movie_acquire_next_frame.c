@@ -29,10 +29,10 @@ void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     }
 
     g_open_movie_current_frame = header->frame_number;
-    if (header->frame_number >= g_open_movie_first_frame) {
+    if (header->frame_number >= g_open_movie_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO;
     }
-    if (g_open_movie_last_frame != -1 && header->frame_number >= g_open_movie_last_frame) {
+    if (g_open_movie_video_end_frame != -1 && header->frame_number >= g_open_movie_video_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP;
     }
 

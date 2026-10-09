@@ -175,7 +175,7 @@ void world_build_options_menu(void) {
         page = &g_world_options_menu_pages[i & 1];
         if (delta == 0 && world_menu_is_input_allowed() != 0) {
             if ((*input0 & PSX_PAD_UP)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
@@ -187,7 +187,7 @@ void world_build_options_menu(void) {
                     g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
                     g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;

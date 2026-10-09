@@ -12,4 +12,4 @@ void open_movie_stream_and_push_controller_1(s32 start_sector, s32 unused, s32 e
     g_open_current_controller_index = controller + 1;
 }
 
-/* This variant starts handler state one and uses movie rate 0x94. */
+/* This variant starts handler state one and plays the CD audio at mix level 0x94. */

@@ -266,7 +266,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     }
                     g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_IDLE;
                     g_battle_map_resource_load_state = MAP_LOAD_STATE_DONE;
-                    battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
+                    battle_map_run_weather_command(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
                     main_heap_free(g_battle_map_data_load_buffer);
                 }
             }

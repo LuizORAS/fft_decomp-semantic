@@ -11,8 +11,9 @@ extern gns_record_view_t g_battle_map_selected_mesh_record;
  * layout/weather/time comparison matches, and loads the selected record's
  * file into a temporary 0x20000-byte buffer. The loader's fourth argument is
  * the resource type, as at its other call sites; battle_map_start_file_load
- * does not read it. */
-s32 battle_map_load_mesh_variant(s32 mesh_slot) {
+ * does not read it. `palette_mode` is the animation mode the alternate mesh's
+ * palette is applied with (battle_map_update_palette_colors). */
+s32 battle_map_load_mesh_variant(s32 palette_mode) {
     s32 i;
     s16 state;
 
@@ -52,7 +53,7 @@ s32 battle_map_load_mesh_variant(s32 mesh_slot) {
             /* Retail scales this byte offset as a word index. */
             mesh_data_offset = ((map_mesh_file_header_t*)mesh_data)->color_palette_offset * 4;
             mesh_data = (u8*)mesh_data + mesh_data_offset;
-            battle_map_update_palette_colors(mesh_slot, MAP_PALETTE_BANK_MAP_1, 0, 1, (const u16*)mesh_data);
+            battle_map_update_palette_colors(palette_mode, MAP_PALETTE_BANK_MAP_1, 0, 1, (const u16*)mesh_data);
             main_heap_free(g_battle_map_mesh_load_buffer);
             g_battle_map_mesh_load_state = MAP_MESH_LOAD_IDLE;
         }

@@ -6,7 +6,7 @@
 
 /* Set up the weather particles and their flat-textured sprites.
  *
- * 0x8f (snow, from battle_map_set_weather_texture_overlay 0x53/0x7e/0x7f) scatters 64 flakes;
+ * 0x8f (snow, from battle_map_run_weather_command 0x53/0x7e/0x7f) scatters 64 flakes;
  * 0x90 (rain, 0x55/0x7c/0x7d) scatters 32 drop pairs over the map extent and
  * records the lowest tile surface (largest y) in g_battle_map_lowest_surface_y. The rain UV
  * pointer is formed from one combined byte offset: the target adds the

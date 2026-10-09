@@ -10,7 +10,7 @@ void wldcore_list_handle_unexplored_lands_input(wldcore_menu_panel_level_t* leve
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
-        g_wldcore_menu_result = 0;
+        g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         if (level->result != 0) {
@@ -30,7 +30,7 @@ void wldcore_list_handle_unexplored_lands_input(wldcore_menu_panel_level_t* leve
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0
         && g_main_file_still_loading == 0) {
-        wldcore_list_unexplored_lands_clear_result(level);
+        wldcore_list_unexplored_lands_block_all_buttons(level);
         wldcore_menu_push_message_level(0x1058, 1);
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
         && g_main_file_still_loading == 0) {

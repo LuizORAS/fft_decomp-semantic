@@ -1445,7 +1445,7 @@ typedef enum main_game_flow_state {
     MAIN_GAME_FLOW_ENDING = 3, /* run the ending, then restart */
 } main_game_flow_state_e;
 
-/* Error codes passed to main_system_handle_animation_exception, whose report
+/* Error codes passed to main_system_handle_error, whose report
  * hook is empty in retail. */
 typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,              /* main_file_load_to_heap got no block */
@@ -1494,7 +1494,7 @@ void main_overlay_exec_open_bin_ending(void);
 int main_overlay_open_world_and_wldcore(int load_world);
 void main_overlay_open_world_bin(s32 mode);
 void main_restore_game_loop_stack_pointer(u32* source);
-void main_system_handle_animation_exception(int error_code);
+void main_system_handle_error(int error_code);
 void main_system_handle_battle_load_exception(s32 value);
 void main_system_handle_malloc_exception(s32 allocator_id, s32 error_code);
 void main_system_handle_pointer_exception(int error_code);

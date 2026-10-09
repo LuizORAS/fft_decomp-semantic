@@ -276,10 +276,10 @@ enum {
     EQUIP_ITEM_LIST_END = 0xFF,
     EQUIP_ITEM_ID_MASK = 0x3FF,
     EQUIP_ITEM_LIST_ENTRY_ITEM_ID_MASK = 0x3FF,
-    EQUIP_ITEM_LIST_ENTRY_EQUIPPED = 0x4000,
-    EQUIP_ITEM_COUNT_EQUIPPED_FLAG = 0x40000000,
+    EQUIP_ITEM_LIST_ENTRY_UNEQUIPPABLE = 0x4000, /* listed, but the unit cannot equip the item */
 };
 
+/* The display order lists of the five item tabs: hands, headgear, body armor, accessories, other. */
 extern u8* g_equip_item_category_lists[];
 extern battle_menu_status_panel_graphic_descriptor_t g_equip_item_graphic_descriptor;
 extern u8 g_equip_item_inventory_totals[];
@@ -314,7 +314,7 @@ void equip_item_calculate_swap_stat_delta(
     struct world_item_stat_detail* output, struct world_item_stat_summary* out, s16 from, s16 to, s32 slot);
 
 void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
-s32 equip_item_get_available_count(s32 item_entry);
+s32 equip_item_get_equipped_count(s32 item_entry);
 s32 equip_menu_get_entry_item_equipped_count(s32 row);
 item_menu_category_e equip_item_get_menu_category(s16 item_id);
 s32 equip_item_get_total_count(s16 item_id);
@@ -325,11 +325,11 @@ s32 equip_item_is_in_category_list(s32 item_id, s32 category_index);
 void equip_item_prepend_to_category_list(s32 item_id, s32 category_index);
 void equip_item_rebuild_category_list(s32 category);
 void equip_item_remove_from_category_list(s32 item_id, s32 category_index);
-s32 equip_item_sort_list_by_category_order(item_menu_category_e category, s16* list);
-void equip_item_store_category_list(item_menu_category_e category, const s16* source);
+s32 equip_item_sort_list_by_category_order(s32 category_index, s16* list);
+void equip_item_store_category_list(s32 category_index, const s16* source);
 void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
 s32 equip_run_item_type_order_mode(void);
-void equip_item_sort_list_by_criteria(s32 sort_key, s16* list);
+void equip_item_sort_list_by_criteria(s32 mode, s16* list);
 s32 equip_item_build_filtered_list(s32 unit_index, s32 sort_mode, s32 category, s16* list, s32 equip_filter);
 battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_source(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);

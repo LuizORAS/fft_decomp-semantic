@@ -163,7 +163,7 @@ void world_menu_scrolling_list_thread(void) {
             }
             if ((g_world_menu_new_button_input & PSX_PAD_UP)
                 && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)
-                    || g_world_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                    || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     world_sound_set_scroll_effect();
@@ -176,7 +176,7 @@ void world_menu_scrolling_list_thread(void) {
                 }
             } else if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
                 && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)
-                    || g_world_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                    || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->columns.row_count - 1) {
                     cursor++;
                     world_sound_set_scroll_effect();

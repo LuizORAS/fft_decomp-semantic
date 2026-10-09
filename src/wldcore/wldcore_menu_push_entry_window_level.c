@@ -9,7 +9,7 @@ void wldcore_menu_push_entry_window_level(void) {
     s32 depth;
     s32* counter;
 
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_blocked_buttons = -1;
     world_menu_open_entry_window(4, -0x30, -0x38);
     one = 1;
     g_wldcore_context_value_display_mode = one;

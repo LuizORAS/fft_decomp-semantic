@@ -1,12 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_unit_start_view_thread(s32 event_id, s32 unit_a, s32 unit_b) {
+void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
     if (g_battle_menu_suspend_state == 1) {
         return;
     }
     battle_text_build_unit_name_list();
-    g_battle_menu_panel_fade_mode = g_battle_menu_panel_fade_modes[event_id];
+    g_battle_menu_panel_fade_mode = g_battle_menu_panel_fade_modes[mode];
     if (unit_a != 0xff) {
         g_battle_active_turn_unit.battle_id = unit_a;
         g_battle_menu_active_turn_banner.unit_index = unit_a;
@@ -18,5 +18,5 @@ void battle_unit_start_view_thread(s32 event_id, s32 unit_a, s32 unit_b) {
     if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_UNIT_VIEW) == 0) {
         battle_thread_start(NATIVE_THREAD_SLOT_UNIT_VIEW, battle_unit_view_supervisor_thread);
     }
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, event_id, 0, 0);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, mode, 0, 0);
 }

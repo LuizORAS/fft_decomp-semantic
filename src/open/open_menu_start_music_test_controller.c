@@ -15,7 +15,7 @@ void open_menu_start_music_test_controller(void) {
     }
 
     world_script_set_event_speed(1);
-    g_open_menu_formation_entry_mask = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
+    g_open_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     /* The same 4 is stored twice; the local keeps it in a saved register
      * across the fade-out call instead of being rematerialized. */
     four = 4;

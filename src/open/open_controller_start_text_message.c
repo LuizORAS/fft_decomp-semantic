@@ -1,7 +1,7 @@
 #include "fft/open.h"
 
 /* The thread-2 controller record reuses the first two words as
- * run_followup (0x00) and result (0x04). */
+ * run_followup (0x00) and the saved blocked buttons (0x04). */
 void open_controller_start_text_message(s32 parameter, s32 run_followup) {
     {
         s32 controller = g_open_current_controller_index;
@@ -18,10 +18,10 @@ void open_controller_start_text_message(s32 parameter, s32 run_followup) {
 
     {
         s32 controller = g_open_current_controller_index;
-        s32 previous_mask = g_open_menu_formation_entry_mask;
+        s32 saved_blocked_buttons = g_open_menu_blocked_buttons;
 
-        g_open_menu_formation_entry_mask = -1;
-        g_open_controller_stream_start[controller].stream_length = previous_mask;
+        g_open_menu_blocked_buttons = -1;
+        g_open_controller_stream_start[controller].stream_length = saved_blocked_buttons;
     }
     main_sound_play_sfx(MAIN_SFX_WINDOW_OPEN);
 

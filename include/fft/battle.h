@@ -928,9 +928,10 @@ typedef enum battle_unit_animation {
     BATTLE_UNIT_ANIMATION_IDLE_FLYING = 0x06, /* sheets with the flying flag */
     BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE = 0x07,
     BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW = 0x08,
-    BATTLE_UNIT_ANIMATION_FLOAT_IDLE = 0x09, /* floating or flying units; also the crystal sprite */
-    BATTLE_UNIT_ANIMATION_FLOAT_IDLE_HASTE = 0x0a,
-    BATTLE_UNIT_ANIMATION_FLOAT_IDLE_SLOW = 0x0b,
+    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE
+    = 0x09, /* in water two or more deep (battle_move_get_water_depth); also the crystal sprite */
+    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE = 0x0a,
+    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW = 0x0b,
     BATTLE_UNIT_ANIMATION_FLY = 0x12,      /* a flying unit's movement step */
     BATTLE_UNIT_ANIMATION_TREASURE = 0x15, /* the treasure chest sprite */
     BATTLE_UNIT_ANIMATION_DEFEND = 0x17,
@@ -1030,14 +1031,14 @@ extern s32 g_battle_deployment_skipped;
 extern s32 g_battle_cursor_x;
 extern s32 g_battle_cursor_y;
 extern s32 g_battle_cursor_z;
-extern s32 g_battle_controller_input_copy_12;
+extern s32 g_battle_cursor_input_mode_saved;
 extern u16 g_battle_cursor_screen_x;
 extern s32 g_battle_cursor_previous_x;     /* cursor X before this step */
 extern s32 g_battle_cursor_previous_y;     /* cursor Y before this step */
 extern s32 g_battle_cursor_previous_z;     /* cursor level before this step */
 extern u32 g_battle_cursor_repeat_counter; /* free-cursor repeat counter */
 extern s16 g_battle_cursor_screen_y;
-extern s32 g_battle_controller_input;
+extern s32 g_battle_cursor_input_mode;
 extern s32 g_main_input_pressed_buttons;
 extern s32 g_main_input_previous_buttons;
 extern s32 g_main_input_current_buttons;
@@ -1387,7 +1388,7 @@ typedef enum battle_game_state {
     BATTLE_GAME_STATE_JP_EXP_GAIN = 0x26,
     BATTLE_GAME_STATE_CHANGE_TURN = 0x27,
     BATTLE_GAME_STATE_LEARN_ABILITY_ON_HIT = 0x28,
-    BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY = 0x29,
+    BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT = 0x29,
     BATTLE_GAME_STATE_OPEN_SP2_FILES = 0x2a,
     BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN = 0x2b,
     BATTLE_GAME_STATE_SECONDARY_EFFECT = 0x2c,
@@ -1505,7 +1506,7 @@ void battle_state_handle_deep_dungeon_mesh_load_state(void);
 /* Per-frame handlers dispatched by battle_state_run_game_loop. */
 void battle_state_handle_default_state(void);
 void battle_state_handle_display_move_area_state(void);
-void battle_state_handle_effect_damage_display_state(void);
+void battle_state_handle_action_announcement_state(void);
 void battle_state_handle_effect_state(void);
 void battle_state_update_event_mode(void);
 void battle_state_handle_free_cursor_help_state(void);
@@ -2242,7 +2243,7 @@ typedef enum battle_camera_input_source {
     BATTLE_CAMERA_INPUT_RELEASED = 2,
 } battle_camera_input_source_e;
 
-/* g_battle_controller_input: how the directional buttons map to map directions. The first two are
+/* g_battle_cursor_input_mode: how the directional buttons map to map directions. The first two are
  * the Cursor Movement option's settings; FREE_CURSOR sends the four buttons along the screen's axes. */
 typedef enum battle_cursor_input_mode {
     BATTLE_CURSOR_INPUT_OPTION_A = 0,
@@ -2818,16 +2819,16 @@ enum {
 /* Index into g_battle_effect_trap_particle_configs: the particle groups of the secondary effect
  * handlers, named after the handler that spawns each. */
 typedef enum battle_effect_particle_group {
-    /* battle_effect_glowing_tar_secondary_handler: its first slot set */
-    BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_A = 0,
-    BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B = 1, /* its second slot set */
+    /* battle_effect_weapon_hit_secondary_handler: its first slot set */
+    BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A = 0,
+    BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B = 1, /* its second slot set */
     BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF = 3,
     BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF = 4,
     BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP = 5,
-    BATTLE_EFFECT_PARTICLE_GROUP_FALLING_TAR = 6,
+    BATTLE_EFFECT_PARTICLE_GROUP_FALL_DUST = 6,
     BATTLE_EFFECT_PARTICLE_GROUP_SPLASH = 7,
     BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP = 8,
-    BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B_MISSED = 9, /* the second slot set of a missed hit */
+    BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B_MISSED = 9, /* the second slot set of a missed hit */
     BATTLE_EFFECT_PARTICLE_GROUP_RED_ORBS = 10,
     BATTLE_EFFECT_PARTICLE_GROUP_EQUIP_BREAK = 11,
     BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE = 12,
@@ -4173,7 +4174,7 @@ s32 battle_effect_spawn_emitter_particles(
 void battle_effect_build_secondary_init_from_action(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* init);
 
-void battle_effect_call_build_secondary_init(battle_unit_misc_data_t* unit);
+void battle_move_start_teleport_step(battle_unit_misc_data_t* unit);
 
 void battle_effect_init_altima_teleport_data(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);
@@ -4884,8 +4885,8 @@ battle_ai_command_action_t* battle_unit_get_target_id_ptr_by_battle_id(u32 battl
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
 s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
-void battle_unit_init_coordinates(struct battle_unit_misc_data* unit);
-void battle_unit_init_coordinates_animation_facing(battle_unit_misc_data_t* unit);
+void battle_move_update_teleport_start(struct battle_unit_misc_data* unit);
+void battle_move_start_teleport_animation(battle_unit_misc_data_t* unit);
 void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* formation, s32 unused_1);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
@@ -5246,8 +5247,8 @@ void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_
 
 void battle_gfx_load_unit_into_evtchr_slot(battle_unit_misc_data_t* unit, s32 slot, s32 image_slot);
 
-void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 section_id, s32 unit_misc_id,
-    s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 bank, s32 row, s32 preset,
+    s16 red, s16 green, s16 blue, s32 final_value);
 
 s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination);
 
@@ -5349,8 +5350,8 @@ u8* battle_gfx_init_unit_sprite_display(s32 unit_index);
 s32 battle_gfx_is_spritesheet_id_loaded(s32 spritesheet_id);
 s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
 
-void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id, s32 unit_misc_id, s32 preset, s16 red,
-    s16 green, s16 blue, s32 final_value);
+void battle_gfx_modify_vram_palette(
+    s32 mode, const u16* source, s32 bank, s32 row, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 s32 battle_gfx_release_reserved_vram_slot(s32 slot_index);
 void battle_gfx_release_unit_vram_slot(struct battle_unit_misc_data* unit);
@@ -6288,7 +6289,9 @@ typedef char battle_move_find_result_data_size_must_be_6[(sizeof(battle_move_fin
 
 /* Ordered class selection at 0x80174630–0x80174700, not movement ability
  * flags or the separate cost-table selector. Water names describe standing
- * height; the English ability labels in external references disagree. */
+ * height. The BATTLE_MOVEMENT_SET_3 bits carry the retail ability names, which
+ * are the other way round: "Move in Water" (0x1f6) stands on the surface and
+ * "Walk on Water" (0x1f7) one level below it. */
 typedef enum battle_movement_class {
     BATTLE_MOVEMENT_CLASS_FLY = 0,
     BATTLE_MOVEMENT_CLASS_TELEPORT = 1,
@@ -6303,8 +6306,8 @@ typedef enum battle_movement_class {
 typedef enum battle_effective_movement_flags {
     BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK = 0x02,
     BATTLE_EFFECTIVE_MOVEMENT_TELEPORT = 0x08,
-    BATTLE_EFFECTIVE_MOVEMENT_IN_WATER = 0x10,
-    BATTLE_EFFECTIVE_MOVEMENT_ON_WATER = 0x20,
+    BATTLE_EFFECTIVE_MOVEMENT_IN_WATER = 0x10, /* BATTLE_MOVEMENT_SET_3_WALK_ON_WATER: one level below the surface */
+    BATTLE_EFFECTIVE_MOVEMENT_ON_WATER = 0x20, /* BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER: on the surface */
     BATTLE_EFFECTIVE_MOVEMENT_FLOAT = 0x40,
     BATTLE_EFFECTIVE_MOVEMENT_FLY = 0x80,
 } battle_move_effective_flags_e;
@@ -6400,11 +6403,11 @@ enum {
     FRONTIER_FLAG_QUEUED = 0x01, /* waiting to be spread from in the current pass */
     FRONTIER_FLAG_LOW_CORNER = 0x02,
     FRONTIER_FLAG_UNIT_ON_TILE = 0x04,
-    FRONTIER_FLAG_STAND_ON_UNIT = 0x08, /* the unit on the tile can be stood on */
-    FRONTIER_FLAG_REACHABLE = 0x10,
-    FRONTIER_FLAG_VALID_DESTINATION = 0x20,
-    FRONTIER_FLAG_STEEP = 0x40,   /* a slope higher than the mover's jump: no entry from its low side */
-    FRONTIER_FLAG_BLOCKED = 0x80, /* a blocked tile, or the tile of Altima's second form */
+    FRONTIER_FLAG_STAND_ON_UNIT = 0x08,  /* the unit on the tile can be stood on */
+    FRONTIER_FLAG_ENTERABLE = 0x10,      /* the terrain lets the mover in and no enemy stands there */
+    FRONTIER_FLAG_MOUNTABLE_UNIT = 0x20, /* a unit of the mover's team that can be mounted stands there */
+    FRONTIER_FLAG_STEEP = 0x40,          /* a slope higher than the mover's jump: no entry from its low side */
+    FRONTIER_FLAG_BLOCKED = 0x80,        /* a blocked tile, or the tile of Altima's second form */
 };
 
 /* battle_move_set_tile_flags_for_pathfinding modes. Bit 0 clears the target panels' ranges. */
@@ -6595,10 +6598,11 @@ extern u8 g_battle_move_destination_edge_height;
 extern s32 g_battle_move_jump_gravity;
 extern battle_move_step_t g_battle_move_step_value;
 extern s16 g_battle_move_target_screen_z;
-extern u8 g_battle_move_entry_edge_centre_offsets[];
-extern u8 g_battle_move_step_centre_offsets[];
-extern u8 g_battle_move_climb_step_centre_offsets[];
-extern u8 g_battle_move_ascent_centre_offsets[];
+/* battle_move_step_phase_e by step direction: the phase each kind of step enters. */
+extern u8 g_battle_move_float_to_centre_phases[];
+extern u8 g_battle_move_walk_to_centre_phases[];
+extern u8 g_battle_move_climb_to_centre_phases[];
+extern u8 g_battle_move_jump_descent_phases[];
 extern battle_unit_misc_data_t* g_battle_move_tile_occupant;
 extern s32 g_battle_move_displacement_direction;
 extern u8* g_battle_move_terrain_costs_ptr;
@@ -6627,7 +6631,7 @@ extern battle_move_spread_state_t* g_battle_move_scratch_pad_ptr;
 extern u8 g_battle_move_path_height_offsets;
 extern u8 g_battle_move_destination_unit_record;
 extern u8 g_battle_move_effective_flags;
-extern u8 g_battle_move_landing_centre_offsets[];
+extern u8 g_battle_move_jump_landing_phases[];
 extern u8* g_battle_move_pathing_frontier;
 extern s32 g_battle_move_pathing_resume_pass;
 extern s32 g_battle_move_pathing_tile_index;
@@ -6672,7 +6676,7 @@ void battle_move_calculate_spread(void);
 u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
 s32 battle_move_check_spreading_tile_coordinates(void);
-void battle_move_clear_reachable_flags_under_dead_or_jumping_units(void);
+void battle_move_clear_enterable_flags_under_dead_or_jumping_units(void);
 void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction);
 void battle_move_displace_unit_along_step_direction(battle_unit_misc_data_t* unit, s32 x, s32 y, s32 delta);
 void battle_move_finalize_path_after_animation(battle_unit_misc_data_t* unit);
@@ -6718,7 +6722,7 @@ void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
 s32 battle_move_update_candidate(s32 extra_span);
 void battle_move_update_knockback_after_animation(battle_unit_misc_data_t* unit);
 void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-u8 battle_move_validate_float_fly(battle_unit_misc_data_t* unit);
+u8 battle_move_get_water_depth(battle_unit_misc_data_t* unit);
 void battle_move_apply_knockback(void);
 s32 battle_move_calculate_teleport_chances(void);
 void battle_move_check_and_spread_one_tile_around(void);
@@ -6955,7 +6959,7 @@ typedef enum map_light_matrix_command {
     MAP_LIGHT_MATRIX_COMMAND_STEP_DELTA = 0x69,
 } map_light_matrix_command_e;
 
-/* Commands of battle_map_set_weather_texture_overlay and battle_map_init_weather_particles. */
+/* Commands of battle_map_run_weather_command and battle_map_init_weather_particles. */
 typedef enum map_weather_command {
     MAP_WEATHER_COMMAND_SNOW = 0x53,  /* also the snow value of g_battle_map_weather_effect_mode */
     MAP_WEATHER_COMMAND_CLEAR = 0x54, /* also the mode with no weather effect */
@@ -7132,9 +7136,9 @@ typedef struct map_palette_animation_state {
 } map_palette_animation_state_t;
 typedef char map_palette_animation_state_size_must_be_8[(sizeof(map_palette_animation_state_t) == 8) ? 1 : -1];
 
-/* One 0x982-byte runtime bank per loaded mesh, based at 0x800995f4.
+/* One 0x982-byte runtime bank per map_palette_bank_e value, based at 0x800995f4.
  * Components and packed_colors are runtime state/mirror, not the separate
- * 0x200-byte-per-mesh upload staging at 0x800e4ea4. Palette extraction fills
+ * 0x200-byte-per-bank upload staging at 0x800e4ea4. Palette extraction fills
  * both; 0x80092f98 uploads staging and clears the pending word at 0x800995ec. */
 typedef struct map_palette_runtime_bank {
     u8 enabled;
@@ -7667,14 +7671,14 @@ void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
 void battle_map_data_load_complete_thread(void);
 s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
-void battle_map_extract_palette_colors(const u16* palette, s32 mesh_index, s32 palette_row_index);
+void battle_map_extract_palette_colors(const u16* palette, s32 bank, s32 palette_row_index);
 s32 battle_map_get_effective_weather(void);
 map_tile_t* battle_map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_id(u32 misc_id);
 void battle_map_init_palette_state(void);
-s32 battle_map_load_data_stage_0x75(void);
-s32 battle_map_load_data_stage_0x76(void);
+s32 battle_map_start_data_load(void);
+s32 battle_map_poll_data_load(void);
 void battle_map_load_move_find_item_data(map_move_find_item_data_t* map_data);
 void battle_map_mark_data_load_complete(void);
 void battle_map_modify_background_gradient(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
@@ -7685,7 +7689,7 @@ void battle_map_start_ambient_light_blend(s32 mode, s32 frame_duration, s16 red,
 void battle_map_set_darkness_color(s32 frame_duration, const map_color_t* color);
 s32 battle_map_step_init_sequence(s32 map_id, s32 step);
 s32 battle_map_stop_texture_animation(s32 handle);
-void battle_map_store_modified_palette_colors(s32 palette_group, s32 palette_index, s32 store_all);
+void battle_map_store_modified_palette_colors(s32 bank, s32 row, s32 store_all);
 void battle_map_store_selected_tile_coordinates(void* destination);
 void battle_map_store_selected_tile_data(void);
 s32 battle_map_try_start_deep_dungeon_mesh_load(void);
@@ -7693,14 +7697,14 @@ s32 battle_map_update_deep_dungeon_and_animation(void);
 void battle_map_wait_for_refresh(void);
 
 void battle_map_modify_palette(
-    s32 command, s32 amount, s32 palette_index, s32 color_index, s32 all_colors, s32 red, s32 green, s32 blue);
+    s32 command, s32 amount, s32 bank, s32 row_index, s32 all_colors, s32 red, s32 green, s32 blue);
 
 s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
 s32 battle_map_load_data(s32 map_id, s32 kind);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
-void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 palette_index, const u16* colors);
+void battle_map_update_palette_colors_inner(s32 mode, s32 bank, s32 row, const u16* colors);
 void* battle_map_determine_rare_common_item(battle_stats_t* unit);
 battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 layer);
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
@@ -7722,13 +7726,12 @@ void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t*
 /* Map data, palette and mesh interfaces implemented in the battle overlay. */
 void battle_map_init_darkness(void);
 s32 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
-void battle_map_load_palette_data(const u16* palette, s32 mesh_index, s32 palette_row_index, s32 load_all_rows);
-s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 suppress_loading_display);
+void battle_map_load_palette_data(const u16* palette, s32 bank, s32 palette_row_index, s32 load_all_rows);
+s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 
-void battle_map_update_palette_colors(
-    s32 mode, s32 palette_group, s32 palette_index, s32 update_all, const u16* colors);
+void battle_map_update_palette_colors(s32 mode, s32 bank, s32 row, s32 update_all, const u16* colors);
 
 u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
@@ -7738,7 +7741,7 @@ map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
 s32 battle_move_get_weather_terrain_cost(void);
 s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_running);
-s32 battle_map_load_mesh_variant(s32 mesh_slot);
+s32 battle_map_load_mesh_variant(s32 palette_mode);
 void battle_map_queue_textured_quads(u32* otag, void* prims, s32 yaw, s32* count);
 void battle_map_queue_textured_triangles(u32* otag, void* prims, s32 yaw, s32* count);
 void battle_map_queue_untextured_quads(u32* otag, void* prims, s32 yaw, s32* count);
@@ -7747,12 +7750,12 @@ s32 battle_map_refresh_deep_dungeon(void);
 s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
 s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
 void battle_map_set_light_matrices(MATRIX* first, MATRIX* second);
-void battle_map_set_weather_texture_overlay(s32 command);
+void battle_map_run_weather_command(s32 command);
 s32 battle_map_start_texture_animation(s32 frame_duration, s32 polygon_group, s32 first_polygon, s32 last_polygon);
 void battle_map_update_mesh_part_animations(void);
 
 void battle_map_update_palette_from_other(
-    const u16* source, s32 section_id, s32 unit_misc_id, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+    const u16* source, s32 bank, s32 row, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 void battle_map_update_texture_animations(void);
 void battle_map_init_mesh_render_records(void* geometry_data);
@@ -7840,7 +7843,7 @@ extern s32 g_battle_menu_help_opening;
 extern s16 g_battle_menu_hovered_unit_display_mode;
 extern RECT g_battle_menu_hovered_unit_stats_display;
 extern world_menu_entry_t g_battle_menu_idle_action_entries[];
-extern u16 g_battle_menu_input_disabled; /* menu_input_mode_e */
+extern u16 g_battle_menu_input_mode; /* menu_input_mode_e */
 extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
 extern u8 g_battle_menu_numeric_display_palette_indices[12];
 extern RECT g_battle_menu_numeric_display_texture_window;
@@ -8002,7 +8005,7 @@ void battle_menu_enter_status_screen_selection(void);
 void battle_menu_fade_out_thread(void);
 void battle_menu_free_high_overlay(void);
 s32 battle_menu_get_cursor_bob_offset(s32 mode);
-s32* battle_menu_get_selected_ability_address(void);
+s32* battle_menu_get_selected_command_address(void);
 void battle_menu_icon_linked_entry_thread(void);
 s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit);
 void battle_menu_init_buffer_allocator(void);
@@ -8155,7 +8158,7 @@ void battle_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t
 void battle_menu_handle_action(void* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
-void battle_unit_start_view_thread(s32 event_id, s32 unit_a, s32 unit_b);
+void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
 /* text */
 /* The low 9 bits select a result graphic; bit 9 alters its motion for a

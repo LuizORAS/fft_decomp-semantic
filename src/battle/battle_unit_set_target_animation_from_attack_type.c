@@ -12,7 +12,7 @@ void battle_unit_set_target_animation_from_attack_type(
     s32 delta;
     s32 attacker_height;
     s32 target_height;
-    u32 float_fly;
+    u32 water_depth;
 
     if (attacker == target) {
         return;
@@ -23,9 +23,9 @@ void battle_unit_set_target_animation_from_attack_type(
     if ((target->encoded_animation >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
-    float_fly = battle_move_validate_float_fly(target);
-    animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
-    if (float_fly < 2) {
+    water_depth = battle_move_get_water_depth(target);
+    animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
+    if (water_depth < 2) {
         stats = target->battle_data;
         if (stats != 0) {
             action = &stats->action;

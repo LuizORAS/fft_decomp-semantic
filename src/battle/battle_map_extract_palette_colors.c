@@ -6,7 +6,7 @@ enum {
     MAP_PALETTE_ROW_COLOR_COUNT = 16,
 };
 
-void battle_map_extract_palette_colors(const u16* palette, s32 mesh_index, s32 palette_row_index) {
+void battle_map_extract_palette_colors(const u16* palette, s32 bank, s32 palette_row_index) {
     s32 color_index;
     s32 selected_row;
     s32 i;
@@ -20,10 +20,10 @@ void battle_map_extract_palette_colors(const u16* palette, s32 mesh_index, s32 p
 
     selected_row = palette_row_index;
     i = 0;
-    component_bank = g_battle_map_palette_state.banks[mesh_index].components;
+    component_bank = g_battle_map_palette_state.banks[bank].components;
     upload_palette_base = g_battle_map_palette_modified_colors[0];
-    upload_palette_bank = upload_palette_base + mesh_index * (MAP_PALETTE_UPLOAD_BANK_BYTES / sizeof(u16));
-    packed_color_bank = g_battle_map_palette_state.banks[mesh_index].packed_colors;
+    upload_palette_bank = upload_palette_base + bank * (MAP_PALETTE_UPLOAD_BANK_BYTES / sizeof(u16));
+    packed_color_bank = g_battle_map_palette_state.banks[bank].packed_colors;
     palette_ptr = palette;
     do {
         /* PlayStation CLUT words use ABBBBBGGGGGRRRRR. */

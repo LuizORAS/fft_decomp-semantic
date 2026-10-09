@@ -19,7 +19,7 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
             unit->special_graphic_y_offset = 0x60;
             unit->status_flags_5_6 = BATTLE_MISC_STATUS_CRYSTAL;
             unit->status_flags_1_4 = 0;
-            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FLOAT_IDLE, unit->facing, unit);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
         } else if (flags & BATTLE_MISC_STATUS_TREASURE) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_TREASURE;
             unit->special_graphic_y_offset = 0;

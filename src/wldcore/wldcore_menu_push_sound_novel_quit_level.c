@@ -2,8 +2,8 @@
 
 /* Pushes the type-0x16 menu level: two window records (sequences 2 and 4)
  * and one render record showing text 0xb83a in a 0x3c x 0x30 image at
- * (-0x1e, -0x18), with the windows offset inside it. Resets the menu result
- * to -1, clears the fade box colour, sets fade flag 8 and clears the new
+ * (-0x1e, -0x18), with the windows offset inside it. Blocks every button
+ * (-1), clears the fade box colour, sets fade flag 8 and clears the new
  * level's words 0x10..0x1c.
  *
  * The level is written through the save_confirm member of the stack-record
@@ -52,7 +52,7 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
         = g_wldcore_window_render_records[index].base.y + 0xE;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].position.x
         = g_wldcore_window_render_records[index].base.x + 4;
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_blocked_buttons = -1;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].position.y
         = g_wldcore_window_render_records[index].base.y - 2;
     g_wldcore_menu_stack_depth = depth + 1;

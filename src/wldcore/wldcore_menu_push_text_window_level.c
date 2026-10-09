@@ -7,7 +7,7 @@
  * g_open_text_section_offsets; appends a window record (sequence 0xe,
  * priority 1); measures the entry, clamped to three rows; fills the shared
  * scrollable window and centres it and the window record on the measured box;
- * then saves g_wldcore_menu_result in the level, sets it to -1, plays sound
+ * then saves g_wldcore_menu_blocked_buttons in the level, sets it to -1, plays sound
  * 0x12, writes the level type and bumps the depth.
  *
  * Taking the record base into `records` at the last block-one store lets CSE
@@ -80,8 +80,9 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     position->y = -(box.y / 2) - 2;
     wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);
 
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.saved_menu_result = g_wldcore_menu_result;
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.saved_blocked_buttons
+        = g_wldcore_menu_blocked_buttons;
+    g_wldcore_menu_blocked_buttons = -1;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_TEXT_WINDOW;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

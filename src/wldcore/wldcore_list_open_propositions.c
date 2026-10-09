@@ -59,7 +59,7 @@ void wldcore_list_open_propositions(void) {
         &origin);
     previous = g_wldcore_menu_stack_depth - 1;
     g_wldcore_menu_ordering_table_offset = 9;
-    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
+    g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     if ((g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
                 .flags
             & WLDCORE_DISPLAY_OBJECT_HIDDEN)

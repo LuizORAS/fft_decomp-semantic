@@ -10,7 +10,7 @@
  */
 typedef struct wldcore_map_dot_render {
     s32 flags;      /* dot +0x10 */
-    s32 sprite_id;  /* dot +0x14 */
+    s32 sequence;   /* dot +0x14 */
     s32 priority;   /* dot +0x18 */
     s32 _unused_0c; /* dot +0x1c */
     s32 _unused_10; /* dot +0x20 */

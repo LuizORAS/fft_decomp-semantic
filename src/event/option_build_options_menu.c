@@ -168,7 +168,7 @@ void option_build_options_menu(void) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
             if ((*input0 & PSX_PAD_UP)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
@@ -180,7 +180,7 @@ void option_build_options_menu(void) {
                     g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_disabled != MENU_INPUT_PLAYER)) {
+                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;

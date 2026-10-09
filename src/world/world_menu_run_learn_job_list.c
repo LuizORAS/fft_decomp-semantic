@@ -19,7 +19,7 @@ s32 world_menu_run_learn_job_list(void) {
         g_world_menu_script_callbacks[5] = world_job_calculate_next_level_jp_requirement;
         g_world_menu_script_callbacks[6] = world_job_calculate_current_total_jp;
         g_world_menu_script_callbacks[13] = world_job_calculate_current_mastered;
-        world_gfx_get_sprite_slot(9, &x, &y, g_world_menu_learn_unlocked_jobs);
+        world_menu_get_selection_record(9, &x, &y, g_world_menu_learn_unlocked_jobs);
         world_menu_init_scrollable_list(
             g_world_menu_learn_unlocked_jobs, x, y, g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
         g_world_learn_job_list_initialized = 1;
@@ -40,7 +40,7 @@ s32 world_menu_run_learn_job_list(void) {
             world_menu_get_learn_job_jp(g_world_menu_cursor_position);
             world_job_calculate_current_total_jp(g_world_menu_cursor_position);
             world_job_calculate_next_level_jp_requirement(g_world_menu_cursor_position);
-            world_gfx_set_sprite_slot(
+            world_menu_set_selection_record(
                 9, g_world_menu_cursor_position, g_world_menu_scroll_offset, g_world_menu_learn_unlocked_jobs);
             g_world_learn_job_list_initialized = 0;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;

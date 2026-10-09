@@ -75,10 +75,10 @@ void world_formation_init_menu_display(void) {
     world_menu_clear_cursor_positions();
     g_world_formation_unit_cycle_mode = 0;
     world_menu_reset_selection_results();
-    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_SKILLSET_NAMES);
-    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_JOB_NAMES);
-    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_ABILITY_NAMES);
-    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_FORMATION_MESSAGES);
+    world_text_bind_section_data(WORLD_TEXT_DATA_SKILLSET_NAMES);
+    world_text_bind_section_data(WORLD_TEXT_DATA_JOB_NAMES);
+    world_text_bind_section_data(WORLD_TEXT_DATA_ABILITY_NAMES);
+    world_text_bind_section_data(WORLD_TEXT_DATA_FORMATION_MESSAGES);
     g_world_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_world_formation_menu_text_buffer;
     g_world_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_formation_menu_text_table;
     g_world_formation_cursor_ot_override = 0;

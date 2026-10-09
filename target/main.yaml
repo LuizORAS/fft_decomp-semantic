@@ -738,7 +738,7 @@ functions:
   - {addr: 0x800449cc, size: 32, name: main_heap_call_free, hash: 68e41579281fa6e2}
   - {addr: 0x800449f8, size: 8, name: main_noop_800449f8, hash: 6d64edf91449c1b1}
   - {addr: 0x80044a00, size: 8, name: main_system_handle_malloc_exception, hash: 6d64edf91449c1b1}
-  - {addr: 0x80044a08, size: 44, name: main_system_handle_animation_exception, hash: 0520ba9fd79942b9}
+  - {addr: 0x80044a08, size: 44, name: main_system_handle_error, hash: 0520ba9fd79942b9}
   - {addr: 0x80044a34, size: 44, name: main_system_handle_pointer_exception, hash: c49c56d6a872179f}
   - {addr: 0x80044a60, size: 28, name: main_gfx_get_otag, hash: 0e1f986e004b6e64}
   - {addr: 0x80044a7c, size: 80, name: main_gfx_swap_and_clear_otag, hash: 676737da60ea151b}

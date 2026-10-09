@@ -10,12 +10,12 @@ s32 world_item_get_equip_candidate_marker(s32 unit_index) {
 
     for (i = 0; i < 5; i++) {
         if (unit->equipment[i] == g_world_shop_equip_candidate_item) {
-            return WORLD_FORMATION_READOUT_EQUIP_LABEL;
+            return MENU_UNIT_READOUT_EQUIP_LABEL;
         }
     }
     result = world_unit_can_equip_item_id(unit_index, g_world_shop_equip_candidate_item);
     if (result != 1) {
-        return WORLD_FORMATION_READOUT_EQUIP_LABEL;
+        return MENU_UNIT_READOUT_EQUIP_LABEL;
     }
     return -1;
 }

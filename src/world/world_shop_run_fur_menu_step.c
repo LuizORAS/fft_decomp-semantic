@@ -4,7 +4,7 @@
 
 /* Fur shop menu step: on entry checks for a Secret Hunt unit and poached
  * stock (refusing entry with message 0xf82d when nobody has the ability),
- * then routes the selected entry to the buy-back menu, the item menu or a
+ * then routes the selected entry to the buy list, the sell list or a
  * refusal message. */
 void world_shop_run_fur_menu_step(void) {
     s32 i;
@@ -42,7 +42,7 @@ void world_shop_run_fur_menu_step(void) {
             g_world_shop_fur_waiting_message = 0;
         }
     } else if (world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_fur_menu_thread_data) == 0) {
-        world_gfx_clear_sprite_slots();
+        world_menu_clear_selection_records();
         if (g_world_menu_selection_results[0] == 0) {
             if (g_world_shop_fur_has_poached_stock != 0) {
                 g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);

@@ -18,15 +18,15 @@ void battle_menu_start_entry_thread(void) {
     while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         battle_thread_yield();
     }
-    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER) {
+    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
         if (battle_script_is_tutorial_event_slot() != 0) {
-            g_battle_menu_input_disabled = MENU_INPUT_TUTORIAL;
+            g_battle_menu_input_mode = MENU_INPUT_TUTORIAL;
             battle_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             battle_script_start_current_event_thread();
             battle_thread_wait_frames(0x1E);
         }
-        if (g_battle_menu_input_disabled != MENU_INPUT_PLAYER) {
+        if (g_battle_menu_input_mode != MENU_INPUT_PLAYER) {
             battle_thread_wait_frames(2);
         }
     } else {

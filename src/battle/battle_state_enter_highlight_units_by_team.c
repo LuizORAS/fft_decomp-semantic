@@ -3,8 +3,8 @@
 void battle_state_enter_highlight_units_by_team(void) {
     battle_state_start_game_flow();
     g_battle_game_state = BATTLE_GAME_STATE_HIGHLIGHT_UNITS;
-    g_battle_controller_input_copy_12 = g_battle_controller_input;
-    g_battle_controller_input = BATTLE_CURSOR_INPUT_FREE_CURSOR;
+    g_battle_cursor_input_mode_saved = g_battle_cursor_input_mode;
+    g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
     battle_gfx_tint_all_units_by_team();
     battle_action_clear_at_list_active();
 }

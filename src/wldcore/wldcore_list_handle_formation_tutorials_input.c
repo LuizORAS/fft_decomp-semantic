@@ -15,7 +15,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
             world_menu_set_brightness(0x80, 0x80, 0x80);
             world_formation_run_screen_for_menu_index(*selected);
             g_wldcore_menu_ordering_table_offset = 1;
-            g_wldcore_menu_result = 0;
+            g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED | MAIN_SYSTEM_FLAG_DISPLAY_OFF;
             g_wldcore_menu_stack_depth--;
             wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS, 0, 0);
@@ -35,7 +35,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
             return;
         }
         g_wldcore_menu_ordering_table_offset = 1;
-        g_wldcore_menu_result = 0;
+        g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS);
@@ -48,7 +48,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
-        wldcore_list_formation_tutorials_clear_result(level);
+        wldcore_list_formation_tutorials_block_all_buttons(level);
         wldcore_menu_push_message_level(0x108B, 1);
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);

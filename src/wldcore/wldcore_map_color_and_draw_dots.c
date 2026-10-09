@@ -46,7 +46,7 @@ void wldcore_map_color_and_draw_dots(void) {
         color[1] = 0x80;
         color[2] = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sprite_id = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
+        g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < 0x18) {
                 g_wldcore_map_dots[i].palette = 0xc;

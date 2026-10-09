@@ -6,7 +6,7 @@
  * (0x8b,0x9e; 0x61,0x63 when mode >= 2) and drags the cursor with it; the
  * other units drift sideways by frame^2/2 (alternating direction per row)
  * while the backdrop shade fades. Returns the frame counter, which wraps to
- * 0 and clears g_world_formation_scroll_enabled when the transition ends. Compiled at -O1. */
+ * 0 and clears g_world_formation_unit_banner_at_bottom when the transition ends. Compiled at -O1. */
 s32 world_formation_step_grid_transition(s32 mode) {
     point16_t positions[20];
     u8 frame;
@@ -60,7 +60,7 @@ s32 world_formation_step_grid_transition(s32 mode) {
     g_world_formation_grid_transition_frame++;
     if (g_world_formation_grid_transition_frame == 24) {
         g_world_formation_grid_transition_frame = 0;
-        g_world_formation_scroll_enabled = 0;
+        g_world_formation_unit_banner_at_bottom = 0;
     }
     world_formation_draw_unit_slots(positions, shade);
     return g_world_formation_grid_transition_frame;

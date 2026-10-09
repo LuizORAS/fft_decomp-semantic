@@ -524,7 +524,7 @@ void bunit_menu_draw_scrollable_list(u8* script);
 void bunit_menu_draw_thread_status_indicators(void);
 s32 bunit_menu_get_event_speed(void);
 void bunit_menu_get_selection_record(s32 index, s16* out_index, s16* out_b, s16* list);
-s32 bunit_menu_is_unit_list_row_visible(s32 page_offset);
+s32 bunit_menu_is_selected_unit_in_upper_rows(s32 page_offset);
 s32 bunit_menu_is_unit_list_scroll_needed(void);
 void bunit_menu_reset_results(void);
 s32 bunit_menu_run_descriptor_thread(s32 id, world_menu_entry_t* desc);
@@ -560,14 +560,6 @@ void bunit_menu_update_unit_list_scroll(s8* step, s8* offset);
 s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* unit */
-typedef enum bunit_unit_stat {
-    BUNIT_UNIT_STAT_HP = 0,
-    BUNIT_UNIT_STAT_MP = 1,
-    BUNIT_UNIT_STAT_CT = 2,
-    BUNIT_UNIT_STAT_LEVEL_EXP = 3,
-    BUNIT_UNIT_STAT_BRAVE_FAITH = 4, /* the last one: L2/R2 wrap between it and HP */
-} bunit_unit_stat_e;
-
 /*
  * BUNIT.OUT unit-data record. This is the formation/menu representation,
  * distinct from party_data_t, entd_unit_t, and battle_stats_t. Unnamed fields
@@ -670,7 +662,7 @@ extern s8 g_bunit_unit_list_scroll_step;
 extern s16 g_bunit_unit_max_stat_value;
 extern u8 g_bunit_unit_reorderable_indices[];
 extern s16 g_bunit_unit_selected_index;
-extern u8 g_bunit_unit_stat_mode; /* bunit_unit_stat_e */
+extern u8 g_bunit_unit_stat_mode; /* menu_unit_readout_e */
 extern s16 g_bunit_unit_comparison_index;
 extern u8 g_bunit_unit_browse_enabled;
 extern u8 g_bunit_unit_grid_selected_cell;

@@ -69,11 +69,11 @@ void battle_script_process_pending_requests(void) {
     }
     reload_state = g_battle_map_reload_state;
     if (reload_state == 1) {
-        if (battle_map_load_data_stage_0x75() == 0) {
+        if (battle_map_start_data_load() == 0) {
             g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     } else if (reload_state == 2) {
-        if (battle_map_load_data_stage_0x76() == 0) {
+        if (battle_map_poll_data_load() == 0) {
             g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     }
@@ -105,14 +105,14 @@ void battle_script_process_pending_requests(void) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 g_battle_event_weather_request = weather_id + 5;
             }
-            battle_map_set_weather_texture_overlay(
+            battle_map_run_weather_command(
                 g_battle_event_weather_commands[g_battle_event_weather_request].environment_id);
         }
     }
     time_of_day = g_battle_event_pending_map_state;
     if (time_of_day != -1) {
         battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, time_of_day);
-        battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
+        battle_map_run_weather_command(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
     }
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {

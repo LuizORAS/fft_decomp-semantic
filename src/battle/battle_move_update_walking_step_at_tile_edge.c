@@ -9,7 +9,7 @@
  * from the tile height/depth pair scaled by the unit's per-step scales, taking
  * a mount's walking height into account when one is present and float/fly slope
  * otherwise.  A height difference of at most one step starts an ordinary step
- * (centre offset 6) or a climb-speed step (centre offset 0xe); up to seven
+ * (the WALK_TO_CENTRE phase) or a climb-speed step (CLIMB_TO_CENTRE); up to seven
  * starts the dismounting climb at 0x8006aa80, and anything higher the fall at
  * 0x8006a7c0. */
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
@@ -40,8 +40,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
                 + (g_battle_move_current_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                     * unit->current_edge_height;
-            g_battle_move_current_edge_height
-                += battle_move_calculate_float_fly_slope(unit, g_battle_move_current_tile);
+            g_battle_move_current_edge_height += battle_move_calculate_water_lift(unit, g_battle_move_current_tile);
         }
 
         if (g_battle_move_step_value.bits.mount) {
@@ -63,8 +62,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
                 + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                     * unit->destination_edge_height;
-            g_battle_move_current_edge_height
-                += battle_move_calculate_float_fly_slope(unit, g_battle_move_destination_tile);
+            g_battle_move_current_edge_height += battle_move_calculate_water_lift(unit, g_battle_move_destination_tile);
         }
 
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {

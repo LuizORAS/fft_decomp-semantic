@@ -32,10 +32,10 @@ void battle_target_select_tile(void) {
     case 0:
     case 1:
         battle_state_start_game_flow();
-        prev = g_battle_controller_input;
+        prev = g_battle_cursor_input_mode;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
-        g_battle_controller_input = BATTLE_CURSOR_INPUT_FREE_CURSOR;
-        g_battle_controller_input_copy_12 = prev;
+        g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
+        g_battle_cursor_input_mode_saved = prev;
         battle_target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         battle_target_store_cursor_casting_unit_name_and_data();
         if (g_main_game_options.fields.target_flashing == GAME_OPTION_ON) {

@@ -18,7 +18,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
     u32 threshold;
 
     direction = -1;
-    switch (g_battle_controller_input) {
+    switch (g_battle_cursor_input_mode) {
     case BATTLE_CURSOR_INPUT_OPTION_A:
     case BATTLE_CURSOR_INPUT_OPTION_B:
         switch (mode) {
@@ -127,7 +127,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
         break;
     }
 
-    switch (g_battle_controller_input) {
+    switch (g_battle_cursor_input_mode) {
     case BATTLE_CURSOR_INPUT_OPTION_A:
         switch (g_battle_camera_render_state.vy & 0xC00) {
         case BATTLE_FACING_SOUTH:

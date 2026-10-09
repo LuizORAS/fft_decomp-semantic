@@ -12,7 +12,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     u8* label_table;
     world_menu_entry_t* entry;
 
-    if (g_battle_menu_input_disabled != MENU_INPUT_BLOCKED) {
+    if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {
         if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
             && (g_battle_menu_building_thread_started == 0) && (menu_id != IDLE_ACTION_MENU_INVALID_ID)) {
             g_battle_menu_current_id = menu_id;

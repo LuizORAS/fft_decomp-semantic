@@ -70,7 +70,7 @@ void battle_script_execute_event(void) {
     if (battle_script_is_tutorial_event_slot() != 0) {
         battle_gfx_ramp_screen_overlay_intensity_to_zero();
     }
-    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER) {
+    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
         for (work_index = 2; work_index < 0xE; work_index++) {
             battle_thread_wait_until_inactive(work_index);
         }
@@ -282,7 +282,7 @@ restart_script:
                 battle_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
-            if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER) {
+            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
                 for (work_index = 2; work_index < 0xE; work_index++) {
                     battle_thread_wait_until_inactive(work_index);
                 }
@@ -293,8 +293,8 @@ restart_script:
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
             finish_operation = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER && finish_operation == 0
-                && (operand_1 - 0x190) >= 0x1AU && operand_1 != 0) {
+            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0 && (operand_1 - 0x190) >= 0x1AU
+                && operand_1 != 0) {
                 g_battle_script_condition_unit_battle_id = 0xFF;
                 battle_script_run_scenario_conditions();
                 if (battle_script_load_next_event() != 0) {

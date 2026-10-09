@@ -24,7 +24,7 @@ s32 battle_state_announce_next_charged_action(void) {
             result = battle_reaction_prepare_hamedo_for_pending_action(
                 unit->battle_data->misc_unit_id, &command.ability_id);
             if (result != -1) {
-                g_battle_game_state = BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY;
+                g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 actor = battle_unit_get_misc_data_by_battle_id(result & 0xffff);
                 g_battle_casting_unit_id = actor->unit_id;
                 command.skillset = 0;
@@ -41,7 +41,7 @@ s32 battle_state_announce_next_charged_action(void) {
         case BATTLE_ACTION_PHASE_ACTING_UNIT:
             result = battle_action_init_current_data(unit->battle_data->misc_unit_id);
             if (result == 0) {
-                g_battle_game_state = BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY;
+                g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_unit_id = unit->unit_id;
                 battle_text_determine_spell_quote((world_unit_command_action_t*)&unit->battle_data->action_actor_id,
                     unit->battle_data->misc_unit_id, 1);
@@ -64,7 +64,7 @@ s32 battle_state_announce_next_charged_action(void) {
         case BATTLE_ACTION_PHASE_REACTING_UNIT:
             result = battle_reaction_prepare_next(&command.ability_id);
             if (result != -1) {
-                g_battle_game_state = BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY;
+                g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 actor = battle_unit_get_misc_data_by_battle_id(result & 0xffff);
                 g_battle_casting_unit_id = actor->unit_id;
                 command.skillset = 0;

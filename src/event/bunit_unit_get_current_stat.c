@@ -1,18 +1,18 @@
 #include "fft/event_bunit.h"
 
 s32 bunit_unit_get_current_stat(s32 unit_index) {
-    bunit_unit_stat_e mode;
+    menu_unit_readout_e mode;
     bunit_unit_data_t* entry;
     s32 value;
 
     mode = g_bunit_unit_stat_mode;
-    if (mode == BUNIT_UNIT_STAT_HP) {
+    if (mode == MENU_UNIT_READOUT_HP) {
         entry = g_bunit_unit_data[unit_index];
         value = entry->current_hp;
-    } else if (mode == BUNIT_UNIT_STAT_MP) {
+    } else if (mode == MENU_UNIT_READOUT_MP) {
         entry = g_bunit_unit_data[unit_index];
         value = entry->current_mp;
-    } else if (mode == BUNIT_UNIT_STAT_CT) {
+    } else if (mode == MENU_UNIT_READOUT_CT) {
         entry = g_bunit_unit_data[unit_index];
         value = entry->current_ct;
     }
