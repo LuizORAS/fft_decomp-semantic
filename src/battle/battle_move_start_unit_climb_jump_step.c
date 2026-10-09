@@ -20,7 +20,7 @@ void battle_move_start_unit_climb_jump_step(
     s32 speed;
     s32 time;
 
-    step = &unit->movement_value;
+    step = &unit->movement_value.value;
     if (unit->current_unit_id_plus_one != 0
         && (battle_unit_calculate_height_data(&height_data, unit->current_unit_id_plus_one - 1),
             (height_data.unit_flags & 0x80) == 0)) {

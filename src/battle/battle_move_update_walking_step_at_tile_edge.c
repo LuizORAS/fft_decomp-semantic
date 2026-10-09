@@ -25,7 +25,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
         return;
     }
     battle_move_snap_axis_to_current_tile_exit_edge(direction, unit);
-    if ((g_battle_move_step_value & 3) == 0) {
+    if (g_battle_move_step_value.bits.length == 0) {
         rider = unit->current_unit_id_plus_one;
         if (rider != 0) {
             battle_unit_calculate_height_data(&g_battle_move_tile_occupant_height, rider - 1);
@@ -44,7 +44,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
                 += battle_move_calculate_float_fly_slope(unit, g_battle_move_current_tile);
         }
 
-        if (g_battle_move_step_value & 0x10) {
+        if (g_battle_move_step_value.bits.mount) {
             g_battle_move_tile_occupant
                 = battle_unit_find_any_misc_data_at_map_coords(unit->movement.bytes.destination_x,
                     unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
@@ -69,7 +69,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
 
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_unit_dismount_rider_and_update_display(unit);
-            switch ((g_battle_move_step_value >> 3) & 1) {
+            switch (g_battle_move_step_value.bits.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->centre_tile_offset = 6;

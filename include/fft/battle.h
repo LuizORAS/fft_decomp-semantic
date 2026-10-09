@@ -1694,6 +1694,20 @@ typedef struct battle_gfx_unit_shp_frame_tables {
     u8* secondary[0xd0]; /* 0x348 */
 } battle_gfx_unit_shp_frame_tables_t;
 
+/* One movement step: a path element, the unit's current step and the step
+ * the movement code is working on. */
+typedef union battle_move_step {
+    u8 value;
+    struct {
+        u8 length : 2;    /* extra tiles covered: the jump length */
+        u8 slow : 1;      /* start the step at climb speed (battle_move_update_path_step) */
+        u8 climb : 1;     /* continue with a climb-speed step */
+        u8 mount : 1;     /* 0x10: the step ends on another unit */
+        u8 higher : 1;    /* 0x20: destination on the higher elevation */
+        u8 direction : 2; /* 0 +x, 1 -x, 2 -y, 3 +y */
+    } bits;
+} battle_move_step_t;
+
 typedef struct battle_unit_misc_data {
     struct battle_unit_misc_data* previous; /* 0x000; previous Misc unit_t Data */
     u8 unit_id;                             /* 0x004; Misc unit_t Data ID */
@@ -1770,17 +1784,17 @@ typedef struct battle_unit_misc_data {
      * non-zero count means the unit is still moving (unit_moving_check_by_misc_id,
      * process_unit_movement); set_unit_movement_flag ORs 0x10 into a step.
      */
-    u8 movement_path_count; /* 0x09c */
-    u8 movement_path[0x7c]; /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
-    u8 movement_flags;      /* 0x119; battle_move_effective_flags_e bits */
+    u8 movement_path_count;                 /* 0x09c */
+    battle_move_step_t movement_path[0x7c]; /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
+    u8 movement_flags;                      /* 0x119; battle_move_effective_flags_e bits */
     u8 _unused_11a;
-    u8 mount_byte;                /* 0x11b */
-    u8 movement_value;            /* 0x11c */
-    u8 last_path_count;           /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
-    u8 current_unit_id_plus_one;  /* 0x11e */
-    u8 previous_unit_id_plus_one; /* 0x11f */
-    s16 item_get_camera_x;        /* 0x120 */
-    s16 item_get_camera_y;        /* 0x122 */
+    u8 mount_byte;                     /* 0x11b */
+    battle_move_step_t movement_value; /* 0x11c */
+    u8 last_path_count;                /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
+    u8 current_unit_id_plus_one;       /* 0x11e */
+    u8 previous_unit_id_plus_one;      /* 0x11f */
+    s16 item_get_camera_x;             /* 0x120 */
+    s16 item_get_camera_y;             /* 0x122 */
     u8 _unused_124[4];
     u32 otag_depth_index;              /* 0x128 */
     s32 status_bubble_gte_flag;        /* 0x12c; RotTrans flag output while positioning the status bubble */
@@ -5991,7 +6005,7 @@ extern s8 g_battle_move_find_occupying_unit_id;
 extern u8 g_battle_move_current_edge_height;
 extern u8 g_battle_move_destination_edge_height;
 extern s32 g_battle_move_jump_gravity;
-extern u8 g_battle_move_step_value;
+extern battle_move_step_t g_battle_move_step_value;
 extern s16 g_battle_move_target_screen_z;
 extern u8 g_battle_move_entry_edge_centre_offsets[];
 extern u8 g_battle_move_step_centre_offsets[];

@@ -9,16 +9,14 @@
  */
 s32 battle_ai_handle_autobattle(void) {
     s32 result;
-    /* Pin: unpinned, GCC routes the result through $a0 and loses the $v0 delay-slot fills (4 bytes larger). */
-    register s32 direct_result __asm__("$2");
 
     /* A -2 result falls back to another policy's case; those jumps stay gotos. */
     switch (g_battle_ai_data_base.autobattle_setting) {
     case BATTLE_AI_AUTOBATTLE_TARGETED:
-        direct_result = battle_ai_select_targeted_action();
-        if (direct_result != -1)
+        if (battle_ai_select_targeted_action() != -1) {
             return 1;
-        return -1;
+        }
+        break;
     case BATTLE_AI_AUTOBATTLE_RECOVERY:
     case_e:
         result = battle_ai_select_recovery_action();
@@ -40,11 +38,12 @@ s32 battle_ai_handle_autobattle(void) {
         return 1;
     case BATTLE_AI_AUTOBATTLE_RETREAT:
     case_11:
-        direct_result = battle_ai_select_retreat_action();
-        if (direct_result != -1)
+        if (battle_ai_select_retreat_action() != -1) {
             return 1;
-        return -1;
+        }
+        break;
     default:
         return 0;
     }
+    return -1;
 }

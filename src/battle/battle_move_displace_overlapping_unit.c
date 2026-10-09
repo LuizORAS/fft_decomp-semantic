@@ -19,7 +19,7 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     if (unit->movement_path_offset < 2) {
         return;
     }
-    if (((unit->movement_path - 2)[unit->movement_path_offset] >> 4) & 1) {
+    if (((unit->movement_path - 2)[unit->movement_path_offset].value >> 4) & 1) {
         return;
     }
     if (other == 0) {

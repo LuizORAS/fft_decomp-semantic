@@ -134,7 +134,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             } else if (flags & 0x40) {
                 battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else {
-                switch ((g_battle_move_step_value >> 2) & 1) {
+                switch (g_battle_move_step_value.bits.slow) {
                 case 0:
                     unit->step_speed = 0x2000;
                     battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

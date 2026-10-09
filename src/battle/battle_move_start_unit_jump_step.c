@@ -18,12 +18,12 @@ void battle_move_start_unit_jump_step(
     u32 word;
     s32 value;
 
-    unit->velocity.vy = -g_battle_move_jump_gravity * ((((unit->movement_value & 3) * 0x1C000) + 0xE000) / 24576);
-    step = &unit->movement_value;
-    value = unit->movement_value;
+    unit->velocity.vy = -g_battle_move_jump_gravity * ((((unit->movement_value.value & 3) * 0x1C000) + 0xE000) / 24576);
+    step = &unit->movement_value.value;
+    value = unit->movement_value.value;
     if ((value & 3) >= 2) {
         unit->centre_tile_offset = jump_offsets[(u8)value >> 6];
-        battle_unit_store_animation_facing(0x1E, facings[unit->movement_value >> 6], unit);
+        battle_unit_store_animation_facing(0x1E, facings[unit->movement_value.value >> 6], unit);
     } else {
         unit->centre_tile_offset = hop_offsets[(u8)value >> 6];
         battle_unit_dismount_rider(unit);

@@ -8,8 +8,7 @@
  * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
  */
 void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
-    /* Pin: unpinned, GCC swaps unit ($s4) and unit_id ($s5) throughout. */
-    register battle_stats_t* unit __asm__("$20");
+    battle_stats_t* unit;
     s32 i;
     s32 byte_index;
     s32 mask;
@@ -73,16 +72,12 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             g_battle_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
             battle_thread_call_on_main_stack(unit_id, 1);
         }
-        {
-            u8 charged_ct = unit->status_sets.current[0]
-                    & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
-                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING))
-                ? g_battle_unit_status_staging_data->charged_ability_ct[unit_id]
-                : 0xff;
-            /* Keeps one merged CT store; without it reorg duplicates the store into a jump. */
-            __asm__("" : : "r"(charged_ct));
-            unit->charged_ability_ct = charged_ct;
+        if (!(unit->status_sets.current[0]
+                & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)))) {
+            unit->charged_ability_ct = 0xff;
+        } else {
+            unit->charged_ability_ct = g_battle_unit_status_staging_data->charged_ability_ct[unit_id];
         }
         g_battle_unit_status_staging_data->state[unit_id] = 2;
         g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;

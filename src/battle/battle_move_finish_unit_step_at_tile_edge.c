@@ -31,9 +31,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (((unit->encoded_animation >> 1) - 0x30) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
-            /* Keeps the g_battle_move_step_value load below this store. */
-            __asm__ volatile("");
-            switch ((g_battle_move_step_value >> 3) & 1) {
+            switch (g_battle_move_step_value.bits.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->centre_tile_offset = g_battle_move_step_centre_offsets[direction];
@@ -62,7 +60,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
             battle_unit_store_animation_facing(0x20, (s16)unit->facing, unit);
         }
-        if (g_battle_move_step_value & 0x10) {
+        if (g_battle_move_step_value.bits.mount) {
             battle_sound_play_movement_sfx(unit, 0x28);
             return;
         }
@@ -76,7 +74,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
         battle_unit_store_animation_facing(0x20, (s16)unit->facing, unit);
     }
-    if (g_battle_move_step_value & 0x10) {
+    if (g_battle_move_step_value.bits.mount) {
         battle_sound_play_movement_sfx(unit, 0x28);
         return;
     }

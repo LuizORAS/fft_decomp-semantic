@@ -273,9 +273,9 @@ written that way.
 - `g_wldcore_zodiac_start_dates[12][2]` (`include/fft/wldcore.h`) and OPEN's
   flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
   the OPEN name covers both bytes.
-- `battle_unit_misc_data_t.movement_value` (`+0x11c`, `include/fft/battle.h`)
-  is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
-  length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).
+- The movement step byte is one bit-field record (`battle_move_step_t`) in
+  three places: the path elements, `battle_unit_misc_data_t.movement_value`
+  and the working global `g_battle_move_step_value`.
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.

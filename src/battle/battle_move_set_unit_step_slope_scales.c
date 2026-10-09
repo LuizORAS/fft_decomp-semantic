@@ -9,7 +9,7 @@ void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit) {
         (g_battle_move_destination_tile->flags_06.value >> MAP_TILE_SHADOW_MODE_SHIFT)
             & MAP_TILE_SHADOW_MODE_VALUE_MASK,
         1);
-    switch (g_battle_move_step_value >> 6) {
+    switch (g_battle_move_step_value.bits.direction) {
     case 0:
         unit->destination_edge_height = g_battle_move_destination_edge_height
             = (g_battle_move_destination_tile->slope_type & 0xC) >> 2;
@@ -36,7 +36,7 @@ void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit) {
     if (unit->current_unit_id_plus_one != 0) {
         unit->current_edge_height = g_battle_move_current_edge_height = 0;
     }
-    if (g_battle_move_step_value & 0x10) {
+    if (g_battle_move_step_value.bits.mount) {
         unit->destination_edge_height = g_battle_move_destination_edge_height = 0;
     }
 }

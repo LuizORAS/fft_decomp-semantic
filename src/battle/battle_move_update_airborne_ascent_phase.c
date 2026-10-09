@@ -17,7 +17,7 @@ void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit) {
     if (unit->velocity.vy >= 0) {
         unit->centre_tile_offset = g_battle_move_ascent_centre_offsets[direction];
         unit->map_z = unit->movement.bytes.destination_z;
-        if ((g_battle_move_step_value & 0x10) != 0) {
+        if (g_battle_move_step_value.bits.mount) {
             occupant = battle_unit_find_any_misc_data_at_map_coords(unit->movement.bytes.destination_x,
                 unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
             g_battle_move_tile_occupant = occupant;

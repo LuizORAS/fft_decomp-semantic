@@ -16,7 +16,7 @@ void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_dat
             + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                 * unit->destination_edge_height;
         battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
-            unit, &unit->movement_path_count, &unit->movement_value);
+            unit, &unit->movement_path_count, &unit->movement_value.value);
         battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         unit->centre_tile_offset = 0x27;
     }

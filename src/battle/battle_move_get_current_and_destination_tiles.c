@@ -18,7 +18,7 @@ void battle_move_get_current_and_destination_tiles(
     x = unit->map_x;
     y = unit->map_y;
     layer = unit->map_z;
-    movement = unit->movement_value;
+    movement = unit->movement_value.value;
     *out_current = battle_map_get_tile_data_pointer(x, y, layer);
     flags = movement;
     dir = flags >> 6;

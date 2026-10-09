@@ -2,19 +2,22 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
+/* Draw record: print a callback-supplied number right-aligned in a field of
+ * `command[4]` eight-pixel cells, then advance past the record. `count` holds
+ * the value, then the printed length, then the number of digit cells. */
 u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
-    char buf[0x10];
+    s8 buf[0x10];
     RECT rect;
     s16 i;
     s16 x;
     s32 count;
     u8 y;
     s16 blanks;
-    s32 len;
     s32 j;
 
-    len = sprintf(buf, g_equip_text_decimal_format, g_equip_menu_list_row_callbacks[command[3]](command[9]));
-    blanks = command[4] - len;
+    count = g_equip_menu_list_row_callbacks[command[3]](command[9]);
+    count = sprintf((char*)buf, g_equip_text_decimal_format, count);
+    blanks = command[4] - count;
     x = command[7];
     y = command[8];
     count = command[4] - blanks;
@@ -29,11 +32,9 @@ u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
     rect.w = 8;
     rect.h = 0x10;
     for (j = 0; j < count; j++) {
-        equip_gfx_enqueue_textured_quad(&rect, (((s8*)buf)[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
+        equip_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
             g_equip_text_clut_1_mode0, g_equip_gfx_sprite_ot_index);
         rect.x += 8;
     }
-    /* Extra uses rank count above command for allocation (target s2/s3/s4). */
-    __asm__("" : : "r"(count), "r"(count), "r"(count), "r"(count));
     return command + command[1];
 }
