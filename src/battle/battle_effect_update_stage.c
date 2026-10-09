@@ -5,7 +5,7 @@ s32 battle_effect_update_stage(void) {
     s32 id;
     s32 next;
 
-    id = (s16)g_battle_effect_allocated_record_head;
+    id = g_battle_effect_allocated_record_head;
     switch (g_battle_effect_phase) {
     case BATTLE_EFFECT_PHASE_IDLE:
         result = 0;
@@ -61,9 +61,7 @@ s32 battle_effect_update_stage(void) {
             }
             id = next;
         }
-        /* This stage reloads the list head as a signed halfword. The shared
-         * declaration remains unsigned because other traversals use lhu. */
-        if (*(s16*)&g_battle_effect_allocated_record_head != 0) {
+        if (g_battle_effect_allocated_record_head != 0) {
             result = 1;
         } else {
             if (g_battle_effect_flags_section->flags & EFFECT_FLAG_AUDIO_FADE) {

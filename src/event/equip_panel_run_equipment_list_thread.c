@@ -24,7 +24,7 @@ void equip_panel_run_equipment_list_thread(void) {
     s32 frame;
     s32 mode;
     s32 bank;
-    s32 id;
+    s16 id;
     s32 i;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
@@ -111,9 +111,9 @@ void equip_panel_run_equipment_list_thread(void) {
             battle_gfx_init_image_loading(&screen->sprites[19 + i], g_equip_panel_item_icon_texture,
                 g_equip_panel_origin_offsets, g_equip_panel_item_icon_layouts + i);
             /* Read unsigned: the target extends the id only where it is passed on. */
-            id = *(u16*)&state->equipment[i];
+            id = state->equipment[i];
             if ((id & 0xff) != 0xff) {
-                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)id);
+                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], id);
             } else {
                 (&screen->sprites[i])[19].x0 = 0;
             }

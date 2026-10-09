@@ -81,7 +81,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
-                    battle_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
+                    battle_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
                         g_bunit_character_status_equipment_text_image, &g_menu_text_state.pen);
                 }
                 g_menu_text_state.pen.rect.y += 0x10;
@@ -118,7 +118,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             battle_gfx_init_image_loading(&screen->sprites[19 + i], g_bunit_panel_item_icon_texture,
                 &g_bunit_character_status_frame_rect, &g_bunit_character_status_item_icon_layout[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
-                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
+                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
                 /* The target indexes the five icon sprites from their own base (i * 0x14 + 0x1a8), as a
                  * separate array after the 19 label sprites would. */

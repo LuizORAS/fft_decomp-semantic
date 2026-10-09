@@ -6,7 +6,7 @@
  * the remaining width and height in their low nibbles.
  */
 u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
-    urect16_t rect;
+    RECT rect;
     s32 full_columns;
     s32 origin_x;
     s32 origin_y;

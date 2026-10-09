@@ -13,7 +13,7 @@ void card_save_run_menu(s32 unused) {
     u16 menu_input;
     u16 alignment;
     s16 music_slot;
-    card_directory_entry_t save_buffer[15];
+    DIRENTRY save_buffer[15];
 
     g_card_gfx_otag_length = 0x40;
     g_card_gfx_poly_ft4_capacity = 0x258;

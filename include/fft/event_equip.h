@@ -249,10 +249,10 @@ void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad_current_ot(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 unused_priority);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 unused_priority);
 
 /* input */
 extern u8 g_equip_input_activation_timer;
@@ -285,7 +285,7 @@ extern battle_menu_status_panel_graphic_descriptor_t g_equip_item_graphic_descri
 extern u8 g_equip_item_inventory_totals[];
 extern s16 g_equip_item_list_entries[];
 extern u8 g_equip_item_type_icon_coords[][2];
-extern u8* g_equip_item_type_order_lists[];
+extern s8* g_equip_item_type_order_lists[];
 extern s32 g_equip_item_numeric_panel_params;
 extern s32 g_equip_item_numeric_panel_y;
 extern s32 g_equip_item_numeric_panel_redraw;

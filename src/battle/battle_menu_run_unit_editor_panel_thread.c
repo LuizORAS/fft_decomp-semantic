@@ -113,7 +113,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         battle_gfx_init_image_loading(&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
             &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_item_icon_image_params[i]);
         battle_gfx_set_item_icon_sprite(
-            &frame_record->sprites[19 + i], (s16)g_battle_menu_billboard_data.state.equipment[i]);
+            &frame_record->sprites[19 + i], g_battle_menu_billboard_data.state.equipment[i]);
     }
 
     buffer = battle_menu_alloc_buffer(0xC80);
@@ -121,8 +121,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     g_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
-        value = (s16)g_battle_menu_billboard_data.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
-        if (g_battle_menu_billboard_data.state.equipment[i] == 0xFFFF) {
+        value = g_battle_menu_billboard_data.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
+        if ((u16)g_battle_menu_billboard_data.state.equipment[i] == 0xFFFF) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -234,7 +234,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            if (g_battle_menu_billboard_data.state.equipment[i] != 0xFFFF) {
+            if ((u16)g_battle_menu_billboard_data.state.equipment[i] != 0xFFFF) {
                 battle_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }

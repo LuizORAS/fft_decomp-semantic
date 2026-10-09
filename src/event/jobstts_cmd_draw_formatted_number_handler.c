@@ -11,7 +11,7 @@
  * sp+0x50). Only the first 0x10 bytes are ever touched; `reserved` stands in
  * for the unidentified tail and is required for the 0x70 frame. */
 typedef struct jobstts_number_glyph {
-    urect16_t rect;
+    RECT rect;
     s16 u;
     s16 v;
     s16 w;
@@ -68,11 +68,11 @@ u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
         y = data[8];
     } else {
         arg = g_jobstts_menu_scroll_base_index + g_jobstts_menu_list_row_index;
-        y = (((s16)g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[8])
+        y = ((g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[8])
             - g_jobstts_menu_list_scroll_offset_y;
         if (g_jobstts_menu_list_scroll_offset_y < 0) {
             arg -= 1;
-            y -= (s16)g_jobstts_menu_list_row_height;
+            y -= g_jobstts_menu_list_row_height;
         }
     }
 

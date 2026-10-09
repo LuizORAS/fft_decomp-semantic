@@ -1,17 +1,7 @@
 #include "fft/event_jobstts.h"
 
-/* clang-format off */
-void jobstts_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, tpage, clut, ot_index)
-    urect16_t* rect;
-    s32 u;
-    s32 v;
-    u8* color;
-    s32 semitrans;
-    u16 tpage;
-    u16 clut;
-    s32 ot_index;
-/* clang-format on */
-{
+void jobstts_gfx_enqueue_textured_quad(
+    RECT* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];
@@ -26,22 +16,8 @@ void jobstts_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, tpage, clut
     }
     SetSemiTrans(poly, semitrans);
 
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    poly->x1 = rect->x + (rect->w + 0x80);
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    poly->x3 = rect->x + (rect->w + 0x80);
-    poly->y3 = rect->y + rect->h;
-    poly->u0 = u;
-    poly->v0 = v;
-    poly->u1 = u + rect->w;
-    poly->v1 = v;
-    poly->u2 = u;
-    poly->v2 = v + rect->h;
-    poly->u3 = u + rect->w;
-    poly->v3 = v + rect->h;
+    setXYWH(poly, rect->x + 0x80, rect->y, rect->w, rect->h);
+    setUVWH(poly, u, v, rect->w, rect->h);
     poly->clut = clut;
     poly->tpage = tpage;
 

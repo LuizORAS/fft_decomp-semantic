@@ -4,7 +4,7 @@
 void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     u16 screen_coords[2];
     u16 screen_x;
-    u16 screen_y;
+    s16 screen_y;
     s32 screen_x_in_range;
 
     /* The camera-relative position is read unsigned (lhu) here. */
@@ -16,7 +16,7 @@ void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     if (!screen_x_in_range) {
         return;
     }
-    if ((u16)(screen_y + 0x1f) >= 0x12f) {
+    if (screen_y < -0x1f || screen_y > 0x10f) {
         return;
     }
     if ((unit->otag_depth_index - 1) >= 0x17f) {

@@ -15,7 +15,7 @@ void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work
         owner->work_head = work->next;
     }
     owner->work_count--;
-    switch ((s16)work->kind_flags & EFFECT_WORK_KIND_MASK) {
+    switch (work->kind_flags & EFFECT_WORK_KIND_MASK) {
     case EFFECT_WORK_KIND_LIST_NODE_0:
     case EFFECT_WORK_KIND_LIST_NODE_2:
     case EFFECT_WORK_KIND_LIST_NODE_4:

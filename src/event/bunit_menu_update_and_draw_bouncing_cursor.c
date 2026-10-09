@@ -14,7 +14,7 @@ void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) 
     s32 active_bit;
     s32 timer;
     s32 offset;
-    s32 offset_shifted;
+    s8 raw_offset;
     s32 i;
     u16 cursor_clut;
     u16 shadow_clut;
@@ -50,13 +50,13 @@ void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) 
     active_bit = active;
     if (active_bit != 0) {
         for (i = 0; g_bunit_menu_cursor_reverse_offset_keyframes[i] < timer; i += 2) { }
-        offset_shifted = (u8)g_bunit_menu_cursor_reverse_offset_keyframes[i + 1] << 24;
+        raw_offset = g_bunit_menu_cursor_reverse_offset_keyframes[i + 1];
     } else {
         for (i = 0; g_bunit_menu_cursor_forward_offset_keyframes[i] < timer; i += 2) { }
-        offset_shifted = (u8)g_bunit_menu_cursor_forward_offset_keyframes[i + 1] << 24;
+        raw_offset = g_bunit_menu_cursor_forward_offset_keyframes[i + 1];
     }
 
-    offset = offset_shifted >> 24;
+    offset = raw_offset;
     timer += bunit_menu_get_event_speed();
     active_bit = active;
     if (active_bit != 0) {

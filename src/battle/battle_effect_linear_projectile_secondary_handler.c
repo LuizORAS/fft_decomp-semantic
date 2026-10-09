@@ -157,8 +157,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             kind = g_battle_effect_current_secondary->used_weapon_id;
             if ((kind < 0x7d || kind > 0x7f) && (kind < 0xf0 || kind > 0xfd)
                 && g_battle_effect_current_secondary->target_count != 0) {
-                battle_unit_call_bow_hardcoding_by_misc_id(
-                    (u8)g_battle_effect_current_secondary->caster_block.values[1],
+                battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
                     g_battle_effect_current_secondary->target.fields.target_id);
             }
         }
@@ -178,7 +177,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             } else if (battle_effect_get_phase() == 1) {
                 if (g_battle_effect_current_secondary->target_count != 0) {
                     battle_unit_call_bow_hardcoding_by_misc_id(
-                        (u8)g_battle_effect_current_secondary->caster_block.values[1],
+                        g_battle_effect_current_secondary->caster.fields.caster_id,
                         g_battle_effect_current_secondary->target.fields.target_id);
                 }
                 battle_effect_set_phase_none();

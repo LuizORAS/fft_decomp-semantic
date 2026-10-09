@@ -363,7 +363,7 @@ void bunit_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void bunit_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 
 void bunit_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
 void bunit_gfx_enqueue_gouraud_textured_quad(
     const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index);
@@ -553,8 +553,8 @@ void bunit_menu_update_job(void);
 void bunit_menu_update_node_cursor(s16 mode);
 void bunit_menu_update_unit_browser(void);
 
-s32 bunit_menu_update_unit_grid(s32 allow_banner_toggle, s32 allow_browse, s32 show_stat_panel, s32 allow_stat_cycle,
-    s32 stat_mode, s32 buttons, s32 locked);
+s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 show_stat_panel, s16 allow_stat_cycle,
+    s16 stat_mode, s16 buttons, s16 locked);
 
 void bunit_menu_update_unit_list_scroll(s8* step, s8* offset);
 s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
@@ -670,7 +670,7 @@ extern u8 g_bunit_unit_list_initialized;
 extern u8 g_bunit_unit_list_triangle_menu_open;
 extern u8 g_bunit_unit_reorderable_count;
 extern s8 g_bunit_unit_dot_glow_direction;
-extern u8 g_bunit_unit_dot_glow_timer;
+extern s8 g_bunit_unit_dot_glow_timer;
 extern world_oriented_quad_t g_bunit_unit_dot_sprite;
 extern world_draw_number_command_t g_bunit_unit_grid_brave_number;
 extern world_draw_number_command_t g_bunit_unit_grid_brave_number_wide;

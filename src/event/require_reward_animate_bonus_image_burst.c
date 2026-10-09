@@ -37,7 +37,7 @@ extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
 void require_reward_animate_bonus_image_burst(void) {
     s32 phase;
     s32 max_delay;
-    s32 divisor;
+    u32 divisor;
     s32 angle_step;
     s32 radius_step;
     s32 done;
@@ -105,7 +105,7 @@ void require_reward_animate_bonus_image_burst(void) {
                     &g_require_reward_burst_rotated_offset);
                 dist = abs(g_require_reward_burst_rotated_offset.vx / ONE);
             }
-            dist = (dist * dist) / (u32)(divisor << 8);
+            dist = (dist * dist) / (divisor << 8);
             tile->delay = dist;
             tile->angle = 0;
             tile->radius = 0;

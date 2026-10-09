@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Set a BATTLE draw mode from aligned texture-page coordinates in a rect. */
-void battle_gfx_set_draw_mode_from_rect(void* mode, const u16* rect) {
-    SetDrawMode(mode, 0, 0, GetTPage(0, 0, (s16)(rect[0] & 0xffc0), (s16)(rect[1] & 0xff00)) & 0xffff,
-        &g_battle_menu_disabled_texture_window);
+void battle_gfx_set_draw_mode_from_rect(void* mode, const RECT* rect) {
+    SetDrawMode(
+        mode, 0, 0, GetTPage(0, 0, rect->x & ~0x3f, rect->y & ~0xff) & 0xffff, &g_battle_menu_disabled_texture_window);
 }

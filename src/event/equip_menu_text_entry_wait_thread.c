@@ -7,7 +7,7 @@ void equip_menu_text_entry_wait_thread(void) {
     world_menu_text_binding_t* task;
     u32* input;
     u16 text_id;
-    s32 header_id;
+    u16 header_id;
     u16 child_id;
     u16 task_arg;
 

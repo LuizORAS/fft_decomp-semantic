@@ -10,8 +10,8 @@
 void battle_gfx_build_scaled_draw_area_pair_swapped(
     world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag) {
     s32 percent;
-    u16 width;
-    u16 height;
+    s16 width;
+    s16 height;
     s32 offset;
 
     if (g_battle_event_speed == 2) {
@@ -30,10 +30,10 @@ void battle_gfx_build_scaled_draw_area_pair_swapped(
     }
     width = packets->rects[0].w;
     height = packets->rects[0].h;
-    offset = ((s16)width * percent) / 200;
-    packets->rects[0].x = (s16)width / 2 + packets->rects[0].x - offset;
-    offset = ((s16)height * percent) / 200;
-    packets->rects[0].y = (s16)height / 2 + packets->rects[0].y - offset;
+    offset = width * percent / 200;
+    packets->rects[0].x = width / 2 + packets->rects[0].x - offset;
+    offset = height * percent / 200;
+    packets->rects[0].y = height / 2 + packets->rects[0].y - offset;
     packets->rects[0].w = (packets->rects[0].w * percent) / 100;
     packets->rects[0].h = (packets->rects[0].h * percent) / 100;
     if (flag != 0) {

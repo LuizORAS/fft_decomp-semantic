@@ -228,7 +228,7 @@ typedef struct battle_menu_status_panel_slot_state {
                           * hiding pass; low bit of display_mode */
     s16 two_hands;       /* 0x10: two-hands flag; high bit of display_mode */
     u8 _unused_12[0x12]; /* 0x12: PA to magic accessory evade (world_item_stat_detail_t) */
-    u16 equipment[5];    /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
+    s16 equipment[5];    /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
                           * means "no entry"; otherwise rendered through the
                           * item-name text bank and passed to
                           * battle_gfx_set_item_icon_sprite */
@@ -640,7 +640,7 @@ typedef struct world_menu_entry {
     u8 _padding_22[0x24 - 0x22]; /* aligns row_actions */
     s16* row_actions;            /* 0x24 */
     void (*thread_entry)(void);  /* 0x28 */
-    u16 header_id;               /* 0x2c: menu header; text-thread parameter (world_menu_text_entry_thread); the
+    s16 header_id;               /* 0x2c: menu header; text-thread parameter (world_menu_text_entry_thread); the
                                     icon threads read it signed as the icon kind: 0x10 arrow, 0..4 single
                                     icon, 5..15 four-piece icon (world_menu_build_icon_record) */
     u8 _padding_2e[2];           /* aligns text_binding */

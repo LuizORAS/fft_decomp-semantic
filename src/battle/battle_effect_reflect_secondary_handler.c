@@ -94,8 +94,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
         rect.w = 6;
         rect.h = 1;
         LoadImage(&rect, (u32*)work->clut[g_battle_effect_buffer_index]);
-        caster
-            = battle_unit_get_screen_data_ptr_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1]);
+        caster = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id);
         target = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id);
         delta.vx = caster->vx - target->vx;
         delta.vy = caster->vy - target->vy;

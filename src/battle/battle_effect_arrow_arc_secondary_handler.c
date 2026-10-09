@@ -20,7 +20,6 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
     VECTOR scale;
     SVECTOR spin;
     battle_effect_arrow_buffer_t* work;
-    s32 phase;
     s32 velocity;
     s32 term;
     s32 previous;
@@ -31,8 +30,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
     s32 result;
     u8 flags;
 
-    phase = g_battle_effect_current_secondary->phase;
-    switch ((u32)phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
@@ -41,8 +39,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         g_battle_effect_arrow_arc_yaw = ratan2(-delta.vz, delta.vx);
         result = 1;
         g_battle_effect_arrow_arc_caster_relative_yaw = g_battle_effect_arrow_arc_yaw
-            - (((battle_unit_get_facing_quadrant_by_misc_id(
-                     (u8)g_battle_effect_current_secondary->caster_block.values[1])
+            - (((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id)
                     + 1)
                    & 3)
                 << 10);
@@ -107,7 +104,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         if (g_battle_effect_projectile_step_count == 2 && g_battle_effect_trajectory_hit_unit_id != -1
             && g_battle_effect_current_secondary->target_count != 0) {
-            battle_unit_call_bow_hardcoding_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1],
+            battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
                 g_battle_effect_current_secondary->target.fields.target_id);
         }
         if (--g_battle_effect_projectile_step_count == 0 || position.vy >= 0) {

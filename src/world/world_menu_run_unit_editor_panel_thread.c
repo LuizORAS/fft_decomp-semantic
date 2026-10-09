@@ -110,8 +110,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     for (i = 0; i < 5; i++) {
         world_gfx_init_image_loading(&frame_record->sprites[19 + i], &g_world_item_icon_image_location,
             &g_world_unit_editor_panel_rect, &g_world_unit_editor_item_icon_image_params[i]);
-        world_gfx_set_item_icon_sprite(
-            &frame_record->sprites[19 + i], (s16)g_world_unit_editor_fields.state.equipment[i]);
+        world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_fields.state.equipment[i]);
     }
 
     buffer = world_menu_alloc_buffer(0xC80);
@@ -119,8 +118,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
-        value = (s16)g_world_unit_editor_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
-        if (g_world_unit_editor_fields.state.equipment[i] == 0xFFFF) {
+        value = g_world_unit_editor_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
+        if ((u16)g_world_unit_editor_fields.state.equipment[i] == 0xFFFF) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -232,7 +231,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            if (g_world_unit_editor_fields.state.equipment[i] != 0xFFFF) {
+            if ((u16)g_world_unit_editor_fields.state.equipment[i] != 0xFFFF) {
                 world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }

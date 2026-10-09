@@ -24,7 +24,7 @@ extern s16 g_helpmenu_selected_unit_panel_mode;
 /* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
 extern s32 g_helpmenu_text_section_offsets[32];
 extern u8 g_helpmenu_text_data[];
-extern s32* g_helpmenu_controller_state_ptr;
+extern u32* g_helpmenu_controller_state_ptr;
 extern u16* g_helpmenu_current_text_ids;
 extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];

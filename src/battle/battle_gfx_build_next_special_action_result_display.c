@@ -85,21 +85,21 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
     case BATTLE_NUMERIC_DISPLAY_GAINED_EXP:
         if (digits[1] == 0) {
             battle_gfx_store_sprite_display_data(display_0, 0, -7, -24, 0xc0, 0xb8, 0x12, 9, 0);
-            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, 0xa8 + digits[0] * 8, 0x30, 8, 16, 0);
         } else {
             battle_gfx_store_sprite_display_data(display_0, 0, -7, -24, 0xc0, 0xb8, 0x12, 9, 0);
-            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
-            battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, (s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, 0xa8 + digits[0] * 8, 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, 0xa8 + digits[1] * 8, 0x30, 8, 16, 0);
         }
         break;
     case BATTLE_NUMERIC_DISPLAY_GAINED_JP:
         if (digits[1] == 0) {
             battle_gfx_store_sprite_display_data(display_0, 0, -7, -24, 0xb4, 0xb8, 0x0c, 9, 0);
-            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, 0xa8 + digits[0] * 8, 0x30, 8, 16, 0);
         } else {
             battle_gfx_store_sprite_display_data(display_0, 0, -7, -24, 0xb4, 0xb8, 0x0c, 9, 0);
-            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
-            battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, (s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_1, 0, -14, -32, 0xa8 + digits[0] * 8, 0x30, 8, 16, 0);
+            battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, 0xa8 + digits[1] * 8, 0x30, 8, 16, 0);
         }
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_TARGET:

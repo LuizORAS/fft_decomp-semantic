@@ -28,7 +28,7 @@ void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_
         tile = attr & 0x3ff;
         u = (tile & 0x1f) * 8;
         v = (tile >> 5) * 8;
-        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8),
-            (s16)(height * 8), (flags & 0x61) | ((attr & 0xc000) >> 13));
+        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8,
+            (flags & 0x61) | ((attr & 0xc000) >> 13));
     }
 }

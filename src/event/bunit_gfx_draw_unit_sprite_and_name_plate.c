@@ -42,7 +42,6 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     s32 dx;
     s32 orientation;
     s32 value;
-    s32 pulse;
     s32 size;
 
     i = bunit_gfx_calculate_distance_falloff(x, y, 0xC8, 0x50);
@@ -98,17 +97,16 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     }
     g_bunit_unit_dot_sprite.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     if (unit == g_bunit_unit_selected_index) {
-        pulse = g_bunit_unit_dot_glow_timer + g_bunit_unit_dot_glow_direction * 2;
-        g_bunit_unit_dot_glow_timer = pulse;
-        if ((s8)pulse > 0x28) {
+        g_bunit_unit_dot_glow_timer += g_bunit_unit_dot_glow_direction * 2;
+        if (g_bunit_unit_dot_glow_timer > 0x28) {
             g_bunit_unit_dot_glow_direction = -1;
         }
-        if ((s8)pulse < -0x28) {
+        if (g_bunit_unit_dot_glow_timer < -0x28) {
             g_bunit_unit_dot_glow_direction = 1;
         }
-        rgb[0] += pulse;
-        rgb[1] += pulse;
-        rgb[2] += pulse;
+        rgb[0] += g_bunit_unit_dot_glow_timer;
+        rgb[1] += g_bunit_unit_dot_glow_timer;
+        rgb[2] += g_bunit_unit_dot_glow_timer;
     }
     bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
 }

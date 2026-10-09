@@ -6,15 +6,15 @@ void battle_effect_reset_parent_timeline(struct battle_effect_parent_timeline_st
 /* Allocate an effect state record for a script and reset its per-handler state.
  * Returns the record index, or 0 when none is available. */
 s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index) {
-    s32 index;
+    s16 index;
     s16 i;
     effect_record_t* record;
 
     index = battle_effect_alloc_state_record();
-    if ((s16)index == 0) {
+    if (index == 0) {
         return 0;
     }
-    record = &g_effect_state_records[(s16)index];
+    record = &g_effect_state_records[index];
     record->parent_index = parent_index;
     record->script = script;
     record->pc = start_pc;

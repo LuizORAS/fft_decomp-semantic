@@ -66,23 +66,13 @@ typedef struct battle_gfx_part_prim {
  * test with its duplicated `addPrim(ot, prim)` arm is the original shape: jump
  * optimisation merges the arms, but the references counted before that merge
  * give `ot` the allocation priority that places it in $s5 ahead of `display`. */
-/* clang-format off */
-void battle_gfx_construct_polygon_data_for_units(display, end, start, position, angle, mode, scale, ot)
-    battle_gfx_sprite_display_data_t* display;
-    s32 end;
-    s32 start;
-    SVECTOR* position;
-    s16 angle;
-    u16 mode;
-    SVECTOR* scale;
-    u32* ot;
-/* clang-format on */
-{
+void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_t* display, s32 end, s32 start,
+    SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot) {
     VECTOR unused;
     battle_gfx_sprite_part_display_data_t* part;
     battle_gfx_part_prim_t* prim;
     s32 i;
-    u16 flags;
+    s16 flags;
     s16 index;
     s16 x;
     s16 y;

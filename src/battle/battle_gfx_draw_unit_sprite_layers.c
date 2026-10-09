@@ -41,7 +41,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     if (unit->numeric_display_active) {
         battle_gfx_animate_post_action_text(unit, (u16*)&position);
     }
-    if (!(((u16)position.vx >= 0x61 && (u16)position.vx < 0x1a0) && (position.vy >= -0x1f && position.vy <= 0x10f))
+    if (!((position.vx >= 0x61 && position.vx <= 0x19f) && (position.vy >= -0x1f && position.vy <= 0x10f))
         && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }
@@ -117,7 +117,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
             } else {
                 display = unit->sprite_display_section;
                 battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
-                    (s16)(flags ^ unit->animation_flags), &zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    flags ^ unit->animation_flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             }
         }
         if (unit->shadow_graphic_trigger) {

@@ -16,9 +16,8 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     u16 size;
     s32 u;
     u32 tile_index;
-    u32 part_flags;
+    s16 part_flags;
     u32 row;
-    u32 mask;
 
     y_offset = unit->special_graphic_y_offset;
     /* The selector returns a raw SHP pointer or the -1 sentinel. */
@@ -53,7 +52,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                 part_u = (tile & 0x1f) * 8;
                 part_v = y_offset + (tile >> 5) * 8;
                 battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
-                    (s16)(width * 8), (s16)(height * 8), (flags & 0x61) | ((attr & 0xc000) >> 13));
+                    width * 8, height * 8, (flags & 0x61) | ((attr & 0xc000) >> 13));
             }
         }
     } else if (frame < (u32)sprite->shp[0]) {
@@ -61,10 +60,6 @@ void battle_gfx_load_trap_and_unit_frame_parts(
         display->clut = unit->vram_palette_id;
         i = 0;
         if (count != 0) {
-            mask = flags & 0x61;
-            /* Emits nothing; keeps the target's separate `andi 0xff` of the
-             * hoisted mask, which combine would fold into the `andi 0x61`. */
-            __asm__("" : "=r"(mask) : "0"(mask));
             do {
                 part = &frame_data->parts[i];
                 attr = part->attributes;
@@ -83,16 +78,16 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         width = g_battle_gfx_part_sizes[size].width;
                         height = g_battle_gfx_part_sizes[size].height;
                         battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
-                            (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
+                            width * 8, height * 8, (flags & 0x61) | ((attr & 0xc000) >> 13));
                     } else {
                         tile_index = attr & 0x3ff;
                         u = (tile_index & 0x1f) * 8;
                         row = tile_index >> 5;
-                        part_flags = (u8)mask | ((attr & 0xc000) >> 13);
-                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)(part->y_shift + 0x18), u,
-                            (row * 8 + 0x18), 0x30, 0x18, part_flags);
-                        battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, u,
-                            (s16)(row * 8), 0x30, 0x18, part_flags | 0x80);
+                        part_flags = (flags & 0x61) | ((attr & 0xc000) >> 13);
+                        battle_gfx_store_sprite_display_data(
+                            display, i, part->x_shift, part->y_shift + 0x18, u, row * 8 + 0x18, 0x30, 0x18, part_flags);
+                        battle_gfx_store_sprite_display_data(
+                            display, i + 1, part->x_shift, part->y_shift, u, row * 8, 0x30, 0x18, part_flags | 0x80);
                         display->part_count++;
                         return;
                     }
@@ -108,7 +103,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                     part_u = (tile & 0x1f) * 8;
                     part_v = y_offset + (tile >> 5) * 8;
                     battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
-                        (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
+                        width * 8, height * 8, (flags & 0x61) | ((attr & 0xc000) >> 13));
                 }
             } while (++i < count);
         }

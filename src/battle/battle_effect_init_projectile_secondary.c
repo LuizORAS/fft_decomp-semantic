@@ -13,7 +13,7 @@ s32 battle_effect_init_projectile_secondary(s32 animation, battle_effect_seconda
     g_battle_effect_secondary_data[target_id].parameter = animation >> 16;
     g_battle_effect_secondary_data[target_id].function_id
         = g_battle_effect_secondary_animations[g_battle_effect_secondary_data[target_id].animation_id].function_id;
-    g_battle_effect_secondary_data[target_id].caster_block = source->caster.block;
+    g_battle_effect_secondary_data[target_id].caster.block = source->caster.block;
     g_battle_effect_secondary_data[target_id].target.block = source->target[0].block;
     g_battle_effect_secondary_data[target_id].used_weapon_id = source->used_weapon_id;
     g_battle_effect_secondary_data[target_id].phase = BATTLE_SECONDARY_EFFECT_INITIALIZING;

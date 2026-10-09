@@ -52,7 +52,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     u32 otags[128];
     bunit_gfx_context_t buffers[2];
     u8 previous_mode;
-    s32 running;
+    u8 running;
     s32 sound_id;
     s32 sound_request;
 
@@ -110,8 +110,8 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         } else {
             running = bunit_menu_run_unit_list_frame();
             bunit_menu_update_unit_grid(1, 1, 1, 1, 0,
-                g_bunit_help_screen_id == MENU_GRID_HELP_NONE ? (s16)g_bunit_input_secondary_repeat : 0,
-                (s16)bunit_menu_is_active_or_transitioning());
+                g_bunit_help_screen_id == MENU_GRID_HELP_NONE ? g_bunit_input_secondary_repeat : 0,
+                bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();
         g_battle_gfx_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
@@ -136,7 +136,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         }
         g_bunit_sound_queued_effect_id = MAIN_SFX_NONE;
         g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
-    } while ((u8)running != 0);
+    } while (running != 0);
     bunit_thread_toggle_9_and_12(0);
     bunit_panel_toggle_unit_status_thread(0);
     while (DrawSync(1) != 0) { }

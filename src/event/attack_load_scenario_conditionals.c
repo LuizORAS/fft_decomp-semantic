@@ -51,7 +51,7 @@ s32 attack_load_scenario_conditionals(void) {
     s32 ramza;
     s32 script;
     s16* conditions;
-    u16* base;
+    s16* base;
     s32 first;
     s32 count;
 
@@ -163,8 +163,8 @@ s32 attack_load_scenario_conditionals(void) {
     attack_load_unaligned_s16(scenario->next_scenario);
     attack_load_unaligned_s16(scenario->after_event);
     script = attack_load_unaligned_s16(scenario->event_script);
-    base = (u16*)g_attack_event_condition_blocks;
-    conditions = (s16*)(base + (s16)((u16*)g_attack_event_condition_blocks)[script] / 2);
+    base = (s16*)g_attack_event_condition_blocks;
+    conditions = base + base[script] / 2;
     first = *conditions;
     for (i = 0; i < 16; i++) {
         g_main_scenario_condition_offsets[i] = *conditions - first;

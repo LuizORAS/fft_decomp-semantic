@@ -2,10 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Offsets of the unit inside its 28-unit tile along X and Z. */
-#define TILE_OFFSET_X ((s16)(coords.vx % 28))
-#define TILE_OFFSET_Z ((s16)(coords.vz % 28))
-
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit) {
     SVECTOR coords;
     SVECTOR unused; /* unreferenced; keeps the 0x30-byte target frame */
@@ -26,7 +22,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     battle_unit_copy_misc_data_xyz_values(&coords, unit);
     tile = battle_map_get_tile_data_pointer((coords.vx / 28), (coords.vz / 28), layer);
     depth = tile->depth_half_height.value;
-    height = tile->height;
+    height = tile->height + (depth >> MAP_TILE_DEPTH_SHIFT);
     slope_type = tile->slope_type;
     quad = unit->shadow_quad;
     quad[0].vx = coords.vx - 10;
@@ -37,7 +33,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     quad[2].vz = coords.vz - 10;
     quad[3].vx = coords.vx + 10;
     quad[3].vz = coords.vz - 10;
-    quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = -((u8)(height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 12);
+    quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = -(height * 12);
     slope = depth & MAP_TILE_HALF_HEIGHT_MASK;
     if (slope == 0) {
         return;
@@ -72,8 +68,10 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
         quad[0].vy = quad[1].vy = quad[1].vy - 6;
         break;
     case MAP_SLOPE_LOW_CORNER_NORTH_EAST: /* low corner, north-east up */
-        lhs = TILE_OFFSET_X;
-        rhs = TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = tx;
+        rhs = ty;
         if (lhs < rhs) {
             rise = lhs * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
@@ -83,10 +81,12 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
         }
         break;
     case MAP_SLOPE_LOW_CORNER_SOUTH_EAST: /* low corner, south-east up */
-        lhs = TILE_OFFSET_X;
-        rhs = 28 - TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = tx;
+        rhs = 28 - ty;
         if (lhs >= rhs) {
-            rise = TILE_OFFSET_Z * 12;
+            rise = ty * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         } else {
             rise = lhs * 12;
@@ -94,30 +94,36 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
         }
         break;
     case MAP_SLOPE_LOW_CORNER_SOUTH_WEST: /* low corner, south-west up */
-        lhs = 28 - TILE_OFFSET_X;
-        rhs = 28 - TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = 28 - tx;
+        rhs = 28 - ty;
         if (lhs >= rhs) {
-            rise = TILE_OFFSET_Z * 12;
+            rise = ty * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         } else {
-            rise = TILE_OFFSET_X * 12;
+            rise = tx * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         }
         break;
     case MAP_SLOPE_LOW_CORNER_NORTH_WEST: /* low corner, north-west up */
-        lhs = 28 - TILE_OFFSET_X;
-        rhs = TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = 28 - tx;
+        rhs = ty;
         if (lhs >= rhs) {
             rise = rhs * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
         } else {
-            rise = TILE_OFFSET_X * 12;
+            rise = tx * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_NORTH_EAST: /* high corner, north-east up */
-        lhs = TILE_OFFSET_X;
-        rhs = TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = tx;
+        rhs = ty;
         if (lhs >= rhs) {
             rise = lhs * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
@@ -127,32 +133,38 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST: /* high corner, south-east up */
-        lhs = TILE_OFFSET_X;
-        rhs = 28 - TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = tx;
+        rhs = 28 - ty;
         if (lhs >= rhs) {
             rise = lhs * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
         } else {
-            rise = TILE_OFFSET_Z * 12;
+            rise = ty * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST: /* high corner, south-west up */
-        lhs = 28 - TILE_OFFSET_X;
-        rhs = 28 - TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = 28 - tx;
+        rhs = 28 - ty;
         if (lhs < rhs) {
-            rise = TILE_OFFSET_Z * 12;
+            rise = ty * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         } else {
-            rise = TILE_OFFSET_X * 12;
+            rise = tx * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_NORTH_WEST: /* high corner, north-west up */
-        lhs = 28 - TILE_OFFSET_X;
-        rhs = TILE_OFFSET_Z;
+        tx = coords.vx % 28;
+        ty = coords.vz % 28;
+        lhs = 28 - tx;
+        rhs = ty;
         if (lhs >= rhs) {
-            rise = TILE_OFFSET_X * 12;
+            rise = tx * 12;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
         } else {
             rise = rhs * 12;

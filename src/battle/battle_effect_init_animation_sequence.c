@@ -7,7 +7,7 @@
 void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index) {
     u8* sequences;
     u8* entry;
-    s32 offset;
+    s16 offset;
     u16 flags;
 
     sequences = g_battle_effect_animation_sequences;
@@ -19,5 +19,5 @@ void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_
     state->frame_timer = 0;
     state->kind = flags;
     /* Integer addition preserves the original register order. */
-    state->sequence_data = (u8*)((s16)offset + (s32)sequences);
+    state->sequence_data = (u8*)(offset + (s32)sequences);
 }

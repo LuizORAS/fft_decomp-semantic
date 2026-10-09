@@ -75,7 +75,7 @@ s32 bunit_run_ability_list_menu(void) {
             g_bunit_menu_scroll_base_index, g_bunit_ability_entries);
         g_bunit_ability_category = category;
         bunit_create_ability_list(
-            g_bunit_unit_selected_index, g_bunit_job_selected_id, (s16)category, g_bunit_ability_entries, 0);
+            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
         bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_bunit_ability_entries);
         bunit_menu_init_scrollable_list(
             g_bunit_ability_entries, selected, scroll, g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);

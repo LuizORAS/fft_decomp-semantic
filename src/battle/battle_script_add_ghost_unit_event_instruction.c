@@ -13,7 +13,7 @@ s32 battle_script_add_ghost_unit_event_instruction(
         g_battle_gfx_unit_graphics_load_state[2] = 0;
         g_battle_gfx_unit_graphics_load_state[3] = 0;
         battle_gfx_append_unit_graphics_load_descriptor(
-            map_x, map_y, map_level, map_height, portrait_id, 0, (s16)misc_id, 0, flags);
+            map_x, map_y, map_level, map_height, portrait_id, 0, misc_id, 0, flags);
         ret = 1;
     }
     return ret;

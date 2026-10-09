@@ -404,7 +404,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         }
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;
-        if ((s16)entry->header_id >= 5) {
+        if (entry->header_id >= 5) {
             battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
             battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[1]);
             if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0) {

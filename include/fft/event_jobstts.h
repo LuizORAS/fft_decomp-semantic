@@ -163,7 +163,7 @@ extern s16 g_jobstts_gfx_sprite_16_count;
 void jobstts_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 
 void jobstts_gfx_enqueue_textured_quad(
-    urect16_t* rect, s32 u, s32 v, u8* color, s32 semitrans, s32 tpage, s32 clut, s32 ot_index);
+    RECT* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
 
 s32 jobstts_gfx_get_transition_frame(void);
 
@@ -231,7 +231,7 @@ s32 jobstts_job_is_special_monster(s32 job_id);
 extern s8 g_jobstts_menu_event_speed;
 extern s16* g_jobstts_menu_list_entries;
 extern s16 g_jobstts_menu_list_entry_count;
-extern u16 g_jobstts_menu_list_row_height;
+extern s16 g_jobstts_menu_list_row_height;
 extern s32 g_jobstts_menu_list_row_index;
 extern s16 g_jobstts_menu_list_row_rendering;
 extern s16 g_jobstts_menu_list_scroll_offset_y;
@@ -274,7 +274,7 @@ void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
-void jobstts_menu_update_and_draw_animated_cursor(urect16_t* anchor, u16* state, s32 mode);
+void jobstts_menu_update_and_draw_animated_cursor(RECT* anchor, u16* state, s32 mode);
 
 /* text */
 extern u8 g_jobstts_text_color[3];

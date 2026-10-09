@@ -32,7 +32,7 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
         g_battle_effect_secondary_data[target_id].parameter = elements;
         g_battle_effect_secondary_data[target_id].function_id
             = g_battle_effect_secondary_animations[g_battle_effect_secondary_data[target_id].animation_id].function_id;
-        g_battle_effect_secondary_data[target_id].caster_block = source->caster.block;
+        g_battle_effect_secondary_data[target_id].caster.block = source->caster.block;
         g_battle_effect_secondary_data[target_id].target.block = source->target[0].block;
         g_battle_effect_secondary_data[target_id].timer = 0;
         g_battle_effect_secondary_data[target_id].phase = BATTLE_SECONDARY_EFFECT_INITIALIZING;

@@ -9,8 +9,7 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
     s32 frame;
     s32 table_offset;
     s32 x_offset;
-    s32 raw_offset;
-    s32 threshold;
+    s8 raw_offset;
     u16 foreground_clut;
     u16 background_clut;
 
@@ -46,23 +45,13 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
     }
     state_value = reverse;
     if (state_value != 0) {
-        table_offset = 0;
-        threshold = (s8)g_card_menu_cursor_reverse_offset_keyframes[table_offset];
-        while (threshold < frame) {
-            table_offset += 2;
-            threshold = (s8)g_card_menu_cursor_reverse_offset_keyframes[table_offset];
-        }
+        for (table_offset = 0; g_card_menu_cursor_reverse_offset_keyframes[table_offset] < frame; table_offset += 2) { }
         raw_offset = g_card_menu_cursor_reverse_offset_keyframes[table_offset + 1];
     } else {
-        table_offset = 0;
-        threshold = (s8)g_card_menu_cursor_forward_offset_keyframes[table_offset];
-        while (threshold < frame) {
-            table_offset += 2;
-            threshold = (s8)g_card_menu_cursor_forward_offset_keyframes[table_offset];
-        }
+        for (table_offset = 0; g_card_menu_cursor_forward_offset_keyframes[table_offset] < frame; table_offset += 2) { }
         raw_offset = g_card_menu_cursor_forward_offset_keyframes[table_offset + 1];
     }
-    x_offset = (s8)raw_offset;
+    x_offset = raw_offset;
 
     frame += card_menu_get_event_speed();
     state_value = reverse;

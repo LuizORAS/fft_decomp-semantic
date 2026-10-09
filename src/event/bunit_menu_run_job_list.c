@@ -9,7 +9,7 @@ s32 bunit_menu_run_job_list(void) {
 
     if (g_bunit_job_list_initialized == 0) {
         bunit_menu_set_vsync_mode_and_event_speed(2);
-        bunit_job_build_unit_job_list((u8)g_bunit_unit_selected_index, g_bunit_job_ids, 0);
+        bunit_job_build_unit_job_list(g_bunit_unit_selected_index & 0xff, g_bunit_job_ids, 0);
         g_bunit_menu_row_callbacks[0] = bunit_job_calculate_current_level;
         g_bunit_menu_row_callbacks[2] = bunit_job_calculate_current_jp;
         g_bunit_menu_row_callbacks[5] = bunit_job_calculate_next_level_jp_requirement;

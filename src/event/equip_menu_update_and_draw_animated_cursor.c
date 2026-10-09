@@ -19,7 +19,7 @@ void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* st
     s32 active_test;
     s32 frame;
     s32 i;
-    u8 raw_offset;
+    s8 raw_offset;
     s32 x_offset;
     u16 clut;
     u16 shadow_clut;
@@ -58,7 +58,7 @@ void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* st
         for (i = 0; g_equip_menu_cursor_forward_offset_keyframes[i] < frame; i += 2) { }
         raw_offset = g_equip_menu_cursor_forward_offset_keyframes[i + 1];
     }
-    x_offset = (s8)raw_offset;
+    x_offset = raw_offset;
 
     frame += equip_menu_get_event_speed();
     active_test = active;

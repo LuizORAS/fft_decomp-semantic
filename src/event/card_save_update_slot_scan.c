@@ -154,8 +154,8 @@ void card_save_update_slot_scan(void) {
             status = 1;
             result = 0;
             while (result < g_card_save_file_count) {
-                status = strcmp(g_card_save_file_names[g_card_save_slot_scan_index],
-                    (const char*)g_card_save_menu_work_buffer[result].name);
+                status = strcmp(
+                    g_card_save_file_names[g_card_save_slot_scan_index], g_card_save_menu_work_buffer[result].name);
                 if (status == 0) {
                     break;
                 }

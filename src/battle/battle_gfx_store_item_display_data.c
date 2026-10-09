@@ -14,6 +14,6 @@ void battle_gfx_store_item_display_data(battle_unit_misc_data_t* unit, u32 item_
 
     battle_gfx_set_item_icon_sprite((SPRT*)&data, item_id);
     unit->item_display->clut = data.clut;
-    battle_gfx_store_sprite_display_data(unit->item_display, 0, (s16)((16 - data.width) / 2 - 8),
-        (s16)((16 - data.height) / 2 - 8), data.x_load_location, data.y_load_location, data.width, data.height, 0);
+    battle_gfx_store_sprite_display_data(unit->item_display, 0, (16 - data.width) / 2 - 8, (16 - data.height) / 2 - 8,
+        data.x_load_location, data.y_load_location, data.width, data.height, 0);
 }

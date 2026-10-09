@@ -94,7 +94,7 @@ void battle_gfx_run_wep_eff_seq_script(
             case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_2:
                 if (g_battle_state_animation_continue_check != 0) {
                     offset = (s8)seq[anim][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
@@ -123,10 +123,10 @@ void battle_gfx_run_wep_eff_seq_script(
                 count = seq[anim][pos++];
                 if (sprite->loop_count != 0) {
                     if (--sprite->loop_count != 0) {
-                        pos = offset + (s16)(pos - 4);
+                        pos += offset - 4;
                     }
                 } else {
-                    pos = offset + (s16)(pos - 4);
+                    pos += offset - 4;
                     sprite->loop_count = count;
                 }
                 break;
@@ -163,14 +163,14 @@ void battle_gfx_run_wep_eff_seq_script(
             case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_1:
                 if (g_battle_state_animation_continue_check == 1) {
                     offset = (s8)seq[anim][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
             case BATTLE_SEQ_OP_HOLD_WEAPON:
                 offset = (s8)seq[anim][pos];
-                pos = offset + (s16)(pos - 2);
+                pos += offset - 2;
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_D7:
             case BATTLE_SEQ_OP_UNKNOWN_E3:
@@ -240,7 +240,7 @@ void battle_gfx_run_wep_eff_seq_script(
                     v = (tile >> 5) * 8 + graphic_v;
                     mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
                     battle_gfx_store_sprite_display_data(
-                        display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
+                        display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);
                 }
                 break;
             case BATTLE_SPRITE_GRAPHIC_EFFECT:
@@ -265,7 +265,7 @@ void battle_gfx_run_wep_eff_seq_script(
                     v = (tile >> 5) * 8;
                     mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
                     battle_gfx_store_sprite_display_data(
-                        display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
+                        display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);
                 }
                 break;
             }

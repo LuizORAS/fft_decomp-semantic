@@ -2,28 +2,17 @@
 #include "psx/types.h"
 
 s32 bunit_ability_get_ct_display_value(s32 index) {
-    s32 ability;
+    s32 entry = g_bunit_ability_entries[index];
     s32 result;
 
-    ability = g_bunit_ability_entries[index];
-    result = MENU_NUMBER_VALUE_DASHES;
-
-    if ((ability & ABILITY_LIST_ENTRY_HIDE_DETAILS) == 0) {
-        s32 quotient;
-        s32 remainder;
-
+    if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
+        result = MENU_NUMBER_VALUE_DASHES;
+    } else {
         result = ((ability_secondary_data_t*)g_bunit_ability_selected_specific)->ct;
-        quotient = 100 / result;
-        remainder = 100 % result;
-        result = quotient + (remainder != 0);
+        result = (100 / result) + ((100 % result) != 0);
     }
-    {
-        /* The (s16) keeps the lh as one value; without it combine splits it into lhu/sll/sra and adds a frame. */
-        s32 ability_type = (s16)ability >> ABILITY_LIST_ENTRY_DISABLED_SHIFT;
-
-        if (ability_type != 0) {
-            result |= MENU_NUMBER_VALUE_DISABLED;
-        }
+    if (entry >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) {
+        result |= MENU_NUMBER_VALUE_DISABLED;
     }
     return result;
 }

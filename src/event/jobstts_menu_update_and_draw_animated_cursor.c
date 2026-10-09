@@ -20,13 +20,13 @@
  * `active`, including the copy the first `if` leaves dead. Branching on
  * `active` directly, or dropping that dead copy, coalesces the two pseudos
  * and changes both the register assignment and the clamp join. */
-void jobstts_menu_update_and_draw_animated_cursor(urect16_t* anchor, u16* state, s32 mode) {
-    urect16_t rect;
+void jobstts_menu_update_and_draw_animated_cursor(RECT* anchor, u16* state, s32 mode) {
+    RECT rect;
     s32 active;
     s32 active_test;
     s32 frame;
     s32 i;
-    u8 raw_offset;
+    s8 raw_offset;
     s32 x_offset;
     u16 clut;
     u16 shadow_clut;
@@ -65,7 +65,7 @@ void jobstts_menu_update_and_draw_animated_cursor(urect16_t* anchor, u16* state,
         for (i = 0; g_jobstts_menu_cursor_forward_offset_keyframes[i] < frame; i += 2) { }
         raw_offset = g_jobstts_menu_cursor_forward_offset_keyframes[i + 1];
     }
-    x_offset = (s8)raw_offset;
+    x_offset = raw_offset;
 
     frame += jobstts_menu_get_event_speed();
     active_test = active;

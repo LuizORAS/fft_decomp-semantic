@@ -6,10 +6,10 @@
  * terminator (-1) has been copied. The first parameter is unused. */
 void bunit_unit_copy_reorder_list_to_orders(s32 unused, const s16* entries) {
     s32 index = 0;
-    u8 value = *entries;
+    s8 value = *entries;
 
     g_main_item_type_order_tables.order_0[index] = value;
-    while ((s8)value != -1) {
+    while (value != -1) {
         entries++;
         value = *entries;
         index += 1;

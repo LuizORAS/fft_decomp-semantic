@@ -12,5 +12,5 @@ s32 bunit_unit_get_max_stat(s32 unit_index) {
         value = 100;
     }
     g_bunit_unit_max_stat_value = value;
-    return (s16)value;
+    return g_bunit_unit_max_stat_value;
 }

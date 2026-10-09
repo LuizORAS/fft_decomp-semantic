@@ -1,17 +1,17 @@
 #include "fft/event_jobstts.h"
 
 u8* jobstts_cmd_draw_textured_quad_handler(u8* data) {
-    urect16_t rect;
+    RECT rect;
     s32 y;
     u8* pal;
 
     if (g_jobstts_menu_list_row_rendering == 0) {
         y = data[4];
     } else {
-        y = (((s16)g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[4])
+        y = ((g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[4])
             - g_jobstts_menu_list_scroll_offset_y;
         if (g_jobstts_menu_list_scroll_offset_y < 0) {
-            y -= (s16)g_jobstts_menu_list_row_height;
+            y -= g_jobstts_menu_list_row_height;
         }
     }
     rect.x = data[3];

@@ -5,6 +5,6 @@ battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_so
     /* item_t list rows are halfword entries whose low byte is the item id
      * (see equip_item_build_type_icon_source / equip_menu_get_entry_item_equipped_count). */
     /* 6-halfword descriptor filled by equip_gfx_build_item_graphic_descriptor. */
-    equip_gfx_build_item_graphic_descriptor(&g_equip_item_graphic_descriptor, (u8)g_equip_item_list_entries[row]);
+    equip_gfx_build_item_graphic_descriptor(&g_equip_item_graphic_descriptor, g_equip_item_list_entries[row] & 0xff);
     return &g_equip_item_graphic_descriptor;
 }

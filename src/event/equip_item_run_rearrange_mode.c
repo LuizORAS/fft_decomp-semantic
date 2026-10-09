@@ -58,7 +58,7 @@ s32 equip_item_run_rearrange_mode(void) {
     }
     scroll_offset = g_equip_menu_scroll_base_index;
     row = g_equip_rearrange_picked_cursor - scroll_offset;
-    if ((u32)row < 8) {
+    if (row >= 0 && row < 8) {
         frame = g_equip_rearrange_anim_frame++;
         if (frame & 1) {
             tile = g_equip_menu_cursor_mode0_foreground_clut;
@@ -70,7 +70,7 @@ s32 equip_item_run_rearrange_mode(void) {
         rect.w = 0x10;
         rect.h = 0x10;
         rect.x = 0;
-        rect.y = row * 16 - (s16)(g_equip_menu_list_scroll_offset - 0x5E);
+        rect.y = row * 16 + 0x5E - g_equip_menu_list_scroll_offset;
         equip_gfx_enqueue_textured_quad(&rect, 0xA8, 0, 0, 0, 0x5F, tile, 0x1F);
         rect.x += 2;
         rect.y += 2;

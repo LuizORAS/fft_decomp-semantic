@@ -20,15 +20,6 @@ void card_bits_write_primary(s32 value);
 void card_bits_init_secondary_reader(const u8* data);
 
 /* card */
-/* BIOS directory entry as returned by firstfile/nextfile and consumed by
- * card_file_enumerate_saves (0x801c2c60) and card_file_count_free_blocks. */
-typedef struct card_directory_entry {
-    u8 name[20];
-    u32 attributes;
-    s32 size;
-    u8 remainder[12];
-} card_directory_entry_t;
-
 extern u8 g_card_io_operation_pending;
 extern u8 g_card_io_selected_slot;
 extern s8 g_card_io_open_result;
@@ -67,8 +58,8 @@ s32 card_file_read_with_retries(s32 descriptor, void* destination, s32 size);
 s32 card_file_seek_with_retries(s32 descriptor, s32 offset, s32 origin);
 s32 card_file_write_buffer(const char* filename, const u8* source, s32 size, s32 create_file);
 s32 card_file_write_with_retries(s32 descriptor, const void* source, s32 size);
-s32 card_file_count_free_blocks(const card_directory_entry_t* entries, s32 entry_count);
-s32 card_file_enumerate_saves(card_directory_entry_t* entries, s32 all_files);
+s32 card_file_count_free_blocks(const DIRENTRY* entries, s32 entry_count);
+s32 card_file_enumerate_saves(DIRENTRY* entries, s32 all_files);
 
 /* gfx */
 /*
@@ -162,7 +153,7 @@ s32 card_gfx_update_decreasing_fade(void);
 s32 card_gfx_update_increasing_fade(void);
 
 void card_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
 void card_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
 
@@ -198,12 +189,12 @@ void card_input_update_event_state(void* state, u32 input, s32 count_frame);
 
 /* menu */
 
-extern const u8 g_card_menu_cursor_forward_offset_keyframes[];
+extern const s8 g_card_menu_cursor_forward_offset_keyframes[];
 extern u16 g_card_menu_cursor_mode0_background_clut;
 extern u16 g_card_menu_cursor_mode0_foreground_clut;
 extern u16 g_card_menu_cursor_mode1_background_clut;
 extern u16 g_card_menu_cursor_mode1_foreground_clut;
-extern const u8 g_card_menu_cursor_reverse_offset_keyframes[];
+extern const s8 g_card_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_card_menu_cursor_texture_page;
 extern s8 g_card_menu_event_speed;
 extern s16 g_card_menu_selection_index;
@@ -257,7 +248,7 @@ extern world_menu_entry_t g_card_save_initial_prompt_descriptor[];
 extern u8 g_card_save_initial_prompt_thread_state;
 extern u16 g_card_save_menu_palette_image[0x100];
 extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
-extern card_directory_entry_t* g_card_save_menu_work_buffer;
+extern DIRENTRY* g_card_save_menu_work_buffer;
 extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];
 extern u16 g_card_save_slot_cursor_animation[];
 extern u16 g_card_save_slot_cursor_position[];

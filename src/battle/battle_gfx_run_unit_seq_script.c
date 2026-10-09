@@ -135,7 +135,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_2:
                 if (g_battle_state_animation_continue_check != 0) {
                     offset = (s8)seq->frames[anim_index][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
@@ -195,10 +195,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 count = seq->frames[anim_index][pos++];
                 if (state->loop_count != 0) {
                     if (--state->loop_count != 0) {
-                        pos = offset + (s16)(pos - 4);
+                        pos += offset - 4;
                     }
                 } else {
-                    pos = offset + (s16)(pos - 4);
+                    pos += offset - 4;
                     state->loop_count = count;
                 }
                 break;
@@ -257,7 +257,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_WAIT_FOR_INPUT:
                 if (g_battle_action_post_action == 0) {
                     offset = (s8)seq->frames[anim_index][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
@@ -268,7 +268,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_1:
                 if (g_battle_state_animation_continue_check == 1) {
                     offset = (s8)seq->frames[anim_index][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
@@ -286,14 +286,14 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_WAIT_FOR_DISTORT:
                 if (unit->distortion_animation_id != 0) {
                     offset = (s8)seq->frames[anim_index][pos];
-                    pos = offset + (s16)(pos - 2);
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
             case BATTLE_SEQ_OP_HOLD_WEAPON:
                 offset = (s8)seq->frames[anim_index][pos];
-                pos = offset + (s16)(pos - 2);
+                pos += offset - 2;
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_BF:
                 battle_gfx_init_position_vector_copies(unit);

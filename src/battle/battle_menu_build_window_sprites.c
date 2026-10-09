@@ -47,7 +47,7 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
         record->icons[1] = 0;
         record->icons[2] = 0;
     }
-    battle_gfx_set_draw_mode_from_rect(record, (const u16*)param);
+    battle_gfx_set_draw_mode_from_rect(record, (const RECT*)param);
     SetDrawMode(
         &record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_battle_menu_disabled_texture_window);
 }

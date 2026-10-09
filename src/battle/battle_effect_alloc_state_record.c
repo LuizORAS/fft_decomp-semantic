@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 
 /* Allocate one effect record and link it into the in-use list. */
-s32 battle_effect_alloc_state_record(void) {
+s16 battle_effect_alloc_state_record(void) {
     u16* available;
-    u16* allocated;
+    s16* allocated;
     s16 index;
     u16 next_available;
     u16 next_allocated;

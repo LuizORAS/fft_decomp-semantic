@@ -10,7 +10,7 @@
 
 u8* jobstts_cmd_draw_window_frame_handler(u8* stream) {
     world_menu_window_command_t* command;
-    urect16_t rect;
+    RECT rect;
     s32 left;
     s32 top;
     s32 full_columns;

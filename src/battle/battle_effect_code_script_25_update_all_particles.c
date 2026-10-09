@@ -55,7 +55,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             }
         }
 
-        g_battle_effect_particle_render_handlers[node->kind_flags >> 12](record, node);
+        g_battle_effect_particle_render_handlers[(node->kind_flags >> 12) & 0xf](record, node);
 
         if ((node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_1
             || (node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_2) {

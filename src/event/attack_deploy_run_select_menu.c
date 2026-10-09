@@ -71,8 +71,7 @@ void attack_deploy_run_select_menu(void) {
     }
     g_attack_deploy_select_menu_nodes[8].help_base = g_attack_deploy_selected_roster_index * 11 + 10 - 0x3000;
     for (i = 0; i < 10; i++) {
-        g_attack_deploy_select_menu_nodes[i + 18].help_base
-            = g_attack_deploy_selected_roster_index * 11 + (s16)(i - 0x3000);
+        g_attack_deploy_select_menu_nodes[i + 18].help_base = g_attack_deploy_selected_roster_index * 11 - 0x3000 + i;
     }
     selected = 0;
     nodes = g_attack_deploy_select_menu_nodes;
@@ -121,11 +120,11 @@ void attack_deploy_run_select_menu(void) {
                             battle_thread_start(parent_id, battle_text_character_handling_thread);
                             battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
                         }
-                    } else if (node->help_base == 0x7800 && (u32)((u16)*node->value - 1) >= 0x301) {
+                    } else if (node->help_base == 0x7800 && (u16)*node->value - 1 >= 0x301U) {
                         *input = 0;
-                    } else if (node->help_base == 0x6800 && (u32)((u16)*node->value - 1) >= 0x101) {
+                    } else if (node->help_base == 0x6800 && (u16)*node->value - 1 >= 0x101U) {
                         *input = 0;
-                    } else if (node->help_base == -0x6800 && (u32)((u16)*node->value - 1) >= 0x101) {
+                    } else if (node->help_base == -0x6800 && (u16)*node->value - 1 >= 0x101U) {
                         *input = 0;
                     } else {
                         g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;

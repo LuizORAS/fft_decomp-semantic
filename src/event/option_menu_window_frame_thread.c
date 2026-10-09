@@ -63,7 +63,7 @@ void option_menu_window_frame_thread(void) {
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu 0x1a(sp))
        and reuses it for every halfword and byte store below. */
-    texture_v = (u8)texture.y;
+    texture_v = texture.y & 0xff;
     for (index = 0; index < 4; index++) {
         g_option_menu_panel_texture_windows[index].x = (texture_u + index) * 0x10;
         g_option_menu_panel_texture_windows[index].y = texture_v;

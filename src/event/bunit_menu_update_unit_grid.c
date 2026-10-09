@@ -33,18 +33,8 @@
  *   together with the two g_bunit_unit_selected_index tests; the unused
  *   RECTs reproduce the locals area.
  */
-/* clang-format off */
-s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_panel, allow_stat_cycle, stat_mode,
-    buttons, locked)
-    s16 allow_banner_toggle;
-    s16 allow_browse;
-    s16 show_stat_panel;
-    s16 allow_stat_cycle;
-    u16 stat_mode;
-    u16 buttons;
-    s16 locked;
-/* clang-format on */
-{
+s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 show_stat_panel, s16 allow_stat_cycle,
+    s16 stat_mode, s16 buttons, s16 locked) {
     RECT unused[3];
     RECT cell;
     RECT rect;
@@ -53,7 +43,6 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     u8 saved_color[3];
     s32 row;
     s32 col;
-    u16 input;
     u8* menu;
     battle_menu_sprite_cell_t* quads;
     s16 y;
@@ -77,19 +66,18 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     s16* focus;
     s16 cursor_y;
 
-    input = buttons;
     if (locked != 0) {
-        input = 0;
+        buttons = 0;
     }
     if (allow_stat_cycle != 0) {
         if (g_bunit_unit_browse_enabled == 0) {
-            if (input & PSX_PAD_L2) {
+            if (buttons & PSX_PAD_L2) {
                 g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP ? MENU_UNIT_READOUT_BRAVE_FAITH
                                                                                         : g_bunit_unit_stat_mode - 1;
-                input &= ~PSX_PAD_R2;
+                buttons &= ~PSX_PAD_R2;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
-            if (input & PSX_PAD_R2) {
+            if (buttons & PSX_PAD_R2) {
                 g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_BRAVE_FAITH
                     ? MENU_UNIT_READOUT_HP
                     : g_bunit_unit_stat_mode + 1;
@@ -105,13 +93,13 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
         && !(g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))
         && g_bunit_status_banner_slide_step == 0 && g_bunit_unit_list_scroll_step == 0) {
-        if (input & PSX_PAD_CIRCLE) {
+        if (buttons & PSX_PAD_CIRCLE) {
             if (g_bunit_unit_browse_enabled == 0
                 && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
                 g_bunit_unit_browse_enabled = 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             }
-        } else if (input & PSX_PAD_CROSS) {
+        } else if (buttons & PSX_PAD_CROSS) {
             if (g_bunit_unit_browse_enabled != 0) {
                 unit = 0;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
@@ -120,9 +108,9 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         }
     }
     if (g_bunit_unit_browse_enabled != 0) {
-        input &= 0xFFF;
+        buttons &= 0xFFF;
     }
-    if (allow_banner_toggle != 0 && g_bunit_unit_browse_enabled == 0 && (input & PSX_PAD_SQUARE)
+    if (allow_banner_toggle != 0 && g_bunit_unit_browse_enabled == 0 && (buttons & PSX_PAD_SQUARE)
         && bunit_menu_is_unit_list_scroll_needed() == 0
         && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
         && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
@@ -133,23 +121,23 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
         && g_bunit_help_screen_id == MENU_GRID_HELP_NONE && bunit_gfx_get_fade_state() == 0) {
         g_bunit_unit_grid_selected_cell = bunit_menu_update_wrapped_grid_selection(
-            4, 5, g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, (s16)input);
+            4, 5, g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, buttons);
         g_bunit_unit_selected_index = g_bunit_unit_reorderable_indices[g_bunit_unit_grid_selected_cell];
     }
     bunit_menu_update_unit_list_scroll(&g_bunit_unit_list_scroll_step, &g_bunit_unit_list_page_offset);
     if (g_bunit_unit_browse_enabled != 0) {
-        if (input & PSX_PAD_L1) {
+        if (buttons & PSX_PAD_L1) {
             g_bunit_unit_selected_index
                 = g_bunit_unit_selected_index == 0 ? g_bunit_unit_list_count - 1 : g_bunit_unit_selected_index - 1;
-        } else if (input & PSX_PAD_R1) {
+        } else if (buttons & PSX_PAD_R1) {
             g_bunit_unit_selected_index
                 = g_bunit_unit_selected_index != g_bunit_unit_list_count - 1 ? g_bunit_unit_selected_index + 1 : 0;
         }
         g_bunit_unit_grid_selected_cell = g_bunit_unit_list_index_map[g_bunit_unit_selected_index];
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, input & PSX_PAD_L1,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, buttons & PSX_PAD_L1,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, input & PSX_PAD_R1,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, buttons & PSX_PAD_R1,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
     }
@@ -164,10 +152,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             menu = g_bunit_unit_grid_stat_bar_script_bottom;
             quads = g_bunit_unit_grid_label_tiles_bottom;
         }
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, top, input & PSX_PAD_L2,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, top, buttons & PSX_PAD_L2,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R2, 0xC2, top, input & PSX_PAD_R2,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R2, 0xC2, top, buttons & PSX_PAD_R2,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
         bunit_menu_dispatch_with_override(menu, 0, 0);
@@ -358,8 +346,8 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             if (g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
                 bunit_gfx_draw_unit_sprite_and_name_plate(
                     bunit_unit_find_index_by_battle_id(
-                        (s16)(g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info
-                            - BATTLE_MOUNT_INFO_FLAG_RIDER)),
+                        g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info
+                        - BATTLE_MOUNT_INFO_FLAG_RIDER),
                     cell.x, cell.y);
             }
         }

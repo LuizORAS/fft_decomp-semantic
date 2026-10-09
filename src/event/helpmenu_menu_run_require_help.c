@@ -68,7 +68,7 @@ void helpmenu_menu_run_require_help(void) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
         g_helpmenu_require_navigation[7].destination[3] = 2;
     }
-    g_helpmenu_controller_state_ptr = (s32*)battle_script_get_controller_input_pointer(0);
+    g_helpmenu_controller_state_ptr = battle_script_get_controller_input_pointer(0);
     menu_index = 0;
     g_helpmenu_require_navigation[0].x = 0xC4;
     g_helpmenu_require_navigation[2].x = 0xE0;

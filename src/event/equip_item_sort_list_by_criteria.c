@@ -19,7 +19,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     s32 k;
     s16 item_a;
     s16 item_b;
-    u8* criteria;
+    s8* criteria;
     s16 criterion;
     s32 key_a;
     s32 key_b;
@@ -45,7 +45,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     for (; passes > 0; passes--) {
         for (j = 0; j < passes; j++) {
             k = 0;
-            criterion = (s8)criteria[k];
+            criterion = criteria[k];
             item_a = list[j] & 0x3ff;
             item_b = list[j + 1] & 0x3ff;
             while (criterion >= 0) {
@@ -139,7 +139,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                 if (diff != 0) {
                     break;
                 }
-                criterion = (s8)criteria[k];
+                criterion = criteria[k];
             }
             if (criterion == ITEM_SORT_KEY_TYPE) {
                 diff *= -1;

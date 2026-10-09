@@ -16,7 +16,7 @@ typedef struct jobstts_oriented_uv {
 
 /* Queue a textured quad whose texture cell is mirrored by orientation. */
 void jobstts_gfx_enqueue_oriented_textured_quad(
-    urect16_t* rect, jobstts_oriented_uv_t* uv, u8* color, s32 orientation, s32 semitrans, s32 ot_index) {
+    RECT* rect, jobstts_oriented_uv_t* uv, u8* color, s32 orientation, s32 semitrans, s32 ot_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     s32 quad_ot_index = ot_index;
@@ -34,14 +34,7 @@ void jobstts_gfx_enqueue_oriented_textured_quad(
     }
     SetSemiTrans(poly, quad_semitrans);
 
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    poly->x1 = rect->x + (rect->w + 0x80);
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    poly->x3 = rect->x + (rect->w + 0x80);
-    poly->y3 = rect->y + rect->h;
+    setXYWH(poly, rect->x + 0x80, rect->y, rect->w, rect->h);
 
     switch (quad_orientation & 0xff) {
     case TEXTURE_UV_FLIP_NONE:
