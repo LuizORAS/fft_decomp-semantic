@@ -201,7 +201,7 @@ extern s32 g_jobstts_input_primary_repeat;
 extern s32 g_jobstts_input_secondary_repeat;
 extern u16 g_jobstts_input_latched_button;
 extern u8 g_jobstts_input_lock_timer;
-extern volatile u32 g_jobstts_input_repeat_counters[16];
+extern s32 g_jobstts_input_repeat_counters[16];
 extern u16 g_jobstts_input_previous;
 extern u8 g_jobstts_input_activation_timer;
 jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);

@@ -135,6 +135,16 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   not 1-4.
 - `world_card_read_file_chunked` sets `result` to -1 when the last read was
   short and then returns `total`; the test has no effect.
+- `helpmenu_menu_run_require_help` and `world_menu_run_require_help` reach
+  the shadow quads by indexing past the end of the local `cursor[2]`
+  (`quad[2]`, `quads[buffer + 2]`), relying on `shadow[2]` following it on
+  the stack. `entry`, `x` and `y` are assigned only on frames where text
+  thread 0x10 is idle and are unset if it is already running on the first
+  frame.
+- The six `*_text_render_decimal_value` copies assign 1 on every rung of the
+  minimum-width ladder, so the value is always placed as one digit.
+- `etc_graphic_build_game_over_polygons`: `texture_mode` is the constant 1,
+  so the 4-bit CLUT arm never runs.
 - `require_party_find_join_candidates` searches the formation sprite groups
   for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
   result.

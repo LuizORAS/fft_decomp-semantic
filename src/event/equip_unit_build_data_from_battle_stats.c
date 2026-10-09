@@ -4,8 +4,6 @@
 /* Build EQUIP.OUT's unit preview from a battle_stats_t record, clamping the
  * displayed values and folding empty equipment slots (0xFF and above) to 0. */
 void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_data_t* unit) {
-    /* Pin: the target copies the call result to $a0; unpinned GCC tests $v0. */
-    register s32 list_index asm("$4");
     s32 i;
     s32 value;
     u8 larger;
@@ -20,10 +18,10 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     if (!(stats->team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         unit->team_kind = 2;
     }
-    list_index = battle_action_check_at_list_for_unit_battle_id(stats);
+    i = battle_action_check_at_list_for_unit_battle_id(stats);
     value = -1;
-    if (list_index >= 0) {
-        value = list_index + 1;
+    if (i >= 0) {
+        value = i + 1;
     }
     unit->list_index = value;
     unit->experience = stats->experience < 100 ? stats->experience : 99;

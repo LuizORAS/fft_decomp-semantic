@@ -1534,7 +1534,7 @@ extern u32 g_world_input_frame_secondary_repeat_counter;
  * check instead of reusing the first load. */
 extern volatile u8 g_world_input_lockout_timer;
 extern u16 g_world_input_previous, g_world_input_latched_button, g_world_input_newly_pressed;
-extern volatile u32 g_world_input_repeat_counters[16];
+extern s32 g_world_input_repeat_counters[16];
 extern u32 g_world_input_primary_repeat, g_world_input_secondary_repeat;
 extern u32 g_world_input_unfiltered_controller;
 extern world_input_timing_profile_t g_world_input_timing_profiles[];

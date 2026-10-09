@@ -1,255 +1,110 @@
 #include "fft/event_etc.h"
 #include "psx/types.h"
 
+/* The dimension row of the tile being built. Spelled out at each access: the
+ * target forms this address inside every memory reference (scaled terms
+ * first), which a row pointer variable does not. */
+#define ROW (dimensions + dimension_set + tile)
+
 /* Build and draw the four POLY_GT4 tiles of an ETC graphic revealed up to `fade`
- * pixels, followed by a gradient edge of up to 32 pixels. */
+ * pixels, followed by a gradient edge of up to 32 pixels.
+ *
+ * The graphic is always 8-bit (texture mode 1). Retail keeps the first
+ * half's right edge in the dead `graphic_id` argument. */
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color) {
-    /* Locals the retail build keeps on the stack, one word apart. */
-    struct {
-        s32 reverse_order;
-        s32 _unused_04;
-        s32 dimension_base;
-        s32 _unused_0c;
-        s32 first_tpage;
-        s32 _unused_14;
-        s32 second_tpage;
-        s32 _unused_1c;
-        s32 third_tpage;
-    } stack;
-    /* Pins: unpinning any one of these changes the target's register allocation. */
-    register s32 graphic_height __asm__("$3");
-    s16 clut;
-    s32 first_fade_x;
-    register s32 clip __asm__("$6");
-    register void* current_primitive __asm__("$19");
-    register s32 dimension_offset __asm__("$20");
-    register s32 tile __asm__("$21");
-    register s32 half __asm__("$23");
-    u16 tpage;
-    register u8* primitive_cursor __asm__("$16");
-    register s32 enabled __asm__("$22");
-    /* One $t0 temporary for the tpage constants, the stack reloads and the clut flag. */
-    register s32 scratch __asm__("$8");
-    register s32 dimensions __asm__("$4");
-    s32 tpage_base;
-    s32 graphic_index = graphic_id;
-    s32 reveal = fade;
-    s32 first_dimension_index = dimension_set;
-    s32 brightness = color;
+    etc_graphic_dimensions_t* dimensions;
+    POLY_GT4* primitive;
+    s32 texture_mode;
+    s32 half;
+    s32 tile;
+    s32 clip;
+    s32 fade_x;
 
-#define primitive ((POLY_GT4*)(primitive_cursor - 0x2a))
-    /* Target-specific address arithmetic: ordinary pointer addition reverses
-     * the addu operands at +0x190/+0x2e0. The row index is scaled and added to
-     * the base as a 32-bit target address before the per-tile displacement;
-     * field access itself stays typed. */
-    half = 0;
-    stack.reverse_order = reverse_order;
-    dimensions = (s32)g_etc_graphics[graphic_index].dimensions;
-    current_primitive = primitives;
-    enabled = 1;
-    stack.dimension_base = dimensions;
-    do {
-        tile = 0;
-        scratch = 1;
-        /* Hides the 1 so the tpage words are built with sll/ori, not folded to 0xa6/0xc6. */
-        __asm__("" : "=r"(scratch) : "0"(scratch));
-        tpage_base = scratch << 7;
-        stack.first_tpage = (scratch = tpage_base | 0x26);
-        scratch = 0x200;
-        /* Hides the 0x200 so `li 0x200; ori 0x106` is not folded to `li 0x306`. */
-        __asm__("" : "=r"(scratch) : "0"(scratch));
-        scratch |= 0x106;
-        tpage_base |= 0x46;
-        dimension_offset = 0;
-        primitive_cursor = (u8*)current_primitive + 0x2a;
-        stack.second_tpage = scratch;
-        stack.third_tpage = tpage_base;
-        do {
-            /* Keeps the index and fade unscaled in the loop instead of hoisted scaled forms. */
-            __asm__ __volatile__("" : "=r"(first_dimension_index) : "0"(first_dimension_index));
-            __asm__ __volatile__("" : "=r"(reveal) : "0"(reveal));
-            SetPolyGT4((POLY_GT4*)current_primitive);
-            SetShadeTex((POLY_GT4*)current_primitive, 0);
-            SetSemiTrans((POLY_GT4*)current_primitive, 1);
-
-            primitive->u0 = 0;
-            primitive->v0 = 0;
-            primitive->u1 = enabled;
-            primitive->v1 = 0;
-            primitive->u2 = 0;
-            primitive->v2 = enabled;
-            primitive->u3 = enabled;
-            primitive->v3 = enabled;
-            primitive->x0 = 0;
-            primitive->y0 = 0;
-            primitive->x1 = 0;
-            primitive->y1 = 0;
-            primitive->x2 = 0;
-            primitive->y2 = 0;
-            primitive->x3 = 0;
-            primitive->y3 = 0;
-
+    texture_mode = 1;
+    dimensions = g_etc_graphics[graphic_id].dimensions;
+    primitive = primitives;
+    for (half = 0; half < 2; half++) {
+        for (tile = 0; tile < 2; tile++) {
+            SetPolyGT4(primitive);
+            SetShadeTex(primitive, 0);
+            SetSemiTrans(primitive, 1);
+            setUV4(primitive, 0, 0, 1, 0, 0, 1, 1, 1);
+            setXY4(primitive, 0, 0, 0, 0, 0, 0, 0, 0);
             if (tile != 0) {
-                if (GetGraphType() == enabled || GetGraphType() == 2) {
-                    tpage = 0x286;
-                } else {
-                    tpage = stack.first_tpage;
-                }
-            } else if (GetGraphType() == enabled || GetGraphType() == 2) {
-                tpage = stack.second_tpage;
+                primitive->tpage = getTPage(texture_mode, 1, 384, 0);
             } else {
-                tpage = stack.third_tpage;
+                primitive->tpage = getTPage(texture_mode, 2, 384, 0);
             }
-            scratch = 1;
-            /* Hides the 1 so the clut test stays a runtime branch, with `li t0,1` in the jump delay slots. */
-            __asm__("" : "=r"(scratch) : "0"(scratch));
-            primitive->tpage = tpage;
-            if (scratch != 0) {
-                /* Keeps 0x7f80 as the jump-delay-slot arm; without it the two clut arms swap. */
-                __asm__ __volatile__("");
-                clut = 0x7f80;
+            if (texture_mode != 0) {
+                primitive->clut = 0x7f80;
             } else {
-                clut = 0xfdb;
+                primitive->clut = 0xfdb;
             }
-            primitive->clut = clut;
 
             if (half == 0) {
-                scratch = stack.reverse_order;
-                if (scratch == 0) {
-                    /* Pin: keeps the first-row address in $a0 through the final addition. */
-                    register etc_graphic_dimensions_t* first_row_base __asm__("$4");
-                    etc_graphic_dimensions_t* row;
-                    scratch = stack.dimension_base;
-                    first_row_base
-                        = (etc_graphic_dimensions_t*)(first_dimension_index * (sizeof(etc_graphic_dimensions_t))
-                            + (u32)scratch);
-                    row = (etc_graphic_dimensions_t*)(dimension_offset + (u32)first_row_base);
-                    primitive->u0 = row->u.bytes.low + row->width.bytes.low;
-                    primitive->v0 = row->v.bytes.low;
-                    primitive->u2 = row->u.bytes.low;
-                    primitive->v2 = row->v.bytes.low;
-                    primitive->u1 = row->u.bytes.low + row->width.bytes.low;
-                    primitive->v1 = row->v.bytes.low + reveal;
-                    primitive->u3 = row->u.bytes.low;
-                    primitive->v3 = row->v.bytes.low + reveal;
-                    primitive->x0 = row->y.value + 0x100;
-                    primitive->y0 = row->x.value + 0x80;
-                    first_fade_x = reveal + 0x100;
-                    primitive->x1 = row->y.value + first_fade_x;
-                    primitive->y1 = row->x.value + 0x80;
-                    primitive->x2 = row->y.value + 0x100;
-                    primitive->y2 = row->x.value + (row->width.value + 0x80);
-                    primitive->x3 = row->y.value + first_fade_x;
-                    primitive->y3 = row->x.value + (row->width.value + 0x80);
-                    /* Keeps the y3 store ahead of the brightness stores. */
-                    __asm__ __volatile__("");
-                    primitive->r0 = brightness;
-                    primitive->g0 = brightness;
-                    primitive->b0 = brightness;
-                    primitive->r1 = brightness;
-                    primitive->g1 = brightness;
-                    primitive->b1 = brightness;
-                    primitive->r2 = brightness;
-                    primitive->g2 = brightness;
-                    primitive->b2 = brightness;
-                    primitive->r3 = brightness;
-                    primitive->g3 = brightness;
-                    primitive->b3 = brightness;
+                if (reverse_order == 0) {
+                    primitive->u0 = ROW->u.value + ROW->width.value;
+                    primitive->v0 = ROW->v.value;
+                    primitive->u2 = ROW->u.value;
+                    primitive->v2 = ROW->v.value;
+                    primitive->u1 = ROW->u.value + ROW->width.value;
+                    primitive->v1 = ROW->v.value + fade;
+                    primitive->u3 = ROW->u.value;
+                    primitive->v3 = ROW->v.value + fade;
+                    primitive->x0 = ROW->y.value + 0x100;
+                    primitive->y0 = ROW->x.value + 0x80;
+                    graphic_id = fade + 0x100;
+                    primitive->x1 = ROW->y.value + graphic_id;
+                    primitive->y1 = ROW->x.value + 0x80;
+                    primitive->x2 = ROW->y.value + 0x100;
+                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->x3 = ROW->y.value + graphic_id;
+                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    setRGB0(primitive, color, color, color);
+                    setRGB1(primitive, color, color, color);
+                    setRGB2(primitive, color, color, color);
+                    setRGB3(primitive, color, color, color);
                 }
-            } else if (half == enabled) {
-                /* Pin: unpinned, the fade x and the row pointer swap $a0 and $a1. */
-                register s32 second_fade_x __asm__("$4");
-                etc_graphic_dimensions_t* row;
-
-                scratch = stack.dimension_base;
-                row = (etc_graphic_dimensions_t*)(dimension_offset
-                    + (first_dimension_index * sizeof(etc_graphic_dimensions_t) + (u32)scratch));
-                graphic_height = row->height.signed_value;
-                clip = graphic_height < reveal + 0x20 ? graphic_height - reveal : 0x20;
-                second_fade_x = reveal + 0x100;
-                scratch = stack.reverse_order;
-                if (scratch == 0) {
-                    primitive->u0 = row->u.bytes.low + row->width.bytes.low;
-                    primitive->v0 = row->v.bytes.low + reveal;
-                    primitive->u2 = row->u.bytes.low;
-                    primitive->v2 = row->v.bytes.low + reveal;
-                    primitive->u1 = row->u.bytes.low + row->width.bytes.low;
-                    {
-                        s32 value = row->v.bytes.low + reveal;
-                        value += clip;
-                        primitive->v1 = value;
-                    }
-                    primitive->u3 = row->u.bytes.low;
-                    {
-                        s32 value = row->v.bytes.low + reveal;
-                        value += clip;
-                        primitive->v3 = value;
-                    }
-                    {
-                        u16 x_offset = row->y.value;
-                        primitive->x0 = x_offset + second_fade_x;
-                    }
-                    primitive->y0 = row->x.value + 0x80;
-                    {
-                        u16 x_offset = row->y.value;
-                        s32 value = x_offset + second_fade_x;
-                        value += clip;
-                        primitive->x1 = value;
-                    }
-                    primitive->y1 = row->x.value + 0x80;
-                    {
-                        u16 x_offset = row->y.value;
-                        primitive->x2 = x_offset + second_fade_x;
-                    }
-                    primitive->y2 = row->x.value + (row->width.value + 0x80);
-                    {
-                        u16 x_offset = row->y.value;
-                        s32 value = x_offset + second_fade_x;
-                        value += clip;
-                        primitive->x3 = value;
-                    }
-                    primitive->y3 = row->x.value + (row->width.value + 0x80);
-                    primitive->r0 = brightness;
-                    primitive->g0 = brightness;
-                    primitive->b0 = brightness;
-                    primitive->r1 = 0;
-                    primitive->g1 = 0;
-                    primitive->b1 = 0;
-                    primitive->r2 = brightness;
-                    primitive->g2 = brightness;
-                    primitive->b2 = brightness;
-                    primitive->r3 = 0;
-                    primitive->g3 = 0;
-                    primitive->b3 = 0;
+            } else if (half == 1) {
+                clip = ROW->height.signed_value < fade + 0x20 ? ROW->height.signed_value - fade : 0x20;
+                if (reverse_order == 0) {
+                    fade_x = fade + 0x100;
+                    primitive->u0 = ROW->u.value + ROW->width.value;
+                    primitive->v0 = ROW->v.value + fade;
+                    primitive->u2 = ROW->u.value;
+                    primitive->v2 = ROW->v.value + fade;
+                    primitive->u1 = ROW->u.value + ROW->width.value;
+                    primitive->v1 = ROW->v.value + fade + clip;
+                    primitive->u3 = ROW->u.value;
+                    primitive->v3 = ROW->v.value + fade + clip;
+                    primitive->x0 = ROW->y.value + fade_x;
+                    primitive->y0 = ROW->x.value + 0x80;
+                    primitive->x1 = ROW->y.value + fade_x + clip;
+                    primitive->y1 = ROW->x.value + 0x80;
+                    primitive->x2 = ROW->y.value + fade_x;
+                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->x3 = ROW->y.value + fade_x + clip;
+                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    setRGB0(primitive, color, color, color);
+                    setRGB1(primitive, 0, 0, 0);
+                    setRGB2(primitive, color, color, color);
+                    setRGB3(primitive, 0, 0, 0);
                 }
             }
-            primitive_cursor += 0x34;
-            current_primitive += 0x34;
-            tile++;
-            dimension_offset += 0xc;
-        } while (tile < 2);
-        half++;
-    } while (half < 2);
-
-    scratch = stack.reverse_order;
-    if (scratch != 0) {
-        scratch = primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x34));
-        battle_gfx_draw_or_append_gpu_primitive(primitives);
-        scratch = primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x9c));
-        scratch = primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x68));
-    } else {
-        scratch = primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x9c));
-        scratch = primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x68));
-        scratch = *(s32*)&primitives;
-        battle_gfx_draw_or_append_gpu_primitive((scratch + 0x34));
-        battle_gfx_draw_or_append_gpu_primitive(primitives);
+            primitive++;
+        }
     }
 
-#undef primitive
+    if (reverse_order != 0) {
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
+    } else {
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
+    }
 }

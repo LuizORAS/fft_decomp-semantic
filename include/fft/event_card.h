@@ -213,7 +213,7 @@ extern u16 g_card_input_latched_button;
 extern u16 g_card_input_newly_pressed;
 extern u16 g_card_input_previous;
 extern u32 g_card_input_repeat_counter;
-extern volatile u32 g_card_input_repeat_counters[16];
+extern s32 g_card_input_repeat_counters[16];
 extern u32 g_card_input_secondary_repeat;
 extern u32 g_card_input_secondary_repeat_counter;
 extern u32 g_card_previous_input;

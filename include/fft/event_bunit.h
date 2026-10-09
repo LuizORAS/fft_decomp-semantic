@@ -513,7 +513,7 @@ extern u8 g_bunit_input_page_scroll_disabled;
 extern u16 g_bunit_input_page_scroll_hold_frames;
 extern u16 g_bunit_input_previous;
 extern u32 g_bunit_input_repeat_counter;
-extern volatile u32 g_bunit_input_repeat_counters[16];
+extern s32 g_bunit_input_repeat_counters[16];
 extern u32 g_bunit_input_secondary_repeat_counter;
 extern u32 g_bunit_previous_input;
 extern u32* g_bunit_input_controller;
