@@ -49,13 +49,13 @@ void battle_camera_update_vector_from_game_state(void) {
         unit = battle_unit_get_source_misc_data();
         height
             = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy / ONE;
-        if (unit->item_get_camera_x >= 0xB1 && unit->item_get_camera_x < 0x150
-            && unit->item_get_camera_y - height >= 0x51 && unit->item_get_camera_y < 0xA0) {
+        if (unit->camera_relative_x >= 0xB1 && unit->camera_relative_x < 0x150
+            && unit->camera_relative_y - height >= 0x51 && unit->camera_relative_y < 0xA0) {
             main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
             return;
         }
-        if (unit->item_get_camera_x >= 0xA1 && unit->item_get_camera_x < 0x160
-            && unit->item_get_camera_y - height >= 0x41 && unit->item_get_camera_y < 0xB0) {
+        if (unit->camera_relative_x >= 0xA1 && unit->camera_relative_x < 0x160
+            && unit->camera_relative_y - height >= 0x41 && unit->camera_relative_y < 0xB0) {
             battle_camera_calculate_acting_unit_vector_normal();
         } else {
             battle_camera_shift_acting_unit_vector();
@@ -63,7 +63,7 @@ void battle_camera_update_vector_from_game_state(void) {
         battle_camera_step_real_coords_toward_target((battle_camera_step_target_t*)unit);
         return;
     }
-    if (g_battle_game_state >= 0x29) {
+    if (g_battle_game_state >= BATTLE_GAME_STATE_EFFECT_DAMAGE_DISPLAY) {
         main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
         return;
     }

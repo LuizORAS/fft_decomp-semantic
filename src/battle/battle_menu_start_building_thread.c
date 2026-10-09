@@ -7,7 +7,7 @@ void battle_menu_start_building_thread(void) {
             g_battle_menu_building_thread_started = 1;
         }
     }
-    if (g_event_input_suppression_frames != 0) {
+    if (g_battle_event_input_suppression_frames != 0) {
         return;
     }
     if (g_option_menu_open != 0) {
@@ -16,7 +16,7 @@ void battle_menu_start_building_thread(void) {
     if (battle_camera_is_active() != 0) {
         return;
     }
-    if (g_companion_overlay_state != 0) {
+    if (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE) {
         return;
     }
     if (battle_thread_is_running_8014cc94(3) != 0) {

@@ -10,7 +10,7 @@ void battle_unit_set_attacker_animation_for_shield_block(
     if (stats == 0) {
         return;
     }
-    if (g_battle_gfx_spritesheet_data[attacker->spritesheet_id].shp_id >= 2) {
+    if (g_battle_gfx_spritesheet_data[attacker->spritesheet_id].shp_id >= BATTLE_SHP_CYOKO) {
         return;
     }
     kind = stats->action.miss_type;

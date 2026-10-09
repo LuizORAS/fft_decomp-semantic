@@ -134,8 +134,8 @@ typedef struct attack_deployed_unit_coordinate {
     u8 x;          /* 0x01 */
     u8 y;          /* 0x02 */
     u8 facing : 2; /* 0x03 */
-    u8 unk_3_2 : 3;
-    u8 unk_3_5 : 2;
+    u8 _unknown_03_bit2 : 3;
+    u8 _unused_03_bit5 : 2;
     u8 upper_level : 1;
 } attack_deployed_unit_coordinate_t;
 

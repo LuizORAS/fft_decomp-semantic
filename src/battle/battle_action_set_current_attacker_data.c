@@ -29,5 +29,5 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     g_battle_action_current_attacker.team = unit->team_flags & BATTLE_TEAM_MASK;
     g_battle_action_current_attacker.right_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     g_battle_action_current_attacker.left_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-    g_battle_action_current_attacker.data_initialized = 1;
+    g_battle_action_current_attacker.mimic_pending = 1;
 }

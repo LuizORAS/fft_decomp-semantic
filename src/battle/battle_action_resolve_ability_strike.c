@@ -38,8 +38,8 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     battle_action_clear_current_data(&g_battle_action_attacker_action_data);
     g_battle_action_attacker_action_data.hit = 0;
     work->knockback_flags = 0;
-    work->ability_formula = 0;
-    work->control_value_19f = 0;
+    work->post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
+    work->math_skill_flag = 0;
     work->reaction_ability_id = 0;
     reaction_targeted = 0;
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY) {
@@ -53,7 +53,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             reaction_targeted = 1;
         }
     } else if (attacker->last_skillset_id == i) {
-        work->control_value_19f = 1;
+        work->math_skill_flag = 1;
     }
     if (!reaction_targeted) {
         if (battle_target_calculate_map_for_action((battle_ai_command_action_t*)&attacker->action_actor_id, &flags_3)
@@ -63,8 +63,8 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             return -1;
         }
         if (g_battle_action_current_ability.post_action_target_id < 21
-            && (g_battle_action_current_ability.elemental_flags != 0
-                || (g_battle_action_current_ability.knockback_flags & 0x80))) {
+            && (g_battle_action_current_ability.weapon_proc_pending != 0
+                || (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING))) {
             battle_target_disable_green_panel_flags();
             count = 1;
             targets[0] = g_battle_action_current_ability.post_action_target_id;
@@ -104,7 +104,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     if (count == 0) {
         g_battle_action_current_ability.strike_counter++;
         work->last_attack_id = attacker->last_ability_id;
-        work->reaction_id_1a = 0;
+        work->reaction_id = 0;
         if (!(flags_3 & 1)) {
             work->animate_on_miss_flag = 1;
         }
@@ -115,10 +115,10 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         }
         return 1;
     }
-    work->ability_formula = g_battle_action_current_ability.post_formula_flag;
+    work->post_action_message = g_battle_action_current_ability.post_action_message;
     work->animate_on_miss_flag = 0;
     reaction_id = g_battle_action_current_ability.reaction_id;
-    if (reaction_id != 0 && g_battle_action_current_ability.elemental_flags == 0) {
+    if (reaction_id != 0 && g_battle_action_current_ability.weapon_proc_pending == 0) {
         work->last_attack_id = reaction_id;
         work->reaction_occurred = 1;
     } else if (g_battle_action_current_ability.defaulted_to_attack != 0) {
@@ -126,15 +126,15 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else {
         work->last_attack_id = attacker->last_ability_id;
     }
-    work->reaction_id_1a = g_battle_action_current_ability.reaction_id;
+    work->reaction_id = g_battle_action_current_ability.reaction_id;
     if (g_battle_action_current_ability.knockback_flags != 0) {
-        work->knockback_flags = g_battle_action_current_ability.knockback_flags & 0x7f;
-        work->target_new_x = g_battle_action_current_ability.target_x;
-        work->target_new_y = g_battle_action_current_ability.target_y;
-        work->target_new_map_level = g_battle_action_current_ability.target_elevation;
+        work->knockback_flags = g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_KIND_MASK;
+        work->target_new_x = g_battle_action_current_ability.target_new_x;
+        work->target_new_y = g_battle_action_current_ability.target_new_y;
+        work->target_new_map_level = g_battle_action_current_ability.target_new_elevation;
     }
-    if (g_battle_action_current_ability.elemental_flags != 0
-        || (g_battle_action_current_ability.knockback_flags & 0x80)) {
+    if (g_battle_action_current_ability.weapon_proc_pending != 0
+        || (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING)) {
         work->continue_attack = 1;
     } else {
         if (g_battle_action_current_ability.knockback_flags != 0) {

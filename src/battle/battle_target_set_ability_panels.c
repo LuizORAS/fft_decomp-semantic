@@ -76,20 +76,22 @@ s32 battle_target_set_ability_panels(const u8* source) {
     if (flags_1 & ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF) {
         origin->remaining_range = 0;
     }
-    if (flags_1 & 0x10) {
+    if (flags_1 & ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED) {
         location = x;
         battle_target_apply_vertical_fixed(location, y);
     }
-    if (flags_1 & 0x08) {
+    if (flags_1 & ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE) {
         battle_target_apply_vertical_tolerance(elevation, vertical, 0);
     }
-    if (aoe == 0 || (flags_4 & 0x20)) {
+    if (aoe == 0 || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING)) {
         battle_target_clear_panels_on_untargetable_tiles();
     }
-    if (flags_1 & 0xc0) {
+    if (flags_1 & (ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS | ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS)) {
         battle_target_set_state_for_all_unit_panels(unit, flags_1);
     }
-    if (flags_1 & 0xd0) {
+    if (flags_1
+        & (ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS
+            | ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS)) {
         return battle_target_clear_selection_state_of_all_panels();
     }
     return battle_target_set_all_panels_targeted_if_targetable();

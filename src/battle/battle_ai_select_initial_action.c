@@ -10,7 +10,7 @@ s32 battle_ai_select_initial_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_data_base.initial_targeting_state) {
         case 0:
@@ -63,7 +63,7 @@ native_action:
     }
     if (result != 0)
         return 0;
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
 general_action:
     if (battle_ai_run_non_specific_autobattle() == -1) {
         ai->initial_targeting_state = 7;

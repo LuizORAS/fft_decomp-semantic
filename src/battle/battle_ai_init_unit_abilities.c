@@ -17,7 +17,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     s32 evade_count;
     s32 i;
 
-    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_battle_ids[unit_id] >= 16) {
+    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_compact_indices[unit_id] >= 16) {
         return;
     }
     battle_ai_build_unit_ability_list(unit_id);
@@ -29,7 +29,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     decision->highest_mp_cost = 0;
     decision->lowest_mp_cost = 0xff;
     for (i = 0; i < 34; i++) {
-        entry = &ai->ability_lists[ai->unit_battle_ids[unit_id]][i];
+        entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
             break;
         }
@@ -91,7 +91,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
         return;
     }
     if (decision->targeting_flags_2 & BATTLE_AI_TARGET_CONSERVE_CT) {
-        ai->unit_behaviour[unit_id] = 0x11;
+        ai->unit_autobattle_modes[unit_id] = BATTLE_AI_AUTOBATTLE_RETREAT;
         return;
     }
     if (!(decision->flags & BATTLE_AI_DECISION_FOCUS_TARGET)) {
@@ -109,9 +109,9 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
         unit->auto_battle_target = i;
         if ((g_battle_unit_stats[i].initial_team_flags & BATTLE_TEAM_MASK)
             != (unit->initial_team_flags & BATTLE_TEAM_MASK)) {
-            ai->unit_behaviour[unit_id] = 0x0c;
+            ai->unit_autobattle_modes[unit_id] = BATTLE_AI_AUTOBATTLE_TARGETED;
         } else {
-            ai->unit_behaviour[unit_id] = 0x0e;
+            ai->unit_autobattle_modes[unit_id] = BATTLE_AI_AUTOBATTLE_RECOVERY;
         }
         return;
     }

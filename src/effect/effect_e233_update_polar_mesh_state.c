@@ -30,7 +30,7 @@ s32 effect_e233_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
     entry = &g_effect_geometry_table->entries[geometry_index].polar_mesh;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
 
@@ -65,7 +65,7 @@ s32 effect_e233_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
         work->destroy_delay = 0;
         work->base_u = entry->texture_u;
         work->base_v = entry->texture_v;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
@@ -326,7 +326,7 @@ s32 effect_e233_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
             battle_heap_free_block(work);
             record->work_slots[byte_offset] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

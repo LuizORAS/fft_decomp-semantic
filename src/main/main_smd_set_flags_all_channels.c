@@ -9,8 +9,8 @@ void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music) {
     channel = music->channels;
     count = music->channel_count;
     do {
-        if (channel->active != 0)
-            channel->active |= mask;
+        if (channel->flags != 0)
+            channel->flags |= mask;
         channel++;
     } while (--count != 0);
 }

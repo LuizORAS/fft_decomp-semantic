@@ -26,7 +26,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
     }
     battle_move_snap_axis_to_current_tile_exit_edge(direction, unit);
     if (g_battle_move_step_value.bits.length == 0) {
-        rider = unit->current_unit_id_plus_one;
+        rider = unit->standing_on_unit_id_plus_one;
         if (rider != 0) {
             battle_unit_calculate_height_data(&g_battle_move_tile_occupant_height, rider - 1);
             if (g_battle_move_tile_occupant_height.unit_flags & 0x80) {
@@ -48,7 +48,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             g_battle_move_tile_occupant
                 = battle_unit_find_any_misc_data_at_map_coords(unit->movement.bytes.destination_x,
                     unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
-            unit->current_unit_id_plus_one = g_battle_move_tile_occupant->battle_data->misc_unit_id + 1;
+            unit->standing_on_unit_id_plus_one = g_battle_move_tile_occupant->battle_data->misc_unit_id + 1;
             battle_unit_calculate_height_data(
                 &g_battle_move_tile_occupant_height, g_battle_move_tile_occupant->battle_data->misc_unit_id);
             if (g_battle_move_tile_occupant_height.unit_flags & 0x80) {
@@ -59,7 +59,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
                 g_battle_move_destination_edge_height = g_battle_move_tile_occupant_height.total_height;
             }
         } else {
-            unit->current_unit_id_plus_one = 0;
+            unit->standing_on_unit_id_plus_one = 0;
             g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
                 + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                     * unit->destination_edge_height;
@@ -72,12 +72,12 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             switch (g_battle_move_step_value.bits.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->centre_tile_offset = 6;
+                unit->step_phase = 6;
                 return;
             case 1:
                 battle_move_start_unit_step_at_climb_speed(
                     unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->centre_tile_offset = 0xe;
+                unit->step_phase = 0xe;
                 return;
             }
             return;
@@ -87,15 +87,15 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             battle_unit_dismount_rider(unit);
             unit->step_speed = 0x2000;
             battle_move_start_unit_climb_hop_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-            unit->current_unit_id_plus_one = 0;
+            unit->standing_on_unit_id_plus_one = 0;
             return;
         }
         unit->step_speed = 0x2000;
         battle_move_start_unit_climb_jump_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-        unit->current_unit_id_plus_one = 0;
+        unit->standing_on_unit_id_plus_one = 0;
     } else {
         unit->step_speed = 0x2000;
         battle_move_start_unit_jump_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-        unit->current_unit_id_plus_one = 0;
+        unit->standing_on_unit_id_plus_one = 0;
     }
 }

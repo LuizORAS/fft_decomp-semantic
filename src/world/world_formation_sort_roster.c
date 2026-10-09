@@ -56,7 +56,7 @@ void world_formation_sort_roster(s32 index) {
     }
     count = 0;
     for (i = 0; i < g_world_formation_record_count; i++) {
-        if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & 4) {
+        if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & UNIT_FLAG_EGG) {
             guests[count++] = g_world_formation_record_order[i];
         }
     }

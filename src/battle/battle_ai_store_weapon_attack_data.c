@@ -17,9 +17,9 @@ void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_i
     weapon = &g_main_item_weapon_data[item_id];
     flags = weapon->flags;
     if (flags & WEAPON_FLAG_ARC) {
-        out->bytes.flags_3 |= ABILITY_SECONDARY_FLAG_3_REFLECTABLE;
+        out->bytes.flags_3 |= BATTLE_AI_ABILITY_FLAG_3_ARC_TRAJECTORY;
     } else if (flags & WEAPON_FLAG_DIRECT) {
-        out->bytes.flags_3 |= ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE;
+        out->bytes.flags_3 |= BATTLE_AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY;
     }
     formula = weapon->formula;
     switch (formula) {

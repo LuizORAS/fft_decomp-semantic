@@ -6,7 +6,7 @@ void battle_gfx_init_position_vector_copies(battle_unit_misc_data_t* unit) {
 
     unit->position_copies_active = 1;
     i = 0;
-    /* The retail loop walks display_svectors by an integer offset
+    /* The retail loop walks position_copies by an integer offset
      * (li 0x2ec / addiu 8); a typed SVECTOR pointer emits addiu from unit. */
     offset = 0x2ec;
     do {

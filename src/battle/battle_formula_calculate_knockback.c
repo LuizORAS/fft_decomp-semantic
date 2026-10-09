@@ -37,7 +37,7 @@ void battle_formula_calculate_knockback(void) {
     if (target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) {
         return;
     }
-    if ((target->team_flags & 3) == 3) {
+    if ((target->team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
         return;
     }
     attacker = g_battle_action_attacker;
@@ -79,7 +79,7 @@ void battle_formula_calculate_knockback(void) {
     }
     tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
     surface = tile->surface.bits.type;
-    if (tile->flags_06.bits.untargetable) {
+    if (tile->flags.bits.untargetable) {
         return;
     }
     if (tile->depth_half_height.bits.depth != 0) {
@@ -92,15 +92,15 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     if (!(battle_move_get_effective_flags(g_battle_action_target) & BATTLE_EFFECTIVE_MOVEMENT_FLY)) {
-        g_battle_action_current_ability.knockback_flags = 0x81;
+        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
     } else if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        g_battle_action_current_ability.knockback_flags = 0x81;
+        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
     } else {
-        g_battle_action_current_ability.knockback_flags = 0x82;
+        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_NO_FALL_DAMAGE;
     }
-    g_battle_action_current_ability.target_x = x;
-    g_battle_action_current_ability.target_y = y;
-    g_battle_action_current_ability.target_elevation = level;
+    g_battle_action_current_ability.target_new_x = x;
+    g_battle_action_current_ability.target_new_y = y;
+    g_battle_action_current_ability.target_new_elevation = level;
     g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK;
 }

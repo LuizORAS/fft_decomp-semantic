@@ -19,7 +19,7 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
     s32 base_blue;
     s32 i;
 
-    channels = g_map_background_gradient_transition.channels;
+    channels = g_battle_map_background_gradient_transition.channels;
     for (i = 0; i < 2; i++) {
         switch (mode) {
         case 0:
@@ -48,21 +48,21 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
         }
         case 4:
         case 9:
-            target_red = (g_map_background_gradient_transition.colors[i].red + red) << 16;
-            target_green = (g_map_background_gradient_transition.colors[i].green + green) << 16;
-            target_blue = (g_map_background_gradient_transition.colors[i].blue + blue) << 16;
+            target_red = (g_battle_map_background_gradient_transition.colors[i].red + red) << 16;
+            target_green = (g_battle_map_background_gradient_transition.colors[i].green + green) << 16;
+            target_blue = (g_battle_map_background_gradient_transition.colors[i].blue + blue) << 16;
             break;
         case 5:
-            target_red = (g_map_background_gradient_transition.colors[i].red << 15) + (red << 16);
-            target_green = (g_map_background_gradient_transition.colors[i].green << 15) + (green << 16);
-            target_blue = (g_map_background_gradient_transition.colors[i].blue << 15) + (blue << 16);
+            target_red = (g_battle_map_background_gradient_transition.colors[i].red << 15) + (red << 16);
+            target_green = (g_battle_map_background_gradient_transition.colors[i].green << 15) + (green << 16);
+            target_blue = (g_battle_map_background_gradient_transition.colors[i].blue << 15) + (blue << 16);
             break;
         case 6: {
             s32 grey;
 
-            base_red = g_map_background_gradient_transition.colors[i].red << 16;
-            base_green = g_map_background_gradient_transition.colors[i].green << 16;
-            base_blue = g_map_background_gradient_transition.colors[i].blue << 16;
+            base_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
+            base_green = g_battle_map_background_gradient_transition.colors[i].green << 16;
+            base_blue = g_battle_map_background_gradient_transition.colors[i].blue << 16;
             grey = (base_red * 2 + base_green * 3 + base_blue) / 6;
             target_red = grey + (red << 16);
             target_green = grey + (green << 16);
@@ -72,9 +72,9 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
         case 7: {
             s32 grey;
 
-            base_red = g_map_background_gradient_transition.colors[i].red << 16;
-            base_green = g_map_background_gradient_transition.colors[i].green << 16;
-            base_blue = g_map_background_gradient_transition.colors[i].blue << 16;
+            base_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
+            base_green = g_battle_map_background_gradient_transition.colors[i].green << 16;
+            base_blue = g_battle_map_background_gradient_transition.colors[i].blue << 16;
             grey = (base_red * 2 + base_green * 3 + base_blue) / 12;
             target_red = grey + (red << 16);
             target_green = grey + (green << 16);
@@ -82,12 +82,12 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
             break;
         }
         case 8:
-            target_red = g_map_background_gradient_transition.colors[i].red << 16;
-            target_green = g_map_background_gradient_transition.colors[i].green << 16;
-            target_blue = g_map_background_gradient_transition.colors[i].blue << 16;
+            target_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
+            target_green = g_battle_map_background_gradient_transition.colors[i].green << 16;
+            target_blue = g_battle_map_background_gradient_transition.colors[i].blue << 16;
             break;
         case 10:
-            g_map_background_gradient_transition.repeat = 0;
+            g_battle_map_background_gradient_transition.repeat = 0;
             return;
         }
 
@@ -124,18 +124,18 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
         }
     }
     if (frame_duration != 0) {
-        g_map_background_gradient_transition.active = 1;
-        g_map_background_gradient_transition.phase = 0;
-        g_map_background_gradient_transition.tick = 0;
-        g_map_background_gradient_transition.period = frame_duration;
+        g_battle_map_background_gradient_transition.active = 1;
+        g_battle_map_background_gradient_transition.phase = 0;
+        g_battle_map_background_gradient_transition.tick = 0;
+        g_battle_map_background_gradient_transition.period = frame_duration;
         if (mode == 9) {
-            g_map_background_gradient_transition.repeat = 1;
-            g_map_background_gradient_transition.repeat_rgb[0] = red;
-            g_map_background_gradient_transition.repeat_rgb[1] = green;
-            g_map_background_gradient_transition.repeat_rgb[2] = blue;
+            g_battle_map_background_gradient_transition.repeat = 1;
+            g_battle_map_background_gradient_transition.repeat_rgb[0] = red;
+            g_battle_map_background_gradient_transition.repeat_rgb[1] = green;
+            g_battle_map_background_gradient_transition.repeat_rgb[2] = blue;
         }
     } else {
-        g_map_background_gradient_transition.active = 0;
+        g_battle_map_background_gradient_transition.active = 0;
         current.first.red = channels[0].red / 0x10000;
         current.first.green = channels[0].green / 0x10000;
         current.first.blue = channels[0].blue / 0x10000;

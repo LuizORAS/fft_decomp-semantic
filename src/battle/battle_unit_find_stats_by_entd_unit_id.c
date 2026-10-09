@@ -31,7 +31,7 @@ battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_bat
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)
             && unit->existence != unit->entd_slot) {
-            if (unit->existence == 0) {
+            if (unit->existence == BATTLE_UNIT_EXISTENCE_OFF_FIELD) {
                 *out_battle_id = -2;
                 return unit;
             }

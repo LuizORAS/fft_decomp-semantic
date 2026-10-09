@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Allocates a game-heap buffer for a TIM of `size` bytes at disc `sector`,
+/* Allocates a game-heap buffer for a file of `size` bytes at disc `sector`,
  * queues the read and blocks until the file has landed.  Twin of
  * main_file_get_smd, which draws from the SMD allocator instead. */
 void* main_file_load_to_heap(s32 sector, s32 size) {

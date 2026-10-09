@@ -83,12 +83,19 @@ typedef enum ability_secondary_flags_1 {
     ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
     ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
     ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
     ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
+    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS = 0x40, /* mark the panels under enemy units */
+    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS = 0x80,  /* mark the panels under allied units */
 } ability_secondary_flags_1_e;
 
 typedef enum ability_secondary_flags_2 {
     ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
+    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
+    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
     ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
+    ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET = 0x10, /* tile targeting without the follow-unit choice */
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
 } ability_secondary_flags_2_e;
@@ -108,7 +115,7 @@ extern battle_ability_animation_data_t g_battle_ability_animation_data[BATTLE_AB
 extern u8 g_battle_ability_charge_animation_sets[BATTLE_CHARGE_ANIMATION_SET_COUNT]
                                                 [BATTLE_CHARGE_ANIMATION_VARIANT_COUNT];
 
-extern s16 g_ability_effect_id;
+extern s16 g_battle_ability_effect_id;
 extern s32 g_battle_menu_selected_command;
 extern s32 g_battle_spell_quote_last_ability_id;
 extern u8 g_battle_loaded_ability_flags_1;
@@ -136,8 +143,16 @@ typedef enum battle_ai_simulation_phase {
 enum {
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES = 0x01,
+    BATTLE_AI_ABILITY_FLAG_1_AFFECTS_HP = 0x80,
+    BATTLE_AI_ABILITY_FLAG_2_EVADEABLE = 0x02,
+    BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE = 0x20,
     BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES = 0x80,
+    BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK = 0x01,
+    BATTLE_AI_ABILITY_FLAG_3_MAGICAL_ATTACK = 0x02,
     BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK = 0x3c,
+    BATTLE_AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY = 0x40,
+    BATTLE_AI_ABILITY_FLAG_3_ARC_TRAJECTORY = 0x80,
+    BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION = 0x01, /* the static table's bit; the AI working copy reuses byte 4 */
     BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
 
@@ -161,6 +176,8 @@ enum {
     BATTLE_AI_ABILITY_UNDEAD_REVERSE = 0x00002000,
     BATTLE_AI_ABILITY_REFLECTABLE = 0x00004000,
     BATTLE_AI_ABILITY_TARGET_MAP_TILES = 0x00008000,
+    BATTLE_AI_ABILITY_PHYSICAL_ATTACK = 0x00010000,
+    BATTLE_AI_ABILITY_MAGICAL_ATTACK = 0x00020000,
     BATTLE_AI_ABILITY_LINEAR_TRAJECTORY = 0x00200000,
     BATTLE_AI_ABILITY_DIRECT_TRAJECTORY = 0x00400000,
     BATTLE_AI_ABILITY_ARC_TRAJECTORY = 0x00800000,
@@ -327,7 +344,7 @@ typedef char battle_ai_status_tail_must_be_at_offset_8
  * inverted-priority scratch at +0x154 and the selected action at +0x17fc.
  */
 typedef struct battle_ai_action_data {
-    u8 target_flags_set; /* 0x00; set to 1; name provisional */
+    u8 act_before_move;  /* 0x00; 1: act from the current tile, then move; 0: move to coords first */
     u8 reflected_action; /* 0x01; set while evaluating reflected-origin candidates */
     u8 _unused_02;
     u8 wait_facing_hint;       /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
@@ -418,6 +435,7 @@ typedef enum battle_ai_targeting_flags_2 {
 typedef enum battle_ai_target_setting_flags {
     BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS = 0x01000000,
     BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS = 0x02000000,
+    BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER = 0x20000000, /* the acting unit can use the Holy Water item ability */
     BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE = 0x40000000,
 } battle_ai_target_setting_flags_e;
 
@@ -438,8 +456,8 @@ typedef struct battle_ai_unit_decision {
     u8 mp_ability_mod;    /* 0x0b */
     u8 silence_mod;       /* 0x0c */
     u8 evade_mod;         /* 0x0d */
-    u8 lowest_range;      /* 0x0e; plus unit move */
-    u8 highest_range;     /* 0x0f; plus unit move */
+    u8 enemy_ability_min_reach; /* 0x0e; least range + AoE of the enemy-targeting abilities, plus Move */
+    u8 ally_ability_min_reach;  /* 0x0f; least range + AoE of the ally-targeting abilities, plus Move */
 } battle_ai_unit_decision_t;
 typedef char battle_ai_unit_decision_size_must_be_0x10[(sizeof(battle_ai_unit_decision_t) == 0x10) ? 1 : -1];
 
@@ -492,17 +510,17 @@ typedef struct battle_ai_data {
     battle_ai_coords_t considered_unit_coords; /* 0x0c74 */
     battle_ai_targetability_t targetability;   /* 0x0c78 */
     /* Included target/strike pairs, not unique units; 0xff disables counting. */
-    u16 total_hit_percent;            /* 0x0cb8 */
-    u8 hit_counter;                   /* 0x0cba */
-    u8 attack_origin_tile_count;      /* 0x0cbb */
-    u8 movable_tile_count;            /* 0x0cbc */
-    u8 ability_counter;               /* 0x0cbd */
-    u8 ability_targets_enemies_or_mp; /* 0x0cbe; provisional name: any usable ability has (flags & 0x42) == 0x40 */
-    u8 crystal_treasure_status;       /* 0x0cbf; 1 crystal, 2 treasure */
+    u16 total_hit_percent;       /* 0x0cb8 */
+    u8 hit_counter;              /* 0x0cba */
+    u8 attack_origin_tile_count; /* 0x0cbb */
+    u8 movable_tile_count;       /* 0x0cbc */
+    u8 ability_counter;          /* 0x0cbd */
+    u8 has_mp_recovery_ability;  /* 0x0cbe; a usable ability affects MP and does not target enemies */
+    u8 crystal_treasure_status;  /* 0x0cbf; 1 crystal, 2 treasure */
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
-    u8 unit_action_records[16][0x14]; /* 0x0cd4 */
+    u8 unit_action_records[16][0x14]; /* 0x0cd4; battle_ai_command_action_t rows */
     u16 throw_ability_id;             /* 0x0e14 */
     u8 throw_weapon_id;               /* 0x0e16 */
     /* All slots with entd_slot != 0xff, capped at 255 by 0x80199d20. */
@@ -510,7 +528,7 @@ typedef struct battle_ai_data {
     u8 unit_acts_before_me[BATTLE_UNIT_SLOT_COUNT];  /* 0x0e18..0x0e2c; all slots cleared at 0x8019d408–0x8019d41c */
     u8 movement_scenario;                            /* 0x0e2d; 0..2 */
     u8 acting_unit_id;                               /* 0x0e2e */
-    u8 acting_unit_battle_id;                        /* 0x0e2f */
+    u8 acting_unit_compact_index;                    /* 0x0e2f; unit_compact_indices[acting_unit_id] */
     battle_ai_coords_t acting_unit_coords;           /* 0x0e30 */
     battle_ai_unit_decision_t* acting_unit_decision; /* 0x0e34 */
     u8 acting_unit_move;                             /* 0x0e38 */
@@ -528,10 +546,10 @@ typedef struct battle_ai_data {
     u8 reflected_target_unit_index;      /* 0x0e4a */
     u8 reflected_candidate_level;        /* 0x0e4b */
     u8 ability_effect_on_self;           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
-    u8 weapon_range_flag;                /* 0x0e4d */
+    u8 ranked_origin_scan;               /* 0x0e4d; consume the ranked origin tiles */
     u8 useful_on_caster_flag;            /* 0x0e4e */
     u8 acting_unit_remaining_clockticks; /* 0x0e4f */
-    u8 unit_status_records[16][8];       /* 0x0e50 */
+    u8 unit_status_records[16][8];       /* 0x0e50; battle_ai_status_snapshot_t rows */
     u8 saved_ability_ct;                 /* 0x0ed0 */
     u8 saved_current_status;             /* 0x0ed1 */
     u8 saved_inflicted_status;           /* 0x0ed2 */
@@ -550,9 +568,9 @@ typedef struct battle_ai_data {
     u8 math_type_index;       /* 0x0ede; 0..3 */
     u8 math_multiplier_index; /* 0x0edf; 4..7 */
     /* Turn-controller globals saved/restored by 0x8019d37c–0x8019db80. */
-    s32 saved_turn_state_0;                            /* 0x0ee0; snapshot of 0x8018f518 */
-    s32 saved_turn_state_1;                            /* 0x0ee4; snapshot of 0x8018f51c */
-    s32 saved_turn_state_2;                            /* 0x0ee8; snapshot of 0x8018f520 */
+    s32 saved_between_turn_state;                      /* 0x0ee0; g_battle_between_turn_state during the simulation */
+    s32 saved_between_turn_resume_state;               /* 0x0ee4; g_battle_between_turn_resume_state */
+    s32 saved_turn_unit_id;                            /* 0x0ee8; g_battle_turn_unit_id */
     u16 simulated_turn_events;                         /* 0x0eec; interturn loop stops at 256 */
     u8 action_simulation_phase;                        /* 0x0eee; battle_ai_simulation_phase_e */
     u8 _padding_0eef;                                  /* aligns ability_lists */
@@ -565,22 +583,22 @@ typedef struct battle_ai_data {
     battle_ai_action_data_t selected_action;                 /* 0x17fc */
     /* 0x8019aea0 compares/copies coordinate words; 0x80194da4 consumes
      * x/elevation/y to clear reachable tiles. The list's broader policy is unknown. */
-    battle_ai_coords_t coords_181c[4];                                /* 0x181c; x == 0xff terminates the list */
+    battle_ai_coords_t known_trap_coords[4];                          /* 0x181c; x == 0xff terminates the list */
     battle_ai_unit_decision_t unit_decisions[BATTLE_UNIT_SLOT_COUNT]; /* 0x182c */
     /* 0x80195ed4 saves the complete decision before retreat; 0x80195efc
      * restores it only after the child finishes, not when it suspends. */
     battle_ai_unit_decision_t saved_acting_unit_decision; /* 0x197c */
-    u8 unit_battle_ids[BATTLE_UNIT_SLOT_COUNT];           /* 0x198c */
-    u8 unit_behaviour[BATTLE_UNIT_SLOT_COUNT];            /* 0x19a1; 0x11 coward, 0x0e/0x0c aggressive */
+    u8 unit_compact_indices[BATTLE_UNIT_SLOT_COUNT];      /* 0x198c; slot -> index among present units (0..15) */
+    u8 unit_autobattle_modes[BATTLE_UNIT_SLOT_COUNT];     /* 0x19a1; battle_ai_autobattle_mode_e from ENTD AI flags */
     u8 autobattle_setting;                                /* 0x19b6 */
-    u8 decision_state;                                    /* 0x19b7 */
+    u8 resume_pending;                                    /* 0x19b7; an AI routine suspended on its frame budget */
     u8 random_use_threshold;                              /* 0x19b8; 0x80195778..0x80195788 stores
                                                            * floor(128 * random-use entries / eligible entries).
                                                            * A zero denominator leaves the prior byte unchanged. */
     u8 water_penalty;                                     /* 0x19b9 */
     u8 valuable_target_hit;                               /* 0x19ba; a counted hit on unit_targetable sets this
                                                            * at 0x8019e010..0x8019e020. */
-    u8 targetable_override;                               /* 0x19bb */
+    u8 single_enemy_remaining;                            /* 0x19bb; exactly one enemy counted */
     u8 ability_processing_done;                           /* 0x19bc */
     u8 action_taken;                                      /* 0x19bd */
     u8 movement_taken;                                    /* 0x19be */
@@ -665,6 +683,9 @@ typedef enum battle_ai_direction {
 } battle_ai_direction_e;
 
 typedef enum battle_ai_targeting_flags_1 {
+    BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY = 0x01, /* a usable ability has a direct or arc trajectory */
+    BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES = 0x02,    /* a usable ability affects HP and targets allies */
+    BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT = 0x04,     /* ally-targeting share of the usable abilities >= 77/128 */
     BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION = 0x08,
 } battle_ai_targeting_flags_1_e;
 
@@ -865,18 +886,51 @@ typedef enum battle_facing {
     BATTLE_FACING_MASK = 0x0fff,
 } battle_unit_facing_e;
 
+/* Unit animation ids (SEQ script indices) that the code selects by number. */
+typedef enum battle_unit_animation {
+    BATTLE_UNIT_ANIMATION_STAND = 0x02, /* stop, petrify, cursed; the default hit reaction */
+    BATTLE_UNIT_ANIMATION_IDLE = 0x03,
+    BATTLE_UNIT_ANIMATION_IDLE_HASTE = 0x04,
+    BATTLE_UNIT_ANIMATION_IDLE_SLOW = 0x05,
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING = 0x06, /* sheets with the flying flag */
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE = 0x07,
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW = 0x08,
+    BATTLE_UNIT_ANIMATION_FLOAT_IDLE = 0x09, /* floating or flying units; also the crystal sprite */
+    BATTLE_UNIT_ANIMATION_DEFEND = 0x17,
+    BATTLE_UNIT_ANIMATION_DODGE = 0x18,
+    BATTLE_UNIT_ANIMATION_HURT = 0x19,
+    BATTLE_UNIT_ANIMATION_DEAD = 0x1a,
+    BATTLE_UNIT_ANIMATION_RAISE_HANDS = 0x1b, /* healed, blade grasp or catch, crystal pickup */
+    BATTLE_UNIT_ANIMATION_JUMP = 0x1e,
+    BATTLE_UNIT_ANIMATION_FALL = 0x1f,
+    BATTLE_UNIT_ANIMATION_CLIMB = 0x23,
+    BATTLE_UNIT_ANIMATION_SLEEP = 0x24,
+    BATTLE_UNIT_ANIMATION_CONFUSION = 0x25,
+    BATTLE_UNIT_ANIMATION_FOUND_ITEM = 0x33,
+    BATTLE_UNIT_ANIMATION_DEATH = 0x34,
+    BATTLE_UNIT_ANIMATION_REVIVE = 0x35,
+    BATTLE_UNIT_ANIMATION_HOLD_ITEM = 0x39,
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_HIGH = 0x58, /* the attacker stands at least 12 higher */
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LEVEL = 0x59,
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW = 0x5a,
+    BATTLE_UNIT_ANIMATION_JUMP_DEPART = 0x75, /* the jump status is added in event mode */
+    BATTLE_UNIT_ANIMATION_JUMP_LAND = 0x76,
+} battle_unit_animation_e;
+
 /* Word-view masks for the high motion byte at misc-unit +0x83. */
 typedef enum battle_motion_flags {
+    BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE = 0x01000000,
     BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS = 0x02000000,
     BATTLE_MOTION_FLAG_SUPPRESS_PALETTE_UPDATE = 0x04000000,
     BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP = 0x08000000,
     BATTLE_MOTION_FLAG_FLOAT = 0x10000000,
+    BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE = 0x20000000, /* set with each stored animation request */
 } battle_motion_flags_e;
 
 /* Provisional effect state view used by the two keyframe-action dispatchers. */
 typedef struct battle_keyframe_effect_state {
     u8 _unused_00[2];
-    s16 callback_arg_02; /* Passed as callback arg0 by the 0x801a4000 dispatcher. */
+    s16 record_index; /* Passed as callback arg0 by the 0x801a4000 dispatcher. */
     u8 _unused_04[0x22 - 4];
     u8 callback_state[7]; /* 0x22 */
     u8 _unused_29[0xd4 - 0x29];
@@ -891,9 +945,9 @@ void battle_script_rotate_unit(const u8* parameters);
 
 /* dead unit */
 
-extern s32 g_dead_unit_action;
-extern crystal_pickup_result_t* g_dead_unit_context;
-extern s32 g_dead_unit_result;
+extern s32 g_battle_dead_unit_action;
+extern crystal_pickup_result_t* g_battle_dead_unit_context;
+extern s32 g_battle_dead_unit_result;
 
 /* deploy */
 /* Formation row read by battle_unit_init_deployed_units_data: five 4-byte
@@ -905,7 +959,7 @@ typedef struct battle_deployed_coords {
     u8 facing_elevation_flags; /* +3; bit 0x10 marks unit absent before graphics/status setup */
 } battle_deployed_coords_t;
 
-extern const RECT g_deployment_clear_rect;
+extern const RECT g_battle_deployment_clear_rect;
 extern u16 g_battle_deployed_unit_palettes[2][16];
 extern s32 g_battle_deployment_skipped;
 
@@ -913,7 +967,7 @@ extern s32 g_battle_deployment_skipped;
 extern s32 g_battle_cursor_x;
 extern s32 g_battle_cursor_y;
 extern s32 g_battle_cursor_z;
-extern s32 g_controller_input_copy_12;
+extern s32 g_battle_controller_input_copy_12;
 extern u16 g_battle_cursor_screen_x;
 extern s32 g_battle_cursor_previous_x;     /* cursor X before this step */
 extern s32 g_battle_cursor_previous_y;     /* cursor Y before this step */
@@ -991,7 +1045,7 @@ extern u32 g_battle_script_event_secondary_repeat_counter;
 extern s32* g_battle_script_variables;
 extern u16 g_battle_scenario_music_1_id;
 extern u16 g_battle_scenario_music_2_id;
-extern u16 g_event_input_suppression_frames;
+extern u16 g_battle_event_input_suppression_frames;
 extern s32 g_battle_menu_input_lock_mode;
 
 /* BATTLE pointer slot 0x80173ca4; WORLD pointer slot 0x801cd75c. */
@@ -1598,15 +1652,15 @@ typedef char
  * start at 0x0e; battle_initialize_*_sprite_display fill in the header.
  */
 typedef struct battle_gfx_sprite_display_data {
-    u8 red;             /* 0x00 */
-    u8 green;           /* 0x01 */
-    u8 blue;            /* 0x02 */
-    u8 part_count;      /* 0x03; graphics count passed to battle_gfx_construct_polygon_data_for_units */
-    s16 spritesheet_id; /* 0x04; 0x1e = ITEM.BIN, 0x1f = FRAME.BIN */
-    u16 clut;           /* 0x06 */
-    s16 scale_x;        /* 0x08; 1.0 = 0x1000 */
-    s16 scale_y;        /* 0x0a; 1.0 = 0x1000 */
-    s16 y_rotation;     /* 0x0c; SEQ 0xe5 saves it, 0xdf clears it; the frame header selects it */
+    u8 red;        /* 0x00 */
+    u8 green;      /* 0x01 */
+    u8 blue;       /* 0x02 */
+    u8 part_count; /* 0x03; graphics count passed to battle_gfx_construct_polygon_data_for_units */
+    s16 tpage;     /* 0x04; 0x1e = ITEM.BIN, 0x1f = FRAME.BIN */
+    u16 clut;      /* 0x06 */
+    s16 scale_x;   /* 0x08; 1.0 = 0x1000 */
+    s16 scale_y;   /* 0x0a; 1.0 = 0x1000 */
+    s16 rotation;  /* 0x0c; SEQ 0xe5 saves it, 0xdf clears it; the frame header selects it */
     battle_gfx_sprite_part_display_data_t parts[1]; /* 0x0e; count depends on the display */
 } battle_gfx_sprite_display_data_t;
 /*
@@ -1633,7 +1687,7 @@ typedef struct battle_unit_sprite_block {
     u16 script_pos;                            /* 0x06 */
     u16 frame;                                 /* 0x08 */
     u16 wait;                                  /* 0x0a */
-    u16 counter_0c;                            /* 0x0c */
+    u16 restart_count;                         /* 0x0c */
     u16 saved_animation_id;                    /* 0x0e */
     u16 saved_script_pos;                      /* 0x10 */
     u16 wait_bias;                             /* 0x12 */
@@ -1715,9 +1769,9 @@ typedef struct battle_unit_misc_data {
     u8 spritesheet_id;                      /* 0x006 */
     u8 stored_palette;                      /* 0x007 */
     u16 state_frame_counter;                /* 0x008; incremented while renderer action states wait */
-    u16 ability_in_use;                     /* 0x00a; always accessed as a halfword */
+    u16 draw_enabled;                       /* 0x00a; set by event Draw, cleared by Erase; a halfword */
     u16 requested_animation;                /* 0x00c */
-    u16 vram_spritesheet_id;                /* 0x00e */
+    u16 tpage;                              /* 0x00e; VRAM slot + 0x14: the sheet's texture page */
     u16 vram_palette_id;                    /* 0x010 */
     /* Read-modify-written as a halfword over 0x012..0x013
      * (battle_gfx_update_sprite_transparency_flag). */
@@ -1742,13 +1796,13 @@ typedef struct battle_unit_misc_data {
      * battle_unit_shift_down_or_up read-modify-write the first;
      * increment_another_coords_by_misc_id(_copy) accumulate into the
      * second. */
-    SVECTOR effect_vector; /* 0x050 */
+    SVECTOR seq_offset; /* 0x050; shift written by the SEQ script opcodes */
     /* Screen offset added to the projected sprite position (0x80086b44) by
      * SEQ opcode 0xf9; cleared with both effect vectors by
      * battle_unit_place_in_new_location. vx/vy are the screen X/Y offsets; vz is
      * only ever cleared with them. */
-    SVECTOR screen_offset;   /* 0x058 */
-    SVECTOR effect_vector_2; /* 0x060 */
+    SVECTOR screen_offset; /* 0x058 */
+    SVECTOR event_offset;  /* 0x060; accumulated by the event SpriteMove instructions */
     u8 _unused_068[4];
     /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256,
      * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
@@ -1759,13 +1813,13 @@ typedef struct battle_unit_misc_data {
     u16 facing;                                          /* 0x070 */
     u16 attack_facing;                                   /* 0x072 */
     u16 depth_height_offset;                             /* 0x074 */
-    u16 mounted_height_offset;                           /* 0x076 */
+    u16 float_bob_offset;                                /* 0x076; from the float bob table */
     u16 float_bob_phase;          /* 0x078; advanced by g_main_system_animation_speed at 0x8007ea98 */
     s16 special_graphic_y_offset; /* 0x07a */
     u8 map_x;                     /* 0x07c */
     u8 map_y;                     /* 0x07d */
     u8 map_z;                     /* 0x07e */
-    u8 centre_tile_offset;        /* 0x07f */
+    u8 step_phase;                /* 0x07f; movement step phase, 0 = no step */
     battle_move_destination_t movement;
     u8 previous_map_x;          /* 0x084 */
     u8 previous_map_y;          /* 0x085 */
@@ -1784,20 +1838,20 @@ typedef struct battle_unit_misc_data {
      * non-zero count means the unit is still moving (unit_moving_check_by_misc_id,
      * process_unit_movement); set_unit_movement_flag ORs 0x10 into a step.
      */
-    u8 movement_path_count;                 /* 0x09c */
-    battle_move_step_t movement_path[0x7c]; /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
-    u8 movement_flags;                      /* 0x119; battle_move_effective_flags_e bits */
-    u8 _unused_11a;
-    u8 mount_byte;                     /* 0x11b */
-    battle_move_step_t movement_value; /* 0x11c */
-    u8 last_path_count;                /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
-    u8 current_unit_id_plus_one;       /* 0x11e */
-    u8 previous_unit_id_plus_one;      /* 0x11f */
-    s16 item_get_camera_x;             /* 0x120 */
-    s16 item_get_camera_y;             /* 0x122 */
+    u8 movement_path_count;                   /* 0x09c */
+    battle_move_step_t movement_path[0x7c];   /* 0x09d..0x118; step: direction | 0x20 higher elevation | jump length */
+    u8 movement_flags;                        /* 0x119; battle_move_effective_flags_e bits */
+    u8 _unused_11a;                           /* 0x11a; copy of the path height offset; only cleared */
+    u8 pending_mount;                         /* 0x11b; 0x80 | id of the mount on the destination tile */
+    battle_move_step_t current_path_step;     /* 0x11c; path step byte being executed */
+    u8 last_path_count;                       /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
+    u8 standing_on_unit_id_plus_one;          /* 0x11e; unit stood on, 0 = none */
+    u8 previous_standing_on_unit_id_plus_one; /* 0x11f; restored when a move is undone */
+    s16 camera_relative_x;                    /* 0x120; camera-space x from RotTrans */
+    s16 camera_relative_y;                    /* 0x122 */
     u8 _unused_124[4];
     u32 otag_depth_index;              /* 0x128 */
-    s32 status_bubble_gte_flag;        /* 0x12c; RotTrans flag output while positioning the status bubble */
+    s32 gte_flag;                      /* 0x12c; RotTrans flag output of the unit and status bubble transforms */
     u8 mount_state;                    /* 0x130; battle_misc_mount_state_e */
     u8 mount_partner_misc_id;          /* 0x131; linked rider or mount misc ID */
     u8 previous_mount_state;           /* 0x132; battle_misc_mount_state_e */
@@ -1806,9 +1860,9 @@ typedef struct battle_unit_misc_data {
     u16 used_ability_id;               /* 0x138 */
     u8 used_item_or_weapon_id;         /* 0x13a */
     u8 equipped_weapon_type;           /* 0x13b */
-    u8 ability_ct_resolved;            /* 0x13c */
+    u8 turn_action_flags;              /* 0x13c; |= 1 moved, |= 2 acted this turn */
     u8 team_flags;                     /* 0x13d */
-    u8 palette_modifier;               /* 0x13e */
+    u8 fade_out_phase;                 /* 0x13e; 0 none, 1 flash, 2 darken, 3 removed */
     u8 horizontal_flip_flag;           /* 0x13f */
     u32 status_flags_1_4;              /* 0x140; battle_misc_status_flags_1_4_e */
     u32 status_flags_5_6;              /* 0x144; battle_misc_status_flags_5_6_e */
@@ -1832,18 +1886,17 @@ typedef struct battle_unit_misc_data {
     battle_dismount_coords_t dismount; /* 0x184 */
     u8 _unused_18a[2];
     /* Current action data, 0x18c..0x1d7. */
-    u8 action_18c;           /* 0x18c; "Reaction ID / Attacking unit ID? - Used Ability ID" */
+    u8 actor_id;             /* 0x18c; first byte of the strike work record: the acting unit's battle id */
     u8 target_count;         /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
     u8 target_list[0x10];    /* 0x18e; misc ids, 0xff terminated */
     u8 animate_on_miss_flag; /* 0x19e; 1 when animate-on-miss is false, cleared on hit */
-    u8 control_value_19f;    /* 0x19f; 0x01 math skill */
+    u8 math_skill_flag;      /* 0x19f; 0x01 math skill */
     u16 last_attack_id;      /* 0x1a0 */
-    u8 ability_formula;      /* 0x1a2; can poach? */
+    u8 post_action_message;  /* 0x1a2; 6 poached, 9 trained, else 0 */
     u8 reaction_occurred;    /* 0x1a3 */
     u8 continue_attack;      /* 0x1a4 */
     u8 current_hit_number;   /* 0x1a5 */
-    u8 reaction_id_1a6;      /* 0x1a6 */
-    u8 _unused_1a7;
+    s16 reaction_id;         /* 0x1a6; g_battle_action_current_ability.reaction_id, the ability shown for the attack */
     u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
     u8 target_new_y;         /* 0x1a9 */
     u8 target_new_map_level; /* 0x1aa */
@@ -1868,20 +1921,20 @@ typedef struct battle_unit_misc_data {
     /* The unit_t sprite data block starts at 0x1d8; the trigger is written
      * as a halfword by animate_and_set_enemy_level_data_by_misc_id.
      * 0x1d8..0x207 is the unit's battle_unit_anim_state_t, spelled out here. */
-    u16 sprite_graphic_trigger;    /* 0x1d8 */
-    u16 sprite_graphic_type;       /* 0x1da */
-    u16 encoded_animation;         /* 0x1dc: half-shifted animation id */
-    u16 animation_script_pos;      /* 0x1de: frame-command byte counter (anim state script_pos) */
-    u16 animation_frame;           /* 0x1e0: current frame (anim state frame) */
-    u16 animation_countdown;       /* 0x1e2: frames remaining in current attack state */
-    u16 secondary_animation_state; /* 0x1e4 */
-    u16 saved_animation_id;        /* 0x1e6 */
-    u16 saved_script_pos;          /* 0x1e8 */
-    u16 animation_wait_bias;       /* 0x1ea */
-    u16 animation_frame_bias;      /* 0x1ec */
-    u16 animation_loop_count;      /* 0x1ee */
-    u16 animation_flags;           /* 0x1f0; toggled by script opcodes 0xec/0xeb */
-    u8 _padding_1f2[2];            /* 0x1f2; aligns shp_data */
+    u16 sprite_graphic_trigger;  /* 0x1d8 */
+    u16 sprite_graphic_type;     /* 0x1da */
+    u16 encoded_animation;       /* 0x1dc: half-shifted animation id */
+    u16 animation_script_pos;    /* 0x1de: frame-command byte counter (anim state script_pos) */
+    u16 animation_frame;         /* 0x1e0: current frame (anim state frame) */
+    u16 animation_countdown;     /* 0x1e2: frames remaining in current attack state */
+    u16 animation_restart_count; /* 0x1e4; SEQ loop rewinds since the animation changed */
+    u16 saved_animation_id;      /* 0x1e6 */
+    u16 saved_script_pos;        /* 0x1e8 */
+    u16 animation_wait_bias;     /* 0x1ea */
+    u16 animation_frame_bias;    /* 0x1ec */
+    u16 animation_loop_count;    /* 0x1ee */
+    u16 animation_flags;         /* 0x1f0; toggled by script opcodes 0xec/0xeb */
+    u8 _padding_1f2[2];          /* 0x1f2; aligns shp_data */
     /* unit_t sprite SHP/SEQ pointers (0x1f4/0x1f8); poach_morbol_transformation
      * rewrites both for the Malboro spritesheet. */
     battle_gfx_unit_shp_frame_tables_t* shp_data;             /* 0x1f4 */
@@ -1907,7 +1960,7 @@ typedef struct battle_unit_misc_data {
     u16 numeric_display_value;                             /* 0x2c0; number to display */
     s16 numeric_display_progress;                          /* 0x2c2; animation progress, capped at 0x15 */
     battle_gfx_sprite_display_data_t* numeric_displays[3]; /* 0x2c4, 0x2c8, 0x2cc */
-    u8 item_ability_display;                               /* 0x2d0; item ability display (byte store) */
+    u8 item_display_active;                                /* 0x2d0; SEQ opcodes: draw the item sprite (byte store) */
     u8 _unused_2d1;                                        /* 0x2d1 */
     s8 item_get_x_offset;                                  /* 0x2d2; setup_item_get_rendering reads (s8) */
     s8 item_get_y_offset;                                  /* 0x2d3 */
@@ -1928,7 +1981,7 @@ typedef struct battle_unit_misc_data {
     u32 position_copies_active;
     /* Six vectors used during sprite rotation/scaling render (0x2ec);
      * battle_gfx_init_position_vector_copies seeds all six from screen_x/z/y. */
-    SVECTOR display_svectors[6]; /* 0x2ec..0x31b */
+    SVECTOR position_copies[6]; /* 0x2ec..0x31b */
     /* Sprite display sections (0x31c..0x43b): a battle_gfx_sprite_display_data_t
      * header and its parts each; the unit display has 8 parts, a weapon
      * display 3. */
@@ -1959,6 +2012,20 @@ typedef char battle_misc_facing_hint_must_be_0x164
 typedef char battle_misc_target_x_must_be_0x168
     [((unsigned long)&((battle_unit_misc_data_t*)0)->command_state.cursor.target_panel == 0x168) ? 1 : -1];
 
+/* battle_unit_misc_data_t.fade_out_phase: the fade-out removal's progress. */
+typedef enum battle_misc_fade_out_phase {
+    BATTLE_MISC_FADE_OUT_NONE = 0,
+    BATTLE_MISC_FADE_OUT_FLASH = 1,
+    BATTLE_MISC_FADE_OUT_DARKEN = 2,
+    BATTLE_MISC_FADE_OUT_REMOVED = 3,
+} battle_misc_fade_out_phase_e;
+
+/* battle_unit_misc_data_t.turn_action_flags. */
+typedef enum battle_misc_turn_action_flags {
+    BATTLE_MISC_TURN_ACTION_MOVED = 0x01,
+    BATTLE_MISC_TURN_ACTION_ACTED = 0x02,
+} battle_misc_turn_action_flags_e;
+
 extern u16 g_battle_screen_fade_intensity;
 extern POLY_F4 g_battle_screen_fade_polygons[2];
 extern DR_MODE g_battle_screen_fade_draw_modes[];
@@ -1968,20 +2035,6 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(
     struct battle_unit_misc_data* unit, const battle_screen_coords_t* coords);
 
 /* camera */
-/* Script-variable word indices that mirror the live camera. Proven by
- * battle_camera_store_state_to_script_variables (0x80143a9c), which writes
- * them, and battle_camera_load_state_from_script_variables, which reads them back into a VECTOR
- * (X -> vx, Z (height) -> vy, Y (map depth) -> vz). */
-enum {
-    BATTLE_CAMERA_X_WORD_INDEX = 0x1a,
-    BATTLE_CAMERA_Z_WORD_INDEX = 0x1b,
-    BATTLE_CAMERA_Y_WORD_INDEX = 0x1c,
-    BATTLE_CAMERA_TILT_WORD_INDEX = 0x1d,
-    BATTLE_CAMERA_YAW_WORD_INDEX = 0x1e,
-    BATTLE_CAMERA_ROLL_WORD_INDEX = 0x1f,
-    BATTLE_CAMERA_ZOOM_WORD_INDEX = 0x20,
-};
-
 /* Camera rotation angles: an unsigned view of an SVECTOR's first three
  * halfwords (the target loads them with lhu). */
 typedef struct battle_camera_rotation {
@@ -2318,7 +2371,7 @@ typedef char battle_effect_target_size_must_be_0x0a[(sizeof(battle_effect_target
 typedef struct battle_effect_secondary_init {
     u16 target_count;        /* 0x00 */
     u8 palette_target_count; /* 0x02; entries in palette_target_ids */
-    u8 math_skill_flag;      /* 0x03; strike work control_value_19f */
+    u8 math_skill_flag;      /* 0x03; strike work math_skill_flag */
     union {
         struct {
             s16 target_type; /* 0x04; 0 unit, 1 tile (battle_effect_target_t) */
@@ -2343,6 +2396,16 @@ typedef struct battle_effect_secondary_init {
     u16 used_weapon_id;                 /* 0xc6 */
 } battle_effect_secondary_init_t;
 typedef char battle_secondary_effect_init_size_must_be_0xc8[(sizeof(battle_effect_secondary_init_t) == 0xc8) ? 1 : -1];
+
+/* result_animation of a target in the effect init record built by
+ * battle_effect_store_targets_and_display_types. The weapon-hit secondary
+ * init (battle_effect_build_secondary_init_from_action) uses its own values. */
+typedef enum battle_effect_hit_result {
+    BATTLE_EFFECT_HIT_NORMAL = 0,
+    BATTLE_EFFECT_HIT_CRITICAL = 1,
+    BATTLE_EFFECT_HIT_REFLECTED = 2,
+    BATTLE_EFFECT_HIT_MISSED = 3,
+} battle_effect_hit_result_e;
 
 /* Four-byte records at 0x801b84dc indexed by animation id; byte 0 selects the
  * g_battle_effect_secondary_handlers handler. */
@@ -2369,15 +2432,15 @@ typedef struct battle_effect_resource {
     s32 words[6];
 } battle_effect_resource_t;
 
-/* Twelve-byte on-hit effect vector at g_battle_effect_gravity (0x801b8a40), with a
- * saved copy at on_hit_effects_data_second_section (0x801b8a50). The
+/* Twelve-byte gravity vector at g_battle_effect_gravity (0x801b8a40), added to every
+ * effect particle's velocity, with a saved copy at g_battle_effect_saved_gravity (0x801b8a50). The
  * secondary-effect handlers store (0, 0x1000, 0) before stepping the effect
  * slots; effect script 0x27 copies it from the particle-system data. */
-typedef struct battle_effect_on_hit_vector {
+typedef struct battle_effect_gravity {
     s32 x;
     s32 y;
     s32 z;
-} battle_effect_on_hit_vector_t;
+} battle_effect_gravity_t;
 
 /* Tile target of the current effect: placement mode 0x200, emitter modes 0x40/0xa0 and camera mode 0x1c0. */
 /* Provisional view of an effect slot's position and velocity words. */
@@ -2455,7 +2518,7 @@ typedef struct battle_effect_coord_data {
  * battle_effect_step_emitter_timeline. The halfword arrays at 0x00 and 0x4a
  * are indexed by keyframe, the byte array at 0x31 selects the emitter action,
  * and 0x7e is the highest valid keyframe index (the role
- * effect_misc_data_t::last_keyframe_index plays). Array bounds are inferred
+ * effect_timeline_t::last_keyframe_index plays). Array bounds are inferred
  * from the gaps between the observed offsets. */
 typedef struct battle_effect_keyframe_table {
     u16 frame_start[0x18]; /* 0x00 */
@@ -2501,7 +2564,7 @@ typedef struct effect_timeline_color_tracks {
 } effect_timeline_color_tracks_t;
 
 /* Single-phase timeline channels beginning eight bytes into the effect's
- * timing section. The multi-phase effect_misc_data_t view has a different
+ * timing section. The multi-phase effect_timeline_t view has a different
  * layout after its common header. */
 typedef struct battle_effect_tick_sound_track {
     u16 duration[17]; /* 0x00 */
@@ -2644,7 +2707,7 @@ typedef struct effect_camera_keyframes_21 {
  * three 17-entry three-halfword channels. The two phases' particle channels,
  * sound tracks and colour tracks follow, then the 21-entry main and cleanup
  * camera tables. */
-typedef struct effect_misc_data {
+typedef struct effect_timeline {
     u16 _unused_0000;
     u16 phase2_duration; /* 0x002; effect script 0x1e adds it to the phase-2 start */
     u16 phase1_duration; /* 0x004 */
@@ -2663,16 +2726,16 @@ typedef struct effect_misc_data {
     effect_timeline_color_tracks_t color_tracks[2];         /* 0xdde */
     effect_camera_keyframes_21_t main;                      /* 0x14e6 */
     effect_camera_keyframes_21_t cleanup;                   /* 0x16b6 */
-} effect_misc_data_t;
+} effect_timeline_t;
+typedef char effect_timeline_selector_offset_must_be_0x806[((unsigned long)&((effect_timeline_t*)0)->selector == 0x806)
+        ? 1
+        : -1];
+typedef char effect_timeline_position_offset_must_be_0x6d4[((unsigned long)&((effect_timeline_t*)0)->position == 0x6d4)
+        ? 1
+        : -1];
 typedef char
-    effect_misc_data_selector_offset_must_be_0x806[((unsigned long)&((effect_misc_data_t*)0)->selector == 0x806) ? 1
-                                                                                                                 : -1];
-typedef char
-    effect_misc_data_position_offset_must_be_0x6d4[((unsigned long)&((effect_misc_data_t*)0)->position == 0x6d4) ? 1
-                                                                                                                 : -1];
-typedef char
-    effect_misc_data_main_offset_must_be_0x14e6[((unsigned long)&((effect_misc_data_t*)0)->main == 0x14e6) ? 1 : -1];
-typedef char effect_misc_data_size_must_be_0x1886[(sizeof(effect_misc_data_t) == 0x1886) ? 1 : -1];
+    effect_timeline_main_offset_must_be_0x14e6[((unsigned long)&((effect_timeline_t*)0)->main == 0x14e6) ? 1 : -1];
+typedef char effect_timeline_size_must_be_0x1886[(sizeof(effect_timeline_t) == 0x1886) ? 1 : -1];
 
 /* The four GTE input corners at 0x801bbf40; only the leading x/y word of each
  * is written here, straight from the sprite frame record. */
@@ -2757,16 +2820,16 @@ typedef char
 /* Section table at the start of an effect file's header section: byte offsets
  * from the table itself, one per battle_effect_*_address/_pointer getter. */
 typedef struct effect_file_header {
-    s32 frame_data;      /* 0x00: the getter skips the section's leading word */
-    s32 parameter_sets;  /* 0x04: likewise */
-    s32 motion_header;   /* 0x08: effect script section */
-    s32 particle_system; /* 0x0c: emitter motion and control */
-    s32 animation_curve; /* 0x10 */
-    s32 nibble_table;    /* 0x14 */
-    s32 flags_section;   /* 0x18 */
-    s32 misc_data;       /* 0x1c: timing, palette and camera tracks */
-    s32 sound_section;   /* 0x20: 0 when the effect has no sound */
-    s32 palette;         /* 0x24 */
+    s32 frame_data;          /* 0x00: the getter skips the section's leading word */
+    s32 animation_sequences; /* 0x04: likewise */
+    s32 script;              /* 0x08: effect script section */
+    s32 particle_system;     /* 0x0c: emitter motion and control */
+    s32 animation_curve;     /* 0x10 */
+    s32 timing_curves;       /* 0x14 */
+    s32 flags_section;       /* 0x18 */
+    s32 timeline;            /* 0x1c: timing, palette and camera tracks */
+    s32 sound_section;       /* 0x20: 0 when the effect has no sound */
+    s32 palette;             /* 0x24 */
 } effect_file_header_t;
 typedef char effect_file_header_size_must_be_0x28[sizeof(effect_file_header_t) == 0x28 ? 1 : -1];
 
@@ -2942,9 +3005,9 @@ typedef struct battle_effect_temp_data {
     u8 _unused_00[0x26];
     s16 target_index; /* 0x26 */
     s16 frame;        /* 0x28 */
-    s16 values_2a[13];
-    s16 values_44[13];
-    s16 values_5e[13];
+    s16 keyframe[13];
+    s16 remaining[13];
+    s16 step[13];
 } battle_effect_temp_data_t;
 typedef char battle_temp_effect_data_size_must_be_0x78[sizeof(battle_effect_temp_data_t) == 0x78 ? 1 : -1];
 
@@ -2981,23 +3044,23 @@ typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 0x24 ? 1
 typedef struct effect_work_record {
     struct effect_work_record* prev; /* 0x00 */
     struct effect_work_record* next; /* 0x04 */
-    u8 _unused_08[0x04];
-    s32 position[3]; /* 0x0c: x/y/z, 20.12 fixed; battle_effect_update_node_from_work copies >> 12 to the node */
-    s32 velocity[3]; /* 0x18: x/y/z; battle_effect_update_node_from_work orients the node along it */
-    s32 wave_y[3];   /* 0x24: randomized vertical-wave components from the emitter */
-    s32 wave_x[3];   /* 0x30: randomized horizontal-wave components from the emitter */
-    s16 anchor_x;    /* 0x3c: compared against position x >> 12 */
-    s16 anchor_y;    /* 0x3e: compared against position y >> 12 */
-    s16 anchor_z;    /* 0x40: compared against position z >> 12 */
-    s16 lifetime;    /* 0x42: decremented by the particle update */
-    u8 _unused_44[0x02];
+    u8 _unused_08[0x04];             /* 0x08: inertia and weight (effect_particle_physics_view_t) */
+    s32 position[3];     /* 0x0c: x/y/z, 20.12 fixed; battle_effect_update_node_from_work copies >> 12 to the node */
+    s32 velocity[3];     /* 0x18: x/y/z; battle_effect_update_node_from_work orients the node along it */
+    s32 acceleration[3]; /* 0x24: randomized acceleration from the emitter */
+    s32 drag[3];         /* 0x30: randomized drag from the emitter */
+    s16 target_x;        /* 0x3c: homing target, compared against position x >> 12 */
+    s16 target_y;        /* 0x3e: compared against position y >> 12 */
+    s16 target_z;        /* 0x40: compared against position z >> 12 */
+    s16 lifetime;        /* 0x42: decremented by the particle update */
+    u8 _unused_44[0x02]; /* 0x44: +0x45 homing curve index */
     u8 colour_curves[3]; /* 0x46: r/g/b rows of g_effect_palette_table */
-    u8 _unused_49[0x03];
-    u16 kind_flags;             /* 0x4c: bits 12-15 select how data is allocated/released; bit 1 orients to velocity */
-    u16 flags;                  /* 0x4e: bit 6 = per-channel colour curves in use */
-    s16 palette_frame;          /* 0x50: column of the colour-curve rows */
-    u8 child_emitter_index;     /* 0x52: emitter index for mid/death children */
-    u8 child_emitter_index_alt; /* 0x53: alternate emitter index for children */
+    u8 _unused_49[0x03]; /* 0x49: +0x4a homing strength */
+    u16 kind_flags;      /* 0x4c: bits 12-15 select how data is allocated/released; bit 1 orients to velocity */
+    u16 flags;           /* 0x4e: bit 6 = per-channel colour curves in use */
+    s16 palette_frame;   /* 0x50: column of the colour-curve rows */
+    u8 child_emitter_on_death;     /* 0x52: emitter spawned when the lifetime ends */
+    u8 child_emitter_mid_life;     /* 0x53: emitter spawned every frame while alive */
     struct effect_list_node* data; /* 0x54: effect_list_node_t for kinds 0x0000-0x3000, heap block for 0x4000 */
 } effect_work_record_t;
 typedef char assert_effect_work_record_size[sizeof(effect_work_record_t) == 0x58 ? 1 : -1];
@@ -3034,25 +3097,26 @@ typedef struct effect_particle_physics_view {
 typedef char assert_effect_particle_physics_view_size[sizeof(effect_particle_physics_view_t) == 0x58 ? 1 : -1];
 
 typedef struct effect_record {
-    u16 next_index;     /* 0x00: next record in the current intrusive list */
-    s16 record_index;   /* 0x02: initialized to this record's array index */
-    s16 parent_index;   /* 0x04: spawning record (g_battle_effect_current_record_index) for script opcode 02 */
-    s16 pc;             /* 0x06: byte offset of the current instruction in script */
-    u8* script;         /* 0x08 */
-    s16 phase_ids[4];   /* 0x0c: child record indexes stored by script opcode 02 */
-    s16 counters[4];    /* 0x14: opcodes 20..23 select one by the argument's top two bits */
-    u16 work_count;     /* 0x1c: entries on work_head */
-    u16 flags;          /* 0x1e: bit 0 marks an allocated record with a work list */
-    s16 emitter_index;  /* 0x20: passed by script opcode 26; reset to -1 */
-    u8 phase[4];        /* 0x22: per-handler phase, indexed by the handler's byte_offset */
-    u8 target_index;    /* 0x26: current target, resolved to an anchor position by the emitter and native handlers */
-    u8 _padding_27;     /* aligns timeline_frame */
-    s16 timeline_frame; /* 0x28: frame counter of battle_effect_code_script_29_step_parent_timeline; tested by opcodes
-                           1d/1e */
+    u16 next_index;       /* 0x00: next record in the current intrusive list */
+    s16 record_index;     /* 0x02: initialized to this record's array index */
+    s16 parent_index;     /* 0x04: spawning record (g_battle_effect_current_record_index) for script opcode 02 */
+    s16 pc;               /* 0x06: byte offset of the current instruction in script */
+    u8* script;           /* 0x08 */
+    s16 child_indices[4]; /* 0x0c: child record indexes stored by script opcode 02 */
+    s16 counters[4];      /* 0x14: opcodes 20..23 select one by the argument's top two bits */
+    u16 work_count;       /* 0x1c: entries on work_head */
+    u16 flags;            /* 0x1e: bit 0 marks an allocated record with a work list */
+    s16 frame_counter;    /* 0x20: passed by script opcode 26; reset to -1 */
+    u8 callback_phase[4]; /* 0x22: per-handler phase, indexed by the handler's byte_offset */
+    u8 target_index;      /* 0x26: current target, resolved to an anchor position by the emitter and native handlers */
+    u8 _padding_27;       /* aligns timeline_frame */
+    s16 timeline_frame;   /* 0x28: frame counter of battle_effect_code_script_29_step_parent_timeline; tested by opcodes
+                             1d/1e */
     u8 _unused_2a[0xa6];
     effect_work_record_t* work_head; /* 0xd0 */
-    s32 values_d4[4];                /* 0xd4: cleared at allocation */
-    void* work_slots[5];             /* 0xe4: indexed by the same byte_offset */
+    s32 callbacks[4];                /* 0xd4: callbacks of the keyframe selector slots */
+    void* work_slots[4];             /* 0xe4: indexed by the same byte_offset */
+    void* file_function;             /* 0xf4: the file function effect script opcode 07 last called */
 } effect_record_t;
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
 
@@ -3088,11 +3152,11 @@ typedef struct battle_effect_anim_script {
 /* Per-slot motion state at battle_effect_slot_t +0x98, also embedded in the
  * particle list nodes battle_effect_integrate_particle_motion integrates. Velocity decays by
  * g_battle_effect_inertia_threshold / mass each step, gains force << 12 /
- * mass, and gains g_battle_effect_gravity scaled by on_hit_weight (4.12 fixed
+ * mass, and gains g_battle_effect_gravity scaled by weight (4.12 fixed
  * point). */
 typedef struct battle_effect_motion {
     s16 mass;          /* 0x00 */
-    s16 on_hit_weight; /* 0x02 */
+    s16 weight;        /* 0x02; scales the gravity vector */
     s32 position[3];   /* 0x04 */
     s32 velocity[3];   /* 0x10 */
     s32 force[3];      /* 0x1c */
@@ -3126,7 +3190,7 @@ typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 0xcc
  * record is unidentified; only the halfword at 0x28 is proven. */
 typedef struct battle_effect_timing_entry {
     u8 _unused_00[0x28];
-    u16 curve_index; /* 0x28: nibble index into g_battle_effect_nibble_table; bit 0 selects the high nibble */
+    u16 curve_index; /* 0x28: nibble index into g_battle_effect_timing_curves; bit 0 selects the high nibble */
 } battle_effect_timing_entry_t;
 
 /* The particle emitter's view of effect_geometry_entry_t 0x14-0x4b. The
@@ -3191,9 +3255,9 @@ typedef char assert_effect_geometry_motion_view_size[sizeof(effect_geometry_moti
  *     record's +0x45 homing-blend curve. */
 typedef struct effect_geometry_entry {
     u8 _unused_00;
-    u8 animation_index;       /* 0x01: passed to battle_effect_init_parameter_set as the sequence */
+    u8 animation_index;       /* 0x01: passed to battle_effect_init_animation_sequence as the sequence */
     u16 work_kind_flags;      /* 0x02: copied to the work record's kind_flags */
-    u8 animation_frame_group; /* 0x04: passed to battle_effect_init_parameter_set, stored doubled at node +0x1e */
+    u8 animation_frame_group; /* 0x04: passed to battle_effect_init_animation_sequence, stored doubled at node +0x1e */
     u8 _padding_05;           /* aligns flags */
     u16 flags;                /* 0x06: copied to the work record's flags; bit 6 = per-channel colour curves */
     u32 curve_indices[2];     /* 0x08 */
@@ -3650,12 +3714,12 @@ extern u8* g_battle_effect_frame_data_start;
 extern s32 g_battle_effect_gravity_modifier;
 extern s32 g_battle_effect_inertia_threshold;
 extern s16 g_battle_effect_load_countdown;
-extern effect_misc_data_t* g_battle_effect_timeline;
+extern effect_timeline_t* g_battle_effect_timeline;
 extern u8* g_battle_effect_script;
-extern u8* g_battle_effect_nibble_table;
+extern u8* g_battle_effect_timing_curves;
 extern battle_effect_tick_channels_t* g_battle_effect_timing_channels;
-extern u8* g_battle_effect_parameter_sets;
-extern u8* g_battle_effect_parameter_sets_start;
+extern u8* g_battle_effect_animation_sequences;
+extern u8* g_battle_effect_animation_sequences_start;
 extern u32* g_battle_effect_polygon_depth_data;
 extern u16 g_battle_effect_active_slot_tail;
 extern s32 g_battle_effect_primitive_sizes[];
@@ -3664,8 +3728,8 @@ extern s32 g_battle_effect_sound_data_base;
 extern struct main_sound_resource* g_battle_effect_sound_section_ptr;
 extern u8 g_battle_effect_target_id;
 extern effect_flags_section_t* g_battle_effect_flags_section;
-extern battle_effect_on_hit_vector_t g_battle_effect_gravity;
-extern battle_effect_on_hit_vector_t on_hit_effects_data_second_section;
+extern battle_effect_gravity_t g_battle_effect_gravity;
+extern battle_effect_gravity_t g_battle_effect_saved_gravity;
 extern s32 g_battle_effect_arc_trajectory_height;
 extern s16 g_battle_effect_arrow_arc_caster_relative_yaw;
 extern s32 g_battle_effect_arrow_arc_distance;
@@ -3813,8 +3877,8 @@ s32 battle_effect_calculate_arc_height_term(s32 distance);
 s32 battle_effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* arc_a, s32* arc_b);
 void battle_effect_call_play(void);
 void battle_effect_copy_camera_angles_and_screen_coords(void);
-void battle_effect_copy_on_hit_data_to_second_section(void);
-void battle_effect_copy_second_section_to_on_hit_data(void);
+void battle_effect_save_gravity(void);
+void battle_effect_restore_gravity(void);
 void battle_effect_finalize_secondary(u8 target_id);
 s32 battle_effect_find_next_keyframe(s16 frame, u32 mask, s32* out_index, s32* out_frame);
 s32 battle_effect_get_bow_shot_angle(void);
@@ -3857,7 +3921,7 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
     s16* index, s16* remaining, s16* step);
 
 void battle_effect_step_motion(battle_effect_motion_t* motion);
-void battle_effect_store_first_section_of_on_hit_data(battle_effect_on_hit_vector_t* src);
+void battle_effect_set_gravity(battle_effect_gravity_t* src);
 
 s32 battle_effect_trace_arc_trajectory_path(
     SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc, void* obstacles);
@@ -3895,7 +3959,7 @@ void battle_effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 t
 s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_init_data(void);
-void battle_effect_init_parameter_set(effect_list_node_t* state, s32 frame_group, s32 animation_index);
+void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
 void battle_effect_init_trap_animation(s32 group, u16 palette_id, battle_effect_slot_t* slot);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
 u32 battle_effect_load_ability(s32 ability_id);
@@ -4005,9 +4069,9 @@ typedef struct battle_at_entry {
 } battle_at_entry_t;
 typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
 
-extern u8 g_acting_unit_elevation;
-extern u8 g_acting_unit_x;
-extern u8 g_acting_unit_y;
+extern u8 g_battle_acting_unit_elevation;
+extern u8 g_battle_acting_unit_x;
+extern u8 g_battle_acting_unit_y;
 extern s32 g_battle_acting_unit_id;
 extern battle_active_unit_t g_battle_active_turn_unit;
 extern s32 g_battle_between_turn_resume_state;
@@ -4031,18 +4095,24 @@ typedef enum battle_mount_info_flags {
     BATTLE_MOUNT_INFO_ROLE_MASK = 0xc0,
 } battle_mount_info_flags_e;
 
-/* Lifecycle states stored in Battle Stats 0x183. Zero and 0xff participate in
- * broader absence/sentinel checks and remain deliberately unnamed. */
+/* Lifecycle states stored in Battle Stats 0x183. */
 typedef enum battle_unit_existence_state {
+    BATTLE_UNIT_EXISTENCE_OFF_FIELD = 0, /* defined but not placed; AddUnit can use the slot */
     BATTLE_UNIT_EXISTENCE_ACTIVE = 1,
     BATTLE_UNIT_EXISTENCE_PENDING_REMOVAL = 2,
     BATTLE_UNIT_EXISTENCE_DISABLED = 0x80,
+    BATTLE_UNIT_EXISTENCE_NONE = 0xff, /* empty slot */
 } battle_unit_existence_state_e;
 
 /* Miscellaneous Unit Data 0x13f is XORed with the sprite display flags. */
 typedef enum battle_misc_display_flags {
+    BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT = 0x01,
     BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP = 0x02,
     BATTLE_MISC_DISPLAY_VERTICAL_FLIP = 0x04,
+    /* Bits 5-6 are ORed into the texture page: the PS1 blend rate. */
+    BATTLE_MISC_DISPLAY_BLEND_ADD = 0x20,
+    BATTLE_MISC_DISPLAY_BLEND_SUBTRACT = 0x40,
+    BATTLE_MISC_DISPLAY_BLEND_MASK = 0x60,
 } battle_misc_display_flags_e;
 
 typedef enum battle_unit_equipped_flags {
@@ -4094,7 +4164,7 @@ typedef struct battle_unit_anim_state {
     u16 script_pos;                            /* 0x06 */
     u16 frame;                                 /* 0x08 */
     u16 wait;                                  /* 0x0a */
-    u16 counter_0c;                            /* 0x0c */
+    u16 restart_count;                         /* 0x0c */
     u16 saved_animation_id;                    /* 0x0e */
     u16 saved_script_pos;                      /* 0x10 */
     u16 wait_bias;                             /* 0x12 */
@@ -4192,7 +4262,7 @@ typedef struct battle_war_result {
     u8 item_count;                       /* 0x15 */
     u8 _padding_16[2];                   /* 0x16; aligns bonus_money */
     s32 bonus_money;                     /* 0x18; sum of bonus-money modifiers * 100 */
-    s32 level_sum_money;                 /* 0x1c; g_enemy_level_sum * 100 */
+    s32 level_sum_money;                 /* 0x1c; g_battle_enemy_level_sum * 100 */
     s32 level_bonus_money;               /* 0x20; (highest enemy level - lowest level) * 100 */
 } battle_war_result_t;
 typedef char battle_war_result_size_must_be_0x24[(sizeof(battle_war_result_t) == 0x24) ? 1 : -1];
@@ -4211,10 +4281,10 @@ typedef char battle_unit_height_data_size_must_be_8[sizeof(battle_unit_height_da
 
 /* Sprite lookup result filled in by battle_gfx_get_unit_sprite_frame_and_vram_ids. */
 typedef struct {
-    s16 vram_palette_id;     /* 0x00 */
-    s16 vram_spritesheet_id; /* 0x02 */
-    s16 graphic_height;      /* 0x04 */
-    s16 graphic_y_offset;    /* 0x06 */
+    s16 vram_palette_id;  /* 0x00 */
+    s16 tpage;            /* 0x02 */
+    s16 graphic_height;   /* 0x04 */
+    s16 graphic_y_offset; /* 0x06 */
 } battle_unit_sprite_query_t;
 
 /* Queued unit graphics load (g_main_gfx_unit_graphics_load_queue.descriptors, 16 entries),
@@ -4304,7 +4374,7 @@ extern RECT g_battle_unit_summary_panel_rect;
 extern world_gfx_image_load_parameters_t g_battle_unit_summary_portrait_image_params;
 extern world_gfx_image_load_parameters_t g_battle_unit_summary_sprite_image_params[];
 extern s16 g_battle_unit_was_moving_latch[];
-extern s32 g_companion_overlay_state;
+extern s32 g_battle_companion_overlay_state;
 
 /* BATTLE and WORLD use the same seven-byte per-unit rotation state. */
 extern world_unit_animation_state_t g_battle_unit_misc_rotation_data[];
@@ -4504,13 +4574,17 @@ typedef enum battle_background_color_command {
     BATTLE_BACKGROUND_COLOR_RESTORE = 12
 } battle_map_background_color_command_e;
 
+/* Texture pages stored in a sprite display record's tpage. */
+enum {
+    BATTLE_GFX_TPAGE_ITEM = 0x1e,  /* ITEM.BIN */
+    BATTLE_GFX_TPAGE_FRAME = 0x1f, /* FRAME.BIN */
+};
+
 /* Reviewed direct spritesheet IDs and exclusive range boundaries; the
  * remaining IDs are not yet a complete semantic domain. */
 enum {
     BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1 = 0x01,
     BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
-    BATTLE_SPRITESHEET_ID_ITEM = 0x1e,
-    BATTLE_SPRITESHEET_ID_FRAME = 0x1f,
     BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM = 0x41,
     BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM = 0x49,
     BATTLE_SPRITESHEET_ID_CHOCOBO = 0x86,
@@ -4535,7 +4609,7 @@ typedef struct battle_gfx_render_unit {
     u8 _unused_2d4[4];
     battle_gfx_sprite_display_data_t* found_item_display;
     u8 _unused_2dc[0x10];
-    SVECTOR display_svectors[6];
+    SVECTOR position_copies[6];
 } battle_gfx_render_unit_t;
 
 /* Render view of the same sprite display header. The first two colour bytes
@@ -4598,6 +4672,31 @@ typedef struct battle_gfx_spritesheet_data {
     u8 graphic_height;
 } battle_gfx_spritesheet_data_t;
 typedef char battle_gfx_spritesheet_data_size_must_be_4[(sizeof(battle_gfx_spritesheet_data_t) == 4) ? 1 : -1];
+
+/* battle_gfx_spritesheet_data_t.shp_id: index of the sheet's frame table file in
+ * g_battle_gfx_sprite_shp_files (BATTLE/TYPE1.SHP ...). Id 5 has no file. */
+typedef enum battle_shp_type {
+    BATTLE_SHP_TYPE1 = 0,
+    BATTLE_SHP_TYPE2 = 1,
+    BATTLE_SHP_CYOKO = 2,
+    BATTLE_SHP_MON = 3,
+    BATTLE_SHP_OTHER = 4,
+    BATTLE_SHP_ARUTE = 6,
+    BATTLE_SHP_KANZEN = 7,
+} battle_shp_type_e;
+
+/* battle_gfx_spritesheet_data_t.seq_id: index of the sheet's animation file in
+ * g_battle_gfx_sprite_seq_files (BATTLE/TYPE1.SEQ ...). */
+typedef enum battle_seq_type {
+    BATTLE_SEQ_TYPE1 = 0,
+    BATTLE_SEQ_TYPE3 = 1,
+    BATTLE_SEQ_CYOKO = 2,
+    BATTLE_SEQ_MON = 3,
+    BATTLE_SEQ_OTHER = 4,
+    BATTLE_SEQ_RUKA = 5,
+    BATTLE_SEQ_ARUTE = 6,
+    BATTLE_SEQ_KANZEN = 7,
+} battle_seq_type_e;
 
 enum { BATTLE_SPRITESHEET_ID_COUNT = 0x9f };
 
@@ -4794,7 +4893,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
     u16 animation, s32** out_table, s32* out_value);
 
 void battle_gfx_set_sprite_part_flag_bit_0(battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
-void battle_gfx_shift_and_fill_display_svectors(battle_gfx_render_unit_t* unit);
+void battle_gfx_shift_and_fill_position_copies(battle_gfx_render_unit_t* unit);
 void battle_gfx_store_item_display_data(battle_gfx_render_unit_t* unit, u32 item_id);
 void battle_gfx_unpack_unit_shp_data(battle_gfx_unit_shp_frame_tables_t* dst, u8* src);
 void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s32 tile_effect_level, s32 final_value);
@@ -4989,6 +5088,14 @@ typedef enum battle_action_target_kind {
     BATTLE_ACTION_TARGET_UNIT = 6,
 } battle_action_target_kind_e;
 
+/* g_battle_action_phase: which unit's action the attack phase is announcing. */
+typedef enum battle_action_phase {
+    BATTLE_ACTION_PHASE_PRE_ACTION = 0,    /* a reaction that pre-empts the pending action (Hamedo) */
+    BATTLE_ACTION_PHASE_ACTING_UNIT = 1,   /* the acting unit's own action */
+    BATTLE_ACTION_PHASE_REACTING_UNIT = 2, /* the reactions it provoked */
+    BATTLE_ACTION_PHASE_COUNT = 3,
+} battle_action_phase_e;
+
 /* Pending post-action displays are queued as one little-endian word in Misc
  * Unit Data 0x1b8..0x1bb.  The two dispatchers at 0x8007f5f8 and 0x800808b8
  * consume one bit at a time in ascending order. */
@@ -5144,13 +5251,13 @@ typedef struct battle_strike_work {
     u8 target_count;
     u8 target_list[16];
     u8 animate_on_miss_flag;
-    u8 control_value_19f;
+    u8 math_skill_flag;
     s16 last_attack_id;
-    u8 ability_formula;
+    u8 post_action_message;
     u8 reaction_occurred;
     u8 continue_attack;
     u8 current_hit_number;
-    u16 reaction_id_1a;
+    u16 reaction_id;
     u8 target_new_x;
     u8 target_new_y;
     u8 target_new_map_level;
@@ -5221,10 +5328,10 @@ typedef struct battle_current_ability {
     u8 primary_weapon_id;                       /* 0x04 */
     u8 secondary_weapon_id;                     /* 0x05 */
     u16 reaction_id;                            /* 0x06 */
-    u16 elemental_flags;                        /* 0x08 */
-    u8 target_x;                                /* 0x0a */
-    u8 target_y;                                /* 0x0b */
-    u8 target_elevation;                        /* 0x0c */
+    u16 weapon_proc_pending;                    /* 0x08; a weapon proc spell is still to strike */
+    u8 target_new_x;                            /* 0x0a; knockback or random-fire tile */
+    u8 target_new_y;                            /* 0x0b */
+    u8 target_new_elevation;                    /* 0x0c */
     u8 terrain;                                 /* 0x0d: surface type under the target */
     u16 xa;                                     /* 0x0e: formula steps that divide it signed read it as s16 */
     u16 ya;                                     /* 0x10: likewise */
@@ -5240,8 +5347,8 @@ typedef struct battle_current_ability {
     u8 base_hit;                                /* 0x1c */
     u8 _unused_1d;                              /* 0x1d */
     u8 accessory_evade;                         /* 0x1e */
-    u8 right_shield_evade;                      /* 0x1f */
-    u8 left_shield_evade;                       /* 0x20 */
+    u8 right_hand_evade;                        /* 0x1f; shield, or weapon with Weapon Guard */
+    u8 left_hand_evade;                         /* 0x20 */
     u8 class_evade;                             /* 0x21 */
     u8 facing_modifier;                         /* 0x22: 0 front, 1 side, 2 back */
     u8 _unused_23;                              /* 0x23 */
@@ -5264,10 +5371,27 @@ typedef struct battle_current_ability {
     status_infliction_data_t status_infliction; /* 0x46 */
     u8 level_gained_flag;                       /* 0x4c */
     u8 job_level_gained_flag;                   /* 0x4d */
-    u8 post_formula_flag;                       /* 0x4e */
+    u8 post_action_message;                     /* 0x4e; 6 poached, 9 trained */
     u8 random_fire_flag;                        /* 0x4f */
 } battle_current_ability_t;
 typedef char battle_current_ability_size_must_be_0x50[(sizeof(battle_current_ability_t) == 0x50) ? 1 : -1];
+
+/* battle_current_ability_t.knockback_flags: the kind of knockback found by
+ * battle_formula_calculate_knockback, with PENDING set until it is applied. */
+typedef enum battle_knockback_flags {
+    BATTLE_KNOCKBACK_FALL_DAMAGE = 0x01,    /* a grounded target: the fall height can hurt */
+    BATTLE_KNOCKBACK_NO_FALL_DAMAGE = 0x02, /* a flying target */
+    BATTLE_KNOCKBACK_KIND_MASK = 0x7f,
+    BATTLE_KNOCKBACK_PENDING = 0x80,
+} battle_knockback_flags_e;
+
+/* battle_current_ability_t.post_action_message, copied to the strike work and
+ * the misc unit record: the message the post-action state opens. */
+typedef enum battle_post_action_message {
+    BATTLE_POST_ACTION_MESSAGE_NONE = 0,
+    BATTLE_POST_ACTION_MESSAGE_POACHED = 6,
+    BATTLE_POST_ACTION_MESSAGE_TRAINED = 9,
+} battle_post_action_message_e;
 
 /* Current attacker record at 0x8019389c, filled by
  * battle_action_set_current_attacker_data and read by
@@ -5275,7 +5399,7 @@ typedef char battle_current_ability_size_must_be_0x50[(sizeof(battle_current_abi
  * bytes (battle_ai_store_considered_action_data). */
 typedef struct battle_current_attacker_data {
     u8 facing;                         /* 0x00 */
-    u8 data_initialized;               /* 0x01: set once the fields below are filled; no stronger meaning yet */
+    u8 mimic_pending;                  /* 0x01: a non-Mime action was recorded; state 13 queues the Mimes */
     u8 right_hand_weapon_id;           /* 0x02 */
     u8 left_hand_weapon_id;            /* 0x03 */
     u8 team;                           /* 0x04 */
@@ -5393,7 +5517,7 @@ extern u8 g_battle_action_menu_skillsets[];
 /* g_battle_action_saved_command + 2: the saved battle_stats_t
  * last_ability_id. The container is a raw byte copy of the unit's action
  * fields, so this halfword keeps its own name. */
-extern s16 g_reaction_unit_last_ability_id;
+extern s16 g_battle_reaction_unit_last_ability_id;
 extern battle_current_attacker_data_t g_battle_action_current_attacker;
 extern battle_action_data_t g_battle_action_attacker_action_data;
 extern battle_stats_t* g_battle_action_attacker;
@@ -5412,7 +5536,7 @@ extern battle_screen_coords_t g_battle_current_misc_screen_coords;
 extern VECTOR g_battle_current_vector;
 extern u32* g_battle_gfx_current_otag_entry;
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
-extern void* g_current_effect_work;
+extern void* g_battle_effect_current_work;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 extern entd_unit_t* g_main_entd_current_unit;
 extern s32 g_battle_current_thread_id;
@@ -5805,8 +5929,8 @@ typedef enum battle_movement_set_2 {
 } battle_unit_movement_set_2_e;
 
 typedef enum battle_movement_set_3 {
-    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x80,
-    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x40,
+    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x80, /* ability 0x1f6; stands on the water surface */
+    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x40, /* ability 0x1f7; wades one level deep */
     BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA = 0x20,
     BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER = 0x10,
     BATTLE_MOVEMENT_SET_3_FLOAT = 0x08,
@@ -6023,7 +6147,7 @@ extern battle_move_pathfind_scratch_t* g_battle_move_config_ptr;
 /* The two map tiles of the step in progress, refreshed by battle_move_get_current_and_destination_tiles from
  * the unit's movement value. Callers that only forward them to the step
  * starters take them as opaque words; the geometry readers use the tile
- * fields (height at 0x02, depth_half_height at 0x03, slope_type, flags_06). */
+ * fields (height at 0x02, depth_half_height at 0x03, slope_type, flags). */
 extern map_tile_t* g_battle_move_current_tile;
 extern map_tile_t* g_battle_move_destination_tile;
 
@@ -6354,7 +6478,7 @@ enum {
 };
 
 enum {
-    MAP_TILE_SURFACE_FLAG_6 = 0x40,
+    MAP_TILE_SURFACE_FLAG_DEPTH_BIAS = 0x40,
 };
 
 typedef enum map_move_find_item_entry_flags {
@@ -6434,7 +6558,7 @@ typedef struct gns_file_record {
     u16 _padding_06;         /* 0x06; aligns disc_lba */
     u32 disc_lba;            /* 0x08; absolute, including the high halfword at +0x0a */
     u32 byte_length;         /* 0x0c; sector-rounded */
-    u8 padding_55_66_77[3];  /* 0x10 */
+    u8 _unused_10[3];        /* 0x10 */
     u8 file_present_marker;  /* 0x13; 0x88 on disc, tested for nonzero */
 } gns_file_record_t;
 typedef char gns_file_record_size_must_be_0x14[(sizeof(gns_file_record_t) == 0x14) ? 1 : -1];
@@ -6461,23 +6585,23 @@ typedef char gns_command_record_prefix_size_must_be_0x14[(sizeof(gns_command_rec
  * words are zero in the USA disc's mesh files. A zero offset means the chunk
  * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. */
 typedef struct map_mesh_file_header {
-    u32 unused_resource_offsets_00_0f[16]; /* 0x00 */
-    u32 geometry_offset;                   /* 0x40 */
-    u32 color_palette_offset;              /* 0x44 */
-    u32 _unused_48;                        /* 0x48 */
-    u32 texture_quarter_0_offset;          /* 0x4c */
-    u32 _unused_50[5];                     /* 0x50 */
-    u32 lights_background_offset;          /* 0x64 */
-    u32 terrain_offset;                    /* 0x68 */
-    u32 texture_animation_offset;          /* 0x6c */
-    u32 palette_animation_offset;          /* 0x70 */
-    u32 _unused_74[2];                     /* 0x74 */
-    u32 grayscale_palette_offset;          /* 0x7c */
-    u32 _unused_80[3];                     /* 0x80 */
-    u32 mesh_animation_offset;             /* 0x8c */
-    u32 animated_mesh_offsets[8];          /* 0x90 */
-    u32 polygon_render_properties_offset;  /* 0xb0 */
-    u32 _unused_b4[4];                     /* 0xb4 */
+    u32 _unused_00[16];                   /* 0x00 */
+    u32 geometry_offset;                  /* 0x40 */
+    u32 color_palette_offset;             /* 0x44 */
+    u32 _unused_48;                       /* 0x48 */
+    u32 texture_quarter_0_offset;         /* 0x4c */
+    u32 _unused_50[5];                    /* 0x50 */
+    u32 lights_background_offset;         /* 0x64 */
+    u32 terrain_offset;                   /* 0x68 */
+    u32 texture_animation_offset;         /* 0x6c */
+    u32 palette_animation_offset;         /* 0x70 */
+    u32 _unused_74[2];                    /* 0x74 */
+    u32 grayscale_palette_offset;         /* 0x7c */
+    u32 _unused_80[3];                    /* 0x80 */
+    u32 mesh_animation_offset;            /* 0x8c */
+    u32 animated_mesh_offsets[8];         /* 0x90 */
+    u32 polygon_render_properties_offset; /* 0xb0 */
+    u32 _unused_b4[4];                    /* 0xb4 */
 } map_mesh_file_header_t;
 typedef char map_mesh_file_header_size_must_be_0xc4[(sizeof(map_mesh_file_header_t) == 0xc4) ? 1 : -1];
 
@@ -6529,7 +6653,7 @@ typedef struct gns_record_view {
 typedef char gns_record_view_size_must_be_0x14[(sizeof(gns_record_view_t) == 0x14) ? 1 : -1];
 
 /* Runtime colour fades stepped by update_map_animations (0x800912a4):
- * g_map_background_gradient_transition at 0x800a1b10, the ambient light at
+ * g_battle_map_background_gradient_transition at 0x800a1b10, the ambient light at
  * 0x800a1b50 and the darkness at 0x800a1b74. Channels are 16.16 fixed point;
  * the byte fields follow the updater's use. */
 typedef struct map_color_transition_channels {
@@ -6582,13 +6706,13 @@ typedef struct battle_map_mesh_part {
     VECTOR scale_start;        /* 0x30; the scales reset to {0x1000, 0x1000, 0x1000} */
     VECTOR scale;              /* 0x40 */
     VECTOR scale_step;         /* 0x50 */
-    MATRIX matrix_60;          /* 0x60 */
-    s16 value_80;              /* 0x80 */
-    s16 value_82;              /* 0x82 */
-    u8 value_84;               /* 0x84 */
-    u8 value_85;               /* 0x85 */
+    MATRIX matrix;             /* 0x60 */
+    s16 elapsed;               /* 0x80; time in the keyframe */
+    s16 duration;              /* 0x82; tween length */
+    u8 speed;                  /* 0x84; 4.4, 0x10 = 1 */
+    u8 next_instruction;       /* 0x85 */
     u8 parent;                 /* 0x86; parent part, from mesh properties byte 0 */
-    u8 value_87;               /* 0x87 */
+    u8 keyframe;               /* 0x87; 0 = fetch next */
     /* 0x88: per-part start indices and counts of its render records, written
      * by battle_map_append_mesh_geometry (0x800f4dd4). */
     u16 textured_triangle_start;
@@ -6608,18 +6732,27 @@ typedef char battle_map_mesh_part_size_must_be_0x98[(sizeof(battle_map_mesh_part
  * start/end angle for the sine modes and a mode flag word whose bits 0 and 1
  * are TweenTo and TweenBy. */
 typedef struct battle_map_mesh_keyframe {
-    SVECTOR vector_0;   /* 0x00; rotation */
-    SVECTOR vector_8;   /* 0x08; translation */
-    s16 value_10;       /* 0x10; scale x */
-    s16 value_12;       /* 0x12; scale y */
-    s16 value_14;       /* 0x14; scale z */
-    s16 _unused_16;     /* 0x16 */
-    s16 angle_start[9]; /* 0x18 */
-    s16 angle_end[9];   /* 0x2a */
-    u16 flags[9];       /* 0x3c */
-    u16 _unused_4e;     /* 0x4e */
+    SVECTOR rotation;    /* 0x00; target */
+    SVECTOR translation; /* 0x08; target */
+    s16 scale_x;         /* 0x10; ONE = 1.0 */
+    s16 scale_y;         /* 0x12 */
+    s16 scale_z;         /* 0x14 */
+    s16 _unused_16;      /* 0x16 */
+    s16 angle_start[9];  /* 0x18 */
+    s16 angle_end[9];    /* 0x2a */
+    u16 tween_flags[9];  /* 0x3c; per channel */
+    u16 _unused_4e;      /* 0x4e */
 } battle_map_mesh_keyframe_t;
 typedef char battle_map_mesh_keyframe_size_must_be_0x50[(sizeof(battle_map_mesh_keyframe_t) == 0x50) ? 1 : -1];
+
+/* battle_map_mesh_keyframe_t.tween_flags: how one channel reaches its keyframe value. */
+typedef enum battle_map_mesh_tween_flags {
+    BATTLE_MAP_MESH_TWEEN_TO = 0x01, /* delta = target - start */
+    BATTLE_MAP_MESH_TWEEN_BY = 0x02, /* delta = the keyframe value */
+    BATTLE_MAP_MESH_TWEEN_LINEAR = 0x04,
+    BATTLE_MAP_MESH_TWEEN_SINE = 0x08,        /* delta * sin */
+    BATTLE_MAP_MESH_TWEEN_RAISED_SINE = 0x10, /* delta * (sin + 1) */
+} battle_map_mesh_tween_flags_e;
 
 /* One mesh animation instruction (MAPnnn.GNS record type 2). A duration of
  * 0 stops the part's animation when it is reached. */
@@ -6769,7 +6902,7 @@ extern gns_record_view_t g_battle_map_loaded_gns_records[49];
 extern map_background_gradient_colors_t g_battle_map_background_gradient_colors;
 extern map_color_t g_battle_map_ambient_light_color;
 extern map_color_t g_battle_map_darkness_color;
-extern map_gradient_transition_t g_map_background_gradient_transition;
+extern map_gradient_transition_t g_battle_map_background_gradient_transition;
 extern map_color_transition_t g_battle_map_ambient_light_transition;
 extern map_color_transition_t g_battle_map_darkness_transition;
 extern battle_map_mesh_part_t g_battle_map_mesh_parts[9];
@@ -6968,11 +7101,6 @@ gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);
 
 /* menu */
-typedef enum battle_menu_system_command {
-    BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE = 5,
-    BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT = 7,
-} battle_menu_system_command_e;
-
 /* Text origin rewritten from each menu_number_entry_t before it is drawn. */
 typedef struct menu_number_position {
     u16 x; /* 0x00 */
@@ -7126,7 +7254,7 @@ extern RECT g_battle_menu_portrait_pixel_rect;
 extern u8 g_battle_menu_restore_pending;
 extern s16 g_battle_menu_right_unit_display_mode;
 extern RECT g_battle_menu_right_unit_stats_display;
-extern s32 g_battle_menu_secondary_companion_executable_request_index;
+extern s32 g_battle_menu_companion_data_file_request_index;
 extern s32 g_battle_menu_selected_skill_ct;
 extern s32 g_battle_menu_slot_owner_thread_ids[3];
 extern s32 g_battle_menu_slot_states[3];
@@ -7179,9 +7307,9 @@ extern u8 g_battle_menu_attack_target_stats_setup[];
 extern s32 g_battle_menu_companion_executable_lbas[];
 extern s32 g_battle_menu_companion_executable_sizes[];
 extern s32 g_battle_menu_companion_executable_offsets[];
-extern s32 g_battle_menu_secondary_companion_executable_lbas[];
-extern s32 g_battle_menu_secondary_companion_executable_sizes[];
-extern s32 g_battle_menu_secondary_companion_loading;
+extern s32 g_battle_menu_companion_data_file_lbas[];
+extern s32 g_battle_menu_companion_data_file_sizes[];
+extern s32 g_battle_menu_companion_data_file_loading;
 extern u8 g_battle_menu_idle_action_entry_labels[];
 extern s32 g_battle_menu_building_thread_started;
 extern u8 g_battle_menu_panel_fade_modes[];
@@ -7222,8 +7350,8 @@ extern battle_unit_status_record_t g_battle_menu_status_billboard;
 
 /* Twelve crop percentages, indexed by step. */
 extern u16 g_battle_menu_zoom_percentages[];
-extern s32 g_menu_text_param_22; /* 0x80166020: record +0x22 */
-extern s32 g_menu_text_param_24; /* 0x80166024: record +0x24 */
+extern s32 g_battle_menu_text_param_22; /* 0x80166020: record +0x22 */
+extern s32 g_battle_menu_text_param_24; /* 0x80166024: record +0x24 */
 extern battle_image_location_t g_battle_menu_texture_location;
 extern u16 g_option_menu_open;
 extern u16 g_battle_menu_suspend_state;
@@ -7242,7 +7370,7 @@ extern world_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
 
 /* Full record bases, not the legacy aliases biased to thread_id. */
 extern menu_window_buffer_t g_battle_menu_window_buffers[6]; /* 0x8016e43c */
-extern s32 g_menu_text_palette_offset;
+extern s32 g_battle_menu_text_palette_offset;
 
 /* BATTLE's current menu-entry table pointer at 0x80173cb8 (menu threads are
  * started on &table[i]): battle_menu_init_subsystem_pointers points it at
@@ -7604,9 +7732,9 @@ extern u8 g_battle_math_source_skillsets[4];
 extern VECTOR g_battle_offset_screen_coords;
 extern s16 g_battle_unit_entd_spritesheet_ids[];
 extern s32 g_battle_unit_entd_spritesheet_count;
-extern u16 g_enemy_level_sum;
-extern u8 g_highest_enemy_level;
-extern s32 g_previous_battle_game_state;
+extern u16 g_battle_enemy_level_sum;
+extern u8 g_battle_highest_enemy_level;
+extern s32 g_battle_previous_game_state;
 extern game_options_t g_battle_saved_game_options;
 
 /* Scratch map coordinates filled by battle_unit_copy_map_coords_from_misc_id;

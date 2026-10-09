@@ -21,7 +21,7 @@ void battle_state_handle_close_move_help_state(void) {
     casting = battle_unit_get_casting_misc_data();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    if (source->team_flags & 8) {
+    if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();

@@ -50,7 +50,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     g_battle_screen_fade_intensity -= g_battle_state_screen_fade_step;
     if ((s16)g_battle_screen_fade_intensity <= 0) {
         g_battle_screen_fade_intensity = 0;
-        g_battle_game_state = g_previous_battle_game_state;
-        g_previous_battle_game_state = 0;
+        g_battle_game_state = g_battle_previous_game_state;
+        g_battle_previous_game_state = BATTLE_GAME_STATE_FREE_CURSOR;
     }
 }

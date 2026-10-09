@@ -7,9 +7,9 @@ s32 battle_unit_add_event_offset_by_misc_id_copy(u32 misc_id, const battle_scree
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
     if (unit != 0) {
-        unit->effect_vector_2.vx = unit->effect_vector_2.vx + amount->x;
-        unit->effect_vector_2.vy = unit->effect_vector_2.vy + amount->z;
-        unit->effect_vector_2.vz = unit->effect_vector_2.vz + amount->y;
+        unit->event_offset.vx = unit->event_offset.vx + amount->x;
+        unit->event_offset.vy = unit->event_offset.vy + amount->z;
+        unit->event_offset.vz = unit->event_offset.vz + amount->y;
     } else {
         main_system_handle_pointer_exception(12);
         return 0;

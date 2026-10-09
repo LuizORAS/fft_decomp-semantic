@@ -15,27 +15,27 @@ void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile,
     battle_unit_misc_data_t* rider;
 
     battle_unit_dismount_rider(unit);
-    step = &unit->movement_value.value;
-    switch (unit->movement_value.value >> 6) {
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
     case 0:
-        facing = 0xC00;
-        unit->centre_tile_offset = 0x24;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value.value & 3);
+        facing = BATTLE_FACING_EAST;
+        unit->step_phase = 0x24;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         break;
     case 1:
-        facing = 0x400;
-        unit->centre_tile_offset = 0x28;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value.value & 3);
+        facing = BATTLE_FACING_WEST;
+        unit->step_phase = 0x28;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         break;
     case 2:
-        facing = 0;
-        unit->centre_tile_offset = 0x22;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value.value & 3);
+        facing = BATTLE_FACING_SOUTH;
+        unit->step_phase = 0x22;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         break;
     case 3:
-        facing = 0x800;
-        unit->centre_tile_offset = 0x26;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value.value & 3);
+        facing = BATTLE_FACING_NORTH;
+        unit->step_phase = 0x26;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
         break;
     }
 

@@ -33,7 +33,7 @@ void world_menu_check_action_restrictions(void) {
     } else {
         if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)) {
             if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_CHARGE) {
-                g_world_text_substitution_values[0] = unit->last_skillset_id | 0xb000;
+                g_world_text_substitution_values[0] = unit->last_skillset_id | TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
             } else {
                 g_world_text_substitution_values[0] = unit->last_ability_id + TEXT_ID_ABILITY_NAME_BASE;
             }

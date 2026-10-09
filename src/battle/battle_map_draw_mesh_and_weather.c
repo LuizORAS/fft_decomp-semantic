@@ -153,24 +153,24 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         g_battle_map_camera_rotation.vy, &i);
     /* Dead store: `matrix` is reassigned for every drawn child part before
      * use. It still survives the first CSE pass (the loop uses `matrix`), and
-     * the second pass reuses it for the loop-hoisted &g_battle_map_mesh_parts[0].matrix_60
+     * the second pass reuses it for the loop-hoisted &g_battle_map_mesh_parts[0].matrix
      * constant; reload then deletes that spilled constant together with this
      * set. The transient local moves the draw calls' `&i` temporary from v0
      * to a0, as in the target. Earlier than the textured_triangle_count access, it would
      * become the base of that address instead. */
-    matrix = &g_battle_map_mesh_parts[0].matrix_60;
+    matrix = &g_battle_map_mesh_parts[0].matrix;
     PushMatrix();
     for (part = 1; part < 9; part++) {
         if (g_battle_map_mesh_animation_instructions[part].states[0][1].next != 0) {
             u8 parent;
 
             rotation = &g_battle_map_mesh_parts[part].rotation;
-            matrix = &g_battle_map_mesh_parts[part].matrix_60;
+            matrix = &g_battle_map_mesh_parts[part].matrix;
             parent = g_battle_map_mesh_parts[part].parent;
             RotMatrix(rotation, matrix);
-            MulMatrix2(&g_battle_map_mesh_parts[parent].matrix_60, matrix);
-            SetRotMatrix(&g_battle_map_mesh_parts[parent].matrix_60);
-            SetTransMatrix(&g_battle_map_mesh_parts[parent].matrix_60);
+            MulMatrix2(&g_battle_map_mesh_parts[parent].matrix, matrix);
+            SetRotMatrix(&g_battle_map_mesh_parts[parent].matrix);
+            SetTransMatrix(&g_battle_map_mesh_parts[parent].matrix);
             RotTrans(&g_battle_map_mesh_parts[part].translation, (VECTOR*)matrix->t, &flag);
             ScaleMatrix(matrix, &g_battle_map_mesh_parts[part].scale);
             RotMatrix(rotation, &light_rotation);
@@ -206,7 +206,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             battle_map_queue_untextured_quads(g_battle_gfx_current_render_buffer->otag,
                 &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts[part].untextured_quad_start],
                 g_battle_map_camera_rotation.vy, &i);
-            if (g_battle_map_untextured_otz_mask != 0 && g_current_effect_work != 0
+            if (g_battle_map_untextured_otz_mask != 0 && g_battle_effect_current_work != 0
                 && (g_battle_map_loaded_id == 0x35 || g_battle_map_loaded_id == 0x37
                     || g_battle_map_loaded_id == 0x53)) {
                 RotMatrix(&g_battle_map_mesh_parts[part].rotation, &effect_matrix);
@@ -219,8 +219,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 SetTransMatrix(&effect_matrix);
                 for (j = 0; j < 4; j++) {
                     effect_base = (part - 1) * 4 + 0x61;
-                    RotTrans(&g_battle_map_mesh_animation_keyframes[j + effect_base].vector_8,
-                        (VECTOR*)g_current_effect_work + j + (part - 1) * 4, &effect_flag);
+                    RotTrans(&g_battle_map_mesh_animation_keyframes[j + effect_base].translation,
+                        (VECTOR*)g_battle_effect_current_work + j + (part - 1) * 4, &effect_flag);
                 }
             }
         }
@@ -496,7 +496,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].y = ground - 8;
                 g_battle_map_rain_splash_particles[i].x = g_battle_map_weather_particles[i].x;
                 g_battle_map_rain_splash_particles[i].z = g_battle_map_weather_particles[i].z;
-                if (!(g_battle_map_tile_data_ptr[tile].flags_06.value & 2)) {
+                if (!(g_battle_map_tile_data_ptr[tile].flags.value & 2)) {
                     g_battle_map_weather_particles[i].fall_speed = 1;
                 } else {
                     g_battle_map_weather_particles[i].fall_speed = 2;

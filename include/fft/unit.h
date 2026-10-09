@@ -58,7 +58,7 @@ typedef struct battle_action_data {
     u8 ma_change;             /* 0x15 */
     u8 brave_change;          /* 0x16 */
     u8 faith_change;          /* 0x17 */
-    u8 status_change;         /* 0x18 */
+    u8 miss_display_flags;    /* 0x18 */
     u8 equipment_destroyed;   /* 0x19; battle_action_equipment_slot_mask_e; 0xfe is a selection sentinel */
     u8 stolen_item_id;        /* 0x1a */
     u8 status_infliction[5];  /* 0x1b */
@@ -72,6 +72,12 @@ typedef struct battle_action_data {
     u16 attack_accuracy; /* 0x2a */
 } battle_action_data_t;
 typedef char battle_action_data_size_must_be_0x2c[(sizeof(battle_action_data_t) == 0x2c) ? 1 : -1];
+
+/* battle_action_data_t.miss_display_flags, loaded from the ability's AI flags. */
+typedef enum battle_action_miss_display_flags {
+    BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK = 0x03,       /* the AI target-allies / target-enemies pair */
+    BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION = 0x80, /* the ability's evade-with-motion bit */
+} battle_action_miss_display_flags_e;
 
 /* character identity */
 /*
@@ -409,11 +415,18 @@ typedef struct unit_status_staging {
     u8 death_counter[BATTLE_UNIT_SLOT_COUNT];                        /* 0x372 */
     u8 team_flags[BATTLE_UNIT_SLOT_COUNT];                           /* 0x387 */
     u8 state[BATTLE_UNIT_SLOT_COUNT];                                /* 0x39c; 0 not staged, 1 saved, 2 restored */
-    u8 exit_mode[BATTLE_UNIT_SLOT_COUNT];                            /* 0x3b1 */
+    u8 inflict_status_mode[BATTLE_UNIT_SLOT_COUNT];                  /* 0x3b1 */
     u16 hp[BATTLE_UNIT_SLOT_COUNT];                                  /* 0x3c6 */
-    u16 flags;                                                       /* 0x3f0; status-specific follow-up flags */
+    u16 jump_float_flags;                                            /* 0x3f0; status-specific follow-up flags */
 } unit_status_staging_t;
 typedef char unit_status_staging_size_must_be_0x3f2[sizeof(unit_status_staging_t) == 0x3f2 ? 1 : -1];
+
+/* unit_status_staging_t.state of one unit. */
+typedef enum unit_status_staging_state {
+    UNIT_STATUS_STAGING_NONE = 0,
+    UNIT_STATUS_STAGING_SAVED = 1,
+    UNIT_STATUS_STAGING_RESTORED = 2, /* blocks a second restore */
+} unit_status_staging_state_e;
 
 /* unit */
 /* Five 24-bit raw values serialized in HP, MP, Speed, PA, MA order. */
@@ -541,7 +554,8 @@ typedef struct battle_stats {
     battle_status_sets_t status_sets; /* 0x04e; innate / immunity / current */
     u8 status_ct[16];                 /* 0x05d */
     u8 elemental_affinity[5];         /* 0x06d; elemental_affinity_index_e */
-    u8 raw_stats[0x19];               /* 0x072 */
+    u8 raw_stats[15];                 /* 0x072; unit_raw_stat_index_e, 3 bytes each */
+    u8 growths_multipliers[10];       /* 0x081; job_data_t.growths_multipliers */
     u8 reaction_abilities[4];         /* 0x08b; battle_unit_reaction_set_N_e */
     u8 support_abilities[4];          /* 0x08f */
     u8 movement_abilities[3];         /* 0x093 */
@@ -558,7 +572,7 @@ typedef struct battle_stats {
     u8 secondary_skillset_name[8];     /* 0x154 */
     u8 ko_count;                       /* 0x15c */
     u8 charged_ability_ct;             /* 0x15d */
-    u8 graphic_variant;                /* 0x15e; copied from job data and consumed by WORLD formation graphics */
+    u8 monster_graphic;                /* 0x15e; copied from job data and consumed by WORLD formation graphics */
     u8 spritesheet_id;                 /* 0x15f */
     u8 job_portrait_palette;           /* 0x160 */
     u8 unit_id;                        /* 0x161 */
@@ -567,11 +581,11 @@ typedef struct battle_stats {
     u8 bonus_money_modifier;           /* 0x164 */
     u8 ai_target_x;                    /* 0x165 */
     u8 ai_target_y;                    /* 0x166 */
-    u8 ai_flags;                       /* 0x167 */
+    u8 ai_flags;                       /* 0x167; battle_ai_decision_flags_e */
     u8 prioritized_target;             /* 0x168 */
     u8 ai_targeting_flags_1;           /* 0x169; copied to battle_ai_unit_decision_t +0x06 */
     u8 ai_targeting_flags_2;           /* 0x16a; battle_ai_targeting_flags_2_e */
-    u8 entd_unknown_right;             /* 0x16b */
+    u8 ai_initial_enemy_flag;          /* 0x16b; ENTD 0x27 */
     u16 quote_name_id;                 /* 0x16c */
     u8 action_actor_id;                /* 0x16e */
     u8 last_skillset_id;               /* 0x16f */
@@ -584,8 +598,8 @@ typedef struct battle_stats {
     s16 action_target_x;               /* 0x17a */
     s16 action_target_elevation;       /* 0x17c */
     s16 action_target_y;               /* 0x17e */
-    u8 death_on_chocobo;               /* 0x180 */
-    u8 action_tile_flags;              /* 0x181 */
+    u8 _unused_180;                    /* 0x180 */
+    u8 _unused_181;                    /* 0x181 */
     u8 mount_info;                     /* 0x182 */
     u8 existence;                      /* 0x183; battle_unit_existence_state_e */
     u8 equipped_flags;                 /* 0x184; battle_unit_equipped_flags_e */
@@ -597,7 +611,7 @@ typedef struct battle_stats {
     u8 misc_unit_id;             /* 0x18a */
     u8 ability_ct;               /* 0x18b */
     battle_action_data_t action; /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;      /* 0x1b8 */
+    u8 auto_battle_setting;      /* 0x1b8; battle_ai_autobattle_mode_e, 0 = manual */
     u8 auto_battle_target;       /* 0x1b9 */
     u8 initial_team_flags;       /* 0x1ba */
     u8 inflicted_status[5];      /* 0x1bb */
@@ -611,6 +625,13 @@ typedef char battle_stats_status_immunity_must_be_0x53
 typedef char
     battle_stats_current_status_must_be_0x58[((unsigned long)&((battle_stats_t*)0)->status_sets.current == 0x58) ? 1
                                                                                                                  : -1];
+
+/* battle_stats_t.ability_outcome. */
+typedef enum battle_unit_ability_outcome {
+    BATTLE_ABILITY_OUTCOME_TARGETED = 0x01,      /* target of a primary action */
+    BATTLE_ABILITY_OUTCOME_AFFECTED = 0x02,      /* that action changed the unit */
+    BATTLE_ABILITY_OUTCOME_LEARN_CHECKED = 0x04, /* the learn-on-hit pass consumed AFFECTED */
+} battle_unit_ability_outcome_e;
 
 typedef union entd_unit_position {
     u16 raw;
@@ -680,7 +701,7 @@ typedef struct entd_unit {
     u16 movement_ability;                    /* 0x10 */
     u8 equipment[ENTD_EQUIPMENT_SLOT_COUNT]; /* 0x12 */
     u8 palette;                              /* 0x17 */
-    u8 battle_flags;                         /* 0x18 */
+    u8 team_flags;                           /* 0x18 */
     s8 x;                                    /* 0x19 */
     entd_unit_position_t position;           /* 0x1a */
     u8 experience;                           /* 0x1c */
@@ -689,9 +710,9 @@ typedef struct entd_unit {
     u8 bonus_money_modifier;                 /* 0x1f; same initializer copies to battle +0x164 */
     u8 unit_id;                              /* 0x20 */
     u8 ai_target_xy[2];   /* 0x21; AI "stay near" X, Y (copied to battle_stats_t ai_target_x onward) */
-    u8 ai_flags;          /* 0x23 */
+    u8 ai_flags;          /* 0x23; battle_ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
     u8 ai_target_unit_id; /* 0x24 */
-    u8 _unused_25[3];
+    u8 _unused_25[3];     /* 0x25; read through ai_target_xy[4..6] into the two AI targeting flags and the enemy flag */
 } entd_unit_t;
 typedef char entd_unit_size_must_be_0x28[(sizeof(entd_unit_t) == 0x28) ? 1 : -1];
 
@@ -756,8 +777,8 @@ typedef struct party_data {
     u8 name_id[2];            /* 0xce; little-endian, accessed bytewise like the ability ids */
     u8 proposition_status;    /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
-    u8 egg_color; /* 0xd2; create/save/generate unit stores */
-    u8 _unused_d3[0x2d];
+    u8 egg_color;        /* 0xd2; create/save/generate unit stores */
+    u8 _unused_d3[0x2d]; /* 0xd3; saves and loads copy 0xe0 bytes per record, so 0xe0..0xff is not saved */
 } party_data_t;
 typedef char party_data_size_must_be_0x100[(sizeof(party_data_t) == 0x100) ? 1 : -1];
 
@@ -765,7 +786,7 @@ typedef char party_data_size_must_be_0x100[(sizeof(party_data_t) == 0x100) ? 1 :
  * units. The byte combines persistence controls with unit-kind flags. */
 typedef enum unit_flags {
     UNIT_FLAG_SAVE_FORMATION = 0x01,
-    UNIT_FLAG_EGG = 0x04,
+    UNIT_FLAG_EGG = 0x04, /* a roster egg; on ENTD battle units it hides the numeric stats and scales HP/MP by 10 */
     UNIT_FLAG_LOAD_FORMATION = 0x08,
     UNIT_FLAG_JOIN_AFTER_EVENT = 0x10,
     UNIT_FLAG_MONSTER = 0x20,
@@ -814,8 +835,15 @@ typedef enum battle_team_flags {
     BATTLE_TEAM_RED = 0x10,
     BATTLE_TEAM_GREEN = 0x20,
     BATTLE_TEAM_LIGHT_BLUE = 0x30,
+    BATTLE_TEAM_IMPORTANCE_MASK = 0x03, /* 0..3; 3 decides the battle outcome and cannot be knocked back */
     BATTLE_TEAM_FLAG_IMMORTAL = 0x04,
     BATTLE_TEAM_FLAG_PLAYER_CONTROLLED = 0x08,
+    /* ENTD presence, read when the units are loaded: neither bit leaves the
+     * unit out, RANDOMLY_PRESENT alone leaves it out half the time, and both
+     * load its graphics for a later AddUnit. */
+    BATTLE_TEAM_FLAG_RANDOMLY_PRESENT = 0x40,
+    BATTLE_TEAM_FLAG_ALWAYS_PRESENT = 0x80,
+    BATTLE_TEAM_PRESENCE_MASK = 0xc0,
 } battle_unit_team_flags_e;
 
 typedef enum battle_formation_index {
@@ -827,6 +855,7 @@ enum {
     ITEM_ID_MASK = 0xff,
     ITEM_ID_COUNT = 0x100,
     ENTD_EQUIPMENT_RANDOM = 0xfe,
+    ENTD_VALUE_RANDOM = 0xfe, /* the same sentinel in the ENTD level and secondary skillset bytes */
     ITEM_TYPE_FILTER_ANY = 0xff,
 };
 

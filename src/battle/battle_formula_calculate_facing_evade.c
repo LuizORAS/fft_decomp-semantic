@@ -73,7 +73,7 @@ void battle_formula_calculate_facing_evade(void) {
         g_battle_action_current_ability.class_evade = 0;
     }
     if (*result == BATTLE_ABILITY_FACING_BACK) {
-        g_battle_action_current_ability.right_shield_evade = 0;
-        g_battle_action_current_ability.left_shield_evade = 0;
+        g_battle_action_current_ability.right_hand_evade = 0;
+        g_battle_action_current_ability.left_hand_evade = 0;
     }
 }

@@ -18,7 +18,7 @@ s32 battle_effect_init_data(void) {
     u8* destination;
 
     destination = g_main_heap_companion_overlay_load_address + 0x3500;
-    if (g_ability_effect_id >= 0) {
+    if (g_battle_ability_effect_id >= 0) {
         switch (g_effect_load_state) {
         case 0:
             if (g_battle_effect_target_id != 0) {
@@ -26,9 +26,9 @@ s32 battle_effect_init_data(void) {
             } else {
                 g_battle_effect_load_countdown = 0;
             }
-            battle_effect_load_lba_and_size(g_ability_effect_id, &lba, &byte_length);
+            battle_effect_load_lba_and_size(g_battle_ability_effect_id, &lba, &byte_length);
             if (byte_length == 0) {
-                g_ability_effect_id = 1;
+                g_battle_ability_effect_id = 1;
                 battle_effect_load_lba_and_size(1, &lba, &byte_length);
             }
             result = main_file_call_build_header(lba, byte_length, destination);
@@ -53,7 +53,7 @@ s32 battle_effect_init_data(void) {
                 battle_effect_finalize_secondary(g_battle_effect_target_id);
             }
             g_effect_load_state = 3;
-            battle_effect_init_flags_section_pointer(g_ability_effect_id);
+            battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
             /* An `lw` of the section's leading word, not a byte test. */
             if (g_battle_effect_flags_section->flags & EFFECT_FLAG_AUDIO_FADE) {
                 main_sound_set_current_music_volume(0x40, 0xF0);

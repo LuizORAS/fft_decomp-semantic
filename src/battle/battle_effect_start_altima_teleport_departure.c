@@ -18,6 +18,6 @@ s32 battle_effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit)
         return 1;
     }
     battle_effect_set_secondary_teleport(unit);
-    main_sound_play_sfx_find_channel(0x6a);
+    main_sound_play_sfx_find_channel(MAIN_SFX_TELEPORT_OUT);
     return 0;
 }

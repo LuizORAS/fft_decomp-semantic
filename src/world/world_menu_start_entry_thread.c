@@ -13,7 +13,7 @@ void world_menu_start_entry_thread(void) {
         world_thread_exit_current();
     }
     world_camera_wait_until_idle();
-    while (world_thread_find_running_by_task(0x12) != 0) {
+    while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         world_thread_yield();
     }
     if (g_world_menu_input_disabled == 0) {

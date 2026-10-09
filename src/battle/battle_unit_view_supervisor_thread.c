@@ -43,9 +43,12 @@ void battle_unit_view_supervisor_thread(void) {
             if (thread->is_running != 0) {
                 task = thread->task_id;
                 if (task == set->task_ids[i]
-                    && (task != 0x11 || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)
-                    && (task != 0x3a || g_battle_unit_view_started_comparison_id == g_battle_preview_target_unit_id)
-                    && (task != 0x14 || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)) {
+                    && (task != NATIVE_THREAD_TASK_HOVERED_UNIT_STATS
+                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)
+                    && (task != NATIVE_THREAD_TASK_RIGHT_UNIT_STATS
+                        || g_battle_unit_view_started_comparison_id == g_battle_preview_target_unit_id)
+                    && (task != NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL
+                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)) {
                     continue;
                 }
                 states[set->thread_ids[i]] = BATTLE_UNIT_VIEW_SLOT_RESTART;

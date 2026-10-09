@@ -2,11 +2,6 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Battle Stats 0x005 presence bits copied from the ENTD entry; both set
- * means the unit is loaded (graphics and all) but not deployed. */
-#define ENTD_PRESENCE_RANDOM 0x40
-#define ENTD_PRESENCE_MASK   0xc0
-
 /* Loads the 16 ENTD units of the encounter into the battle unit slots.
  *
  * Each present unit is initialised, deduplicated against the party limit and
@@ -33,8 +28,8 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     entd_unit_t* entd_list = entd_data->units;
 
     g_battle_player_unit_fallen = 0;
-    g_enemy_level_sum = 0;
-    g_highest_enemy_level = 0;
+    g_battle_enemy_level_sum = 0;
+    g_battle_highest_enemy_level = 0;
     main_party_calculate_highest_level();
     party_limit = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
     party_limit = (party_limit < 10) ? 9 - party_limit : 0;
@@ -47,7 +42,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         g_main_entd_current_unit = entd;
         if (entd->sprite_set == 0) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0xff;
+            unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
             continue;
         }
 
@@ -67,10 +62,10 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         }
         unit->unit_id = unit_id;
 
-        presence = unit->team_flags & ENTD_PRESENCE_MASK;
-        if (presence == 0 || (presence == ENTD_PRESENCE_RANDOM && (rand() & 1))) {
+        presence = unit->team_flags & BATTLE_TEAM_PRESENCE_MASK;
+        if (presence == 0 || (presence == BATTLE_TEAM_FLAG_RANDOMLY_PRESENT && (rand() & 1))) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0;
+            unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
             main_unit_init_position_and_rewards(unit, g_main_entd_current_unit);
             continue;
         }
@@ -79,7 +74,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         if (battle_unit_validate_placement(battle_id) != 0) {
             main_system_handle_battle_load_exception(battle_id + 300);
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0xff;
+            unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
             continue;
         }
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
@@ -87,7 +82,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         }
         if (battle_unit_add_unique_entd_spritesheet(battle_id, portrait_id, party_limit) != 0) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0;
+            unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
             if (duplicate_message_shown != 0) {
                 continue;
             }
@@ -96,9 +91,9 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             continue;
         }
 
-        if (presence != ENTD_PRESENCE_MASK && enemy_count >= enemy_limit) {
+        if (presence != BATTLE_TEAM_PRESENCE_MASK && enemy_count >= enemy_limit) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0xff;
+            unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
             if (limit_message_shown != 0) {
                 continue;
             }
@@ -107,9 +102,9 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             enemy_count++;
             continue;
         }
-        if (presence == ENTD_PRESENCE_MASK) {
+        if (presence == BATTLE_TEAM_PRESENCE_MASK) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0;
+            unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
             status = 1;
         } else {
             status = 0;
@@ -117,7 +112,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         }
         battle_gfx_append_unit_graphics_load_descriptor(unit->x, (u8)unit->position.raw, unit->position.raw >> 15,
             (unit->position.raw >> 8) & 0xf, portrait_id, palette_id, unit_id, unit, status);
-        if (presence != ENTD_PRESENCE_MASK) {
+        if (presence != BATTLE_TEAM_PRESENCE_MASK) {
             enemy_count++;
         }
     }

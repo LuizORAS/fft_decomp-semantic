@@ -16,7 +16,7 @@ typedef struct attack_scenario {
     u8 squad_1[2];       /* 0x09 */
     u8 squad_2[2];       /* 0x0b */
     u8 portrait_id;      /* 0x0d */
-    u8 unit_id;          /* 0x0e */
+    u8 portrait_unit_id; /* 0x0e */
     u8 story_entd_id[2]; /* 0x0f */
     u8 ramza_mandatory;  /* 0x11 */
     u8 next_scenario[2]; /* 0x12 */
@@ -83,14 +83,14 @@ s32 attack_load_scenario_conditionals(void) {
             return;
         }
         g_main_special_portrait_wldface_id = scenario->portrait_id;
-        g_main_special_portrait_unit_id = scenario->unit_id;
+        g_main_special_portrait_unit_id = scenario->portrait_unit_id;
         return;
     }
     g_battle_scenario_event_active = 0;
     for (i = 0x70; i < 0x90; i++) {
         battle_script_set_variable(i, 0);
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 1);
+    battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 1);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL) != 0
         && battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0
         && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x12a) {
@@ -157,7 +157,7 @@ s32 attack_load_scenario_conditionals(void) {
     squads[0] = attack_load_unaligned_s16(scenario->squad_1);
     squads[1] = attack_load_unaligned_s16(scenario->squad_2);
     g_main_special_portrait_wldface_id = scenario->portrait_id;
-    g_main_special_portrait_unit_id = scenario->unit_id;
+    g_main_special_portrait_unit_id = scenario->portrait_unit_id;
     squads[3] = attack_load_unaligned_s16(scenario->story_entd_id);
     ramza = scenario->ramza_mandatory;
     attack_load_unaligned_s16(scenario->next_scenario);

@@ -18,9 +18,9 @@ void main_sound_stop_sfx_channel_pair(s32 index) {
     music = g_main_sound_sfx_music;
     channel = &music->channels[index];
     do {
-        if (channel->active & 1) {
+        if (channel->flags & 1) {
             channels |= bit;
-            channel->active = 0;
+            channel->flags = 0;
             voices |= channel->voice_mask;
         }
         bit <<= 1;

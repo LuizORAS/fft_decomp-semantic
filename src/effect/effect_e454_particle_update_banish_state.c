@@ -24,7 +24,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
 
     record = &g_effect_state_records[record_index];
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
@@ -33,14 +33,14 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
         }
         vertex_work = battle_heap_alloc_block(0x200, record_index);
         record->work_slots[byte_offset] = vertex_work;
-        g_current_effect_work = vertex_work;
+        g_battle_effect_current_work = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 3, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 4, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 5, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 6, 1, 1);
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[byte_offset];
@@ -58,7 +58,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                     parent.position[1] = vertex->vy << 12;
                     parent.position[2] = vertex->vz << 12;
                     battle_effect_spawn_emitter_particles(
-                        record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                        record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                 }
             } else if (group == 13) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
@@ -70,7 +70,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                         parent.position[1] = vertex->vy << 12;
                         parent.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
-                            record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                            record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
             } else if (group == 14) {
@@ -83,7 +83,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                         parent.position[1] = vertex->vy << 12;
                         parent.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
-                            record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                            record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
             }
@@ -94,9 +94,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
         if (record->work_slots[byte_offset] != NULL) {
             battle_heap_free_block(record->work_slots[byte_offset]);
             record->work_slots[byte_offset] = NULL;
-            g_current_effect_work = NULL;
+            g_battle_effect_current_work = NULL;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

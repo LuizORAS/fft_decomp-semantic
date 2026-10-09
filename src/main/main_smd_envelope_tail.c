@@ -7,7 +7,7 @@ u8* main_smd_envelope_tail(u8* note_data, suzuki_music_t* music, suzuki_music_ch
 
     channel->decay_time = note_data[0];
     level = note_data[1];
-    channel->func_flags |= 0x120;
+    channel->voice_attr_flags |= 0x120;
     channel->sustain_level = level;
     return note_data + 2;
 }

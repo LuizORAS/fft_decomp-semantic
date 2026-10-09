@@ -41,11 +41,12 @@ s32 jobstts_update_ability_list_menu(void) {
         rect.h = 0x10;
         g_jobstts_ability_list_job_name_ids[0] = g_jobstts_job_selected_id;
         jobstts_text_render_id_rows_to_vram(
-            (s32)g_battle_text_section_pointers[6], g_jobstts_ability_list_job_name_ids, &rect, 0);
+            (s32)g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_jobstts_ability_list_job_name_ids, &rect, 0);
         g_jobstts_ability_category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, 0);
         jobstts_ability_build_list(
             0, g_jobstts_job_selected_id & 0x3ff, g_jobstts_ability_category, g_jobstts_ability_entries, 0);
-        jobstts_menu_init_scrollable_list_core(g_jobstts_ability_entries, 0, (s32)g_battle_text_section_pointers[14]);
+        jobstts_menu_init_scrollable_list_core(
+            g_jobstts_ability_entries, 0, (s32)g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_jobstts_ability_list_initialized = 1;
     }
 
@@ -79,8 +80,8 @@ s32 jobstts_update_ability_list_menu(void) {
             0, g_jobstts_job_selected_id, g_jobstts_ability_category, g_jobstts_ability_entries, 0);
         jobstts_menu_get_selection_record(
             g_jobstts_ability_category, &selected_index, &scroll_index, g_jobstts_ability_entries);
-        jobstts_menu_init_scrollable_list(
-            g_jobstts_ability_entries, selected_index, scroll_index, g_battle_text_section_pointers[14]);
+        jobstts_menu_init_scrollable_list(g_jobstts_ability_entries, selected_index, scroll_index,
+            g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         jobstts_gfx_set_transition_frame(0xa);
         g_jobstts_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }

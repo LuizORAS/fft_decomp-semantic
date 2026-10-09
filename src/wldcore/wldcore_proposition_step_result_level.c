@@ -63,12 +63,15 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     }
     g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
     g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 1;
-    proposition_flags
-        = world_script_get_variable(g_main_active_propositions[level->proposition].proposition_id + 0x360) & 0xFFFD;
+    proposition_flags = world_script_get_variable(g_main_active_propositions[level->proposition].proposition_id
+                            + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
+        & 0xFFFD;
     if (g_wldcore_job_selection.result == 0) {
         proposition_flags |= 4;
     }
-    world_script_set_variable(g_main_active_propositions[level->proposition].proposition_id + 0x360, proposition_flags);
+    world_script_set_variable(
+        g_main_active_propositions[level->proposition].proposition_id + EVENT_SCRIPT_VAR_PROPOSITION_FIRST,
+        proposition_flags);
     war_funds = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_wldcore_proposition_gil_amount;
     if (war_funds > 0x05F5E0FF) {
         war_funds = 0x05F5E0FF;
@@ -84,14 +87,14 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
             g_main_active_propositions[level->proposition].proposition_id, date);
     }
     if (g_wldcore_job_selection.reward_type == 1) {
-        world_script_set_variable(g_wldcore_job_selection.reward_index + 0x321, 1);
+        world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
         date[1] = day;
         date[0] = month;
         wldcore_write_nine_bit_record(
             g_main_treasure_acquisition_date_bits, g_wldcore_job_selection.reward_index, date);
     }
     if (g_wldcore_job_selection.reward_type == 2) {
-        world_script_set_variable(g_wldcore_job_selection.reward_index + 0x350, 1);
+        world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
         date[1] = day;
         date[0] = month;
         wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, g_wldcore_job_selection.reward_index, date);

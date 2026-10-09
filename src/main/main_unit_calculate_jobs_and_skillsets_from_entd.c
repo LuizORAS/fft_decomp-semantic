@@ -58,7 +58,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
             unit->ability_outcome = 0xff;
         }
         selected = entd->secondary_skillset;
-        if (selected == 0xfe) {
+        if (selected == ENTD_VALUE_RANDOM) {
             if (unit->unit_flags & UNIT_FLAG_MONSTER)
                 unit->secondary_skillset = 0;
             else {

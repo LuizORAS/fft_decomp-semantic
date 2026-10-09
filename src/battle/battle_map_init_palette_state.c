@@ -25,8 +25,8 @@ void battle_map_init_palette_state(void) {
         group++;
     } while (group < 14);
 
-    g_map_background_gradient_transition.active = 0;
-    g_map_background_gradient_transition.repeat = 0;
+    g_battle_map_background_gradient_transition.active = 0;
+    g_battle_map_background_gradient_transition.repeat = 0;
     g_battle_map_ambient_light_transition.active = 0;
     g_battle_map_ambient_light_transition.repeat = 0;
     g_battle_map_palette_state.banks[2].enabled = 0;

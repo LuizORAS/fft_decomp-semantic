@@ -6,7 +6,7 @@
 /*
  * Scrolling three-column text list thread (an older sibling of
  * world_menu_scrolling_list_thread with a fixed page pair at 0x801bfda4 and helper thread
- * 15 running world_menu_run_dead_unit_panel_a_2).
+ * 15 running world_menu_window_frame_thread_2).
  *
  * Draws the visible rows into a text image, then runs the input loop on two
  * alternating packet pages. Cursor moves past either end start a one-row
@@ -117,7 +117,7 @@ void world_build_at_list_2(void) {
     buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
-    world_thread_start(0xF, world_menu_run_dead_unit_panel_a_2);
+    world_thread_start(0xF, world_menu_window_frame_thread_2);
     world_thread_set_parameters(0xF, (s32)&entry->window_x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;

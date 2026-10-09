@@ -102,7 +102,7 @@ typedef struct world_gfx_scaled_draw_area_pair {
 } world_gfx_scaled_draw_area_pair_t;
 typedef char world_scaled_draw_area_pair_size_must_be_0x28[sizeof(world_gfx_scaled_draw_area_pair_t) == 0x28 ? 1 : -1];
 
-/* The 0x10-byte glyph blit descriptor used by the dead-unit panels and filled
+/* The 0x10-byte glyph blit descriptor used by the window frame threads and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
  * the surface width in pixels. */
 typedef struct world_glyph_blit {

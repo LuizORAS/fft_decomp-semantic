@@ -49,7 +49,7 @@ s32 effect_e483_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
     ot = main_gfx_get_otag();
     scratch = (effect_single_ring_mesh_scratch_t*)0x1f800000;
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
 
@@ -81,7 +81,7 @@ s32 effect_e483_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
@@ -356,7 +356,7 @@ s32 effect_e483_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
             battle_heap_free_block(work);
             record->work_slots[byte_offset] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

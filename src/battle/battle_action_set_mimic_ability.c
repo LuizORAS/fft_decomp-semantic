@@ -31,7 +31,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     if (battle_action_can_unit_react(self) != 0) {
         return 0;
     }
-    if ((self->team_flags & 0x30) != g_battle_action_current_attacker.team) {
+    if ((self->team_flags & BATTLE_TEAM_MASK) != g_battle_action_current_attacker.team) {
         return 0;
     }
     if (self->misc_unit_id == current->unit_id) {
@@ -40,8 +40,9 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     menu_type = g_main_action_menu_types_by_skillset[current->skillset];
     /* The target loads the ability id signed (lh). */
     ability_id = (s16)g_battle_action_current_attacker.action.ability_id;
-    if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_ARITHMETICKS || menu_type == ACTION_MENU_TYPE_MONSTER) {
-        if (g_main_ability_range_data[ability_id].flags_3 & 0x10) {
+    if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_ARITHMETICKS
+        || menu_type == ACTION_MENU_TYPE_MONSTER) {
+        if (g_main_ability_range_data[ability_id].flags_3 & ABILITY_SECONDARY_FLAG_3_CANNOT_MIMIC) {
             return 0;
         }
     }

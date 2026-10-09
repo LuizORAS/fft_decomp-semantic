@@ -1,8 +1,7 @@
 #include "fft/event_attack.h"
 
-#define ATTACK_NAME_BYTES       16
-#define ATTACK_NAME_END         0xfe
-#define PARTY_FLAG_UNDEPLOYABLE 0x04
+#define ATTACK_NAME_BYTES 16
+#define ATTACK_NAME_END   0xfe
 
 void attack_deploy_find_fieldable_units(void) {
     s32 index;
@@ -11,15 +10,17 @@ void attack_deploy_find_fieldable_units(void) {
     party_data_t* party_unit;
 
     name_cursor = g_battle_text_section_pointers[11];
-    g_battle_text_section_pointers[8] = g_attack_text_data + g_attack_text_section_offset_1;
-    g_battle_text_section_pointers[6] = g_attack_text_data + g_attack_text_section_offset_2;
-    g_battle_text_section_pointers[2] = g_battle_text_section_pointers[22];
+    g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES]
+        = g_attack_text_data + g_attack_text_section_offset_1;
+    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_attack_text_data + g_attack_text_section_offset_2;
+    g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY]
+        = g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES];
     g_attack_deploy_fieldable_unit_count = 0;
 
     for (index = 0; index < PARTY_ROSTER_SLOT_COUNT; index++) {
         party_unit = main_party_get_data_pointer(index);
         if (party_unit->party_id == PARTY_ID_NONE || index >= PARTY_GUEST_SLOT_FIRST
-            || party_unit->proposition_status != 0 || (party_unit->gender_flags & PARTY_FLAG_UNDEPLOYABLE) != 0) {
+            || party_unit->proposition_status != 0 || (party_unit->gender_flags & UNIT_FLAG_EGG) != 0) {
             g_attack_deploy_unit_fieldable[index] = 0;
             *name_cursor++ = ATTACK_NAME_END;
         } else {

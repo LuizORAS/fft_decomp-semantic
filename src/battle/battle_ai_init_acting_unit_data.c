@@ -21,7 +21,7 @@ void battle_ai_init_acting_unit_data(void) {
     g_battle_ai_data_base.acting_unit_coords.bytes.y = unit->position.bits.y;
     g_battle_ai_data_base.acting_unit_coords.bytes.elevation = unit->position.bits.higher_elevation;
     g_battle_ai_data_base.acting_unit_coords.bytes.zero = 0;
-    g_battle_ai_data_base.acting_unit_battle_id = ai->unit_battle_ids[id];
+    g_battle_ai_data_base.acting_unit_compact_index = ai->unit_compact_indices[id];
     g_battle_ai_data_base.acting_unit_team = unit->team_flags & BATTLE_TEAM_MASK;
     g_battle_ai_data_base.acting_unit_remaining_clockticks = battle_ai_calculate_clockticks_until_unit_acts(unit);
     acting = g_battle_ai_data_base.acting_unit;

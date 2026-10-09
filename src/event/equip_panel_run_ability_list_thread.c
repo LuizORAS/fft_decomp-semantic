@@ -93,9 +93,9 @@ void equip_panel_run_ability_list_thread(void) {
             g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
-                id = state->ability_ids[i] + 0xb000;
+                id = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
                 if (state->generic_monster != 0) {
-                    id = state->ability_ids[i] + 0x7000;
+                    id = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                     g_menu_text_state.origin_y += 0x10;
@@ -106,7 +106,8 @@ void equip_panel_run_ability_list_thread(void) {
             }
             for (; i < 5; i++) {
                 if ((u16)state->ability_ids[i] != BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    battle_menu_display_text_entry(state->ability_ids[i] + 0x7000, text, &g_menu_text_state.origin_x);
+                    battle_menu_display_text_entry(
+                        state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE, text, &g_menu_text_state.origin_x);
                 }
                 g_menu_text_state.origin_y += 0x10;
             }

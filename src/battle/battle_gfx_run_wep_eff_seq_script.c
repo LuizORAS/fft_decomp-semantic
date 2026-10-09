@@ -67,11 +67,11 @@ void battle_gfx_run_wep_eff_seq_script(
                 sprite->wait = 0;
                 return;
             case BATTLE_SEQ_OP_INCREMENT_LOOP:
-                sprite->counter_0c++;
+                sprite->restart_count++;
                 pos = 0;
                 break;
             case BATTLE_SEQ_OP_SET_Y_ROTATION_0:
-                sprite->display->y_rotation = 0;
+                sprite->display->rotation = 0;
                 break;
             case BATTLE_SEQ_OP_QUEUE_THROW_ANIMATION:
                 battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(unit);
@@ -153,7 +153,7 @@ void battle_gfx_run_wep_eff_seq_script(
                 do {
                     count = seq[anim][pos++];
                     count |= seq[anim][pos++] << 8;
-                    sprite->display->y_rotation = count;
+                    sprite->display->rotation = count;
                 } while (0);
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
@@ -209,9 +209,9 @@ void battle_gfx_run_wep_eff_seq_script(
             }
             display = sprite->display;
             parts = display->part_count = (src->part_count_and_rotation & 7) + 1;
-            display->y_rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
-            if (unit->sprite_display_flags.half & 2) {
-                display->y_rotation = -display->y_rotation;
+            display->rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
+            if (unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
+                display->rotation = -display->rotation;
             }
             if (parts > 3) {
                 parts = 3;
@@ -219,7 +219,7 @@ void battle_gfx_run_wep_eff_seq_script(
             flags = src->flags;
             switch (sprite->graphic_type) {
             case 1:
-                display->spritesheet_id = (flags & 0x60) | 9;
+                display->tpage = (flags & 0x60) | 9;
                 display->clut = unit->vram_palette_id + index * 64 + 0x80;
                 for (i = 0; i < parts; i++) {
                     u32 size;
@@ -244,7 +244,7 @@ void battle_gfx_run_wep_eff_seq_script(
                 }
                 break;
             case 2:
-                display->spritesheet_id = (flags & 0x60) | 8;
+                display->tpage = (flags & 0x60) | 8;
                 display->clut = unit->vram_palette_id + index * 64 + 0x80;
                 for (i = 0; i < parts; i++) {
                     u32 size;

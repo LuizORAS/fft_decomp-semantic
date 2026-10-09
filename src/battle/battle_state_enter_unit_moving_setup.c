@@ -12,31 +12,31 @@ void battle_state_enter_unit_moving_setup(void) {
     src = battle_unit_get_source_misc_data();
     cast = battle_unit_get_casting_misc_data();
 
-    if (cast->mount_byte & 0x80) {
-        battle_menu_init_system_function(
-            2, 1, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+    if (cast->pending_mount & 0x80) {
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 1, src->battle_data->misc_unit_id, 0,
+            src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         return;
     }
     path_count = cast->movement_path_count + 2;
     if (path_count < 2) {
         if (g_main_game_options.fields.navigation_messages != GAME_OPTION_ON) {
-            battle_menu_init_system_function(
-                2, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 0,
+                src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             return;
         }
-        battle_menu_init_system_function(
-            0xD, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0, src->battle_data->misc_unit_id, 0,
+            src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         return;
     }
     at_tile
         = battle_unit_get_crystal_or_treasure_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (at_tile != 0) {
         if (at_tile->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-            battle_menu_init_system_function(
-                2, 4, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 4,
+                src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             return;
         }
     }
-    battle_menu_init_system_function(
-        2, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+    battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 0, src->battle_data->misc_unit_id, 0,
+        src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
 }

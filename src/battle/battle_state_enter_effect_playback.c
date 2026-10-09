@@ -20,7 +20,7 @@ s32 battle_state_enter_effect_playback(void) {
     g_battle_camera_offset_screen_coord_countdown = 0;
     g_battle_camera_rotation_countdown = 0;
     g_battle_camera_zoom_countdown = 0;
-    g_previous_battle_game_state = previous_state;
+    g_battle_previous_game_state = previous_state;
     g_main_saved_animation_speed = previous_animation_speed;
     return 0;
 }

@@ -41,7 +41,7 @@ void require_render_gil_reward_ticker(void) {
 
     g_require_reward_war_trophy_entry_count = 0;
     battle_unit_find_war_trophies_and_bonus_money(&g_require_reward_war_trophy_search_result);
-    battle_script_set_variable(0x2c,
+    battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
         battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS)
             + g_require_reward_war_trophy_search_result.level_sum_money);
     money = g_require_reward_war_trophy_search_result.level_sum_money;
@@ -67,7 +67,7 @@ void require_render_gil_reward_ticker(void) {
         j /= 10;
         g_require_reward_money_digit_positions[i] = g_require_reward_money_digit_targets[i] << 13;
     }
-    g_battle_sound_pending_sfx_id = 4;
+    g_battle_sound_pending_sfx_id = MAIN_SFX_GIL_TICKER;
     for (bank = 0; bank < 2; bank++) {
         for (j = 0; j < digits; j++) {
             POLY_FT4* pd;

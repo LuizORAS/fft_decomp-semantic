@@ -17,7 +17,7 @@ void battle_action_choose_facing_for_wait(void) {
             battle_unit_decide_facing_direction(unit, *(s16*)&mounted_unit->facing);
             if (unit->battle_data != 0) {
                 battle_unit_set_tile_position(unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z,
-                    (*(s16*)&mounted_unit->facing / 0x400));
+                    (*(s16*)&mounted_unit->facing / BATTLE_FACING_QUARTER_TURN));
             }
         }
     }

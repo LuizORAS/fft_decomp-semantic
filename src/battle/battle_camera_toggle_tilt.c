@@ -20,5 +20,5 @@ void battle_camera_toggle_tilt(void) {
         g_battle_camera_tilt_action = 2;
     }
     g_battle_camera_tilt_increment = 1;
-    main_sound_play_sfx(0x31);
+    main_sound_play_sfx(MAIN_SFX_CAMERA_TILT);
 }

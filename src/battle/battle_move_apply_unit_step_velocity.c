@@ -17,7 +17,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         && unit->map_z != unit->movement.bytes.destination_z) {
         layer = unit->map_z = unit->movement.bytes.destination_z;
     }
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 2:
     case 4:
     case 6:
@@ -25,7 +25,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
-            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->movement_value.value,
+            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step.value,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         }
@@ -37,7 +37,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
-            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->movement_value.value,
+            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step.value,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->step_speed);
         }
@@ -49,7 +49,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     unit->screen.vz = unit->real.vz / 4096;
     ground_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
     move_ground_z = battle_gfx_calculate_screen_z_from_misc_move_data(unit);
-    switch (unit->centre_tile_offset) {
+    switch (unit->step_phase) {
     case 1:
     case 3:
     case 5:
@@ -59,7 +59,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if ((-unit->real.vy / 4096) <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_unit_step_delta_center_to_edge(
-                unit, &unit->movement_value.value, map_tile, unit->current_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         } else {
             if ((-unit->real.vy / 4096) < -ground_z + 6) {
@@ -68,9 +68,9 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1A;
+                unit->step_phase = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, (s16)unit->facing, unit);
                 }
             }
         }
@@ -88,7 +88,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
             battle_move_set_unit_step_delta_center_to_edge(
-                unit, &unit->movement_value.value, map_tile, unit->current_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->step_speed);
         } else {
             if ((-unit->real.vy / 4096) < -ground_z + 6) {
@@ -97,9 +97,9 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1A;
+                unit->step_phase = 0x1A;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, (s16)unit->facing, unit);
                 }
             }
         }
@@ -114,7 +114,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (-unit->real.vy / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_unit_step_delta_edge_to_center(
-                unit, &unit->movement_value.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         }
         if (-ground_z < (-unit->real.vy / 4096)) {
@@ -124,9 +124,9 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1B;
+                unit->step_phase = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, (s16)unit->facing, unit);
                 }
             }
         }
@@ -144,7 +144,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
             battle_move_set_unit_step_delta_edge_to_center(
-                unit, &unit->movement_value.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->step_speed);
         }
         if ((-unit->real.vy / 4096) > -ground_z) {
@@ -154,9 +154,9 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->centre_tile_offset = 0x1B;
+                unit->step_phase = 0x1B;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                    battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+                    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, (s16)unit->facing, unit);
                 }
             }
         }
@@ -195,7 +195,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_float_step_delta_center_to_edge(
-                unit, &unit->movement_value.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         } else {
             /* Shared with the next case: a duplicated branch does not merge. */
@@ -213,7 +213,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_float_step_delta_edge_to_center(
-                unit, &unit->movement_value.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         } else {
         accelerate:
@@ -234,7 +234,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (-unit->real.vy / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_velocity_for_contiguous_clamped_steps(
-                unit, &unit->movement_path_count, &unit->movement_value.value);
+                unit, &unit->movement_path_count, &unit->current_path_step.value);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         }
         unit->shadow_dirty |= 1;
@@ -249,7 +249,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
-                unit, &unit->movement_path_count, &unit->movement_value.value);
+                unit, &unit->movement_path_count, &unit->current_path_step.value);
             battle_move_interpolate_partial((s32*)unit, unit->walk_speed.word);
         }
         unit->shadow_dirty |= 1;

@@ -6,7 +6,7 @@ void battle_move_finalize_path_after_animation(battle_unit_misc_data_t* unit) {
 
     if (unit->animation_countdown == 0) {
         path_count = unit->movement_path_count;
-        unit->centre_tile_offset = 0;
+        unit->step_phase = 0;
         unit->movement_path_count = 0;
         unit->last_path_count = path_count;
     }

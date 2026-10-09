@@ -11,7 +11,7 @@ s32 battle_ai_select_retreat_action(void) {
     battle_ai_ability_entry_t* entry;
     s32 i, result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_retreat_phase) {
         case 0:
@@ -52,7 +52,7 @@ charging:
         return 0;
     }
     for (i = 0; i < 34; i++) {
-        entry = &ai->ability_lists[ai->acting_unit_battle_id][i];
+        entry = &ai->ability_lists[ai->acting_unit_compact_index][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
             break;
         battle_ai_load_ability_entry(entry);

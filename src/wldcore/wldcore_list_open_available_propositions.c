@@ -46,7 +46,8 @@ void wldcore_list_open_available_propositions(void) {
     }
     count = 0;
     for (i = 0; i < 0x60; i++) {
-        if (!(world_script_get_variable(i + 0x360) & 6) && !(g_main_proposition_states[i] & 0x3F)
+        if (!(world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 6)
+            && !(g_main_proposition_states[i] & 0x3F)
             && wldcore_proposition_set_based_on_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
             g_wldcore_list_entry_values[count] = i + 0xD000;
             g_wldcore_list_row_flags[count] = 0;

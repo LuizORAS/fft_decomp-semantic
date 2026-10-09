@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread_b; second WORLD copy with its own
+ * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread_b; second WORLD copy with its own
  * blit descriptors, blit setters and texture-window table (the frame block at 0x801cc074 is shared with
  * world_menu_window_frame_thread_b), byte-identical apart from addresses). Layout notes below are the OPTION twin's;
  * the WORLD helpers are the same routines.
@@ -67,15 +67,15 @@ void world_menu_window_frame_thread_b_2(void) {
        reuses it for every halfword and byte store below. */
     texture_v = (u8)texture.y;
     for (index = 0; index < 4; index++) {
-        g_world_dead_unit_panel_b_texture_windows[index].x = (texture_u + index) * 0x10;
-        g_world_dead_unit_panel_b_texture_windows[index].y = texture_v;
+        g_world_menu_panel_texture_windows_b_2[index].x = (texture_u + index) * 0x10;
+        g_world_menu_panel_texture_windows_b_2[index].y = texture_v;
     }
-    g_world_dead_unit_panel_b_texture_windows[4].x = texture_u + 0x30;
-    g_world_dead_unit_panel_b_texture_windows[4].y = texture_v + 8;
+    g_world_menu_panel_texture_windows_b_2[4].x = texture_u + 0x30;
+    g_world_menu_panel_texture_windows_b_2[4].y = texture_v + 8;
 
     for (index = 0; index < 7; index++) {
         SetDrawMode(
-            &prim->modes[index], 1, 0, GetTPage(0, 0, 0x1c0, 0), &g_world_dead_unit_panel_b_texture_windows[index]);
+            &prim->modes[index], 1, 0, GetTPage(0, 0, 0x1c0, 0), &g_world_menu_panel_texture_windows_b_2[index]);
     }
 
     border_wide = 0x10;

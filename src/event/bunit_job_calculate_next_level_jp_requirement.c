@@ -9,7 +9,7 @@ s32 bunit_job_calculate_next_level_jp_requirement(s32 index) {
     if (level >= 8) {
         g_bunit_job_next_level_jp_requirement |= 0x20000000;
     } else {
-        g_bunit_job_next_level_jp_requirement = g_job_level_jp_requirements[level];
+        g_bunit_job_next_level_jp_requirement = g_main_job_level_jp_requirements[level];
     }
     return g_bunit_job_next_level_jp_requirement;
 }

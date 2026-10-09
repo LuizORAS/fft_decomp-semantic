@@ -83,8 +83,8 @@ void card_save_update_and_draw_slot_list(u16 input) {
                 index = g_card_save_list_cursor_index;
                 if (input & PSX_PAD_DOWN) {
                     g_card_save_list_cursor_index++;
-                    if (g_card_save_list_cursor_index >= g_world_card_mode_select_enabled) {
-                        g_card_save_list_cursor_index = g_world_card_mode_select_enabled - 1;
+                    if (g_card_save_list_cursor_index >= g_card_save_occupied_slot_count) {
+                        g_card_save_list_cursor_index = g_card_save_occupied_slot_count - 1;
                     }
                 } else if ((input & PSX_PAD_UP) && g_card_save_list_cursor_index != 0) {
                     g_card_save_list_cursor_index--;
@@ -199,7 +199,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
         card_gfx_enqueue_textured_quad(
             &rect, 0xd8, 0, 0, 0, g_card_menu_cursor_texture_page, g_card_menu_cursor_mode0_foreground_clut, 15);
     }
-    if (g_world_card_mode_select_enabled - g_card_save_list_top_row >= 5) {
+    if (g_card_save_occupied_slot_count - g_card_save_list_top_row >= 5) {
         rect.x = 0xe3;
         rect.y = 0xba;
         rect.w = 8;

@@ -18,10 +18,13 @@ void battle_state_handle_jp_exp_gain_state(void) {
         return;
     }
     if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
-        if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
+        if (battle_menu_init_system_function(
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
+                == 2
             && battle_script_get_event_finish_operation() != 0) {
-            g_previous_battle_game_state = g_battle_game_state;
-            battle_menu_init_system_function(8, 0, unit->battle_data->misc_unit_id, 0, 1);
+            g_battle_previous_game_state = g_battle_game_state;
+            battle_menu_init_system_function(
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);
             battle_action_set_casting_unit_id_ff();
             return;
         }

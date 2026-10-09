@@ -4,7 +4,7 @@
 s32 battle_camera_wrap_yaw_angle(void) {
     s32 yaw;
 
-    yaw = g_battle_script_variables[BATTLE_CAMERA_YAW_WORD_INDEX];
+    yaw = g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW];
     while (yaw < 0) {
         yaw += ONE;
     }

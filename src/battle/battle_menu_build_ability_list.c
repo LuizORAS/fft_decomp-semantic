@@ -39,29 +39,29 @@ void battle_menu_build_ability_list(s32 mode) {
     for (i = 0; i < 0x50; i++) {
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[i] = 0xFFFF;
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[i] = 0xFF;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e[i] = 1;
+        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct[i] = 1;
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[i] = 0;
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras[i] = 0xFFFF;
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[i] = 0;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2[i] = 1;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled[i] = 0xFF;
+        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns[i] = 1;
+        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] = 0xFF;
         g_battle_menu_ability_display_flags[i] = 0;
     }
     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e[0x50] = 0xFF;
+    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct[0x50] = 0xFF;
     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled[0x50] = 0xFF;
+    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns[0x50] = 0xFF;
+    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[0x50] = 0xFF;
 
     if (type == ACTION_MENU_TYPE_DEFAULT) {
         battle_menu_get_unit_skillset_ability_data(unit_index, skillset,
             (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e, 0,
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct, 0,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2);
-        battle_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e, 0x50);
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns);
+        battle_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct,
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
         battle_menu_display_item_inventory_ability(
@@ -97,8 +97,8 @@ void battle_menu_build_ability_list(s32 mode) {
     if (type == ACTION_MENU_TYPE_CHARGE) {
         battle_menu_load_charge_skillset(unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2);
-        battle_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled,
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns);
+        battle_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, 0x50);
     }
     window_x = 0xAC;
@@ -116,7 +116,7 @@ void battle_menu_build_ability_list(s32 mode) {
             (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
         battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
         found = 0;
         for (i = 0; i < count; i++) {
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[i]
@@ -133,7 +133,7 @@ void battle_menu_build_ability_list(s32 mode) {
         } else {
             g_battle_ability_menu_layout.mode[2] = 2;
             battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
+                ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
             window_x = 0x94;
             row_mode = 8;
         }
@@ -171,13 +171,13 @@ void battle_menu_build_ability_list(s32 mode) {
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
                 window_x -= 8;
                 battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
+                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
                 row_mode = 6;
                 g_battle_ability_menu_layout.x[1] -= 8;
                 g_battle_ability_menu_layout.x[2] -= 8;
             } else {
                 battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
+                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
                 window_x = 0x94;
                 row_mode = 5;
                 g_battle_ability_menu_layout.mode[2] = 2;
@@ -198,13 +198,13 @@ void battle_menu_build_ability_list(s32 mode) {
         ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[i] |= row_flags;
         if (type == ACTION_MENU_TYPE_DEFAULT) {
             if (unit->mp - ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[i] < 0
-                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled[i] != 0) {
+                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] != 0) {
                 g_battle_menu_ability_display_flags[i] = 8;
             }
         }
         if (type == ACTION_MENU_TYPE_DEFAULT || type == ACTION_MENU_TYPE_MONSTER) {
             if ((((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[i] & 2)
-                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled[i] != 0
+                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] != 0
                 && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
                 g_battle_menu_ability_display_flags[i] = 8;
             }

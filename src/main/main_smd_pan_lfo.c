@@ -18,8 +18,8 @@ u8* main_smd_pan_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
         modulator = &channel->modulators[2];
         modulator->amplitude = main_smd_modulator_calculate_step(depth << 24, speed, 3);
         modulator->timer_reset = speed;
-        modulator->counter_14_reset = note_data[2];
-        modulator->counter_18_reset = 0x100;
+        modulator->delay_reset = note_data[2];
+        modulator->fade_step = 0x100;
         modulator->step = main_smd_modulator_step_triangle_centered;
         modulator->waveform = 3;
         modulator->target = 2;

@@ -39,7 +39,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     jump_found = 0;
     abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
     menu = g_main_action_menu_types_by_skillset[skillset];
-    list_id = ai->unit_battle_ids[unit_id];
+    list_id = ai->unit_compact_indices[unit_id];
     if (menu == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
         if (battle_ai_load_known_ability_flag(unit_id, skillset, 0)) {
             unit_bits = unit_id << 10;
@@ -100,7 +100,8 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             if (max_mp < mp_cost) {
                 continue;
             }
-            if ((ai->considered_ability.ai_flags.word & 0x400) && (unit->status_sets.innate[4] & 0x40)) {
+            if ((ai->considered_ability.ai_flags.word & 0x400)
+                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT))) {
                 continue;
             }
             flags = g_main_ability_range_data[ability_id].flags_4;

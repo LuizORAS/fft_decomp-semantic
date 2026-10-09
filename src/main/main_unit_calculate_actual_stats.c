@@ -22,7 +22,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
         cap = 10;
         max = 0xffff;
     }
-    mult = unit->raw_stats + UNIT_RAW_STAT_DATA_BYTE_COUNT;
+    mult = unit->growths_multipliers;
     level = unit->level;
     raw = unit->raw_stats;
 

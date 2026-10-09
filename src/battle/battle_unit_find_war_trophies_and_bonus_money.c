@@ -18,7 +18,7 @@ void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) 
     lowest = 99;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->existence != 0xFF && unit->existence != 0) {
+        if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE && unit->existence != BATTLE_UNIT_EXISTENCE_OFF_FIELD) {
             value = unit->war_trophy;
             if (value != ITEM_ID_NOTHING) {
                 result->item_ids[count] = value;
@@ -38,10 +38,10 @@ void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) 
         result->item_ids[i] = ITEM_ID_NOTHING;
     }
     result->bonus_money = money;
-    result->level_sum_money = g_enemy_level_sum * 100;
-    if (g_battle_player_unit_fallen != 0 || lowest >= g_highest_enemy_level) {
+    result->level_sum_money = g_battle_enemy_level_sum * 100;
+    if (g_battle_player_unit_fallen != 0 || lowest >= g_battle_highest_enemy_level) {
         result->level_bonus_money = 0;
     } else {
-        result->level_bonus_money = (g_highest_enemy_level - lowest) * 100;
+        result->level_bonus_money = (g_battle_highest_enemy_level - lowest) * 100;
     }
 }

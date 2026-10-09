@@ -66,7 +66,7 @@ void world_menu_run_battle_help(void) {
     g_world_text_section_pointers[20] = g_world_help_data_base + g_world_help_text_section_offsets[20];
     self = &g_world_threads[g_world_thread_current_id];
     world_menu_copy_billboard_data_out(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);
-    if ((g_world_selected_unit_stat_summary.team_state != 0) || (g_world_unit_join_screen_active != 0)) {
+    if ((g_world_selected_unit_stat_summary.team_kind != 0) || (g_world_unit_join_screen_active != 0)) {
         g_world_help_require_navigation[2].destination[2] = 7;
         g_world_help_require_navigation[7].destination[3] = 2;
     }
@@ -180,7 +180,7 @@ void world_menu_run_battle_help(void) {
                     if (text_section == TEXT_ID_ABILITY_NAME_BASE) {
                         help_id &= 0x7FF;
                         help_id |= 0x7800;
-                    } else if (text_section == 0xB000) {
+                    } else if (text_section == TEXT_ID_SKILLSET_NAME_SOURCE_BASE) {
                         help_id &= 0x7FF;
                         help_id |= 0x9800;
                     } else if (text_section == TEXT_ID_ITEM_NAME_BASE) {

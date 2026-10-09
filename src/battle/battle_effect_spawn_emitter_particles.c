@@ -119,7 +119,7 @@ s32 battle_effect_spawn_emitter_particles(
         particle->kind_flags = kind;
         particle->child_spawn_flags = flags;
         particle->animation_frame = 0;
-        battle_effect_init_parameter_set(
+        battle_effect_init_animation_sequence(
             particle->animation_state, entry->animation_frame_group, entry->animation_index);
     }
     head = particle;

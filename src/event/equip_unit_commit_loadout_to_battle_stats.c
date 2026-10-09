@@ -43,7 +43,7 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
         = g_equip_unit_data[0]->equipment[3] != 0 ? g_equip_unit_data[0]->equipment[3] : 0xFF;
     stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]
         = g_equip_unit_data[0]->equipment[4] != 0 ? g_equip_unit_data[0]->equipment[4] : 0xFF;
-    bcopy(stats->equipment, main_party_get_data_pointer(g_equip_unit_data[0]->formation_index_78)->equipment, 7);
+    bcopy(stats->equipment, main_party_get_data_pointer(g_equip_unit_data[0]->party_index)->equipment, 7);
     main_unit_refresh_stats_and_statuses(stats);
     stats = battle_unit_get_stats_from_battle_id(unit_id);
     hp = g_equip_unit_saved_hp;

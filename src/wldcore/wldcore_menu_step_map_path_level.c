@@ -14,7 +14,8 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
             return;
         }
         if (level->erase != 0) {
-            world_script_set_variable(g_wldcore_map_path_animation.script_variable + 0x22c, 0);
+            world_script_set_variable(
+                g_wldcore_map_path_animation.script_variable + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST, 0);
             g_wldcore_map_path_animation.page_index = g_wldcore_map_path_animation.page_count - 1;
             g_wldcore_map_path_animation.frame_timer
                 = g_wldcore_map_path_animation.page_frames[g_wldcore_map_path_animation.page_count - 1] - 1;
@@ -32,7 +33,8 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
                 g_wldcore_map_path_animation.page_index++;
                 g_wldcore_map_path_animation.frame_timer = 0;
                 if (g_wldcore_map_path_animation.page_index >= g_wldcore_map_path_animation.page_count) {
-                    world_script_set_variable(g_wldcore_map_path_animation.script_variable + 0x22c, 1);
+                    world_script_set_variable(
+                        g_wldcore_map_path_animation.script_variable + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST, 1);
                 }
             }
         } else {

@@ -43,11 +43,11 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             = (node->flags & EFFECT_WORK_BEHAVIOR_HOMING_THRESHOLD_MASK) >> EFFECT_WORK_BEHAVIOR_HOMING_THRESHOLD_SHIFT;
         work = node->next;
         if (threshold != 0) {
-            delta = (node->position[0] >> 12) - node->anchor_x;
+            delta = (node->position[0] >> 12) - node->target_x;
             if (delta < threshold && -threshold < delta) {
-                delta = (node->position[1] >> 12) - node->anchor_y;
+                delta = (node->position[1] >> 12) - node->target_y;
                 if (delta < threshold && -threshold < delta) {
-                    delta = (node->position[2] >> 12) - node->anchor_z;
+                    delta = (node->position[2] >> 12) - node->target_z;
                     if (delta < threshold && -threshold < delta) {
                         node->lifetime = EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN;
                     }
@@ -60,7 +60,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
         if ((node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_1
             || (node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_2) {
             battle_effect_spawn_emitter_particles(
-                record->record_index, record->emitter_index, node->child_emitter_index_alt, node);
+                record->record_index, record->frame_counter, node->child_emitter_mid_life, node);
         }
 
         node->palette_frame++;
@@ -78,10 +78,10 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
 
         if ((node->flags & EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MODE_1) {
             battle_effect_spawn_emitter_particles(
-                record->record_index, record->emitter_index, node->child_emitter_index, node);
+                record->record_index, record->frame_counter, node->child_emitter_on_death, node);
         } else if ((node->flags & EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MODE_2) {
             battle_effect_spawn_emitter_particles(
-                record->record_index, record->emitter_index, node->child_emitter_index, node);
+                record->record_index, record->frame_counter, node->child_emitter_on_death, node);
         }
         battle_effect_free_work_record(record->record_index, node);
     }

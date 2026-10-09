@@ -9,7 +9,7 @@ void battle_menu_reserve_high_overlay(u32 size) {
             break;
         }
         battle_thread_yield();
-        if (g_font_print_enabled != 0) {
+        if (g_main_font_print_enabled != 0) {
             FntPrint(g_battle_text_wait_for_file_allocation_message);
         }
     }

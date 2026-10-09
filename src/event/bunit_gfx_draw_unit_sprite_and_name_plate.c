@@ -57,7 +57,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         size = cells[i].size;
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
-        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->roster_id);
+        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
         dx = cells[i].dx;
         orientation = 0;
         if (value >= 2) {
@@ -68,13 +68,13 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
          * reassociate it onto x. */
         quad.x = x + (s16)(dx + 0x1C);
         quad.y = cells[i].dy + (y + base_y);
-        if (g_bunit_unit_data[unit]->formation_order_key & 0x80) {
+        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             quad.y -= 8;
         }
         quad.u = cells[i].cell % 32 * 8;
         quad.v = cells[i].cell / 32 * 8 + quad.query.graphic_y_offset;
         value = 7;
-        if (g_bunit_unit_data[unit]->formation_order_key & 0x40) {
+        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
             value = 8;
             if (i >= 3) {
                 value = 6;
@@ -82,7 +82,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         }
         bunit_gfx_enqueue_oriented_textured_quad((world_oriented_quad_t*)&quad, rgb, orientation, 0, value);
     }
-    if (g_bunit_unit_data[unit]->formation_order_key & 0x40) {
+    if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
     }
     g_bunit_unit_shadow_sprite.x = x + 0x12;

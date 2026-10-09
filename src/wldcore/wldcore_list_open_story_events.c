@@ -19,7 +19,7 @@ void wldcore_list_open_story_events(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < 64; i++) {
-        if (world_script_get_variable(i + 0x1BC) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
             *values = i - 0x1800;
             *flags = 0;
             flags++;

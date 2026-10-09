@@ -71,8 +71,8 @@ void battle_map_reset_mesh_render_state(void) {
     }
     for (i = 1; i < 9; i++) {
         g_battle_map_mesh_animation_instructions[i].states[0][1].next = 0;
-        g_battle_map_mesh_parts[i].value_84 = 0x10;
-        g_battle_map_mesh_parts[i].value_87 = 0;
+        g_battle_map_mesh_parts[i].speed = 0x10;
+        g_battle_map_mesh_parts[i].keyframe = 0;
         g_battle_map_mesh_part_animation_states[i] = 0;
     }
     g_battle_map_textured_triangle_count = 0;
@@ -93,7 +93,7 @@ void battle_map_reset_mesh_render_state(void) {
         g_battle_map_mesh_parts[i].scale = unit_scale;
         g_battle_map_mesh_parts[i].scale_start = unit_scale;
         g_battle_map_mesh_parts[i].scale_step = unit_scale;
-        g_battle_map_mesh_parts[i].value_85 = 1;
+        g_battle_map_mesh_parts[i].next_instruction = 1;
         g_battle_map_mesh_part_animation_states[i] = 0;
     }
 }

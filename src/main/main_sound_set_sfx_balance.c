@@ -10,10 +10,10 @@ void main_sound_set_sfx_balance(s32 sound_id, s32 balance) {
     count = 8;
     channel = g_main_sound_sfx_music->channels;
     do {
-        if (channel->active & 1) {
+        if (channel->flags & 1) {
             if (channel->sound_id.raw == sound_id) {
                 channel->balance = balance << 8;
-                channel->note_flags2 = 0x100;
+                channel->voice_update_flags = 0x100;
             }
         }
         channel++;

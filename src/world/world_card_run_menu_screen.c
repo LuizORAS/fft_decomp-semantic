@@ -30,7 +30,7 @@ typedef struct world_card_screen_packets {
  * constants whose overlapping lifetimes put the 10 in $t0, and sched2 then
  * hoists only the $v0 stores.
  */
-s32 world_card_run_menu_screen(s32 slot_count) {
+s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_card_screen_packets_t packets;
     s32 music_handle;
     s32 input;
@@ -66,11 +66,11 @@ s32 world_card_run_menu_screen(s32 slot_count) {
         0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
     world_formation_init_menu_display();
     g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
-    g_world_text_section_pointers[27] = g_world_card_slot_text_table;
+    g_world_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_card_slot_text_table;
     world_gfx_bind_data_pointer(3);
     g_world_card_menu_step = 0;
-    /* WORLD stores the CARD slot count as a halfword. */
-    *(s16*)&g_world_card_mode_select_enabled = slot_count;
+    /* 1 from the world menu, 0 from the title screen's Continue (load only). */
+    g_world_card_mode_select_enabled = mode_select_enabled;
     music_handle = main_sound_open_music_into_free_slot(0x29);
     while (main_return_zero_80043708() != 0) { }
     main_sound_switch_music_track((s16)music_handle, 0x7f, 0);

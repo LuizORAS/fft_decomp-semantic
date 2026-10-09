@@ -565,7 +565,7 @@ typedef struct bunit_unit_data {
     s16 experience; /* 0x08 */
     s16 entd_slot;  /* 0x0a */
     s16 current_hp;
-    u8 _unused_00e[2];
+    u8 _unused_00e[2]; /* 0x0e; HP gauge bonus slot, left zero */
     s16 max_hp;
     s16 current_mp;
     u8 _unused_014[2];
@@ -575,12 +575,12 @@ typedef struct bunit_unit_data {
     s16 max_ct;          /* 0x1c */
     s16 formation_index; /* 0x1e */
     u8 _unused_020[2];
-    s16 entd_slot_22;        /* 0x22 */
-    s16 monster_base_job_id; /* 0x24; used when character_identity is 0x82 */
-    s16 brave;               /* 0x26 */
-    s16 faith;               /* 0x28 */
-    s16 zodiac;              /* 0x2a */
-    s16 roster_id;           /* 0x2C; searched by bunit_unit_find_index_by_roster_id */
+    s16 name_index; /* 0x22 */
+    s16 job_id;     /* 0x24; used when character_identity is 0x82 */
+    s16 brave;      /* 0x26 */
+    s16 faith;      /* 0x28 */
+    s16 zodiac;     /* 0x2a */
+    s16 battle_id;  /* 0x2C; searched by bunit_unit_find_index_by_battle_id */
     u8 _unused_02e[2];
     s16 move;                     /* 0x30 */
     s16 speed;                    /* 0x32 */
@@ -603,18 +603,18 @@ typedef struct bunit_unit_data {
     s16 equipment[5];            /* 0x54 */
     s16 abilities[5];            /* 0x5e; primary skillset, secondary, reaction, support, movement (filled by
                                   * bunit_unit_build_data_from_battle_stats; bunit_create_ability_list reads [0]) */
-    u8 _unused_068[8];
-    u8 gender_flags;          /* 0x70; Bard/Dancer restrictions */
-    u8 misc_unit_id;          /* 0x71 */
-    u8 initial_team_flags;    /* 0x72 */
-    u8 formation_order_key;   /* 0x73; bit 0x40 marks an encoded roster ID */
-    u8 character_identity;    /* 0x74; special character, generic male/female/monster */
-    u8 unlocked_jobs[3];      /* 0x75; bit reader consumes Squire through Mime */
-    u8 learned_abilities[57]; /* 0x78 */
-    u8 job_levels[10];        /* 0xb1; two packed job-level nibbles per byte */
-    u8 _padding_0bb;          /* aligns job_points */
-    u16 job_points[20];       /* 0xbc; current JP by generic job */
-    u16 total_job_points[20]; /* 0xe4; cumulative JP by generic job */
+    u8 _unused_068[8];           /* 0x68; spare tail of the stat-detail block */
+    u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
+    u8 misc_unit_id;             /* 0x71 */
+    u8 initial_team_flags;       /* 0x72 */
+    u8 mount_info;               /* 0x73; battle_stats_t.mount_info */
+    u8 character_identity;       /* 0x74; special character, generic male/female/monster */
+    u8 unlocked_jobs[3];         /* 0x75; bit reader consumes Squire through Mime */
+    u8 learned_abilities[57];    /* 0x78 */
+    u8 job_levels[10];           /* 0xb1; two packed job-level nibbles per byte */
+    u8 _padding_0bb;             /* aligns job_points */
+    u16 job_points[20];          /* 0xbc; current JP by generic job */
+    u16 total_job_points[20];    /* 0xe4; cumulative JP by generic job */
 } bunit_unit_data_t;
 typedef char bunit_unit_data_size_must_be_0x10c[(sizeof(bunit_unit_data_t) == 0x10c) ? 1 : -1];
 typedef char bunit_unit_data_character_identity_must_be_0x74
@@ -639,9 +639,9 @@ typedef char
 typedef char bunit_unit_data_brave_must_be_0x26[((unsigned long)&((bunit_unit_data_t*)0)->brave == 0x26) ? 1 : -1];
 typedef char bunit_unit_data_faith_must_be_0x28[((unsigned long)&((bunit_unit_data_t*)0)->faith == 0x28) ? 1 : -1];
 typedef char
-    bunit_unit_data_roster_id_must_be_0x2c[((unsigned long)&((bunit_unit_data_t*)0)->roster_id == 0x2C) ? 1 : -1];
-typedef char bunit_unit_data_formation_order_key_must_be_0x73
-    [((unsigned long)&((bunit_unit_data_t*)0)->formation_order_key == 0x73) ? 1 : -1];
+    bunit_unit_data_battle_id_must_be_0x2c[((unsigned long)&((bunit_unit_data_t*)0)->battle_id == 0x2C) ? 1 : -1];
+typedef char
+    bunit_unit_data_mount_info_must_be_0x73[((unsigned long)&((bunit_unit_data_t*)0)->mount_info == 0x73) ? 1 : -1];
 
 extern s16 g_bunit_unit_count;
 extern s16 g_bunit_unit_current_stat_value;
@@ -697,7 +697,7 @@ void bunit_unit_build_list_index_map(void);
 s32 bunit_unit_build_reorderable_index_list(void);
 void bunit_unit_copy_orders_to_reorder_list(s32 unused, s16* entries);
 void bunit_unit_copy_selected_data(void);
-s32 bunit_unit_find_index_by_roster_id(s16 roster_id);
+s32 bunit_unit_find_index_by_battle_id(s16 battle_id);
 s32 bunit_unit_get_current_stat(s32 unit_index);
 s32 bunit_unit_get_level(s32 unit_id);
 s32 bunit_unit_get_experience(s32 unit_id);
@@ -751,11 +751,7 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
 
 /* other */
-enum {
-    BUNIT_FORMATION_ORDER_KEY_ENCODED_ROSTER_ID = 0x40,
-};
-
-extern u8 g_bunit_selected_roster_id;
+extern u8 g_bunit_selected_battle_id;
 extern u8 g_bunit_saved_unit_browse_enabled;
 extern u8 g_bunit_saved_status_banner_enabled;
 extern s16 g_bunit_frame_arg;

@@ -19,7 +19,7 @@ void wldcore_list_open_brave_story_propositions(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < 96; i++) {
-        if (world_script_get_variable(i + 0x360) & 4) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 4) {
             *values = i + 0x6000;
             *flags = 0;
             flags++;

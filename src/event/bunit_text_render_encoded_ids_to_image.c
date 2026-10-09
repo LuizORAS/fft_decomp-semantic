@@ -50,7 +50,7 @@ void bunit_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bo
                         position.y = rect->y + line * rect->line_height;
                     }
                     if (code < TEXT_FORMAT_FIRST) {
-                        if (code >= 0xD0) {
+                        if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                             code &= 0xF;
                             code = code * 0xD0 + *text++;
                         }

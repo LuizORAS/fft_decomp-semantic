@@ -33,7 +33,8 @@ void battle_action_set_item_throw_stone_ability_display(void) {
         battle_action_clear_at_list_active();
         return;
     }
-    if ((battle_effect_is_item_ability(ability) == 0) || ((unit->encoded_animation >> 1) == 0x39)) {
+    if ((battle_effect_is_item_ability(ability) == 0)
+        || ((unit->encoded_animation >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
         battle_effect_play();
     }
     main_sound_pause_tracked_sfx();

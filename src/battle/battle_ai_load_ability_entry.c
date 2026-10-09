@@ -24,7 +24,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     switch (menu) {
     case ACTION_MENU_TYPE_ATTACK:
     attack:
-        weapon = &ai->unit_weapon_data[ai->unit_battle_ids[unit_id]];
+        weapon = &ai->unit_weapon_data[ai->unit_compact_indices[unit_id]];
         ai->considered_ability.parameters.bytes.range = weapon->bytes.range;
         ai->considered_ability.element = weapon->bytes.element;
     weapon_flags:
@@ -85,7 +85,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         else
             ai->considered_ability.parameters.bytes.range
                 = g_main_jump_ability_data[ability_id - ABILITY_ID_JUMP_FIRST].range;
-        weapon = &ai->unit_weapon_data[ai->unit_battle_ids[unit_id]];
+        weapon = &ai->unit_weapon_data[ai->unit_compact_indices[unit_id]];
         goto weapon_flags;
     case ACTION_MENU_TYPE_CHARGE:
         ai->considered_ability.ct = g_main_charge_ability_data[ability_id - ABILITY_ID_CHARGE_FIRST].ct;
@@ -126,7 +126,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             ai->considered_ability.mp_cost >>= 1;
         if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
             ai->considered_ability.parameters.bytes.range
-                = ai->unit_weapon_data[ai->unit_battle_ids[unit_id]].bytes.range;
+                = ai->unit_weapon_data[ai->unit_compact_indices[unit_id]].bytes.range;
             ai->considered_ability.parameters.bytes.aoe = 0;
         } else {
             ai->considered_ability.parameters.bytes.range = secondary->range;

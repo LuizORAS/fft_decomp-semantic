@@ -28,7 +28,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     if (unit_id == 0x68) {
         for (battle_id = 0; battle_id < 16; battle_id++) {
             unit = battle_unit_get_stats_from_battle_id(battle_id);
-            if (unit->team_flags & 3)
+            if (unit->team_flags & BATTLE_TEAM_IMPORTANCE_MASK)
                 break;
         }
         if (battle_id == 16) {

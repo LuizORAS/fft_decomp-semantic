@@ -28,7 +28,7 @@ void wldcore_list_open_rumors(void) {
         /* A register operand keeps the loaded word first in the `and`;
          * testing *locations directly lets expand_binop swap them. */
         entry = *locations;
-        if ((entry & mask) && world_script_get_variable(i + 0x2D1) != 0) {
+        if ((entry & mask) && world_script_get_variable(i + EVENT_SCRIPT_VAR_RUMOR_FIRST) != 0) {
             *values = i - 0x3800;
             *flags = 0;
             flags++;

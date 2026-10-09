@@ -47,7 +47,7 @@ void wldcore_map_color_and_draw_dots(void) {
         color[2] = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
         g_wldcore_map_dots[i].sprite_id = is_castle + 0x6a;
-        if (world_script_get_variable(i + 0x267) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < 0x18) {
                 g_wldcore_map_dots[i].palette = 0xc;
             } else {
@@ -58,7 +58,7 @@ void wldcore_map_color_and_draw_dots(void) {
         }
         dot->anim_counter = 0;
         g_wldcore_map_dots[i].frame_index = 0;
-        if (world_script_get_variable(i + 0x200) == 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             g_wldcore_map_dots[i].flags |= 0x10;
         }
         dot++;

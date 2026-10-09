@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /*
- * Draw the unit's sprite once at each of its six display_svectors.
+ * Draw the unit's sprite once at each of its six position_copies.
  *
  * Counterpart of battle_gfx_init_position_vector_copies, which seeds the
  * copies; each copy is projected with the battle camera and queued at its own
@@ -23,11 +23,12 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
             &g_battle_offset_screen_coords, &g_battle_camera_zoom);
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        RotTrans(&unit->display_svectors[i], &transformed, &flag);
+        RotTrans(&unit->position_copies[i], &transformed, &flag);
         depth = transformed.vz / 4;
         position.vx = transformed.vx;
         position.vy = transformed.vy;
-        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags.half) & 0xff9f) | 1;
+        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags.half) & 0xff9f)
+            | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         zoom.vx = g_battle_camera_zoom.vx;
         zoom.vy = g_battle_camera_zoom.vy;
         zoom.vz = g_battle_camera_zoom.vz;

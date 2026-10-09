@@ -14,7 +14,7 @@
  * script thread has stopped, otherwise 1 (or g_battle_script_frame_result_override while it is set, or 0
  * while menu input is disabled with state 2). The three BATTLE-only halfword clears come
  * after the word clears in source; the scheduler still groups them with the
- * other halfword stores, and this order keeps the g_companion_overlay_state load
+ * other halfword stores, and this order keeps the g_battle_companion_overlay_state load
  * below them as in the target.
  */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
@@ -116,28 +116,28 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     g_battle_3d_object_use_request = 0;
     g_battle_field_object_use_request = 0;
 
-    if (g_companion_overlay_state == 3) {
+    if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
         g_battle_companion_overlay_primitives = jobstts_entrypoint(g_battle_active_turn_unit.battle_id, 0);
         if (g_battle_companion_overlay_primitives != 0) {
             AddPrims(g_battle_gfx_current_otag_entry, (void*)g_battle_companion_overlay_primitives,
                 (void*)(g_battle_companion_overlay_primitives + 0xFC));
         } else {
-            g_companion_overlay_state = 0;
+            g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }
     }
-    if (g_companion_overlay_state == 4) {
+    if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
         prims = equip_entrypoint(g_battle_active_turn_unit.battle_id, g_battle_gfx_current_otag_entry + 1);
         g_battle_companion_overlay_primitives = prims;
         if (prims >= 2) {
             AddPrims(g_battle_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
         } else {
-            g_companion_overlay_state = 0;
+            g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }
     }
 
     if (battle_script_is_tutorial_event_slot() == 0 && g_battle_script_event_input != PSX_PAD_SELECT
         && g_battle_script_event_input != 0) {
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
         g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_8014cc94(i);
@@ -145,11 +145,11 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     battle_thread_yield();
     for (i = 1; i < 16; i++) {
         if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_8014cc94(i)) {
-            g_event_input_suppression_frames = 5;
+            g_battle_event_input_suppression_frames = 5;
         }
     }
-    if (g_event_input_suppression_frames != 0) {
-        g_event_input_suppression_frames--;
+    if (g_battle_event_input_suppression_frames != 0) {
+        g_battle_event_input_suppression_frames--;
     }
     battle_camera_load_state_from_script_variables();
     g_battle_event_frame_counter++;
@@ -162,21 +162,21 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         return g_battle_script_frame_result_override;
     }
 
-    if (g_companion_overlay_state == 1) {
+    if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
         battle_noop_8013ccec();
-        g_companion_overlay_state = 0;
-    } else if (g_companion_overlay_state == 2) {
+        g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_BUNIT) {
         battle_script_set_event_speed(1);
         i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
         g_battle_active_turn_unit.battle_id = i;
-        g_companion_overlay_state = 0;
-    } else if (g_companion_overlay_state == 5) {
+        g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE) {
         battle_script_set_event_speed(1);
         polarity = g_main_gfx_screen_polarity;
         battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
         card_save_run_menu(0);
-        g_companion_overlay_state = 0;
+        g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         g_main_gfx_screen_polarity = polarity;
     }
     battle_menu_open_companion_executable();

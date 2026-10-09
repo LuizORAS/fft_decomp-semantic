@@ -17,6 +17,7 @@ enum {
     ABILITY_ID_MASK = 0x1ff,
     ABILITY_ID_COUNT = 0x200,
     ABILITY_ID_ITEM_FIRST = 0x170,
+    ABILITY_ID_ITEM_HOLY_WATER = 0x17b,
     ABILITY_ID_THROW_FIRST = 0x17e,
     ABILITY_ID_JUMP_FIRST = 0x18a,
     ABILITY_ID_CHARGE_FIRST = 0x196,
@@ -198,6 +199,7 @@ typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
     ABILITY_SECONDARY_FLAG_3_PERSEVERE = 0x04,
     ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM = 0x08,
+    ABILITY_SECONDARY_FLAG_3_CANNOT_MIMIC = 0x10,
     ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE = 0x20,
     ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE = 0x40,
     ABILITY_SECONDARY_FLAG_3_REFLECTABLE = 0x80,
@@ -517,7 +519,7 @@ typedef struct job_data {
     u8 elemental_affinity[4];          /* 0x29; affinity indices 0 through 3 */
     u8 spritesheet_id;                 /* 0x2d */
     u8 job_portrait_palette;           /* 0x2e */
-    u8 graphic_variant;                /* 0x2f; copied to battle_stats_t 0x15e */
+    u8 monster_graphic;                /* 0x2f; copied to battle_stats_t 0x15e */
 } job_data_t;
 typedef char job_data_size_must_be_48[(sizeof(job_data_t) == 48) ? 1 : -1];
 

@@ -365,7 +365,7 @@ functions:
   - {addr: 0x801c6f48, size: 380, name: bunit_unit_sort_index_list_by_order_keys, hash: d11b39851ebec6b1}
   - {addr: 0x801c70c4, size: 64, name: bunit_unit_copy_orders_to_reorder_list, hash: cac2171590658656}
   - {addr: 0x801c7104, size: 68, name: bunit_unit_copy_reorder_list_to_orders, hash: a6104db1a4999b63}
-  - {addr: 0x801c7148, size: 96, name: bunit_unit_find_index_by_roster_id, hash: aeb870b2fb0d661f}
+  - {addr: 0x801c7148, size: 96, name: bunit_unit_find_index_by_battle_id, hash: aeb870b2fb0d661f}
   - {addr: 0x801c71a8, size: 44, name: bunit_job_get_generic_index, hash: 39c0e32433f9234e}
   - {addr: 0x801c71d4, size: 88, name: bunit_job_find_first_for_skillset, hash: 0e69ad31124150c2}
   - {addr: 0x801c722c, size: 76, name: bunit_job_get_base, hash: 0fb085973a10550b}
@@ -542,7 +542,7 @@ data:
   - {addr: 0x801cf4b0, name: g_bunit_unit_grid_normal_color}
   - {addr: 0x801cf4b3, name: g_bunit_status_banner_enabled}
   - {addr: 0x801cf4b4, name: g_bunit_unit_browse_enabled}
-  - {addr: 0x801cf4b5, name: g_bunit_selected_roster_id}
+  - {addr: 0x801cf4b5, name: g_bunit_selected_battle_id}
   - {addr: 0x801cf4b8, name: g_bunit_status_display_thread_params}
   - {addr: 0x801cf4bc, name: g_bunit_status_display_offset_y}
   - {addr: 0x801cf4c0, name: g_bunit_status_display_flags}
@@ -1043,7 +1043,7 @@ data:
   - {addr: 0x801cc808, name: g_card_save_buffer_pointer}
   - {addr: 0x801cc80c, name: g_card_save_menu_state}
   - {addr: 0x801cc810, name: g_card_save_menu_work_buffer}
-  - {addr: 0x801cc814, name: g_world_card_mode_select_enabled}
+  - {addr: 0x801cc814, name: g_card_save_occupied_slot_count}
   - {addr: 0x801cc818, name: g_card_gfx_poly_ft4_buffers}
   - {addr: 0x801d8398, name: g_card_save_slot_descriptions}
   - {addr: 0x801d8848, name: g_card_input_event}
@@ -2132,8 +2132,8 @@ data:
   - {addr: 0x801c3514, name: g_option_gfx_draw_area_scale_percent}
   - {addr: 0x801c3580, name: g_option_menu_entry_table}
   - {addr: 0x801c35ac, name: g_option_menu_at_list_entry_table}
-  - {addr: 0x801c35d8, name: g_dead_unit_menu_entries}
-  - {addr: 0x801c3628, name: g_dead_unit_menu}
+  - {addr: 0x801c35d8, name: g_option_dead_unit_menu_entries}
+  - {addr: 0x801c3628, name: g_option_dead_unit_menu}
   - {addr: 0x801c38ac, name: g_option_menu_at_list_state}
   - {addr: 0x801c38dc, name: g_option_menu_at_list_entry_table_pointer}
   - {addr: 0x801c38e4, name: g_option_menu_transition_duration}
@@ -2144,7 +2144,7 @@ data:
   - {addr: 0x801c39cc, name: g_option_choice_counts}
   - {addr: 0x801c3a04, name: g_option_value_text_id_bases}
   - {addr: 0x801c3a3c, name: g_option_menu_icon_thread_param}
-  - {addr: 0x801c3a78, name: g_dead_unit_controller_input}
+  - {addr: 0x801c3a78, name: g_option_dead_unit_controller_input}
   - {addr: 0x801c3a7c, name: g_option_menu_render_buffer}
   - {addr: 0x801c9a7c, name: g_option_at_list_pages}
   - {addr: 0x801c9ce4, name: g_option_text_glyph_source}
@@ -2154,10 +2154,10 @@ data:
   - {addr: 0x801ca10c, name: g_option_menu_at_list_primary_values}
   - {addr: 0x801ca50c, name: g_option_menu_at_list_secondary_values}
   - {addr: 0x801ca70c, name: g_option_menu_at_list_indices}
-  - {addr: 0x801ca90c, name: g_dead_unit_menu_flags}
+  - {addr: 0x801ca90c, name: g_option_dead_unit_menu_flags}
   - {addr: 0x801cad0c, name: g_option_menu_at_list_flags}
-  - {addr: 0x801caf14, name: g_dead_unit_primary_result}
-  - {addr: 0x801caf18, name: g_dead_unit_secondary_result}
+  - {addr: 0x801caf14, name: g_option_dead_unit_primary_result}
+  - {addr: 0x801caf18, name: g_option_dead_unit_secondary_result}
   - {addr: 0x801cb6fc, name: g_option_menu_at_list_descriptors}
   - {addr: 0x801cb79c, name: g_option_menu_at_list_text}
   - {addr: 0x801cbc4c, name: g_option_menu_title_image_rect}

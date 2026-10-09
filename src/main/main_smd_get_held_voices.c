@@ -13,8 +13,8 @@ u32 main_smd_get_held_voices(suzuki_music_t* music) {
     channel = music->channels;
     voices = 0;
     do {
-        if ((channel->active & 1) && (channel->active & 0x100)) {
-            if ((channel->active & 0x30) == 0) {
+        if ((channel->flags & 1) && (channel->flags & 0x100)) {
+            if ((channel->flags & 0x30) == 0) {
                 voices |= channel->voice_mask;
             }
         }

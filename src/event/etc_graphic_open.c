@@ -13,7 +13,7 @@ void etc_graphic_open(s32 graphic_id) {
             break;
         }
         battle_thread_yield();
-        if (g_font_print_enabled != 0) {
+        if (g_main_font_print_enabled != 0) {
             FntPrint(g_etc_allocation_wait_message);
         }
     }

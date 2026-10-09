@@ -28,7 +28,7 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
         timer
             = battle_move_calculate_jump_arc_velocity((const battle_screen_coords_t*)&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
-        unit->sprite_display_flags.half |= 0x61;
+        unit->sprite_display_flags.half |= BATTLE_MISC_DISPLAY_BLEND_MASK | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         battle_gfx_start_misc_unit_palette_modulation(4, 1, unit->unit_id, -31, -31, -31);
         threshold = 4;
         unit->distortion_phase++;

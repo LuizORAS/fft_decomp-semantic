@@ -11,7 +11,7 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
     u32 status;
     s32 unit_id;
 
-    if (misc->palette_modifier != 0) {
+    if (misc->fade_out_phase != BATTLE_MISC_FADE_OUT_NONE) {
         return;
     }
     status = misc->status_flags_1_4;

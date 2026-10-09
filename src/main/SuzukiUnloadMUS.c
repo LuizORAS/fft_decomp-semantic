@@ -5,7 +5,7 @@
  * when it was queued, frees its snapshots and the record itself. */
 void SuzukiUnloadMUS(suzuki_music_t* music) {
     /* The target tests the playing bit on an `lh` load. */
-    if ((s16)music->status & 0x8000) {
+    if ((s16)music->status & SUZUKI_MUSIC_STATUS_PLAYING) {
         SuzukiDeallocateMUSChannels(music);
     }
     if (main_smd_remove_music(music) == 0) {

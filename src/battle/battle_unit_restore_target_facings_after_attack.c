@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* For each live target in the attacker's target list, tell it to face the
-   attacker. */
-void battle_unit_face_attacker_toward_targets(battle_unit_misc_data_t* unit) {
+/* Restore the facing each unit in the attacker's target list had before the
+   attack. */
+void battle_unit_restore_target_facings_after_attack(battle_unit_misc_data_t* unit) {
     s32 i;
     battle_unit_misc_data_t* target;
 

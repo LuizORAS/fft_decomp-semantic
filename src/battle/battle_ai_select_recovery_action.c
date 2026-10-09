@@ -14,7 +14,7 @@ s32 battle_ai_select_recovery_action(void) {
     u32 status;
     s32 result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: each phase re-enters the step that suspended. */
         switch (g_battle_ai_data_base.action_selection_phase) {
         case 0:

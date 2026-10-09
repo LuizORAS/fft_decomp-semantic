@@ -56,18 +56,18 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->status_flags_1_4 = 0;
     battle_gfx_load_spritesheet_into_vram_slot(data, slot, unit_id, unit, palette);
     tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
-    battle_gfx_check_tile_status_palette_mod(unit, tile->flags_06.bits.shadow_mode, 1);
+    battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
     battle_map_load_palette_data(g_battle_gfx_shadow_palette, 4, unit_id, 0);
     unit->vram_palette_id = GetClut(unit_id << 4, 0x1e3);
-    unit->vram_spritesheet_id = slot + 0x14;
+    unit->tpage = slot + 0x14;
     if (flags == 0) {
-        unit->ability_in_use = 1;
+        unit->draw_enabled = 1;
         unit->sprite_graphic_trigger = 1;
     } else {
-        unit->ability_in_use = 0;
+        unit->draw_enabled = 0;
         unit->sprite_graphic_trigger = 0;
     }
-    unit->current_unit_id_plus_one = 0;
+    unit->standing_on_unit_id_plus_one = 0;
     unit->battle_data = stats;
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
@@ -75,13 +75,13 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->mount_state = 0;
     unit->horizontal_flip_flag = 0;
     unit->depth_height_offset = 0;
-    unit->mounted_height_offset = 0;
+    unit->float_bob_offset = 0;
     unit->float_bob_phase = 0;
-    unit->centre_tile_offset = 0;
+    unit->step_phase = 0;
     unit->movement_path_count = 0;
     unit->sprite_display_flags.half = 0;
     unit->layer_priority = 0;
-    unit->ability_ct_resolved = 0;
+    unit->turn_action_flags = 0;
     unit->special_graphic_y_offset = 0;
     unit->distortion_animation_id = 0;
     unit->distortion_phase = 0;
@@ -95,7 +95,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->map_z = tile_z;
     unit->movement.word &= ~0x08000000;
     unit->movement.word &= ~0x10000000;
-    unit->movement.word &= ~0x20000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
     unit->movement.bytes.destination_x = tile_x;
     unit->movement.bytes.destination_y = tile_y;
     unit->movement.bytes.destination_z = tile_z;
@@ -105,16 +105,16 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->velocity.vy = 0;
     unit->velocity.vx = 0;
     unit->walk_speed.word = 0x2000;
-    unit->effect_vector.vz = 0;
-    unit->effect_vector.vy = 0;
-    unit->effect_vector.vx = 0;
+    unit->seq_offset.vz = 0;
+    unit->seq_offset.vy = 0;
+    unit->seq_offset.vx = 0;
     unit->screen_offset.vz = 0;
     unit->screen_offset.vy = 0;
     unit->screen_offset.vx = 0;
-    unit->effect_vector_2.vz = 0;
-    unit->effect_vector_2.vy = 0;
-    unit->effect_vector_2.vx = 0;
-    unit->palette_modifier = 0;
+    unit->event_offset.vz = 0;
+    unit->event_offset.vy = 0;
+    unit->event_offset.vx = 0;
+    unit->fade_out_phase = BATTLE_MISC_FADE_OUT_NONE;
     unit->shadow_graphic_trigger = 1;
     unit->shadow_dirty = 1;
     unit->shadow_counter = 0;
@@ -127,8 +127,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->numeric_displays[0]->scale_x = unit->numeric_displays[0]->scale_y = unit->numeric_displays[1]->scale_x
         = unit->numeric_displays[1]->scale_y = unit->numeric_displays[2]->scale_x = unit->numeric_displays[2]->scale_y
         = ONE;
-    unit->numeric_displays[0]->spritesheet_id = unit->numeric_displays[1]->spritesheet_id
-        = unit->numeric_displays[2]->spritesheet_id = 0x1f;
+    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x1f;
     unit->numeric_displays[0]->clut = unit->numeric_displays[1]->clut = unit->numeric_displays[2]->clut
         = unit->vram_palette_id + 0x100;
     unit->numeric_displays[0]->part_count = unit->numeric_displays[1]->part_count
@@ -137,7 +136,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->status_bubble_id = 0;
     unit->status_bubble_timer = 0;
     unit->status_bubble_display = battle_gfx_init_status_bubble_sprite_display(unit_id);
-    unit->item_ability_display = 0;
+    unit->item_display_active = 0;
     unit->item_display = battle_gfx_init_item_sprite_display(unit_id);
     unit->position_copies_active = 0;
     unit->sprite_display_section = (battle_gfx_sprite_display_data_t*)battle_gfx_init_unit_sprite_display(unit_id);
@@ -145,7 +144,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
     unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);
     sprite->wait = 1;
-    sprite->counter_0c = 0;
+    sprite->restart_count = 0;
     sprite->script_pos = 0;
     sprite->animation_id = 6;
     sprite->frame = 0;
@@ -155,7 +154,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     sprite->loop_count = 0;
     unit->sprite_display_section->scale_x = ONE;
     unit->sprite_display_section->scale_y = ONE;
-    unit->sprite_display_section->y_rotation = 0;
+    unit->sprite_display_section->rotation = 0;
     battle_unit_set_animation_based_on_status(unit);
     battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)sprite, 1);
     for (i = 0; i < 3; i++) {
@@ -181,7 +180,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         sprite->loop_count = 0;
         sprite->display->scale_x = ONE;
         sprite->display->scale_y = ONE;
-        sprite->display->y_rotation = 0;
+        sprite->display->rotation = 0;
         if ((s16)id < 0x86 && (s16)id < 0x3c && (s16)id >= 0x4a && (s16)id != 0x5d) {
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);
         }

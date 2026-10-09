@@ -127,7 +127,8 @@ typedef struct effect_particle_ribbon_record_view {
     u8 phase[4];      /* 0x22 */
     s16 target_index; /* 0x26: read as a halfword */
     u8 _unused_28[0xbc];
-    void* work_slots[5]; /* 0xe4 */
+    void* work_slots[4]; /* 0xe4 */
+    void* file_function; /* 0xf4 */
 } effect_particle_ribbon_record_view_t;
 typedef char
     assert_effect_particle_ribbon_record_view_size[sizeof(effect_particle_ribbon_record_view_t) == 0xf8 ? 1 : -1];

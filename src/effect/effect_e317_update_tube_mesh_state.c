@@ -69,7 +69,7 @@ s32 effect_e317_update_tube_mesh_state(s32 record_index, s32 byte_offset, s32 ge
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
 
@@ -101,7 +101,7 @@ s32 effect_e317_update_tube_mesh_state(s32 record_index, s32 byte_offset, s32 ge
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
@@ -412,7 +412,7 @@ s32 effect_e317_update_tube_mesh_state(s32 record_index, s32 byte_offset, s32 ge
             battle_heap_free_block(work);
             record->work_slots[byte_offset] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

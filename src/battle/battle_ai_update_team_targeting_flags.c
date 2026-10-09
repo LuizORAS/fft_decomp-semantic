@@ -15,7 +15,7 @@ void battle_ai_update_team_targeting_flags(void) {
     s32 impaired_ally_count;
     s32 i;
 
-    g_battle_ai_data_base.targetable_override = 0;
+    g_battle_ai_data_base.single_enemy_remaining = 0;
     if ((acting_decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE)
         || (g_battle_ai_data_base.acting_unit->status_sets.current[4]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
@@ -52,7 +52,7 @@ void battle_ai_update_team_targeting_flags(void) {
         ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE;
     } else {
         if (enemy_count == 1) {
-            ai->targetable_override = 1;
+            ai->single_enemy_remaining = 1;
         }
         ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE;
     }

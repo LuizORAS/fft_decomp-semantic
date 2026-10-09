@@ -15,7 +15,7 @@ s32 wldcore_map_find_dot_at_point(wldcore_point32_t point) {
     best = 0xFFFFFF;
     hit = 0;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (world_script_get_variable(i + 0x200) == 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             continue;
         }
         if ((g_wldcore_map_dots[i].flags & 0x18) != 0) {

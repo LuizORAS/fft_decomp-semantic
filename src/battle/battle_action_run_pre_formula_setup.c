@@ -34,7 +34,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_current_ability.target_id = target_id;
     g_battle_action_target = &g_battle_unit_stats[target_id];
     g_battle_action_target_data = &g_battle_unit_stats[target_id].action;
-    g_battle_action_current_ability.post_formula_flag = 0;
+    g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
     g_battle_action_current_ability_view.attacker_id = action.unit_id;
     g_battle_action_attacker_data = &g_battle_action_attacker_action_data;
     g_battle_action_attacker = &g_battle_unit_stats[g_battle_action_current_ability_view.attacker_id];
@@ -42,7 +42,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&action);
         return 0;
     }
-    if (g_battle_action_current_ability.knockback_flags & 0x80) {
+    if (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING) {
         battle_move_apply_knockback();
         return 0;
     }
@@ -79,7 +79,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     skillset = action.skillset;
     g_battle_action_current_ability.skillset = skillset;
     menu_type = g_main_action_menu_types_by_skillset[skillset];
-    if (g_battle_action_current_ability_view.elemental_flags != 0) {
+    if (g_battle_action_current_ability_view.weapon_proc_pending != 0) {
         action.ability_id = g_battle_action_current_ability_view.reaction_id;
         g_battle_action_current_ability_view.ability_id = action.ability_id;
         menu_type = ACTION_MENU_TYPE_DEFAULT;
@@ -87,9 +87,9 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         g_battle_action_current_ability_view.reaction_id = 0;
     }
     data = &g_main_ability_data[(s16)action.ability_id];
-    g_battle_action_target_data->status_change = data->ai_flags.bytes[0] & 3;
-    if (data->ai_flags.bytes[3] & 1) {
-        g_battle_action_target_data->status_change += 0x80;
+    g_battle_action_target_data->miss_display_flags = data->ai_flags.bytes[0] & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK;
+    if (data->ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION) {
+        g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
         action.ability_id = action.item_id + 0x26;
@@ -106,7 +106,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         if ((s16)action.ability_id < 0x171) {
             if ((g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-                && g_battle_action_current_ability_view.elemental_flags == 0) {
+                && g_battle_action_current_ability_view.weapon_proc_pending == 0) {
                 g_battle_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
                 main_util_copy_byte_data((u8*)g_main_item_weapon_data,
                     (u8*)&g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
@@ -169,7 +169,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         formula = 1;
         break;
     }
-    g_battle_action_current_ability_view.elemental_flags = 0;
+    g_battle_action_current_ability_view.weapon_proc_pending = 0;
     g_battle_action_current_ability.knockback_flags = 0;
     if (formula == 0 || formula >= 0x65) {
         formula = 1;

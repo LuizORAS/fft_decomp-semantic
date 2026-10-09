@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread,
+ * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
  * byte-identical apart from addresses). Layout notes below are the OPTION
  * twin's; the WORLD helpers are the same routines.
  */

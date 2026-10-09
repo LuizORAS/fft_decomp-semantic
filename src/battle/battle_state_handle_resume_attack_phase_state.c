@@ -28,7 +28,8 @@ void battle_state_handle_resume_attack_phase_state(void) {
             g_battle_gfx_sp2_data = 0;
         }
         battle_gfx_invalidate_sp2_vram_slot((struct battle_gfx_misc_data_header*)unit);
-        if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
+        if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY
+            && g_battle_action_phase == BATTLE_ACTION_PHASE_ACTING_UNIT) {
             facing = *(s16*)&unit->facing;
             if (facing < 0) {
                 facing += 0x3ff;
@@ -41,8 +42,8 @@ void battle_state_handle_resume_attack_phase_state(void) {
         battle_unit_call_set_animation_based_on_status(unit);
         battle_unit_update_anim_display_for_all_targets(unit);
         battle_unit_get_source_misc_data();
-        if (g_battle_action_phase != 0) {
-            if (g_battle_action_phase != 2) {
+        if (g_battle_action_phase != BATTLE_ACTION_PHASE_PRE_ACTION) {
+            if (g_battle_action_phase != BATTLE_ACTION_PHASE_REACTING_UNIT) {
                 g_battle_action_phase += 1;
             }
             if (battle_state_announce_next_charged_action() != 0) {

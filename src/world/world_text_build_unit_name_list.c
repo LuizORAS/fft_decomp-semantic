@@ -11,7 +11,7 @@ void world_text_build_unit_name_list(void) {
     u8 character;
 
     world_text_init_section_pointers();
-    out = g_world_text_section_pointers[WORLD_TEXT_SECTION_ROSTER_UNIT_NAMES];
+    out = g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_get_stats_from_battle_id(i);
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {

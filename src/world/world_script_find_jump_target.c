@@ -22,7 +22,7 @@ s32 world_script_find_jump_target(s32 offset, s32 instruction, s32 alt_instructi
     if (instruction == EVENT_OPCODE_BACK_TARGET) {
         for (i = 0; i < offset; i += g_world_event_instruction_sizes[opcode] + 1) {
             opcode = g_world_event_script[i];
-            if (opcode == EVENT_OPCODE_UNKNOWN_D9) {
+            if (opcode == EVENT_OPCODE_BACK_TARGET_BARRIER) {
                 found = -1;
             } else if (opcode == EVENT_OPCODE_FORWARD_TARGET && *(g_world_event_script + i + 1) == label) {
                 found = -1;

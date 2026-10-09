@@ -16,11 +16,11 @@ void main_sound_stop_sfx_channels(s32 sound_id) {
     music = g_main_sound_sfx_music;
     channel = music->channels;
     for (i = 8; i != 0; i--) {
-        if (channel->active & 1) {
+        if (channel->flags & 1) {
             if (channel->sound_id.raw == sound_id) {
                 channels |= bit;
                 voices |= channel->voice_mask;
-                channel->active = 0;
+                channel->flags = 0;
             }
         }
         bit <<= 1;

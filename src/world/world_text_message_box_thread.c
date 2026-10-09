@@ -39,7 +39,7 @@ void world_text_message_box_thread(void) {
     u16 cursor_y;
     s16 right;
     s16 bottom;
-    u16 color;
+    u16 delay;
     u16 no_wait;
     u16 script_variable_base;
     s32 width_override;
@@ -174,7 +174,7 @@ void world_text_message_box_thread(void) {
     if (*(s32*)&rec.box_type == 0x10010) {
         x = win->quads[0].u0 + 0x30;
     }
-    color = 1;
+    delay = 1;
     saved = (u8*)-1;
     repeat = 0;
     no_wait = 0;
@@ -206,7 +206,7 @@ void world_text_message_box_thread(void) {
             } else {
                 world_menu_build_and_upload_window_frame_image(rec.width, rec.height, &rec.rect, 0);
             }
-            color = 1;
+            delay = 1;
             saved = (u8*)-1;
             cursor_x = x;
             cursor_y = y;
@@ -361,9 +361,9 @@ void world_text_message_box_thread(void) {
                 world_script_set_variable(script_variable_base, *text);
             }
             NEXT();
-        } else if (code == TEXT_SET_GLYPH_COLOR) {
+        } else if (code == TEXT_SET_GLYPH_DELAY) {
             NEXT();
-            color = *text;
+            delay = *text;
             NEXT();
         } else if (code == TEXT_SET_PALETTE) {
             NEXT();
@@ -409,7 +409,7 @@ void world_text_message_box_thread(void) {
                     g_world_text_message_box_glyph.y = cursor_y;
                     g_world_text_message_box_glyph.mode = rec.dialog_type & 0x70;
                     g_world_text_message_box_glyph.palette = rec.color;
-                    world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, color);
+                    world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, delay);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -417,7 +417,7 @@ void world_text_message_box_thread(void) {
                     }
                 }
                 NEXT();
-            } else if ((code & 0xF0) == 0xF0 && (code & 0xF) < 4) {
+            } else if ((code & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (code & 0xF) < 4) {
                 saved = text + 3;
                 value = (text[0] & 3) * 8;
                 repeat = text[1] >> 5;
@@ -428,9 +428,9 @@ void world_text_message_box_thread(void) {
                 value = value + text[2];
                 text -= value;
             } else {
-                if (code < 0xD0) {
+                if (code < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = *text;
-                } else if ((code & 0xF0) == 0xD0) {
+                } else if ((code & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = (*text & 0xF) * 0xD0;
                     NEXT();
                     code = code + *text;
@@ -440,7 +440,7 @@ void world_text_message_box_thread(void) {
                 g_world_text_message_box_glyph.palette = rec.color;
                 g_world_text_message_box_glyph.x = cursor_x;
                 g_world_text_message_box_glyph.y = cursor_y;
-                world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, color);
+                world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, delay);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

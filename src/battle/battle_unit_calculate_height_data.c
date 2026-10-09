@@ -85,9 +85,9 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
                 water_offset = depth * 2 + 2;
                 level = tile_height + water_offset;
-            } else if (flags & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
-                level = tile_height + depth * 2;
             } else if (flags & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+                level = tile_height + depth * 2;
+            } else if (flags & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
                 water_offset = depth * 2 - 2;
                 level = tile_height + water_offset;
             }

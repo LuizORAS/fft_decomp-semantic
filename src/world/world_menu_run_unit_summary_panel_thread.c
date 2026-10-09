@@ -33,7 +33,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     digits = g_world_unit_summary_digit_images;
     world_menu_load_selected_unit();
     unit = world_unit_get_battle_stats_for_stored();
-    g_world_menu_hide_numeric_values = unit->unit_flags & 4;
+    g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
     sprite = frames[0].sprites;
     world_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_0, 0);
     world_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_1, 1);
@@ -50,7 +50,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     }
     world_gfx_init_image_loading(&frames[0].portrait, &g_world_gfx_menu_image_source,
         (const world_image_location_t*)&g_world_unit_summary_panel_rect, &g_world_unit_summary_sprite_image_params[7]);
-    if (unit->initial_team_flags & 0x30) {
+    if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;
     } else {
         frames[0].portrait.clut = 0x7FBD;
@@ -100,7 +100,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
 
     for (frame = 0;; frame++) {
         world_thread_yield();
-        g_world_menu_hide_numeric_values = world_unit_get_battle_stats_for_stored()->unit_flags & 4;
+        g_world_menu_hide_numeric_values = world_unit_get_battle_stats_for_stored()->unit_flags & UNIT_FLAG_EGG;
         frame_record = &frames[frame & 1];
         if (frame == 0) {
             world_menu_free_memory(buffer);

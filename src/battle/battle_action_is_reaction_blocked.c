@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Returns the first nonzero result of the three checks, or the evade check's
- * zero. */
+/* Returns the first nonzero result of the three checks, or the action
+ * restriction check's zero. */
 s32 battle_action_is_reaction_blocked(battle_stats_t* unit) {
     s32 result;
 

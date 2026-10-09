@@ -12,7 +12,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     battle_action_command_prefix_t* action = (battle_action_command_prefix_t*)&unit->action_actor_id;
     s32 state;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         state = g_battle_ai_data_base.charging_state;
         if (state == 0)
@@ -30,7 +30,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
             = ai->candidate_coords[g_battle_ai_data_base.movement_scenario].word;
         battle_ai_check_unit_for_crystal_or_treasure_status();
     }
-    ai->current_action.target_flags_set = 0;
+    ai->current_action.act_before_move = 0;
     ai->current_action.skillset = 0;
     if ((u32)(action->ability_id - 0x56) < 14) {
     evaluate_song_dance:

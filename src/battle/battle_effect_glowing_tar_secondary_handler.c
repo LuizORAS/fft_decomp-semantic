@@ -17,7 +17,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
     battle_effect_burst_state_t* state;
     battle_effect_slot_t* slot;
     s32 unused[8];
-    battle_effect_on_hit_vector_t pos;
+    battle_effect_gravity_t pos;
     VECTOR zoom;
     VECTOR offset;
     s32 result;
@@ -120,8 +120,8 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
         pos.z = 0;
         pos.x = 0;
         pos.y = ONE;
-        battle_effect_copy_on_hit_data_to_second_section();
-        battle_effect_store_first_section_of_on_hit_data(&pos);
+        battle_effect_save_gravity();
+        battle_effect_set_gravity(&pos);
         for (i = 0; i < 8; i++) {
             id = state->ids_a[i];
             if (id != 0 && battle_effect_update_slot(id) == 0) {
@@ -139,7 +139,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
             }
         }
         battle_effect_restore_inertia_threshold();
-        battle_effect_copy_second_section_to_on_hit_data();
+        battle_effect_restore_gravity();
         if (g_battle_effect_current_secondary->target.fields.result_animation == 1) {
             if (state->frame == 0) {
                 zoom.vx = zoom.vy = zoom.vz = -0x80;

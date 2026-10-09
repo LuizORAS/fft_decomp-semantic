@@ -57,13 +57,13 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     upper_index = index + 0x100;
     lower = &g_battle_map_tile_data[index];
     upper = &g_battle_map_tile_data[upper_index];
-    if (lower->flags_06.value & MAP_TILE_FLAG_BLOCKED) {
+    if (lower->flags.value & MAP_TILE_FLAG_BLOCKED) {
         lower_height = 0xff;
     } else {
         lower_height = TILE_EDGE_HEIGHT(lower, destination_shift);
     }
     upper_height = 0xff;
-    if (!(upper->flags_06.value & MAP_TILE_FLAG_BLOCKED)) {
+    if (!(upper->flags.value & MAP_TILE_FLAG_BLOCKED)) {
         upper_height = TILE_EDGE_HEIGHT(upper, destination_shift);
     }
     if (height < lower_height && height < upper_height) {

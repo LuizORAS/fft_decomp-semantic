@@ -4,7 +4,7 @@
 void battle_script_start_current_event_thread(void) {
     battle_unit_reset_animation_states();
     g_battle_script_attack_entry_mode = 1;
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) != 0) {
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         battle_camera_store_state_to_script_variables();
         battle_camera_reset_script_transform();
         g_battle_camera_position_locked = 0;

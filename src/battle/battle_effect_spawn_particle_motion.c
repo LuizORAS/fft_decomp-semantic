@@ -160,6 +160,6 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     motion->force[0] = motion->force[1] = motion->force[2] = motion->force_step[0] = motion->force_step[1]
         = motion->force_step[2] = 0;
     motion->mass = ONE;
-    motion->on_hit_weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
+    motion->weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
     return battle_effect_get_random_between(values->lifetime_min, values->lifetime_max);
 }

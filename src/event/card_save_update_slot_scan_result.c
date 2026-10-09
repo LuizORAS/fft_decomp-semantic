@@ -43,7 +43,7 @@ void card_save_update_slot_scan_result(void) {
             g_card_save_list_top_row = 0;
             g_card_save_list_selected_slot = 0;
             g_card_save_list_cursor_index = 0;
-            g_world_card_mode_select_enabled = card_save_init_occupied_slot_selection();
+            g_card_save_occupied_slot_count = card_save_init_occupied_slot_selection();
             g_card_save_menu_state = CARD_SAVE_MENU_SELECT_SAVE;
         } else {
             g_card_sound_queued_effect_id = MAIN_SFX_CARD_ERROR;

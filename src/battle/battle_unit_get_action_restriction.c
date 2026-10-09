@@ -21,7 +21,7 @@ s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
         return 0;
     }
     if ((unit->movement_abilities[2]
-            & (BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_FLOAT))
+            & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_FLOAT))
         != 0) {
         return 0;
     }

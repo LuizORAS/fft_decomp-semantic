@@ -23,7 +23,7 @@ void battle_action_check_between_turn_events(void) {
         if (g_battle_menu_status_requested != 0 && !(unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
             && g_battle_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY) {
             battle_unit_update_display_by_misc_id(unit->unit_id);
-            main_sound_play_sfx(0x71);
+            main_sound_play_sfx(MAIN_SFX_STATUS_MENU_REQUEST);
             battle_action_open_status_menu_at_list_start();
             battle_action_is_at_list_unit_charging_ability();
             battle_menu_set_next_script_action_menus();

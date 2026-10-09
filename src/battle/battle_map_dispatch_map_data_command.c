@@ -49,9 +49,9 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         for (i = 0; i < 17; i++) {
             entry->states[0][i] = entry->states[object_state][i];
         }
-        g_battle_map_mesh_parts[index].value_80 = 2;
-        g_battle_map_mesh_parts[index].value_82 = 0;
-        g_battle_map_mesh_parts[index].value_85 = 1;
+        g_battle_map_mesh_parts[index].elapsed = 2;
+        g_battle_map_mesh_parts[index].duration = 0;
+        g_battle_map_mesh_parts[index].next_instruction = 1;
         g_battle_map_mesh_part_animation_states[index] = (object_state << 8) | flag;
         break;
     case MAP_DATA_COMMAND_SPLIT_MESH_PARTS:

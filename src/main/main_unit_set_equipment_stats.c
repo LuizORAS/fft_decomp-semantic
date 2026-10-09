@@ -16,13 +16,11 @@ void main_unit_set_equipment_stats(battle_stats_t* unit) {
 
     item = &g_main_item_primary_data[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]];
     if (item->type_flags & ITEM_TYPE_FLAG_ACCESSORY) {
-        accessory_data_t* g_main_item_accessory_flags
+        accessory_data_t* accessory
             = &g_main_item_accessory_data[g_main_item_secondary_data_ids[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]
                 * sizeof(item_data_t)]];
-        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE]
-            = g_main_item_accessory_flags->physical_evade;
-        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE]
-            = g_main_item_accessory_flags->magic_evade;
+        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE] = accessory->physical_evade;
+        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE] = accessory->magic_evade;
     }
     item = &g_main_item_primary_data[unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD]];
     if (item->type_flags & ITEM_TYPE_FLAG_SHIELD) {

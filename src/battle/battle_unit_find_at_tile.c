@@ -23,7 +23,7 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
     }
 
     tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
-    if (tile->flags_06.value & MAP_TILE_COLLISION_MASK) {
+    if (tile->flags.value & MAP_TILE_COLLISION_MASK) {
         return -2;
     }
     if (filters & BATTLE_UNIT_TILE_FILTER_DRY_LOW_SLOPE) {

@@ -51,15 +51,15 @@ void main_smd_init_channels(suzuki_music_t* music) {
             if (*offsets != 0) {
                 channels |= bit;
                 if (music->mute_mask & bit) {
-                    channel->active = 0x421;
+                    channel->flags = 0x421;
                 } else {
-                    channel->active = 0x401;
+                    channel->flags = 0x401;
                 }
                 if (music->status & 0x2000) {
-                    channel->active |= 4;
+                    channel->flags |= 4;
                 }
-                channel->note_flags2 = 0x300;
-                channel->flags_06 = 0;
+                channel->voice_update_flags = 0x300;
+                channel->ramp_flags = 0;
                 channel->sound_id.raw = smd->id;
                 channel->priority = 0x10;
                 channel->channel_number = index;
@@ -90,10 +90,10 @@ void main_smd_init_channels(suzuki_music_t* music) {
                 channel->note_data = note_data;
                 if (slot < 25) {
                     channel->voice_mask = 1 << voice;
-                    channel->_unknown_038 = 0xff9f;
+                    channel->voice_attr_mask = 0xff9f;
                 } else {
                     channel->voice_mask = 0;
-                    channel->_unknown_038 = 0;
+                    channel->voice_attr_mask = 0;
                 }
                 for (i = 3; i >= 0; i--) {
                     channel->modulators[i].flags = 0;
@@ -103,7 +103,7 @@ void main_smd_init_channels(suzuki_music_t* music) {
                     main_smd_set_instrument(0, channel);
                 }
             } else {
-                channel->active = 0;
+                channel->flags = 0;
             }
             offsets++;
             voice++;

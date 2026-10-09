@@ -74,10 +74,10 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             started |= bit;
             voices |= channel->voice_mask;
             flags = 0x409;
-            channel->active = flags;
+            channel->flags = flags;
             flags = 0x100;
-            channel->note_flags2 = flags;
-            channel->flags_06 = 0;
+            channel->voice_update_flags = flags;
+            channel->ramp_flags = 0;
             data = (u8*)resource + *offsets;
             channel->octave_base = 0x3c;
             channel->gate_time = 0xf;
@@ -109,10 +109,10 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
                 main_smd_set_instrument(g_main_sound_sfx_instrument, channel);
             }
         } else {
-            if (channel->active & 1) {
+            if (channel->flags & 1) {
                 stopped |= channel->voice_mask;
             }
-            channel->active = 0;
+            channel->flags = 0;
         }
         offsets++;
         bit <<= 1;
@@ -131,17 +131,17 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
     g_main_sound_sfx_restart_channels = 0;
     g_main_sound_sfx_restart_voices = 0;
     g_main_sound_voice_update_requests |= 7;
-    music->status |= 0x8000;
+    music->status |= SUZUKI_MUSIC_STATUS_PLAYING;
     if (voices != 0) {
         for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
             /* The playing bit is tested as a sign (`lh`), as elsewhere in the driver. */
-            if ((music->status & 1) && (s16)music->status < 0) {
+            if ((music->status & SUZUKI_MUSIC_STATUS_SMD) && (s16)music->status < 0) {
                 channel = music->channels;
                 count = music->channel_count;
                 do {
-                    if (channel->active & 1) {
+                    if (channel->flags & 1) {
                         if (voices & channel->voice_mask) {
-                            channel->func_flags |= 0x71ff;
+                            channel->voice_attr_flags |= 0x71ff;
                         }
                     }
                     channel++;

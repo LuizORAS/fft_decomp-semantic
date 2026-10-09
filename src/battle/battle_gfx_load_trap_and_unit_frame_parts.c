@@ -28,14 +28,14 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     }
     display = sprite->display;
     count = display->part_count = (frame_data->part_count_and_rotation & 7) + 1;
-    display->y_rotation = g_battle_gfx_sprite_y_rotations[frame_data->part_count_and_rotation >> 3];
+    display->rotation = g_battle_gfx_sprite_y_rotations[frame_data->part_count_and_rotation >> 3];
     if (count > 8) {
         count = 8;
         main_system_handle_animation_exception(10);
     }
     flags = frame_data->flags;
     if (unit->spritesheet_id >= 0x9b) {
-        display->spritesheet_id = (flags & 0x60) | 0xb;
+        display->tpage = (flags & 0x60) | 0xb;
         display->clut = unit->vram_palette_id;
         for (i = 0; i < count; i++) {
             part = &frame_data->parts[i];
@@ -57,7 +57,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
             }
         }
     } else if (frame < (u32)sprite->shp[0]) {
-        display->spritesheet_id = unit->vram_spritesheet_id | (flags & 0x60);
+        display->tpage = unit->tpage | (flags & 0x60);
         display->clut = unit->vram_palette_id;
         i = 0;
         if (count != 0) {

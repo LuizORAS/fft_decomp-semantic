@@ -12,25 +12,25 @@
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
     g_effect_load_state = 0;
-    if (ability < 0x200) {
+    if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
             s32 ball = battle_effect_get_ninja_ball(packed >> 16);
             if (ball == 1)
-                g_ability_effect_id = 0x10;
+                g_battle_ability_effect_id = 0x10;
             else if (ball == 2)
-                g_ability_effect_id = 0x18;
+                g_battle_ability_effect_id = 0x18;
             else if (ball == 8)
-                g_ability_effect_id = 0x14;
+                g_battle_ability_effect_id = 0x14;
         } else {
-            g_ability_effect_id = (u16)g_battle_effect_ability_ids[ability];
+            g_battle_ability_effect_id = (u16)g_battle_effect_ability_ids[ability];
         }
     } else {
         /* Ids from 0x200 up continue the table after the action abilities. */
-        g_ability_effect_id = (u16)g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
+        g_battle_ability_effect_id = (u16)g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
     }
 
-    if (g_ability_effect_id >= 0) {
-        g_ability_effect_id &= 0x1ff;
+    if (g_battle_ability_effect_id >= 0) {
+        g_battle_ability_effect_id &= 0x1ff;
         g_battle_effect_phase = 1;
         if (g_battle_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
             g_battle_effect_target_id = battle_effect_init_secondary(
@@ -50,6 +50,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
 
     if ((u32)(ability - 0x8a) < 8)
         battle_effect_init_secondary(0x12, 0, source);
-    if ((u32)(ability - 0x196) < 8 || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
+    if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST
+        || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
         battle_effect_init_secondary(0x11, 0, source);
 }

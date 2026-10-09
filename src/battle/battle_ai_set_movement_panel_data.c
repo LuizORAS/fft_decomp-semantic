@@ -9,7 +9,7 @@ typedef struct battle_ai_walkable_view {
 
 /* Build the AI walkable and reachable tile rows for the acting unit.
  *
- * A fresh decision (decision_state 0) sets the water penalty, rebuilds the
+ * A fresh decision (resume_pending 0) sets the water penalty, rebuilds the
  * walkable rows, clears the scenario rows and spreads movement unless the
  * unit has moved or cannot move. The reachable rows then drop occupied tiles
  * and, unless the unit is disabled, the four listed coordinates. Returns -1
@@ -28,9 +28,10 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     s32 j;
     battle_ai_coords_t* coords;
 
-    if (g_battle_ai_data_base.decision_state == 0) {
+    if (g_battle_ai_data_base.resume_pending == 0) {
         if ((g_battle_ai_data_base.acting_unit->movement_abilities[2] & 0xc8)
-            || (g_battle_ai_data_base.acting_unit->status_sets.current[2] & 0x40)) {
+            || (g_battle_ai_data_base.acting_unit->status_sets.current[2]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
             g_battle_ai_data_base.water_penalty = 0;
         } else {
             g_battle_ai_data_base.water_penalty = 1;
@@ -40,7 +41,8 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
-                    if (!(tile->flags_06.value & 1) && (tile->surface.value & 0x3f) != 0x3f) {
+                    if (!(tile->flags.value & 1)
+                        && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                         ((battle_ai_walkable_view_t*)ai)->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
                 }
@@ -51,7 +53,8 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             ai->reachable_tiles[ai->movement_scenario][0][j] = 0;
             ai->reachable_tiles[ai->movement_scenario][1][j] = 0;
         }
-        if (movement_taken != 0 || (ai->acting_unit->status_sets.current[4] & 0x08)) {
+        if (movement_taken != 0
+            || (ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE))) {
             ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
                 = 0x8000 >> ai->acting_unit_coords.bytes.x;
             return 0;
@@ -68,7 +71,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     if (VSync(1) > 0x1b8) {
         return -1;
     }
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     for (level = 0; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
@@ -107,7 +110,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         return 0;
     }
     for (i = 0; i < 4; i++) {
-        coords = &ai->coords_181c[i];
+        coords = &ai->known_trap_coords[i];
         if (coords->bytes.x == 0xff) {
             break;
         }

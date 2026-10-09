@@ -34,14 +34,14 @@ void battle_effect_integrate_particle_motion(battle_effect_particle_t* list) {
     s32 track;
     VECTOR delta;
     s32 inertia;
-    s32 on_hit_x;
-    s32 on_hit_y;
-    s32 on_hit_z;
+    s32 gravity_x;
+    s32 gravity_y;
+    s32 gravity_z;
 
     inertia = g_battle_effect_inertia_threshold;
-    on_hit_x = g_battle_effect_gravity.x;
-    on_hit_y = g_battle_effect_gravity.y;
-    on_hit_z = g_battle_effect_gravity.z;
+    gravity_x = g_battle_effect_gravity.x;
+    gravity_y = g_battle_effect_gravity.y;
+    gravity_z = g_battle_effect_gravity.z;
 
     node = list;
     while (list != 0) {
@@ -55,11 +55,11 @@ void battle_effect_integrate_particle_motion(battle_effect_particle_t* list) {
         weight = motion->mass - inertia;
 
         motion->velocity[0] = (weight * motion->velocity[0] + (motion->force[0] << 12)) / motion->mass
-            + ((on_hit_x * motion->on_hit_weight) >> 12);
+            + ((gravity_x * motion->weight) >> 12);
         motion->velocity[1] = (weight * motion->velocity[1] + (motion->force[1] << 12)) / motion->mass
-            + ((on_hit_y * motion->on_hit_weight) >> 12);
+            + ((gravity_y * motion->weight) >> 12);
         motion->velocity[2] = (weight * motion->velocity[2] + (motion->force[2] << 12)) / motion->mass
-            + ((on_hit_z * motion->on_hit_weight) >> 12);
+            + ((gravity_z * motion->weight) >> 12);
 
         weight = node->attract_weight;
         if (weight != 0) {

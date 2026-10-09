@@ -343,11 +343,12 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                 }
             }
             bunit_gfx_draw_unit_sprite_and_name_plate((u8)g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
-            if (g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->formation_order_key & 0x80) {
+            if (g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->mount_info
+                & BATTLE_MOUNT_INFO_FLAG_RIDER) {
                 bunit_gfx_draw_unit_sprite_and_name_plate(
-                    bunit_unit_find_index_by_roster_id(
-                        (s16)(g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->formation_order_key
-                            - 0x80)),
+                    bunit_unit_find_index_by_battle_id(
+                        (s16)(g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->mount_info
+                            - BATTLE_MOUNT_INFO_FLAG_RIDER)),
                     cell.x, cell.y);
             }
         }

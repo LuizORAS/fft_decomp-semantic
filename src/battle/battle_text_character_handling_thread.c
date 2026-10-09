@@ -35,7 +35,7 @@ void battle_text_character_handling_thread(void) {
     s16 right;
     s16 bottom;
     u16 mark_x;
-    u16 color;
+    u16 delay;
     u16 no_wait;
     u16 variable_base;
     u16 value_index;
@@ -346,7 +346,7 @@ void battle_text_character_handling_thread(void) {
         rec.y += 8;
     }
     no_wait = 0;
-    color = 1;
+    delay = 1;
     column = 0;
     rec.color = 0;
     rec.line = 0;
@@ -530,7 +530,7 @@ void battle_text_character_handling_thread(void) {
                     no_wait = 0;
                     battle_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
-                    color = 1;
+                    delay = 1;
                     column = 0;
                     cursor_x = rec.x;
                     width_override = no_value;
@@ -657,7 +657,7 @@ void battle_text_character_handling_thread(void) {
                 no_wait = 0;
                 battle_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
-                color = 1;
+                delay = 1;
                 column = 0;
                 width_override = no_value;
                 cursor_x = rec.x;
@@ -705,9 +705,9 @@ void battle_text_character_handling_thread(void) {
                 battle_script_set_variable(variable_base, *text);
             }
             NEXT();
-        } else if (character == TEXT_SET_GLYPH_COLOR) {
+        } else if (character == TEXT_SET_GLYPH_DELAY) {
             NEXT();
-            color = *text;
+            delay = *text;
             NEXT();
         } else if (character == TEXT_SET_PALETTE) {
             NEXT();
@@ -761,7 +761,7 @@ void battle_text_character_handling_thread(void) {
                         glyph->mode = rec.dialog_type & 0x70;
                         glyph->palette = rec.color;
                     }
-                    battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
+                    battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
                     if (character == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -769,7 +769,7 @@ void battle_text_character_handling_thread(void) {
                     }
                 }
                 NEXT();
-            } else if ((character & 0xF0) == 0xF0 && (character & 0xF) < 4) {
+            } else if ((character & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (character & 0xF) < 4) {
                 saved = text + 3;
                 value = (text[0] & 3) * 8;
                 repeat = value + (text[1] >> 5) + 4;
@@ -778,12 +778,12 @@ void battle_text_character_handling_thread(void) {
                 value = value + text[2];
                 text -= value;
             } else {
-                if (character < 0xD0) {
+                if (character < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     character = *text;
-                } else if ((character & 0xF0) == 0xD0) {
+                } else if ((character & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     character = (*text & 0xF) * 0xD0;
                     NEXT();
-                    if ((*text & 0xF0) == 0xF0 && (*text & 0xF) < 4) {
+                    if ((*text & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (*text & 0xF) < 4) {
                         saved = text + 3;
                         value = (text[0] & 3) * 8;
                         repeat = value + (text[1] >> 5) + 4;
@@ -803,7 +803,7 @@ void battle_text_character_handling_thread(void) {
                     glyph->mode = rec.box_type;
                     glyph->palette = rec.color;
                 }
-                battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
+                battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
                 if (character == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

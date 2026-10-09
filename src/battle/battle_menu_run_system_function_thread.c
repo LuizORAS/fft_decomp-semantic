@@ -29,11 +29,11 @@ void battle_menu_run_system_function_thread(void) {
     }
     battle_camera_wait_until_idle();
     entry = &g_battle_system_function_table[id];
-    value = entry->value_00;
+    value = entry->menu_id;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
-    g_battle_menu_system_function_row_actions[0] = entry->value_06;
+    g_battle_menu_system_function_row_actions[0] = entry->row_action;
     g_battle_menu_current_id = value;
-    g_battle_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->value_08;
+    g_battle_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->thread_count;
     if (id == 0x1f) {
         battle_thread_start(8, battle_menu_open_option_dead_unit_panel);
         battle_thread_set_parameters(8, 0, D_80173C70, 0);

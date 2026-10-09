@@ -4,7 +4,7 @@
 /* Spread an ability range from the unit's tile and mark the reachable panels.
  *
  * Range bits 0-6 seed the unit's panel on both map levels and bit 7 excludes
- * the unit's own tile afterwards. Panels flagged in flags_06 bits 0-1 are never
+ * the unit's own tile afterwards. Panels flagged in flags bits 0-1 are never
  * marked. Returns the number of marked panels. */
 s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range) {
     battle_target_panel_t* panel;
@@ -32,7 +32,7 @@ s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* un
     count = 0;
     tile = g_battle_map_tile_data;
     for (i = 0, panels = g_battle_target_panels; i < 0x200; i++) {
-        if (panels->remaining_range != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
+        if (panels->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
             tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
             count++;
         } else {

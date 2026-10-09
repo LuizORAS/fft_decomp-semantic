@@ -13,7 +13,7 @@ void battle_ai_init_workspace(void) {
 
     g_battle_ai_workspace = ai;
     g_battle_ai_unit_snapshots = g_battle_ai_unit_snapshot_storage;
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     ai->selected_action.rank_byte = 0;
     ai->selected_action.coords.bytes.zero = 0;
     ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_ELMDOR_BLOOD_SUCK;
@@ -28,9 +28,9 @@ void battle_ai_init_workspace(void) {
     ai->map_max_x = g_battle_map_max_x;
     ai->map_max_y = g_battle_map_max_y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        ai->unit_battle_ids[i] = 0xff;
+        ai->unit_compact_indices[i] = 0xff;
         if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE) {
-            ai->unit_battle_ids[i] = present_count;
+            ai->unit_compact_indices[i] = present_count;
             battle_ai_init_unit_abilities(i);
             present_count++;
             total_max_hp += g_battle_unit_stats[i].max_hp;
@@ -47,7 +47,7 @@ void battle_ai_init_workspace(void) {
     {
         s32 empty = 0xff;
         for (i = 3; i >= 0; i--) {
-            ai->coords_181c[i].bytes.x = empty;
+            ai->known_trap_coords[i].bytes.x = empty;
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;

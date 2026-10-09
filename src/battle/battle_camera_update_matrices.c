@@ -18,6 +18,6 @@ void battle_camera_update_matrices(
     ScaleMatrix(&g_battle_map_camera_matrix, &g_battle_map_camera_zoom);
 
     *camera_matrix = g_battle_map_camera_matrix;
-    g_battle_map_mesh_parts[0].matrix_60 = g_battle_map_camera_matrix;
+    g_battle_map_mesh_parts[0].matrix = g_battle_map_camera_matrix;
     RotMatrix(&g_battle_map_light_rotation, &g_battle_map_light_rotation_matrix);
 }

@@ -29,7 +29,7 @@ void world_menu_switch_item_category(s32 input) {
         }
         world_gfx_get_sprite_slot(cursor_slot, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(
-            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
+            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
     }
     world_menu_draw_row_window_and_cursor(1, g_world_shop_item_category, g_world_thread_task_active);

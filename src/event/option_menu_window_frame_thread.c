@@ -1,5 +1,5 @@
 /*
- * OPTION dead-unit panel, variant A.
+ * OPTION menu window frame thread, variant A: started by the options menu and AT list builders.
  *
  * Twin of option_menu_window_frame_thread_b at 0x801c0894; that panel allocates its
  * 4bpp scratch image instead of using the fixed one, uses the second texture-window table,

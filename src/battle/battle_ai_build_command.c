@@ -20,7 +20,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     ai = &g_battle_ai_data_base;
     if (ticks > 440)
         return -1;
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the suspended decision stage. */
         switch (g_battle_ai_data_base.main_ai_state) {
         case BATTLE_AI_COMMAND_BUILD_REFRESH:
@@ -37,12 +37,12 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         return 0;
     }
     ai->acting_unit_id = unit_id;
-    if (ai->unit_battle_ids[unit_id] >= 16) {
+    if (ai->unit_compact_indices[unit_id] >= 16) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
         return 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_battle_ids[i] >= 16) {
+        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_compact_indices[i] >= 16) {
             command->kind = BATTLE_AI_COMMAND_END_TURN;
             return 0;
         }
@@ -55,32 +55,32 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     refresh:
         if (battle_ai_refresh_unit_decision_flags() == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_REFRESH;
-            ai->decision_state = 1;
+            ai->resume_pending = 1;
             return -1;
         }
         battle_ai_set_ability_considerations(ai->acting_unit->action_taken);
     movement:
         if (battle_ai_set_movement_panel_data(ai->acting_unit->movement_taken) == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_MOVEMENT;
-            ai->decision_state = 1;
+            ai->resume_pending = 1;
             return -1;
         }
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         battle_ai_update_team_targeting_flags();
         battle_ai_init_target_consideration();
     choose:
         if (battle_ai_select_initial_action() == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_CHOOSE_ACTION;
-            ai->decision_state = 1;
+            ai->resume_pending = 1;
             return -1;
         }
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         ai->selected_action.rank_byte = 0xff;
         if (ai->selected_action.reflected_action)
             ai->acting_unit_decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
         battle_ai_restore_considered_action_data();
     }
-    if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.target_flags_set)) {
+    if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.act_before_move)) {
         ai->selected_action.coords.bytes.zero = 0;
         if (ai->selected_action.coords.word != ai->acting_unit_coords.word) {
             command->kind = BATTLE_AI_COMMAND_MOVE;

@@ -31,7 +31,7 @@ void battle_script_block_start_thread(void) {
             battle_script_warp_unit(parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_VALUE) {
             battle_script_wait_value_event_instruction(parameters);
-        } else if (script[0] == EVENT_OPCODE_UNKNOWN_72) {
+        } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             battle_script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
             g_battle_thread_call_target = battle_script_walkto_event_instruction;
@@ -67,7 +67,7 @@ void battle_script_block_start_thread(void) {
             if (misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(misc_id);
             }
-        } else if (script[0] == EVENT_OPCODE_UNKNOWN_12) {
+        } else if (script[0] == EVENT_OPCODE_WAIT_UNIT_READY) {
             misc_id = battle_script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {
                 battle_script_wait_for_unit_ready(misc_id);

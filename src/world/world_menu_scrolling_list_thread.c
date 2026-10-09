@@ -224,8 +224,8 @@ void world_menu_scrolling_list_thread(void) {
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
                             && (u16)layout->columns.text_ids[column][index] < 2
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0xFF
-                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index]
+                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0xFF
+                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index]
                                     == 0)) {
                             g_world_menu_text_state.origin_y += 2;
                             world_menu_draw_stacked_glyph_pair(

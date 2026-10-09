@@ -249,16 +249,16 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     index = cursor + row_offset + scroll_delta;
                     battle_menu_set_text_origin(layout->columns.x[column], 0);
                     if (layout->columns.mode[column] != 2) {
-                        g_menu_text_palette_offset = layout->columns.text_colors[column][index];
+                        g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
                     }
                     g_menu_text_state.color = 0;
-                    if (g_menu_text_palette_offset == 4) {
+                    if (g_battle_menu_text_palette_offset == 4) {
                         g_menu_text_state.color = 0x44444444;
                     }
                     if (layout->columns.mode[column] == 0) {
                         battle_menu_display_text_entry(
                             layout->columns.text_ids[column][index], buffer, &g_menu_text_state.origin_x);
-                        g_menu_text_palette_offset = layout->columns.text_colors[column][index];
+                        g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
                             && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
                             battle_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
@@ -270,8 +270,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
                             && (u16)layout->columns.text_ids[column][index] < 2
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0xFF
-                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index]
+                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0xFF
+                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index]
                                     == 0)) {
                             g_menu_text_state.origin_y += 2;
                             battle_menu_draw_stacked_glyph_pair(
@@ -280,7 +280,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                             value = (u16)layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
-                                    g_menu_text_palette_offset = 0;
+                                    g_battle_menu_text_palette_offset = 0;
                                     g_menu_text_state.origin_x += 3;
                                     battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.origin_x);
                                 } else {
@@ -291,7 +291,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         }
                     }
                 }
-                g_menu_text_palette_offset = 0;
+                g_battle_menu_text_palette_offset = 0;
                 g_menu_text_state.color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;

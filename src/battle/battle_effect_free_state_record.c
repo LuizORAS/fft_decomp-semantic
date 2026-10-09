@@ -27,13 +27,13 @@ void battle_effect_free_state_record(s16 record_index) {
             battle_heap_free_block(g_effect_state_records[record_index].work_slots[i]);
             g_effect_state_records[record_index].work_slots[i] = 0;
         }
-        g_effect_state_records[record_index].values_d4[i] = 0;
+        g_effect_state_records[record_index].callbacks[i] = 0;
     }
     parent = g_effect_state_records[record_index].parent_index;
     if (parent != 0 && (g_effect_state_records[parent].flags & 1)) {
         for (i = 0; i < 4; i++) {
-            if (g_effect_state_records[parent].phase_ids[i] == record_index) {
-                g_effect_state_records[parent].phase_ids[i] = 0;
+            if (g_effect_state_records[parent].child_indices[i] == record_index) {
+                g_effect_state_records[parent].child_indices[i] = 0;
             }
         }
     }

@@ -104,7 +104,7 @@ void world_menu_equipment_panel_thread(void) {
                     bank = state->equipment[i] & 0xc000;
                     g_world_menu_text_color = bank >> 12;
                     world_menu_display_text_entry(
-                        (state->equipment[i] & 0xff) | 0x3800, text, &g_world_menu_text_state.origin_x);
+                        (state->equipment[i] & 0xff) | TEXT_ID_ITEM_NAME_BASE, text, &g_world_menu_text_state.origin_x);
                 }
                 g_world_menu_text_state.origin_y += 0x10;
             }

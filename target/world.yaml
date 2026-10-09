@@ -525,7 +525,7 @@ functions:
   - {addr: 0x8010a4a8, size: 24, name: world_gfx_set_blit_dest_position, hash: 573a5fe65290d88d}
   - {addr: 0x8010a4c0, size: 464, name: world_gfx_build_scaled_draw_area_packets_3, hash: a51f79f9dce9dafc}
   - {addr: 0x8010a690, size: 52, name: world_gfx_init_scaled_draw_area_packets_2, hash: 5daaf3af4a8fceaa}
-  - {addr: 0x8010a6c4, size: 1444, name: world_menu_run_dead_unit_panel_a_2, hash: ed4c0f0ead7f4d22}
+  - {addr: 0x8010a6c4, size: 1444, name: world_menu_window_frame_thread_2, hash: ed4c0f0ead7f4d22}
   - {addr: 0x8010ac68, size: 1436, name: world_menu_window_frame_thread_b_2, hash: 82f4d7b2eeb33719}
   - {addr: 0x8010b204, size: 316, name: world_menu_announce_entry_value_thread, hash: e5790e55f67d3488}
   - {addr: 0x8010b340, size: 524, name: world_menu_icon_clamped_list_thread, hash: fa08b37eaa55bd09}
@@ -1058,7 +1058,7 @@ data:
   - {addr: 0x8013a5f8, name: g_world_menu_resolved_command}
   - {addr: 0x8013a5fc, name: g_world_menu_last_dispatched_command}
   - {addr: 0x8013a600, name: g_world_menu_last_dispatched_option}
-  - {addr: 0x8013a604, name: g_world_ability_selected_skill_target}
+  - {addr: 0x8013a604, name: g_world_ability_selected_skill_ct}
   - {addr: 0x8013a608, name: g_world_menu_restore_pending}
   - {addr: 0x8013a609, name: g_world_menu_restore_depth}
   - {addr: 0x8013a60a, name: g_world_menu_restore_unit_id}
@@ -1360,8 +1360,8 @@ data:
   - {addr: 0x8018a144, name: g_world_formation_view}
   - {addr: 0x8018a168, name: g_world_formation_sprite_by_portrait}
   - {addr: 0x8018a2d1, name: g_world_monster_formation_sprite_table}
-  - {addr: 0x8018a330, name: g_world_dead_unit_panel_b_texture_windows}
-  - {addr: 0x8018a368, name: g_world_dead_unit_panel_a_texture_windows}
+  - {addr: 0x8018a330, name: g_world_menu_panel_texture_windows_b_2}
+  - {addr: 0x8018a368, name: g_world_menu_panel_texture_windows_2}
   - {addr: 0x8018a3b4, name: g_world_menu_zoom_percentages}
   - {addr: 0x8018a494, name: g_world_menu_entry_text_id_tables}
   - {addr: 0x8018a894, name: g_world_menu_number_entry_digit_steps}

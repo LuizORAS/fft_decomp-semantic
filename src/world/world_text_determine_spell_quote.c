@@ -39,7 +39,8 @@ void world_text_determine_spell_quote(world_unit_command_action_t* action, s32 u
         && g_main_game_options.fields.ability_names == GAME_OPTION_ON
         && (world_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {
         g_world_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
-        world_menu_dispatch_system_function(5, 0, unit_id, 0, enabled, (struct battle_ai_command_action*)action);
+        world_menu_dispatch_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE, 0, unit_id, 0, enabled, (struct battle_ai_command_action*)action);
         return;
     }
     if (action->skillset != 0) {
@@ -50,8 +51,10 @@ void world_text_determine_spell_quote(world_unit_command_action_t* action, s32 u
     if ((known == 0 && (ability->type_flags & ABILITY_DATA_FLAG_SPELL_QUOTE)
             && g_main_game_options.fields.ability_names == GAME_OPTION_ON)
         || action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
-        world_menu_dispatch_system_function(7, 0, unit_id, 0, enabled, (struct battle_ai_command_action*)action);
+        world_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT, 0, unit_id, 0, enabled,
+            (struct battle_ai_command_action*)action);
     } else {
-        world_menu_dispatch_system_function(7, 0, unit_id, 0, 0, (struct battle_ai_command_action*)action);
+        world_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT, 0, unit_id, 0, 0,
+            (struct battle_ai_command_action*)action);
     }
 }

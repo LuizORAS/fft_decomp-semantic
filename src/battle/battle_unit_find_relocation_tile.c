@@ -102,7 +102,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             if (height >= 3) {
                                 continue;
                             }
-                            flags = tile->flags_06.value;
+                            flags = tile->flags.value;
                             if (flags & MAP_TILE_FLAG_BLOCKED) {
                                 continue;
                             }

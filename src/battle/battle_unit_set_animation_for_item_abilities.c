@@ -21,9 +21,9 @@ void battle_unit_set_animation_for_item_abilities(battle_unit_misc_data_t* unit,
     }
     /* facing is read signed (lh). */
     if ((dx <= 0 && dy <= 0) || (dx < 2 && dy == 0) || (dx == 0 && dy < 2)) {
-        battle_unit_store_animation_facing(0x39, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_HOLD_ITEM, *(s16*)&unit->facing, unit);
     } else {
-        unit->item_ability_display = 0;
+        unit->item_display_active = 0;
         battle_unit_store_animation_facing_movement_data(0x4C, *(s16*)&unit->facing, unit);
     }
 }

@@ -50,7 +50,7 @@ void world_text_render_encoded_ids_to_image(
                         target.y = rect->y + line * rect->h;
                     }
                     if (code < TEXT_FORMAT_FIRST) {
-                        if (code >= 0xD0) {
+                        if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                             code &= 0xF;
                             code = code * 0xD0 + *text++;
                         }

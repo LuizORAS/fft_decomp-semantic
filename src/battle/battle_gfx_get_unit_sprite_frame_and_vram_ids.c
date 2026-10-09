@@ -16,9 +16,9 @@ u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprit
 
     out->vram_palette_id = unit->vram_palette_id;
     if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
-        out->vram_spritesheet_id = 11;
+        out->tpage = 11;
     } else {
-        out->vram_spritesheet_id = unit->vram_spritesheet_id;
+        out->tpage = unit->tpage;
     }
     out->graphic_height = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height;
     out->graphic_y_offset = unit->special_graphic_y_offset;

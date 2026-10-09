@@ -37,7 +37,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
     battle_thread_call_on_main_stack((u8*)g_option_menu_at_list_descriptors, 0);
 
     for (index = 0; index < 0x100; index++) {
-        g_dead_unit_menu_flags[index] = 0;
+        g_option_dead_unit_menu_flags[index] = 0;
         g_option_menu_at_list_flags[index] = 0;
     }
 
@@ -98,7 +98,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
             }
         }
 
-        if ((unit->initial_team_flags & 0x30) != 0) {
+        if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
             g_option_menu_at_list_flags[entry_count] = 8;
         }
         entry_count++;

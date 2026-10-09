@@ -6,7 +6,7 @@ u8* main_smd_attack_time(u8* note_data, suzuki_music_t* music, suzuki_music_chan
     u16 value;
 
     value = *note_data++;
-    channel->func_flags |= 0x10;
+    channel->voice_attr_flags |= 0x10;
     channel->attack_time = value;
     return note_data;
 }

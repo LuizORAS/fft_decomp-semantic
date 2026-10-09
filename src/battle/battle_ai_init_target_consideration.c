@@ -25,7 +25,7 @@ void battle_ai_init_target_consideration(void) {
         }
     }
 
-    ai->autobattle_setting = ai->unit_behaviour[ai->acting_unit_id];
+    ai->autobattle_setting = ai->unit_autobattle_modes[ai->acting_unit_id];
     flags = decision->flags;
     if (flags & BATTLE_AI_DECISION_SPECIAL_BEHAVIOR) {
         if (!(ai->acting_unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE))) {
@@ -37,7 +37,7 @@ void battle_ai_init_target_consideration(void) {
                 battle_ai_transfer_unit_coordinates(decision->main_target_id, &decision->target);
                 target = battle_ai_check_target_type(decision->main_target_id);
             } else {
-                target = ai->targetable_override;
+                target = ai->single_enemy_remaining;
             }
             if (target == 0)
                 return;
@@ -56,7 +56,7 @@ void battle_ai_init_target_consideration(void) {
         }
     } else {
         /* Nested: a combined && folds both byte tests into one word test. */
-        if (decision->targeting_flags_1 & 4) {
+        if (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT) {
             if (!(decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE))
                 goto save_fading_life;
         }
@@ -70,5 +70,5 @@ void battle_ai_init_target_consideration(void) {
     return;
 
 save_fading_life: /* the target places this exit after the shared tail */
-    ai->autobattle_setting = 0x10;
+    ai->autobattle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;
 }

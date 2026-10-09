@@ -8,8 +8,8 @@ void main_smd_stop_marked_music(void) {
 
     music = g_main_sound_active_music_list;
     while (music != 0) {
-        if (music->status & 1) {
-            music->status &= 0x7fff;
+        if (music->status & SUZUKI_MUSIC_STATUS_SMD) {
+            music->status &= ~SUZUKI_MUSIC_STATUS_PLAYING;
             g_main_sound_music_key_off_voices |= SuzukiGetActiveChannels(music);
         }
         music = music->next;

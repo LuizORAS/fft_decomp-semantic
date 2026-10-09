@@ -27,7 +27,7 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
     if ((battle_thread_is_running_8014cc94(8) != 0
-            && g_battle_thread_contexts[8].task_id != NATIVE_THREAD_TASK_MENU_SOUND_DELAY)
+            && g_battle_thread_contexts[8].task_id != NATIVE_THREAD_TASK_MINI_MENU)
         || battle_thread_is_running_8014cc94(7) != 0 || battle_thread_is_running_8014cc94(6) != 0) {
         if (g_battle_animation_speed_forced == 0) {
             g_battle_animation_speed_forced = 1;

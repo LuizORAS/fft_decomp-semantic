@@ -35,7 +35,7 @@ void battle_target_select_tile(void) {
         prev = g_battle_controller_input;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
         g_battle_controller_input = 2;
-        g_controller_input_copy_12 = prev;
+        g_battle_controller_input_copy_12 = prev;
         battle_target_set_tile_background_color(7, 3);
         battle_target_store_cursor_casting_unit_name_and_data();
         if (g_main_game_options.fields.target_flashing == GAME_OPTION_ON) {

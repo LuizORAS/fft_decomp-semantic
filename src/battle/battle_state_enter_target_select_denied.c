@@ -17,15 +17,18 @@ void battle_state_enter_target_select_denied(void) {
     }
     unit = battle_unit_get_casting_misc_data();
     if (misc == 0) {
-        battle_menu_init_system_function(9, 3, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 3, unit->battle_data->misc_unit_id, 0, 1);
         return;
     }
     kind = unit->target_select_command;
     if (kind == 0xC) {
-        battle_menu_init_system_function(9, 1, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->battle_data->misc_unit_id, 0, 1);
         return;
     }
     if (kind == 0xE) {
-        battle_menu_init_system_function(9, 2, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->battle_data->misc_unit_id, 0, 1);
     }
 }

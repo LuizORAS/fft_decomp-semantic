@@ -18,7 +18,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     memset(record, 0, sizeof(world_formation_unit_t));
     record->level = party->level < 100 ? party->level : 99;
     if (unit->formation_index >= PARTY_GUEST_SLOT_FIRST) {
-        record->guest_marker = 2;
+        record->team_kind = 2;
     }
     record->experience = party->experience < 100 ? party->experience : 99;
     record->party_index = unit->formation_index;
@@ -122,7 +122,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     bcopy(party->name, record->name, sizeof(record->name));
     bcopy(unit->support_abilities, record->support_abilities, sizeof(record->support_abilities));
     record->proposition_status = party->proposition_status;
-    record->graphic_variant = unit->graphic_variant;
+    record->monster_graphic = unit->monster_graphic;
     record->birthday = *(u16*)&unit->birthday & 0x1ff;
     record->egg_color = party->egg_color;
     record->two_handed

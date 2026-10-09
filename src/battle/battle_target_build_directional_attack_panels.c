@@ -8,7 +8,7 @@ typedef struct battle_target_unit_action_copy {
     u16 calculator_type; /* 0x04 */
     u16 calculator_multiplier;
     u16 used_item;        /* 0x08 */
-    u8 reaction_id;       /* 0x0a */
+    u8 target_kind;       /* 0x0a; battle_action_target_kind_e */
     u8 target_id;         /* 0x0b */
     s16 target_x;         /* 0x0c */
     s16 target_elevation; /* 0x0e */

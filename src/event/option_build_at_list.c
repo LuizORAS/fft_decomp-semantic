@@ -190,9 +190,9 @@ void option_build_at_list(void) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
                         if (layout->mode[column] != 2) {
-                            g_menu_text_palette_offset = layout->text_colors[column][index];
+                            g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                         }
-                        if (g_menu_text_palette_offset == 4) {
+                        if (g_battle_menu_text_palette_offset == 4) {
                             g_menu_text_state.color = 0x44444444;
                         }
                         if (layout->mode[column] == 0) {
@@ -207,7 +207,7 @@ void option_build_at_list(void) {
                         }
                     }
                     g_menu_text_state.color = 0;
-                    g_menu_text_palette_offset = 0;
+                    g_battle_menu_text_palette_offset = 0;
                     LoadImage(&image_rect, (u32*)buffer);
                     clear.h = 2;
                     clear.x = image_rect.x;

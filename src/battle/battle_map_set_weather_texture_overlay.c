@@ -21,7 +21,7 @@ void battle_map_set_weather_texture_overlay(s32 command) {
         weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
         g_battle_map_lightning_mode = 0;
         weather &= 7;
-        if (weather < 2) {
+        if (weather < BATTLE_WEATHER_RAIN) {
             battle_sound_stop_weather_sfx();
             battle_map_set_weather_texture_overlay(0x54);
             battle_map_set_weather_texture_overlay(0x8c);

@@ -28,7 +28,7 @@ void battle_menu_run_icon_selection_loop(void) {
     buffer = battle_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
     g_menu_text_state.stride = param->inner_width;
     battle_menu_set_text_origin(8, 9);
-    g_menu_text_palette_offset = 0;
+    g_battle_menu_text_palette_offset = 0;
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.origin_x);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {

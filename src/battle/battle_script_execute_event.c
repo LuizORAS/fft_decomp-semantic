@@ -82,7 +82,7 @@ void battle_script_execute_event(void) {
         g_battle_menu_right_unit_stats_display.y = 0xAA;
     }
     battle_unit_clear_status_staging_data();
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) != 0) {
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         battle_unit_update_staged_status_data(0, 0);
     } else {
         battle_script_process_inflict_status_commands();
@@ -120,7 +120,7 @@ restart_script:
             operand_1 = first_halfword & 0xFFFF;
             battle_script_run_variable_command(opcode, operand_1,
                 battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3) & 0xFFFF, 0);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_4D) {
+        } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_battle_event_map_jump_in_request = operand_1;
             battle_thread_wait_frames(2);
         }
@@ -153,11 +153,11 @@ restart_script:
                         battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
-                    battle_menu_request_open_companion_executable(0xE);
-                    g_companion_overlay_state = 5;
+                    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_CARD);
+                    g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE;
                     do {
                         battle_thread_yield();
-                    } while (g_companion_overlay_state != 0);
+                    } while (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
                     battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
                     operand_1 = 2;
                     do {
@@ -179,10 +179,10 @@ restart_script:
                 battle_script_blue_remove_all_enemy_units();
                 battle_thread_wait_frames(0x78);
             }
-            if (operand_1 == EVENT_CALL_FUNCTION_UNKNOWN_05) {
+            if (operand_1 == EVENT_CALL_FUNCTION_REQUEST_CAMERA_YAW_WRAP) {
                 g_battle_camera_wrap_yaw_pending = 1;
             }
-            if (operand_1 == EVENT_CALL_FUNCTION_UNKNOWN_08) {
+            if (operand_1 == EVENT_CALL_FUNCTION_DISABLE_DEBUG_DISPLAY) {
                 g_main_debug_display_enabled = 0;
                 D_800459D8 = 0;
             }
@@ -291,7 +291,7 @@ restart_script:
             if (operand_1 != 0x1AD && operand_1 != 0x1D1) {
                 battle_gfx_init_evtchr_vram_slots();
             }
-            battle_script_set_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS, 0);
+            battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
             finish_operation = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
             if (g_battle_menu_input_disabled == 0 && finish_operation == 0 && (operand_1 - 0x190) >= 0x1AU
                 && operand_1 != 0) {
@@ -323,7 +323,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_JUMP_FORWARD_IF_ZERO) {
             if (g_battle_script_variables[EVENT_SCRIPT_VAR_COMPARISON_RESULT] == 0) {
                 instruction_offset = battle_script_find_jump_target(
-                    instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, EVENT_OPCODE_UNKNOWN_D4, operand_1);
+                    instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, EVENT_OPCODE_FORWARD_TARGET_EXIT, operand_1);
                 continue;
             }
         } else if (opcode == EVENT_OPCODE_JUMP_FORWARD) {
@@ -331,7 +331,7 @@ restart_script:
                 = battle_script_find_jump_target(instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, -1, operand_1);
             continue;
         } else if (opcode == EVENT_OPCODE_FORWARD_TARGET) {
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_D4) {
+        } else if (opcode == EVENT_OPCODE_FORWARD_TARGET_EXIT) {
             break;
         } else if (opcode == EVENT_OPCODE_JUMP_BACK) {
             instruction_offset
@@ -339,7 +339,7 @@ restart_script:
             continue;
         } else if (opcode == EVENT_OPCODE_BACK_TARGET) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D8) {
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_D9) {
+        } else if (opcode == EVENT_OPCODE_BACK_TARGET_BARRIER) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_DC) {
             D_80165FB0 = 0xD;
         }
@@ -422,9 +422,9 @@ restart_script:
             battle_script_unit_anim(parameters);
         } else if (opcode == EVENT_OPCODE_MARCH) {
             battle_script_march_units(parameters);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_81) {
+        } else if (opcode == EVENT_OPCODE_SET_UNIT_MOVEMENT_EFFECT_SUPPRESSION) {
             battle_script_set_units_movement_effect_suppression(parameters);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_12) {
+        } else if (opcode == EVENT_OPCODE_WAIT_UNIT_READY) {
             operand_1 = battle_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
                 battle_script_wait_for_unit_ready(operand_1);
@@ -459,7 +459,7 @@ restart_script:
             } while (g_battle_map_append_state != 0);
         } else if (opcode == EVENT_OPCODE_PAUSE) {
             battle_script_pause_event_instruction();
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_26) {
+        } else if (opcode == EVENT_OPCODE_RESUME_WAITING_DIALOG) {
             for (work_index = 1; work_index < 16; work_index++) {
                 thread = &g_battle_thread_contexts[work_index];
                 if (thread->is_running != 0 && thread->task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
@@ -467,7 +467,7 @@ restart_script:
                     thread->task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_37) {
+        } else if (opcode == EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT) {
             battle_script_toggle_message_portrait_flip(parameters);
         } else if (opcode == EVENT_OPCODE_UNKNOWN_17) {
         }
@@ -482,7 +482,7 @@ restart_script:
             g_battle_event_effect_target_x = effect_instruction[4];
             g_battle_event_effect_target_y = effect_instruction[5];
             g_battle_event_effect_target_mode = effect_instruction[6];
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CAMERA_ROTATION, 0);
+            battle_script_set_variable(EVENT_SCRIPT_VAR_CAMERA_ROLL, 0);
             battle_thread_wait_frames(2);
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
@@ -499,8 +499,8 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_FOCUS_SPEED) {
             script_variables = g_battle_script_variables;
             battle_script_focus_speed(parameters, &script_variables[EVENT_SCRIPT_VAR_CAMERA_X],
-                &script_variables[EVENT_SCRIPT_VAR_CAMERA_ANGLE]);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_73) {
+                &script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT]);
+        } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
             battle_script_apply_relative_camera(parameters, &g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_X]);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
             operand_1 = battle_thread_resolve_id(0x10U);
@@ -566,7 +566,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_EARTHQUAKE_END) {
             battle_thread_wait_frames(1);
             battle_thread_suspend(battle_thread_find_running_by_task(NATIVE_THREAD_TASK_EARTHQUAKE));
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_25) {
+        } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_battle_text_speaker_swap_unit_a = first_halfword;
             g_battle_text_speaker_swap_unit_b
                 = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3);
@@ -613,26 +613,26 @@ restart_script:
                 parameters[0], parameters[4], ((s8)parameters[1]), ((s8)parameters[2]), ((s8)parameters[3]));
         } else if (opcode == EVENT_OPCODE_COLOR_UNIT) {
             battle_script_color_unit_event_instruction(parameters);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_6C) {
+        } else if (opcode == EVENT_OPCODE_RESUME_UNIT_PALETTE_UPDATES) {
             battle_script_set_units_palette_update_suppression(first_halfword & 0xFFFF, 0);
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_6D) {
+        } else if (opcode == EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES) {
             battle_script_set_units_palette_update_suppression(first_halfword & 0xFFFF, 1);
         } else if (opcode == EVENT_OPCODE_COLOR_FIELD) {
             battle_map_color_field(
                 parameters[0], parameters[4], ((s8)parameters[1]), ((s8)parameters[2]), ((s8)parameters[3]));
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_66) {
+        } else if (opcode == EVENT_OPCODE_STORE_MODIFIED_MAP_PALETTE) {
             battle_map_store_modified_palette_colors(0, 0, 1);
         } else if (opcode == EVENT_OPCODE_SET_TILE_CAMERA_BLOCK) {
             battle_map_set_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], (u8)(parameters[1]),
                 (u8)(parameters[2]), (u8)(parameters[3]));
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_40) {
+        } else if (opcode == EVENT_OPCODE_SET_TILE_HEIGHT) {
             tile = battle_map_get_tile_data_pointer(parameters[0], (u8)(parameters[1]), (u8)(parameters[2]));
             if ((tile->surface.bits.type - MAP_SURFACE_GRASSLAND) >= 2U) {
                 tile->surface.value = (tile->surface.value & ~MAP_SURFACE_MASK) | MAP_SURFACE_STONE_FLOOR;
             }
             tile->height = parameters[3];
-            tile->flags_06.bits.untargetable = parameters[4];
-            tile->flags_06.bits.blocked = 0;
+            tile->flags.bits.untargetable = parameters[4];
+            tile->flags.bits.blocked = 0;
         }
         /* ---- Event speed, dark screen, conditions, and graphics ---- */
         else if (opcode == EVENT_OPCODE_EVENT_SPEED) {
@@ -861,7 +861,7 @@ restart_script:
                     battle_gfx_set_shadow_graphic_trigger_by_misc_id(shadow_misc_id);
                 }
             }
-        } else if (opcode == EVENT_OPCODE_UNKNOWN_72) {
+        } else if (opcode == EVENT_OPCODE_DEBUG_PAUSE) {
             battle_script_print_debug_message();
         } else if (opcode == EVENT_OPCODE_WAIT_VALUE) {
             battle_script_wait_value_event_instruction(parameters);
@@ -923,7 +923,7 @@ restart_script:
         /* ---- Map title, dates, teleports, and status ---- */
         else if (opcode == EVENT_OPCODE_SHOW_MAP_TITLE) {
             operand_4 = battle_thread_resolve_id(0x10U);
-            battle_menu_request_open_companion_executable(0xD);
+            battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_ATTACK);
             attack_map_load_title_graphic();
             battle_thread_start(operand_4, attack_map_show_title);
             battle_thread_set_parameters(operand_4, (s8)operand_1, (s8)operand_2, (s8)operand_3);

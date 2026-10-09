@@ -21,7 +21,7 @@ s32 world_menu_run_learn_job_list(void) {
         g_world_menu_script_callbacks[13] = world_job_calculate_current_mastered;
         world_gfx_get_sprite_slot(9, &x, &y, g_world_menu_learn_unlocked_jobs);
         world_menu_init_scrollable_list(
-            g_world_menu_learn_unlocked_jobs, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_JOB_NAMES]);
+            g_world_menu_learn_unlocked_jobs, x, y, g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
         g_world_learn_job_list_initialized = 1;
     }
     g_world_menu_description_text_id = g_world_menu_learn_unlocked_jobs[g_world_menu_cursor_position] + 0x6000;

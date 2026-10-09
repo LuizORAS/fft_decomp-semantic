@@ -8,7 +8,7 @@ typedef struct battle_target_reflect_action {
     u8 skillset_id; /* 0x16f */
     s16 ability_id; /* 0x170 */
     u8 _unused_04[6];
-    u8 reaction_id;       /* 0x178 */
+    u8 target_kind;       /* 0x178; battle_action_target_kind_e */
     u8 target_id;         /* 0x179 */
     s16 target_x;         /* 0x17a */
     s16 target_elevation; /* 0x17c */
@@ -25,8 +25,8 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     s32 last_attack;
 
     act = (battle_target_reflect_action_t*)&unit->action_actor_id;
-    dx = unit->x - g_acting_unit_x;
-    dy = unit->position.bits.y - g_acting_unit_y;
+    dx = unit->x - g_battle_acting_unit_x;
+    dy = unit->position.bits.y - g_battle_acting_unit_y;
     if (dx == 0 && dy == 0) {
         return -1;
     }
@@ -35,7 +35,7 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     }
     act->skillset_id = SKILLSET_ID_BLACK_MAGIC;
     last_attack = unit->action.last_received_attack;
-    act->reaction_id = 5;
+    act->target_kind = BATTLE_ACTION_TARGET_TILE;
     act->target_id = 0;
     act->ability_id = last_attack;
     act->target_x = x;

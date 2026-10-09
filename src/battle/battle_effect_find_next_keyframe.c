@@ -9,7 +9,7 @@
  * loop.c from turning the indexed reads into a single advancing pointer.
  */
 s32 battle_effect_find_next_keyframe(s16 frame, u32 mask, s32* out_index, s32* out_frame) {
-    effect_misc_data_t* data;
+    effect_timeline_t* data;
     s32 i;
 
     data = g_battle_effect_timeline;

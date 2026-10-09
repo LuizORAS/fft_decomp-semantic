@@ -19,7 +19,7 @@ void battle_script_load_event(s32 id) {
     block = g_battle_event_block;
     off = block->text_offset_or_marker;
     if (off != EVENT_TEXT_OFFSET_PROCESSED) {
-        g_battle_text_section_pointers[0] = (u8*)(off + (u32)block);
+        g_battle_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = (u8*)(off + (u32)block);
         block->text_offset_or_marker = EVENT_TEXT_OFFSET_PROCESSED;
     }
 }

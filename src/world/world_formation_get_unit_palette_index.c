@@ -2,10 +2,11 @@
 #include "psx/types.h"
 
 /*
- * Compute the portrait index shown for a party unit.
+ * Compute the formation sprite palette index of a party unit; the caller
+ * turns it into the CLUT at (0x140 + (index % 4) * 16, 0xe0 + index / 4).
  *
  * Generic male/female identities derive their sheet from the job; other
- * selectors take the job's spritesheet. Portraits of 0x3e and above are
+ * selectors take the job's spritesheet. Indices of 0x3e and above are
  * expanded by the job's portrait palette.
  */
 s32 world_formation_get_unit_palette_index(s32 party_index) {

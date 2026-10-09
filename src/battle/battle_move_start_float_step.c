@@ -13,27 +13,27 @@ void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_
 
     battle_unit_dismount_rider_and_update_display(unit);
     step_count = unit->current_edge_height;
-    step = &unit->movement_value.value;
-    switch (unit->movement_value.value >> 6) {
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
     case 0:
         facing = BATTLE_FACING_EAST;
-        unit->centre_tile_offset = 0x2F;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 0x2F;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         break;
     case 1:
         facing = BATTLE_FACING_WEST;
-        unit->centre_tile_offset = 0x37;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 0x37;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         break;
     case 2:
         facing = BATTLE_FACING_SOUTH;
-        unit->centre_tile_offset = 0x2B;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 0x2B;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         break;
     case 3:
         facing = BATTLE_FACING_NORTH;
-        unit->centre_tile_offset = 0x33;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 0x33;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
         break;
     }
     unit->facing = facing;

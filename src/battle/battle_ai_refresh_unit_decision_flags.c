@@ -12,7 +12,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
     s32 unit_id;
 
     /* A resumed decision goes straight back to the suspended simulation. */
-    if (!g_battle_ai_data_base.decision_state) {
+    if (!g_battle_ai_data_base.resume_pending) {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             unit = &g_battle_unit_stats[unit_id];
             decision = &ai->unit_decisions[unit_id];
@@ -48,7 +48,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
             if (!decision->enemy_flag || unit->charged_ability_ct != 0xff)
                 decision->flags |= 0x80;
         }
-        ai->current_action.target_flags_set = 1;
+        ai->current_action.act_before_move = 1;
         ai->current_action.skillset = 0;
         ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS;
     }

@@ -13,7 +13,7 @@ s32 battle_ai_select_targeted_action(void) {
     s32 i, result;
 
     /* Reload the persistent target before every resume dispatch. */
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         switch (g_battle_ai_data_base.action_selection_phase) {
         case 0:
             goto score_tiles;

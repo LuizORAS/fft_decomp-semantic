@@ -23,7 +23,7 @@ s32 battle_script_find_jump_target(
         for (offset = 0; offset < limit_offset; offset += 1 + g_battle_script_event_instruction_sizes[opcode]) {
             base = (u8*)g_battle_event_block;
             opcode = base[offset];
-            if (opcode == EVENT_OPCODE_UNKNOWN_D9
+            if (opcode == EVENT_OPCODE_BACK_TARGET_BARRIER
                 || (opcode == EVENT_OPCODE_FORWARD_TARGET && (base + offset)[1] == target_id)) {
                 found = -1;
             } else if (opcode == target_opcode && (base + offset)[1] == target_id) {

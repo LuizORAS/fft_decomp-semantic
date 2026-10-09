@@ -8,6 +8,6 @@ void battle_menu_run_helpmenu_thread(void) {
         battle_sound_set_effect_to_confirm();
     }
     battle_menu_reserve_high_overlay(0x20000);
-    battle_menu_request_open_companion_executable(3);
+    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_HELPMENU);
     helpmenu_menu_run_battle_help();
 }

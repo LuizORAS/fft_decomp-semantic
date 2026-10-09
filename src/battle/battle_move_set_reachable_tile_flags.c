@@ -51,7 +51,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if (half_height >= 4) {
                 continue;
             }
-            tile_flags = tile->flags_06.value;
+            tile_flags = tile->flags.value;
             if (tile_flags & MAP_TILE_FLAG_CANNOT_STOP) {
                 continue;
             }

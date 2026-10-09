@@ -15,12 +15,12 @@ s32 battle_unit_place_in_new_location(u32 misc_id, s16* tile, s32 facing) {
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
     if (unit != 0) {
-        unit->effect_vector_2.vz = 0;
-        unit->effect_vector_2.vy = 0;
-        unit->effect_vector_2.vx = 0;
-        unit->effect_vector.vz = 0;
-        unit->effect_vector.vy = 0;
-        unit->effect_vector.vx = 0;
+        unit->event_offset.vz = 0;
+        unit->event_offset.vy = 0;
+        unit->event_offset.vx = 0;
+        unit->seq_offset.vz = 0;
+        unit->seq_offset.vy = 0;
+        unit->seq_offset.vx = 0;
         unit->screen_offset.vz = 0;
         unit->screen_offset.vy = 0;
         unit->screen_offset.vx = 0;

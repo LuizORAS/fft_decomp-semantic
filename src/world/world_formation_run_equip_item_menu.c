@@ -67,7 +67,7 @@ s32 world_formation_run_equip_item_menu(void) {
             }
             world_gfx_get_sprite_slot(slot, &x, &y, g_world_menu_entry_ids);
             world_menu_init_scrollable_list(
-                g_world_menu_entry_ids, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
+                g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
             g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
             g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
             g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;

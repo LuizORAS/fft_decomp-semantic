@@ -154,6 +154,16 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `open_movie_init_mdec_stream_state` stores the slice width (24) into the
   global `g_open_movie_mdec_stream_state.output_rect.w`, not through its
   `state` parameter; the one caller passes that global.
+- `battle_action_init_current_ability_strike_data` tests
+  `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST`, which is always
+  true.
+- The ENTD 7-byte AI copy reads three bytes past `ai_target_xy` (0x25-0x27),
+  into the two AI targeting flags and `ai_initial_enemy_flag`.
+- EQUIP never fills the physical accessory evade slot of `equip_unit_data_t`
+  (0x48); it stores the accessory's magic evade to 0x52.
+- `battle_status_modify_inflictions` masks five status bytes with the 4-byte
+  table at 0x8018f60c; the fifth mask is the low byte of
+  `g_battle_formula_handlers[0]`.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

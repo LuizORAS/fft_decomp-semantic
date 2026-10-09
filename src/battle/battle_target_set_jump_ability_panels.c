@@ -100,7 +100,7 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
     panel->remaining_range = 0;
     other_panel->remaining_range = 0;
     other_height = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + tile->height * 2;
-    if ((tile->flags_06.value & MAP_TILE_FLAG_BLOCKED) == 0 && height < other_height) {
+    if ((tile->flags.value & MAP_TILE_FLAG_BLOCKED) == 0 && height < other_height) {
         return 0;
     }
     marked = 0;
@@ -111,12 +111,12 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
         panel = &panels[i];
         lower = &g_battle_map_tile_data[i];
         upper = &g_battle_map_tile_data[i + 0x100];
-        if (panel->remaining_range == 0 || (lower->flags_06.value & MAP_TILE_FLAG_BLOCKED)) {
+        if (panel->remaining_range == 0 || (lower->flags.value & MAP_TILE_FLAG_BLOCKED)) {
             lower_height = -1;
         } else {
             lower_height = (lower->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + lower->height * 2;
         }
-        if (other_panel->remaining_range == 0 || (upper->flags_06.value & MAP_TILE_FLAG_BLOCKED)) {
+        if (other_panel->remaining_range == 0 || (upper->flags.value & MAP_TILE_FLAG_BLOCKED)) {
             upper_height = -1;
         } else {
             upper_height = (upper->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + upper->height * 2;
@@ -128,7 +128,7 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
             upper = tile;
         }
         if (lower_height >= min_height && max_height >= lower_height
-            && (lower->flags_06.value & MAP_TILE_FLAG_UNTARGETABLE) == 0) {
+            && (lower->flags.value & MAP_TILE_FLAG_UNTARGETABLE) == 0) {
             marked++;
             lower->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
         } else {

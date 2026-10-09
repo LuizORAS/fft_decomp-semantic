@@ -20,7 +20,7 @@ typedef union {
  * (g_battle_action_current_ability.strike_count). Two-swords and the 0x20 ability flag are what allow a second
  * strike; menu type 2 (item) only records the consumed item.
  *
- * The `ability_id >= 0 || ability_id < 0x170` guard is the target's own: the
+ * The `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` guard is the target's own: the
  * second arm is unreachable, so the table read is never actually skipped.
  *
  * `left_hand` is load-bearing: the target issues the equipment[5] reload
@@ -40,7 +40,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
 
     g_battle_action_current_ability.strike_count = 1;
     g_battle_action_current_ability.strike_counter = 0;
-    g_battle_action_current_ability.elemental_flags = 0;
+    g_battle_action_current_ability.weapon_proc_pending = 0;
     g_battle_action_current_ability.knockback_flags = 0;
     weapon_kind = 0;
     if (g_battle_action_context == 0) {
@@ -65,9 +65,9 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         return;
     }
 
-    if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_MONSTER) {
+    if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_id = unit->last_ability_id;
-        if (ability_id >= 0 || ability_id < 0x170) {
+        if (ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST) {
             data = &g_main_ability_range_data[ability_id];
             g_battle_loaded_ability_flags_1 = data->flags_1;
             chance = data->x;
@@ -95,7 +95,8 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     }
 
     support = unit->support_abilities[2];
-    if ((unit->status_sets.current[2] & 2) || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
+    if ((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+        || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
         g_battle_action_current_ability.primary_weapon_id = ITEM_ID_NONE;
         g_battle_action_current_ability.secondary_weapon_id = ITEM_ID_NONE;
     }

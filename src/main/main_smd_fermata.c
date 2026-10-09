@@ -7,7 +7,7 @@ u8* main_smd_fermata(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     u16 value;
 
     value = *note_data++;
-    channel->active |= 0x100;
+    channel->flags |= 0x100;
     channel->rest_length = value;
     return note_data;
 }

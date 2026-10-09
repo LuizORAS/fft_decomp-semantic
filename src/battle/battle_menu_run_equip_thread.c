@@ -19,16 +19,16 @@ void battle_menu_run_equip_thread(void) {
     battle_unit_start_view_thread(0, 0xFF, 0xFF);
     g_battle_menu_suspend_state = 1;
     battle_thread_wait_for_10_to_13();
-    battle_menu_request_open_companion_executable(9);
+    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
     battle_menu_reserve_high_overlay(0x20000);
-    battle_menu_request_open_companion_executable(10);
+    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     battle_thread_suspend(8);
     battle_thread_suspend(7);
-    g_companion_overlay_state = 4;
+    g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_battle_script_event_input = 0;
         battle_thread_yield();
-    } while (g_companion_overlay_state != 0);
+    } while (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
     g_battle_menu_action_slot_row_actions = -3;
     g_battle_sound_suppressed = 1;

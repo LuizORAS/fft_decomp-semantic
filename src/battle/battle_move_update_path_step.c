@@ -20,15 +20,15 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     u8 flags;
 
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
-    g_battle_move_step_value = unit->movement_value;
-    switch (unit->centre_tile_offset) {
+    g_battle_move_step_value = unit->current_path_step;
+    switch (unit->step_phase) {
     case 0x11:
     case 0x15:
     case 0x19:
     case 0x1D:
         if (unit->animation_countdown == 0) {
-            unit->centre_tile_offset++;
-            battle_unit_store_animation_facing(0x1F, (s16)unit->facing, unit);
+            unit->step_phase++;
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, (s16)unit->facing, unit);
             battle_sound_play_movement_sfx(unit, 0x27);
             battle_unit_dismount_rider(unit);
         }
@@ -108,7 +108,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         battle_move_finalize_path_after_animation(unit);
         break;
     }
-    if (unit->centre_tile_offset == 0) {
+    if (unit->step_phase == 0) {
         count = unit->movement_path_count;
         if (count == 0xFE) {
             battle_unit_dismount_rider_and_update_display(unit);
@@ -116,7 +116,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         } else if (count == 0xFF) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_effect_call_build_secondary_init(unit);
-            unit->mount_byte = 0;
+            unit->pending_mount = 0;
             battle_ai_init_selected_action();
         } else if (count == 0) {
             battle_unit_mount_onto_pending_mount(unit);
@@ -126,7 +126,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             }
             offset = unit->movement_path_offset;
             unit->movement_path_offset = offset + 1;
-            unit->movement_value = g_battle_move_step_value = unit->movement_path[offset];
+            unit->current_path_step = g_battle_move_step_value = unit->movement_path[offset];
             battle_move_set_unit_step_slope_scales(unit);
             flags = unit->movement_flags;
             if (flags & 0x80) {

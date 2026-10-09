@@ -44,11 +44,12 @@ s32 bunit_run_ability_list_menu(void) {
         rect.h = 0x10;
         g_bunit_ability_list_job_name_row[0] = g_bunit_job_selected_id;
         bunit_text_render_id_rows_to_vram(
-            (s32)g_battle_text_section_pointers[6], g_bunit_ability_list_job_name_row, &rect, 0);
+            (s32)g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_bunit_ability_list_job_name_row, &rect, 0);
         g_bunit_ability_category = bunit_menu_update_wrapped_horizontal_selection(4, 0, 0);
         bunit_create_ability_list(
             g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
-        bunit_menu_init_scrollable_list_core(g_bunit_ability_entries, 0, (s32)g_battle_text_section_pointers[14]);
+        bunit_menu_init_scrollable_list_core(
+            g_bunit_ability_entries, 0, (s32)g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_bunit_ability_list_ready = 1;
     }
     if (*(s16*)&g_bunit_menu_list_entry_count == 0
@@ -75,8 +76,8 @@ s32 bunit_run_ability_list_menu(void) {
         bunit_create_ability_list(
             g_bunit_unit_selected_index, g_bunit_job_selected_id, (s16)category, g_bunit_ability_entries, 0);
         bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_bunit_ability_entries);
-        bunit_menu_init_scrollable_list(
-            (s32)g_bunit_ability_entries, selected, scroll, (s32)g_battle_text_section_pointers[14]);
+        bunit_menu_init_scrollable_list((s32)g_bunit_ability_entries, selected, scroll,
+            (s32)g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         bunit_gfx_set_transition_frame(10);
     }
     bunit_menu_dispatch_with_override(

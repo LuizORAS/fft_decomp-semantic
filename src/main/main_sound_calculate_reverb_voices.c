@@ -17,7 +17,7 @@ void main_sound_calculate_reverb_voices(void) {
         /* The target tests the playing bit (15) as a sign: `lh` and `bgez`. */
         status = (s16)music->status;
         if (status < 0) {
-            if ((status & 1) != 0)
+            if ((status & SUZUKI_MUSIC_STATUS_SMD) != 0)
                 excludable_voices |= music->reverb_voice_mask;
             else
                 forced_voices |= music->reverb_voice_mask;

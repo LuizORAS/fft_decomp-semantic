@@ -6,9 +6,9 @@ void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_st
 
     out->animate_on_miss_flag = 0;
     if (g_battle_action_current_ability.random_fire_flag != 0) {
-        out->target_new_x = g_battle_action_current_ability.target_x;
-        out->target_new_y = g_battle_action_current_ability.target_y;
-        out->target_new_map_level = g_battle_action_current_ability.target_elevation;
+        out->target_new_x = g_battle_action_current_ability.target_new_x;
+        out->target_new_y = g_battle_action_current_ability.target_new_y;
+        out->target_new_map_level = g_battle_action_current_ability.target_new_elevation;
     } else if (acting->action_target_kind == BATTLE_ACTION_TARGET_UNIT) {
         target = &g_battle_unit_stats[acting->action_target_id];
         out->target_new_x = target->x;

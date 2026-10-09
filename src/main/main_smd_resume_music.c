@@ -15,9 +15,9 @@ void main_smd_resume_music(suzuki_music_t* music, s16 volume, s16 fade) {
         SuzukiCalcMusVolChange(music, volume, fade);
         main_sound_set_reverb_mode(
             music->reverb_mode, music->reverb_depth, music->reverb_delay, music->reverb_feedback);
-        main_smd_force_channel_func(music, 0x71ff);
+        main_smd_set_voice_attr_flags_all_channels(music, 0x71ff);
         main_smd_retrigger_held_voices(music);
-        music->status = (music->status & ~0x100) | 0x8000;
+        music->status = (music->status & ~SUZUKI_MUSIC_STATUS_PAUSED) | SUZUKI_MUSIC_STATUS_PLAYING;
         EnableEvent(g_main_root_counter_2_event);
     }
 }

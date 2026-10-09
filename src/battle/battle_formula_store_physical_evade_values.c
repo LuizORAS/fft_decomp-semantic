@@ -34,8 +34,8 @@ void battle_formula_store_physical_evade_values(void) {
     }
     g_battle_action_current_ability.base_hit = 100;
     g_battle_action_current_ability.accessory_evade = 0;
-    g_battle_action_current_ability.right_shield_evade = 0;
-    g_battle_action_current_ability.left_shield_evade = 0;
+    g_battle_action_current_ability.right_hand_evade = 0;
+    g_battle_action_current_ability.left_hand_evade = 0;
     g_battle_action_current_ability.class_evade
         = g_battle_action_target->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
     if ((g_battle_action_target->unit_flags & UNIT_FLAG_MONSTER) != 0) {
@@ -63,9 +63,9 @@ void battle_formula_store_physical_evade_values(void) {
         = g_main_item_primary_data[g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD]]
               .secondary_data_id;
     if ((weapon_flags & ITEM_TYPE_FLAG_WEAPON) != 0 && weapon_guard != 0) {
-        g_battle_action_current_ability.right_shield_evade = g_main_item_weapon_data[weapon_secondary].evade;
+        g_battle_action_current_ability.right_hand_evade = g_main_item_weapon_data[weapon_secondary].evade;
     } else if ((shield_flags & ITEM_TYPE_FLAG_SHIELD) != 0) {
-        g_battle_action_current_ability.right_shield_evade = g_main_item_shield_data[shield_secondary].physical_evade;
+        g_battle_action_current_ability.right_hand_evade = g_main_item_shield_data[shield_secondary].physical_evade;
     }
 
     weapon_secondary
@@ -78,8 +78,8 @@ void battle_formula_store_physical_evade_values(void) {
     shield_secondary = g_main_item_primary_data[g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD]]
                            .secondary_data_id;
     if ((weapon_flags & ITEM_TYPE_FLAG_WEAPON) != 0 && weapon_guard != 0) {
-        g_battle_action_current_ability.left_shield_evade = g_main_item_weapon_data[weapon_secondary].evade;
+        g_battle_action_current_ability.left_hand_evade = g_main_item_weapon_data[weapon_secondary].evade;
     } else if ((shield_flags & ITEM_TYPE_FLAG_SHIELD) != 0) {
-        g_battle_action_current_ability.left_shield_evade = g_main_item_shield_data[shield_secondary].physical_evade;
+        g_battle_action_current_ability.left_hand_evade = g_main_item_shield_data[shield_secondary].physical_evade;
     }
 }

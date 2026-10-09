@@ -19,7 +19,7 @@ u8* main_smd_modulator_select(u8* note_data, suzuki_music_t* music, suzuki_music
         modulator->flags = 0;
     }
     modulator->target = note_data[2];
-    modulator->counter_14_reset = 0;
-    modulator->counter_18_reset = 0x100;
+    modulator->delay_reset = 0;
+    modulator->fade_step = 0x100;
     return note_data + 3;
 }

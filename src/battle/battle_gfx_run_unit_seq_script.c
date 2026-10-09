@@ -69,19 +69,19 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                         frame = g_battle_gfx_targeted_frame_front[g_battle_gfx_spritesheet_data[unit->spritesheet_id]
                                 .shp_id];
                     }
-                    unit->effect_vector.vz = 0;
-                    unit->effect_vector.vy = 0;
-                    unit->effect_vector.vx = 0;
+                    unit->seq_offset.vz = 0;
+                    unit->seq_offset.vy = 0;
+                    unit->seq_offset.vx = 0;
                     battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, anim);
                 }
                 state->wait = 0;
                 return;
             case BATTLE_SEQ_OP_INCREMENT_LOOP:
                 pos = 0;
-                state->counter_0c++;
+                state->restart_count++;
                 break;
             case BATTLE_SEQ_OP_SET_Y_ROTATION_0:
-                state->display->y_rotation = 0;
+                state->display->rotation = 0;
                 break;
             case BATTLE_SEQ_OP_POST_GENERIC_ATTACK:
                 if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
@@ -210,7 +210,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 do {
                     count = seq->frames[anim_index][pos++];
                     count |= seq->frames[anim_index][pos++] << 8;
-                    state->display->y_rotation = count;
+                    state->display->rotation = count;
                 } while (0);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT:
@@ -246,10 +246,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 battle_unit_shift_down_or_up(unit, -2);
                 break;
             case BATTLE_SEQ_OP_LOAD_MF_ITEM:
-                unit->item_ability_display = 1;
+                unit->item_display_active = 1;
                 break;
             case BATTLE_SEQ_OP_UNLOAD_MF_ITEM:
-                unit->item_ability_display = 0;
+                unit->item_display_active = 0;
                 break;
             case BATTLE_SEQ_OP_WAIT_FOR_INPUT:
                 if (g_battle_action_post_action == 0) {

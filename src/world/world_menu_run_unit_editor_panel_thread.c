@@ -137,7 +137,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_menu_text_state.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
-        value = g_world_unit_editor_fields.state.ability_ids[i] + 0xB000;
+        value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         if (g_world_unit_editor_fields.state.generic_monster != 0) {
             value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
@@ -259,7 +259,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     } while (g_world_unit_status_bounce_step != 0);
     world_thread_start(0xA, world_menu_selected_tile_info_display_thread);
     world_thread_set_parameters(0xA, 0, 0, 0);
-    g_world_thread_contexts[10].task_id = 0x10;
+    g_world_thread_contexts[10].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
     g_world_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();
     world_menu_build_idle_action_stub(g_world_menu_current_id);

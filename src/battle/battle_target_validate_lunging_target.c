@@ -112,10 +112,10 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         upper_height = upper->height * 2 + (upper->depth_half_height.value & 0x1f);
         lower_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 0);
         upper_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 1);
-        if (lower->flags_06.bits.blocked) {
+        if (lower->flags.bits.blocked) {
             lower_height = 0xff;
         }
-        if (upper->flags_06.bits.blocked) {
+        if (upper->flags.bits.blocked) {
             upper_height = 0xff;
         }
         if (lower_height > upper_height) {

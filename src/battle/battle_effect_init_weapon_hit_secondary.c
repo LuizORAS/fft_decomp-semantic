@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Start the current effect target's thrown-ball secondary effect.
+/* Start the current effect target's weapon-hit secondary effect.
  *
  * The target's result animation selects animation 7 (hit, critical, guarded),
  * 0x12 (6-7) or 0x14 (5); result 2 keeps the slot's animation. The parameter
- * is the ball effect index for the given element mask. Returns the target ID,
+ * is the element effect index for the weapon's element mask. Returns the target ID,
  * or 0 when the init record has no targets. */
 s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondary_init_t* source, s32 unused_is_bow) {
     u8 target_id;

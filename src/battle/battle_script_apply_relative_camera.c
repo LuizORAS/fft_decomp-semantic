@@ -8,7 +8,7 @@ void battle_script_apply_relative_camera(u8* parameters, s32* src) {
     s32 val;
 
     dst = parameters + 0xF;
-    if (parameters[0xE] == 0x38) {
+    if (parameters[0xE] == EVENT_OPCODE_FOCUS_SPEED) {
         dst = parameters + 0x12;
     }
     for (i = 0; i < 7; i++) {

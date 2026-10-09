@@ -32,8 +32,8 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     u16 birthday;
 
     unit->sprite_palette = entd->palette;
-    unit->team_flags = entd->battle_flags;
-    unit->initial_team_flags = entd->battle_flags;
+    unit->team_flags = entd->team_flags;
+    unit->initial_team_flags = entd->team_flags;
 
     value = entd->unit_flags;
     if (value & UNIT_FLAG_LOAD_FORMATION) {
@@ -63,7 +63,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     }
 
     /* Copies entd 0x21..0x27 into unit 0x165..0x16b (ai_target_x through
-     * entd_unknown_right).  The byte-shifted struct view reproduces the
+     * ai_initial_enemy_flag).  The byte-shifted struct view reproduces the
      * target's `addu unit,i` operand order; (&unit->ai_target_x)[i] swaps it. */
     for (i = 0; i < 7; i++) {
         ((battle_stats_t*)((u8*)unit + i))->ai_target_x = g_main_entd_current_unit->ai_target_xy[i];
@@ -78,7 +78,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     unit->character_identity = sprite;
 
     value = entd->level;
-    if (value == 0 || value == 0xfe) {
+    if (value == 0 || value == ENTD_VALUE_RANDOM) {
         number = g_main_party_highest_level;
         level_range = (number >> 3) + 1;
         level_base = number - (number >> 3);

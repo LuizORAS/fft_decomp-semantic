@@ -35,7 +35,7 @@ void wldcore_menu_push_proposition_category_level(void) {
     }
     completed = 0;
     for (i = 0; i < 0x60; i++) {
-        if (world_script_get_variable(i + 0x360) & 4) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 4) {
             completed++;
         }
     }

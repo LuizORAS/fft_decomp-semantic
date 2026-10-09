@@ -46,8 +46,8 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     do {
         if (attacker_id != i) {
             unit = &g_battle_unit_stats[i];
-            if (unit->ability_outcome & 2) {
-                unit->ability_outcome = 4;
+            if (unit->ability_outcome & BATTLE_ABILITY_OUTCOME_AFFECTED) {
+                unit->ability_outcome = BATTLE_ABILITY_OUTCOME_LEARN_CHECKED;
                 if (!(unit->unit_flags & UNIT_FLAG_MONSTER)
                     && main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION) == 0) {
                     skillset = unit->primary_skillset;

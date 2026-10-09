@@ -15,7 +15,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     s32 flags;
     s32 status_byte;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: the target jumps into the middle of the ability loop. */
         goto evaluate_ability;
     }
@@ -42,7 +42,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
 
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, unit_id) != 0) {
         for (ai->ability_counter = 0; ai->ability_counter < 0x22; ai->ability_counter++) {
-            entry = &ai->ability_lists[ai->acting_unit_battle_id][ai->ability_counter];
+            entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
             if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
                 break;
             battle_ai_load_ability_entry(entry);
@@ -86,7 +86,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     }
     if (g_battle_ai_status_candidate_count == 0)
         return 0;
-    if (g_battle_ai_status_insufficient_mp != 0 && ai->ability_targets_enemies_or_mp == 0
+    if (g_battle_ai_status_insufficient_mp != 0 && ai->has_mp_recovery_ability == 0
         && g_battle_ai_status_sufficient_mp == 0)
         return 0;
     return 1;

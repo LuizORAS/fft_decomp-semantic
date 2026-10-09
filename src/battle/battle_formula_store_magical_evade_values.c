@@ -12,8 +12,8 @@ void battle_formula_store_magical_evade_values(void) {
     target = g_battle_action_target;
     g_battle_action_current_ability.base_hit = 100;
     g_battle_action_current_ability.accessory_evade = 0;
-    g_battle_action_current_ability.right_shield_evade = 0;
-    g_battle_action_current_ability.left_shield_evade = 0;
+    g_battle_action_current_ability.right_hand_evade = 0;
+    g_battle_action_current_ability.left_hand_evade = 0;
     g_battle_action_current_ability.class_evade = 0;
     if (target->unit_flags & UNIT_FLAG_MONSTER) {
         return;
@@ -27,11 +27,11 @@ void battle_formula_store_magical_evade_values(void) {
     item = &items[target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD]];
     secondary = item->secondary_data_id;
     if (item->type_flags & ITEM_TYPE_FLAG_SHIELD) {
-        g_battle_action_current_ability.right_shield_evade = g_main_item_shield_data[secondary].magic_evade;
+        g_battle_action_current_ability.right_hand_evade = g_main_item_shield_data[secondary].magic_evade;
     }
     item = &items[target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD]];
     secondary = item->secondary_data_id;
     if (item->type_flags & ITEM_TYPE_FLAG_SHIELD) {
-        g_battle_action_current_ability.left_shield_evade = g_main_item_shield_data[secondary].magic_evade;
+        g_battle_action_current_ability.left_hand_evade = g_main_item_shield_data[secondary].magic_evade;
     }
 }

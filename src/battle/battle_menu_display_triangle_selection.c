@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_menu_display_triangle_selection(void) {
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_SOUND_DELAY);
+    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MINI_MENU);
     while (battle_camera_is_active() != 0 || g_battle_menu_transition_state != 0) {
         battle_thread_yield();
     }

@@ -28,17 +28,17 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
             }
             battle_menu_set_text_origin(layout->x[column], row * 0x10);
             if (layout->mode[column] != 2) {
-                g_menu_text_palette_offset = layout->text_colors[column][index];
+                g_battle_menu_text_palette_offset = layout->text_colors[column][index];
             }
             g_menu_text_state.color = 0;
-            if (g_menu_text_palette_offset == 4) {
+            if (g_battle_menu_text_palette_offset == 4) {
                 g_menu_text_state.color = 0x44444444;
             }
             if (layout->mode[column] == 0) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.origin_x);
                 if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
                     && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
-                    g_menu_text_palette_offset = layout->text_colors[column][index];
+                    g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                     /* Full-word x and y, as above. */
                     battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
@@ -48,15 +48,15 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_menu_text_state.origin_x);
             } else if (layout->mode[column] == 3) {
                 if ((column == 2 || (column == 1 && layout->mode[2] == 2)) && (u16)layout->text_ids[column][index] < 2
-                    && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0xFF
-                        || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index] == 0)) {
+                    && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0xFF
+                        || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0)) {
                     g_menu_text_state.origin_y += 2;
                     battle_menu_draw_stacked_glyph_pair(buffer, (world_glyph_blit_t*)&g_menu_text_state.origin_x);
                 } else {
                     value = (u16)layout->text_ids[column][index];
                     if (value & 0x7FF) {
                         if ((value & 0x7FF) >= 100) {
-                            g_menu_text_palette_offset = 0;
+                            g_battle_menu_text_palette_offset = 0;
                             g_menu_text_state.origin_x += 3;
                             battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.origin_x);
                         } else {
@@ -66,7 +66,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     }
                 }
             }
-            g_menu_text_palette_offset = 0;
+            g_battle_menu_text_palette_offset = 0;
             g_menu_text_state.color = 0;
         }
     }

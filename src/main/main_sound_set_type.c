@@ -29,7 +29,7 @@ void main_sound_set_type(s32 type) {
     SpuSetReverbModeParam(&g_main_sound_reverb_attr);
     g_main_sound_reverb_attr.mask = 0;
     for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
-        main_smd_set_note_flags2_all_channels(0x100, music);
+        main_smd_set_voice_update_flags_all_channels(0x100, music);
     }
     if (g_main_sound_driver_flags & 0x2000) {
         main_sound_put_type(g_main_sound_spu_state.sound_type);

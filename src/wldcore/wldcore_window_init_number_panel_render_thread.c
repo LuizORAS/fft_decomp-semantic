@@ -58,7 +58,7 @@ void wldcore_window_init_number_panel_render_thread(
     g_wldcore_window_panel_render_state.text_id = text_id;
     g_wldcore_window_panel_render_state.max_row_index = 0;
     g_wldcore_window_panel_render_state.thread_count = 0;
-    g_wldcore_window_panel_render_state.parent_indices = g_wldcore_list_entry_values;
+    g_wldcore_window_panel_render_state.row_actions = g_wldcore_list_entry_values;
     g_wldcore_window_panel_render_state.header_id = 0;
     g_wldcore_window_panel_render_state.text_binding
         = (struct world_menu_text_binding*)&g_wldcore_window_panel_number_state; /* a value range */

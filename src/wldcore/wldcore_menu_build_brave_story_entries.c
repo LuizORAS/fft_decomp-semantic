@@ -35,7 +35,7 @@ void wldcore_menu_build_brave_story_entries(void) {
 
     count = g_main_save_proposition_count;
     for (i = 0; i < 0x60; i++) {
-        if (world_script_get_variable(i + 0x360) & 4) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 4) {
             count++;
         }
     }
@@ -50,7 +50,7 @@ void wldcore_menu_build_brave_story_entries(void) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window]
         .flags |= 8;
     for (i = 0; i < 0x10; i++) {
-        if (world_script_get_variable(i + 0x350) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
             count++;
         }
     }
@@ -72,7 +72,7 @@ void wldcore_menu_build_brave_story_entries(void) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window]
         .flags |= 8;
     for (i = 0; i < 0x2F; i++) {
-        if (world_script_get_variable(i + 0x321) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             count++;
         }
     }
@@ -81,7 +81,7 @@ void wldcore_menu_build_brave_story_entries(void) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window]
             .y = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0xE;
         for (i = 0; i < 0x1F; i++) {
-            if (world_script_get_variable(i + 0x321) != 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
                 count++;
             }
         }

@@ -34,7 +34,7 @@ void equip_menu_init_screen(s32 battle_id) {
     equip_unit_load_data_from_battle_stats(battle_id);
     equip_menu_load_images_and_reset_lists();
     g_equip_unit_status_panel_flags = battle_id;
-    g_battle_text_section_pointers[27] = g_equip_text_data;
+    g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_equip_text_data;
     equip_unit_load_selected_data();
     equip_panel_toggle_unit_status_thread(1);
     equip_panel_toggle_equipment_threads(1);

@@ -45,10 +45,10 @@ void option_run_option_choice_menu(void) {
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
         battle_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_option_current_values[kind]) {
-            g_menu_text_palette_offset = 8;
+            g_battle_menu_text_palette_offset = 8;
         }
         battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_menu_text_state.origin_x);
-        g_menu_text_palette_offset = 0;
+        g_battle_menu_text_palette_offset = 0;
     }
     /* Dead store: allocation device, see the file header. */
     if (height <= 0) {

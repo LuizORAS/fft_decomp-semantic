@@ -6,7 +6,7 @@ u32 main_job_calculate_level(u16 job_jp) {
     s32 level;
 
     for (level = 0; level < 8; level++) {
-        if (job_jp >= g_job_level_jp_requirements[level]) {
+        if (job_jp >= g_main_job_level_jp_requirements[level]) {
             job_level++;
         }
     }

@@ -35,7 +35,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         unit->misc_unit_id = battle_id;
         if (g_main_unit_deployed_coords[i].party_id != 0xff) {
             unit->entd_slot = battle_id;
-            unit->existence = 1;
+            unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
             if (main_unit_init_job_data(unit, g_main_unit_deployed_coords[i].party_id, 0) != 0) {
                 main_system_handle_battle_load_exception(battle_id + 0x1f4);
             } else if (battle_unit_set_placement_and_validate(battle_id, &g_main_unit_deployed_coords[i]) != 0) {
@@ -54,28 +54,28 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                     unit->sprite_palette = 1;
                 }
                 if (g_main_unit_deployed_coords[i].facing_elevation_flags & 0x10) {
-                    unit->existence = 0;
+                    unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {
                     battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
                         unit->position.bits.higher_elevation, unit->position.bits.facing, sprite, palette, 0xff, unit,
                         0);
                     main_unit_init_status_and_rewards(unit, 1);
-                    unit->existence = 1;
+                    unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
                 }
                 continue;
             }
             failures += weight;
         }
         unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-        unit->existence = 0xff;
+        unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
     }
     if (is_red_team_debug) {
         for (i = 5; i < 16; i++) {
             battle_stats_t* unit = &g_battle_unit_stats[i];
             unit->misc_unit_id = i;
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-            unit->existence = 0xff;
+            unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
         }
     }
     return failures;

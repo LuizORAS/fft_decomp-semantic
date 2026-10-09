@@ -54,12 +54,12 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     }
     record->max_ct = 100;
     record->formation_index = unit->formation_index;
-    record->entd_slot_22 = unit->entd_slot;
-    record->monster_base_job_id = unit->job_id;
+    record->name_index = unit->entd_slot;
+    record->job_id = unit->job_id;
     record->brave = unit->brave;
     record->faith = unit->faith;
     record->zodiac = *(u16*)&unit->birthday >> 12;
-    record->roster_id = unit->entd_slot;
+    record->battle_id = unit->entd_slot;
     record->move = unit->move;
     record->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
     record->jump = unit->jump;
@@ -128,7 +128,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
 
     record->misc_unit_id = battle_unit_get_misc_id_by_battle_id(unit->entd_slot);
     record->initial_team_flags = unit->initial_team_flags;
-    record->formation_order_key = unit->mount_info;
+    record->mount_info = unit->mount_info;
     record->two_handed = bunit_unit_is_two_handing_weapon(record->equipment, unit->support_abilities[2] & 2);
     record->gender_flags = unit->unit_flags;
     record->character_identity = unit->character_identity;

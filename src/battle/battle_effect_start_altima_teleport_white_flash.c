@@ -6,7 +6,8 @@ void battle_effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* un
         || unit->spritesheet_id == BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         battle_effect_play();
     }
-    unit->sprite_display_flags.half = (unit->sprite_display_flags.half & 0xff9f) | 0x21;
+    unit->sprite_display_flags.half = (unit->sprite_display_flags.half & 0xff9f)
+        | (BATTLE_MISC_DISPLAY_BLEND_ADD | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT);
     battle_gfx_start_misc_unit_palette_modulation(4, 2, unit->unit_id, 0x1f, 0x1f, 0x1f);
     unit->distortion_phase++;
     unit->distortion_timer = 0;

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The selector halfwords are u16 in effect_misc_data_t (the keyframe scanner
+/* The selector halfwords are u16 in effect_timeline_t (the keyframe scanner
  * masks them); this dispatcher sign-extends them, so each read casts to s16
  * to keep the `lh`. */
 

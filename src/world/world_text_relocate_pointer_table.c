@@ -9,5 +9,5 @@ void world_text_relocate_pointer_table(s32* offsets) {
     do {
         *dst++ = base + *offsets++;
         i++;
-    } while (i < WORLD_TEXT_SECTION_COUNT);
+    } while (i < TEXT_SECTION_COUNT);
 }

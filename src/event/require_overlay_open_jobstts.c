@@ -12,18 +12,18 @@ void require_overlay_open_jobstts(void) {
             break;
         }
         battle_thread_yield();
-        if (g_font_print_enabled != 0) {
+        if (g_main_font_print_enabled != 0) {
             FntPrint(g_require_text_wait_for_file_allocation_message);
         }
     }
-    battle_menu_request_open_companion_executable(7);
+    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_JOBSTTS);
     battle_thread_wait_frames(2);
-    g_companion_overlay_state = 3;
+    g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS;
     do {
         g_require_input_controller = battle_script_get_controller_input_pointer(0);
         *g_require_input_controller = 0;
         battle_thread_yield();
-    } while (g_companion_overlay_state != 0);
+    } while (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
     *g_require_input_controller = 0;
     main_heap_free(allocation);
     battle_thread_wait_frames(2);

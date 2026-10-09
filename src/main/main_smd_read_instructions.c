@@ -14,7 +14,7 @@
  * active bit 0x1000 records whether a note comes next; a rest (0x80) or
  * 0xB0/0xB1 clears bit 0x200 and a fermata (0x81) sets it. gate_time scales
  * the length into note_ticks in sixteenths. On key-on (the previous event
- * ended, active 0x400) a key change with flags_06 bit 2 set (opcode 0xD6)
+ * ended, active 0x400) a key change with ramp_flags bit 2 set (opcode 0xD6)
  * starts a slide from the previous key over portamento_ticks ticks, and the enabled
  * modulators restart. voice_bit follows the channel for music->channel_mask.
  *
@@ -22,7 +22,7 @@
  * copies $a2 before $a1). op also carries the key, because the target
  * zero-extends it again before the shift. Every store through channel ends
  * CSE's copy of a field, so the length_adjust and pitch_slide_count stores come
- * before the reloads of rest_length and flags_06 that the target performs;
+ * before the reloads of rest_length and ramp_flags that the target performs;
  * mod_flags keeps the single flags load the target tests three times. */
 void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* channels, s16 channel_count) {
     suzuki_music_channel_t* channel;
@@ -43,19 +43,19 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
     channel = channels;
     voice_bit = 1;
     do {
-        if (channel->active != 0) {
+        if (channel->flags != 0) {
             key_on = 0;
             if (channel->rest_length == 0) {
-                flags = channel->active;
+                flags = channel->flags;
                 note_data = channel->note_data;
-                channel->active = flags & 0xf8ff;
+                channel->flags = flags & 0xf8ff;
                 do {
                     op = *note_data++;
                     if (op < 0x80) {
-                        if (!(channel->active & 8)) {
+                        if (!(channel->flags & 8)) {
                             channel->velocity = op << 8;
                         }
-                        channel->note_flags2 |= 0x100;
+                        channel->voice_update_flags |= 0x100;
                         note = *note_data++;
                         op = channel->key = channel->octave_base + g_main_smd_note_semitones[note];
                         note = g_main_smd_note_durations[note];
@@ -64,32 +64,32 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                         } else {
                             channel->rest_length = *note_data++;
                         }
-                        channel->release_time = channel->release_2e;
-                        channel->func_flags |= 0x80;
+                        channel->release_time = channel->note_release_time;
+                        channel->voice_attr_flags |= 0x80;
                         channel->pitch_slide = ((op << 8) + channel->pitch_offset + channel->fine_tune) << 16;
-                        channel->note_flags2 |= 0x200;
-                        channel->active |= 0x180;
+                        channel->voice_update_flags |= 0x200;
+                        channel->flags |= 0x180;
                         if (flags & 0x400) {
                             key_on = 1;
-                            channel->note_flags2 |= 1;
+                            channel->voice_update_flags |= 1;
                         }
-                        if (channel->active & 0x8000) {
-                            channel->active &= 0x7fff;
-                            channel->note_flags2 |= 0x300;
-                            channel->func_flags |= 0x1ff;
+                        if (channel->flags & 0x8000) {
+                            channel->flags &= 0x7fff;
+                            channel->voice_update_flags |= 0x300;
+                            channel->voice_attr_flags |= 0x1ff;
                         }
                     } else {
                         op -= 0x80;
                         note_data = g_main_smd_opcode_handlers[op](note_data, music, channel);
-                        if (channel->active == 0) {
+                        if (channel->flags == 0) {
                             music->channel_mask &= ~voice_bit;
                             break;
                         }
                     }
-                } while (!(channel->active & 0x500));
+                } while (!(channel->flags & 0x500));
                 channel->note_data = note_data;
-                if (channel->active & 0x800) {
-                    channel->active |= 0x200;
+                if (channel->flags & 0x800) {
+                    channel->flags |= 0x200;
                 }
                 repeat = &channel->repeats[channel->repeat_depth];
                 while ((op = *note_data) >= 0x80) {
@@ -101,15 +101,15 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                         break;
                     }
                     if (op == 0x80) {
-                        channel->active &= ~0x200;
+                        channel->flags &= ~0x200;
                         break;
                     }
                     if (op == 0x81) {
-                        channel->active |= 0x200;
+                        channel->flags |= 0x200;
                         break;
                     }
                     if (op == 0xb0 || op == 0xb1) {
-                        channel->active &= ~0x200;
+                        channel->flags &= ~0x200;
                         break;
                     }
                     if (op == 0x99) {
@@ -128,9 +128,9 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                     }
                 }
                 if (op < 0x80) {
-                    channel->active |= 0x1000;
+                    channel->flags |= 0x1000;
                 } else {
-                    channel->active &= ~0x1000;
+                    channel->flags &= ~0x1000;
                 }
                 length = (s8)channel->length_adjust + channel->rest_length;
                 if (length <= 0) {
@@ -157,11 +157,11 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                 channel->note_ticks = ticks;
                 channel->rest_length = length;
                 if (key_on) {
-                    if (channel->flags_06 & 4) {
+                    if (channel->ramp_flags & 4) {
                         diff = (channel->key - channel->previous_key) << 24;
                         if (diff != 0) {
                             channel->pitch_slide_count = channel->portamento_ticks;
-                            channel->flags_06 |= 1;
+                            channel->ramp_flags |= 1;
                             channel->pitch_slide
                                 = ((channel->previous_key << 8) + channel->pitch_offset + channel->fine_tune) << 16;
                             channel->pitch_slide_step = diff / channel->portamento_ticks;
@@ -175,10 +175,10 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                             if (mod_flags & 2) {
                                 modulator->value = 0;
                                 modulator->timer = 1;
-                                modulator->counter_14 = modulator->counter_14_reset;
-                                modulator->counter_18 = modulator->counter_18_reset;
+                                modulator->delay = modulator->delay_reset;
+                                modulator->fade_level = modulator->fade_step;
                                 if (mod_flags & 3) {
-                                    channel->note_flags2 |= 0x100;
+                                    channel->voice_update_flags |= 0x100;
                                 }
                                 modulator->flags &= ~0xc;
                             }

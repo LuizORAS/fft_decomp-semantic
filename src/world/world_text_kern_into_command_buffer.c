@@ -30,7 +30,7 @@ void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 pa
             if (character == TEXT_SPACE) {
                 x += 6;
             } else {
-                if (character >= 0xD0) {
+                if (character >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     glyph = character & 0xF;
                     second = *text++;
                     glyph = second + glyph * 0xD0;
@@ -56,7 +56,7 @@ void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 pa
                 len++;
                 *out++ = character;
                 len++;
-                if (character >= 0xD0) {
+                if (character >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     *out++ = second;
                     len++;
                 }

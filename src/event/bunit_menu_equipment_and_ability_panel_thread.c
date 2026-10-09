@@ -86,7 +86,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
-                    battle_menu_display_text_entry((s16)state->equipment[i] + 0x3800,
+                    battle_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
                         g_bunit_character_status_equipment_text_image, &g_menu_text_state.origin_x);
                 }
                 g_menu_text_state.origin_y += 0x10;
@@ -97,9 +97,9 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
-                mode = state->ability_ids[i] + 0xb000;
+                mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
                 if (state->generic_monster != 0) {
-                    mode = state->ability_ids[i] + 0x7000;
+                    mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                     g_menu_text_state.origin_y += 0x10;
@@ -111,7 +111,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
-                    battle_menu_display_text_entry(state->ability_ids[i] + 0x7000,
+                    battle_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
                         g_bunit_character_status_ability_text_image, &g_menu_text_state.origin_x);
                 }
                 g_menu_text_state.origin_y += 0x10;

@@ -5,7 +5,7 @@ void require_text_build_battle_nicknames(void) {
     u8* output;
     s32 unit_id;
 
-    output = g_battle_text_section_pointers[8];
+    output = g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     unit_id = 0;
     do {
         battle_stats_t* unit = battle_unit_get_stats_from_battle_id(unit_id);

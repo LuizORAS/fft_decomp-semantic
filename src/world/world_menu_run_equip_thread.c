@@ -17,16 +17,16 @@ void world_menu_run_equip_thread(void) {
     world_unit_start_view_thread(0, 0xFF, 0xFF);
     g_world_menu_overlay_state = 1;
     world_thread_wait_for_10_to_13();
-    world_menu_request_open_companion_executable(9);
+    world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
     world_menu_reserve_high_overlay(0x20000);
-    world_menu_request_open_companion_executable(10);
+    world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     world_thread_suspend(8);
     world_thread_suspend(7);
-    g_world_companion_overlay_state = 4;
+    g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_world_menu_new_button_input = 0;
         world_thread_yield();
-    } while (g_world_companion_overlay_state != 0);
+    } while (g_world_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_action_slot_row_actions = -3;
     g_world_menu_sound_muted = 1;

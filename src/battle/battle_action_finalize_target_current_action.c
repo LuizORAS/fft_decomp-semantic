@@ -34,7 +34,7 @@ void battle_action_finalize_target_current_action(void) {
         battle_action_clear_data();
         battle_formula_clear_nullify_flags();
         battle_action_clear_knockback_flag();
-        g_battle_action_current_ability.post_formula_flag = 0;
+        g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
         battle_formula_force_attack_miss();
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
         return;

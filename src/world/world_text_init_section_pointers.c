@@ -10,7 +10,7 @@ void world_text_init_section_pointers(void) {
 
     offset = g_world_text_section_offsets;
     i = 0;
-    text = (u8*)(offset + WORLD_TEXT_SECTION_COUNT);
+    text = (u8*)(offset + TEXT_SECTION_COUNT);
     section = g_world_text_section_pointers;
     do {
         value = *offset;
@@ -19,5 +19,5 @@ void world_text_init_section_pointers(void) {
         value += (s32)text;
         *section = (u8*)value;
         section++;
-    } while (i < WORLD_TEXT_SECTION_COUNT);
+    } while (i < TEXT_SECTION_COUNT);
 }

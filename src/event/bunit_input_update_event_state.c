@@ -77,7 +77,7 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     g_battle_sound_pending_sfx_id = -1;
     battle_script_load_event_input_state((world_menu_input_state_t*)&g_bunit_input_event);
     if (g_bunit_input_event != PSX_PAD_SELECT && g_bunit_input_event != 0) {
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
 
     thread_id = 1;
@@ -91,13 +91,13 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     do {
         status = g_bunit_thread_status_snapshot[thread_id];
         if (status != battle_thread_is_running_8014cc94(thread_id)) {
-            g_event_input_suppression_frames = 5;
+            g_battle_event_input_suppression_frames = 5;
         }
         thread_id++;
     } while (thread_id < 16);
 
-    if (g_event_input_suppression_frames != 0) {
-        g_event_input_suppression_frames--;
+    if (g_battle_event_input_suppression_frames != 0) {
+        g_battle_event_input_suppression_frames--;
     }
     bunit_menu_draw_thread_status_indicators();
     g_battle_event_frame_counter++;

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 s32 battle_ai_select_fading_life_action(void) {
-    if (g_battle_ai_data_base.decision_state == 0) {
+    if (g_battle_ai_data_base.resume_pending == 0) {
         if (battle_ai_select_peril_target() != 0) {
             g_battle_ai_data_base.autobattle_setting = BATTLE_AI_AUTOBATTLE_RECOVERY;
             return -2;

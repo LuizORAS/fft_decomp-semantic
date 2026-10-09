@@ -18,7 +18,7 @@ u8* battle_text_advance_cursor_with_backreferences_2(world_text_backreference_st
         }
     }
     character = cursor[0];
-    if (((character & 0xF0) == 0xF0) && ((character & 0xF) < 4)) {
+    if (((character & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST) && ((character & 0xF) < 4)) {
         reader->return_cursor = cursor + 3;
         reader->scratch = (cursor[0] & 3) * 8;
         reader->remaining_bytes = cursor[1] >> 5;

@@ -17,27 +17,27 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     case 0:
     case 1:
         if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-            animation = 9;
+            animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
         } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
             animation = 0x15;
         } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_ANIMATION_SELECTION_MASK) == 0) {
-            animation = 6;
+            animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING;
             if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                animation = 3;
+                animation = BATTLE_UNIT_ANIMATION_IDLE;
             }
         } else {
             spritesheet_id = unit->spritesheet_id;
-            if (g_battle_gfx_spritesheet_data[spritesheet_id].seq_id >= 5) {
+            if (g_battle_gfx_spritesheet_data[spritesheet_id].seq_id >= BATTLE_SEQ_RUKA) {
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
-                    animation = 0x1a;
+                    animation = BATTLE_UNIT_ANIMATION_DEAD;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_STOP) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLEEP) {
-                    animation = 0x24;
+                    animation = BATTLE_UNIT_ANIMATION_SLEEP;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PETRIFY) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CONFUSION) {
-                    animation = 0x25;
+                    animation = BATTLE_UNIT_ANIMATION_CONFUSION;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
@@ -45,43 +45,43 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
-                    animation = 0x17;
+                    animation = BATTLE_UNIT_ANIMATION_DEFEND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
-                    animation = 8;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 5;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE_SLOW;
                     }
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_HASTE) {
-                    animation = 7;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 4;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE_HASTE;
                     }
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CURSED) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & 1) {
                     animation = 0x21;
                 } else {
-                    animation = 6;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 3;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE;
                     }
                 }
             } else {
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
-                    animation = 0x1a;
+                    animation = BATTLE_UNIT_ANIMATION_DEAD;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_MOUNTED) {
                     animation = 0x32;
                 } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_CRITICAL)
                     && unit->mount_state != BATTLE_MISC_MOUNT_STATE_MOUNT) {
-                    animation = 0x24;
+                    animation = BATTLE_UNIT_ANIMATION_SLEEP;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_STOP) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLEEP) {
-                    animation = 0x24;
+                    animation = BATTLE_UNIT_ANIMATION_SLEEP;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PETRIFY) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CONFUSION) {
-                    animation = 0x25;
+                    animation = BATTLE_UNIT_ANIMATION_CONFUSION;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
@@ -89,25 +89,25 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
-                    animation = 0x17;
+                    animation = BATTLE_UNIT_ANIMATION_DEFEND;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
-                    animation = 8;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 5;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE_SLOW;
                     }
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_HASTE) {
-                    animation = 7;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 4;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE_HASTE;
                     }
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CURSED) {
-                    animation = 2;
+                    animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & 1) {
                     animation = 0x21;
                 } else {
-                    animation = 6;
+                    animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING;
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
-                        animation = 3;
+                        animation = BATTLE_UNIT_ANIMATION_IDLE;
                     }
                 }
             }
@@ -117,25 +117,25 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     default:
         if ((unit->status_flags_5_6 & BATTLE_MISC_STATUS_TRANSFORMATION_MASK) != 0) {
             if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-                animation = 9;
+                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
             } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
                 animation = 0x15;
             }
         } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_ANIMATION_SELECTION_MASK) != 0) {
             if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
-                animation = 0x1a;
+                animation = BATTLE_UNIT_ANIMATION_DEAD;
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_MOUNTED) {
                 animation = 0x32;
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_HASTE) {
                 animation = 0xa;
             } else {
-                animation = 9;
+                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
                     animation = 0xb;
                 }
             }
         } else {
-            animation = 9;
+            animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
         }
         break;
     }

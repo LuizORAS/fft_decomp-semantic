@@ -24,7 +24,8 @@ s32 equip_menu_run_slot_item_browser(void) {
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
             g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
-        equip_menu_init_scrollable_list(g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);
+        equip_menu_init_scrollable_list(
+            g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         g_equip_menu_list_row_callbacks[0] = equip_menu_get_entry_item_equipped_count;
         g_equip_menu_list_row_callbacks[1] = equip_menu_get_entry_item_count;
         g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_type_icon_source;
@@ -55,7 +56,8 @@ s32 equip_menu_run_slot_item_browser(void) {
             g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         g_equip_slot_item_browser_previewed_index = -1;
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
-        equip_menu_init_scrollable_list(g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);
+        equip_menu_init_scrollable_list(
+            g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         equip_gfx_set_transition_frame(10);
     } else if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_equip_menu_list_entry_count != 0) {

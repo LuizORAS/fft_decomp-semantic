@@ -22,7 +22,7 @@ s32 battle_action_check_battle_outcome(void) {
     do {
         unit = &g_battle_unit_stats[unit_index];
         if ((unit->initial_team_flags & BATTLE_OUTCOME_SPECIAL_CLASS_MASK) == BATTLE_OUTCOME_SPECIAL_CLASS) {
-            if (unit->existence != 0xff) {
+            if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
                 selected = unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED;
                 selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY);
                 if (selected != 0) {

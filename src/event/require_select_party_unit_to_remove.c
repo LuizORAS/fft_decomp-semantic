@@ -40,7 +40,7 @@ s32 require_select_party_unit_to_remove(void) {
     RECT* palette_rect;
 
     require_gfx_prepare_party_portrait_textures();
-    text = g_battle_text_section_pointers[8];
+    text = g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     require_panel_set_transition_value(1);
     {
         s32 name_character_index;
@@ -48,7 +48,7 @@ s32 require_select_party_unit_to_remove(void) {
         for (party_index = 0; party_index < 0x14; party_index++) {
             party_unit = main_party_get_data_pointer(party_index);
             if (party_unit->party_id == 0xff || party_index >= 0x10 || party_unit->proposition_status != 0
-                || (party_unit->gender_flags & 4) != 0) {
+                || (party_unit->gender_flags & UNIT_FLAG_EGG) != 0) {
                 g_require_party_removable_flags[party_index] = 0;
                 *text = 0xfe;
                 text++;
@@ -252,7 +252,7 @@ s32 require_select_party_unit_to_remove(void) {
     {
         s32 name_character_index;
 
-        text = g_battle_text_section_pointers[8];
+        text = g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
         for (party_index = 0; party_index < 0x15; party_index++) {
             selected_battle_unit = battle_unit_get_stats_from_battle_id(party_index);
             for (name_character_index = 0; name_character_index < 0x10; name_character_index++) {

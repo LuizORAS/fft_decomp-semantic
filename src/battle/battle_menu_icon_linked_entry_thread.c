@@ -6,7 +6,7 @@ struct battle_text_message_window_layout;
 extern void battle_menu_size_entry_to_text(
     struct battle_text_message_window_layout* window, s16* width, s16* height, s32* extra_frames, s32 pad_short);
 
-/* Menu icon thread that also opens a linked entry: when parent_indices[0]
+/* Menu icon thread that also opens a linked entry: when row_actions[0]
  * names a menu entry, that entry is centred on this text width, placed below
  * this entry, and started in the previous thread slot. The icon records then
  * alternate until input completes, selecting CLUTs in the linked slot.
@@ -29,7 +29,7 @@ void battle_menu_icon_linked_entry_thread(void) {
     battle_menu_build_window_sprites(
         (battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)param, &records[0]);
     battle_copy_bytes(&records[1], &records[0], 0x7C);
-    parent = param->parent_indices[0];
+    parent = param->row_actions[0];
     if (parent >= 0) {
         g_battle_menu_thread_menu_data[parent].window_x
             = (width >> 1) - (g_battle_menu_thread_menu_data[parent].inner_width - 0x102);

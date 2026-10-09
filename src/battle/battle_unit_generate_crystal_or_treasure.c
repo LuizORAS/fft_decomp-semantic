@@ -47,7 +47,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     g_main_crystal_pickup_result.result = 0;
     g_main_crystal_pickup_result.unit_index = crystal_index;
     crystal = &g_battle_unit_stats[crystal_index];
-    if (crystal->status_sets.current[1] & 1) {
+    if (crystal->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
         g_main_crystal_pickup_result.result = 4;
         g_main_crystal_pickup_result.treasure_item = battle_unit_generate_treasure(crystal);
     } else {
@@ -72,7 +72,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                     known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[i][j];
                     offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[i][j];
                 }
-                job_id = i + 0x4a;
+                job_id = i + JOB_ID_GENERIC_FIRST;
                 if (i == 0) {
                     if (mover_identity != crystal_identity) {
                         continue;
@@ -100,7 +100,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                             && main_util_roll_pass_fail(100, g_main_ability_data[ability_id].learn_rate) == 0) {
                             gained[byte_index] = mask | gained[byte_index];
                             learned_count++;
-                            if (ability_id < 0x200) {
+                            if (ability_id < ABILITY_ID_COUNT) {
                                 g_main_crystal_pickup_result.learned_abilities[ability_id >> 3] = (1 << (ability & 7))
                                     | g_main_crystal_pickup_result.learned_abilities[ability_id >> 3];
                             }

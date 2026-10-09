@@ -20,7 +20,7 @@ void battle_state_enter_commence_attack_phase(void) {
     memcpy((u8*)unit + 0x16c, &stats->action_target_y, 4);
     /* last_ability_id is s16 in the header; the target loads it with lhu. */
     unit->used_ability_id = *(u16*)&(*stats_pointer)->last_ability_id;
-    unit->ability_ct_resolved |= 2;
+    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
     if (unit->used_ability_id != 0) {
         battle_unit_start_ability_charge_hold_animation(unit);
     }

@@ -22,7 +22,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
 
     /* Field-derived byte stages preserve the original level/row address
      * order; flattened typed indexing changes the generated instructions. */
-    if (g_battle_ai_data_base.decision_state && g_battle_ai_data_base.search_resume_flag) {
+    if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.search_resume_flag) {
         x = g_battle_ai_data_base.current_action.target_x;
         level = g_battle_ai_data_base.current_action.target_elevation;
         y = g_battle_ai_data_base.current_action.target_y;
@@ -37,8 +37,8 @@ s32 battle_ai_evaluate_target_tiles(void) {
         ai->search_resume_flag = 0;
         return -1;
     }
-    ai->decision_state = 0;
-    if (ai->current_action.target_flags_set)
+    ai->resume_pending = 0;
+    if (ai->current_action.act_before_move)
         origin = &ai->acting_unit_coords;
     else
         origin = &ai->current_action.coords;

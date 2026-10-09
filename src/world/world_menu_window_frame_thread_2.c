@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread,
+ * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
  * byte-identical apart from addresses): the variant that allocates its scratch
  * pixel buffer, using the second WORLD blit descriptors and setters (as
  * world_menu_window_frame_thread_b_2) and its own texture-window table. Layout
@@ -8,7 +8,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_menu_run_dead_unit_panel_a_2(void) {
+void world_menu_window_frame_thread_2(void) {
     RECT texture;
     /* The stride pointers are locals because the target keeps each one live
        and re-derives the descriptor base from it (addiu -8) for the glyph
@@ -55,15 +55,14 @@ void world_menu_run_dead_unit_panel_a_2(void) {
     texture_u = (texture.x & 0x3f) * 4;
     texture_v = (u8)texture.y;
     for (index = 0; index < 4; index++) {
-        g_world_dead_unit_panel_a_texture_windows[index].x = (texture_u + index) * 0x10;
-        g_world_dead_unit_panel_a_texture_windows[index].y = texture_v;
+        g_world_menu_panel_texture_windows_2[index].x = (texture_u + index) * 0x10;
+        g_world_menu_panel_texture_windows_2[index].y = texture_v;
     }
-    g_world_dead_unit_panel_a_texture_windows[4].x = texture_u + 0x60;
-    g_world_dead_unit_panel_a_texture_windows[4].y = texture_v;
+    g_world_menu_panel_texture_windows_2[4].x = texture_u + 0x60;
+    g_world_menu_panel_texture_windows_2[4].y = texture_v;
 
     for (index = 0; index < 7; index++) {
-        SetDrawMode(
-            &prim->modes[index], 1, 0, GetTPage(0, 0, 0x1c0, 0), &g_world_dead_unit_panel_a_texture_windows[index]);
+        SetDrawMode(&prim->modes[index], 1, 0, GetTPage(0, 0, 0x1c0, 0), &g_world_menu_panel_texture_windows_2[index]);
     }
 
     border_wide = 0x10;

@@ -33,11 +33,11 @@ void world_menu_auto_battle_setting_thread(void) {
     stats = world_unit_get_battle_stats_for_stored();
     if (stats->auto_battle_setting == 0) {
         cursor = 0;
-    } else if (stats->auto_battle_setting == 0xC) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_TARGETED) {
         cursor = 1;
-    } else if (stats->auto_battle_setting == 0xE) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_RECOVERY) {
         cursor = 2;
-    } else if (stats->auto_battle_setting == 0x10) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_FADING_LIFE) {
         cursor = 3;
     } else {
         cursor = 4;

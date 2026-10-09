@@ -10,7 +10,7 @@ void main_smd_set_balance_shift(suzuki_music_t* music, s16 value, s16 time) {
     if (time == 0) {
         music->balance_shift.value = value << 24;
         music->balance_shift.count = 0;
-        main_smd_set_note_flags2_all_channels(0x100, music);
+        main_smd_set_voice_update_flags_all_channels(0x100, music);
     } else {
         difference = (value << 16) - (music->balance_shift.value >> 8);
         if (difference != 0) {

@@ -55,35 +55,35 @@ u8* battle_map_load_saved_state_record(battle_map_state_record_t* record) {
                 break;
             }
             g_battle_map_mesh_parts[i].parent = *src;
-            g_battle_map_mesh_parts[i].value_82 = 0;
-            g_battle_map_mesh_parts[i].value_80 = 2;
+            g_battle_map_mesh_parts[i].duration = 0;
+            g_battle_map_mesh_parts[i].elapsed = 2;
             src += 4;
             if (g_battle_map_mesh_animation_instructions[i].states[0][1].next != 0) {
                 g_battle_map_mesh_part_animation_states[i] = 1;
             } else {
                 g_battle_map_mesh_part_animation_states[i] = 0;
             }
-            g_battle_map_mesh_parts[i].value_87 = 0;
+            g_battle_map_mesh_parts[i].keyframe = 0;
             g_battle_map_mesh_parts[i].rotation
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
-                          .vector_0;
+                          .rotation;
             g_battle_map_mesh_parts[i].translation
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
-                          .vector_8;
+                          .translation;
             g_battle_map_mesh_parts[i].scale.vx
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
-                          .value_10;
+                          .scale_x;
             g_battle_map_mesh_parts[i].scale.vy
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
-                          .value_12;
+                          .scale_y;
             g_battle_map_mesh_parts[i].scale.vz
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
-                          .value_14;
+                          .scale_z;
         }
         for (; i < count; i++) {
             src += 4;

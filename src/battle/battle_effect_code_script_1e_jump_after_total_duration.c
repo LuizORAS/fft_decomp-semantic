@@ -6,7 +6,7 @@
  * and the phase-2 delay combined; otherwise step over the 4-byte
  * instruction. */
 s32 battle_effect_code_script_1e_jump_after_total_duration(effect_record_t* effect) {
-    effect_misc_data_t* timing;
+    effect_timeline_t* timing;
 
     timing = g_battle_effect_timeline;
     if (effect->timeline_frame >= (s32)(timing->phase1_duration + timing->phase2_duration

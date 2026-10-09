@@ -38,7 +38,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         return 0;
     }
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
-        g_battle_action_target->ability_outcome = 1;
+        g_battle_action_target->ability_outcome = BATTLE_ABILITY_OUTCOME_TARGETED;
     }
     battle_action_dispatch_target_reaction_ability();
     if ((s16)g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
@@ -180,7 +180,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_unit_update_attacker_earned_experience(outcome);
     if (outcome != 0) {
-        g_battle_action_target->ability_outcome = 2;
+        g_battle_action_target->ability_outcome = BATTLE_ABILITY_OUTCOME_AFFECTED;
     }
     battle_action_check_stat_save_and_restore_reaction_usability();
     if (g_battle_action_target->status_sets.current[0] & (STATUS_MASK(CRYSTAL) | STATUS_MASK(DEAD))) {

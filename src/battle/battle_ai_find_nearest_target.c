@@ -31,7 +31,7 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
                 continue;
             switch (mode) {
             case BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL:
-                if (decision->enemy_flag || !(decision->targeting_flags_1 & 2))
+                if (decision->enemy_flag || !(decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES))
                     continue;
                 break;
             case BATTLE_AI_NEAREST_IMMINENT_ENEMY:

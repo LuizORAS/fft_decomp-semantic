@@ -35,13 +35,13 @@ extern s32 g_world_dead_unit_action; /* committed action */
 extern s32 g_world_dead_unit_result;
 extern dead_unit_entry_counts_t g_world_dead_unit_menu_entries;
 extern dead_unit_menu_t g_world_dead_unit_menu;
-extern RECT g_world_dead_unit_panel_b_texture_windows[7];
+extern RECT g_world_menu_panel_texture_windows_b_2[7];
 
 /* One libgpu texture window per DR_MODE packet (the seven RECTs after
- * g_world_dead_unit_panel_b_texture_windows). The static table holds each
- * window's w/h; world_menu_run_dead_unit_panel_a_2 fills in the runtime x/y.
+ * g_world_menu_panel_texture_windows_b_2). The static table holds each
+ * window's w/h; world_menu_window_frame_thread_2 fills in the runtime x/y.
  * Indexing the array reproduces the target's symbol-plus-byte-offset addressing. */
-extern RECT g_world_dead_unit_panel_a_texture_windows[7];
+extern RECT g_world_menu_panel_texture_windows_2[7];
 extern u32* g_world_dead_unit_controller_input;
 extern s16 g_world_dead_unit_menu_flags[256];
 extern s16 g_world_dead_unit_menu_result; /* primary menu result */
@@ -537,7 +537,7 @@ typedef struct world_menu_point {
 } world_menu_point_t;
 
 extern s16 g_world_ability_category;
-extern s32 g_world_ability_selected_skill_target;
+extern s32 g_world_ability_selected_skill_ct;
 extern s32 g_world_ability_selected_type;
 extern s32 g_world_secondary_bit_read_index;
 extern u8 g_world_secondary_bit_cursor_reset;
@@ -1267,40 +1267,40 @@ enum {
  * stay as padding.
  */
 typedef struct world_formation_unit {
-    s16 level;        /* 0x000 */
-    s16 guest_marker; /* 0x002; 2 for guest slots */
-    u8 _unused_004[4];
-    s16 experience;  /* 0x008 */
-    s16 party_index; /* 0x00a; portrait */
-    s16 hp;          /* 0x00c */
-    u8 _unused_00e[2];
-    s16 max_hp; /* 0x010 */
-    s16 mp;     /* 0x012 */
+    s16 level;         /* 0x000 */
+    s16 team_kind;     /* 0x002; 2 for guest slots */
+    u8 _unused_004[4]; /* 0x004; status record list_index and unit_count, left zero */
+    s16 experience;    /* 0x008 */
+    s16 party_index;   /* 0x00a; portrait */
+    s16 hp;            /* 0x00c */
+    u8 _unused_00e[2]; /* 0x00e; HP gauge bonus slot */
+    s16 max_hp;        /* 0x010 */
+    s16 mp;            /* 0x012 */
     u8 _unused_014[2];
     s16 max_mp; /* 0x016 */
     s16 ct;     /* 0x018 */
     u8 _unused_01a[2];
-    s16 max_ct; /* 0x01c; always 100 (world_formation_build_unit_record) */
-    u8 _unused_01e[4];
-    u8 name_index[2]; /* 0x022; s16 formation index; starts the 14-byte display snapshot at WORLD 0x80114bc8 */
-    s16 job_id;       /* 0x024; "Current Job" */
-    s16 brave;        /* 0x026 */
-    s16 faith;        /* 0x028 */
-    s16 zodiac;       /* 0x02a; battle_stats_t birthday >> 12 (world_formation_build_unit_record) */
-    s16 roster_slot;  /* 0x02c; "Roster Slot Index" */
-    u8 _unused_02e[2];
-    s16 move;                     /* 0x030 */
-    s16 speed;                    /* 0x032 */
-    s16 jump;                     /* 0x034 */
-    s16 right_weapon_power;       /* 0x036 */
-    s16 left_weapon_power;        /* 0x038 */
-    s16 right_weapon_evade;       /* 0x03a */
-    s16 left_weapon_evade;        /* 0x03c */
-    s16 uses_monster_skillset;    /* 0x03e; primary skillset is in the monster range 0xb0..0xdf */
-    s16 two_handed;               /* 0x040; world_unit_is_two_handing_weapon result (WORLD 0x80115198) */
-    s16 physical_attack;          /* 0x042 */
-    s16 physical_class_evade;     /* 0x044 */
-    s16 physical_shield_evade;    /* 0x046 */
+    s16 max_ct;                /* 0x01c; always 100 (world_formation_build_unit_record) */
+    u8 _unused_01e[4];         /* 0x01e; tail of the 0x22-byte status record */
+    u8 name_index[2];          /* 0x022; s16 formation index; starts the 14-byte display snapshot at WORLD 0x80114bc8 */
+    s16 job_id;                /* 0x024; "Current Job" */
+    s16 brave;                 /* 0x026 */
+    s16 faith;                 /* 0x028 */
+    s16 zodiac;                /* 0x02a; battle_stats_t birthday >> 12 (world_formation_build_unit_record) */
+    s16 roster_slot;           /* 0x02c; "Roster Slot Index" */
+    u8 _unused_02e[2];         /* 0x02e; end of the 0xe-byte identity record */
+    s16 move;                  /* 0x030 */
+    s16 speed;                 /* 0x032 */
+    s16 jump;                  /* 0x034 */
+    s16 right_weapon_power;    /* 0x036 */
+    s16 left_weapon_power;     /* 0x038 */
+    s16 right_weapon_evade;    /* 0x03a */
+    s16 left_weapon_evade;     /* 0x03c */
+    s16 uses_monster_skillset; /* 0x03e; primary skillset is in the monster range 0xb0..0xdf */
+    s16 two_handed;            /* 0x040; world_unit_is_two_handing_weapon result (WORLD 0x80115198) */
+    s16 physical_attack;       /* 0x042 */
+    s16 physical_class_evade;  /* 0x044 */
+    s16 physical_shield_evade; /* 0x046 */
     s16 physical_accessory_evade; /* 0x048 */
     u8 _unused_04a[2];
     s16 magical_attack;          /* 0x04c */
@@ -1313,8 +1313,8 @@ typedef struct world_formation_unit {
     s16 reaction_ability;        /* 0x062 */
     s16 support_ability;         /* 0x064 */
     s16 movement_ability;        /* 0x066 */
-    u8 _unused_068[8];
-    u8 gender_flags; /* 0x070; unit_flags_e (fft/unit.h) */
+    u8 _unused_068[8];           /* 0x068; spare tail of the stat-detail block */
+    u8 gender_flags;             /* 0x070; unit_flags_e (fft/unit.h) */
     u8 _unused_071;
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
@@ -1325,7 +1325,7 @@ typedef struct world_formation_unit {
     u16 job_points[0x14];        /* 0x0be; per-job JP */
     u16 total_job_points[0x14];  /* 0x0e6; per-job total JP */
     u8 name[0x10];               /* 0x10e; "unit_t Nickname" */
-    u8 graphic_variant;          /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
+    u8 monster_graphic;          /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
                                     (world_formation_build_unit_graphic_entry) */
     u8 proposition_status;       /* 0x11f; "Proposition Byte" */
     u16 birthday;                /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
@@ -1735,21 +1735,8 @@ void world_unit_update_monster_breeding(s32 unused);
 /* WORLD text files materialize 32 section pointers after their 0x80-byte
  * offset/header area. The same table is saved and restored around overlays. */
 enum {
-    WORLD_TEXT_SECTION_COUNT = 32,
     WORLD_TEXT_SECTION_TABLE_BYTES = 0x80,
     WORLD_TEXT_FILE_HEADER_BYTES = 0x80,
-};
-
-/* g_world_text_section_pointers indexes with a fixed meaning. */
-enum {
-    WORLD_TEXT_SECTION_JOB_NAMES = 6,
-    WORLD_TEXT_SECTION_ITEM_NAMES = 7,
-    WORLD_TEXT_SECTION_ROSTER_UNIT_NAMES = 8,
-    WORLD_TEXT_SECTION_UNIT_NAMES = 9,
-    WORLD_TEXT_SECTION_ABILITY_NAMES = 14,
-    WORLD_TEXT_SECTION_MESSAGES = 17,
-    WORLD_TEXT_SECTION_LOCATION_NAMES = 18,
-    WORLD_TEXT_SECTION_SKILLSET_NAMES = 22,
 };
 
 /* Provisional: destination placement for the packed-font glyph decoder at
@@ -1849,7 +1836,7 @@ extern world_menu_list_page_t g_world_text_list_pages[2];
 /* The two glyph blit descriptors, filled by world_gfx_set_blit_source_rect
  * and world_gfx_set_blit_dest_position. Each is 0x10 bytes and the second
  * starts 0x10 past the first. The stride is the surface width in pixels:
- * 0x100 for the glyph sheet, 0x80 for a dead-unit panel's scratch image. */
+ * 0x100 for the glyph sheet, 0x80 for a window frame's scratch image. */
 extern world_glyph_blit_t g_world_text_glyph_source;
 extern world_glyph_blit_t g_world_text_glyph_dest;
 extern RECT g_world_text_message_box_vram_rect;
@@ -1862,7 +1849,7 @@ extern u8* g_world_text_glyph_bitmap_data;
 
 /* Text section base per text-id section (id >> 11 & 0x1f); several
  * elements also carry their own names below. */
-extern u8* g_world_text_section_pointers[WORLD_TEXT_SECTION_COUNT];
+extern u8* g_world_text_section_pointers[TEXT_SECTION_COUNT];
 void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, world_glyph_blit_t* origin, s32 arg3);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette);
@@ -2013,7 +2000,7 @@ typedef struct world_menu_number_range {
     void (*on_change)(void); /* 0x08 */
 } world_menu_number_range_t;
 
-/* The menu thread's first parameter as the dead-unit panels read it. Only the
+/* The menu thread's first parameter as the window frame threads read it. Only the
  * leading window rectangle is used and the record is certainly longer, so no
  * size is asserted. The fields are unsigned: every read in the target is an
  * lhu, and making them signed turns each one into an lh. */
@@ -2372,7 +2359,7 @@ void world_script_apply_input_overrides(s32* state);
 void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* record);
 void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 void world_menu_run_equip_thread(void);
-void world_menu_run_dead_unit_panel_a_2(void);
+void world_menu_window_frame_thread_2(void);
 void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
 u8* world_menu_script_draw_sprite(u8* cmd);
@@ -2634,6 +2621,7 @@ extern s8 g_world_card_scan_start_frame;
 extern u8 g_world_card_save_mode;
 extern u8 g_world_card_menu_result;
 extern s16 g_world_card_list_scroll_y;
+extern s16 g_world_card_mode_select_enabled;
 extern s16 g_world_card_active_slot;
 extern s16 g_world_card_list_first_visible_row;
 extern u8* g_world_card_directory_buffer;
@@ -2665,7 +2653,7 @@ s32 world_card_poll_info_with_retries(s32 channel, s32 count);
 s32 world_card_probe_selected(void);
 s32 world_card_read_file_with_retries(s32 descriptor, void* destination, s32 size);
 void world_card_run_load_step(s32 slot);
-s32 world_card_run_menu_screen(s32 slot_count);
+s32 world_card_run_menu_screen(s32 mode_select_enabled);
 void world_card_run_mode_select_step(void);
 void world_card_run_save_step(s32 slot);
 void world_card_run_slot_select_step(void);
@@ -2792,7 +2780,7 @@ item_menu_category_e world_item_get_menu_category(s32 item_id);
 s32 world_item_is_in_category_list(s32 item_id, s32 list_index);
 
 void world_item_populate_stat_preview(
-    s32 g_main_item_item_flags, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
+    s32 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
 
 void world_item_prepend_to_category_list(s32 item_id, s32 list_index);
 void world_item_reconcile_sorted_list(s32 list_index);

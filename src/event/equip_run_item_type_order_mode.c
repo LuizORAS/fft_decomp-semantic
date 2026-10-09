@@ -60,8 +60,8 @@ s32 equip_run_item_type_order_mode(void) {
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 0x81,
             g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         equip_item_store_category_list(g_equip_selected_slot, g_equip_item_list_entries);
-        equip_menu_init_scrollable_list_core(
-            g_equip_item_list_entries, g_equip_menu_selected_list_index, g_battle_text_section_pointers[7]);
+        equip_menu_init_scrollable_list_core(g_equip_item_list_entries, g_equip_menu_selected_list_index,
+            g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         equip_gfx_set_transition_frame(10);
         equip_collect_item_stat_deltas(g_equip_item_list_entries[g_equip_menu_selected_list_index],
             &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);

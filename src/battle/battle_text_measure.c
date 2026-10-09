@@ -78,7 +78,7 @@ void battle_text_measure(s16* columns, s16* rows, const u8* text) {
                 state->column += state->pending_width;
                 state->pending_width = 0xFFFF;
             }
-        } else if ((u32)(state->command - TEXT_SET_GLYPH_COLOR) < 2
+        } else if ((u32)(state->command - TEXT_SET_GLYPH_DELAY) < 2
             || (u32)(state->command - TEXT_SET_VARIABLE_BASE) < 2 || state->command == TEXT_SET_PORTRAIT) {
             cursor = battle_text_advance_cursor_with_backreferences(
                 state, battle_text_advance_cursor_with_backreferences(state, cursor));
@@ -95,7 +95,7 @@ void battle_text_measure(s16* columns, s16* rows, const u8* text) {
             state->value_cursor++;
             continue;
         }
-        if ((state->command & 0xF0) == 0xF0 && (state->command & 0xF) < 4) {
+        if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
             state->scratch = (cursor[0] & 3) * 8;
             state->remaining_bytes = cursor[1] >> 5;
@@ -105,7 +105,7 @@ void battle_text_measure(s16* columns, s16* rows, const u8* text) {
             cursor -= state->scratch;
             continue;
         }
-        if ((state->command & 0xF0) < 0xD0) {
+        if ((state->command & 0xF0) < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             state->column++;
         }
         cursor = battle_text_advance_cursor_with_backreferences(state, cursor);

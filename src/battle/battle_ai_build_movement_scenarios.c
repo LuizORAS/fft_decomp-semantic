@@ -24,7 +24,7 @@ s32 battle_ai_build_movement_scenarios(void) {
     ai = &g_battle_ai_data_base;
     g_battle_ai_data_base.movement_scenario = 1;
     decision = g_battle_ai_data_base.acting_unit_decision;
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.movement_decision_state == 0)
             goto fill_target_distance;

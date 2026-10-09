@@ -69,17 +69,17 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
             unit->status_bubble_id = bubble;
 
             switch (g_battle_gfx_spritesheet_data[unit->spritesheet_id].shp_id) {
-            case 6:
+            case BATTLE_SHP_ARUTE:
                 STATUS_BUBBLE_X(unit) = 0;
                 STATUS_BUBBLE_Y(unit) = -0x46;
                 break;
-            case 7:
+            case BATTLE_SHP_KANZEN:
                 STATUS_BUBBLE_X(unit) = 0;
                 STATUS_BUBBLE_Y(unit) = -0x78;
                 break;
-            case 4:
+            case BATTLE_SHP_OTHER:
                 animation = unit->encoded_animation >> 1;
-                if (animation == 0x1A || animation == 0x34) {
+                if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     STATUS_BUBBLE_X(unit) = -5;
                     STATUS_BUBBLE_Y(unit) = -0x19;
                 } else {
@@ -87,17 +87,17 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     STATUS_BUBBLE_Y(unit) = -0x19;
                 }
                 break;
-            case 0:
-            case 1:
+            case BATTLE_SHP_TYPE1:
+            case BATTLE_SHP_TYPE2:
                 if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height.value
                     & MAP_TILE_DEPTH_MASK) {
                     switch (unit->encoded_animation >> 1) {
-                    case 0x1A:
-                    case 0x34:
+                    case BATTLE_UNIT_ANIMATION_DEAD:
+                    case BATTLE_UNIT_ANIMATION_DEATH:
                         STATUS_BUBBLE_X(unit) = -5;
                         STATUS_BUBBLE_Y(unit) = -0x23;
                         break;
-                    case 0x24:
+                    case BATTLE_UNIT_ANIMATION_SLEEP:
                         STATUS_BUBBLE_X(unit) = 0;
                         STATUS_BUBBLE_Y(unit) = -0x1E;
                         break;
@@ -108,12 +108,12 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     }
                 } else {
                     switch (unit->encoded_animation >> 1) {
-                    case 0x1A:
-                    case 0x34:
+                    case BATTLE_UNIT_ANIMATION_DEAD:
+                    case BATTLE_UNIT_ANIMATION_DEATH:
                         STATUS_BUBBLE_X(unit) = -5;
                         STATUS_BUBBLE_Y(unit) = -0x19;
                         break;
-                    case 0x24:
+                    case BATTLE_UNIT_ANIMATION_SLEEP:
                         STATUS_BUBBLE_X(unit) = 0;
                         STATUS_BUBBLE_Y(unit) = -0x1E;
                         break;
@@ -126,7 +126,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 break;
             default:
                 animation = unit->encoded_animation >> 1;
-                if (animation == 0x1A || animation == 0x34) {
+                if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     STATUS_BUBBLE_X(unit) = -5;
                     STATUS_BUBBLE_Y(unit) = -0x1E;
                 } else {

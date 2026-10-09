@@ -5,7 +5,7 @@ void card_save_init_menu_graphics(void) {
     RECT rect;
     u16 image_data[16];
 
-    g_battle_text_section_pointers[27] = g_card_text_data;
+    g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_card_text_data;
     g_battle_text_section_pointers[24] = g_card_text_command_help;
 
     rect.x = 0x100;

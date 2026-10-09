@@ -19,5 +19,5 @@ void battle_menu_start_mini_menu_display_thread(void) {
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
     battle_thread_start(MINI_MENU_THREAD_ID, battle_menu_display_triangle_selection);
     battle_thread_set_parameters(MINI_MENU_THREAD_ID, (s32)&g_battle_menu_thread_menu_data[10], 0, 0);
-    g_battle_thread_contexts[8].task_id = NATIVE_THREAD_TASK_MENU_SOUND_DELAY;
+    g_battle_thread_contexts[8].task_id = NATIVE_THREAD_TASK_MINI_MENU;
 }

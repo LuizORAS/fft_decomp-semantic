@@ -4,7 +4,7 @@
 void world_menu_preview_attack_target_stats(void) {
     s32 saved;
 
-    if (g_world_thread_contexts[12].task_id != 0x13) {
+    if (g_world_thread_contexts[12].task_id != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
         world_thread_wait_until_inactive(0xC);
     }
     world_thread_yield();

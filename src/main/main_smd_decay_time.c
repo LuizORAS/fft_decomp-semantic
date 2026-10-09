@@ -6,7 +6,7 @@ u8* main_smd_decay_time(u8* note_data, suzuki_music_t* music, suzuki_music_chann
     u16 value;
 
     value = *note_data++;
-    channel->func_flags |= 0x20;
+    channel->voice_attr_flags |= 0x20;
     channel->decay_time = value;
     return note_data;
 }

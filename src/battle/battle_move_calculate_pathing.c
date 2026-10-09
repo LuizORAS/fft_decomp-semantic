@@ -35,13 +35,13 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         config->map_max_x = g_battle_map_max_x;
         config->map_max_y = g_battle_map_max_y;
         g_battle_move_pathing_tile_index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
-        if (g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags_06.bits.blocked
-            || g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags_06.bits.untargetable) {
+        if (g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.bits.blocked
+            || g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.bits.untargetable) {
             return 0;
         }
         config->target_index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-        if (g_battle_map_tile_data[config->target_index].flags_06.bits.blocked
-            || g_battle_map_tile_data[config->target_index].flags_06.bits.untargetable) {
+        if (g_battle_map_tile_data[config->target_index].flags.bits.blocked
+            || g_battle_map_tile_data[config->target_index].flags.bits.untargetable) {
             return 0;
         }
         config->unit_id = 0x7F;
@@ -146,11 +146,11 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         if (g_battle_target_panels[i].ride_remaining_range != 0
             || ((g_battle_map_tile_data[i].depth_half_height.bits.half_height < 3 || !(frontier[i] & 2))
                 && g_battle_target_panels[i].remaining_range != 0 && tile->depth_half_height.bits.half_height < 4
-                && g_battle_map_tile_data[i].surface.bits.type != 0x1C
+                && g_battle_map_tile_data[i].surface.bits.type != MAP_SURFACE_OBSTACLE
                 && (tile->depth_half_height.bits.depth == 0 || !config->cannot_stay_on_water)
                 && (tile->depth_half_height.bits.depth != 3 || !config->will_drown)
                 && (tile->depth_half_height.bits.depth < 4 || !config->will_sink)
-                && (tile->surface.bits.type != 0x12 || config->move_type != 0) && (frontier[i] & 0x10))) {
+                && (tile->surface.bits.type != MAP_SURFACE_LAVA || config->move_type != 0) && (frontier[i] & 0x10))) {
             state->reachable_count++;
             tile->ceiling_depth_and_marks.value |= 0x20;
         }

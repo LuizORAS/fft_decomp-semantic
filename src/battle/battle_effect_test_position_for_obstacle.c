@@ -30,7 +30,7 @@ s32 battle_effect_test_position_for_obstacle(
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 0;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits.unknown_4_6;
+        g_battle_effect_trajectory_tile_flags = tile->flags.bits.unknown_4_6;
         return 1;
     }
 
@@ -43,7 +43,7 @@ s32 battle_effect_test_position_for_obstacle(
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 1;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits.unknown_4_6;
+        g_battle_effect_trajectory_tile_flags = tile->flags.bits.unknown_4_6;
         return 1;
     }
 

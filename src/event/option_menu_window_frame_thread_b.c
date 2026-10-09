@@ -1,5 +1,5 @@
 /*
- * OPTION dead-unit panel, variant B.
+ * OPTION menu window frame thread, variant B.
  *
  * Twin of option_menu_window_frame_thread at 0x801c0304; this one allocates and
  * frees its own 4bpp scratch image, uses the second texture-window table, and lays the

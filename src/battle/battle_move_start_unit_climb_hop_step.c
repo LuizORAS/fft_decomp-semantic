@@ -4,7 +4,7 @@
 /* Starts a unit's hop to a nearby tile (called from the knockback handler at
  * 0x8006cc94): derives the launch rise and flight frames from the landing
  * height, then sets the facing, destination tile and horizontal velocity for
- * the direction in bits 6-7 of `movement_value`.
+ * the direction in bits 6-7 of `current_path_step`.
  *
  * Case bodies store the destination before clearing the other velocity axis;
  * that order gives the target's map_x/step load order. */
@@ -20,9 +20,9 @@ void battle_move_start_unit_climb_hop_step(
     u32 animation;
     u32 word;
 
-    step = &unit->movement_value.value;
-    if (unit->current_unit_id_plus_one != 0
-        && (battle_unit_calculate_height_data(&height_data, unit->current_unit_id_plus_one - 1),
+    step = &unit->current_path_step.value;
+    if (unit->standing_on_unit_id_plus_one != 0
+        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {
@@ -35,22 +35,22 @@ void battle_move_start_unit_climb_hop_step(
     frames = rise / g_battle_move_jump_gravity;
     switch (*step >> 6) {
     case 0:
-        unit->centre_tile_offset = 0x16;
-        unit->facing = 0xC00;
+        unit->step_phase = 0x16;
+        unit->facing = BATTLE_FACING_EAST;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
     case 1:
-        unit->centre_tile_offset = 0x1E;
-        unit->facing = 0x400;
+        unit->step_phase = 0x1E;
+        unit->facing = BATTLE_FACING_WEST;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
     case 2:
-        unit->centre_tile_offset = 0x12;
-        unit->facing = 0;
+        unit->step_phase = 0x12;
+        unit->facing = BATTLE_FACING_SOUTH;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = -0xE000 / frames;
@@ -60,8 +60,8 @@ void battle_move_start_unit_climb_hop_step(
          * `beq a1,3` delay slot, where the target keeps a nop; an asm insn
          * stops fill_slots_from_thread's scan (stop_search_p). */
         __asm__ volatile("");
-        unit->centre_tile_offset = 0x1A;
-        unit->facing = 0x800;
+        unit->step_phase = 0x1A;
+        unit->facing = BATTLE_FACING_NORTH;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = 0xE000 / frames;

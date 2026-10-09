@@ -39,11 +39,11 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
     s32 i;
     s32 j;
 
-    if (unit->ability_in_use == 0) {
+    if (unit->draw_enabled == 0) {
         return;
     }
     if (unit->position_copies_active != 0) {
-        battle_gfx_shift_and_fill_display_svectors((battle_gfx_render_unit_t*)unit);
+        battle_gfx_shift_and_fill_position_copies((battle_gfx_render_unit_t*)unit);
     }
     direction = (g_battle_camera_render_state.vy + (s16)unit->facing) & 0xfff;
     quadrant = direction / 1024;
@@ -60,10 +60,10 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             unit->camera_facing_sixteenth.s = sixteenth;
             unit->animation_script_pos = 0;
             unit->animation_countdown = 0;
-            unit->secondary_animation_state = 0;
-            unit->effect_vector.vz = 0;
-            unit->effect_vector.vy = 0;
-            unit->effect_vector.vx = 0;
+            unit->animation_restart_count = 0;
+            unit->seq_offset.vz = 0;
+            unit->seq_offset.vy = 0;
+            unit->seq_offset.vx = 0;
             unit->screen_offset.vz = 0;
             unit->screen_offset.vy = 0;
             unit->screen_offset.vx = 0;
@@ -75,11 +75,12 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             unit->requested_animation = 0;
             battle_gfx_release_unit_vram_slot(unit);
         } else if (unit->requested_animation >= 12 || (unit->unit_id & 3) == g_battle_frame_counter % 4
-            || (unit->movement.word & 0x20000000)) {
+            || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
             /* Units below animation 12 update only on their frame slot. */
             ok = 1;
             if ((unit->requested_animation - 1) * 2 + animation_by_quadrant[quadrant] != unit->encoded_animation
-                || unit->animation_countdown == 0 || (unit->movement.word & 0x20000000)) {
+                || unit->animation_countdown == 0
+                || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
                 animation = unit->requested_animation - 1;
                 if (animation < 500) {
                     seq = (battle_unit_seq_header_t*)unit->seq_data;
@@ -121,9 +122,9 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                                                 other->animation_frame = g_battle_gfx_targeted_frame_front
                                                     [g_battle_gfx_spritesheet_data[other->spritesheet_id].shp_id];
                                             }
-                                            other->effect_vector.vz = 0;
-                                            other->effect_vector.vy = 0;
-                                            other->effect_vector.vx = 0;
+                                            other->seq_offset.vz = 0;
+                                            other->seq_offset.vy = 0;
+                                            other->seq_offset.vx = 0;
                                             battle_gfx_load_trap_and_unit_frame_parts(other,
                                                 (battle_unit_anim_state_t*)&other->sprite_graphic_trigger,
                                                 other->animation_frame, other->encoded_animation);
@@ -155,10 +156,10 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     unit->camera_facing_sixteenth.s = sixteenth;
                     unit->animation_script_pos = 0;
                     unit->animation_countdown = 0;
-                    unit->secondary_animation_state = 0;
-                    unit->effect_vector.vz = 0;
-                    unit->effect_vector.vy = 0;
-                    unit->effect_vector.vx = 0;
+                    unit->animation_restart_count = 0;
+                    unit->seq_offset.vz = 0;
+                    unit->seq_offset.vy = 0;
+                    unit->seq_offset.vx = 0;
                     unit->screen_offset.vz = 0;
                     unit->screen_offset.vy = 0;
                     unit->screen_offset.vx = 0;
@@ -167,7 +168,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     unit->animation_loop_count = 0;
                     unit->animation_flags = 0;
                     battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
-                    unit->movement.word &= ~0x20000000;
+                    unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
                     unit->requested_animation = 0;
                     if (unit->mount_state == 2) {
                         other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
@@ -193,7 +194,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 unit->requested_animation = 0;
             }
         }
-    } else if (!(unit->movement.word & 0x01000000)) {
+    } else if (!(unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE)) {
         if (sixteenth != unit->camera_facing_sixteenth.s) {
             encoded = unit->encoded_animation;
             if (encoded < 6) {

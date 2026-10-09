@@ -14,6 +14,6 @@ void battle_target_show_move_range_in_free_cursor(void) {
     battle_target_set_tile_background_color(1, 1);
     prev = g_battle_controller_input;
     g_battle_controller_input = 2;
-    g_controller_input_copy_12 = prev;
+    g_battle_controller_input_copy_12 = prev;
     main_sound_play_sfx(MAIN_SFX_CONFIRM);
 }

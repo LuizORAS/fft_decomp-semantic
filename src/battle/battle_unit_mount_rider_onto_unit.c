@@ -14,7 +14,7 @@ void battle_unit_mount_rider_onto_unit(battle_unit_misc_data_t* rider, battle_un
     rider->screen = mount->screen;
     rider->screen.vy -= 10;
     rider->real = mount->real;
-    rider->current_unit_id_plus_one = 0;
+    rider->standing_on_unit_id_plus_one = 0;
     rider->real.vy += -0xa000;
     rider->map_x = mount->map_x;
     rider->map_y = mount->map_y;

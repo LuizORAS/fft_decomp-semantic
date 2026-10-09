@@ -99,9 +99,9 @@ void equip_panel_run_equipment_list_thread(void) {
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
                     bank = state->equipment[i] & 0xc000;
-                    g_menu_text_palette_offset = bank >> 12;
+                    g_battle_menu_text_palette_offset = bank >> 12;
                     battle_menu_display_text_entry(
-                        (state->equipment[i] & 0xff) | 0x3800, text, &g_menu_text_state.origin_x);
+                        (state->equipment[i] & 0xff) | TEXT_ID_ITEM_NAME_BASE, text, &g_menu_text_state.origin_x);
                 }
                 g_menu_text_state.origin_y += 0x10;
             }

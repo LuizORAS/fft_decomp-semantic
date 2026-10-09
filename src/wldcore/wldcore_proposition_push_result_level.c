@@ -72,8 +72,9 @@ void wldcore_proposition_push_result_level(s32 proposition) {
 
         point.y = (text_rows + row) * 0x10 + 8;
         point.x = x;
-        wldcore_menu_display_text_entry(index, g_main_active_propositions[proposition].participant_indices[i] | 0x4000,
-            point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(index,
+            g_main_active_propositions[proposition].participant_indices[i] | TEXT_ID_UNIT_NAME_BASE, point,
+            g_wldcore_window_image_buffer);
     }
     for (i = 0; i < count; i++) {
         s32 row = i + 2;
@@ -93,7 +94,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         world_thread_start(0xE, world_text_message_box_thread);
     }
     party = &g_wldcore_job_selection.excluded_party_index;
-    g_world_text_substitution_values[0] = *party + 0x4000;
+    g_world_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
     world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
     if (g_wldcore_job_selection.gate != 0) {

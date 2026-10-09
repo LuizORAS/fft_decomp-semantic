@@ -39,7 +39,7 @@ s32 battle_state_update_controller_input(void) {
         unit = battle_unit_get_source_misc_data();
         if (g_battle_menu_status_enabled != 0 && g_battle_menu_status_requested == 0
             && (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) == 0) {
-            main_sound_play_sfx(0x71);
+            main_sound_play_sfx(MAIN_SFX_STATUS_MENU_REQUEST);
             g_battle_menu_status_requested = 1;
         }
     }

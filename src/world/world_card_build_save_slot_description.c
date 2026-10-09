@@ -55,7 +55,7 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0x58;
         source = world_text_find_entry_by_index(
-            g_world_text_section_pointers[WORLD_TEXT_SECTION_LOCATION_NAMES], g_world_load_work_buffer->location, 1);
+            g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES], g_world_load_work_buffer->location, 1);
         while ((*slot_graphic++ = *source++) != 0xFE) { }
     }
     *slot_graphic = 0xFE;

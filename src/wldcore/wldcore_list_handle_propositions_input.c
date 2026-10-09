@@ -45,7 +45,8 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         world_thread_set_parameters(0xC, 0, 0, 1);
         if (world_script_get_variable(
-                (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF) + 0x360)
+                (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF)
+                + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
             & 8) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.first_window].flags

@@ -21,27 +21,27 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
     unit = g_battle_unit_misc_list_head;
     while (unit != 0) {
         battle_unit_copy_misc_data_xyz_values(&screen, unit);
-        RotTrans(&screen, &transformed, &unit->status_bubble_gte_flag);
+        RotTrans(&screen, &transformed, &unit->gte_flag);
 
         if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
-            unit->item_get_camera_x = transformed.vx - unit->screen_offset.vx;
+            unit->camera_relative_x = transformed.vx - unit->screen_offset.vx;
         } else {
-            unit->item_get_camera_x = transformed.vx + unit->screen_offset.vx;
+            unit->camera_relative_x = transformed.vx + unit->screen_offset.vx;
         }
         if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) != 0) {
-            unit->item_get_camera_y = transformed.vy - unit->screen_offset.vy;
+            unit->camera_relative_y = transformed.vy - unit->screen_offset.vy;
         } else {
-            unit->item_get_camera_y = transformed.vy + unit->screen_offset.vy;
+            unit->camera_relative_y = transformed.vy + unit->screen_offset.vy;
         }
 
         tile = battle_map_get_tile_data_pointer(unit->screen.vx / 28, unit->screen.vz / 28, unit->map_z);
-        if (unit->centre_tile_offset != 0) {
-            if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_6) != 0) {
+        if (unit->step_phase != 0) {
+            if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) != 0) {
                 battle_camera_calculate_relative_offset_5(&screen.vx, &adjusted.vx);
             } else {
                 battle_camera_calculate_relative_offset_1(&screen.vx, &adjusted.vx);
             }
-        } else if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_6) != 0) {
+        } else if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) != 0) {
             battle_camera_convert_screen_coords_modify_by_5(&screen.vx, &adjusted.vx);
         } else {
             battle_camera_convert_screen_coords_modify_by_1(&screen.vx, &adjusted.vx);

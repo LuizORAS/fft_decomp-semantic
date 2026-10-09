@@ -14,7 +14,7 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     bunit_block_200_t block = bunit_D_801BF000;
 
     bunit_menu_set_vsync_mode_and_event_speed(0);
-    g_battle_text_section_pointers[0] = g_bunit_text_menu_section;
+    g_battle_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = g_bunit_text_menu_section;
     g_battle_text_section_pointers[25] = g_bunit_text_reorder_list_buffer;
     rect.x = 0x100;
     rect.y = 0;

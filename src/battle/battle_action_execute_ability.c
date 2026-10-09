@@ -10,7 +10,7 @@ void battle_action_execute_ability(void) {
     battle_unit_start_view_thread(0, 0, 0);
     unit = battle_unit_get_source_misc_data();
     battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
-    unit->ability_ct_resolved |= 2;
+    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
     battle_unit_face_toward_cursor(unit);
     result = battle_action_call_attack_preparation_at_preview((u8*)&unit->command_state.ai.data);
     unit->attack_phase_state = result;
@@ -23,7 +23,7 @@ void battle_action_execute_ability(void) {
         battle_state_stop_game_flow();
         g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
         g_battle_action_post_action = 0;
-        unit->ability_ct_resolved |= 2;
+        unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
         if (g_battle_ability_animation_data[unit->used_ability_id].charge_animation_set_id != 0) {
             battle_unit_start_ability_charge_hold_animation(unit);
         }

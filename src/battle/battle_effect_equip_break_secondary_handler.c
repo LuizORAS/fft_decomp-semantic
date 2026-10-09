@@ -9,7 +9,7 @@
 s32 battle_effect_equip_break_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     battle_effect_secondary_data_t* current;
-    battle_effect_on_hit_vector_t pos;
+    battle_effect_gravity_t gravity;
     s32 group;
     s32 result;
     s16 finish_timer;
@@ -31,14 +31,14 @@ s32 battle_effect_equip_break_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(0x230);
-        pos.z = 0;
-        pos.x = 0;
-        pos.y = ONE;
-        battle_effect_copy_on_hit_data_to_second_section();
-        battle_effect_store_first_section_of_on_hit_data(&pos);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
+        battle_effect_save_gravity();
+        battle_effect_set_gravity(&gravity);
         battle_effect_update_active_slots(group);
         battle_effect_restore_inertia_threshold();
-        battle_effect_copy_second_section_to_on_hit_data();
+        battle_effect_restore_gravity();
         current = g_battle_effect_current_secondary;
         finish_timer = current->finish_timer;
         result = finish_timer != 1;

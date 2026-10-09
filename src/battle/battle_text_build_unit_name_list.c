@@ -9,7 +9,7 @@ void battle_text_build_unit_name_list(void) {
 
     battle_text_init_menu_section_pointers();
     unit_id = 0;
-    output = g_battle_text_section_pointers[8];
+    output = g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     do {
         unit = battle_unit_get_stats_from_battle_id(unit_id);
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {

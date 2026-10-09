@@ -18,7 +18,7 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     unit->primary_skillset = job->skillset;
     main_util_copy_byte_data(job->innate_abilities, unit->innate_abilities, 8);
     main_util_copy_byte_data(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_byte_data(job->growths_multipliers, &unit->raw_stats[UNIT_RAW_STAT_DATA_BYTE_COUNT], 10);
+    main_util_copy_byte_data(job->growths_multipliers, unit->growths_multipliers, 10);
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {
@@ -49,5 +49,5 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     unit->spritesheet_id = job->spritesheet_id;
     unit->job_portrait_palette = job->job_portrait_palette;
-    unit->graphic_variant = job->graphic_variant;
+    unit->monster_graphic = job->monster_graphic;
 }

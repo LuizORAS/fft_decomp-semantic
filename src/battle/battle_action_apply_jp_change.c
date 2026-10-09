@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Runs the reaction and, if it changed the unit's job level, sets the
-   "job level changed" flag so the caller queues the level-up report. */
+/* Adds the pending JP change to the unit's job and, if that changed the job
+   level, sets the job-level-gained flag so the caller queues the level-up report. */
 void battle_action_apply_jp_change(battle_stats_t* unit) {
     s32 jp;
     s32 initial_level;

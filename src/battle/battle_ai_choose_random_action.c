@@ -13,7 +13,7 @@ s32 battle_ai_choose_random_action(void) {
     u16* abilities;
     s32 index_or_count;
 
-    g_battle_ai_data_base.current_action.target_flags_set = 0;
+    g_battle_ai_data_base.current_action.act_before_move = 0;
     g_battle_ai_data_base.current_action.skillset = ai->considered_ability.skillset;
     g_battle_ai_data_base.current_action.ability_id = ai->considered_ability.ability_id;
     g_battle_ai_data_base.current_action.item_id = ai->considered_ability.parameters.bytes.item_id;

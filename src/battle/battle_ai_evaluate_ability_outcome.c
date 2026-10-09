@@ -10,7 +10,7 @@
 s32 battle_ai_evaluate_ability_outcome(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: each state re-enters the evaluation step that suspended. */
         switch (g_battle_ai_data_base.outcome_evaluation_state) {
         case 0:
@@ -39,7 +39,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
     }
     {
         s32 flags = ai->considered_ability.ai_flags.word;
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         if (flags >= 0)
             return 0;
         if (flags & BATTLE_AI_ABILITY_RANDOM_USE) {

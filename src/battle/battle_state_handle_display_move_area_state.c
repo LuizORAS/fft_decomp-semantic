@@ -4,7 +4,7 @@
 void battle_state_handle_display_move_area_state(void) {
     if (g_main_input_pressed_buttons & PSX_PAD_CROSS) {
         battle_target_set_tile_background_color(0, 1);
-        g_battle_controller_input = g_controller_input_copy_12;
+        g_battle_controller_input = g_battle_controller_input_copy_12;
         main_sound_play_sfx(MAIN_SFX_CANCEL);
         battle_state_set_free_cursor();
     }

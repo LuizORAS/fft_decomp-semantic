@@ -4,6 +4,6 @@
 
 void world_script_show_graphic(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_SHOW_GRAPHIC);
-    world_menu_request_open_companion_executable(0xC);
+    world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_ETC);
     etc_graphic_show_async();
 }

@@ -213,8 +213,8 @@ functions:
   - {addr: 0x80016e48, size: 92, name: main_smd_select_sound_font, hash: 3066f90fbf19f301}
   - {addr: 0x80016ea4, size: 272, name: main_smd_end_track, hash: 71c987f5ac945c0a}
   - {addr: 0x80016fb4, size: 228, name: main_smd_set_instrument, hash: c2dd507b0db162ae}
-  - {addr: 0x80017098, size: 64, name: main_smd_set_note_flags2_all_channels, hash: df50549d20d331a3}
-  - {addr: 0x800170d8, size: 64, name: main_smd_force_channel_func, hash: e708dfed3be27cc0}
+  - {addr: 0x80017098, size: 64, name: main_smd_set_voice_update_flags_all_channels, hash: df50549d20d331a3}
+  - {addr: 0x800170d8, size: 64, name: main_smd_set_voice_attr_flags_all_channels, hash: e708dfed3be27cc0}
   - {addr: 0x80017118, size: 780, name: main_smd_update_voices, hash: 989993e81a871f34}
   - {addr: 0x80017424, size: 120, name: main_smd_calculate_pitch, hash: 806ed29df5e89daf}
   - {addr: 0x8001749c, size: 408, name: main_smd_update_modulators, hash: 5243ca116d6992eb}
@@ -1251,7 +1251,7 @@ data:
   - {addr: 0x800459c4, name: g_main_system_play_time_hours}
   - {addr: 0x800459c8, name: g_main_battle_bin_sector}
   - {addr: 0x800459cc, name: g_main_debug_display_enabled}
-  - {addr: 0x800459d0, name: g_font_print_enabled}
+  - {addr: 0x800459d0, name: g_main_font_print_enabled}
   - {addr: 0x800459d8, name: D_800459D8}
   - {addr: 0x800459dc, name: g_battle_entd_selection_mode}
   - {addr: 0x800459e0, name: g_main_gfx_now_loading_clut}
@@ -1388,7 +1388,7 @@ data:
   - {addr: 0x80066064, name: g_main_item_poach_table}
   - {addr: 0x800660c4, name: g_main_job_unlock_requirements}
   - {addr: 0x80066182, name: g_main_job_jp_requirements_by_level}
-  - {addr: 0x80066184, name: g_job_level_jp_requirements}
+  - {addr: 0x80066184, name: g_main_job_level_jp_requirements}
   - {addr: 0x80066194, name: g_main_job_data_pointer}
   - {addr: 0x80066198, name: g_main_calculator_primes}
   - {addr: 0x800661ce, name: g_main_month_start_day_offsets}

@@ -29,7 +29,7 @@ s32 wldcore_proposition_set_based_on_location(s32 index, s32 location) {
         }
     }
     if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_STATUS) {
-        if ((world_script_get_variable(entry.fields.condition_value + 0x360) & 4) == 0) {
+        if ((world_script_get_variable(entry.fields.condition_value + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 4) == 0) {
             return 0;
         }
     }

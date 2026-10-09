@@ -12,7 +12,7 @@ s32 battle_ai_evaluate_movement_origins(void) {
     s32 row;
     u32 row_base;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.highest_priority_state == 0)
             goto begin_evaluation;
@@ -34,20 +34,20 @@ begin_evaluation:
         ai->highest_priority_state = 0;
         return -1;
     }
-    ai->decision_state = 0;
-    ai->weapon_range_flag = 0;
+    ai->resume_pending = 0;
+    ai->ranked_origin_scan = 0;
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_EXHAUSTIVE_ORIGIN_SCAN) {
         ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
     } else {
         ai->max_possibilities = ai->attack_origin_tile_count;
         ai->max_possibilities *= ai->movable_tile_count;
         if (ai->max_possibilities > 10)
-            ai->weapon_range_flag = 1;
+            ai->ranked_origin_scan = 1;
         /* The target sets this regardless of the truncated product test. */
-        ai->weapon_range_flag = 1;
+        ai->ranked_origin_scan = 1;
     }
     if ((ai->targetability.live.target_setting_flags & BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS)
-        || ai->weapon_range_flag) {
+        || ai->ranked_origin_scan) {
         while (ai->attack_origin_tile_count && ai->movable_tile_count) {
             battle_ai_take_next_movement_origin();
             battle_ai_select_candidate_coords_and_check_crystal();

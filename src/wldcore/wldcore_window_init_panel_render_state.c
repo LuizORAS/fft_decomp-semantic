@@ -45,7 +45,7 @@ void wldcore_window_init_panel_render_state(
     last_row = dimensions->y;
     g_wldcore_window_panel_render_state.max_row_index = last_row;
     g_wldcore_window_panel_render_state.thread_count = 0;
-    g_wldcore_window_panel_render_state.parent_indices = g_wldcore_panel_row_actions;
+    g_wldcore_window_panel_render_state.row_actions = g_wldcore_panel_row_actions;
     g_wldcore_window_panel_render_state.header_id = 1;
     g_wldcore_window_panel_render_state.text_binding
         = (struct world_menu_text_binding*)&g_wldcore_window_panel_label_state; /* a column layout */

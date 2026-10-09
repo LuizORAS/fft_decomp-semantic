@@ -40,11 +40,11 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     vertical = ability->vertical;
     unit_id = action_copy.unit_id;
     unit = &g_battle_unit_stats[unit_id];
-    if (ability->flags_4 & 0x20) {
-        flags_1 |= 0x20;
+    if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
+        flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;
         flags_2 &= 0x39;
     }
-    if (flags_2 & 6) {
+    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
         y = unit->position.bits.y;
         elevation = unit->position.bits.higher_elevation;
@@ -68,7 +68,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags_06.value & 1) {
+    if (tile->flags.value & 1) {
         return -1;
     }
     height = tile->height * 2 + (tile->depth_half_height.value & 0x1f) + (tile->depth_half_height.value >> 5) * 2;
@@ -94,7 +94,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
             other_panel->mark = 1;
         }
         g_battle_target_panels[index & 0xff].mark = 1;
-        if (!(flags_1 & 0x20)) {
+        if (!(flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
             panel->remaining_range = aoe + 1;
             other_panel->remaining_range = aoe + 1;
             battle_target_spread_panels(aoe, 0);
@@ -103,23 +103,24 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
         }
     }
     cursor = &g_battle_target_panels[battle_map_calculate_location(unit)];
-    if (flags_2 & 1) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER) {
         cursor->remaining_range = 0;
     }
-    if (flags_2 & 4) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK) {
         battle_target_build_directional_attack_panels(&action_copy, 1);
     }
-    if (flags_2 & 2) {
+    if (flags_2 & ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS) {
         battle_target_build_directional_attack_panels(&action_copy, 3);
     }
-    if (flags_2 & 0xc0) {
-        battle_target_apply_unit_team_eligibility(unit_id, flags_2 & 0x80, flags_2 & 0x40, aoe == 0xff);
+    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES)) {
+        battle_target_apply_unit_team_eligibility(unit_id, flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES,
+            flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES, aoe == 0xff);
     }
     count = 0;
     if (!(flags_2 & 0xc0)) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-            if (marked->remaining_range != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
+            if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
                 count++;
                 tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
             } else {
@@ -131,7 +132,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     }
     tile = g_battle_map_tile_data;
     for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-        if (marked->mark != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
+        if (marked->mark != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
             count++;
             tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
         } else {

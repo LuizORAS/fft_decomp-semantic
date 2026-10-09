@@ -410,9 +410,9 @@ void bunit_render_unit_status_panel_thread(void) {
             battle_clear_menu_render_buffer(render_c, 0x580);
             *win = 0x58;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(scroll[0] + 0x4000, render_c, origin);
+            battle_menu_display_text_entry(scroll[0] + TEXT_ID_UNIT_NAME_BASE, render_c, origin);
             battle_menu_set_text_origin(0, 0x10);
-            battle_menu_display_text_entry(scroll[1] + 0x3000, render_c, origin);
+            battle_menu_display_text_entry(scroll[1] + TEXT_ID_JOB_NAME_BASE, render_c, origin);
             LoadImage(&rects[2], (u32*)render_c);
             battle_clear_menu_render_buffer(render_b, 0xF0);
             *win = 0x10;

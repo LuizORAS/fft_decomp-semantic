@@ -12,7 +12,7 @@ void wldcore_list_open_unexplored_lands(void) {
 
     count = 0;
     for (i = 0; i < 16; i++) {
-        if (world_script_get_variable(i + 0x350) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
             g_wldcore_list_entry_values[count] = i - 0x2800;
             g_wldcore_list_row_flags[count] = 0;
             count++;

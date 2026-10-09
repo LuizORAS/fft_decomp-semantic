@@ -27,11 +27,11 @@ s32 battle_ai_select_peril_target(void) {
         }
         distance_score = 255 - battle_ai_calculate_distance_between_units(ai->acting_unit, unit);
         missing_hp = 128 - ((unit->hp << 7) / unit->max_hp);
-        team_bits = unit->team_flags & 3;
+        team_bits = unit->team_flags & BATTLE_TEAM_IMPORTANCE_MASK;
         if (battle_ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_DEAD)
             && (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE)) {
             status_score = 0x78;
-        } else if ((ai->acting_unit_decision->targeting_flags_1 & 2)
+        } else if ((ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES)
             && ((decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITH_RERAISE)
                 || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))) {
             status_score = 0x77;
@@ -45,12 +45,12 @@ s32 battle_ai_select_peril_target(void) {
             status_score = 0x73;
         } else {
             status_score = 0;
-            if (ai->acting_unit_decision->targeting_flags_1 & 2) {
+            if (ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES) {
                 status_score = -(decision->targeting_flags_2 & BATTLE_AI_TARGET_HP_BELOW_HALF) & 0x72;
             }
         }
         if (status_score == 0) {
-            if (decision->targeting_flags_1 & 4) {
+            if (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT) {
                 continue;
             }
             if (ai->acting_unit_id == i) {

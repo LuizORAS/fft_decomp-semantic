@@ -58,7 +58,7 @@ void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_ima
                         }
 
                         if (code < TEXT_FORMAT_FIRST) {
-                            if (code >= 0xd0) {
+                            if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                                 code &= 0x0f;
                                 code = (code * 0xd0) + (*(encoded++));
                             }

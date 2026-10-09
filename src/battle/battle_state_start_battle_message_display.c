@@ -20,16 +20,18 @@ void battle_state_start_battle_message_display(void) {
     unit = battle_unit_get_casting_misc_data();
     battle_action_build_targets_post_action_message();
     battle_unit_update_attack_result_animation(unit);
-    unit->item_ability_display = 0;
+    unit->item_display_active = 0;
     battle_text_set_message_duration_frames(0x3c);
-    switch (unit->ability_formula) {
-    case 6:
+    switch (unit->post_action_message) {
+    case BATTLE_POST_ACTION_MESSAGE_POACHED:
         main_sound_play_tune(2);
-        battle_menu_init_system_function(0xa, 0x1838, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1838, unit->battle_data->misc_unit_id, 0, 1);
         return;
-    case 9:
+    case BATTLE_POST_ACTION_MESSAGE_TRAINED:
         main_sound_play_tune(2);
-        battle_menu_init_system_function(0xa, 0x1828, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1828, unit->battle_data->misc_unit_id, 0, 1);
         return;
     }
 
@@ -53,11 +55,13 @@ void battle_state_start_battle_message_display(void) {
     }
 
     if (message == 6 || message == 0x2b) {
-        battle_menu_init_system_function(
-            0xa, message | 0x1800, unit->battle_data->misc_unit_id, target->battle_data->misc_unit_id, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800,
+            unit->battle_data->misc_unit_id, target->battle_data->misc_unit_id, 1);
     } else if (message != 0) {
-        battle_menu_init_system_function(0xa, message | 0x1800, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800, unit->battle_data->misc_unit_id, 0, 1);
     } else {
-        battle_menu_init_system_function(0xa, 0, unit->battle_data->misc_unit_id, 0, 0);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
     }
 }

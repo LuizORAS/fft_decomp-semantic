@@ -6,7 +6,7 @@ s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id) {
 
     if (stats->entd_slot != BATTLE_ENTD_SLOT_NONE)
         return 0;
-    if (stats->existence != 0)
+    if (stats->existence != BATTLE_UNIT_EXISTENCE_OFF_FIELD)
         return -1;
     stats->entd_slot = battle_id;
     stats->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;

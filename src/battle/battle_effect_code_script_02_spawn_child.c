@@ -19,7 +19,7 @@ s32 battle_effect_code_script_02_spawn_child(effect_record_t* effect) {
     phase_id
         = battle_effect_start_script_record(script, *(s16*)(instruction + 2), g_battle_effect_current_record_index);
     if ((s32)slot < EFFECT_SCRIPT_PHASE_SLOT_COUNT) {
-        effect->phase_ids[slot] = phase_id;
+        effect->child_indices[slot] = phase_id;
     }
     effect->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

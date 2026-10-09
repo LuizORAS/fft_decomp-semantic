@@ -6,7 +6,7 @@
  *
  * The id also fills the three text substitution values. The text thread runs
  * with window mode 0x11, or 0x12 when the unit is on the upper half of the
- * screen, from the secondary companion executable loaded into a 16 KiB
+ * screen, from SPELL.MES (companion data file 4) loaded into a 16 KiB
  * buffer. */
 void battle_text_run_spell_quote_thread(void) {
     s16 screen_coords[2];
@@ -34,8 +34,8 @@ void battle_text_run_spell_quote_thread(void) {
     }
     message_id = battle_thread_get_current_parameter_2() | 0xA800;
     g_battle_text_message_buffer = game_malloc(0x4000);
-    battle_menu_request_open_companion_data_file(4);
-    g_battle_text_section_pointers[21] = g_battle_text_message_buffer;
+    battle_menu_request_open_companion_data_file(BATTLE_COMPANION_FILE_SPELL_MES);
+    g_battle_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE] = g_battle_text_message_buffer;
     battle_thread_start(8, battle_text_character_handling_thread);
     battle_thread_set_parameters(8, window_mode, message_id, id);
     battle_thread_wait_until_inactive(8);

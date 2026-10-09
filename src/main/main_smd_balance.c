@@ -4,6 +4,6 @@
 /* SMD opcode 0xE8 "Balance". */
 u8* main_smd_balance(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     channel->balance = note_data[0] << 8;
-    channel->note_flags2 |= 0x100;
+    channel->voice_update_flags |= 0x100;
     return note_data + 1;
 }

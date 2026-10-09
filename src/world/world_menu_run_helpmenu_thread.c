@@ -6,6 +6,6 @@ void world_menu_run_helpmenu_thread(void) {
         world_sound_set_effect_to_confirm();
     }
     world_menu_reserve_high_overlay(0x20000);
-    world_menu_request_open_companion_executable(3);
+    world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_HELPMENU);
     world_menu_run_battle_help();
 }

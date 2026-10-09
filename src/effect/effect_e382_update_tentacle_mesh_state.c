@@ -92,7 +92,7 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
     flags = entry->flags;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
 
@@ -129,7 +129,7 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
@@ -584,7 +584,7 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
             battle_heap_free_block(work);
             record->work_slots[byte_offset] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

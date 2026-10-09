@@ -49,14 +49,14 @@ void battle_state_handle_idling_action_menus_state(void) {
         case SKILLSET_ID_DEFEND:
             misc->command_state.ai = *command;
             battle_status_inflict_defending_to_battle_id(misc->battle_data->misc_unit_id);
-            misc->ability_ct_resolved |= 2;
+            misc->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
             battle_unit_update_display_by_misc_id(misc->unit_id);
             battle_action_set_only_action_taken(misc->battle_data->misc_unit_id);
             battle_state_enter_after_command();
             break;
         case SKILLSET_ID_EQUIP_CHANGE:
             misc->command_state.ai = *command;
-            misc->ability_ct_resolved |= 2;
+            misc->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
             battle_status_enable_disable_acting(misc->battle_data);
             battle_ai_init_unit_abilities(misc->battle_data->misc_unit_id);
             battle_unit_update_display_by_misc_id(misc->unit_id);

@@ -11,8 +11,9 @@ s32 battle_action_resume_attack_phase_control(void) {
     if (idx != 0) {
         idx -= 1;
         g_battle_action_post_effect_msg_counter = idx;
-        battle_menu_init_system_function(0x11, g_battle_action_post_effect_msgs[idx].code,
-            g_battle_action_post_effect_msgs[idx].unit, g_battle_action_post_effect_msgs[idx].value, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT,
+            g_battle_action_post_effect_msgs[idx].code, g_battle_action_post_effect_msgs[idx].unit,
+            g_battle_action_post_effect_msgs[idx].value, 1);
         g_battle_action_post_action = 0;
         return 1;
     }

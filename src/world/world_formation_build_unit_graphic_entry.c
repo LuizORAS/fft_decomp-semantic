@@ -33,7 +33,7 @@ void world_formation_build_unit_graphic_entry(
     } else if (job_id == JOB_ID_HOLY_DRAGON_REIS) {
         index = 0x4C;
     } else if (unit->sprite_set == CHARACTER_IDENTITY_MONSTER) {
-        index = unit->graphic_variant + 0x3D;
+        index = unit->monster_graphic + 0x3D;
     } else if (unit->sprite_set < CHARACTER_IDENTITY_BOY) {
         index = g_world_formation_generic_human_graphic_index_table[unit->sprite_set];
     } else {

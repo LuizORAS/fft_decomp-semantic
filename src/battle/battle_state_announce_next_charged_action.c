@@ -3,7 +3,7 @@
 
 extern void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled);
 
-enum { BATTLE_GAME_STATE_ANNOUNCE_ABILITY = 0x29, BATTLE_ACTION_PHASE_COUNT = 3 };
+enum { BATTLE_GAME_STATE_ANNOUNCE_ABILITY = 0x29 };
 
 /* Announce the next unit whose charged or performing action comes due.
  *
@@ -22,7 +22,7 @@ s32 battle_state_announce_next_charged_action(void) {
     unit = battle_unit_get_source_misc_data();
     do {
         switch (g_battle_action_phase) {
-        case 0:
+        case BATTLE_ACTION_PHASE_PRE_ACTION:
             result = battle_reaction_prepare_hamedo_for_pending_action(
                 unit->battle_data->misc_unit_id, &command.ability_id);
             if (result != -1) {
@@ -40,7 +40,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 actor->used_ability_id = ability_id;
             }
             break;
-        case 1:
+        case BATTLE_ACTION_PHASE_ACTING_UNIT:
             result = battle_action_init_current_data(unit->battle_data->misc_unit_id);
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ANNOUNCE_ABILITY;
@@ -63,7 +63,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 result = -1;
             }
             break;
-        case 2:
+        case BATTLE_ACTION_PHASE_REACTING_UNIT:
             result = battle_reaction_prepare_next(&command.ability_id);
             if (result != -1) {
                 g_battle_game_state = BATTLE_GAME_STATE_ANNOUNCE_ABILITY;

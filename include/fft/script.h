@@ -41,7 +41,7 @@ enum {
 typedef enum event_opcode {
     EVENT_OPCODE_DISPLAY_MESSAGE = 0x10,        /* 14 */
     EVENT_OPCODE_UNIT_ANIM = 0x11,              /* 5 */
-    EVENT_OPCODE_UNKNOWN_12 = 0x12,             /* 2 */
+    EVENT_OPCODE_WAIT_UNIT_READY = 0x12,        /* 2 */
     EVENT_OPCODE_CHANGE_MAP_BETA = 0x13,        /* 2 */
     EVENT_OPCODE_PAUSE = 0x16,                  /* 0 */
     EVENT_OPCODE_UNKNOWN_17 = 0x17,             /* 5; recognized no-op */
@@ -57,8 +57,8 @@ typedef enum event_opcode {
     EVENT_OPCODE_SWITCH_TRACK = 0x22,           /* 3 */
     EVENT_OPCODE_UNKNOWN_23 = 0x23,             /* 3; recognized no-op */
     EVENT_OPCODE_UNKNOWN_24 = 0x24,             /* 0; recognized no-op */
-    EVENT_OPCODE_UNKNOWN_25 = 0x25,             /* 4 */
-    EVENT_OPCODE_UNKNOWN_26 = 0x26,             /* 2 */
+    EVENT_OPCODE_SET_SPEAKER_PAIR = 0x25,       /* 4 */
+    EVENT_OPCODE_RESUME_WAITING_DIALOG = 0x26,  /* 2 */
     EVENT_OPCODE_RELOAD_MAP_STATE = 0x27,       /* 0 */
     EVENT_OPCODE_WALK_TO = 0x28,                /* 8 */
     EVENT_OPCODE_WAIT_WALK = 0x29,              /* 2 */
@@ -70,7 +70,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_COLOR_BG_BETA = 0x31,          /* 5 */
     EVENT_OPCODE_COLOR_UNIT = 0x32,             /* 7 */
     EVENT_OPCODE_COLOR_FIELD = 0x33,            /* 5 */
-    EVENT_OPCODE_UNKNOWN_37 = 0x37,             /* 2 */
+    EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT = 0x37,  /* 2 */
     EVENT_OPCODE_FOCUS_SPEED = 0x38,            /* 2 */
     EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT = 0x39, /* 0 */
     EVENT_OPCODE_WAIT_FILE_LOAD = 0x3a,         /* 0 */
@@ -79,7 +79,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_REMOVE_UNIT = 0x3d,            /* 2 */
     EVENT_OPCODE_COLOR_SCREEN = 0x3e,           /* 9 */
     EVENT_OPCODE_SET_TILE_CAMERA_BLOCK = 0x3f,  /* 4 */
-    EVENT_OPCODE_UNKNOWN_40 = 0x40,             /* 5 */
+    EVENT_OPCODE_SET_TILE_HEIGHT = 0x40,        /* 5 */
     EVENT_OPCODE_EARTHQUAKE_START = 0x41,       /* 4 */
     EVENT_OPCODE_EARTHQUAKE_END = 0x42,         /* 0 */
     EVENT_OPCODE_CALL_FUNCTION = 0x43,          /* 1 */
@@ -92,7 +92,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_ADD_UNIT_END = 0x4a,           /* 0 */
     EVENT_OPCODE_WAIT_ADD_UNIT_END = 0x4b,      /* 0 */
     EVENT_OPCODE_CHANGE_MAP = 0x4c,             /* 2 */
-    EVENT_OPCODE_UNKNOWN_4D = 0x4d,             /* 1 */
+    EVENT_OPCODE_REQUEST_MAP_JUMP_IN = 0x4d,    /* 1 */
     EVENT_OPCODE_UNIT_SHADOW = 0x4e,            /* 3 */
     EVENT_OPCODE_SET_DAYTIME = 0x4f,            /* 1 */
     EVENT_OPCODE_PORTRAIT_COL = 0x50,           /* 1 */
@@ -117,19 +117,19 @@ typedef enum event_opcode {
     EVENT_OPCODE_CAMERA_SPEED_CURVE = 0x63,                       /* 1 */
     EVENT_OPCODE_WAIT_ROTATE_UNIT = 0x64,                         /* 2 */
     EVENT_OPCODE_WAIT_ROTATE_ALL = 0x65,                          /* 0 */
-    EVENT_OPCODE_UNKNOWN_66 = 0x66,                               /* 0 */
+    EVENT_OPCODE_STORE_MODIFIED_MAP_PALETTE = 0x66,               /* 0 */
     EVENT_OPCODE_MIRROR_SPRITE = 0x68,                            /* 3 */
     EVENT_OPCODE_FACE_TILE = 0x69,                                /* 8 */
     EVENT_OPCODE_EDIT_BG_SOUND = 0x6a,                            /* 5 */
     EVENT_OPCODE_BG_SOUND = 0x6b,                                 /* 5 */
-    EVENT_OPCODE_UNKNOWN_6C = 0x6c,                               /* 2 */
-    EVENT_OPCODE_UNKNOWN_6D = 0x6d,                               /* 2 */
+    EVENT_OPCODE_RESUME_UNIT_PALETTE_UPDATES = 0x6c,              /* 2 */
+    EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES = 0x6d,            /* 2 */
     EVENT_OPCODE_SPRITE_MOVE_BETA = 0x6e,                         /* 12 */
     EVENT_OPCODE_WAIT_SPRITE_MOVE = 0x6f,                         /* 2 */
     EVENT_OPCODE_JUMP = 0x70,                                     /* 4 */
     EVENT_OPCODE_SET_FIRST_MISC_UNIT = 0x71,                      /* 2 */
-    EVENT_OPCODE_UNKNOWN_72 = 0x72,                               /* 0 */
-    EVENT_OPCODE_UNKNOWN_73 = 0x73,                               /* 14 */
+    EVENT_OPCODE_DEBUG_PAUSE = 0x72,                              /* 0 */
+    EVENT_OPCODE_RELATIVE_CAMERA = 0x73,                          /* 14 */
     EVENT_OPCODE_UNKNOWN_74 = 0x74,                               /* 6 */
     EVENT_OPCODE_UNKNOWN_75 = 0x75,                               /* 6; recognized no-op */
     EVENT_OPCODE_DARK_SCREEN = 0x76,                              /* 6 */
@@ -143,7 +143,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_WAIT_VALUE = 0x7e,                               /* 4 */
     EVENT_OPCODE_EVTCHR_PALETTE = 0x7f,                           /* 4 */
     EVENT_OPCODE_MARCH = 0x80,                                    /* 3 */
-    EVENT_OPCODE_UNKNOWN_81 = 0x81,                               /* 3 */
+    EVENT_OPCODE_SET_UNIT_MOVEMENT_EFFECT_SUPPRESSION = 0x81,     /* 3 */
     EVENT_OPCODE_LOAD_ATTACK_GRAPHICS = 0x82,                     /* 0 */
     EVENT_OPCODE_CHANGE_STATS = 0x83,                             /* 5 */
     EVENT_OPCODE_PLAY_TUNE = 0x84,                                /* 1 */
@@ -199,10 +199,10 @@ typedef enum event_opcode {
     EVENT_OPCODE_JUMP_FORWARD = 0xd1,         /* 1 */
     EVENT_OPCODE_FORWARD_TARGET = 0xd2,       /* 1 */
     EVENT_OPCODE_JUMP_BACK = 0xd3,            /* 1 */
-    EVENT_OPCODE_UNKNOWN_D4 = 0xd4,           /* 1; stops the current task */
+    EVENT_OPCODE_FORWARD_TARGET_EXIT = 0xd4,  /* 1; JumpForwardIfZero target; exits when run */
     EVENT_OPCODE_BACK_TARGET = 0xd5,          /* 1 */
     EVENT_OPCODE_UNKNOWN_D8 = 0xd8,           /* 1; recognized no-op */
-    EVENT_OPCODE_UNKNOWN_D9 = 0xd9,           /* 1; recognized no-op */
+    EVENT_OPCODE_BACK_TARGET_BARRIER = 0xd9,  /* 1; JumpBack ignores earlier targets */
     EVENT_OPCODE_UNKNOWN_DA = 0xda,           /* 0; recognized no-op */
     EVENT_OPCODE_END = 0xdb,                  /* 0 */
     EVENT_OPCODE_UNKNOWN_DC = 0xdc,           /* 0 */
@@ -222,10 +222,10 @@ typedef enum event_call_function {
     EVENT_CALL_FUNCTION_ADVANCE_YEAR = 0x02,
     EVENT_CALL_FUNCTION_INCREASE_BLUE_TEAM_BRAVE = 0x03,
     EVENT_CALL_FUNCTION_REMOVE_ALL_ENEMY_UNITS = 0x04,
-    EVENT_CALL_FUNCTION_UNKNOWN_05 = 0x05,
+    EVENT_CALL_FUNCTION_REQUEST_CAMERA_YAW_WRAP = 0x05,
     EVENT_CALL_FUNCTION_OPEN_SAVE_MENU = 0x06,
     EVENT_CALL_FUNCTION_ADVANCE_YEAR_ALTERNATE = 0x07,
-    EVENT_CALL_FUNCTION_UNKNOWN_08 = 0x08,
+    EVENT_CALL_FUNCTION_DISABLE_DEBUG_DISPLAY = 0x08,
     EVENT_CALL_FUNCTION_MUTE_TEXT_AUDIO_CUE = 0x09,
     EVENT_CALL_FUNCTION_UNMUTE_TEXT_AUDIO_CUE = 0x0a,
     EVENT_CALL_FUNCTION_ADVANCE_MAP_DESTRUCTION_AND_WAIT = 0x0b,
@@ -286,14 +286,18 @@ typedef enum event_script_variable_id {
     /* Result word tested by the conditional-jump opcodes. */
     EVENT_SCRIPT_VAR_COMPARISON_RESULT = 0x00,
     EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION = 0x18,
-    /* First of the camera X, Z, Y and angle words (0x1a-0x1d) handed to the
-     * camera opcodes as one block. */
+    /* Words 0x1a-0x20 mirror the live camera: the store and load routines copy
+     * X -> vx, Z (height) -> vy, Y (map depth) -> vz, tilt, yaw, roll and zoom.
+     * The camera opcodes take X, Z, Y and tilt (0x1a-0x1d) as one block. */
     EVENT_SCRIPT_VAR_CAMERA_X = 0x1a,
-    EVENT_SCRIPT_VAR_CAMERA_ANGLE = 0x1d,
+    EVENT_SCRIPT_VAR_CAMERA_Z = 0x1b,
+    EVENT_SCRIPT_VAR_CAMERA_Y = 0x1c,
+    EVENT_SCRIPT_VAR_CAMERA_TILT = 0x1d,
     /* WORLD camera setup stores its 12-bit yaw here; the corresponding reader
      * normalizes it into 0..0xfff. */
     EVENT_SCRIPT_VAR_CAMERA_YAW = 0x1e,
-    EVENT_SCRIPT_VAR_CAMERA_ROTATION = 0x1f,
+    EVENT_SCRIPT_VAR_CAMERA_ROLL = 0x1f,
+    EVENT_SCRIPT_VAR_CAMERA_ZOOM = 0x20,
     /* Reads synthesize a fresh random value; the backing word does not retain
      * the value returned by the interpreter. */
     EVENT_SCRIPT_VAR_RANDOM_VALUE = 0x21,
@@ -378,12 +382,24 @@ typedef enum event_script_variable_id {
     /* When set, the interpreters skip the DismissUnit, CallFunction,
      * UnlockDate, and SetDateAdvance side effects. */
     EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS = 0x1fc,
-    /* Read at interpreter start and cleared at EventEnd. */
-    EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS = 0x1fd,
+    /* Set by ATTACK when a battle is loaded and cleared at EventEnd; while set,
+     * statuses are staged and the turn check starts the battle-start event. */
+    EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED = 0x1fd,
     /* ATTACK uses this branch while selecting deployment squads, and REQUIRE
      * uses it while applying permanent Brave and Faith changes. */
     EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE = 0x1fe,
     EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD = 0x1ff,
+    /* First variable of the world-map ranges WLDCORE indexes: one flag per
+     * Brave Story event, location dot, route, alternate dot colour, rumour,
+     * treasure and unexplored land, then one nibble of state bits per proposition. */
+    EVENT_SCRIPT_VAR_STORY_EVENT_FIRST = 0x1bc,
+    EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST = 0x200,
+    EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST = 0x22c,
+    EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST = 0x267,
+    EVENT_SCRIPT_VAR_RUMOR_FIRST = 0x2d1,
+    EVENT_SCRIPT_VAR_TREASURE_FIRST = 0x321,
+    EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST = 0x350,
+    EVENT_SCRIPT_VAR_PROPOSITION_FIRST = 0x360,
 } event_script_variable_id_e;
 
 #endif

@@ -16,27 +16,27 @@ void battle_move_start_unit_step_at_climb_speed(
     battle_unit_misc_data_t* rider;
 
     step_count = unit->current_edge_height;
-    step = &unit->movement_value.value;
-    switch (unit->movement_value.value >> 6) {
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
     case 0:
-        unit->centre_tile_offset = 0xB;
-        battle_unit_store_animation_facing(0x23, 0xC00, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 0xB;
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_EAST, unit);
+        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         break;
     case 1:
-        unit->centre_tile_offset = 0xF;
-        battle_unit_store_animation_facing(0x23, 0x400, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 0xF;
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_WEST, unit);
+        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         break;
     case 2:
-        unit->centre_tile_offset = 9;
-        battle_unit_store_animation_facing(0x23, 0, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 9;
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_SOUTH, unit);
+        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         break;
     case 3:
-        unit->centre_tile_offset = 0xD;
-        battle_unit_store_animation_facing(0x23, 0x800, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 0xD;
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_NORTH, unit);
+        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
         break;
     }
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {

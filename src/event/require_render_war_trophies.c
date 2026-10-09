@@ -80,7 +80,8 @@ void require_render_war_trophies(void) {
                 if (g_require_reward_war_trophy_entry_types[last] == 0) {
                     battle_menu_set_text_origin(0, 0);
                     battle_menu_display_text_entry(
-                        g_require_reward_war_trophy_entry_values[last] + 0x3800, image, &g_menu_text_state.origin_x);
+                        g_require_reward_war_trophy_entry_values[last] + TEXT_ID_ITEM_NAME_BASE, image,
+                        &g_menu_text_state.origin_x);
                 } else {
                     battle_menu_set_text_origin(0, 0);
                     battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],

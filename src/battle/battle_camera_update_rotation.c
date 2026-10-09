@@ -17,9 +17,9 @@ void battle_camera_update_rotation(void) {
                 }
             } else {
                 g_battle_camera_rotation_action = 0;
-                main_sound_stop_sfx(0xC);
-                main_sound_stop_sfx(0xB);
-                main_sound_play_sfx_find_channel(0xD);
+                main_sound_stop_sfx(MAIN_SFX_CAMERA_ROTATE_RIGHT);
+                main_sound_stop_sfx(MAIN_SFX_CAMERA_ROTATE_LEFT);
+                main_sound_play_sfx_find_channel(MAIN_SFX_CAMERA_ROTATE_STOP);
             }
         }
     } else if (g_battle_camera_rotation_action == 2) {
@@ -34,9 +34,9 @@ void battle_camera_update_rotation(void) {
                 }
             } else {
                 g_battle_camera_rotation_action = 0;
-                main_sound_stop_sfx(0xC);
-                main_sound_stop_sfx(0xB);
-                main_sound_play_sfx_find_channel(0xD);
+                main_sound_stop_sfx(MAIN_SFX_CAMERA_ROTATE_RIGHT);
+                main_sound_stop_sfx(MAIN_SFX_CAMERA_ROTATE_LEFT);
+                main_sound_play_sfx_find_channel(MAIN_SFX_CAMERA_ROTATE_STOP);
             }
         }
     } else {

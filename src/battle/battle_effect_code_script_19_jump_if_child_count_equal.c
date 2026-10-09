@@ -8,7 +8,7 @@ s32 battle_effect_code_script_19_jump_if_child_count_equal(effect_record_t* effe
     target = *(u16*)(effect->pc + (s32)effect->script + 2);
     count = 0;
     for (i = 0; i < 4; i++) {
-        if (effect->phase_ids[i] != 0) {
+        if (effect->child_indices[i] != 0) {
             count++;
         }
     }

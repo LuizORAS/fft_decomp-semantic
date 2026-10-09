@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Marks every in-use channel that holds a fermata and is not muted or
- * flagged 0x10 for retriggering (note_flags2 bit 0) and returns the voices
+ * flagged 0x10 for retriggering (voice_update_flags bit 0) and returns the voices
  * of those channels.
  *
  * The two single-bit tests are merged by GCC into one word-wide
@@ -17,10 +17,10 @@ u32 main_smd_retrigger_held_voices(suzuki_music_t* music) {
     channel = music->channels;
     voices = 0;
     do {
-        if ((channel->active & 1) && (channel->active & 0x100)) {
-            if ((channel->active & 0x30) == 0) {
+        if ((channel->flags & 1) && (channel->flags & 0x100)) {
+            if ((channel->flags & 0x30) == 0) {
                 voices |= channel->voice_mask;
-                channel->note_flags2 |= 1;
+                channel->voice_update_flags |= 1;
             }
         }
         count--;

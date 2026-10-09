@@ -57,7 +57,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
     geometry = &g_effect_geometry_table->entries[geometry_index].emitter;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
@@ -96,7 +96,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         work->wave_x_phase = 0;
         work->wave_y_amplitude_phase = 0;
         work->wave_y_phase = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[byte_offset];
@@ -258,7 +258,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
                 battle_heap_free_block(work);
                 record->work_slots[byte_offset] = 0;
             }
-            record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+            record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         }
         break;
     }

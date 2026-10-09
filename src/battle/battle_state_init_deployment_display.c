@@ -4,7 +4,7 @@ void battle_state_init_deployment_display(s32 width, s32 height, s32 projection,
     RECT clear_rect;
     s32 second_y;
 
-    clear_rect = g_deployment_clear_rect;
+    clear_rect = g_battle_deployment_clear_rect;
     second_y = -(height != 0x1e0) & 0xf0;
 
     SetDispMask(0);
@@ -28,7 +28,7 @@ void battle_state_init_deployment_display(s32 width, s32 height, s32 projection,
 
     ClearImage(&clear_rect, 0, 0, 0);
     DrawSync(0);
-    if (g_font_print_enabled != 0) {
+    if (g_main_font_print_enabled != 0) {
         main_gfx_load_efc_fnt();
     }
     PutDispEnv(&g_main_gfx_display_envs[g_main_gfx_screen_polarity]);

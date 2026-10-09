@@ -5,9 +5,9 @@ void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s3
     battle_gfx_sprite_display_data_t* display_1 = unit->numeric_displays[1];
     battle_gfx_sprite_display_data_t* display_2 = unit->numeric_displays[2];
 
-    display_2->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
-    display_1->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
-    display_0->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
+    display_2->tpage = BATTLE_GFX_TPAGE_FRAME;
+    display_1->tpage = BATTLE_GFX_TPAGE_FRAME;
+    display_0->tpage = BATTLE_GFX_TPAGE_FRAME;
     switch (mode) {
     case 1:
         unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET;

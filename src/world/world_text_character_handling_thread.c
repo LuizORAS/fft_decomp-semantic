@@ -35,7 +35,7 @@ void world_text_character_handling_thread(void) {
     s16 right;
     s16 bottom;
     u16 mark_x;
-    u16 color;
+    u16 delay;
     u16 no_wait;
     u16 variable_id;
     u16 value_index;
@@ -123,13 +123,13 @@ void world_text_character_handling_thread(void) {
         party = main_party_get_data_pointer(rec.portrait);
         if (party->sprite_set >= 0x80) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
-                s32 base = (party->job_id - 0x4A) * 2;
+                s32 base = (party->job_id - JOB_ID_GENERIC_FIRST) * 2;
                 portrait_id = base + 0x60;
                 if (party->job_id == JOB_ID_MIME) {
                     portrait_id = base + 0x5E;
                 }
             } else if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_FEMALE) {
-                s32 base = (party->job_id - 0x4A) * 2;
+                s32 base = (party->job_id - JOB_ID_GENERIC_FIRST) * 2;
                 portrait_id = base + 0x61;
                 if (party->job_id == JOB_ID_MIME) {
                     portrait_id = base + 0x5F;
@@ -410,7 +410,7 @@ void world_text_character_handling_thread(void) {
         rec.y += 8;
     }
     no_wait = 0;
-    color = 1;
+    delay = 1;
     column = 0;
     rec.color = 0;
     rec.line = 0;
@@ -577,7 +577,7 @@ void world_text_character_handling_thread(void) {
                     no_wait = 0;
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
-                    color = 1;
+                    delay = 1;
                     cursor_x = rec.x;
                     width_override = no_value;
                     rec.mark = -1;
@@ -679,7 +679,7 @@ void world_text_character_handling_thread(void) {
                 no_wait = 0;
                 world_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
-                color = 1;
+                delay = 1;
                 width_override = no_value;
                 cursor_x = rec.x;
                 cursor_y = rec.y;
@@ -726,9 +726,9 @@ void world_text_character_handling_thread(void) {
                 world_script_set_variable(variable_id, *text);
             }
             NEXT();
-        } else if (code == TEXT_SET_GLYPH_COLOR) {
+        } else if (code == TEXT_SET_GLYPH_DELAY) {
             NEXT();
-            color = *text;
+            delay = *text;
             NEXT();
         } else if (code == TEXT_SET_PALETTE) {
             NEXT();
@@ -782,7 +782,7 @@ void world_text_character_handling_thread(void) {
                         glyph->mode = rec.dialog_type & 0x70;
                         glyph->palette = rec.color;
                     }
-                    world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
+                    world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -790,7 +790,7 @@ void world_text_character_handling_thread(void) {
                     }
                 }
                 NEXT();
-            } else if ((code & 0xF0) == 0xF0 && (code & 0xF) < 4) {
+            } else if ((code & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (code & 0xF) < 4) {
                 saved = text + 3;
                 value = (text[0] & 3) * 8;
                 repeat = value + (text[1] >> 5) + 4;
@@ -799,12 +799,12 @@ void world_text_character_handling_thread(void) {
                 value = value + text[2];
                 text -= value;
             } else {
-                if (code < 0xD0) {
+                if (code < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = *text;
-                } else if ((code & 0xF0) == 0xD0) {
+                } else if ((code & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = (*text & 0xF) * 0xD0;
                     NEXT();
-                    if ((*text & 0xF0) == 0xF0 && (*text & 0xF) < 4) {
+                    if ((*text & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (*text & 0xF) < 4) {
                         saved = text + 3;
                         value = (text[0] & 3) * 8;
                         repeat = value + (text[1] >> 5) + 4;
@@ -824,7 +824,7 @@ void world_text_character_handling_thread(void) {
                     glyph->mode = rec.box_type;
                     glyph->palette = rec.color;
                 }
-                world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
+                world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

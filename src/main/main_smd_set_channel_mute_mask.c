@@ -19,16 +19,16 @@ void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask) {
         count = music->channel_count;
         music->mute_mask = mask;
         do {
-            if (channel->active != 0) {
+            if (channel->flags != 0) {
                 if (mask & 1) {
-                    if (!(channel->active & 0x20)) {
-                        channel->active |= 0x20;
+                    if (!(channel->flags & 0x20)) {
+                        channel->flags |= 0x20;
                         key_off |= channel->voice_mask;
                     }
                 } else {
-                    if (channel->active & 0x20) {
-                        channel->active &= ~0x20;
-                        if ((channel->active & 0x100) && !(channel->active & 0x10)) {
+                    if (channel->flags & 0x20) {
+                        channel->flags &= ~0x20;
+                        if ((channel->flags & 0x100) && !(channel->flags & 0x10)) {
                             key_on |= channel->voice_mask;
                         }
                     }

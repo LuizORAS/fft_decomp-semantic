@@ -22,15 +22,15 @@ typedef struct native_thread {
     s32 function_parameter_3; /* 0x08 */
     s32 function_parameter_4; /* 0x0c; set by WORLD's four-parameter helper */
     u8 _unused_010[0x28];
-    void* global_pointer;       /* 0x38 */
-    u32* stack_pointer;         /* 0x3c */
-    u32* frame_pointer;         /* 0x40 */
-    void (*code_pointer)(void); /* 0x44 */
-    s32 is_running;             /* 0x48 */
-    s32 task_id;                /* 0x4c */
-    s32 task_words[7];          /* 0x50: per-task words, see above */
-    u8 _unused_06c[0x3f0 - 0x6c];
-    u32 stack_top[4]; /* 0x3f0: initial SP/FP; the stack grows down from here */
+    void* global_pointer;         /* 0x38 */
+    u32* stack_pointer;           /* 0x3c */
+    u32* frame_pointer;           /* 0x40 */
+    void (*code_pointer)(void);   /* 0x44 */
+    s32 is_running;               /* 0x48 */
+    s32 task_id;                  /* 0x4c */
+    s32 task_words[7];            /* 0x50: per-task words, see above */
+    u8 _unused_06c[0x3f0 - 0x6c]; /* 0x6c: the thread's stack */
+    u32 stack_top[4];             /* 0x3f0: initial SP/FP; the stack grows down from here */
 } native_thread_t;
 typedef char native_thread_size_must_be_0x400[(sizeof(native_thread_t) == 0x400) ? 1 : -1];
 typedef char native_thread_running_must_be_0x48[((unsigned long)&((native_thread_t*)0)->is_running == 0x48) ? 1 : -1];
@@ -63,6 +63,12 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_COLOR_SCREEN = 0xc,
     NATIVE_THREAD_TASK_EARTHQUAKE = 0xd,
     NATIVE_THREAD_TASK_ADD_UNIT = 0xe,
+    /* Unit-view panels: the ids the view thread sets pair with each panel thread. */
+    NATIVE_THREAD_TASK_TILE_INFO_PANEL = 0x10,
+    NATIVE_THREAD_TASK_HOVERED_UNIT_STATS = 0x11,
+    NATIVE_THREAD_TASK_ATTACK_TARGET_STATS = 0x12,
+    NATIVE_THREAD_TASK_ATTACK_CASTER_STATS = 0x13,
+    NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL = 0x14,
     NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL = 0x15,
     NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL = 0x23,
     NATIVE_THREAD_TASK_MESSAGE_BOX = 0x26,
@@ -78,12 +84,13 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_DARK_SCREEN_HOLD = 0x37,
     NATIVE_THREAD_TASK_CONDITION_DISPATCH = 0x38,
     NATIVE_THREAD_TASK_UNIT_STATUS_BANNER = 0x39,
+    NATIVE_THREAD_TASK_RIGHT_UNIT_STATS = 0x3a,
     NATIVE_THREAD_TASK_STATUS_PANEL = 0x3b,
     NATIVE_THREAD_TASK_SHOW_GRAPHIC = 0x3d,
     NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR = 0x3e,
     NATIVE_THREAD_TASK_HELP_MENU = 0x40,
     NATIVE_THREAD_TASK_PLAY_EFFECT = 0x41,
-    NATIVE_THREAD_TASK_MENU_SOUND_DELAY = 0x42,
+    NATIVE_THREAD_TASK_MINI_MENU = 0x42,
     NATIVE_THREAD_TASK_INFLICT_STATUS = 0x43,
     NATIVE_THREAD_TASK_EXECUTE_EVENT = 0x44,
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 0x46,

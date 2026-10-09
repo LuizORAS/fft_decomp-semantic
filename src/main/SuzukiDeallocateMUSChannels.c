@@ -3,7 +3,7 @@
 
 void SuzukiDeallocateMUSChannels(suzuki_music_t* music) {
     if (music != 0) {
-        music->status &= 0x7fff;
+        music->status &= ~SUZUKI_MUSIC_STATUS_PLAYING;
         g_main_sound_music_key_off_voices |= SuzukiGetActiveChannels(music);
     }
 }

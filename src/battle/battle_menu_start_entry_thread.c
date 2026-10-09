@@ -15,7 +15,7 @@ void battle_menu_start_entry_thread(void) {
         battle_thread_exit_current();
     }
     battle_camera_wait_until_idle();
-    while (battle_thread_find_running_by_task(0x12) != 0) {
+    while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         battle_thread_yield();
     }
     if (g_battle_menu_input_disabled == 0) {

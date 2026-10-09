@@ -100,8 +100,9 @@ typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_backgroun
 typedef union map_tile_surface {
     u8 value;
     struct {
-        u8 type : 6; /* map_surface_type_e */
-        u8 _unused_00_bit6 : 2;
+        u8 type : 6;       /* map_surface_type_e */
+        u8 depth_bias : 1; /* camera depth offset 5 instead of 1 for the cursor, units and shadows on this tile */
+        u8 _unused_00_bit7 : 1;
     } bits;
 } map_tile_surface_t;
 
@@ -117,7 +118,7 @@ typedef union map_tile_marks {
     } bits;
 } map_tile_marks_t;
 
-typedef union map_tile_flags_06 {
+typedef union map_tile_flags {
     u8 value;
     struct {
         u8 blocked : 1;
@@ -126,7 +127,7 @@ typedef union map_tile_flags_06 {
         u8 unknown_4_6 : 3;
         u8 cannot_stop : 1;
     } bits;
-} map_tile_flags_06_t;
+} map_tile_flags_t;
 
 /* Tile byte 0x03: slope half-height and the depth added to the height
  * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup).
@@ -153,7 +154,7 @@ typedef struct map_tile {
     map_tile_depth_t depth_half_height;       /* 0x03 */
     u8 slope_type;                            /* 0x04; two bits per exit side (battle_move_calculate_tile_ceiling) */
     map_tile_marks_t ceiling_depth_and_marks; /* 0x05; ceiling depth and the transient map marks */
-    map_tile_flags_06_t flags_06;
+    map_tile_flags_t flags;
     /* 0x07; low nibble blocks camera directions at a flat pitch; high nibble
      * holds the same direction bits for a steep pitch. */
     u8 camera_block_masks;

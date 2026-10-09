@@ -6,7 +6,7 @@ void battle_unit_set_animation(s32 misc_id, u32 value) {
     battle_stats_t* stats;
     s32 depth;
 
-    if ((battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) == 0)
+    if ((battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0)
         && (battle_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) != 0)) {
         idx = battle_unit_get_battle_index_by_misc_id(misc_id);
         if ((idx >= 0) && (value < 0x1F4)) {

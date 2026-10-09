@@ -71,9 +71,10 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             } else {
                 delay = battle_ai_calculate_clockticks_until_unit_acts(unit);
             }
-            decision->targeting_flags_1 &= 0xfc;
+            decision->targeting_flags_1
+                &= ~(BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES);
             for (i = 0; i < 0x22; i++) {
-                entry = &ai->ability_lists[ai->unit_battle_ids[unit_id]][i];
+                entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
                 entry->skillset_flags.packed &= 0x7fff;
                 if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
                     break;
@@ -81,7 +82,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 battle_ai_load_ability_entry(entry);
                 ability_id = ability->ability_id;
                 threshold = delay + ability->ct;
-                if (unit->status_sets.current[2] & 2) {
+                if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
                     if (ability_id != ABILITY_ID_BLACK_MAGIC_FROG && ability_id != ABILITY_ID_FROG_ATTACK) {
                         continue;
                     }
@@ -91,11 +92,11 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (battle_ai_is_status_active_through_delay(delay, unit, BATTLE_STATUS_ID_DONT_ACT)) {
                     continue;
                 }
-                if ((AI_FLAGS_LO(ability) & 0x100)
+                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE)
                     && battle_ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_SILENCE)) {
                     continue;
                 }
-                if ((AI_FLAGS_LO(ability) & 0x400)
+                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
                     && battle_ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_INNOCENT)) {
                     continue;
                 }
@@ -105,7 +106,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
                 if (menu == 1 || menu == 7 || ability_id == ABILITY_ID_THROW_SHURIKEN
                     || ability_id == ABILITY_ID_THROW_BALL) {
-                    if (!(unit->initial_team_flags & 0x30)) {
+                    if (!(unit->initial_team_flags & BATTLE_TEAM_MASK)) {
                         if (g_main_item_quantities[ability->parameters.bytes.item_id] == 0) {
                             continue;
                         }
@@ -125,7 +126,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                                 if (g_main_item_primary_data[item_id].type == item_type) {
                                     level = g_main_item_primary_data[item_id].required_level;
                                     if (level >= best_level) {
-                                        if (!(unit->initial_team_flags & 0x30)) {
+                                        if (!(unit->initial_team_flags & BATTLE_TEAM_MASK)) {
                                             lacking = g_main_item_quantities[item_id] < 5;
                                         } else {
                                             lacking = unit->level < level;
@@ -147,15 +148,15 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 entry->skillset_flags.packed |= 0x8000;
                 if (!(entry->skillset_flags.packed & 0x800)) {
                     if (decision->enemy_flag) {
-                        if (AI_FLAGS_LO(ability) & 2) {
+                        if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                             enemy_harmful++;
-                            if (AI_FLAGS_HI(ability) & 2) {
+                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_MAGICAL_ATTACK >> 16)) {
                                 enemy_magical++;
                             }
-                            if (AI_FLAGS_HI(ability) & 1) {
+                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_PHYSICAL_ATTACK >> 16)) {
                                 enemy_physical++;
                             }
-                            if (AI_FLAGS_LO(ability) & 0x4000) {
+                            if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_REFLECTABLE) {
                                 enemy_reflectable++;
                             }
                             if (ability->element & 8) {
@@ -163,16 +164,18 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                             }
                         }
                     }
-                    if ((AI_FLAGS_LO(ability) & 0x81) == 0x81) {
-                        decision->targeting_flags_1 |= 2;
+                    if ((AI_FLAGS_LO(ability) & (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES))
+                        == (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES)) {
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES;
                     }
-                    if (AI_FLAGS_HI(ability) & 0xc0) {
-                        decision->targeting_flags_1 |= 1;
+                    if (AI_FLAGS_HI(ability)
+                        & ((BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY) >> 16)) {
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY;
                     }
-                    if (AI_FLAGS_LO(ability) & 2) {
+                    if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                         unit_harmful++;
                     }
-                    if (AI_FLAGS_LO(ability) & 1) {
+                    if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ALLIES) {
                         unit_helpful++;
                     }
                 }
@@ -180,13 +183,13 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             if (decision->enemy_flag == 0) {
                 total = unit_helpful + unit_harmful;
                 if (total == 0) {
-                    decision->targeting_flags_1 &= 0xfb;
+                    decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                 } else {
                     ratio = (unit_helpful << 7) / total;
                     if (ratio >= 0x4d) {
-                        decision->targeting_flags_1 |= 4;
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                     } else {
-                        decision->targeting_flags_1 &= 0xfb;
+                        decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                     }
                     if (ratio < lowest_ratio) {
                         lowest_unit = unit_id;
@@ -200,20 +203,20 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
 
     usable = 0;
     if (lowest_unit != 0xff) {
-        ai->unit_decisions[lowest_unit].targeting_flags_1 &= 0xfb;
+        ai->unit_decisions[lowest_unit].targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
     }
     random_use = 0;
     decision = g_battle_ai_data_base.acting_unit_decision;
-    ai->ability_targets_enemies_or_mp = 0;
-    ai->targetability.live.target_setting_flags &= 0xdfffffff;
-    decision->highest_range = 0xff;
-    decision->lowest_range = 0xff;
+    ai->has_mp_recovery_ability = 0;
+    ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
+    decision->ally_ability_min_reach = 0xff;
+    decision->enemy_ability_min_reach = 0xff;
     threshold = enemy_harmful / 8;
     for (i = 0; i < 5; i++) {
         ai->status_to_cancel[i] = 0;
     }
     for (i = 0; i < 0x22; i++) {
-        entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_battle_id][i];
+        entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_compact_index][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
             break;
         }
@@ -233,30 +236,32 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
             if (entry->skillset_flags.packed & 0x8000) {
                 usable++;
-                if (AI_FLAGS_LO(ability) & 0x800) {
+                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_RANDOM_USE) {
                     random_use++;
                 }
-                if (ability->ability_id == 0x17b) {
-                    ai->targetability.live.target_setting_flags |= 0x20000000;
+                if (ability->ability_id == ABILITY_ID_ITEM_HOLY_WATER) {
+                    ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
                 }
-                if (AI_FLAGS_LO(ability) & 0x20) {
+                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_CANCEL_STATUS) {
                     for (throw_id = 0; throw_id < 5; throw_id++) {
                         ai->status_to_cancel[throw_id] |= ability->parameters.bytes.status_infliction[throw_id];
                     }
                 }
-                if ((AI_FLAGS_LO(ability) & 0x42) == 0x40) {
-                    ai->ability_targets_enemies_or_mp = 1;
+                if ((AI_FLAGS_LO(ability) & (BATTLE_AI_ABILITY_AFFECTS_MP | BATTLE_AI_ABILITY_TARGET_ENEMIES))
+                    == BATTLE_AI_ABILITY_AFFECTS_MP) {
+                    ai->has_mp_recovery_ability = 1;
                 }
                 range = ability->parameters.bytes.range + ability->parameters.bytes.aoe;
-                if ((AI_FLAGS_LO(ability) & 2) && range < decision->lowest_range) {
-                    decision->lowest_range = range;
+                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                    && range < decision->enemy_ability_min_reach) {
+                    decision->enemy_ability_min_reach = range;
                 }
-                if (AI_FLAGS_LO(ability) & 1) {
-                    if (g_main_action_menu_types_by_skillset[ability->skillset] == 1) {
+                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ALLIES) {
+                    if (g_main_action_menu_types_by_skillset[ability->skillset] == ACTION_MENU_TYPE_ITEM_INVENTORY) {
                         range = (range + 1) / 2;
                     }
-                    if (range < decision->highest_range) {
-                        decision->highest_range = range;
+                    if (range < decision->ally_ability_min_reach) {
+                        decision->ally_ability_min_reach = range;
                     }
                 }
                 flags = entry->skillset_flags.packed;
@@ -276,13 +281,13 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
         }
     }
-    if (decision->lowest_range != 0xff) {
-        decision->lowest_range += g_battle_ai_data_base.acting_unit_move;
+    if (decision->enemy_ability_min_reach != 0xff) {
+        decision->enemy_ability_min_reach += g_battle_ai_data_base.acting_unit_move;
     }
-    if (decision->highest_range == 0xff) {
-        decision->highest_range = 0;
+    if (decision->ally_ability_min_reach == 0xff) {
+        decision->ally_ability_min_reach = 0;
     }
-    decision->highest_range += g_battle_ai_data_base.acting_unit_move;
+    decision->ally_ability_min_reach += g_battle_ai_data_base.acting_unit_move;
     if (usable != 0) {
         ai->random_use_threshold = (random_use << 7) / usable;
     }

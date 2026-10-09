@@ -20,13 +20,13 @@ void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_da
         g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
             + (g_battle_move_current_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                 * unit->current_edge_height;
-        unit->current_unit_id_plus_one = 0;
+        unit->standing_on_unit_id_plus_one = 0;
         g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
             + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                 * unit->destination_edge_height;
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-            unit->centre_tile_offset = g_battle_move_entry_edge_centre_offsets[direction];
+            unit->step_phase = g_battle_move_entry_edge_centre_offsets[direction];
         } else {
             unit->step_speed = 0x2000;
             battle_move_start_float_climb_jump_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

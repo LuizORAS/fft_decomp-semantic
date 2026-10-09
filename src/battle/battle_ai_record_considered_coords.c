@@ -16,11 +16,11 @@ void battle_ai_record_considered_coords(s32 x, s32 y, s32 level) {
     g_battle_ai_data_base.considered_unit_coords.bytes.zero = 0;
     battle_ai_init_selected_action();
     for (i = 0; i < 4; i++) {
-        if (ai->coords_181c[i].bytes.x == 0xff) {
-            ai->coords_181c[i].word = ai->considered_unit_coords.word;
+        if (ai->known_trap_coords[i].bytes.x == 0xff) {
+            ai->known_trap_coords[i].word = ai->considered_unit_coords.word;
             break;
         }
-        if (ai->coords_181c[i].word == ai->considered_unit_coords.word) {
+        if (ai->known_trap_coords[i].word == ai->considered_unit_coords.word) {
             break;
         }
     }

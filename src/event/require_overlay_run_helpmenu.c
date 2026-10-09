@@ -13,7 +13,7 @@ void require_overlay_run_helpmenu(void) {
         main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x10000) != g_main_heap_high_overlay_load_address) {
         battle_thread_yield();
     }
-    battle_menu_request_open_companion_executable(3);
+    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_HELPMENU);
     thread_id = battle_thread_resolve_id(0x10);
     battle_thread_start(thread_id, helpmenu_menu_run_require_help);
     battle_thread_wait_until_inactive(thread_id);

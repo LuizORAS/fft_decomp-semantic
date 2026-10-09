@@ -48,7 +48,7 @@ s32 bunit_menu_run_unit_list_frame(void) {
                     g_bunit_unit_list_initialized = 0;
                 } else if (g_bunit_menu_primary_result == 1) {
                     bunit_gfx_start_increasing_fade();
-                    g_bunit_selected_roster_id = g_bunit_unit_data[g_bunit_unit_selected_index]->roster_id;
+                    g_bunit_selected_battle_id = g_bunit_unit_data[g_bunit_unit_selected_index]->battle_id;
                 }
                 g_bunit_character_status_highlight = 0;
                 g_bunit_numeric_editor_highlight = 0;
@@ -73,7 +73,7 @@ s32 bunit_menu_run_unit_list_frame(void) {
             g_bunit_unit_list_triangle_menu_open = 1;
         } else if ((input & PSX_PAD_CIRCLE) && g_bunit_unit_browse_enabled != 0) {
             unit = g_bunit_unit_data[g_bunit_unit_selected_index];
-            if (unit->uses_monster_skillset != 0 || (unit->initial_team_flags & 0x30)) {
+            if (unit->uses_monster_skillset != 0 || (unit->initial_team_flags & BATTLE_TEAM_MASK)) {
                 g_bunit_sound_queued_effect_id = MAIN_SFX_INVALID;
             } else {
                 g_bunit_status_display_highlight = 1;

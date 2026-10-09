@@ -25,7 +25,7 @@ void world_menu_load_text_1bd8_with_face(void) {
         *dst++ = value + base;
         i++;
     } while (i < 0x20);
-    g_world_text_section_pointers[WORLD_TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
+    g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
     world_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, 0);

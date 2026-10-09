@@ -163,7 +163,10 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         value = 0x7C;
     }
     config->move = value;
-    if ((unit->unit_flags & 0xC0) && !(unit->status_sets.current[2] & 6) && !(unit->status_sets.current[4] & 0x20)) {
+    if ((unit->unit_flags & 0xC0)
+        && !(unit->status_sets.current[2]
+            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)))
+        && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM))) {
         config->can_ride = 1;
     } else {
         config->can_ride = 0;
@@ -183,10 +186,12 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         if (other->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (other->status_sets.current[0] & 0x64) {
+        if (other->status_sets.current[0]
+            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
+                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
             continue;
         }
-        if (other->status_sets.current[1] & 1) {
+        if (other->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
             continue;
         }
         if (i == unit_id) {
@@ -228,7 +233,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         depth = tile->depth_half_height.value >> 5;
         byte = base;
         if (depth != 0) {
-            if (other->status_sets.current[2] & 0x40) {
+            if (other->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
                 adjust = depth * 2 + 2;
                 byte = base + adjust;
             } else if (movement_3 & 0x80) {
@@ -238,7 +243,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
                 adjust = depth * 2 - 2;
                 byte = base + adjust;
             }
-        } else if (other->status_sets.current[2] & 0x40) {
+        } else if (other->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             byte = base + 2;
         }
         current->standing_height = byte;

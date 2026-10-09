@@ -16,7 +16,7 @@ s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target) {
     s32 level, x, y;
     s32 distance, y_distance;
 
-    if (g_battle_ai_data_base.decision_state != 0)
+    if (g_battle_ai_data_base.resume_pending != 0)
         g_battle_ai_data_base.search_resume_flag = 0;
     else
         g_battle_ai_data_base.search_resume_flag = 1;
@@ -30,7 +30,7 @@ s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target) {
             target->bytes.elevation, ai->search_resume_flag, &suspended, 1);
         if (suspended != 0)
             return -1;
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         target_remaining_range
             = g_battle_target_panels[(target->bytes.elevation << 8) + target->bytes.y * ai->map_max_x + target->bytes.x]
                   .remaining_range;

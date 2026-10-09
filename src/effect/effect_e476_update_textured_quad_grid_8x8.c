@@ -38,7 +38,7 @@ s32 effect_e476_update_textured_quad_grid_8x8(s16 record_index, s32 byte_offset,
     geometry = &g_effect_geometry_table->entries[geometry_index].emitter;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
@@ -78,7 +78,7 @@ s32 effect_e476_update_textured_quad_grid_8x8(s16 record_index, s32 byte_offset,
         work->destroy_latched = 0;
         work->texture_u = geometry->motion.textured_quad.texture_u;
         work->texture_v = geometry->motion.textured_quad.texture_v;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[byte_offset];
@@ -166,7 +166,7 @@ s32 effect_e476_update_textured_quad_grid_8x8(s16 record_index, s32 byte_offset,
                 battle_heap_free_block(work);
                 record->work_slots[byte_offset] = 0;
             }
-            record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+            record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         }
         break;
     }

@@ -54,13 +54,13 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
 
     while (1) {
         state->command = *cursor;
-        if (state->command >= 0xD0) {
-            if ((state->command & 0xF0) == 0xD0) {
+        if (state->command >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
+            if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 state->command = (*cursor & 0xF) * 0xD0;
                 cursor = world_text_advance_cursor_with_backreferences_2(state, cursor);
                 state->command = *cursor + state->command;
             } else {
-                if (state->command == TEXT_SET_GLYPH_COLOR) {
+                if (state->command == TEXT_SET_GLYPH_DELAY) {
                     cursor = world_text_advance_cursor_with_backreferences_2(state, cursor);
                 } else if (state->command == TEXT_SET_PORTRAIT) {
                     cursor = world_text_advance_cursor_with_backreferences_2(state, cursor);
@@ -142,7 +142,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
                     state->value_cursor++;
                     continue;
                 }
-                if ((state->command & 0xF0) == 0xF0 && (state->command & 0xF) < 4) {
+                if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
                     state->return_cursor = cursor + 3;
                     state->scratch = (cursor[0] & 3) * 8;
                     state->remaining_bytes = cursor[1] >> 5;

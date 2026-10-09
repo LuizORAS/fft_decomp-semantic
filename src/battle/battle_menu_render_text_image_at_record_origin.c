@@ -14,8 +14,8 @@ void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* 
         g_menu_text_state.origin_x = record->origin_x;
         g_menu_text_state.origin_y = record->origin_y;
         g_menu_text_state.stride = record->rect.w * 4;
-        g_menu_text_param_22 = record->first_line;
-        g_menu_text_param_24 = record->last_line;
+        g_battle_menu_text_param_22 = record->first_line;
+        g_battle_menu_text_param_24 = record->last_line;
         battle_menu_display_text_entry(record->text, record->buffer, &g_menu_text_state.origin_x);
         LoadImage(&record->rect, record->buffer);
         battle_thread_yield();

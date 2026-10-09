@@ -25,8 +25,8 @@ s32 main_smd_remove_music(suzuki_music_t* music) {
         return -1;
     }
     status = music->status;
-    if ((status & 0x8000) && music != 0) {
-        music->status = status & 0x7fff;
+    if ((status & SUZUKI_MUSIC_STATUS_PLAYING) && music != 0) {
+        music->status = status & ~SUZUKI_MUSIC_STATUS_PLAYING;
         g_main_sound_music_key_off_voices |= SuzukiGetActiveChannels(music);
     }
     if (previous != 0) {

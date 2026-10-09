@@ -81,8 +81,8 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
         point.x = 0x3C;
         line = i + 2;
         point.y = (size[1] + line) * 0x10 + 8;
-        wldcore_menu_display_text_entry(
-            index, g_wldcore_proposition_send_units[i] + 0x4000, point, &g_wldcore_window_image_buffer[0x200]);
+        wldcore_menu_display_text_entry(index, g_wldcore_proposition_send_units[i] + TEXT_ID_UNIT_NAME_BASE, point,
+            &g_wldcore_window_image_buffer[0x200]);
     }
     wldcore_window_load_image_record_to_vram(index, &g_wldcore_window_image_buffer[0x200]);
     g_wldcore_window_render_records[index].priority = 8;

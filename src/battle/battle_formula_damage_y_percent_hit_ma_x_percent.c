@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x53: damage (X)% of max HP, hit (MA+X)%. */
+/* Formula 0x53: damage (Y)% of max HP, hit (MA+X)%. */
 void battle_formula_damage_y_percent_hit_ma_x_percent(void) {
     if (battle_formula_calculate_magical_evade() != 0) {
         return;

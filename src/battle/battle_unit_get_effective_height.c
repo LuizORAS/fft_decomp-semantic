@@ -30,9 +30,9 @@ u8 battle_unit_get_effective_height(battle_stats_t* unit) {
         ignores_water = 1;
     }
     if (water_depth != 0) {
-        if (ignores_water || (flags & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)) {
+        if (ignores_water || (flags & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER)) {
             effective_height += water_depth;
-        } else if (flags & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+        } else if (flags & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
             effective_height += water_depth - 2;
         }
     }

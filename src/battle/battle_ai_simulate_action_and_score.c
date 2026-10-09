@@ -24,7 +24,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     u32 product;
     u32 below_cost;
 
-    if (g_battle_ai_data_base.decision_state && g_battle_ai_data_base.action_simulation_phase) {
+    if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.action_simulation_phase) {
         battle_ai_restore_unit_state(1);
         /* Resume: re-enter the suspended turn-advance or scoring phase. */
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_ADVANCE_TURNS)
@@ -46,13 +46,13 @@ s32 battle_ai_simulate_action_and_score(void) {
     }
     ai->current_action.priority = 0;
     ai->current_action.base_hit_percent = 0xff;
-    if (ai->current_action.target_flags_set) {
+    if (ai->current_action.act_before_move) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
             if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
-                ai->decision_state = 0;
+                ai->resume_pending = 0;
                 return 0;
             }
             ai->acting_unit->action_taken = 1;
@@ -65,7 +65,7 @@ s32 battle_ai_simulate_action_and_score(void) {
             if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
-                ai->decision_state = 0;
+                ai->resume_pending = 0;
                 return 0;
             }
             ai->acting_unit->action_taken = 1;
@@ -79,9 +79,9 @@ s32 battle_ai_simulate_action_and_score(void) {
     if (ai->current_action.skillset == 0)
         ai->current_action.base_hit_percent = 100;
     battle_action_end_turn(ai->acting_unit_id);
-    ai->saved_turn_state_0 = g_battle_between_turn_state;
-    ai->saved_turn_state_1 = g_battle_between_turn_resume_state;
-    ai->saved_turn_state_2 = g_battle_turn_unit_id;
+    ai->saved_between_turn_state = g_battle_between_turn_state;
+    ai->saved_between_turn_resume_state = g_battle_between_turn_resume_state;
+    ai->saved_turn_unit_id = g_battle_turn_unit_id;
     ai->simulated_turn_events = 0;
     for (;;) {
     advance_turns:
@@ -103,9 +103,9 @@ s32 battle_ai_simulate_action_and_score(void) {
             battle_action_finalize_attack_and_flag_reactions(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
             if (battle_ai_call_ability_processing((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
-                g_battle_between_turn_state = ai->saved_turn_state_0;
-                g_battle_between_turn_resume_state = ai->saved_turn_state_1;
-                g_battle_turn_unit_id = ai->saved_turn_state_2;
+                g_battle_between_turn_state = ai->saved_between_turn_state;
+                g_battle_between_turn_resume_state = ai->saved_between_turn_resume_state;
+                g_battle_turn_unit_id = ai->saved_turn_unit_id;
                 /* An early return duplicates this shared cleanup tail. */
                 goto finish_without_scoring;
             }
@@ -130,9 +130,9 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (unit_index == BATTLE_UNIT_ID_NONE)
             break;
     }
-    g_battle_between_turn_state = ai->saved_turn_state_0;
-    g_battle_between_turn_resume_state = ai->saved_turn_state_1;
-    g_battle_turn_unit_id = ai->saved_turn_state_2;
+    g_battle_between_turn_state = ai->saved_between_turn_state;
+    g_battle_between_turn_resume_state = ai->saved_between_turn_resume_state;
+    g_battle_turn_unit_id = ai->saved_turn_unit_id;
 score_state:
     if (VSync(1) >= 441) {
         battle_ai_save_unit_state(1);
@@ -162,7 +162,7 @@ score_state:
     } else {
         battle_ai_clear_current_action_rank_byte();
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
-            status = ai->unit_battle_ids[unit_index];
+            status = ai->unit_compact_indices[unit_index];
             if (status == 0xff)
                 continue;
             unit = &g_battle_unit_stats[unit_index];
@@ -220,7 +220,7 @@ score_state:
             if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
                 for (equipment_slot = 0; equipment_slot < 7; equipment_slot++) {
                     if (unit->equipment[equipment_slot]
-                        == g_battle_ai_unit_snapshots[ai->unit_battle_ids[unit_index]].equipment[equipment_slot])
+                        == g_battle_ai_unit_snapshots[ai->unit_compact_indices[unit_index]].equipment[equipment_slot])
                         score += 51;
                 }
             }
@@ -255,11 +255,11 @@ score_state:
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_BALL)
             ai->current_action.base_hit_percent >>= 1;
         battle_ai_restore_unit_state(0);
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         return 1;
     }
 finish_without_scoring:
     battle_ai_restore_unit_state(0);
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     return 0;
 }

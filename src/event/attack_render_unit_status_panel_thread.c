@@ -405,7 +405,7 @@ void attack_render_unit_status_panel_thread(void) {
             battle_menu_set_text_origin(0, 0);
             battle_menu_display_text_entry(unit_info[0] + 0x5800, name_pixels, text_position);
             battle_menu_set_text_origin(0, 0x10);
-            battle_menu_display_text_entry(unit_info[1] + 0x3000, name_pixels, text_position);
+            battle_menu_display_text_entry(unit_info[1] + TEXT_ID_JOB_NAME_BASE, name_pixels, text_position);
             LoadImage(&rects[2], name_pixels);
             battle_clear_menu_render_buffer(value_pixels, 0xF0);
             *window_width = 0x10;

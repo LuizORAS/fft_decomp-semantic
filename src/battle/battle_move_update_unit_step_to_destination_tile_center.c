@@ -22,7 +22,7 @@ void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_da
             unit->velocity.vy = 0;
             unit->real.vy = g_battle_move_target_screen_z << 12;
             unit->screen.vy = unit->real.vy / ONE;
-            unit->centre_tile_offset = 0;
+            unit->step_phase = 0;
             unit->shadow_dirty |= 1;
         }
     }

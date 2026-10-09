@@ -11,7 +11,7 @@ u32 SuzukiGetActiveChannels(suzuki_music_t* music) {
     channel = music->channels;
     active = 0;
     do {
-        if (channel->active != 0) {
+        if (channel->flags != 0) {
             active |= channel->voice_mask;
         }
         remaining--;

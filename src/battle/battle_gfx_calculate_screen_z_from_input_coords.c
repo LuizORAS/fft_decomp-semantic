@@ -15,8 +15,8 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(
     s32 animation;
     s16 raised;
 
-    if (unit->current_unit_id_plus_one != 0) {
-        battle_unit_calculate_height_data(&height, unit->current_unit_id_plus_one - 1);
+    if (unit->standing_on_unit_id_plus_one != 0) {
+        battle_unit_calculate_height_data(&height, unit->standing_on_unit_id_plus_one - 1);
         if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
             screen_z = battle_map_calculate_slope_height(&coords->x, (u8)coords->z);
         } else {
@@ -37,7 +37,7 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(
                 raised = screen_z + 4;
                 screen_z = raised
                     - ((tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset);
-            } else if ((flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) || animation == 0x1a) {
+            } else if ((flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) || animation == BATTLE_UNIT_ANIMATION_DEAD) {
                 screen_z
                     -= ((tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) - 1) * 12 + unit->depth_height_offset;
             } else if (sprite == BATTLE_SPRITESHEET_ID_TREASURE || sprite == BATTLE_SPRITESHEET_ID_CRYSTAL) {

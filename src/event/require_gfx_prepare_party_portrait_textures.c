@@ -49,13 +49,13 @@ void require_gfx_prepare_party_portrait_textures(void) {
             value = unit->sprite_set;
         } else {
             if (unit->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
-                base = (unit->job_id - 0x4a) * 2;
+                base = (unit->job_id - JOB_ID_GENERIC_FIRST) * 2;
                 value = base + 0x60;
                 if (unit->job_id == JOB_ID_MIME) {
                     value = base + 0x5e;
                 }
             } else if (unit->sprite_set == CHARACTER_IDENTITY_GENERIC_FEMALE) {
-                base = (unit->job_id - 0x4a) * 2;
+                base = (unit->job_id - JOB_ID_GENERIC_FIRST) * 2;
                 value = base + 0x61;
                 if (unit->job_id == JOB_ID_MIME) {
                     value = base + 0x5f;

@@ -7,12 +7,12 @@
 
 /* dead unit */
 
-extern u32* g_dead_unit_controller_input;
-extern dead_unit_menu_t g_dead_unit_menu;
-extern dead_unit_entry_counts_t g_dead_unit_menu_entries;
-extern s16 g_dead_unit_menu_flags[];
-extern s16 g_dead_unit_primary_result;
-extern s16 g_dead_unit_secondary_result;
+extern u32* g_option_dead_unit_controller_input;
+extern dead_unit_menu_t g_option_dead_unit_menu;
+extern dead_unit_entry_counts_t g_option_dead_unit_menu_entries;
+extern s16 g_option_dead_unit_menu_flags[];
+extern s16 g_option_dead_unit_primary_result;
+extern s16 g_option_dead_unit_secondary_result;
 
 /* gfx */
 extern const u16 g_option_gfx_draw_area_scale_percent[12];
@@ -56,7 +56,7 @@ extern world_menu_text_layout_t g_option_menu_entry_table[1];
 extern world_panel_frame_t g_option_menu_panel_frames[2];
 extern u8 g_option_menu_panel_pixels[];
 
-/* One libgpu texture window per dead-unit panel DR_MODE packet. The static
+/* One libgpu texture window per window frame DR_MODE packet. The static
  * tables already hold each window's w/h (0x10x0x10, 8x0x10, 0x10x8 and two
  * full 0x100x0x100 windows); the panels fill in only the runtime x/y.
  * Indexing the array is what reproduces the target's symbol-plus-byte-offset

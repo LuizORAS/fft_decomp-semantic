@@ -32,7 +32,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         for (i = 3; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
-        g_battle_action_current_attacker.data_initialized = 0;
+        g_battle_action_current_attacker.mimic_pending = 0;
         for (i = 0; i < 21; i++) {
             unit = &g_battle_unit_stats[i];
             unit->ct = 0;
@@ -47,8 +47,13 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         for (i = 0; i < 21; i++) {
             unit = &g_battle_unit_stats[i];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                if (!(unit->status_sets.current[0] & 0x64)) {
-                    if (!(unit->status_sets.current[1] & 0x81)) {
+                if (!(unit->status_sets.current[0]
+                        & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)
+                            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
+                            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)))) {
+                    if (!(unit->status_sets.current[1]
+                            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY)
+                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))) {
                         return i | 0xd000;
                     }
                 }
@@ -93,7 +98,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             if (best != 0xff) {
                 unit = &g_battle_unit_stats[best];
-                if (unit->status_sets.current[0] & 4) {
+                if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
                     unit->ct = 99;
                     continue;
                 }
@@ -151,7 +156,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
                 if (!(flags & 0xf) && unit->charged_ability_ct == 0) {
-                    if (unit->status_sets.current[0] & 1) {
+                    if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                         main_unit_copy_last_ability_ct(unit);
                         unit->charged_ability_ct = unit->ability_ct;
                     } else {
@@ -168,7 +173,8 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             i = 0;
             do {
                 unit = &g_battle_unit_stats[i];
-                if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && !(unit->status_sets.current[0] & 4)) {
+                if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
+                    && !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
                     battle_status_update_expiring(i);
                 }
                 /* clang-format off */
@@ -180,7 +186,8 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             do {
                 unit = &g_battle_unit_stats[i];
                 g_battle_mimic_pending_flags[i] = 0;
-                if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && !(unit->status_sets.current[0] & 4)) {
+                if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
+                    && !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
                     g_battle_mimic_pending_flags[i] = unit->action.attack_type;
                 }
                 /* clang-format off */
@@ -276,7 +283,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             break;
         case 13:
-            if (g_battle_action_current_attacker.data_initialized != 0) {
+            if (g_battle_action_current_attacker.mimic_pending != 0) {
                 i = 0;
                 do {
                     unit = &g_battle_unit_stats[i];
@@ -292,7 +299,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             break;
         case 14:
-            g_battle_action_current_attacker.data_initialized = 0;
+            g_battle_action_current_attacker.mimic_pending = 0;
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (g_battle_mimic_pending_flags[i] != 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {

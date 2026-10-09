@@ -16,7 +16,7 @@ s32 battle_ai_build_targeted_movement(void) {
     s32 distance;
     s32 within_two_tiles;
 
-    if (!g_battle_ai_data_base.decision_state
+    if (!g_battle_ai_data_base.resume_pending
         && (g_battle_ai_data_base.acting_unit->auto_battle_target == g_battle_ai_data_base.acting_unit_id
             || ((ai->unit_decisions[g_battle_ai_data_base.acting_unit->auto_battle_target].targeting_flags_2 >> 4)
                 & (BATTLE_AI_TARGET_UNTARGETABLE >> 4)))) {

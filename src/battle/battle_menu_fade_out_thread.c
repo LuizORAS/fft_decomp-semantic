@@ -11,11 +11,11 @@ void battle_menu_fade_out_thread(void) {
         battle_thread_yield();
     } while (battle_thread_is_running_8014cc94(6));
 
-    g_companion_overlay_state = 2;
+    g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_BUNIT;
     g_battle_menu_help_open = 0;
     do {
         battle_thread_wait_frames(1);
-    } while (g_companion_overlay_state != 0);
+    } while (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
 
     battle_menu_free_high_overlay();
     for (thread_id = 2; thread_id < 15; thread_id++) {

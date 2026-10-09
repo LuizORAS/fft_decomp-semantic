@@ -44,9 +44,9 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
                         state->callback_state[slot] = 3;
                     }
                     ((void (*)(s16, s32, s32, s16))state->callback_ptrs[slot])(
-                        state->callback_arg_02, slot, action - 1, *step);
+                        state->record_index, slot, action - 1, *step);
                 } else {
-                    battle_effect_spawn_emitter_particles(state->callback_arg_02, *step, action - 1, 0);
+                    battle_effect_spawn_emitter_particles(state->record_index, *step, action - 1, 0);
                 }
                 *step = *step + 1;
             }

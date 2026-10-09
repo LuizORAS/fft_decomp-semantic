@@ -38,7 +38,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
             message = 0x1003;
             mode = 2;
         } else {
-            if (unit->status_sets.current[2] & 2) {
+            if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
                 message = 0x1007;
                 mode = 2;
             } else {

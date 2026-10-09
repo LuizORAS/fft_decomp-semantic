@@ -3,11 +3,13 @@
 #include "psx/types.h"
 
 /*
- * Per-turn status upkeep: pick the reaction the unit's current status set
- * produces this tick and stage it in the unit's action record.
+ * Per-turn status upkeep: stage the change the unit's current status set
+ * produces this tick in the unit's action record.
  *
- * Returns 2 for a regenerating heal, 1 for a sleep/charm style roll, 3 when a
- * timed status expires and 0 when nothing happens.
+ * Returns 2 for a Reraise or undead revival and for any other staged change
+ * (Defending removed, the Brave-below-10 change), 1 when the death counter
+ * runs out and the unit becomes a crystal or treasure, 3 when Death Sentence
+ * expires on a unit that is not undead, and 0 when nothing happens.
  */
 s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     battle_action_data_t* action = &unit->action;
@@ -31,7 +33,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
         && g_battle_action_state == 0) {
-        if (unit->team_flags & 4) {
+        if (unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) {
             return 0;
         }
         if (unit->unit_flags & (UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION)) {
@@ -52,7 +54,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
             return 2;
         }
         mask = 0x10;
-        if (unit->initial_team_flags & 8) {
+        if (unit->initial_team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
             mask = 0x110;
         }
         if (roll & mask) {

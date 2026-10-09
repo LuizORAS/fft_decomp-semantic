@@ -45,7 +45,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[2] & 2) { /* Frog */
+    if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
     if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
@@ -88,7 +88,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
         if (ability == 0) {
             continue;
         }
-        if (ability >= 1 && ability < 0x170) {
+        if (ability >= 1 && ability < ABILITY_ID_ITEM_FIRST) {
             secondary = &g_main_ability_range_data[ability];
             requirements = secondary->flags_4;
             if ((requirements & ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD) && !sword) {
@@ -117,7 +117,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
             ct_out[count] = ct;
             flags_out[count] = kind;
             turns_out[count] = turns;
-        } else if (ability >= 0x196 && ability < 0x19e) {
+        } else if (ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST) {
             ct = (g_main_charge_ability_data - ABILITY_ID_CHARGE_FIRST)[ability].ct;
             turns = battle_action_get_number_of_turns_to_resolve(unit_id, ct, at_list);
             mp_out[count] = 0;

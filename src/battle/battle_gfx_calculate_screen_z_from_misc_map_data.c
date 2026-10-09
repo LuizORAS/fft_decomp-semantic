@@ -14,7 +14,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_map_data(battle_unit_misc_data_t* un
     screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, &coord);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
         adjusted_screen_z = screen_z - 10;
-        screen_z = mount->mounted_height_offset + adjusted_screen_z;
+        screen_z = mount->float_bob_offset + adjusted_screen_z;
     }
     return (s16)screen_z;
 }

@@ -10,7 +10,7 @@ void main_smd_save_snapshot(suzuki_music_t* music) {
     u32 size;
 
     DisableEvent(g_main_root_counter_2_event);
-    music->status |= 0x10;
+    music->status |= SUZUKI_MUSIC_STATUS_SNAPSHOT;
     size = music->channel_count * sizeof(suzuki_music_channel_t)
         + (sizeof(suzuki_music_t) - sizeof(suzuki_music_channel_t));
     if (music->snapshot == 0) {
@@ -20,6 +20,6 @@ void main_smd_save_snapshot(suzuki_music_t* music) {
     main_sound_copy_memory(snapshot, music, size);
     snapshot->next = 0;
     snapshot->snapshot = 0;
-    music->tick_2c = 0;
+    music->snapshot_restore_tick = 0;
     EnableEvent(g_main_root_counter_2_event);
 }

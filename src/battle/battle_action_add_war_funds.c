@@ -7,7 +7,7 @@ s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id) {
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
         return 0;
     }
-    if (unit->team_flags & 0x30) {
+    if (unit->team_flags & BATTLE_TEAM_MASK) {
         return 0;
     }
     if (item_id != ITEM_ID_NOTHING) {

@@ -37,11 +37,11 @@ void battle_menu_auto_battle_setting_thread(void) {
     stats = battle_unit_get_attacker_data_pointer();
     if (stats->auto_battle_setting == 0) {
         cursor = 0;
-    } else if (stats->auto_battle_setting == 0xC) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_TARGETED) {
         cursor = 1;
-    } else if (stats->auto_battle_setting == 0xE) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_RECOVERY) {
         cursor = 2;
-    } else if (stats->auto_battle_setting == 0x10) {
+    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_FADING_LIFE) {
         cursor = 3;
     } else {
         cursor = 4;
@@ -95,7 +95,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 battle_menu_handle_action(param, previous);
             }
             for (j = 0; j < 5; j++) {
-                g_menu_text_palette_offset = colour[j];
+                g_battle_menu_text_palette_offset = colour[j];
                 g_menu_text_state.stride = param->inner_width;
                 battle_menu_set_text_origin(8, j * 16 + 9);
                 battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.origin_x);

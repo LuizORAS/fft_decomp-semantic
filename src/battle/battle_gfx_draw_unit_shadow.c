@@ -92,21 +92,21 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         prim->v0 = prim->v1 = 0x40;
         prim->v2 = prim->v3 = 0x53;
     }
-    main_util_set_svector(&position, unit->screen.vx + unit->effect_vector_2.vx + unit->effect_vector.vx, 0,
-        unit->screen.vz + unit->effect_vector_2.vz + unit->effect_vector.vz);
+    main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
+        unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
     position.vy = battle_map_calculate_slope_height(&position.vx, unit->map_z);
     if (unit->screen.vy >= position.vy) {
         packet = ot;
     } else {
         tile = battle_map_get_tile_data_pointer((position.vx / 28), (position.vz / 28), unit->map_z);
         position.vy -= (tile->depth_half_height.value >> 5) * 12;
-        if (unit->centre_tile_offset != 0) {
-            if (tile->surface.value & 0x40) {
+        if (unit->step_phase != 0) {
+            if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
                 battle_camera_calculate_relative_offset_5((u16*)&position, &offset.vx);
             } else {
                 battle_camera_calculate_relative_offset_1((u16*)&position, &offset.vx);
             }
-        } else if (tile->surface.value & 0x40) {
+        } else if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
             battle_camera_convert_screen_coords_modify_by_5(&position.vx, &offset.vx);
         } else {
             battle_camera_convert_screen_coords_modify_by_1(&position.vx, &offset.vx);

@@ -66,6 +66,6 @@ void battle_handle_menu_cancel_input(void* menu) {
         g_battle_script_event_input = 0;
         *cur = -1;
         battle_sound_set_effect_to_cancel();
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
 }

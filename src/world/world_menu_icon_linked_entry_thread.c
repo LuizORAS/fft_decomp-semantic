@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Menu icon thread that also opens a linked entry: when parent_indices[0]
+/* Menu icon thread that also opens a linked entry: when row_actions[0]
  * names a menu entry, that entry is centred on this text width, placed below
  * this entry, and started in the previous thread slot. The icon records then
  * alternate until input completes, selecting CLUTs in the linked slot. */
@@ -22,7 +22,7 @@ void world_menu_icon_linked_entry_thread(void) {
     world_menu_size_entry_to_text(param, &width, &height, &pad, 0);
     world_menu_build_icon_record(&rect, param, &records[0]);
     world_script_copy_bytes(&records[1], &records[0], 0x7C);
-    parent = param->parent_indices[0];
+    parent = param->row_actions[0];
     if (parent >= 0) {
         g_world_menu_thread_menu_data[parent].window_x
             = (width >> 1) - (g_world_menu_thread_menu_data[parent].inner_width - 0x102);

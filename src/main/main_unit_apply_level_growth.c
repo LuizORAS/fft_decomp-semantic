@@ -14,7 +14,7 @@ void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
     s32 i;
 
     raw_stats = unit->raw_stats;
-    growth = &unit->raw_stats[UNIT_RAW_STAT_DATA_BYTE_COUNT];
+    growth = unit->growths_multipliers;
     level = unit->level;
 
     for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {

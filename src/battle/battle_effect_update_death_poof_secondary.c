@@ -33,7 +33,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
     battle_effect_secondary_data_t* effect;
     battle_effect_trap_state_t* state;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
-    battle_effect_on_hit_vector_t on_hit_vector;
+    battle_effect_gravity_t on_hit_vector;
     s32 result;
     s32 spawned;
     s32 i;
@@ -94,8 +94,8 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
         on_hit_vector.z = 0;
         on_hit_vector.x = 0;
         on_hit_vector.y = ONE;
-        battle_effect_copy_on_hit_data_to_second_section();
-        battle_effect_store_first_section_of_on_hit_data(&on_hit_vector);
+        battle_effect_save_gravity();
+        battle_effect_set_gravity(&on_hit_vector);
         for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
             id = state->ids[i];
             if (id != 0 && battle_effect_update_slot(id) == 0) {
@@ -105,7 +105,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
             }
         }
         battle_effect_restore_inertia_threshold();
-        battle_effect_copy_second_section_to_on_hit_data();
+        battle_effect_restore_gravity();
         current = g_battle_effect_current_secondary;
         current->timer = current->timer + 1;
         result = state->finish_timer != 1;

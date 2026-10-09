@@ -30,8 +30,8 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     s16 flags;
     s16 rider_flags;
 
-    position.vx = unit->item_get_camera_x;
-    position.vy = unit->item_get_camera_y;
+    position.vx = unit->camera_relative_x;
+    position.vy = unit->camera_relative_y;
     SetGeomScreen(0x200);
     SetGeomOffset(0, 0);
     angle = 0;
@@ -53,7 +53,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     if (unit->sprite_graphic_trigger == 0) {
         return;
     }
-    if (unit->item_ability_display) {
+    if (unit->item_display_active) {
         battle_gfx_init_item_get_rendering((battle_gfx_render_unit_t*)unit);
     }
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
@@ -74,9 +74,9 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, 3, 0,
                         (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
                     rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
-                    if (rider != 0 && rider->ability_in_use != 0) {
-                        rider_position.vx = rider->item_get_camera_x;
-                        rider_position.vy = rider->item_get_camera_y;
+                    if (rider != 0 && rider->draw_enabled != 0) {
+                        rider_position.vx = rider->camera_relative_x;
+                        rider_position.vy = rider->camera_relative_y;
                         rider_flags = rider->sprite_display_flags.half;
                         rider_row = rider->layer_priority;
                         for (j = 0; j < 4; j++) {

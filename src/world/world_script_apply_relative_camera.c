@@ -8,7 +8,7 @@ void world_script_apply_relative_camera(u8* source, const s32* deltas) {
     s32 value;
 
     destination = source + 15;
-    if (source[14] == 0x38) {
+    if (source[14] == EVENT_OPCODE_FOCUS_SPEED) {
         destination = source + 18;
     }
 

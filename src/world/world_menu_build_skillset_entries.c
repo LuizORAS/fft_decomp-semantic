@@ -12,7 +12,7 @@ void world_menu_build_skillset_entries(void) {
     u8 separator;
 
     count = 0;
-    g_world_ability_selected_skill_target = 0;
+    g_world_ability_selected_skill_ct = 0;
     g_world_action_menu_skillsets[0] = 0;
     g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_active_unit_data.battle_id,
         g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
@@ -46,9 +46,10 @@ void world_menu_build_skillset_entries(void) {
             g_world_menu_skillset_row_actions[i] = 3;
         }
         if (g_world_menu_monster_skillset_flag != 0) {
-            g_world_text_substitution_values[count] = 0xb000;
+            g_world_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         } else {
-            g_world_text_substitution_values[count] = g_world_action_menu_skillsets[i] + 0xb000;
+            g_world_text_substitution_values[count]
+                = g_world_action_menu_skillsets[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         }
         count++;
     }
@@ -57,7 +58,8 @@ void world_menu_build_skillset_entries(void) {
         g_world_menu_skillset_row_actions[i] = 0x16;
         g_world_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
         g_world_action_menu_skillsets[i + 1] = 0xff;
-        g_world_text_substitution_values[count++] = 0xb000 + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
+        g_world_text_substitution_values[count++]
+            = TEXT_ID_SKILLSET_NAME_SOURCE_BASE + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
     }
     height = count * 16 + 16;
     rows[count - 1].terminator = 0xff;

@@ -37,7 +37,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
         g_wldcore_job_selection.reward_type = 1;
         count = 0;
         for (i = 0; i < 31; i++) {
-            if (world_script_get_variable(i + 0x321) == 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }
@@ -46,7 +46,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
         count = 0;
         g_wldcore_job_selection.reward_type = discovery_kind;
         for (i = 0; i < 16; i++) {
-            if (world_script_get_variable(i + 0x350) == 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }

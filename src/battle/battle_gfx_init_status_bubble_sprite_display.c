@@ -10,9 +10,9 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s
     display->red = 0x80;
     display->scale_y = ONE;
     display->scale_x = ONE;
-    display->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
+    display->tpage = BATTLE_GFX_TPAGE_FRAME;
     display->clut = 0x7887;
-    display->y_rotation = 0;
+    display->rotation = 0;
     display->part_count = 1;
     for (i = 0; i < 1; i++) {
         display->parts[i].y_shift = 0;

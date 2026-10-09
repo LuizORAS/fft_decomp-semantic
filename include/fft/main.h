@@ -286,7 +286,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
 
 /* job */
 extern job_data_t g_main_job_data[];
-extern const u16 g_job_level_jp_requirements[8];
+extern const u16 g_main_job_level_jp_requirements[8];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
 s32 main_job_add_proposition_jp(s32 party_index, s32 jp);
@@ -470,9 +470,9 @@ typedef struct suzuki_smd_header {
 /* Suzuki sequencer modulator (0x20 bytes). Each channel has four, at
  * channel+0xe0. step is one of the g_main_smd_modulator_waveforms functions,
  * called by main_smd_update_modulators (0x8001749c), which adds the scaled
- * result to the channel output selected by target. counter_14 delays the
- * start; while counter_18 is below 0x100 the output is scaled by
- * counter_18 / 0x100 and counter_18 grows by counter_18_reset (fade-in). */
+ * result to the channel output selected by target. delay delays the
+ * start; while fade_level is below 0x100 the output is scaled by
+ * fade_level / 0x100 and fade_level grows by fade_step (fade-in). */
 typedef struct suzuki_modulator {
     s32 (*step)(struct suzuki_modulator*); /* 0x00 */
     s32 value;                             /* 0x04 */
@@ -480,10 +480,10 @@ typedef struct suzuki_modulator {
     s32 amplitude;                         /* 0x0c; from main_smd_modulator_calculate_step */
     u16 timer;                             /* 0x10 */
     u16 timer_reset;                       /* 0x12 */
-    u16 counter_14;                        /* 0x14 */
-    u16 counter_14_reset;                  /* 0x16 */
-    s16 counter_18;                        /* 0x18 */
-    u16 counter_18_reset;                  /* 0x1a */
+    u16 delay;                             /* 0x14; ticks before the start */
+    u16 delay_reset;                       /* 0x16; reload of delay */
+    s16 fade_level;                        /* 0x18; output scale, 0x100 = full */
+    u16 fade_step;                         /* 0x1a; per-tick fade-in increment */
     u8 target;                             /* 0x1c; 0 pitch, 1 volume, 2 balance */
     u8 waveform;                           /* 0x1d; index into g_main_smd_modulator_waveforms */
     s16 flags;                             /* 0x1e; bit 0: active; bits 2-3: step state */
@@ -513,14 +513,14 @@ typedef struct suzuki_repeat {
  * (main_smd_init_channel_streams); main_smd_set_flags_all_channels ORs a mask
  * into every non-zero word.
  *
- * func_flags marks the SPU voice attributes main_sound_update_voice_attrs
+ * voice_attr_flags marks the SPU voice attributes main_sound_update_voice_attrs
  * pushes: 0x1 volume, 0x2 volume and volume mode, 0x4 pitch, 0x8 start and
  * loop addresses, 0x10 attack (time and mode), 0x20 decay, 0x40 sustain
  * (time and mode), 0x80 release (time and mode), 0x100 sustain level. 0x4,
  * 0x10 and 0x40 also request the pitch-LFO, noise and reverb voice-mask
- * updates. note_flags2 bit 0 queues a key-on, bit 1 a key-off, bit 8 a
+ * updates. voice_update_flags bit 0 queues a key-on, bit 1 a key-off, bit 8 a
  * volume/balance change and bit 9 a pitch change for main_smd_update_voices.
- * flags_06 bits 0, 3 and 4 mark the pitch-slide, volume and balance ramps
+ * ramp_flags bits 0, 3 and 4 mark the pitch-slide, volume and balance ramps
  * stepped by main_smd_update_channel_ramps.
  *
  * octave_base is written at halfword width (Octave, Raise/Lower Octave, End
@@ -531,10 +531,10 @@ typedef struct suzuki_repeat {
  * sounds; Play VFX SMD (0x80015c38) reads the resource id half with `lh`,
  * the SFX API compares the whole word. */
 typedef struct suzuki_music_channel {
-    u16 active;      /* 0x00 */
-    u16 note_flags2; /* 0x02 */
-    u16 func_flags;  /* 0x04 */
-    u16 flags_06;    /* 0x06; bit 1 toggled by 0xD5, bit 2 by 0xD6, bit 3 ramp active */
+    u16 flags;              /* 0x00; 1 in use */
+    u16 voice_update_flags; /* 0x02; 1 key on */
+    u16 voice_attr_flags;   /* 0x04 */
+    u16 ramp_flags;         /* 0x06; bit 1 toggled by 0xD5, bit 2 by 0xD6, bit 3 ramp active */
     union {
         u32 raw;
         struct {
@@ -556,17 +556,17 @@ typedef struct suzuki_music_channel {
     u8 loop_octave_base;       /* 0x2b; octave_base saved with loop_note_data */
     u8 instrument;             /* 0x2c */
     u8 voice;                  /* 0x2d; SPU voice (opcode 0xAA); bit 0 allows the pitch LFO */
-    u16 release_2e;            /* 0x2e; Release stores its byte here and in release_time */
+    u16 note_release_time;     /* 0x2e; Release stores its byte here and in release_time */
     suzuki_waveset_t* waveset; /* 0x30; Select Sound Font */
     u32 voice_mask;            /* 0x34; SPU voice bit(s) owned by this channel */
-    u32 _unknown_038;          /* 0x38; initialised to 0xff9f */
+    u32 voice_attr_mask;       /* 0x38; SpuVoiceAttr mask; 0xff9f */
     s16 spu_volume_left;       /* 0x3c; SpuSetVoiceVolume(Attr) left, from main_smd_update_voices */
     s16 spu_volume_right;      /* 0x3e */
     s16 spu_volume_mode_left;  /* 0x40; SpuSetVoiceVolumeAttr left mode; cleared by the channel initialiser */
     s16 spu_volume_mode_right; /* 0x42 */
-    u8 _unused_044[4];         /* 0x44 */
+    u8 _unused_044[4];         /* 0x44; SpuVoiceAttr volumex */
     u16 spu_pitch;             /* 0x48; SpuSetVoicePitch value, from main_smd_update_voices */
-    u8 _unused_04a[6];         /* 0x4a */
+    u8 _unused_04a[6];         /* 0x4a; SpuVoiceAttr note, sample_note, envx */
     u32 start_address;         /* 0x50; instrument sample SPU address */
     u32 loop_address;          /* 0x54; instrument loop SPU address */
     s32 attack_mode;           /* 0x58 */
@@ -577,7 +577,7 @@ typedef struct suzuki_music_channel {
     u16 sustain_time;          /* 0x68 */
     u16 release_time;          /* 0x6a */
     u16 sustain_level;         /* 0x6c */
-    u8 _unused_06e[6];         /* 0x6e */
+    u8 _unused_06e[6];         /* 0x6e; SpuVoiceAttr adsr1, adsr2 */
     s16 rest_length;           /* 0x74; Rest or Fermata hold length, counted down per tick */
     u8 length_adjust;          /* 0x76; signed note-length adjust: opcode 0xAD adds to or clears it */
     u8 _padding_077;           /* 0x77; aligns note_ticks */
@@ -593,7 +593,7 @@ typedef struct suzuki_music_channel {
     s16 volume_modulation;     /* 0x8a; modulator target 1 output */
     s16 balance_modulation;    /* 0x8c; modulator target 2 output */
     u8 _unused_08e[2];         /* 0x8e */
-    u16 portamento_ticks;      /* 0x90; portamento length (opcode 0xD6), mirrored into flags_06 bit 2 */
+    u16 portamento_ticks;      /* 0x90; portamento length (opcode 0xD6), mirrored into ramp_flags bit 2 */
     s16 balance;               /* 0x92; balance byte << 8 */
     s16 velocity;              /* 0x94; velocity << 8, 0x6000 by default */
     u8 _padding_096[2];        /* 0x96; aligns volume */
@@ -644,18 +644,18 @@ typedef struct suzuki_music {
     u8 _unknown_01c;               /* 0x1c; set by opcode 0xA4, adjusted by 0xA5 */
     u8 channel_select;             /* 0x1d; opcode 0x8D acts when its byte matches */
     u16 noise_clock;               /* 0x1e; opcodes 0xB4/0xB5 */
-    s32 tick_20;                   /* 0x20; incremented every tick */
-    u32 tick_24;                   /* 0x24; ticks while the record owns voices */
+    s32 timer_ticks;               /* 0x20; incremented every tick */
+    u32 sequence_ticks;            /* 0x24; ticks while the record owns voices */
     u32 ticks;                     /* 0x28; root-counter ticks played, in 1/256 units (tempo scale) */
-    u32 tick_2c;                   /* 0x2c; restore the snapshot when tick_24 reaches it (0: never) */
+    u32 snapshot_restore_tick;     /* 0x2c; restore the snapshot when sequence_ticks reaches it (0: never) */
     u16 min_loop_count;            /* 0x30; main_smd_get_min_loop_count */
     u16 bar;                       /* 0x32; 1-based bar counter */
     u16 beat;                      /* 0x34; beat within the bar */
-    u16 beat_ticks_36;             /* 0x36 */
+    u16 beat_ticks_remaining;      /* 0x36; ticks left in the beat */
     u16 beats_per_bar;             /* 0x38 */
     u16 ticks_per_beat;            /* 0x3a */
     u16 beat_unit;                 /* 0x3c */
-    u16 beats_remaining;           /* 0x3e */
+    u16 beats_per_bar_copy;        /* 0x3e; write-only */
     u8 _unused_040[4];             /* 0x40 */
     s32 reverb_mode;               /* 0x44 */
     s16 reverb_depth;              /* 0x48; depth byte << 8 */
@@ -690,6 +690,16 @@ typedef struct suzuki_music {
     suzuki_music_channel_t channels[1]; /* 0xb8; channel_count entries */
 } suzuki_music_t;
 typedef char suzuki_music_channels_must_be_at_0xb8[(sizeof(suzuki_music_t) == 0xb8 + 0x160) ? 1 : -1];
+
+/* suzuki_music_t.status. */
+typedef enum suzuki_music_status {
+    SUZUKI_MUSIC_STATUS_SMD = 0x0001,      /* the record plays SMD music */
+    SUZUKI_MUSIC_STATUS_SFX = 0x0002,      /* the sound-effect record */
+    SUZUKI_MUSIC_STATUS_SNAPSHOT = 0x0010, /* a saved copy exists */
+    SUZUKI_MUSIC_STATUS_PAUSED = 0x0100,
+    SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE = 0x4000, /* push every voice attribute once */
+    SUZUKI_MUSIC_STATUS_PLAYING = 0x8000,
+} suzuki_music_status_e;
 
 /* Loaded SED/SMD sound block ("feds" VFX resource), kept by the Suzuki driver
  * in a singly linked list through next (SuzukiAppendVFXSMD). Play VFX SMD
@@ -768,23 +778,32 @@ typedef enum main_sfx {
     MAIN_SFX_CONFIRM = 1,
     MAIN_SFX_CANCEL = 2,
     MAIN_SFX_CURSOR_MOVE = 3,
+    MAIN_SFX_GIL_TICKER = 4, /* looping count-up of the REQUIRE gil reward */
     MAIN_SFX_INVALID = 5,
     MAIN_SFX_PAGE_SWITCH = 6, /* L1/R1 unit and page switches */
     MAIN_SFX_UNEQUIP = 7,     /* remove equipment/abilities */
     MAIN_SFX_DISMISS = 9,     /* dismiss unit */
     MAIN_SFX_EQUIP = 0xa,     /* equip, set ability, best fit */
+    MAIN_SFX_CAMERA_ROTATE_LEFT = 0xb,
+    MAIN_SFX_CAMERA_ROTATE_RIGHT = 0xc,
+    MAIN_SFX_CAMERA_ROTATE_STOP = 0xd, /* the rotation reached its target */
     /* Paired zoom sounds: battle_camera_toggle_zoom and battle_camera_zoom_map
      * play 0x11 with zoom action 4 and 0xe with action 2; the in/out reading
      * follows the zoom-target comment in battle_camera_toggle_zoom. The
      * ATTACK deploy screen also plays 0x11 when a placed unit is moved. */
     MAIN_SFX_CAMERA_ZOOM_IN = 0xe,
     MAIN_SFX_CAMERA_ZOOM_OUT = 0x11,
-    MAIN_SFX_WINDOW_OPEN = 0x12,      /* help, message or text window opens */
-    MAIN_SFX_TEXT_PAGE = 0x2d,        /* dialogue/scroll window advances a page */
-    MAIN_SFX_CARD_ERROR = 0x30,       /* memory-card load, save or scan failure */
-    MAIN_SFX_CAMERA_TILT = 0x31,      /* battle_camera_handle_tilt_request */
+    MAIN_SFX_WINDOW_OPEN = 0x12, /* help, message or text window opens */
+    MAIN_SFX_TEXT_PAGE = 0x2d,   /* dialogue/scroll window advances a page */
+    MAIN_SFX_CARD_ERROR = 0x30,  /* memory-card load, save or scan failure */
+    MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_TELEPORT_OUT = 0x6a,
+    MAIN_SFX_TELEPORT_IN = 0x6b,
+    MAIN_SFX_STATUS_MENU_REQUEST
+    = 0x71,                           /* Triangle queues the status menu on another unit's turn; again when it opens */
     MAIN_SFX_TEXT_GLYPH = 0x73,       /* typewriter tick after a dialogue glyph */
     MAIN_SFX_SHOP_TRANSACTION = 0x97, /* shop buy/sell confirmed */
+    MAIN_SFX_ABILITY_LEARNED = 0x98,  /* an ability bought in the learn list */
 } main_sfx_e;
 
 /* Sector/size pairs for scenario and permanently loaded music SMD files. */
@@ -796,10 +815,10 @@ typedef struct main_sound_smd_file {
 /* Elapsed play time filled by main_smd_get_play_time. The root counter runs
  * at 240 Hz; music->ticks counts those ticks in 1/256 units. */
 typedef struct suzuki_play_time {
-    u32 tick_24;  /* 0x00; music->tick_24 */
-    u16 fraction; /* 0x04; 1/240 s */
-    u16 seconds;  /* 0x06 */
-    u16 minutes;  /* 0x08 */
+    u32 sequence_ticks; /* 0x00; music->sequence_ticks */
+    u16 fraction;       /* 0x04; 1/240 s */
+    u16 seconds;        /* 0x06 */
+    u16 minutes;        /* 0x08 */
 } suzuki_play_time_t;
 
 extern u8 g_main_sound_env_sed_data[];
@@ -997,8 +1016,8 @@ s32 main_smd_random(void);
 
 /* Reprograms an SMD channel with an instrument of its waveset. */
 void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel);
-void main_smd_set_note_flags2_all_channels(u16 mask, suzuki_music_t* music);
-void main_smd_force_channel_func(suzuki_music_t* music, u16 mask);
+void main_smd_set_voice_update_flags_all_channels(u16 mask, suzuki_music_t* music);
+void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask);
 
 /* Driver set-up, wavesets, volume and SPU transfers (0x80017920-0x800186c4). */
 void main_sound_quit(void);
@@ -1039,7 +1058,7 @@ static inline void main_sound_flush_key_on_inline(void) {
     while (music != 0) {
         status = music->status;
         if (status < 0) {
-            if ((status & 2) != 0)
+            if ((status & SUZUKI_MUSIC_STATUS_SFX) != 0)
                 voices |= music->key_on_mask;
             else
                 voices |= allowed & music->key_on_mask;
@@ -1071,7 +1090,7 @@ static inline void main_sound_flush_key_off_inline(void) {
     while (music != 0) {
         status = music->status;
         if (status < 0) {
-            if ((status & 2) != 0)
+            if ((status & SUZUKI_MUSIC_STATUS_SFX) != 0)
                 voices |= music->key_off_mask;
             else
                 voices |= allowed & music->key_off_mask;
@@ -1406,7 +1425,7 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_po
 
 /* other */
 extern volatile u8 g_fntload_clut_y_offset_immediate;
-extern s32 g_font_print_enabled;
+extern s32 g_main_font_print_enabled;
 extern u8* g_main_brave_story_ages_source;
 extern u8 g_main_menu_scroll_accel_delay;
 extern u8 g_main_menu_scroll_slow_step;

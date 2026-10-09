@@ -6,7 +6,7 @@ s32 bunit_job_get_base(s16 unit_id) {
     s32 job_id = unit->character_identity;
 
     if (job_id == CHARACTER_IDENTITY_MONSTER) {
-        job_id = unit->monster_base_job_id;
+        job_id = unit->job_id;
     } else if ((u32)job_id >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
         job_id = JOB_ID_SQUIRE;
     }

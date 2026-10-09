@@ -16,7 +16,7 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
     g_world_unit_status_staging_data = &((world_event_work_t*)g_battle_ai_workspace_ptr)->status_staging;
     if (g_world_menu_input_disabled == 0 && world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
-        g_world_unit_status_staging_data->flags = 0;
+        g_world_unit_status_staging_data->jump_float_flags = 0;
         do {
             if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
@@ -41,10 +41,10 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
             }
             unit_index++;
         } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
-        if (g_world_unit_status_staging_data->flags != 0) {
+        if (g_world_unit_status_staging_data->jump_float_flags != 0) {
             world_thread_wait_frames(40);
         }
-        if (g_world_unit_status_staging_data->flags & 1) {
+        if (g_world_unit_status_staging_data->jump_float_flags & 1) {
             world_thread_wait_frames(40);
         }
         if (restore == 0) {

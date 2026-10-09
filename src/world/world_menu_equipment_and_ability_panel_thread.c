@@ -104,7 +104,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
             g_world_menu_text_state.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
-                mode = state->ability_ids[i] + 0xb000;
+                mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
                 if (state->generic_monster != 0) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }

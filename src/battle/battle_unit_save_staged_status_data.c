@@ -16,7 +16,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
     s32 value;
     unit_status_staging_t* st;
 
-    if (g_battle_unit_status_staging_data->state[unit_id] == 0) {
+    if (g_battle_unit_status_staging_data->state[unit_id] == UNIT_STATUS_STAGING_NONE) {
         stats = battle_unit_get_stats_from_battle_id(unit_id);
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             g_battle_unit_status_staging_data->innate[unit_id][i] = stats->status_sets.innate[i];
@@ -31,7 +31,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
         g_battle_unit_status_staging_data->hp[unit_id] = stats->hp;
         g_battle_unit_status_staging_data->team_flags[unit_id] = stats->team_flags;
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if (battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) != 0) {
+            if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                 if ((stats->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && stats->primary_skillset < SKILLSET_ID_END)
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_FIRST_FORM
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM
@@ -63,11 +63,11 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-            g_battle_unit_status_staging_data->flags |= 1;
+            g_battle_unit_status_staging_data->jump_float_flags |= 1;
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
-            g_battle_unit_status_staging_data->flags |= 2;
+            g_battle_unit_status_staging_data->jump_float_flags |= 2;
         }
         if (stats->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {
@@ -75,7 +75,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
         }
         g_battle_thread_call_target = (void (*)(void))battle_status_apply_unit_action_removal;
         battle_thread_call_on_main_stack(stats);
-        g_battle_unit_status_staging_data->state[unit_id] = 1;
+        g_battle_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_SAVED;
         return 1;
     }
     return 0;

@@ -31,7 +31,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.caster.fields.caster_id = unit->unit_id;
     save_3_u16(
         (SVECTOR*)&init.target_tile.id.tile_x, unit->target_new_x, unit->target_new_map_level, unit->target_new_y);
-    block = (battle_strike_work_t*)&unit->action_18c;
+    block = (battle_strike_work_t*)&unit->actor_id;
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
@@ -43,15 +43,15 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
                 target_stats = target->battle_data;
 
                 if (target_stats == 0) {
-                    init.target[i].fields.result_animation = 0;
+                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 } else if (target_stats->action.critical != 0) {
-                    init.target[i].fields.result_animation = 1;
+                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                    init.target[i].fields.result_animation = 2;
+                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
                 } else if (target_stats->action.miss_type != 0) {
-                    init.target[i].fields.result_animation = 3;
+                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 } else {
-                    init.target[i].fields.result_animation = 0;
+                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
             }
         }
@@ -83,10 +83,11 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
         }
     }
     init.palette_target_count = spectators;
-    init.math_skill_flag = block->control_value_19f;
+    init.math_skill_flag = block->math_skill_flag;
     init.used_weapon_id = block->used_weapon_id;
-    if (block->last_attack_id == 0 || block->reaction_occurred != 0 || g_battle_action_phase != 1
-        || (unit->used_item_or_weapon_id - 0x4A) < 2U || (item = unit->used_item_or_weapon_id) == 0x4C) {
+    if (block->last_attack_id == 0 || block->reaction_occurred != 0
+        || g_battle_action_phase != BATTLE_ACTION_PHASE_ACTING_UNIT || (unit->used_item_or_weapon_id - 0x4A) < 2U
+        || (item = unit->used_item_or_weapon_id) == 0x4C) {
         packed = 0;
     } else {
         if (ability == ABILITY_ID_THROW_BALL) {

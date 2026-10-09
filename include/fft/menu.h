@@ -16,20 +16,20 @@ typedef struct world_ability_skill_use_tables {
     u8 _unused_000[0x1ec];
     u8 mp_cost[0x290 - 0x1ec]; /* 0x1ec; compared against the unit's MP */
     u8 flags[0x334 - 0x290];   /* 0x290; bit 1: blocked by a status */
-    u8 target[1];              /* 0x334; 0xff means none */
+    u8 skill_ct[1];            /* 0x334; CT, 0xff means none */
 } world_ability_skill_use_tables_t;
 
 /* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct world_ability_list {
-    u16 ids[0x52];      /* 0x000; 0xffff terminated, item/ability text-bank row flags */
-    u16 values[0x52];   /* 0x0a4 */
-    u16 extras[0x52];   /* 0x148 */
-    u8 mp_costs[0x52];  /* 0x1ec; 0xff terminated */
-    u8 bytes_23e[0x52]; /* 0x23e */
-    u8 flags[0x52];     /* 0x290; bit 1 = blocked by unit flag 0x59 & 8 */
-    u8 bytes_2e2[0x52]; /* 0x2e2 */
-    u8 enabled[0x52];   /* 0x334 */
+    u16 ids[0x52];     /* 0x000; 0xffff terminated, item/ability text-bank row flags */
+    u16 values[0x52];  /* 0x0a4 */
+    u16 extras[0x52];  /* 0x148 */
+    u8 mp_costs[0x52]; /* 0x1ec; 0xff terminated */
+    u8 ct[0x52];       /* 0x23e; CT */
+    u8 flags[0x52];    /* 0x290; bit 1 = blocked by unit flag 0x59 & 8 */
+    u8 turns[0x52];    /* 0x2e2 */
+    u8 skill_ct[0x52]; /* 0x334 */
 } world_ability_list_t;
 
 /* item */
@@ -39,7 +39,7 @@ typedef struct world_ability_list {
  * the named detail fields. Weapon fields follow equipment-slot order. */
 typedef struct world_item_stat_summary {
     u8 _unused_00[2];
-    s16 team_state; /* 0x02; the battle_unit_status_record_t team_kind */
+    s16 team_kind; /* 0x02; the battle_unit_status_record_t team_kind */
     u8 _unused_04[0x0a];
     s16 hp_bonus; /* 0x0e */
     u8 _unused_10[4];
@@ -216,20 +216,20 @@ typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) =
  * character slots; the status threads walk them with 2-byte cursors. The
  * layout is the lower billboard record (0x801ca0e8). */
 typedef struct battle_menu_status_panel_slot_state {
-    u8 _unused_00[0x0e];
+    u8 _unused_00[0x0e]; /* 0x00: move, speed, jump, right/left weapon power and evade */
     s16 generic_monster; /* 0x0e: star icons instead of ability-type icons; selects the
                           * ability-name text bank and gates the per-slot portrait
                           * hiding pass; low bit of display_mode */
     s16 two_hands;       /* 0x10: two-hands flag; high bit of display_mode */
-    u8 _unused_12[0x12];
-    u16 equipment[5];   /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
-                         * means "no entry"; otherwise rendered through the
-                         * item-name text bank and passed to
-                         * battle_gfx_set_item_icon_sprite */
-    s16 ability_ids[5]; /* 0x2e: primary/secondary skillset, reaction, support,
-                         * movement; -1 means no label; the first two rows select
-                         * the skillset-name or ability-name text bank by mode,
-                         * and the remaining rows use ability names */
+    u8 _unused_12[0x12]; /* 0x12: PA to magic accessory evade (world_item_stat_detail_t) */
+    u16 equipment[5];    /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
+                          * means "no entry"; otherwise rendered through the
+                          * item-name text bank and passed to
+                          * battle_gfx_set_item_icon_sprite */
+    s16 ability_ids[5];  /* 0x2e: primary/secondary skillset, reaction, support,
+                          * movement; -1 means no label; the first two rows select
+                          * the skillset-name or ability-name text bank by mode,
+                          * and the remaining rows use ability names */
 } battle_menu_status_panel_slot_state_t;
 typedef char
     battle_menu_status_panel_slot_state_size_must_be_0x38[(sizeof(battle_menu_status_panel_slot_state_t) == 0x38) ? 1
@@ -476,8 +476,8 @@ typedef struct world_menu_entry {
     s16 max_row_index;           /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
     s16 thread_count;            /* 0x20: threads world_menu_cancel_thread_group stops, -1 when there is no thread
                                     group; set from the system-function table by world_menu_run_system_function_thread */
-    u8 _padding_22[0x24 - 0x22]; /* aligns parent_indices */
-    s16* parent_indices;         /* 0x24 */
+    u8 _padding_22[0x24 - 0x22]; /* aligns row_actions */
+    s16* row_actions;            /* 0x24 */
     void (*thread_entry)(void);  /* 0x28 */
     u16 header_id;               /* 0x2c: menu header; text-thread parameter (world_menu_text_entry_thread); the
                                     icon threads read it signed as the icon kind: 0x10 arrow, 0..4 single
@@ -694,7 +694,7 @@ typedef struct world_panel_record {
     world_menu_palette_primitives_t* palette; /* 0x1a8 */
 } world_panel_record_t;
 
-/* Provisional layout of the dead-unit panel primitive block at 0x801cc074
+/* Provisional layout of the window frame primitive block at 0x801cc074
  * (WORLD) and OPTION's copy, which hold two identical frame records. The 0x158
  * record size is fixed by the second frame starting there and by the byte copy
  * between them. Members come from the panels' own accesses plus two helpers:
@@ -759,7 +759,7 @@ typedef char dead_unit_menu_size_must_be_0x16c[sizeof(dead_unit_menu_t) == 0x16c
 
 /* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
  * that battle_unit_generate_crystal_or_treasure builds on the main thread
- * stack call and returns; BATTLE keeps the pointer in g_dead_unit_context and
+ * stack call and returns; BATTLE keeps the pointer in g_battle_dead_unit_context and
  * WORLD in g_world_thread_inner_subroutine_result. The dead-unit panels pick
  * their variant from `result` and show `treasure_item`. */
 typedef struct crystal_pickup_result {
@@ -813,17 +813,95 @@ typedef char help_navigation_record_size_must_be_0x10[(sizeof(help_navigation_re
  * battle_menu_dispatch_system_function). The member comments name the BATTLE
  * globals; WORLD binds its own copies. */
 typedef struct battle_system_function {
-    s16 value_00;               /* 0x00; copied to g_battle_menu_current_id */
+    s16 menu_id;                /* 0x00; copied to g_battle_menu_current_id */
     u16 text_id;                /* 0x02; menu entry text id */
     s16 menu_entry_index;       /* 0x04; g_battle_menu_thread_menu_data index */
-    u16 value_06;               /* 0x06; copied to g_battle_menu_system_function_row_actions */
-    u16 value_08;               /* 0x08; menu entry value_20 */
+    u16 row_action;             /* 0x06; copied to g_battle_menu_system_function_row_actions */
+    u16 thread_count;           /* 0x08; menu entry thread_count */
     u8 _padding_0a[2];          /* aligns thread_entry */
     void (*thread_entry)(void); /* 0x0c; started as thread 8 */
     s16 alternate_id;           /* 0x10; replaces the id when navigation messages are not On */
     u8 _padding_12[2];          /* tail padding to 4-byte alignment */
 } battle_system_function_t;
 typedef char battle_system_function_size_must_be_0x14[(sizeof(battle_system_function_t) == 0x14) ? 1 : -1];
+
+/* First argument of *_menu_init_system_function and
+ * *_menu_dispatch_system_function; `option` selects the variant. */
+typedef enum battle_menu_system_command {
+    BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT = 0x01, /* prompt for the resolved menu command */
+    BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK = 0x02,    /* option 0 closes, 1 and 4 confirm, others reject the move */
+    BATTLE_MENU_SYSTEM_COMMAND_WAIT_MENU = 0x03,
+    BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM = 0x04,
+    BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE = 0x05,
+    BATTLE_MENU_SYSTEM_COMMAND_CLOSE = 0x06,
+    BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT = 0x07,
+    BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK = 0x08, /* may start event 0x190-0x193; otherwise closes */
+    BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM = 0x09,
+    BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE = 0x0a,  /* option: text id */
+    BATTLE_MENU_SYSTEM_COMMAND_ABILITY_LEARNED = 0x0b, /* option: ability id */
+    BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE = 0x0c,
+    BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM = 0x0d,
+    BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT = 0x0e,    /* option: trap id */
+    BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM = 0x0f, /* option: item id */
+    BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM_SILENT = 0x10,
+    BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT = 0x11, /* option: battle_action_display_image_id_e */
+} battle_menu_system_command_e;
+
+/* Indices of the system function table (g_battle_system_function_table and
+ * its WORLD twin) that the dispatcher names; the rest are message variants. */
+typedef enum battle_system_function_id {
+    BATTLE_SYSTEM_FUNCTION_WAIT_MENU = 0x01,
+    BATTLE_SYSTEM_FUNCTION_CLOSE = 0x08,
+    BATTLE_SYSTEM_FUNCTION_ABILITY_ANNOUNCEMENT = 0x0a,
+    BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE = 0x1d,
+    BATTLE_SYSTEM_FUNCTION_ABILITY_LEARNED = 0x1e,
+    BATTLE_SYSTEM_FUNCTION_CRYSTAL_OR_TREASURE = 0x1f,
+    BATTLE_SYSTEM_FUNCTION_MOVE_CONFIRM = 0x21,
+    BATTLE_SYSTEM_FUNCTION_TRAP_RESULT_FIRST = 0x22,
+    BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM_SOLD = 0x26,
+    BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM = 0x27,
+    BATTLE_SYSTEM_FUNCTION_MOVE_CONFIRM_SILENT = 0x28,
+    BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT = 0x2c,
+    BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT = 0x32,
+} battle_system_function_id_e;
+
+/* Companion overlay requests: index into the overlay LBA, size and load offset
+ * tables (g_battle_menu_companion_executable_lbas and the WORLD twins). */
+typedef enum battle_companion_overlay {
+    BATTLE_COMPANION_OVERLAY_OPTION = 1,             /* EVENT/OPTION.OUT */
+    BATTLE_COMPANION_OVERLAY_BUNIT = 2,              /* EVENT/BUNIT.OUT, first half */
+    BATTLE_COMPANION_OVERLAY_HELPMENU = 3,           /* EVENT/HELPMENU.OUT */
+    BATTLE_COMPANION_OVERLAY_EVTOOL = 4,             /* EVENT/EVTOOL.OUT; no request in retail */
+    BATTLE_COMPANION_OVERLAY_DEBUGMAP = 5,           /* EVENT/DEBUGMAP.OUT; no request in retail */
+    BATTLE_COMPANION_OVERLAY_REQUIRE = 6,            /* EVENT/REQUIRE.OUT */
+    BATTLE_COMPANION_OVERLAY_JOBSTTS = 7,            /* EVENT/JOBSTTS.OUT */
+    BATTLE_COMPANION_OVERLAY_SMALL = 8,              /* EVENT/SMALL.OUT */
+    BATTLE_COMPANION_OVERLAY_EQUIP = 9,              /* EVENT/EQUIP.OUT, first half */
+    BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF = 10, /* loaded above the heap reservation */
+    BATTLE_COMPANION_OVERLAY_DEBUGCHR = 11,          /* EVENT/DEBUGCHR.OUT */
+    BATTLE_COMPANION_OVERLAY_ETC = 12,               /* EVENT/ETC.OUT */
+    BATTLE_COMPANION_OVERLAY_ATTACK = 13,            /* EVENT/ATTACK.OUT */
+    BATTLE_COMPANION_OVERLAY_CARD = 14,              /* EVENT/CARD.OUT */
+    BATTLE_COMPANION_OVERLAY_BUNIT_SECOND_HALF = 15, /* loaded above the heap reservation */
+} battle_companion_overlay_e;
+
+/* Companion data file requests (the second LBA and size tables). */
+typedef enum battle_companion_file {
+    BATTLE_COMPANION_FILE_WIN001 = 2,    /* EVENT/WIN001.BIN */
+    BATTLE_COMPANION_FILE_BONUS = 3,     /* EVENT/BONUS.BIN */
+    BATTLE_COMPANION_FILE_SPELL_MES = 4, /* EVENT/SPELL.MES */
+} battle_companion_file_e;
+
+/* g_battle_companion_overlay_state / g_world_companion_overlay_state: the overlay
+ * entry the frame driver calls, cleared when the overlay returns. */
+typedef enum battle_companion_overlay_state {
+    BATTLE_COMPANION_OVERLAY_STATE_IDLE = 0,
+    BATTLE_COMPANION_OVERLAY_STATE_STUB = 1,      /* an empty function */
+    BATTLE_COMPANION_OVERLAY_STATE_BUNIT = 2,     /* bunit_entrypoint */
+    BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS = 3,   /* jobstts_entrypoint */
+    BATTLE_COMPANION_OVERLAY_STATE_EQUIP = 4,     /* equip_entrypoint */
+    BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
+} battle_companion_overlay_state_e;
 
 /* One 17-byte per-unit menu record, one per battle-unit slot (WORLD keeps its
  * 21 rows at 0x8013a750).
@@ -1084,7 +1162,9 @@ typedef char world_options_menu_page_size_must_be_0x190[(sizeof(world_options_me
 typedef enum text_control {
     TEXT_EXTENDED_GLYPH_PREFIX_FIRST = 0xd0,
     TEXT_EXTENDED_GLYPH_PREFIX_LAST = 0xdf,
-    TEXT_SET_GLYPH_COLOR = 0xe2,     /* operand: glyph colour argument */
+    TEXT_BACKREFERENCE_PREFIX_FIRST = 0xf0, /* 0xf0-0xf3 start a three-byte back-reference into earlier text */
+    TEXT_BACKREFERENCE_PREFIX_LAST = 0xf3,
+    TEXT_SET_GLYPH_DELAY = 0xe2,     /* operand: typewriter delay */
     TEXT_SET_PALETTE = 0xe3,         /* operand: text palette */
     TEXT_PRINT_NEXT_VALUE = 0xe4,    /* prints the next substitution value */
     TEXT_PRINT_INDEXED_VALUE = 0xe6, /* operand: substitution value index */
@@ -1147,7 +1227,26 @@ typedef enum text_id_base {
     TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE = 0x4300,
     TEXT_ID_ABILITY_NAME_BASE = 0x7000,
     TEXT_ID_SECTION_9000_BASE = 0x9000,
+    TEXT_ID_SKILLSET_NAME_SOURCE_BASE = 0xb000, /* section 22, which SMALL also binds as section 2 */
 } text_id_base_e;
+
+/* Index into the 32 text section pointers (g_battle_text_section_pointers,
+ * g_world_text_section_pointers): a text id's top five bits. Only the
+ * sections the code binds or reads by a fixed role are named. */
+typedef enum text_section {
+    TEXT_SECTION_EVENT_MESSAGES = 0,      /* the loaded event's text; BUNIT binds its menu text here */
+    TEXT_SECTION_SKILLSET_NAMES_COPY = 2, /* TEXT_ID_SKILLSET_NAME_BASE; a copy of section 22 */
+    TEXT_SECTION_JOB_NAMES = 6,           /* TEXT_ID_JOB_NAME_BASE */
+    TEXT_SECTION_ITEM_NAMES = 7,          /* TEXT_ID_ITEM_NAME_BASE */
+    TEXT_SECTION_ROSTER_UNIT_NAMES = 8,   /* TEXT_ID_UNIT_NAME_BASE */
+    TEXT_SECTION_UNIT_NAMES = 9,
+    TEXT_SECTION_ABILITY_NAMES = 14, /* TEXT_ID_ABILITY_NAME_BASE */
+    TEXT_SECTION_MESSAGES = 17,
+    TEXT_SECTION_LOCATION_NAMES = 18,
+    TEXT_SECTION_UNIT_MESSAGE = 21,   /* SPELL.MES while the spell quote thread runs */
+    TEXT_SECTION_SKILLSET_NAMES = 22, /* TEXT_ID_SKILLSET_NAME_SOURCE_BASE */
+    TEXT_SECTION_OVERLAY_SCREEN = 27, /* each overlay screen binds its own text here */
+} text_section_e;
 
 /* Substitution opcodes shared by battle messages and WORLD event text. */
 typedef enum text_format_code {

@@ -2,12 +2,12 @@
 #include "psx/libspu.h"
 #include "psx/types.h"
 
-/* Pushes the voice attributes marked in each channel's func_flags to the SPU,
+/* Pushes the voice attributes marked in each channel's voice_attr_flags to the SPU,
  * for every MUS record that is playing or restarting (status 0xc000) and not
  * paused (0x20), then clears the marks. Voices reserved or pending release by
  * SFX are skipped except for the SFX record (status bit 1).
  *
- * func_flags 0x4, 0x10 and 0x40 double as the marks set by the LFO, noise and
+ * voice_attr_flags 0x4, 0x10 and 0x40 double as the marks set by the LFO, noise and
  * reverb opcodes (main_smd_enable_lfo, main_smd_turn_on_noise,
  * main_smd_enable_reverb), so they also request the pitch-LFO, noise and
  * reverb voice-mask recalculations (g_main_sound_voice_update_requests bits 0-2). The volume/mode call
@@ -24,17 +24,18 @@ void main_sound_update_voice_attrs(void) {
     music = g_main_sound_active_music_list;
     while (music != 0) {
         status = music->status;
-        if ((status & 0xc000) != 0 && (status & 0x20) == 0) {
-            music->status = status & ~0x4000;
+        if ((status & (SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE | SUZUKI_MUSIC_STATUS_PLAYING)) != 0
+            && (status & 0x20) == 0) {
+            music->status = status & ~SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE;
             count = music->channel_count;
             channel = music->channels;
-            if ((status & 2) != 0)
+            if ((status & SUZUKI_MUSIC_STATUS_SFX) != 0)
                 allowed = -1;
             else
                 allowed = ~(g_main_mask_exclusion | g_main_sound_sfx_key_off_voices);
             do {
-                if ((channel->active & 1) != 0 && (allowed & channel->voice_mask) != 0) {
-                    flags = channel->func_flags;
+                if ((channel->flags & 1) != 0 && (allowed & channel->voice_mask) != 0) {
+                    flags = channel->voice_attr_flags;
                     if (flags != 0) {
                         voice = channel->voice;
                         if ((flags & 2) != 0) {
@@ -66,7 +67,7 @@ void main_sound_update_voice_attrs(void) {
                             g_main_sound_voice_update_requests |= 2;
                         if ((flags & 0x40) != 0)
                             g_main_sound_voice_update_requests |= 4;
-                        channel->func_flags = 0;
+                        channel->voice_attr_flags = 0;
                     }
                 }
                 channel++;

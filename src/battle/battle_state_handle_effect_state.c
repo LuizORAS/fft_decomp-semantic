@@ -14,7 +14,7 @@ void battle_state_handle_effect_state(void) {
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
     if (g_battle_state_animation_continue_check == 0) {
-        g_battle_game_state = g_previous_battle_game_state;
+        g_battle_game_state = g_battle_previous_game_state;
         g_main_system_animation_speed = g_main_saved_animation_speed;
     }
 }

@@ -56,7 +56,7 @@ void battle_action_run_between_turn_events(void) {
     }
     unit = battle_unit_get_source_misc_data();
     if (unit != 0) {
-        unit->ability_ct_resolved = 0;
+        unit->turn_action_flags = 0;
         if (g_battle_action_turn_event_type != BATTLE_TURN_EVENT_UNKNOWN_0400) {
             battle_target_move_cursor_to_unit(unit);
         }

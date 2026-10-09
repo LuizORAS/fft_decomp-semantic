@@ -16,7 +16,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
 
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = battle_unit_get_stats_from_battle_id(i);
-                if (unit->formation_index == party_index && unit->existence != 0xff && unit->unit_id != 0) {
+                if (unit->formation_index == party_index && unit->existence != BATTLE_UNIT_EXISTENCE_NONE
+                    && unit->unit_id != 0) {
                     break;
                 }
             }
@@ -24,7 +25,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
             if (i != BATTLE_UNIT_ID_NONE) {
                 unit = battle_unit_get_stats_from_battle_id(i);
                 unit = battle_unit_find_stats_by_entd_unit_id(unit->unit_id, &found_index);
-                if (unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED || unit->existence == 0xff || found_index == -3) {
+                if (unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED || unit->existence == BATTLE_UNIT_EXISTENCE_NONE
+                    || found_index == -3) {
                     if (unit->unit_id == 0 || unit->unit_id >= 4) {
                         if (!(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
                             require_party_store_equipment_or_sell_overflow(i);

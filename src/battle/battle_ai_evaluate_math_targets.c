@@ -21,11 +21,11 @@ s32 battle_ai_evaluate_math_targets(void) {
     u8* special;
     s32 unit;
 
-    if (g_battle_ai_data_base.decision_state)
+    if (g_battle_ai_data_base.resume_pending)
         goto evaluate_priority; /* resume inside the multiplier loop */
     if (!battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords))
         return 0;
-    g_battle_ai_data_base.current_action.target_flags_set = 1;
+    g_battle_ai_data_base.current_action.act_before_move = 1;
     for (g_battle_ai_math_skillset_index = 0; g_battle_ai_math_skillset_index < 4; g_battle_ai_math_skillset_index++) {
         g_battle_ai_math_skillset = g_battle_math_source_skillsets[g_battle_ai_math_skillset_index];
         g_battle_ai_math_ability_list

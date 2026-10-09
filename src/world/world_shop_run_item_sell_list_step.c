@@ -14,7 +14,7 @@ void world_shop_run_item_sell_list_step(void) {
             (s8)(g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : 7),
             (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_menu_init_scrollable_list_core(g_world_menu_entry_ids, g_world_menu_cursor_position,
-            g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
+            g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
         g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
         g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;

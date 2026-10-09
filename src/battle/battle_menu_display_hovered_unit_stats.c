@@ -14,7 +14,8 @@ extern world_gfx_image_load_parameters_t g_battle_menu_sprite_page_image_param_b
  * mode 2, the reaction-ability name), the BATTLE twin of world_menu_display_hovered_unit_stats.
  * Builds two alternating 0x2ec-byte pages, slides the panel in by
  * `slide`/`speed` each event tick and out when the thread's third parameter
- * is set (mode 0 also leaves immediately while g_battle_thread_contexts[12].task_id is 0x13). A running
+ * is set (mode 0 also leaves immediately while g_battle_thread_contexts[12].task_id is
+ NATIVE_THREAD_TASK_ATTACK_CASTER_STATS). A running
  * task-0x15 thread dims the portrait, gauges and CLUTs.
  *
  * `i` doubles as the saved hide-numbers flag in the first-frame text pass, as
@@ -56,17 +57,17 @@ void battle_menu_display_hovered_unit_stats(
     speed = 0x16;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
-    g_battle_menu_hide_numeric_values = unit->unit_flags & 4;
-    if (battle_thread_get_current_task_id() == 0x11) {
+    g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count++;
     }
     if (mode == 2) {
         text_id = unit->reaction_ability;
-        if (text_id >= 0x200) {
+        if (text_id >= ABILITY_ID_COUNT) {
             text_id = 0;
         }
         if (text_id != 0) {
-            text = battle_text_find_entry(text_id + 0x7000);
+            text = battle_text_find_entry(text_id + TEXT_ID_ABILITY_NAME_BASE);
             g_battle_thread_call_target = (void (*)(void))battle_text_measure_pixels;
             battle_thread_call_on_main_stack(&extent_w, &extent_h, text);
             if (extent_w & 3) {
@@ -139,7 +140,7 @@ void battle_menu_display_hovered_unit_stats(
         }
         for (i = 0; i < g_battle_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
-                if (mode == 0 && g_battle_thread_contexts[12].task_id == 0x13) {
+                if (mode == 0 && g_battle_thread_contexts[12].task_id == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
                     /* Both exits leave the step loop and the frame loop. */
                     goto exit;
                 }
@@ -175,10 +176,10 @@ void battle_menu_display_hovered_unit_stats(
             page->portrait.b0 = 0x80;
         }
         status->team_kind = 0;
-        if (unit->initial_team_flags & 0x30) {
+        if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
             status->team_kind = 1;
         }
-        if (!(unit->initial_team_flags & 0x38)) {
+        if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
             status->team_kind = 2;
         }
         if (unit->auto_battle_setting != 0) {
@@ -371,14 +372,14 @@ void battle_menu_display_hovered_unit_stats(
         battle_menu_submit_numeric_display_frame_primitives(&page->palette);
         battle_gfx_draw_or_append_gpu_primitive(&offs->a);
         battle_thread_yield();
-        g_battle_menu_hide_numeric_values = unit->unit_flags & 4;
-        if (battle_thread_get_current_task_id() == 0x11) {
+        g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+        if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_battle_menu_hovered_stats_frame_count++;
         }
     }
 exit:
     battle_thread_yield();
-    if (battle_thread_get_current_task_id() == 0x11) {
+    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count = 0;
     }
     battle_gfx_free_tpage7_vram(&rects[0]);

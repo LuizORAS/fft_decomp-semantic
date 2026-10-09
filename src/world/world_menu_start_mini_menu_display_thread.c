@@ -17,5 +17,5 @@ void world_menu_start_mini_menu_display_thread(void) {
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     world_thread_start(8, world_menu_display_triangle_selection);
     world_thread_set_parameters(8, (s32)&g_world_menu_thread_menu_data[10], 0, 0);
-    g_world_thread_contexts[8].task_id = NATIVE_THREAD_TASK_MENU_SOUND_DELAY;
+    g_world_thread_contexts[8].task_id = NATIVE_THREAD_TASK_MINI_MENU;
 }

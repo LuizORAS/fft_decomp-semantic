@@ -17,10 +17,10 @@ void SuzukiSetSfxEcho(int sound_id, s16 echo) {
     channel = music->channels;
     if (echo != 0) {
         do {
-            if (channel->active & 1) {
+            if (channel->flags & 1) {
                 if (channel->sound_id.raw == sound_id) {
                     channel->velocity = echo << 8;
-                    channel->note_flags2 = 0x100;
+                    channel->voice_update_flags = 0x100;
                 }
             }
             channel++;
@@ -40,11 +40,11 @@ void SuzukiSetSfxEcho(int sound_id, s16 echo) {
         channels = 0;
         remaining = 8;
         do {
-            if (stop->active & 1) {
+            if (stop->flags & 1) {
                 if (stop->sound_id.raw == sound_id) {
                     channels |= bit;
                     voices |= stop->voice_mask;
-                    stop->active = 0;
+                    stop->flags = 0;
                 }
             }
             bit <<= 1;

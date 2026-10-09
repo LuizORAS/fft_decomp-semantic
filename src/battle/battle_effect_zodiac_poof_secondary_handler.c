@@ -17,7 +17,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     battle_effect_trap_state_24_t* state;
     battle_effect_slot_t* slot;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
-    battle_effect_on_hit_vector_t pos;
+    battle_effect_gravity_t gravity;
     s32 result;
     s32 spawned;
     s32 i;
@@ -71,11 +71,11 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(0x230);
-        pos.z = 0;
-        pos.x = 0;
-        pos.y = ONE;
-        battle_effect_copy_on_hit_data_to_second_section();
-        battle_effect_store_first_section_of_on_hit_data(&pos);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
+        battle_effect_save_gravity();
+        battle_effect_set_gravity(&gravity);
         for (spawned = 0; spawned < BATTLE_EFFECT_TRAP3_SLOT_COUNT; spawned++) {
             id = state->ids[spawned];
             if (id != 0 && battle_effect_update_slot(id) == 0) {
@@ -85,7 +85,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
             }
         }
         battle_effect_restore_inertia_threshold();
-        battle_effect_copy_second_section_to_on_hit_data();
+        battle_effect_restore_gravity();
         {
             battle_effect_secondary_data_t* current_effect;
 

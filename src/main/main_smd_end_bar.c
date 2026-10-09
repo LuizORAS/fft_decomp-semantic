@@ -15,19 +15,19 @@ u8* main_smd_end_bar(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
         channel->loop_count++;
         channel->octave_base = channel->loop_octave_base;
     } else {
-        channel->note_flags2 &= ~3;
-        if (music->status & 2) {
+        channel->voice_update_flags &= ~3;
+        if (music->status & SUZUKI_MUSIC_STATUS_SFX) {
             g_main_sound_sfx_key_off_voices |= channel->voice_mask;
             mask = ~channel->voice_mask;
             music->lfo_voice_mask &= mask;
             music->noise_voice_mask &= mask;
             music->reverb_voice_mask &= mask;
             g_main_mask_exclusion &= mask;
-            channel->func_flags |= 0x54;
+            channel->voice_attr_flags |= 0x54;
         } else {
             g_main_sound_music_key_off_voices |= channel->voice_mask;
         }
-        channel->active = 0;
+        channel->flags = 0;
         note_data--;
     }
     return note_data;

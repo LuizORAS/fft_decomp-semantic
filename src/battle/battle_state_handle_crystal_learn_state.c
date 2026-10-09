@@ -69,7 +69,7 @@ void battle_state_handle_crystal_learn_state(void) {
         if ((source->animation_countdown != 0) && ((source->encoded_animation >> 1) >= 0xc)) {
             return;
         }
-        source->item_ability_display = 0;
+        source->item_display_active = 0;
         g_battle_move_find_result &= ~4;
     } else if (g_battle_move_find_result & 8) {
         g_battle_move_find_result &= ~8;

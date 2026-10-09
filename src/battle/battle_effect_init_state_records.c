@@ -11,7 +11,7 @@ void battle_effect_init_state_records(void) {
     for (i = 1; i < 16; i++) {
         g_effect_state_records[i].record_index = i;
         g_effect_state_records[i].next_index = i + 1;
-        g_effect_state_records[i].work_slots[4] = 0;
+        g_effect_state_records[i].file_function = 0;
     }
     g_effect_state_records[i].next_index = 0;
     g_effect_state_records[i].record_index = i;

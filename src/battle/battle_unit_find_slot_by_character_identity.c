@@ -38,8 +38,8 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->character_identity == (u8)character_identity
-            && unit->existence != 0xff) {
-            if (unit->existence == 0) {
+            && unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
+            if (unit->existence == BATTLE_UNIT_EXISTENCE_OFF_FIELD) {
                 return -2;
             }
             if (unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED) {

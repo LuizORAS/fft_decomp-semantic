@@ -5,7 +5,7 @@ void battle_formula_clear_nullify_flags(void) {
     u16* pflag;
     battle_action_data_t* action;
     u16* special_effect;
-    pflag = &g_battle_action_current_ability.elemental_flags;
+    pflag = &g_battle_action_current_ability.weapon_proc_pending;
     if (*pflag != 0) {
         action = g_battle_action_target_data;
         g_battle_action_current_ability.reaction_id = 0;

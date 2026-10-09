@@ -302,7 +302,7 @@ extern s8 g_card_save_format_prompt_active;
 extern s8 g_card_save_slot_scan_index;
 extern s8 g_card_save_file_count;
 extern s8 g_card_save_scan_setup_step;
-extern s8 g_world_card_mode_select_enabled;
+extern s8 g_card_save_occupied_slot_count;
 void card_save_build_buffer(s32 slot);
 void card_save_build_slot_description(s32 mode, u8* destination);
 void card_save_init_menu_graphics(void);

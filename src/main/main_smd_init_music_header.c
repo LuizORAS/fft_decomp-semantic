@@ -11,10 +11,10 @@ void main_smd_init_music_header(suzuki_music_t* music) {
     music->min_loop_count = 0;
     music->bar = 1;
     music->beat = 0;
-    music->beat_ticks_36 = 1;
+    music->beat_ticks_remaining = 1;
     music->ticks = 0;
-    music->tick_24 = 0;
-    music->tick_20 = 0;
+    music->sequence_ticks = 0;
+    music->timer_ticks = 0;
     music->channel_mask = 0;
     music->key_on_mask = 0;
     music->key_off_mask = 0;
@@ -31,7 +31,7 @@ void main_smd_init_music_header(suzuki_music_t* music) {
     music->tempo_step_count = 0;
     music->beats_per_bar = 4;
     music->beat_unit = 4;
-    music->beats_remaining = 4;
+    music->beats_per_bar_copy = 4;
     music->tempo_scale.value = 0x1000000;
     music->master_volume.value = 0x7f000000;
     music->tempo.raw = 0x660000;

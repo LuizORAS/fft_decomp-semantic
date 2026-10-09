@@ -13,27 +13,27 @@ void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t
     s16 facing;
 
     step_count = unit->current_edge_height;
-    step = &unit->movement_value.value;
-    switch (unit->movement_value.value >> 6) {
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
     case 0:
         facing = BATTLE_FACING_EAST;
-        unit->centre_tile_offset = 3;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 3;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         break;
     case 1:
         facing = BATTLE_FACING_WEST;
-        unit->centre_tile_offset = 7;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 7;
+        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         break;
     case 2:
         facing = BATTLE_FACING_SOUTH;
-        unit->centre_tile_offset = 1;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value.value & 3);
+        unit->step_phase = 1;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         break;
     case 3:
         facing = BATTLE_FACING_NORTH;
-        unit->centre_tile_offset = 5;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value.value & 3);
+        unit->step_phase = 5;
+        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
         break;
     }
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {

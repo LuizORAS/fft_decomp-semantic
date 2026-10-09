@@ -46,7 +46,7 @@ void world_card_run_mode_select_step(void) {
         g_world_card_mode_select_menu.selected_index = 0;
         g_world_card_mode_select_running = 1;
     }
-    if (*(s16*)&g_world_card_mode_select_enabled == 0) {
+    if (g_world_card_mode_select_enabled == 0) {
         g_world_menu_selection_results[5] = 1;
         g_world_card_mode_select_running = 0;
     } else {

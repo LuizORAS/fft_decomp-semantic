@@ -3,7 +3,7 @@
 
 /*
  * Resolves the terrain records for a moving unit's current tile and the tile
- * one step away, as encoded by movement_value: bits 6-7 select the axis and
+ * one step away, as encoded by current_path_step: bits 6-7 select the axis and
  * sign, bit 5 selects the map layer and bits 0-1 add extra distance.
  */
 void battle_move_get_current_and_destination_tiles(
@@ -18,7 +18,7 @@ void battle_move_get_current_and_destination_tiles(
     x = unit->map_x;
     y = unit->map_y;
     layer = unit->map_z;
-    movement = unit->movement_value.value;
+    movement = unit->current_path_step.value;
     *out_current = battle_map_get_tile_data_pointer(x, y, layer);
     flags = movement;
     dir = flags >> 6;

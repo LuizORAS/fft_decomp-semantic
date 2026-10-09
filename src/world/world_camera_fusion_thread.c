@@ -70,7 +70,7 @@ void world_camera_fusion_thread(void) {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
                     world_script_focus(cursor + 1);
-                } else if (*cursor == EVENT_OPCODE_UNKNOWN_73) {
+                } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
                     world_script_apply_relative_camera(cursor + 1, values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     world_script_focus_speed(cursor + 1, values, values + 3);

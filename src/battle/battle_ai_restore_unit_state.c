@@ -15,7 +15,7 @@ void battle_ai_restore_unit_state(s32 mode) {
     s32 id;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        id = ai->unit_battle_ids[i];
+        id = ai->unit_compact_indices[i];
         if (id == 0xff) {
             continue;
         }

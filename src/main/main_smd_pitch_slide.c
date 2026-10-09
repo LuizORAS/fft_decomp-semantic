@@ -12,10 +12,10 @@ u8* main_smd_pitch_slide(u8* note_data, suzuki_music_t* music, suzuki_music_chan
     amount = (s8)note_data[1] << 24;
     if (steps != 0 && amount != 0) {
         channel->pitch_slide_count = steps;
-        channel->flags_06 |= 1;
+        channel->ramp_flags |= 1;
         channel->pitch_slide_step = amount / steps;
     } else {
-        channel->flags_06 &= ~1;
+        channel->ramp_flags &= ~1;
     }
     return note_data + 2;
 }

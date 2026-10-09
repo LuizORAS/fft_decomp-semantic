@@ -43,16 +43,17 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                     *frontier_cell |= 0x40;
                 }
             }
-            if ((tile->flags_06.bits.blocked | tile->flags_06.bits.untargetable) == 0) {
+            if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
                 depth = tile->depth_half_height.value >> 5;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
                     *frontier_cell |= 0x10;
                 }
             }
-            tile_flags = tile->flags_06.value;
+            tile_flags = tile->flags.value;
             if (tile_flags & 1) {
                 *frontier_cell |= 0x80;
-            } else if (!config->move_type && (tile_flags & 2) && (tile->surface.value & 0x3f) != 0x3f) {
+            } else if (!config->move_type && (tile_flags & 2)
+                && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                 *frontier_cell |= 0x10;
             }
         }

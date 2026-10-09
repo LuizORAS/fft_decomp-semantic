@@ -19,7 +19,7 @@ void battle_map_transition_background_gradient(s32 frame_duration, const map_bac
     s32 target_green;
     s32 target_blue;
 
-    base = g_map_background_gradient_transition.channels;
+    base = g_battle_map_background_gradient_transition.channels;
     color = &colors->first;
     for (i = 0; i < 2; i++) {
         red = color[i].red << 16;
@@ -39,12 +39,12 @@ void battle_map_transition_background_gradient(s32 frame_duration, const map_bac
         }
     }
     if (frame_duration != 0) {
-        g_map_background_gradient_transition.active = 1;
-        g_map_background_gradient_transition.phase = 0;
-        g_map_background_gradient_transition.tick = 0;
-        g_map_background_gradient_transition.period = frame_duration;
+        g_battle_map_background_gradient_transition.active = 1;
+        g_battle_map_background_gradient_transition.phase = 0;
+        g_battle_map_background_gradient_transition.tick = 0;
+        g_battle_map_background_gradient_transition.period = frame_duration;
     } else {
-        g_map_background_gradient_transition.active = 0;
+        g_battle_map_background_gradient_transition.active = 0;
         current.first.red = base[0].red / 0x10000;
         current.first.green = base[0].green / 0x10000;
         current.first.blue = base[0].blue / 0x10000;

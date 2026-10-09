@@ -9,7 +9,7 @@
  * so callers select scenario 1 to preserve the scenario 0 mask.
  */
 s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
-    s32 g_main_item_move_find_flags = 0;
+    s32 found = 0;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 x, y, level;
     u16 row;
@@ -25,13 +25,13 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if (((row << x) & 0x8000) && distance_limit >= ai->tile_target_distance[level][y][x]) {
                         ai->reachable_tiles[ai->movement_scenario][level][y] |= 0x8000 >> x;
-                        g_main_item_move_find_flags = 1;
+                        found = 1;
                     }
                 }
             }
         }
     }
-    if (g_main_item_move_find_flags == 0) {
+    if (found == 0) {
         battle_ai_transfer_halfword_values((u16*)ai->reachable_tiles[ai->movement_scenario],
             (u16*)ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
         return 0;

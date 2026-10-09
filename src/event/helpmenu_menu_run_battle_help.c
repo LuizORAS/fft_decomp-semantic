@@ -180,7 +180,7 @@ void helpmenu_menu_run_battle_help(void) {
                     if (text_base == TEXT_ID_ABILITY_NAME_BASE) {
                         help_id &= 0x7FF;
                         help_id |= 0x7800;
-                    } else if (text_base == 0xB000) {
+                    } else if (text_base == TEXT_ID_SKILLSET_NAME_SOURCE_BASE) {
                         help_id &= 0x7FF;
                         help_id |= 0x9800;
                     } else if (text_base == TEXT_ID_ITEM_NAME_BASE) {

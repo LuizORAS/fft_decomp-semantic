@@ -26,7 +26,7 @@ void bunit_menu_update_unit_browser(void) {
             BUNIT_REQUEST_FLAGS = 0;
             if (g_bunit_status_banner_at_bottom_latch != g_bunit_status_banner_at_bottom) {
                 bcopy(g_bunit_unit_data[(s16)g_bunit_unit_comparison_index], &g_bunit_panel_comparison_billboard, 0x22);
-                bcopy(&g_bunit_unit_data[(s16)g_bunit_unit_comparison_index]->entd_slot_22,
+                bcopy(&g_bunit_unit_data[(s16)g_bunit_unit_comparison_index]->name_index,
                     g_bunit_panel_comparison_unit_data, 0xE);
                 bunit_panel_toggle_comparison_status_thread(1);
                 g_bunit_status_banner_at_bottom_latch = g_bunit_status_banner_at_bottom;

@@ -410,9 +410,9 @@ void world_menu_unit_status_banner_thread(void) {
             world_clear_menu_render_buffer(render_c, 0x580);
             *text_stride = 0x58;
             world_menu_set_text_origin(0, 0);
-            world_menu_display_text_entry(identity->unit_index + 0x4000, render_c, origin);
+            world_menu_display_text_entry(identity->unit_index + TEXT_ID_UNIT_NAME_BASE, render_c, origin);
             world_menu_set_text_origin(0, 0x10);
-            world_menu_display_text_entry(identity->job_id + 0x3000, render_c, origin);
+            world_menu_display_text_entry(identity->job_id + TEXT_ID_JOB_NAME_BASE, render_c, origin);
             LoadImage(&rects[2], (u32*)render_c);
             world_clear_menu_render_buffer(render_b, 0xF0);
             *text_stride = 0x10;

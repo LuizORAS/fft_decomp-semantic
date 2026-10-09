@@ -5,18 +5,17 @@
  * through one pointer: the target addresses these fields relative to
  * misc + 0x18c. */
 typedef struct battle_action_misc_data {
-    u8 action_18c;           /* 0x00 (misc 0x18c) */
+    u8 actor_id;             /* 0x00 (misc 0x18c) */
     u8 target_count;         /* 0x01 (misc 0x18d) */
     u8 target_list[0x10];    /* 0x02 (misc 0x18e) */
     u8 animate_on_miss_flag; /* 0x12 (misc 0x19e) */
-    u8 control_value_19f;    /* 0x13 */
+    u8 math_skill_flag;      /* 0x13 */
     u16 last_attack_id;      /* 0x14 */
-    u8 ability_formula;      /* 0x16 */
+    u8 post_action_message;  /* 0x16 */
     u8 reaction_occurred;    /* 0x17 (misc 0x1a3) */
     u8 continue_attack;      /* 0x18 */
     u8 current_hit_number;   /* 0x19 */
-    u8 reaction_id_1a6;      /* 0x1a */
-    u8 _unused_1b;           /* 0x1b */
+    s16 reaction_id;         /* 0x1a */
     u8 target_new_x;         /* 0x1c */
     u8 target_new_y;         /* 0x1d */
     u8 target_new_map_level; /* 0x1e */
@@ -50,7 +49,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
     if (unit->continue_attack_count == 0) {
         battle_unit_face_towards_action_target(unit, 0);
     }
-    action = (battle_action_misc_data_t*)&unit->action_18c;
+    action = (battle_action_misc_data_t*)&unit->actor_id;
     if (action->target_count != 0) {
         for (i = 0; i < action->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
@@ -64,7 +63,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
         }
     }
 
-    if (g_battle_action_phase == 1) {
+    if (g_battle_action_phase == BATTLE_ACTION_PHASE_ACTING_UNIT) {
         if (unit->used_ability_id != 0 && !IS_ELEMENTAL_GUN(unit->used_item_or_weapon_id)
             && action->reaction_occurred == 0) {
             battle_unit_select_attack_animation_for_ability(

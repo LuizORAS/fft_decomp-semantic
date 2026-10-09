@@ -19,7 +19,7 @@ void world_font_upload_glyph_image(u16 code, s32 x, s32 y, s32 style) {
         glyph = (code >> 8) & 0xf;
         glyph = glyph * 0xd0 + (code & 0xff);
     } else {
-        if (code >= 0xd0) {
+        if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             return;
         }
         glyph = code;

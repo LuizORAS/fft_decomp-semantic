@@ -8,6 +8,6 @@ u8* main_smd_increase_noise(u8* note_data, suzuki_music_t* music, suzuki_music_c
     music->noise_clock = (*note_data++ + music->noise_clock) & 0x3f;
     SpuSetNoiseClock(music->noise_clock);
     music->noise_voice_mask |= channel->voice_mask;
-    channel->func_flags |= 0x10;
+    channel->voice_attr_flags |= 0x10;
     return note_data;
 }

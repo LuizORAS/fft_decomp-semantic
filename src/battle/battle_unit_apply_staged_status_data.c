@@ -12,9 +12,9 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
     s32 i;
     s32 byte_index;
     s32 mask;
-    u8 exit_mode;
+    u8 inflict_status_mode;
     if (!(battle_script_get_current_scenario_finish_operation() & 0x8000)
-        && g_battle_unit_status_staging_data->state[unit_id] == 1) {
+        && g_battle_unit_status_staging_data->state[unit_id] == UNIT_STATUS_STAGING_SAVED) {
         unit = battle_unit_get_stats_from_battle_id(unit_id);
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             g_battle_unit_status_staging_data->added[unit_id][i]
@@ -48,21 +48,21 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-            g_battle_unit_status_staging_data->flags |= 1;
+            g_battle_unit_status_staging_data->jump_float_flags |= 1;
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
-            g_battle_unit_status_staging_data->flags |= 2;
+            g_battle_unit_status_staging_data->jump_float_flags |= 2;
         }
-        exit_mode = g_battle_unit_status_staging_data->exit_mode[unit_id];
-        if (exit_mode != 0) {
-            if (exit_mode == 3) {
+        inflict_status_mode = g_battle_unit_status_staging_data->inflict_status_mode[unit_id];
+        if (inflict_status_mode != 0) {
+            if (inflict_status_mode == 3) {
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
-            } else if (exit_mode == 2) {
+            } else if (inflict_status_mode == 2) {
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
-            } else if (exit_mode == 1) {
+            } else if (inflict_status_mode == 1) {
                 unit->hp = 1;
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
@@ -79,7 +79,7 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         } else {
             unit->charged_ability_ct = g_battle_unit_status_staging_data->charged_ability_ct[unit_id];
         }
-        g_battle_unit_status_staging_data->state[unit_id] = 2;
+        g_battle_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_RESTORED;
         g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
         battle_thread_call_on_main_stack(misc_id);
     }

@@ -23,6 +23,6 @@ void battle_action_switch_ability_to_default_attack(void) {
     *pc3 = saved_c3;
     u3->last_ability_id = saved_ability;
     u3->last_skillset_id = saved_skillset;
-    g_battle_action_current_ability.elemental_flags = 0;
+    g_battle_action_current_ability.weapon_proc_pending = 0;
     g_battle_action_current_ability.reaction_id = 0;
 }

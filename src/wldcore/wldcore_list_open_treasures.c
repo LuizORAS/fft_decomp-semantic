@@ -12,7 +12,7 @@ void wldcore_list_open_treasures(void) {
 
     count = 0;
     for (i = 0; i < 47; i++) {
-        if (world_script_get_variable(i + 0x321) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             g_wldcore_list_entry_values[count] = i - 0x2000;
             g_wldcore_list_row_flags[count] = 0;
             count++;
