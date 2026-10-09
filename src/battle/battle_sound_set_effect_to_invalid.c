@@ -2,5 +2,5 @@
 #include "psx/types.h"
 
 void battle_sound_set_effect_to_invalid(void) {
-    g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+    g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
 }

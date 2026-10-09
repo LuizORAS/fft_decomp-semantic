@@ -9,7 +9,7 @@ void equip_panel_set_primitive_colors(
     s32 i;
     s32 clut;
 
-    if (state->style == 1 || g_event_mode == 1) {
+    if (state->style == 1 || g_battle_menu_input_lock_mode == 1) {
         clut = 0x7dfc;
         for (i = 11; i >= 0; i--) {
             (primitives->sprites + i)->clut = clut;

@@ -27,14 +27,14 @@ void world_menu_run_unit_editor_panel_thread(void) {
     s32 frame;
     s32 i;
 
-    world_menu_run_unit_debug_editor_thread();
+    world_menu_open_debugchr_unit_editor();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
     g_world_menu_overlay_state = 1;
     g_world_menu_panel_fade_mode = 2;
     world_thread_set_parameters(0xA, 0, 0, 1);
     world_thread_set_parameters(8, 0, 0, 1);
-    world_menu_store_value_for_stored_unit();
+    world_menu_record_selection_for_selected_unit();
     world_menu_set_transition_active_flag();
     do {
         world_thread_yield();
@@ -43,12 +43,12 @@ void world_menu_run_unit_editor_panel_thread(void) {
 
     frame_record = g_world_unit_editor_frames;
     records = frame_record;
-    world_gfx_reset_record_texture_window(&frame_record->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&frame_record->cursor_mode);
     g_world_menu_hovered_unit_stats_display.y = 0x1A;
     g_world_unit_summary_panel_rect.y = 0x1A;
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[0], 0);
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[1], 2);
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[2], 4);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], 0);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], 2);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], 4);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
     frame_record->tiles[0].r0 = 0x30;
@@ -117,7 +117,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
             (const world_image_location_t*)&g_world_item_icon_image_location,
             (const world_image_location_t*)&g_world_unit_editor_panel_rect,
             &g_world_unit_editor_item_icon_image_params[i]);
-        world_build_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_panel_data.item_ids[i]);
+        world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_panel_data.item_ids[i]);
     }
 
     buffer = world_menu_alloc_buffer(0xC80);
@@ -173,8 +173,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_script_copy_bytes(&records[1], frame_record, sizeof(world_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_world_unit_editor_palette;
-    world_menu_build_line_box(&g_world_unit_editor_panel_rect, records[0].palette);
-    world_menu_build_line_box(&g_world_unit_editor_panel_rect, records[1].palette);
+    world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);
+    world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[1].palette);
     world_thread_start(0xA, world_menu_run_numeric_display_panel_thread);
     world_thread_set_parameters(0xA, 0, 0, 0);
     world_thread_yield();
@@ -248,7 +248,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&frame_record->lines[i]);
         }
         frame++;
-        world_gfx_submit_primitive_group((world_primitive_group_t*)frame_record->palette);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)frame_record->palette);
         world_gfx_draw_or_append_gpu_primitive(&frame_record->cursor_mode);
     }
     g_world_menu_hovered_unit_stats_display.y = 0xAA;
@@ -259,7 +259,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     do {
         world_thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
-    world_thread_start(0xA, world_map_draw_selected_tile_info_thread);
+    world_thread_start(0xA, world_menu_selected_tile_info_display_thread);
     world_thread_set_parameters(0xA, 0, 0, 0);
     g_world_thread_contexts[10].task_id = 0x10;
     g_world_menu_overlay_state = 0;

@@ -28,10 +28,10 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     g_battle_gfx_vram_slots[1].image_rect.y = 0;
     g_battle_gfx_vram_slots[1].image_rect.w = 0x40;
     g_battle_gfx_vram_slots[1].image_rect.h = 0xc8;
-    g_battle_gfx_load_data_cursor = (u8*)&g_battle_gfx_unit_animation_data;
-    g_battle_gfx_state_words[0] = 0;
-    g_battle_gfx_state_words[1] = 0;
-    g_battle_gfx_state_words[2] = 0;
-    g_battle_gfx_state_words[3] = 0;
+    g_battle_gfx_seq_data_cursor = (u8*)&g_battle_gfx_unit_animation_data;
+    g_battle_gfx_unit_graphics_load_state[0] = 0;
+    g_battle_gfx_unit_graphics_load_state[1] = 0;
+    g_battle_gfx_unit_graphics_load_state[2] = 0;
+    g_battle_gfx_unit_graphics_load_state[3] = 0;
     g_battle_gfx_shp_frame_data_cursor = (u8*)&g_battle_gfx_shp_frame_data_buffer;
 }

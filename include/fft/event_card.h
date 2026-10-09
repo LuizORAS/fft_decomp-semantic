@@ -170,7 +170,7 @@ extern u16 g_card_gfx_poly_ft4_capacity;
 extern u16 g_card_gfx_poly_ft4_count;
 extern u32* g_card_gfx_render_otag;
 extern u16 g_card_gfx_tile_capacity;
-void card_gfx_build_scaled_sprite_primitive_chain(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly);
+void card_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly);
 
 void card_gfx_enqueue_oriented_textured_quad(
     const card_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
@@ -194,7 +194,7 @@ s32 card_gfx_update_increasing_fade(void);
 void card_gfx_enqueue_textured_quad(
     const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 otag_index);
 
-void card_gfx_enqueue_translucent_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
+void card_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
 
 void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 unused_2, s32 unused_3, s32 unused_4,
     POLY_FT4* polygons, s32 unused_6, s32 unused_7, s32 unused_8, s32 unused_9, s32 unused_10, s32 unused_11,
@@ -387,7 +387,7 @@ extern s8 g_card_save_format_prompt_active;
 extern s8 g_card_save_slot_scan_index;
 extern s8 g_card_save_file_count;
 extern s8 g_card_save_scan_setup_step;
-extern s8 g_card_save_occupied_slot_count;
+extern s8 g_world_card_mode_select_enabled;
 void card_save_build_buffer(s32 slot);
 void card_save_build_slot_description(s32 mode, u8* destination);
 void card_save_init_menu_graphics(void);
@@ -450,7 +450,7 @@ s32 card_text_render_glyph_to_4bpp_image(
 
 void card_text_render_id_rows_to_vram(void* glyph_data, const u16* text_ids, const RECT* destination, s32 flags);
 void card_text_set_palette_and_metrics(s32 mode);
-const u8* card_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2);
+const u8* card_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 
 /* thread */
 extern s32 g_card_thread_active_key;
@@ -458,9 +458,9 @@ extern s32 g_card_thread_state;
 extern u8 g_card_thread_status_snapshot[16];
 void card_thread_request_stop(s32 id);
 void card_thread_stop_and_clear_state(s32 id);
-void card_thread_wait_and_clear_state(s32 thread_id);
+void card_menu_stop_thread_and_wait(s32 thread_id);
 s32 card_thread_start_managed(s32 thread_id, world_menu_entry_t* descriptor);
-void card_thread_start_managed_with_delay(s32 thread_id, world_menu_entry_t* descriptor);
+void card_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* descriptor);
 
 /* other */
 extern u8 g_card_sound_queued_effect_id;

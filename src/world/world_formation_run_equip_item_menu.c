@@ -51,7 +51,8 @@ s32 world_formation_run_equip_item_menu(void) {
         return 1;
     }
     if (g_world_equip_item_list_open == 0) {
-        g_world_equip_item_slot = world_menu_step_cursor_with_sound(5, 2, g_world_input_secondary_repeat, 6);
+        g_world_equip_item_slot
+            = world_menu_update_vertical_selection_and_mark_change(5, 2, g_world_input_secondary_repeat, 6);
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_equip_item_slot + 1),
                 g_world_equip_item_slot, (world_item_list_entry_t*)g_world_menu_entry_ids, 1);
@@ -66,7 +67,7 @@ s32 world_formation_run_equip_item_menu(void) {
             }
             world_gfx_get_sprite_slot(slot, &x, &y, g_world_menu_entry_ids);
             world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
-            g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;
+            g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
             g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
             g_world_menu_aux_callback = (s32 (*)(s32))world_item_build_type_icon_source;
             g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
@@ -90,12 +91,12 @@ s32 world_formation_run_equip_item_menu(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             } else {
                 equip = item;
-                if (world_item_change_quantity_on_equip(equip, 0) == 0) {
+                if (world_item_adjust_inventory_count(equip, 0) == 0) {
                     world_text_show_message_and_play_sound(0xc003, 0x30);
                 } else if (world_formation_equip_item_to_unit_slot(
                                g_world_formation_selected_unit_index, g_world_equip_item_slot, equip)
                     == 1) {
-                    world_item_change_quantity_on_equip(equip, -1);
+                    world_item_adjust_inventory_count(equip, -1);
                     world_formation_stage_selected_unit();
                     g_world_equip_item_list_refresh = 1;
                     g_world_menu_sound_effect_id = MAIN_SFX_EQUIP;

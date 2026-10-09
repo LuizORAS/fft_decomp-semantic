@@ -9,7 +9,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
         return;
@@ -17,7 +17,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
     if (g_battle_camera_rotation_action != 0) {
         return;
     }
-    if (g_action_type == BATTLE_TURN_EVENT_ABILITY_READY) {
+    if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
         if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
             && battle_script_get_event_finish_operation() != 0) {
             g_previous_battle_game_state = g_battle_game_state;

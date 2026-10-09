@@ -49,7 +49,7 @@ void battle_script_process_pending_requests(void) {
         battle_state_start_change_map_jump_in(jump_in_duration);
     }
     if (g_battle_3d_object_use_request != 0) {
-        battle_map_command_set_3d_object_state(g_battle_event_map_command_80_arg1, g_battle_event_map_command_80_arg2);
+        battle_map_command_set_3d_object_state(g_battle_event_3d_object_id, g_battle_event_3d_object_state);
         g_battle_3d_object_wait_status = 1;
     }
     if (g_battle_field_object_use_request != 0) {
@@ -58,7 +58,7 @@ void battle_script_process_pending_requests(void) {
         g_battle_field_object_wait_status = 1;
     }
     if (g_battle_3d_object_wait_status != 0) {
-        g_battle_3d_object_wait_status = battle_map_command_get_3d_object_state(g_battle_event_map_command_80_arg1);
+        g_battle_3d_object_wait_status = battle_map_command_get_3d_object_state(g_battle_event_3d_object_id);
     }
     if (g_battle_field_object_wait_status != 0) {
         g_battle_field_object_wait_status
@@ -148,12 +148,12 @@ void battle_script_process_pending_requests(void) {
         if (release_slot >= 0) {
             battle_gfx_release_reserved_vram_slot(release_slot);
         }
-        sfx_id = g_sound_effect_id_to_play;
+        sfx_id = g_battle_sound_pending_sfx_id;
         if (sfx_id != -1) {
             main_sound_play_sfx(sfx_id);
         }
         if (g_battle_music_switch_request >= 0) {
-            main_sound_stop_forced_music();
+            main_sound_stop_current_music();
             g_battle_current_music_track_index = g_battle_current_music_track_index ^ 1;
             if (g_battle_current_music_track_index == 0) {
                 music_track_id = g_battle_music_track_1_id;
@@ -167,7 +167,7 @@ void battle_script_process_pending_requests(void) {
             }
         }
         if (g_battle_music_unload_slot_request >= 0) {
-            main_sound_stop_forced_music();
+            main_sound_stop_current_music();
             main_sound_unload_scenario_mus(g_battle_music_unload_slot_request);
         }
         if (g_battle_music_set_track_request != -1) {

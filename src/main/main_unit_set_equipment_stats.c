@@ -9,7 +9,7 @@ void main_unit_set_equipment_stats(battle_stats_t* unit) {
 
     main_util_clear_byte_data(unit->equipment_stats, BATTLE_UNIT_EQUIPMENT_STAT_COUNT);
     unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE]
-        = g_job_data_pointer[unit->job_id].class_evade;
+        = g_main_job_data_pointer[unit->job_id].class_evade;
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return;
     }

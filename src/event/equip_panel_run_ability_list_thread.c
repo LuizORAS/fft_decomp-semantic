@@ -135,7 +135,7 @@ void equip_panel_run_ability_list_thread(void) {
         equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[2], frame,
             g_main_gfx_screen_polarity * 0xf0, (const s16*)offset);
         equip_panel_set_primitive_colors(screen, (const battle_menu_status_panel_frame_config_t*)thread);
-        equip_gfx_apply_menu_palette_for_mode(&screen->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&screen->numeric_frame, (s32*)thread);
         battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[1]);

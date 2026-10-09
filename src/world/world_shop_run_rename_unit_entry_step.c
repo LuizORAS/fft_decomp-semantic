@@ -4,7 +4,7 @@
 void world_shop_run_rename_unit_entry_step(void) {
     if (g_world_shop_rename_entry_initialized == 0) {
         g_world_formation_unit_banner_enabled = 0;
-        world_menu_toggle_unit_status_banner(0);
+        world_menu_toggle_unit_status_thread(0);
         g_world_shop_rename_entry_initialized = 1;
     }
     g_world_shop_entered_unit_name = world_name_run_entry_keyboard_frame(

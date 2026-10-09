@@ -37,7 +37,7 @@ void battle_gfx_resolve_packed_offset_table(u8** entries, battle_gfx_packed_offs
         if (offset == -1) {
             offset = 0;
         }
-        entries[index] = g_battle_gfx_load_data_cursor + offset;
+        entries[index] = g_battle_gfx_seq_data_cursor + offset;
         index += 1;
     } while (index < 0x100);
 
@@ -46,10 +46,10 @@ void battle_gfx_resolve_packed_offset_table(u8** entries, battle_gfx_packed_offs
     if (payload_size != 0) {
         payload = record->payload;
         do {
-            g_battle_gfx_load_data_cursor[index] = *payload;
+            g_battle_gfx_seq_data_cursor[index] = *payload;
             index += 1;
             payload += 1;
         } while (index < payload_size);
     }
-    g_battle_gfx_load_data_cursor += index;
+    g_battle_gfx_seq_data_cursor += index;
 }

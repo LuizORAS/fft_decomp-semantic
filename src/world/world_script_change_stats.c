@@ -18,33 +18,33 @@ void world_script_change_stats(const u8* parameters) {
 
     delta = world_script_load_halfword(parameters + 3);
     unit_id = world_script_load_halfword(parameters);
-    if (world_unit_try_get_misc_data_by_id(&unit_id, &misc_index) != 0) {
+    if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {
             if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
-                    unit = battle_find_unit_data_pointer_for_entd_unit_id(
+                    unit = battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
                     if (battle_id >= 0) {
                         if (parameters[2] == 0) {
                             value = unit->hp + delta;
-                            world_clamp_s32(&value, 0, unit->max_hp);
+                            world_script_clamp_s32_to_range(&value, 0, unit->max_hp);
                             unit->hp = value;
                         }
                         if (parameters[2] == 2) {
                             value = unit->ct + delta;
-                            world_clamp_s32(&value, 0, 100);
+                            world_script_clamp_s32_to_range(&value, 0, 100);
                             unit->ct = value;
                         }
                         if (parameters[2] == 3) {
                             value = unit->brave + delta;
-                            world_clamp_s32(&value, 0, 100);
+                            world_script_clamp_s32_to_range(&value, 0, 100);
                             unit->brave = value;
                         }
                         if (parameters[2] == 4) {
                             value = unit->faith + delta;
-                            world_clamp_s32(&value, 0, 100);
+                            world_script_clamp_s32_to_range(&value, 0, 100);
                             unit->faith = value;
                         }
                     }

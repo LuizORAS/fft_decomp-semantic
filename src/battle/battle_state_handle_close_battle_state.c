@@ -15,5 +15,5 @@ void battle_state_handle_close_battle_state(void) {
     g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].b0 = intensity;
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
-    g_battle_screen_fade_intensity += g_battle_state_map_transition_step;
+    g_battle_screen_fade_intensity += g_battle_state_screen_fade_step;
 }

@@ -6,7 +6,7 @@ s32 battle_menu_should_close_thread(s32* out_flag) {
     s32 offset;
     s32 task_state;
 
-    if (g_event_mode != 0 || g_battle_menu_help_open != 0) {
+    if (g_battle_menu_input_lock_mode != 0 || g_battle_menu_help_open != 0) {
         *out_flag = 0;
         return 0;
     }

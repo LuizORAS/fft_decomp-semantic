@@ -73,8 +73,8 @@ void world_script_update_event_frame_input(u32* otag, u32 input, s32 frame_arg) 
     }
 
     g_world_sound_effect_id_to_play = -1;
-    world_input_store_menu_state((const world_menu_input_state_t*)&g_world_input_frame_new);
-    world_input_store_menu_state((const world_menu_input_state_t*)&g_world_input_frame_new);
+    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
+    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
     if (g_world_input_frame_new != PSX_PAD_SELECT && g_world_input_frame_new != 0) {
         g_world_thread_change_cooldown = 5;
     }

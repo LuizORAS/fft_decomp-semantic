@@ -95,7 +95,7 @@ next:
             return;
         }
         g_wldcore_audio_queue.music.flags &= ~1;
-        main_sound_stop_forced_music();
+        main_sound_stop_current_music();
         goto clear_command;
     case 0x12:
         if (--g_wldcore_audio_queue.current_value != 0) {

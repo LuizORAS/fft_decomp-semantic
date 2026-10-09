@@ -25,7 +25,7 @@ typedef struct battle_menu_at_descriptor {
 
 /*
  * Provisional: the AT-list work area this builder fills, reached through
- * g_event_overlay_load_address. Every offset below is written or published by
+ * g_main_heap_companion_overlay_load_address. Every offset below is written or published by
  * this function: the five parallel halfword columns become the layout's
  * text_ids/text_colors tables at the end, `text` is published through
  * g_menu_text_pointer, and `request` is the block handed to the main-stack
@@ -84,7 +84,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     const u16* at_table;
 
     at_table = (const u16*)g_battle_ai_workspace_ptr;
-    work = (battle_menu_at_list_work_t*)g_event_overlay_load_address;
+    work = (battle_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_battle_menu_thread_menu_data[52].select_text_table = 0x13;
     g_battle_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_battle_menu_at_list_layout;
     text_id = at_table[g_battle_menu_thread_menu_data[3].selected_index];

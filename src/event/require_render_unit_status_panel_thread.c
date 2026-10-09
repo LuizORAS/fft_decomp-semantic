@@ -162,7 +162,7 @@ void require_render_unit_status_panel_thread(void) {
         }
         highlight = 0;
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
-            highlight = g_event_mode != 0;
+            highlight = g_battle_menu_input_lock_mode != 0;
         }
         if (thread->highlight != 0) {
             highlight = 1;

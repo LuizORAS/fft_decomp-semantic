@@ -51,7 +51,7 @@ s32 battle_menu_dispatch_system_function(
                 count = 0;
                 g_battle_script_condition_unit_battle_id = unit_id;
                 for (i = 0; i < 3; i++) {
-                    if (battle_classify_character_identity_slot(i + 1) == -3) {
+                    if (battle_unit_find_slot_by_character_identity(i + 1) == -3) {
                         count++;
                     }
                 }
@@ -59,8 +59,8 @@ s32 battle_menu_dispatch_system_function(
                     && battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) == 0) {
                     if (option != 2) {
                         battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x190);
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_unit_start_view_thread(0, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
                     } else {
@@ -71,8 +71,8 @@ s32 battle_menu_dispatch_system_function(
                 if (g_battle_scenario_event_active != 0) {
                     if (battle_script_run_scenario_conditions() != 0) {
                         if (option != 2) {
-                            battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                            g_option_menu_submenu_state = 1;
+                            battle_unit_start_view_thread(0, 0xFF, 0xFF);
+                            g_battle_menu_suspend_state = 1;
                             battle_script_start_current_event_thread();
                         } else {
                             g_battle_next_event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -86,8 +86,8 @@ s32 battle_menu_dispatch_system_function(
                     return 1;
                 } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) != 0) {
                     if (option != 2) {
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_unit_start_view_thread(0, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
                             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x193);
                         } else {
@@ -100,8 +100,8 @@ s32 battle_menu_dispatch_system_function(
                     return 2;
                 } else if (battle_action_check_battle_outcome() == 0) {
                     if (option != 2) {
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_unit_start_view_thread(0, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x192);
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
@@ -169,13 +169,13 @@ s32 battle_menu_dispatch_system_function(
             value = 0xB;
             if (option != 1) {
                 if (option == 2 || option == 4) {
-                    if (g_battle_menu_used_item_id == 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id == 0xFFFE || g_battle_menu_selected_skill_ct == 0) {
                         value = 0x2D;
                     } else {
                         value = 0xC;
                     }
                 } else {
-                    if (g_battle_menu_used_item_id != 0xFFFE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id != 0xFFFE || g_battle_menu_selected_skill_ct == 0) {
                         value = 0x2E;
                     } else {
                         value = 0xD;
@@ -187,7 +187,7 @@ s32 battle_menu_dispatch_system_function(
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
         g_battle_spell_quote_last_ability_id = action->ability_id & 0x1FF;
-        battle_thread_start(4, battle_text_run_unit_message_thread);
+        battle_thread_start(4, battle_text_run_spell_quote_thread);
         battle_thread_set_parameters(4, unit_id, g_battle_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         battle_text_set_message_duration_frames(0x3C);

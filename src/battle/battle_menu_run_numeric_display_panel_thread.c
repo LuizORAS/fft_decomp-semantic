@@ -11,7 +11,7 @@
 typedef struct battle_menu_numeric_panel_record {
     DR_MODE mode0;                                 /* 0x000 */
     DR_MODE mode1;                                 /* 0x00c */
-    battle_gfx_scaled_draw_area_pair_t draw_areas; /* 0x018; battle_menu_set_disabled_texture_window */
+    battle_gfx_scaled_draw_area_pair_t draw_areas; /* 0x018; battle_gfx_init_scaled_draw_area_packets */
     SPRT sprites[18];                              /* 0x040 */
     world_menu_palette_primitives_t* palette;      /* 0x1a8 */
 } battle_menu_numeric_panel_record_t;
@@ -37,7 +37,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode0, 0);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode1, 2);
-    battle_menu_set_disabled_texture_window((u8*)&record->draw_areas);
+    battle_gfx_init_scaled_draw_area_packets((u8*)&record->draw_areas);
     buffer = battle_menu_alloc_memory(0x918);
     battle_clear_menu_render_buffer(buffer, 0x918);
     g_menu_text_state.stride = 0x14;
@@ -73,7 +73,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     for (frame = 0;; frame++) {
         battle_thread_yield();
         record = &records[frame & 1];
-        battle_menu_build_zoom_draw_area_pair(
+        battle_gfx_build_scaled_draw_area_pair_swapped(
             &record->draw_areas, &g_battle_numeric_display_texture_window, frame, g_main_gfx_screen_polarity);
         if (battle_thread_get_current_parameter_3() != 0) {
             break;

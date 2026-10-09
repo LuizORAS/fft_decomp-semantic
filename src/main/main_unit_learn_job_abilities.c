@@ -55,7 +55,7 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
             auto_learn = 1;
         }
     } else {
-        skillset = g_job_data_pointer[job_id].skillset;
+        skillset = g_main_job_data_pointer[job_id].skillset;
     }
     i = 0;
     /* Views of job_points[job_index] and learned_abilities[job_index * 3]. The

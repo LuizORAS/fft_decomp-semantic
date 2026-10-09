@@ -13,8 +13,8 @@
  * than the target's edge is unusable; when only one layer is low enough, the
  * other layer's ceiling must leave at least four half-units of headroom. Of
  * two usable layers the higher one wins. On success the fall height goes to
- * g_current_ability.knockback_fall_height and the ability target ID to
- * g_current_ability.post_action_target_id, and the destination
+ * g_battle_action_current_ability.knockback_fall_height and the ability target ID to
+ * g_battle_action_current_ability.post_action_target_id, and the destination
  * layer is returned; -1 means off-map, blocked or occupied. */
 s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     map_tile_t* tile;
@@ -96,7 +96,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     if (battle_target_get_unit_id_if_tile_targetable(x, y, level) != -1) {
         return -1;
     }
-    g_current_ability.knockback_fall_height = fall;
-    g_current_ability.post_action_target_id = g_current_ability.target_id;
+    g_battle_action_current_ability.knockback_fall_height = fall;
+    g_battle_action_current_ability.post_action_target_id = g_battle_action_current_ability.target_id;
     return level;
 }

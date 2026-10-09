@@ -6,7 +6,7 @@ s32 battle_state_sync_frame(u32 ordering_table) {
     s32 timer;
     s32 sync_result;
 
-    if (g_animation_speed == 1) {
+    if (g_main_system_animation_speed == 1) {
         DrawSync(0);
         sync_result = VSync(0);
     } else {
@@ -33,7 +33,7 @@ s32 battle_state_sync_frame(u32 ordering_table) {
             }
             sync_result = VSync(sync_wait);
         } else {
-            sync_result = VSync(g_animation_speed);
+            sync_result = VSync(g_main_system_animation_speed);
         }
     }
 

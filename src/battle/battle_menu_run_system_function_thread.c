@@ -35,7 +35,7 @@ void battle_menu_run_system_function_thread(void) {
     g_battle_menu_current_id = value;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].field_0x20 = entry->value_08;
     if (id == 0x1f) {
-        battle_thread_start(8, battle_menu_open_option_menu_2);
+        battle_thread_start(8, battle_menu_open_option_dead_unit_panel);
         battle_thread_set_parameters(8, 0, D_80173C70, 0);
         battle_thread_exit_current();
     }

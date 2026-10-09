@@ -28,7 +28,7 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     s16 bottom;
 
     slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[0]];
-    battle_get_item_graphic_data(&sprite, item_id);
+    battle_gfx_set_item_icon_sprite(&sprite, item_id);
     prim = &slot->quads[g_battle_effect_buffer_index];
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);

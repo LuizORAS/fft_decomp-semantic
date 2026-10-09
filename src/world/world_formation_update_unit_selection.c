@@ -25,7 +25,7 @@ void world_formation_update_unit_selection(void) {
                     g_world_comparison_unit_stat_summary, 0x22);
                 bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->name_index,
                     &g_world_comparison_unit_identity, 0xe);
-                world_menu_toggle_comparison_banner_thread(1);
+                world_menu_toggle_comparison_status_thread(1);
                 g_world_comparison_display_thread_params.flags = saved;
                 g_world_formation_scroll_enabled_latch = g_world_formation_scroll_enabled;
                 if (g_world_formation_banner_slide_step < 0) {
@@ -81,7 +81,7 @@ void world_formation_update_unit_selection(void) {
     } else if (g_world_formation_current_menu == 2) {
         world_menu_toggle_ability_panel_thread(1);
     }
-    world_menu_toggle_unit_status_banner(
+    world_menu_toggle_unit_status_thread(
         g_world_formation_unit_banner_enabled != 0 || g_world_formation_unit_browse_enabled != 0);
     if (g_world_formation_banner_slide_step < 0) {
         g_world_status_display_thread_params.y = g_world_formation_banner_slide_step * 8 + 0x108;

@@ -202,7 +202,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
         marker.x = command[7] - command[11];
         marker.y = command[8]
             + (g_equip_menu_selected_list_index - g_equip_menu_scroll_base_index) * g_equip_menu_list_row_height;
-        equip_menu_update_and_draw_animated_marker(
+        equip_menu_update_and_draw_animated_cursor(
             &marker, g_equip_menu_list_cursor_anim_state, g_equip_text_compact_layout);
     }
     command += command[1];

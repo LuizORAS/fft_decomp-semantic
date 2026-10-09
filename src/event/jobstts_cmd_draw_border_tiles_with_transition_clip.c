@@ -22,7 +22,7 @@ u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command) {
     } else {
         g_jobstts_gfx_otag_index_locked = 0;
     }
-    next = jobstts_create_border_tiles(command);
+    next = jobstts_cmd_draw_window_frame_handler(command);
     g_jobstts_gfx_otag_index++;
     return next;
 }

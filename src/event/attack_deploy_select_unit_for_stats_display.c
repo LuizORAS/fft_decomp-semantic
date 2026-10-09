@@ -13,5 +13,5 @@ void attack_deploy_select_unit_for_stats_display(void) {
         g_attack_deploy_selected_roster_index++;
     }
     g_attack_status_display_thread_params = 0;
-    attack_load_party_unit_into_editor(1, g_attack_deploy_selected_roster_index);
+    attack_editor_load_party_unit(1, g_attack_deploy_selected_roster_index);
 }

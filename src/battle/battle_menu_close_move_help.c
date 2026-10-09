@@ -22,6 +22,6 @@ void battle_menu_close_move_help(void) {
         casting->state_frame_counter = 0;
         battle_target_store_cursor_unit_name_and_data();
     } else {
-        battle_action_enter_move_range_exception();
+        battle_state_enter_move_range_exception();
     }
 }

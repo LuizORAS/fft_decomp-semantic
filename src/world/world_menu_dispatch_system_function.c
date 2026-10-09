@@ -43,7 +43,7 @@ s32 world_menu_dispatch_system_function(
                 count = 0;
                 g_world_script_acting_unit_id = unit_id;
                 for (i = 0; i < 3; i++) {
-                    if (battle_classify_character_identity_slot(i + 1) == -3) {
+                    if (battle_unit_find_slot_by_character_identity(i + 1) == -3) {
                         count++;
                     }
                 }
@@ -54,18 +54,18 @@ s32 world_menu_dispatch_system_function(
                         world_unit_start_view_thread(0, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
                         g_world_menu_scenario_event_started = 1;
-                        world_script_start_event_from_variables();
+                        world_script_start_current_event_thread();
                     } else {
                         g_world_finish_operation_event_id = 0x190;
                     }
                     return 2;
                 }
                 if (g_world_menu_scenario_event_started != 0) {
-                    if (world_process_scenario_conditionals() != 0) {
+                    if (world_script_run_scenario_conditions() != 0) {
                         if (option != 2) {
                             world_unit_start_view_thread(0, 0xFF, 0xFF);
                             g_world_menu_overlay_state = 1;
-                            world_script_start_event_from_variables();
+                            world_script_start_current_event_thread();
                         } else {
                             g_world_finish_operation_event_id
                                 = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -86,7 +86,7 @@ s32 world_menu_dispatch_system_function(
                         } else {
                             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x191);
                         }
-                        world_script_start_event_from_variables();
+                        world_script_start_current_event_thread();
                     } else {
                         g_world_finish_operation_event_id = 0x191;
                     }
@@ -97,7 +97,7 @@ s32 world_menu_dispatch_system_function(
                         g_world_menu_overlay_state = 1;
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x192);
                         g_world_menu_scenario_event_started = 1;
-                        world_script_start_event_from_variables();
+                        world_script_start_current_event_thread();
                     } else {
                         g_world_finish_operation_event_id = 0x192;
                     }

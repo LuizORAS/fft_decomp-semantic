@@ -8,9 +8,9 @@ void battle_menu_open_debugchr_unit_editor(void) {
     if (battle_unit_get_stats_from_battle_id(*selected)->mount_info == 0) {
         return;
     }
-    battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
+    battle_unit_start_view_thread(0, 0xFF, 0xFF);
     battle_menu_set_option_menu_open();
-    g_option_menu_submenu_state = 1;
+    g_battle_menu_suspend_state = 1;
     battle_menu_request_open_companion_executable(0xB);
     battle_thread_set_parameters(8, 0, 0, 1);
     battle_thread_wait_until_inactive(8);
@@ -18,11 +18,11 @@ void battle_menu_open_debugchr_unit_editor(void) {
     battle_menu_record_selection_for_selected_unit();
     battle_menu_enter_status_screen_selection();
     debugchr_editor_run_unit_thread(*selected);
-    g_option_menu_submenu_state = 0;
+    g_battle_menu_suspend_state = 0;
     g_battle_sound_suppressed = 0;
     g_battle_script_event_input = 0;
     battle_menu_build_idle_action_menu(g_battle_menu_current_id);
-    battle_menu_store_unit_names_and_event_block_data(3, *selected, *selected);
+    battle_unit_start_view_thread(3, *selected, *selected);
     battle_menu_clear_option_menu_open();
     battle_menu_leave_status_screen_selection();
     battle_thread_exit_current();

@@ -131,7 +131,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
                     }
                 }
 
-                state->value = world_text_adjust_value_for_event_code(state->command, *state->value_cursor);
+                state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {

@@ -501,7 +501,7 @@ enum {
 };
 
 /*
- * 0x30-byte job record (g_job_data_pointer). The named fields are those copied
+ * 0x30-byte job record (g_main_job_data_pointer). The named fields are those copied
  * by main_unit_copy_job_data, main_unit_calculate_abilities and
  * main_unit_set_equipment_stats into battle_stats_t.
  */

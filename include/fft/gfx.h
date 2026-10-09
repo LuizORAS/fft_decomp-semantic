@@ -86,7 +86,7 @@ typedef union world_fade_intensity {
     u8 bytes[4];
 } world_fade_intensity_t;
 
-/* Draw-area pair built by world_menu_build_zoom_draw_area_pair: two DR_AREA packets whose
+/* Draw-area pair built by world_gfx_build_scaled_draw_area_packets_3: two DR_AREA packets whose
  * rectangles are scaled around their centre by a percentage from
  * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step). */
 typedef struct world_gfx_scaled_draw_area_pair {
@@ -105,8 +105,8 @@ typedef struct world_gfx_4bpp_rect {
     s32 stride;
 } world_gfx_4bpp_rect_t;
 
-/* View written by world_gfx_reset_record_texture_window{,_2,_3} and
- * world_menu_init_record: the cursor mode/sprite/window tail of
+/* View written by world_gfx_init_scaled_draw_area_packets{,_2,_3} and
+ * world_gfx_init_scaled_draw_area_packets_4: the cursor mode/sprite/window tail of
  * world_panel_frame_t. Callers also pass other records with the same offsets
  * (e.g. world_gfx_scaled_draw_area_pair_t, whose rects[0].w and rects[1] land
  * on sprite.w and texture_window). */

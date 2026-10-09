@@ -88,7 +88,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     bunit_menu_init_unit_list(g_bunit_unit_selected_index);
     do {
         bunit_gfx_submit_frame_and_swap_buffers(0, 0);
-        previous_mode = g_event_mode;
+        previous_mode = g_battle_menu_input_lock_mode;
         bunit_menu_update_event_thread_state();
         bunit_input_update_lock_timer();
         bunit_gfx_update_decreasing_fade();
@@ -98,10 +98,10 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         if (g_bunit_help_screen_id != 0) {
             bunit_menu_update_node_cursor(g_bunit_unit_data[g_bunit_unit_selected_index]->uses_monster_skillset);
         }
-        if (previous_mode != 0 && g_event_mode == 0) {
-            battle_text_restore_pointer_table();
+        if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
+            battle_text_restore_section_pointers();
         }
-        bunit_text_set_palette_and_metrics(g_event_mode);
+        bunit_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
         if (g_bunit_menu_current_menu == 2) {
             bunit_menu_update_job();
             /* The target also passes a1 = 0 to this one-argument callee. */
@@ -114,18 +114,18 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
                 (s16)bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();
-        g_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
+        g_battle_gfx_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
         battle_menu_draw_active_window_frames();
         bunit_input_update_event_state(
             g_bunit_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_bunit_gfx_drawenv_y);
-        sound_request = g_sound_effect_id_to_play;
+        sound_request = g_battle_sound_pending_sfx_id;
         if (sound_request == MAIN_SFX_CURSOR_MOVE || sound_request == MAIN_SFX_CANCEL) {
-            g_bunit_sound_queued_effect_id = g_sound_effect_id_to_play;
+            g_bunit_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
         }
         if (sound_request < 0 || g_battle_sound_suppressed != 0) {
-            g_sound_effect_id_to_play = 0;
+            g_battle_sound_pending_sfx_id = 0;
         }
-        sound_id = g_sound_effect_id_to_play;
+        sound_id = g_battle_sound_pending_sfx_id;
         if (sound_id == 0) {
             sound_id = g_bunit_sound_queued_effect_id;
         }
@@ -135,10 +135,10 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             main_sound_play_sfx(sound_id);
         }
         g_bunit_sound_queued_effect_id = 0;
-        g_sound_effect_id_to_play = 0;
+        g_battle_sound_pending_sfx_id = 0;
     } while ((u8)running != 0);
     bunit_thread_toggle_9_and_12(0);
-    bunit_thread_toggle_8(0);
+    bunit_panel_toggle_unit_status_thread(0);
     while (DrawSync(1) != 0) { }
     VSync(0);
     return (s8)g_bunit_selected_roster_id;

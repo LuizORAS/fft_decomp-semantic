@@ -29,7 +29,7 @@ void battle_target_spread_panels(u8 passes, s32 unused) {
                 panel = &g_battle_target_panels[y * g_map_max_x + x];
                 if (panel->mark != 0) {
                     panel->mark = 0;
-                    changed += battle_spread_targeting_panel_to_neighbors(y, x);
+                    changed += battle_target_spread_panel_to_neighbors(y, x);
                 }
             }
         }

@@ -112,9 +112,10 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.extras_x = 0x7E;
     g_world_ability_menu_layout.ids_mode = 0;
     if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
-        count = world_menu_widen_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
-        world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
+        count
+            = world_menu_copy_ff_terminated_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
+                ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
+        world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
         found = 0;
         for (i = 0; i < count; i++) {
@@ -131,7 +132,7 @@ void world_menu_build_ability_list(s32 mode) {
             window_x -= 4;
         } else {
             g_world_ability_menu_layout.extras_mode = 2;
-            world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+            world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                 ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
             window_x = 0x94;
             row_mode = 8;
@@ -165,16 +166,17 @@ void world_menu_build_ability_list(s32 mode) {
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
-                world_menu_widen_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+                world_menu_copy_ff_terminated_bytes_to_halfwords(
+                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
                 window_x -= 8;
-                world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
+                world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
                 row_mode = 6;
                 g_world_ability_menu_layout.values_x -= 8;
                 g_world_ability_menu_layout.extras_x -= 8;
             } else {
-                world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+                world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
                 window_x = 0x94;
                 row_mode = 5;

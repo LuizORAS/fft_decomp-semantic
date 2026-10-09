@@ -23,9 +23,9 @@ void world_text_render_id_list_to_image_rows(u8* font, s16* text_ids, RECT* dest
         row_text_ids[0] = *text_ids;
         row_text_ids[1] = -1;
         memset(g_world_text_row_image_buffer, 0, 0x800);
-        world_text_render_ids_into_image(
+        world_text_render_encoded_ids_to_image(
             g_world_text_row_image_buffer, &scratch_rect, 0xa, 0x64, font, row_text_ids, 0x64, 0xe7, palette);
-        world_gfx_load_image_sync(&destination_row, (u32*)g_world_text_row_image_buffer);
+        world_gfx_load_image_and_wait(&destination_row, (u32*)g_world_text_row_image_buffer);
         destination_row.y += 0x10;
     }
 }

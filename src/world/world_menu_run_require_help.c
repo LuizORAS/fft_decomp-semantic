@@ -35,12 +35,12 @@ void world_menu_run_require_help(void) {
 
     for (frame = 0; frame < 2; frame++) {
         poly = &cursor[frame];
-        world_menu_init_quad(poly);
+        world_gfx_init_default_poly_ft4(poly);
         SetSemiTrans(poly, 0);
         poly->tpage = GetTPage(0, 0, 0x3C0, 0x100);
         poly->clut = 0x7D7C;
         shadow_poly = &shadow[frame];
-        world_menu_init_quad(shadow_poly);
+        world_gfx_init_default_poly_ft4(shadow_poly);
         SetSemiTrans(shadow_poly, 1);
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;
@@ -56,8 +56,8 @@ void world_menu_run_require_help(void) {
     g_world_text_section_pointers[19] = g_world_help_data_base + g_world_help_text_section_offsets[19];
     g_world_text_section_pointers[20] = g_world_help_data_base + g_world_help_text_section_offsets[20];
     self = &g_world_threads[g_world_thread_current_id];
-    world_gfx_copy_screen_setup_out(g_world_help_active_banner, g_world_help_active_unit_data, &g_world_help_billboard,
-        g_world_help_menu_cursor_tile);
+    world_menu_copy_billboard_data_out(g_world_help_active_banner, g_world_help_active_unit_data,
+        &g_world_help_billboard, g_world_help_menu_cursor_tile);
     if (g_world_selected_unit_stat_summary.team_state != 0 || g_world_unit_join_screen_active != 0) {
         g_world_help_require_navigation[2].neighbors[2] = 7;
         g_world_help_require_navigation[7].neighbors[3] = 2;
@@ -150,9 +150,9 @@ void world_menu_run_require_help(void) {
             }
         }
         if (self->task_words[1] != 0) {
-            bob = world_lookup_thread_parameter_threshold_value(1);
+            bob = world_menu_get_cursor_bob_offset(1);
         } else {
-            bob = world_lookup_thread_parameter_threshold_value(0);
+            bob = world_menu_get_cursor_bob_offset(0);
         }
         self->task_words[0] += g_world_event_speed;
         bob -= 4;
@@ -211,5 +211,5 @@ void world_menu_run_require_help(void) {
     }
     *g_world_help_controller_state_ptr = 0;
     world_thread_wait_frames(1);
-    world_text_restore_sections_and_stop_thread();
+    world_menu_close_help_menu();
 }

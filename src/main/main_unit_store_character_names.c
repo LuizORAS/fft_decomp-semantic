@@ -24,7 +24,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     battle_stats_t* other;
     u8* name_bytes;
 
-    prepare_text = battle_text_init_entry;
+    prepare_text = battle_text_find_entry;
     if (g_main_unit_name_uses_world_text != 0) {
         prepare_text = world_text_find_entry;
     }

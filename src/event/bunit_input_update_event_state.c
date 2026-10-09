@@ -21,7 +21,7 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_current_otag_entry = (u32*)state;
+    g_battle_gfx_current_otag_entry = (u32*)state;
     g_bunit_frame_arg = frame_arg;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     g_battle_menu_hide_numeric_values = 0;
@@ -76,7 +76,7 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
         }
     }
 
-    g_sound_effect_id_to_play = -1;
+    g_battle_sound_pending_sfx_id = -1;
     battle_script_load_event_input_state((struct battle_event_input_state*)&g_bunit_input_event);
     if (g_bunit_input_event != PSX_PAD_SELECT && g_bunit_input_event != 0) {
         g_event_input_suppression_frames = 5;

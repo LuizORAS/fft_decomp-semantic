@@ -17,7 +17,7 @@ void attack_deploy_select_next_roster_unit(void) {
             }
         } while (g_attack_deploy_roster_unit_deployable[g_attack_deploy_selected_roster_index] == 0);
     }
-    attack_load_party_unit_into_editor(1, g_attack_deploy_selected_roster_index);
+    attack_editor_load_party_unit(1, g_attack_deploy_selected_roster_index);
     g_attack_deploy_roster_navigation_direction = 1;
     g_attack_status_display_thread_params = 0;
     g_attack_numeric_editor_redraw_request = 1;

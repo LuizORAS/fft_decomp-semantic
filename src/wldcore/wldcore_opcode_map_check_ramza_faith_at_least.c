@@ -7,7 +7,7 @@ void wldcore_opcode_map_check_ramza_faith_at_least(void) {
     u16 ip;
     s32 val;
 
-    party = wldcore_get_party_data_pointer(wldcore_get_ramza_s_roster_index());
+    party = wldcore_get_party_data_pointer(wldcore_get_ramza_roster_index());
     ipp = &g_wldcore_script_state.ip;
     ip = *ipp;
     val = g_wldcore_script_state.data[ip];

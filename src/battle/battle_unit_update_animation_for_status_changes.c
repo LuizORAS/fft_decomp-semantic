@@ -49,7 +49,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         if (unit->statuses_to_add_5_6 & 0x40) {
             battle_unit_store_animation_facing_movement_data(0x75, (s16)unit->facing, unit);
         } else if (unit->statuses_to_remove_5_6 & 0x40) {
-            battle_unit_animate_and_set_enemy_level_data_by_misc_id(unit->unit_id);
+            battle_unit_draw_and_activate_by_misc_id(unit->unit_id);
             battle_unit_store_animation_facing_movement_data(0x76, (s16)unit->facing, unit);
         }
         if ((u32)(battle_move_validate_float_fly(unit) & 0xff) >= 2) {

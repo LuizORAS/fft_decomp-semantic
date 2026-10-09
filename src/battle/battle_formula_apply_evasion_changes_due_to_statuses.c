@@ -27,10 +27,10 @@ void battle_formula_apply_evasion_changes_due_to_statuses(void) {
         flag = 1;
     }
     if (flag) {
-        main_util_clear_byte_data(&g_current_ability.accessory_evade, 4);
+        main_util_clear_byte_data(&g_battle_action_current_ability.accessory_evade, 4);
     }
     if (((battle_formula_evasion_target_t*)g_battle_action_target)->x58 & 2) {
-        base_hit = &g_current_ability.base_hit;
+        base_hit = &g_battle_action_current_ability.base_hit;
         *base_hit >>= 1;
     }
 }

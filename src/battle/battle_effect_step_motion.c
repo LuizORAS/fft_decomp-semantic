@@ -11,15 +11,15 @@ void battle_effect_step_motion(battle_effect_motion_t* motion) {
     motion->velocity[0]
         = ((motion->mass - g_battle_effect_inertia_threshold) * motion->velocity[0] + (motion->force[0] << 12))
             / motion->mass
-        + ((motion->on_hit_weight * on_hit_effects_data.x) >> 12);
+        + ((motion->on_hit_weight * g_battle_effect_gravity.x) >> 12);
     motion->velocity[1]
         = ((motion->mass - g_battle_effect_inertia_threshold) * motion->velocity[1] + (motion->force[1] << 12))
             / motion->mass
-        + ((motion->on_hit_weight * on_hit_effects_data.y) >> 12);
+        + ((motion->on_hit_weight * g_battle_effect_gravity.y) >> 12);
     motion->velocity[2]
         = ((motion->mass - g_battle_effect_inertia_threshold) * motion->velocity[2] + (motion->force[2] << 12))
             / motion->mass
-        + ((motion->on_hit_weight * on_hit_effects_data.z) >> 12);
+        + ((motion->on_hit_weight * g_battle_effect_gravity.z) >> 12);
     motion->force[0] += motion->force_step[0];
     motion->force[1] += motion->force_step[1];
     motion->force[2] += motion->force_step[2];

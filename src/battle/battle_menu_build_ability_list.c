@@ -115,7 +115,7 @@ void battle_menu_build_ability_list(s32 mode) {
         count = battle_menu_copy_ff_terminated_bytes_to_halfwords(
             (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
-        battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
+        battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
         found = 0;
         for (i = 0; i < count; i++) {
@@ -132,7 +132,7 @@ void battle_menu_build_ability_list(s32 mode) {
             window_x -= 4;
         } else {
             g_battle_ability_menu_layout.mode[2] = 2;
-            battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+            battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                 ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
             window_x = 0x94;
             row_mode = 8;
@@ -170,13 +170,13 @@ void battle_menu_build_ability_list(s32 mode) {
                     (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
                 window_x -= 8;
-                battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
+                battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
                 row_mode = 6;
                 g_battle_ability_menu_layout.x[1] -= 8;
                 g_battle_ability_menu_layout.x[2] -= 8;
             } else {
-                battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+                battle_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
                 window_x = 0x94;
                 row_mode = 5;

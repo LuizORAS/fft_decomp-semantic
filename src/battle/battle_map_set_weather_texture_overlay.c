@@ -45,7 +45,7 @@ void battle_map_set_weather_texture_overlay(s32 command) {
             } else {
                 g_battle_sound_primary_weather_sfx_id = 0x10002;
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_weather_sfx(0x10002);
+                    main_sound_play_bg_sfx(0x10002);
                 }
                 battle_map_set_weather_texture_overlay(0x55);
                 battle_map_set_weather_texture_overlay(0x8c);
@@ -62,7 +62,7 @@ void battle_map_set_weather_texture_overlay(s32 command) {
                 battle_map_set_weather_texture_overlay(0x8a);
                 g_battle_sound_primary_weather_sfx_id = 0x10002;
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_weather_sfx(0x10002);
+                    main_sound_play_bg_sfx(0x10002);
                 }
             }
         }
@@ -72,7 +72,7 @@ void battle_map_set_weather_texture_overlay(s32 command) {
         g_battle_map_lightning_state.timer = 0x3c;
         g_battle_sound_primary_weather_sfx_id = 0x10002;
         if (g_battle_sound_weather_sfx_enabled != 0) {
-            main_sound_play_weather_sfx(0x10002);
+            main_sound_play_bg_sfx(0x10002);
         }
         g_battle_map_lightning_state.color_matrices[1].m[0][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[0][1] = 0;

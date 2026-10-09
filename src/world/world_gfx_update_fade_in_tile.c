@@ -20,13 +20,13 @@ s32 world_gfx_update_fade_in_tile(void) {
             g_world_gfx_fade_decreasing = 0;
             running = 0;
         }
-        world_gfx_add_draw_mode_primitive(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
+        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
         rgb = &g_world_fade_tile_color.r;
         level = g_world_gfx_fade_intensity;
         g_world_fade_tile_color.b = level;
         g_world_fade_tile_color.g = level;
         *rgb = level;
-        world_gfx_append_tile_to_otag(&g_world_gfx_fade_tile_rect, rgb, 1, g_world_ot_length - 1);
+        world_gfx_enqueue_tile(&g_world_gfx_fade_tile_rect, rgb, 1, g_world_ot_length - 1);
     }
     return running;
 }

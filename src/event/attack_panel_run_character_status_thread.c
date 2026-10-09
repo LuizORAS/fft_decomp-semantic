@@ -5,7 +5,7 @@
 #define FRAME_RECT g_attack_character_status_frame_rect
 
 /* Thread task 0x3b: the combined status panel for the selected unit. REQUIRE
- * twin of bunit_panel_run_character_status_thread. */
+ * twin of bunit_menu_equipment_and_ability_panel_thread. */
 void attack_panel_run_character_status_thread(void) {
     battle_menu_status_panel_frame_config_t* thread;
     battle_menu_status_panel_buffer_t* screen;
@@ -26,7 +26,7 @@ void attack_panel_run_character_status_thread(void) {
     g_attack_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_attack_panel_frames_a;
     base = g_attack_panel_frames_a;
-    state = &g_attack_unit_editor_state.state;
+    state = &g_attack_editor_unit_fields.state;
     rect = FRAME_RECT;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
     attack_gfx_init_menu_tile_and_line_primitives(screen);
@@ -127,7 +127,7 @@ void attack_panel_run_character_status_thread(void) {
             battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i], g_attack_panel_item_icon_texture,
                 (const battle_image_location_t*)FRAME_RECT, &g_attack_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
-                battle_get_item_graphic_data(&screen->sprites[19 + i], (s16)state->equipment[i]);
+                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
                 ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
             }
@@ -146,7 +146,7 @@ void attack_panel_run_character_status_thread(void) {
         screen->draw_offsets[1].y = g_attack_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
         attack_panel_set_primitive_colors(screen, thread);
-        attack_gfx_apply_menu_palette_for_mode(&screen->numeric_frame, thread);
+        attack_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }

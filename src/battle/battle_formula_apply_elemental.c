@@ -7,12 +7,12 @@ void battle_formula_apply_elemental(void) {
     battle_stats_t* unit;
     s32 mount_info;
 
-    element = g_current_ability.range_data.element;
+    element = g_battle_action_current_ability.range_data.element;
     /* Oil (status 3 bit 0x80) doubles fire (element bit 0x80) and is removed. */
     if ((g_battle_action_target->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
         && (element & BATTLE_ELEMENT_FIRE)) {
         action = g_battle_action_target_data;
-        g_current_ability.xa = (s16)g_current_ability.xa * 2;
+        g_battle_action_current_ability.xa = (s16)g_battle_action_current_ability.xa * 2;
         action->status_removal[2] |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;

@@ -88,16 +88,16 @@ void world_menu_display_hovered_unit_stats(
         }
     }
     page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode]];
-    world_menu_build_line_box(frame_rect, &page->palette);
-    world_gfx_set_image_draw_mode(&page->draw_mode_1, 1);
-    world_gfx_set_image_draw_mode(&page->draw_mode_0, 0);
+    world_menu_init_numeric_display_frame_primitives(frame_rect, &page->palette);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, 1);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, 0);
     world_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
-        world_menu_init_quad(&page->quads[frame]);
+        world_gfx_init_default_poly_ft4(&page->quads[frame]);
     }
-    world_menu_init_quad(&page->portrait);
-    world_menu_init_icon_slot(&rects[0], 0x28, 0x28, (world_texture_prim_t*)&page->quads[0], 2);
-    world_menu_init_icon_slot(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&page->quads[1], 2);
+    world_gfx_init_default_poly_ft4(&page->portrait);
+    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (world_texture_prim_t*)&page->quads[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
     if (mode == 1) {
         world_gfx_init_image_loading(
@@ -314,7 +314,7 @@ void world_menu_display_hovered_unit_stats(
                 g_world_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 world_menu_set_text_origin(2, 0);
-                world_display_specific_menu_text((s32)(buffer + 0x400), (s32)(stride - 2), (s32)text);
+                world_menu_display_text_string((s32)(buffer + 0x400), (s32)(stride - 2), (s32)text);
             }
             LoadImage(&rects[1], (u32*)(buffer + 0x400));
             text_loaded = 1;
@@ -365,7 +365,7 @@ void world_menu_display_hovered_unit_stats(
         } else {
             world_menu_init_primitive_colors_palette_bank_0(&page->palette);
         }
-        world_gfx_submit_primitive_group((world_primitive_group_t*)&page->palette);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&page->palette);
         world_gfx_draw_or_append_gpu_primitive(&offs->a);
         world_thread_yield();
         g_world_menu_hide_numeric_values = unit->unit_flags & 4;
@@ -378,7 +378,7 @@ exit:
     if (world_thread_get_current_task_id() == 0x11) {
         g_world_menu_hovered_stats_frame_count = 0;
     }
-    world_gfx_free_texture_grid_rect(&rects[0]);
-    world_gfx_free_texture_grid_rect(&rects[1]);
+    world_gfx_free_tpage7_vram(&rects[0]);
+    world_gfx_free_tpage7_vram(&rects[1]);
     world_thread_exit_current();
 }

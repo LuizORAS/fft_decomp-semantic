@@ -22,7 +22,7 @@ void battle_move_start_unit_climb_hop_step(
 
     step = &unit->movement_value;
     if (unit->current_unit_id_plus_one != 0
-        && (battle_calculate_unit_height_data(&height_data, unit->current_unit_id_plus_one - 1),
+        && (battle_unit_calculate_height_data(&height_data, unit->current_unit_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {

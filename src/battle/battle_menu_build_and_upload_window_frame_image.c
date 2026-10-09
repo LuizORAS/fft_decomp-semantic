@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Builds a tiled window-frame image and optionally uploads it. Mode 2 may use
- * the fixed UI buffer at g_event_overlay_load_address + 0x8000. */
+ * the fixed UI buffer at g_main_heap_companion_overlay_load_address + 0x8000. */
 void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode) {
     RECT upload;
     s32 first;
@@ -32,7 +32,7 @@ void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, REC
     if (size > 0x3000 && mode == 0) {
         buffer = battle_menu_alloc_memory(0x3000);
     } else if (mode == 2 && g_battle_menu_scroll_list_depth == 2) {
-        buffer = (u16*)(g_event_overlay_load_address + 0x8000);
+        buffer = (u16*)(g_main_heap_companion_overlay_load_address + 0x8000);
     } else {
         buffer = battle_menu_alloc_memory(size);
     }

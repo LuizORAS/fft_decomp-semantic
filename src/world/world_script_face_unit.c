@@ -26,15 +26,15 @@ void world_script_face_unit(const u8* parameters, s32 second_only) {
     order = 1;
     misc_id = world_script_load_halfword(parameters);
     unit_id = world_script_load_halfword(parameters + 2);
-    if (world_unit_try_get_misc_data_by_id(&unit_id, &misc_index) != 0) {
-        misc_id = world_get_misc_id(misc_id);
+    if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
+        misc_id = world_script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&g_world_unit_face_slot_order[i], &misc_index)
                         != 0
                     && misc_id != unit_id) {
-                    world_unit_copy_screen_data_by_misc_id(misc_id, position);
-                    world_unit_copy_screen_data_by_misc_id(unit_id, target);
+                    world_unit_copy_misc_screen_coords(misc_id, position);
+                    world_unit_copy_misc_screen_coords(unit_id, target);
                     dx = target[0] - position[0];
                     dy = target[2] - position[2];
                     facing = -ratan2(dy, dx);

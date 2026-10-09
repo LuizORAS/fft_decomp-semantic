@@ -41,13 +41,13 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
         if (i != g_battle_acting_unit_id) {
             unit = &g_battle_unit_stats[i];
             action = &unit->action_actor_id;
-            if (battle_formula_can_unit_evade(unit) == 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
+            if (battle_unit_get_action_restriction(unit) == 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                 can_react = battle_action_can_unit_react(unit);
                 ability = unit->action.reaction_id;
                 if (((can_react == 0 && g_battle_action_state != 1) || ability == ABILITY_ID_REACTION_REFLECT)
                     && ability != 0) {
                     g_battle_action_context = 1;
-                    main_util_copy_action_data(action, g_reaction_unit_action_data_16e);
+                    main_util_copy_action_data(action, g_battle_action_saved_command);
                     g_battle_current_reaction_ability_id = ability;
                     action[0] = i;
                     action[1] = 0;
@@ -78,7 +78,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         break;
                     case 3:
                         outcome = (battle_action_store_counter_ability(unit, 0x11,
-                                       g_geomancy_terrain_ability_table
+                                       g_main_terrain_geomancy_abilities
                                            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
                                                & 0x3F],
                                        0)
@@ -120,19 +120,19 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         outcome = BATTLE_REACTION_OUTCOME_NONE;
                     }
                     if (outcome == BATTLE_REACTION_OUTCOME_NONE) {
-                        main_util_copy_action_data(g_reaction_unit_action_data_16e, action);
+                        main_util_copy_action_data(g_battle_action_saved_command, action);
                         i++;
                         continue;
                     }
                     if ((u32)(outcome - 1) < 3) {
                         battle_action_init_current_ability_strike_data(unit);
                     } else {
-                        g_current_ability.strike_count = 1;
-                        g_current_ability.strike_counter = 0;
-                        g_current_ability.elemental_flags = 0;
-                        g_current_ability.knockback_flags = 0;
-                        g_current_ability.primary_weapon_id = unit->equipment[3];
-                        g_current_ability.secondary_weapon_id = unit->equipment[5];
+                        g_battle_action_current_ability.strike_count = 1;
+                        g_battle_action_current_ability.strike_counter = 0;
+                        g_battle_action_current_ability.elemental_flags = 0;
+                        g_battle_action_current_ability.knockback_flags = 0;
+                        g_battle_action_current_ability.primary_weapon_id = unit->equipment[3];
+                        g_battle_action_current_ability.secondary_weapon_id = unit->equipment[5];
                         action[1] = 0;
                         action[0xA] = 5;
                         action[0xB] = i;

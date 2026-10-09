@@ -1,4 +1,4 @@
-/* Evaluates one five-halfword scenario condition record for world_process_scenario_conditionals
+/* Evaluates one five-halfword scenario condition record for world_script_run_scenario_conditions
  * (the WORLD sibling of BATTLE process_scenario_conditionals): returns 1 when
  * the condition holds, 2 for type 0x19 (stores the id in script variable
  * 0x27), otherwise 0. Twin: battle_script_check_scenario_condition (0x80142694),

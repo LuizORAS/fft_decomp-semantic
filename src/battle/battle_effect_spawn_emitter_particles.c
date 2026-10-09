@@ -24,7 +24,7 @@
  * the resulting minimum and maximum. transform is the parent particle for the
  * 0x800 spawn anchor.
  *
- * The records returned by battle_effect_alloc_work are initialized through
+ * The records returned by battle_effect_alloc_work_record are initialized through
  * effect_particle_physics_view_t. The 0x4c/0x50 lerps are computed and
  * discarded, as is the target's facing quadrant. */
 s32 battle_effect_spawn_emitter_particles(
@@ -112,7 +112,7 @@ s32 battle_effect_spawn_emitter_particles(
     CURVE_FACTOR(entry->curve_indices[1] >> 20 & 0xf);
     count = battle_effect_lerp_linear(entry->particle_count_start, entry->particle_count_end, factor);
     for (i = 0; i < count; i++) {
-        particle = (effect_particle_physics_view_t*)battle_effect_alloc_work(effect_index, (s16)(kind & 0xf000));
+        particle = (effect_particle_physics_view_t*)battle_effect_alloc_work_record(effect_index, (s16)(kind & 0xf000));
         particle->kind_flags = kind;
         particle->child_spawn_flags = flags;
         particle->animation_frame = 0;

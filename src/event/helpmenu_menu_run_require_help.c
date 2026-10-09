@@ -54,7 +54,7 @@ void helpmenu_menu_run_require_help(void) {
     g_battle_text_section_pointers[19] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[19];
     g_battle_text_section_pointers[20] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[20];
     self = &g_battle_threads[g_battle_current_thread_id];
-    battle_action_copy_at_and_cursor_to(
+    battle_menu_copy_billboard_data_out(
         g_helpmenu_active_banner, g_helpmenu_active_unit_data, &g_helpmenu_billboard, g_helpmenu_menu_cursor_tile);
     if (g_helpmenu_selected_unit_panel_mode != 0 || g_battle_post_battle_unit_changes_active != 0) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
@@ -72,7 +72,7 @@ void helpmenu_menu_run_require_help(void) {
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_event_mode = 0;
+                g_battle_menu_input_lock_mode = 0;
             }
             if (self->task_words[1] != 0) {
                 self->task_words[1] = 0;
@@ -89,7 +89,7 @@ void helpmenu_menu_run_require_help(void) {
             }
             input = *g_helpmenu_controller_state_ptr;
             if (input & PSX_PAD_CROSS) {
-                g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (input & PSX_PAD_CIRCLE) {
@@ -100,7 +100,7 @@ void helpmenu_menu_run_require_help(void) {
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_helpmenu_controller_state_ptr = 0;
                         } else {
-                            g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                            g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                             battle_thread_start(text_thread_id, battle_text_character_handling_thread);
                             battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
@@ -111,13 +111,13 @@ void helpmenu_menu_run_require_help(void) {
                     } else if (entry->help_base == -0x6800 && (u32)(*(u16*)entry->value - 1) >= 0x101U) {
                         *g_helpmenu_controller_state_ptr = 0;
                     } else {
-                        g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                        g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         battle_thread_start(text_thread_id, battle_text_character_handling_thread);
                         battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = entry->help_base;
-                    g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     battle_thread_start(text_thread_id, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
@@ -132,7 +132,7 @@ void helpmenu_menu_run_require_help(void) {
                     help_id = 3;
                 }
                 if (menu_index != entry->destination[help_id]) {
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 menu_index = entry->destination[help_id];
             }
@@ -140,7 +140,7 @@ void helpmenu_menu_run_require_help(void) {
             /* The help text is up: entry, x and y keep the values of the last
                idle frame. */
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_event_mode = 1;
+                g_battle_menu_input_lock_mode = 1;
             }
             if (self->task_words[1] == 0) {
                 self->task_words[1] = 2;

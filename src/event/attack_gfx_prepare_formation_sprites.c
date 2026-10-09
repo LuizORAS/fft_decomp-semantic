@@ -1,6 +1,6 @@
 /* Loads file 0x166b (0x10000 bytes) via the entry-mode load paths, uploads its
  * second half, then for the 16 formation slots derives each unit's portrait
- * (inlined world_unit_get_portrait_index logic), copies a 0x18x0x30 cell into
+ * (inlined world_formation_get_unit_palette_index logic), copies a 0x18x0x30 cell into
  * the g_attack_formation_sprite_staging staging buffer, uploads it to g_attack_portrait_upload_rect and uploads the
  * 16x1 palette row to g_attack_portrait_palette_upload_rect; g_attack_formation_sprite_tall_cell[slot] records the cell
  * layout.

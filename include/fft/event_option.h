@@ -62,7 +62,7 @@ void option_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_
 /* Record types hoisted out of the defining .c files so that callers and
  * definitions agree on one spelling. */
 /* Scroll geometry block shared by option_menu_init_at_list and
- * option_menu_update_scroll. */
+ * option_menu_redraw_text_page_on_scroll. */
 typedef struct option_scroll_layout {
     s16 step;
     s16 maximum;
@@ -114,7 +114,7 @@ typedef struct option_menu_entry {
  * is fixed by the second frame starting there and by the byte copy between
  * them. Members come from the panels' own accesses plus the two BATTLE
  * helpers they call: battle_menu_init_sprite_array (0x8012e2b8) is handed the
- * nine SPRT packets, and battle_menu_set_disabled_texture_window (0x80138adc)
+ * nine SPRT packets, and battle_gfx_init_scaled_draw_area_packets (0x80138adc)
  * writes +0x1c and the 8-byte window at +0x20 of the cursor record, which
  * lands on the cursor sprite's w and the RECT that follows it. The block is
  * zero-filled in the overlay image, so none of it is initialized data. */
@@ -157,11 +157,12 @@ extern struct world_menu_icon_thread_param g_option_menu_icon_thread_param;
 extern RECT g_option_menu_title_image_rect;
 extern RECT g_option_menu_value_image_rect;
 void option_menu_init_at_list(option_at_menu_t* menu);
-void option_menu_render_entries(option_menu_entry_t* entry, s32* row_offset, void* buffer);
+void option_menu_draw_text_columns(option_menu_entry_t* entry, s32* row_offset, void* buffer);
 void option_menu_start_at_list_thread(void);
 void option_menu_start_dead_unit_threads(void);
-void option_menu_run_dead_unit_panel_a(void);
-void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
+void option_menu_window_frame_thread(void);
+void* option_menu_redraw_text_page_on_scroll(
+    option_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
 
 /* text */
 /* The two glyph blit descriptors at 0x801c9ce4 and 0x801c9cf4, filled by

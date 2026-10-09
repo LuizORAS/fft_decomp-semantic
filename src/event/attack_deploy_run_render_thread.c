@@ -47,7 +47,7 @@ void attack_deploy_run_render_thread(void) {
         &g_attack_gfx_draw_area_template);
     SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9f4, 0, 0, GetTPage(0, 1, 0x3c0, 0x100),
         &g_attack_gfx_draw_area_template);
-    attack_out_prepare_valid_deployment_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
+    attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
     battle_copy_bytes(
         &g_attack_deploy_render_buffers[1], &g_attack_deploy_render_buffers[0], sizeof(attack_deploy_render_buffer_t));
     frame = 0;
@@ -88,10 +88,10 @@ void attack_deploy_run_render_thread(void) {
                 g_attack_deploy_render_buffers[frame & 1].arrow.y1 = 0x49;
                 g_attack_deploy_render_buffers[frame & 1].arrow.y2 = 0x4a;
             }
-            attack_out_prepare_valid_deployment_tiles(g_attack_deploy_render_buffers[frame & 1].tiles[0]);
+            attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[frame & 1].tiles[0]);
             offset_y = g_main_gfx_screen_polarity == 0 ? 0xf0 : 0;
         } else {
-            attack_out_prepare_valid_deployment_tiles(g_attack_deploy_render_buffers[frame & 1].tiles[0]);
+            attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[frame & 1].tiles[0]);
             offset_y = g_main_gfx_screen_polarity == 0 ? 0xf0 : 0;
         }
         g_attack_deploy_render_buffers[frame & 1].world_position.x = g_attack_deploy_grid_slide_x - 0x80;
@@ -185,7 +185,7 @@ void attack_deploy_run_render_thread(void) {
         }
         battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9e8);
         battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].world_offset);
-        g_attack_deploy_zodiac_draw_context.ot = g_current_otag_entry;
+        g_attack_deploy_zodiac_draw_context.ot = g_battle_gfx_current_otag_entry;
         if (g_attack_deploy_zodiac_draw_context.scale_x > ONE) {
             g_attack_deploy_zodiac_draw_context.scale_x -= 0x100;
             g_attack_deploy_zodiac_draw_context.scale_y -= 0x100;

@@ -44,10 +44,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     animation = 0x25;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CHARGING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
                     animation = 0x17;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
@@ -88,10 +88,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     animation = 0x25;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PERFORMING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CHARGING) {
                     unit->used_ability_id = unit->battle_data->last_ability_id;
-                    battle_unit_start_ability_charge_animation_for_movement(unit);
+                    battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEFENDING) {
                     animation = 0x17;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {

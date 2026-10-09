@@ -44,7 +44,7 @@ void battle_menu_select_unit_action_slots_thread(void) {
         }
         if (g_battle_action_menu_row_types[g_battle_menu_thread_menu_data[4].selected_index] == 12) {
             g_battle_menu_thread_menu_data[3].selected_index = 0;
-            battle_menu_run_companion_overlay_9_10_thread();
+            battle_menu_run_equip_thread();
         }
         g_battle_thread_call_target = battle_menu_build_ability_list;
         battle_thread_call_on_main_stack(i);

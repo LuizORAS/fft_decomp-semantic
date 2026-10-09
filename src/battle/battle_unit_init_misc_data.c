@@ -142,8 +142,8 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->position_copies_active = 0;
     unit->sprite_display_section = (battle_gfx_sprite_display_data_t*)battle_gfx_init_unit_sprite_display(unit_id);
     sprite->graphic_type = 0;
-    unit->shp_data = unit->saved_shp_data = battle_gfx_get_spritesheet_shp_data_address(id);
-    unit->seq_data = unit->saved_seq_data = battle_gfx_get_spritesheet_seq_data_address(id);
+    unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
+    unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);
     sprite->wait = 1;
     sprite->counter_0c = 0;
     sprite->script_pos = 0;
@@ -163,12 +163,12 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         sprite->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
         if (i == 0) {
             sprite->graphic_type = 1;
-            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_spritesheet_shp_data(id);
-            sprite->seq = (u8**)battle_gfx_get_spritesheet_seq_data(id);
+            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
+            sprite->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
         } else {
             sprite->graphic_type = 2;
-            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_body_part_sprite_data(id);
-            sprite->seq = (u8**)battle_gfx_get_body_part_seq_data(id);
+            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
+            sprite->seq = (u8**)battle_gfx_get_effect_seq_data(id);
         }
         sprite->trigger = 0;
         sprite->wait = 1;

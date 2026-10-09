@@ -217,7 +217,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             marker.y = command[8]
                 + ((g_jobstts_menu_list_selected_index - g_jobstts_menu_scroll_base_index)
                     * (s16)g_jobstts_menu_list_row_height);
-            jobstts_menu_update_and_draw_animated_marker(
+            jobstts_menu_update_and_draw_animated_cursor(
                 &marker, &g_jobstts_menu_list_cursor_anim_state, g_jobstts_text_layout_mode);
         }
     }

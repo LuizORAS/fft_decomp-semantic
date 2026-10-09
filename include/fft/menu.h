@@ -217,7 +217,7 @@ typedef struct battle_menu_status_panel_slot_state {
     u16 equipment[5];   /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
                          * means "no entry"; otherwise rendered through the
                          * item-name text bank and passed to
-                         * battle_get_item_graphic_data */
+                         * battle_gfx_set_item_icon_sprite */
     s16 ability_ids[5]; /* 0x2e: primary/secondary skillset, reaction, support,
                          * movement; -1 means no label; the first two rows select
                          * the skillset-name or ability-name text bank by mode,

@@ -80,7 +80,7 @@ s32 world_formation_run_set_ability_menu(void) {
         } else {
             g_world_menu_description_text_id = current + 0x9800;
         }
-        slot = world_menu_step_cursor_with_sound(4, 4, g_world_input_secondary_repeat, 6) + 1;
+        slot = world_menu_update_vertical_selection_and_mark_change(4, 4, g_world_input_secondary_repeat, 6) + 1;
         g_world_set_ability_slot = slot;
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;

@@ -23,6 +23,6 @@ void battle_menu_start_building_thread(void) {
         return;
     }
     g_battle_menu_help_open = 1;
-    battle_thread_start(3, battle_menu_building_thread);
+    battle_thread_start(3, battle_menu_run_helpmenu_thread);
     battle_thread_set_parameters(3, 0, 0, 0);
 }

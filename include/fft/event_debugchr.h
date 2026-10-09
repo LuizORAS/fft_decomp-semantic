@@ -14,9 +14,9 @@ typedef struct debug_range {
 
 extern s32 g_debugchr_editor_active;
 extern s16 g_debugchr_editor_display_mode;
-extern u8 g_debugchr_editor_first_ability_bytes[];
+extern u8 g_debugchr_editor_unit_name[];
 extern s16 g_debugchr_editor_first_maximum;
-extern u8 g_debugchr_editor_fourth_ability_bytes[];
+extern u8 g_debugchr_editor_secondary_skillset_name[];
 extern u8 g_debugchr_editor_jump;
 extern u8 g_debugchr_editor_move;
 extern u8 g_debugchr_editor_numeric_descriptor_a[];
@@ -34,7 +34,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_debugchr_editor_numeric_tab
 extern u8 g_debugchr_editor_numeric_text_a[];
 extern u8 g_debugchr_editor_numeric_text_b[];
 extern u8 g_debugchr_editor_numeric_texture[];
-extern u8 g_debugchr_editor_second_ability_bytes[];
+extern u8 g_debugchr_editor_job_name[];
 extern s16 g_debugchr_editor_second_maximum;
 extern s16 g_debugchr_editor_selected_unit_id;
 extern s32 g_debugchr_editor_selected_unit_slot;
@@ -44,11 +44,11 @@ extern u8 g_debugchr_editor_speed;
 extern debug_range_t g_debugchr_editor_template[21];
 extern u8 g_debugchr_editor_template_normal[];
 extern u8 g_debugchr_editor_template_special[];
-extern u8 g_debugchr_editor_third_ability_bytes[];
+extern u8 g_debugchr_editor_primary_skillset_name[];
 extern s16 g_debugchr_editor_third_maximum;
 extern battle_menu_status_panel_slot_storage_t g_debugchr_editor_unit_fields;
 extern u8 g_debugchr_editor_unit_ids[];
-extern s16 g_debugchr_editor_unit_type;
+extern s16 g_debugchr_editor_job_id;
 
 /* Views of g_debugchr_panel_selected_billboard.bars[i].value (values[3 * i])
  * and bars[i].limit (the *_maximum words): debugchr_editor_apply_values_to_battle_unit
@@ -107,7 +107,7 @@ void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
-void debugchr_gfx_apply_menu_palette_for_mode(
+void debugchr_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
 
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
@@ -182,7 +182,7 @@ extern battle_menu_status_panel_numeric_entry_t g_debugchr_panel_comparison_nume
 extern CVECTOR g_debugchr_panel_gauge_bar_colors[];
 extern battle_menu_status_panel_numeric_entry_t g_debugchr_panel_selected_numeric_entries[];
 extern const debug_chr_texture_page_t g_debugchr_panel_status_texture;
-void debugchr_panel_copy_unit_data_to_billboard(battle_stats_t* unit, u8* output);
+void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, u8* output);
 
 void debugchr_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);

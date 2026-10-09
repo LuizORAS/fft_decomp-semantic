@@ -23,34 +23,34 @@ void battle_map_polygon_flag_command(s32 command) {
     case 0x94:
         for (i = 0; i < g_battle_map_textured_triangle_count; i++) {
             if (!(g_battle_map_textured_triangle_positions[i].polygon_flags & 0x8000)) {
-                (g_battle_data->gt3 + i)->r0 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt3 + i)->g0 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt3 + i)->b0 = g_battle_map_ambient_polygon_color[2];
-                (g_battle_data->gt3 + i)->r1 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt3 + i)->g1 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt3 + i)->b1 = g_battle_map_ambient_polygon_color[2];
-                (g_battle_data->gt3 + i)->r2 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt3 + i)->g2 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt3 + i)->b2 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->r0 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->g0 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->b0 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->r1 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->g1 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->b1 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->r2 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->g2 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt3 + i)->b2 = g_battle_map_ambient_polygon_color[2];
             }
         }
         for (i = 0; i < g_battle_map_textured_quad_count; i++) {
             if (!(g_battle_map_textured_quad_positions[i].polygon_flags & 0x8000)) {
-                (g_battle_data->gt4 + i)->r0 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt4 + i)->g0 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt4 + i)->b0 = g_battle_map_ambient_polygon_color[2];
-                (g_battle_data->gt4 + i)->r1 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt4 + i)->g1 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt4 + i)->b1 = g_battle_map_ambient_polygon_color[2];
-                (g_battle_data->gt4 + i)->r2 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt4 + i)->g2 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt4 + i)->b2 = g_battle_map_ambient_polygon_color[2];
-                (g_battle_data->gt4 + i)->r3 = g_battle_map_ambient_polygon_color[0];
-                (g_battle_data->gt4 + i)->g3 = g_battle_map_ambient_polygon_color[1];
-                (g_battle_data->gt4 + i)->b3 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->r0 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->g0 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->b0 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->r1 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->g1 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->b1 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->r2 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->g2 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->b2 = g_battle_map_ambient_polygon_color[2];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->r3 = g_battle_map_ambient_polygon_color[0];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->g3 = g_battle_map_ambient_polygon_color[1];
+                (g_battle_gfx_current_render_buffer->gt4 + i)->b3 = g_battle_map_ambient_polygon_color[2];
             }
         }
-        g_battle_map_ambient_restored_buffer = g_battle_data;
+        g_battle_map_ambient_restored_buffer = g_battle_gfx_current_render_buffer;
         break;
     case 0x46:
         for (i = 0; i < g_battle_map_textured_triangle_count; i++) {

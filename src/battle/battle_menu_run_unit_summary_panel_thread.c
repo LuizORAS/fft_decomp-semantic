@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Unit summary panel thread, BATTLE twin of world_menu_unit_summary_panel_thread: renders the
+/* Unit summary panel thread, BATTLE twin of world_menu_run_unit_summary_panel_thread: renders the
  * unit's name/job, brave, faith and a third number into text images,
  * builds two alternating frames (seven sprites, the portrait quad and two draw
  * offsets), then slides the panel in and redraws it each frame until the
@@ -32,7 +32,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     speed = 0x16;
     slide = 0x84;
     digits = g_battle_unit_summary_digit_images;
-    battle_menu_store_units_small_in_battle_display_data();
+    battle_menu_load_selected_unit();
     unit = battle_unit_get_attacker_data_pointer();
     g_battle_menu_hide_numeric_values = unit->unit_flags & 4;
     sprite = frames[0].sprites;
@@ -65,9 +65,9 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     *stride = 0x58;
     battle_menu_set_text_origin(0, 0);
     origin = (battle_rect_t*)(stride - 2);
-    battle_world_display_specific_menu_text((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_unit_name);
+    battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_unit_name);
     battle_menu_set_text_origin(0, 0x10);
-    battle_world_display_specific_menu_text((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_job_name);
+    battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_job_name);
     LoadImage(&rects[0], (u32*)buffer);
     battle_clear_menu_render_buffer(digits, 0xF0);
     *stride = 0x10;

@@ -8,7 +8,7 @@
  * `kind` selects the ability id range (0 action, 1 reaction, 2 support,
  * 3 movement, otherwise all). `mode` 0 lists every ability and tags unlearned
  * ones with 0x4000/0x6000; 1 lists learned ones (with kind 0 it defers to
- * world_get_known_skillsets); 2 tags learned ones 0x1000 and marks
+ * world_ability_list_secondary_skillsets); 2 tags learned ones 0x1000 and marks
  * unaffordable JP abilities 0x4000; 3 only counts unlearned ones. Lists
  * other than mode 3 are -1 terminated.
  *
@@ -29,11 +29,11 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     s16 id;
 
     if (mode == 1 && kind == 0) {
-        return world_get_known_skillsets(unit, out);
+        return world_ability_list_secondary_skillsets(unit, out);
     }
     skillset = world_job_get_skillset(job);
     generic = world_job_get_generic_index(job);
-    if (world_job_find_by_skillset(skillset) == -1) {
+    if (world_job_find_first_for_skillset(skillset) == -1) {
         skillset = (u16)g_world_formation_unit_pointers[unit]->primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, 0xF);
@@ -70,7 +70,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
             }
             learned = 1;
         } else {
-            learned = world_bit_cursor_read_primary(1);
+            learned = world_bits_read_primary(1);
         }
         id = abilities[i];
         if (id == 0) {

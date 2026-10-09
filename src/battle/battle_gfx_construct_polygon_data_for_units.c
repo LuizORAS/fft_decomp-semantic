@@ -104,7 +104,7 @@ void battle_gfx_construct_polygon_data_for_units(display, end, start, position, 
         flags = part->flags;
         index = battle_gfx_increment_counter();
         flags ^= mode;
-        prim = (battle_gfx_part_prim_t*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + index);
+        prim = (battle_gfx_part_prim_t*)((POLY_FT4*)g_battle_gfx_sprite_prim_pool + index);
         prim->length = 9;
         prim->code = 0x2c;
         if (mode & 2) {

@@ -12,18 +12,18 @@ s32 battle_effect_find_next_keyframe(s16 frame, u32 mask, s32* out_index, s32* o
     effect_misc_data_t* data;
     s32 i;
 
-    data = g_battle_effect_misc_data;
+    data = g_battle_effect_timeline;
     if (frame < data->phase2_delay) {
         i = 0;
         if (data->last_keyframe_index >= 0) {
             do {
                 if (frame < data->frame_thresholds[i] && (mask & data->selector[i]) != 0) {
                     *out_index = i;
-                    *out_frame = g_battle_effect_misc_data->frame_thresholds[i];
+                    *out_frame = g_battle_effect_timeline->frame_thresholds[i];
                     return 1;
                 }
                 i++;
-                data = g_battle_effect_misc_data;
+                data = g_battle_effect_timeline;
             } while (i <= data->last_keyframe_index);
         }
     }

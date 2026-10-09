@@ -30,9 +30,9 @@ void world_menu_update_icon_cursor_sprites(
             thread->task_words[0] = 0;
         }
         if (thread->task_words[1] != 0) {
-            x = world_lookup_thread_parameter_threshold_value(1);
+            x = world_menu_get_cursor_bob_offset(1);
         } else {
-            x = world_lookup_thread_parameter_threshold_value(0);
+            x = world_menu_get_cursor_bob_offset(0);
         }
         thread->task_words[0] += g_world_event_speed;
         x -= 12;

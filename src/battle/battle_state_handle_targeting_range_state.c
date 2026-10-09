@@ -8,18 +8,18 @@ void battle_state_handle_targeting_range_state(void) {
 
     unit = battle_unit_get_source_misc_data();
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
+        if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             battle_target_set_tile_background_color(0, 2);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }
-        if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
+        if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if ((battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
                         ->ceiling_depth_and_marks
                     & MAP_TILE_FLAG_ABILITY_RANGE)

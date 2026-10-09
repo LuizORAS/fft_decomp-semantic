@@ -12,7 +12,7 @@ void battle_unit_face_attacker_toward_targets(battle_unit_misc_data_t* unit) {
         while (i < unit->target_count) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
             if (target != 0) {
-                battle_unit_set_rider_mount_x_y_facing(target);
+                battle_unit_restore_facing_after_attack(target);
             }
             i++;
         }

@@ -8,7 +8,7 @@ void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
     s16 set = g_wldcore_active_saved_record.background_set;
 
     if (set != -1) {
-        wldcore_load_data_set_into_scratch_buffer(set);
+        wldcore_gfx_load_background_set(set);
         wldcore_wait_for_file_load();
     }
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags &= ~8;

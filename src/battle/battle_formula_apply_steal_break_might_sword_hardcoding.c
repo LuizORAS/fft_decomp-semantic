@@ -16,7 +16,7 @@ s32 battle_formula_apply_steal_break_might_sword_hardcoding(void) {
 
     g_battle_action_target_data->equipment_destroyed = 0xfe;
     if (!(g_battle_action_target->unit_flags & UNIT_FLAG_MONSTER)) {
-        ability = g_current_ability.ability_id;
+        ability = g_battle_action_current_ability.ability_id;
         if (ability == ABILITY_ID_BATTLE_SKILL_HEAD_BREAK || ability == ABILITY_ID_MIGHT_SWORD_BLASTAR_PUNCH
             || ability == ABILITY_ID_STEAL_HELMET) {
             if (g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_HEAD] != ITEM_ID_NONE) {

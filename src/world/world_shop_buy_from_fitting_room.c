@@ -10,7 +10,7 @@ void world_shop_buy_from_fitting_room(void) {
             if ((g_main_item_item_flags >> 14) != 0) {
                 g_world_formation_unit_pointers[i]->equipment[j] &= WORLD_ITEM_ID_MASK;
             }
-            world_item_change_quantity_on_equip(g_world_shop_fitting_room_items[i][j], 1);
+            world_item_adjust_inventory_count(g_world_shop_fitting_room_items[i][j], 1);
             g_world_shop_fitting_room_items[i][j] = ITEM_ID_NOTHING;
         }
     }

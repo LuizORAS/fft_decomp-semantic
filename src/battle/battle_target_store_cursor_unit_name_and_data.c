@@ -13,5 +13,5 @@ void battle_target_store_cursor_unit_name_and_data(void) {
         mode = 1;
         unit_id = 0xFF;
     }
-    battle_menu_store_unit_names_and_event_block_data(mode, unit_id, 0xFF);
+    battle_unit_start_view_thread(mode, unit_id, 0xFF);
 }

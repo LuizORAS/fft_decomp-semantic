@@ -90,7 +90,7 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
                         key_a = 0;
                     }
                 } else if (criterion == 5) {
-                    key_a = world_item_change_quantity_on_equip(item_a, 0) + counts[item_a];
+                    key_a = world_item_adjust_inventory_count(item_a, 0) + counts[item_a];
                 }
                 if (criterion == 0) {
                     key_b = g_main_item_primary_data[item_b].type;
@@ -125,7 +125,7 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
                         key_b = 0;
                     }
                 } else {
-                    key_b = world_item_change_quantity_on_equip(item_b, 0) + counts[item_b];
+                    key_b = world_item_adjust_inventory_count(item_b, 0) + counts[item_b];
                 }
                 k++;
                 if (criterion == 2) {

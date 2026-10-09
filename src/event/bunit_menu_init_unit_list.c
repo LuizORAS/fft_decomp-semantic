@@ -11,7 +11,7 @@ void bunit_menu_init_unit_list(s32 unused_selected_index) {
     g_bunit_menu_row_callbacks[5] = bunit_unit_get_experience;
     g_bunit_menu_row_callbacks[6] = bunit_unit_get_brave;
     g_bunit_menu_row_callbacks[7] = bunit_unit_get_faith;
-    bunit_menu_set_event_speed(0);
+    bunit_menu_set_vsync_mode_and_event_speed(0);
     ret = bunit_menu_is_unit_list_row_visible(g_bunit_unit_list_page_offset);
     g_bunit_status_banner_at_bottom = ret;
     g_bunit_status_banner_at_bottom_latch = ret;

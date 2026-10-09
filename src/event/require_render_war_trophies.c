@@ -123,7 +123,7 @@ void require_render_war_trophies(void) {
                     quad->y3
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0x10;
-                    battle_get_item_graphic_data(&sprite, g_require_reward_war_trophy_entry_values[i]);
+                    battle_gfx_set_item_icon_sprite(&sprite, g_require_reward_war_trophy_entry_values[i]);
                     quad->u0 = sprite.u0;
                     quad->v0 = sprite.v0;
                     quad->u1 = sprite.u0 + 0x10;

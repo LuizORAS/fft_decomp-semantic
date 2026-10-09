@@ -86,7 +86,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                     }
                 }
             } else {
-                battle_get_item_graphic_data(&sprite, item);
+                battle_gfx_set_item_icon_sprite(&sprite, item);
                 g_battle_effect_current_secondary->slot_ids[0] = battle_effect_alloc_slot();
                 slot = (battle_effect_item_slot_view_t*)&g_battle_effect_slots[g_battle_effect_current_secondary
                         ->slot_ids[0]];

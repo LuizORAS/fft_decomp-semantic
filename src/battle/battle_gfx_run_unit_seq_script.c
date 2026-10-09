@@ -141,10 +141,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 battle_sound_play_movement_sfx(unit, seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_RL:
-                battle_unit_shift_right_left(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_right_or_left(unit, seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_DU:
-                battle_unit_add_signed_byte_to_height(unit, (s8)seq->frames[anim_index][pos++]);
+                battle_unit_shift_down_or_up(unit, (s8)seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_FB:
                 battle_unit_shift_forward_or_backward(unit, (s8)seq->frames[anim_index][pos++]);
@@ -214,8 +214,8 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 } while (0);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT:
-                battle_unit_shift_right_left(unit, seq->frames[anim_index][pos++]);
-                battle_unit_add_signed_byte_to_height(unit, (s8)seq->frames[anim_index][pos++]);
+                battle_unit_shift_right_or_left(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_down_or_up(unit, (s8)seq->frames[anim_index][pos++]);
                 battle_unit_shift_forward_or_backward(unit, (s8)seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
@@ -228,10 +228,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 battle_unit_shift_forward_or_backward(unit, 2);
                 break;
             case BATTLE_SEQ_OP_MOVE_DOWN_1:
-                battle_unit_add_signed_byte_to_height(unit, 1);
+                battle_unit_shift_down_or_up(unit, 1);
                 break;
             case BATTLE_SEQ_OP_MOVE_DOWN_2:
-                battle_unit_add_signed_byte_to_height(unit, 2);
+                battle_unit_shift_down_or_up(unit, 2);
                 break;
             case BATTLE_SEQ_OP_MOVE_BACKWARD_1:
                 battle_unit_shift_forward_or_backward(unit, -1);
@@ -240,10 +240,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 battle_unit_shift_forward_or_backward(unit, -2);
                 break;
             case BATTLE_SEQ_OP_MOVE_UP_1:
-                battle_unit_add_signed_byte_to_height(unit, -1);
+                battle_unit_shift_down_or_up(unit, -1);
                 break;
             case BATTLE_SEQ_OP_MOVE_UP_2:
-                battle_unit_add_signed_byte_to_height(unit, -2);
+                battle_unit_shift_down_or_up(unit, -2);
                 break;
             case BATTLE_SEQ_OP_LOAD_MF_ITEM:
                 unit->item_ability_display = 1;

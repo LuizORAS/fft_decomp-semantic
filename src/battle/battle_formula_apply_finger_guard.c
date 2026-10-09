@@ -6,7 +6,7 @@ void battle_formula_apply_finger_guard(void) {
     battle_stats_t* unit;
     s32 chance;
 
-    if (battle_action_can_unit_react_1(g_battle_action_target) != 0)
+    if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;
     unit = g_battle_action_target;
     if ((unit->reaction_abilities[3] & BATTLE_REACTION_SET_4_FINGER_GUARD) == 0)

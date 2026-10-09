@@ -6,7 +6,7 @@ void battle_state_handle_target_select_confirm_state(void) {
     battle_unit_misc_data_t* target;
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     switch (*battle_menu_get_selected_ability_address()) {
     case 7:
         caster = battle_unit_get_casting_misc_data();

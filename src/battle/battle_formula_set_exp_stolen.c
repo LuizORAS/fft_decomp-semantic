@@ -9,7 +9,7 @@ void battle_formula_set_exp_stolen(void) {
     u8 amount;
     u8 available_exp;
 
-    amount = g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_SPEED] + g_current_ability.range_data.y;
+    amount = g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_SPEED] + g_battle_action_current_ability.range_data.y;
     if (amount > 100) {
         amount = 100;
     }

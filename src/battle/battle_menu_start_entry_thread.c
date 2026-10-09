@@ -11,7 +11,7 @@ void battle_menu_start_entry_thread(void) {
     s32 count;
 
     battle_thread_wait_until_inactive(8);
-    if (g_option_menu_submenu_state != 0) {
+    if (g_battle_menu_suspend_state != 0) {
         battle_thread_exit_current();
     }
     battle_camera_wait_until_idle();

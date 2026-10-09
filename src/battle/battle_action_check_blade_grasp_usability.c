@@ -5,7 +5,7 @@ void battle_action_check_blade_grasp_usability(void) {
     battle_stats_t* attacker;
     battle_action_data_t* target;
 
-    if ((g_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE) == 0)
+    if ((g_battle_action_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE) == 0)
         return;
     attacker = g_battle_action_target;
     target = g_battle_action_target_data;

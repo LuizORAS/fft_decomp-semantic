@@ -26,7 +26,7 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     if (byte != 0xff && byte != 0) {
         unit->primary_skillset = byte;
     } else {
-        unit->primary_skillset = g_job_data_pointer[job_id].skillset;
+        unit->primary_skillset = g_main_job_data_pointer[job_id].skillset;
     }
 
     if (gender & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE)) {
@@ -71,9 +71,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     for (i = 0; i < 4; i++) {
         s32 k = i * 2;
 
-        unit->innate_abilities[i] = g_job_data_pointer[job_id].innate_abilities[k]
-            + (g_job_data_pointer[job_id].innate_abilities[k + 1] << 8);
-        unit->equipment_categories[i] = g_job_data_pointer[job_id].equipment_categories[i];
+        unit->innate_abilities[i] = g_main_job_data_pointer[job_id].innate_abilities[k]
+            + (g_main_job_data_pointer[job_id].innate_abilities[k + 1] << 8);
+        unit->equipment_categories[i] = g_main_job_data_pointer[job_id].equipment_categories[i];
     }
 
     unit->reaction_ability = main_unit_calculate_rsm(unit, entd->reaction_ability, RSM_ABILITY_FILTER_REACTION, entd);

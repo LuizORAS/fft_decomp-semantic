@@ -16,9 +16,9 @@ void world_menu_run_bunit_transition_thread(void) {
     world_thread_set_parameters(12, 0, 0, 1);
     world_thread_set_parameters(13, 0, 0, 1);
     world_thread_wait_for_10_to_13();
-    world_bin_load_file(2);
-    world_menu_retry_alloc_with_message(0x20000);
-    world_bin_load_file(0xF);
+    world_menu_request_open_companion_executable(2);
+    world_menu_reserve_high_overlay(0x20000);
+    world_menu_request_open_companion_executable(0xF);
     world_thread_wait_frames(2);
     g_world_text_overlay_active = 1;
     world_thread_start(13, world_menu_fade_out_thread);

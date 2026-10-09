@@ -3,7 +3,7 @@
 /* Appends one 0xfe/0xff-terminated string. Overflowing the arena jumps
  * straight to the cleanup and skips the help-text copy. */
 #define APPEND_TEXT(text_id)                                                                                           \
-    src = battle_text_init_entry(text_id);                                                                             \
+    src = battle_text_find_entry(text_id);                                                                             \
     *dst++ = *src++;                                                                                                   \
     while ((dst[-1] & 0xfe) != 0xfe) {                                                                                 \
         if (dst >= g_attack_scenario_table + 0x4000) {                                                                 \
@@ -42,7 +42,7 @@ void attack_text_build_deployment_strings(void) {
     file = main_heap_alloc(0x18000);
     g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
     battle_thread_call_on_main_stack(0x1a3a, 0x16800, file);
-    battle_text_save_pointer_table();
+    battle_text_save_section_pointers();
     attack_text_init_battle_pointers(file);
     for (i = 0; i < 0x10; i++) {
         unit = main_party_get_data_pointer(i);
@@ -52,11 +52,11 @@ void attack_text_build_deployment_strings(void) {
             }
             continue;
         }
-        attack_load_party_unit_into_editor(1, i);
+        attack_editor_load_party_unit(1, i);
         for (j = 0; j < 5; j++) {
             APPEND_TEXT_ID(g_attack_editor_item_and_ability_ids[j], 0x6800);
         }
-        if (g_attack_unit_editor_state.state.generic_monster != 0) {
+        if (g_attack_editor_unit_fields.state.generic_monster != 0) {
             for (j = 0; j < 5; j++) {
                 APPEND_TEXT_ID(g_attack_editor_item_and_ability_ids[j + 5], 0x7800);
             }
@@ -72,12 +72,12 @@ void attack_text_build_deployment_strings(void) {
     }
     g_attack_deploy_unit_text_section = g_attack_scenario_table;
     g_attack_deploy_help_text_section = g_attack_event_condition_blocks;
-    src = battle_text_init_entry(0x5800);
+    src = battle_text_find_entry(0x5800);
     dst = g_attack_event_condition_blocks;
     for (i = 0; i < 0x1400; i++) {
         *dst++ = *src++;
     }
 end:
-    battle_text_restore_pointer_table();
+    battle_text_restore_section_pointers();
     main_heap_call_free(file);
 }

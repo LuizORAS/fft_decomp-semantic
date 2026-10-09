@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* BATTLE's copy of attack_sound_play_scenario_music (ATTACK.OUT 0x801c3e60). */
+/* BATTLE's copy of attack_sound_play_music_tracks (ATTACK.OUT 0x801c3e60). */
 void battle_sound_play_music_tracks(s32 primary_track, s32 alternate_track) {
     main_sound_unload_scenario_music_and_tunes();
 

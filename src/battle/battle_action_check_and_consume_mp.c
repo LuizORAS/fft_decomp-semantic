@@ -18,10 +18,10 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
 
     ability_id = unit->last_ability_id;
     menu = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
-    g_current_ability.mp_cost = 0;
+    g_battle_action_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         main_status_set_action_state(unit, 0xff);
-    result = battle_formula_can_unit_evade(unit);
+    result = battle_unit_get_action_restriction(unit);
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
         result = 1;
@@ -47,7 +47,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
             cost = ability->mp_cost;
             if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
                 cost >>= 1;
-            g_current_ability.mp_cost = cost;
+            g_battle_action_current_ability.mp_cost = cost;
             /* A signed member view retains the target store-before-load order;
              * casting the unsigned value hoists the MP load and loses a nop. */
             mp = unit->mp;

@@ -19,6 +19,6 @@ u8* equip_cmd_draw_translucent_tile_handler(u8* cmd) {
     rect.y = y;
     rect.w = cmd[4];
     rect.h = cmd[5];
-    equip_gfx_enqueue_translucent_tile(&rect, cmd + 6, (u8)g_equip_gfx_semitransparency, g_equip_gfx_sprite_ot_index);
+    equip_gfx_enqueue_tile(&rect, cmd + 6, (u8)g_equip_gfx_semitransparency, g_equip_gfx_sprite_ot_index);
     return cmd + cmd[1];
 }

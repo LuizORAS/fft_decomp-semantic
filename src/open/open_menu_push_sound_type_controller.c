@@ -7,7 +7,7 @@
  * (absolute address plus index); the spellings below keep that split. The
  * selected render-record index is likewise read through the controller
  * record, while sound_mode_selection and step are addressed through
- * g_open_controller_flags. */
+ * g_open_controller_selected_options. */
 void open_menu_push_sound_type_controller(void) {
     s32 i;
     s32 record;
@@ -31,10 +31,10 @@ void open_menu_push_sound_type_controller(void) {
         ((open_render_record_36_position_t*)&g_open_gfx_render_records_36[record].x)->x = -0x14;
     }
 
-    g_open_controller_flags[g_open_current_controller_index * 25 + 1] = 0;
+    g_open_controller_selected_options[g_open_current_controller_index * 25 + 1] = 0;
     sound_type = main_sound_get_type();
     controller_index = g_open_current_controller_index;
-    g_open_controller_flags[controller_index * 25] = sound_type;
+    g_open_controller_selected_options[controller_index * 25] = sound_type;
     menu = (open_sound_menu_state_t*)&g_open_controller_stream_start[controller_index];
     sound_type <<= 2;
     /* The explicit byte offset preserves the target's index shift before the

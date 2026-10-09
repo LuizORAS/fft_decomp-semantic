@@ -98,7 +98,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                 if (i == 0x12 && (mover_flags & 0x80)) {
                     continue;
                 }
-                skillset = g_job_data_pointer[job_id].skillset;
+                skillset = g_main_job_data_pointer[job_id].skillset;
                 for (j = 0; j < 24; j++) {
                     byte_index = j / 8;
                     mask = 0x80 >> (j - byte_index * 8);

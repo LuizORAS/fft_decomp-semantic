@@ -15,7 +15,7 @@ s32 battle_action_apply_tile_trap(battle_stats_t* unit) {
     if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         unit = &g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
     }
-    g_current_ability.target_id = unit->misc_unit_id;
+    g_battle_action_current_ability.target_id = unit->misc_unit_id;
     g_battle_action_target = unit;
     g_battle_action_target_data = &unit->action;
     battle_action_clear_current_data(&unit->action);

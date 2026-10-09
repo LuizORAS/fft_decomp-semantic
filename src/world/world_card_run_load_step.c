@@ -44,11 +44,11 @@ void world_card_run_load_step(s32 slot) {
                 g_world_card_menu_step = 9;
                 world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
                 g_world_menu_sound_effect_id = 0x85;
-                g_card_save_last_written_slot = slot;
+                g_main_card_save_last_used_slot = slot;
                 return;
             }
         } else {
-            g_card_save_last_written_slot = 0xFF;
+            g_main_card_save_last_used_slot = 0xFF;
         }
         g_world_card_load_failed = 1;
         g_world_menu_sound_effect_id = MAIN_SFX_CARD_ERROR;

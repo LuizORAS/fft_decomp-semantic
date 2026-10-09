@@ -33,7 +33,8 @@ void world_shop_run_sell_equipped_item_menu(void) {
                 g_world_shop_sell_equipped_result_shown = 0;
             }
         } else if (g_world_shop_sell_equipped_prompt_active == 0) {
-            g_world_shop_sell_equipped_slot = world_menu_step_cursor_with_sound(5, 3, g_world_input_primary_repeat, 6);
+            g_world_shop_sell_equipped_slot
+                = world_menu_update_vertical_selection_and_mark_change(5, 3, g_world_input_primary_repeat, 6);
             if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                     ->equipment[g_world_shop_sell_equipped_slot]
                 != ITEM_ID_NOTHING) {

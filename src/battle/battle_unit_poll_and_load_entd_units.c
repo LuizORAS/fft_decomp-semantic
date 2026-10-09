@@ -9,7 +9,7 @@ s32 battle_unit_poll_and_load_entd_units(void) {
         if (entd_data == 0) {
             return 1;
         }
-        battle_load_entd_units(entd_data, 0);
+        battle_unit_load_entd_units(entd_data, 0);
         main_heap_call_free((void*)g_main_entd_set);
     }
     return 0;

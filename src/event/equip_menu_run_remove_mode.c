@@ -43,7 +43,7 @@ s32 equip_menu_run_remove_mode(void) {
     }
     if (input & PSX_PAD_LEFT) {
         g_equip_remove_all_equipment_prompt_active = 1;
-        equip_unit_calculate_equipment_swap_stat_deltas(&g_equip_item_preview_stat_detail,
+        equip_item_calculate_equipment_swap_stat_delta(&g_equip_item_preview_stat_detail,
             &g_equip_selected_unit_stat_summary, g_equip_unit_data[g_equip_unit_selected_index]->equipment,
             g_equip_remove_all_equipment_ids);
         g_equip_unit_status_panel_redraw = 1;
@@ -54,8 +54,8 @@ s32 equip_menu_run_remove_mode(void) {
     selection = equip_menu_update_vertical_selection_and_mark_change(5, 1, g_equip_input_secondary_repeat, 6);
     g_equip_remove_item_marker_rect.y = ((selection & 0xFF) << 4) + 0x90;
     equip_gfx_set_otag_index(0x28);
-    equip_menu_update_and_draw_animated_marker(
-        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_event_mode);
+    equip_menu_update_and_draw_animated_cursor(
+        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_battle_menu_input_lock_mode);
 
     g_equip_text_help_message_id = g_equip_remove_item_equipment[selection & 0xFF] != 0
         ? g_equip_remove_item_equipment[selection & 0xFF] + 0x6800
@@ -76,7 +76,7 @@ s32 equip_menu_run_remove_mode(void) {
         has_item = g_equip_remove_item_equipment[selection & 0xFF];
         if (has_item != 0) {
             equip_unit_set_slot_item(1, (u8)selection, 0);
-            equip_unit_calculate_equipment_swap_stat_deltas(&g_equip_item_preview_stat_detail,
+            equip_item_calculate_equipment_swap_stat_delta(&g_equip_item_preview_stat_detail,
                 &g_equip_selected_unit_stat_summary, g_equip_unit_data[g_equip_unit_selected_index]->equipment,
                 g_equip_unit_data[1]->equipment);
             bcopy(g_equip_unit_data[g_equip_unit_selected_index]->equipment, g_equip_unit_data[1]->equipment, 10);

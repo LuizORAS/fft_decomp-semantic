@@ -116,7 +116,7 @@ void world_text_message_box_thread(void) {
     message = world_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    world_gfx_alloc_texture_grid_rect(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
     } else {
@@ -371,7 +371,7 @@ void world_text_message_box_thread(void) {
             NEXT();
         } else {
             substitution = &g_world_text_substitution_values[value_index];
-            value = world_text_adjust_value_for_event_code(code, *substitution);
+            value = world_text_resolve_format_string_id(code, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
@@ -460,8 +460,8 @@ void world_text_message_box_thread(void) {
     }
     win->active = 0;
     world_menu_release_window_buffer_pair(win);
-    world_gfx_free_texture_grid_rect(&rec.rect);
-    world_thread_clear_current_slot();
+    world_gfx_free_tpage7_vram(&rec.rect);
+    world_text_release_current_message_box_slot();
     world_thread_yield();
     world_thread_exit_current();
 }

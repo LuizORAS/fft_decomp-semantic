@@ -6,7 +6,7 @@
 void world_script_waitwalk_event_instruction(s32 unit_id) {
     s32 misc_id;
 
-    misc_id = world_get_misc_id(unit_id);
+    misc_id = world_script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         do {
             world_thread_yield();

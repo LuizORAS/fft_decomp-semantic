@@ -33,15 +33,15 @@ void world_script_focus(u8* parameters) {
     parameters++;
     unit_a = first;
     unit_b = second;
-    first = world_get_misc_id(unit_a);
-    second = world_get_misc_id(unit_b);
+    first = world_script_get_misc_id(unit_a);
+    second = world_script_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
         parameters[-1] = 0xc0;
         main_system_handle_malloc_exception(7, 0);
         return;
     }
-    world_unit_copy_screen_coordinates(first, (VECTOR*)coords[0]);
-    world_unit_copy_screen_coordinates(second, (VECTOR*)coords[1]);
+    world_unit_copy_misc_screen_location(first, (VECTOR*)coords[0]);
+    world_unit_copy_misc_screen_location(second, (VECTOR*)coords[1]);
     coords[0][1] += 0x20;
     coords[1][1] += 0x20;
     if (unit_a == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {

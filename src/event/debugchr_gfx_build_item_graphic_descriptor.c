@@ -5,7 +5,7 @@
 void debugchr_gfx_build_item_graphic_descriptor(battle_menu_status_panel_graphic_descriptor_t* output, u32 item_id) {
     SPRT graphic;
 
-    battle_get_item_graphic_data(&graphic, item_id);
+    battle_gfx_set_item_icon_sprite(&graphic, item_id);
     output->x_load_location = graphic.u0;
     output->y_load_location = graphic.v0;
     output->width = 16;

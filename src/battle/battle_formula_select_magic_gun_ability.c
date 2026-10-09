@@ -14,7 +14,7 @@ void battle_formula_select_magic_gun_ability(void) {
     battle_stats_t* attacker;
     s32 roll;
 
-    element = g_current_ability.weapon_data.element;
+    element = g_battle_action_current_ability.weapon_data.element;
     roll = battle_formula_get_random_0_7fff();
     pct = (roll * 100) / 0x8000;
     if (element & BATTLE_ELEMENT_FIRE) {
@@ -45,7 +45,7 @@ void battle_formula_select_magic_gun_ability(void) {
             }
         }
     }
-    current_ability = &g_current_ability.ability_id;
+    current_ability = &g_battle_action_current_ability.ability_id;
     *current_ability = id;
     src = (u8*)current_ability + 0x1A;
     attacker = g_battle_action_attacker;

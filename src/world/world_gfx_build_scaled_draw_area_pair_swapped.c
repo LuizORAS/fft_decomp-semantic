@@ -6,7 +6,7 @@
  * a record's texture window -- so the parameters are void* and the typed view
  * is a cast at each use. A cast of a pointer parameter is the parameter's own
  * pseudo and emits nothing, whereas assigning it to a typed local would add the
- * copies that cost the match in world_gfx_build_scaled_draw_area_pair_at_offset. */
+ * copies that cost the match in world_gfx_build_scaled_draw_area_packets. */
 #define PAIR ((world_gfx_scaled_draw_area_pair_t*)packets)
 
 /*

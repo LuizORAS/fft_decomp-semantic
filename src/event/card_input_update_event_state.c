@@ -15,7 +15,7 @@ void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_current_otag_entry = (u32*)state;
+    g_battle_gfx_current_otag_entry = (u32*)state;
     g_card_input_controller = battle_script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;
@@ -67,7 +67,7 @@ void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
         }
     }
 
-    g_sound_effect_id_to_play = -1;
+    g_battle_sound_pending_sfx_id = -1;
     battle_script_load_event_input_state(&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
         g_event_input_suppression_frames = 5;

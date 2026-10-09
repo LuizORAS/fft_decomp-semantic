@@ -72,7 +72,7 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
         row = buffer + (i - first) * words;
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
-        world_menu_fill_pattern_row(src, row, words, src_index);
+        world_menu_build_window_image_row(src, row, words, src_index);
     }
     if (mode == 0 || mode == 2) {
         LoadImage(&upload, (u32*)buffer);

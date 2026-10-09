@@ -29,9 +29,9 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     s32 i;
 
     unit = battle_unit_get_source_misc_data();
-    g_battle_gfx_wait_arrow_blink_timer += g_animation_speed;
+    g_battle_gfx_wait_arrow_blink_timer += g_main_system_animation_speed;
     for (i = 0; i < 4; i++) {
-        prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+        prim = (POLY_FT4*)g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
         ((P_TAG*)prim)->len = 9;
         prim->code = 0x2e;
         prim->tpage = 0x3f;

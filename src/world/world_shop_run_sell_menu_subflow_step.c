@@ -17,11 +17,11 @@ void world_shop_run_sell_menu_subflow_step(void) {
         world_formation_stop_menu_threads();
         g_world_formation_unit_cycle_mode = 0;
         g_world_shop_sell_subflow_step = 4;
-        world_gfx_clear_sprite_slot(5);
-        world_gfx_clear_sprite_slot(6);
-        world_gfx_clear_sprite_slot(7);
-        world_gfx_clear_sprite_slot(8);
-        world_gfx_clear_sprite_slot(9);
+        world_menu_clear_selection_record(5);
+        world_menu_clear_selection_record(6);
+        world_menu_clear_selection_record(7);
+        world_menu_clear_selection_record(8);
+        world_menu_clear_selection_record(9);
         g_world_shop_sell_subflow_initialized = 1;
     }
     g_world_shop_menu_step = g_world_shop_sell_subflow_step;

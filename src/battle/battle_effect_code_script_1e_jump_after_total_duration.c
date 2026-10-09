@@ -8,7 +8,7 @@
 s32 battle_effect_code_script_1e_jump_after_total_duration(effect_record_t* effect) {
     effect_misc_data_t* timing;
 
-    timing = g_battle_effect_misc_data;
+    timing = g_battle_effect_timeline;
     if (effect->timeline_frame >= (s32)(timing->phase1_duration + timing->phase2_duration
             + (g_battle_effect_coord_data.hit_counter - 1) * timing->spawn_delay + timing->phase2_delay)) {
         effect->pc = *(u16*)(effect->pc + (s32)effect->script + 2);

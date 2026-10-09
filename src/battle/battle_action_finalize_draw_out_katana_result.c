@@ -15,11 +15,12 @@ void battle_action_finalize_draw_out_katana_result(
     if (attacker->job_id == JOB_ID_MIME)
         return;
     if ((hit_count & 0xFF) == 0
-        || ((flags = g_current_action_data.special_effect) & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN)
+        || ((flags = g_battle_action_attacker_action_data.special_effect)
+               & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN)
             != 0) {
-        g_current_action_data.special_effect = BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN;
-        g_current_action_data.attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
-        g_current_action_data.hit = 1;
+        g_battle_action_attacker_action_data.special_effect = BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN;
+        g_battle_action_attacker_action_data.attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
+        g_battle_action_attacker_action_data.hit = 1;
         return;
     }
     if (flags & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN) {

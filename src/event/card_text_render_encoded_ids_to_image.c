@@ -44,7 +44,7 @@ void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_ima
                         packed_terminator >> 16, image, &position, (((s32)(((*current_text_id)) << 16)) >> 30) | style);
                 } while (glyph_index < 8);
             } else {
-                const u8* encoded = card_text_skip_encoded_segments(glyph_data, text_id & 0x0fff, 2);
+                const u8* encoded = card_text_find_entry_by_index(glyph_data, text_id & 0x0fff, 2);
                 s32 code = *(encoded++);
 
                 if (code < 0xfe) {

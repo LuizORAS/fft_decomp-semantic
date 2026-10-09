@@ -25,7 +25,7 @@ void world_menu_run_system_function_thread(void) {
             world_thread_yield();
         }
     }
-    world_camera_run_move_thread();
+    world_camera_wait_until_idle();
     entry = &g_world_system_function_table[id];
     value = entry->value_00;
     g_world_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
@@ -33,7 +33,7 @@ void world_menu_run_system_function_thread(void) {
     g_world_menu_current_id = value;
     g_world_menu_thread_menu_data[entry->menu_entry_index].field_0x20 = entry->value_08;
     if (id == 0x1f) {
-        world_thread_start(8, world_menu_start_main_mode_2);
+        world_thread_start(8, world_menu_open_option_dead_unit_panel);
         world_thread_set_parameters(8, 0, D_801A668C, 0);
         world_thread_exit_current();
     }

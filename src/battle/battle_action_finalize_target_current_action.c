@@ -17,16 +17,16 @@ void battle_action_finalize_target_current_action(void) {
     status = g_battle_action_target->status_sets.current[0];
     invalid = 0;
     if ((status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && (!(g_current_ability_canceled_statuses[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+        && (!(g_battle_action_canceled_statuses[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
             || (status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)))) {
         invalid = 1;
     }
     if ((g_battle_action_target->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-        && !(g_current_ability_canceled_statuses[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+        && !(g_battle_action_canceled_statuses[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
         invalid = 1;
     }
     if ((g_battle_action_target->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))
-        && !(g_current_ability_canceled_statuses[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))) {
+        && !(g_battle_action_canceled_statuses[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))) {
         invalid = 1;
     }
     if (invalid != 0) {
@@ -34,7 +34,7 @@ void battle_action_finalize_target_current_action(void) {
         battle_action_clear_data();
         battle_formula_clear_nullify_flags();
         battle_action_clear_knockback_flag();
-        g_current_ability.post_formula_flag = 0;
+        g_battle_action_current_ability.post_formula_flag = 0;
         battle_formula_force_attack_miss();
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
         return;
@@ -62,7 +62,7 @@ void battle_action_finalize_target_current_action(void) {
     action = g_battle_action_target_data;
     if ((action->attack_type != 0) && (action->hit != 0) && (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         && (g_battle_team_golem[team] != 0)
-        && (g_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
+        && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         action->miss_type = BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD;
         action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_GOLEM_GUARD;
         battle_action_clear_status_changes(g_battle_action_target_data);

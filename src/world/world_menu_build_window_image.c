@@ -56,7 +56,7 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
         row = image + i * words + x_offset;
         row[words - 1] = 0;
         row[words - 2] = 0;
-        world_menu_fill_pattern_row(sheet, row, words, sheet_offset);
+        world_menu_build_window_image_row(sheet, row, words, sheet_offset);
     }
     if (kind != 8) {
         g_world_menu_window_sprite_source.rect.x = 0x58;

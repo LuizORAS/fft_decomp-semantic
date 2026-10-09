@@ -10,7 +10,7 @@ void open_controller_start_text_message(s32 parameter, s32 run_followup) {
     }
     if (run_followup != 0) {
         world_text_save_section_pointers();
-        world_text_init_format_section_pointers(g_open_text_section_offsets);
+        world_text_relocate_pointer_table(g_open_text_section_offsets);
     }
 
     world_thread_start(2, world_text_character_handling_thread);

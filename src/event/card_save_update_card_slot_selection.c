@@ -24,7 +24,7 @@ void card_save_update_card_slot_selection(void) {
         } else {
             g_battle_text_substitution_values[0] = g_card_save_slot_index + 1;
             if (g_card_save_selected_slot != g_card_save_slot_index) {
-                g_card_save_last_written_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
             }
             g_card_save_selected_slot = g_card_save_slot_index;
             card_io_set_selected_slot(g_card_save_slot_index);

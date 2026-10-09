@@ -33,7 +33,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         rect.y = (g_main_gfx_screen_polarity & 1) * 0xF0;
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
-    g_current_otag_entry = ot;
+    g_battle_gfx_current_otag_entry = ot;
     battle_gfx_submit_screen_fade_overlay(
         &g_battle_gfx_screen_fade_overlays[g_battle_menu_packet_buffer_index], g_battle_screen_fade);
     battle_camera_store_state_to_script_variables();
@@ -55,7 +55,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
                 }
             } else {
                 g_battle_script_threads_idle = 0;
-                g_option_menu_submenu_state = 0;
+                g_battle_menu_suspend_state = 0;
                 return 0;
             }
             if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x147) {
@@ -64,7 +64,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
             finish_op = (finish_op & 0xF300) >> 8;
             g_battle_script_threads_idle = 0;
-            g_option_menu_submenu_state = 0;
+            g_battle_menu_suspend_state = 0;
             if (finish_op == 0x80) {
                 return 9;
             }
@@ -107,7 +107,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     g_battle_event_pending_loaded_evtchr_clear_slot = -1;
     g_battle_event_pending_unit_vram_copy = -1;
     g_battle_event_pending_reserved_vram_release_slot = -1;
-    g_sound_effect_id_to_play = -1;
+    g_battle_sound_pending_sfx_id = -1;
     g_battle_music_volume_transition_request = -1;
     g_battle_music_set_track_request = -1;
     g_battle_music_switch_request = -1;
@@ -119,17 +119,17 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     if (g_companion_overlay_state == 3) {
         g_battle_companion_overlay_primitives = jobstts_entrypoint(g_battle_active_turn_unit.battle_id, 0);
         if (g_battle_companion_overlay_primitives != 0) {
-            AddPrims(g_current_otag_entry, (void*)g_battle_companion_overlay_primitives,
+            AddPrims(g_battle_gfx_current_otag_entry, (void*)g_battle_companion_overlay_primitives,
                 (void*)(g_battle_companion_overlay_primitives + 0xFC));
         } else {
             g_companion_overlay_state = 0;
         }
     }
     if (g_companion_overlay_state == 4) {
-        prims = equip_entrypoint(g_battle_active_turn_unit.battle_id, g_current_otag_entry + 1);
+        prims = equip_entrypoint(g_battle_active_turn_unit.battle_id, g_battle_gfx_current_otag_entry + 1);
         g_battle_companion_overlay_primitives = prims;
         if (prims >= 2) {
-            AddPrims(g_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
+            AddPrims(g_battle_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
         } else {
             g_companion_overlay_state = 0;
         }
@@ -180,7 +180,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         g_main_gfx_screen_polarity = polarity;
     }
     battle_menu_open_companion_executable();
-    battle_menu_open_secondary_companion_executable();
+    battle_menu_open_companion_data_file();
     battle_script_process_pending_requests();
     battle_noop_8014a82c();
     if (g_battle_menu_input_disabled == 1) {

@@ -4,11 +4,11 @@
 
 /* Picks the knockback destination for the current action's target.
  *
- * Runs only while g_current_ability.target_count is 1. An immortal target, a target
+ * Runs only while g_battle_action_current_ability.target_count is 1. An immortal target, a target
  * with both low team-flag bits set, the attacker itself and a mounted pair are
  * never pushed. The target moves one tile away from the attacker along the
  * dominant axis, and the tile must be neither untargetable, deep, steep, lava
- * nor an obstacle. On success g_current_ability.knockback_flags records the knockback
+ * nor an obstacle. On success g_battle_action_current_ability.knockback_flags records the knockback
  * kind (0x82 for a flier that is neither frog nor chicken, else 0x81),
  * [0xa]..[0xc] the destination x, y and level, and the target's action data
  * gets the knockback special effect.
@@ -31,7 +31,7 @@ void battle_formula_calculate_knockback(void) {
     s32 y;
     s32 level;
 
-    if (g_current_ability.target_count != 1) {
+    if (g_battle_action_current_ability.target_count != 1) {
         return;
     }
     target = g_battle_action_target;
@@ -94,15 +94,15 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     if (!(battle_move_get_effective_flags(g_battle_action_target) & BATTLE_EFFECTIVE_MOVEMENT_FLY)) {
-        g_current_ability.knockback_flags = 0x81;
+        g_battle_action_current_ability.knockback_flags = 0x81;
     } else if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        g_current_ability.knockback_flags = 0x81;
+        g_battle_action_current_ability.knockback_flags = 0x81;
     } else {
-        g_current_ability.knockback_flags = 0x82;
+        g_battle_action_current_ability.knockback_flags = 0x82;
     }
-    g_current_ability.target_x = x;
-    g_current_ability.target_y = y;
-    g_current_ability.target_elevation = level;
+    g_battle_action_current_ability.target_x = x;
+    g_battle_action_current_ability.target_y = y;
+    g_battle_action_current_ability.target_elevation = level;
     g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK;
 }

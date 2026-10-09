@@ -14,7 +14,7 @@ void battle_menu_run_skillset_thread(void) {
     battle_menu_record_t* record;
     s32* param;
 
-    battle_menu_check_action_menu_restrictions();
+    battle_menu_check_action_restrictions();
     g_battle_thread_call_target = battle_menu_build_skillset_entries;
     battle_thread_call_on_main_stack();
     param_value = 1;

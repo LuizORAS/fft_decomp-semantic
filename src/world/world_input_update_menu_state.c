@@ -16,7 +16,7 @@ void world_input_update_menu_state(void) {
     u32 counter;
 
     g_world_menu_new_button_input = 0;
-    world_input_store_menu_state(&g_world_menu_new_button_input);
+    world_script_load_event_input_state(&g_world_menu_new_button_input);
     world_thread_yield();
     input = PadRead(1);
     if (input == 0

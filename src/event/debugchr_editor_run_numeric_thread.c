@@ -119,7 +119,7 @@ void debugchr_editor_run_numeric_thread(void) {
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_debugchr_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
-        if (thread->style == 1 || g_event_mode == 1) {
+        if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }
@@ -136,7 +136,7 @@ void debugchr_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        debugchr_gfx_apply_menu_palette_for_mode(&buffer->numeric_frame, thread);
+        debugchr_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }

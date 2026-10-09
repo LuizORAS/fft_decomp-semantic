@@ -19,7 +19,7 @@ s32 bunit_gfx_update_increasing_fade(void) {
             g_bunit_gfx_fade_color_b = g_bunit_gfx_fade_intensity;
             g_bunit_gfx_fade_color_g = g_bunit_gfx_fade_intensity;
             *color = g_bunit_gfx_fade_intensity;
-            bunit_gfx_enqueue_translucent_tile(g_bunit_gfx_fade_rect, color, 1, g_bunit_gfx_otag_count - 1);
+            bunit_gfx_enqueue_tile(g_bunit_gfx_fade_rect, color, 1, g_bunit_gfx_otag_count - 1);
         }
     }
     return ret;

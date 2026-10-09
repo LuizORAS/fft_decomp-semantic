@@ -7,7 +7,7 @@ s32 battle_gfx_calculate_screen_z_with_caller_data(
     s32 screen_z;
 
     mount = battle_unit_get_mount_misc_data(unit);
-    screen_z = battle_calculate_screen_z_from_input_coords(mount, coords);
+    screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, coords);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
         adjusted_screen_z = screen_z - 10;
         screen_z = mount->mounted_height_offset + adjusted_screen_z;

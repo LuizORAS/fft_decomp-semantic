@@ -28,9 +28,9 @@ void battle_script_unit_anim(u8* parameters) {
                 battle_unit_set_facing_update_suppression(misc_id);
             }
             animation = battle_script_load_halfword(parameters + 2);
-            battle_unit_set_specific_animation_value_on_battle_init(misc_id, animation);
+            battle_unit_set_animation(misc_id, animation);
             if ((u32)(animation - 0x53) < 3) {
-                battle_effect_play_and_wait_for_animation();
+                battle_script_play_effect_and_wait();
             }
             if (state == 0) {
                 return;

@@ -14,8 +14,8 @@ extern s32 g_require_character_status_redraw_request;
 /* editor */
 extern s16 g_require_editor_brave;
 extern s16 g_require_editor_faith;
-extern u8 g_require_editor_first_ability_bytes[];
-extern u8 g_require_editor_fourth_ability_bytes[];
+extern u8 g_require_editor_unit_name[];
+extern u8 g_require_editor_secondary_skillset_name[];
 extern u8 g_require_editor_numeric_descriptor_a[];
 extern u8 g_require_editor_numeric_descriptor_b[];
 extern RECT g_require_editor_numeric_entries_a;
@@ -30,11 +30,11 @@ extern battle_menu_status_panel_numeric_geometry_t g_require_editor_numeric_tabl
 extern u8 g_require_editor_numeric_text_a[];
 extern u8 g_require_editor_numeric_text_b[];
 extern u8 g_require_editor_numeric_texture[];
-extern u8 g_require_editor_second_ability_bytes[];
+extern u8 g_require_editor_job_name[];
 extern s16 g_require_editor_selected_unit_id;
-extern u8 g_require_editor_third_ability_bytes[];
+extern u8 g_require_editor_primary_skillset_name[];
 extern battle_menu_status_panel_slot_storage_t g_require_editor_unit_fields;
-extern s16 g_require_editor_unit_type;
+extern s16 g_require_editor_job_id;
 extern s16 g_require_editor_zodiac;
 extern s16 g_require_editor_team_state;
 extern struct battle_stats g_require_editor_party_unit_stats;
@@ -107,7 +107,7 @@ extern POLY_GT4 g_require_gfx_poly_gt4_array_8[];
 extern POLY_GT4 g_require_gfx_poly_gt4_banks[2][40];
 
 /* find (BATTLE) */
-void require_gfx_apply_menu_palette_for_mode(
+void require_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
@@ -165,7 +165,7 @@ extern s32 g_require_menu_indicator_fade_work[2];
 extern s32 g_require_menu_indicator_packet_index[2];
 extern s32 g_require_menu_indicator_state[2];
 extern s16 g_require_menu_selection_result;
-void require_menu_run_simple_selection_thread(void);
+void require_menu_icon_strip_thread(void);
 void require_menu_wait_selection_threads(void);
 
 /* panel */
@@ -333,16 +333,16 @@ void require_party_remove_low_brave_high_faith_units(void);
 s32 require_party_sell_equipment_over_limit(s32 unit_id);
 s32 require_party_store_equipment_or_sell_overflow(s32 unit_id);
 void require_party_update_bio_variable_for_unit_class(s32 unit_class, s32 value);
-void require_load_party_unit_into_editor(s32 unused, s32 party_index);
-s32 require_party_find_join_candidates(void);
+void require_editor_load_party_unit(s32 unused, s32 party_index);
+s32 require_party_save_battle_units_and_find_join_candidates(void);
 s32 require_party_get_free_slot_status(s32 unit_id);
 s32 require_party_restore_item_counts(s32 party_index);
-void require_prepare_party_portrait_textures(void);
+void require_gfx_prepare_party_portrait_textures(void);
 void require_render_unit_status_panel_thread(void);
 s32 require_select_party_unit_to_remove(void);
 
 /* other */
-extern char g_jobstts_text_wait_for_allocation_message[];
+extern char g_require_text_wait_for_file_allocation_message[];
 extern u32* g_require_input_controller;
 extern u8 g_require_work[];
 extern job_data_t* g_require_formation_job_data;
@@ -359,7 +359,7 @@ void require_noop_801c43e0(s32 unused_battle_index, s32 unused_unit_id, s32 unus
 void require_overlay_open_jobstts(void);
 void require_render_gil_reward_ticker(void);
 void require_render_war_trophies(void);
-void require_sound_wait_music_idle(void);
+void require_sound_wait_for_music_stub(void);
 void require_overlay_run_helpmenu(void);
 
 #endif

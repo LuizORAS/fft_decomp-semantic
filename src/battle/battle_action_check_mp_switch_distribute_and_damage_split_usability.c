@@ -6,9 +6,9 @@ void battle_action_check_mp_switch_distribute_and_damage_split_usability(void) {
     battle_stats_t* unit;
     u8 flags;
 
-    if (g_current_ability.formula == 7)
+    if (g_battle_action_current_ability.formula == 7)
         return;
-    if (battle_action_can_unit_react_1(g_battle_action_target) != 0)
+    if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;
     unit = g_battle_action_target;
     flags = unit->reaction_abilities[2];

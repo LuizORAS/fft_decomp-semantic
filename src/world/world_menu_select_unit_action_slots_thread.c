@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Provisional: 17-byte per-unit menu row at g_world_menu_unit_selection_rows (compare
- * WORLD_UNKNOWN_ROW_BYTES in world_menu_remap_value_for_stored_unit). */
+ * WORLD_UNKNOWN_ROW_BYTES in world_menu_restore_selection_for_selected_unit). */
 
 /* Menu entry 4's value and the loop counter share $s0 in the target: the
  * index dies after the two table loads and the register is reused by the
@@ -48,7 +48,7 @@ void world_menu_select_unit_action_slots_thread(void) {
         }
         if (g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index] == 12) {
             g_world_menu_thread_menu_data[3].selected_index = 0;
-            world_menu_run_companion_overlay_9_10_thread();
+            world_menu_run_equip_thread();
         }
         g_world_thread_inner_subroutine_callback = (void (*)(void))world_menu_build_ability_list;
         world_thread_call_on_main_stack(i);

@@ -14,7 +14,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     world_menu_entry_t* entry;
 
     if (g_battle_menu_input_disabled != 1) {
-        if ((g_option_menu_submenu_state == 0) && (g_battle_menu_help_open == 0)
+        if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
             && (g_battle_menu_building_thread_started == 0) && (menu_id != IDLE_ACTION_MENU_INVALID_ID)) {
             g_battle_menu_current_id = menu_id;
             g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
@@ -41,7 +41,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
              * delay slot; this raw access preserves the target's store ordering. */
             *(s16*)((u8*)g_battle_menu_thread_menu_data + 0x218) = 0;
             D_801669E8 = 0;
-            battle_menu_clear_idle_action_menu_entry_flags();
+            battle_menu_clear_entry_selections();
             battle_thread_start(MENU_BUILDING_THREAD_ID, battle_menu_start_entry_thread);
             battle_thread_set_parameters(MENU_BUILDING_THREAD_ID, menu_id, 0, 0);
         }

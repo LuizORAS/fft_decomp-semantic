@@ -117,7 +117,7 @@ void equip_panel_run_equipment_list_thread(void) {
                 (const battle_image_location_t*)g_equip_panel_origin_offsets, g_equip_panel_item_icon_layouts + i);
             id = state->equipment[i];
             if ((id & 0xff) != 0xff) {
-                battle_get_item_graphic_data(&screen->sprites[19 + i], (s16)id);
+                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)id);
             } else {
                 (&screen->sprites[i])[19].x0 = 0;
             }
@@ -134,7 +134,7 @@ void equip_panel_run_equipment_list_thread(void) {
         equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[1], frame,
             g_main_gfx_screen_polarity * 0xf0, (const s16*)thread);
         equip_panel_set_primitive_colors(screen, thread);
-        equip_gfx_apply_menu_palette_for_mode(&screen->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&screen->numeric_frame, (s32*)thread);
         battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[0]);

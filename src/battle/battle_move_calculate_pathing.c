@@ -70,7 +70,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         config->fly_or_teleport = 0;
         config->unit_size = 6;
         config->movement_set_3 = 0;
-        g_battle_move_weather_severity = battle_map_get_weather_severity();
+        g_battle_move_weather_terrain_cost = battle_move_get_weather_terrain_cost();
         config->move_mod = 0;
         config->move_type = BATTLE_MOVEMENT_CLASS_NORMAL;
         config->movement_3 = 0;
@@ -79,7 +79,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         for (i = 0; i < 256; i++) {
             g_battle_move_terrain_cost = g_main_terrain_movement_cost_tables[g_battle_move_pathing_scratch][i];
             if (g_battle_move_terrain_cost == 0) {
-                g_battle_move_terrain_cost = g_battle_move_weather_severity;
+                g_battle_move_terrain_cost = g_battle_move_weather_terrain_cost;
             }
             if ((flags & 0x100) && g_battle_move_pathing_scratch != 0xFF) {
                 g_battle_move_terrain_cost = 1;

@@ -496,7 +496,7 @@ typedef union battle_unit_position {
         u16 stepping_stone : 1;
         u16 higher_elevation : 1;
     } bits;
-    u8 bytes[2]; /* bytes[0] is y; battle_unit_modify_entd_unit saves it with lbu/sb */
+    u8 bytes[2]; /* bytes[0] is y; battle_unit_transform_into_morbol saves it with lbu/sb */
 } battle_unit_position_t;
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
@@ -782,7 +782,7 @@ typedef struct world_unit_command_action {
     s16 ability_id; /* 0x02 */
 } world_unit_command_action_t;
 
-/* Per-unit facing/animation state written by world_script_rotate_unit_animation and
+/* Per-unit facing/animation state written by world_script_unit_animation_rotate_event_instruction and
  * advanced every frame by world_unit_update_facing_and_pending_animations.
  * Seven bytes per unit, 21 units. */
 typedef struct world_unit_animation_state {

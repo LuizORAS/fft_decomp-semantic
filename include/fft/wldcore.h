@@ -23,9 +23,9 @@ s32 wldcore_month_day_to_day_of_year(s32 month, s32 day);
 
 /* file */
 void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream);
-void wldcore_build_global_file_header(void);
+void wldcore_file_seek_to_battle_bin(void);
 
-void wldcore_wait_and_build_file_header(
+void wldcore_file_wait_then_build_header(
     main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
 
 void wldcore_wait_for_file_load(void);
@@ -77,7 +77,7 @@ typedef struct wldcore_job_selection {
 typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_job_selection_t) == 0x58 ? 1 : -1];
 
 extern wldcore_job_selection_t g_wldcore_job_selection;
-void wldcore_return_from_job_determinations(s32 job_id);
+void wldcore_proposition_prepare_report(s32 job_id);
 
 /* opcode */
 /* The world-script state from the instruction word at 0x800d4848 onwards
@@ -108,12 +108,12 @@ void wldcore_opcode_branch_if_saved_bit(s32 expected);
 void wldcore_opcode_branch_if_local_flag(s32 expected);
 void wldcore_opcode_branch_if_savedata_bit(s32 expected);
 void wldcore_opcode_branch_if_dialog_option(s32 expected);
-void wldcore_opcode_load_deep_dungeon_entry_arguments(void);
-void wldcore_opcode_load_draw_path_arguments(void);
-void wldcore_opcode_load_erase_path_arguments(void);
-void wldcore_opcode_load_event(void);
-void wldcore_opcode_load_set_var2_arguments(void);
-void wldcore_opcode_load_text_id(void);
+void wldcore_opcode_map_request_deep_dungeon_entry(void);
+void wldcore_opcode_map_request_draw_path(void);
+void wldcore_opcode_map_request_erase_path(void);
+void wldcore_opcode_map_request_load_event(void);
+void wldcore_opcode_map_request_set_var_2(void);
+void wldcore_opcode_map_request_text(void);
 void wldcore_opcode_start_pending_value_transition(void);
 void wldcore_opcode_load_picture(void);
 void wldcore_opcode_load_background_set(void);
@@ -278,7 +278,7 @@ extern s32 g_wldcore_thread8_offset_y;
 /* unit */
 extern s32 g_wldcore_participant_list_saved_cursor;
 party_data_t* wldcore_get_party_data_pointer(s32 party_index);
-s32 wldcore_get_ramza_s_roster_index(void);
+s32 wldcore_get_ramza_roster_index(void);
 s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
 
@@ -1817,7 +1817,7 @@ extern s32 g_wldcore_tutorial_event_ids[];
 void wldcore_init_world_map_state(void);
 void wldcore_switch_to_stack(void*);
 s32 wldcore_handle_exit_request(void);
-void wldcore_load_data_set_into_scratch_buffer(s32 set);
+void wldcore_gfx_load_background_set(s32 set);
 void wldcore_load_formation_unit_name_and_face(void);
 void wldcore_load_scratch_data_blocking(void);
 void wldcore_set_bit_value(u32* bits, s32 index, s32 set);

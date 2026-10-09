@@ -317,7 +317,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             g_battle_map_resource_load_state = 0;
             break;
         case 0x79:
-            if (g_battle_map_mesh_data_buffer != (s32)g_battle_data) {
+            if (g_battle_map_mesh_data_buffer != (s32)g_battle_gfx_current_render_buffer) {
                 g_battle_map_textured_triangle_render_record_count = 0;
                 g_battle_map_textured_quad_render_record_count = 0;
                 g_battle_map_untextured_triangle_render_record_count = 0;
@@ -335,7 +335,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             }
             break;
         case 0x91:
-            if (g_battle_map_mesh_data_buffer != (s32)g_battle_data) {
+            if (g_battle_map_mesh_data_buffer != (s32)g_battle_gfx_current_render_buffer) {
                 g_battle_map_textured_triangle_render_record_count = 0;
                 g_battle_map_textured_quad_render_record_count = 0;
                 g_battle_map_untextured_triangle_render_record_count = 0;

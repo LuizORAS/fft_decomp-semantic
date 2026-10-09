@@ -67,7 +67,7 @@ void require_render_gil_reward_ticker(void) {
         j /= 10;
         g_require_reward_money_digit_positions[i] = g_require_reward_money_digit_targets[i] << 13;
     }
-    g_sound_effect_id_to_play = 4;
+    g_battle_sound_pending_sfx_id = 4;
     for (bank = 0; bank < 2; bank++) {
         for (j = 0; j < digits; j++) {
             POLY_FT4* pd;
@@ -263,7 +263,7 @@ finished:
     }
     battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_sign_polys[bank]);
 skipped:
-    g_sound_effect_id_to_play = 0;
+    g_battle_sound_pending_sfx_id = 0;
     i++;
     tick = 0;
     for (;;) {

@@ -7,7 +7,7 @@
 #define STATUS_BUBBLE_X(unit) (*(s8*)&unit->status_bubble_x)
 #define STATUS_BUBBLE_Y(unit) (*(s8*)&unit->status_bubble_y)
 
-/* Advances one unit's status bubble by g_animation_speed frames.
+/* Advances one unit's status bubble by g_main_system_animation_speed frames.
  *
  * Every 16 timer ticks the bubble id walks forward to the next status the unit
  * carries, wrapping at 0x16, and the bubble's x/y offsets are chosen from the
@@ -22,7 +22,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
     u32 status_flags;
     s32 animation;
 
-    for (frame = 0; frame < g_animation_speed; frame++) {
+    for (frame = 0; frame < g_main_system_animation_speed; frame++) {
         bubble = unit->status_bubble_id;
         if (bubble == 9) {
             unit->status_bubble_alternate_row = (unit->status_bubble_timer & 8) >> 3;
@@ -32,7 +32,8 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
 
         if ((unit->status_bubble_timer & 0xF) == 0) {
             status_flags = unit->status_flags_1_4;
-            if (((status_flags & BATTLE_MISC_STATUS_BUBBLE_MASK) == 0) && (unit->unit_id != g_battle_casting_misc_id)) {
+            if (((status_flags & BATTLE_MISC_STATUS_BUBBLE_MASK) == 0)
+                && (unit->unit_id != g_battle_unit_source_misc_id)) {
                 unit->status_bubble_active = 0;
                 return;
             }
@@ -61,7 +62,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     if (status_flags & bubble_mask) {
                         break;
                     }
-                } else if (unit->unit_id == g_battle_casting_misc_id) {
+                } else if (unit->unit_id == g_battle_unit_source_misc_id) {
                     break;
                 }
             }

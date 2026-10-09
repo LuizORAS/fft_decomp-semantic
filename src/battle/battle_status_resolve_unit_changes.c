@@ -15,7 +15,7 @@ s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
         return -1;
     }
     main_util_copy_byte_data(g_battle_action_target_data->status_infliction, saved, 10);
-    g_current_ability.target_id = unit_id;
+    g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
     battle_status_modify_inflictions(removal_only);

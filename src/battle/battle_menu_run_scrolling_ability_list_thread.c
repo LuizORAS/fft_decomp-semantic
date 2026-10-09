@@ -80,7 +80,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     hold_time = 0;
     if (g_battle_menu_scroll_list_depth != 0) {
         /* Nested list: page pair in the event overlay area, 0x1000 bytes in. */
-        page = (battle_menu_scroll_list_page_t*)(g_event_overlay_load_address + 0x1000);
+        page = (battle_menu_scroll_list_page_t*)(g_main_heap_companion_overlay_load_address + 0x1000);
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
@@ -155,7 +155,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
     battle_menu_build_and_upload_window_frame_image(entry->inner_width, entry->inner_height, &image_rect, 2);
     if (g_battle_menu_scroll_list_depth == 2) {
-        buffer = g_event_overlay_load_address + 0x2000;
+        buffer = g_main_heap_companion_overlay_load_address + 0x2000;
     } else {
         StoreImage(&g_battle_menu_ability_list_clut_rect, (u32*)saved_clut);
         buffer = battle_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
@@ -353,16 +353,16 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
             break;
         }
-        battle_menu_configure_frame_cluts(&page->icons);
-        battle_set_menu_sprite_clut_variant_1(page->icons.extra[0]);
-        battle_set_menu_sprite_clut_variant_1(page->icons.extra[1]);
-        battle_set_menu_sprite_clut_variant_1(page->icons.extra[2]);
-        if (battle_thread_is_previous_running() != 0 || g_event_mode == 1) {
+        battle_menu_select_icon_cluts(&page->icons);
+        battle_menu_select_icon_sprite_clut(page->icons.extra[0]);
+        battle_menu_select_icon_sprite_clut(page->icons.extra[1]);
+        battle_menu_select_icon_sprite_clut(page->icons.extra[2]);
+        if (battle_thread_is_previous_running() != 0 || g_battle_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;
         }
-        battle_update_menu_cursor_primitives(
+        battle_menu_update_icon_cursor_sprites(
             (world_menu_icon_thread_param_t*)entry, (world_menu_icon_sprites_t*)&page->icons, i, cursor);
         if (layout->columns.hidden_rows != 0 && battle_thread_is_previous_running() == 0) {
             if (row_offset != 0) {

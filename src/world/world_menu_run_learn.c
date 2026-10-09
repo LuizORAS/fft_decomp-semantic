@@ -14,7 +14,7 @@ s32 world_menu_run_learn(void) {
         world_menu_stop_unit_status_banner_thread(10);
         g_world_formation_unit_cycle_mode = 0;
         world_menu_set_cursor_position_2(8, 0);
-        world_gfx_clear_sprite_slot(9);
+        world_menu_clear_selection_record(9);
         g_world_learn_menu_initialized = 1;
     }
     if (g_world_learn_menu_step == 0) {

@@ -9,7 +9,7 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
     s32 misc_id;
 
     misc_id = world_script_load_halfword(parameters->unit_id_le);
-    misc_id = world_get_misc_id(misc_id);
+    misc_id = world_script_get_misc_id(misc_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords[0] = parameters->x;
         coords[2] = parameters->y;

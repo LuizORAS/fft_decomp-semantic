@@ -52,8 +52,8 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             if (-unit->screen.vy >= (tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12) {
                 return;
             }
-            battle_play_landing_sfx_by_tile_type(unit);
-            battle_set_landing_secondary_effect_by_tile_type(unit);
+            battle_sound_play_landing_sfx_by_surface_type(unit);
+            battle_effect_set_landing_secondary_by_surface_type(unit);
             return;
         }
         unit->velocity.vy = 0;
@@ -66,8 +66,8 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             battle_sound_play_movement_sfx(unit, 0x28);
             return;
         }
-        battle_play_landing_sfx_by_tile_type(unit);
-        battle_set_landing_secondary_effect_by_tile_type(unit);
+        battle_sound_play_landing_sfx_by_surface_type(unit);
+        battle_effect_set_landing_secondary_by_surface_type(unit);
         return;
     }
     unit->velocity.vy = 0;
@@ -80,6 +80,6 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         battle_sound_play_movement_sfx(unit, 0x28);
         return;
     }
-    battle_play_landing_sfx_by_tile_type(unit);
-    battle_set_landing_secondary_effect_by_tile_type(unit);
+    battle_sound_play_landing_sfx_by_surface_type(unit);
+    battle_effect_set_landing_secondary_by_surface_type(unit);
 }

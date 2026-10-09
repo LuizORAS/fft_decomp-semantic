@@ -88,7 +88,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state, world_text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
-        state->value = world_text_adjust_value_for_event_code(state->command, *state->value_cursor);
+        state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {

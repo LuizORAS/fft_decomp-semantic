@@ -17,7 +17,7 @@ void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** 
             if ((flags & 1) != 0) {
                 open_gfx_draw_render_record_36((open_sprite_actor_t*)record, otag);
             } else if ((flags & 2) != 0) {
-                open_gfx_draw_render_record_56((open_render_record_56_t*)record, otag);
+                open_gfx_draw_window_record((open_render_record_56_t*)record, otag);
             }
         }
     }

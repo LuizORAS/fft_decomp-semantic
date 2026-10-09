@@ -18,7 +18,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
     g_require_party_affected_unit_count = 0;
     for (battle_index = 0; battle_index < BATTLE_UNIT_SLOT_COUNT; battle_index++) {
         battle_unit = battle_unit_get_stats_from_battle_id(battle_index);
-        unit = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &found_battle_index);
+        unit = battle_unit_find_stats_by_entd_unit_id(battle_unit->unit_id, &found_battle_index);
         if (found_battle_index < 0 || battle_index != found_battle_index
             || unit->formation_index == BATTLE_FORMATION_INDEX_NONE || unit->unit_id == 0) {
             continue;

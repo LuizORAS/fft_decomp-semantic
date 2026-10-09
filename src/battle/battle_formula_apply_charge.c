@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_formula_apply_charge(void) {
-    u16* xa = &g_current_ability.xa;
+    u16* xa = &g_battle_action_current_ability.xa;
 
-    *xa += g_current_ability.charge_power;
+    *xa += g_battle_action_current_ability.charge_power;
 }

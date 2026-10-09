@@ -7,7 +7,7 @@
  * at 0x801C0584 (thread 8) and 0x801C0F4C (other). Same layout as the EVENT
  * DEBUGCHR twin's debugchr_editor_packet_t. */
 typedef struct world_formation_summary_packet {
-    world_menu_palette_primitives_t frame; /* 0x000: world_menu_build_line_box */
+    world_menu_palette_primitives_t frame; /* 0x000: world_menu_init_numeric_display_frame_primitives */
     u8 unknown_frame_tail[0xEC - sizeof(world_menu_palette_primitives_t)];
     DR_MODE draw_mode_a;                                  /* 0x0EC */
     DR_MODE draw_mode_b;                                  /* 0x0F8 */
@@ -139,16 +139,16 @@ void world_menu_unit_status_banner_thread(void) {
     }
     shake = 0;
 
-    world_menu_build_line_box(&g_world_gfx_portrait_origin, &summary->frame);
-    world_gfx_set_image_draw_mode(&summary->draw_mode_a, 1);
-    world_gfx_set_image_draw_mode(&summary->draw_mode_b, 0);
+    world_menu_init_numeric_display_frame_primitives(&g_world_gfx_portrait_origin, &summary->frame);
+    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_a, 1);
+    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_b, 0);
     world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
     world_menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
-        world_menu_init_quad(&summary->portrait[frame]);
+        world_gfx_init_default_poly_ft4(&summary->portrait[frame]);
     }
-    world_menu_init_icon_slot(&rects[0], 0x38, 0x28, (world_texture_prim_t*)&summary->value_sprites[0], 2);
-    world_menu_init_icon_slot(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&summary->value_sprites[1], 2);
+    world_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (world_texture_prim_t*)&summary->value_sprites[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&summary->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
         world_gfx_init_image_loading((POLY_FT4*)&summary->value_sprites[frame],
             (const world_image_location_t*)g_world_editor_numeric_geometry,
@@ -172,16 +172,16 @@ void world_menu_unit_status_banner_thread(void) {
             &g_world_unit_summary_label_sprite_params[frame]);
     }
     world_script_copy_bytes(summary + 1, summary, sizeof(world_formation_summary_packet_t));
-    world_gfx_set_image_draw_mode(&status->draw_mode_a, 0);
-    world_gfx_set_image_draw_mode(&status->draw_mode_b, 1);
-    world_menu_build_line_box(&g_world_unit_status_panel_origin, &status->frame);
+    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, 0);
+    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, 1);
+    world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->frame);
     cur = (u8*)&status->sprites[0];
     world_menu_init_sprite_array((SPRT*)cur, 7, 0x7C3C);
-    world_menu_init_quad(&status->portrait);
-    world_menu_init_icon_slot(&rects[2], 0x58, 0x20, (world_texture_prim_t*)cur, 0);
-    world_menu_init_icon_slot(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[1], 0);
-    world_menu_init_icon_slot(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[2], 0);
-    world_menu_init_icon_slot(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[3], 0);
+    world_gfx_init_default_poly_ft4(&status->portrait);
+    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (world_texture_prim_t*)cur, 0);
+    world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[1], 0);
+    world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[2], 0);
+    world_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
         world_gfx_init_image_loading((POLY_FT4*)&status->sprites[frame],
             (const world_image_location_t*)g_world_editor_numeric_geometry,
@@ -366,7 +366,7 @@ void world_menu_unit_status_banner_thread(void) {
                 anim_state = 2;
             }
         }
-        world_formation_build_portrait_transition_primitives(
+        world_gfx_build_portrait_transition_primitives(
             transition, &anim_state, &cur_unit, &prev_unit, portrait_image, &summary->portrait[0], (s32)portrait_arg);
         {
             CVECTOR* color;
@@ -432,7 +432,7 @@ void world_menu_unit_status_banner_thread(void) {
         status->sprites[6].h = 0x14;
         status->sprites[6].v0 = (s16)(cell / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (display->work != 0)) {
-            world_gfx_copy_screen_setup_in(&g_world_selected_unit_stat_summary, &g_world_selected_unit_identity,
+            world_menu_copy_billboard_data_in(&g_world_selected_unit_stat_summary, &g_world_selected_unit_identity,
                 &g_world_selected_unit_stat_detail);
             if (state->list_index < 0) {
                 entries[6].param = 0xC00;
@@ -517,7 +517,7 @@ void world_menu_unit_status_banner_thread(void) {
                 }
                 world_gfx_draw_or_append_gpu_primitive(&summary->portrait[0]);
             }
-            world_gfx_submit_primitive_group((world_primitive_group_t*)summary);
+            world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)summary);
             world_gfx_draw_or_append_gpu_primitive(&summary->draw_offset_a);
             world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_b);
             portrait_prim = (u8*)&status->portrait;
@@ -531,7 +531,7 @@ void world_menu_unit_status_banner_thread(void) {
                 world_gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
             }
             world_gfx_draw_or_append_gpu_primitive(&status->draw_mode_a);
-            world_gfx_submit_primitive_group((world_primitive_group_t*)status);
+            world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)status);
             world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_a);
         }
         world_thread_yield();
@@ -541,11 +541,11 @@ void world_menu_unit_status_banner_thread(void) {
         frame += 1;
     }
     world_thread_yield();
-    world_gfx_free_texture_grid_rect(&rects[0]);
-    world_gfx_free_texture_grid_rect(&rects[1]);
-    world_gfx_free_texture_grid_rect(&rects[2]);
-    world_gfx_free_texture_grid_rect(&rects[3]);
-    world_gfx_free_texture_grid_rect(&rects[4]);
-    world_gfx_free_texture_grid_rect(&rects[5]);
+    world_gfx_free_tpage7_vram(&rects[0]);
+    world_gfx_free_tpage7_vram(&rects[1]);
+    world_gfx_free_tpage7_vram(&rects[2]);
+    world_gfx_free_tpage7_vram(&rects[3]);
+    world_gfx_free_tpage7_vram(&rects[4]);
+    world_gfx_free_tpage7_vram(&rects[5]);
     world_thread_exit_current();
 }

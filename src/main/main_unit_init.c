@@ -4,7 +4,7 @@
 s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle) {
     entd_unit_t* entd_unit = &entd->units[unit_id];
 
-    g_current_entd_unit = entd_unit;
+    g_main_entd_current_unit = entd_unit;
     if (entd_unit->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
         return -2;
     }

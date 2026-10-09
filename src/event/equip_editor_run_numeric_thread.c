@@ -11,7 +11,7 @@ struct menu_number_position;
 
 /* Thread task 0x3b: numeric editor panel.
  *
- * Twin of attack_editor_run_numeric_thread / bunit_run_numeric_editor_thread
+ * Twin of attack_editor_run_numeric_thread / bunit_menu_run_numeric_editor_thread
  * with EQUIP's own draw-mode setup. Builds the primitive block once, copies it
  * into the second buffer, then each frame re-renders the three text images when
  * requested, rescales the draw area, recolours the sprites for the thread
@@ -124,7 +124,7 @@ void equip_editor_run_numeric_thread(void) {
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_equip_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
-        if (thread->style == 1 || g_event_mode == 1) {
+        if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }
@@ -141,7 +141,7 @@ void equip_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        equip_gfx_apply_menu_palette_for_mode(&buffer->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&buffer->numeric_frame, (s32*)thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }

@@ -32,7 +32,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     }
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+    prim = (POLY_FT4*)g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
     corners = unit->shadow_quad;
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
@@ -51,7 +51,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->code |= 2;
     tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
     if ((tile->depth_half_height & 0xe0) && -(tile->height + (tile->depth_half_height >> 5)) * 12 < unit->screen.vy) {
-        unit->shadow_counter += g_animation_speed;
+        unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
         prim->clut = unit->vram_palette_id + 0x40;

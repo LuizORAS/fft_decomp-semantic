@@ -27,9 +27,9 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     screen = g_world_change_banner_panel_frames;
     base = g_world_change_banner_panel_frames;
     state = &g_world_selected_unit_stat_detail;
-    world_menu_build_line_box(&g_world_equipment_ability_panel_origin, &screen->menu);
-    world_menu_init_column_frame_primitives((battle_menu_status_panel_menu_primitives_t*)screen);
-    world_gfx_reset_record_texture_window_3(&screen->draw_area);
+    world_menu_init_numeric_display_frame_primitives(&g_world_equipment_ability_panel_origin, &screen->menu);
+    world_gfx_init_menu_tile_and_line_primitives((battle_menu_status_panel_menu_primitives_t*)screen);
+    world_gfx_init_scaled_draw_area_packets_3(&screen->draw_area);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += g_world_equipment_ability_panel_origin.x;
         screen->tiles[i].y0 += g_world_equipment_ability_panel_origin.y;
@@ -134,15 +134,15 @@ void world_menu_equipment_and_ability_panel_thread(void) {
                 (const world_image_location_t*)&g_world_equipment_ability_panel_origin,
                 &g_world_equipment_panel_icon_params[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
-                world_build_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
+                world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
                 ((world_status_frame_t*)cursor)->sprites[19].x0 = -0x200;
             }
             cursor += sizeof(SPRT);
         }
         g_world_gfx_draw_area_y = (u16)g_world_frame_arg != 0xf0 ? 0xf0 : 0;
-        world_gfx_build_scaled_draw_area_pair_at_offset(&screen->draw_area, &g_world_equipment_ability_panel_draw_area,
-            frame, (u16)g_world_frame_arg, (s32*)thread);
+        world_gfx_build_scaled_draw_area_packets(&screen->draw_area, &g_world_equipment_ability_panel_draw_area, frame,
+            (u16)g_world_frame_arg, (s32*)thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
@@ -175,7 +175,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         for (i = 0; i < 8; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_gfx_submit_primitive_group((world_primitive_group_t*)&screen->menu);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->menu);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&screen->draw_area);

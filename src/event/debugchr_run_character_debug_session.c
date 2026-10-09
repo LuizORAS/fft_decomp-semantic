@@ -96,7 +96,7 @@ void debugchr_run_character_debug_session(void) {
     g_debugchr_editor_active = 1;
     g_debugchr_panel_status_group_count = 2;
     for (i = 0; i < 0x15; i++) {
-        battle_find_unit_data_pointer_for_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
+        battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
         if ((battle_id >= 0) && (i == battle_id)) {
             EDITOR_UNIT_IDS[i] = 1;
         } else {

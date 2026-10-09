@@ -12,7 +12,7 @@ void battle_menu_start_mini_menu_display_thread(void) {
     if (battle_thread_is_running_8014cc94(7) != 0) {
         return;
     }
-    if (g_option_menu_submenu_state != 0) {
+    if (g_battle_menu_suspend_state != 0) {
         return;
     }
     g_battle_menu_current_id = MINI_MENU_MENU_ID;

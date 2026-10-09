@@ -13,9 +13,9 @@ s32 battle_state_enter_effect_playback(void) {
     }
     battle_effect_play();
     previous_state = g_battle_game_state;
-    previous_animation_speed = g_animation_speed;
+    previous_animation_speed = g_main_system_animation_speed;
     g_battle_game_state = BATTLE_GAME_STATE_EFFECT;
-    g_animation_speed = 2;
+    g_main_system_animation_speed = 2;
     g_battle_gfx_screen_color_modulation_fade_frames = 0;
     g_battle_camera_offset_screen_coord_countdown = 0;
     g_battle_camera_rotation_countdown = 0;

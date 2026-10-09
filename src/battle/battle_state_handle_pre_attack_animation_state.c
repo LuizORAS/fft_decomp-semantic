@@ -4,7 +4,7 @@ void battle_state_handle_pre_attack_animation_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
     if ((unit->animation_countdown == 0 || unit->secondary_animation_state != 0 || unit->state_frame_counter >= 0x3d)
         && (g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0

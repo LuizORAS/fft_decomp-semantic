@@ -98,8 +98,8 @@ void world_build_options_menu(void) {
     clear.w = window.rect.w / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
-    world_gfx_set_image_draw_mode(&page->icon_mode, 0);
-    world_gfx_set_image_draw_mode(&page->text_mode, 1);
+    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
+    world_gfx_set_draw_mode_for_texture_page(&page->text_mode, 1);
     texture_window.x = 0;
     texture_window.y = 0;
     texture_window.w = 0x100;
@@ -154,10 +154,10 @@ void world_build_options_menu(void) {
     image_rect.w = g_world_menu_text_state.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
     world_thread_wait_frames(1);
-    world_gfx_reset_record_texture_window(&page->title_area);
-    world_gfx_reset_record_texture_window(&page->value_area);
+    world_gfx_init_scaled_draw_area_packets(&page->title_area);
+    world_gfx_init_scaled_draw_area_packets(&page->value_area);
     world_menu_init_sprite(&base->title);
-    world_menu_init_icon_slot(
+    world_text_configure_sprite_vram(
         &g_world_options_menu_title_rect, entry->inner_width, 0x2C, (world_texture_prim_t*)&base->title, 0);
     image
         = world_menu_build_and_upload_window_frame_image(entry->inner_width, 0x2C, &g_world_options_menu_title_rect, 3);
@@ -180,7 +180,8 @@ void world_build_options_menu(void) {
     world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     world_thread_yield();
     world_menu_init_sprite(&base->value);
-    world_menu_init_icon_slot(&g_world_options_menu_value_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
+    world_text_configure_sprite_vram(
+        &g_world_options_menu_value_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
     world_clear_menu_render_buffer(buffer, 0x1E0);
@@ -299,9 +300,9 @@ void world_build_options_menu(void) {
             }
         }
         page->frame.v0 = ring * 16 + accum - 2;
-        world_menu_select_task_icon_tile((world_texture_prim_t*)&page->title);
-        world_menu_select_task_icon_tile((world_texture_prim_t*)&page->value);
-        world_menu_select_task_icon_tile((world_texture_prim_t*)frame);
+        world_menu_select_sprite_clut((world_texture_prim_t*)&page->title);
+        world_menu_select_sprite_clut((world_texture_prim_t*)&page->value);
+        world_menu_select_sprite_clut((world_texture_prim_t*)frame);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
@@ -372,8 +373,8 @@ void world_build_options_menu(void) {
         g_main_menu_scroll_fast_step = g_world_option_input_timing_profiles[column].scroll_fast_step;
     }
     world_menu_free_memory(buffer);
-    world_gfx_free_texture_grid_rect(&g_world_options_menu_title_rect);
-    world_gfx_free_texture_grid_rect(&g_world_options_menu_value_rect);
+    world_gfx_free_tpage7_vram(&g_world_options_menu_title_rect);
+    world_gfx_free_tpage7_vram(&g_world_options_menu_value_rect);
     world_thread_wait_frames(1);
     g_world_menu_thread_result = 2;
     world_thread_set_parameters(g_world_thread_current_id + 1, 0, 0, 1);

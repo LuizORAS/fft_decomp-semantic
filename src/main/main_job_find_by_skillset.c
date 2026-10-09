@@ -8,7 +8,7 @@ s32 main_job_find_by_skillset(s32 skillset_id) {
     job_data_t* job_data;
 
     job_id = 0;
-    job_data = g_job_data_pointer;
+    job_data = g_main_job_data_pointer;
     skillset_id &= 0xff;
 
     do {

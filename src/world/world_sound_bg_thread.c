@@ -23,7 +23,7 @@ void world_sound_bg_thread(void) {
     } else {
         handle = sound_id + sound_bank;
         main_sound_stop_sfx(handle);
-        main_sound_play_weather_sfx(handle);
+        main_sound_play_bg_sfx(handle);
     }
     echo = parameter[1];
     if (echo == 0) {

@@ -11,14 +11,14 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     u8 compiler_stack_pad[8];
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_ability_address = battle_menu_get_selected_ability_address();
     casting_unit = battle_unit_get_casting_misc_data();
     selected_ability = *selected_ability_address;
     switch (selected_ability) {
     case 7:
         if (g_battle_action_post_action_display_phase == 2) {
-            target_unit = battle_unit_get_misc_data_by_battle_id(*(u16*)&g_battle_action_post_action_unit_id);
+            target_unit = battle_unit_get_misc_data_by_battle_id(*(u16*)&g_battle_action_learn_on_hit_unit_id);
             battle_unit_learn_used_ability(target_unit->battle_data);
         }
     case 8:

@@ -26,7 +26,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
         saved_current[i] = unit->status_sets.current[i];
         saved_inflicted[i] = unit->inflicted_status[i];
     }
-    job = &g_job_data_pointer[unit->job_id];
+    job = &g_main_job_data_pointer[unit->job_id];
     unit->move = job->move;
     unit->jump = job->jump & 0x7F;
     main_util_copy_bytes(job->equipment_categories, unit->equipment_categories, 4);

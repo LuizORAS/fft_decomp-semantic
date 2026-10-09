@@ -13,17 +13,17 @@ void battle_state_handle_menu_to_targeting_state(void) {
     u16 frame;
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
-        g_animation_speed = 2;
+        g_main_system_animation_speed = 2;
         if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
                 unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
                 battle_action_call_attack_preparation(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
-            g_animation_speed = 1;
+            g_main_system_animation_speed = 1;
         }
     }
     frame = unit->state_frame_counter++;
@@ -39,7 +39,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
         }
         /* fallthrough */
     case 0x19:
-        g_battle_casting_unit_id = g_battle_casting_misc_id;
+        g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         battle_action_handle_move_command();
         return;
     case BATTLE_AI_COMMAND_ACT:

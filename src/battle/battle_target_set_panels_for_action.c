@@ -39,9 +39,8 @@ s32 battle_target_set_panels_for_action(u8* source) {
         range = unit->move | 0x80;
         break;
     case ACTION_MENU_TYPE_ELEMENTS:
-        ability_id
-            = g_geomancy_terrain_ability_table[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
-                & 0x3f];
+        ability_id = g_main_terrain_geomancy_abilities
+            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value & 0x3f];
         mode = 1;
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:

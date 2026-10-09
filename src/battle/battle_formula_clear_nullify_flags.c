@@ -5,10 +5,10 @@ void battle_formula_clear_nullify_flags(void) {
     u16* pflag;
     battle_action_data_t* action;
     u16* special_effect;
-    pflag = &g_current_ability.elemental_flags;
+    pflag = &g_battle_action_current_ability.elemental_flags;
     if (*pflag != 0) {
         action = g_battle_action_target_data;
-        g_current_ability.reaction_id = 0;
+        g_battle_action_current_ability.reaction_id = 0;
         *pflag = 0;
         /* Clear the nullify bit (0x0200).  Reading the field through a
          * second pointer keeps the lhu below the two scalar global stores;

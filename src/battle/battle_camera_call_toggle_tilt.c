@@ -4,7 +4,7 @@
 
 void battle_camera_call_toggle_tilt(void) {
     if (g_battle_camera_tilt_action == 0) {
-        if ((g_controller_input_pressed & PSX_PAD_R2) != 0) {
+        if ((g_main_input_pressed_buttons & PSX_PAD_R2) != 0) {
             battle_camera_toggle_tilt();
         }
     }

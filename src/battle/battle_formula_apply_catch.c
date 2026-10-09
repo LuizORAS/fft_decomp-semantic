@@ -7,11 +7,11 @@ void battle_formula_apply_catch(void) {
     battle_action_data_t* action;
     /* Loaded through a pointer so GCC keeps it between the struct stores
      * (a plain scalar load is assumed not to alias them and floats). */
-    u8* weapon_id_ptr = &g_current_ability.weapon_id;
+    u8* weapon_id_ptr = &g_battle_action_current_ability.weapon_id;
     s32 weapon_id;
     s32 chance;
 
-    if (battle_action_can_unit_react_1(g_battle_action_target) != 0)
+    if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;
     if (g_battle_action_attacker->job_id == JOB_ID_MIME)
         return;

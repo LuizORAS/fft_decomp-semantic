@@ -17,11 +17,11 @@ void world_item_reconcile_sorted_list(s32 list_index) {
         }
         if (list_index == category) {
             if (world_item_count_owned_and_equipped((s16)item_id)) {
-                if (!world_item_is_in_sorted_list(item_id, list_index)) {
-                    world_item_prepend_sorted(item_id, list_index);
+                if (!world_item_is_in_category_list(item_id, list_index)) {
+                    world_item_prepend_to_category_list(item_id, list_index);
                 }
             } else {
-                world_item_remove_sorted(item_id, list_index);
+                world_item_remove_from_category_list(item_id, list_index);
             }
         }
     }

@@ -12,7 +12,7 @@ void battle_formula_calculate_katana_break_chance(void) {
     g_battle_action_attacker_data->miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
 
     if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE
-        && main_util_roll_pass_fail(100, g_current_ability.weapon_data.power) != 0) {
+        && main_util_roll_pass_fail(100, g_battle_action_current_ability.weapon_data.power) != 0) {
         g_battle_action_attacker_data->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN;
     } else {
         g_battle_action_attacker_data->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN;

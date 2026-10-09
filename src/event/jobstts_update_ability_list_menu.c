@@ -85,7 +85,7 @@ s32 jobstts_update_ability_list_menu(void) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
     jobstts_cmd_run_stream_with_mode(
-        g_jobstts_ability_list_render_commands, (void*)g_jobstts_input_primary_repeat, g_event_mode);
+        g_jobstts_ability_list_render_commands, (void*)g_jobstts_input_primary_repeat, g_battle_menu_input_lock_mode);
     rect.x = 0x26;
     rect.y = 0x27;
     rect.w = 0x50;

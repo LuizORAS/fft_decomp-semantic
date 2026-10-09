@@ -19,7 +19,7 @@ void battle_effect_free_state_record(s16 record_index) {
     particle = work = g_effect_state_records[record_index].work_head;
     head = g_battle_effect_allocated_record_head;
     while (work != 0) {
-        battle_effect_free_particle(record_index, particle);
+        battle_effect_free_work_record(record_index, particle);
         particle = work = work->next;
     }
     for (i = 0; i < 4; i++) {

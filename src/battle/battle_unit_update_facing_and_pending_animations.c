@@ -19,8 +19,7 @@ void battle_unit_update_facing_and_pending_animations(void) {
             if (((u16*)g_battle_unit_pending_animation_ids)[i] != 0) {
                 moving = battle_move_is_unit_moving_by_misc_id(i);
                 if (moving == 0 && ((u16*)g_battle_unit_was_moving_latch)[i] != 0) {
-                    battle_unit_set_specific_animation_value_on_battle_init(
-                        i, ((u16*)g_battle_unit_pending_animation_ids)[i]);
+                    battle_unit_set_animation(i, ((u16*)g_battle_unit_pending_animation_ids)[i]);
                     g_battle_unit_pending_animation_ids[i] = 0;
                 }
                 g_battle_unit_was_moving_latch[i] = moving;
@@ -58,7 +57,7 @@ void battle_unit_update_facing_and_pending_animations(void) {
             } else if (state->rotate_mode == 2) {
                 facing = (current + 0xF) & 0xF;
             }
-            battle_unit_init_for_store_anim_facing_move(i, facing);
+            battle_unit_set_facing(i, facing);
         } else {
             g_battle_unit_was_moving_latch[i] = 0;
             g_battle_unit_pending_animation_ids[i] = 0;

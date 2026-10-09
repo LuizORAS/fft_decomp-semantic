@@ -10,7 +10,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_ability = *battle_menu_get_selected_ability_address();
     if (selected_ability >= 7 && (selected_ability < 9 || selected_ability == 0xff)) {
         g_battle_action_post_action = 1;
@@ -28,7 +28,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
             g_battle_gfx_sp2_data = 0;
         }
         battle_gfx_invalidate_sp2_vram_slot((struct battle_gfx_misc_data_header*)unit);
-        if (g_action_type == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
+        if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY && g_battle_action_phase == 1) {
             facing = *(s16*)&unit->facing;
             if (facing < 0) {
                 facing += 0x3ff;

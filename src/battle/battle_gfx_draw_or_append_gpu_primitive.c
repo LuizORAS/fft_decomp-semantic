@@ -15,7 +15,7 @@ void battle_gfx_draw_or_append_gpu_primitive(void* primitive) {
         DrawPrim(prim);
         return;
     }
-    otag = (s32*)g_current_otag_entry;
+    otag = (s32*)g_battle_gfx_current_otag_entry;
     *prim = (*prim & 0xFF000000) | (*otag & 0xFFFFFF);
     *otag = (*otag & 0xFF000000) | ((s32)prim & 0xFFFFFF);
 }

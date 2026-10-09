@@ -23,7 +23,7 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     equip_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_equip_gfx_context->otag;
     changed = 0;
-    if (g_event_mode != 0) {
+    if (g_battle_menu_input_lock_mode != 0) {
         message_idle = g_equip_text_message_thread_active == 0;
         changed = message_idle;
     }
@@ -33,17 +33,17 @@ s32 equip_entrypoint(s32 unit, void* otag) {
         equip_text_start_help_thread(3);
     }
     if (g_equip_text_restore_pending != 0) {
-        if (g_event_mode == 0) {
-            battle_text_restore_pointer_table();
+        if (g_battle_menu_input_lock_mode == 0) {
+            battle_text_restore_section_pointers();
         }
     }
-    equip_text_set_palette_and_metrics(g_event_mode);
+    equip_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
     g_equip_menu_screen_state_handlers[g_equip_menu_screen_state]();
     if (g_equip_sound_suppress_queued != 0) {
         g_equip_sound_queued_effect_id = 0;
     }
     if (g_equip_sound_queued_effect_id != 0) {
-        g_sound_effect_id_to_play = g_equip_sound_queued_effect_id;
+        g_battle_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
     }
     g_equip_sound_queued_effect_id = 0;
     if (g_equip_menu_screen_state != 0xFF) {

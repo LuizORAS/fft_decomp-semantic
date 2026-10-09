@@ -9,7 +9,7 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
     RECT rect;
     s32 depth;
 
-    wldcore_build_global_file_header();
+    wldcore_file_seek_to_battle_bin();
     if (mode == 2) {
         g_main_system_flags |= 0x08000000;
         wldcore_fade_start_screen(2, 0x20);

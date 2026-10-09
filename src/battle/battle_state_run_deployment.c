@@ -87,7 +87,8 @@ void battle_state_run_deployment(void) {
             AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
             AddPrim(main_gfx_get_otag(), &banner[g_main_gfx_screen_polarity]);
             g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-            g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+            g_main_system_battle_frame_hsync_count
+                = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
             fade -= 8;
         } while (fade >= 0);
     }
@@ -103,7 +104,7 @@ void battle_state_run_deployment(void) {
         }
         g_battle_state_map_init_step
             = battle_map_init_units_sprites_event_and_music(map_id, g_battle_state_map_init_step,
-                battle_script_is_deployment_running(main_gfx_get_otag(), g_controller_input_raw));
+                battle_script_is_deployment_running(main_gfx_get_otag(), g_main_input_current_buttons));
         if (g_battle_state_map_init_step == 0xd) {
             battle_gfx_extract_deployed_unit_palettes();
             battle_action_set_casting_unit_id_ff_and_init();
@@ -119,7 +120,8 @@ void battle_state_run_deployment(void) {
         AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
         AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
         g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-        g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+        g_main_system_battle_frame_hsync_count
+            = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
         main_file_poll_load(&g_main_file_cd_state);
         main_noop_800449ec();
     }
@@ -139,7 +141,8 @@ done:
             AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
             AddPrim(main_gfx_get_otag(), &banner[g_main_gfx_screen_polarity]);
             g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;
-            g_battle_frame_measurement = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
+            g_main_system_battle_frame_hsync_count
+                = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
             fade += 8;
         } while (fade < 0x100);
     }

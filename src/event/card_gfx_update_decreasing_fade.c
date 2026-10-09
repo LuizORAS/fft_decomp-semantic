@@ -15,7 +15,7 @@ s32 card_gfx_update_decreasing_fade(void) {
         g_card_gfx_fade_color_b = g_card_gfx_fade_intensity;
         g_card_gfx_fade_color_g = g_card_gfx_fade_intensity;
         g_card_gfx_fade_color[0] = g_card_gfx_fade_intensity;
-        card_gfx_enqueue_translucent_tile(&g_card_gfx_fade_rect, g_card_gfx_fade_color, 1, g_card_gfx_otag_length - 1);
+        card_gfx_enqueue_tile(&g_card_gfx_fade_rect, g_card_gfx_fade_color, 1, g_card_gfx_otag_length - 1);
     }
     return result;
 }

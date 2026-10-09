@@ -16,7 +16,7 @@ s32 main_unit_calculate_zodiac_symbol(u32 birthday) {
     zodiac = 0;
     index = 0;
     birthday &= 0xffff;
-    day_limit = g_zodiac_day_limits;
+    day_limit = g_main_zodiac_day_limits;
 
     /* A goto loop: as any while/for/do loop, GCC's loop pass reverses the unused
      * counter into a count-down. The explicit division below reproduces the

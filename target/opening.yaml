@@ -37,11 +37,11 @@ functions:
   - {addr: 0x80068384, size: 156, name: open_title_init_new_game_party, hash: 3b01ce90b00a6557}
   - {addr: 0x80068420, size: 300, name: open_birthday_convert_to_zodiac_position, hash: 9aaa68be5ea32880}
   - {addr: 0x8006854c, size: 160, name: open_menu_update_world_formation, hash: b27c035b144dee4f}
-  - {addr: 0x800685ec, size: 76, name: open_birthday_calculate_day_index, hash: e796a8582427e794}
+  - {addr: 0x800685ec, size: 76, name: open_birthday_month_day_to_day_of_year, hash: e796a8582427e794}
   - {addr: 0x80068638, size: 76, name: open_sound_set_type_and_volume, hash: 3fcd975cc8b2da0c}
   - {addr: 0x80068684, size: 88, name: open_movie_init_and_stream_opening, hash: 7f2fe3e68306a213}
   - {addr: 0x800686dc, size: 132, name: open_movie_init_and_play_end, hash: c5005cd2d64378db}
-  - {addr: 0x80068760, size: 76, name: open_gfx_backup_frame_vram_page, hash: 74303d09981cd6c2}
+  - {addr: 0x80068760, size: 76, name: open_gfx_restore_frame_vram_page, hash: 74303d09981cd6c2}
   - {addr: 0x800687ac, size: 832, name: open_gfx_init_screen_environments, hash: 00685f629e5f306d}
   - {addr: 0x80068aec, size: 136, name: open_system_init_runtime_state, hash: 1795eb2597584b2e}
   - {addr: 0x80068b74, size: 60, name: open_gfx_clear_and_draw_current_frame, hash: 22d70e319b6161e8}
@@ -49,9 +49,9 @@ functions:
   - {addr: 0x80068c90, size: 64, name: open_gfx_clear_current_otag, hash: 7dbb971d4cb43ee9}
   - {addr: 0x80068cd0, size: 176, name: open_gfx_draw_render_record_pointer_list, hash: a3a591bbfb26047c}
   - {addr: 0x80068d80, size: 1164, name: open_gfx_draw_render_record_36, hash: d2445b3917e77445}
-  - {addr: 0x8006920c, size: 1212, name: open_gfx_draw_render_record_56, hash: 6c7b3dae23c3f006}
+  - {addr: 0x8006920c, size: 1212, name: open_gfx_draw_window_record, hash: 6c7b3dae23c3f006}
   - {addr: 0x800696c8, size: 232, name: open_gfx_append_render_record_36, hash: a3135d544f819f6f}
-  - {addr: 0x800697b0, size: 272, name: open_gfx_append_render_record_56, hash: 6a95dfcd435c9a47}
+  - {addr: 0x800697b0, size: 272, name: open_gfx_append_window_record, hash: 6a95dfcd435c9a47}
   - {addr: 0x800698c0, size: 276, name: open_gfx_calculate_scaled_rectangle, hash: 9676150bdf1ed31c}
   - {addr: 0x800699d4, size: 96, name: open_file_wait_then_build_header, hash: b839cd0a4c5eb016}
   - {addr: 0x80069a34, size: 92, name: open_file_wait_for_pending, hash: 5e8c5303cf510992}
@@ -61,7 +61,7 @@ functions:
   - {addr: 0x80069cc8, size: 112, name: open_file_build_openbk_header, hash: 2fab328389970f4a}
   - {addr: 0x80069d38, size: 68, name: open_file_get_cd_sync_state_delta, hash: 1656986d7649ae48}
   - {addr: 0x80069d7c, size: 228, name: open_gfx_load_opntex_into_frame_buffer, hash: 590cf49a34430f90}
-  - {addr: 0x80069e60, size: 84, name: open_movie_start_fftst_or_alternate_controller, hash: e0be4a8551206743}
+  - {addr: 0x80069e60, size: 84, name: open_movie_start_fftst_or_title_menu, hash: e0be4a8551206743}
   - {addr: 0x80069eb4, size: 112, name: open_controller_dispatch_current, hash: 56c28d63abc90fb7}
   - {addr: 0x80069f24, size: 180, name: open_movie_stream_fftst_and_push_controller, hash: 3466a0da8fc6b302}
   - {addr: 0x80069fd8, size: 156, name: open_movie_finish_stream_controller_if_ready_or_skipped, hash: e736c342c3869071}
@@ -93,7 +93,7 @@ functions:
   - {addr: 0x8006cef0, size: 876, name: open_menu_update_music_test, hash: c7076123a75c7032}
   - {addr: 0x8006d25c, size: 260, name: open_controller_start_text_message, hash: ef898de4d115f54e}
   - {addr: 0x8006d360, size: 108, name: open_controller_wait_text_message, hash: e623f7328948a829}
-  - {addr: 0x8006d3cc, size: 180, name: open_movie_stream_other_str_and_push_controller_11, hash: 29c7eb100bdbc02b}
+  - {addr: 0x8006d3cc, size: 180, name: open_movie_stream_title_demo_and_push_controller, hash: 29c7eb100bdbc02b}
   - {addr: 0x8006d480, size: 164, name: open_movie_start_fftst_or_skip_controller, hash: 4e72507cef1a9abd}
   - {addr: 0x8006d524, size: 308, name: open_title_start_new_game_or_clear_file_buffer, hash: efa74633bab45d83}
   - {addr: 0x8006d658, size: 340, name: open_title_update_exit_transition, hash: 7c3ab8fe1d7d5d9c}
@@ -222,7 +222,7 @@ data:
   - {addr: 0x80085324, name: g_open_controller_stream_start}
   - {addr: 0x80085324, name: g_open_title_menu_states}
   - {addr: 0x80085328, name: g_open_controller_stream_length}
-  - {addr: 0x80085340, name: g_open_controller_flags}
+  - {addr: 0x80085340, name: g_open_controller_selected_options}
   - {addr: 0x80085344, name: g_open_controller_birthdays}
   - {addr: 0x800854b4, name: g_open_gfx_image_copy_row_flags}
   - {addr: 0x800854b5, name: g_open_gfx_image_copy_progress}

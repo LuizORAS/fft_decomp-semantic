@@ -5,7 +5,7 @@
 void world_script_start_tutorial(s32 index) {
     g_world_script_tutorial_id = index;
     if (index != 0) {
-        world_gfx_load_tim_pair_by_index(index, &g_world_tutorial_saved_game_image);
+        world_script_load_tutorial_files(index, &g_world_tutorial_saved_game_image);
         g_world_script_tutorial_command_ptr = g_world_tutorial_script_buffer;
         g_world_text_section_pointers[23] = g_world_tutorial_text_buffer;
         world_card_init_menu_state();

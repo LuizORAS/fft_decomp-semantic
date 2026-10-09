@@ -22,7 +22,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
-    switch (battle_script_run_event_frame(main_gfx_get_otag(), g_controller_input_raw)) {
+    switch (battle_script_run_event_frame(main_gfx_get_otag(), g_main_input_current_buttons)) {
     case 1:
         break;
     case 0:
@@ -47,7 +47,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
 
-    g_battle_screen_fade_intensity -= g_battle_state_map_transition_step;
+    g_battle_screen_fade_intensity -= g_battle_state_screen_fade_step;
     if ((s16)g_battle_screen_fade_intensity <= 0) {
         g_battle_screen_fade_intensity = 0;
         g_battle_game_state = g_previous_battle_game_state;

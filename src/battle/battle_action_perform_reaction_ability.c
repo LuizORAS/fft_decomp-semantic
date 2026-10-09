@@ -113,6 +113,6 @@ s32 battle_action_perform_reaction_ability(void) {
     if (g_battle_action_target_data->special_effect != 0) {
         g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_PSEUDO_STATUS;
     }
-    g_current_ability.reaction_id = 0;
+    g_battle_action_current_ability.reaction_id = 0;
     return 1;
 }

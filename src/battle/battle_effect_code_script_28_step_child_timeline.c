@@ -260,7 +260,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
         if (g_battle_effect_targets[target].target_type == 0) {
             init.caster.block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[16];
             init.target.block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[target];
-            battle_effect_init_secondary(10, g_battle_effect_misc_data->spawn_delay, &init);
+            battle_effect_init_secondary(10, g_battle_effect_timeline->spawn_delay, &init);
         }
         ((battle_effect_tick_record_view_t*)record)->frame = g_battle_effect_timing_channels->duration;
     }

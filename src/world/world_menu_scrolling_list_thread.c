@@ -228,7 +228,8 @@ void world_menu_scrolling_list_thread(void) {
                                 || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->target[index]
                                     == 0)) {
                             g_world_menu_text_state.origin_y += 2;
-                            world_text_draw_shadowed(buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                            world_menu_draw_stacked_glyph_pair(
+                                buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
                         } else {
                             value = (u16)layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
@@ -270,9 +271,9 @@ void world_menu_scrolling_list_thread(void) {
             break;
         }
         world_menu_select_icon_cluts(&page->icons.base);
-        world_menu_select_task_icon_tile_2(page->icons.icons[0]);
-        world_menu_select_task_icon_tile_2(page->icons.icons[1]);
-        world_menu_select_task_icon_tile_2(page->icons.icons[2]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[0]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[1]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[2]);
         if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
             frame->clut = 0x7F7D;
         } else {

@@ -12,7 +12,7 @@ battle_stats_t* world_unit_get_by_unit_id(s32 unit_id) {
             >= CHARACTER_IDENTITY_GENERIC_FIRST - CHARACTER_IDENTITY_RAMZA_CHAPTER_1) {
             return (battle_stats_t*)-1;
         }
-        raid_class = battle_classify_character_identity_slot(unit_id);
+        raid_class = battle_unit_find_slot_by_character_identity(unit_id);
         index = raid_class;
         /* Both failures here share the -1 return of the lookup below, as in
            the target; separate returns are laid out after the lookup. */

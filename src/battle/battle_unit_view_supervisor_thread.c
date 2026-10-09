@@ -15,7 +15,7 @@ extern world_unit_view_thread_set_t g_battle_unit_view_thread_sets[];
 
 /*
  * Battle twin of world_unit_view_supervisor_thread; started by
- * battle_menu_store_unit_names_and_event_block_data.
+ * battle_unit_start_view_thread.
  *
  * For the requested view mode it starts each missing slot thread, and asks
  * running ones with the wrong task (or a stale viewed unit) to stop, then

@@ -72,7 +72,7 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
         } else if (type_flags & CALCULATOR_ATTRIBUTE_EXP) {
             value = unit->experience;
         } else {
-            battle_calculate_unit_height_data(&height, i);
+            battle_unit_calculate_height_data(&height, i);
             value = height.walking_height;
             if (value & 1) {
                 continue;

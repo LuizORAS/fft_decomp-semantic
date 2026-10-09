@@ -76,11 +76,11 @@ void option_run_option_choice_menu(void) {
         record = &g_option_picker_icon_records[width & 1];
         if (battle_menu_can_accept_input()) {
             if (*input & PSX_PAD_CROSS) {
-                g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (*input & PSX_PAD_CIRCLE) {
-                g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 if (kind == GAME_OPTION_COUNT) {
                     if (cursor == 1) {
                         /* Dead store: allocation device, see the file header. */
@@ -107,7 +107,7 @@ void option_run_option_choice_menu(void) {
                 } else {
                     cursor = g_option_choice_counts[kind] - 1;
                 }
-                g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             }
             if (*input & PSX_PAD_DOWN) {
                 *input = 0;
@@ -116,12 +116,12 @@ void option_run_option_choice_menu(void) {
                 } else {
                     cursor++;
                 }
-                g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             }
         }
-        battle_menu_configure_frame_cluts(record);
-        battle_update_menu_cursor_primitives(param, (world_menu_icon_sprites_t*)record, width, cursor);
-        battle_menu_submit_frame_primitives(record);
+        battle_menu_select_icon_cluts(record);
+        battle_menu_update_icon_cursor_sprites(param, (world_menu_icon_sprites_t*)record, width, cursor);
+        battle_menu_submit_icon_primitives(record);
         battle_thread_wait_frames(1);
     }
     g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];

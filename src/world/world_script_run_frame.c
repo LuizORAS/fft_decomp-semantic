@@ -34,7 +34,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
     g_world_gfx_active_otag_entries = ot;
-    world_gfx_draw_screen_tint_tile(
+    world_gfx_submit_screen_fade_overlay(
         &g_world_screen_tint_tiles[g_world_menu_packet_buffer_index], g_world_script_tutorial_thread_switch_counter);
     world_noop_800f6ea8();
     world_menu_draw_active_window_frames();
@@ -85,7 +85,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     world_input_update_menu_repeat(buttons);
     if (g_world_menu_input_disabled == 2) {
         g_world_input_unfiltered_controller = g_world_menu_new_button_input;
-        world_menu_refresh_state_from_script_variables(&g_world_menu_new_button_input);
+        world_script_apply_input_overrides(&g_world_menu_new_button_input);
         g_world_script_saved_event_input = g_world_menu_new_button_input;
         world_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
     }
@@ -130,7 +130,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         }
     }
 
-    world_input_store_menu_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
+    world_script_load_event_input_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
     if (world_script_check_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
         && g_world_menu_new_button_input != 0) {
         g_world_thread_change_cooldown = 5;
@@ -175,8 +175,8 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_companion_overlay_state = 0;
         g_main_gfx_screen_polarity = polarity;
     }
-    world_process_bin_load_request();
-    world_update_pending_file_load();
+    world_menu_open_companion_executable();
+    world_menu_open_companion_data_file();
     world_noop_800f6e98();
     world_noop_800fdce8();
     if (g_world_menu_input_disabled == 1) {

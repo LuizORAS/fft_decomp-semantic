@@ -34,7 +34,7 @@ void open_system_run_ending_cutscene(void) {
         } while ((g_open_system_runtime_flags & 1) != 0);
     }
 
-    open_gfx_backup_frame_vram_page();
+    open_gfx_restore_frame_vram_page();
     SetDispMask(0);
     open_sound_set_type_and_volume(0xc0, 0x78);
 }

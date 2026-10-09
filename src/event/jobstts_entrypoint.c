@@ -42,15 +42,15 @@ s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
     }
     jobstts_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_jobstts_gfx_context->otag;
-    g_jobstts_previous_event_mode = g_event_mode;
+    g_jobstts_previous_event_mode = g_battle_menu_input_lock_mode;
     jobstts_input_update_with_message_state();
     if (g_jobstts_input_primary_repeat & PSX_PAD_SELECT) {
         jobstts_text_start_help_thread(3);
     }
-    if (g_jobstts_previous_event_mode != 0 && g_event_mode == 0) {
-        battle_text_restore_pointer_table();
+    if (g_jobstts_previous_event_mode != 0 && g_battle_menu_input_lock_mode == 0) {
+        battle_text_restore_section_pointers();
     }
-    jobstts_text_set_palette_and_metrics(g_event_mode);
+    jobstts_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
     if (g_jobstts_active_page == 0) {
         g_jobstts_active_page = jobstts_menu_update_job_list();
         if (g_jobstts_input_primary_repeat & PSX_PAD_CROSS) {

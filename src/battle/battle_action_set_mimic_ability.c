@@ -27,11 +27,11 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     s32 facing;
 
     self = unit;
-    current = &g_current_ability_attacker.action;
+    current = &g_battle_action_current_attacker.action;
     if (battle_action_can_unit_react(self) != 0) {
         return 0;
     }
-    if ((self->team_flags & 0x30) != g_current_ability_attacker.team) {
+    if ((self->team_flags & 0x30) != g_battle_action_current_attacker.team) {
         return 0;
     }
     if (self->misc_unit_id == current->unit_id) {
@@ -39,20 +39,20 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     menu_type = g_main_action_menu_types_by_skillset[current->skillset];
     /* The target loads the ability id signed (lh). */
-    ability_id = (s16)g_current_ability_attacker.action.ability_id;
+    ability_id = (s16)g_battle_action_current_attacker.action.ability_id;
     if (menu_type == 0 || menu_type == ACTION_MENU_TYPE_ARITHMETICKS || menu_type == ACTION_MENU_TYPE_MONSTER) {
         if (g_main_ability_range_data[ability_id].flags_3 & 0x10) {
             return 0;
         }
     }
     facing = self->position.bits.facing;
-    attacker_facing = g_current_ability_attacker.facing - 4;
+    attacker_facing = g_battle_action_current_attacker.facing - 4;
     direction = facing - attacker_facing;
     if (menu_type == ACTION_MENU_TYPE_JUMP) {
         direction |= 0x100;
     }
-    if (battle_map_resolve_rotated_offset_layer(self, g_current_ability_attacker.target_delta_x,
-            g_current_ability_attacker.target_delta_y, direction, &x, &y, &z)
+    if (battle_map_resolve_rotated_offset_layer(self, g_battle_action_current_attacker.target_delta_x,
+            g_battle_action_current_attacker.target_delta_y, direction, &x, &y, &z)
         != 0) {
         return -1;
     }
@@ -62,11 +62,11 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     unit_id = self->misc_unit_id;
     action.target_x = x;
     action.target_elevation = z;
-    weapon_id = g_current_ability_attacker.right_hand_weapon_id;
+    weapon_id = g_battle_action_current_attacker.right_hand_weapon_id;
     action.target_y = y;
     action.target_id = unit_id;
     self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = weapon_id;
-    self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_current_ability_attacker.left_hand_weapon_id;
+    self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_battle_action_current_attacker.left_hand_weapon_id;
     result = battle_target_set_panels_for_action((u8*)&action);
     if (result == -1 || result == 3
         || (result < 2

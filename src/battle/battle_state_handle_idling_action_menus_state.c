@@ -21,11 +21,11 @@ void battle_state_handle_idling_action_menus_state(void) {
     if (battle_menu_is_still_building() == 0) {
         battle_state_set_free_cursor();
     }
-    if (g_controller_input_pressed & PSX_PAD_SELECT) {
+    if (g_main_input_pressed_buttons & PSX_PAD_SELECT) {
         battle_menu_open_help();
     }
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     command = (battle_ai_command_t*)battle_menu_get_selected_ability_address();
     misc = battle_unit_get_casting_misc_data();
     switch ((s32)command->kind) {
@@ -33,13 +33,13 @@ void battle_state_handle_idling_action_menus_state(void) {
         if (misc->mount_state != 0) {
             g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(misc->mount_partner_misc_id)->unit_id;
         } else {
-            g_battle_casting_unit_id = g_battle_casting_misc_id;
+            g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         }
         battle_action_clear_at_list_id();
         battle_action_handle_move_command();
         break;
     case 0x19:
-        g_battle_casting_unit_id = g_battle_casting_misc_id;
+        g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         battle_action_clear_at_list_id();
         battle_action_handle_move_command();
         break;

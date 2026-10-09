@@ -14,7 +14,7 @@ void battle_action_store_acting_unit_data(battle_stats_t* unit) {
         unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE; /* right hand */
         unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;  /* left hand */
     } else if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
-        g_current_ability_attacker.facing = (*(u16*)&unit->position >> 8) & 0xF;
+        g_battle_action_current_attacker.facing = (*(u16*)&unit->position >> 8) & 0xF;
     }
 
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
@@ -22,7 +22,7 @@ void battle_action_store_acting_unit_data(battle_stats_t* unit) {
         g_acting_unit_y = unit->position.bits.y;
         g_acting_unit_elevation = unit->position.raw >> 15;
     } else {
-        main_util_copy_action_data(g_reaction_unit_action_data_16e, &unit->action_actor_id);
+        main_util_copy_action_data(g_battle_action_saved_command, &unit->action_actor_id);
         g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
     }
 }

@@ -5,7 +5,7 @@
 
 /* Starts SFX sound_id (resource id << 16 | sound index) on
  * g_main_sound_sfx_channel_count consecutive SFX channels from channel & 0xff; the high byte of
- * channel is the priority main_sound_find_sfx_voice checks before stealing
+ * channel is the priority main_sound_find_sfx_channel checks before stealing
  * a channel. Channels whose stream offset is 0 are stopped instead. The
  * volume is scaled by the resource's per-sound volume byte, then the SFX
  * voices are claimed in the SFX music and in g_main_mask_exclusion, and

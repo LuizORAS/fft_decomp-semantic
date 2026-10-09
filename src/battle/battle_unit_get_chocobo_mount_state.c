@@ -1,0 +1,12 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+s32 battle_unit_get_chocobo_mount_state(battle_stats_t* unit) {
+    if ((u32)(unit->job_id - JOB_ID_CHOCOBO) >= JOB_ID_CHOCOBO_FAMILY_COUNT)
+        return 0;
+    if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_UNMOUNTABLE) != 0)
+        return 0;
+    if (unit->mount_info != 0)
+        return 2;
+    return 1;
+}

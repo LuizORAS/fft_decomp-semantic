@@ -7,11 +7,11 @@ void battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x(void) {
 
     battle_formula_store_pa_and_y();
     battle_formula_apply_zodiac_compatibility();
-    damage = g_current_ability.xa * g_current_ability.ya;
+    damage = g_battle_action_current_ability.xa * g_battle_action_current_ability.ya;
     /* Cast-pointer stores: as struct members GCC sinks them past the
      * following scalar global loads; the target keeps source order. */
     g_battle_action_target_data->hp_damage = damage;
-    damage = damage / g_current_ability.range_data.x;
+    damage = damage / g_battle_action_current_ability.range_data.x;
     action = g_battle_action_attacker_data;
     action->hit = 1;
     action->hp_damage = damage;

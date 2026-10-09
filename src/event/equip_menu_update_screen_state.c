@@ -11,7 +11,7 @@ void equip_menu_update_screen_state(void) {
         if (battle_thread_is_running(5) == 0) {
             g_equip_command_menu.selected_index = 0;
             g_battle_menu_thread_menu_data = &g_equip_command_menu;
-            battle_thread_start(5, equip_menu_run_thread);
+            battle_thread_start(5, equip_menu_icon_list_thread);
             battle_thread_set_parameters(5, (s32)g_battle_menu_thread_menu_data, 0, 0);
             g_equip_thread_idle_stop_pending = 0;
             g_equip_menu_thread_running = 1;

@@ -31,11 +31,11 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 half_height;
     u8 color;
 
-    prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+    prim = (POLY_FT4*)g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
     if (g_battle_menu_status_screen_selected != 1) {
-        g_battle_gfx_selection_cursor_bob_timer += g_animation_speed;
+        g_battle_gfx_selection_cursor_bob_timer += g_main_system_animation_speed;
         if (g_battle_gfx_selection_cursor_bob_timer >= duration[g_battle_gfx_selection_cursor_bob_frame]) {
             g_battle_gfx_selection_cursor_bob_frame += 1;
             g_battle_gfx_selection_cursor_bob_timer = 0;

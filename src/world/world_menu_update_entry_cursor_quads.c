@@ -31,9 +31,9 @@ void world_menu_update_entry_cursor_quads(
             thread->task_words[0] = 0;
         }
         if (thread->task_words[1] != 0) {
-            y = world_lookup_thread_parameter_threshold_value(1);
+            y = world_menu_get_cursor_bob_offset(1);
         } else {
-            y = world_lookup_thread_parameter_threshold_value(0);
+            y = world_menu_get_cursor_bob_offset(0);
         }
         thread->task_words[0] += g_world_event_speed;
         x = -(cursor + 1) * 6;

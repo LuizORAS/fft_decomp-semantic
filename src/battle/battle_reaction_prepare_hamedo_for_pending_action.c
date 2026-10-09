@@ -29,7 +29,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
 
     unit = &g_battle_unit_stats[id];
     base = g_battle_unit_stats;
-    g_current_ability_hamedo_flag = 0;
+    g_battle_action_hamedo_flag = 0;
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
@@ -86,20 +86,20 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
     }
 
     g_battle_action_context = count;
-    main_util_copy_action_data(action, g_reaction_unit_action_data_16e);
+    main_util_copy_action_data(action, g_battle_action_saved_command);
     g_battle_current_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
     target->action_actor_id = tid;
     if (battle_action_store_counter_ability(target, 1, 0, 1) == 0 && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);
         *out_ability = g_battle_current_reaction_ability_id;
-        g_current_ability_hamedo_flag = count;
+        g_battle_action_hamedo_flag = count;
         if (unit->job_id == JOB_ID_MIME) {
             unit->equipment[3] = ITEM_ID_NONE;
             unit->equipment[5] = ITEM_ID_NONE;
         }
         return tid;
     }
-    main_util_copy_action_data(g_reaction_unit_action_data_16e, action);
+    main_util_copy_action_data(g_battle_action_saved_command, action);
     return -1;
 }

@@ -24,7 +24,7 @@ void battle_script_change_stats(const u8* parameters) {
             if (battle_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
-                    unit = battle_find_unit_data_pointer_for_entd_unit_id(
+                    unit = battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
                     if (battle_id >= 0) {
                         if (parameters[2] == 0) {

@@ -28,7 +28,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   check resolves the party unit once, before its loop, from the scoring loop's
   leftover (past-the-end) index, so it tests that one unit every pass.
 - `src/battle/battle_map_calculate_slope_height.c`,
-  `src/battle/battle_calculate_screen_z_from_input_coords.c`: an off-map point
+  `src/battle/battle_gfx_calculate_screen_z_from_input_coords.c`: an off-map point
   (a unit staged outside the map, its screen coordinates read unsigned) gets no
   tile, and the null tile is read from RAM address 0. The unit shadow, palette
   modulation and per-frame rotation code (`battle_gfx_draw_unit_shadow`,
@@ -78,7 +78,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   types index past the four equipment-category bytes into the first innate
   status byte; that adjacent byte controls their eligibility.
 - `src/event/jobstts_text_render_encoded_ids_to_image.c`,
-  `bunit_text_render_ids_into_image.c`, `equip_text_render_encoded_ids_to_image.c`
+  `bunit_text_render_encoded_ids_to_image.c`, `equip_text_render_encoded_ids_to_image.c`
   and `card_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
   its glyph counter (`glyph_index`, `col`) against the line width but never
   assigns it; the stale register stays below the width, so text never wraps.
@@ -102,7 +102,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `world_menu_scrolling_list_thread`: `SetSemiTrans(&frame, 1)` passes the
   address of the `frame` pointer, so the semi-transparency bit lands in a stack
   byte past the pointer and the sprite is unchanged.
-- `src/event/helpmenu_run_battle_help_menu.c` and its REQUIRE twin
+- `src/event/helpmenu_menu_run_battle_help.c` and its REQUIRE twin
   `src/event/helpmenu_menu_run_require_help.c`: the vertical cursor writes its
   shadow's coordinates through `vert_poly[2]`, past the two-entry
   `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
@@ -132,7 +132,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
   `cursor` when the list is empty; `world_menu_build_available_item_list`
   uses `selected` when no entry matches the current item;
-  `helpmenu_run_battle_help_menu` and `world_run_battle_help_menu` read
+  `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help` read
   `node`, `x` and `y` in the cursor loop when the text thread is already
   running on the first frame, and `navigation` when the unit view mode is
   not 1-4.
@@ -154,10 +154,10 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `g_battle_gfx_vram_slots[0..1]` for a free load marker and decompresses into
   that slot's image data, but writes the owner, marker and state of the
   caller's slot.
-- `require_party_find_join_candidates` searches the formation sprite groups
+- `require_party_save_battle_units_and_find_join_candidates` searches the formation sprite groups
   for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
   result.
-- `helpmenu_run_battle_help_menu` and `world_run_battle_help_menu`: the
+- `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help`: the
   `mode == 2` arm cannot run (the first arm takes modes 1 and 2); request
   kinds 4, 0x11, 0x12 and 0x17 call the close routine for an empty id and
   then start the text thread anyway, relying on close not returning.
@@ -196,8 +196,8 @@ written that way.
   id: step 0 passes `map_id`, still in `$a0`; step 11 passes whatever
   `main_sound_unload_current_scenario_music` left there.
 - `g_equip_menu_list_row_callbacks` holds `s32 (*)(s32)` entries, but slots 2
-  and 3 are `equip_item_build_row_icon_rect` and
-  `equip_item_build_row_graphic_descriptor`, which return record pointers.
+  and 3 are `equip_item_build_type_icon_source` and
+  `equip_menu_get_entry_item_icon_source`, which return record pointers.
 - `battle_unit_get_screen_data_ptr_by_misc_id` returns NULL for a missing
   unit, but its callers test for -1 and read through it. A teleport-out with
   removal (Wiegraf at the Fovoham windmill) fades the unit out while the
@@ -215,7 +215,7 @@ written that way.
   256-byte local array, but the ids are halfwords and an item tried on in the
   shop's fitting room carries flag bits above the low byte, so sorting the
   list then increments a byte far past the array.
-- `battle_get_misc_id`: for the active-turn selector 0x69 with no unit
+- `battle_script_get_misc_id`: for the active-turn selector 0x69 with no unit
   holding the turn, it falls back to ENTD units 1 and 2 and tests the Jump
   status of whatever the finder returned; with neither on the field that is
   NULL, so it reads kernel RAM at address 0x58.
@@ -269,7 +269,7 @@ written that way.
   is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
   length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).
 - `g_world_gfx_full_texture_window` is a `RECT`, but
-  `src/world/world_formation_build_view_primitives.c` reads its first 4 bytes
+  `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
@@ -288,7 +288,7 @@ translation unit. Share their types and constants through headers.
   E336/E461, E230/E481 and E015/E047 differ only in immediates.
 - BATTLE/WORLD pairs: scenario conditionals
   (`battle_script_run_scenario_conditions.c` /
-  `world_process_scenario_conditionals.c`), action-slot restrictions, the
+  `world_script_run_scenario_conditions.c`), action-slot restrictions, the
   portrait-flip toggle (instruction `0x37`), staged status, selected-tile data,
   and the event interpreters.
 - `src/wldcore/wldcore_menu_push_script_flag_01a4_detail_level.c` and
@@ -297,7 +297,7 @@ translation unit. Share their types and constants through headers.
 - `battle_map_blend_ambient_light_color.c` and
   `battle_map_blend_darkness_color.c` are one 1,032-byte function over
   different records.
-- `world_gfx_reset_record_texture_window{,_2,_3}.c` differ only in the `RECT`
+- `world_gfx_init_scaled_draw_area_packets{,_2,_3}.c` differ only in the `RECT`
   they install.
 - Overlays share load addresses, so an address match is not an identity
   match. Compare bytes: REQUIRE and EQUIP both have code at `0x801c2dcc`, and
@@ -310,7 +310,7 @@ translation unit. Share their types and constants through headers.
 - `psyq_gte_apply_rotation_ir`: writes saturated IR1–IR3 output words and returns its unchanged third argument.
 - `sprintf`: unsupported conversions terminate output, `%#p` prefixes `0p`, hexadecimal alternate form prefixes zero, and `%#.0o` with zero emits no digit.
 - JOBSTTS.OUT offset `0x0` and BUNIT.OUT offset `0x200` hold the literal `"%d"`
-  (`g_jobstts_text_decimal_format`, `g_bunit_text_decimal_format`) used by `src/event/jobstts_menu_script_draw_formatted_number.c` and
+  (`g_jobstts_text_decimal_format`, `g_bunit_text_decimal_format`) used by `src/event/jobstts_cmd_draw_formatted_number_handler.c` and
   `src/event/bunit_cmd_draw_right_aligned_number_handler.c`.
 - The game-options word packs its last five fields out of array order
   (`include/fft/menu.h`).
@@ -322,7 +322,7 @@ translation unit. Share their types and constants through headers.
   `+0x8d`, so Counter (`0x1ba`) wins.
 - `g_main_debug_display_enabled` is only ever cleared by retail code; the
   add-unit threads and unit-summary panels print debug output when it is set.
-- `src/event/helpmenu_run_battle_help_menu.c`: an earlier close arm catches
+- `src/event/helpmenu_menu_run_battle_help.c`: an earlier close arm catches
   help mode 2, so its group is unreachable.
 - `src/wldcore/wldcore_input_check_repeating_directional.c`: the arms test
   UP, DOWN, RIGHT, LEFT, R1, L1, but the counters sit in UP, DOWN, LEFT, RIGHT,

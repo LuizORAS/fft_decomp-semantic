@@ -30,7 +30,7 @@ s32 equip_menu_update_equipment(void) {
     if (g_equip_menu_substate == -1) {
         equip_panel_toggle_item_numeric_thread(0);
         equip_panel_toggle_equipment_threads(1);
-        equip_panel_toggle_numeric_thread(1);
+        equip_panel_toggle_numeric_editor_thread(1);
         equip_panel_toggle_unit_status_thread(1);
         g_equip_menu_ready = 0;
         g_equip_unit_banner_enabled = 1;
@@ -43,7 +43,7 @@ s32 equip_menu_update_equipment(void) {
     if (g_equip_menu_substate == 0) {
         g_equip_menu_substate = equip_menu_run_slot_item_browser();
     } else if (g_equip_menu_substate == 1) {
-        g_equip_menu_substate = equip_menu_run_item_rearrange_mode();
+        g_equip_menu_substate = equip_item_run_rearrange_mode();
     } else if (g_equip_menu_substate == 2) {
         g_equip_menu_substate = equip_menu_update_item_action_state();
     } else if (g_equip_menu_substate == 5) {
@@ -58,11 +58,11 @@ s32 equip_menu_update_equipment(void) {
         g_equip_input_page_scroll_disabled = 1;
     }
     override = 0;
-    if (g_event_mode != 0 || battle_thread_is_running(2) != 0) {
+    if (g_battle_menu_input_lock_mode != 0 || battle_thread_is_running(2) != 0) {
         override = 1;
     }
     equip_menu_dispatch_with_override((s32)g_equip_equipment_render_commands, input, override);
-    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_event_mode);
+    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_battle_menu_input_lock_mode);
     if (g_equip_menu_list_entry_count != 0) {
         item_id = g_equip_item_list_entries[g_equip_menu_selected_list_index];
         if (item_id < ITEM_ID_THROWABLE_FIRST) {

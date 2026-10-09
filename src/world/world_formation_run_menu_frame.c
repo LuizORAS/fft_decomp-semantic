@@ -113,7 +113,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     g_world_gfx_active_otag_entries = otag;
     g_world_sound_effect_id_to_play = -1;
     world_menu_draw_active_window_frames();
-    world_input_store_menu_state((const world_menu_input_state_t*)&g_world_formation_menu_new_buttons);
+    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_formation_menu_new_buttons);
     if (g_world_formation_menu_new_buttons != 0x100 && g_world_formation_menu_new_buttons != 0) {
         g_world_thread_change_cooldown = 5;
     }

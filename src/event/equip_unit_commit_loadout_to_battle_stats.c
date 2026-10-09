@@ -56,7 +56,7 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
     max = stats->max_mp;
     stats->mp = mp > max ? max : mp;
     /* The callee's parameter is the provisional 0x80-byte view of this 0x40-byte record. */
-    equip_unit_calculate_equipment_stat_bonuses((equip_stats_t*)&bonuses, g_equip_unit_data[0]->equipment);
+    equip_item_sum_equipment_stat_details((equip_stats_t*)&bonuses, g_equip_unit_data[0]->equipment);
     stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER] = bonuses.right_weapon_power;
     stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER] = bonuses.left_weapon_power;
     stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE] = bonuses.right_weapon_evade;

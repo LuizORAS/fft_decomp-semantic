@@ -5,7 +5,7 @@
 #include "psx/types.h"
 
 /* Provisional view of the 0x0E-byte record at 0x8013A364 (copied by
- * world_gfx_copy_screen_setup_in/out). The halfword at +0x0A is also read
+ * world_menu_copy_billboard_data_in/out). The halfword at +0x0A is also read
  * through the scalar alias g_world_unit_view_battle_id; the struct access is required here
  * because an in-struct load keeps its place after the preceding stores. */
 typedef struct world_screen_setup_c {
@@ -23,7 +23,7 @@ extern s16 g_world_text_typewriter_glyph_palette;
 
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
-#define NEXT() text = world_script_advance_cursor_with_repeat(&repeat, text, &saved)
+#define NEXT() text = world_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 /* Aborts (here and below) leave the nested text loops for the shared
    window close-and-release tail at `end`. */
@@ -113,11 +113,11 @@ void world_text_character_handling_thread(void) {
     rec.y_offset = thread->task_words[3];
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && rec.options == 0xC) {
         world_text_save_section_pointers();
-        world_text_init_format_section_pointers(g_open_text_section_offsets);
+        world_text_relocate_pointer_table(g_open_text_section_offsets);
     }
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 0) {
         world_text_save_section_pointers();
-        world_text_init_format_section_pointers(g_open_text_section_offsets);
+        world_text_relocate_pointer_table(g_open_text_section_offsets);
         if (thread->function_parameter_2 == 0x807) {
             i = world_menu_get_party_unit_name_id();
             if (i >= 0x2FF) {
@@ -210,7 +210,7 @@ void world_text_character_handling_thread(void) {
     }
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != 8) {
         center = rec.width >> 1;
-        value = world_get_misc_id(world_thread_get_current_parameter_3());
+        value = world_script_get_misc_id(world_thread_get_current_parameter_3());
         world_unit_project_misc_to_screen(value, g_world_text_speaker_screen_coords);
         cursor_x = center;
         rec.tail_offset = 0;
@@ -221,7 +221,7 @@ void world_text_character_handling_thread(void) {
             } else if (world_thread_get_current_parameter_3() == (u16)g_world_text_speaker_swap_unit_b) {
                 value = (u16)g_world_text_speaker_swap_unit_a;
             }
-            world_unit_project_misc_to_screen(world_get_misc_id(value), g_world_text_partner_screen_coords);
+            world_unit_project_misc_to_screen(world_script_get_misc_id(value), g_world_text_partner_screen_coords);
             if (g_world_text_speaker_screen_coords[1] < 0
                 || g_world_text_partner_screen_coords[1] < g_world_text_speaker_screen_coords[1]) {
                 rec.position = 2;
@@ -299,7 +299,7 @@ void world_text_character_handling_thread(void) {
     rec.text = world_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    world_gfx_alloc_texture_grid_rect(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         if (text[0] == TEXT_SET_PORTRAIT) {
             win->portrait_code = text[1];
@@ -753,7 +753,7 @@ void world_text_character_handling_thread(void) {
             NEXT();
         } else {
             substitution = &g_world_text_substitution_values[value_index];
-            value = world_text_adjust_value_for_event_code(code, *substitution);
+            value = world_text_resolve_format_string_id(code, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
@@ -855,8 +855,8 @@ end:
     g_world_menu_event_state_flag = 0;
     win->active = 0;
     world_menu_release_window_buffer_pair(win);
-    world_gfx_free_texture_grid_rect(&rec.rect);
-    world_menu_clear_matching_state_entry();
+    world_gfx_free_tpage7_vram(&rec.rect);
+    world_menu_release_current_thread_slot();
     YIELD_OR_INPUT();
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
         g_world_thread_task_active = 0;

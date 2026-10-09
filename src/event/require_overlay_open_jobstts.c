@@ -4,7 +4,7 @@
 void require_overlay_open_jobstts(void) {
     void* allocation;
 
-    battle_action_copy_active_turn_data_from(
+    battle_menu_copy_billboard_data_in(
         g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
     while (1) {
         allocation = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x1f000);
@@ -13,7 +13,7 @@ void require_overlay_open_jobstts(void) {
         }
         battle_thread_yield();
         if (g_font_print_enabled != 0) {
-            FntPrint(g_jobstts_text_wait_for_allocation_message);
+            FntPrint(g_require_text_wait_for_file_allocation_message);
         }
     }
     battle_menu_request_open_companion_executable(7);

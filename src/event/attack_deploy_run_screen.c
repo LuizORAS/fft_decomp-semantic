@@ -62,7 +62,7 @@ void attack_deploy_run_screen(void) {
     }
     battle_copy_bytes(g_attack_deploy_cursor_palette_cycle, g_attack_deploy_cursor_palette_source, 0x40);
     attack_deploy_reset_tables();
-    attack_out_prepare_valid_deployment_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
+    attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD) != 0) {
         for (row = 0; row < 5; row++) {
             for (column = 0; column < 5; column++) {
@@ -234,25 +234,25 @@ ramza_placed:
             if (*input & PSX_PAD_LEFT) {
                 if (g_attack_deploy_cursor_column[cursor] < 4) {
                     g_attack_deploy_cursor_column[cursor]++;
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             }
             if (*input & PSX_PAD_RIGHT) {
                 if (g_attack_deploy_cursor_column[cursor] > 0) {
                     g_attack_deploy_cursor_column[cursor]--;
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             }
             if (*input & PSX_PAD_UP) {
                 if (g_attack_deploy_cursor_row[cursor] < 4) {
                     g_attack_deploy_cursor_row[cursor]++;
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             }
             if (*input & PSX_PAD_DOWN) {
                 if (g_attack_deploy_cursor_row[cursor] > 0) {
                     g_attack_deploy_cursor_row[cursor]--;
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             }
             column = g_attack_deploy_cursor_column[cursor];
@@ -295,13 +295,13 @@ ramza_placed:
             }
             if (*input & PSX_PAD_START) {
                 if (g_attack_deploy_deployed_unit_count == 0) {
-                    g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
                     g_attack_deploy_menu_entries[2].text_id = 0x900b;
                     battle_thread_start(13, battle_menu_icon_linked_entry_thread);
                     battle_thread_set_parameters(13, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
                     battle_thread_wait_until_inactive(13);
                 } else {
-                    g_sound_effect_id_to_play = 0x85;
+                    g_battle_sound_pending_sfx_id = 0x85;
                     g_attack_panel_status_animation[4] = 7;
                     if (battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT) - 1
                             != g_attack_deploy_current_squad
@@ -344,7 +344,7 @@ ramza_placed:
                 }
             }
             if ((*input & PSX_PAD_CROSS) && g_attack_deploy_active_cursor == 0 && g_attack_deploy_current_squad != 0) {
-                g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 g_attack_deploy_menu_state = 5;
                 for (i = 0; i < 5; i++) {
                     if (g_attack_panel_status_animation[i] < 2) {
@@ -373,28 +373,28 @@ ramza_placed:
                     if (g_attack_deploy_roster_id_by_tile[row][column] == 0xff) {
                         if (attack_deploy_has_roster_id_on_tiles(g_attack_deploy_selected_roster_index) == 0) {
                             if (g_attack_deploy_deployed_unit_count < g_attack_deploy_current_squad_data->unit_limit) {
-                                g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                                g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                                 g_attack_deploy_roster_id_by_tile[row][column] = g_attack_deploy_selected_roster_index;
                                 g_attack_deploy_deployed_unit_count++;
                             } else {
-                                g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+                                g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
                                 g_attack_deploy_menu_entries[2].text_id = 0x900c;
                                 battle_thread_start(13, battle_menu_icon_linked_entry_thread);
                                 battle_thread_set_parameters(13, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
                                 battle_thread_wait_until_inactive(13);
                             }
                         } else {
-                            g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                            g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                             attack_deploy_swap_roster_unit_tile(column, row, g_attack_deploy_selected_roster_index);
                         }
                     } else {
-                        g_sound_effect_id_to_play = 0x3c;
+                        g_battle_sound_pending_sfx_id = 0x3c;
                         g_attack_deploy_active_cursor = 1;
                         g_attack_deploy_cursor_column[1] = g_attack_deploy_cursor_column[0];
                         g_attack_deploy_cursor_row[1] = g_attack_deploy_cursor_row[0];
                     }
                 } else {
-                    g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
                 }
             } else if (g_attack_deploy_active_cursor == 1) {
                 column = g_attack_deploy_cursor_column[cursor];
@@ -405,7 +405,7 @@ ramza_placed:
                             && g_attack_deploy_cursor_row[0] == g_attack_deploy_cursor_row[1]) {
                             if (g_attack_deploy_roster_id_by_tile[row][column] == 0
                                 && battle_script_get_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD) == 1) {
-                                g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+                                g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
                                 g_attack_deploy_menu_entries[2].text_id = 0x900d;
                                 battle_thread_start(13, battle_menu_icon_linked_entry_thread);
                                 battle_thread_set_parameters(13, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
@@ -417,7 +417,7 @@ ramza_placed:
                                 != g_attack_deploy_selected_roster_index) {
                                 if (attack_deploy_has_roster_id_on_tiles(g_attack_deploy_selected_roster_index) != 0) {
                                     g_attack_deploy_active_cursor = 0;
-                                    g_sound_effect_id_to_play = MAIN_SFX_CAMERA_ZOOM_OUT;
+                                    g_battle_sound_pending_sfx_id = MAIN_SFX_CAMERA_ZOOM_OUT;
                                     attack_deploy_remove_roster_unit_from_tiles(g_attack_deploy_selected_roster_index);
                                     g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                                     g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
@@ -425,7 +425,7 @@ ramza_placed:
                                     g_attack_deploy_roster_id_by_tile[row][column]
                                         = g_attack_deploy_selected_roster_index;
                                 } else {
-                                    g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                                    g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                                     g_attack_deploy_active_cursor = 0;
                                     g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                                     g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
@@ -433,7 +433,7 @@ ramza_placed:
                                         = g_attack_deploy_selected_roster_index;
                                 }
                             } else {
-                                g_sound_effect_id_to_play = MAIN_SFX_CAMERA_ZOOM_OUT;
+                                g_battle_sound_pending_sfx_id = MAIN_SFX_CAMERA_ZOOM_OUT;
                                 g_attack_deploy_active_cursor = 0;
                                 g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                                 g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
@@ -444,22 +444,22 @@ ramza_placed:
                             attack_deploy_swap_roster_unit_tile(column, row,
                                 g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[0]]
                                                                  [g_attack_deploy_cursor_column[0]]);
-                            g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                            g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                             g_attack_deploy_active_cursor = 0;
                             g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                             g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
                         }
                     } else {
-                        g_sound_effect_id_to_play = MAIN_SFX_INVALID;
+                        g_battle_sound_pending_sfx_id = MAIN_SFX_INVALID;
                     }
                 } else if (*input & PSX_PAD_CROSS) {
                     g_attack_deploy_active_cursor = 0;
-                    g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 }
             }
             attack_deploy_handle_roster_navigation_input();
             if (*input & PSX_PAD_SQUARE) {
-                g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 battle_script_set_event_speed(2);
                 if (g_attack_panel_status_animation[2] < 2) {
                     g_attack_panel_status_animation[2] = 1;
@@ -484,7 +484,7 @@ ramza_placed:
                     }
                     attack_deploy_handle_roster_navigation_input();
                 } while (!(*input & PSX_PAD_CROSS));
-                g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 battle_thread_set_parameters(12, 0, 0, 1);
                 battle_thread_set_parameters(9, 0, 0, 1);
                 battle_thread_wait_until_inactive(12);
@@ -496,7 +496,7 @@ ramza_placed:
                                                      [g_attack_deploy_cursor_column[g_attack_deploy_active_cursor]]
                     != 0xff) {
                     g_attack_panel_status_animation[2] = 7;
-                    g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                    g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                     if (battle_thread_is_running(4) == 0) {
                         g_attack_deploy_pending_roster_index = g_attack_deploy_roster_id_by_tile
                             [g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]

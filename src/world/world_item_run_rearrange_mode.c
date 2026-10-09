@@ -44,7 +44,7 @@ s32 world_item_run_rearrange_mode(void) {
         item = g_world_menu_entry_ids[picked];
         g_world_menu_entry_ids[picked] = g_world_menu_entry_ids[cursor];
         g_world_menu_entry_ids[cursor] = item;
-        world_item_finalize_sorted_list(g_world_item_menu_category, g_world_menu_entry_ids);
+        world_item_store_category_list(g_world_item_menu_category, g_world_menu_entry_ids);
         world_menu_init_scrollable_list_core(
             g_world_menu_entry_ids, g_world_menu_cursor_position, g_world_text_item_names);
         world_menu_set_window_scale_step(10);

@@ -8,5 +8,5 @@ void open_movie_init_and_stream_opening(s32 skip_movie) {
     open_gfx_init_screen_environments(1);
     open_gfx_init_render_buffers();
     open_input_init_directional_state();
-    open_movie_start_fftst_or_alternate_controller(skip_movie);
+    open_movie_start_fftst_or_title_menu(skip_movie);
 }

@@ -16,9 +16,9 @@ void world_menu_run_numeric_display_panel_thread(void) {
     record = g_world_numeric_display_panel_records;
     records = record;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
-    world_gfx_set_image_draw_mode(&record->mode0, 0);
-    world_gfx_set_image_draw_mode(&record->mode1, 2);
-    world_gfx_reset_record_texture_window(&record->draw_areas);
+    world_gfx_set_draw_mode_for_texture_page(&record->mode0, 0);
+    world_gfx_set_draw_mode_for_texture_page(&record->mode1, 2);
+    world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = world_menu_alloc_ui_buffer(0x918);
     world_clear_menu_render_buffer(buffer, 0x918);
     g_world_menu_text_state.stride = 0x14;
@@ -47,8 +47,8 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_script_copy_bytes(&record[1], record, 0x1AC);
     record[0].palette = &g_world_numeric_display_palettes[0].primitives;
     record[1].palette = &g_world_numeric_display_palettes[1].primitives;
-    world_menu_build_line_box(&g_world_numeric_display_frame_rect, record[0].palette);
-    world_menu_build_line_box(&g_world_numeric_display_frame_rect, record[1].palette);
+    world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[0].palette);
+    world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[1].palette);
     for (frame = 0;; frame++) {
         world_thread_yield();
         record = &records[frame & 1];
@@ -83,7 +83,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
         world_gfx_draw_or_append_gpu_primitive(&record->mode1);
-        world_gfx_submit_primitive_group((world_primitive_group_t*)record->palette);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)record->palette);
         world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
     world_thread_yield();

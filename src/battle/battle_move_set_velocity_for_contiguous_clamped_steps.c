@@ -80,7 +80,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
     direction.vz = end_y - start_y;
     direction.vy = end_z - start_z;
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_main_system_animation_speed;
+    unit->velocity.vy = unit->velocity.vy * g_main_system_animation_speed;
+    unit->velocity.vz = unit->velocity.vz * g_main_system_animation_speed;
 }

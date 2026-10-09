@@ -38,7 +38,7 @@ s32 require_select_party_unit_to_remove(void) {
     s16* portrait_destination;
     RECT* palette_rect;
 
-    require_prepare_party_portrait_textures();
+    require_gfx_prepare_party_portrait_textures();
     text = g_battle_text_section_pointers[8];
     require_panel_set_transition_value(1);
     {
@@ -70,11 +70,11 @@ s32 require_select_party_unit_to_remove(void) {
     for (party_index = 0; party_index < 0x14; party_index++) {
         if (g_require_party_removable_flags[party_index] == 0)
             continue;
-        require_load_party_unit_into_editor(0, party_index);
+        require_editor_load_party_unit(0, party_index);
         selected_party_index = party_index;
         break;
     }
-    battle_action_copy_active_turn_data_from(
+    battle_menu_copy_billboard_data_in(
         g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
     g_require_status_display_redraw_request = 1;
     g_require_numeric_editor_redraw_request = 1;
@@ -155,13 +155,13 @@ s32 require_select_party_unit_to_remove(void) {
                     selected_party_index = 0;
                 if (g_require_party_removable_flags[selected_party_index] == 0)
                     goto next_party;
-                g_sound_effect_id_to_play = MAIN_SFX_PAGE_SWITCH;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
                 g_require_status_display_redraw_request = should_restore;
                 g_require_numeric_editor_redraw_request = should_restore;
                 g_require_character_status_redraw_request = should_restore;
-                require_load_party_unit_into_editor(1, selected_party_index);
+                require_editor_load_party_unit(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_copy_billboard_data_in(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             } else if (*g_require_input_controller & PSX_PAD_L1) {
                 g_require_panel_status_animation[0] = 7;
@@ -170,13 +170,13 @@ s32 require_select_party_unit_to_remove(void) {
                     if (selected_party_index == -1)
                         selected_party_index = 0x13;
                 } while (g_require_party_removable_flags[selected_party_index] == 0);
-                g_sound_effect_id_to_play = MAIN_SFX_PAGE_SWITCH;
+                g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
                 g_require_status_display_redraw_request = 2;
                 g_require_numeric_editor_redraw_request = should_restore;
                 g_require_character_status_redraw_request = should_restore;
-                require_load_party_unit_into_editor(1, selected_party_index);
+                require_editor_load_party_unit(1, selected_party_index);
                 REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_action_copy_active_turn_data_from(
+                battle_menu_copy_billboard_data_in(
                     g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
             }
             if (*g_require_input_controller & PSX_PAD_CIRCLE)
@@ -188,8 +188,7 @@ s32 require_select_party_unit_to_remove(void) {
 
             for (party_index = 0; party_index < 0x15; party_index++) {
                 battle_unit = battle_unit_get_stats_from_battle_id(party_index);
-                selected_battle_unit
-                    = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &message_id);
+                selected_battle_unit = battle_unit_find_stats_by_entd_unit_id(battle_unit->unit_id, &message_id);
                 if (message_id >= 0 && party_index == message_id
                     && battle_unit_get_misc_id_by_battle_id(party_index) != -1)
                     break;

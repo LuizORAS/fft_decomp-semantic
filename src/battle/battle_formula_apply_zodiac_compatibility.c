@@ -64,7 +64,7 @@ void battle_formula_apply_zodiac_compatibility(void) {
     }
 
     {
-        s16* slot = (s16*)&g_current_ability.xa;
+        s16* slot = (s16*)&g_battle_action_current_ability.xa;
 
         xa = *slot;
         product = xa * 25;
@@ -85,7 +85,7 @@ void battle_formula_apply_zodiac_compatibility(void) {
     }
 
     {
-        s16* slot = (s16*)&g_current_ability.xa;
+        s16* slot = (s16*)&g_battle_action_current_ability.xa;
 
         if (*slot <= 0) {
             *slot = 1;

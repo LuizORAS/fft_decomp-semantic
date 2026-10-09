@@ -28,7 +28,7 @@ void bunit_menu_update_unit_browser(void) {
                 bcopy(g_bunit_unit_data[(s16)g_bunit_unit_comparison_index], &g_bunit_panel_comparison_billboard, 0x22);
                 bcopy(&g_bunit_unit_data[(s16)g_bunit_unit_comparison_index]->entd_slot_22,
                     g_bunit_panel_comparison_unit_data, 0xE);
-                bunit_thread_toggle_7(1);
+                bunit_panel_toggle_comparison_status_thread(1);
                 g_bunit_status_banner_at_bottom_latch = g_bunit_status_banner_at_bottom;
                 if (g_bunit_status_banner_slide_step < 0) {
                     g_bunit_status_banner_slide_step += 0x10;
@@ -80,7 +80,7 @@ void bunit_menu_update_unit_browser(void) {
     if (g_bunit_status_banner_enabled != 0 || g_bunit_unit_browse_enabled != 0) {
         enable = 1;
     }
-    bunit_thread_toggle_8(enable);
+    bunit_panel_toggle_unit_status_thread(enable);
     slide = g_bunit_status_banner_slide_step;
     if (slide < 0) {
         g_bunit_status_display_offset_y = slide * 8 + 0x108;

@@ -23,7 +23,7 @@ void battle_formula_apply_poach_and_train(void) {
         return;
     }
     if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> 4] != 0)
-        && (g_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
+        && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         return;
     }
     if (*(u16*)&target->status_sets.current[0]
@@ -42,7 +42,7 @@ void battle_formula_apply_poach_and_train(void) {
         battle_action_clear_knockback_flag();
         battle_formula_clear_nullify_flags();
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_POACH;
-        g_current_ability.post_formula_flag = 6;
+        g_battle_action_current_ability.post_formula_flag = 6;
         return;
     }
     if ((remaining > 0) && ((g_battle_action_target->max_hp / 5) >= remaining)
@@ -51,7 +51,7 @@ void battle_formula_apply_poach_and_train(void) {
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
             g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-            g_current_ability.post_formula_flag = 9;
+            g_battle_action_current_ability.post_formula_flag = 9;
         }
     }
 }

@@ -28,9 +28,9 @@ void battle_menu_fade_out_thread(void) {
     }
 
     battle_menu_clear_option_menu_open();
-    g_option_menu_submenu_state = 0;
+    g_battle_menu_suspend_state = 0;
     g_battle_screen_fade = 0;
     g_battle_menu_transition_state = 0;
-    battle_menu_store_unit_names_and_event_block_data(2, g_battle_active_turn_unit.battle_id, 0xff);
+    battle_unit_start_view_thread(2, g_battle_active_turn_unit.battle_id, 0xff);
     battle_thread_exit_current();
 }

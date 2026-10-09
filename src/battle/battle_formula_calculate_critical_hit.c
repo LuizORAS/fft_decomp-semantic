@@ -8,7 +8,7 @@ void battle_formula_calculate_critical_hit(void) {
     if (battle_formula_roll_random_at_least(0x64, 4) == 0) {
         g_battle_action_target_data->critical = 1;
         rnd = battle_formula_get_random_0_7fff();
-        xa = (s16*)&g_current_ability.xa;
+        xa = (s16*)&g_battle_action_current_ability.xa;
         base_xa = *xa;
         *xa = base_xa + (rnd * base_xa) / 32768;
         battle_formula_calculate_knockback();

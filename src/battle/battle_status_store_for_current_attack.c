@@ -20,7 +20,7 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
     s32 blocked;
     u8 previous;
 
-    g_current_ability.target_id = unit_id;
+    g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
     for (i = 0; i < BATTLE_STATUS_COUNT; i++) {

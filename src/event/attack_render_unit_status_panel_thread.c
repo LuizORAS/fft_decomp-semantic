@@ -74,8 +74,8 @@ void attack_render_unit_status_panel_thread(void) {
         value_pixels = g_attack_panel_selected_large_number_image;
         name_pixels = g_attack_panel_selected_name_image;
         number_entries = g_attack_panel_selected_numeric_entries;
-        state = &g_attack_editor_status_gauges;
-        unit_info = &g_attack_active_unit_data;
+        state = &g_attack_panel_selected_billboard;
+        unit_info = &g_attack_panel_selected_unit_data;
         transition = &g_attack_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
@@ -172,7 +172,7 @@ void attack_render_unit_status_panel_thread(void) {
         }
         highlight = 0;
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
-            highlight = g_event_mode != 0;
+            highlight = g_battle_menu_input_lock_mode != 0;
         }
         if (thread->highlight != 0) {
             highlight = 1;

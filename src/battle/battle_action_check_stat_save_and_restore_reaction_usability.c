@@ -9,8 +9,8 @@ void battle_action_check_stat_save_and_restore_reaction_usability(void) {
     battle_stats_t* target;
     u8 reaction_flags;
 
-    if (g_current_ability.formula == ABILITY_FORMULA_NO_STAT_SAVE_REACTION
-        || battle_action_can_unit_react_1(g_battle_action_target) != 0) {
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_NO_STAT_SAVE_REACTION
+        || battle_action_is_reaction_blocked(g_battle_action_target) != 0) {
         return;
     }
     target = g_battle_action_target;

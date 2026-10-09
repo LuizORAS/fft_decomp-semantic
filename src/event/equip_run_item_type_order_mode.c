@@ -17,11 +17,11 @@ s32 equip_run_item_type_order_mode(void) {
         g_battle_text_section_pointers[25] = g_equip_item_type_order_names;
         g_equip_type_order_menu_hand_body.selected_index = 0;
         g_equip_type_order_menu_other_slots.selected_index = 0;
-        equip_item_expand_type_order_list(g_equip_selected_slot + 1, g_equip_item_type_order);
+        equip_menu_load_sort_key_list(g_equip_selected_slot + 1, g_equip_item_type_order);
         for (i = 0; (names[i] = g_equip_item_type_order[i]) != -1; i++) {
             names[i] += 3;
         }
-        equip_text_concatenate_ids(g_equip_text_data, g_equip_item_type_order_names, names, 1);
+        equip_text_concatenate_entries(g_equip_text_data, g_equip_item_type_order_names, names, 1);
         g_equip_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         g_equip_type_order_ready = 1;
     }
@@ -50,11 +50,11 @@ s32 equip_run_item_type_order_mode(void) {
         }
         g_equip_item_type_order[0] = first;
         equip_menu_reset_selection_indices();
-        equip_item_store_type_order_list(g_equip_selected_slot + 1, g_equip_item_type_order);
+        equip_menu_store_sort_key_list(g_equip_selected_slot + 1, g_equip_item_type_order);
         for (i = 0; (names[i] = g_equip_item_type_order[i]) != -1; i++) {
             names[i] += 3;
         }
-        equip_text_concatenate_ids(g_equip_text_data, g_equip_item_type_order_names, names, 1);
+        equip_text_concatenate_entries(g_equip_text_data, g_equip_item_type_order_names, names, 1);
         category = g_equip_selected_slot;
         g_equip_menu_text_redraw_flag = 1;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 0x81,

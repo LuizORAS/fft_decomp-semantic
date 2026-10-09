@@ -1,0 +1,8 @@
+#include "fft/wldcore.h"
+#include "psx/types.h"
+
+/* Stage the location ID for a deferred EraseLocation request. */
+void wldcore_opcode_map_request_erase_location(void) {
+    g_wldcore_script_flags |= WLDCORE_SCRIPT_REQUEST_ERASE_LOCATION;
+    g_wldcore_script_state.args[0] = g_wldcore_script_state.data[g_wldcore_script_state.ip];
+}

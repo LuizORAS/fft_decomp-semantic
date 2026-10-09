@@ -24,6 +24,6 @@ u8* world_menu_script_draw_tile(u8* cmd) {
     rect.h = cmd[5];
     /* g_world_menu_semi_trans is an s16 (its writer stores a halfword); this site reads its
      * low byte, which a (u8) cast would render as lh + andi. */
-    world_gfx_append_tile_to_otag(&rect, cmd + 6, *(u8*)&g_world_menu_semi_trans, g_world_menu_draw_priority);
+    world_gfx_enqueue_tile(&rect, cmd + 6, *(u8*)&g_world_menu_semi_trans, g_world_menu_draw_priority);
     return cmd + cmd[1];
 }

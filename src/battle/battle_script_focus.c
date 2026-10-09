@@ -33,8 +33,8 @@ void battle_script_focus(u8* parameters) {
     parameters++;
     unit_a = first;
     unit_b = second;
-    first = battle_get_misc_id(unit_a);
-    second = battle_get_misc_id(unit_b);
+    first = battle_script_get_misc_id(unit_a);
+    second = battle_script_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
         parameters[-1] = 0xc0;
         main_system_handle_malloc_exception(7, 0);

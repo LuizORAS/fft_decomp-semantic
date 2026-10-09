@@ -17,7 +17,7 @@ typedef struct equip_number_glyph {
 /* Render command that draws the decimal value returned by one of the list-row
  * callbacks as a row of digit tiles.
  *
- * Twin of JOBSTTS jobstts_menu_script_draw_formatted_number, extended with a
+ * Twin of JOBSTTS jobstts_cmd_draw_formatted_number_handler, extended with a
  * leading minus sign and three glyph styles (data[2]); style 2 uses the
  * two-row digit strip with its own CLUT. `negative` is s16: the target copies
  * the promoted halfword into a scratch register before each test. Clearing it

@@ -19,10 +19,10 @@ void battle_action_store_used_weapon(battle_action_used_weapon_context_t* action
     u8 weapon;
     s16 ability_id;
 
-    if (g_current_ability.strike_counter == 0) {
-        weapon = g_current_ability.primary_weapon_id;
+    if (g_battle_action_current_ability.strike_counter == 0) {
+        weapon = g_battle_action_current_ability.primary_weapon_id;
     } else {
-        weapon = g_current_ability.secondary_weapon_id;
+        weapon = g_battle_action_current_ability.secondary_weapon_id;
     }
     switch (g_main_action_menu_types_by_skillset[action->last_skillset_id]) {
     case ACTION_MENU_TYPE_DEFAULT:
@@ -50,5 +50,5 @@ void battle_action_store_used_weapon(battle_action_used_weapon_context_t* action
     if (weapon == ITEM_ID_NONE) {
         weapon = ITEM_ID_NOTHING;
     }
-    g_current_ability.weapon_id = weapon;
+    g_battle_action_current_ability.weapon_id = weapon;
 }

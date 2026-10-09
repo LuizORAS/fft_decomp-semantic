@@ -14,7 +14,7 @@ void battle_gfx_append_unit_graphics_load_descriptor(map_x, map_y, map_level, ma
     u32 flags;
 /* clang-format on */
 {
-    volatile s32* load_count = &g_unit_graphics_load_count;
+    volatile s32* load_count = &g_main_gfx_unit_graphics_load_count;
     s32 count;
 
     g_unit_graphics_load_descriptors[*load_count].map_x = map_x;

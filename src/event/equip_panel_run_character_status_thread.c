@@ -5,7 +5,7 @@
 #define FRAME_RECT g_equip_character_status_frame_rect
 
 /* Thread task 0x3b: the combined status panel for the selected unit. REQUIRE
- * twin of bunit_panel_run_character_status_thread. */
+ * twin of bunit_menu_equipment_and_ability_panel_thread. */
 void equip_panel_run_character_status_thread(void) {
     battle_menu_status_panel_frame_config_t* thread;
     battle_menu_status_panel_buffer_t* screen;
@@ -131,7 +131,7 @@ void equip_panel_run_character_status_thread(void) {
             battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i], g_equip_panel_item_icon_texture,
                 (const battle_image_location_t*)FRAME_RECT, &g_equip_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
-                battle_get_item_graphic_data(&screen->sprites[19 + i], (s16)state->equipment[i]);
+                battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
                 ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
             }
@@ -150,7 +150,7 @@ void equip_panel_run_character_status_thread(void) {
         screen->draw_offsets[1].y = g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
         equip_panel_set_primitive_colors(screen, thread);
-        equip_gfx_apply_menu_palette_for_mode(&screen->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&screen->numeric_frame, (s32*)thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }

@@ -66,7 +66,7 @@ void world_build_at_list_2(void) {
     window.y_screen_offset = 0xC;
     window.rect.w = entry->window_width - 0x12;
     window.rect.h = entry->window_height - 0x1A;
-    world_gfx_set_image_draw_mode(&page->icon_mode, 0);
+    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
     texture_window.x = 0;
     texture_window.y = (u8)entry->vram_y;
     texture_window.w = 0x100;
@@ -78,7 +78,7 @@ void world_build_at_list_2(void) {
         world_menu_build_icon_record(
             &image_rect, (world_menu_icon_thread_param_t*)entry, &g_world_text_list_pages[i].icons);
     }
-    world_gfx_reset_record_texture_window(&page->draw_areas);
+    world_gfx_init_scaled_draw_area_packets(&page->draw_areas);
     SetDrawMode(
         &page->text_mode, 1, 0, GetTPage(0, 0, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
@@ -284,7 +284,7 @@ void world_build_at_list_2(void) {
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->draw_areas, &entry->window_x, i, g_main_gfx_display_buffer_index);
-        world_menu_select_task_icon_tile_2(page->icons.icons[0]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         if ((s16)entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
         }

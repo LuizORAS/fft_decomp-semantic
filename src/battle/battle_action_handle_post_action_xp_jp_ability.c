@@ -6,7 +6,7 @@ void battle_action_handle_post_action_xp_jp_ability(void) {
     battle_stats_t* stats;
 
     unit = battle_unit_get_source_misc_data();
-    battle_unit_sync_all_rider_mount_positions();
+    battle_unit_restore_all_facings_after_attack();
     if (unit != 0) {
         stats = unit->battle_data;
         if (stats != 0 && battle_unit_apply_action_rewards(stats->misc_unit_id, &unit->action_rewards) == -1) {

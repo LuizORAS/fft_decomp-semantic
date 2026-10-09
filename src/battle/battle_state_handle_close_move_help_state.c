@@ -20,13 +20,13 @@ void battle_state_handle_close_move_help_state(void) {
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (source->team_flags & 8) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        buttons = g_controller_input_pressed;
+        buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = battle_move_build_path_to_tile(
                 casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);

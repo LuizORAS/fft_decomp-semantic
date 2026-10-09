@@ -25,10 +25,10 @@ s32 equip_menu_run_slot_item_browser(void) {
             g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);
-        g_equip_menu_list_row_callbacks[0] = equip_item_get_available_with_equip_flag;
-        g_equip_menu_list_row_callbacks[1] = equip_item_get_total_with_equip_flag;
-        g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_row_icon_rect;
-        g_equip_menu_list_row_callbacks[3] = (equip_row_callback_t)equip_item_build_row_graphic_descriptor;
+        g_equip_menu_list_row_callbacks[0] = equip_menu_get_entry_item_equipped_count;
+        g_equip_menu_list_row_callbacks[1] = equip_menu_get_entry_item_count;
+        g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_type_icon_source;
+        g_equip_menu_list_row_callbacks[3] = (equip_row_callback_t)equip_menu_get_entry_item_icon_source;
         g_equip_menu_list_row_callbacks[4] = equip_menu_get_preview_hp_bonus_display;
         g_equip_menu_list_row_callbacks[5] = equip_menu_get_preview_mp_bonus_display;
         g_equip_menu_list_row_callbacks[6] = equip_menu_get_preview_hp_bonus;

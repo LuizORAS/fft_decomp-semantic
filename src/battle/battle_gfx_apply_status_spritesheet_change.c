@@ -38,8 +38,8 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
                 unit->saved_shp_data = unit->shp_data;
                 unit->saved_seq_data = unit->seq_data;
             }
-            unit->shp_data = battle_gfx_get_spritesheet_shp_data_address(spritesheet_id);
-            unit->seq_data = battle_gfx_get_spritesheet_seq_data_address(spritesheet_id);
+            unit->shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(spritesheet_id);
+            unit->seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(spritesheet_id);
             unit->spritesheet_id = spritesheet_id;
             battle_gfx_tint_unit_palette_for_weather_and_tile(unit, tile_effect_level, 1);
             battle_unit_set_animation_based_on_status(unit);

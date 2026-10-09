@@ -40,7 +40,7 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
 
     parameters = (u8*)parameter_address;
     mode = use_speed;
-    misc_id = battle_get_misc_id(battle_script_load_halfword(parameters));
+    misc_id = battle_script_get_misc_id(battle_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }

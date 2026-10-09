@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_unit_set_specific_animation_value_on_battle_init. */
+/* WORLD twin of battle_unit_set_animation. */
 void world_unit_set_animation(s32 misc_id, u32 value) {
     s32 battle_id;
     battle_stats_t* stats;

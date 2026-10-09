@@ -13,7 +13,7 @@ extern world_menu_quad_page_t g_battle_menu_height_display_pages[2];
  * battle_menu_build_quad_pieces) every frame and, when its depth is
  * non-zero, renders it as a one-digit number into the icon sprite. Runs
  * until the third thread parameter is set. BATTLE twin of
- * world_map_draw_selected_tile_info_thread. */
+ * world_menu_selected_tile_info_display_thread. */
 void battle_menu_selected_tile_info_display_thread(void) {
     RECT rect;
     u8 buffer[0x100];

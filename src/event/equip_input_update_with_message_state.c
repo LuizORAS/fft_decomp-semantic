@@ -40,7 +40,7 @@ void equip_input_update_with_message_state(void) {
     }
     if (running == 0) {
         g_equip_text_message_thread_active = 0;
-        g_event_mode = 0;
+        g_battle_menu_input_lock_mode = 0;
         g_equip_sound_suppress_queued = 0;
     }
     if (g_equip_text_thread_running_state == 1) {

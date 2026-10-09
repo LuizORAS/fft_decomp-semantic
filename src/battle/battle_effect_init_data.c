@@ -17,7 +17,7 @@ s32 battle_effect_init_data(void) {
     s32 byte_length;
     u8* destination;
 
-    destination = g_event_overlay_load_address + 0x3500;
+    destination = g_main_heap_companion_overlay_load_address + 0x3500;
     if (g_ability_effect_id >= 0) {
         switch (g_effect_load_state) {
         case 0:

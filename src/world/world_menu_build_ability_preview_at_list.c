@@ -65,7 +65,7 @@ void world_menu_build_ability_preview_at_list(void) {
     const u16* at_table;
 
     at_table = (const u16*)g_battle_ai_workspace_ptr;
-    work = (world_menu_at_list_work_t*)g_event_overlay_load_address;
+    work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_world_menu_thread_menu_data[52].select_text_table = 0x13;
     g_world_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
     text_id = at_table[g_world_menu_thread_menu_data[3].selected_index];

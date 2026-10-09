@@ -9,7 +9,7 @@ void battle_menu_dispatch_idle_action_menu(void) {
         return;
     }
     g_battle_casting_unit_id = misc->unit_id;
-    if (g_battle_status_menu_open == 0 && misc->unit_id == g_battle_casting_misc_id) {
+    if (g_battle_status_menu_open == 0 && misc->unit_id == g_battle_unit_source_misc_id) {
         if ((misc->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
             battle_menu_open_active_unit_idle_action_menu();
         } else {

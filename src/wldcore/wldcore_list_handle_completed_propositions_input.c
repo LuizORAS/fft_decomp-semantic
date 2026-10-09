@@ -33,7 +33,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
     if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_list_completed_propositions_clear_result(values);
-        wldcore_return_from_job_determinations(values[g_wldcore_window_panel_render_state.selected_index + 13]);
+        wldcore_proposition_prepare_report(values[g_wldcore_window_panel_render_state.selected_index + 13]);
         wldcore_list_store_cursor_state(4);
         g_world_text_substitution_values[0]
             = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];

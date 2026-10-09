@@ -29,7 +29,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
                 unit->job_levels[selected / UNIT_JOBS_PER_LEVEL_BYTE] = levels;
                 for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
                     if (selected)
-                        levels = g_job_unlock_requirements[selected - 1][i];
+                        levels = g_main_job_unlock_requirements[selected - 1][i];
                     else {
                         levels = UNIT_JOB_LEVEL_ONE_LOW_NIBBLE;
                         if (i != 0)
@@ -65,7 +65,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
                 /* The job-level temporary holds the random job id here. */
                 levels = main_job_get_random_unlocked(unit);
                 if (levels)
-                    skillset = g_job_data_pointer[levels].skillset;
+                    skillset = g_main_job_data_pointer[levels].skillset;
                 else
                     skillset = levels;
                 if (skillset == unit->primary_skillset)

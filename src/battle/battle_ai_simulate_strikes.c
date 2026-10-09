@@ -41,7 +41,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                     continue;
                 }
                 if (!(behavior[1] & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {
-                    if (battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(target_id) != 0) {
+                    if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
                     if (action->targeting_type == 6 && ai->unit_acts_before_me[action->target_id] != 0) {

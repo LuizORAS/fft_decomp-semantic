@@ -66,7 +66,7 @@ s32 attack_load_scenario_conditionals(void) {
     if (ENTRY_MODE == 2) {
         g_main_special_portrait_wldface_id = 0;
         g_main_special_portrait_unit_id = 0;
-        value = g_scenario_event_finish_operations[battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
+        value = g_main_scenario_event_finish_operations[battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
         if (value == 0) {
             return;
         }
@@ -119,19 +119,19 @@ s32 attack_load_scenario_conditionals(void) {
         if (id == 0) {
             break;
         }
-        g_scenario_event_finish_operations[id]
+        g_main_scenario_event_finish_operations[id]
             = (scenario->after_event[0] << 8) | ((scenario->next_scenario[1] << 10) + scenario->next_scenario[0]);
         scenario++;
     }
-    g_scenario_event_finish_operations[0x192] = 0x8000;
-    g_scenario_event_finish_operations[0x191] = 0;
-    g_scenario_event_finish_operations[0x193] = 0;
+    g_main_scenario_event_finish_operations[0x192] = 0x8000;
+    g_main_scenario_event_finish_operations[0x191] = 0;
+    g_main_scenario_event_finish_operations[0x193] = 0;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
-        g_scenario_event_finish_operations[0x190] = 0x8000;
-        g_scenario_event_finish_operations[0x194] = 0x8000;
+        g_main_scenario_event_finish_operations[0x190] = 0x8000;
+        g_main_scenario_event_finish_operations[0x194] = 0x8000;
     } else {
-        g_scenario_event_finish_operations[0x190] = 0x8200;
-        g_scenario_event_finish_operations[0x194] = 0x8200;
+        g_main_scenario_event_finish_operations[0x190] = 0x8200;
+        g_main_scenario_event_finish_operations[0x194] = 0x8200;
     }
     scenario = (attack_scenario_t*)g_attack_scenario_table;
     for (i = 0; i < 500; i++) {

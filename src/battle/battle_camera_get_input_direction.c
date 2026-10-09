@@ -23,10 +23,10 @@ s32 battle_camera_get_input_direction(s32 mode) {
     case 1:
         switch (mode) {
         case 0:
-            input = g_controller_input_previous;
+            input = g_main_input_previous_buttons;
             break;
         case 1:
-            input = g_controller_input_pressed;
+            input = g_main_input_pressed_buttons;
             switch (g_main_game_options.fields.cursor_repeat_speed) {
             case 0:
                 divisor = 3;
@@ -43,22 +43,22 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 break;
             }
             if (threshold < g_controller_stable_frames && g_controller_stable_frames % divisor == 0) {
-                input = g_controller_input_previous;
+                input = g_main_input_previous_buttons;
             }
             break;
         case 2:
-            input = g_controller_input_released;
+            input = g_main_input_released_buttons;
             break;
         }
         break;
     case 2:
         switch (mode) {
         case 0:
-            input = g_controller_input_previous | g_controller_previous_copy_0;
+            input = g_main_input_previous_buttons | g_controller_previous_copy_0;
             break;
         case 1:
-            previous = g_controller_input_previous | g_controller_previous_copy_0;
-            pressed = g_controller_input_pressed;
+            previous = g_main_input_previous_buttons | g_controller_previous_copy_0;
+            pressed = g_main_input_pressed_buttons;
             input = 0;
             if (pressed & PSX_PAD_UP) {
                 if (previous & PSX_PAD_RIGHT) {
@@ -117,11 +117,11 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 break;
             }
             if (threshold < g_controller_stable_frames && g_controller_stable_frames % divisor == 0) {
-                input = g_controller_input_previous | g_controller_previous_copy_0;
+                input = g_main_input_previous_buttons | g_controller_previous_copy_0;
             }
             break;
         case 2:
-            input = g_controller_input_released;
+            input = g_main_input_released_buttons;
             break;
         }
         break;
@@ -369,7 +369,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
         }
         break;
     }
-    if (g_controller_input_pressed
+    if (g_main_input_pressed_buttons
         & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT | PSX_PAD_START)) {
         direction = -1;
     }

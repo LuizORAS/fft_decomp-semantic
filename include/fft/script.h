@@ -21,7 +21,7 @@ enum {
     /* Five ordinary deployed-unit IDs; the end value is exclusive. */
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
-    /* battle_get_misc_id / world_get_misc_id result for an absent unit. */
+    /* battle_script_get_misc_id / world_script_get_misc_id result for an absent unit. */
     EVENT_MISC_ID_NONE = 2000,
     /* g_*_event_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,

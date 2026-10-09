@@ -5,13 +5,13 @@ battle_stats_t* battle_unit_get_by_unit_id(s32 unit_id) {
     battle_stats_t* stats;
     s32 raid_class;
 
-    battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &index);
+    battle_unit_find_stats_by_entd_unit_id(unit_id, &index);
     if (index < 0) {
         if ((u32)(unit_id - CHARACTER_IDENTITY_RAMZA_CHAPTER_1)
             >= CHARACTER_IDENTITY_GENERIC_FIRST - CHARACTER_IDENTITY_RAMZA_CHAPTER_1) {
             return (battle_stats_t*)-1;
         }
-        raid_class = battle_classify_character_identity_slot(unit_id);
+        raid_class = battle_unit_find_slot_by_character_identity(unit_id);
         index = raid_class;
         if (raid_class >= 0) {
             stats = battle_unit_get_stats_from_battle_id(raid_class);

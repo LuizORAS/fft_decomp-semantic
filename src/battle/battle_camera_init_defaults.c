@@ -8,7 +8,7 @@ void battle_camera_init_defaults(void) {
     main_util_set_vector(&g_battle_camera_current_real_coords, 0, 0, 0);
 
     g_battle_casting_unit_id = 0xFF;
-    g_battle_casting_misc_id = 0xFF;
+    g_battle_unit_source_misc_id = 0xFF;
     g_battle_cursor_y = 0;
     g_battle_cursor_z = 0;
     g_battle_cursor_x = 0;

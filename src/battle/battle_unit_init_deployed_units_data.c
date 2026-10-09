@@ -5,7 +5,7 @@
  *
  * Normal deployment fills slots 0x10..0x14; red team debug deployment fills
  * slots 0..4 and clears the remaining ENTD slots. The target reloads each row
- * from g_main_current_formation_entry at its distinct uses.
+ * from g_main_unit_deployed_coords at its distinct uses.
  */
 s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s32 is_red_team_debug) {
     s32 failures = 0;
@@ -16,7 +16,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
     s32 next_generated_unit_id;
     u8 palette;
 
-    g_main_current_formation_entry = formation;
+    g_main_unit_deployed_coords = formation;
     if (is_red_team_debug) {
         next_generated_unit_id = 0xfe;
         slot_step = -1;
@@ -33,12 +33,12 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         s32 identity;
 
         unit->misc_unit_id = battle_id;
-        if (g_main_current_formation_entry[i].party_id != 0xff) {
+        if (g_main_unit_deployed_coords[i].party_id != 0xff) {
             unit->entd_slot = battle_id;
             unit->existence = 1;
-            if (main_unit_init_job_data(unit, g_main_current_formation_entry[i].party_id, 0) != 0) {
+            if (main_unit_init_job_data(unit, g_main_unit_deployed_coords[i].party_id, 0) != 0) {
                 main_system_handle_battle_load_exception(battle_id + 0x1f4);
-            } else if (battle_unit_set_placement_and_validate(battle_id, &g_main_current_formation_entry[i]) != 0) {
+            } else if (battle_unit_set_placement_and_validate(battle_id, &g_main_unit_deployed_coords[i]) != 0) {
                 main_system_handle_battle_load_exception(battle_id + 0x190);
             } else {
                 sprite = main_unit_calculate_palette_spritesheet(unit, &palette);
@@ -53,7 +53,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                     unit->initial_team_flags = 0x18;
                     unit->sprite_palette = 1;
                 }
-                if (g_main_current_formation_entry[i].facing_elevation_flags & 0x10) {
+                if (g_main_unit_deployed_coords[i].facing_elevation_flags & 0x10) {
                     unit->existence = 0;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {

@@ -46,8 +46,7 @@ void card_save_run_menu_graphic_thread(void) {
         /* The chain builder reads this record through the shared scaled-sprite
          * view, which loads the colour word at +0x04 as a byte intensity and
          * scale_y as s16. */
-        card_gfx_build_scaled_sprite_primitive_chain(
-            (battle_menu_status_panel_scaled_sprite_t*)&g_card_input_display_state,
+        card_gfx_build_zodiac_primitives((battle_menu_status_panel_scaled_sprite_t*)&g_card_input_display_state,
             g_card_gfx_scaled_sprite_primitive_buffers[frame & 1]);
         battle_thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {

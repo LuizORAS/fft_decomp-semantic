@@ -44,7 +44,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     display_0 = unit->numeric_displays[0];
     display_1 = unit->numeric_displays[1];
     display_2 = unit->numeric_displays[2];
-    progress = unit->numeric_display_progress + g_animation_speed;
+    progress = unit->numeric_display_progress + g_main_system_animation_speed;
     display = (battle_action_result_display_t*)&unit->numeric_display_active;
     if (progress < 21) {
         if (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL) {
@@ -134,5 +134,5 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
         (s16*)&position, 0, 0, (s16*)&zoom_1, main_gfx_get_otag() + 1);
     battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_2, display_2->part_count, 0,
         (s16*)&position, 0, 0, (s16*)&zoom_2, main_gfx_get_otag() + 1);
-    display->progress += g_animation_speed;
+    display->progress += g_main_system_animation_speed;
 }

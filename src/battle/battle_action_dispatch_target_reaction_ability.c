@@ -9,9 +9,9 @@
 void battle_action_dispatch_target_reaction_ability(void) {
     battle_stats_t* unit;
 
-    if (g_current_ability.formula == 7)
+    if (g_battle_action_current_ability.formula == 7)
         return;
-    if (battle_action_can_unit_react_1(g_battle_action_target) != 0)
+    if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;
     unit = g_battle_action_target;
     if (unit->reaction_abilities[0] & BATTLE_REACTION_SET_1_SUNKEN_STATE) {

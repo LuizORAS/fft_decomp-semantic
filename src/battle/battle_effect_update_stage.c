@@ -30,7 +30,7 @@ s32 battle_effect_update_stage(void) {
         battle_state_clear_frame_pacing();
         battle_effect_set_frame_data_pointer(g_ability_effect_id);
         battle_effect_set_parameter_sets_pointer(g_ability_effect_id);
-        battle_effect_set_motion_header_pointer(g_ability_effect_id);
+        battle_effect_set_script_pointer(g_ability_effect_id);
         battle_effect_set_animation_curve_data_pointer(g_ability_effect_id);
         battle_effect_set_particle_system_data_pointer(g_ability_effect_id);
         battle_effect_set_misc_data_pointers(g_ability_effect_id);
@@ -39,12 +39,12 @@ s32 battle_effect_update_stage(void) {
         battle_effect_set_nibble_table_pointer(g_ability_effect_id);
         if (g_battle_effect_coord_data.math_skill_flag != 0) {
             if (g_battle_effect_flags_section->spawn_delay_override != 0) {
-                g_battle_effect_misc_data->spawn_delay = g_battle_effect_flags_section->spawn_delay_override;
+                g_battle_effect_timeline->spawn_delay = g_battle_effect_flags_section->spawn_delay_override;
             } else {
-                g_battle_effect_misc_data->spawn_delay = 100;
+                g_battle_effect_timeline->spawn_delay = 100;
             }
         }
-        g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_motion_header, 0, 0);
+        g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
         g_battle_effect_phase = 4;
         battle_map_configure_effect_data_state(0x88);
         result = 1;
@@ -87,7 +87,7 @@ s32 battle_effect_update_stage(void) {
         battle_effect_reset_subsystems();
         battle_effect_reset_frame_data_pointer();
         battle_effect_reset_parameter_sets_pointer();
-        g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_motion_header, 0, 0);
+        g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
         g_battle_effect_phase = 4;
         return 1;
     }

@@ -9,7 +9,7 @@ void battle_action_choose_facing_for_wait(void) {
     unit = battle_unit_get_source_misc_data();
     facing = *(s16*)&unit->facing;
     g_battle_game_state = BATTLE_GAME_STATE_WAIT_DIRECTION;
-    g_current_facing_direction = facing;
+    g_battle_state_wait_direction_facing = facing;
     unit->state_frame_counter = 0;
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
         mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);

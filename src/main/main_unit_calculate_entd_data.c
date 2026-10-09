@@ -39,7 +39,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     if (value & UNIT_FLAG_LOAD_FORMATION) {
         party_slot = main_unit_init_job_data_from_entd(unit, entd);
     } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birthday[0] == 0) {
-        for (party_index = 0, ramza_jobs = &g_job_data[1]; party_index < 20; party_index++) {
+        for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < 20; party_index++) {
             party_unit = main_party_get_data_pointer(party_index);
             if (party_unit->party_id == PARTY_ID_NONE) {
                 continue;
@@ -55,7 +55,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
             }
             if (skillset == ramza_jobs[0].skillset || skillset == ramza_jobs[1].skillset
                 || skillset == ramza_jobs[2].skillset) {
-                party_unit->secondary_skillset = g_job_data[entd->sprite_set].skillset;
+                party_unit->secondary_skillset = g_main_job_data[entd->sprite_set].skillset;
             }
             party_slot = main_unit_init_job_data_from_entd(unit, entd);
             value = UNIT_FLAG_LOAD_FORMATION;
@@ -66,7 +66,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
      * entd_unknown_right).  The byte-shifted struct view reproduces the
      * target's `addu unit,i` operand order; (&unit->ai_target_x)[i] swaps it. */
     for (i = 0; i < 7; i++) {
-        ((battle_stats_t*)((u8*)unit + i))->ai_target_x = g_current_entd_unit->ai_target_xy[i];
+        ((battle_stats_t*)((u8*)unit + i))->ai_target_x = g_main_entd_current_unit->ai_target_xy[i];
     }
     if (value & UNIT_FLAG_LOAD_FORMATION) {
         return party_slot;
@@ -79,12 +79,12 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
 
     value = entd->level;
     if (value == 0 || value == 0xfe) {
-        number = g_highest_party_level;
+        number = g_main_party_highest_level;
         level_range = (number >> 3) + 1;
         level_base = number - (number >> 3);
         value = level_base + (level_range * rand()) / 0x8000;
     } else if (value >= 100) {
-        level_bonus = g_highest_party_level - 100;
+        level_bonus = g_main_party_highest_level - 100;
         value += level_bonus;
     }
     level = value;

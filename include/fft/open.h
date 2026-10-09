@@ -90,7 +90,7 @@ extern volatile u32 g_open_input_new_button_presses;
 extern u32 g_open_input_polled_buttons;
 extern u32 g_open_input_previous_buttons;
 extern s32 g_open_input_up_repeat_counter;
-extern s32 g_open_controller_flags[];
+extern s32 g_open_controller_selected_options[];
 void open_controller_dispatch_current(void);
 void open_controller_start_text_message(s32 parameter, s32 run_followup);
 u32 open_input_check_repeating_directional(u32 buttons);
@@ -147,7 +147,7 @@ void open_movie_pause_cd_audio(void);
 void open_movie_play_end(void);
 void open_movie_present_frame(void);
 void open_movie_start_cd_stream_read(const void* location);
-void open_movie_start_fftst_or_alternate_controller(s32 use_alternate);
+void open_movie_start_fftst_or_title_menu(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 sound_type);
 void open_movie_stop_stream(s32 pause_cd_audio);
@@ -155,7 +155,7 @@ void open_movie_stream_and_push_controller_1(s32 start_sector, s32 unused, s32 e
 void open_movie_stream_fftend(s32 start_sector, s32 unused, s32 end_frame);
 void open_movie_stream_fftst_and_push_controller(s32 start_sector, s32 stream_length, s32 end_frame, s32 frame_count);
 
-void open_movie_stream_other_str_and_push_controller_11(
+void open_movie_stream_title_demo_and_push_controller(
     s32 start_sector, s32 stream_length, s32 end_frame, s32 frame_rate);
 
 void open_movie_update_stream_frame(void);
@@ -206,7 +206,7 @@ typedef struct open_render_record {
 /* CLUT position and source rectangle at +0x24 of a 56-byte record.
  * open_gfx_init_window_frame_record takes its address as one pointer. */
 typedef struct open_render_record_56_tail {
-    /* 0x00 */ open_point32_t clut; /* open_gfx_draw_render_record_56 passes it to GetClut */
+    /* 0x00 */ open_point32_t clut; /* open_gfx_draw_window_record passes it to GetClut */
     /* 0x08 */ RECT quad;           /* quarter-pixel source rectangle */
 } open_render_record_56_tail_t;
 
@@ -283,7 +283,7 @@ extern u8 g_open_birthday_zodiac_months[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
 void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* state);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
-s32 open_birthday_calculate_day_index(s32 month, s32 day);
+s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day);
 void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
 
 void open_birthday_draw_menu_text_entry(
@@ -564,12 +564,12 @@ extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
 extern u32** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
 void open_gfx_draw_render_record_36(open_sprite_actor_t* actor, u32* ot);
-void open_gfx_draw_render_record_56(open_render_record_56_t* record, u32* ot);
+void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
 s32 open_gfx_update_transition_sequence(void);
 void open_gfx_draw_transition_line_strips(s32 intensity);
 s32 open_gfx_append_render_record_36(open_render_record_t** list, s32* count);
-s32 open_gfx_append_render_record_56(open_render_record_t** list, s32* count);
-void open_gfx_backup_frame_vram_page(void);
+s32 open_gfx_append_window_record(open_render_record_t** list, s32* count);
+void open_gfx_restore_frame_vram_page(void);
 void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle);
 void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);

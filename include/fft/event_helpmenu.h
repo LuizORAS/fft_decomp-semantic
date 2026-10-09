@@ -35,7 +35,7 @@ typedef char help_request_kind_offset_must_be_0x3a[((unsigned long)&((help_reque
 extern u8 g_helpmenu_active_banner[];
 extern u8 g_helpmenu_active_unit_data[];
 
-/* 0x40-byte billboard filled by battle_action_copy_at_and_cursor_to; +0x0e is the monster-skillset flag. */
+/* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
 extern battle_menu_status_panel_slot_state_t g_helpmenu_billboard;
 extern help_navigation_record_t g_helpmenu_require_navigation[];
 
@@ -52,6 +52,6 @@ extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_4_navigation[];
 s32 helpmenu_thread_find_running_from_4(void);
-void helpmenu_run_battle_help_menu(void);
+void helpmenu_menu_run_battle_help(void);
 
 #endif

@@ -67,10 +67,10 @@ s32 equip_menu_run_equip_mode(void) {
                 &scroll, g_equip_item_list_entries);
             equip_menu_init_scrollable_list(
                 g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);
-            g_equip_menu_list_row_callbacks[0] = equip_item_get_available_with_equip_flag;
-            g_equip_menu_list_row_callbacks[1] = equip_item_get_total_with_equip_flag;
-            g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_row_icon_rect;
-            g_equip_menu_list_row_callbacks[3] = (equip_row_callback_t)equip_item_build_row_graphic_descriptor;
+            g_equip_menu_list_row_callbacks[0] = equip_menu_get_entry_item_equipped_count;
+            g_equip_menu_list_row_callbacks[1] = equip_menu_get_entry_item_count;
+            g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_type_icon_source;
+            g_equip_menu_list_row_callbacks[3] = (equip_row_callback_t)equip_menu_get_entry_item_icon_source;
             g_equip_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             g_equip_equip_item_previewed_cursor = -1;
         }
@@ -107,7 +107,7 @@ s32 equip_menu_run_equip_mode(void) {
                 if (result == 1) {
                     g_equip_equip_item_preview_active = 1;
                     g_equip_item_numeric_panel_redraw = result;
-                    equip_unit_calculate_equipment_swap_stat_deltas(&g_equip_item_preview_stat_detail,
+                    equip_item_calculate_equipment_swap_stat_delta(&g_equip_item_preview_stat_detail,
                         &g_equip_selected_unit_stat_summary, g_equip_unit_data[g_equip_unit_selected_index]->equipment,
                         g_equip_unit_data[1]->equipment);
                     bcopy(
@@ -133,7 +133,7 @@ s32 equip_menu_run_equip_mode(void) {
     equip_panel_toggle_item_numeric_thread(g_equip_equip_item_preview_active);
     g_equip_slot_marker_rect.y = g_equip_equip_item_slot * 16 + 0x90;
     equip_gfx_set_otag_index(0x28);
-    equip_menu_update_and_draw_animated_marker(&g_equip_slot_marker_rect, g_equip_equip_item_cursor_anim,
-        g_equip_equip_item_list_open != 0 || g_event_mode != 0);
+    equip_menu_update_and_draw_animated_cursor(&g_equip_slot_marker_rect, g_equip_equip_item_cursor_anim,
+        g_equip_equip_item_list_open != 0 || g_battle_menu_input_lock_mode != 0);
     return 1;
 }

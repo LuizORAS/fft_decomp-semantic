@@ -93,7 +93,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
         input &= 0xff0;
     }
     if (world_thread_is_running(9) == 0 && g_world_grid_menu_id == 0 && world_gfx_get_fade_state() == 0) {
-        g_world_formation_selected_unit_index = world_menu_step_grid_cursor(
+        g_world_formation_selected_unit_index = world_menu_update_wrapped_grid_selection(
             4, 5, g_world_formation_unit_count - 1, g_world_formation_selected_unit_index, input);
     }
     world_formation_step_scroll_velocity(&g_world_formation_scroll_velocity, &g_world_formation_scroll_position);
@@ -117,7 +117,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
         world_menu_draw_pressable_button(4, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, 6);
         world_menu_draw_pressable_button(5, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, 6);
         world_menu_run_script_with_palette_mode(window, 0, 0);
-        world_gfx_add_sprite_cell_quads(cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);
+        world_gfx_enqueue_textured_quad_list(
+            cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);
         if (g_world_formation_stat_display_mode < 3) {
             row = g_world_formation_stat_display_mode;
             col = 1;
@@ -128,7 +129,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             row = 5;
             col = 3;
         }
-        world_gfx_add_sprite_cell_quads(
+        world_gfx_enqueue_textured_quad_list(
             &cells[row], 0, 0, g_world_menu_icon_tpage, g_world_menu_alternate_number_clut_normal, 0xc, col);
     }
     if (toggle_banner != 0) {
@@ -198,7 +199,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             rgb[0] = rgb_value;
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
-                world_formation_draw_unit_portrait_frame(
+                world_formation_draw_egg_sprite(
                     (world_gfx_sprite_desc_t*)&pos, unit->egg_color, (s32)rgb, unit->birthday & 0xf, 6);
             } else {
                 world_formation_draw_unit_sprite(i, (world_menu_point_t*)&pos, (s8*)rgb, 6);

@@ -1,8 +1,8 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_run_dead_unit_panel_a,
+ * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread,
  * byte-identical apart from addresses): the variant that allocates its scratch
  * pixel buffer, using the second WORLD blit descriptors and setters (as
- * world_menu_run_dead_unit_panel_b_2) and its own texture-window table. Layout
+ * world_menu_window_frame_thread_b_2) and its own texture-window table. Layout
  * notes below are the OPTION twin's; the WORLD helpers are the same routines.
  */
 #include "fft/world.h"
@@ -33,7 +33,7 @@ void world_menu_run_dead_unit_panel_a_2(void) {
     world_clear_menu_render_buffer(pixels, 0x400);
     texture.w = 0x80;
     texture.h = 0x10;
-    world_gfx_alloc_texture_grid_rect(&texture, &prim->texture_prim, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&texture, &prim->texture_prim, (u32*)-1);
     *source_stride = 0x100;
     *dest_stride = 0x80;
 
@@ -120,7 +120,7 @@ void world_menu_run_dead_unit_panel_a_2(void) {
     prim->sprites[8].w = border_thin;
     prim->sprites[8].h = border_wide;
 
-    world_gfx_reset_record_texture_window(&prim->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&prim->cursor_mode);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(world_panel_frame_t));
 
@@ -151,6 +151,6 @@ void world_menu_run_dead_unit_panel_a_2(void) {
     }
     world_thread_yield();
     world_menu_free_memory(pixels);
-    world_gfx_free_texture_grid_rect(&texture);
+    world_gfx_free_tpage7_vram(&texture);
     world_thread_exit_current();
 }

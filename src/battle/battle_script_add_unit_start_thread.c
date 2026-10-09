@@ -28,7 +28,7 @@ void battle_script_add_unit_start_thread(void) {
         if (opcode == EVENT_OPCODE_LOAD_ATTACK_GRAPHICS) {
             battle_script_load_attack_graphics_event_instruction();
         } else if (opcode == EVENT_OPCODE_ADD_UNIT) {
-            unit = battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &index);
+            unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &index);
             if (index == -2 || index >= 0) {
                 slot = 0;
                 do {
@@ -39,14 +39,14 @@ void battle_script_add_unit_start_thread(void) {
                 } while (slot < EVENT_UNIT_SLOT_COUNT);
                 misc_id = battle_unit_get_misc_id_by_battle_id(slot);
                 if (misc_id == -1) {
-                    battle_update_unit_status_and_staged_status_data(slot);
+                    battle_unit_save_staged_status_data(slot);
                     battle_gfx_load_unit_graphics_by_battle_id(slot, flag);
                     g_battle_unit_graphics_load_pending = 1;
                 } else {
                     if (flag == 0) {
-                        battle_unit_animate_and_set_enemy_level_data_by_misc_id(misc_id);
+                        battle_unit_draw_and_activate_by_misc_id(misc_id);
                     }
-                    if (battle_update_unit_status_and_staged_status_data(slot) != 0) {
+                    if (battle_unit_save_staged_status_data(slot) != 0) {
                         g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
                         battle_thread_call_on_main_stack(misc_id);
                     }

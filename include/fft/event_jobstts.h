@@ -282,7 +282,7 @@ void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
-void jobstts_menu_update_and_draw_animated_marker(urect16_t* anchor, u16* state, s32 mode);
+void jobstts_menu_update_and_draw_animated_cursor(urect16_t* anchor, u16* state, s32 mode);
 
 /* text */
 typedef struct jobstts_text_image_position {
@@ -323,7 +323,7 @@ s32 jobstts_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);
 
 void jobstts_text_set_palette_and_metrics(s32 mode);
-const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators, s32 unused_2);
+const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);
 void jobstts_text_start_help_thread(s32 thread_data);
 
 /* unit */
@@ -357,7 +357,7 @@ extern s8 g_jobstts_active_page;
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;
-u8* jobstts_create_border_tiles(u8* command);
+u8* jobstts_cmd_draw_window_frame_handler(u8* command);
 s32 jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif

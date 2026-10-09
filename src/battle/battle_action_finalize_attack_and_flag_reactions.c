@@ -25,7 +25,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     if (unit_id >= 21) {
         return -1;
     }
-    g_current_ability.target_id = unit_id;
+    g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
     if (g_battle_action_target->entd_slot == BATTLE_ENTD_SLOT_NONE) {
@@ -109,7 +109,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, 0);
     battle_action_handle_steal_exp(g_battle_action_target, g_battle_action_target_data->exp_change);
     if (g_battle_action_target_data->jp_change != 0) {
-        battle_action_run_main_reaction_and_flag_job_level_change(g_battle_action_target);
+        battle_action_apply_jp_change(g_battle_action_target);
     }
     outcome |= battle_unit_apply_level_up_down_ability();
     outcome |= battle_action_add_poached_item_to_fur_shop_inventory();

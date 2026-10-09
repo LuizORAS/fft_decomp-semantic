@@ -142,9 +142,9 @@ typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
 /* Provisional 0xa-byte selected-tile record: BATTLE's at 0x8014d02c, filled by
  * battle_map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
  * world_map_store_selected_tile_data and saved whole by
- * world_gfx_copy_screen_setup_out.
+ * world_menu_copy_billboard_data_out.
  * _unknown_02/_unknown_04 are the two bytes of the per-surface-type main table
- * D_8005E950; their meaning is unproven. */
+ * g_main_terrain_tile_info_pairs; their meaning is unproven. */
 typedef struct map_selected_tile {
     s16 surface_type;   /* 0x00 */
     s16 _unknown_02;    /* 0x02 */

@@ -32,7 +32,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         for (i = 3; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
-        g_current_ability_attacker.data_initialized = 0;
+        g_battle_action_current_attacker.data_initialized = 0;
         for (i = 0; i < 21; i++) {
             unit = &g_battle_unit_stats[i];
             unit->ct = 0;
@@ -259,7 +259,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             g_battle_between_turn_state = 17;
             if (g_battle_turn_unit_id != -1) {
                 unit = &g_battle_unit_stats[g_battle_turn_unit_id];
-                if (battle_prepare_terrain_poison(unit)) {
+                if (battle_status_prepare_terrain_poison(unit)) {
                     result = g_battle_turn_unit_id | 0x300;
                     return result;
                 }
@@ -276,7 +276,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             break;
         case 13:
-            if (g_current_ability_attacker.data_initialized != 0) {
+            if (g_battle_action_current_attacker.data_initialized != 0) {
                 i = 0;
                 do {
                     unit = &g_battle_unit_stats[i];
@@ -292,7 +292,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             break;
         case 14:
-            g_current_ability_attacker.data_initialized = 0;
+            g_battle_action_current_attacker.data_initialized = 0;
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (g_battle_mimic_pending_flags[i] != 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {

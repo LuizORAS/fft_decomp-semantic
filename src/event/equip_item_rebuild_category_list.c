@@ -8,7 +8,7 @@ void equip_item_rebuild_category_list(s32 category) {
 
     for (i = 1; i < 0xFE; i++) {
         item = i;
-        type = equip_item_get_category(item);
+        type = equip_item_get_menu_category(item);
         cat = 0;
         if (type != 0) {
             cat = type - 1;

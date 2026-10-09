@@ -70,7 +70,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             if (job_id == 0) {
                 continue;
             }
-            skillset = g_job_data_pointer[job_id].skillset;
+            skillset = g_main_job_data_pointer[job_id].skillset;
         }
         if (skillset == secondary) {
             secondary_unchecked = 0;

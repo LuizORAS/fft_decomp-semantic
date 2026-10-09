@@ -26,18 +26,18 @@ extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table
 extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern u8 g_attack_editor_numeric_texture[];
-extern battle_menu_status_panel_gauges_t g_attack_editor_status_gauges;
+extern battle_menu_status_panel_gauges_t g_attack_panel_selected_billboard;
 extern s16 g_attack_editor_team_state;
 extern s16 g_attack_editor_job_id;
 extern s16 g_attack_editor_brave;
 extern s16 g_attack_editor_faith;
 extern s16 g_attack_editor_zodiac;
 extern s16 g_attack_editor_selected_unit_id;
-extern u8 g_attack_editor_third_ability_bytes[];
-extern u8 g_attack_editor_fourth_ability_bytes[];
+extern u8 g_attack_editor_primary_skillset_name[];
+extern u8 g_attack_editor_secondary_skillset_name[];
 
 /* Five name ids and five ability/skillset ids of the unit loaded into the
- * editor (g_attack_unit_editor_state + 0x24). The target walks them from this
+ * editor (g_attack_editor_unit_fields + 0x24). The target walks them from this
  * standalone address: indexing the editor record instead folds 0x24 into each
  * load and allocates the walk from the record base. */
 extern s16 g_attack_editor_item_and_ability_ids[10];
@@ -96,7 +96,7 @@ extern RECT g_attack_portrait_sheet_rect_3;
 extern u8 g_attack_portrait_staging[];
 extern RECT g_attack_portrait_upload_rect;
 
-void attack_gfx_apply_menu_palette_for_mode(
+void attack_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const battle_menu_status_panel_frame_config_t* thread);
 
 void attack_gfx_build_formation_sprites(void);
@@ -105,7 +105,7 @@ void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void attack_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
     const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
 
-void attack_gfx_build_scaled_sprite_cell_poly_ft4(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
     const RECT* position, attack_gfx_sprite_rect_t* sprite_rect, attack_gfx_point_t* scale, const s16* offset);
 
 void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
@@ -392,12 +392,12 @@ void attack_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_pa
 void attack_text_init_battle_pointers(s32* offsets);
 
 /* unit */
-extern s16 g_attack_active_unit_data;
+extern s16 g_attack_panel_selected_unit_data;
 
 /* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
-extern battle_menu_status_panel_slot_storage_t g_attack_unit_editor_state;
-void attack_load_party_unit_into_editor(s32 mode, s32 roster_index);
-void attack_prepare_party_portrait_textures(void);
+extern battle_menu_status_panel_slot_storage_t g_attack_editor_unit_fields;
+void attack_editor_load_party_unit(s32 mode, s32 roster_index);
+void attack_gfx_prepare_party_portrait_textures(void);
 void attack_render_unit_status_panel_thread(void);
 
 /* other */
@@ -412,10 +412,10 @@ extern RECT g_attack_special_portrait_palette_rect;
 extern RECT g_attack_special_portrait_rect;
 extern s32 g_attack_status_display_offset_y[];
 s32 attack_load_scenario_conditionals(void);
-void attack_sound_play_scenario_music(s32 primary_track, s32 alternate_track);
-void attack_sound_wait_music_idle(void);
+void attack_sound_play_music_tracks(s32 primary_track, s32 alternate_track);
+void attack_sound_wait_for_music_stub(void);
 s32 attack_thread_is_running(s32 thread_id);
-void attack_out_prepare_valid_deployment_tiles(SPRT* sprites);
+void attack_deploy_prepare_valid_tiles(SPRT* sprites);
 void attack_file_load_sync(s32 lba, s32 size, void* destination);
 s16 attack_load_unaligned_s16(const u8* ptr);
 void attack_thread_wait_forever(void);

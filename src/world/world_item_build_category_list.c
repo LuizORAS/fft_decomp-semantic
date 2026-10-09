@@ -8,7 +8,7 @@
  * include equipped copies) and their type fits the category. Mode 1 flags
  * items the unit cannot equip with 0x4000, or hides them like mode 2 when Show
  * Unequippable is not On. Categories 0-4 and 7 with sort modes 1-5 go
- * through world_item_filter_sorted_entries, which returns the new count.
+ * through world_item_sort_list_by_category_order, which returns the new count.
  */
 /* clang-format off */
 s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
@@ -34,7 +34,7 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
     for (; item < 0xFE; item++) {
         entry = item;
         if (mode == 3) {
-            result = world_item_change_quantity_on_equip((s16)item, 0);
+            result = world_item_adjust_inventory_count((s16)item, 0);
         } else {
             result = world_item_count_owned_and_equipped((s16)item);
         }
@@ -95,7 +95,7 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
         list_index = 4;
     }
     if (list_index < 5 && (u16)(sort_mode - 1) < 5) {
-        count = world_item_filter_sorted_entries(list_index, entries);
+        count = world_item_sort_list_by_category_order(list_index, entries);
     } else {
         world_item_sort_id_list(sort_mode & 0xF, entries);
     }

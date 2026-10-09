@@ -17,7 +17,7 @@ void wldcore_bar_push_menu_level(void) {
     if (value == 2) {
         set = 0x17;
     }
-    wldcore_load_data_set_into_scratch_buffer(set);
+    wldcore_gfx_load_background_set(set);
     wldcore_wait_for_file_load();
     g_main_system_flags |= 0x3000;
     world_thread_start(0xE, world_text_message_box_thread);

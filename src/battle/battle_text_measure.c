@@ -90,7 +90,7 @@ void battle_text_measure(s16* columns, s16* rows, const u8* text) {
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
                 cursor = g_battle_player_name;
             } else {
-                cursor = battle_text_init_entry(state->value);
+                cursor = battle_text_find_entry(state->value);
             }
             state->value_cursor++;
             continue;

@@ -40,7 +40,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
 
     config = g_battle_move_config_ptr;
     record = g_battle_move_records_ptr;
-    battle_calculate_unit_height_data(&height_data, unit_id);
+    battle_unit_calculate_height_data(&height_data, unit_id);
     unit = &g_battle_unit_stats[unit_id];
     for (i = 0; i < 3; i++) {
         movement[i] = unit->movement_abilities[i];
@@ -85,7 +85,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     if (movement[1] & 0x10) {
         movement[2] &= 0xAF;
     }
-    weather = battle_map_get_weather_severity();
+    weather = battle_move_get_weather_terrain_cost();
     if (movement[2] & 4) {
         config->move_mod = 1;
         config->move_type = 0;
@@ -153,7 +153,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     config->jump_times_two = (value & 0xFF) * 2;
     config->jump_or_1f = value;
-    if (battle_unit_check_chocobo(unit) != 0) {
+    if (battle_unit_get_chocobo_mount_state(unit) != 0) {
         config->mountable_chocobo = 1;
     } else {
         config->mountable_chocobo = 0;
@@ -198,7 +198,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
             continue;
         }
         value = i;
-        if (battle_unit_check_chocobo(other) != 1 && other->mount_info != (config->unit_id | 0x40)) {
+        if (battle_unit_get_chocobo_mount_state(other) != 1 && other->mount_info != (config->unit_id | 0x40)) {
             value = i | 0x20;
         }
         byte = other->team_flags;

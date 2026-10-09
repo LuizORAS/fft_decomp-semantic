@@ -33,8 +33,7 @@ void open_birthday_push_date_controller(void) {
     g_open_gfx_render_records_36[record].frame_timer = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
 
-    record
-        = open_gfx_append_render_record_56(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
+    record = open_gfx_append_window_record(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_controller_stream_start[g_open_current_controller_index]._unknown_08 = record;
     quad.x = 0;
     quad.y = 0;

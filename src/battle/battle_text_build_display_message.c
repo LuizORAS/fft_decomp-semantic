@@ -20,7 +20,7 @@ void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
     if (flags & 0x80) {
         flags &= 3;
         battle_text_measure_pixels(
-            &width, &height, battle_text_init_entry(((EVENT_BYTE(offset, 4) << 8) + EVENT_BYTE(offset, 3)) - 1));
+            &width, &height, battle_text_find_entry(((EVENT_BYTE(offset, 4) << 8) + EVENT_BYTE(offset, 3)) - 1));
         max_width = width;
         next = offset + 1;
         size = g_battle_script_event_instruction_sizes[EVENT_OPCODE_DISPLAY_MESSAGE];
@@ -33,7 +33,7 @@ void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
                 }
                 if ((EVENT_BYTE(offset, 1) & flags) == flags) {
                     battle_text_measure_pixels(&width, &height,
-                        battle_text_init_entry(((EVENT_BYTE(offset, 3) << 8) + EVENT_BYTE(offset, 2)) - 1));
+                        battle_text_find_entry(((EVENT_BYTE(offset, 3) << 8) + EVENT_BYTE(offset, 2)) - 1));
                     if (max_width < width) {
                         max_width = width;
                     }

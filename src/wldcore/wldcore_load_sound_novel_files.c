@@ -6,12 +6,12 @@
 
 void wldcore_load_sound_novel_files(s32 chapter) {
     wldcore_wait_for_file_load();
-    wldcore_wait_and_build_file_header(&g_main_file_cd_state,
+    wldcore_file_wait_then_build_header(&g_main_file_cd_state,
         g_wldcore_sound_novel_script_sector_offsets[chapter] + 0x128f9,
         g_wldcore_sound_novel_script_sector_offsets[chapter + 1] - g_wldcore_sound_novel_script_sector_offsets[chapter],
         g_main_save_slot_buffer);
     wldcore_wait_for_file_load();
-    wldcore_wait_and_build_file_header(&g_main_file_cd_state,
+    wldcore_file_wait_then_build_header(&g_main_file_cd_state,
         g_wldcore_sound_novel_text_sector_offsets[chapter] + 0x1291d,
         g_wldcore_sound_novel_text_sector_offsets[chapter + 1] - g_wldcore_sound_novel_text_sector_offsets[chapter],
         g_wldcore_message_buffer);

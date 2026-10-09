@@ -54,7 +54,7 @@ void battle_menu_build_unit_status_list(void) {
     }
     battle_sound_set_effect_to_confirm();
     if (count == 0) {
-        battle_menu_option_menu_thread();
+        battle_menu_run_jobstts_thread();
     }
     odd = count & 1;
     half = count / 2;

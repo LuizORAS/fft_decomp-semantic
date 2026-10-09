@@ -23,7 +23,7 @@ s32 world_ability_run_view_list(void) {
         g_world_menu_script_callbacks[1] = world_job_get_cached_total_jp;
         g_world_menu_script_callbacks[2] = world_job_get_cached_level_jp_requirement;
         g_world_menu_script_callbacks[3] = world_job_get_selected_unit_job_points_entry;
-        g_world_menu_script_callbacks[4] = world_ability_cache_entry_pointers;
+        g_world_menu_script_callbacks[4] = world_ability_is_non_action_learned;
         g_world_menu_script_callbacks[5] = world_job_get_cached_skillset_empty_flag;
         g_world_menu_script_callbacks[6] = world_menu_is_learn_ability_learned;
         g_world_menu_script_callbacks[7] = world_ability_get_mp_cost_display_value;
@@ -36,17 +36,17 @@ s32 world_ability_run_view_list(void) {
         g_world_menu_script_callbacks[14] = world_ability_is_non_action_unlearned;
         g_world_view_abilities_confirm_prompt_state = 0;
         g_world_menu_script_callbacks[15] = world_ability_is_selected_action_type;
-        world_gfx_clear_sprite_slot(10);
-        world_gfx_clear_sprite_slot(11);
-        world_gfx_clear_sprite_slot(12);
-        world_gfx_clear_sprite_slot(13);
+        world_menu_clear_selection_record(10);
+        world_menu_clear_selection_record(11);
+        world_menu_clear_selection_record(12);
+        world_menu_clear_selection_record(13);
         rect.x = 0x240;
         rect.y = 0x1c8;
         rect.w = 0x14;
         rect.h = 0x10;
         g_world_view_job_name_list[0] = g_world_learn_selected_job;
         world_text_render_id_list_to_image_rows(g_world_text_job_names, (s16*)g_world_view_job_name_list, &rect, 0);
-        g_world_ability_category = world_move_menu_cursor_horizontal(4, 8, 0);
+        g_world_ability_category = world_menu_update_wrapped_horizontal_selection(4, 8, 0);
         world_ability_find_unit_abilities(g_world_formation_selected_unit_index, g_world_learn_selected_job,
             g_world_ability_category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_VIEW_ALL);
         world_menu_init_scrollable_list_core(g_world_ability_entries, 0, (u32)g_world_text_ability_names);
@@ -69,7 +69,7 @@ s32 world_ability_run_view_list(void) {
         return -1;
     }
     {
-        category = world_menu_step_cursor_with_sound_2(4, 8, g_world_input_secondary_repeat, 6);
+        category = world_menu_update_horizontal_selection_and_mark_change(4, 8, g_world_input_secondary_repeat, 6);
         if (category != g_world_ability_category) {
             world_gfx_set_sprite_slot(g_world_ability_category + 10, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, (u16*)g_world_ability_entries);

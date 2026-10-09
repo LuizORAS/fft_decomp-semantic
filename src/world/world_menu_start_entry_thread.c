@@ -12,7 +12,7 @@ void world_menu_start_entry_thread(void) {
     if (*(u16*)&g_world_menu_overlay_state != 0) {
         world_thread_exit_current();
     }
-    world_camera_run_move_thread();
+    world_camera_wait_until_idle();
     while (world_thread_find_running_by_task(0x12) != 0) {
         world_thread_yield();
     }
@@ -21,7 +21,7 @@ void world_menu_start_entry_thread(void) {
             g_world_menu_input_disabled = 2;
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
-            world_script_start_event_from_variables();
+            world_script_start_current_event_thread();
             world_thread_wait_frames(0x1E);
         }
         if (g_world_menu_input_disabled != 0) {

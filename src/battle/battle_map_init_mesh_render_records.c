@@ -26,7 +26,7 @@ void battle_map_init_mesh_render_records(u16* geometry_data) {
     u16 clut_data;
     u16 texture_page;
 
-    g_battle_map_mesh_data_buffer = (s32)g_battle_data;
+    g_battle_map_mesh_data_buffer = (s32)g_battle_gfx_current_render_buffer;
 
     textured_triangle_count = *source++;
     textured_quad_count = *source++;
@@ -53,14 +53,14 @@ void battle_map_init_mesh_render_records(u16* geometry_data) {
         packed = *source++;
         v2 = packed >> 8;
         u2 = packed & 0xff;
-        g_battle_data->gt3[polygon_index].u0 = u0;
-        g_battle_data->gt3[polygon_index].u1 = u1;
-        g_battle_data->gt3[polygon_index].u2 = u2;
-        g_battle_data->gt3[polygon_index].v0 = v0;
-        g_battle_data->gt3[polygon_index].v1 = v1;
-        g_battle_data->gt3[polygon_index].v2 = v2;
-        g_battle_data->gt3[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
-        g_battle_data->gt3[polygon_index].tpage = texture_page;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].u0 = u0;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].u1 = u1;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].u2 = u2;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].v0 = v0;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].v1 = v1;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].v2 = v2;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].tpage = texture_page;
     }
 
     for (polygon_index = g_battle_map_textured_quad_render_record_count;
@@ -81,30 +81,30 @@ void battle_map_init_mesh_render_records(u16* geometry_data) {
         packed = *source++;
         v3 = packed >> 8;
         u3 = packed & 0xff;
-        g_battle_data->gt4[polygon_index].u0 = u0;
-        g_battle_data->gt4[polygon_index].u1 = u1;
-        g_battle_data->gt4[polygon_index].u2 = u2;
-        g_battle_data->gt4[polygon_index].u3 = u3;
-        g_battle_data->gt4[polygon_index].v0 = v0;
-        g_battle_data->gt4[polygon_index].v1 = v1;
-        g_battle_data->gt4[polygon_index].v2 = v2;
-        g_battle_data->gt4[polygon_index].v3 = v3;
-        g_battle_data->gt4[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
-        g_battle_data->gt4[polygon_index].tpage = texture_page;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].u0 = u0;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].u1 = u1;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].u2 = u2;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].u3 = u3;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].v0 = v0;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].v1 = v1;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].v2 = v2;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].v3 = v3;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].tpage = texture_page;
     }
 
     for (polygon_index = g_battle_map_untextured_triangle_render_record_count;
         polygon_index < untextured_triangle_count + g_battle_map_untextured_triangle_render_record_count;
         polygon_index++) {
-        g_battle_data->f3[polygon_index].r0 = 0;
-        g_battle_data->f3[polygon_index].g0 = 0;
-        g_battle_data->f3[polygon_index].b0 = 1;
+        g_battle_gfx_current_render_buffer->f3[polygon_index].r0 = 0;
+        g_battle_gfx_current_render_buffer->f3[polygon_index].g0 = 0;
+        g_battle_gfx_current_render_buffer->f3[polygon_index].b0 = 1;
     }
 
     for (polygon_index = g_battle_map_untextured_quad_render_record_count;
         polygon_index < untextured_quad_count + g_battle_map_untextured_quad_render_record_count; polygon_index++) {
-        g_battle_data->f4[polygon_index].r0 = 0;
-        g_battle_data->f4[polygon_index].g0 = 0;
-        g_battle_data->f4[polygon_index].b0 = 1;
+        g_battle_gfx_current_render_buffer->f4[polygon_index].r0 = 0;
+        g_battle_gfx_current_render_buffer->f4[polygon_index].g0 = 0;
+        g_battle_gfx_current_render_buffer->f4[polygon_index].b0 = 1;
     }
 }

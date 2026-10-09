@@ -21,11 +21,11 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
             if (battle_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
-                    battle_find_unit_data_pointer_for_entd_unit_id(
+                    battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
                     if (battle_id >= 0) {
                         if (restore == 0) {
-                            if (battle_update_unit_status_and_staged_status_data(battle_unit_index) != 0) {
+                            if (battle_unit_save_staged_status_data(battle_unit_index) != 0) {
                                 g_battle_thread_call_target
                                     = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
                                 battle_thread_call_on_main_stack(unit_id);

@@ -28,7 +28,7 @@ void battle_sound_bg_thread(void) {
     } else {
         sound = sound_id + bank;
         main_sound_stop_sfx(sound);
-        main_sound_play_weather_sfx(sound);
+        main_sound_play_bg_sfx(sound);
     }
     volume = request->volume;
     if (volume == 0) {

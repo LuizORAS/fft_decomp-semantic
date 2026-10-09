@@ -24,7 +24,7 @@ void world_card_run_mode_select_step(void) {
 
     if (world_card_check_selected() > CARD_IO_RESULT_COMPLETE) {
         g_world_card_pending_message = 0;
-        g_card_save_last_written_slot = 0xFF;
+        g_main_card_save_last_used_slot = 0xFF;
         world_menu_stop_thread_and_wait(0xF);
         world_menu_stop_thread_and_wait(6);
         g_world_card_mode_select_running = 0;
@@ -36,7 +36,7 @@ void world_card_run_mode_select_step(void) {
         if (g_world_input_primary_repeat & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             g_world_card_pending_message = 0;
             world_menu_stop_thread_and_wait(6);
-            g_card_save_last_written_slot = 0xFF;
+            g_main_card_save_last_used_slot = 0xFF;
             g_world_card_menu_step = 0;
         }
         return;
@@ -46,7 +46,7 @@ void world_card_run_mode_select_step(void) {
         g_world_card_mode_select_menu.cursor = 0;
         g_world_card_mode_select_running = 1;
     }
-    if (*(s16*)&g_card_save_occupied_slot_count == 0) {
+    if (*(s16*)&g_world_card_mode_select_enabled == 0) {
         g_world_menu_selection_results[5] = 1;
         g_world_card_mode_select_running = 0;
     } else {

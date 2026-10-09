@@ -15,7 +15,7 @@ s32 bunit_menu_run_unit_list_frame(void) {
             g_bunit_status_banner_enabled = g_bunit_saved_status_banner_enabled;
             g_bunit_unit_browse_enabled = g_bunit_saved_unit_browse_enabled;
             bunit_menu_init_unit_list(g_bunit_unit_selected_index);
-            g_bunit_unit_list_count = bunit_panel_build_unit_billboard_list(-1, (s32)g_bunit_unit_data, 1);
+            g_bunit_unit_list_count = bunit_unit_build_data_list(-1, (s32)g_bunit_unit_data, 1);
             g_bunit_unit_reorderable_count = bunit_unit_build_reorderable_index_list();
             bunit_unit_build_list_index_map();
             g_bunit_unit_grid_selected_cell = g_bunit_unit_list_index_map[g_bunit_unit_selected_index];

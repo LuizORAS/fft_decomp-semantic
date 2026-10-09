@@ -35,7 +35,7 @@ void card_save_run_menu(s32 unused) {
         card_gfx_submit_frame_and_swap_buffers(0, 0);
         card_input_update_suppressed_during_fade();
         card_gfx_update_decreasing_fade();
-        card_gfx_enqueue_translucent_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
+        card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE && battle_thread_is_running(5) == 0
             ? g_card_input_primary_repeat
@@ -63,7 +63,7 @@ void card_save_run_menu(s32 unused) {
         }
 
         card_gfx_set_render_otag(g_card_gfx_context->otag + 1);
-        g_current_otag_entry = g_card_gfx_context->otag + 0x3c;
+        g_battle_gfx_current_otag_entry = g_card_gfx_context->otag + 0x3c;
         battle_menu_draw_active_window_frames();
         input = PadRead(0) & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
         buttons = g_card_input_newly_pressed & 0x0fff;
@@ -73,18 +73,18 @@ void card_save_run_menu(s32 unused) {
         }
         card_input_update_event_state(g_card_gfx_context->otag + 0x3c, input, g_card_gfx_drawenv_y == 0 ? 0xf0 : 0);
 
-        if (g_sound_effect_id_to_play == MAIN_SFX_CURSOR_MOVE || g_sound_effect_id_to_play == MAIN_SFX_CANCEL) {
-            g_card_sound_queued_effect_id = g_sound_effect_id_to_play;
+        if (g_battle_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE || g_battle_sound_pending_sfx_id == MAIN_SFX_CANCEL) {
+            g_card_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
         }
-        if (g_sound_effect_id_to_play < 0 || g_battle_sound_suppressed != 0) {
-            g_sound_effect_id_to_play = 0;
+        if (g_battle_sound_pending_sfx_id < 0 || g_battle_sound_suppressed != 0) {
+            g_battle_sound_pending_sfx_id = 0;
         }
-        input = g_sound_effect_id_to_play != 0 ? g_sound_effect_id_to_play : g_card_sound_queued_effect_id;
+        input = g_battle_sound_pending_sfx_id != 0 ? g_battle_sound_pending_sfx_id : g_card_sound_queued_effect_id;
         if (input != 0) {
             main_sound_play_sfx(input);
         }
         g_card_sound_queued_effect_id = 0;
-        g_sound_effect_id_to_play = 0;
+        g_battle_sound_pending_sfx_id = 0;
     }
 
     battle_thread_set_parameters(2, 0, -1, 0);

@@ -6,7 +6,7 @@ void wldcore_sound_change_scenario_music(s32 scenario) {
     s32 slot = (s8)(packed >> 8);
 
     if ((packed & 0xFF) != 0) {
-        main_sound_stop_forced_music();
+        main_sound_stop_current_music();
     }
     if (slot != 0) {
         main_sound_unload_scenario_mus(slot);

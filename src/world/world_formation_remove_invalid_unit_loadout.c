@@ -21,7 +21,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
             unit_id, i, (s16)g_world_formation_unit_pointers[unit_id]->equipment[i]);
         if ((u32)(status + 1) < 2 || status == -6) {
             if (unit_id != 20) {
-                world_item_change_quantity_on_equip((s16)g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
+                world_item_adjust_inventory_count((s16)g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
             }
             g_world_formation_unit_pointers[unit_id]->equipment[i] = ITEM_ID_NOTHING;
         }
@@ -31,7 +31,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
     if (i < ITEM_ID_THROWABLE_FIRST && i != ITEM_ID_NOTHING && status < ITEM_ID_THROWABLE_FIRST
         && status != ITEM_ID_NOTHING && world_ability_has_two_swords(unit_id) == 0) {
         if (unit_id != 20) {
-            world_item_change_quantity_on_equip((s16)g_world_formation_unit_pointers[unit_id]->equipment[1], 1);
+            world_item_adjust_inventory_count((s16)g_world_formation_unit_pointers[unit_id]->equipment[1], 1);
         }
         g_world_formation_unit_pointers[unit_id]->equipment[1] = ITEM_ID_NOTHING;
     }

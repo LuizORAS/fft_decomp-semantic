@@ -39,9 +39,9 @@ void battle_effect_integrate_particle_motion(battle_effect_particle_t* list) {
     s32 on_hit_z;
 
     inertia = g_battle_effect_inertia_threshold;
-    on_hit_x = on_hit_effects_data.x;
-    on_hit_y = on_hit_effects_data.y;
-    on_hit_z = on_hit_effects_data.z;
+    on_hit_x = g_battle_effect_gravity.x;
+    on_hit_y = g_battle_effect_gravity.y;
+    on_hit_z = g_battle_effect_gravity.z;
 
     node = list;
     while (list != 0) {

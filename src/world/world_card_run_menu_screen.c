@@ -70,7 +70,7 @@ s32 world_card_run_menu_screen(s32 slot_count) {
     world_gfx_bind_data_pointer(3);
     g_world_card_menu_step = 0;
     /* WORLD stores the CARD slot count as a halfword. */
-    *(s16*)&g_card_save_occupied_slot_count = slot_count;
+    *(s16*)&g_world_card_mode_select_enabled = slot_count;
     music_handle = main_sound_open_music_into_free_slot(0x29);
     while (main_return_zero_80043708() != 0) { }
     main_sound_switch_music_track((s16)music_handle, 0x7f, 0);
@@ -84,7 +84,7 @@ s32 world_card_run_menu_screen(s32 slot_count) {
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
         world_thread_update_task_state_2();
         world_gfx_update_fade_in_tile();
-        world_gfx_append_tile_to_otag(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
+        world_gfx_enqueue_tile(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
         if (g_world_card_menu_step == 3 && world_thread_is_running(5) == 0) {
             input = (u16)g_world_input_primary_repeat;
         } else {

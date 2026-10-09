@@ -51,7 +51,7 @@ void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, world_u
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (battle_unit_has_misc_id(i) != 0) {
             unit_id = battle_unit_get_battle_index_by_misc_id(i);
-            linked_unit = battle_find_unit_data_pointer_for_entd_unit_id(
+            linked_unit = battle_unit_find_stats_by_entd_unit_id(
                 battle_unit_get_stats_from_battle_id(unit_id)->unit_id, &resolved_id);
             if (resolved_id >= 0 && unit_id == resolved_id && linked_unit->unit_id != 0) {
                 count++;

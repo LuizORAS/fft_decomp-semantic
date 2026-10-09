@@ -11,6 +11,6 @@ void battle_state_restart_menu_to_targeting(void) {
     unit->command_ready = 0;
     battle_target_set_tile_background_color(0, 0);
     if (unit != 0 && unit->battle_data != 0) {
-        battle_menu_store_unit_names_and_event_block_data(3, unit->battle_data->misc_unit_id, 0);
+        battle_unit_start_view_thread(3, unit->battle_data->misc_unit_id, 0);
     }
 }

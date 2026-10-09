@@ -43,7 +43,7 @@ s32 battle_target_move_cursor_by_input(void) {
     direction = 0;
     current = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (g_main_game_options.fields.multi_height_cursor_speed == 3) {
-        if (g_controller_input_pressed & PSX_PAD_START) {
+        if (g_main_input_pressed_buttons & PSX_PAD_START) {
             if (!battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
                     ->flags_06.bits.blocked) {
                 direction = 1;

@@ -32,7 +32,7 @@ void battle_menu_validate_skill_selection_thread(void) {
             message = 0x1008;
         }
     }
-    g_battle_menu_selected_skill_target = target;
+    g_battle_menu_selected_skill_ct = target;
     if ((g_battle_active_menu == 6 || g_battle_active_menu == 0) && blocked != 0
         && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
         message = 0x8013;

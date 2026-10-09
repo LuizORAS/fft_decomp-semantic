@@ -20,7 +20,7 @@ void bunit_menu_update_event_thread_state(void) {
     }
 
     if (running == 0) {
-        g_event_mode = 0;
+        g_battle_menu_input_lock_mode = 0;
     }
     if (g_bunit_help_text_state == 1) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_WINDOW_OPEN;

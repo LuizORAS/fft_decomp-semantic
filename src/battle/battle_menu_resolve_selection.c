@@ -31,7 +31,7 @@ s32 battle_menu_resolve_selection(void) {
     command = selection->command;
     option = selection->option;
     item = selection->item;
-    g_selected_ability = command;
+    g_battle_menu_selected_command = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
         menu = g_battle_menu_current_id;
@@ -78,7 +78,7 @@ s32 battle_menu_resolve_selection(void) {
             item = 0xFFFE;
             g_battle_menu_resolved_command = command;
         }
-        g_selected_ability = command;
+        g_battle_menu_selected_command = command;
         if ((option & 0xFE) != 0xFE) {
             option = g_battle_action_menu_skillsets[index];
             if ((u32)(option - 1) < 2 || (u32)(option - 3) < 2 || (u32)(option - 0x11) < 2) {

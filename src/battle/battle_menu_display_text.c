@@ -5,7 +5,7 @@
  * BATTLE text measurers. */
 #define TEXT_STATE ((world_text_backreference_state_t*)0x1F800200)
 
-#define TEXT_NEXT(state, cursor) battle_text_find_next_character(state, cursor)
+#define TEXT_NEXT(state, cursor) battle_text_advance_cursor_with_backreferences_2(state, cursor)
 
 /* Renders a text entry's glyphs into a menu image at the pen position.
  *
@@ -33,7 +33,7 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
 
     main_party_get_data_pointer(0);
     if (text == (u8*)0 || text == (u8*)1) {
-        cursor = battle_text_init_entry(text_id);
+        cursor = battle_text_find_entry(text_id);
     } else {
         cursor = text;
     }
@@ -146,7 +146,7 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {
                         cursor = g_battle_player_name;
                     } else {
-                        cursor = battle_text_init_entry(state->value);
+                        cursor = battle_text_find_entry(state->value);
                     }
                     state->value_cursor++;
                     continue;

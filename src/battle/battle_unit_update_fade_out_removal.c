@@ -17,7 +17,7 @@ s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit) {
         battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, -0x1f, -0x1f, -0x1f);
         return 0;
     case 2:
-        if (unit->unit_id != g_battle_casting_misc_id) {
+        if (unit->unit_id != g_battle_unit_source_misc_id) {
             unit->palette_modifier = 3;
             if (unit->battle_data != 0) {
                 battle_unit_disable_remove(unit->battle_data->misc_unit_id);

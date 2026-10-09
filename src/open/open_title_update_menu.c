@@ -106,7 +106,7 @@ void open_title_update_menu(open_title_controller_t* state) {
             frame_rate = 0x85;
             break;
         }
-        open_movie_stream_other_str_and_push_controller_11(start_sector, stream_length, end_frame, frame_rate);
+        open_movie_stream_title_demo_and_push_controller(start_sector, stream_length, end_frame, frame_rate);
         g_open_title_demo_movie_index++;
         if (g_open_title_demo_movie_index >= 3) {
             g_open_title_demo_movie_index = 0;

@@ -38,8 +38,8 @@ void battle_menu_run_icon_selection_loop(void) {
         }
         record = &records[i & 1];
         param->cursor = cursor;
-        battle_menu_configure_frame_cluts(record);
-        battle_update_menu_cursor_primitives(param, (world_menu_icon_sprites_t*)record, i, cursor);
+        battle_menu_select_icon_cluts(record);
+        battle_menu_update_icon_cursor_sprites(param, (world_menu_icon_sprites_t*)record, i, cursor);
         if ((records[0]._unknown_78 == 0 && records[1]._unknown_78 == 2)
             || (records[0]._unknown_78 == 2 && records[1]._unknown_78 == 0)) {
             records[0]._unknown_78 = 0;
@@ -49,9 +49,9 @@ void battle_menu_run_icon_selection_loop(void) {
             break;
         }
         battle_menu_handle_action(param, cursor);
-        battle_menu_update_selection_from_input((battle_menu_idle_action_entry_t*)param, &cursor);
+        battle_menu_step_wrapping_cursor_on_scroll_buttons((battle_menu_idle_action_entry_t*)param, &cursor);
         battle_handle_menu_cancel_input(param);
-        battle_menu_submit_frame_primitives(record);
+        battle_menu_submit_icon_primitives(record);
     }
     battle_thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {

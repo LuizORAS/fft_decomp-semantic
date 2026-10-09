@@ -96,9 +96,9 @@ void world_shop_run_screen(s32 shop_type) {
     SetDispMask(0);
     while (DrawSync(1) != 0) { }
     world_gfx_move_image_and_wait(&g_world_shop_background_vram_rect, 0, 0);
-    tim = world_gfx_load_tim_by_table_index(tim_index + buttons);
-    world_gfx_load_image_sync(&g_world_shop_background_vram_rect, tim + 5);
-    world_gfx_move_image_to_ram_from_vram_and_wait(&g_world_shop_vram_backup_rect, tim);
+    tim = world_shop_load_background_tim(tim_index + buttons);
+    world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim + 5);
+    world_gfx_store_image_and_wait(&g_world_shop_vram_backup_rect, tim);
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,
         packets.gradient_quads, packets.textured_gradient_quads, packets.tiles_24, 0, 0, 0, 0, 0, packets.tiles, 0, 0,
         0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
@@ -130,8 +130,8 @@ void world_shop_run_screen(s32 shop_type) {
         world_menu_set_palette_mode(g_world_thread_task_active);
         if (g_world_shop_background_visible != 0) {
             world_gfx_enqueue_textured_quad(&g_world_shop_background_rect, 0, 0, 0, 0, 0x14C, 0, 1);
-            world_gfx_append_tile_to_otag(&g_world_shop_backdrop_tile_rect, g_world_gfx_black_tile_color, 0, 0);
-            world_gfx_append_tile_to_otag(tile_box, g_world_gfx_black_tile_color, 0, g_world_ot_length - 1);
+            world_gfx_enqueue_tile(&g_world_shop_backdrop_tile_rect, g_world_gfx_black_tile_color, 0, 0);
+            world_gfx_enqueue_tile(tile_box, g_world_gfx_black_tile_color, 0, g_world_ot_length - 1);
         }
         if ((g_world_formation_unit_cycle_mode != 0 || g_world_formation_unit_browse_enabled != 0)
             && g_world_shop_menu_step < 0x14) {
@@ -190,6 +190,6 @@ void world_shop_run_screen(s32 shop_type) {
     world_formation_save_records_to_party_data();
     world_script_set_vsync_mode_and_event_speed(0);
     world_formation_reset_menu_context();
-    world_gfx_load_image_sync(&g_world_shop_background_vram_rect, tim);
+    world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim);
     main_heap_free(tim);
 }

@@ -13,8 +13,8 @@ void battle_state_handle_default_state(void) {
     battle_camera_call_toggle_tilt();
     battle_target_move_cursor_by_input();
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    input = g_controller_input_pressed;
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    input = g_main_input_pressed_buttons;
     (void)&unused;
     if (input & PSX_PAD_SELECT) {
         battle_action_clear_at_list_id();

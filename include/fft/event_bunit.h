@@ -206,12 +206,12 @@ extern u16 g_bunit_text_metric_5;
 extern u8 g_bunit_text_layout_mode;
 
 /* Text-section buffers: bunit_menu_run_reorder_list passes g_bunit_text_reorder_list_buffer
- * straight to bunit_text_concatenate_ids as its u8* output string and
+ * straight to bunit_text_concatenate_entries as its u8* output string and
  * g_bunit_text_menu_section as the text-section base; bunit_gfx_init_vram_and_start_fade
  * installs both addresses as u8* text-section pointers. */
 extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_text_reorder_list_buffer[];
-void bunit_run_numeric_editor_thread(void);
+void bunit_menu_run_numeric_editor_thread(void);
 
 void bunit_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
     battle_menu_status_panel_text_position_t* out, s32 count);
@@ -226,13 +226,13 @@ void bunit_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_pan
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void bunit_text_set_palette_and_metrics(s32 mode);
-void bunit_text_concatenate_ids(const u8* text_table, u8* out, s16* list, s32 separate);
+void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s32 separate);
 void bunit_text_render_id_rows_to_vram(s32 text_table, u16* text_ids, RECT* destination, s32 flags);
 
-void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
+void bunit_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 
-const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2);
+const u8* bunit_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 void bunit_text_start_selection_thread(s32 thread_data);
 
 /* thread */
@@ -240,8 +240,8 @@ extern battle_menu_status_panel_indicator_prims_t g_bunit_thread_indicator_packe
 extern u8 g_bunit_thread_status_snapshot[16];
 s32 bunit_thread_is_running(s32 thread_id);
 void bunit_thread_request_stop(s32 thread_id);
-void bunit_thread_toggle_7(s32 enable);
-void bunit_thread_toggle_8(s32 enable);
+void bunit_panel_toggle_comparison_status_thread(s32 enable);
+void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_thread_toggle_9_and_12(s32 enable);
 
 /* cursor */
@@ -462,7 +462,7 @@ void bunit_gfx_enqueue_textured_quad_corners(bunit_sprite_desc_t* src, u8* color
 void bunit_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const u8* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count);
 
-void bunit_gfx_enqueue_translucent_tile(RECT* rect, u8* color, u8 semi, s32 idx);
+void bunit_gfx_enqueue_tile(RECT* rect, u8* color, u8 semi, s32 idx);
 s32 bunit_gfx_get_fade_state(void);
 void bunit_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void bunit_gfx_init_rhombus_cursor_tpages(void);
@@ -472,7 +472,7 @@ void bunit_gfx_start_decreasing_fade(void);
 void bunit_gfx_start_increasing_fade(void);
 s32 bunit_gfx_update_increasing_fade(void);
 
-void bunit_gfx_apply_menu_palette_for_mode(
+void bunit_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const battle_menu_status_panel_frame_config_t* thread);
 
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
@@ -626,7 +626,7 @@ s32 bunit_menu_run_descriptor_thread(s32 id, world_menu_entry_t* desc);
 s32 bunit_menu_run_job_list(void);
 void bunit_menu_run_reorder_list(void);
 void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, u8* script);
-void bunit_menu_set_event_speed(s32 speed);
+void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
 void bunit_menu_dispatch_with_override(s32 menu_id, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id);
@@ -711,7 +711,7 @@ typedef struct bunit_unit_data {
     s16 magical_accessory_evade; /* 0x52 */
     s16 equipment[5];            /* 0x54 */
     s16 abilities[5];            /* 0x5e; primary skillset, secondary, reaction, support, movement (filled by
-                                  * bunit_panel_copy_unit_data_to_billboard; bunit_create_ability_list reads [0]) */
+                                  * bunit_unit_build_data_from_battle_stats; bunit_create_ability_list reads [0]) */
     u8 _unused_068[8];
     u8 gender_flags;          /* 0x70; Bard/Dancer restrictions */
     u8 misc_unit_id;          /* 0x71 */
@@ -799,7 +799,7 @@ extern world_menu_entry_t g_bunit_unit_list_triangle_menu;
 extern bunit_oriented_quad_t g_bunit_unit_shadow_sprite;
 
 /* Halfword field index, per sort key, into the 0x10C-byte formation record
- * built by bunit_panel_build_unit_billboard_list. The name is provisional. */
+ * built by bunit_unit_build_data_list. The name is provisional. */
 extern s8 g_bunit_unit_sort_field_indices[];
 void bunit_unit_sort_index_list_by_order_keys(s32 a);
 void bunit_unit_build_list_index_map(void);
@@ -855,9 +855,9 @@ extern u8 g_bunit_panel_sprite_cells[];
 void bunit_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
 
-void bunit_panel_run_character_status_thread(void);
-s32 bunit_panel_build_unit_billboard_list(s32 mode, s32 unit_data, s32 sort_mode);
-void bunit_panel_copy_unit_data_to_billboard(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
+void bunit_menu_equipment_and_ability_panel_thread(void);
+s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
+void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
 
 /* other */
 enum {

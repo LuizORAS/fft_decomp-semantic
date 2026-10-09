@@ -11,7 +11,7 @@ s32 world_card_count_selectable_save_slots(void) {
 
     g_world_menu_script_callbacks[0] = 0;
     for (i = 0, count = 0; i < 15; i++) {
-        if (i == g_card_save_last_written_slot) {
+        if (i == g_main_card_save_last_used_slot) {
             g_world_card_active_slot = i;
             g_world_card_slot_cursor_row = count;
         }

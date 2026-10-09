@@ -15,7 +15,7 @@ void world_script_jump_event_instruction(world_script_event_instruction_t* instr
     battle_stats_t* stats;
     u8 saved;
 
-    misc_id = world_get_misc_id(world_script_load_halfword((const u8*)instr));
+    misc_id = world_script_get_misc_id(world_script_load_halfword((const u8*)instr));
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords = (battle_screen_coords_t*)battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
         vec.x = -coords->x;

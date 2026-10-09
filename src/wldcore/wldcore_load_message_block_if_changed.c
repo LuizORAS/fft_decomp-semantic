@@ -9,7 +9,7 @@ void wldcore_load_message_block_if_changed(s32 chapter) {
     if (chapter != g_wldcore_loaded_message_block) {
         wldcore_wait_for_file_load();
         g_wldcore_loaded_message_block = chapter;
-        wldcore_wait_and_build_file_header(&g_main_file_cd_state,
+        wldcore_file_wait_then_build_header(&g_main_file_cd_state,
             g_wldcore_message_block_sector_offsets[chapter] + 0x11f59,
             g_wldcore_message_block_sector_offsets[chapter + 1] - g_wldcore_message_block_sector_offsets[chapter],
             g_wldcore_message_buffer);

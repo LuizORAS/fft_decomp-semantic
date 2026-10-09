@@ -116,11 +116,11 @@ typedef struct card_save_header {
 
 extern s32 g_main_card_bios_events[MAIN_CARD_EVENT_COUNT];
 extern u8 g_main_card_bios_events_opened;
-extern u8 g_card_save_last_written_slot;
+extern u8 g_main_card_save_last_used_slot;
 extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
-extern u8 g_card_save_slot_metadata[][0x18];
-extern u8 g_card_save_slot_playtimes[][3];
+extern u8 g_main_card_save_slot_metadata[][0x18];
+extern u8 g_main_card_save_slot_playtimes[][3];
 void main_card_init_events(void);
 
 /* file */
@@ -164,10 +164,10 @@ void main_file_reset_cdrom_cpu_ram(void);
 int main_file_build_header(
     main_file_load_descriptor_t* state, int lba, int sector_count, void* destination, int loading_display_mode);
 
-void* main_file_get_bin_as_tim(int sector, int size);
+void* main_file_load_checked_to_heap(int sector, int size);
 void* main_file_load_checked_to_address(int sector, int size, void* destination);
 void* main_file_get_smd(int sector, int size);
-void* main_file_get_tim(s32 sector, s32 size);
+void* main_file_load_to_heap(s32 sector, s32 size);
 void* main_file_load_to_address(int sector, u32 size, void* destination);
 void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
 void main_file_poll_load(main_file_load_descriptor_t* state);
@@ -221,10 +221,10 @@ item_data_t* main_item_get_data_pointer(s32 item_id);
 s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
 
 /* job */
-extern job_data_t g_job_data[];
+extern job_data_t g_main_job_data[];
 extern const u16 g_job_level_jp_requirements[8];
 extern u16 g_main_job_jp_requirements_by_level[];
-extern const u8 g_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
+extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
 s32 main_job_add_proposition_jp(s32 party_index, s32 jp);
 u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
@@ -325,12 +325,12 @@ void main_save_init_state_and_options(void);
 void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
 /* script */
-extern u16 g_scenario_event_finish_operations[];
+extern u16 g_main_scenario_event_finish_operations[];
 extern s32 g_main_script_variables[0x100];
-extern u8* g_event_overlay_load_address;
+extern u8* g_main_heap_companion_overlay_load_address;
 extern u16 g_main_scenario_condition_offsets[];
 extern s16 g_main_scenario_condition_data[];
-extern event_file_block_t g_event_script_buffer[];
+extern event_file_block_t g_main_script_event_block[];
 
 /* sound */
 /* Suzuki sound driver (SCUS_942.21 0x800120f4-0x800186c4) records, tables and
@@ -665,7 +665,7 @@ typedef u8* (*suzuki_smd_handler_t)(u8* note_data, suzuki_music_t* music, suzuki
 
 /* Scenario-music playback state at 0x8004d95c (SCUS_942.21). current_music
  * is the Suzuki music record of the playing scenario music:
- * main_sound_stop_forced_music hands it straight to
+ * main_sound_stop_current_music hands it straight to
  * SuzukiDeallocateMUSChannels, which takes a suzuki_music_t*. */
 typedef struct main_sound_music_state {
     s32 scenario_track;                /* 0x00 0x8004d95c slot of the playing scenario music */
@@ -810,7 +810,7 @@ s32 main_sound_open_music_into_free_slot(s32 scenario);
 s32 main_sound_open_music_into_slot(s32 scenario, s32 slot);
 s32 main_sound_open_scenario_smd_files(s32 scenario);
 void main_sound_play_sfx(s32 sound_id);
-void main_sound_play_weather_sfx(s32 sound_id);
+void main_sound_play_bg_sfx(s32 sound_id);
 void main_sound_play_sfx_find_channel(s32 sound_id);
 s32 main_sound_play_tune(s32 tune);
 s32 main_sound_poll_scenario_smd_load(void);
@@ -822,7 +822,7 @@ void main_sound_set_current_music_track(s32 track);
 s32 main_sound_set_current_music_volume(s32 volume, s32 time);
 s32 main_sound_set_current_music_volume_timed(s32 time);
 s32 main_sound_set_tune_volume(s32 volume);
-s32 main_sound_stop_forced_music(void);
+s32 main_sound_stop_current_music(void);
 
 /* battle_map_step_init_sequence calls this without loading $a0, but the body reads sound_id. */
 void main_sound_stop_sfx(int sound_id);
@@ -896,7 +896,7 @@ void main_sound_stop_sfx_channel_pair(s32 index);
 void main_sound_release_sfx_voices(suzuki_music_t* music, u32 channel_mask, u32 voice_mask);
 void main_sound_set_sfx_balance(s32 sound_id, s32 balance);
 u32 main_sound_get_sfx_channels(s32 sound_id);
-s32 main_sound_find_sfx_voice(s32 sound_id, s32 voice_count);
+s32 main_sound_find_sfx_channel(s32 sound_id, s32 voice_count);
 suzuki_music_t* main_sound_init_sfx_music(void);
 void main_smd_init_sfx_music_header(suzuki_music_t* music);
 void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance);
@@ -959,7 +959,7 @@ void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mod
 void main_suzuki_spu_callback_func(void);
 s32 main_sound_spu_event_handler(void);
 s16 main_sound_wait_for_spu_transfer(s32 flags);
-void main_sound_replay_weather_sfx(void);
+void main_sound_replay_bg_sfx(void);
 
 /* Suzuki key-on/key-off flushes. The driver compiled them both as functions
  * and inline in its root-counter handler, so their bodies live here once. */
@@ -1183,7 +1183,7 @@ typedef enum main_unit_action_state {
     MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 0xff
 } main_unit_action_state_e;
 
-extern u8 g_highest_party_level;
+extern u8 g_main_party_highest_level;
 extern u8 g_party_slot_base;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
@@ -1308,7 +1308,7 @@ typedef struct zodiac_draw_context {
     main_zodiac_draw_offset_t offset; /* 0x18 */
 } zodiac_draw_context_t;
 
-extern const u16 g_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
+extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
 extern POLY_FT4 g_main_zodiac_primitives[2][30];
 
 /* gfx */
@@ -1346,7 +1346,7 @@ int main_gfx_swap_display_area(u32 otag);
 void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_gfx_build_now_loading_center(u32 visible);
-void main_gfx_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
+void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
@@ -1371,7 +1371,7 @@ extern u32 g_main_tutorial_progress_masks[];
 extern u8 g_main_special_portrait_unit_id;
 extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
 extern u16 g_main_month_start_day_offsets[13];
-extern struct battle_deployed_coords* g_main_current_formation_entry;
+extern struct battle_deployed_coords* g_main_unit_deployed_coords;
 extern u8 g_main_crystal_learnable_abilities[];
 extern u8 g_main_crystal_treasure_item_id;
 extern u8 g_main_brave_story_character_ages[0x40];
@@ -1392,7 +1392,7 @@ extern s16 D_80032A58; /* only ever stored */
 extern s32 D_800459D8;
 extern u8 D_800473A7;
 extern u8 D_80057b1c;
-extern u8 D_8005E950[];
+extern u8 g_main_terrain_tile_info_pairs[];
 
 /* entry */
 

@@ -13,7 +13,7 @@ void battle_state_enter_status_execute(void) {
     unit = battle_unit_get_source_misc_data();
     battle_action_clear_at_list_active();
     g_battle_action_post_action = 0;
-    if (g_action_type == BATTLE_TURN_EVENT_MIME) {
+    if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_MIME) {
         battle_text_set_message_duration_frames(0x3C);
         battle_menu_init_system_function(
             0xA, 0x183A, unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);

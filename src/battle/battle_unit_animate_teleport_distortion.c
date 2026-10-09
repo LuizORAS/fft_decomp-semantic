@@ -9,7 +9,7 @@ typedef struct battle_unit_teleport_pulse_prim {
     s16 scale_y; /* 0x0a */
 } battle_unit_teleport_pulse_prim_t;
 
-/* Renderer-side object shared with battle_move_interpolate_height_toward_fixed_drop (0x087..0x090 agree). */
+/* Renderer-side object shared with battle_move_interpolate_height_toward_fixed_rise (0x087..0x090 agree). */
 typedef struct battle_unit_teleport_pulse_obj {
     u8 _unused_000[0x87];
     u8 active;      /* 0x087 */

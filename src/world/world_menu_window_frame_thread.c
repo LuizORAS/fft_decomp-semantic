@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_run_dead_unit_panel_a,
+ * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread,
  * byte-identical apart from addresses). Layout notes below are the OPTION
  * twin's; the WORLD helpers are the same routines.
  */
@@ -28,7 +28,7 @@ void world_menu_window_frame_thread(void) {
     /* The two border thicknesses feed both the primitive fields and the
        argument registers throughout, even though the callee at 0x80138adc
        takes only the primitive pointer:
-       world_gfx_reset_record_texture_window reads none of them. */
+       world_gfx_init_scaled_draw_area_packets reads none of them. */
     s32 border_wide;
     s32 border_thin;
     s32 span;
@@ -40,7 +40,7 @@ void world_menu_window_frame_thread(void) {
     world_clear_menu_render_buffer(g_world_menu_window_frame_image, 0x400);
     texture.w = 0x80;
     texture.h = 0x10;
-    world_gfx_alloc_texture_grid_rect(&texture, &prim->texture_prim, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&texture, &prim->texture_prim, (u32*)-1);
     *source_stride = 0x100;
     *dest_stride = 0x80;
 
@@ -135,7 +135,7 @@ void world_menu_window_frame_thread(void) {
     prim->sprites[8].w = border_thin;
     prim->sprites[8].h = border_wide;
 
-    world_gfx_reset_record_texture_window(&prim->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&prim->cursor_mode);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(world_panel_frame_t));
 
@@ -169,6 +169,6 @@ void world_menu_window_frame_thread(void) {
         world_thread_yield();
     }
     world_thread_yield();
-    world_gfx_free_texture_grid_rect(&texture);
+    world_gfx_free_tpage7_vram(&texture);
     world_thread_exit_current();
 }

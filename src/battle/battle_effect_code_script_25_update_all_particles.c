@@ -83,7 +83,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             battle_effect_spawn_emitter_particles(
                 record->record_index, record->emitter_index, node->child_emitter_index, node);
         }
-        battle_effect_free_particle(record->record_index, node);
+        battle_effect_free_work_record(record->record_index, node);
     }
 
     record->pc += 2;

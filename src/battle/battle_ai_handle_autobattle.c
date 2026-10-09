@@ -30,7 +30,7 @@ s32 battle_ai_handle_autobattle(void) {
         }
         return 1;
     case BATTLE_AI_AUTOBATTLE_FADING_LIFE:
-        result = battle_ai_save_fading_life_auto_battle();
+        result = battle_ai_select_fading_life_action();
         if (result == -1) {
             return -1;
         }

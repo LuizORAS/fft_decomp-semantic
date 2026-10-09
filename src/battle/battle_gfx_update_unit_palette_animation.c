@@ -7,7 +7,7 @@ void battle_gfx_update_unit_palette_animation(void) {
     u8* palette;
     s32 unused[2];
 
-    g_battle_unit_palette_animation_timer += g_animation_speed;
+    g_battle_unit_palette_animation_timer += g_main_system_animation_speed;
     if (g_battle_unit_palette_animation_timer >= 4) {
         g_battle_unit_palette_animation_timer = 0;
         g_battle_unit_palette_animation_offset++;

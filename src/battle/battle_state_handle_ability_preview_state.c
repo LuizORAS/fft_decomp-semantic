@@ -10,11 +10,11 @@ void battle_state_handle_ability_preview_state(void) {
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
+        if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             g_battle_controller_input = g_controller_input_copy_12;
             battle_gfx_update_unit_palettes();
             battle_action_confirm();
-        } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
+        } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             g_battle_controller_input = g_controller_input_copy_12;
             battle_target_set_tile_background_color(8, 3);
             if (unit->ability_preview_phase == 2) {
@@ -37,5 +37,5 @@ void battle_state_handle_ability_preview_state(void) {
         }
     }
     battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
 }

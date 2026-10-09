@@ -67,13 +67,13 @@ void battle_formula_calculate_facing_evade(void) {
     } else if (dx == 0 && dy == 0) {
         direction = BATTLE_ABILITY_FACING_BACK;
     }
-    result = &g_current_ability.facing_modifier;
+    result = &g_battle_action_current_ability.facing_modifier;
     *result = direction;
     if (*result != BATTLE_ABILITY_FACING_FRONT) {
-        g_current_ability.class_evade = 0;
+        g_battle_action_current_ability.class_evade = 0;
     }
     if (*result == BATTLE_ABILITY_FACING_BACK) {
-        g_current_ability.right_shield_evade = 0;
-        g_current_ability.left_shield_evade = 0;
+        g_battle_action_current_ability.right_shield_evade = 0;
+        g_battle_action_current_ability.left_shield_evade = 0;
     }
 }

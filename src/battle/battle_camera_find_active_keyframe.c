@@ -26,17 +26,17 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
     s32 elapsed;
     s32 start;
 
-    phase1 = g_battle_effect_misc_data->phase1_duration;
-    spawn_delay = g_battle_effect_coord_data.hit_counter != 0 ? g_battle_effect_misc_data->spawn_delay : 0;
-    phase2_delay = g_battle_effect_coord_data.hit_counter != 0 ? g_battle_effect_misc_data->phase2_delay : 0;
+    phase1 = g_battle_effect_timeline->phase1_duration;
+    spawn_delay = g_battle_effect_coord_data.hit_counter != 0 ? g_battle_effect_timeline->spawn_delay : 0;
+    phase2_delay = g_battle_effect_coord_data.hit_counter != 0 ? g_battle_effect_timeline->phase2_delay : 0;
 
     if (frame < phase1) {
-        data = g_battle_effect_misc_data;
+        data = g_battle_effect_timeline;
         for (i = 0; i <= data->main.last_keyframe_index; i++) {
             if (frame < data->main.frame_thresholds[i] && (mask & data->main.selector[i]) != 0) {
                 goto found_main;
             }
-            data = g_battle_effect_misc_data;
+            data = g_battle_effect_timeline;
         }
     }
 
@@ -49,7 +49,7 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
         } else {
             local_frame = -1;
         }
-        data = g_battle_effect_misc_data;
+        data = g_battle_effect_timeline;
         for (i = 0; i <= data->last_keyframe_index; i++) {
             if (data->frame_thresholds[i] >= spawn_delay) {
                 break;
@@ -57,12 +57,12 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
             if (local_frame < data->frame_thresholds[i] && (mask & data->selector[i]) != 0) {
                 goto found_target;
             }
-            data = g_battle_effect_misc_data;
+            data = g_battle_effect_timeline;
         }
         target_index++;
         local_frame = -1;
         if (target_index < g_battle_effect_coord_data.hit_counter) {
-            data = g_battle_effect_misc_data;
+            data = g_battle_effect_timeline;
             for (i = 0; i <= data->last_keyframe_index; i++) {
                 if (data->frame_thresholds[i] >= spawn_delay) {
                     break;
@@ -70,7 +70,7 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
                 if (local_frame < data->frame_thresholds[i] && (mask & data->selector[i]) != 0) {
                     goto found_next_target;
                 }
-                data = g_battle_effect_misc_data;
+                data = g_battle_effect_timeline;
             }
         }
     }
@@ -83,12 +83,12 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
             if (frame >= start) {
                 local_frame = frame - phase1 - target_index * spawn_delay;
             }
-            data = g_battle_effect_misc_data;
+            data = g_battle_effect_timeline;
             for (i = 0; i <= data->last_keyframe_index; i++) {
                 if (local_frame < data->frame_thresholds[i] && (mask & data->selector[i]) != 0) {
                     goto found_last_target;
                 }
-                data = g_battle_effect_misc_data;
+                data = g_battle_effect_timeline;
             }
         }
     }
@@ -101,40 +101,40 @@ s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32*
 
 found_main:
     *out_index = i;
-    *out_frame = g_battle_effect_misc_data->main.frame_thresholds[i];
+    *out_frame = g_battle_effect_timeline->main.frame_thresholds[i];
     return 1;
 
 found_target:
     *out_index = i + 0x10000;
     *out_frame
-        = (target_index << 16) + (g_battle_effect_misc_data->frame_thresholds[i] + target_index * spawn_delay + phase1);
+        = (target_index << 16) + (g_battle_effect_timeline->frame_thresholds[i] + target_index * spawn_delay + phase1);
     return 1;
 
 found_next_target:
     *out_index = i + 0x10000;
     *out_frame
-        = (target_index << 16) + (g_battle_effect_misc_data->frame_thresholds[i] + target_index * spawn_delay + phase1);
+        = (target_index << 16) + (g_battle_effect_timeline->frame_thresholds[i] + target_index * spawn_delay + phase1);
     return 1;
 
 found_last_target:
     *out_index = i + 0x10000;
     *out_frame
-        = (target_index << 16) + (g_battle_effect_misc_data->frame_thresholds[i] + target_index * spawn_delay + phase1);
+        = (target_index << 16) + (g_battle_effect_timeline->frame_thresholds[i] + target_index * spawn_delay + phase1);
     return 1;
 
 found_cleanup:
     *out_index = i + 0x20000;
-    *out_frame = g_battle_effect_misc_data->cleanup.frame_thresholds[i] + phase1
+    *out_frame = g_battle_effect_timeline->cleanup.frame_thresholds[i] + phase1
         + (g_battle_effect_coord_data.hit_counter - 1) * spawn_delay + phase2_delay;
     return 1;
 
 scan_cleanup:
-    data = g_battle_effect_misc_data;
+    data = g_battle_effect_timeline;
     for (i = 0; i <= data->cleanup.last_keyframe_index; i++) {
         if (local_frame < data->cleanup.frame_thresholds[i] && (mask & data->cleanup.selector[i]) != 0) {
             goto found_cleanup;
         }
-        data = g_battle_effect_misc_data;
+        data = g_battle_effect_timeline;
     }
     return 0;
 }

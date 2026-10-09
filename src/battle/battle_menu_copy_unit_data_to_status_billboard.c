@@ -4,7 +4,7 @@
 /* Fills a status billboard (level, team kind, AT position, HP/MP/CT and the
  * live-unit count) from a battle unit.
  *
- * BATTLE twin of debugchr_panel_copy_unit_data_to_billboard. Reusing `unit`
+ * BATTLE twin of debugchr_menu_copy_unit_data_to_status_billboard. Reusing `unit`
  * for the loop's stats and lookup pointers ranks it ahead of `i` for $s0, and
  * reading MP directly rather than through `value` gives CT $v1 and the
  * callback address $v0 in the call block. */
@@ -52,7 +52,7 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
         if (battle_unit_has_misc_id(i) != 0) {
             unit_id = battle_unit_get_battle_index_by_misc_id(i);
             unit = battle_unit_get_stats_from_battle_id(unit_id);
-            unit = battle_find_unit_data_pointer_for_entd_unit_id(unit->unit_id, &resolved_id);
+            unit = battle_unit_find_stats_by_entd_unit_id(unit->unit_id, &resolved_id);
             if (resolved_id >= 0 && unit_id == resolved_id && unit->unit_id != 0) {
                 count++;
             }

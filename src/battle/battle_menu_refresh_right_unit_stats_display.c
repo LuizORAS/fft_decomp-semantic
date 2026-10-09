@@ -4,7 +4,7 @@
 void battle_menu_refresh_right_unit_stats_display(void) {
     s16* display_mode;
 
-    battle_menu_store_units_small_in_battle_display_data();
+    battle_menu_load_selected_unit();
     display_mode = &g_battle_menu_right_unit_display_mode;
     *display_mode = 2;
     if (g_battle_menu_status_billboard.list_index < 0) {

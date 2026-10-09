@@ -31,7 +31,7 @@ void world_menu_preview_attack_caster_stats(void) {
     }
     world_thread_yield();
     world_thread_yield();
-    world_unit_load_selected_into_editor();
+    world_menu_load_selected_unit();
     world_menu_display_hovered_unit_stats(&g_world_menu_attack_caster_stats_display, 1,
         g_world_menu_attack_caster_stats_setup, &g_world_unit_selected_status_billboard);
 }

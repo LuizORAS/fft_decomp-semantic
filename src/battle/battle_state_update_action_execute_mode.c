@@ -19,8 +19,8 @@ void battle_state_update_action_execute_mode(void) {
     battle_target_calculate_tile_coords_and_glow_from_at_list();
 
     unit = battle_unit_get_casting_misc_data();
-    /* The target reads the halfword of g_animation_speed. */
-    unit->state_frame_counter += g_animation_speed;
+    /* The target reads the halfword of g_main_system_animation_speed. */
+    unit->state_frame_counter += g_main_system_animation_speed;
     if (unit->target_count != 0) {
         for (i = 0; i < unit->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
@@ -38,7 +38,7 @@ void battle_state_update_action_execute_mode(void) {
         }
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
             && (unit->animation_countdown == 0 || (unit->encoded_animation >> 1) < 0x3cU)) {
-            main_sound_replay_weather_sfx();
+            main_sound_replay_bg_sfx();
             if (unit->target_count != 0) {
                 for (i = 0; i < unit->target_count; i++) {
                     target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
@@ -59,7 +59,7 @@ void battle_state_update_action_execute_mode(void) {
         }
     } else {
         battle_camera_update_cursor_tile_vector();
-        battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+        battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
             && (unit->animation_countdown == 0 || (unit->encoded_animation >> 1) < 0x3cU)) {
             if (unit->target_count != 0) {

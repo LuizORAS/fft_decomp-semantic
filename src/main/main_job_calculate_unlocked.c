@@ -42,12 +42,12 @@ u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags) {
         unlock_bit /= 2;
         blocked = 0;
         for (j = 0; j < UNIT_JOB_LEVEL_BYTE_COUNT; j++) {
-            if ((g_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)
+            if ((g_main_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)
                 > (levels[j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)) {
                 blocked = 1;
                 break;
             }
-            if ((g_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)
+            if ((g_main_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)
                 > (levels[j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)) {
                 blocked = 1;
                 break;

@@ -45,6 +45,6 @@ void world_menu_announce_entry_value_thread(void) {
     world_text_character_handling_thread();
     g_world_formation_menu_new_buttons = 0;
     g_world_thread_task_active = 0;
-    world_input_store_menu_state(&g_world_formation_menu_input_state);
+    world_script_load_event_input_state(&g_world_formation_menu_input_state);
     world_thread_exit_current();
 }

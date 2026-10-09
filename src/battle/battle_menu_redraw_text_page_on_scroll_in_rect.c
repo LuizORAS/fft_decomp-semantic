@@ -41,7 +41,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             if (offset < 0) {
                 *row_offset = 0;
             }
-            g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+            g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
         } else if ((*input & PSX_PAD_DOWN) && *row_offset != layout->hidden_rows) {
             offset = layout->row_count + *row_offset;
@@ -49,7 +49,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             if (layout->hidden_rows < offset) {
                 *row_offset = layout->hidden_rows;
             }
-            g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+            g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
         } else if (g_battle_threads[g_battle_current_thread_id].task_words[4] != 0) {
             changed = 1;
@@ -57,7 +57,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
         }
         if (changed != 0) {
             if (g_battle_menu_scroll_list_depth == 2) {
-                buffer = g_event_overlay_load_address + 0x2000;
+                buffer = g_main_heap_companion_overlay_load_address + 0x2000;
             } else {
                 buffer = battle_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
             }

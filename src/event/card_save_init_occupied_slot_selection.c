@@ -9,7 +9,7 @@ s32 card_save_init_occupied_slot_selection(void) {
     slot = 0;
     occupied_count = 0;
     while (slot < 15) {
-        if (slot == g_card_save_last_written_slot) {
+        if (slot == g_main_card_save_last_used_slot) {
             g_card_save_list_selected_slot = slot;
             g_card_save_list_cursor_index = occupied_count;
         }

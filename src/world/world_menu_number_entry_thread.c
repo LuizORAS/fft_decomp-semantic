@@ -62,7 +62,7 @@ void world_menu_number_entry_thread(void) {
     world_menu_build_icon_record(&rect, (world_menu_icon_thread_param_t*)param, &records[0]);
     world_script_copy_bytes(&records[1], &records[0], 0x7C);
     for (j = 0; j < 2; j++) {
-        world_menu_init_quad(&cursor_quads[j]);
+        world_gfx_init_default_poly_ft4(&cursor_quads[j]);
         SetSemiTrans(&cursor_quads[j], 0);
         cursor_quads[j].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         cursor_quads[j].clut = 0x7D7C;
@@ -74,7 +74,7 @@ void world_menu_number_entry_thread(void) {
         cursor_quads[j].v1 = 0x10;
         cursor_quads[j].v2 = 0;
         cursor_quads[j].v3 = 0x10;
-        world_menu_init_quad(&shadow_quads[j]);
+        world_gfx_init_default_poly_ft4(&shadow_quads[j]);
         SetSemiTrans(&shadow_quads[j], 1);
         shadow_quads[j].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_quads[j].clut = 0x7DBC;
@@ -151,8 +151,8 @@ void world_menu_number_entry_thread(void) {
         cursor_quad = &cursor_quads[i & 1];
         shadow_quad = &shadow_quads[i & 1];
         world_menu_update_entry_cursor_quads((world_menu_entry_t*)param, cursor_quad, shadow_quad, i, digit);
-        world_menu_select_task_icon_tile((world_texture_prim_t*)cursor_quad);
-        world_menu_select_task_icon_tile((world_texture_prim_t*)shadow_quad);
+        world_menu_select_sprite_clut((world_texture_prim_t*)cursor_quad);
+        world_menu_select_sprite_clut((world_texture_prim_t*)shadow_quad);
         if (world_thread_is_previous_running() == 0) {
             cursor_quad->clut = 0x7D7C;
             shadow_quad->clut = 0x7DBC;
