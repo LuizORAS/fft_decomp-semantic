@@ -3,13 +3,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Primitive tag helpers (clean-room equivalents of the libgpu macros). */
-#define setlen(p, l)         (((P_TAG*)(p))->len = (u8)(l))
-#define setcode(p, c)        (((P_TAG*)(p))->code = (u8)(c))
-#define getcode(p)           (((P_TAG*)(p))->code)
-#define setPolyFT4(p)        (setlen(p, 9), setcode(p, 0x2c))
-#define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
-
 /* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
  * (0x801b7694): the leading halfword is the offset of the per-frame offset
  * array, and each of those offsets reaches a frame record from the same base. */

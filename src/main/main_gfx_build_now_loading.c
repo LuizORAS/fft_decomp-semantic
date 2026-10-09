@@ -1,11 +1,6 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Primitive tag helpers (clean-room equivalents of the libgpu macros). */
-#define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
-#define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
-#define setPolyFT4(p) (setlen(p, 9), setcode(p, 0x2c))
-
 void main_gfx_build_now_loading(u32 visible, s32 x, s32 y) {
     POLY_FT4* prims = g_main_gfx_now_loading_primitives[0];
     POLY_FT4* poly;

@@ -143,6 +143,50 @@ typedef struct {
 #define catPrim(p0, p1) setaddr(p0, p1)
 #define termPrim(p)     setaddr(p, 0xffffffff)
 
+#define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
+#define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
+#define getlen(p)     (((P_TAG*)(p))->len)
+#define getcode(p)    (((P_TAG*)(p))->code)
+
+#define setPolyF3(p)  (setlen(p, 4), setcode(p, 0x20))
+#define setPolyFT3(p) (setlen(p, 7), setcode(p, 0x24))
+#define setPolyG3(p)  (setlen(p, 6), setcode(p, 0x30))
+#define setPolyGT3(p) (setlen(p, 9), setcode(p, 0x34))
+#define setPolyF4(p)  (setlen(p, 5), setcode(p, 0x28))
+#define setPolyFT4(p) (setlen(p, 9), setcode(p, 0x2c))
+#define setPolyG4(p)  (setlen(p, 8), setcode(p, 0x38))
+#define setPolyGT4(p) (setlen(p, 12), setcode(p, 0x3c))
+
+#define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
+#define setShadeTex(p, tge)  ((tge) ? setcode(p, getcode(p) | 0x01) : setcode(p, getcode(p) & ~0x01))
+
+#define getTPage(tp, abr, x, y)                                                                                        \
+    ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
+            ? ((((tp) & 0x3) << 9) | (((abr) & 0x3) << 7) | (((y) & 0x300) >> 3) | (((x) & 0x3ff) >> 6))               \
+            : ((((tp) & 0x3) << 7) | (((abr) & 0x3) << 5) | (((y) & 0x100) >> 4) | (((x) & 0x3ff) >> 6)                \
+                  | (((y) & 0x200) << 2)))
+
+#define setRGB0(p, r, g, b) (p)->r0 = (r), (p)->g0 = (g), (p)->b0 = (b)
+#define setRGB1(p, r, g, b) (p)->r1 = (r), (p)->g1 = (g), (p)->b1 = (b)
+#define setRGB2(p, r, g, b) (p)->r2 = (r), (p)->g2 = (g), (p)->b2 = (b)
+#define setRGB3(p, r, g, b) (p)->r3 = (r), (p)->g3 = (g), (p)->b3 = (b)
+
+#define setXY4(p, _x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3)                                                              \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1), (p)->x2 = (_x2), (p)->y2 = (_y2),              \
+    (p)->x3 = (_x3), (p)->y3 = (_y3)
+
+#define setXYWH(p, _x0, _y0, _w, _h)                                                                                   \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x0) + (_w), (p)->y1 = (_y0), (p)->x2 = (_x0),                        \
+    (p)->y2 = (_y0) + (_h), (p)->x3 = (_x0) + (_w), (p)->y3 = (_y0) + (_h)
+
+#define setUV4(p, _u0, _v0, _u1, _v1, _u2, _v2, _u3, _v3)                                                              \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2),              \
+    (p)->u3 = (_u3), (p)->v3 = (_v3)
+
+#define setUVWH(p, _u0, _v0, _w, _h)                                                                                   \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u0) + (_w), (p)->v1 = (_v0), (p)->u2 = (_u0),                        \
+    (p)->v2 = (_v0) + (_h), (p)->u3 = (_u0) + (_w), (p)->v3 = (_v0) + (_h)
+
 typedef struct {
     s16 x;
     s16 y;
