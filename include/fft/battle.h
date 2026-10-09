@@ -3703,10 +3703,10 @@ s32 battle_effect_update_stage(void);
 void battle_effect_interpolate_emitter_spawn_position(const void* source, s32 factor, s32* out);
 void battle_effect_interpolate_emitter_velocity_base_angles(const void* source, s32 factor, s32* out);
 void battle_effect_interpolate_emitter_velocity_direction_spread(const void* source, s32 factor, s32* out);
-void battle_effect_add_vectors_to_svector(VECTOR* left, VECTOR* right, SVECTOR* result);
-void battle_effect_add_vectors_to_svector_rot_y_270(VECTOR* left, VECTOR* right, SVECTOR* result);
-void battle_effect_add_vectors_to_svector_rot_y_180(VECTOR* left, VECTOR* right, SVECTOR* result);
-void battle_effect_add_vectors_to_svector_rot_y_90(VECTOR* left, VECTOR* right, SVECTOR* result);
+void battle_effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void battle_effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void battle_effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void battle_effect_add_vectors_to_svector_rot_y_90(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot);
 
 /* turn */
@@ -4178,7 +4178,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
 s32 battle_unit_set_placement_and_validate(s32 unit_index, battle_deployed_coords_t* src);
 s32 battle_unit_validate_placement(s32 unit_index);
 void battle_unit_view_supervisor_thread(void);
-s32 battle_update_unit_status_and_staged_status_data();
+s32 battle_update_unit_status_and_staged_status_data(s32 unit_id);
 s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* destination);
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
@@ -7694,6 +7694,7 @@ extern u8 g_battle_text_typewriter_previous_images[3][0x54]; /* previous image p
 void battle_text_run_unit_message_thread(void);
 const u8* battle_find_text_id_location(const u8* text_section, s32 entry_id);
 void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
+u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
 void battle_text_render_glyph_to_4bpp_image(const u8* glyph_bitmap, s32 image, u16* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);

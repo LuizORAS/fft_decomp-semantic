@@ -485,7 +485,13 @@ void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx)
 void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 void bunit_gfx_enqueue_gouraud_quad(u16* pts, u8* color, s32 semi, s32 idx);
 u8* bunit_gfx_get_draw_color(void);
-void bunit_gfx_init_double_packet_buffers();
+void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
+    POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
+    POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
+    u8 (*flat_lines_3)[0x18], u8 (*flat_lines_4)[0x1c], LINE_G2* gouraud_lines, u8 (*gouraud_lines_3)[0x20],
+    u8 (*gouraud_lines_4)[0x28], TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc],
+    SPRT* sprites, u8 (*sprites_8)[0x10], u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas,
+    DR_MODE* draw_modes);
 void bunit_gfx_init_scaled_draw_area_packets(u8* primitive);
 void bunit_gfx_init_vram_and_start_fade(void);
 void bunit_gfx_load_image_and_wait(RECT* rect, u32* data);

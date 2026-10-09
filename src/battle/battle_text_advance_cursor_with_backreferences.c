@@ -1,17 +1,8 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Text-stream cursor state.  Only the three fields this routine touches are named.
- */
-typedef struct battle_text_backreference_state {
-    u8 _unused_00[0x14];
-    s32 scratch;         /* 0x14; intermediate byte-count / back-offset */
-    s32 remaining_bytes; /* 0x18; bytes left before returning to return_cursor */
-    u8* return_cursor;   /* 0x1c; cursor to resume at, -1 when none */
-} battle_text_backreference_state_t;
-
 /* Target 0x80130718. */
-u8* battle_text_advance_cursor_with_backreferences(battle_text_backreference_state_t* state, u8* cursor) {
+u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;
 
