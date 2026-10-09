@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "psx/libgpu.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Draw the pending dialogue glyph into VRAM and hold it for the typewriter
@@ -28,7 +29,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
     battle_text_glyph_state_t* request;
 
     request = &g_battle_text_typewriter_glyph;
-    if (g_battle_text_typewriter_glyph.mode == 0x10 || g_battle_text_typewriter_glyph.mode == 0) {
+    if (g_battle_text_typewriter_glyph.mode == DIALOG_BOX_TYPE_PORTRAIT || g_battle_text_typewriter_glyph.mode == 0) {
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
@@ -94,7 +95,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
 
         next_glyph = request->glyph;
         next_kind = g_text_glyph_widths[next_glyph];
-        if (next_kind == 4 || next_glyph == 0xFA) {
+        if (next_kind == 4 || next_glyph == TEXT_SPACE) {
             g_battle_text_slot_source_columns[slot] = phase == 2 ? 2 : 1;
         } else if (next_kind == 2) {
             if (phase == 2) {
@@ -121,7 +122,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
         }
 
-        if (request->glyph != 0xFA) {
+        if (request->glyph != TEXT_SPACE) {
             g_battle_text_typewriter_state.pen.rect.x = phase;
             g_battle_text_typewriter_state.pen.rect.y = 0;
             g_battle_text_typewriter_state.pen.stride = pitch;
@@ -151,11 +152,11 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
             g_battle_menu_slot_states[slot] = 0;
         } else {
-            if (PadRead(1) & 0x20) {
+            if (PadRead(1) & PSX_PAD_CIRCLE) {
                 g_battle_text_glyphs_per_wait = 8;
-            } else if ((g_main_game_options.value & 0x7000) == 0) {
+            } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0) {
                 g_battle_text_glyphs_per_wait = 8;
-            } else if ((g_main_game_options.value & 0x7000) == 0x1000) {
+            } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0x1000) {
                 g_battle_text_glyphs_per_wait = 2;
             } else {
                 g_battle_text_glyphs_per_wait = 1;

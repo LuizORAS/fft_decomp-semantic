@@ -989,6 +989,17 @@ void world_gfx_load_evtchr_thread(void);
 void world_script_resetpalette_event_instruction(const u8* parameters);
 
 /* job */
+/* world_job_build_unit_list mode the builder tests: mark the current job and
+ * also list the jobs another unit has unlocked. */
+enum {
+    WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS = 2,
+};
+
+/* Flag on a job list entry: the current job, or one only another unit has
+ * unlocked. The job id is the low ten bits. */
+enum {
+    WORLD_JOB_LIST_ENTRY_FLAGGED = 0x4000,
+};
 
 extern s32 g_world_job_cached_level;
 extern s32 g_world_job_cached_level_jp_requirement;

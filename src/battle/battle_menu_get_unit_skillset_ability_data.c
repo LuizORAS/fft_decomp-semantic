@@ -45,7 +45,8 @@ s32 battle_menu_get_unit_skillset_ability_data(
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
     if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
@@ -65,8 +66,8 @@ s32 battle_menu_get_unit_skillset_ability_data(
     }
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         skillset_index = -1;
-    } else if (skillset >= 5 && skillset < 0x18) {
-        skillset_index = skillset - 5;
+    } else if (skillset >= SKILLSET_ID_BASIC_SKILL && skillset < SKILLSET_ID_MIMIC) {
+        skillset_index = skillset - SKILLSET_ID_BASIC_SKILL;
     } else if (skillset == unit->primary_skillset || skillset == unit->base_job_skillset) {
         skillset_index = 0;
     } else {

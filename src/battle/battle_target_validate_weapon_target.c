@@ -50,13 +50,14 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_flags = g_main_ability_range_data[(u8)action.ability_id].flags_1;
     }
-    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE || (ability_flags & 0x20)) {
+    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE
+        || (ability_flags & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         /* An empty left hand contributes 0; an equipped right hand wins. */
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-        mask = -(hand != 0xff);
+        mask = -(hand != ITEM_ID_NONE);
         weapon = hand & mask;
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
-        if (hand != 0xff) {
+        if (hand != ITEM_ID_NONE) {
             weapon = hand;
         }
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]

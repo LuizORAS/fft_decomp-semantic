@@ -2,8 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define WLDCORE_ROUTE_COUNT           48
-#define SCRIPT_VAR_ROUTE_VISIBLE_BASE 556
+#define WLDCORE_ROUTE_COUNT 48
 
 /* Draws the visible world-map routes into the auxiliary ordering table as
  * textured semi-transparent ribbons. Each route record is a run of packed
@@ -60,7 +59,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
 
     for (i = 0, vertex = verts; i < WLDCORE_ROUTE_COUNT; i++) {
-        if (world_script_get_variable(i + SCRIPT_VAR_ROUTE_VISIBLE_BASE) == 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
             continue;
         }
         slot = 0;

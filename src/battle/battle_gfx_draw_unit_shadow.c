@@ -50,7 +50,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->y3 = transformed.vy;
     prim->code |= 2;
     tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
-    if ((tile->depth_half_height.value & 0xe0)
+    if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
         && -(tile->height + (tile->depth_half_height.value >> 5)) * 12 < unit->screen.vy) {
         unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;

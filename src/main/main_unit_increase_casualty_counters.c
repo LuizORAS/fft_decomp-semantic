@@ -7,7 +7,8 @@ void main_unit_increase_casualty_counters(battle_stats_t* unit) {
     s32 id;
     s32 count;
 
-    id = (unit->initial_team_flags & BATTLE_TEAM_MASK) != 0 ? 0x61 : 0x62;
+    id = (unit->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE ? EVENT_SCRIPT_VAR_INJURED
+                                                                           : EVENT_SCRIPT_VAR_CASUALTIES;
     count = battle_script_get_variable(id);
     if (count < 0x270F) {
         count++;

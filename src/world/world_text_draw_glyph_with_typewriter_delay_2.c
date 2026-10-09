@@ -1,5 +1,6 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 extern world_glyph_blit_t g_world_text_message_box_state;
@@ -21,8 +22,8 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
     s32 ring;
     s32 offset;
 
-    if (g_world_text_message_box_glyph.mode != 0x10 && g_world_text_message_box_glyph.mode != 0x20
-        && g_world_text_message_box_glyph.mode != 0) {
+    if (g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_PORTRAIT
+        && g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_CHECK && g_world_text_message_box_glyph.mode != 0) {
         world_thread_yield();
         return;
     }
@@ -149,11 +150,11 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
         }
         g_world_text_message_box_slot_glyph_counters[slot] = 0;
     } else {
-        if (PadRead(1) & 0x20) {
+        if (PadRead(1) & PSX_PAD_CIRCLE) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & 0x7000) == 0) {
+        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & 0x7000) == 0x1000) {
+        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0x1000) {
             g_world_text_message_box_glyph_delay = 2;
         } else {
             g_world_text_message_box_glyph_delay = 1;

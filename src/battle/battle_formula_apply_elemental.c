@@ -9,11 +9,13 @@ void battle_formula_apply_elemental(void) {
 
     element = g_battle_action_current_ability.range_data.element;
     /* Oil (status 3 bit 0x80) doubles fire (element bit 0x80) and is removed. */
-    if ((g_battle_action_target->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
+    if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
         && (element & BATTLE_ELEMENT_FIRE)) {
         action = g_battle_action_target_data;
         g_battle_action_current_ability.xa = (s16)g_battle_action_current_ability.xa * 2;
-        action->status_removal[2] |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL);
+        action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
+            |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
@@ -24,7 +26,8 @@ void battle_formula_apply_elemental(void) {
         unit = &g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
     }
     /* Float (status 3 bit 0x40) nullifies earth (element bit 0x08). */
-    if ((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
         && (element & BATTLE_ELEMENT_EARTH)) {
         battle_formula_nullify_action();
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE;

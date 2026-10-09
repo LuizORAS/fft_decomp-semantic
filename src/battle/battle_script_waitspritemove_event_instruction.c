@@ -6,7 +6,7 @@ void battle_script_waitspritemove_event_instruction(s32 unit_id) {
     s32 i;
 
     target = battle_script_get_misc_id(unit_id);
-    if (target == 2000) {
+    if (target == EVENT_MISC_ID_NONE) {
         return;
     }
 

@@ -16,8 +16,8 @@ void battle_script_apply_relative_camera(u8* parameters, s32* src) {
         if (i < 3) {
             delta = delta / 1024;
         }
-        if (battle_script_load_halfword(parameters) == 10000) {
-            val = 10000;
+        if (battle_script_load_halfword(parameters) == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
+            val = BATTLE_CAMERA_FUSION_HOLD_SENTINEL;
         } else {
             val = delta + battle_script_load_halfword(parameters);
         }

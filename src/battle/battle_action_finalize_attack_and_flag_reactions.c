@@ -87,15 +87,16 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     g_battle_action_target->hp = hp;
     g_battle_action_target->mp = mp;
     outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->sp_change, &g_battle_action_target->base_attributes[2], 50, 1);
+        g_battle_action_target_data->sp_change, &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_SPEED], 50, 1);
     outcome |= battle_unit_apply_stat_increment_decrement(
         g_battle_action_target_data->ct_change, &g_battle_action_target->ct, 255, 0);
-    outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->pa_change, &g_battle_action_target->base_attributes[0], 99, 1);
-    outcome |= battle_unit_apply_stat_increment_decrement(
-        g_battle_action_target_data->ma_change, &g_battle_action_target->base_attributes[1], 99, 1);
+    outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->pa_change,
+        &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK], 99, 1);
+    outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->ma_change,
+        &g_battle_action_target->base_attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK], 99, 1);
     outcome |= battle_unit_apply_stat_increment_decrement(g_battle_action_target_data->brave_change,
-        &g_battle_action_target->brave, 100, (g_battle_action_target->mount_info & 0x80) ? 10 : 0);
+        &g_battle_action_target->brave, 100,
+        (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) ? 10 : 0);
     outcome |= battle_unit_apply_stat_increment_decrement(
         g_battle_action_target_data->faith_change, &g_battle_action_target->faith, 100, 0);
     outcome |= battle_action_remove_broken_or_stolen_equipment();
@@ -106,7 +107,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     if (g_battle_action_target_data->gil_change != 0 || g_battle_action_target_data->exp_change != 0) {
         outcome |= 1;
     }
-    battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, 0);
+    battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, ITEM_ID_NOTHING);
     battle_action_handle_steal_exp(g_battle_action_target, g_battle_action_target_data->exp_change);
     if (g_battle_action_target_data->jp_change != 0) {
         battle_action_apply_jp_change(g_battle_action_target);
@@ -141,7 +142,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     } else {
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CHICKEN);
     }
-    if (g_battle_action_target_data->attack_type & 0x80) {
+    if (g_battle_action_target_data->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
         g_battle_action_target_data->status_removal[4] |= STATUS_MASK(CHARM) | STATUS_MASK(SLEEP);
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(TRANSPARENT);
         g_battle_action_target_data->status_removal[1] |= STATUS_MASK(CONFUSION);
@@ -184,7 +185,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_action_check_stat_save_and_restore_reaction_usability();
     if (g_battle_action_target->status_sets.current[0] & (STATUS_MASK(CRYSTAL) | STATUS_MASK(DEAD))) {
-        if (g_battle_action_target->mount_info & 0x80) {
+        if (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             return -1;
         }
     }

@@ -33,7 +33,7 @@ void world_text_determine_spell_quote(battle_ai_command_action_t* action, s32 un
         && unit->job_id != JOB_ID_CALCULATOR && unit->job_id != JOB_ID_MIME
         && (s16)action->ability_id < ABILITY_ID_ITEM_FIRST
         && (secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE)
-        && !(unit->status_sets.current[2]
+        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)))
         && g_main_game_options.fields.ability_names == GAME_OPTION_ON
         && (world_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {

@@ -78,11 +78,11 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     return;
                 case 0x5F:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    wldcore_menu_run_shop_and_rebuild_screen(0x65);
+                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_SHOP_ID_SOLDIER_OFFICE);
                     return;
                 case 0x60:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    wldcore_menu_run_shop_and_rebuild_screen(0x64);
+                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_SHOP_ID_FUR_SHOP);
                     return;
                 default:
                     world_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION, value - 0xED);

@@ -88,7 +88,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             continue;
         }
         entry = &ai->ability_lists[list_id][count];
-        if (!(g_main_ability_data[ability_id].ai_flags.bytes[3] & 0x80)) {
+        if (!(g_main_ability_data[ability_id].ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)) {
             continue;
         }
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
@@ -100,17 +100,18 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             if (max_mp < mp_cost) {
                 continue;
             }
-            if ((ai->considered_ability.ai_flags.word & 0x400)
-                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT))) {
+            if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
+                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT))) {
                 continue;
             }
             flags = g_main_ability_range_data[ability_id].flags_4;
-            if (flags & 8) {
-                if (!(unit->equipped_flags & 8)) {
+            if (flags & ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD) {
+                if (!(unit->equipped_flags & BATTLE_UNIT_EQUIPPED_FLAG_SWORD)) {
                     continue;
                 }
-            } else if (flags & 4) {
-                if (!(unit->equipped_flags & 4)) {
+            } else if (flags & ABILITY_SECONDARY_FLAG_4_REQUIRES_MATERIA_BLADE) {
+                if (!(unit->equipped_flags & BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE)) {
                     continue;
                 }
             }

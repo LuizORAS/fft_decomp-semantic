@@ -28,7 +28,8 @@ void battle_ai_init_target_consideration(void) {
     ai->autobattle_setting = ai->unit_autobattle_modes[ai->acting_unit_id];
     flags = decision->flags;
     if (flags & BATTLE_AI_DECISION_SPECIAL_BEHAVIOR) {
-        if (!(ai->acting_unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE))) {
+        if (!(ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE))) {
             if (decision->targeting_flags_2 & BATTLE_AI_TARGET_CONSERVE_CT)
                 return;
             if (ai->autobattle_setting)

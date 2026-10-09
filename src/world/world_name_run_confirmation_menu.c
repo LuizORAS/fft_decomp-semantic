@@ -20,7 +20,7 @@ void world_name_run_confirmation_menu(void) {
             value = g_world_name_entry_original_name[0];
             count = 0;
             g_world_name_entry_text[0] = value;
-            while (value != 0xfe) {
+            while (value != TEXT_END_WAIT_FOR_CONFIRM) {
                 if (count >= 16) {
                     g_world_name_entry_text[16] = TEXT_END_WAIT_FOR_CONFIRM;
                     break;

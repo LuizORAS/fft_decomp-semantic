@@ -165,6 +165,11 @@ typedef struct open_point32 {
     s32 y;
 } open_point32_t;
 
+/* open_render_record_36_t.palette of the selected title or sound type menu entry. */
+enum {
+    OPEN_MENU_ENTRY_HIGHLIGHTED = 9,
+};
+
 /* Render records. open_gfx_draw_render_record_pointer_list dispatches on flags bit 0
  * (36-byte record) or bit 1 (56-byte record); bit 4 marks a visible record.
  * Both pools hold 16 entries, allocated by the open_append_render_record_*
@@ -175,7 +180,7 @@ typedef struct open_render_record_36 {
     /* 0x08 */ s32 ot_layer;
     /* 0x0c */ s32 frame_index;
     /* 0x10 */ s32 frame_timer;
-    /* 0x14 */ s32 palette; /* birthday menu: 9 = highlighted entry */
+    /* 0x14 */ s32 palette; /* 0 keeps the sprite's own; OPEN_MENU_ENTRY_HIGHLIGHTED on the selected entry */
     /* 0x18 */ s32 x;
     /* 0x1c */ s32 y;
     /* 0x20 */ CVECTOR color;
@@ -548,13 +553,20 @@ void open_gfx_update_fade_overlay(u32* otag);
 void open_gfx_update_opntex_sequence(void);
 
 /* system */
-enum {
-    OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN = 0x1000,
-    OPEN_SYSTEM_RUNTIME_FLAG_RGB24 = 0x2000,
-};
-
+/* Bits of g_open_system_runtime_flags. The party mode (0..2) chosen on the
+ * title menu is kept as one bit, OPEN_PARTY_MODE_FLAG_BASE << mode. */
 enum {
     OPEN_RUNTIME_INPUT_DISABLED = 0x10,
+    OPEN_FLAG_WORLD_OVERLAY_LOADED = 0x80,
+    OPEN_FLAG_PARTY_CHOSEN = 0x100,
+    OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN = 0x1000,
+    OPEN_SYSTEM_RUNTIME_FLAG_RGB24 = 0x2000,
+    OPEN_PARTY_MODE_FLAG_BASE = 0x4000,
+    OPEN_PARTY_MODE_FLAG_MASK = 0x1C000,
+};
+
+/* Bits of open_overlay_fade_t.flags. */
+enum {
     OPEN_OVERLAY_FADE_ACTIVE = 0x04,
 };
 

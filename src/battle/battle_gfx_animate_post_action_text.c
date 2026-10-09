@@ -56,7 +56,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
                 critical_scale_2.value[progress]);
         } else {
             switch (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
-            case 0 ... 15:
+            case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE ... BATTLE_NUMERIC_DISPLAY_MA_GAIN:
                 main_util_set_svector(
                     &zoom_0, scale_0.value[progress], scale_0.value[progress], scale_0.value[progress]);
                 main_util_set_svector(
@@ -101,24 +101,24 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     position.vx = screen_coords[0] + 0x15;
     position.vy = screen_coords[1] - 8;
     switch (display->selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
-    case 0:
-    case 2:
-    case 4:
-    case 6:
-    case 8:
-    case 10:
-    case 12:
-    case 14:
+    case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_MP_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_CT_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_PA_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_MA_DAMAGE:
         position.vy = screen_coords[1] - 0x30;
         break;
-    case 1:
-    case 3:
-    case 5:
-    case 7:
-    case 9:
-    case 11:
-    case 13:
-    case 15:
+    case BATTLE_NUMERIC_DISPLAY_HP_HEALING:
+    case BATTLE_NUMERIC_DISPLAY_MP_HEALING:
+    case BATTLE_NUMERIC_DISPLAY_SPEED_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_CT_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_FAITH_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_PA_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_MA_GAIN:
         position.vy = screen_coords[1] - 0x10;
         break;
     case BATTLE_NUMERIC_DISPLAY_MISSED:

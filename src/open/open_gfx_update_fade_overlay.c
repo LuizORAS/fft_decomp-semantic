@@ -37,7 +37,7 @@ void open_gfx_update_fade_overlay(u32* ot) {
             g_open_gfx_overlay_fade.flags &= ~6;
         }
     }
-    if (g_open_gfx_overlay_fade.flags & 4) {
+    if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
         TILE* tiles = g_open_gfx_overlay_fade.tiles;
         SetTile(&tiles[g_active_graphics_buffer_index]);
         SetSemiTrans(&tiles[g_active_graphics_buffer_index], 1);

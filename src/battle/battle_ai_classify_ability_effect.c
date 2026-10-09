@@ -40,7 +40,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     /* Death/revival timing determines which effects can still matter. */
     i = 0;
     if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-        && (ai->considered_ability.parameters.bytes.status_infliction[0]
+        && (ai->considered_ability.parameters.bytes.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
         i = 1;
     if (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITH_RERAISE) {
@@ -57,21 +57,26 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
         if (!i)
             return BATTLE_AI_ABILITY_EFFECT_NONE;
     }
-    if ((unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
         && (!(ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes.status_infliction[1]
+            || !(ai->considered_ability.parameters.bytes
+                     .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))))
         return BATTLE_AI_ABILITY_EFFECT_NONE;
     if (battle_ai_is_status_active_through_delay(ct, unit, BATTLE_STATUS_ID_WALL)
         && (!(ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes.status_infliction[3]
+            || !(ai->considered_ability.parameters.bytes
+                     .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))))
         return BATTLE_AI_ABILITY_EFFECT_NONE;
 
     i = ai->considered_ability.element;
     if (i) {
         if (i == (i & unit->elemental_affinity[ELEMENTAL_AFFINITY_NULLIFY])
-            || (i == 8 && (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)))) {
+            || (i == 8
+                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)))) {
             return BATTLE_AI_ABILITY_EFFECT_NONE;
         }
     }
@@ -79,9 +84,11 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_UNDEAD_REVERSE) {
             if (decision->enemy_flag) {
-                if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
                     return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
-            } else if (!(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))) {
+            } else if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+                           & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))) {
                 return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
             }
         } else if (decision->enemy_flag) {
@@ -95,7 +102,8 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
                 i = 0;
             if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_HP)
                 && g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] != ACTION_MENU_TYPE_CHARGE) {
-                if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
                     return BATTLE_AI_ABILITY_EFFECT_USEFUL;
                 if (battle_ai_is_status_active_through_delay(ct, unit, BATTLE_STATUS_ID_SLEEP))
                     return BATTLE_AI_ABILITY_EFFECT_USEFUL;
@@ -105,7 +113,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
             if ((unit->elemental_affinity[ELEMENTAL_AFFINITY_ABSORB] & ai->considered_ability.element)
                 && (decision->targeting_flags_2 & BATTLE_AI_TARGET_HP_BELOW_HALF))
                 return BATTLE_AI_ABILITY_EFFECT_USEFUL;
-            if ((unit->status_sets.current[1]
+            if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                     & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
                         | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
                 || i) {
@@ -126,7 +134,8 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
             return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
         }
         if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_HP)
-            && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+            && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
             return BATTLE_AI_ABILITY_EFFECT_USEFUL;
         if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_MP)
             && unit->mp > decision->lowest_mp_cost)
@@ -136,19 +145,23 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_ALLIES) {
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_UNDEAD_REVERSE) {
             if (decision->enemy_flag) {
-                if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
                     return BATTLE_AI_ABILITY_EFFECT_USEFUL;
                 return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
             }
-            if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
                 return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
         } else if (decision->enemy_flag)
             return BATTLE_AI_ABILITY_EFFECT_ADVERSE;
         /* Death Sentence: the Add Reraise shortcut likewise bypasses the
          * generic already-present/immunity filters. */
-        if (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)) {
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)) {
             if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS)
-                && (ai->considered_ability.parameters.bytes.status_infliction[2]
+                && (ai->considered_ability.parameters.bytes
+                        .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 return BATTLE_AI_ABILITY_EFFECT_USEFUL;
             return BATTLE_AI_ABILITY_EFFECT_NONE;
@@ -161,7 +174,8 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
             return BATTLE_AI_ABILITY_EFFECT_USEFUL;
     }
 
-    if (!(ai->considered_ability.ai_flags.word & 3)) {
+    if (!(ai->considered_ability.ai_flags.word
+            & (BATTLE_AI_ABILITY_TARGET_ALLIES | BATTLE_AI_ABILITY_TARGET_ENEMIES))) {
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_HP)
             return BATTLE_AI_ABILITY_EFFECT_USEFUL;
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_MP)
@@ -201,8 +215,10 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
                         if ((mask
                                 & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)
                                     | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)))
-                            && ((unit->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP))
-                                || (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP))))
+                            && ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_STOP)]
+                                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP))
+                                || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
+                                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP))))
                             mask &= (u8) ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW));
                         break;

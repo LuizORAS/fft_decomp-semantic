@@ -153,8 +153,8 @@ void debugchr_render_unit_status_panel_thread(void) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->gauges[2].value >= 0x65) {
-            state->gauges[2].value = 0x64;
+        if (state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
+            state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(

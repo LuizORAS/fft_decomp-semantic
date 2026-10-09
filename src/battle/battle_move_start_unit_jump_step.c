@@ -10,7 +10,7 @@
  * 0x30/0x31 hop animation. */
 void battle_move_start_unit_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to) {
-    u16 facings[4] = { 0xC00, 0x400, 0, 0x800 };
+    u16 facings[4] = { BATTLE_FACING_EAST, BATTLE_FACING_WEST, BATTLE_FACING_SOUTH, BATTLE_FACING_NORTH };
     u8 jump_offsets[4] = { 0x15, 0x1D, 0x11, 0x19 };
     u8 hop_offsets[4] = { 0x16, 0x1E, 0x12, 0x1A };
     u8* step;

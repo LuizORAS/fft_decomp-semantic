@@ -78,7 +78,8 @@ s32 world_menu_run_remove_item(void) {
         world_menu_toggle_preview_stats_window(1);
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    slot = world_menu_update_vertical_selection_and_mark_change(5, 3, g_world_input_secondary_repeat, 6);
+    slot = world_menu_update_vertical_selection_and_mark_change(
+        5, 3, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
     cursor_y = &g_world_remove_item_cursor_point.y;
     index = slot;
     *cursor_y = index * 16 + 0x90;

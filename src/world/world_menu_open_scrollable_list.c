@@ -19,9 +19,9 @@ void world_menu_open_scrollable_list(u8* list) {
     g_world_text_section_pointers[28] = g_world_text_name_entry_keys_data;
     g_world_name_entry_cursor = 0;
     i = 0;
-    while ((g_world_name_entry_text[i] = list[i]) != 0xFE) {
+    while ((g_world_name_entry_text[i] = list[i]) != TEXT_END_WAIT_FOR_CONFIRM) {
         if (i >= 16) {
-            g_world_name_entry_text[16] = 0xFE;
+            g_world_name_entry_text[16] = TEXT_END_WAIT_FOR_CONFIRM;
             break;
         }
         i++;

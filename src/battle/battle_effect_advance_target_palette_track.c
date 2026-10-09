@@ -40,7 +40,7 @@ void battle_effect_advance_target_palette_track(
                     battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
                         g_battle_effect_palette_target_misc_ids[i], red, green, blue);
                 }
-                if (!(g_battle_map_weather_flags & 2)) {
+                if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                     battle_map_start_darkness_blend(
                         preset & 0x7f, track->duration[index], red * 8, green * 8, blue * 8);
                 }

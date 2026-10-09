@@ -68,10 +68,11 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags.value & 1) {
+    if (tile->flags.value & MAP_TILE_FLAG_BLOCKED) {
         return -1;
     }
-    height = tile->height * 2 + (tile->depth_half_height.value & 0x1f) + (tile->depth_half_height.value >> 5) * 2;
+    height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+        + (tile->depth_half_height.value >> 5) * 2;
     if (aoe == 0xff) {
         cursor = g_battle_target_panels;
         for (i = 0; i < 0x200; i++) {
@@ -117,7 +118,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
             flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES, aoe == 0xff);
     }
     count = 0;
-    if (!(flags_2 & 0xc0)) {
+    if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES))) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
             if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {

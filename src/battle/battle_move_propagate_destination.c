@@ -35,7 +35,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         if (!(*destination_flags & 8))
             return 17;
     } else {
-        if (!(*destination_flags & 0x10))
+        if (!(*destination_flags & FRONTIER_FLAG_REACHABLE))
             return 2;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);

@@ -149,7 +149,7 @@ void world_shop_run_screen(s32 shop_type) {
                     g_world_formation_selected_unit_index = g_world_formation_selected_unit_index == 0
                         ? g_world_formation_unit_count - 1
                         : g_world_formation_selected_unit_index - 1;
-                    buttons &= ~8;
+                    buttons &= ~PSX_PAD_R1;
                 } else if (buttons & PSX_PAD_R1) {
                     g_world_formation_selected_unit_index
                         = g_world_formation_selected_unit_index == g_world_formation_unit_count - 1
@@ -159,8 +159,8 @@ void world_shop_run_screen(s32 shop_type) {
             } else {
                 buttons = 0;
             }
-            world_menu_draw_pressable_button(0, 0xC, 0xC, buttons & PSX_PAD_L1, (s16)disabled, 6);
-            world_menu_draw_pressable_button(1, 0xE0, 0xC, buttons & PSX_PAD_R1, (s16)disabled, 6);
+            world_menu_draw_pressable_button(0, 0xC, 0xC, buttons & PSX_PAD_L1, (s16)disabled, MAIN_SFX_PAGE_SWITCH);
+            world_menu_draw_pressable_button(1, 0xE0, 0xC, buttons & PSX_PAD_R1, (s16)disabled, MAIN_SFX_PAGE_SWITCH);
         }
         g_world_shop_menu_step_handlers[g_world_shop_menu_step]();
         if (g_world_shop_menu_step != 0x1B && g_world_shop_menu_step != 0x17 && g_world_shop_menu_step != 9) {
@@ -170,7 +170,7 @@ void world_shop_run_screen(s32 shop_type) {
         world_menu_draw_active_window_frames();
         if (g_world_shop_menu_step == 0x10 || g_world_shop_menu_step == 0x13 || g_world_shop_menu_step == 0xB
             || g_world_shop_menu_step == 2 || g_world_shop_menu_step == 5 || g_world_shop_cost_window_visible != 0
-            || shop_type == 0x65) {
+            || shop_type == WORLD_SHOP_ID_SOLDIER_OFFICE) {
             ot_index = 0x3C;
         } else {
             ot_index = 9;

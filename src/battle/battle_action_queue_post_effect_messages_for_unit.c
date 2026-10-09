@@ -93,7 +93,8 @@ void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* 
             }
             break;
         case 8:
-            if (action->special_effect & 0x180) {
+            if (action->special_effect
+                & (BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP | BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN)) {
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x2d;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].value
                     = action->special_effect;
@@ -101,18 +102,20 @@ void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* 
             }
             break;
         case 9:
-            if (action->special_effect & 0x1004) {
+            if (action->special_effect
+                & (BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT
+                    | BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN)) {
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x1d;
                 off = g_battle_action_post_effect_msg_counter;
                 g_battle_action_post_effect_msgs[off].value = action->item_lost;
-                if (action->special_effect & 0x1000) {
+                if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN) {
                     g_battle_action_post_effect_msgs[off].value = action->item_lost | 0x8000;
                 }
                 queued = 1;
             }
             break;
         case 10:
-            if (action->special_effect & 0x10) {
+            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
                 queued = 1;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].code = 0x1c;
                 g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].value = action->item_lost;

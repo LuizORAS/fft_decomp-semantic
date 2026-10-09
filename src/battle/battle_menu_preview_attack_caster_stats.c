@@ -23,7 +23,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     action = (world_unit_command_action_t*)battle_unit_get_target_id_ptr_by_battle_id(*selected);
     action->unit_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
-        main_ability_calculate_pointers_and_type(action->ability_id & 0x1ff, &ability_data, (u8**)&secondary);
+        main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, (u8**)&secondary);
     }
     if (((secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE) && action->ability_id < ABILITY_ID_ITEM_FIRST)
         || action->skillset == SKILLSET_ID_EQUIP_CHANGE) {

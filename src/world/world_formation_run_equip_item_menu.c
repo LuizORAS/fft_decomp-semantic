@@ -51,8 +51,8 @@ s32 world_formation_run_equip_item_menu(void) {
         return 1;
     }
     if (g_world_equip_item_list_open == 0) {
-        g_world_equip_item_slot
-            = world_menu_update_vertical_selection_and_mark_change(5, 2, g_world_input_secondary_repeat, 6);
+        g_world_equip_item_slot = world_menu_update_vertical_selection_and_mark_change(
+            5, 2, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_equip_item_slot + 1),
                 g_world_equip_item_slot, g_world_menu_entry_ids, 1);
@@ -78,15 +78,17 @@ s32 world_formation_run_equip_item_menu(void) {
         equipped = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                        ->equipment[g_world_equip_item_slot];
         value = -1;
-        if (equipped != 0) {
+        if (equipped != ITEM_ID_NOTHING) {
             value = equipped + 0x6800;
         }
         g_world_menu_description_text_id = value;
     } else {
         g_world_menu_description_text_id = g_world_menu_option_count != 0
-            ? (g_world_menu_entry_ids[g_world_menu_cursor_position] & 0x3ff) + 0x6800
+            ? (g_world_menu_entry_ids[g_world_menu_cursor_position] & WORLD_ITEM_ID_MASK) + 0x6800
             : -1;
-        item = g_world_menu_option_count != 0 ? g_world_menu_entry_ids[g_world_menu_cursor_position] & 0x3ff : 0;
+        item = g_world_menu_option_count != 0
+            ? g_world_menu_entry_ids[g_world_menu_cursor_position] & WORLD_ITEM_ID_MASK
+            : 0;
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             if (g_world_menu_option_count == 0 || (g_world_menu_entry_ids[g_world_menu_cursor_position] & 0x4000)) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;

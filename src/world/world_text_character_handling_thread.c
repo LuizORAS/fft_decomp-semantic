@@ -120,7 +120,7 @@ void world_text_character_handling_thread(void) {
             rec.portrait = thread->function_parameter_4;
         }
         party = main_party_get_data_pointer(rec.portrait);
-        if (party->sprite_set >= 0x80) {
+        if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 s32 base = (party->job_id - JOB_ID_GENERIC_FIRST) * 2;
                 portrait_id = base + 0x60;
@@ -147,7 +147,7 @@ void world_text_character_handling_thread(void) {
             portrait_id = party->sprite_set;
         }
         portrait_id = g_world_help_portrait_clut_by_sheet_id[portrait_id];
-        if (party->sprite_set == 0) {
+        if (party->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
             portrait_id = 0;
         }
         if (party->sprite_set == CHARACTER_IDENTITY_MONSTER) {
@@ -599,7 +599,7 @@ void world_text_character_handling_thread(void) {
                 if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
-                } else if (rec.box_type != 0) {
+                } else if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
                     g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_PAGE;
                     rec.first_line = rec.line;
                     rec.last_line = rec.line + rec.lines;
@@ -643,7 +643,7 @@ void world_text_character_handling_thread(void) {
                         choice++;
                     }
                     if (g_world_menu_new_button_input & PSX_PAD_CIRCLE) {
-                        if (rec.box_type != 0) {
+                        if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
                             g_world_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
                         }
                         break;

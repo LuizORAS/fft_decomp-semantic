@@ -13,13 +13,13 @@ void world_formation_build_job_wheel_availability(void) {
     u16 entry;
     s32 id;
 
-    g_world_job_wheel_job_count
-        = world_job_build_unit_list(g_world_formation_selected_unit_index, (s16*)g_world_job_wheel_jobs, 2);
+    g_world_job_wheel_job_count = world_job_build_unit_list(g_world_formation_selected_unit_index,
+        (s16*)g_world_job_wheel_jobs, WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS);
     for (i = 0; i < g_world_job_wheel_job_count; i++) {
         unit = g_world_formation_selected_unit_index;
         entry = g_world_job_wheel_jobs[i];
         id = entry & 0x3FF;
-        if (id == g_world_formation_unit_pointers[unit]->job_id || !(entry & 0x4000)) {
+        if (id == g_world_formation_unit_pointers[unit]->job_id || !(entry & WORLD_JOB_LIST_ENTRY_FLAGGED)) {
             g_world_job_wheel_mastered_jobs[i]
                 = world_ability_find_unit_abilities(unit, id, 0xF, 0, WORLD_ABILITY_LIST_MODE_COUNT_UNLEARNED) == 0;
         } else {

@@ -50,7 +50,8 @@ s32 equip_menu_run_equip_mode(void) {
             help_id = entry + 0x6800;
         }
         g_equip_text_help_message_id = help_id;
-        selected_slot = equip_menu_update_vertical_selection_and_mark_change(5, 0, g_equip_input_secondary_repeat, 6);
+        selected_slot = equip_menu_update_vertical_selection_and_mark_change(
+            5, 0, g_equip_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         g_equip_equip_item_slot = selected_slot;
         if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
             unit = g_equip_unit_selected_index;
@@ -76,18 +77,21 @@ s32 equip_menu_run_equip_mode(void) {
         }
     } else {
         g_equip_text_help_message_id = g_equip_menu_list_entry_count != 0
-            ? (g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF) + 0x6800
+            ? (g_equip_item_list_entries[g_equip_menu_selected_list_index] & EQUIP_ITEM_LIST_ENTRY_ITEM_ID_MASK)
+                + 0x6800
             : -1;
-        item = g_equip_menu_list_entry_count != 0 ? g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF
-                                                  : 0;
+        item = g_equip_menu_list_entry_count != 0
+            ? g_equip_item_list_entries[g_equip_menu_selected_list_index] & EQUIP_ITEM_LIST_ENTRY_ITEM_ID_MASK
+            : 0;
         if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
             if (g_equip_menu_list_entry_count != 0
-                && (g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x4000) == 0) {
+                && (g_equip_item_list_entries[g_equip_menu_selected_list_index] & EQUIP_ITEM_LIST_ENTRY_EQUIPPED)
+                    == 0) {
                 item_id = item;
                 if (equip_item_adjust_inventory_count(item_id, 0) == 0) {
                     equip_text_show_message_with_sound(0xD809, 0x30);
                 } else if (equip_unit_set_slot_item(g_equip_unit_selected_index, g_equip_equip_item_slot, item_id)
-                    == 1) {
+                    == EQUIP_SLOT_ITEM_ALLOWED) {
                     equip_item_adjust_inventory_count(item_id, -1);
                     equip_unit_load_selected_data();
                     g_equip_equip_item_list_refresh = 1;
@@ -104,7 +108,7 @@ s32 equip_menu_run_equip_mode(void) {
             if (g_equip_equip_item_previewed_cursor != index) {
                 g_equip_equip_item_previewed_cursor = index;
                 result = equip_unit_set_slot_item(1, g_equip_equip_item_slot, item);
-                if (result == 1) {
+                if (result == EQUIP_SLOT_ITEM_ALLOWED) {
                     g_equip_equip_item_preview_active = 1;
                     g_equip_item_numeric_panel_redraw = result;
                     equip_item_calculate_equipment_swap_stat_delta(&g_equip_item_preview_stat_detail,

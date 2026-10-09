@@ -112,8 +112,8 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                     buttons = g_world_input_secondary_repeat;
                 }
                 world_formation_cycle_selected_unit((s16)buttons);
-                world_menu_draw_pressable_button(0, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, 6);
-                world_menu_draw_pressable_button(1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, 6);
+                world_menu_draw_pressable_button(0, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, MAIN_SFX_PAGE_SWITCH);
+                world_menu_draw_pressable_button(1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, MAIN_SFX_PAGE_SWITCH);
             }
             if (g_world_formation_current_menu != 8) {
                 world_formation_update_unit_selection();

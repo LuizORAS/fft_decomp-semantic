@@ -170,7 +170,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
                     unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
                     unit->requested_animation = 0;
-                    if (unit->mount_state == 2) {
+                    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
                         other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
                         if (other != 0) {
                             other->animation_script_pos = 0;

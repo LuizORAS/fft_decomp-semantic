@@ -25,7 +25,8 @@ u8 battle_unit_get_effective_height(battle_stats_t* unit) {
     }
     flags = unit->movement_abilities[2];
     if ((flags & BATTLE_MOVEMENT_SET_3_FLOAT)
-        || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
+        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
         effective_height += 2;
         ignores_water = 1;
     }

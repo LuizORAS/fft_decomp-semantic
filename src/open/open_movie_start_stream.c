@@ -27,5 +27,6 @@ void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 so
     PutDrawEnv(&g_open_gfx_screen_environments[0].draw);
     PutDispEnv(&g_open_gfx_screen_environments[0].disp);
     g_open_file_current_openbk_image_id = -1;
-    g_open_system_runtime_flags = (g_open_system_runtime_flags & ~0x180) | 6;
+    g_open_system_runtime_flags
+        = (g_open_system_runtime_flags & ~(OPEN_FLAG_WORLD_OVERLAY_LOADED | OPEN_FLAG_PARTY_CHOSEN)) | 6;
 }

@@ -10,7 +10,7 @@ void equip_item_rebuild_category_list(s32 category) {
         item = i;
         type = equip_item_get_menu_category(item);
         cat = 0;
-        if (type != 0) {
+        if (type != ITEM_MENU_CATEGORY_WEAPON) {
             cat = type - 1;
         }
         if (category == cat) {

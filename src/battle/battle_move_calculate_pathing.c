@@ -144,15 +144,17 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         tile = &g_battle_map_tile_data[i];
         tile->ceiling_depth_and_marks.value &= 0xDF;
         if (g_battle_target_panels[i].ride_remaining_range != 0
-            || ((g_battle_map_tile_data[i].depth_half_height.bits.half_height < 3 || !(frontier[i] & 2))
+            || ((g_battle_map_tile_data[i].depth_half_height.bits.half_height < 3
+                    || !(frontier[i] & FRONTIER_FLAG_LOW_CORNER))
                 && g_battle_target_panels[i].remaining_range != 0 && tile->depth_half_height.bits.half_height < 4
                 && g_battle_map_tile_data[i].surface.bits.type != MAP_SURFACE_OBSTACLE
                 && (tile->depth_half_height.bits.depth == 0 || !config->cannot_stay_on_water)
                 && (tile->depth_half_height.bits.depth != 3 || !config->will_drown)
                 && (tile->depth_half_height.bits.depth < 4 || !config->will_sink)
-                && (tile->surface.bits.type != MAP_SURFACE_LAVA || config->move_type != 0) && (frontier[i] & 0x10))) {
+                && (tile->surface.bits.type != MAP_SURFACE_LAVA || config->move_type != BATTLE_MOVEMENT_CLASS_FLY)
+                && (frontier[i] & FRONTIER_FLAG_REACHABLE))) {
             state->reachable_count++;
-            tile->ceiling_depth_and_marks.value |= 0x20;
+            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_MOVE_DESTINATION;
         }
     }
     g_battle_move_reachable_tiles_valid = 1;

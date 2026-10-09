@@ -17,5 +17,5 @@ void open_movie_init_stream(s32 sector, void* output_callback) {
         VSync(0);
     }
 
-    while (CdControl(2, g_open_file_location, 0) == 0) { }
+    while (CdControl(CdlSetloc, g_open_file_location, 0) == 0) { }
 }

@@ -24,7 +24,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             } else {
                 value = table[frame + 0xd2];
             }
-        } else if (tile->depth_half_height.value & 0xe0) {
+        } else if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             if (unit->battle_data != 0) {
                 flags = battle_move_get_effective_flags(unit->battle_data);
                 /* The combined test keeps the table pointer's reference count
@@ -75,7 +75,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             table -= 0x1d59;
         }
         /* A shifted byte offset keeps the target's base-first addu. */
-        if (tile->depth_half_height.value & 0xe0) {
+        if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             value = *(s32*)((u8*)table + (frame << 2));
         } else {
             value = *(s32*)((u8*)table + (frame << 2) - 0x340);

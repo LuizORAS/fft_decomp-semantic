@@ -45,7 +45,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
             break;
         }
         unit = main_party_get_data_pointer(i);
-        if (unit->sprite_set < 0x80) {
+        if (unit->sprite_set < CHARACTER_IDENTITY_SELECTOR_FIRST) {
             value = unit->sprite_set;
         } else {
             if (unit->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
@@ -73,7 +73,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
             }
         }
         value = g_require_portrait_index_by_sprite_set[value];
-        if (unit->sprite_set == 0) {
+        if (unit->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
             value = 0;
         }
         if (unit->sprite_set == CHARACTER_IDENTITY_MONSTER) {

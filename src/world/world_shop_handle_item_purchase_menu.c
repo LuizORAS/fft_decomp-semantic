@@ -68,6 +68,7 @@ void world_shop_handle_item_purchase_menu(void) {
     if (world_map_is_busy() != 0 || g_world_menu_option_count == 0 || g_world_shop_item_category == 4) {
         disabled = 1;
     }
-    world_menu_draw_pressable_button(3, 0xBA, 0x4C, (u16)g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, 1);
+    world_menu_draw_pressable_button(
+        3, 0xBA, 0x4C, (u16)g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
     world_shop_run_obtain_gil_menu();
 }

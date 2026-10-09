@@ -63,7 +63,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     g_battle_thread_call_target = (void (*)(void))battle_action_preview_at_list;
     turn = battle_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {
-        work->descriptors[0].flags |= 0x40;
+        work->descriptors[0].flags |= WORLD_AT_ACTING_UNIT;
         work->descriptors[0].turn_value = g_battle_menu_selected_action.item_id;
     }
     count = 0;
@@ -94,12 +94,12 @@ void battle_menu_build_ability_preview_at_list(void) {
         world_at_descriptor_t* slot = &work->descriptors[index];
         s32 name_index;
 
-        if ((slot->flags & 0x1f) == 0x1f) {
+        if ((slot->flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
             break;
         }
         work->entry_numbers[index] = index + 1;
-        stats = battle_unit_get_stats_from_battle_id(slot->flags & 0x1f);
-        if ((slot->flags & 0x40) != 0) {
+        stats = battle_unit_get_stats_from_battle_id(slot->flags & WORLD_AT_UNIT_ID_MASK);
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -111,31 +111,31 @@ void battle_menu_build_ability_preview_at_list(void) {
             }
             text++;
         }
-        if ((slot->flags & 0x40) != 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
-        if ((slot->flags & 0x40) != 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             work->secondary_values[count] = index - 0x800;
         } else {
             work->primary_values[count] = index - 0x800;
         }
-        if ((slot->flags & 0x40) == 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) == 0) {
             work->secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             s32 turn_text_id;
             s32 turn_bias;
 
             bracketed = 1;
-            if ((slot->flags & 0x20) != 0) {
+            if ((slot->flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
                 turn_text_id = 0xb012;
             } else {
                 turn_bias = slot->turn_value;
                 if (index == 0 && staged_item != 0) {
                     turn_text_id = turn_bias + 0x3800;
                 } else {
-                    if ((slot->flags & 0x80) != 0) {
+                    if ((slot->flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
                         turn_bias += 0x100;
                     }
                     turn_text_id = turn_bias + TEXT_ID_ABILITY_NAME_BASE;
@@ -143,7 +143,7 @@ void battle_menu_build_ability_preview_at_list(void) {
             }
             work->primary_values[count] = turn_text_id;
         }
-        if ((stats->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
+        if ((stats->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE) {
             work->secondary_colors[count] = 8;
         }
         count++;

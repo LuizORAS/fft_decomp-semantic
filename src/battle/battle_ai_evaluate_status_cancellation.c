@@ -58,13 +58,16 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
                     & (0x80 >> (status_id - status_byte * 8))))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
-                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT)))
+                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT)))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_REFLECTABLE)
-                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT)))
+                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REFLECT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT)))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE)
-                && (ai->acting_unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE)))
+                && (ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE)))
                 continue;
 
             if (ai->acting_unit->mp < ai->considered_ability.mp_cost)

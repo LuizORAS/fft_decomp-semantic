@@ -41,6 +41,6 @@ void world_menu_confirm_item_repurchase(void) {
     }
     world_menu_switch_item_category(0);
     world_menu_run_script_with_palette_mode(g_world_shop_fur_purchase_menu_script, 0, world_thread_is_running(1));
-    world_menu_draw_pressable_button(3, 0xBA, 0x4C, 0, 1, 1);
+    world_menu_draw_pressable_button(3, 0xBA, 0x4C, 0, 1, MAIN_SFX_CONFIRM);
     world_shop_run_obtain_gil_menu();
 }

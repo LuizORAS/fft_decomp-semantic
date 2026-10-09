@@ -15,7 +15,8 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
     u8 turns[0x18];
     s32 result;
 
-    if ((g_battle_unit_stats[unit_id].status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+    if ((g_battle_unit_stats[unit_id].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && menu != ACTION_MENU_TYPE_DEFAULT && menu != ACTION_MENU_TYPE_MONSTER && menu != ACTION_MENU_TYPE_ATTACK
         && menu != ACTION_MENU_TYPE_BLANK_05) {
         return 0;

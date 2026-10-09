@@ -20,7 +20,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
     menu = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
     g_battle_action_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
-        main_status_set_action_state(unit, 0xff);
+        main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);
     result = battle_unit_get_action_restriction(unit);
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))

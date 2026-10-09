@@ -65,7 +65,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
         sprite.x = g_world_job_wheel_center_x + ((scaled_x * rcos(theta)) >> 12) - 8;
         sprite.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
         rgb = 0;
-        if (g_world_job_wheel_jobs[job] & 0x4000) {
+        if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_FLAGGED) {
             rgb = g_world_formation_dimmed_sprite_color;
         }
         if (g_world_job_wheel_mastered_jobs[job] != 0) {

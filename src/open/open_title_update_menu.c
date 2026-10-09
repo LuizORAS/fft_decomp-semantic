@@ -23,7 +23,7 @@ void open_title_update_menu(open_title_controller_t* state) {
     s32 end_frame;
     s32 frame_rate;
 
-    if (g_open_gfx_overlay_fade.flags & 4) {
+    if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
         return;
     }
 
@@ -31,13 +31,13 @@ void open_title_update_menu(open_title_controller_t* state) {
         if (g_open_system_runtime_flags & 4) {
             state->exit_timer--;
             if (state->exit_timer == 3) {
-                CdControl(9, 0, 0);
+                CdControl(CdlPause, 0, 0);
             }
             remaining = state->exit_timer;
             if (remaining == 2) {
                 status = CdSync(1, loc);
                 if (status == 5) {
-                    CdControl(9, 0, 0);
+                    CdControl(CdlPause, 0, 0);
                 } else if (status != remaining) {
                     state->exit_timer++;
                 }
@@ -64,11 +64,11 @@ void open_title_update_menu(open_title_controller_t* state) {
     }
 
     if (state->state == 3) {
-        if (g_open_gfx_overlay_fade.flags & 4) {
+        if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
             return;
         }
         g_active_graphics_buffer_index = 1;
-        g_open_system_runtime_flags ^= 0x10;
+        g_open_system_runtime_flags ^= OPEN_RUNTIME_INPUT_DISABLED;
         g_open_gfx_next_render_record_36 -= 6;
         g_open_gfx_render_record_pointer_count -= 6;
         demo = g_open_title_demo_movie_index;
@@ -109,13 +109,13 @@ void open_title_update_menu(open_title_controller_t* state) {
     }
 
     flags = g_open_system_runtime_flags;
-    if (flags & 0x10) {
+    if (flags & OPEN_RUNTIME_INPUT_DISABLED) {
         s32 cursor;
 
-        if (g_open_gfx_overlay_fade.flags & 4) {
+        if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
             return;
         }
-        g_open_system_runtime_flags = flags ^ 0x10;
+        g_open_system_runtime_flags = flags ^ OPEN_RUNTIME_INPUT_DISABLED;
         open_movie_pause_cd_audio();
         g_open_system_runtime_flags &= ~OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN;
         open_gfx_init_screen_environments(1);
@@ -123,7 +123,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         switch (cursor) {
         case 0:
             g_main_debug_display_enabled = 0;
-            g_open_system_runtime_flags &= ~0x180;
+            g_open_system_runtime_flags &= ~(OPEN_FLAG_WORLD_OVERLAY_LOADED | OPEN_FLAG_PARTY_CHOSEN);
             g_open_gfx_next_render_record_36 -= 6;
             g_open_gfx_render_record_pointer_count -= 6;
             g_open_current_controller_index--;
@@ -173,7 +173,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         state->state = 3;
         g_open_gfx_overlay_fade.ot_index = 2;
         open_gfx_start_overlay_fade_in(0x20);
-        g_open_system_runtime_flags |= 0x10;
+        g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
         return;
     }
 
@@ -188,7 +188,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         case 2:
             g_open_gfx_overlay_fade.ot_index = 2;
             open_gfx_start_overlay_fade_in(0x20);
-            g_open_system_runtime_flags |= 0x10;
+            g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
             return;
         case 3:
             state->state = 2;
@@ -204,7 +204,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         if (state->cursor < 0) {
             state->cursor = 3;
         }
-        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 9;
+        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
     if (open_input_check_repeating_directional(PSX_PAD_DOWN) != 0
@@ -215,7 +215,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         if (state->cursor >= 4) {
             state->cursor = 0;
         }
-        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 9;
+        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 }

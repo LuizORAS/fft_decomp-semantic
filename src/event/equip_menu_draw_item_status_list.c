@@ -46,7 +46,7 @@ void equip_menu_draw_item_status_list(s16 item_id) {
         count = 12;
     }
     bit = 0xC2;
-    if (g_equip_selected_slot == 3) {
+    if (g_equip_selected_slot == EQUIP_SLOT_BODY) {
         bit = 0xDA;
     }
     y = bit - count * 9;

@@ -24,7 +24,7 @@ void card_save_build_buffer(s32 slot) {
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);
-        if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < 4) {
+        if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
     }

@@ -23,7 +23,7 @@ void world_thread_update_task_state(void) {
             } else {
                 g_world_text_task_phase = 0;
             }
-        } else if (g_world_text_task_phase != 0 || world_gfx_get_fade_state() != 0) {
+        } else if (g_world_text_task_phase != 0 || world_gfx_get_fade_state() != WORLD_FADE_STATE_NONE) {
             g_world_text_task_phase = 0;
             world_input_clear_state();
         }

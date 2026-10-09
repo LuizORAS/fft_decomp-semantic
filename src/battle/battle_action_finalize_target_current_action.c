@@ -17,16 +17,21 @@ void battle_action_finalize_target_current_action(void) {
     status = g_battle_action_target->status_sets.current[0];
     invalid = 0;
     if ((status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && (!(g_battle_action_canceled_statuses[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+        && (!(g_battle_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
             || (status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)))) {
         invalid = 1;
     }
-    if ((g_battle_action_target->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-        && !(g_battle_action_canceled_statuses[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+    if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+        && !(g_battle_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
         invalid = 1;
     }
-    if ((g_battle_action_target->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))
-        && !(g_battle_action_canceled_statuses[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))) {
+    if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))
+        && !(g_battle_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))) {
         invalid = 1;
     }
     if (invalid != 0) {

@@ -647,6 +647,15 @@ typedef struct world_at_descriptor {
     u8 _unused_03;
 } world_at_descriptor_t;
 
+/* world_at_descriptor_t.flags. */
+enum {
+    WORLD_AT_UNIT_ID_MASK = 0x1f,
+    WORLD_AT_END_OF_LIST = 0x1f,
+    WORLD_AT_SHOW_WAIT_LABEL = 0x20,
+    WORLD_AT_ACTING_UNIT = 0x40,
+    WORLD_AT_TURN_VALUE_HIGH_BIT = 0x80,
+};
+
 /* Provisional: the AT-list work area the *_menu_build_ability_preview_at_list
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
  * parallel halfword columns become the layout's text_ids/text_colors tables,
@@ -790,6 +799,12 @@ typedef struct help_navigation_record {
     s16 vertical_cursor; /* 0x0e: nonzero: the cursor points down and bobs along y */
 } help_navigation_record_t;
 typedef char help_navigation_record_size_must_be_0x10[(sizeof(help_navigation_record_t) == 0x10) ? 1 : -1];
+
+/* g_battle_menu_current_id / g_world_menu_current_id values the code tests
+ * by number; the id also indexes the *_menu_thread_menu_data entries. */
+enum {
+    BATTLE_MENU_ID_MINI_MENU = 10,
+};
 
 /* Provisional 0x14-byte system-function record, tables at BATTLE 0x801692c0
  * and WORLD 0x80156750 (*_menu_run_system_function_thread,

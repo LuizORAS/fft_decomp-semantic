@@ -23,10 +23,11 @@ void battle_move_start_unit_climb_jump_step(
     step = &unit->current_path_step.value;
     if (unit->standing_on_unit_id_plus_one != 0
         && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
-            (height_data.unit_flags & 0x80) == 0)) {
+            (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {
-        height = to->height * 2 + (to->depth_half_height.value & 0x1f) * unit->destination_edge_height + 2;
+        height = to->height * 2
+            + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height + 2;
     }
     /* Grouping each constant with the gravity term keeps the target's order
      * (scale, then multiply by gravity); the flat spelling scales gravity first. */

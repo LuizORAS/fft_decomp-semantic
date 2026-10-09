@@ -45,7 +45,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_panel_index = state->destination_unit_record_index + 512;
         state->effective_destination_panel = &g_battle_target_panels[state->destination_panel_index];
     } else {
-        if (!(tile_flags[state->destination_index] & 0x10))
+        if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_REACHABLE))
             return 4;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);

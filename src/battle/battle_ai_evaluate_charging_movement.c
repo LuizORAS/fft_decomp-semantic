@@ -51,9 +51,9 @@ evaluate_with_charge:
     ai->saved_current_status = ai->acting_unit->status_sets.current[0];
     ai->saved_inflicted_status = ai->acting_unit->inflicted_status[0];
     ai->acting_unit->charged_ability_ct = 0xff;
-    ai->acting_unit->status_sets.current[0]
+    ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
         &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
-    ai->acting_unit->inflicted_status[0]
+    ai->acting_unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
         &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
 evaluate_without_charge:
     if (battle_ai_simulate_action_and_score() != -1) {

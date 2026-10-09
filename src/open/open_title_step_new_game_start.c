@@ -19,7 +19,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
     party_data_t* party;
 
     if (state->step == 5) {
-        if (g_open_gfx_overlay_fade.flags & 4) {
+        if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
             return;
         }
         main_sound_unload_current_scenario_music();
@@ -70,7 +70,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         return;
     }
 
-    if (g_open_gfx_overlay_fade.flags & 4) {
+    if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
         return;
     }
     if (open_gfx_update_transition_sequence() != 0) {

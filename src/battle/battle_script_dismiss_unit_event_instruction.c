@@ -13,7 +13,7 @@ void battle_script_dismiss_unit_event_instruction(s32 unit_id) {
 
     for (i = 1; i < 0x14; i++) {
         party = main_party_get_data_pointer(i);
-        if (party->party_id != 0xFF && party->sprite_set == unit_id) {
+        if (party->party_id != PARTY_ID_NONE && party->sprite_set == unit_id) {
             break;
         }
     }
@@ -22,7 +22,7 @@ void battle_script_dismiss_unit_event_instruction(s32 unit_id) {
         none = 0xFF;
         for (; j < 7; j++) {
             item_id = party->equipment[j];
-            if (item_id == 0 || item_id == none) {
+            if (item_id == ITEM_ID_NOTHING || item_id == none) {
                 continue;
             }
             g_main_item_quantities[item_id]++;

@@ -35,11 +35,11 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
                 *frontier_cell |= 2;
-                if (((s8)tile->depth_half_height.value & 0x1f) >= 3) {
+                if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) >= 3) {
                     *frontier_cell |= 0x40;
                 }
             } else {
-                if (((s8)tile->depth_half_height.value & 0x1f) > config->jump_or_1f) {
+                if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) > config->jump_or_1f) {
                     *frontier_cell |= 0x40;
                 }
             }
@@ -50,9 +50,9 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                 }
             }
             tile_flags = tile->flags.value;
-            if (tile_flags & 1) {
+            if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
                 *frontier_cell |= 0x80;
-            } else if (!config->move_type && (tile_flags & 2)
+            } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
                 && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                 *frontier_cell |= 0x10;
             }
@@ -78,7 +78,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                         *unit_cell &= 0xf7;
                     }
                     if (!(flags & 0x20)) {
-                        frontier[index] |= 0x20;
+                        frontier[index] |= FRONTIER_FLAG_VALID_DESTINATION;
                     } else {
                         frontier[index] &= 0xdf;
                     }
@@ -99,7 +99,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     }
     if (mode == 1) {
         panel = &g_battle_target_panels[index];
-        if (frontier[index] & 0x20) {
+        if (frontier[index] & FRONTIER_FLAG_VALID_DESTINATION) {
             state->outer_count = 0x24;
             aux = g_battle_target_panels + 0x200 + panel->unit_record_index;
             aux->remaining_range = config->move + 1;

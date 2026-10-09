@@ -10,7 +10,7 @@ void open_input_update_buttons_and_check_game_reset(void) {
     input = PadRead(0);
     g_open_input_polled_buttons = input;
 
-    if (g_open_system_runtime_flags & 0x10) {
+    if (g_open_system_runtime_flags & OPEN_RUNTIME_INPUT_DISABLED) {
         g_open_input_new_button_presses = 0;
         g_open_input_current_buttons = 0;
     } else {

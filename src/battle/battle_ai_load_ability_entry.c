@@ -34,7 +34,9 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ai_flags.bytes.flags_3 = weapon->bytes.flags_3;
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         if (menu == ACTION_MENU_TYPE_JUMP)
-            ai->considered_ability.ai_flags.word = (ai->considered_ability.ai_flags.word | 2) & ~1;
+            ai->considered_ability.ai_flags.word
+                = (ai->considered_ability.ai_flags.word | BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                & ~BATTLE_AI_ABILITY_TARGET_ALLIES;
         return;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         status_id = g_main_item_secondary_data[ability_id - ABILITY_ID_ITEM_FIRST].status_infliction_id;

@@ -40,7 +40,7 @@ s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_w
     }
     main_unit_set_equippable_items(unit);
     if (kind != 0x82) {
-        if (unit->formation_index >= 0x14) {
+        if (unit->formation_index >= PARTY_ROSTER_SLOT_COUNT) {
             main_unit_calculate_entd_equipment(unit, entd);
         }
     }

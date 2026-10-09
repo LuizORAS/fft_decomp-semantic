@@ -26,7 +26,7 @@ s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_
         return 0;
     }
     ability_count = battle_menu_get_unit_skillset_ability_data(
-        unit_id, 0x13, (s16*)abilities, mp_costs, ability_ct, 0, ability_flags, turns);
+        unit_id, SKILLSET_ID_DRAW_OUT, (s16*)abilities, mp_costs, ability_ct, 0, ability_flags, turns);
     if (ability_count == 0) {
         *out_item_ids = 0xFF;
         return 0;

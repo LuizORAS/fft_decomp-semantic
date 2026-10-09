@@ -29,7 +29,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     switch (level->phase) {
     case 1:
         level->timer = level->timer + 1;
-        if (g_main_file_cd_state.state == 0) {
+        if (g_main_file_cd_state.state == MAIN_FILE_LOAD_STATE_IDLE) {
             level->phase = level->phase + 1;
         }
         return;

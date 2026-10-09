@@ -21,10 +21,11 @@ s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
     battle_status_modify_inflictions(removal_only);
     battle_status_set_inflicted_ct_and_transfer_last_used_ct(unit_id);
     battle_status_store_for_current_attack(unit_id, removal_only);
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
         g_battle_action_target->hp = 0;
     }
-    if (!(g_battle_action_target->status_sets.current[0]
+    if (!(g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)))) {
         g_battle_action_target->charged_ability_ct = 0xFF;

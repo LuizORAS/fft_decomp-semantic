@@ -14,7 +14,8 @@ void battle_action_check_reflect_blade_grasp_and_arrow_guard(void) {
     if (battle_action_check_reaction(g_battle_action_target) == 1) {
         return;
     }
-    if ((g_battle_action_target->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT))
+    if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REFLECT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT))
         && g_battle_action_current_ability.reaction_id == 0) {
         battle_action_check_reflect_reaction();
     }

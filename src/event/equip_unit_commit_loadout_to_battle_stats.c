@@ -17,9 +17,9 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
 
     unit_id = g_equip_unit_data[0]->battle_id;
     stats = battle_unit_get_stats_from_battle_id(unit_id);
-    item_id = g_equip_unit_data[0]->equipment[0];
-    stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = 0xFF;
-    stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] = 0xFF;
+    item_id = g_equip_unit_data[0]->equipment[EQUIP_SLOT_RIGHT_HAND];
+    stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
+    stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] = ITEM_ID_NONE;
     if (item_id != 0) {
         if (g_main_item_primary_data[item_id].type == ITEM_TYPE_SHIELD) {
             stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] = item_id;
@@ -27,9 +27,9 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
             stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = item_id;
         }
     }
-    item_id = g_equip_unit_data[0]->equipment[1];
-    stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = 0xFF;
-    stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD] = 0xFF;
+    item_id = g_equip_unit_data[0]->equipment[EQUIP_SLOT_LEFT_HAND];
+    stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
+    stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD] = ITEM_ID_NONE;
     if (item_id != 0) {
         if (g_main_item_primary_data[item_id].type == ITEM_TYPE_SHIELD) {
             stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD] = item_id;
@@ -37,12 +37,15 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
             stats->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = item_id;
         }
     }
-    stats->equipment[UNIT_EQUIPMENT_SLOT_HEAD]
-        = g_equip_unit_data[0]->equipment[2] != 0 ? g_equip_unit_data[0]->equipment[2] : 0xFF;
-    stats->equipment[UNIT_EQUIPMENT_SLOT_BODY]
-        = g_equip_unit_data[0]->equipment[3] != 0 ? g_equip_unit_data[0]->equipment[3] : 0xFF;
-    stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]
-        = g_equip_unit_data[0]->equipment[4] != 0 ? g_equip_unit_data[0]->equipment[4] : 0xFF;
+    stats->equipment[UNIT_EQUIPMENT_SLOT_HEAD] = g_equip_unit_data[0]->equipment[EQUIP_SLOT_HEAD] != 0
+        ? g_equip_unit_data[0]->equipment[EQUIP_SLOT_HEAD]
+        : ITEM_ID_NONE;
+    stats->equipment[UNIT_EQUIPMENT_SLOT_BODY] = g_equip_unit_data[0]->equipment[EQUIP_SLOT_BODY] != 0
+        ? g_equip_unit_data[0]->equipment[EQUIP_SLOT_BODY]
+        : ITEM_ID_NONE;
+    stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] = g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY] != 0
+        ? g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY]
+        : ITEM_ID_NONE;
     bcopy(stats->equipment, main_party_get_data_pointer(g_equip_unit_data[0]->party_index)->equipment, 7);
     main_unit_refresh_stats_and_statuses(stats);
     stats = battle_unit_get_stats_from_battle_id(unit_id);

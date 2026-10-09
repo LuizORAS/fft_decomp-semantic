@@ -58,15 +58,15 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
                 result = 1;
             }
         } else if (category == 5) {
-            if (type == 0) {
+            if (type == ITEM_MENU_CATEGORY_WEAPON) {
                 result = 1;
             }
         } else if (category == 6) {
-            if (type == 1) {
+            if (type == ITEM_MENU_CATEGORY_SHIELD) {
                 result = 1;
             }
         } else if (category == 7) {
-            if (type == 5) {
+            if (type == ITEM_MENU_CATEGORY_OTHER) {
                 result = 1;
             }
         }

@@ -11,7 +11,7 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
     for (party_index = 0; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
         party_data_t* party_unit = main_party_get_data_pointer(party_index);
 
-        if (party_unit->party_id != 0xff) {
+        if (party_unit->party_id != PARTY_ID_NONE) {
             battle_stats_t* unit;
 
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
@@ -28,17 +28,19 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
                 if (unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED || unit->existence == BATTLE_UNIT_EXISTENCE_NONE
                     || found_index == -3) {
                     if (unit->unit_id == 0 || unit->unit_id >= 4) {
-                        if (!(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
+                        if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+                                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
                             require_party_store_equipment_or_sell_overflow(i);
                         main_party_remove_unit(party_index);
                         require_party_update_bio_variable_for_unit_class(unit->character_identity, 0xf);
                     }
-                } else if (unit->character_identity != 0 && unit->character_identity < 4) {
+                } else if (unit->character_identity != CHARACTER_IDENTITY_ENTD_NONE
+                    && unit->character_identity < CHARACTER_IDENTITY_RAMZA_END) {
                     main_party_save_unit(unit, 0);
                 } else if (!(unit->unit_flags & UNIT_FLAG_SAVE_FORMATION)
                     && unit->formation_index >= PARTY_GUEST_SLOT_FIRST) {
                     main_party_remove_unit(unit->formation_index);
-                    unit->formation_index = 0xff;
+                    unit->formation_index = BATTLE_FORMATION_INDEX_NONE;
                 } else {
                     main_party_save_unit(unit, unit->unit_flags & UNIT_FLAG_SAVE_FORMATION);
                 }
@@ -55,9 +57,11 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
         if (found_index >= 0 && party_index == found_index && unit->formation_index == BATTLE_FORMATION_INDEX_NONE
             && unit->unit_id != 0) {
             u32 base_class = unit->character_identity;
-            if ((base_class == 0 || base_class >= 4) && unit->unit_id >= 4
+            if ((base_class == CHARACTER_IDENTITY_ENTD_NONE || base_class >= CHARACTER_IDENTITY_RAMZA_END)
+                && unit->unit_id >= 4
                 && ((unit->unit_flags & UNIT_FLAG_JOIN_AFTER_EVENT)
-                    || (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)))) {
+                    || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)))) {
                 if (unit->unit_flags & UNIT_FLAG_SAVE_FORMATION) {
                     s32 column;
 

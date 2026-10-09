@@ -333,6 +333,7 @@ typedef enum weapon_flag {
 typedef enum item_id {
     ITEM_ID_NOTHING = 0x00,
     ITEM_ID_DAGGER = 0x01,
+    ITEM_ID_MATERIA_BLADE = 0x20,
     ITEM_ID_POTION = 0xf0,
     ITEM_ID_HI_POTION = 0xf1,
     ITEM_ID_X_POTION = 0xf2,

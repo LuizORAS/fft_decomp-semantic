@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Resets state used when entering the world map.
@@ -101,7 +102,7 @@ void wldcore_init_world_map_state(void) {
         for (i = 0; i < 0x40; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
 
-        if (!(PadRead(0) & 0x800)) {
+        if (!(PadRead(0) & PSX_PAD_START)) {
             record[0] = 1;
             record[1] = 1;
             for (i = 0; i < 0x2f; i++) {

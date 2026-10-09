@@ -5,7 +5,7 @@ void battle_gfx_init_item_get_rendering(battle_unit_misc_data_t* unit) {
     SVECTOR zoom;
     u32* otag;
 
-    if ((unit->sprite_display_flags.half & 2) != 0) {
+    if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
         position.vx = unit->item_get_x_offset;
     } else {
         position.vx = -unit->item_get_x_offset;

@@ -208,7 +208,7 @@ void battle_map_update_animations(void) {
                 transition->active = 0;
             }
         }
-        if (g_battle_map_weather_flags & 2) {
+        if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
             red = g_battle_map_darkness_transition.channels.red / 0x80000;
             green = g_battle_map_darkness_transition.channels.green / 0x80000;
             blue = g_battle_map_darkness_transition.channels.blue / 0x80000;
@@ -389,7 +389,7 @@ void battle_map_update_animations(void) {
                     }
                 }
             }
-            if (i == 0 && (g_battle_map_weather_flags & 2)) {
+            if (i == 0 && (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                 red = g_battle_map_darkness_transition.channels.red / 0x80000;
                 green = g_battle_map_darkness_transition.channels.green / 0x80000;
                 blue = g_battle_map_darkness_transition.channels.blue / 0x80000;

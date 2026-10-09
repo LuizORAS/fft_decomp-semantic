@@ -29,8 +29,10 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     battle_ai_coords_t* coords;
 
     if (g_battle_ai_data_base.resume_pending == 0) {
-        if ((g_battle_ai_data_base.acting_unit->movement_abilities[2] & 0xc8)
-            || (g_battle_ai_data_base.acting_unit->status_sets.current[2]
+        if ((g_battle_ai_data_base.acting_unit->movement_abilities[2]
+                & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
+                    | BATTLE_MOVEMENT_SET_3_FLOAT))
+            || (g_battle_ai_data_base.acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
             g_battle_ai_data_base.water_penalty = 0;
         } else {
@@ -41,7 +43,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
-                    if (!(tile->flags.value & 1)
+                    if (!(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
                         && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                         ((battle_ai_walkable_view_t*)ai)->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
@@ -54,14 +56,15 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             ai->reachable_tiles[ai->movement_scenario][1][j] = 0;
         }
         if (movement_taken != 0
-            || (ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE))) {
+            || (ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE))) {
             ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
                 = 0x8000 >> ai->acting_unit_coords.bytes.x;
             return 0;
         }
         mount_info = ai->acting_unit->mount_info;
-        if (mount_info & 0x80) {
-            i = mount_info & 0x1f;
+        if (mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
+            i = mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
         } else {
             i = ai->acting_unit_id;
         }
@@ -76,8 +79,8 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
                 tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
-                if (ai->acting_unit->movement_abilities[1] & 0x08) {
-                    if (!(ai->acting_unit->mount_info & 0x80)) {
+                if (ai->acting_unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
+                    if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)) {
                         i = ai->acting_unit_coords.bytes.x - x;
                         if (i < 0) {
                             i = -i;
@@ -91,7 +94,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
                         }
                     }
                 }
-                if (tile->ceiling_depth_and_marks.value & 0x20) {
+                if (tile->ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     ai->reachable_tiles[0][level][y] |= 0x8000 >> x;
                 }
             }

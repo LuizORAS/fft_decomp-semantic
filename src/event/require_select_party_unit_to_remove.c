@@ -47,7 +47,7 @@ s32 require_select_party_unit_to_remove(void) {
 
         for (party_index = 0; party_index < 0x14; party_index++) {
             party_unit = main_party_get_data_pointer(party_index);
-            if (party_unit->party_id == 0xff || party_index >= 0x10 || party_unit->proposition_status != 0
+            if (party_unit->party_id == PARTY_ID_NONE || party_index >= 0x10 || party_unit->proposition_status != 0
                 || (party_unit->gender_flags & UNIT_FLAG_EGG) != 0) {
                 g_require_party_removable_flags[party_index] = 0;
                 *text = 0xfe;
@@ -198,8 +198,9 @@ s32 require_select_party_unit_to_remove(void) {
         }
         party_unit = main_party_get_data_pointer(selected_party_index);
         formation_index = 0;
-        if (party_unit->sprite_set & 0x80) {
-            message_id = ((party_unit->sprite_set - 0x80) * 8) + (battle_script_get_variable(0x21) & 7) + 0x1800;
+        if (party_unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
+            message_id = ((party_unit->sprite_set - 0x80) * 8)
+                + (battle_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 7) + 0x1800;
         } else {
             s32 sprite_column;
             u8* sprite_group;
@@ -222,7 +223,7 @@ s32 require_select_party_unit_to_remove(void) {
                 formation_index = 0;
             if (formation_index == 0x47)
                 formation_index = 0x48;
-            if (sprite_set != 0 && sprite_set < 4) {
+            if (sprite_set != CHARACTER_IDENTITY_ENTD_NONE && sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
                 message_id = formation_index + 0x1862;
             } else {
                 message_id = formation_index + 0x1818;
@@ -231,7 +232,7 @@ s32 require_select_party_unit_to_remove(void) {
 
         require_panel_set_transition_value(1);
         g_battle_text_substitution_values[0] = selected_party_index;
-        if (party_unit->sprite_set < 4)
+        if (party_unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END)
             goto show_unit_message;
         g_require_menu_selection_result = 0xff;
         battle_thread_start(7, battle_text_character_handling_thread);

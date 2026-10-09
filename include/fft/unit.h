@@ -851,6 +851,15 @@ typedef enum battle_formation_index {
     BATTLE_FORMATION_INDEX_NONE = 0xff,
 } battle_formation_index_e;
 
+/* battle_stats_t.auto_battle_setting; 0 is manual control. The BATTLE and
+ * WORLD auto-battle menus store it and the AI reads it. */
+typedef enum battle_ai_autobattle_mode {
+    BATTLE_AI_AUTOBATTLE_TARGETED = 0x0C,
+    BATTLE_AI_AUTOBATTLE_RECOVERY = 0x0E,
+    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 0x10,
+    BATTLE_AI_AUTOBATTLE_RETREAT = 0x11,
+} battle_ai_autobattle_mode_e;
+
 enum {
     ITEM_ID_MASK = 0xff,
     ITEM_ID_COUNT = 0x100,

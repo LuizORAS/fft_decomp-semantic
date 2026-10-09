@@ -42,7 +42,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
         battle_gfx_animate_post_action_text(unit, (u16*)&position);
     }
     if (!(((u16)position.vx >= 0x61 && (u16)position.vx < 0x1a0) && ((u16)(position.vy + 0x1f) < 0x12f))
-        && unit->spritesheet_id != 0x49) {
+        && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }
     zoom.vx = g_battle_camera_zoom.vx;

@@ -60,7 +60,7 @@ void option_run_option_choice_menu(void) {
     param->inner_height = param->window_height = param->text_image.height = height;
     param->vram_x = 0x1C0;
     param->vram_y = 0x100 - height;
-    if (kind == 3) {
+    if (kind == GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED) {
         param->vram_x = 0x1AE;
     }
     param->text_image.width -= 4;

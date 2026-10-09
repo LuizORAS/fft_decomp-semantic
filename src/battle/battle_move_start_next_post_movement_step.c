@@ -139,7 +139,7 @@ s32 battle_move_start_next_post_movement_step(void) {
     if (g_battle_move_find_result & 0x400) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->misc_unit_id, 0, 0);
-        if (source->mount_state != 0) {
+        if (source->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
             target = battle_unit_get_misc_data_by_misc_id(source->mount_partner_misc_id);
             if (target != 0) {
                 battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);

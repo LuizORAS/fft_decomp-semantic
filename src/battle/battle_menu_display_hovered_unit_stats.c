@@ -126,8 +126,8 @@ void battle_menu_display_hovered_unit_stats(
     battle_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
     text_loaded = 0;
     for (frame = 0;; frame++) {
-        if (status->gauges[2].value > 100) {
-            status->gauges[2].value = 100;
+        if (status->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value > 100) {
+            status->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
         }
         if (text_loaded != 0) {
             battle_menu_free_memory(buffer);

@@ -25,7 +25,7 @@ void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) 
                 count++;
             }
             money += unit->bonus_money_modifier * 100;
-            if (unit->formation_index != 0xFF) {
+            if (unit->formation_index != BATTLE_FORMATION_INDEX_NONE) {
                 value = unit->level;
                 if (value < lowest) {
                     lowest = value;

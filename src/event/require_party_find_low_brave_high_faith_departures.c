@@ -33,7 +33,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
         brave = unit->original_brave;
         faith = unit->original_faith;
         if (brave < 6) {
-            if (unit->character_identity < 0x80) {
+            if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 count;
 
                 for (group = 0; group < 0x49; group++) {
@@ -72,7 +72,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
             require_noop_801c43e0(battle_index, unit->unit_id, unit->character_identity);
             departure_count++;
         } else if (faith >= 0x5f) {
-            if (unit->character_identity < 0x80) {
+            if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 count;
 
                 for (group = 0; group < 0x49; group++) {

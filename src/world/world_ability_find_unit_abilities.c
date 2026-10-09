@@ -28,7 +28,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     s32 learned;
     s16 id;
 
-    if (mode == 1 && kind == 0) {
+    if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY && kind == 0) {
         return world_ability_list_secondary_skillsets(unit, out);
     }
     skillset = world_job_get_skillset(job);
@@ -36,7 +36,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     if (world_job_find_first_for_skillset(skillset) == -1) {
         skillset = (u16)g_world_formation_unit_pointers[unit]->primary_skillset;
     }
-    abilities = (s16*)main_ability_store_skillset_abilities(skillset, 0xF);
+    abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     if (kind == 0) {
         lo = 1;
         hi = 0x1A5;
@@ -76,7 +76,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         if (id == 0) {
             continue;
         }
-        if (mode == 0) {
+        if (mode == WORLD_ABILITY_LIST_MODE_VIEW_ALL) {
             if (!learned) {
                 if (!(g_main_ability_data[id].type_flags >> 7)) {
                     id |= 0x4000;
@@ -86,12 +86,12 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
             }
             out[count] = id;
             count++;
-        } else if (mode == 1) {
+        } else if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY) {
             if (learned) {
                 out[count] = id;
                 count++;
             }
-        } else if (mode == 2) {
+        } else if (mode == WORLD_ABILITY_LIST_MODE_LEARN_MENU) {
             if (!learned) {
                 if (g_main_ability_data[id].type_flags >> 7) {
                     continue;
@@ -104,13 +104,13 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
             }
             out[count] = id;
             count++;
-        } else if (mode == 3) {
+        } else if (mode == WORLD_ABILITY_LIST_MODE_COUNT_UNLEARNED) {
             if (!learned) {
                 count++;
             }
         }
     }
-    if (mode != 3) {
+    if (mode != WORLD_ABILITY_LIST_MODE_COUNT_UNLEARNED) {
         out[count] = -1;
     }
     return count;

@@ -33,7 +33,8 @@ s32 battle_ai_select_peril_target(void) {
             status_score = 0x78;
         } else if ((ai->acting_unit_decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES)
             && ((decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITH_RERAISE)
-                || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))) {
+                || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))) {
             status_score = 0x77;
         } else if (battle_ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_BLOOD_SUCK)) {
             status_score = 0x76;

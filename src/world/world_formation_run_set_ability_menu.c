@@ -80,7 +80,9 @@ s32 world_formation_run_set_ability_menu(void) {
         } else {
             g_world_menu_description_text_id = current + 0x9800;
         }
-        slot = world_menu_update_vertical_selection_and_mark_change(4, 4, g_world_input_secondary_repeat, 6) + 1;
+        slot = world_menu_update_vertical_selection_and_mark_change(
+                   4, 4, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
+            + 1;
         g_world_set_ability_slot = slot;
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
@@ -113,7 +115,8 @@ s32 world_formation_run_set_ability_menu(void) {
             if (g_world_set_ability_slot == 1) {
                 value = 0x9800;
             }
-            g_world_menu_description_text_id = value + (((u16*)g_world_menu_entry_ids)[cursor] & 0x3FF);
+            g_world_menu_description_text_id
+                = value + (((u16*)g_world_menu_entry_ids)[cursor] & ABILITY_LIST_ENTRY_ID_MASK);
             if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
                 selected = ((u16*)g_world_menu_entry_ids)[cursor];
                 if (selected & 0x4000) {

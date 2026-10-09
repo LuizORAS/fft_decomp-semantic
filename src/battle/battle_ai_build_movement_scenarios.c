@@ -42,12 +42,14 @@ s32 battle_ai_build_movement_scenarios(void) {
             return -1;
         }
         if ((decision->targeting_flags_2 & (BATTLE_AI_TARGET_HP_BELOW_HALF | BATTLE_AI_TARGET_MP_CONSTRAINED))
-            && !(ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
+            && !(ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
             for (g_battle_ai_movement_unit_index = 0; g_battle_ai_movement_unit_index < BATTLE_UNIT_SLOT_COUNT;
                 g_battle_ai_movement_unit_index++) {
                 unit = &g_battle_unit_stats[g_battle_ai_movement_unit_index];
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                    && (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
+                    && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
                     battle_ai_transfer_unit_coordinates(g_battle_ai_movement_unit_index, &ai->considered_unit_coords);
                     ai->tile_target_distance[ai->considered_unit_coords.bytes.elevation]
                                             [ai->considered_unit_coords.bytes.y][ai->considered_unit_coords.bytes.x]

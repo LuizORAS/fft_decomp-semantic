@@ -19,8 +19,10 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
         if ((unit != 0) && (unit->entd_slot != BATTLE_ENTD_SLOT_NONE)) {
             if (unit->unit_flags & UNIT_FLAG_EGG) {
                 total++;
-            } else if (!(*&unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
-                && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+            } else if (!(*&unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                           & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
                 total++;
                 bunit_unit_build_data_from_battle_stats(unit, &g_bunit_unit_records[shown], shown);
                 g_bunit_shown_unit_indices[shown] = shown;

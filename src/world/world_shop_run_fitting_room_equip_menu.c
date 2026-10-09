@@ -38,17 +38,17 @@ void world_shop_run_fitting_room_equip_menu(void) {
         }
     } else if (g_world_shop_fitting_room_item_list_open == 0) {
         prev = g_world_shop_fitting_equip_slot;
-        g_world_shop_fitting_equip_slot
-            = world_menu_update_vertical_selection_and_mark_change(5, 2, g_world_input_primary_repeat, 6);
+        g_world_shop_fitting_equip_slot = world_menu_update_vertical_selection_and_mark_change(
+            5, 2, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (prev != g_world_shop_fitting_equip_slot) {
             g_world_menu_cursor_position = 0;
         }
         if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                 ->equipment[g_world_shop_fitting_equip_slot]
-            != 0) {
+            != ITEM_ID_NOTHING) {
             value = (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                             ->equipment[g_world_shop_fitting_equip_slot]
-                        & 0x3ff)
+                        & WORLD_ITEM_ID_MASK)
                 + 0x6800;
         } else {
             value = -1;
@@ -125,7 +125,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
         world_menu_run_script_with_palette_mode(
             g_world_shop_fitting_item_list_menu_script, g_world_input_primary_repeat, world_map_is_busy());
         g_world_menu_description_text_id = g_world_menu_option_count != 0
-            ? (g_world_menu_entry_ids[g_world_menu_cursor_position] & 0x3ff) + 0x6800
+            ? (g_world_menu_entry_ids[g_world_menu_cursor_position] & WORLD_ITEM_ID_MASK) + 0x6800
             : -1;
     }
     if (g_world_shop_fitting_item_list_close != 0) {

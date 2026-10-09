@@ -1,12 +1,5 @@
 #include "fft/event_card.h"
 
-enum {
-    CARD_SAVE_HEADER_MAGIC_S = 'S',
-    CARD_SAVE_HEADER_MAGIC_C = 'C',
-    CARD_SAVE_HEADER_ICON_ONE_FRAME = 0x11,
-    CARD_SAVE_HEADER_BLOCK_COUNT_ONE = 1,
-};
-
 /* Build the 256-byte PlayStation memory-card header: the title template with
  * the 1-based save slot number and the play time as full-width Shift-JIS
  * digits, then the icon selected by the slot. `level` is not read.

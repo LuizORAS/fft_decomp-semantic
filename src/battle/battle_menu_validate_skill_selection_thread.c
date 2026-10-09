@@ -34,7 +34,9 @@ void battle_menu_validate_skill_selection_thread(void) {
     }
     g_battle_menu_selected_skill_ct = ct;
     if ((g_battle_active_menu == ACTION_MENU_TYPE_MONSTER || g_battle_active_menu == ACTION_MENU_TYPE_DEFAULT)
-        && blocked != 0 && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
+        && blocked != 0
+        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
         message = 0x8013;
         if (ct == 0) {
             message = 0x1009;

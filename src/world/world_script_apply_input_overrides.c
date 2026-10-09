@@ -2,12 +2,12 @@
 #include "psx/types.h"
 
 /* Refresh the low halfword of a menu state word from the disabled and forced
- * controller-input variables, preserving its high halfword. The sentinel
- * 0x90C requests a full game reset before the refresh. */
+ * controller-input variables, preserving its high halfword. The reset
+ * button combination requests a full game reset before the refresh. */
 void world_script_apply_input_overrides(s32* state) {
     s32 high;
 
-    if (*state == 0x90C) {
+    if (*state == MAIN_INPUT_RESET_BUTTONS) {
         main_system_reset_game();
     }
 

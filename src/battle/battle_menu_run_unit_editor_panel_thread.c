@@ -139,7 +139,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         if (g_battle_menu_billboard_data.state.generic_monster != 0) {
             value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == 0xFFFF) {
+        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -148,7 +148,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     }
     for (i = 2; i < 5; i++) {
         value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == 0xFFFF) {
+        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -157,7 +157,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     }
     if (g_battle_menu_billboard_data.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == 0xFFFF) {
+            if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -212,7 +212,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
                 battle_thread_set_parameters(0xA, 0, 0, 1);
                 break;
             }
-            if ((g_battle_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_running_8014cc94(3) == 0
+            if ((g_battle_script_event_input & PSX_PAD_CIRCLE)
+                && battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
                 && (battle_unit_has_any_current_status(g_battle_active_turn_unit.battle_id) != 0
                     || (g_battle_menu_billboard_data.state.generic_monster == 0
                         && g_battle_menu_active_turn_banner.team_kind != 1))) {

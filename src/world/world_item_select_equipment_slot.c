@@ -18,15 +18,15 @@ world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32
             if (right_hand >= ITEM_ID_THROWABLE_FIRST) {
                 slot = WORLD_EQUIPMENT_SLOT_LEFT_HAND;
             } else {
-                slot = left_hand != 0;
+                slot = left_hand != ITEM_ID_NOTHING;
             }
         } else {
             slot = WORLD_EQUIPMENT_SLOT_RIGHT_HAND;
         }
     } else if (item_id < ITEM_ID_HEADGEAR_FIRST) {
-        if (left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != 0) {
+        if (left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != ITEM_ID_NOTHING) {
             slot = WORLD_EQUIPMENT_SLOT_RIGHT_HAND;
-        } else if (right_hand < ITEM_ID_THROWABLE_FIRST && right_hand != 0) {
+        } else if (right_hand < ITEM_ID_THROWABLE_FIRST && right_hand != ITEM_ID_NOTHING) {
             slot = WORLD_EQUIPMENT_SLOT_LEFT_HAND;
         } else {
             slot = left_hand >= ITEM_ID_THROWABLE_FIRST;

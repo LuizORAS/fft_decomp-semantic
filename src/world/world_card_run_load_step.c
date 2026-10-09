@@ -48,7 +48,7 @@ void world_card_run_load_step(s32 slot) {
                 return;
             }
         } else {
-            g_main_card_save_last_used_slot = 0xFF;
+            g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
         }
         g_world_card_load_failed = 1;
         g_world_menu_sound_effect_id = MAIN_SFX_CARD_ERROR;

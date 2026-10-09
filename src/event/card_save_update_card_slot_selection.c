@@ -1,10 +1,6 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
-enum {
-    CARD_LAST_WRITTEN_SAVE_SLOT_NONE = 0xff,
-};
-
 void card_save_update_card_slot_selection(void) {
     if (g_card_save_slot_selection_thread_state == 0) {
         g_card_save_slot_selection_thread_state = 1;
@@ -19,7 +15,7 @@ void card_save_update_card_slot_selection(void) {
             if (g_card_save_completed != 0) {
                 g_card_save_menu_state = 10;
             } else {
-                g_card_save_menu_state = 0;
+                g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
             }
         } else {
             g_battle_text_substitution_values[0] = g_card_save_slot_index + 1;

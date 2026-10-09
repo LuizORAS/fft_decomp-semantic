@@ -39,7 +39,7 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
         if (category < 2) {
             matches = item_category < 2;
         } else if (category == 2) {
-            if (item_category == 2) {
+            if (item_category == ITEM_MENU_CATEGORY_HEADGEAR) {
                 matches = 1;
             }
         } else if (category == 3) {
@@ -51,15 +51,15 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
                 matches = 1;
             }
         } else if (category == 5) {
-            if (item_category == 0) {
+            if (item_category == ITEM_MENU_CATEGORY_WEAPON) {
                 matches = 1;
             }
         } else if (category == 6) {
-            if (item_category == 1) {
+            if (item_category == ITEM_MENU_CATEGORY_SHIELD) {
                 matches = 1;
             }
         } else if (category == 7) {
-            if (item_category == 5) {
+            if (item_category == ITEM_MENU_CATEGORY_OTHER) {
                 matches = 1;
             }
         }

@@ -58,7 +58,7 @@ void world_card_update_slot_scan(void) {
                 g_world_card_menu_step = 1;
                 return;
             } else {
-                g_main_card_save_last_used_slot = 0xff;
+                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
             }
         }
 
@@ -106,7 +106,7 @@ void world_card_update_slot_scan(void) {
         }
         g_world_menu_selection_results[5] = -1;
         g_world_card_format_prompt[0].selection = 1;
-        g_main_card_save_last_used_slot = 0xff;
+        g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
         g_world_card_scan_prompt_active = 1;
         g_world_card_slot_scan_index = 0;
         g_world_card_slot_scan_active = 1;

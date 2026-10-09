@@ -88,12 +88,12 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     weather = battle_move_get_weather_terrain_cost();
     if (movement[2] & 4) {
         config->move_mod = 1;
-        config->move_type = 0;
+        config->move_type = BATTLE_MOVEMENT_CLASS_FLY;
         config->fly_or_teleport = 1;
     } else if (movement[1] & 0xC) {
         config->move_mod = 1;
         config->movement_set_2 = movement[1];
-        config->move_type = 1;
+        config->move_type = BATTLE_MOVEMENT_CLASS_TELEPORT;
         config->fly_or_teleport = 1;
     } else {
         if (movement[2] & 8) {
@@ -148,7 +148,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         value = 7;
     }
     config->jump_half = (u8)value >> 1;
-    if (config->move_type == 0 || (movement[0] & 2)) {
+    if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & 2)) {
         value = 0x1F;
     }
     config->jump_times_two = (value & 0xFF) * 2;
@@ -163,10 +163,11 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         value = 0x7C;
     }
     config->move = value;
-    if ((unit->unit_flags & 0xC0)
-        && !(unit->status_sets.current[2]
+    if ((unit->unit_flags & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE))
+        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)))
-        && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM))) {
+        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM))) {
         config->can_ride = 1;
     } else {
         config->can_ride = 0;
@@ -186,28 +187,30 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         if (other->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (other->status_sets.current[0]
+        if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
             continue;
         }
-        if (other->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+        if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
             continue;
         }
         if (i == unit_id) {
             continue;
         }
         mount = other->mount_info;
-        if ((mount & 0x80) && (mount & 0x1F) == config->unit_id) {
+        if ((mount & BATTLE_MOUNT_INFO_FLAG_RIDER) && (mount & BATTLE_MOUNT_INFO_PARTNER_ID_MASK) == config->unit_id) {
             config->unit_size += 2;
             continue;
         }
         value = i;
-        if (battle_unit_get_chocobo_mount_state(other) != 1 && other->mount_info != (config->unit_id | 0x40)) {
+        if (battle_unit_get_chocobo_mount_state(other) != 1
+            && other->mount_info != (config->unit_id | BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
             value = i | 0x20;
         }
         byte = other->team_flags;
-        if ((team ^ byte) & 0x30) {
+        if ((team ^ byte) & BATTLE_TEAM_MASK) {
             value |= 0x40;
         }
         current = &record[count];
@@ -224,26 +227,28 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
             current->body_height = 6;
         }
         value = other->mount_info;
-        if ((value & 0x40) && (value & 0x1F) != config->unit_id) {
+        if ((value & BATTLE_MOUNT_INFO_FLAG_MOUNT) && (value & BATTLE_MOUNT_INFO_PARTNER_ID_MASK) != config->unit_id) {
             current->body_height += 2;
         }
         movement_3 = other->movement_abilities[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(other)];
-        base = tile->height * 2 + (tile->depth_half_height.value & 0x1F);
+        base = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
         depth = tile->depth_half_height.value >> 5;
         byte = base;
         if (depth != 0) {
-            if (other->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+            if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
                 adjust = depth * 2 + 2;
                 byte = base + adjust;
-            } else if (movement_3 & 0x80) {
+            } else if (movement_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
                 adjust = depth * 2;
                 byte = base + adjust;
-            } else if (movement_3 & 0x40) {
+            } else if (movement_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
                 adjust = depth * 2 - 2;
                 byte = base + adjust;
             }
-        } else if (other->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+        } else if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             byte = base + 2;
         }
         current->standing_height = byte;

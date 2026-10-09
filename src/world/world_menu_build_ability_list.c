@@ -196,7 +196,8 @@ void world_menu_build_ability_list(s32 mode) {
         if (type == ACTION_MENU_TYPE_DEFAULT || type == ACTION_MENU_TYPE_MONSTER) {
             if ((g_battle_ai_workspace_ptr->ability_list.flags[i] & 2)
                 && g_battle_ai_workspace_ptr->ability_list.skill_ct[i] != 0
-                && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
+                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
                 g_world_menu_ability_display_flags[i] = 8;
             }
         }

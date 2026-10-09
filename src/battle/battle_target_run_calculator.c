@@ -52,11 +52,12 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (unit->status_sets.current[0]
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
             continue;
         }
-        if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
             continue;
         }
         if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {

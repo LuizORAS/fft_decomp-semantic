@@ -5,7 +5,7 @@
  * origin (8, 8), upload it to VRAM and release the buffer. Twin of
  * world_menu_render_text_image_at_record_origin. */
 void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* record) {
-    if (record->box_type != 0) {
+    if (record->box_type != DIALOG_BOX_TYPE_CENTERED) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {
             record->buffer = world_menu_build_window_image(
                 record->width, record->height, &record->rect, record->dialog_type, record->tail_offset, 1);

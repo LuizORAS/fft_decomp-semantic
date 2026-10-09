@@ -29,7 +29,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
         rider = unit->standing_on_unit_id_plus_one;
         if (rider != 0) {
             battle_unit_calculate_height_data(&g_battle_move_tile_occupant_height, rider - 1);
-            if (g_battle_move_tile_occupant_height.unit_flags & 0x80) {
+            if (g_battle_move_tile_occupant_height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
                 g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
                     + (g_battle_move_current_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                         * unit->current_edge_height;
@@ -51,7 +51,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             unit->standing_on_unit_id_plus_one = g_battle_move_tile_occupant->battle_data->misc_unit_id + 1;
             battle_unit_calculate_height_data(
                 &g_battle_move_tile_occupant_height, g_battle_move_tile_occupant->battle_data->misc_unit_id);
-            if (g_battle_move_tile_occupant_height.unit_flags & 0x80) {
+            if (g_battle_move_tile_occupant_height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
                 g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
                     + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                         * unit->destination_edge_height;

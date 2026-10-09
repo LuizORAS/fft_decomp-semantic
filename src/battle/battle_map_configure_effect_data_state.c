@@ -1,11 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-enum {
-    MAP_EFFECT_DATA_END = 0x87,
-    MAP_EFFECT_DATA_BEGIN = 0x88,
-};
-
 s32 battle_map_configure_effect_data_state(s32 command) {
     s32 result;
 

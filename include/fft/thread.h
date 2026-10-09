@@ -45,6 +45,14 @@ enum {
     NATIVE_THREAD_LAST_WORD_OFFSET = 0x3ffc,
 };
 
+/* Thread slots the BATTLE and WORLD menu code starts by fixed number. Other
+ * code also borrows these slots for its own threads. */
+typedef enum native_thread_slot {
+    NATIVE_THREAD_SLOT_MENU_BUILDING = 3,   /* help menu and menu entry build threads */
+    NATIVE_THREAD_SLOT_SYSTEM_FUNCTION = 4, /* the system function thread, which starts slot 8 */
+    NATIVE_THREAD_SLOT_MINI_MENU = 8,       /* the opened menu's thread, the mini menu among them */
+} native_thread_slot_e;
+
 /* task_id values shared by the BATTLE and WORLD schedulers. Each named id is
  * set by one family of twin thread functions (set_current_task_id or a
  * direct task_id store) and is looked up with *_thread_find_running_by_task.

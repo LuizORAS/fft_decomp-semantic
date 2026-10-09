@@ -10,7 +10,7 @@ void open_title_update_exit_transition(open_title_exit_state_t* transition) {
     s32 state;
     u32 buttons;
 
-    if ((g_open_gfx_overlay_fade.flags & 4) != 0) {
+    if ((g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) != 0) {
         return;
     }
 

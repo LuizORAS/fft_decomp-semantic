@@ -73,7 +73,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         }
         config->source_tile_occupied = 1;
     }
-    if (config->move_type == 1) {
+    if (config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) {
         move_flags = &g_battle_move_effective_flags;
         *move_flags = 8;
         value = config->movement_3;

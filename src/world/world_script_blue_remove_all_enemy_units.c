@@ -14,8 +14,8 @@ void world_script_blue_remove_all_enemy_units(void) {
             if (unit_index != -1
                 && (find_unit_by_id(battle_unit_get_stats_from_battle_id(unit_index)->unit_id, &resolved_id)
                            ->initial_team_flags
-                       & 0x30)
-                    != 0
+                       & BATTLE_TEAM_MASK)
+                    != BATTLE_TEAM_BLUE
                 && resolved_id != -2) {
                 battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, 0);
             }

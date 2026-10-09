@@ -48,7 +48,7 @@ void require_apply_post_battle_unit_changes(void) {
     menu_base = g_require_join_menu_descriptor;
     g_battle_menu_thread_menu_data = (world_menu_entry_t*)menu_base;
     g_battle_text_section_pointers[3] = text_data + g_require_text_section_offsets[3];
-    g_battle_text_section_pointers[6] = text_data + g_require_text_section_offsets[4];
+    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
     affected_index = 0;
     require_text_build_battle_nicknames();
@@ -262,7 +262,7 @@ void require_apply_post_battle_unit_changes(void) {
 
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
             unit_index_ptr++;
-            main_party_save_unit(unit, unit->unit_flags & 1);
+            main_party_save_unit(unit, unit->unit_flags & UNIT_FLAG_SAVE_FORMATION);
             battle_thread_wait_frames(20);
             goto next_unit;
         not_joining:

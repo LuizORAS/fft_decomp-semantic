@@ -100,7 +100,7 @@ void battle_script_process_pending_requests(void) {
             g_battle_event_weather_request = -1;
         } else {
             g_battle_event_weather_request = weather_id;
-            if (g_battle_map_weather_flags & 1) {
+            if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 g_battle_event_weather_request = weather_id + 5;
             }
             battle_map_set_weather_texture_overlay(

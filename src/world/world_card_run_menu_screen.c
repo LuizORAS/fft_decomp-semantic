@@ -1,6 +1,7 @@
 #include "fft/event_card.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Stack-resident primitive pools for both WORLD packet buffers. Each pool
@@ -106,14 +107,14 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             world_card_run_save_step(g_world_card_active_slot);
         } else if (step == 9) {
             main_sound_set_current_music_target(0, 0xf0);
-            while (world_card_check_selected() == -1) { }
+            while (world_card_check_selected() == CARD_IO_RESULT_PENDING) { }
             world_gfx_start_increasing_fade();
             g_world_card_menu_step = 0xff;
         }
         world_formation_set_ordering_table_pointer(g_world_gfx_active_packet_buffer->otag + 1);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 60;
         world_menu_draw_active_window_frames();
-        buttons = PadRead(0) & 0xf000;
+        buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
         buttons |= g_world_input_newly_pressed & 0xfff;
         if (world_thread_is_running(1) == 0 && world_thread_is_running(5) == 0 && world_thread_is_running(0xf) == 0) {
             buttons &= 0xff00;

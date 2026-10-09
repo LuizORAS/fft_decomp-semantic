@@ -26,5 +26,5 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id) {
     if (unit_index != 1) {
         equip_unit_commit_loadout_to_battle_stats();
     }
-    return 1;
+    return EQUIP_SLOT_ITEM_ALLOWED;
 }

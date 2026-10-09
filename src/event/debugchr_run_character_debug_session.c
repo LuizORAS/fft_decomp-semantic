@@ -294,7 +294,7 @@ editor:
                         up_clamp = &g_debugchr_editor_template[row].hi;
                         *value = *up_clamp - 1;
                     }
-                    if (PadRead(1) & 4) {
+                    if (PadRead(1) & PSX_PAD_L1) {
                         steps = 0xA;
                     } else {
                         steps = 1;
@@ -335,7 +335,7 @@ editor:
                     clamp_lo:
                         *down_value = *dn_lo + 1;
                     }
-                    if (PadRead(1) & 4) {
+                    if (PadRead(1) & PSX_PAD_L1) {
                         steps = 0xA;
                     } else {
                         steps = 1;

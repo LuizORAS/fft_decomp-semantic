@@ -17,7 +17,8 @@ void battle_ai_update_team_targeting_flags(void) {
 
     g_battle_ai_data_base.single_enemy_remaining = 0;
     if ((acting_decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE)
-        || (g_battle_ai_data_base.acting_unit->status_sets.current[4]
+        || (g_battle_ai_data_base.acting_unit->status_sets
+                .current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
         g_battle_ai_data_base.targetability.live.target_setting_flags
             &= ~BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE;
@@ -34,7 +35,7 @@ void battle_ai_update_team_targeting_flags(void) {
             enemy_count++;
         } else {
             ally_count++;
-            if (g_battle_unit_stats[i].status_sets.current[2]
+            if (g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                 & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)
                     | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL))) {
                 impaired_ally_count++;

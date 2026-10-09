@@ -26,8 +26,10 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
             else
                 decision->enemy_flag = 0;
             decision->targeting_flags_2 &= BATTLE_AI_TARGET_CONSERVE_CT | BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE;
-            if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
-                if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))
                     decision->targeting_flags_2 |= BATTLE_AI_TARGET_DEAD_WITH_RERAISE;
                 else
                     decision->targeting_flags_2 |= BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE;

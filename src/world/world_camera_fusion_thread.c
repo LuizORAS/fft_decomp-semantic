@@ -14,9 +14,6 @@
  * target passes to world_menu_alloc_ui_buffer. */
 #define WORLD_CAMERA_FUSION_COMPONENT_COUNT 7
 
-/* Sentinel operand meaning "keep the component's current value". */
-#define WORLD_CAMERA_FUSION_HOLD 10000
-
 void world_camera_fusion_thread(void) {
     battle_camera_track_t* tracks;
     battle_camera_track_t* track;
@@ -77,7 +74,7 @@ void world_camera_fusion_thread(void) {
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
                         value = world_script_load_halfword(cursor + i + i + 1);
-                        if (value == WORLD_CAMERA_FUSION_HOLD) {
+                        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
                             } else {

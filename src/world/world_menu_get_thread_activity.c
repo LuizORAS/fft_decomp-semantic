@@ -4,7 +4,7 @@
 s32 world_menu_get_thread_activity(void) {
     s32 i;
 
-    if (world_thread_is_running_80100164(3) != 0) {
+    if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
         return 2;
     }
     for (i = 4; i < 9; i++) {

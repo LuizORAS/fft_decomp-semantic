@@ -89,7 +89,7 @@ void open_script_update_xa_audio(void) {
             if (g_open_script_state.xa_wait_frames < 0x78) {
                 return;
             }
-            if (!(CdStatus() & 0x20)) {
+            if (!(CdStatus() & CdlStatRead)) {
                 g_open_script_state.control_state = 0;
                 *control = (*control ^ 8) | 0x20;
                 return;

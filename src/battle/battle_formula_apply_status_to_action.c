@@ -90,7 +90,8 @@ void battle_formula_apply_status_to_action(void) {
     }
 
     g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-    if (g_battle_action_target_data->status_infliction[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
+    if (g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
     }
 }

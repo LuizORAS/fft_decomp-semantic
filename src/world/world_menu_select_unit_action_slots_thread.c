@@ -29,7 +29,7 @@ void world_menu_select_unit_action_slots_thread(void) {
 
     for (i = (g_world_menu_restore_pending == 0) ? 2 : 0; i >= 0; i--) {
         world_menu_check_action_slot_restrictions(menu, i, check_unit);
-        if (menu == 3) {
+        if (menu == ACTION_MENU_TYPE_ARITHMETICKS) {
             slot = &row->bytes[i + 11] + i;
             g_world_menu_thread_menu_data[3].selected_index = slot[0];
             g_world_ability_menu_layout.row_offset = slot[1];
@@ -40,13 +40,14 @@ void world_menu_select_unit_action_slots_thread(void) {
             slot = pair + 3;
         }
         for (j = 0; j < 6; j++) {
-            if (menu != 3 || i == 0) {
+            if (menu != ACTION_MENU_TYPE_ARITHMETICKS || i == 0) {
                 (&g_world_menu_action_slot_row_actions)[j] = 0x1024;
             } else {
                 (&g_world_menu_action_slot_row_actions)[j] = -1;
             }
         }
-        if (g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index] == 12) {
+        if (g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index]
+            == ACTION_MENU_TYPE_CHANGE_EQUIPMENT) {
             g_world_menu_thread_menu_data[3].selected_index = 0;
             world_menu_run_equip_thread();
         }
@@ -56,7 +57,7 @@ void world_menu_select_unit_action_slots_thread(void) {
         world_menu_scrolling_list_thread();
         slot[0] = g_world_menu_thread_menu_data[3].selected_index;
         slot[1] = g_world_ability_menu_layout.row_offset;
-        if (menu != 3) {
+        if (menu != ACTION_MENU_TYPE_ARITHMETICKS) {
             world_thread_exit_current();
         }
         if (g_world_menu_action_slot_selected_option == -1) {

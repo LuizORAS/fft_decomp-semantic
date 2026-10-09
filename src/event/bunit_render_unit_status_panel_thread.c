@@ -142,8 +142,8 @@ void bunit_render_unit_status_panel_thread(void) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->gauges[2].value >= 0x65) {
-            state->gauges[2].value = 0x64;
+        if (state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
+            state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(g_bunit_panel_editor_mode_cell, &g_bunit_panel_editor_mode_cells[state->team_kind], 0xC);
@@ -421,7 +421,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 stats = battle_unit_get_stats_from_battle_id(scroll[5]);
                 if (scroll[5] >= 0x10) {
                     s32 id = stats->formation_index;
-                    if (id == 0xFF) {
+                    if (id == BATTLE_FORMATION_INDEX_NONE) {
                         id = 0;
                     }
                     battle_text_draw_large_number_glyphs(id + 1, 0x4002, render_b + 0xA0, origin);

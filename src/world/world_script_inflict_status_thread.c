@@ -31,11 +31,13 @@ void world_script_inflict_status_thread(void) {
     }
     world_unit_update_staged_status_data(unit_id, 0);
     unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
-    if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
         state = 0;
     } else {
         state = 2;
-        if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)) {
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)) {
             state = 1;
         }
     }

@@ -16,7 +16,8 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
     u8 image;
     u8 miss;
 
-    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x1f;
+    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
+        = BATTLE_GFX_TPAGE_FRAME;
     stats = unit->battle_data;
     action = &stats->action;
     if (action->hit != 0) {
@@ -124,14 +125,14 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
             if ((u32)(action->miss_type - 1) < 2 || miss == BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE
                 || miss == BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE
                 || miss == BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD) {
-                if ((action->miss_display_flags & 3) == 1) {
+                if ((action->miss_display_flags & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK) == 1) {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
                 } else {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
                 }
             } else if (miss == BATTLE_ACTION_MISS_TYPE_CATCH) {
                 unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
-            } else if (miss != BATTLE_ACTION_MISS_TYPE_CANCELLED && miss != 0
+            } else if (miss != BATTLE_ACTION_MISS_TYPE_CANCELLED && miss != BATTLE_ACTION_MISS_TYPE_HIT
                 && miss != BATTLE_ACTION_MISS_TYPE_REFLECTED) {
                 unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
             }

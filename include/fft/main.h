@@ -14,6 +14,7 @@
 #include "psx/libapi.h"
 #include "psx/libcd.h"
 #include "psx/libspu.h"
+#include "psx/pad.h"
 #include "psx/suzuki.h"
 
 struct battle_deployed_coords;
@@ -104,6 +105,11 @@ typedef enum card_io_result {
 
 enum { CARD_SAVE_SLOT_COUNT = 15 };
 
+/* g_main_card_save_last_used_slot when no slot was loaded or written. */
+enum {
+    CARD_LAST_WRITTEN_SAVE_SLOT_NONE = 0xff,
+};
+
 /* PlayStation memory-card save-file header block (256 bytes), as built by
  * card_build_save_file_header (0x801c2ea8) and its WORLD twin
  * world_card_build_save_file_header (0x801322e4). */
@@ -117,6 +123,14 @@ typedef struct card_save_header {
     u8 icon_clut[0x20];  /* 0x60 */
     u8 icon_image[0x80]; /* 0x80 */
 } card_save_header_t;
+
+/* The fixed leading bytes of card_save_header_t. */
+enum {
+    CARD_SAVE_HEADER_MAGIC_S = 'S',
+    CARD_SAVE_HEADER_MAGIC_C = 'C',
+    CARD_SAVE_HEADER_ICON_ONE_FRAME = 0x11,
+    CARD_SAVE_HEADER_BLOCK_COUNT_ONE = 1,
+};
 
 /* The 0x1e00-byte memory-card save image, parity-covered per 128-byte block.
  * WORLD holds it in g_world_load_work_buffer (0x801cd1ec) and its serializer
@@ -239,6 +253,11 @@ void main_file_poll_load(main_file_load_descriptor_t* state);
 void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
 
 /* input */
+/* L1 + R1 + Select + Start restarts the game. */
+enum {
+    MAIN_INPUT_RESET_BUTTONS = PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_SELECT | PSX_PAD_START,
+};
+
 extern u8 g_main_input_repeat_initial_delay;
 extern u8 g_main_input_repeat_period;
 extern u8 g_main_input_secondary_repeat_period;

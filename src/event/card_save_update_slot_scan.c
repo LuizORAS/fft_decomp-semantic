@@ -3,10 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-enum {
-    CARD_LAST_WRITTEN_SAVE_SLOT_NONE = 0xff,
-};
-
 /* Dispatched in scanning state by card_save_run_menu. */
 void card_save_update_slot_scan(void) {
     s32 result;

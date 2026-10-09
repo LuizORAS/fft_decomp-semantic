@@ -72,7 +72,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
     unit->camera_facing_sixteenth.s = unit->camera_facing_quadrant.s = *(s16*)& unit->attack_facing = -1;
-    unit->mount_state = 0;
+    unit->mount_state = BATTLE_MISC_MOUNT_STATE_NONE;
     unit->horizontal_flip_flag = 0;
     unit->depth_height_offset = 0;
     unit->float_bob_offset = 0;
@@ -87,14 +87,14 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->distortion_phase = 0;
     tile_x = map_x;
     unit->map_x = tile_x;
-    unit->movement.word &= ~0x01000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE;
     tile_y = map_y;
     unit->map_y = tile_y;
-    unit->movement.word &= ~0x04000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_PALETTE_UPDATE;
     tile_z = map_level;
     unit->map_z = tile_z;
-    unit->movement.word &= ~0x08000000;
-    unit->movement.word &= ~0x10000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_FLOAT;
     unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
     unit->movement.bytes.destination_x = tile_x;
     unit->movement.bytes.destination_y = tile_y;
@@ -127,7 +127,8 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->numeric_displays[0]->scale_x = unit->numeric_displays[0]->scale_y = unit->numeric_displays[1]->scale_x
         = unit->numeric_displays[1]->scale_y = unit->numeric_displays[2]->scale_x = unit->numeric_displays[2]->scale_y
         = ONE;
-    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x1f;
+    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
+        = BATTLE_GFX_TPAGE_FRAME;
     unit->numeric_displays[0]->clut = unit->numeric_displays[1]->clut = unit->numeric_displays[2]->clut
         = unit->vram_palette_id + 0x100;
     unit->numeric_displays[0]->part_count = unit->numeric_displays[1]->part_count
@@ -191,9 +192,9 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
     battle_status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
-    unit->movement.word |= 0x02000000;
+    unit->movement.word |= BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_unit_set_animation_based_on_status(unit);
-    unit->movement.word &= ~0x02000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
     return unit;
 }

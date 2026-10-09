@@ -39,7 +39,7 @@ void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin
     }
     state = TEXT_STATE;
     powers = g_battle_text_decimal_divisors;
-    variable_base = 0x18;
+    variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     TEXT_STATE->return_cursor = (u8*)-1;
     TEXT_STATE->value_cursor = g_battle_text_substitution_values;
     TEXT_STATE->pending_width = 0xFFFF;

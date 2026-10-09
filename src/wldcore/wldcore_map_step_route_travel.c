@@ -22,7 +22,7 @@ void wldcore_map_step_route_travel(void) {
     if (!(g_wldcore_location_entry_state.flags & 1)) {
         return;
     }
-    if (g_wldcore_map_projection_motion.flags & 1) {
+    if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
         if (wldcore_map_step_projection_motion() == 0) {
             g_wldcore_location_view.projection_state |= 6;
         }

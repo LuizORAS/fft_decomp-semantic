@@ -99,7 +99,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             } else {
                 state->step = 1;
                 world_thread_set_parameters(0xC, 0, 0, 1);
-                g_open_system_runtime_flags |= 0x10;
+                g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
             }
         } else if (buttons & PSX_PAD_SELECT) {
             open_controller_start_text_message(g_open_music_test_list_params.selected_index + 0xC800, 0);

@@ -59,6 +59,6 @@ void card_save_init_menu_graphics(void) {
     card_gfx_load_image_and_wait(&rect, &image_data[4]);
 
     card_gfx_start_decreasing_fade();
-    g_card_save_menu_state = 0;
+    g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
     battle_thread_suspend(15);
 }

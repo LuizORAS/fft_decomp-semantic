@@ -46,7 +46,7 @@ void attack_text_build_deployment_strings(void) {
     attack_text_init_battle_pointers(file);
     for (i = 0; i < 0x10; i++) {
         unit = main_party_get_data_pointer(i);
-        if (unit->party_id == 0xff || i >= 0x10 || unit->proposition_status != 0) {
+        if (unit->party_id == PARTY_ID_NONE || i >= 0x10 || unit->proposition_status != 0) {
             for (k = 0; k < 11; k++) {
                 *dst++ = 0xfe;
             }

@@ -17,7 +17,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
 
     main_util_copy_action_data(source, &action);
     mode = 0;
-    if (action.unit_id >= 21) {
+    if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     unit = &g_battle_unit_stats[action.unit_id];
@@ -31,7 +31,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         mode = 1;
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        range = ((unit->support_abilities[2] & 8) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
+        range = ((unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
         mode = 2;
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
@@ -40,7 +40,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         break;
     case ACTION_MENU_TYPE_ELEMENTS:
         ability_id = g_main_terrain_geomancy_abilities
-            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value & 0x3f];
+            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value & MAP_SURFACE_MASK];
         mode = 1;
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:

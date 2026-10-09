@@ -124,7 +124,7 @@ s8 world_item_run_action_menu(void) {
                 for (i = 0; i < g_world_formation_unit_count; i++) {
                     for (slot = 0; slot < 5; slot++) {
                         if (item == g_world_formation_unit_pointers[i]->equipment[slot]) {
-                            world_formation_equip_item_to_unit_slot(i, slot, 0);
+                            world_formation_equip_item_to_unit_slot(i, slot, ITEM_ID_NOTHING);
                         }
                     }
                 }

@@ -37,7 +37,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
         cursor = text;
     }
     state = TEXT_STATE;
-    variable_id = 0x18;
+    variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     TEXT_STATE->return_cursor = (u8*)-1;
     TEXT_STATE->value_cursor = g_world_text_substitution_values;
     TEXT_STATE->pending_width = 0xFFFF;

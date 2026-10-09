@@ -55,7 +55,7 @@ void world_gfx_set_party_unit_portrait_poly_texture(s32 roster_slot, POLY_FT4* p
         }
     }
     sprite = g_world_portrait_clut_by_sheet_id[sprite];
-    if (party->sprite_set == 0) {
+    if (party->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
         sprite = 0;
     }
     if (party->sprite_set == CHARACTER_IDENTITY_MONSTER) {

@@ -27,7 +27,8 @@ void open_title_push_menu_controller(s32 argument) {
     open_render_record_36_t* entry;
     s32* field;
 
-    g_open_system_runtime_flags = (g_open_system_runtime_flags & ~0x2000) | 0x1000;
+    g_open_system_runtime_flags
+        = (g_open_system_runtime_flags & ~OPEN_SYSTEM_RUNTIME_FLAG_RGB24) | OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN;
     open_gfx_init_screen_environments(0);
     rect.x = 0;
     rect.y = 0;
@@ -91,7 +92,7 @@ void open_title_push_menu_controller(s32 argument) {
     g_open_title_menu_states[controller].exiting = 0;
     record = g_open_title_menu_states[controller].records_36[g_open_title_menu_states[controller].cursor + 1];
     g_open_current_controller_index = controller + 1;
-    g_open_gfx_render_records_36[record].palette = 9;
+    g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
     field = &g_open_controller_handler_indices[controller];
     *field = 2;
 }

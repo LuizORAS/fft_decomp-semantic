@@ -2,12 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-typedef enum wldcore_projection_flags {
-    WLDCORE_PROJECTION_FLAG_UPDATE_POSITION = 0x01,
-    WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION = 0x02,
-    WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04,
-} wldcore_projection_flags_e;
-
 /* Apply pending direction and GTE projection updates to the camera state.
  *
  * The direction word is the player marker's sprite_id: the facing octant picks

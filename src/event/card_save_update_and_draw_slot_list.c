@@ -31,7 +31,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
                 card_menu_stop_thread_and_wait(5);
                 g_card_save_overwrite_prompt_active = 0;
                 g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
-                g_main_card_save_last_used_slot = 0xff;
+                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
             }
         } else if (g_card_save_overwrite_prompt_active != 0) {
             g_card_save_overwrite_prompt_active = card_thread_start_managed(6, g_card_save_overwrite_prompt_descriptor);

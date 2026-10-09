@@ -1,8 +1,5 @@
 #include "fft/world.h"
 
-/* L1 + R1 + Select + Start restarts the game. */
-#define TUTORIAL_RESET_BUTTONS 0x90C
-
 s32 world_script_handle_tutorial_command(void) {
     s32 pad;
     u8 cmd;
@@ -11,7 +8,7 @@ s32 world_script_handle_tutorial_command(void) {
         return 1;
     }
     g_world_script_tutorial_button_input = PadRead(0);
-    if (g_world_script_tutorial_button_input == TUTORIAL_RESET_BUTTONS) {
+    if (g_world_script_tutorial_button_input == MAIN_INPUT_RESET_BUTTONS) {
         world_game_reset();
     }
     g_world_script_tutorial_buttons = g_world_script_tutorial_button_input;

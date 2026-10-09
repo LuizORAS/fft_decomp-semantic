@@ -14,7 +14,8 @@ void world_unit_set_facing(s32 misc_id, s32 facing) {
             stats = battle_unit_get_stats_from_battle_id(battle_id);
             if (stats->mount_info != 0) {
                 battle_unit_set_animation_from_facing_nibble(
-                    battle_unit_get_misc_id_by_battle_id(stats->mount_info & 0x1F), facing & 0xFFFF);
+                    battle_unit_get_misc_id_by_battle_id(stats->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK),
+                    facing & 0xFFFF);
             }
         }
     }

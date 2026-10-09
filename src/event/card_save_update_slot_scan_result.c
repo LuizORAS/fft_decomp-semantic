@@ -2,10 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-enum {
-    CARD_LAST_WRITTEN_SAVE_SLOT_NONE = 0xff,
-};
-
 void card_save_update_slot_scan_result(void) {
     s32 index;
     s32 all_empty;
@@ -22,13 +18,13 @@ void card_save_update_slot_scan_result(void) {
             g_card_save_slot_scan_prompt_descriptor = 0;
             g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
             card_menu_stop_thread_and_wait(6);
-            g_card_save_menu_state = 1;
+            g_card_save_menu_state = CARD_SAVE_MENU_SELECT_CARD;
         }
     } else {
         index = 0;
         all_empty = 1;
         while (index < 15) {
-            if (g_card_save_slot_file_states[index] != -1) {
+            if (g_card_save_slot_file_states[index] != CARD_SAVE_SLOT_UNAVAILABLE) {
                 all_empty = 0;
             }
             index++;

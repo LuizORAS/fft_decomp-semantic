@@ -80,7 +80,7 @@ void debugchr_editor_load_selected_unit(void) {
         editor[7] = 1;
 
     if (editor[7] != 0) {
-        innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, 1);
+        innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         i = 0;
         ability_slot = editor;
         do {

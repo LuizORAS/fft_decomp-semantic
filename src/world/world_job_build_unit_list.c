@@ -3,11 +3,6 @@
 /* Declared s32 here: the target uses the returned register without the
  * re-extension an s16 prototype makes GCC emit (the callee already extends). */
 
-enum {
-    WORLD_JOB_LIST_ENTRY_FLAGGED = 0x4000,
-    WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS = 2,
-};
-
 /*
  * Writes a formation unit's selectable jobs to a -1-terminated list and
  * returns their count.

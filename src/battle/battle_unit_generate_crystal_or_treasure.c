@@ -47,7 +47,8 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     g_main_crystal_pickup_result.result = 0;
     g_main_crystal_pickup_result.unit_index = crystal_index;
     crystal = &g_battle_unit_stats[crystal_index];
-    if (crystal->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+    if (crystal->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
         g_main_crystal_pickup_result.result = 4;
         g_main_crystal_pickup_result.treasure_item = battle_unit_generate_treasure(crystal);
     } else {
@@ -58,7 +59,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
         } while (0);
         mover_flags = mover->unit_flags;
         crystal_flags = crystal->unit_flags;
-        if (!(mover_flags & 0x20) && !(crystal_flags & 0x20)) {
+        if (!(mover_flags & UNIT_FLAG_MONSTER) && !(crystal_flags & UNIT_FLAG_MONSTER)) {
             learned_count = 0;
             unlocked_jobs_mask
                 = (mover->unlocked_jobs[0] << 16) + (mover->unlocked_jobs[1] << 8) + mover->unlocked_jobs[2];
@@ -77,16 +78,16 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                     if (mover_identity != crystal_identity) {
                         continue;
                     }
-                    if (mover_identity < 0x80) {
+                    if (mover_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                         job_id = mover_identity;
                     }
                 } else if (!(unlocked_jobs_mask & (0x800000 >> i))) {
                     continue;
                 }
-                if (i == 0x11 && (mover_flags & 0x40)) {
+                if (i == 0x11 && (mover_flags & UNIT_FLAG_FEMALE)) {
                     continue;
                 }
-                if (i == 0x12 && (mover_flags & 0x80)) {
+                if (i == 0x12 && (mover_flags & UNIT_FLAG_MALE)) {
                     continue;
                 }
                 skillset = g_main_job_data_pointer[job_id].skillset;

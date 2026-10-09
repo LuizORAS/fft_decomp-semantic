@@ -137,7 +137,7 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
             work->scroll_v += scratch->half_height << 12;
         }
 
-        if (entry->flags & 0x40) {
+        if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
             j = entry->colour_curves & 0xFFF;
             scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
             scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];

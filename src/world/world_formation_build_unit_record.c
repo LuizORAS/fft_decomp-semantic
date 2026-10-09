@@ -125,5 +125,6 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->monster_graphic = unit->monster_graphic;
     record->birthday = *(u16*)&unit->birthday & 0x1ff;
     record->egg_color = party->egg_color;
-    record->two_handed = world_unit_is_two_handing_weapon((s16*)record->equipment, record->support_abilities[2] & 2);
+    record->two_handed = world_unit_is_two_handing_weapon(
+        (s16*)record->equipment, record->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
 }

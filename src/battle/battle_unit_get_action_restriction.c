@@ -4,7 +4,9 @@
 s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
     s32 depth;
 
-    if ((unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT)) != 0) {
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
+        != 0) {
         return 1;
     }
     if ((unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) != 0) {

@@ -130,7 +130,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     }
 
     motion = g_wldcore_map_zoom_motion.flags;
-    if (!(motion & 1)) {
+    if (!(motion & WLDCORE_PROJECTION_MOTION_ACTIVE)) {
         if (level->wide_view == 0 && (g_wldcore_new_button_presses & (PSX_PAD_L1 | PSX_PAD_R1))) {
             g_wldcore_window_records[level->window_index].flags |= 0x10;
             g_wldcore_map_zoom_motion.progress = 0x20;
@@ -164,7 +164,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 g_wldcore_map_projection_view.scale.vx = 0x800;
                 g_wldcore_map_projection_view.origin.vx = 0;
                 g_wldcore_map_projection_view.origin.vy = 8;
-                g_wldcore_map_zoom_motion.flags = motion ^ 1;
+                g_wldcore_map_zoom_motion.flags = motion ^ WLDCORE_PROJECTION_MOTION_ACTIVE;
             }
         } else {
             g_wldcore_map_projection_view.origin.vx = (g_wldcore_map_zoom_motion.origin.vx * frame) / duration;
@@ -176,12 +176,12 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 g_wldcore_map_projection_view.scale.vy = ONE;
                 g_wldcore_map_projection_view.scale.vx = ONE;
                 g_wldcore_map_projection_view.origin = g_wldcore_map_zoom_motion.origin;
-                g_wldcore_map_zoom_motion.flags ^= 1;
+                g_wldcore_map_zoom_motion.flags ^= WLDCORE_PROJECTION_MOTION_ACTIVE;
                 g_main_system_flags &= ~0x30;
             }
         }
         g_main_system_flags |= 2;
-        g_wldcore_map_projection_state.flags |= 1;
+        g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
         goto finish;
     }
 
@@ -250,7 +250,7 @@ scroll:
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
                 g_main_system_flags |= 2;
-                g_wldcore_map_projection_state.flags |= 1;
+                g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
             }
         }
         g_wldcore_window_records[level->window_index].position.x += amount.x;
@@ -289,7 +289,7 @@ scroll:
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
                 g_main_system_flags |= 2;
-                g_wldcore_map_projection_state.flags |= 1;
+                g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
             }
         }
     }

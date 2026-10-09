@@ -285,7 +285,8 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         direction.m[2][1] = vector[7];
         direction.m[2][2] = vector[8];
         battle_map_set_light_matrices((MATRIX*)light, &direction);
-        battle_map_control_gte_background_color(9, light->ambient[0], light->ambient[1], light->ambient[2]);
+        battle_map_control_gte_background_color(
+            BATTLE_BACKGROUND_COLOR_SET, light->ambient[0], light->ambient[1], light->ambient[2]);
         red = light->gradient_top[0];
         green = light->gradient_top[1];
         blue = light->gradient_top[2];

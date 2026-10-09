@@ -53,7 +53,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + (tile->depth_half_height.value & 0x1f);
+                height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
                 low = height - 10;
                 if (low < 0) {
                     low = 0;
@@ -98,7 +98,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             if ((s32)(depth >> 5) >= 3) {
                                 continue;
                             }
-                            height = depth & 0x1f;
+                            height = depth & MAP_TILE_HALF_HEIGHT_MASK;
                             if (height >= 3) {
                                 continue;
                             }
@@ -112,7 +112,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             if (g_battle_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
-                            surface = tile->surface.value & 0x3f;
+                            surface = tile->surface.value & MAP_SURFACE_MASK;
                             if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
                                 continue;
                             }

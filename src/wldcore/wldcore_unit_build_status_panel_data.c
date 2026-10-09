@@ -27,10 +27,10 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     gauges->team_kind = 0;
     gauges->level = unit->level;
     flags = unit->team_flags;
-    if (flags & 0x30) {
+    if (flags & BATTLE_TEAM_MASK) {
         gauges->team_kind = 1;
     }
-    if (!(flags & 0x38)) {
+    if (!(flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         gauges->team_kind = 2;
     }
     gauges->list_index = 0;
@@ -98,7 +98,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     }
     detail->generic_monster = unit->unit_flags & UNIT_FLAG_MONSTER;
     if (detail->generic_monster != 0) {
-        abilities = main_ability_store_skillset_abilities(unit->primary_skillset, 1);
+        abilities = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         for (i = 0; i < 5; i++) {
             detail->ability_ids[i] = *abilities++;
         }

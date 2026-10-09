@@ -8,9 +8,6 @@
 
 #define ABS(x) (x < 0 ? -(x) : x)
 
-/* Target operand meaning "keep the component's current value". */
-#define WORLD_CAMERA_HOLD 10000
-
 /* Script-variable index for each camera component, 0x801531b8. */
 
 void world_camera_thread(void) {
@@ -73,7 +70,7 @@ void world_camera_thread(void) {
         ramp = (duration - i) * i;
         for (j = 0; j < 7; j++) {
             variable = &g_world_script_variables[g_world_camera_script_variable_indices[j]];
-            if (target[j] == WORLD_CAMERA_HOLD) {
+            if (target[j] == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
             if (*(u16*)&g_world_camera_position_locked != 0 && j < 3) {
@@ -150,13 +147,13 @@ void world_camera_thread(void) {
 
     if (*(u16*)&g_world_camera_position_locked == 0) {
         for (i = 0; i < 3; i++) {
-            if (target[i] != WORLD_CAMERA_HOLD) {
+            if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i] << 10;
             }
         }
     }
     for (i = 3; i < 7; i++) {
-        if (target[i] != WORLD_CAMERA_HOLD) {
+        if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i];
         }
     }

@@ -207,8 +207,8 @@ ramza_placed:
                 = attack_deploy_is_roster_unit_deployed(g_attack_deploy_selected_roster_index);
             input = battle_script_get_controller_input_pointer(0);
             if (*input & PSX_PAD_SELECT) {
-                battle_thread_start(3, attack_deploy_run_select_menu);
-                battle_thread_set_parameters(3, 1, 0, 0);
+                battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, attack_deploy_run_select_menu);
+                battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 1, 0, 0);
                 battle_thread_wait_until_inactive(3);
             }
             if (g_attack_panel_status_animation[2] < 2) {
@@ -480,8 +480,8 @@ ramza_placed:
                 do {
                     battle_thread_yield();
                     if (*input & PSX_PAD_SELECT) {
-                        battle_thread_start(3, attack_deploy_run_select_menu);
-                        battle_thread_set_parameters(3, 0, 0, 0);
+                        battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, attack_deploy_run_select_menu);
+                        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 0, 0, 0);
                         battle_thread_wait_until_inactive(3);
                     }
                     attack_deploy_handle_roster_navigation_input();
@@ -561,7 +561,7 @@ ramza_placed:
         g_attack_deploy_current_squad_id = battle_script_get_variable(i + 0x35);
         g_attack_deploy_current_squad_data = &g_attack_deploy_squad_data[g_attack_deploy_current_squad_id];
         flags = g_attack_deploy_current_squad_data->orientation_flags;
-        orientation = flags & 0xf;
+        orientation = flags & ATTACK_DEPLOYMENT_ORIENTATION_MASK;
         orientation--;
         orientation += flags >> 4;
         if (orientation < 0) {

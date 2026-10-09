@@ -881,6 +881,13 @@ typedef struct wldcore_projection_state {
     wldcore_map_dot_t marker;
 } wldcore_projection_state_t;
 
+/* wldcore_projection_state_t.flags. */
+typedef enum wldcore_projection_flags {
+    WLDCORE_PROJECTION_FLAG_UPDATE_POSITION = 0x01,
+    WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION = 0x02,
+    WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04,
+} wldcore_projection_flags_e;
+
 /* The volatile first store preserves the target's R3000 load-delay slot. */
 typedef struct wldcore_map_clamped_point32 {
     volatile s32 x;
@@ -897,6 +904,11 @@ typedef struct wldcore_projection_motion {
     wldcore_map_clamped_point32_t target;
 } wldcore_projection_motion_t;
 typedef char wldcore_projection_motion_size_must_be_0x24[sizeof(wldcore_projection_motion_t) == 0x24 ? 1 : -1];
+
+/* wldcore_projection_motion_t.flags. */
+enum {
+    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
+};
 
 /* Provisional: one axis of the accelerating map scroll stepped by
  * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its

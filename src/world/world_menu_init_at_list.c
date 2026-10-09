@@ -87,7 +87,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
                 g_world_menu_at_list_primary_values[count] = value + TEXT_ID_ABILITY_NAME_BASE;
             }
         }
-        if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
+        if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE) {
             g_world_menu_at_list_flags[count] = 8;
         }
         count++;

@@ -11,10 +11,12 @@ void battle_ai_check_unit_for_crystal_or_treasure_status(void) {
     if (unit_id != BATTLE_UNIT_ID_NONE) {
         unit = &g_battle_unit_stats[unit_id];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-            if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)) {
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)) {
                 g_battle_ai_data_base.crystal_treasure_status = 1;
             }
-            if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
                 g_battle_ai_data_base.crystal_treasure_status = 2;
             }
         }

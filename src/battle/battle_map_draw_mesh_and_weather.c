@@ -496,7 +496,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].y = ground - 8;
                 g_battle_map_rain_splash_particles[i].x = g_battle_map_weather_particles[i].x;
                 g_battle_map_rain_splash_particles[i].z = g_battle_map_weather_particles[i].z;
-                if (!(g_battle_map_tile_data_ptr[tile].flags.value & 2)) {
+                if (!(g_battle_map_tile_data_ptr[tile].flags.value & MAP_TILE_FLAG_UNTARGETABLE)) {
                     g_battle_map_weather_particles[i].fall_speed = 1;
                 } else {
                     g_battle_map_weather_particles[i].fall_speed = 2;
@@ -596,7 +596,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x20) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | 0x7840;
                     GT3(i).r0 = 0x20;
                     GT3(i).r1 = 0x20;
@@ -619,7 +619,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x20) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | 0x7840;
                     GT4(i).r0 = 0x20;
                     GT4(i).r1 = 0x20;
@@ -648,7 +648,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x40) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | 0x7840;
                     GT3(i).r0 = 0x60;
                     GT3(i).r1 = 0x60;
@@ -671,7 +671,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x40) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | 0x7840;
                     GT4(i).r0 = 0x60;
                     GT4(i).r1 = 0x60;
@@ -700,7 +700,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x80) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | 0x7840;
                     GT3(i).r0 = 0x50;
                     GT3(i).r1 = 0x50;
@@ -723,7 +723,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & 0x80) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | 0x7840;
                     GT4(i).r0 = 0x50;
                     GT4(i).r1 = 0x50;

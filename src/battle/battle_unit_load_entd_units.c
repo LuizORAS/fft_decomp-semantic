@@ -40,7 +40,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         unit = &g_battle_unit_stats[battle_id];
         unit->misc_unit_id = battle_id;
         g_main_entd_current_unit = entd;
-        if (entd->sprite_set == 0) {
+        if (entd->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
             continue;

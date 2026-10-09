@@ -38,7 +38,8 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
             message = 0x1003;
             mode = 2;
         } else {
-            if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
                 message = 0x1007;
                 mode = 2;
             } else {
@@ -47,7 +48,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
             }
         }
     }
-    if (message == 0 && menu == 3) {
+    if (message == 0 && menu == ACTION_MENU_TYPE_ARITHMETICKS) {
         message = 0x8009 - value;
         mode = 1;
     }

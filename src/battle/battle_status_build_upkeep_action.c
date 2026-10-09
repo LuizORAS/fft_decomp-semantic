@@ -32,7 +32,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     }
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && g_battle_action_state == 0) {
+        && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
         if (unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) {
             return 0;
         }

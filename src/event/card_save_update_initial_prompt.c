@@ -17,7 +17,7 @@ void card_save_update_initial_prompt(void) {
             if (g_card_save_slot_index != 0) {
                 g_card_save_menu_state = 10;
             } else {
-                g_card_save_menu_state = 1;
+                g_card_save_menu_state = CARD_SAVE_MENU_SELECT_CARD;
             }
         }
     }

@@ -68,7 +68,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             if (g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
                 >= 0xa0) {
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
-                    = 1;
+                    = BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1;
             }
             if (battle_gfx_is_spritesheet_id_loaded(
                     g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]]

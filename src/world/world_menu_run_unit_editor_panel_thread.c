@@ -137,7 +137,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         if (g_world_unit_editor_fields.state.generic_monster != 0) {
             value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == 0xFFFF) {
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -146,7 +146,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     for (i = 2; i < 5; i++) {
         value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == 0xFFFF) {
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -155,7 +155,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     if (g_world_unit_editor_fields.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == 0xFFFF) {
+            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -210,7 +210,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
                 world_thread_set_parameters(0xA, 0, 0, 1);
                 break;
             }
-            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_running_80100164(3) == 0
+            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
+                && world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
                 && (world_unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
                     || (g_world_unit_editor_fields.state.generic_monster == 0
                         && g_world_unit_selected_status_billboard.team_kind != 1))) {

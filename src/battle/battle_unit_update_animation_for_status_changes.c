@@ -11,14 +11,14 @@
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit) {
     battle_stats_t* stats;
 
-    if (unit->statuses_to_add_5_6 & 2) {
+    if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_CHICKEN) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, (s16)unit->facing, unit);
-    } else if (unit->statuses_to_remove_5_6 & 2) {
+    } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_CHICKEN) {
         battle_unit_set_animation_based_on_status(unit);
     }
-    if (unit->statuses_to_add_5_6 & 4) {
+    if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_FROG) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, (s16)unit->facing, unit);
-    } else if (unit->statuses_to_remove_5_6 & 4) {
+    } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_FROG) {
         battle_unit_set_animation_based_on_status(unit);
     }
     if (unit->statuses_to_add_1_4 & 4) {
@@ -38,14 +38,14 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
             }
         }
     }
-    if (unit->statuses_to_add_5_6 & 9) {
+    if (unit->statuses_to_add_5_6 & (BATTLE_MISC_STATUS_CRYSTAL | BATTLE_MISC_STATUS_TREASURE)) {
         battle_effect_set_secondary_zodiac_poof(unit);
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-        if (unit->statuses_to_add_5_6 & 0x40) {
+        if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_JUMP) {
             battle_unit_store_animation_facing_movement_data(
                 BATTLE_UNIT_ANIMATION_JUMP_DEPART, (s16)unit->facing, unit);
-        } else if (unit->statuses_to_remove_5_6 & 0x40) {
+        } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_JUMP) {
             battle_unit_draw_and_activate_by_misc_id(unit->unit_id);
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_LAND, (s16)unit->facing, unit);
         }

@@ -16,25 +16,25 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     s32 status;
 
     switch (stream->state) {
-    case 0:
+    case MAIN_FILE_LOAD_STATE_IDLE:
         break;
-    case 1:
+    case MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED:
         mode[0] = CdlModeSpeed;
         CdControl(CdlSetmode, mode, 0);
         g_main_system_session_frames = 0;
         stream->state++;
         break;
-    case 2:
+    case MAIN_FILE_LOAD_STATE_WAIT_AFTER_SET_MODE:
         if (g_main_system_session_frames < 4) {
             return;
         }
         stream->state++;
         break;
-    case 3:
+    case MAIN_FILE_LOAD_STATE_START_SEEK:
         CdControlF(CdlSetloc, stream->position);
         stream->state++;
         break;
-    case 4:
+    case MAIN_FILE_LOAD_STATE_POLL_SEEK:
         status = CdSync(1, 0);
         if (status == CdlComplete) {
             stream->state++;
@@ -43,12 +43,12 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         if (status != CdlDiskError) {
             return;
         }
-        stream->state = 1;
+        stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
         stream->error_count++;
         return;
-    case 5:
+    case MAIN_FILE_LOAD_STATE_START_READ:
         if (CdRead2(CdlModeSpeed) == 0) {
-            stream->state = 1;
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
         }
@@ -56,7 +56,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         stream->sector_index = 0;
         stream->state++;
         break;
-    case 6:
+    case MAIN_FILE_LOAD_STATE_POLL_READ:
         status = CdReady(1, 0);
         if (status == CdlDataReady) {
             CdGetSector(stream->destination + (stream->sector_index & 1) * 2048, 0x200);
@@ -65,13 +65,13 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
             break;
         }
         if (status == CdlDiskError) {
-            stream->state = 1;
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
         }
         if (stream->wait_frames > 0x40000 || (CdStatus() & 1) != 0) {
             main_file_reset_cd_subsystems();
             CdIntToPos(stream->lba + stream->sector_index, stream->position);
-            stream->state = 1;
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
         }
@@ -96,10 +96,10 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         }
         stream->sector_index++;
         if (stream->sector_index < stream->sector_count) {
-            stream->state = 6;
+            stream->state = MAIN_FILE_LOAD_STATE_POLL_READ;
             return;
         }
-        stream->state = 0;
+        stream->state = MAIN_FILE_LOAD_STATE_IDLE;
         CdControlB(CdlPause, 0, 0);
         return;
     }

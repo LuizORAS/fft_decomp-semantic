@@ -25,7 +25,7 @@ void world_card_build_save_image(s32 slot) {
     s32 unused[64]; /* unreferenced locals: the target frame is 0x130 */
 
     for (i = 0; i < g_world_formation_unit_count; i++) {
-        if (g_world_formation_unit_pointers[i]->sprite_set < 4) {
+        if (g_world_formation_unit_pointers[i]->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
     }

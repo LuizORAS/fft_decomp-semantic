@@ -21,13 +21,16 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
         decision = &ai->unit_decisions[i];
         /* Crystals always qualify as healer-mode destinations. */
         if (mode != BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL
-            || !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
+            || !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
             if (battle_ai_is_unit_untargetable(i))
                 continue;
-            if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 continue;
             if (mode != BATTLE_AI_NEAREST_ELIGIBLE_ENEMY
-                && (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
+                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
                 continue;
             switch (mode) {
             case BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL:
@@ -53,7 +56,8 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
                 if (!ai->targetability.live.unit_targetable[i] || !(decision->flags & 0x80))
                     continue;
             case BATTLE_AI_NEAREST_WITHOUT_BLOOD_SUCK:
-                if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK))
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_BLOOD_SUCK)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK))
                     continue;
                 break;
             }

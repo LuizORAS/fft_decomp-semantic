@@ -72,7 +72,7 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             g_battle_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
             battle_thread_call_on_main_stack(unit_id, 1);
         }
-        if (!(unit->status_sets.current[0]
+        if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                 & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
                     | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)))) {
             unit->charged_ability_ct = 0xff;

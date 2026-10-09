@@ -2,7 +2,6 @@
 #include "fft/main.h"
 
 enum {
-    ITEM_ID_MATERIA_BLADE = 0x20,
     MAX_HP_MP_CAP = 999,
 };
 

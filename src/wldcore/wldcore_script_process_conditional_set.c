@@ -46,9 +46,11 @@ s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask) {
             u16 op = g_wldcore_script_state.data[ip];
             g_wldcore_script_state.ip = ip + 1;
             g_wldcore_script_opcode_table[op]();
-        } while ((g_wldcore_script_state.flags & 3) == 0);
+        } while ((g_wldcore_script_state.flags
+                     & (WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_RESULT_CONDITION_FAILED))
+            == 0);
         flags = g_wldcore_script_state.flags;
-        if (flags & 1) {
+        if (flags & WLDCORE_SCRIPT_RESULT_ACTION_REACHED) {
             if (flags & action_mask) {
                 return 1;
             }

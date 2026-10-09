@@ -6,7 +6,7 @@ void battle_script_teleportout_event_instruction(s32 unit_id, s32 remove) {
     s32 idx;
 
     misc = battle_script_get_misc_id(unit_id);
-    if (misc == 0x7D0) {
+    if (misc == EVENT_MISC_ID_NONE) {
         return;
     }
     g_battle_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;

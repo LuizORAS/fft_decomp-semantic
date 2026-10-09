@@ -58,13 +58,13 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     {
         const s32* weather_flags = &g_battle_map_weather_flags;
 
-        if (!(*weather_flags & 2)) {
+        if (!(*weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
             weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
             if (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) == 0) {
-                if (*weather_flags & 1) {
+                if (*weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                     switch (weather) {
-                    case 0:
-                    case 1:
+                    case BATTLE_WEATHER_NONE:
+                    case BATTLE_WEATHER_NONE_ALT:
                         break;
                     case BATTLE_WEATHER_RAIN:
                         red -= 1;
@@ -80,8 +80,8 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
                     }
                 } else {
                     switch (weather) {
-                    case 0:
-                    case 1:
+                    case BATTLE_WEATHER_NONE:
+                    case BATTLE_WEATHER_NONE_ALT:
                         break;
                     case BATTLE_WEATHER_RAIN:
                         red -= 1;
@@ -97,10 +97,10 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
                     }
                 }
             } else {
-                if (*weather_flags & 1) {
+                if (*weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                     switch (weather) {
-                    case 0:
-                    case 1:
+                    case BATTLE_WEATHER_NONE:
+                    case BATTLE_WEATHER_NONE_ALT:
                         red -= 3;
                         green -= 1;
                         blue += 2;
@@ -120,8 +120,8 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
                     }
                 } else {
                     switch (weather) {
-                    case 0:
-                    case 1:
+                    case BATTLE_WEATHER_NONE:
+                    case BATTLE_WEATHER_NONE_ALT:
                         red -= 3;
                         green -= 1;
                         blue += 2;
@@ -145,7 +145,7 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     }
 
     screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
-    if (!(g_battle_map_weather_flags & 2) && screen_z - 0x30 > unit->screen.vy) {
+    if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) && screen_z - 0x30 > unit->screen.vy) {
         blue = 0;
         green = 0;
         red = 0;

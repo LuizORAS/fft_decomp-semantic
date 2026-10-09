@@ -49,7 +49,7 @@ void battle_unit_set_target_animation_from_attack_type(
                     }
                 }
                 break;
-            case 1:
+            case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
             case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
             case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
             case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
@@ -80,7 +80,7 @@ void battle_unit_set_target_animation_from_attack_type(
             }
 
             if (animation != 0) {
-                if (target->spritesheet_id < 0x9b) {
+                if (target->spritesheet_id < BATTLE_SPRITESHEET_ID_CRYSTAL) {
                     battle_unit_store_animation_facing_movement_data(animation, (s16)target->facing, target);
                 } else if (animation == BATTLE_UNIT_ANIMATION_HURT) {
                     battle_unit_store_animation_facing_movement_data(

@@ -1,9 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* L1 + R1 + Select + Start restarts the game. */
-#define TUTORIAL_RESET_BUTTONS 0x90C
-
 s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     u32 input;
 
@@ -12,7 +9,7 @@ s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     } else {
         input = PadRead(0);
     }
-    if (input == TUTORIAL_RESET_BUTTONS) {
+    if (input == MAIN_INPUT_RESET_BUTTONS) {
         world_noop_801325d4();
         world_game_reset();
     }

@@ -84,12 +84,12 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     if (allow_stat_cycle != 0) {
         if (g_bunit_unit_browse_enabled == 0) {
             if (input & PSX_PAD_L2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 0 ? 4 : g_bunit_unit_stat_mode - 1;
-                input &= ~2;
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP ? 4 : g_bunit_unit_stat_mode - 1;
+                input &= ~PSX_PAD_R2;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
             if (input & PSX_PAD_R2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 4 ? 0 : g_bunit_unit_stat_mode + 1;
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 4 ? BUNIT_UNIT_STAT_HP : g_bunit_unit_stat_mode + 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
         }
@@ -139,9 +139,9 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         }
         g_bunit_unit_grid_selected_cell = g_bunit_unit_list_index_map[g_bunit_unit_selected_index];
         bunit_menu_draw_pressable_button(0, 0xC, 0xE, input & PSX_PAD_L1,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, MAIN_SFX_PAGE_SWITCH);
         bunit_menu_draw_pressable_button(1, 0xE0, 0xE, input & PSX_PAD_R1,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, MAIN_SFX_PAGE_SWITCH);
     }
     if (g_bunit_status_banner_slide_step == 0 && bunit_input_get_lock_timer() == 0 && unit != 0 && show_stat_panel != 0
         && g_bunit_status_banner_enabled != 0 && g_bunit_unit_browse_enabled == 0) {
@@ -155,9 +155,9 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             quads = g_bunit_unit_grid_label_tiles_bottom;
         }
         bunit_menu_draw_pressable_button(4, 0x26, (s16)top, input & PSX_PAD_L2,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, MAIN_SFX_PAGE_SWITCH);
         bunit_menu_draw_pressable_button(5, 0xC2, (s16)top, input & PSX_PAD_R2,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, MAIN_SFX_PAGE_SWITCH);
         bunit_menu_dispatch_with_override(menu, 0, 0);
         bunit_gfx_enqueue_textured_quad_list(
             quads, 0, 0, g_bunit_menu_icon_texture_page, g_bunit_text_clut_2_mode0, 0xB, 8);
@@ -235,10 +235,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     rect.h = 11;
                     bunit_gfx_enqueue_textured_quad(
                         &rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page, g_bunit_text_metric_1, 8);
-                    if (g_bunit_unit_stat_mode == 0) {
+                    if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP) {
                         clut = g_bunit_unit_grid_hp_gauge_clut;
                         gradient = g_bunit_unit_grid_hp_gauge_colors;
-                    } else if (g_bunit_unit_stat_mode == 1) {
+                    } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_MP) {
                         clut = g_bunit_unit_grid_mp_gauge_clut;
                         gradient = g_bunit_unit_grid_mp_gauge_colors;
                     } else {

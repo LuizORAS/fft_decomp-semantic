@@ -4,7 +4,7 @@
 #include "psx/libc.h"
 
 enum {
-    NAME_GENDER_MASK = 0xe0,
+    NAME_GENDER_MASK = UNIT_FLAG_MALE | UNIT_FLAG_FEMALE | UNIT_FLAG_MONSTER,
 };
 
 /* Copies the unit's name, job name and skillset names into its battle

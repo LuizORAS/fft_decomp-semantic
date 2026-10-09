@@ -11,7 +11,7 @@ void battle_effect_start_new(s32 effect_id, s32 target_mode, u8* target_data) {
     if (target_mode == 0) {
         effect_data.target[0].fields.target_type = 0;
         effect_data.target[0].fields.target_id = (u32)target_data;
-        effect_data.target[0].fields.result_animation = 0;
+        effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
     } else if (target_mode == 1) {
         effect_data.target[0].fields.target_type = 1;
         effect_data.target[0].block.values[1] = *(u16*)&target_data[0];
@@ -20,7 +20,7 @@ void battle_effect_start_new(s32 effect_id, s32 target_mode, u8* target_data) {
     } else {
         effect_data.target[0].fields.target_type = 0;
         effect_data.target[0].fields.target_id = (u32)target_data;
-        effect_data.target[0].fields.result_animation = 0;
+        effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
         effect_data.caster.fields.caster_id = (u32)target_data;
     }
 

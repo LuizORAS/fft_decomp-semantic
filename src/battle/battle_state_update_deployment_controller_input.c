@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-enum {
-    RESET_BUTTON_MASK = 0x090c,
-};
-
 s32 battle_state_update_deployment_controller_input(void) {
     u32 previous;
     u32 current;
@@ -16,7 +12,7 @@ s32 battle_state_update_deployment_controller_input(void) {
     g_main_input_pressed_buttons = ~previous & current;
     g_main_input_released_buttons = ~current & previous;
 
-    if ((current & RESET_BUTTON_MASK) == RESET_BUTTON_MASK) {
+    if ((current & MAIN_INPUT_RESET_BUTTONS) == MAIN_INPUT_RESET_BUTTONS) {
         main_system_reset_game();
     }
     return 1;

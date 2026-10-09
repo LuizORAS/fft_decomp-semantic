@@ -35,7 +35,8 @@ s32 battle_ai_choose_status_action(void) {
         ai->selected_action.act_before_move = 0;
         goto save_movement;
     }
-    if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)) {
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_BLOOD_SUCK)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)) {
         target_or_count = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_WITHOUT_BLOOD_SUCK);
         entry = &ai->hardcoded_status_abilities[0];
         ai->hardcoded_status_abilities[0].id.packed_id |= g_battle_ai_data_base.acting_unit_id << 10;
@@ -72,7 +73,8 @@ s32 battle_ai_choose_status_action(void) {
         ai->selected_action.coords = coords;
         goto success;
     }
-    if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)) {
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)) {
         if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 255)) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 ai->targetability.live.unit_targetable[i] = 0;
@@ -118,7 +120,8 @@ s32 battle_ai_choose_status_action(void) {
         target_or_count = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_ENEMY);
         berserk_unit = g_battle_ai_data_base.acting_unit;
         if (berserk_unit->primary_skillset < SKILLSET_ID_MONSTER_FIRST
-            && !(berserk_unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
+            && !(berserk_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
             entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_compact_index][0];
         } else {
             entry = &ai->hardcoded_status_abilities[1];

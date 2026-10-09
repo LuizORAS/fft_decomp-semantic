@@ -667,13 +667,6 @@ typedef enum battle_ai_tile_mask_mode {
     BATTLE_AI_TILE_MASK_EXPLICIT = 3,
 } battle_ai_tile_mask_mode_e;
 
-typedef enum battle_ai_autobattle_mode {
-    BATTLE_AI_AUTOBATTLE_TARGETED = 0x0C,
-    BATTLE_AI_AUTOBATTLE_RECOVERY = 0x0E,
-    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 0x10,
-    BATTLE_AI_AUTOBATTLE_RETREAT = 0x11,
-} battle_ai_autobattle_mode_e;
-
 typedef enum battle_ai_command_build_stage {
     BATTLE_AI_COMMAND_BUILD_REFRESH = 0,
     BATTLE_AI_COMMAND_BUILD_MOVEMENT = 1,
@@ -6386,6 +6379,13 @@ typedef enum map_light_command {
     MAP_LIGHT_COMMAND_RESET_DARKNESS_COLOR = 0x64,
     MAP_LIGHT_COMMAND_GET_DARKNESS_COLOR = 0x65,
 } map_light_command_e;
+
+/* Commands of battle_map_configure_effect_data_state: the ordering-table
+ * handling of untextured map polygons while an effect draws. */
+enum {
+    MAP_EFFECT_DATA_END = 0x87,
+    MAP_EFFECT_DATA_BEGIN = 0x88,
+};
 
 enum {
     MAP_PALETTE_ROW_COUNT = 16,

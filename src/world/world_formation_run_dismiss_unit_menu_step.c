@@ -96,9 +96,9 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             sprite = unit->sprite_set;
             if (sprite >= 0x4B) {
                 flags = unit->gender_flags;
-                if (flags & 0x80) {
+                if (flags & UNIT_FLAG_MALE) {
                     value = rand() % 8;
-                } else if (flags & 0x40) {
+                } else if (flags & UNIT_FLAG_FEMALE) {
                     value = rand() % 8 + 8;
                 } else {
                     value = rand() % 8 + 0x10;

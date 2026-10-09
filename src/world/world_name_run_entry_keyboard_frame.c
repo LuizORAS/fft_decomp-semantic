@@ -41,8 +41,10 @@ u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
         world_menu_set_draw_priority(0x28);
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_keyboard_text_cursor_anim, busy);
         world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
-        world_menu_draw_pressable_button(0, 0x37, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_L1, (s16)busy, 6);
-        world_menu_draw_pressable_button(1, 0xB1, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_R1, (s16)busy, 6);
+        world_menu_draw_pressable_button(
+            0, 0x37, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_L1, (s16)busy, MAIN_SFX_PAGE_SWITCH);
+        world_menu_draw_pressable_button(
+            1, 0xB1, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_R1, (s16)busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
         if (g_world_name_entry_state != g_world_name_keyboard_last_state) {
             g_world_name_keyboard_last_state = g_world_name_entry_state;

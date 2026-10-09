@@ -19,10 +19,10 @@ void wldcore_map_step_projection_motion_then_pop_level(wldcore_map_pop_level_ent
     wldcore_projection_state_t* state;
     s32 level;
 
-    if (g_wldcore_map_projection_motion.flags & 1) {
+    if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
         wldcore_map_step_projection_motion();
         state = &g_wldcore_map_projection_state;
-        state->flags |= 1;
+        state->flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
         g_main_system_flags |= 2;
         return;
     }

@@ -47,11 +47,11 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         for (i = 0; i < 21; i++) {
             unit = &g_battle_unit_stats[i];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                if (!(unit->status_sets.current[0]
+                if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)
                             | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
                             | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)))) {
-                    if (!(unit->status_sets.current[1]
+                    if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))) {
                         return i | 0xd000;
@@ -67,11 +67,11 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
-                if (!(flags & 1)) {
-                    speed = unit->attributes[2];
-                    if (flags & 0x20) {
+                if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
+                    speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
+                    if (flags & BATTLE_TURN_STATUS_SLOW) {
                         speed >>= 1;
-                    } else if (flags & 0x10) {
+                    } else if (flags & BATTLE_TURN_STATUS_HASTE) {
                         speed += speed >> 1;
                     }
                     ct = unit->ct + speed;
@@ -89,7 +89,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
-                if (!(flags & 1)) {
+                if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     if (max_ct < unit->ct) {
                         best = i;
                         max_ct = unit->ct;
@@ -98,7 +98,8 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             }
             if (best != 0xff) {
                 unit = &g_battle_unit_stats[best];
-                if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
                     unit->ct = 99;
                     continue;
                 }
@@ -118,7 +119,9 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                     }
                 }
                 flags = battle_status_check_unit(unit);
-                if (!(flags & 7) || ret == 2) {
+                if (!(flags
+                        & (BATTLE_TURN_STATUS_CT_FROZEN | BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD))
+                    || ret == 2) {
                     unit->has_turn = 1;
                     unit->movement_taken = 0;
                     unit->action_taken = 0;
@@ -140,7 +143,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             do {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
-                if (!(flags & 0xf)) {
+                if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK)) {
                     value = unit->charged_ability_ct;
                     if (value != 0xff && value != 0) {
                         value--;
@@ -155,8 +158,9 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
-                if (!(flags & 0xf) && unit->charged_ability_ct == 0) {
-                    if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
+                if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) && unit->charged_ability_ct == 0) {
+                    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                         main_unit_copy_last_ability_ct(unit);
                         unit->charged_ability_ct = unit->ability_ct;
                     } else {
@@ -174,7 +178,8 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             do {
                 unit = &g_battle_unit_stats[i];
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                    && !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+                    && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
                     battle_status_update_expiring(i);
                 }
                 /* clang-format off */
@@ -187,7 +192,8 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                 unit = &g_battle_unit_stats[i];
                 g_battle_mimic_pending_flags[i] = 0;
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                    && !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+                    && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
                     g_battle_mimic_pending_flags[i] = unit->action.attack_type;
                 }
                 /* clang-format off */
@@ -209,7 +215,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             best = 0xff;
             for (i = 0; i < 21; i++) {
                 flags = battle_status_check_unit(&g_battle_unit_stats[i]);
-                if (!(flags & 1)) {
+                if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     if (max_ct < g_battle_unit_stats[i].ct) {
                         best = i;
                         max_ct = g_battle_unit_stats[i].ct;
@@ -241,7 +247,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
 
                     unit_status = battle_status_check_unit(unit);
                     end_turn = battle_action_should_end_unit_turn(unit);
-                    if ((unit_status & 1) || end_turn != 0) {
+                    if ((unit_status & BATTLE_TURN_STATUS_CT_FROZEN) || end_turn != 0) {
                         battle_action_end_turn(i);
                         unit->has_turn = 0;
                     } else {

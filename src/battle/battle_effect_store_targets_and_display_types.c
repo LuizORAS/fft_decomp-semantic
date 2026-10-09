@@ -48,7 +48,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
                     init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
                     init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
-                } else if (target_stats->action.miss_type != 0) {
+                } else if (target_stats->action.miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
                     init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 } else {
                     init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;

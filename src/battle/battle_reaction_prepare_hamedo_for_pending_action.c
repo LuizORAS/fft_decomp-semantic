@@ -90,13 +90,14 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
     g_battle_current_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
     target->action_actor_id = tid;
-    if (battle_action_store_counter_ability(target, 1, 0, 1) == 0 && battle_action_check_and_consume_mp(target) == 0) {
+    if (battle_action_store_counter_ability(target, SKILLSET_ID_ATTACK, 0, 1) == 0
+        && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);
         *out_ability = g_battle_current_reaction_ability_id;
         g_battle_action_hamedo_flag = count;
         if (unit->job_id == JOB_ID_MIME) {
-            unit->equipment[3] = ITEM_ID_NONE;
-            unit->equipment[5] = ITEM_ID_NONE;
+            unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
+            unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
         }
         return tid;
     }

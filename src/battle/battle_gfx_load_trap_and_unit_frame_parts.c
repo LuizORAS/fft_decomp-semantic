@@ -34,7 +34,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
         main_system_handle_animation_exception(10);
     }
     flags = frame_data->flags;
-    if (unit->spritesheet_id >= 0x9b) {
+    if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
         display->tpage = (flags & 0x60) | 0xb;
         display->clut = unit->vram_palette_id;
         for (i = 0; i < count; i++) {

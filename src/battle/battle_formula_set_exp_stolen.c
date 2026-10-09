@@ -23,7 +23,7 @@ void battle_formula_set_exp_stolen(void) {
     }
     g_battle_action_attacker_data->exp_change = amount;
     g_battle_action_attacker_data->hit = 1;
-    g_battle_action_attacker_data->attack_type = 1;
+    g_battle_action_attacker_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
     g_battle_action_target_data->exp_change = amount + 0x80;
-    g_battle_action_target_data->attack_type = 1;
+    g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
 }

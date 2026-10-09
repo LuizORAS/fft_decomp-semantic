@@ -41,7 +41,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     destination_bit = battle_script_get_variable_bit_position(destination_id);
     if (destination_bit >= 0) {
         mask = 1;
-        if (destination_id >= 0x360) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PROPOSITION_FIRST) {
             mask = 0xf;
         }
         shifted_mask = mask << destination_bit;
@@ -86,15 +86,16 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
             replay_mode = battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS);
             g_battle_script_variable_write_guard = 0;
             if (replay_mode != 0 && (destination_id - 0x70) >= 0x20U && (destination_id - 0x1fc) >= 4U
-                && destination_id != 0x66 && (destination_id - 0x32) >= 8U && destination_id >= 0x2c
-                && destination_id != 0x30 && (destination_id - 0x56) >= 5U && destination_id != 0x53) {
+                && destination_id != EVENT_SCRIPT_VAR_TEXT_STORE_INDEX && (destination_id - 0x32) >= 8U
+                && destination_id >= 0x2c && destination_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
+                && (destination_id - 0x56) >= 5U && destination_id != EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) {
                 return;
             }
         }
     }
     if (destination_bit >= 0) {
         mask = 1;
-        if (destination_id >= 0x360) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PROPOSITION_FIRST) {
             mask = 0xf;
         }
         value &= mask;

@@ -129,9 +129,9 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             unit->current_path_step = g_battle_move_step_value = unit->movement_path[offset];
             battle_move_set_unit_step_slope_scales(unit);
             flags = unit->movement_flags;
-            if (flags & 0x80) {
+            if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLY) {
                 battle_move_start_fly_step(unit, (s32)g_battle_move_current_tile, (s32)g_battle_move_destination_tile);
-            } else if (flags & 0x40) {
+            } else if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) {
                 battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else {
                 switch (g_battle_move_step_value.bits.slow) {

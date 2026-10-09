@@ -31,8 +31,10 @@ s32 battle_ai_select_targeted_action(void) {
         g_battle_ai_data_base.acting_unit_decision->flags &= ~BATTLE_AI_DECISION_SPECIAL_BEHAVIOR;
         unit = &g_battle_unit_stats[target];
         if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
-            if (!((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))
-                    && (g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK].status_sets.current[2]
+            if (!((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
+                      & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))
+                    && (g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK]
+                            .status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
                         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))))
                 target = unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
         } else {
@@ -52,7 +54,8 @@ s32 battle_ai_select_targeted_action(void) {
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     unit = &g_battle_unit_stats[i];
                     if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_decisions[i].enemy_flag
-                        && (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))) {
+                        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
+                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))) {
                         target = i;
                         break;
                     }

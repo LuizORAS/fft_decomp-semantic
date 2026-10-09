@@ -5,7 +5,8 @@
  * skip the magic-defense stage. */
 
 void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
         g_battle_action_current_ability.target_is_undead = 1;
     } else {
         g_battle_action_current_ability.target_is_undead = 0;

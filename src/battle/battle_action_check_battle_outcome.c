@@ -1,10 +1,5 @@
 #include "fft/battle.h"
 
-enum {
-    BATTLE_OUTCOME_SPECIAL_CLASS_MASK = 0x03,
-    BATTLE_OUTCOME_SPECIAL_CLASS = 0x03,
-};
-
 /* Determine whether either side has met its battle-ending condition.
  *
  * Returns -1 when the blue side is defeated, 0 when all opposing units are
@@ -21,7 +16,7 @@ s32 battle_action_check_battle_outcome(void) {
     unit_index = 0;
     do {
         unit = &g_battle_unit_stats[unit_index];
-        if ((unit->initial_team_flags & BATTLE_OUTCOME_SPECIAL_CLASS_MASK) == BATTLE_OUTCOME_SPECIAL_CLASS) {
+        if ((unit->initial_team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
             if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
                 selected = unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED;
                 selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY);

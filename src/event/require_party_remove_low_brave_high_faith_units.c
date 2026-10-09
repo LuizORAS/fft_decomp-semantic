@@ -10,7 +10,7 @@ void require_party_remove_low_brave_high_faith_units(void) {
     g_battle_text_section_pointers[1] = g_require_text_data + g_require_text_section_offsets[1];
     g_battle_text_section_pointers[2] = g_require_text_data + g_require_text_section_offsets[2];
     g_battle_text_section_pointers[3] = g_require_text_data + g_require_text_section_offsets[3];
-    g_battle_text_section_pointers[6] = g_require_text_data + g_require_text_section_offsets[4];
+    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
     battle_thread_yield();
     main_thread = battle_thread_resolve_id(0x10);
     battle_thread_start(main_thread, require_render_display_condition_special_cases_thread);

@@ -21,7 +21,7 @@ void battle_script_blue_remove_unit(s32 unit_id) {
         }
         unit = battle_unit_find_stats_by_entd_unit_id(
             battle_unit_get_stats_from_battle_id(battle_index)->unit_id, found_battle_id);
-        if ((unit->team_flags & BATTLE_TEAM_MASK) == 0) {
+        if ((unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE) {
             continue;
         }
         if (found_battle_id[0] == -2) {

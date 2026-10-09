@@ -2,5 +2,5 @@
 #include "psx/types.h"
 
 s32 jobstts_ability_is_movement_tab(s32 unused_row) {
-    return g_jobstts_ability_category == 3;
+    return g_jobstts_ability_category == JOBSTTS_ABILITY_CATEGORY_MOVEMENT;
 }

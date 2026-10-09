@@ -110,10 +110,12 @@ s32 battle_ai_simulate_action_and_score(void) {
                 goto finish_without_scoring;
             }
             unit->charged_ability_ct = 0xff;
-            unit->status_sets.current[0] &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
-            unit->inflicted_status[0] &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+            unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+            unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
         } else if (status == BATTLE_TURN_EVENT_UNIT_READY) {
             if (battle_ai_decide_status_ct_based(0, unit_index))
                 ai->unit_acts_before_me[unit_index] = 1;
@@ -122,7 +124,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             unit = &g_battle_unit_stats[unit_index];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                && (unit->status_sets.current[0]
+                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                     & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
                         | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING))))
                 break;
@@ -145,18 +147,26 @@ score_state:
             unit = &g_battle_unit_stats[unit_index];
             decision->flags &= ~(BATTLE_AI_DECISION_TRANSIENT_DEAD | BATTLE_AI_DECISION_TRANSIENT_PETRIFIED
                 | BATTLE_AI_DECISION_TRANSIENT_JUMP);
-            if ((unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                && !(unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
+            if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 decision->flags |= BATTLE_AI_DECISION_TRANSIENT_DEAD;
-            if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 decision->flags |= BATTLE_AI_DECISION_TRANSIENT_PETRIFIED;
-            if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
                 decision->flags |= BATTLE_AI_DECISION_TRANSIENT_JUMP;
             if (!(decision->flags & 0x80)
-                && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-                && (!(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                    || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
-                && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+                && (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+                    || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
                 decision->flags |= 0x80;
         }
     } else {
@@ -178,10 +188,11 @@ score_state:
                     continue;
                 /* Indexing the s16 table changes register allocation; retain the byte cursor. */
                 weight = *(s16*)((u8*)g_battle_ai_status_priority_weights + weight_offset);
-                if (((unit->status_sets.current[1]
+                if (((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                          & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
                              | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
                     && weight >= 0)
                     continue;
                 switch (status) {
@@ -194,10 +205,10 @@ score_state:
                 case BATTLE_STATUS_ID_CONFUSION:
                 case BATTLE_STATUS_ID_BLOOD_SUCK:
                 case BATTLE_STATUS_ID_CHARM:
-                    if ((unit->status_sets.current[3]
+                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLOW)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP)))
-                        || (unit->status_sets.current[4]
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))))
@@ -208,10 +219,11 @@ score_state:
                 case BATTLE_STATUS_ID_SLEEP:
                 case BATTLE_STATUS_ID_DONT_MOVE:
                 case BATTLE_STATUS_ID_DONT_ACT:
-                    if ((unit->status_sets.current[1]
+                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
                         continue;
                     break;
                 }

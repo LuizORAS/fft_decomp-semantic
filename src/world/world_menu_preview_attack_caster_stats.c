@@ -19,7 +19,7 @@ void world_menu_preview_attack_caster_stats(void) {
     action->unit_id = *stored_unit;
     ability_id = action->ability_id;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
-        main_ability_calculate_pointers_and_type(ability_id & 0x1FF, &ability_data, &secondary_data);
+        main_ability_calculate_pointers_and_type(ability_id & ABILITY_ID_MASK, &ability_data, &secondary_data);
     }
     if (((secondary_data[5] & 4) && action->ability_id < ABILITY_ID_ITEM_FIRST)
         || action->skillset == SKILLSET_ID_EQUIP_CHANGE) {

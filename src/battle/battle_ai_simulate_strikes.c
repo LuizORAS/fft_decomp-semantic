@@ -80,9 +80,9 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
         battle_action_store_target_stats_pointer_data(action->unit_id);
     } while (work.continue_attack != 0);
     if (ai->hit_counter != 0xff && ai->ranked_origin_scan != 0) {
-        if (ai->ability_effect_on_self == 1 && self_hit != 0) {
+        if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_USEFUL && self_hit != 0) {
             ai->useful_on_caster_flag = 1;
-        } else if (ai->ability_effect_on_self == 2 && self_hit == 0) {
+        } else if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_ADVERSE && self_hit == 0) {
             ai->useful_on_caster_flag = 1;
         }
     }

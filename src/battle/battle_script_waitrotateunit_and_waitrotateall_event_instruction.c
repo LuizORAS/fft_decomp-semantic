@@ -16,7 +16,7 @@ void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_i
         } while (i != EVENT_UNIT_SLOT_COUNT);
     } else {
         index = battle_script_get_misc_id(unit_id);
-        if (index != 0x7D0) {
+        if (index != EVENT_MISC_ID_NONE) {
             do {
                 battle_thread_yield();
             } while (g_battle_unit_misc_rotation_data[index].rotating != 0);

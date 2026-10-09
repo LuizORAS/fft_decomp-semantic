@@ -82,7 +82,8 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
         depth = tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
         level = tile_height;
         if (depth != 0) {
-            if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
                 water_offset = depth * 2 + 2;
                 level = tile_height + water_offset;
             } else if (flags & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
@@ -91,12 +92,14 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
                 water_offset = depth * 2 - 2;
                 level = tile_height + water_offset;
             }
-        } else if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+        } else if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             level = tile_height + 2;
         }
         height.walking_height = level;
         height.total_height = level + height.unit_height;
-        if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
             height.unit_flags = BATTLE_UNIT_HEIGHT_UNAVAILABLE;
     } else {
         height.unit_flags = BATTLE_UNIT_HEIGHT_UNAVAILABLE;

@@ -30,10 +30,12 @@ s32 battle_status_modify_inflictions(s32 removal_only) {
     action = g_battle_action_target_data;
     inflicted = action->status_infliction[2];
     if ((inflicted & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-        && (g_battle_action_target->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+        && (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && removal_only == 0) {
         action->status_infliction[2] = inflicted & ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
-        g_battle_action_target_data->status_removal[2] |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
+        g_battle_action_target_data->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
     }
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
         if (removal_only == 0) {

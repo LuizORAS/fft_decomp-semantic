@@ -303,7 +303,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             break;
         case 0x93:
             if (g_battle_map_texture_pending != 0) {
-                battle_map_dispatch_gns_resource(0x17, (u8*)g_battle_map_data_load_buffer);
+                battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE, (u8*)g_battle_map_data_load_buffer);
             }
             if (g_battle_map_palette_pending != 0) {
                 battle_map_dispatch_gns_resource(0x33, g_battle_map_pending_palette_data);

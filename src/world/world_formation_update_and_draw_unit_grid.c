@@ -52,7 +52,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
         if (input & PSX_PAD_L2) {
             g_world_formation_stat_display_mode
                 = g_world_formation_stat_display_mode != 0 ? g_world_formation_stat_display_mode - 1 : 4;
-            input &= ~2;
+            input &= ~PSX_PAD_R2;
             g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
         }
         if (input & PSX_PAD_R2) {
@@ -92,7 +92,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     if (g_world_formation_unit_browse_enabled != 0) {
         input &= 0xff0;
     }
-    if (world_thread_is_running(9) == 0 && g_world_grid_menu_id == 0 && world_gfx_get_fade_state() == 0) {
+    if (world_thread_is_running(9) == 0 && g_world_grid_menu_id == 0
+        && world_gfx_get_fade_state() == WORLD_FADE_STATE_NONE) {
         g_world_formation_selected_unit_index = world_menu_update_wrapped_grid_selection(
             4, 5, g_world_formation_unit_count - 1, g_world_formation_selected_unit_index, input);
     }
@@ -114,8 +115,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             row = g_world_formation_current_menu == 0;
         }
         row |= g_world_thread_task_active != 0 || g_world_grid_menu_id != 0;
-        world_menu_draw_pressable_button(4, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, 6);
-        world_menu_draw_pressable_button(5, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, 6);
+        world_menu_draw_pressable_button(4, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, MAIN_SFX_PAGE_SWITCH);
+        world_menu_draw_pressable_button(5, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(window, 0, 0);
         world_gfx_enqueue_textured_quad_list(
             cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);

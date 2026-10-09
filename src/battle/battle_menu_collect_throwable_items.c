@@ -55,8 +55,8 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
                 break;
             }
         }
-        if (found != 0 && (item->type_flags & 0x80) != 0
-            && (g_main_item_weapon_data[item->secondary_data_id].flags & 2) != 0) {
+        if (found != 0 && (item->type_flags & ITEM_TYPE_FLAG_WEAPON) != 0
+            && (g_main_item_weapon_data[item->secondary_data_id].flags & WEAPON_FLAG_THROWABLE) != 0) {
             item_id = i;
             if (battle_action_decrement_player_item_quantity(unit, item_id, 0) == 0) {
                 *out = item_id;

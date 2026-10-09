@@ -140,7 +140,7 @@ void world_shop_run_best_fit_preview_step(void) {
                     world_shop_add_fitting_room_cost(world_item_get_price(item));
                 } else if ((current >> 15) != 0) {
                     world_shop_add_fitting_room_cost(-world_item_get_price((s16)current));
-                    g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][i] = 0;
+                    g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][i] = ITEM_ID_NOTHING;
                 }
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i] = item;
             }

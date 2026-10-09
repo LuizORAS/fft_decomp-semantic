@@ -30,7 +30,7 @@ void battle_state_handle_idling_action_menus_state(void) {
     misc = battle_unit_get_casting_misc_data();
     switch ((s32)command->kind) {
     case BATTLE_AI_COMMAND_MOVE:
-        if (misc->mount_state != 0) {
+        if (misc->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
             g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(misc->mount_partner_misc_id)->unit_id;
         } else {
             g_battle_casting_unit_id = g_battle_unit_source_misc_id;
@@ -65,7 +65,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         case SKILLSET_ID_MIMIC:
             battle_state_enter_after_command();
             break;
-        case 1:
+        case SKILLSET_ID_ATTACK:
         default:
             misc->command_state.ai = *command;
             misc->command_state.ai.data.action.unit_id = misc->battle_data->misc_unit_id;

@@ -3,7 +3,6 @@
 enum {
     IDLE_ACTION_MENU_ENTRY_COUNT = 0x34,
     IDLE_ACTION_MENU_INVALID_ID = -1,
-    MENU_BUILDING_THREAD_ID = 3,
 };
 
 void battle_menu_build_idle_action_menu(s32 menu_id) {
@@ -42,8 +41,8 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
             *(s16*)((u8*)g_battle_menu_thread_menu_data + 0x218) = 0;
             D_801669E8 = 0;
             battle_menu_clear_entry_selections();
-            battle_thread_start(MENU_BUILDING_THREAD_ID, battle_menu_start_entry_thread);
-            battle_thread_set_parameters(MENU_BUILDING_THREAD_ID, menu_id, 0, 0);
+            battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_start_entry_thread);
+            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, menu_id, 0, 0);
         }
         g_battle_menu_building_thread_started = 0;
     }

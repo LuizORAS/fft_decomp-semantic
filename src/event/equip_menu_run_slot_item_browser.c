@@ -22,7 +22,7 @@ s32 equip_menu_run_slot_item_browser(void) {
         category = g_equip_selected_slot;
         g_equip_slot_item_browser_previewed_index = -1;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
+            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(
             g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
@@ -46,14 +46,14 @@ s32 equip_menu_run_slot_item_browser(void) {
         g_equip_slot_item_browser_initialized = 0;
         return -1;
     }
-    slot = equip_menu_update_horizontal_selection_and_mark_change(5, 2, input, 6);
+    slot = equip_menu_update_horizontal_selection_and_mark_change(5, 2, input, MAIN_SFX_PAGE_SWITCH);
     if (slot != g_equip_selected_slot) {
         equip_menu_set_selection_record(g_equip_selected_slot, g_equip_menu_selected_list_index,
             g_equip_menu_scroll_base_index, g_equip_item_list_entries);
         g_equip_selected_slot = slot;
         category = g_equip_selected_slot;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
+            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         g_equip_slot_item_browser_previewed_index = -1;
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(

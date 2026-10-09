@@ -2,10 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
-
 /* Second names for three fields of g_wldcore_map_projection_motion: the
  * target loads each through its own address, in this order. */
 extern s32 g_wldcore_map_projection_motion_progress;

@@ -47,7 +47,8 @@ void battle_state_update_action_execute_mode(void) {
                         if (unit->used_ability_id >= ABILITY_ID_REACTION_FIRST
                             && unit->used_ability_id < ABILITY_ID_SUPPORT_FIRST) {
                             if (battle_effect_load_ability(unit->used_ability_id) != 0
-                                && g_battle_ability_animation_data[unit->used_ability_id].attack_animation != 0) {
+                                && g_battle_ability_animation_data[unit->used_ability_id].attack_animation
+                                    != BATTLE_ATTACK_ANIMATION_USE_WEAPON) {
                                 /* Both arguments are misc records overlaying the declared parameters. */
                                 battle_unit_start_post_attack_animation_display((s32)unit, (u8*)target);
                             }

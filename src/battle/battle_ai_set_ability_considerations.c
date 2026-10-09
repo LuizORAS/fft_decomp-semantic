@@ -82,7 +82,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 battle_ai_load_ability_entry(entry);
                 ability_id = ability->ability_id;
                 threshold = delay + ability->ct;
-                if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
                     if (ability_id != ABILITY_ID_BLACK_MAGIC_FROG && ability_id != ABILITY_ID_FROG_ATTACK) {
                         continue;
                     }
@@ -104,8 +105,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     continue;
                 }
                 menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
-                if (menu == 1 || menu == 7 || ability_id == ABILITY_ID_THROW_SHURIKEN
-                    || ability_id == ABILITY_ID_THROW_BALL) {
+                if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_KATANA_INVENTORY
+                    || ability_id == ABILITY_ID_THROW_SHURIKEN || ability_id == ABILITY_ID_THROW_BALL) {
                     if (!(unit->initial_team_flags & BATTLE_TEAM_MASK)) {
                         if (g_main_item_quantities[ability->parameters.bytes.item_id] == 0) {
                             continue;
@@ -114,7 +115,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         > unit->level) {
                         continue;
                     }
-                } else if (menu == 2) {
+                } else if (menu == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
                     if (unit_id != g_battle_ai_data_base.acting_unit_id) {
                         continue;
                     }
@@ -269,7 +270,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     entry->skillset_flags.packed = flags | 0x100;
                 } else if (!(flags & 0x400)) {
                     if (ability->ct >= g_battle_ai_data_base.acting_unit_remaining_clockticks
-                        || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1) == 0) {
+                        || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1)
+                            == BATTLE_AI_ABILITY_EFFECT_NONE) {
                         entry->skillset_flags.packed |= 0x100;
                     } else {
                         entry->skillset_flags.packed &= 0xfeff;

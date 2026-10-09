@@ -16,10 +16,10 @@ s32 world_card_count_selectable_save_slots(void) {
             g_world_card_slot_cursor_row = count;
         }
         if (g_world_card_save_mode != 0) {
-            if (g_card_save_slot_file_states[i] == 0) {
+            if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
                 count++;
             }
-        } else if (g_card_save_slot_file_states[i] != -1) {
+        } else if (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
             count++;
         }
     }

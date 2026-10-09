@@ -2,13 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Flags word of the projection-motion record described in
- * src/wldcore/wldcore_map_start_projection_motion_if_outside_bounds.c. */
-
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
-
 /* The dot record's +0x10 render view. The target anchors the argument pair on
  * g_wldcore_map_dots + 0x10 and reaches screen_x as that anchor + 0x18, rather than
  * folding the offset into the global symbol. This local view retains that
