@@ -26,6 +26,6 @@ void wldcore_clear_screen_and_set_map_clip_rect(s32 mode) {
         rect.w = 256;
         rect.h = 238;
     }
-    world_gfx_set_draw_clip_rectangle(&rect);
-    world_gs_setdrawbuffclip();
+    GsSetClip2D(&rect);
+    GsSetDrawBuffClip();
 }

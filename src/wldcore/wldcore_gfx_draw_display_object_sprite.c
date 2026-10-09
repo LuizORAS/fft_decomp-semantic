@@ -101,5 +101,5 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_display_object_t* object, Gs
         sprite.w = object->rect.w;
         sprite.h = object->rect.h;
     }
-    world_gs_sortfastsprite(&sprite, ot, object->priority);
+    GsSortFastSprite(&sprite, ot, object->priority);
 }

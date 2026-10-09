@@ -1070,20 +1070,6 @@ typedef struct world_oriented_sprite {
 } world_oriented_sprite_t;
 typedef char world_oriented_sprite_size_must_be_0x14[sizeof(world_oriented_sprite_t) == 0x14 ? 1 : -1];
 
-/* POLY_FT4 packet as the packed words libgs writes it. */
-typedef struct world_poly_ft4_packet {
-    u32 tag;       /* 0x00 */
-    u32 mode;      /* 0x04: r | g << 8 | b << 16 | code << 24 */
-    u32 xy0;       /* 0x08 */
-    u32 uv0_clut;  /* 0x0c */
-    u32 xy1;       /* 0x10 */
-    u32 uv1_tpage; /* 0x14 */
-    u32 xy2;       /* 0x18 */
-    u32 uv2;       /* 0x1c */
-    u32 xy3;       /* 0x20 */
-    u32 uv3;       /* 0x24 */
-} world_poly_ft4_packet_t;
-
 /* The 0x10-byte glyph blit descriptor used by the dead-unit panels and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
  * the surface width in pixels. */
@@ -1117,7 +1103,6 @@ extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_texture_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
-extern const char g_world_gfx_sort_sprite_overflow_message[];
 extern world_image_location_t g_world_gfx_menu_image_source;
 extern RECT g_world_gfx_texture_window;
 extern u16 g_world_gfx_draw_area_scale_percent[];
@@ -1146,7 +1131,6 @@ extern RECT g_world_gfx_fade_tile_rect;
 extern s32 g_world_shop_background_tim_files[];
 extern s32 g_world_script_tutorial_message_files[]; /* LBA/size pairs */
 extern s32 g_world_script_tutorial_script_files[];  /* LBA/size pairs */
-extern TILE g_world_gs_clear_tile[];                /* per-buffer clear tile */
 extern s32 g_world_gfx_free_rect_texels[4];
 extern s32 g_world_gfx_free_rect_grid_cells[4];
 extern RECT g_world_gfx_draw_area_template;
@@ -1178,13 +1162,7 @@ extern u16 g_world_gfx_textured_gradient_quad_count;
 extern u16 g_world_gfx_sprite_8_capacity;
 extern u16 g_world_gfx_draw_buffer_clip_y;
 
-/* Per-draw-buffer clip offsets: written by world_gs_set_draw_offsets, read by
- * world_gs_setdrawbuffclip. */
-extern s16 g_world_gs_buffer_x[2]; /* display x per buffer */
-extern s16 g_world_gs_buffer_y[2]; /* display y per buffer */
 extern u16 g_world_gfx_sprite_16_capacity;
-extern s16 g_world_gs_buffer_offset_x[2];
-extern s16 g_world_gs_buffer_offset_y[2];
 extern u16 g_world_ot_length;
 
 /* Volatile: world_gfx_init_double_packet_buffers must read the draw-area count
@@ -1194,38 +1172,23 @@ extern u16 g_world_gfx_draw_area_count;
 extern u16 g_world_gfx_draw_mode_capacity;
 extern u16 g_world_gfx_tile_capacity; /* tile count */
 extern u16 g_world_gfx_draw_mode_count;
-extern DVECTOR g_world_gs_ofs; /* libgs screen offset (the second halfword is not word aligned) */
 
 /* Draw move count; volatile for the same read order as g_world_gfx_draw_area_capacity. */
 extern volatile u16 g_world_gfx_draw_move_capacity;
 extern u16 g_world_gfx_tile_count;
-extern void* g_world_gs_out_packet_p;
 extern u16 g_world_gfx_draw_move_count;
 extern u16 g_world_gfx_sprite_count;
 extern u16 g_world_gfx_tile_1_capacity;
 extern u16 g_world_gfx_tile_8_capacity;
 extern u16 g_world_gfx_tile_1_count;
 extern u16 g_world_gfx_tile_8_count;
-extern MATRIX g_world_gs_ls_matrix; /* GsLSMATRIX */
 extern world_gfx_packet_buffer_t* g_world_gfx_packet_buffers;
 extern u16 g_world_gfx_sprite_8_count;
 
-/* The libgs draw environment (GsDRAWENV) shared by the world_gs_* routines. */
-extern DRAWENV g_world_gs_drawenv; /* GsDRAWENV */
-extern DISPENV g_world_gs_dispenv;
 extern u16 g_world_gfx_tile_16_capacity;
-extern s16 g_world_gs_offset_x;
-extern s16 g_world_gs_offset_y;
 extern u16 g_world_gfx_tile_16_count;
-extern MATRIX g_world_gs_light_ws_matrix; /* GsLIGHTWSMATRIX */
 extern u16 g_world_gfx_sprite_16_count;
-extern s32 g_world_gs_screen_width;
-extern s32 g_world_gs_screen_height;
-extern MATRIX g_world_gs_id_matrix; /* GsIDMATRIX */
-extern MATRIX g_world_gs_ws_matrix; /* GsWSMATRIX */
 
-/* libgs clip rectangle: world_gs_reset_screen_state.c writes x/y/w/h here. */
-extern RECT g_world_gs_clip_rect;
 extern u16 g_world_gfx_poly_f3_capacity;
 extern u16 g_world_gfx_poly_g3_capacity;
 extern u16 g_world_gfx_poly_f4_capacity;
@@ -1234,9 +1197,6 @@ extern u16 g_world_gfx_poly_f3_count;
 extern u16 g_world_gfx_poly_g3_count;
 extern u16 g_world_gfx_poly_f4_count;
 extern u16 g_world_gfx_gradient_quad_count;
-extern s32 g_world_gs_frame_count; /* frame counter (never zero after wrap) */
-extern s16 g_world_gs_active_buffer;
-extern s16 g_world_gs_offset_draw_active;
 extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
@@ -1323,38 +1283,16 @@ void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_ota
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 a, s16 b, s16 c, s16 d);
 void world_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
-void world_gfx_set_draw_clip_rectangle(RECT* source);
 void world_gfx_set_draw_mode_from_rect(DR_MODE* mode, const u16* rect);
 void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
 void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_start_decreasing_fade(void);
 void world_gfx_start_increasing_fade(void);
-void world_gs_sortpoly(POLY_FT4* poly, s32 arg, s32 type);
 s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
-void world_gs_clear_ot(s32, s32, void*);
-void world_gs_draw_ot(void*);
-s32 world_gs_get_active_buffer(void);
-void world_gs_gte_init(void);
-void world_gs_init3d(void);
-void world_gs_initgraph(u16 x, u16 y, u16 intmode, u16 dither, u16 vram);
-void world_gs_reset_screen_state(u16 width, u16 height);
-void world_gs_set_draw_offsets(s32 x0, s32 y0, s32 x1, s32 y1);
-void world_gs_setdrawbuffclip(void);
-void world_gs_setdrawbuffoffset(void);
 void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
 void world_script_resetpalette_event_instruction(const u8* parameters);
-void world_gs_sortboxfill(GsBOXF* box, void* table, s32 priority);
-void world_gs_sortline(GsLINE* line, GsOT* ot, u16 pri);
-void world_gs_gettiminfo(u32* tim, GsIMAGE* image);
-void world_gs_set_display_mode(u16 x, u16 y, u16 intmode, u16 dither, u16 vram);
-void world_gs_sortclear(u8 r, u8 g, u8 b, GsOT* otp);
-void world_gs_sortsprite(GsSPRITE* sp, GsOT* ot, u16 pri);
-void world_gs_sortfastsprite(const GsSPRITE* sp, GsOT* ot, u16 pri);
-void world_gs_sortflipsprite(const GsSPRITE* sp, void* otp, s32 pri);
-void world_gs_swapdispbuff(void);
-void world_gs_setworkbase(void* base);
 
 /* job */
 /* A job-wheel portrait quad (0x8018c8a4 and 0x8018c8b4): a
@@ -3666,7 +3604,6 @@ s32 get_current_facing_byte_from_misc_id(s32 misc_id);
 s32 world_coords_fit_in_byte(s32 x, s32 y);
 void world_fill_16_bytes_fe(u8* buf);
 void world_free_work_buffer(void);
-u32 world_ps_sort_sprite_bg(u32* tag, GsOT* ot, s32 z, s32 len);
 s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
 s32 world_is_skillset_in_spell_quote_exception_list(s32 value);
 s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
@@ -3682,8 +3619,5 @@ extern u8 D_801CC7D0;
 extern u8 D_801CC7D8;
 extern u8 D_801CD0EC;
 extern u8 D_801CD0F4;
-extern s32 D_801CD7DC;
-extern s32 D_801CD83C;
-extern s32 D_801CD854;
 
 #endif

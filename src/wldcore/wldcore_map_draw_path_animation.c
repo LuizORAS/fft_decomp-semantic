@@ -93,6 +93,6 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
         poly.y2 = verts[2].vy;
         poly.x3 = verts[3].vx;
         poly.y3 = verts[3].vy;
-        world_gs_sortpoly(&poly, (s32)ot, 1);
+        GsSortPoly(&poly, ot, 1);
     }
 }

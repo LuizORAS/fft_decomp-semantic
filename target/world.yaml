@@ -11,32 +11,32 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [wldcore, battle]
 
 libraries:
-  - {id: libgs, addr: 0x800e03ec, end: 0x800e1a98, kind: psyq, library: LIBGS}
+  - {id: libgs, addr: 0x800e0228, end: 0x800e1a98, kind: psyq, library: LIBGS}
 
 functions:
-  - {addr: 0x800e03ec, size: 148, name: world_ps_sort_sprite_bg, hash: 33eb380bed08096b}
-  - {addr: 0x800e0480, size: 1276, name: world_gs_sortsprite, hash: 8e76bcf090d5aa77}
-  - {addr: 0x800e097c, size: 380, name: world_gs_sortfastsprite, hash: a5429d5475642a68}
-  - {addr: 0x800e0af8, size: 612, name: world_gs_sortflipsprite, hash: c4df1c102510221c}
-  - {addr: 0x800e0d5c, size: 216, name: world_gs_sortline, hash: d756a503f207e066}
-  - {addr: 0x800e0e34, size: 216, name: world_gs_sortboxfill, hash: 1f5281bf14daf0e9}
-  - {addr: 0x800e0f0c, size: 120, name: world_gs_init_display, hash: e2a1bfd604b8a48c}
-  - {addr: 0x800e0f84, size: 368, name: world_gs_initgraph, hash: de09f30ffaec5794}
-  - {addr: 0x800e10f4, size: 120, name: world_gs_set_display_mode, hash: 13ba562341118413}
-  - {addr: 0x800e116c, size: 636, name: world_gs_reset_screen_state, hash: b5593142a1ebc39e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800e13e8, size: 316, name: world_gs_sortclear, hash: acce5511cef23657}
-  - {addr: 0x800e1524, size: 16, name: world_gs_getactivebuff, hash: 7cc1be6a76ed6c82}
-  - {addr: 0x800e1534, size: 276, name: world_gs_setdrawbuffoffset, hash: 503ad86291ffd357}
-  - {addr: 0x800e1648, size: 144, name: world_gs_setdrawbuffclip, hash: 265f405815b7213d}
-  - {addr: 0x800e16d8, size: 56, name: world_gfx_set_draw_clip_rectangle, hash: dfc78b1f175874d7}
-  - {addr: 0x800e1710, size: 180, name: world_gs_swapdispbuff, hash: 4836d69f6c4e02a3}
-  - {addr: 0x800e17c4, size: 160, name: world_gs_set_draw_offsets, hash: 7f21819a8ba1f75c}
-  - {addr: 0x800e1864, size: 120, name: world_gs_init3d, hash: ad8561bf63349e28}
-  - {addr: 0x800e18dc, size: 36, name: world_gs_drawot, hash: 7e33a5e1171c7200}
-  - {addr: 0x800e1900, size: 88, name: world_gs_clearot, hash: e1119fe3256ca121}
-  - {addr: 0x800e1958, size: 76, name: world_gs_gte_init, hash: 2798ccaf5dd44246}
-  - {addr: 0x800e19a4, size: 228, name: world_gs_gettiminfo, hash: 6811aaed0e50ac12}
-  - {addr: 0x800e1a88, size: 16, name: world_gs_setworkbase, hash: 979dfbb7ec52402e}
+  - {addr: 0x800e03ec, size: 148, name: psyq_gs_sort_sprite_bg, hash: 33eb380bed08096b, source: src/psyq/libgs/psyq_gs_sort_sprite_bg.c}
+  - {addr: 0x800e0480, size: 1276, name: GsSortSprite, hash: 8e76bcf090d5aa77, source: src/psyq/libgs/GsSortSprite.c}
+  - {addr: 0x800e097c, size: 380, name: GsSortFastSprite, hash: a5429d5475642a68, source: src/psyq/libgs/GsSortFastSprite.c}
+  - {addr: 0x800e0af8, size: 612, name: GsSortFlipSprite, hash: c4df1c102510221c, source: src/psyq/libgs/GsSortFlipSprite.c}
+  - {addr: 0x800e0d5c, size: 216, name: GsSortLine, hash: d756a503f207e066, source: src/psyq/libgs/GsSortLine.c}
+  - {addr: 0x800e0e34, size: 216, name: GsSortBoxFill, hash: 1f5281bf14daf0e9, source: src/psyq/libgs/GsSortBoxFill.c}
+  - {addr: 0x800e0f0c, size: 120, name: GsInitGraph, hash: e2a1bfd604b8a48c, source: src/psyq/libgs/GsInitGraph.c}
+  - {addr: 0x800e0f84, size: 368, name: psyq_gs_init_gpu, hash: de09f30ffaec5794, source: src/psyq/libgs/psyq_gs_init_gpu.c}
+  - {addr: 0x800e10f4, size: 120, name: GsInitGraph2, hash: 13ba562341118413, source: src/psyq/libgs/GsInitGraph2.c}
+  - {addr: 0x800e116c, size: 636, name: psyq_gs_reset_screen_state, hash: b5593142a1ebc39e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/psyq/libgs/psyq_gs_reset_screen_state.c}
+  - {addr: 0x800e13e8, size: 316, name: GsSortClear, hash: acce5511cef23657, source: src/psyq/libgs/GsSortClear.c}
+  - {addr: 0x800e1524, size: 16, name: GsGetActiveBuff, hash: 7cc1be6a76ed6c82, source: src/psyq/libgs/GsGetActiveBuff.c}
+  - {addr: 0x800e1534, size: 276, name: GsSetDrawBuffOffset, hash: 503ad86291ffd357, source: src/psyq/libgs/GsSetDrawBuffOffset.c}
+  - {addr: 0x800e1648, size: 144, name: GsSetDrawBuffClip, hash: 265f405815b7213d, source: src/psyq/libgs/GsSetDrawBuffClip.c}
+  - {addr: 0x800e16d8, size: 56, name: GsSetClip2D, hash: dfc78b1f175874d7, source: src/psyq/libgs/GsSetClip2D.c}
+  - {addr: 0x800e1710, size: 180, name: GsSwapDispBuff, hash: 4836d69f6c4e02a3, source: src/psyq/libgs/GsSwapDispBuff.c}
+  - {addr: 0x800e17c4, size: 160, name: GsDefDispBuff, hash: 7f21819a8ba1f75c, source: src/psyq/libgs/GsDefDispBuff.c}
+  - {addr: 0x800e1864, size: 120, name: GsInit3D, hash: ad8561bf63349e28, source: src/psyq/libgs/GsInit3D.c}
+  - {addr: 0x800e18dc, size: 36, name: GsDrawOt, hash: 7e33a5e1171c7200, source: src/psyq/libgs/GsDrawOt.c}
+  - {addr: 0x800e1900, size: 88, name: GsClearOt, hash: e1119fe3256ca121, source: src/psyq/libgs/GsClearOt.c}
+  - {addr: 0x800e1958, size: 76, name: psyq_gs_init_gte, hash: 2798ccaf5dd44246, source: src/psyq/libgs/psyq_gs_init_gte.c}
+  - {addr: 0x800e19a4, size: 228, name: GsGetTimInfo, hash: 6811aaed0e50ac12, source: src/psyq/libgs/GsGetTimInfo.c}
+  - {addr: 0x800e1a88, size: 16, name: GsSetWorkBase, hash: 979dfbb7ec52402e, source: src/psyq/libgs/GsSetWorkBase.c}
   - {addr: 0x800e1a98, size: 296, name: world_script_process_inflict_status_commands, hash: 35cae57e15573235}
   - {addr: 0x800e1bc0, size: 244, name: world_unit_set_animation, hash: 98ede871ccc9462e}
   - {addr: 0x800e1cb4, size: 144, name: world_unit_set_facing, hash: ac3faadc8be008fd}
@@ -1021,17 +1021,14 @@ functions:
   - {addr: 0x8013a1e0, size: 288, name: world_menu_open_scrollable_list, hash: 9cf1fd54efd490d1}
 
 data:
-  - {addr: 0x800e0000, name: g_world_gfx_sort_sprite_overflow_message}
+  - {addr: 0x800e0000, name: g_psyq_gs_sort_sprite_overflow_message}
   - {addr: 0x800e002c, name: g_world_text_wait_for_allocation_message}
   - {addr: 0x800e0050, name: g_world_text_decimal_format}
   - {addr: 0x800e0054, name: g_world_text_wait_for_file_allocation_message}
   - {addr: 0x800e0070, name: g_world_script_pause_message}
   - {addr: 0x800e007c, name: g_world_text_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
-  - {addr: 0x800e0228, name: world_gs_sortpoly}
-  - {addr: 0x800e1524, name: world_gs_get_active_buffer}
-  - {addr: 0x800e18dc, name: world_gs_draw_ot}
-  - {addr: 0x800e1900, name: world_gs_clear_ot}
+  - {addr: 0x800e0228, name: GsSortPoly}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x800feff0, name: world_text_blit_glyph}
   - {addr: 0x800ff284, name: world_text_blit_font_glyph_to_4bpp}
@@ -1866,7 +1863,7 @@ data:
   - {addr: 0x80195bd0, name: g_world_name_entry_text_row_ids}
   - {addr: 0x80195bd4, name: g_world_name_confirm_menu}
   - {addr: 0x80195c10, name: g_world_name_confirm_initialized}
-  - {addr: 0x80195c14, name: g_world_gs_clear_tile}
+  - {addr: 0x80195c14, name: g_psyq_gs_clear_tile}
   - {addr: 0x80195c34, name: g_menu_controller_input_0}
   - {addr: 0x80195c34, name: g_world_menu_new_button_input}
   - {addr: 0x80195c3c, name: g_world_menu_status_left_text_ids}
@@ -2242,8 +2239,8 @@ data:
   - {addr: 0x801cd1d0, name: g_world_gfx_textured_gradient_quad_count}
   - {addr: 0x801cd1d4, name: g_world_gfx_sprite_8_capacity}
   - {addr: 0x801cd1d8, name: g_world_gfx_draw_buffer_clip_y}
-  - {addr: 0x801cd1dc, name: g_world_gs_buffer_x}
-  - {addr: 0x801cd1e0, name: g_world_gs_buffer_y}
+  - {addr: 0x801cd1dc, name: PSDBASEX}
+  - {addr: 0x801cd1e0, name: PSDBASEY}
   - {addr: 0x801cd1ec, name: g_world_load_work_buffer}
   - {addr: 0x801cd1f8, name: g_world_menu_alternate_number_clut}
   - {addr: 0x801cd1fc, name: g_world_event_map_command_83_args}
@@ -2252,8 +2249,8 @@ data:
   - {addr: 0x801cd20c, name: g_world_menu_cursor_position}
   - {addr: 0x801cd210, name: g_world_gfx_sprite_16_capacity}
   - {addr: 0x801cd218, name: g_world_shop_id}
-  - {addr: 0x801cd21c, name: g_world_gs_buffer_offset_x}
-  - {addr: 0x801cd220, name: g_world_gs_buffer_offset_y}
+  - {addr: 0x801cd21c, name: g_psyq_gs_buffer_offset_x}
+  - {addr: 0x801cd220, name: g_psyq_gs_buffer_offset_y}
   - {addr: 0x801cd224, name: g_world_ot_length}
   - {addr: 0x801cd228, name: g_world_gfx_draw_area_capacity}
   - {addr: 0x801cd22c, name: g_world_input_primary_repeat_latched}
@@ -2263,11 +2260,11 @@ data:
   - {addr: 0x801cd438, name: g_world_gfx_tile_capacity}
   - {addr: 0x801cd43c, name: g_world_shop_fitting_room_items}
   - {addr: 0x801cd504, name: g_world_gfx_draw_mode_count}
-  - {addr: 0x801cd508, name: g_world_gs_ofs}
+  - {addr: 0x801cd508, name: POSITION}
   - {addr: 0x801cd50c, name: g_world_frame_result_override}
   - {addr: 0x801cd510, name: g_world_gfx_draw_move_capacity}
   - {addr: 0x801cd514, name: g_world_gfx_tile_count}
-  - {addr: 0x801cd518, name: g_world_gs_out_packet_p}
+  - {addr: 0x801cd518, name: GsOUT_PACKET_P}
   - {addr: 0x801cd520, name: g_world_gfx_draw_move_count}
   - {addr: 0x801cd528, name: g_world_gfx_active_packet_buffer}
   - {addr: 0x801cd52c, name: g_world_input_primary_repeat}
@@ -2286,31 +2283,31 @@ data:
   - {addr: 0x801cd5e8, name: g_world_gfx_tile_8_count}
   - {addr: 0x801cd5ec, name: g_world_formation_unit_pointers}
   - {addr: 0x801cd63c, name: g_world_formation_temp_unit}
-  - {addr: 0x801cd644, name: g_world_gs_ls_matrix}
+  - {addr: 0x801cd644, name: g_psyq_gs_ls_matrix}
   - {addr: 0x801cd664, name: g_world_gfx_packet_buffers}
   - {addr: 0x801cd668, name: g_world_input_secondary_repeat}
   - {addr: 0x801cd66c, name: g_world_text_glyph_bitmap_data}
   - {addr: 0x801cd674, name: g_world_gfx_sprite_8_count}
-  - {addr: 0x801cd678, name: g_world_gs_drawenv}
-  - {addr: 0x801cd6d4, name: g_world_gs_dispenv}
+  - {addr: 0x801cd678, name: GsDRAWENV}
+  - {addr: 0x801cd6d4, name: GsDISPENV}
   - {addr: 0x801cd6e8, name: g_world_gfx_tile_16_capacity}
-  - {addr: 0x801cd6ec, name: g_world_gs_offset_x}
-  - {addr: 0x801cd6f0, name: g_world_gs_offset_y}
+  - {addr: 0x801cd6ec, name: g_psyq_gs_offset_x}
+  - {addr: 0x801cd6f0, name: g_psyq_gs_offset_y}
   - {addr: 0x801cd6f4, name: g_world_menu_active_clut_back}
   - {addr: 0x801cd6f8, name: g_world_gfx_tile_16_count}
-  - {addr: 0x801cd6fc, name: g_world_gs_light_ws_matrix}
+  - {addr: 0x801cd6fc, name: g_psyq_gs_light_ws_matrix}
   - {addr: 0x801cd71c, name: g_world_shop_cost_window_visible}
   - {addr: 0x801cd720, name: g_world_menu_window_rect_source}
   - {addr: 0x801cd724, name: g_world_gfx_sprite_16_count}
   - {addr: 0x801cd728, name: g_world_menu_selection_results}
   - {addr: 0x801cd748, name: g_world_event_pending_loaded_evtchr_slot}
-  - {addr: 0x801cd74c, name: g_world_gs_screen_width}
+  - {addr: 0x801cd74c, name: HWD0}
   - {addr: 0x801cd750, name: g_world_grid_menu_id}
   - {addr: 0x801cd754, name: g_world_menu_description_text_id}
   - {addr: 0x801cd758, name: g_world_event_pending_loaded_evtchr_clear_slot}
   - {addr: 0x801cd75c, name: g_world_event_script}
-  - {addr: 0x801cd760, name: g_world_gs_screen_height}
-  - {addr: 0x801cd764, name: g_world_gs_id_matrix}
+  - {addr: 0x801cd760, name: VWD0}
+  - {addr: 0x801cd764, name: GsIDMATRIX}
   - {addr: 0x801cd784, name: g_world_shop_menu_step}
   - {addr: 0x801cd788, name: g_world_formation_unit_count}
   - {addr: 0x801cd78c, name: g_world_thread_call_target}
@@ -2322,8 +2319,8 @@ data:
   - {addr: 0x801cd7d8, name: g_world_event_pending_effect_id}
   - {addr: 0x801cd7dc, name: D_801CD7DC}
   - {addr: 0x801cd7e0, name: g_world_menu_thread_menu_data}
-  - {addr: 0x801cd7e4, name: g_world_gs_ws_matrix}
-  - {addr: 0x801cd804, name: g_world_gs_clip_rect}
+  - {addr: 0x801cd7e4, name: GsIDMATRIX2}
+  - {addr: 0x801cd804, name: CLIP2}
   - {addr: 0x801cd80c, name: g_world_formation_scroll_enabled}
   - {addr: 0x801cd810, name: g_world_script_tutorial_shift_command_bit}
   - {addr: 0x801cd814, name: g_world_gfx_active_otag_entries}
@@ -2335,7 +2332,7 @@ data:
   - {addr: 0x801cd82c, name: g_world_fixed_math_overflow}
   - {addr: 0x801cd830, name: g_world_menu_glyph_sheet}
   - {addr: 0x801cd838, name: g_world_input_newly_pressed}
-  - {addr: 0x801cd83c, name: D_801CD83C}
+  - {addr: 0x801cd83c, name: GsLIGHT_MODE}
   - {addr: 0x801cd840, name: g_world_gfx_poly_f3_capacity}
   - {addr: 0x801cd844, name: g_world_help_text_id_tables_ptr}
   - {addr: 0x801cd848, name: g_world_gfx_poly_g3_capacity}
@@ -2346,12 +2343,12 @@ data:
   - {addr: 0x801cd85c, name: g_world_gfx_poly_g3_count}
   - {addr: 0x801cd860, name: g_world_gfx_poly_f4_count}
   - {addr: 0x801cd864, name: g_world_gfx_gradient_quad_count}
-  - {addr: 0x801cd868, name: g_world_gs_frame_count}
-  - {addr: 0x801cd86c, name: g_world_gs_active_buffer}
+  - {addr: 0x801cd868, name: PSDCNT}
+  - {addr: 0x801cd86c, name: PSDIDX}
   - {addr: 0x801cd870, name: g_world_menu_disabled_number_clut}
   - {addr: 0x801cd874, name: g_world_event_pending_map_state}
   - {addr: 0x801cd87c, name: g_world_event_weather_request}
-  - {addr: 0x801cd880, name: g_world_gs_offset_draw_active}
+  - {addr: 0x801cd880, name: g_psyq_gs_offset_draw_active}
   - {addr: 0x801cd884, name: g_world_map_light_base_matrix}
   - {addr: 0x801cd8a4, name: g_world_text_section_pointers}
   - {addr: 0x801cd8bc, name: g_world_text_job_names}
@@ -2388,6 +2385,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 regions:
+  - {addr: 0x800e0228, end: 0x800e03ec, kind: handwritten, why: "LIBGS GsSortPoly: hand-written assembly, not reconstructed"}
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}
   - {addr: 0x800ff284, end: 0x800ff3d4, kind: handwritten, why: "handwritten scratchpad-frame 4bpp blitter"}
   - {addr: 0x800ff3d4, end: 0x800ff450, kind: handwritten, why: "handwritten zero-fill; byte-identical to battle twin"}

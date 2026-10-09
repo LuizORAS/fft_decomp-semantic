@@ -22,11 +22,10 @@ void open_movie_update_stream_frame(void) {
         open_movie_start_cd_stream_read(&status.position);
     }
 
-    open_bin_decdctin(g_open_movie_mdec_stream_state.vlc_buffers[g_open_movie_mdec_stream_state.vlc_buffer_index], 3);
+    DecDCTin(g_open_movie_mdec_stream_state.vlc_buffers[g_open_movie_mdec_stream_state.vlc_buffer_index], 3);
     words = g_open_movie_mdec_stream_state.output_rect.w;
     words *= g_open_movie_mdec_stream_state.output_rect.h;
-    open_bin_decdctout(
-        (u32)g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index],
+    DecDCTout((u32)g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index],
         words / 2);
     open_movie_decode_next_frame(&g_open_movie_mdec_stream_state);
     open_movie_wait_for_mdec_output(&g_open_movie_mdec_stream_state, 0);

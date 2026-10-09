@@ -42,7 +42,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         if (g_main_file_still_loading != 0) {
             break;
         }
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         LoadClut(image.clut, image.cx, image.cy);
         render = level->render_index;
         bounds.position.x = image.px;
@@ -65,7 +65,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         break;
     case 3:
         level->timer = level->timer + 1;
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         if (wldcore_gfx_step_dissolve_image_upload(&image, level->timer) == 0) {
             level->phase = 0;
         }

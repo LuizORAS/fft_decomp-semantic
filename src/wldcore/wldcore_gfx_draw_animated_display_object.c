@@ -152,6 +152,6 @@ step_frame:
         if (sprite.attribute & 0x400000) {
             sprite.v = sprite.v + 1;
         }
-        world_gs_sortflipsprite(&sprite, ot, object->priority);
+        GsSortFlipSprite(&sprite, ot, object->priority);
     }
 }

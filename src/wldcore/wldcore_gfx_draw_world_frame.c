@@ -7,7 +7,7 @@
 void wldcore_gfx_draw_world_frame(void) {
     RECT rect;
 
-    world_gs_clear_ot(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     DrawSync(0);
     wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_menu_run_world_frame(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
@@ -22,10 +22,10 @@ void wldcore_gfx_draw_world_frame(void) {
     DrawSync(0);
     wldcore_reset_game_if_special_keycode_is_pressed();
     VSync(0);
-    world_gs_swapdispbuff();
+    GsSwapDispBuff();
     if (!(g_main_system_flags & 0x200)) {
         wldcore_gfx_set_display_rect(g_active_graphics_buffer_index == 0, &rect.x);
         LoadImage(&rect, (u32*)g_wldcore_scratch_buffer);
     }
-    world_gs_draw_ot(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
 }

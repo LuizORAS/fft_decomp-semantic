@@ -3,7 +3,7 @@
 
 void open_movie_stop_stream(s32 pause_cd_audio) {
     DrawSync(0);
-    open_bin_decdctoutcallback(0);
+    DecDCToutCallback(0);
     StUnSetRing();
 
     if (pause_cd_audio != 0) {

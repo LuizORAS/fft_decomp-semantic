@@ -168,7 +168,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
                 level->render_index = record;
-                world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+                GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
                 LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
                 LoadClut(image.clut, image.cx, image.cy);
                 DrawSync(0);
@@ -206,7 +206,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
                 level->render_index = record;
-                world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+                GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
                 LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
                 LoadClut(image.clut, image.cx, image.cy);
                 DrawSync(0);

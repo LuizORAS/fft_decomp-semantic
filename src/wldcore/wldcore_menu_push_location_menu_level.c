@@ -71,10 +71,10 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.mode = 8;
 
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
-        world_gs_gettiminfo(g_wldcore_location_frame_tim + 1, &image);
+        GsGetTimInfo(g_wldcore_location_frame_tim + 1, &image);
         LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
         LoadClut(image.clut, image.cx, image.cy);
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
         LoadClut(image.clut, image.cx, image.cy);
 

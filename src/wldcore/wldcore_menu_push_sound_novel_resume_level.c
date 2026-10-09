@@ -36,7 +36,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+    GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
 
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

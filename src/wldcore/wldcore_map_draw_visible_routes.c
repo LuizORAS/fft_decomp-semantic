@@ -94,7 +94,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                     verts[0] = verts[2];
                     verts[1] = verts[3];
                     if (flags[0] != 0 || flags[2] != 0) {
-                        world_gs_sortpoly(&poly, (s32)ot, 1);
+                        GsSortPoly(&poly, ot, 1);
                     }
                     flags[0] = flags[2];
                     flags[1] = flags[3];

@@ -21,7 +21,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         return;
     }
     if (level->dissolve_step != 0) {
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         if (wldcore_gfx_step_dissolve_image_upload(&image, level->dissolve_step) == 0) {
             level->dissolve_step = 0;
             return;

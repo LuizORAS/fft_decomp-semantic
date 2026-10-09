@@ -48,7 +48,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         sprite.w = 0x14;
         sprite.h = 8;
         sprite.cx = 0x20;
-        world_gs_sortfastsprite(&sprite, ot, g_wldcore_hud_ot_priority);
+        GsSortFastSprite(&sprite, ot, g_wldcore_hud_ot_priority);
 
         separator.u = 0x28;
         separator.v = 0;
@@ -61,12 +61,12 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         wldcore_gfx_draw_number_digits(g_wldcore_displayed_numeric_value, 4, &sprite, ot);
 
         separator.x = sprite.x;
-        world_gs_sortfastsprite(&separator, ot, g_wldcore_hud_ot_priority);
+        GsSortFastSprite(&separator, ot, g_wldcore_hud_ot_priority);
         sprite.x += 6;
         wldcore_gfx_draw_number_digits_with_fill(g_wldcore_displayed_numeric_value_secondary, 2, &sprite, ot, 1);
 
         separator.x = sprite.x;
-        world_gs_sortfastsprite(&separator, ot, g_wldcore_hud_ot_priority);
+        GsSortFastSprite(&separator, ot, g_wldcore_hud_ot_priority);
         sprite.x += 6;
         wldcore_gfx_draw_number_digits_with_fill(g_wldcore_displayed_numeric_value_tertiary, 2, &sprite, ot, 1);
         break;
@@ -76,7 +76,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         sprite.w = 0xD;
         sprite.h = 9;
         sprite.cx = 0x20;
-        world_gs_sortfastsprite(&sprite, ot, g_wldcore_hud_ot_priority);
+        GsSortFastSprite(&sprite, ot, g_wldcore_hud_ot_priority);
         /* fallthrough */
     case 0:
         sprite.x -= 0xC;
@@ -90,7 +90,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         sprite.v = 0;
         sprite.cx = 0x20;
         sprite.x -= 0x40;
-        world_gs_sortfastsprite(&sprite, ot, g_wldcore_hud_ot_priority);
+        GsSortFastSprite(&sprite, ot, g_wldcore_hud_ot_priority);
 
         sprite.x += 4;
         sprite.y += 8;

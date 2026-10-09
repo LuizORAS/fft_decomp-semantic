@@ -31,7 +31,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
                 sprite->h = 0xF;
                 sprite->y += 1;
             }
-            world_gs_sortfastsprite(sprite, ot, g_wldcore_hud_ot_priority);
+            GsSortFastSprite(sprite, ot, g_wldcore_hud_ot_priority);
             sprite->y = y;
         } else {
             if (zero_pad != 0) {
@@ -47,7 +47,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
                 sprite->h = 8;
                 sprite->y += 4;
             }
-            world_gs_sortfastsprite(sprite, ot, g_wldcore_hud_ot_priority);
+            GsSortFastSprite(sprite, ot, g_wldcore_hud_ot_priority);
             sprite->y = y;
         }
         sprite->x += 8;

@@ -6,12 +6,12 @@
  * clear, draws both tables and clears system flag 2. Sibling of
  * wldcore_gfx_draw_world_frame. */
 void wldcore_gfx_draw_world_frame_with_map(void) {
-    world_gs_clear_ot(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
-    world_gs_clear_ot(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
+    GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_switch_to_stack((void*)0x1F8003FC);
     wldcore_map_project_and_cull_tiles();
-    wldcore_gfx_draw_projected_map_tiles((s32)&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
+    wldcore_gfx_draw_projected_map_tiles(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_restore_previous_stack();
     wldcore_map_step_route_travel();
     wldcore_switch_to_stack((void*)0x1F8003FC);
@@ -33,9 +33,9 @@ void wldcore_gfx_draw_world_frame_with_map(void) {
     DrawSync(0);
     wldcore_reset_game_if_special_keycode_is_pressed();
     VSync(0);
-    world_gs_swapdispbuff();
-    world_gs_sortclear(0, 0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
-    world_gs_draw_ot(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
-    world_gs_draw_ot(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    GsSwapDispBuff();
+    GsSortClear(0, 0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
+    GsDrawOt(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
+    GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     g_main_system_flags &= ~2;
 }

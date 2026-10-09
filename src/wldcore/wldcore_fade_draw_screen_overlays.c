@@ -16,7 +16,7 @@ void wldcore_fade_draw_screen_overlays(void) {
         if (flags[i] & 9) {
             if (g_wldcore_screen_fade_state.boxes[i].r != 0 || g_wldcore_screen_fade_state.boxes[i].g != 0
                 || g_wldcore_screen_fade_state.boxes[i].b != 0) {
-                world_gs_sortboxfill(
+                GsSortBoxFill(
                     &boxes[i], &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index], priorities[i].x);
             }
         }

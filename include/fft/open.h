@@ -4,6 +4,7 @@
 /* OPEN/OPEN.BIN: opening and title. */
 
 #include "fft/world.h"
+#include "psx/libpress.h"
 
 /* card */
 extern u8 g_open_card_info_pending;
@@ -122,15 +123,7 @@ extern u8 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
 extern s32 g_open_movie_stream_status;
 extern s32 g_open_movie_width;
-extern u32 g_open_mdec_quant_table_command[];
-extern u32 g_open_mdec_luma_quant_table[16];
-extern u32 g_open_mdec_chroma_quant_table[16];
-extern u32 g_open_mdec_scale_table_command[];
-extern u32 g_open_mdec_scale_table[32];
-extern volatile u32* g_open_mdec_command_reg;
-extern volatile u32* g_open_mdec_status_reg;
 extern s32 g_st_cd_interrupt_pending;
-void open_mdec_reset(s32 mode);
 
 /* OPEN.BIN interfaces shared across its reconstructed translation units. */
 void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state);
@@ -343,12 +336,6 @@ typedef struct open_font_metrics {
     u8 advance;
 } open_font_metrics_t;
 
-extern const char g_open_text_mdec_reset_bad_option_format[];
-extern const char g_open_text_mdec_in_sync_tag[];
-extern const char g_open_text_mdec_out_sync_tag[];
-extern const char g_open_text_mdec_timeout_dma_format[];
-extern const char g_open_text_mdec_timeout_fifo_format[];
-extern const char g_open_text_mdec_timeout_format[];
 extern s32 g_open_text_section_offsets[];
 s32 open_text_decode_hex_digit(s32 character);
 void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, void* image);
@@ -604,27 +591,10 @@ typedef enum game_sound_mode {
     GAME_SOUND_MODE_WIDE = 2,
 } game_sound_mode_e;
 
-extern volatile u32* g_open_dma_dpcr;
-extern volatile u32* g_open_dma_mdec_out_chcr;
-extern volatile u32* g_open_dma_mdec_out_madr;
-extern u32* g_open_dma_mdec_out_bcr;
 extern s32 g_open_system_result;
 extern u32 g_open_system_runtime_flags;
 extern s32 g_open_system_vsync_mode;
 extern open_gfx_transition_entry_t** g_open_new_game_transition_entries;
-extern volatile u32* g_open_dma_mdec_in_madr;
-extern volatile u32* g_open_dma_mdec_in_bcr;
-extern volatile u32* g_open_dma_mdec_in_chcr;
-s32 open_bin_decdctbufsize(const u16* bs);
-void open_bin_decdctin(s32* packet, s32 mode);
-void open_bin_decdctout(u32 command, u32 words);
-void open_bin_decdctoutcallback(void* callback);
-void open_bin_decdctreset(s32 mode);
-s32 open_bin_libpress_timeout(const char* operation);
-void open_bin_mdec_in(u32* packet, u32 g_main_save_word_flags);
-s32 open_bin_mdec_in_sync(void);
-void open_bin_mdec_out(u32 command, u32 g_main_save_word_flags);
-s32 open_bin_mdec_out_sync(void);
 void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
 void open_noop_8006d7ec(void);
 void open_system_init_runtime_state(void);

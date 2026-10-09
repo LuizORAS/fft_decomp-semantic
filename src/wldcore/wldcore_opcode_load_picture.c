@@ -25,7 +25,7 @@ void wldcore_opcode_load_picture(void) {
     wldcore_wait_for_file_load();
     g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base_x = x - 0x80;
     g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base_y = y - 0x78;
-    world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+    GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
     bounds.position.x = image.px;
     bounds.position.y = image.py;
     bounds.dimensions.x = image.pw;

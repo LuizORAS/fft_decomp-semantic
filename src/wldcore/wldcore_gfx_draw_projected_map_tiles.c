@@ -19,7 +19,7 @@
 #define WLDCORE_TILE_CULLED_MASK 0x300
 #define WLDCORE_MAP_DOT_CLUT_Y   0x1e0
 
-void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
+void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     POLY_FT4 poly;
     CVECTOR color;
     s32 row;
@@ -72,7 +72,7 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
             poly.v0 = poly.v1 = v;
             poly.u1 = poly.u3 = u + w;
             poly.v2 = poly.v3 = v + h;
-            world_gs_sortpoly(&poly, ot, 2);
+            GsSortPoly(&poly, ot, 2);
         }
     }
 }

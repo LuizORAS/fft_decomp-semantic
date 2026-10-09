@@ -146,32 +146,32 @@ functions:
   - {addr: 0x8007062c, size: 188, name: open_card_poll_info_result, hash: f6ce5450918332a3}
   - {addr: 0x800706e8, size: 148, name: open_card_poll_info_until_stable, hash: 7d39d6dc3dffb0b6}
   - {addr: 0x8007077c, size: 124, name: open_card_check_slots, hash: b46039f85ab0f00d}
-  - {addr: 0x8007348c, size: 56, name: open_bin_decdctreset, hash: da48c5dced171502}
-  - {addr: 0x800734c4, size: 140, name: open_bin_decdctgetenv, hash: f9ac0843b00c34ec}
-  - {addr: 0x80073550, size: 156, name: open_bin_decdctputenv, hash: 110217b2c66870d3}
-  - {addr: 0x800735ec, size: 12, name: open_bin_decdctbufsize, hash: 6e858a1dcb7a2a22}
-  - {addr: 0x800735f8, size: 124, name: open_bin_decdctin, hash: b0929bd48e0b1873}
-  - {addr: 0x80073674, size: 32, name: open_bin_decdctout, hash: 69752e650a86d37c}
-  - {addr: 0x80073694, size: 32, name: open_bin_decdctinsync, hash: c6aebfdbc7b4a7ae}
-  - {addr: 0x800736b4, size: 32, name: open_bin_decdctoutsync, hash: 48c13c5409710abe}
-  - {addr: 0x800736d4, size: 36, name: open_bin_decdctincallback, hash: 9c14c3b6cc46cf39}
-  - {addr: 0x800736f8, size: 36, name: open_bin_decdctoutcallback, hash: 37c93bc1746717c5}
-  - {addr: 0x8007371c, size: 252, name: open_mdec_reset, hash: d1743d9f91162388}
-  - {addr: 0x80073818, size: 148, name: open_bin_mdec_in, hash: 01a4c9128818c744}
-  - {addr: 0x800738ac, size: 144, name: open_bin_mdec_out, hash: d931fbf5397a3806}
-  - {addr: 0x8007393c, size: 152, name: open_bin_mdec_in_sync, hash: 855ba4b219e3e4ae}
-  - {addr: 0x800739d4, size: 152, name: open_bin_mdec_out_sync, hash: 3ba7c2e453a1ded1}
-  - {addr: 0x80073a6c, size: 304, name: open_bin_libpress_timeout, hash: 7a6be33875e51769}
+  - {addr: 0x8007348c, size: 56, name: DecDCTReset, hash: da48c5dced171502, source: src/psyq/libpress/DecDCTReset.c}
+  - {addr: 0x800734c4, size: 140, name: DecDCTGetEnv, hash: f9ac0843b00c34ec, source: src/psyq/libpress/DecDCTGetEnv.c}
+  - {addr: 0x80073550, size: 156, name: DecDCTPutEnv, hash: 110217b2c66870d3, source: src/psyq/libpress/DecDCTPutEnv.c}
+  - {addr: 0x800735ec, size: 12, name: DecDCTBufSize, hash: 6e858a1dcb7a2a22, source: src/psyq/libpress/DecDCTBufSize.c}
+  - {addr: 0x800735f8, size: 124, name: DecDCTin, hash: b0929bd48e0b1873, source: src/psyq/libpress/DecDCTin.c}
+  - {addr: 0x80073674, size: 32, name: DecDCTout, hash: 69752e650a86d37c, source: src/psyq/libpress/DecDCTout.c}
+  - {addr: 0x80073694, size: 32, name: DecDCTinSync, hash: c6aebfdbc7b4a7ae, source: src/psyq/libpress/DecDCTinSync.c}
+  - {addr: 0x800736b4, size: 32, name: DecDCToutSync, hash: 48c13c5409710abe, source: src/psyq/libpress/DecDCToutSync.c}
+  - {addr: 0x800736d4, size: 36, name: DecDCTinCallback, hash: 9c14c3b6cc46cf39, source: src/psyq/libpress/DecDCTinCallback.c}
+  - {addr: 0x800736f8, size: 36, name: DecDCToutCallback, hash: 37c93bc1746717c5, source: src/psyq/libpress/DecDCToutCallback.c}
+  - {addr: 0x8007371c, size: 252, name: MDEC_reset, hash: d1743d9f91162388, source: src/psyq/libpress/MDEC_reset.c}
+  - {addr: 0x80073818, size: 148, name: MDEC_in, hash: 01a4c9128818c744, source: src/psyq/libpress/MDEC_in.c}
+  - {addr: 0x800738ac, size: 144, name: MDEC_out, hash: d931fbf5397a3806, source: src/psyq/libpress/MDEC_out.c}
+  - {addr: 0x8007393c, size: 152, name: MDEC_in_sync, hash: 855ba4b219e3e4ae, source: src/psyq/libpress/MDEC_in_sync.c}
+  - {addr: 0x800739d4, size: 152, name: MDEC_out_sync, hash: 3ba7c2e453a1ded1, source: src/psyq/libpress/MDEC_out_sync.c}
+  - {addr: 0x80073a6c, size: 304, name: timeout, hash: 7a6be33875e51769, source: src/psyq/libpress/timeout.c}
   - {addr: 0x80073ba0, size: 48, name: DecDCTvlcSize, hash: 2663bd671b465d7e, source: src/psyq/libpress/DecDCTvlcSize.c}
   - {addr: 0x80073bd0, size: 832, name: DecDCTvlc, hash: 7a6cb5dc58da8ec9, source: src/psyq/libpress/DecDCTvlc.c}
 
 data:
-  - {addr: 0x80067044, name: g_open_text_mdec_reset_bad_option_format}
-  - {addr: 0x80067060, name: g_open_text_mdec_in_sync_tag}
-  - {addr: 0x80067070, name: g_open_text_mdec_out_sync_tag}
-  - {addr: 0x80067080, name: g_open_text_mdec_timeout_dma_format}
-  - {addr: 0x800670a8, name: g_open_text_mdec_timeout_fifo_format}
-  - {addr: 0x800670e0, name: g_open_text_mdec_timeout_format}
+  - {addr: 0x80067044, name: g_psyq_press_reset_bad_option_format}
+  - {addr: 0x80067060, name: g_psyq_press_in_sync_name}
+  - {addr: 0x80067070, name: g_psyq_press_out_sync_name}
+  - {addr: 0x80067080, name: g_psyq_press_timeout_dma_format}
+  - {addr: 0x800670a8, name: g_psyq_press_timeout_fifo_format}
+  - {addr: 0x800670e0, name: g_psyq_press_timeout_format}
   - {addr: 0x800707f8, name: g_open_gfx_record_36_animations}
   - {addr: 0x800707fc, name: g_open_gfx_record_36_sprites}
   - {addr: 0x80070cb4, name: g_open_new_game_transition_entries}
@@ -190,20 +190,20 @@ data:
   - {addr: 0x80074034, name: g_open_opcode_handlers}
   - {addr: 0x80074074, name: g_open_card_slot}
   - {addr: 0x80074075, name: g_open_card_info_pending}
-  - {addr: 0x80074078, name: g_open_mdec_quant_table_command}
-  - {addr: 0x8007407c, name: g_open_mdec_luma_quant_table}
-  - {addr: 0x800740bc, name: g_open_mdec_chroma_quant_table}
-  - {addr: 0x800740fc, name: g_open_mdec_scale_table_command}
-  - {addr: 0x80074100, name: g_open_mdec_scale_table}
-  - {addr: 0x80074180, name: g_open_dma_mdec_in_madr}
-  - {addr: 0x80074184, name: g_open_dma_mdec_in_bcr}
-  - {addr: 0x80074188, name: g_open_dma_mdec_in_chcr}
-  - {addr: 0x8007418c, name: g_open_dma_mdec_out_madr}
-  - {addr: 0x80074190, name: g_open_dma_mdec_out_bcr}
-  - {addr: 0x80074194, name: g_open_dma_mdec_out_chcr}
-  - {addr: 0x800741b0, name: g_open_mdec_command_reg}
-  - {addr: 0x800741b4, name: g_open_mdec_status_reg}
-  - {addr: 0x800741b8, name: g_open_dma_dpcr}
+  - {addr: 0x80074078, name: g_psyq_press_quant_table_command}
+  - {addr: 0x8007407c, name: g_psyq_press_luma_quant_table}
+  - {addr: 0x800740bc, name: g_psyq_press_chroma_quant_table}
+  - {addr: 0x800740fc, name: g_psyq_press_scale_table_command}
+  - {addr: 0x80074100, name: g_psyq_press_scale_table}
+  - {addr: 0x80074180, name: g_psyq_press_dma_in_madr}
+  - {addr: 0x80074184, name: g_psyq_press_dma_in_bcr}
+  - {addr: 0x80074188, name: g_psyq_press_dma_in_chcr}
+  - {addr: 0x8007418c, name: g_psyq_press_dma_out_madr}
+  - {addr: 0x80074190, name: g_psyq_press_dma_out_bcr}
+  - {addr: 0x80074194, name: g_psyq_press_dma_out_chcr}
+  - {addr: 0x800741b0, name: g_psyq_press_mdec_command}
+  - {addr: 0x800741b4, name: g_psyq_press_mdec_status}
+  - {addr: 0x800741b8, name: g_psyq_press_dma_dpcr}
   - {addr: 0x800741bc, name: g_psyq_press_dc_luma_table}
   - {addr: 0x800745bc, name: g_psyq_press_dc_chroma_table}
   - {addr: 0x800749bc, name: g_psyq_press_ac_primary_table}

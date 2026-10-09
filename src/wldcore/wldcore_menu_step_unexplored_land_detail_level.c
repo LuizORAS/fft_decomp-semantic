@@ -34,7 +34,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         if (g_main_file_still_loading != 0) {
             break;
         }
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
         LoadClut(image.clut, image.cx, image.cy);
         render = level->render_index;

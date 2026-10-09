@@ -398,7 +398,7 @@ extern s32 g_wldcore_screen_fade_box_1_priority;
 void wldcore_gfx_draw_world_frame_with_map(void);
 s32 wldcore_fade_step_screen(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
-void wldcore_gfx_draw_projected_map_tiles(s32 arg);
+void wldcore_gfx_draw_projected_map_tiles(GsOT* ot);
 void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsOT* ot);
 void wldcore_gfx_draw_context_value_display(GsOT* ot);
 void wldcore_gfx_draw_display_object_sprite(wldcore_display_object_t* object, GsOT* ot);
@@ -1636,7 +1636,7 @@ typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
- * world_gs_sortsprite (0x800e0480). */
+ * GsSortSprite (0x800e0480). */
 extern GsSPRITE g_wldcore_menu_indicator_sprite;
 extern s32 g_wldcore_menu_result;
 extern s32 g_wldcore_menu_stack_depth;

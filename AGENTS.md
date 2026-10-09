@@ -11,8 +11,11 @@ Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
 repository source. Keep public SDK entry-point names, use `include/psx/`, and
 put one reconstructed function per file under `src/psyq/<library>/`. Register
 it in the original module's `target/` configuration with an explicit `source:`
-path. Existing LIBGS, LIBPRESS and Suzuki functions stay in their current
-module directories unless a separate change moves them coherently.
+path. A routine or global with no established SDK name is `psyq_<lib>_…` or
+`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
+`src/psyq/libpress/`. The Suzuki sound driver is in `src/main/` under `main_`
+and `Suzuki` names, apart from its four heap routines in `src/psyq/suzuki/`;
+it stays there unless a separate change moves it coherently.
 
 Library C has the same byte-exact requirements as game C. Every completed
 function must match all original bytes; unmatched drafts stay in ignored
