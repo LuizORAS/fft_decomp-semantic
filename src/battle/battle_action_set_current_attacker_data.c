@@ -3,8 +3,8 @@
 
 void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     battle_stats_t* target;
-    s32 x;
-    s32 y;
+    u8 x;
+    u8 y;
 
     if (unit->job_id == JOB_ID_MIME) {
         return;
@@ -15,17 +15,13 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
         x = target->x;
         y = target->position.bits.y;
     } else {
-        /* The target reads only the low byte (lbu) of the s16 target
-         * coordinates here. */
-        x = *(u8*)&unit->action_target_x;
-        y = *(u8*)&unit->action_target_y;
+        /* Only the low byte of the s16 target coordinates is read. */
+        x = unit->action_target_x;
+        y = unit->action_target_y;
     }
     g_battle_action_current_attacker.target_delta_x = x - unit->x;
     g_battle_action_current_attacker.target_delta_y = y - unit->position.bits.y;
-    /* Read through a cast pointer, not position.raw: GCC 2.6.3 assumes a
-     * struct-member load cannot alias the scalar global stores above and
-     * hoists it past them; the target keeps source order. */
-    g_battle_action_current_attacker.facing = (*(u16*)&unit->position >> 8) & 0xF;
+    g_battle_action_current_attacker.facing = unit->position.bits.facing;
     g_battle_action_current_attacker.team = unit->team_flags & BATTLE_TEAM_MASK;
     g_battle_action_current_attacker.right_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     g_battle_action_current_attacker.left_hand_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];

@@ -27,8 +27,8 @@ void battle_script_execute_event(void) {
     u8* effect_cursor;
     s32 finish_operation;
     s16 first_halfword;
-    s32 remove_unit_misc_id;
-    s32 reset_graphic_misc_id;
+    s16 remove_unit_misc_id;
+    s16 reset_graphic_misc_id;
     s16 shadow_misc_id;
     s16 evtchr_palette_misc_id;
     s16 thrown_item_misc_id;
@@ -36,7 +36,7 @@ void battle_script_execute_event(void) {
     s16 arrow_shooter_misc_id;
     s32 ghost_misc_id;
     s32 region_misc_id;
-    s32 draw_misc_id;
+    s16 draw_misc_id;
     s32 date_month;
     battle_stats_t* added_unit;
     s32 arrow_shooter_battle_id;
@@ -257,7 +257,7 @@ restart_script:
                 battle_script_warp_unit_display_to_paired_unit(operand_1);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
-                draw_misc_id = (s16)battle_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
+                draw_misc_id = battle_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
                 if (draw_misc_id != EVENT_MISC_ID_NONE) {
                     battle_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(draw_misc_id), 0);
@@ -715,7 +715,7 @@ restart_script:
         }
         /* ---- Adding and removing units ---- */
         else if (opcode == EVENT_OPCODE_REMOVE_UNIT) {
-            remove_unit_misc_id = (s16)battle_script_get_misc_id(first_halfword);
+            remove_unit_misc_id = battle_script_get_misc_id(first_halfword);
             if (remove_unit_misc_id != EVENT_MISC_ID_NONE) {
                 work_index = remove_unit_misc_id;
                 while (battle_unit_is_moving(work_index) != 0) {
@@ -730,7 +730,7 @@ restart_script:
                 }
             }
         } else if (opcode == EVENT_OPCODE_DRAW) {
-            draw_misc_id = (s16)battle_script_get_misc_id(first_halfword);
+            draw_misc_id = battle_script_get_misc_id(first_halfword);
             if (draw_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(draw_misc_id);
                 if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
@@ -741,7 +741,7 @@ restart_script:
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
-            reset_graphic_misc_id = (s16)battle_script_get_misc_id(first_halfword);
+            reset_graphic_misc_id = battle_script_get_misc_id(first_halfword);
             if (reset_graphic_misc_id != EVENT_MISC_ID_NONE) {
                 battle_gfx_reset_unit_graphic_trigger(reset_graphic_misc_id);
             }

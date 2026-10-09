@@ -2,9 +2,7 @@
 
 void battle_formula_apply_attack_up_and_martial_arts(void) {
     if (g_battle_action_attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
-        s16* xa = (s16*)&g_battle_action_current_ability.xa;
-
-        *xa = *xa * 4 / 3;
+        g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 4 / 3;
     }
 
     {
@@ -14,7 +12,7 @@ void battle_formula_apply_attack_up_and_martial_arts(void) {
         u8 has_martial_arts = attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS;
 
         if (has_martial_arts && weapon_type == ITEM_TYPE_UNARMED) {
-            g_battle_action_current_ability.xa = (s16)g_battle_action_current_ability.xa * 3 / 2;
+            g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 3 / 2;
         }
     }
 }

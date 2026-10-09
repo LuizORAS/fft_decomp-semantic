@@ -10,10 +10,12 @@ s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
     if (unit->attributes[UNIT_ATTRIBUTE_SPEED] == 0) {
         return 0;
     }
-    if ((*(u16*)&unit->status_sets.current[0]
-            & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
-                | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_TREASURE)))
-        != 0) {
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
         return 0;
     }
     if (battle_ai_is_status_active_through_delay(limit, unit, BATTLE_STATUS_ID_STOP) != 0) {

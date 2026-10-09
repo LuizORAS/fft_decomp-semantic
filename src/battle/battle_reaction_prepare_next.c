@@ -21,7 +21,7 @@ enum {
  * pointer in its own register and stores through it rather than through the
  * unit.
  */
-s32 battle_reaction_prepare_next(u16* out_ability) {
+s32 battle_reaction_prepare_next(s16* out_ability) {
     battle_stats_t* unit;
     u8* action;
     s32 i;

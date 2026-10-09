@@ -11,13 +11,9 @@ void battle_formula_init_weapon_xa_ya(void) {
     }
 
     if (weapon_type == ITEM_TYPE_UNARMED) {
-        s16* ya = (s16*)&g_battle_action_current_ability.ya;
-        s32 value;
-
-        value = (s16)g_battle_action_current_ability.xa * g_battle_action_attacker->brave / 100;
-        *ya = value;
-        if ((s16)value == 0) {
-            *ya = value + 1;
+        g_battle_action_current_ability.ya = g_battle_action_current_ability.xa * g_battle_action_attacker->brave / 100;
+        if (g_battle_action_current_ability.ya == 0) {
+            g_battle_action_current_ability.ya++;
         }
     } else {
         g_battle_action_current_ability.ya = g_battle_action_current_ability.weapon_data.power;

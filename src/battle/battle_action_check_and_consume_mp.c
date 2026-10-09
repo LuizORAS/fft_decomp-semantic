@@ -8,12 +8,11 @@
  * Preview skips only subtraction; earlier bookkeeping still runs.
  */
 s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
-    u16 ability_id;
+    s16 ability_id;
     u8 menu;
     s32 result;
-    u32 cost;
+    u8 cost;
     s16 mp;
-    s16 signed_ability;
     ability_secondary_data_t* ability;
 
     ability_id = unit->last_ability_id;
@@ -29,15 +28,13 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
         return result + 6;
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
-        signed_ability = ability_id;
-        if (signed_ability != 0 && signed_ability != ABILITY_ID_FROG_ATTACK
-            && signed_ability != ABILITY_ID_BLACK_MAGIC_FROG)
+        if (ability_id != 0 && ability_id != ABILITY_ID_FROG_ATTACK && ability_id != ABILITY_ID_BLACK_MAGIC_FROG)
             return 5;
         if (menu == ACTION_MENU_TYPE_CHARGE)
             return 5;
     }
-    if (ability_id < ABILITY_ID_ITEM_FIRST) {
-        ability = &g_main_ability_range_data[(s16)ability_id];
+    if (ability_id >= 0 && ability_id < ABILITY_ID_ITEM_FIRST) {
+        ability = &g_main_ability_range_data[ability_id];
         if ((menu == ACTION_MENU_TYPE_DEFAULT || menu == ACTION_MENU_TYPE_MONSTER)
             && (ability->flags_3 & ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE)
             && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
@@ -51,7 +48,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
             /* A signed member view retains the target store-before-load order;
              * casting the unsigned value hoists the MP load and loses a nop. */
             mp = unit->mp;
-            if (mp < (s32)cost)
+            if (mp < cost)
                 return 3;
             if (g_battle_action_state != BATTLE_ACTION_STATE_PREVIEW)
                 unit->mp = mp - cost;

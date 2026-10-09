@@ -30,7 +30,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         s32 battle_id = i + slot_start;
         battle_stats_t* unit = &g_battle_unit_stats[battle_id];
         u8 sprite;
-        s32 identity;
+        u32 identity;
 
         unit->misc_unit_id = battle_id;
         if (g_main_unit_deployed_coords[i].party_id != 0xff) {
@@ -43,7 +43,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
             } else {
                 sprite = main_unit_calculate_palette_spritesheet(unit, &palette);
                 identity = unit->character_identity;
-                if ((identity & 0xff) == 0 || (u32)(identity & 0xff) >= 4) {
+                if ((identity & 0xff) == 0 || (identity & 0xff) >= 4) {
                     identity = next_generated_unit_id;
                     next_generated_unit_id += slot_step;
                 }

@@ -44,10 +44,8 @@ s32 battle_move_start_next_post_movement_step(void) {
         battle_unit_store_animation_facing_movement_data(animation, source->facing, source);
         if (item == -1) {
             stats = source->battle_data;
-            /* The target reads 0x1ba as a halfword for this test; the u8
-             * field access emits lbu. */
-            if ((*(u16*)&stats->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)
-                == BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
+            if (!(stats->initial_team_flags & BATTLE_TEAM_MASK)
+                && (stats->initial_team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)) {
                 battle_menu_init_system_function(
                     BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, stats->misc_unit_id, stats->misc_unit_id, 0, 1);
             } else {
@@ -66,8 +64,8 @@ s32 battle_move_start_next_post_movement_step(void) {
                 battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE,
                     source->battle_data->misc_unit_id, source->battle_data->misc_unit_id, 0, 0);
             }
-            if ((*(u16*)&source->battle_data->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)
-                != BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
+            if ((source->battle_data->initial_team_flags & BATTLE_TEAM_MASK)
+                || !(source->battle_data->initial_team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)) {
                 battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_TAKE_TREASURE);
             }
         }

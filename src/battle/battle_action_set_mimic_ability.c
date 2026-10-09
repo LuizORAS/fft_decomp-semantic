@@ -39,7 +39,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     menu_type = g_main_action_menu_types_by_skillset[current->skillset];
     /* The target loads the ability id signed (lh). */
-    ability_id = (s16)g_battle_action_current_attacker.action.ability_id;
+    ability_id = g_battle_action_current_attacker.action.ability_id;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_ARITHMETICKS
         || menu_type == ACTION_MENU_TYPE_MONSTER) {
         if (g_main_ability_range_data[ability_id].flags_3 & ABILITY_SECONDARY_FLAG_3_CANNOT_MIMIC) {

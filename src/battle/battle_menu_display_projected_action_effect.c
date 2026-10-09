@@ -50,6 +50,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
     u16* digits_x;
     u16* label_0c;
     battle_action_data_t* action;
+    u8 target_id;
 
     extra = 0;
     show_empty = 0;
@@ -70,7 +71,8 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
      * (from kernel RAM) before the null test. */
     action = g_battle_menu_preview_target_action;
     g_battle_menu_active_turn_banner.projected_hit_percent = action->attack_accuracy;
-    if ((u8)g_battle_preview_target_unit_id == 0xff || action == 0) {
+    target_id = g_battle_preview_target_unit_id;
+    if (target_id == 0xff || action == 0) {
         g_battle_menu_projected_value_panel.state = 2;
         g_battle_menu_projected_value_panel.hit_percent_kind = 2;
         return;

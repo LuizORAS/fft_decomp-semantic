@@ -21,7 +21,6 @@ s32 battle_ai_simulate_action_and_score(void) {
     s32 weight_offset;
     s32 weight;
     s32 score;
-    u32 product;
     u32 below_cost;
 
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.action_simulation_phase) {
@@ -244,18 +243,17 @@ score_state:
                 weight_offset /= unit->max_mp;
                 if (below_cost)
                     weight_offset = (u32)weight_offset >> 1;
-                product = weight_offset * ai->unit_decisions[unit_index].mp_ability_mod;
-                weight_offset = (s32)product / 4;
+                weight_offset = weight_offset * ai->unit_decisions[unit_index].mp_ability_mod / 4;
                 score += weight_offset;
             }
             {
-                s32 golem;
+                u32 golem;
 
                 weight_offset = g_battle_team_golem[(unit->team_flags >> 4) & 3];
                 golem = weight_offset;
                 weight_offset <<= 7;
                 score += weight_offset / ai->present_unit_average_max_hp;
-                if ((u32)golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
+                if (golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
                     score--;
             }
             if (ai->unit_decisions[unit_index].enemy_flag)

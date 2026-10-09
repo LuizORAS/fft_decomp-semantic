@@ -29,7 +29,7 @@ s32 battle_map_load_mesh_variant(s32 palette_mode) {
                 state = battle_script_get_variable(g_battle_map_gns_records[i].script_variable_id) & 0xfff;
                 state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                 state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
-                if ((s16)battle_map_is_gns_record_matching_state(g_battle_map_gns_records[i].map_state_comparison,
+                if (battle_map_is_gns_record_matching_state(g_battle_map_gns_records[i].map_state_comparison,
                         g_battle_map_gns_records[i].map_state, state)) {
                     g_battle_map_selected_mesh_record = g_battle_map_gns_records[i];
                 }

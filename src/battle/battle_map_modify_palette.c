@@ -89,7 +89,8 @@ void battle_map_modify_palette(command, amount, bank, row_index, all_colors, red
                     green_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0;
                     blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00;
                     red_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
-                    gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 6;
+                    gray = red_bits * 2 + (green_bits >> 5) * 3 + (blue_bits >> 10);
+                    gray /= 6;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -103,7 +104,8 @@ void battle_map_modify_palette(command, amount, bank, row_index, all_colors, red
                     green_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x3e0;
                     blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x7c00;
                     red_bits = g_battle_map_palette_state.banks[bank].packed_colors[i] & 0x1f;
-                    gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 12;
+                    gray = red_bits * 2 + (green_bits >> 5) * 3 + (blue_bits >> 10);
+                    gray /= 12;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -233,7 +235,8 @@ void battle_map_modify_palette(command, amount, bank, row_index, all_colors, red
                     green_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0;
                     blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00;
                     red_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
-                    gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 6;
+                    gray = red_bits * 2 + (green_bits >> 5) * 3 + (blue_bits >> 10);
+                    gray /= 6;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -247,7 +250,8 @@ void battle_map_modify_palette(command, amount, bank, row_index, all_colors, red
                     green_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x3e0;
                     blue_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x7c00;
                     red_bits = g_battle_map_palette_state.banks[bank].packed_colors[row_index * 16 + i] & 0x1f;
-                    gray = (red_bits * 2 + (s32)(green_bits >> 5) * 3 + (s32)(blue_bits >> 10)) / 12;
+                    gray = red_bits * 2 + (green_bits >> 5) * 3 + (blue_bits >> 10);
+                    gray /= 12;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;

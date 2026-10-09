@@ -6,15 +6,13 @@
  *
  * A Mime's weapons are cleared first. Normal actions save X/Y, elevation,
  * and facing; reactions restore the 20 saved command bytes at 0x16e.
- * The facing read goes through a raw halfword so the lhu stays below the
- * preceding stores (struct-member loads hoist above scalar-global stores).
  */
 void battle_action_store_acting_unit_data(battle_stats_t* unit) {
     if (unit->job_id == JOB_ID_MIME) {
         unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE; /* right hand */
         unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;  /* left hand */
     } else if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
-        g_battle_action_current_attacker.facing = (*(u16*)&unit->position >> 8) & 0xF;
+        g_battle_action_current_attacker.facing = unit->position.bits.facing;
     }
 
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {

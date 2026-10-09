@@ -16,7 +16,7 @@ void battle_formula_apply_status_to_action(void) {
     s32 selected_status;
     s32 byte;
     s32 mask;
-    s32 any;
+    u8 any;
     battle_action_data_t* action;
 
     type = g_battle_action_current_ability.status_infliction.type;
@@ -84,7 +84,7 @@ void battle_formula_apply_status_to_action(void) {
         status++;
     } while (status < BATTLE_STATUS_BYTE_COUNT);
 
-    if ((u8)any == 0 || battle_status_modify_inflictions(0) == 0) {
+    if (any == 0 || battle_status_modify_inflictions(0) == 0) {
         battle_formula_force_attack_miss();
         return;
     }

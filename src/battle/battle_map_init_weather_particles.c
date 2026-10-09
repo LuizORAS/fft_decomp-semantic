@@ -15,6 +15,7 @@
 void battle_map_init_weather_particles(s32 command) {
     battle_weather_sprite_rects_t rects;
     s16 sprite;
+    s16 tile;
     u32 i;
     u32 j;
     s16 surface_y;
@@ -99,10 +100,9 @@ void battle_map_init_weather_particles(s32 command) {
         g_battle_map_tile_data_ptr = g_battle_map_tile_data;
         for (i = 0; i < g_battle_map_tile_width; i++) {
             for (j = 0; j < g_battle_map_tile_depth; j++) {
-                surface_y = -(
-                    (g_battle_map_tile_data_ptr[(s16)(i + j * g_battle_map_tile_width)].height
-                        + (g_battle_map_tile_data_ptr[(s16)(i + j * g_battle_map_tile_width)].depth_half_height.value
-                            >> 5))
+                tile = i + j * g_battle_map_tile_width;
+                surface_y = -((g_battle_map_tile_data_ptr[tile].height
+                                  + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                     * 12);
                 if (g_battle_map_lowest_surface_y < surface_y) {
                     g_battle_map_lowest_surface_y = surface_y;

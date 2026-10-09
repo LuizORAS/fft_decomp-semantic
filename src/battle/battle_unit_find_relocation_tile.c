@@ -95,7 +95,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
                             depth = tile->depth_half_height.value;
-                            if ((s32)(depth >> 5) >= 3) {
+                            if (tile->depth_half_height.bits.depth >= 3) {
                                 continue;
                             }
                             height = depth & MAP_TILE_HALF_HEIGHT_MASK;

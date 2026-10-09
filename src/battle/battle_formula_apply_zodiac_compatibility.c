@@ -63,32 +63,24 @@ void battle_formula_apply_zodiac_compatibility(void) {
         }
     }
 
-    {
-        s16* slot = (s16*)&g_battle_action_current_ability.xa;
-
-        xa = *slot;
-        product = xa * 25;
-        switch (compatibility) {
-        case ZODIAC_COMPATIBILITY_GOOD:
-            *slot = xa + product / 100;
-            break;
-        case ZODIAC_COMPATIBILITY_BEST:
-            *slot = xa + product / 50;
-            break;
-        case ZODIAC_COMPATIBILITY_BAD:
-            *slot = xa - product / 100;
-            break;
-        case ZODIAC_COMPATIBILITY_WORST:
-            *slot = xa - product / 50;
-            break;
-        }
+    xa = g_battle_action_current_ability.xa;
+    product = xa * 25;
+    switch (compatibility) {
+    case ZODIAC_COMPATIBILITY_GOOD:
+        g_battle_action_current_ability.xa = xa + product / 100;
+        break;
+    case ZODIAC_COMPATIBILITY_BEST:
+        g_battle_action_current_ability.xa = xa + product / 50;
+        break;
+    case ZODIAC_COMPATIBILITY_BAD:
+        g_battle_action_current_ability.xa = xa - product / 100;
+        break;
+    case ZODIAC_COMPATIBILITY_WORST:
+        g_battle_action_current_ability.xa = xa - product / 50;
+        break;
     }
 
-    {
-        s16* slot = (s16*)&g_battle_action_current_ability.xa;
-
-        if (*slot <= 0) {
-            *slot = 1;
-        }
+    if (g_battle_action_current_ability.xa <= 0) {
+        g_battle_action_current_ability.xa = 1;
     }
 }

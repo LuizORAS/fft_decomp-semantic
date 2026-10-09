@@ -13,10 +13,12 @@ s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit) {
     if (speed == 0) {
         return 0x7FFFFFFF;
     }
-    if ((*(u16*)&unit->status_sets.current[0]
-            & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
-                | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_TREASURE)))
-        != 0) {
+    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
         return 0x7FFFFFFF;
     }
     if ((ai->unit_decisions[unit->entd_slot].targeting_flags_2 >> 5) & (BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE >> 5)) {

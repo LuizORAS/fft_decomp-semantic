@@ -10,9 +10,7 @@
  * keeps the table index in its own s16 pseudo, so GCC emits the target's fresh
  * `addiu v1,-0x170` on the sign-extended halfword instead of reusing the
  * masked `id + 0xfe90` sum the range test already holds (the two differ only
- * above bit 15); spelled as one expression it is one instruction short. The
- * `+ 0x10000` in the range test forces that sum into a register, matching the
- * target's hoisted `li t0,0xfe90`.
+ * above bit 15); spelled as one expression it is one instruction short.
  */
 s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) {
     battle_stats_t* unit;
@@ -43,7 +41,7 @@ s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) 
         return 0;
     }
     for (i = 0; i < count; i++) {
-        if ((u16)(abilities[i] - ABILITY_ID_ITEM_FIRST + 0x10000) < ABILITY_ID_THROW_FIRST - ABILITY_ID_ITEM_FIRST) {
+        if (abilities[i] >= ABILITY_ID_ITEM_FIRST && abilities[i] < ABILITY_ID_THROW_FIRST) {
             table = g_main_item_ability_item_ids;
             item_index = abilities[i];
             item_index = item_index - ABILITY_ID_ITEM_FIRST;

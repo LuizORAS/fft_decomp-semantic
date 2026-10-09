@@ -1,25 +1,19 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Offsets of the point inside its 28-unit tile along X and Z. */
-#define TILE_OFFSET_X ((s16)(coords[0] % 28))
-#define TILE_OFFSET_Z ((s16)(coords[2] % 28))
-/* Surface height for lhs slope rising (UP) or falling (DOWN) across the tile. */
+/* Surface height for a slope rising (UP) or falling (DOWN) across the tile. */
 #define SLOPE_PRODUCT(f) ((f) * (half * 12))
 #define SLOPE_UP(f)      (base - SLOPE_PRODUCT(f) / 28)
 #define SLOPE_DOWN(f)    (base - (half * 12 - SLOPE_PRODUCT(f) / 28))
 
 /*
- * Return the negated terrain height, in screen units, under lhs point.
+ * Return the negated terrain height, in screen units, under a point.
  *
  * coords[0] and coords[2] are the X and Z positions (tile index * 28 + offset). A tile without a
  * slope half-height, or with an unrecognised slope type, yields
  * -(height * 12); the recognised types interpolate half * 12 across the tile
- * along X, Z, or whichever of the two the corner type selects.
- *
- * The two-axis comparands must be the lhs/rhs variables while the offsets
- * used only by the formulas stay expressions: that split reproduces the
- * target's register allocation.
+ * along X, Z, or whichever of the two the corner type selects. x and z are
+ * the offsets of the point inside its 28-unit tile.
  */
 s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     s16 tile_pos[2];
@@ -27,6 +21,8 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     s32 half;
     s32 base;
     s16 result;
+    s16 x;
+    s16 z;
     s32 lhs;
     s32 rhs;
 
@@ -39,20 +35,26 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     if (half != 0) {
         switch (tile->slope_type) {
         case MAP_SLOPE_EDGE_EAST:
-            result = SLOPE_UP(TILE_OFFSET_X);
+            x = coords[0] % 28;
+            result = SLOPE_UP(x);
             break;
         case MAP_SLOPE_EDGE_WEST:
-            result = SLOPE_DOWN(TILE_OFFSET_X);
+            x = coords[0] % 28;
+            result = SLOPE_DOWN(x);
             break;
         case MAP_SLOPE_EDGE_SOUTH:
-            result = SLOPE_DOWN(TILE_OFFSET_Z);
+            z = coords[2] % 28;
+            result = SLOPE_DOWN(z);
             break;
         case MAP_SLOPE_EDGE_NORTH:
-            result = SLOPE_UP(TILE_OFFSET_Z);
+            z = coords[2] % 28;
+            result = SLOPE_UP(z);
             break;
         case MAP_SLOPE_LOW_CORNER_NORTH_EAST:
-            lhs = TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = x;
+            rhs = z;
             if (lhs < rhs) {
                 result = SLOPE_UP(lhs);
             } else {
@@ -60,35 +62,43 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_LOW_CORNER_SOUTH_EAST:
-            lhs = TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = x;
+            rhs = 28 - z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
                 result = SLOPE_UP(lhs);
             }
             break;
         case MAP_SLOPE_LOW_CORNER_SOUTH_WEST:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = 28 - x;
+            rhs = 28 - z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
         case MAP_SLOPE_LOW_CORNER_NORTH_WEST:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = 28 - x;
+            rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(rhs);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_NORTH_EAST:
-            lhs = TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = x;
+            rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(lhs);
             } else {
@@ -96,28 +106,34 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST:
-            lhs = TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = x;
+            rhs = 28 - z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(lhs);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = 28 - x;
+            rhs = 28 - z;
             if (lhs < rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_NORTH_WEST:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+            x = coords[0] % 28;
+            z = coords[2] % 28;
+            lhs = 28 - x;
+            rhs = z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             } else {
                 result = SLOPE_UP(rhs);
             }

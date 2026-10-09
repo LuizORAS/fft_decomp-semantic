@@ -19,17 +19,17 @@ void battle_camera_advance_effect_tracks(s16 frame) {
         switch (index / 0x10000) {
         case 0:
             battle_effect_copy_svector(g_battle_effect_timeline->main.position[k], &position);
-            battle_camera_execute_angle_command((s16)g_battle_effect_timeline->main.selector[k], keyframe / 0x10000,
-                (keyframe & 0xffff) - frame, &position);
+            battle_camera_execute_angle_command(
+                g_battle_effect_timeline->main.selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &position);
             break;
         case 1:
             battle_effect_copy_svector(g_battle_effect_timeline->position[k], &position);
             battle_camera_execute_angle_command(
-                (s16)g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &position);
+                g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &position);
             break;
         case 2:
             battle_effect_copy_svector(g_battle_effect_timeline->cleanup.position[k], &position);
-            battle_camera_execute_angle_command((s16)g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
+            battle_camera_execute_angle_command(g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
                 (keyframe & 0xffff) - frame, &position);
             break;
         }
@@ -40,18 +40,18 @@ void battle_camera_advance_effect_tracks(s16 frame) {
         switch (index / 0x10000) {
         case 0:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->main.target[k], &vector);
-            battle_camera_execute_position_command((s16)g_battle_effect_timeline->main.selector[k], keyframe / 0x10000,
-                (keyframe & 0xffff) - frame, &vector);
+            battle_camera_execute_position_command(
+                g_battle_effect_timeline->main.selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
             break;
         case 1:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->target[k], &vector);
             battle_camera_execute_position_command(
-                (s16)g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
+                g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
             break;
         case 2:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->cleanup.target[k], &vector);
-            battle_camera_execute_position_command((s16)g_battle_effect_timeline->cleanup.selector[k],
-                keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
+            battle_camera_execute_position_command(g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
+                (keyframe & 0xffff) - frame, &vector);
             break;
         }
     }
@@ -61,17 +61,17 @@ void battle_camera_advance_effect_tracks(s16 frame) {
         switch (index / 0x10000) {
         case 0:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->main.zoom[k], &vector);
-            battle_camera_execute_zoom_command((s16)g_battle_effect_timeline->main.selector[k], keyframe / 0x10000,
-                (keyframe & 0xffff) - frame, &vector);
+            battle_camera_execute_zoom_command(
+                g_battle_effect_timeline->main.selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
             break;
         case 1:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->zoom[k], &vector);
             battle_camera_execute_zoom_command(
-                (s16)g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
+                g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &vector);
             break;
         case 2:
             battle_effect_convert_svector_to_vector(g_battle_effect_timeline->cleanup.zoom[k], &vector);
-            battle_camera_execute_zoom_command((s16)g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
+            battle_camera_execute_zoom_command(g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
                 (keyframe & 0xffff) - frame, &vector);
             break;
         }

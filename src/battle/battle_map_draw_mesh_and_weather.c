@@ -244,7 +244,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 * 12);
             if (g_battle_render_buffers[0].ft3[i].y0 >= 0x119) {
                 if (g_battle_map_weather_scale.vy != 0) {
-                    g_battle_map_weather_particles[i].y = (s32)0xFFF00000 / g_battle_map_weather_scale.vy;
+                    g_battle_map_weather_particles[i].y = -0x100000 / g_battle_map_weather_scale.vy;
                 }
                 g_battle_map_weather_particles[i].fall_speed = 0;
                 sprite = rand() % 3;
@@ -345,7 +345,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                     && g_battle_render_buffers[0].ft3[i].y0 < 0)) {
                 if (g_battle_map_weather_scale.vy != 0) {
                     if (g_battle_map_command_0x96_frame < g_battle_map_command_0x96_duration / 8) {
-                        g_battle_map_weather_particles[i].y = (s32)0xFFF00000 / g_battle_map_weather_scale.vy;
+                        g_battle_map_weather_particles[i].y = -0x100000 / g_battle_map_weather_scale.vy;
                     }
                     if (g_battle_map_command_0x96_duration / 8 < g_battle_map_command_0x96_frame) {
                         g_battle_map_weather_particles[i].y = 0x30000 / g_battle_map_weather_scale.vy;

@@ -61,11 +61,11 @@ movement:
         do {
             u32 status_flags
                 = g_battle_unit_stats[target]
-                      .status_sets.current[(status = ((u8*)statuses.ids)[g_battle_ai_recovery_status_index]) >> 3];
+                      .status_sets.current[(status = statuses.ids[g_battle_ai_recovery_status_index]) >> 3];
             if (status_flags & (0x80 >> (status & 7))) {
             cancel_status:
-                result = battle_ai_evaluate_status_cancellation(
-                    target, ((u8*)statuses.ids)[g_battle_ai_recovery_status_index]);
+                result
+                    = battle_ai_evaluate_status_cancellation(target, statuses.ids[g_battle_ai_recovery_status_index]);
                 if (result == -1) {
                     ai->action_selection_phase = 7;
                     return -1;

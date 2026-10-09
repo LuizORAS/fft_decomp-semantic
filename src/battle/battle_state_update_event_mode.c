@@ -4,14 +4,12 @@
 
 /* Advances the live-map event state and submits its active screen fade.
  *
- * The target loads the shared u16 fade cell with `lh`; the local signed view
- * preserves that use-specific access. Keeping the loaded intensity and the
- * clamped display level as separate s16 values retains the target's two moves
- * before its unsigned 0x100 comparison. The otherwise-unused 24-byte local
- * preserves the original 64-byte frame. */
+ * Keeping the loaded intensity and the clamped display level as separate
+ * values retains the target's two moves before its unsigned 0x100 comparison.
+ * The otherwise-unused 24-byte local preserves the original 64-byte frame. */
 void battle_state_update_event_mode(void) {
     s16 intensity;
-    s16 level;
+    u16 level;
     char unused[24];
 
     battle_gfx_update_all_unit_rotation_and_vectors();
@@ -51,10 +49,10 @@ void battle_state_update_event_mode(void) {
         break;
     }
 
-    if (*(s16*)&g_battle_screen_fade_intensity != 0) {
-        intensity = *(s16*)&g_battle_screen_fade_intensity;
+    if (g_battle_screen_fade_intensity != 0) {
+        intensity = g_battle_screen_fade_intensity;
         level = intensity;
-        if ((u32)level >= 0x100) {
+        if (level >= 0x100) {
             level = 0xff;
         }
         g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].r0 = level;

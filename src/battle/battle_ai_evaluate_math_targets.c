@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 
-/* Copied as ten byte-aligned bytes from 0x80193dd4; the target uses signed
- * byte loads for the final two bytes and unsigned loads while scanning. */
+/* Copied as ten byte-aligned bytes from 0x80193dd4. */
 typedef struct battle_ai_math_ability_id_list {
-    s8 ability_ids[10];
+    u8 ability_ids[10];
 } battle_ai_math_ability_id_list_t;
 
 extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
@@ -18,7 +17,7 @@ extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
 s32 battle_ai_evaluate_math_targets(void) {
     battle_ai_math_ability_id_list_t special_abilities = g_battle_math_extra_known_bit_ids;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
-    u8* special;
+    s32 i;
     s32 unit;
 
     if (g_battle_ai_data_base.resume_pending)
@@ -42,14 +41,12 @@ s32 battle_ai_evaluate_math_targets(void) {
             if (!battle_ai_load_known_ability_flag(
                     ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index))
                 continue;
-            /* The extra known-bit call's result is ignored. The loop uses
-             * the target's signed address comparison (SLT). */
-            special = (u8*)special_abilities.ability_ids;
-            do {
-                if (ai->math_ability_id == *special++)
+            /* The extra known-bit call's result is ignored. */
+            for (i = 0; i < 10; i++) {
+                if (ai->math_ability_id == special_abilities.ability_ids[i])
                     battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);
-            } while ((s32)special < (s32)&special_abilities.ability_ids[10]);
+            }
             battle_ai_transfer_halfword_values(
                 &ai->considered_ability.ai_flags, g_main_ability_data[ai->math_ability_id].ai_flags.halfwords, 4);
             battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,

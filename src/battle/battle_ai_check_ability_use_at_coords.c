@@ -11,6 +11,7 @@ s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
     s32 i;
     s32 dx;
     s32 dy;
+    s32 height;
     battle_stats_t* unit;
 
     if (g_battle_ai_data_base.water_penalty) {
@@ -41,7 +42,8 @@ s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
             if (dy < 0)
                 dy = -dy;
             if (dx + dy < 2) {
-                if ((u32)(battle_ai_calculate_height_difference_between_units(coords, unit) + 2) < 5)
+                height = battle_ai_calculate_height_difference_between_units(coords, unit);
+                if (height >= -2 && height <= 2)
                     return 1;
             }
         }

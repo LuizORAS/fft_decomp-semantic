@@ -14,6 +14,7 @@ void battle_move_start_unit_step_at_climb_speed(
     u8* step;
     s32 step_count;
     battle_unit_misc_data_t* rider;
+    u8 next;
 
     step_count = unit->current_edge_height;
     step = &unit->current_path_step.value;
@@ -21,22 +22,26 @@ void battle_move_start_unit_step_at_climb_speed(
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_EAST, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_WEST, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_SOUTH, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_NORTH, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
         break;
     }
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {

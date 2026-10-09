@@ -77,9 +77,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
-                        if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
-                                state)) {
+                        if (battle_map_is_gns_record_matching_state(g_battle_map_gns_records[r].map_state_comparison,
+                                g_battle_map_gns_records[r].map_state, state)) {
                             /* No braces: a braced body's block note lengthens this loop by one
                              * luid, and loop.c then hoists the 0x48 out of the record loop. */
                             j = 0;
@@ -109,9 +108,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
-                        if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
-                                state)) {
+                        if (battle_map_is_gns_record_matching_state(g_battle_map_gns_records[r].map_state_comparison,
+                                g_battle_map_gns_records[r].map_state, state)) {
                             j = 0;
                             do
                                 g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type].load_info[j]
@@ -164,9 +162,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
-                        if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
-                                state)) {
+                        if (battle_map_is_gns_record_matching_state(g_battle_map_gns_records[r].map_state_comparison,
+                                g_battle_map_gns_records[r].map_state, state)) {
                             {
                                 s32 k;
 

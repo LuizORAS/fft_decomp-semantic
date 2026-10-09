@@ -10,8 +10,8 @@ void battle_unit_set_target_animation_from_attack_type(
     battle_action_data_t* action;
     s32 animation;
     s32 delta;
-    s32 attacker_height;
-    s32 target_height;
+    s16 attacker_height;
+    s16 target_height;
     u32 water_depth;
 
     if (attacker == target) {
@@ -35,11 +35,11 @@ void battle_unit_set_target_animation_from_attack_type(
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
-                attacker_height = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2
-                    - (u16)attacker->screen.vy;
+                attacker_height
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
                 target_height
-                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - (u16)target->screen.vy;
-                delta = (s16)attacker_height - (s16)target_height;
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+                delta = attacker_height - target_height;
                 if (delta < -0xb) {
                     animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;
                 } else {

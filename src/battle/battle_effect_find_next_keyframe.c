@@ -8,7 +8,7 @@
  * The table pointer is re-read at the bottom of the loop, which is what stops
  * loop.c from turning the indexed reads into a single advancing pointer.
  */
-s32 battle_effect_find_next_keyframe(s16 frame, u32 mask, s32* out_index, s32* out_frame) {
+s32 battle_effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame) {
     effect_timeline_t* data;
     s32 i;
 

@@ -26,8 +26,10 @@ void battle_formula_apply_poach_and_train(void) {
         && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         return;
     }
-    if (*(u16*)&target->status_sets.current[0]
-        & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD) | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+    if ((target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+        || (target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
         return;
     }
     if (target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]

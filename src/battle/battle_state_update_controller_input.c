@@ -10,7 +10,7 @@ s32 battle_state_update_controller_input(void) {
 
     g_main_input_current_buttons = PadRead(1);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
-        battle_script_filter_controller_input((u32*)&g_main_input_current_buttons);
+        battle_script_filter_controller_input(&g_main_input_current_buttons);
     }
 
     pressed = g_main_input_pressed_buttons;

@@ -16,13 +16,15 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
     party_data_t* party;
     s32 i;
     u8* status;
+    u8 identity;
 
     if (character_identity >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
         return BATTLE_CHARACTER_SLOT_SELECTOR;
     }
+    identity = character_identity;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->character_identity == (u8)character_identity) {
+        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->character_identity == identity) {
             status = unit->status_sets.current;
             if (status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)) {
@@ -37,7 +39,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->character_identity == (u8)character_identity
+        if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->character_identity == identity
             && unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
             if (unit->existence == BATTLE_UNIT_EXISTENCE_OFF_FIELD) {
                 return BATTLE_CHARACTER_SLOT_OFF_FIELD;
@@ -49,7 +51,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
     }
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         party = main_party_get_data_pointer(i);
-        if (party->party_id != PARTY_ID_NONE && party->sprite_set == (u8)character_identity) {
+        if (party->party_id != PARTY_ID_NONE && party->sprite_set == identity) {
             return BATTLE_CHARACTER_SLOT_IN_PARTY;
         }
     }

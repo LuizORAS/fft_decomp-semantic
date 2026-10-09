@@ -12,7 +12,7 @@
  * in $a1/$a2 at that call. Passing them as arguments would set $a2 twice and
  * change the scheduling of the counter-ability call's argument setup.
  */
-s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) {
+s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
     battle_stats_t* unit;
     battle_stats_t* base;

@@ -10,8 +10,8 @@ u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_
     }
     ct <<= 8;
     do {
-        u32 entry_unit = entries->unit;
-        u32 is_action = entry_unit & 0x40;
+        s32 entry_unit = entries->unit;
+        s32 is_action = entry_unit & 0x40;
         s32 entry_ct;
         entry_unit &= 0x1F;
         if (entry_unit == 0x1F)
@@ -22,7 +22,7 @@ u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_
                 return count & 0xFF;
             if (unit_index == entry_unit && is_action != 0)
                 return count & 0xFF;
-            if ((s32)entry_unit >= unit_index)
+            if (entry_unit >= unit_index)
                 return count & 0xFF;
             if (is_action == 0)
                 return count & 0xFF;

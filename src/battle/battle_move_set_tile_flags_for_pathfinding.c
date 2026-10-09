@@ -35,11 +35,11 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
                 *frontier_cell |= FRONTIER_FLAG_LOW_CORNER;
-                if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) >= 3) {
+                if (tile->depth_half_height.bits.half_height >= 3) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             } else {
-                if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) > config->jump_or_1f) {
+                if (tile->depth_half_height.bits.half_height > config->jump_or_1f) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             }

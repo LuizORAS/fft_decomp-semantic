@@ -3,7 +3,7 @@
 
 void battle_camera_update_matrices(
     MATRIX* camera_matrix, void* render_buffers, void* offset_screen_coords, VECTOR* camera_zoom) {
-    u32 result;
+    long result;
 
     g_battle_map_camera_zoom = *camera_zoom;
     memcpy(&g_battle_map_camera_rotation, render_buffers, 8);
@@ -14,7 +14,7 @@ void battle_camera_update_matrices(
     RotMatrix(render_buffers, &g_battle_map_camera_matrix);
     SetRotMatrix(camera_matrix);
     SetTransMatrix(camera_matrix);
-    RotTrans(&g_battle_camera_integer_coords, (VECTOR*)g_battle_map_camera_matrix.t, (long*)&result);
+    RotTrans(&g_battle_camera_integer_coords, (VECTOR*)g_battle_map_camera_matrix.t, &result);
     ScaleMatrix(&g_battle_map_camera_matrix, &g_battle_map_camera_zoom);
 
     *camera_matrix = g_battle_map_camera_matrix;

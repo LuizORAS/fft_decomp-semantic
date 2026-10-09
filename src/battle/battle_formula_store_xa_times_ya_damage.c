@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 void battle_formula_store_xa_times_ya_damage(void) {
-    u32 damage;
+    s16 damage;
     battle_action_data_t* action;
 
     damage = g_battle_action_current_ability.xa * g_battle_action_current_ability.ya;

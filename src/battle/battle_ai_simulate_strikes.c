@@ -21,7 +21,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     if (reaction_mode == 0 && battle_action_init_current_data(action->unit_id) != 0) {
         return;
     }
-    behavior = g_main_ability_data[(s16)action->ability_id].ai_flags.bytes;
+    behavior = g_main_ability_data[action->ability_id].ai_flags.bytes;
     if (g_battle_ai_data_base.hit_counter != 0xff) {
         self_hit = 0;
         positive = 0;
@@ -89,7 +89,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     battle_action_store_acting_unit_data(&g_battle_unit_stats[action->unit_id]);
     if (reaction_mode == 0) {
         /* Reuse the finished loop counter's low halfword for the reaction ID. */
-        while ((target_id = battle_reaction_prepare_next((u16*)&target_index)) != -1) {
+        while ((target_id = battle_reaction_prepare_next((s16*)&target_index)) != -1) {
             if (ai->unit_acts_before_me[target_id] == 0) {
                 battle_ai_simulate_strikes(
                     (battle_ai_command_action_t*)&g_battle_unit_stats[target_id].action_actor_id, 1);

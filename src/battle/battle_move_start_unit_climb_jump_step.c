@@ -19,6 +19,7 @@ void battle_move_start_unit_climb_jump_step(
     s32 height;
     s32 speed;
     s32 time;
+    u8 next;
 
     step = &unit->current_path_step.value;
     if (unit->standing_on_unit_id_plus_one != 0
@@ -40,28 +41,32 @@ void battle_move_start_unit_climb_jump_step(
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_EAST, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (*step & 3);
         unit->velocity.vx = 0xe000 / time;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_WEST, unit);
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (*step & 3);
         unit->velocity.vx = -0xe000 / time;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_SOUTH, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (*step & 3);
         unit->velocity.vz = -0xe000 / time;
         unit->velocity.vx = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_NORTH, unit);
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (*step & 3);
         unit->velocity.vz = 0xe000 / time;
         unit->velocity.vx = 0;
         break;

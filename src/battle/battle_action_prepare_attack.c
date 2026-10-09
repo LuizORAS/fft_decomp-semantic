@@ -82,7 +82,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if (multiplier < ABILITY_ID_MATH_FIRST || multiplier >= ABILITY_ID_REACTION_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
+        if (ability < 0 || ability >= ABILITY_ID_ITEM_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
@@ -156,7 +156,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
     }
     if (!skip) {
         ability = action.ability_id;
-        if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
+        if (ability < 0 || ability >= ABILITY_ID_ITEM_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);

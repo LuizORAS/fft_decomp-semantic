@@ -15,8 +15,8 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     battle_stats_t* actor;
     battle_stats_t* unit;
     map_tile_t* tile;
-    u16 type;
-    u16 multiplier;
+    s16 type;
+    s16 multiplier;
     u8* type_entry;
     u8* multiplier_entry;
     u8 type_flags;
@@ -38,8 +38,8 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     if (multiplier < ABILITY_ID_MATH_FIRST || multiplier >= ABILITY_ID_REACTION_FIRST) {
         return -1;
     }
-    type_entry = &g_main_math_rsm_ability_data[(s16)type - ABILITY_ID_MATH_FIRST];
-    multiplier_entry = &g_main_math_rsm_ability_data[(s16)multiplier - ABILITY_ID_MATH_FIRST];
+    type_entry = &g_main_math_rsm_ability_data[type - ABILITY_ID_MATH_FIRST];
+    multiplier_entry = &g_main_math_rsm_ability_data[multiplier - ABILITY_ID_MATH_FIRST];
     type_flags = *type_entry;
     multiplier_flags = *multiplier_entry;
     if (!(type_flags & CALCULATOR_ATTRIBUTE_MASK) || !(multiplier_flags & CALCULATOR_MULTIPLE_MASK)

@@ -41,7 +41,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
         return 0;
     }
-    if ((u16)(spritesheet_id - 0x60) < 0x26 && stats != 0) {
+    if (id >= 0x60 && id < 0x86 && stats != 0) {
         palette = stats->sprite_palette;
     }
     if (palette >= 6) {

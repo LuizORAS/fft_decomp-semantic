@@ -31,7 +31,7 @@ void battle_text_character_handling_thread(void) {
     u8* saved;
     s32 column;
     s32 width_override;
-    u16 cursor_y;
+    s16 cursor_y;
     s16 right;
     s16 bottom;
     u16 mark_x;
@@ -59,7 +59,7 @@ void battle_text_character_handling_thread(void) {
     u16 started;
     u16 selection;
     s32* substitution;
-    s32 event_id;
+    s16 event_id;
     s32 window_u;
     s32 half_w;
     s32 half_h;
@@ -350,12 +350,12 @@ void battle_text_character_handling_thread(void) {
     rec.line = 0;
     g_battle_text_current_line = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
-        event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+        event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
         } else {
-            s32 line_width = g_battle_text_line_widths[0] + 0x18;
-            cursor_x = rec.x + ((u32)(rec.width - line_width) >> 1);
+            u32 line_width = g_battle_text_line_widths[0] + 0x18;
+            cursor_x = rec.x + ((rec.width - line_width) >> 1);
         }
         if (cursor_x & 2) {
             cursor_x += 4 - (cursor_x & 3);
@@ -572,14 +572,14 @@ void battle_text_character_handling_thread(void) {
                 battle_thread_yield();
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
-                event_id = (s16)battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+                event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                 if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
                     cursor_x = rec.x;
                 } else {
-                    s32 line_width;
+                    u32 line_width;
                     g_battle_text_current_line++;
                     line_width = g_battle_text_line_widths[g_battle_text_current_line] + 0x18;
-                    cursor_x = rec.x + ((u32)(rec.width - line_width) >> 1);
+                    cursor_x = rec.x + ((rec.width - line_width) >> 1);
                 }
                 if (cursor_x & 3) {
                     cursor_x += 4 - (cursor_x & 3);
@@ -761,7 +761,7 @@ void battle_text_character_handling_thread(void) {
                         glyph->mode = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
                         glyph->palette = rec.color;
                     }
-                    battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
+                    battle_text_draw_glyph_with_typewriter_delay(cursor_x, cursor_y, delay);
                     if (character == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -803,7 +803,7 @@ void battle_text_character_handling_thread(void) {
                     glyph->mode = rec.box_type;
                     glyph->palette = rec.color;
                 }
-                battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
+                battle_text_draw_glyph_with_typewriter_delay(cursor_x, cursor_y, delay);
                 if (character == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

@@ -13,7 +13,7 @@ void battle_formula_apply_elemental(void) {
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
         && (element & BATTLE_ELEMENT_FIRE)) {
         action = g_battle_action_target_data;
-        g_battle_action_current_ability.xa = (s16)g_battle_action_current_ability.xa * 2;
+        g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 2;
         action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL);
         if (battle_status_modify_inflictions(0) != 0) {

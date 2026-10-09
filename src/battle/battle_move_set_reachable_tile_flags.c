@@ -66,7 +66,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if ((depth_bits == 0x60) && (config->will_drown != 0)) {
                 continue;
             }
-            if (((s32)(depth >> MAP_TILE_DEPTH_SHIFT) >= 4) && (config->will_sink != 0)) {
+            if ((tile->depth_half_height.bits.depth >= 4) && (config->will_sink != 0)) {
                 continue;
             }
             if ((surface == MAP_SURFACE_LAVA) && (config->can_pass_lava == 0)) {

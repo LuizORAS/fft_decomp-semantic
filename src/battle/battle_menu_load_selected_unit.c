@@ -35,9 +35,7 @@ void battle_menu_load_selected_unit(void) {
     g_battle_active_turn_unit.brave = unit->brave;
     g_battle_active_turn_unit.faith = unit->faith;
     /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
-    /* Direct union-member access hoists the halfword load above the faith
-     * store; keep the typed field's aliased word view. */
-    g_battle_active_turn_unit.zodiac = *(u16*)&unit->birthday >> 12;
+    g_battle_active_turn_unit.zodiac = unit->birthday.fields.zodiac;
 
     editor[0] = unit->move;
     editor[1] = unit->attributes[UNIT_ATTRIBUTE_SPEED];

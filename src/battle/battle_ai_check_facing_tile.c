@@ -8,17 +8,16 @@
  * but descents are unrestricted. Slope and depth do not affect this test.
  */
 s32 battle_ai_check_facing_tile(battle_ai_coords_t* source, battle_ai_coords_t* target) {
-    s32 x = target->bytes.x;
-    s32 width = g_battle_ai_data_base.map_max_x;
-    s32 y;
+    u8 x = target->bytes.x;
+    u8 width = g_battle_ai_data_base.map_max_x;
+    u8 y;
     map_tile_t* tile;
 
-    if (x >= (u32)width) {
+    if (x >= width) {
         return 1;
     }
     y = target->bytes.y;
-    if ((u32)y >= g_battle_ai_data_base.map_max_y
-        || (tile = &g_battle_map_tile_data[y * width + x])->flags.bits.blocked) {
+    if (y >= g_battle_ai_data_base.map_max_y || (tile = &g_battle_map_tile_data[y * width + x])->flags.bits.blocked) {
         return 1;
     }
     return tile->height

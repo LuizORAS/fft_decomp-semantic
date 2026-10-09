@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_formula_draw_out_mp_damage(void) {
-    u32 damage;
+    s16 damage;
     battle_action_data_t* action;
 
     battle_formula_calculate_katana_break_chance();

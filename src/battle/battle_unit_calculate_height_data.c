@@ -43,11 +43,11 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
 
     offset = 0;
     unit = &g_battle_unit_stats[unit_id];
-    if ((u32)unit_id < BATTLE_UNIT_SLOT_COUNT && (id = unit->entd_slot) != 0xff
-        && (*(u16*)&unit->status_sets.current[0]
-               & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL)
-                   | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_TREASURE)))
-            == 0) {
+    if (unit_id >= 0 && unit_id < BATTLE_UNIT_SLOT_COUNT && (id = unit->entd_slot) != 0xff
+        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
         flags = unit_id;
         id = unit->job_id;
         if (id < JOB_ID_CHOCOBO || id > JOB_ID_RED_CHOCOBO)

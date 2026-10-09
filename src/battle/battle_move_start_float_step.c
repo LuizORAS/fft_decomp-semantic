@@ -10,6 +10,7 @@ void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_
     u8* step;
     s32 step_count;
     s16 facing;
+    u8 next;
 
     battle_unit_dismount_rider_and_update_display(unit);
     step_count = unit->current_edge_height;
@@ -18,22 +19,26 @@ void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         facing = BATTLE_FACING_EAST;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         facing = BATTLE_FACING_WEST;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         facing = BATTLE_FACING_SOUTH;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         facing = BATTLE_FACING_NORTH;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
         break;
     }
     unit->facing = facing;

@@ -19,6 +19,7 @@ void battle_move_start_unit_climb_hop_step(
     s32 height;
     u32 animation;
     u32 word;
+    u8 next;
 
     step = &unit->current_path_step.value;
     if (unit->standing_on_unit_id_plus_one != 0
@@ -37,21 +38,24 @@ void battle_move_start_unit_climb_hop_step(
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST;
         unit->facing = BATTLE_FACING_EAST;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
         unit->facing = BATTLE_FACING_WEST;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
         unit->facing = BATTLE_FACING_SOUTH;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = -0xE000 / frames;
         break;
@@ -62,7 +66,8 @@ void battle_move_start_unit_climb_hop_step(
         __asm__ volatile("");
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
         unit->facing = BATTLE_FACING_NORTH;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = 0xE000 / frames;
         break;

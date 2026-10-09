@@ -12,7 +12,7 @@
  *
  * The conditional-expression header reads keep the entry block from caching
  * the misc-data pointer. */
-s32 battle_camera_find_active_keyframe(s16 frame, s32 mask, s32* out_index, s32* out_frame) {
+s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame) {
     s32 phase1;
     s32 spawn_delay;
     s32 phase2_delay;

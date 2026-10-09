@@ -28,7 +28,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     s32 weather;
     s32 ignore_terrain;
     u8* table;
-    u32 value;
+    u8 value;
     u8 movement_3;
     u8 team;
     u8 mount;
@@ -151,7 +151,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     if (value >= 8) {
         value = 7;
     }
-    config->jump_half = (u8)value >> 1;
+    config->jump_half = value >> 1;
     if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & 2)) {
         value = 0x1F;
     }
