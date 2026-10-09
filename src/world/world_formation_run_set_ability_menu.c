@@ -147,8 +147,8 @@ s32 world_formation_run_set_ability_menu(void) {
         }
         if (g_world_set_ability_cursor != cursor) {
             g_world_set_ability_cursor = cursor;
-            if (((u16)g_world_menu_entry_ids[cursor] >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1
-                    && (u16)g_world_menu_entry_ids[cursor] <= ABILITY_ID_MOVEMENT_JUMP_PLUS_3)
+            if ((g_world_menu_entry_ids[cursor] >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1
+                    && g_world_menu_entry_ids[cursor] <= ABILITY_ID_MOVEMENT_JUMP_PLUS_3)
                 || (u16)((u16)((world_formation_unit_ability_slots_t*)
                                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
                              ->ability_slots[g_world_set_ability_slot]

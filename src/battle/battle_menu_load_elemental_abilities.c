@@ -31,7 +31,7 @@ u16 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
             & MAP_SURFACE_MASK];
     for (i = 0; i < count; i++) {
         if (abilities[i] == terrain_ability) {
-            return (u16)terrain_ability;
+            return terrain_ability;
         }
     }
     return 0;

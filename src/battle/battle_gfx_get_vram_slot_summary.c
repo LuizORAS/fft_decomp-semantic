@@ -26,7 +26,7 @@ s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary) {
             summary[i].spritesheet_id = 0xfe;
         } else if (owner & 0x80) {
             summary[i].spritesheet_id = g_battle_gfx_spritesheet_slots[battle_unit_get_misc_data_by_misc_id(
-                                                                           (u16)g_battle_gfx_vram_slots[i].owner & 0x7f)
+                                                                           g_battle_gfx_vram_slots[i].owner & 0x7f)
                                                                            ->spritesheet_vram_slot]
                                             .spritesheet_id;
         } else {

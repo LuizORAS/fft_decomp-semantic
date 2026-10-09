@@ -18,7 +18,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     switch (selected_command) {
     case 7:
         if (g_battle_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
-            target_unit = battle_unit_get_misc_data_by_battle_id(*(u16*)&g_battle_action_learn_on_hit_unit_id);
+            target_unit = battle_unit_get_misc_data_by_battle_id(g_battle_action_learn_on_hit_unit_id);
             battle_unit_learn_used_ability(target_unit->battle_data);
         }
     case 8:

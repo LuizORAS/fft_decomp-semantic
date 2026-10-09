@@ -150,7 +150,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 battle_unit_shift_down_or_up(unit, seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_FB:
-                battle_unit_shift_forward_or_backward(unit, (s8)seq->frames[anim_index][pos++]);
+                battle_unit_shift_forward_or_backward(unit, seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_SET_SLOWDOWN:
                 state->wait_bias = (s8)seq->frames[anim_index][pos++];
@@ -219,7 +219,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_MOVE_UNIT:
                 battle_unit_shift_right_or_left(unit, seq->frames[anim_index][pos++]);
                 battle_unit_shift_down_or_up(unit, seq->frames[anim_index][pos++]);
-                battle_unit_shift_forward_or_backward(unit, (s8)seq->frames[anim_index][pos++]);
+                battle_unit_shift_forward_or_backward(unit, seq->frames[anim_index][pos++]);
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
                 pos += 3;

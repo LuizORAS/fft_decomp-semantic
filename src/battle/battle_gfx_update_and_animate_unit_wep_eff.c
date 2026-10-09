@@ -113,7 +113,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                                 if (ok == 0) {
                                     if (g_battle_gfx_vram_slots[1].owner - 0xfe >= 2) {
                                         other = battle_unit_get_misc_data_by_misc_id(
-                                            (u16)g_battle_gfx_vram_slots[1].owner & 0x1f);
+                                            g_battle_gfx_vram_slots[1].owner & 0x1f);
                                         if (other != 0) {
                                             if (other->encoded_animation & 1) {
                                                 other->animation_frame = g_battle_gfx_targeted_frame_back

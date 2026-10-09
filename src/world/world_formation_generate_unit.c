@@ -30,5 +30,5 @@ s32 world_formation_generate_unit(s16 unit_type) {
     party->movement_ability[0] = 0;
     party->movement_ability[1] = 0;
     world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
-    return world_formation_find_index_by_roster_slot((s16)roster_slot);
+    return world_formation_find_index_by_roster_slot(roster_slot);
 }

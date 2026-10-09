@@ -357,8 +357,7 @@ restart_event:
                 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xA);
             g_world_thread_contexts[operand_1].task_words[4]
                 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xC);
-            g_world_thread_contexts[operand_1].task_words[5]
-                = ((u8*)((g_world_event_script) + instruction_offset))[0xE];
+            g_world_thread_contexts[operand_1].task_words[5] = (((g_world_event_script) + instruction_offset))[0xE];
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -469,7 +468,7 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_halfword;
             g_world_event_effect_target_misc_id
-                = world_script_get_misc_id(((u8*)((g_world_event_script) + instruction_offset))[3]);
+                = world_script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
             focus_instruction = (u8*)g_world_event_script;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];

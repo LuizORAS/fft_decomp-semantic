@@ -18,7 +18,7 @@ s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_col
     if ((u16)birthday >= 0x16e) {
         birthday = 1;
     }
-    zodiac = main_unit_calculate_zodiac_symbol((u16)birthday);
+    zodiac = main_unit_calculate_zodiac_symbol(birthday);
     party_data->birthday_day = birthday;
     party_data->zodiac = (((u32)birthday & 0x100) >> 8) + (zodiac << 4);
     return party_index;

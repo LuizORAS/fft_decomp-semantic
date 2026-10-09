@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 s32 battle_effect_code_script_06_load_callback_pointer(effect_record_t* effect) {
-    u8* command = (u8*)(effect->pc + effect->script);
+    u8* command = effect->pc + effect->script;
     u32 idx = command[1] >> 2;
     g_battle_effect_callback_slots[idx] = (s32)battle_effect_get_file_pointer(*(s16*)(command + 2));
     effect->pc += 4;
