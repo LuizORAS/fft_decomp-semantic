@@ -11,9 +11,7 @@
  *
  * `item` first holds the chosen option and `selected` copies it: the target
  * compares g_world_item_action_menu_initialized against that copy after `item` is reused for the item
- * id. The zero-instruction barrier reproduces the reload of the category byte
- * after the category-view store and the early `4` compare constant, exactly
- * as in src/world/world_item_run_category_menu.c.
+ * id.
  */
 s8 world_item_run_action_menu(void) {
     s16 x;
@@ -24,7 +22,6 @@ s8 world_item_run_action_menu(void) {
     s32 item;
     s32 i;
     s32 slot;
-    u8 category;
 
     if (*(s8*)&g_world_item_action_menu_initialized == 0) {
         g_world_item_category_input_lock = 0;
@@ -153,18 +150,10 @@ s8 world_item_run_action_menu(void) {
         g_world_item_category_input_lock = 1;
         world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position, g_world_menu_scroll_offset,
             (u16*)g_world_menu_entry_ids);
-        {
-            s32 four = 4;
-
-            g_world_item_category_view = result;
-            /* The view byte aliases g_world_item_menu_category: keeps its reloads
-             * after this store, with the 4 materialised first. */
-            __asm__ volatile("" : : "r"(four) : "memory");
-            category = g_world_item_menu_category;
-            world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
-                g_world_item_menu_category != four ? (s8)(category + 1) : 7,
-                (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
-        }
+        g_world_item_menu_category = result;
+        world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_item_menu_category + 1),
+            (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
+            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
         world_menu_set_window_scale_step(10);

@@ -6,6 +6,8 @@
  * starting at *x, least significant digit first, with a minus glyph drawn
  * before the digits when the value is negative. Glyphs are 0x23 bytes apart
  * in the font block at g_world_text_glyph_bitmap_data.
+ *
+ * `digits` arrives as a full word and only its low byte is used.
  */
 void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, u16* x) {
     s32 original;

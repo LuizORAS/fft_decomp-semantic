@@ -17,14 +17,9 @@ s32 world_formation_can_scroll_slots_back(void) {
             }
             break;
         case -0x3C:
-            if (g_world_formation_selected_unit_index < 0x10) {
-                /* The target reloads the index for the inner test: cse
-                 * shares it across the dominated block otherwise. */
-                __asm__ volatile("" : : : "memory");
-                if (g_world_formation_selected_unit_index < 4) {
-                    result = 1;
-                }
-            } else {
+            if (g_world_formation_selected_unit_index >= 0x10) {
+                result = 1;
+            } else if (g_world_formation_selected_unit_index < 4) {
                 result = 1;
             }
             break;

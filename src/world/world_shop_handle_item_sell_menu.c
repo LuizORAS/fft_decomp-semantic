@@ -9,8 +9,6 @@ void world_shop_handle_item_sell_menu(void) {
     s16 x;
     s16 y;
     s32 input;
-    s32 category;
-    s32 item_list;
     s32 disabled;
     s8 result;
 
@@ -20,15 +18,9 @@ void world_shop_handle_item_sell_menu(void) {
         }
         world_thread_set_parameters(2, 0x19, 0xF832, 0);
         g_world_shop_fur_purchase_list_initialized = 1;
-        item_list = g_world_shop_id;
-        if (g_world_shop_item_category != 4) {
-            /* Forces the target's second category load; CSE otherwise reuses the first. */
-            __asm__("" : : : "memory");
-            category = g_world_shop_item_category + 1;
-        } else {
-            category = 7;
-        }
-        world_shop_build_item_list(-1, item_list, category, (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+        world_shop_build_item_list(-1, g_world_shop_id,
+            g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : 7,
+            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_gfx_get_sprite_slot(g_world_shop_item_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;

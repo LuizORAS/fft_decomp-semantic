@@ -57,11 +57,9 @@
  * then `reserved = room_base + idx * 5;`) forces the `la` to be emitted at
  * that statement, ahead of the index arithmetic.
  *
- * The target reloads `*choice` before storing 0 to
- * g_world_shop_best_fit_menu_open. `sched2` sinks that load below the store
- * from any source position, so the load goes into the `confirm` temp and an
- * empty `__asm__ volatile("")` between the load and the store holds it
- * there. A volatile read of `*choice` in place of the barrier does not.
+ * The confirmation result g_world_menu_selection_results[5] is read directly
+ * each time. Its address stays in one register across the calls and the last
+ * read is scheduled ahead of the two byte stores that precede it in source.
  */
 void world_shop_run_best_fit_preview_step(void) {
     /* The target reserves vars the code never touches: args 16 + vars 88 +
@@ -72,8 +70,6 @@ void world_shop_run_best_fit_preview_step(void) {
     s32 unused_tail[2];
     s32 i;
     s32 item;
-    s32 confirm;
-    s16* choice;
 
     if (g_world_shop_best_fit_menu_open == 0) {
         world_formation_unit_t** unit_slot;
@@ -113,22 +109,18 @@ void world_shop_run_best_fit_preview_step(void) {
     }
     i = world_menu_run_thread(6, &g_world_shop_best_fit_menu);
     if (i == 0) {
-        choice = &g_world_menu_selection_results[5];
-        if (*choice == 0) {
+        if (g_world_menu_selection_results[5] == 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_EQUIP;
         }
-        if (*choice == 1) {
+        if (g_world_menu_selection_results[5] == 1) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
         }
         world_menu_toggle_stat_preview_panel_thread(0);
         world_menu_toggle_preview_stats_window(0);
         g_world_formation_panel_windows[0].enabled = 1;
-        confirm = *choice;
-        /* Keeps the load above the store below (see the header). */
-        __asm__ volatile("");
         g_world_shop_best_fit_menu_open = 0;
         g_world_formation_unit_cycle_mode = 2;
-        if (confirm == 0) {
+        if (g_world_menu_selection_results[5] == 0) {
             for (; i < 4; i++) {
                 u16 suggested;
                 s32 shifted;

@@ -1,122 +1,100 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
+/*
+ * Build the primitives of the formation portrait cross-fade.
+ *
+ * *transition counts the steps: 0 shows the first portrait, 1 the second,
+ * 2-3 capture both CLUTs, 4-9 wipe between the two portraits with two opaque
+ * and two semi-transparent quads. `i` serves the vertex loop, the CLUT loops
+ * and the wipe step alike.
+ */
 void world_formation_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction) {
     RECT second_rect;
     RECT first_rect;
-    s32* transition_p = transition;
-    const s32* first_portrait_p = first_portrait;
-    const s32* second_portrait_p = second_portrait;
-    /* Pin required: unpinned, the callee-saved registers of the pointer
-     * arguments permute. */
-    register u8* image_p __asm__("$20") = image;
-    register POLY_FT4* poly_p __asm__("$17") = poly;
-    s32 direction_v = direction;
-    s32 phase;
-    s32 transition_value;
-    u8* cursor;
+    s32 i;
 
-    /* Emits nothing; moves the three pointer arguments into their
-     * callee-saved registers at entry, in the target's order and registers. */
-    __asm__("" : : "r"(transition_p), "r"(first_portrait_p), "r"(second_portrait_p));
     world_script_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
     world_script_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
     second_rect.x += 0x10;
 
-    phase = 0;
-    cursor = (u8*)poly_p;
-    do {
-        *(volatile s16*)(cursor + 8) = g_world_gfx_portrait_origin.x + 2;
-        *(volatile s16*)(cursor + 0xa) = g_world_gfx_portrait_origin.y + 2;
-        *(volatile s16*)(cursor + 0x10) = g_world_gfx_portrait_origin.x + 0x21;
-        *(volatile s16*)(cursor + 0x12) = g_world_gfx_portrait_origin.y + 2;
-        *(volatile s16*)(cursor + 0x18) = g_world_gfx_portrait_origin.x + 2;
-        *(volatile s16*)(cursor + 0x1a) = g_world_gfx_portrait_origin.y + 0x32;
-        *(volatile s16*)(cursor + 0x20) = g_world_gfx_portrait_origin.x + 0x21;
-        phase++;
-        *(volatile s16*)(cursor + 0x22) = g_world_gfx_portrait_origin.y + 0x32;
-        cursor += sizeof(POLY_FT4);
-    } while (phase < 4);
+    for (i = 0; i < 4; i++) {
+        poly[i].x0 = g_world_gfx_portrait_origin.x + 2;
+        poly[i].y0 = g_world_gfx_portrait_origin.y + 2;
+        poly[i].x1 = g_world_gfx_portrait_origin.x + 0x21;
+        poly[i].y1 = g_world_gfx_portrait_origin.y + 2;
+        poly[i].x2 = g_world_gfx_portrait_origin.x + 2;
+        poly[i].y2 = g_world_gfx_portrait_origin.y + 0x32;
+        poly[i].x3 = g_world_gfx_portrait_origin.x + 0x21;
+        poly[i].y3 = g_world_gfx_portrait_origin.y + 0x32;
+    }
 
-    if (*transition_p == 0) {
-        world_build_portrait_poly_ft4(*first_portrait_p, poly_p);
+    if (*transition == 0) {
+        world_build_portrait_poly_ft4(*first_portrait, poly);
         return;
     }
-    if (*transition_p == 1) {
-        world_build_portrait_poly_ft4(*second_portrait_p, poly_p);
-        *transition_p += 1;
+    if (*transition == 1) {
+        world_build_portrait_poly_ft4(*second_portrait, poly);
+        *transition += 1;
         return;
     }
-    if (*transition_p < 4) {
-        world_build_portrait_poly_ft4(*second_portrait_p, poly_p);
-        world_gfx_set_clut_rect_from_id(&second_rect, poly_p->clut);
-        poly_p++;
-        world_build_portrait_poly_ft4(*first_portrait_p, poly_p);
-        world_gfx_set_clut_rect_from_id(&first_rect, poly_p->clut);
-        StoreImage(&first_rect, (u32*)image_p);
-        StoreImage(&second_rect, (u32*)(image_p + 0x20));
-    } else if (*transition_p < 10) {
-        if (*transition_p == 4) {
-            volatile u16* pixel;
-
-            phase = 0;
-            pixel = (u16*)image_p;
-            do {
-                phase++;
-                *pixel |= 0x8000;
-                pixel++;
-            } while (phase < 0x10);
-            phase = 0;
-            pixel = (u16*)image_p;
-            do {
-                phase++;
-                pixel[16] |= 0x8000;
-                pixel++;
-            } while (phase < 0x10);
-            LoadImage(&first_rect, (u32*)image_p);
-            LoadImage(&second_rect, (u32*)(image_p + 0x20));
+    if (*transition < 4) {
+        world_build_portrait_poly_ft4(*second_portrait, poly);
+        world_gfx_set_clut_rect_from_id(&second_rect, poly->clut);
+        poly++;
+        world_build_portrait_poly_ft4(*first_portrait, poly);
+        world_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
+        StoreImage(&first_rect, (u32*)image);
+        StoreImage(&second_rect, (u32*)(image + 0x20));
+        *transition += g_world_event_speed;
+    } else if (*transition < 10) {
+        if (*transition == 4) {
+            for (i = 0; i < 0x10; i++) {
+                ((u16*)image)[i] |= 0x8000;
+            }
+            for (i = 0; i < 0x10; i++) {
+                ((u16*)image)[i + 0x10] |= 0x8000;
+            }
+            LoadImage(&first_rect, (u32*)image);
+            LoadImage(&second_rect, (u32*)(image + 0x20));
         }
 
-        transition_value = *transition_p;
-        phase = transition_value - 4;
-        world_build_portrait_poly_ft4(*second_portrait_p, poly_p);
-        if (direction_v == 1)
-            world_gfx_clip_sprite_record_left(poly_p, g_world_gfx_portrait_transition_offsets[phase]);
+        i = *transition - 4;
+        world_build_portrait_poly_ft4(*second_portrait, poly);
+        if (direction == 1)
+            world_gfx_clip_sprite_record_left(poly, g_world_gfx_portrait_transition_offsets[i]);
         else
-            world_gfx_clip_sprite_record_right(poly_p, g_world_gfx_portrait_transition_offsets[phase]);
-        poly_p++;
+            world_gfx_clip_sprite_record_right(poly, g_world_gfx_portrait_transition_offsets[i]);
+        poly++;
 
-        world_build_portrait_poly_ft4(*first_portrait_p, poly_p);
-        if (direction_v == 1)
-            world_gfx_clip_sprite_record_right(poly_p, 0x1f - g_world_gfx_portrait_transition_offsets[phase]);
+        world_build_portrait_poly_ft4(*first_portrait, poly);
+        if (direction == 1)
+            world_gfx_clip_sprite_record_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
         else
-            world_gfx_clip_sprite_record_left(poly_p, 0x1f - g_world_gfx_portrait_transition_offsets[phase]);
-        poly_p++;
+            world_gfx_clip_sprite_record_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
+        poly++;
 
-        world_build_portrait_poly_ft4(*second_portrait_p, poly_p);
-        poly_p->tpage = (poly_p->tpage & 0xff9f) | 0x20;
-        poly_p->clut = GetClut(second_rect.x, second_rect.y);
-        SetShadeTex(poly_p, 0);
-        SetSemiTrans(poly_p, 1);
-        if (direction_v == 1)
-            world_gfx_clip_sprite_record_left(poly_p, g_world_gfx_portrait_transition_offsets[phase + 8]);
+        world_build_portrait_poly_ft4(*second_portrait, poly);
+        poly->tpage = (poly->tpage & 0xff9f) | 0x20;
+        poly->clut = GetClut(second_rect.x, second_rect.y);
+        SetShadeTex(poly, 0);
+        SetSemiTrans(poly, 1);
+        if (direction == 1)
+            world_gfx_clip_sprite_record_left(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
         else
-            world_gfx_clip_sprite_record_right(poly_p, g_world_gfx_portrait_transition_offsets[phase + 8]);
-        poly_p++;
+            world_gfx_clip_sprite_record_right(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
+        poly++;
 
-        world_build_portrait_poly_ft4(*first_portrait_p, poly_p);
-        poly_p->tpage = (poly_p->tpage & 0xff9f) | 0x20;
-        poly_p->clut = GetClut(first_rect.x, first_rect.y);
-        SetShadeTex(poly_p, 0);
-        SetSemiTrans(poly_p, 1);
-        if (direction_v == 1)
-            world_gfx_clip_sprite_record_right(poly_p, 0x1f - g_world_gfx_portrait_transition_offsets[phase + 8]);
+        world_build_portrait_poly_ft4(*first_portrait, poly);
+        poly->tpage = (poly->tpage & 0xff9f) | 0x20;
+        poly->clut = GetClut(first_rect.x, first_rect.y);
+        SetShadeTex(poly, 0);
+        SetSemiTrans(poly, 1);
+        if (direction == 1)
+            world_gfx_clip_sprite_record_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
         else
-            world_gfx_clip_sprite_record_left(poly_p, 0x1f - g_world_gfx_portrait_transition_offsets[phase + 8]);
-    } else {
-        return;
+            world_gfx_clip_sprite_record_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
+        *transition += g_world_event_speed;
     }
-
-    *transition_p += g_world_event_speed;
 }

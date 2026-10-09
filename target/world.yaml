@@ -608,7 +608,7 @@ functions:
   - {addr: 0x80115a60, size: 32, name: world_formation_get_unit_egg_hatch_total, hash: 6dd0893aee62b916}
   - {addr: 0x80115a80, size: 240, name: world_formation_can_scroll_slots, hash: 62ea61ae1891b697}
   - {addr: 0x80115b70, size: 304, name: world_formation_step_scroll_velocity, hash: acb16e5e1abdaa94, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80115ca0, size: 204, name: world_formation_can_scroll_slots_back, hash: 8b1a9266f7546426}
+  - {addr: 0x80115ca0, size: 204, name: world_formation_can_scroll_slots_back, hash: 8b1a9266f7546426, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80115d6c, size: 736, name: world_menu_draw_pressable_button, hash: 35c131d743427e92, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011604c, size: 412, name: world_formation_init_selection_cursor, hash: 3146962b4bfecab1, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801161e8, size: 124, name: world_formation_init_cursor_and_scroll_state, hash: 5965d8e8caee29c2, profile: gcc-2.6.3_O1_aspsx-2.34}

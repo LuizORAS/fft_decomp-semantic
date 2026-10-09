@@ -5,8 +5,6 @@
  * price and the poached count is reduced. */
 void world_menu_confirm_item_repurchase(void) {
     s32 result = 1;
-    s32 category;
-    s32 item_list;
 
     if (g_world_shop_fur_purchase_message_wait != 0) {
         if (g_world_input_primary_repeat
@@ -28,15 +26,9 @@ void world_menu_confirm_item_repurchase(void) {
             world_shop_adjust_poached_item_quantity(g_world_menu_entry_ids[g_world_menu_cursor_position],
                 -g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
             world_item_reconcile_sorted_list(g_world_shop_item_category);
-            item_list = g_world_shop_id;
-            if (g_world_shop_item_category != 4) {
-                /* The category is read again after the comparison. */
-                __asm__ volatile("" ::: "memory");
-                category = g_world_shop_item_category + 1;
-            } else {
-                category = 7;
-            }
-            world_shop_build_item_list(-1, item_list, category, (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+            world_shop_build_item_list(-1, g_world_shop_id,
+                g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : 7,
+                (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
             world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
                 g_world_text_item_names, g_world_shop_fur_purchase_menu_script);
             world_menu_set_window_scale_step(10);

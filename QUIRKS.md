@@ -129,6 +129,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
   `cursor` when the list is empty; `world_menu_build_available_item_list`
   uses `selected` when no entry matches the current item.
+- `world_card_read_file_chunked` sets `result` to -1 when the last read was
+  short and then returns `total`; the test has no effect.
 - `main_heap_free`: the clearing loop stops at the first page byte that differs
   from the allocation id, not at the end of the 64-entry
   `g_main_heap_game_allocator_table`; an allocation that reaches the last page

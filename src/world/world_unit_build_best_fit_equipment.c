@@ -32,12 +32,9 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     left_hand = g_world_formation_unit_pointers[unit_index]->equipment[1];
     if (world_ability_has_two_swords(unit_index)) {
         two_swords = world_ability_has_two_hands(unit_index) == 0;
-        /* Zero-instruction barrier: without it global allocation swaps the
-         * callee-saved registers of `held_off_hand` and `equipment` (s5/s6). */
-        __asm__ volatile("");
     }
-    held_weapon = ITEM_ID_NOTHING;
     held_off_hand = ITEM_ID_NOTHING;
+    held_weapon = ITEM_ID_NOTHING;
     if (two_swords) {
         held_weapon = right_hand;
         g_world_best_fit_slot_categories[1] = 5;
@@ -135,11 +132,15 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
         equipment[0] = ITEM_ID_NOTHING;
         equipment[1] = ITEM_ID_NOTHING;
     }
-    if ((right_hand != ITEM_ID_NOTHING && right_hand == equipment[1])
-        || (left_hand != ITEM_ID_NOTHING && left_hand == equipment[0])
-        || (!two_swords && left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != ITEM_ID_NOTHING)
-        || right_hand >= ITEM_ID_THROWABLE_FIRST)
+    if (right_hand != ITEM_ID_NOTHING && right_hand == equipment[1]) {
         i = 1;
+    } else if (left_hand != ITEM_ID_NOTHING && left_hand == equipment[0]) {
+        i = 1;
+    } else if (!two_swords && left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != ITEM_ID_NOTHING) {
+        i = 1;
+    } else if (right_hand >= ITEM_ID_THROWABLE_FIRST) {
+        i = 1;
+    }
     if (i) {
         s32 swap = equipment[0];
         equipment[0] = equipment[1];
