@@ -148,22 +148,26 @@ headers, `target/` and the file name change together.
 
 ## Compiler profiles
 
-Default: GCC 2.6.3 `-O2 -G0`, soft-float R3000, ASPSX 2.34 via maspsx. Other
-profiles are used only where a function matches no other way:
+Default: GCC 2.6.3 `-O2 -G0`, soft-float R3000, ASPSX 2.34 via maspsx. A
+module's `profile` is the toolchain its translation units were built with; a
+function carries its own `profile` only where it differs:
 
+- WLDCORE and OPENING are GCC 2.7.2 with ASPSX 2.21 and checked division
+  (`gcc-2.7.2_O2_aspsx-2.21_divcheck`): a separate `mfhi` in constant
+  divisions, no delay-slot fill from past an if-body join, `lui/addiu/addu`
+  for an indexed global, and the zero/overflow `break` checks around each
+  division. The few functions there that still carry a GCC 2.6.3 profile
+  match only with it as written; a natural spelling under the module profile
+  is still owed.
 - `-O1` and `-O0`: parts of WORLD and the CARD screen.
-- ASPSX 2.21: WLDCORE (its module default), about 60 OPENING functions and a
-  few in BATTLE and MAIN.
-- `gcc-2.7.2_O2_aspsx-2.21`: WLDCORE and OPENING functions that need GCC 2.7
-  code: the separate `mfhi` in constant divisions, or a `lw ra` epilogue with
-  its delay slot filled.
-- `_divcheck`: division with the zero/overflow `break` checks.
+- ASPSX 2.21 and `_divcheck`: a few functions in BATTLE, WORLD and MAIN.
 - `gcc-2.6.3_O2_G8_aspsx-2.34`: the four Suzuki CPU heap routines require
   `$gp`-relative small data with `$gp = 0x800329bc`. The measured assembler
   load-delay correction applies only to this profile; the default remains G0.
 
-Never add a profile or move a function between profiles without a specific
-function that matches only that way.
+Translation units were contiguous, so profiles come in address runs. Move a
+function to another profile only when it then matches with fewer levers (or
+none), and prefer the profile of its neighbours.
 
 ## Code rules
 
