@@ -45,7 +45,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
                 return candidates[i] + 1;
             }
         }
-        goto first;
+        return candidates[0] + 1;
     }
 
     base = ((s32)g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 9;
@@ -65,22 +65,13 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     }
 
     if (count == 1) {
-        goto first;
+        return candidates[0] + 1;
     }
-    if (count != 2) {
-        return 0;
+    if (count == 2) {
+        if (slots[0] <= slots[1]) {
+            return candidates[0] + 1;
+        }
+        return candidates[1] + 1;
     }
-    if (slots[0] > slots[1]) {
-        goto second;
-    }
-    /* Shared exits: with structured returns, cross-jumping keeps a different
-     * copy of `candidates[0] + 1` and the arms swap places. */
-first:
-    return candidates[0] + 1;
-second: {
-    /* Keeps cross-jumping from merging the scan's early return into this arm instead of the first. */
-    s32 result = candidates[1] + 1;
-    __asm__("" : "=r"(result) : "0"(result));
-    return result;
-}
+    return 0;
 }

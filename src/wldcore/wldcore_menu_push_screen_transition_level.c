@@ -25,12 +25,7 @@
  * pushes the level as type 0x31 with delay = 0x14.
  *
  * The new level's fields go through the stack-record union, whose field
- * access is what keeps the target's per-field `$at` bases.
- *
- * The empty barrier in the counting loop keeps reorg from moving `i++` into
- * the `beqz` delay slot, which the target leaves unfilled (as in
- * wldcore_get_completion_milestone_rank); `for`, `while`, `do`/`while`,
- * `continue` and `goto` spellings of the loop are byte-identical without it. */
+ * access is what keeps the target's per-field `$at` bases. */
 void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b) {
     s32* clear;
     s32 count;
@@ -57,9 +52,6 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
             for (i = 0; i < 0x18; i++) {
                 if (world_script_get_variable(i + 0x1A4) != 0) {
                     count++;
-                    /* Keeps `i++` out of the test's delay slot, which the
-                     * target leaves as a nop. */
-                    __asm__ volatile("");
                 }
             }
         }

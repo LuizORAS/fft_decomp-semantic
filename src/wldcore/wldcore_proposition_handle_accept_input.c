@@ -4,7 +4,7 @@
 /* Menu input step: cancel (0x40) closes this level and returns through
  * 0x80072a18; confirm (0x20) stores the 0x8009f2f4 + 0x8009f2f6 total, shows
  * message 0xb810 (with the total substituted) or 0xb80f when it is zero,
- * opens the 0x80073778 panel at (0x48, 0x20), and pushes a level tagged 0xa. */
+ * opens the yes/no panel at (0x48, 0x20), and pushes a level tagged 0xa. */
 void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t* owner) {
     s32 total;
     wldcore_point32_t origin;

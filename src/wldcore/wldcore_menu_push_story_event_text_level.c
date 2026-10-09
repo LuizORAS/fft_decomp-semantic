@@ -13,12 +13,11 @@
  * is value + 0x8800 in both, so 0xe800 is the substitution value and not a
  * text id.
  *
- * Addressing follows wldcore_menu_push_proposition_attempt_detail_level and
- * wldcore_menu_push_tutorial_topic_text_level: the target holds one base of g_wldcore_scrollable_text_window+0x34 (its
- * text_id) and reaches the earlier fields at negative displacements, so the original held a pointer biased to that
- * field. Laundering the anchor keeps it opaque to cse, which otherwise rewrites every displacement back to the $at
- * absolute form after the first two stores. image_y is the one field the target still stores absolutely, so it is
- * written as g_wldcore_scrollable_text_window.image_y.
+ * The coordinate mode is constant here, yet retail still switched on it to
+ * choose the text image row (0x60 for mode 0, 0x70 for mode 1, as the sibling
+ * setups store). The compiler drops the dead case only after its first CSE
+ * pass, which is why the stores after image_y address their fields from the
+ * text_id base register.
  *
  * The depth is spelled as the global at every use rather than cached in a
  * local: the target re-reads g_wldcore_menu_stack_depth after each call.
@@ -28,30 +27,29 @@
  * unused local. */
 void wldcore_menu_push_story_event_text_level(s32 value) {
     s32 unused[2];
-    wldcore_text_scrollable_window_t* window;
-    s32* anchor;
-
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    /* Keeps the biased anchor opaque to cse (see above). */
-    __asm__("" : "=r"(anchor) : "0"(anchor));
+    s32 coordinate_mode = 1;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
-
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
-
-    window->text_id = value + 0x8800;
-    window->image_x = 0;
-    g_wldcore_scrollable_text_window.image_y = 0x70;
-    window->base.x = -122;
-    window->base.y = -40;
-    window->text_width = 0xdc;
-    window->rows_per_page = 8;
-    window->priority = 9;
-    window->image_coordinate_mode = 1;
-    window->extra_render_index = -1;
-    window->text_substitutions[1] = -1;
-    window->text_substitutions[0] = -1;
-    wldcore_text_init_scrollable_window(window);
+    g_wldcore_scrollable_text_window.text_id = value + 0x8800;
+    g_wldcore_scrollable_text_window.image_x = 0;
+    switch (coordinate_mode) {
+    case 0:
+        g_wldcore_scrollable_text_window.image_y = 0x60;
+        break;
+    case 1:
+        g_wldcore_scrollable_text_window.image_y = 0x70;
+        break;
+    }
+    g_wldcore_scrollable_text_window.base.x = -122;
+    g_wldcore_scrollable_text_window.base.y = -40;
+    g_wldcore_scrollable_text_window.text_width = 0xdc;
+    g_wldcore_scrollable_text_window.rows_per_page = 8;
+    g_wldcore_scrollable_text_window.priority = 9;
+    g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
+    g_wldcore_scrollable_text_window.extra_render_index = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = -1;
+    wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
         .flags |= 0x10;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]

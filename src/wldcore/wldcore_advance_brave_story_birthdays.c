@@ -16,14 +16,6 @@
  * The age column is walked one byte at a time from index 1, which is why the
  * loop's base materialises as the biased constant 0x80057f35; entry 0 is the
  * only absolute access to 0x80057f34.
- *
- * Both empty barriers are load-bearing:
- *   - the one inside the age-cap block keeps the loop's `i = 1` in the
- *     preheader, so reorg copies it into the month compare's delay slot
- *     (the target's duplicate `li a2,1`) instead of moving it there;
- *   - the one at the end of the loop body keeps `i++` at the bottom of the
- *     body instead of in the first birthday compare's delay slot, which the
- *     target leaves as a nop.
  */
 void wldcore_advance_brave_story_birthdays(void) {
     const u8(*birthdays)[2] = g_wldcore_brave_story_birthdays;
@@ -38,8 +30,6 @@ void wldcore_advance_brave_story_birthdays(void) {
         age = g_main_brave_story_character_ages[0];
         if (age < 99) {
             g_main_brave_story_character_ages[0] = age + 1;
-            /* Keeps `i = 1` in the loop preheader (see above). */
-            __asm__ volatile("");
         }
     }
 
@@ -49,7 +39,5 @@ void wldcore_advance_brave_story_birthdays(void) {
                 g_main_brave_story_character_ages[i]++;
             }
         }
-        /* Keeps `i++` out of the compare's delay slot (see above). */
-        __asm__ volatile("");
     }
 }

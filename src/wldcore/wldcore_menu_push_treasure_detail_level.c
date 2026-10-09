@@ -18,16 +18,17 @@
  * record, and it clears the new level's timer as well as setting its
  * phase to 1.
  *
- * Addressing follows wldcore_menu_push_unexplored_land_detail_level: the target holds one base of
- * g_wldcore_scrollable_text_window+0x34 (its text_id) and reaches the earlier fields at negative
- * displacements, so the anchor is laundered to keep it opaque to cse;
- * image_y is the one field the target still stores absolutely. */
+ * The coordinate mode is constant here, yet retail still switched on it to
+ * choose the text image row (0x60 for mode 0, 0x70 for mode 1, as the sibling
+ * setups store). The compiler drops the dead case only after its first CSE
+ * pass, which is why the stores after image_y address their fields from the
+ * text_id base register.
+ *
+ * `unused` reproduces eight bytes of locals below the date bytes that the
+ * target never touches. */
 void wldcore_menu_push_treasure_detail_level(s32 value) {
-    wldcore_text_scrollable_window_t* record;
-    s32* anchor;
     s32 index;
-    s32 month;
-    s32 day;
+    s32 coordinate_mode = 1;
     u8 unused[8];
     u8 date[2];
 
@@ -38,26 +39,26 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
     g_wldcore_window_render_records[index].flags |= 0x10;
     wldcore_read_nine_bit_record(g_main_treasure_acquisition_date_bits, value, date);
-
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    __asm__("" : "=r"(anchor) : "0"(anchor));
-    record = (wldcore_text_scrollable_window_t*)(anchor - 13);
-
-    record->text_id = value + 0x8800;
-    record->image_x = 0;
-    g_wldcore_scrollable_text_window.image_y = 0x70;
-    record->base.x = -122;
-    record->base.y = -40;
-    record->text_width = 0xdc;
-    record->rows_per_page = 8;
-    record->priority = 0xa;
-    record->image_coordinate_mode = 1;
-    record->extra_render_index = -1;
-    month = date[0];
-    day = date[1];
-    record->text_substitutions[0] = month + 0xb84f;
-    record->text_substitutions[1] = day;
-    wldcore_text_init_scrollable_window(record);
+    g_wldcore_scrollable_text_window.text_id = value + 0x8800;
+    g_wldcore_scrollable_text_window.image_x = 0;
+    switch (coordinate_mode) {
+    case 0:
+        g_wldcore_scrollable_text_window.image_y = 0x60;
+        break;
+    case 1:
+        g_wldcore_scrollable_text_window.image_y = 0x70;
+        break;
+    }
+    g_wldcore_scrollable_text_window.base.x = -122;
+    g_wldcore_scrollable_text_window.base.y = -40;
+    g_wldcore_scrollable_text_window.text_width = 0xdc;
+    g_wldcore_scrollable_text_window.rows_per_page = 8;
+    g_wldcore_scrollable_text_window.priority = 0xa;
+    g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
+    g_wldcore_scrollable_text_window.extra_render_index = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + 0xb84f;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
+    wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
         .flags |= 0x10;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]

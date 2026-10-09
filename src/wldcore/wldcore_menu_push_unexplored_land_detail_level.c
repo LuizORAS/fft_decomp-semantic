@@ -11,28 +11,26 @@
  * and its frame render record with flag 0x10 and starts WORLD thread 14 on
  * text 0xb849 with substitution value 0xd800 + land.
  *
- * Addressing follows
- * wldcore_menu_push_proposition_attempt_detail_level: the target holds one base
- * of g_wldcore_scrollable_text_window+0x34 (its text_id) and reaches the earlier fields at negative
- * displacements, so the original held a pointer biased to that field.
- * Laundering the anchor keeps it opaque to cse, which otherwise rewrites every
- * displacement back to the $at absolute form; image_y is the one field the
- * target still stores absolutely.
+ * The coordinate mode is constant here, yet retail still switched on it to
+ * choose the text image row (0x60 for mode 0, 0x70 for mode 1, as the sibling
+ * setups store). The compiler drops the dead case only after its first CSE
+ * pass, which is why the stores after image_y address their fields from the
+ * text_id base register.
  *
- * The render record's position is written through a second biased pointer: the
+ * The render record's position is written through a pointer to its base_x: the
  * target reaches base_x/base_y at 0 and 4 off one register holding
  * &g_wldcore_window_render_records[index].base_x, while the flags update above
  * it still uses the $at absolute form. Spelling both coordinates as ordinary
  * indexed field stores recomputes the $at base twice and costs four
  * instructions. The cast is over adjacent s32 base_x/base_y; the header would
- * express it better as a wldcore_point32_t member. */
+ * express it better as a wldcore_point32_t member.
+ *
+ * `unused` reproduces eight bytes of locals below the date bytes that the
+ * target never touches. */
 void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
-    wldcore_text_scrollable_window_t* window;
-    s32* anchor;
     s32 index;
     wldcore_point32_t* base;
-    s32 month;
-    s32 day;
+    s32 coordinate_mode = 1;
     u8 unused[8];
     u8 date[2];
 
@@ -46,27 +44,26 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     base->x = -0x74;
     base->y = -0x22;
     wldcore_read_nine_bit_record(g_main_land_discovery_date_bits, value, date);
-
-    /* Opaque to cse so the stores keep their negative displacements. */
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    __asm__("" : "=r"(anchor) : "0"(anchor));
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
-
-    window->text_id = value + 0x8800;
-    window->image_x = 0;
-    g_wldcore_scrollable_text_window.image_y = 0x70;
-    window->base.x = -122;
-    window->base.y = -40;
-    window->text_width = 0xdc;
-    window->rows_per_page = 8;
-    window->priority = 0xa;
-    window->image_coordinate_mode = 1;
-    window->extra_render_index = -1;
-    month = date[0];
-    day = date[1];
-    window->text_substitutions[0] = month + 0xb84f;
-    window->text_substitutions[1] = day;
-    wldcore_text_init_scrollable_window(window);
+    g_wldcore_scrollable_text_window.text_id = value + 0x8800;
+    g_wldcore_scrollable_text_window.image_x = 0;
+    switch (coordinate_mode) {
+    case 0:
+        g_wldcore_scrollable_text_window.image_y = 0x60;
+        break;
+    case 1:
+        g_wldcore_scrollable_text_window.image_y = 0x70;
+        break;
+    }
+    g_wldcore_scrollable_text_window.base.x = -122;
+    g_wldcore_scrollable_text_window.base.y = -40;
+    g_wldcore_scrollable_text_window.text_width = 0xdc;
+    g_wldcore_scrollable_text_window.rows_per_page = 8;
+    g_wldcore_scrollable_text_window.priority = 0xa;
+    g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
+    g_wldcore_scrollable_text_window.extra_render_index = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + 0xb84f;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
+    wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
         .flags |= 0x10;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]

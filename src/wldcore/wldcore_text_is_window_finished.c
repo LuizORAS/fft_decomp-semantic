@@ -10,11 +10,6 @@
  * the shared tail: its argument copy is then a no-op against the incoming $a0,
  * so only the other paths load $a0 (in their jump delay slots), as in the
  * target.
- *
- * The empty asm keeps the scroll timer's return block from becoming a lone
- * jump after post-reload cross-jumping; otherwise the timer test is inverted
- * to branch straight to the tail and the scroll-down return is threaded past
- * it.
  */
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
     if (state->scroll_state == 2) {
@@ -25,9 +20,6 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
         }
         state->scroll_timer += 1;
         if (state->scroll_timer <= 0) {
-        return_one_from_scroll:
-            /* Emits nothing; see the function comment. */
-            __asm__ volatile("");
             return 1;
         }
         state->scroll_timer = 0;
@@ -45,14 +37,13 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
             return 1;
         }
         if ((wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) && (state->scroll_row != 0)) {
-            state->scroll_row = state->scroll_row - 1;
+            state->scroll_row--;
         } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
-            if (state->page_start_row <= state->scroll_row) {
-                /* Shared tail: the target reuses the state 2 timer's
-                 * return block, which a plain return does not reproduce. */
-                goto return_one_from_scroll;
+            if (state->page_start_row > state->scroll_row) {
+                state->scroll_row++;
+            } else {
+                return 1;
             }
-            state->scroll_row = state->scroll_row + 1;
         } else {
             return 1;
         }
@@ -61,28 +52,28 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
         wldcore_text_update_scroll_indicators(state);
         return 1;
     }
-    if (state->scroll_state != 0) {
-        return 0;
-    }
-    if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
-        if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
-            state->page_start_row += state->rows_per_page;
+    if (state->scroll_state == 0) {
+        if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
+            if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+                state->page_start_row += state->rows_per_page;
+            }
+            if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) || (state->page_start_row > state->last_page_row)) {
+                g_wldcore_window_record_count -= 4;
+                g_wldcore_window_render_record_count -= 1;
+                g_wldcore_window_render_object_count -= 5;
+                return 0;
+            }
+            wldcore_sound_play_effect(MAIN_SFX_TEXT_PAGE);
+            wldcore_text_render_scrollable_window_page(state, state->page_start_row);
+        } else if (g_wldcore_new_button_presses & PSX_PAD_SQUARE) {
+            state->scroll_state = 1;
+            state->scroll_row = state->page_start_row;
+            wldcore_text_update_scroll_indicators(state);
+            g_wldcore_window_records[state->left_window_index].flags |= 0x10;
+            return 1;
         }
-        if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) || (state->page_start_row > state->last_page_row)) {
-            g_wldcore_window_record_count -= 4;
-            g_wldcore_window_render_record_count -= 1;
-            g_wldcore_window_render_object_count -= 5;
-            return 0;
-        }
-        wldcore_sound_play_effect(MAIN_SFX_TEXT_PAGE);
-        wldcore_text_render_scrollable_window_page(state, state->page_start_row);
-    } else if (g_wldcore_new_button_presses & PSX_PAD_SQUARE) {
-        state->scroll_state = 1;
-        state->scroll_row = state->page_start_row;
-        wldcore_text_update_scroll_indicators(state);
-        g_wldcore_window_records[state->left_window_index].flags |= 0x10;
+        wldcore_window_update_flag_from_owner_progress((wldcore_window_owner_t*)state);
         return 1;
     }
-    wldcore_window_update_flag_from_owner_progress((wldcore_window_owner_t*)state);
-    return 1;
+    return 0;
 }

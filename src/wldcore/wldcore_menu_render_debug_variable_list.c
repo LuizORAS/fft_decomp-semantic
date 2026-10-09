@@ -2,8 +2,8 @@
 
 /* Renders up to 10 script-variable rows in the debug list panel.
  *
- * The row-count and bounds constraints preserve the target's separate count
- * register and store order while preparing the aggregate call arguments. */
+ * `value` first holds the row count for the panel height and then each
+ * variable's value: one register (v1) in the target. */
 void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level) {
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t point;
@@ -14,10 +14,6 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     s32 text_id;
     u32 value;
     s32 i;
-    s32 count;
-    /* Pin: places the index argument copy (`move a0,s2`) ahead of the dimensions.y computation. */
-    register s32 call_index __asm__("$4");
-    s32 zero;
 
     variable = level->first_variable;
     if (variable + 10 >= 1024) {
@@ -25,19 +21,13 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     } else {
         level->row_count = 10;
     }
-    zero = 0;
-    /* Materialises the 0 argument (`move a3,zero`) here, right after the row_count store. */
-    __asm__("" : "=r"(zero) : "0"(zero));
-    count = level->row_count;
+    value = level->row_count;
     index = level->render_index;
     bounds.position.x = 0;
     bounds.position.y = 0;
     bounds.dimensions.x = 0x68;
-    bounds.dimensions.y = count * 0x10 + 0x10;
-    call_index = index;
-    /* Keeps the bounds stores in target order, ahead of the image-buffer address setup. */
-    __asm__ volatile("" : : "r"(count), "m"(bounds), "r"(call_index) : "memory");
-    wldcore_window_build_render_record_image(call_index, bounds, zero, g_wldcore_window_image_buffer);
+    bounds.dimensions.y = value * 0x10 + 0x10;
+    wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     /* Direct record indexing moves the symbol load after the index scaling
      * and breaks the exact match. Retain the target's biased base and stride. */
     records = (wldcore_point32_t*)&g_wldcore_window_render_records[0].base_x;

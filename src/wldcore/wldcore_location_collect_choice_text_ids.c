@@ -9,13 +9,10 @@
  * 0x292 + their menu byte, and at most five survive. */
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     s32 available;
-    /* Pin: unpinned, output, the choice pointer and available rotate $s3-$s5. */
-    register s32* output __asm__("$19");
     s32 i;
     s32 written;
     s32 entry;
 
-    output = out;
     if (location_id == 0x14) {
         return -1;
     }
@@ -35,16 +32,14 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     }
     if (available == 1) {
         entry = g_wldcore_script_state.choice_vars[0];
-        *output = entry + 0xa7ff;
+        *out = entry + 0xa7ff;
         return 1;
     }
     written = 0;
     for (i = 0; i < available; i++) {
         entry = g_wldcore_script_state.choice_vars[i];
         if (world_script_get_variable(g_wldcore_choice_hidden_variable_offsets[entry] + 0x292) == 0) {
-            *output = entry + 0xa7ff;
-            written++;
-            output++;
+            out[written++] = entry + 0xa7ff;
             if (written == 5) {
                 break;
             }

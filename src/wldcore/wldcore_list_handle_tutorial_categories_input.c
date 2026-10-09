@@ -11,9 +11,7 @@
  * hands back to the caller through 0x10000000, otherwise it fades in and calls
  * wldcore_menu_push_entry_window_level.
  *
- * The selected-entry reload and fixed-register wrap update preserve the
- * original instruction schedule. Names beyond the shared headers remain
- * provisional. */
+ * Names beyond the shared headers remain provisional. */
 void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;
@@ -67,9 +65,9 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
         level->mode = 1;
-        g_wldcore_window_record_count = g_wldcore_window_record_count - 2;
-        g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
-        g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 3;
+        g_wldcore_window_record_count -= 2;
+        g_wldcore_window_render_record_count -= 1;
+        g_wldcore_window_render_object_count -= 3;
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
@@ -101,39 +99,29 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         case 3:
             world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
             level->mode = 1;
-            g_wldcore_window_record_count = g_wldcore_window_record_count - 2;
-            g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
-            g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 3;
+            g_wldcore_window_record_count -= 2;
+            g_wldcore_window_render_record_count -= 1;
+            g_wldcore_window_render_object_count -= 3;
             return;
         }
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
-            g_wldcore_window_records[level->main_window].y = g_wldcore_window_records[level->main_window].y - 0x10;
-            level->selected_entry = level->selected_entry - 1;
+            g_wldcore_window_records[level->main_window].y -= 0x10;
+            level->selected_entry--;
         } else {
-            register s32 main_window asm("$2");
-            s32 record_offset;
-            s32 entry_count;
-
-            main_window = level->main_window;
-            entry_count = level->entry_count;
-            record_offset = main_window;
-            main_window = g_wldcore_window_records[record_offset].y;
-            main_window = main_window + (entry_count - 1) * 0x10;
-            g_wldcore_window_records[record_offset].y = main_window;
+            g_wldcore_window_records[level->main_window].y += (level->entry_count - 1) * 0x10;
             level->selected_entry = level->entry_count - 1;
         }
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
-            g_wldcore_window_records[level->main_window].y = g_wldcore_window_records[level->main_window].y + 0x10;
-            level->selected_entry = level->selected_entry + 1;
+            g_wldcore_window_records[level->main_window].y += 0x10;
+            level->selected_entry++;
         } else {
-            g_wldcore_window_records[level->main_window].y
-                = g_wldcore_window_records[level->main_window].y - ((level->entry_count - 1) * 0x10);
+            g_wldcore_window_records[level->main_window].y -= (level->entry_count - 1) * 0x10;
             level->selected_entry = 0;
         }
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);

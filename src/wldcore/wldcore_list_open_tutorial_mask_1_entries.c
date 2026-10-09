@@ -10,14 +10,11 @@ void wldcore_list_open_tutorial_mask_1_entries(void) {
     s32 i;
     s32 count;
     s32 record_index;
-    s32 enabled;
 
-    i = 0;
-    enabled = 8;
-    for (; i < 8; i++) {
+    for (i = 0; i < 8; i++) {
         g_wldcore_list_entry_values[i] = i - 0x3FF0;
         if (wldcore_test_bit(&g_main_tutorial_progress_masks[1], i) != 0) {
-            g_wldcore_list_row_flags[i] = enabled;
+            g_wldcore_list_row_flags[i] = 8;
         } else {
             g_wldcore_list_row_flags[i] = 0;
         }
@@ -28,8 +25,6 @@ void wldcore_list_open_tutorial_mask_1_entries(void) {
         i = count;
     } else {
         i = 8;
-        /* Keeps the row count in the loop register; CSE otherwise propagates the 8 into $a2. */
-        __asm__("" : "=r"(i) : "0"(i));
     }
     dimensions.x = 0x8C;
     origin.x = 0x54;

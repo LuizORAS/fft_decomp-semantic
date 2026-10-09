@@ -6,9 +6,6 @@
 void wldcore_list_handle_completed_propositions_input(s32* values) {
     s32 buttons;
     s32 depth;
-    s32 index;
-    s16* selection;
-    s32 value;
     wldcore_point32_t origin;
 
     if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
@@ -36,12 +33,10 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
     if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_list_completed_propositions_clear_result(values);
-        selection = &g_wldcore_window_panel_render_state.selected_index;
-        index = *selection;
-        value = values[*selection + 13];
-        wldcore_return_from_job_determinations(value);
+        wldcore_return_from_job_determinations(values[g_wldcore_window_panel_render_state.selected_index + 13]);
         wldcore_list_store_cursor_state(4);
-        g_world_text_substitution_values[0] = g_wldcore_list_entry_values[*selection];
+        g_world_text_substitution_values[0]
+            = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
         world_thread_set_parameters(0xE, 0x19, 0xB81A, 0);
         origin.x = 0x48;
         origin.y = 0x20;
@@ -49,6 +44,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE;
         g_wldcore_menu_stack_depth = depth + 1;
-        g_wldcore_menu_stack_records_next[depth].job_report_confirm.argument = values[*selection + 13];
+        g_wldcore_menu_stack_records_next[depth].job_report_confirm.argument
+            = values[g_wldcore_window_panel_render_state.selected_index + 13];
     }
 }

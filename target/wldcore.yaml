@@ -41,17 +41,17 @@ functions:
   - {addr: 0x800692ac, size: 340, name: wldcore_window_set_render_objects_visible, hash: 082e633a45d41f5d, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x80069400, size: 168, name: wldcore_fade_start_screen, hash: 3278f2a87335c5a6, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x800694a8, size: 624, name: wldcore_fade_step_screen, hash: a288f6e5f4b66b67, profile: gcc-2.6.3_O2_aspsx-2.21_divcheck}
-  - {addr: 0x80069718, size: 248, name: wldcore_gfx_copy_color_with_tint, hash: 5451cf7fbc8915e8}
+  - {addr: 0x80069718, size: 248, name: wldcore_gfx_copy_color_with_tint, hash: 5451cf7fbc8915e8, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x80069810, size: 264, name: wldcore_fade_draw_screen_overlays, hash: 410c3788cecdf2f4}
   - {addr: 0x80069918, size: 28, name: wldcore_proposition_get_data_pointer, hash: 8370b9e747338d02, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x80069934, size: 176, name: wldcore_unpack_proposition_row, hash: 99bb07ead255aa82, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x800699e4, size: 248, name: wldcore_proposition_set_based_on_location, hash: 3651cbeedd1a3548, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x80069adc, size: 212, name: wldcore_advance_calendar_day, hash: fa23d9cb75d2330b}
   - {addr: 0x80069bb0, size: 400, name: wldcore_convert_date_to_zodiac_date, hash: 8d40642805cd5ac8, profile: gcc-2.7.2_O2_aspsx-2.21}
-  - {addr: 0x80069d40, size: 248, name: wldcore_advance_brave_story_birthdays, hash: 093651326def3e0f}
+  - {addr: 0x80069d40, size: 248, name: wldcore_advance_brave_story_birthdays, hash: 093651326def3e0f, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x80069e38, size: 32, name: wldcore_get_party_data_pointer, hash: 94137dd4e32ea227, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x80069e58, size: 172, name: wldcore_write_nine_bit_record, hash: a100a01dd3458fa8, profile: gcc-2.6.3_O2_aspsx-2.34}
-  - {addr: 0x80069f04, size: 276, name: wldcore_read_nine_bit_record, hash: 337a6e03c2eb3680, profile: gcc-2.6.3_O2_aspsx-2.34}
+  - {addr: 0x80069f04, size: 276, name: wldcore_read_nine_bit_record, hash: 337a6e03c2eb3680, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x8006a018, size: 148, name: wldcore_gfx_clear_vram_and_scratch, hash: 6d07a88a3d3e8359, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x8006a0ac, size: 76, name: wldcore_month_day_to_day_of_year, hash: efdeb3089d1c7472}
   - {addr: 0x8006a0f8, size: 72, name: wldcore_day_of_year_to_month_day, hash: 65bc42f96d71e765}
@@ -123,7 +123,7 @@ functions:
   - {addr: 0x800718d0, size: 236, name: wldcore_window_clear_layout_states_and_queue_msg_b806, hash: a6d8e7a5dc83c4a5}
   - {addr: 0x800719bc, size: 228, name: wldcore_window_publish_slot_b806, hash: 512442d2f93c0290}
   - {addr: 0x80071aa0, size: 272, name: wldcore_menu_pop_level_and_rebuild_screen, hash: b422526c51f8f5d4}
-  - {addr: 0x80071bb0, size: 1212, name: wldcore_bar_handle_menu_input, hash: 0a6e9dc857b30aa8, rodata: [{addr: 0x80067034, size: 20, hash: ae99fb771d003104}]}
+  - {addr: 0x80071bb0, size: 1212, name: wldcore_bar_handle_menu_input, hash: 0a6e9dc857b30aa8, profile: gcc-2.7.2_O2_aspsx-2.21, rodata: [{addr: 0x80067034, size: 20, hash: ae99fb771d003104}]}
   - {addr: 0x8007206c, size: 844, name: wldcore_list_open_rumors, hash: fceb17e0a6e9a75a, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x800723b8, size: 56, name: wldcore_list_rumors_restore_prompt, hash: eaf13c42017efa17}
   - {addr: 0x800723f0, size: 20, name: wldcore_list_rumors_clear_result, hash: 11034aa27eaa3095, profile: gcc-2.6.3_O2_aspsx-2.34}
@@ -220,7 +220,7 @@ functions:
   - {addr: 0x80080758, size: 132, name: wldcore_draw_close_indicator_if_pending, hash: f8623b007ab10664}
   - {addr: 0x800807dc, size: 1656, name: wldcore_menu_step_event_transition_level, hash: 1cd46cc6d961f5e1, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x80080e54, size: 2288, name: wldcore_menu_push_brave_story_level, hash: 4050bf601980cdcc, profile: gcc-2.7.2_O2_aspsx-2.21}
-  - {addr: 0x80081744, size: 1572, name: wldcore_menu_build_brave_story_entries, hash: cefca88b09384215}
+  - {addr: 0x80081744, size: 1572, name: wldcore_menu_build_brave_story_entries, hash: cefca88b09384215, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x80081d68, size: 948, name: wldcore_menu_close_list_window_level, hash: f18117aca5ca9e1b}
   - {addr: 0x8008211c, size: 484, name: wldcore_window_set_list_window_states, hash: f9e15094bedd1e61}
   - {addr: 0x80082300, size: 1768, name: wldcore_menu_handle_brave_story_input, hash: c613740945726384, rodata: [{addr: 0x800671f4, size: 28, hash: fcc71f94f44c6ce0}]}
@@ -263,7 +263,7 @@ functions:
   - {addr: 0x80087da0, size: 516, name: wldcore_list_handle_brave_story_propositions_input, hash: d0220aeec018bc1e}
   - {addr: 0x80087fa4, size: 476, name: wldcore_menu_push_proposition_attempt_detail_level, hash: c9cc9c865ac2e396}
   - {addr: 0x80088180, size: 392, name: wldcore_menu_wait_brave_story_text_then_pop_level, hash: b3f0c6a8cf2e5f9d}
-  - {addr: 0x80088308, size: 988, name: wldcore_menu_push_screen_transition_level, hash: a54f6808fc360853, rodata: [{addr: 0x80067210, size: 76, hash: 6c899961871ac5b9}]}
+  - {addr: 0x80088308, size: 988, name: wldcore_menu_push_screen_transition_level, hash: a54f6808fc360853, profile: gcc-2.7.2_O2_aspsx-2.21, rodata: [{addr: 0x80067210, size: 76, hash: 6c899961871ac5b9}]}
   - {addr: 0x800886e4, size: 916, name: wldcore_window_close_parent_list_all_windows, hash: 70bf9f0c22a63d0e}
   - {addr: 0x80088a78, size: 536, name: wldcore_window_close_parent_list_frame_windows, hash: e3ce1fa1e0ef9392}
   - {addr: 0x80088c90, size: 1120, name: wldcore_menu_step_screen_transition_level, hash: 22416fb257542db2, rodata: [{addr: 0x80067260, size: 76, hash: 0d9e2f6b8eb3d913}]}
@@ -271,12 +271,12 @@ functions:
   - {addr: 0x8008953c, size: 392, name: wldcore_list_build_tutorial_category_panel_image, hash: 6e7e170a9de6189f}
   - {addr: 0x800896c4, size: 236, name: wldcore_window_clear_layout_states_and_queue_msg_b8dd, hash: 1fe1a6d4d29bc858}
   - {addr: 0x800897b0, size: 228, name: wldcore_window_publish_slot_b8dd, hash: 512442d2f93c0290}
-  - {addr: 0x80089894, size: 1468, name: wldcore_list_handle_tutorial_categories_input, hash: a3346d6f4a1eb56a}
+  - {addr: 0x80089894, size: 1468, name: wldcore_list_handle_tutorial_categories_input, hash: a3346d6f4a1eb56a, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x80089e50, size: 412, name: wldcore_list_open_formation_tutorials, hash: e1c1e7140539bd33}
   - {addr: 0x80089fec, size: 20, name: wldcore_list_formation_tutorials_restore_result, hash: 7e9ed99f23ab0769, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x8008a000, size: 20, name: wldcore_list_formation_tutorials_clear_result, hash: 11034aa27eaa3095, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x8008a014, size: 668, name: wldcore_list_handle_formation_tutorials_input, hash: 336a3953d3a822c5}
-  - {addr: 0x8008a2b0, size: 400, name: wldcore_list_open_tutorial_mask_1_entries, hash: e92287c06d325aed}
+  - {addr: 0x8008a2b0, size: 400, name: wldcore_list_open_tutorial_mask_1_entries, hash: e92287c06d325aed, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x8008a440, size: 20, name: wldcore_list_tutorial_mask_1_restore_result, hash: 7e9ed99f23ab0769, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x8008a454, size: 20, name: wldcore_list_tutorial_mask_1_clear_result, hash: 11034aa27eaa3095, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x8008a468, size: 656, name: wldcore_list_handle_tutorial_mask_1_entries_input, hash: 132f4218798f9469}
@@ -354,8 +354,8 @@ functions:
   - {addr: 0x8008cf14, size: 332, name: wldcore_map_pulse_dot_colors, hash: f98bdd99186282ca}
   - {addr: 0x8008d060, size: 308, name: wldcore_map_find_dot_at_point, hash: a0c5bf040d57518f}
   - {addr: 0x8008d194, size: 308, name: wldcore_map_get_dot_snap_step, hash: 983f17049348bd36}
-  - {addr: 0x8008d2c8, size: 248, name: wldcore_map_build_location_menu_entries, hash: d2122546324ab53a}
-  - {addr: 0x8008d3c0, size: 340, name: wldcore_location_collect_choice_text_ids, hash: 6061327aac03598c}
+  - {addr: 0x8008d2c8, size: 248, name: wldcore_map_build_location_menu_entries, hash: d2122546324ab53a, profile: gcc-2.7.2_O2_aspsx-2.21}
+  - {addr: 0x8008d3c0, size: 340, name: wldcore_location_collect_choice_text_ids, hash: 6061327aac03598c, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x8008d514, size: 8, name: wldcore_noop_8008d514, hash: 6d64edf91449c1b1}
   - {addr: 0x8008d51c, size: 740, name: wldcore_map_draw_visible_routes, hash: 536661d7cc829621}
   - {addr: 0x8008d800, size: 416, name: wldcore_location_begin_route_segment, hash: ec085cca25775352}
@@ -364,7 +364,7 @@ functions:
   - {addr: 0x8008df98, size: 804, name: wldcore_map_find_best_route_path, hash: 61cbf00a424cc473}
   - {addr: 0x8008e2bc, size: 644, name: wldcore_location_process_entry, hash: dba5b9b070f1b366}
   - {addr: 0x8008e540, size: 1784, name: wldcore_map_step_route_travel, hash: bdccabd7e83f26a2, profile: gcc-2.7.2_O2_aspsx-2.21_divcheck}
-  - {addr: 0x8008ec38, size: 200, name: wldcore_map_start_projection_motion_if_outside_bounds, hash: f7dcd7c974b7c4de}
+  - {addr: 0x8008ec38, size: 200, name: wldcore_map_start_projection_motion_if_outside_bounds, hash: f7dcd7c974b7c4de, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x8008ed00, size: 188, name: wldcore_map_is_point_outside_projection_bounds, hash: a5a78c68439cf7d0}
   - {addr: 0x8008edbc, size: 84, name: wldcore_map_negate_and_clamp_coordinates, hash: 72354b94871c7f88}
   - {addr: 0x8008ee10, size: 300, name: wldcore_map_step_projection_motion, hash: 5de4aa694c18fd01, profile: gcc-2.6.3_O2_aspsx-2.21_divcheck}
@@ -373,7 +373,7 @@ functions:
   - {addr: 0x8008f284, size: 432, name: wldcore_map_init_location_marker_and_camera, hash: 2f51d47e4f36de8d}
   - {addr: 0x8008f434, size: 224, name: wldcore_map_update_camera_direction_and_projection, hash: bed7c40ebe97aaf4}
   - {addr: 0x8008f514, size: 388, name: wldcore_window_build_render_record_image, hash: 5119c811a5da11ed}
-  - {addr: 0x8008f698, size: 148, name: wldcore_window_transform_point_for_mode, hash: b712870430e662cb, profile: gcc-2.6.3_O2_aspsx-2.34}
+  - {addr: 0x8008f698, size: 148, name: wldcore_window_transform_point_for_mode, hash: b712870430e662cb, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x8008f72c, size: 252, name: wldcore_window_load_image_record_to_vram, hash: 415234420b5b877b}
   - {addr: 0x8008f828, size: 96, name: wldcore_menu_display_text_entry, hash: 534645d5cf3aaa4a}
   - {addr: 0x8008f888, size: 88, name: wldcore_text_get_padded_dimensions, hash: 789af18accb6a0dc}
@@ -391,7 +391,7 @@ functions:
   - {addr: 0x800903e4, size: 732, name: wldcore_text_is_window_finished, hash: b51b825f77122c7e, profile: gcc-2.7.2_O2_aspsx-2.21}
   - {addr: 0x800906c0, size: 872, name: wldcore_text_render_scrollable_window_page, hash: 0a6626b97c286fca}
   - {addr: 0x80090a28, size: 140, name: wldcore_window_update_flag_from_owner_progress, hash: 65507cce57e00cfe}
-  - {addr: 0x80090ab4, size: 636, name: wldcore_text_update_scroll_indicators, hash: 8edf02f6f19c040c, profile: gcc-2.6.3_O2_aspsx-2.21_divcheck}
+  - {addr: 0x80090ab4, size: 636, name: wldcore_text_update_scroll_indicators, hash: 8edf02f6f19c040c, profile: gcc-2.7.2_O2_aspsx-2.21_divcheck}
   - {addr: 0x80090d30, size: 32, name: wldcore_sound_play_effect, hash: cbcbcaac21c3c09d, profile: gcc-2.6.3_O2_aspsx-2.34}
   - {addr: 0x80090d50, size: 208, name: wldcore_sound_enqueue_audio_command, hash: 6b10a0879bd17fe8}
   - {addr: 0x80090e20, size: 852, name: wldcore_sound_process_audio_queue, hash: 419da1927cab9858, rodata: [{addr: 0x800672ac, size: 76, hash: 2d0472f03d8de22e}]}
