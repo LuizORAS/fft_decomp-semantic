@@ -1,10 +1,5 @@
 /* Item-list menu thread for the formation item screen: builds the item
  * category list on entry, steps the cursor, and refreshes the stat preview.
- *
- * After storing the new category the target reloads the byte twice: once into
- * `category` (both `+ 1` operands) and once for the `!= 4` compare. `category`
- * is 16 bits wide: cse forwards the stored value into a byte-wide copy, but
- * not into the widening load.
  */
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -13,18 +8,16 @@ s32 world_item_run_category_menu(void) {
     s16 x;
     s16 y;
     s32 input;
-    s16 category;
     s32 selected;
     s32 description;
 
     if (*(s8*)&g_world_item_category_menu_initialized == 0) {
         g_world_item_category_menu_initialized = 1;
         world_script_set_vsync_mode_and_event_speed(2);
-        category = g_world_item_menu_category;
         g_world_item_category_previewed_cursor = -1;
-        world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
-            g_world_item_menu_category != 4 ? (s8)(category + 1) : 7, (world_item_list_entry_t*)g_world_menu_entry_ids,
-            0);
+        world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_item_menu_category + 1),
+            (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
+            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
@@ -56,10 +49,9 @@ s32 world_item_run_category_menu(void) {
             (u16*)g_world_menu_entry_ids);
 
         g_world_item_menu_category = selected;
-        category = g_world_item_menu_category;
-        world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
-            g_world_item_menu_category != 4 ? (s8)(category + 1) : 7, (world_item_list_entry_t*)g_world_menu_entry_ids,
-            0);
+        world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_item_menu_category + 1),
+            (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
+            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         g_world_item_category_previewed_cursor = -1;
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);

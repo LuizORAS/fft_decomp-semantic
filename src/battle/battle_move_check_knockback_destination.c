@@ -70,14 +70,14 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
         return -1;
     }
     if (height < upper_height && height >= lower_height) {
-        upper_height -= upper->ceiling_depth_and_marks & MAP_TILE_CEILING_DEPTH_MASK;
+        upper_height -= upper->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK;
         if (upper_height < height + 4) {
             return -1;
         }
         level = 0;
         fall = height - lower_height;
     } else if (height < lower_height && height >= upper_height) {
-        lower_height -= lower->ceiling_depth_and_marks & MAP_TILE_CEILING_DEPTH_MASK;
+        lower_height -= lower->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK;
         if (lower_height < height + 4) {
             return -1;
         }

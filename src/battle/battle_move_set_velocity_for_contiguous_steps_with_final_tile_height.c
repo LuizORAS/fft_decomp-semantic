@@ -12,6 +12,9 @@ enum {
  * the remaining path while the steps keep the same direction quadrant and the
  * ground stays at the unit's current height, then hands the accumulated
  * edge-to-edge delta to the velocity solver.
+ *
+ * The step code is copied to a halfword before the switch, as in the clamped
+ * twin: read through the byte again, cse reuses the direction test's load.
  */
 void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
@@ -29,7 +32,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     s32 end_z;
     u32 layer;
     u32 depth;
-    s32 next;
+    s16 code;
 
     battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     x = unit->map_x;
@@ -40,39 +43,29 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     start_z = unit->screen.vy;
 
     while (index < *path) {
-        u8 quadrant;
-        u8 step_quadrant;
-
         current = &path[index + 1];
-        quadrant = *current;
-        quadrant &= 0xc0;
-        step_quadrant = *step;
-        step_quadrant &= 0xc0;
-        if (quadrant != step_quadrant) {
+        if ((*current & 0xc0) != (*step & 0xc0)) {
             break;
         }
-        switch (*current >> 6) {
+        code = *current;
+        switch (code >> 6) {
         case 0:
-            next = x + 1;
-            x = next + (*current & 3);
+            x += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case 1:
-            next = x - 1;
-            x = next - (*current & 3);
+            x -= (code & 3) + 1;
             end_x = x * BATTLE_MOVE_STEP_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case 2:
-            next = y - 1;
-            y = next - (*current & 3);
+            y -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = y * BATTLE_MOVE_STEP_WIDTH;
             break;
         case 3:
-            next = y + 1;
-            y = next + (*current & 3);
+            y += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
             break;

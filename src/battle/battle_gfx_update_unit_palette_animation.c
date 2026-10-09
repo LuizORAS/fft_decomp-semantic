@@ -5,7 +5,7 @@ void battle_gfx_update_unit_palette_animation(void) {
     s32 dst;
     s32 src;
     u8* palette;
-    s32 unused[2];
+    RECT rect; /* never used; retail reserves its 8 bytes */
 
     g_battle_unit_palette_animation_timer += g_main_system_animation_speed;
     if (g_battle_unit_palette_animation_timer >= 4) {
@@ -37,6 +37,5 @@ void battle_gfx_update_unit_palette_animation(void) {
         }
         battle_map_load_palette_data((const u16*)palette, 2, 1, 0);
         battle_map_load_palette_data((const u16*)(palette + 32), 2, 2, 0);
-        (void)&unused;
     }
 }

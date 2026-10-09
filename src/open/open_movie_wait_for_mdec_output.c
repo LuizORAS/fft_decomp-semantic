@@ -1,6 +1,7 @@
 #include "fft/open.h"
 
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused) {
+    /* volatile in the source: retail keeps the counter on the stack. */
     volatile s32 timeout = 0x800000;
 
     while (state->output_ready == 0) {

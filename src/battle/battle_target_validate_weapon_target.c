@@ -115,7 +115,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if ((u32)result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];
-        tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+        tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
     }
     return 0;
 }

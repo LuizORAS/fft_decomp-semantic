@@ -14,20 +14,13 @@
  *
  * The switch has no default: an unknown mode falls off the end and returns the
  * 5 left in $v0 by the last comparison, which is what the target does.
- *
- * The status-query tails use $v1 for the team flags.  The first status scan
- * also retains its check byte in $a1 while its masked status value is in $v0.
- * Scoped register bindings reproduce those short-lived allocations without
- * emitting instructions. */
+ */
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     battle_stats_t* unit;
     s32 index;
     s32 i;
     s32 blocked;
     s32 query;
-    /* These return and flag registers preserve the shared epilogue. */
-    s32 team_bits;
-    register s32 zero_result __asm__("$2");
     u8 first;
 
     if (*mode == 0) {
@@ -63,12 +56,10 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 break;
             }
         }
-        team_bits = unit->team_flags & 0x30;
-        zero_result = 0;
-        if (team_bits) {
-            return zero_result;
+        if ((unit->team_flags & 0x30) == 0 && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
         }
-        return i == BATTLE_STATUS_BYTE_COUNT;
+        return 0;
     }
     if (query == 4) {
         if (index == -1) {
@@ -83,12 +74,9 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 masked;
+                s32 status = unit->status_sets.current[0] & 0xef;
 
-                blocked = unit->status_sets.current[0];
-                blocked &= 0xef;
-                masked = blocked;
-                blocked = first & masked;
+                blocked = first & status;
             } else {
                 blocked
                     = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i];
@@ -97,11 +85,9 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 break;
             }
         }
-        team_bits = unit->team_flags & 0x30;
-        zero_result = 0;
-        if (!team_bits) {
-            return zero_result;
+        if ((unit->team_flags & 0x30) != 0 && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
         }
-        return i == BATTLE_STATUS_BYTE_COUNT;
+        return 0;
     }
 }

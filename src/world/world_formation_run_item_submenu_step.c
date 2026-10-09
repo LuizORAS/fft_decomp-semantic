@@ -35,7 +35,7 @@ s32 world_formation_run_item_submenu_step(void) {
 
     if (*(s8*)&g_world_item_submenu_initialized == 0) {
         g_world_item_submenu_initialized = 1;
-        g_world_item_category_view = world_menu_set_cursor_position_2(7, 0);
+        g_world_item_menu_category = world_menu_set_cursor_position_2(7, 0);
         world_thread_suspend(0xF);
         world_menu_stop_unit_status_banner_thread(8);
         world_menu_stop_unit_status_banner_thread(0xC);

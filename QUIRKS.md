@@ -151,6 +151,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   minimum-width ladder, so the value is always placed as one digit.
 - `etc_graphic_build_game_over_polygons`: `texture_mode` is the constant 1,
   so the 4-bit CLUT arm never runs.
+- `open_movie_init_mdec_stream_state` stores the slice width (24) into the
+  global `g_open_movie_mdec_stream_state.output_rect.w`, not through its
+  `state` parameter; the one caller passes that global.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

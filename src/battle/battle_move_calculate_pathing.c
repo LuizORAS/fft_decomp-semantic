@@ -182,7 +182,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
     state->selected_source_side_shift = 0;
     g_battle_move_pathing_tile_index
         = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks >> 5) & 1)) {
+    if (!((g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks.value >> 5) & 1)) {
         return 0;
     }
     g_battle_move_pathing_frontier = frontier;

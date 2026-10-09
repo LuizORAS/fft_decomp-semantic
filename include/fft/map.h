@@ -105,6 +105,18 @@ typedef union map_tile_surface {
     } bits;
 } map_tile_surface_t;
 
+/* Tile byte 0x05. Retail reads the depth as a bitfield: its zero test and
+ * its value are separate loads (BATTLE 0x801af948..0x801af970). */
+typedef union map_tile_marks {
+    u8 value;
+    struct {
+        u8 ceiling_depth : 5;
+        u8 move_destination : 1; /* MAP_TILE_FLAG_MOVE_DESTINATION */
+        u8 ability_range : 1;    /* MAP_TILE_FLAG_ABILITY_RANGE */
+        u8 targeted : 1;         /* MAP_TILE_FLAG_TARGETED */
+    } bits;
+} map_tile_marks_t;
+
 typedef union map_tile_flags_06 {
     u8 value;
     struct {
@@ -130,8 +142,8 @@ typedef struct map_tile {
     /* 0x03; bits 0..4 slope half-height, bits 5..7 depth added to height
      * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup). */
     u8 depth_half_height;
-    u8 slope_type;              /* 0x04; two bits per exit side (battle_move_calculate_tile_ceiling) */
-    u8 ceiling_depth_and_marks; /* 0x05; low five bits are ceiling depth; high bits are transient map marks */
+    u8 slope_type;                            /* 0x04; two bits per exit side (battle_move_calculate_tile_ceiling) */
+    map_tile_marks_t ceiling_depth_and_marks; /* 0x05; ceiling depth and the transient map marks */
     map_tile_flags_06_t flags_06;
     /* 0x07; low nibble blocks camera directions at a flat pitch; high nibble
      * holds the same direction bits for a steep pitch. */

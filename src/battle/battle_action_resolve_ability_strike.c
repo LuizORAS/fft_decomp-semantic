@@ -73,7 +73,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             }
             tile = &g_battle_map_tile_data[battle_map_calculate_location(
                 &g_battle_unit_stats[g_battle_action_current_ability.post_action_target_id])];
-            tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
         }
         count = battle_target_list_units_on_panels(targets, attacker);
     }

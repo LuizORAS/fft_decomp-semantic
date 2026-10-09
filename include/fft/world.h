@@ -1323,7 +1323,7 @@ void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_ota
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 a, s16 b, s16 c, s16 d);
 void world_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
-void world_gfx_set_draw_clip_rectangle(const volatile RECT* source);
+void world_gfx_set_draw_clip_rectangle(RECT* source);
 void world_gfx_set_draw_mode_from_rect(DR_MODE* mode, const u16* rect);
 void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
 void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);

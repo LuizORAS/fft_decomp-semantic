@@ -4,6 +4,7 @@
 /* OPEN.BIN MDEC out sync - spin until the MDEC output FIFO empties, reporting
  * a timeout through the library's diagnostic dump when the counter expires. */
 s32 open_bin_mdec_out_sync(void) {
+    /* volatile in the source: retail keeps the counter on the stack. */
     volatile s32 timeout = 0x100000;
 
     while (*g_open_dma_mdec_out_chcr & 0x01000000) {

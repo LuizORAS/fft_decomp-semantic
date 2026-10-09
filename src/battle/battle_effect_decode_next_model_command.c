@@ -47,10 +47,9 @@ typedef struct battle_effect_decoded {
  * 0x37 add five halfwords. Any other opcode is skipped by its length byte.
  *
  * The 0x35/0x37 stream uses variable-length commands, so its index is a word
- * offset rather than a battle_effect_command_t array index. The final
- * volatile halfword store preserves the target's store ordering. Without it,
- * reorg moves that store past the command-index update into the jump delay
- * slot and removes the target's trailing nop. */
+ * offset rather than a battle_effect_command_t array index. Its halfwords are
+ * written through a walking pointer, which keeps the last of them ahead of
+ * the command-index update. */
 void battle_effect_decode_next_model_command(battle_effect_decoded_t* out) {
     battle_effect_command_t* command;
     s32 index;
@@ -83,6 +82,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out) {
     case 0x35:
     case 0x37: {
         battle_effect_command_t* extended;
+        u16* h;
 
         extended = (battle_effect_command_t*)&g_battle_effect_model_commands[g_battle_effect_model_command_index];
         dst->values[0] = extended->op35.values[0];
@@ -90,11 +90,12 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out) {
         dst->values[2] = extended->op35.values[2];
         dst->x = extended->op35.x;
         dst->y = extended->op35.y;
-        out->halves[0] = extended->op35.halves[3];
-        out->halves[1] = extended->op35.halves[1];
-        out->halves[2] = extended->op35.halves[0];
-        out->halves[3] = extended->op35.halves[2];
-        *(volatile u16*)&out->halves[4] = extended->op35.halves[4];
+        h = out->halves;
+        *h++ = extended->op35.halves[3];
+        *h++ = extended->op35.halves[1];
+        *h++ = extended->op35.halves[0];
+        *h++ = extended->op35.halves[2];
+        *h++ = extended->op35.halves[4];
         g_battle_effect_model_command_index += 9;
         break;
     }

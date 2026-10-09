@@ -7,9 +7,7 @@
  * strip's icon kind selects. */
 void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* param, world_menu_icon_record_t* record) {
     s32 kind;
-    /* Pins: cse merges a plain copy of kind; the target tests a second copy in $v1 into $v0. */
-    register s32 index __asm__("$3");
-    register s32 test __asm__("$2");
+    s32 index;
     u16 width;
     /* HImode is load-bearing. `cse` keys its constant equivalence classes by
      * mode, so a u16 `size` is not value-equal to the SImode 0x10 of the
@@ -47,7 +45,8 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
     record->base.sprites[2].u0 = 0xb8;
     record->base.sprites[2].v0 = 0;
     kind = param->icon_kind;
-    index = kind;
+    /* The range test below reads its own halfword copy of the kind. */
+    index = (s16)kind;
     if (kind == 0x10) {
         world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
         record->icons[0]->u0 = 0x30;
@@ -63,8 +62,7 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
         world_gfx_init_image_loading((POLY_FT4*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
             (const world_image_location_t*)&param->icon_x, &g_world_menu_single_icon_image_params[kind]);
     } else {
-        test = index - 5;
-        if ((u32)test < 0xb) {
+        if (index >= 5 && index < 0x10) {
             world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
             world_menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
             world_menu_init_sprite_array(record->icons[2], 1, 0x7cfc);

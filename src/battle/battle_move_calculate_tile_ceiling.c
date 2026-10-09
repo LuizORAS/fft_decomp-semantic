@@ -24,7 +24,7 @@ u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exi
         if ((tile->flags_06.value & MAP_TILE_FLAG_BLOCKED) == 0) {
             tile_ceiling = (tile->height << 1)
                 + (tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * ((tile->slope_type >> exit_slope_shift) & 3)
-                - ((tile->ceiling_depth_and_marks & MAP_TILE_CEILING_DEPTH_MASK) << 1);
+                - ((tile->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK) << 1);
             if (tile_ceiling > exit_height) {
                 if (ceiling < tile_ceiling) {
                     tile_ceiling = ceiling;

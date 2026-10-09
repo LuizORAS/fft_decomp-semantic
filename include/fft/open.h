@@ -139,8 +139,7 @@ void open_movie_handle_mdec_output_slice(void);
 void open_movie_init_and_play_end(void);
 void open_movie_init_and_stream_opening(s32 skip_movie);
 
-void open_movie_init_mdec_stream_state(
-    volatile open_movie_mdec_stream_state_t* state, s16 x, s16 y, s16 width, s32 height);
+void open_movie_init_mdec_stream_state(open_movie_mdec_stream_state_t* state, s32 x0, s32 y0, s32 x1, s32 y1);
 
 void open_movie_init_stream(s32 sector, void* output_callback);
 void open_movie_pause_cd_audio(void);

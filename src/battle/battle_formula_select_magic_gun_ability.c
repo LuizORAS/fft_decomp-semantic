@@ -1,17 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* volatile view: the target reloads this global at every use. */
-extern battle_stats_t* volatile g_battle_action_attacker;
-
 /* Selects a Fire, Lightning, or Ice spell and installs its ability data. */
 void battle_formula_select_magic_gun_ability(void) {
     u8 element;
     u8 pct;
     u16 id;
-    volatile u16* current_ability;
-    u8* src;
-    battle_stats_t* attacker;
     s32 roll;
 
     element = g_battle_action_current_ability.weapon_data.element;
@@ -45,10 +39,8 @@ void battle_formula_select_magic_gun_ability(void) {
             }
         }
     }
-    current_ability = &g_battle_action_current_ability.ability_id;
-    *current_ability = id;
-    src = (u8*)current_ability + 0x1A;
-    attacker = g_battle_action_attacker;
-    attacker->last_ability_id = id;
-    main_util_copy_byte_data(&g_main_ability_range_data[id], src, 14);
+    g_battle_action_current_ability.ability_id = id;
+    g_battle_action_attacker->last_ability_id = id;
+    main_util_copy_byte_data(&g_main_ability_range_data[id], &g_battle_action_current_ability.range_data,
+        sizeof(g_battle_action_current_ability.range_data));
 }

@@ -29,9 +29,10 @@
  *
  * Load-bearing constructs:
  *
- *   - The 0x80 flag test reads `slot->flags` through a volatile lvalue: the
- *     target reloads that byte after the turn value instead of reusing the
- *     earlier load.
+ *   - The staged-item test is written as `index == 0 && staged_item != 0`
+ *     with the biased turn value in the else arm: two jumps then reach that
+ *     arm, cse starts a new block there and the 0x80 flag test reloads
+ *     `slot->flags` as the target does.
  *   - `action` is a pointer local for the shared action record. The target
  *     keeps that address in s0, stores through it in the jal delay slot and
  *     passes `move a1,s0`; storing to g_world_menu_preview_action absolutely wastes the delay
@@ -155,13 +156,13 @@ void world_menu_build_ability_preview_at_list(void) {
                 value = 0xb012;
             } else {
                 turn_bias = slot->turn_value;
-                if (index != 0 || staged_item == 0) {
-                    if ((*(volatile u8*)&slot->flags & 0x80) != 0) {
+                if (index == 0 && staged_item != 0) {
+                    value = turn_bias + 0x3800;
+                } else {
+                    if ((slot->flags & 0x80) != 0) {
                         turn_bias += 0x100;
                     }
                     value = turn_bias + TEXT_ID_ABILITY_NAME_BASE;
-                } else {
-                    value = turn_bias + 0x3800;
                 }
             }
             work->primary_values[count] = value;

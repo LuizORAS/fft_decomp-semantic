@@ -21,7 +21,7 @@ void battle_state_handle_targeting_range_state(void) {
         }
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if ((battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
-                        ->ceiling_depth_and_marks
+                        ->ceiling_depth_and_marks.value
                     & MAP_TILE_FLAG_ABILITY_RANGE)
                 != 0) {
                 battle_target_select_tile();

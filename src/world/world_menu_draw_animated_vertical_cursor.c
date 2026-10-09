@@ -7,22 +7,20 @@
  * two `POLY_FT4` layers. Bit 15 selects the alternate animation.
  */
 void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16* state, s32 mode) {
-    s32 active;
+    RECT rect; /* never used; retail reserves its 8 bytes */
     u32 state_mode;
     s32 alternate;
     s32 frame;
     s32 index;
-    u32 y_offset_word;
+    s8 bob;
     s32 y_offset;
     s32 y_end;
-    volatile s32 unused;
     u16 front_clut;
     u16 back_clut;
 
-    active = mode;
     state_mode = *state >> 15;
     alternate = state_mode;
-    if (active == 0) {
+    if (mode == 0) {
         state_mode = alternate;
         if (state_mode != 0) {
             *state = 0;
@@ -30,7 +28,7 @@ void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16*
         }
     }
     state_mode = alternate;
-    if (state_mode == 0 && (active & 1)) {
+    if (state_mode == 0 && (mode & 1)) {
         *state = 0x8000;
         alternate = 1;
     }
@@ -47,23 +45,13 @@ void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16*
     }
     state_mode = alternate;
     if (state_mode != 0) {
-        index = 0;
-        if ((s8)g_world_menu_cursor_bob_active_thresholds[0] < frame) {
-            do {
-                index += 2;
-            } while ((s8)g_world_menu_cursor_bob_active_thresholds[index] < frame);
-        }
-        y_offset_word = g_world_menu_cursor_bob_active_thresholds[index + 1] << 24;
+        for (index = 0; (s8)g_world_menu_cursor_bob_active_thresholds[index] < frame; index += 2) { }
+        bob = g_world_menu_cursor_bob_active_thresholds[index + 1];
     } else {
-        index = 0;
-        if ((s8)g_world_menu_cursor_bob_thresholds[0] < frame) {
-            do {
-                index += 2;
-            } while ((s8)g_world_menu_cursor_bob_thresholds[index] < frame);
-        }
-        y_offset_word = g_world_menu_cursor_bob_thresholds[index + 1] << 24;
+        for (index = 0; (s8)g_world_menu_cursor_bob_thresholds[index] < frame; index += 2) { }
+        bob = g_world_menu_cursor_bob_thresholds[index + 1];
     }
-    y_offset = (s32)y_offset_word >> 24;
+    y_offset = bob;
     frame += world_gfx_get_vsync_mode_or_one();
     state_mode = alternate;
     if (state_mode != 0) {
@@ -75,7 +63,7 @@ void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16*
     } else {
         *state = 0;
     }
-    if (active != 0) {
+    if (mode != 0) {
         front_clut = g_world_menu_clut_front_alt;
         back_clut = g_world_menu_clut_back_alt;
     } else {

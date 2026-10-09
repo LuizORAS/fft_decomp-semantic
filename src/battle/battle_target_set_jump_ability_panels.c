@@ -130,11 +130,11 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
         if (lower_height >= min_height && max_height >= lower_height
             && (lower->flags_06.value & MAP_TILE_FLAG_UNTARGETABLE) == 0) {
             marked++;
-            lower->ceiling_depth_and_marks |= MAP_TILE_FLAG_ABILITY_RANGE;
+            lower->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
         } else {
-            lower->ceiling_depth_and_marks &= 0xBF;
+            lower->ceiling_depth_and_marks.value &= 0xBF;
         }
-        upper->ceiling_depth_and_marks &= 0xBF;
+        upper->ceiling_depth_and_marks.value &= 0xBF;
     }
     return marked;
 }

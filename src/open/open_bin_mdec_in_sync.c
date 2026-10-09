@@ -4,6 +4,7 @@
 /* OPEN.BIN MDEC in sync - spin until the MDEC input FIFO drains, reporting a
  * timeout through the library's diagnostic dump when the counter expires. */
 s32 open_bin_mdec_in_sync(void) {
+    /* volatile in the source: retail keeps the counter on the stack. */
     volatile s32 timeout = 0x100000;
 
     while (*g_open_mdec_status_reg & 0x20000000) {

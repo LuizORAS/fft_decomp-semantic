@@ -16,16 +16,16 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
 
     yaw = battle_camera_wrap_yaw_angle() & 0xFFF;
     battle_unit_copy_map_coords_from_misc_id(misc_id_a, g_battle_scratch_coords);
+    /* The raw result is assigned before it is masked: combine then knows
+     * nothing about the mask's high bits and the loop test keeps its sll 16. */
     mask = battle_map_get_tile_data_value(
-               0xB, g_battle_scratch_coords[0], g_battle_scratch_coords[2], g_battle_scratch_coords[1])
-        & 0xFF;
+        0xB, g_battle_scratch_coords[0], g_battle_scratch_coords[2], g_battle_scratch_coords[1]);
+    mask &= 0xFF;
     battle_unit_copy_map_coords_from_misc_id(misc_id_b, g_battle_scratch_coords);
     mask = (mask
                | battle_map_get_tile_data_value(
                    0xB, g_battle_scratch_coords[0], g_battle_scratch_coords[2], g_battle_scratch_coords[1]))
         & 0xF;
-    /* Launder: hides mask's known-zero bits so the (s16) test keeps its sll 16. */
-    __asm__("" : "=r"(mask) : "0"(mask));
     bit = 1;
     best = 0x8000;
     sign = 1;

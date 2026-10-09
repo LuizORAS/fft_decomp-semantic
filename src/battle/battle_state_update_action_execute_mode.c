@@ -33,7 +33,8 @@ void battle_state_update_action_execute_mode(void) {
 
     if (unit->used_ability_id != 0 && unit->used_ability_id != 0x200
         && unit->used_ability_id != ABILITY_ID_BASIC_SKILL_THROW_STONE) {
-        if (battle_effect_load_ability(unit->used_ability_id) != 0 || (unit->used_ability_id - 0x196) < 8U) {
+        if (battle_effect_load_ability(unit->used_ability_id) != 0
+            || (unit->used_ability_id >= ABILITY_ID_CHARGE_FIRST && unit->used_ability_id < ABILITY_ID_MATH_FIRST)) {
             battle_camera_update_cursor_tile_vector();
         }
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
@@ -43,8 +44,9 @@ void battle_state_update_action_execute_mode(void) {
                 for (i = 0; i < unit->target_count; i++) {
                     target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
                     if (target != 0) {
-                        if ((unit->used_ability_id - 0x1a6) < 0x20U) {
-                            if (battle_effect_load_ability(*(volatile u16*)&unit->used_ability_id) != 0
+                        if (unit->used_ability_id >= ABILITY_ID_REACTION_FIRST
+                            && unit->used_ability_id < ABILITY_ID_SUPPORT_FIRST) {
+                            if (battle_effect_load_ability(unit->used_ability_id) != 0
                                 && g_battle_ability_animation_data[unit->used_ability_id].attack_animation != 0) {
                                 /* Both arguments are misc records overlaying the declared parameters. */
                                 battle_unit_start_post_attack_animation_display((s32)unit, (u8*)target);

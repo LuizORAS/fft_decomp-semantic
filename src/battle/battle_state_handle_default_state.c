@@ -6,7 +6,7 @@
 void battle_state_handle_default_state(void) {
     battle_unit_misc_data_t* unit;
     s32 input;
-    s32 unused[2]; /* dead 8-byte local; keeps the target's 0x20 frame */
+    RECT rect; /* never used; retail reserves its 8 bytes */
 
     battle_camera_handle_rotation_input();
     battle_camera_call_zoom_map();
@@ -15,7 +15,6 @@ void battle_state_handle_default_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     input = g_main_input_pressed_buttons;
-    (void)&unused;
     if (input & PSX_PAD_SELECT) {
         battle_action_clear_at_list_id();
         battle_menu_open_free_cursor_help();

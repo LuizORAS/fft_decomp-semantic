@@ -6,8 +6,7 @@
  *
  * Modes 3 and 5 reject the status check set 8; mode 5 ignores bit 0x10 in
  * the first status byte. The target has no defined return value for other
- * modes; callers must pass 0-5. The two team-flag locals use $v1 to preserve
- * the target's branch and delay-slot allocation without emitting assembly. */
+ * modes; callers must pass 0-5. */
 s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     battle_stats_t* unit;
     s32 index;
@@ -40,10 +39,6 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         return (unit->team_flags & 0x30) == 0;
     }
     if (query == 3) {
-        /* Pins required (both query blocks): unpinned, the && result takes $v1 and the flags $v0, losing the target's
-         * `move v0,zero` delay slot. */
-        register u8 team_flags __asm__("$3");
-
         if (index == -1) {
             return 1;
         }
@@ -53,8 +48,10 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 break;
             }
         }
-        team_flags = unit->team_flags;
-        return (team_flags & 0x30) == 0 && i == BATTLE_STATUS_BYTE_COUNT;
+        if ((unit->team_flags & 0x30) == 0 && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
+        }
+        return 0;
     }
     if (query == 4) {
         if (index == -1) {
@@ -63,20 +60,15 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         return (unit->team_flags & 0x30) != 0;
     }
     if (query == 5) {
-        register u8 team_flags __asm__("$3");
-
         if (index == -1) {
             return 0;
         }
         first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 masked;
+                s32 status = unit->status_sets.current[0] & 0xef;
 
-                blocked = unit->status_sets.current[0];
-                blocked &= 0xef;
-                masked = blocked;
-                blocked = first & masked;
+                blocked = first & status;
             } else {
                 blocked
                     = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i];
@@ -85,7 +77,9 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
                 break;
             }
         }
-        team_flags = unit->team_flags;
-        return (team_flags & 0x30) != 0 && i == BATTLE_STATUS_BYTE_COUNT;
+        if ((unit->team_flags & 0x30) != 0 && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
+        }
+        return 0;
     }
 }

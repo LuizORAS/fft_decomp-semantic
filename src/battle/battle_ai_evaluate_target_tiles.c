@@ -49,9 +49,9 @@ s32 battle_ai_evaluate_target_tiles(void) {
     } else {
         tile = g_battle_map_tile_data;
         for (i = 0; i < 512; i++, tile++)
-            tile->ceiling_depth_and_marks &= ~MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
         g_battle_map_tile_data[origin->bytes.y * ai->map_max_x + origin->bytes.x + (origin->bytes.elevation << 8)]
-            .ceiling_depth_and_marks |= MAP_TILE_FLAG_ABILITY_RANGE;
+            .ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
     }
 
     /* Field-derived level bases keep both row pointers in the target order;
@@ -67,7 +67,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
                     /* Keep the membership test and update in one working mask. */
                     tile_mask = row << x;
                     if (tile_mask & 0x8000) {
-                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level << 8)].ceiling_depth_and_marks
+                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level << 8)].ceiling_depth_and_marks.value
                                 >> MAP_TILE_FLAG_ABILITY_RANGE_SHIFT)
                             & 1) {
                             tile_mask = 0x8000;
