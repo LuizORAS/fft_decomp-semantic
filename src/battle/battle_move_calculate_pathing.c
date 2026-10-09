@@ -59,9 +59,9 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
             || g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags_06.bits.untargetable) {
             return 0;
         }
-        *(u16*)config = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-        if (g_battle_map_tile_data[*(u16*)config].flags_06.bits.blocked
-            || g_battle_map_tile_data[*(u16*)config].flags_06.bits.untargetable) {
+        config->target_index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
+        if (g_battle_map_tile_data[config->target_index].flags_06.bits.blocked
+            || g_battle_map_tile_data[config->target_index].flags_06.bits.untargetable) {
             return 0;
         }
         config->unit_id = 0x7F;
@@ -124,7 +124,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         if (!state->frontier_max_remaining_range) {
             break;
         }
-        if (g_battle_target_panels[*(u16*)config].remaining_range >= state->frontier_max_remaining_range) {
+        if (g_battle_target_panels[config->target_index].remaining_range >= state->frontier_max_remaining_range) {
             break;
         }
         for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {

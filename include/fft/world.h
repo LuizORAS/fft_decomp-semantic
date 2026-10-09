@@ -2510,29 +2510,6 @@ typedef struct world_menu_sprite_layout {
     s16 mode; /* 0x2c */
 } world_menu_sprite_layout_t;
 
-/* Provisional record rendered by the WORLD menu-text image builders at
- * 0x800e4b04 / 0x8010e2c8: a text image buffer is allocated (16-colour via
- * 0x800ff690, otherwise 0x800ff9ac), the text at +0x10 is drawn through
- * the main-thread text callback, and the RECT at +0x08 is uploaded. */
-typedef struct world_menu_text_image {
-    void* buffer; /* 0x00 */
-    u16 width;    /* 0x04 */
-    u16 height;   /* 0x06 */
-    RECT rect;    /* 0x08 */
-    void* text;   /* 0x10 */
-    u8 _unused_14[2];
-    u16 dialog_type;    /* 0x16: window-image mode (DisplayMessage Dialog Type) */
-    u16 bits_per_pixel; /* 0x18: 0 skips rendering, 0x10 selects the wide builder */
-    u8 _unused_1a[8];
-    u16 first_line; /* 0x22: first line world_menu_display_text draws */
-    u16 last_line;  /* 0x24: line world_menu_display_text stops at */
-    u8 _unused_26[0x30 - 0x26];
-    s16 tail_offset; /* 0x30: dialog tail offset from the window centre */
-    u8 _unused_32[0x40 - 0x32];
-    u16 origin_x; /* 0x40 */
-    u16 origin_y; /* 0x42 */
-} world_menu_text_image_t;
-
 /* Provisional: first thread parameter of world_menu_input_loop_thread's menu loop
  * (also passed to world_menu_handle_entry_confirm). Only the fields touched by
  * world_menu_cancel_thread_group (0x800ebe7c) are known. */
@@ -3007,8 +2984,8 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
 
 s32 world_menu_refresh_learn_skillset_empty(s32 index);
 void world_menu_refresh_state_from_script_variables(s32* state);
-void world_menu_render_text_image_at_fixed_origin(world_menu_text_image_t* record);
-void world_menu_render_text_image_at_record_origin(world_menu_text_image_t* record);
+void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* record);
+void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 void world_menu_run_companion_overlay_9_10_thread(void);
 void world_menu_run_dead_unit_panel_a_2(void);
 void world_menu_run_order_unit(void);

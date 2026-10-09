@@ -25,7 +25,7 @@ void attack_render_unit_status_panel_thread(void) {
     battle_menu_status_panel_editor_packet_t* editor_base;    /* sp68 */
     battle_menu_status_panel_numeric_entry_t* number_entries; /* sp70 */
     battle_menu_status_panel_gauges_t* state;                 /* sp78 */
-    void* portrait_request;                                   /* sp80 */
+    s32 portrait_request;                                     /* sp80 */
     const RECT* transition;                                   /* sp88 */
     u8* portrait_image;                                       /* sp90 */
     u8* value_pixels;                                         /* sp98 */
@@ -371,13 +371,13 @@ void attack_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                /* Volatile read of the named field: the request pointer is
+                /* Volatile read of the named field: the request word is
                    fetched again rather than reused from the test above. */
-                portrait_request = *(void* volatile*)&thread->work;
+                portrait_request = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
                 cur_unit = state->unit_index;
             } else {
-                portrait_request = *(void* volatile*)&thread->work;
+                portrait_request = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
                 cur_unit = state->unit_index;
@@ -389,7 +389,7 @@ void attack_render_unit_status_panel_thread(void) {
             }
         }
         attack_gfx_build_portrait_transition_primitives(transition, &anim_state, &cur_unit, &prev_unit, portrait_image,
-            (POLY_FT4*)&editor->portrait[0], (s32)portrait_request);
+            (POLY_FT4*)&editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
             s32 bar_y;

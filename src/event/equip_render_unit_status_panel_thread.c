@@ -37,7 +37,7 @@ void equip_render_unit_status_panel_thread(void) {
     battle_menu_status_panel_editor_packet_t* editor_base;     /* sp68 */
     battle_menu_status_panel_numeric_entry_t* numeric_entries; /* sp70 */
     battle_menu_status_panel_editor_state_t* state;            /* sp78 */
-    void* portrait_arg;                                        /* sp80 */
+    s32 portrait_arg;                                          /* sp80 */
     const RECT* portrait_rect;                                 /* sp88 */
     u8* portrait_image;                                        /* sp90 */
     u8* small_text_image;                                      /* sp98 */
@@ -381,13 +381,13 @@ void equip_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                /* Volatile read of the named field: the request pointer is
+                /* Volatile read of the named field: the request word is
                    fetched again rather than reused from the test above. */
-                portrait_arg = *(void* volatile*)&thread->work;
+                portrait_arg = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
                 cur_unit = state->unit;
             } else {
-                portrait_arg = *(void* volatile*)&thread->work;
+                portrait_arg = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
                 cur_unit = state->unit;
@@ -399,7 +399,7 @@ void equip_render_unit_status_panel_thread(void) {
             }
         }
         equip_gfx_build_portrait_transition_primitives(portrait_rect, &anim_state, &cur_unit, &prev_unit,
-            (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], (s32)portrait_arg);
+            (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             u16* row_y;

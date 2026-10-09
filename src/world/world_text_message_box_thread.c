@@ -2,30 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Text image record handed to world_menu_render_text_image_at_fixed_origin;
- * the leading fields follow world_menu_text_image_t. */
-typedef struct world_text_message_box_record {
-    void* buffer;     /* 0x00 */
-    u16 width;        /* 0x04 */
-    u16 height;       /* 0x06 */
-    RECT rect;        /* 0x08 */
-    s32 text;         /* 0x10 */
-    u16 color;        /* 0x14 */
-    u16 dialog_type;  /* 0x16 */
-    u16 box_type;     /* 0x18: dialog_type & 0x70 */
-    u16 position;     /* 0x1a */
-    u16 options;      /* 0x1c: dialog_type & 0xc */
-    u8 _unused_1e[2]; /* 0x1e */
-    u16 line;         /* 0x20 */
-    u16 first_line;   /* 0x22 */
-    u16 last_line;    /* 0x24 */
-    u8 _unused_26[6]; /* 0x26 */
-    s16 mark;         /* 0x2c: characters per line, later the 0xFB cursor column */
-    s16 lines;        /* 0x2e */
-    s16 tail_offset;  /* 0x30: world_menu_build_and_upload_window_image tail offset */
-    u8 _unused_32[0x50 - 0x32];
-} world_text_message_box_record_t;
-
 /* Record `index` of the window buffer pair; the offset is the first addu
  * operand in the target, which plain `&win[index]` does not reproduce. */
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
@@ -51,7 +27,7 @@ typedef struct world_text_message_box_record {
  * constant is what reproduces the target's 0xFFFF reloads and its reload
  * register rotation. */
 void world_text_message_box_thread(void) {
-    world_text_message_box_record_t rec;
+    world_text_dialog_record_t rec;
     RECT from;
     RECT to;
     s32 column;
@@ -320,7 +296,7 @@ void world_text_message_box_thread(void) {
                                     WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0;
                                     rec.first_line++;
                                     rec.last_line = rec.first_line + rec.lines;
-                                    world_menu_render_text_image_at_fixed_origin((world_menu_text_image_t*)&rec);
+                                    world_menu_render_text_image_at_fixed_origin(&rec);
                                 } else {
                                     break;
                                 }

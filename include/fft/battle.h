@@ -4336,7 +4336,7 @@ typedef struct battle_palette_update_entry {
 typedef struct battle_gfx_sprite_display {
     u16 rg;
     u8 b;
-    u8 _padding_03; /* aligns tpage */
+    u8 part_count; /* 0x03 */
     u16 tpage;
     u16 clut;
     u16 scale_x;
@@ -5560,7 +5560,7 @@ typedef enum battle_effective_movement_flags {
 /* Acting-unit scratch block at 0x1f800000, pointer at 0x8018f4e0.
  * Only target-proven bytes are named. */
 typedef struct battle_move_pathfind_scratch {
-    u8 _unused_00[2];
+    u16 target_index;  /* 0x00; target tile index: (level << 8) + y * map_max_x + x */
     u8 jump_times_two; /* 0x02; 0x3e when flying / ignoring height */
     u8 _unused_03;
     u8 jump_or_1f;     /* 0x04 */
@@ -7084,7 +7084,7 @@ typedef struct battle_menu_status_panel_display_thread {
     } shake_y;
     s32 flags;     /* 0x08: 0x20 and 0x40 start the two shake tables, 0x80
                       suppresses all drawing */
-    void* work;    /* 0x0c: redraw request, cleared once serviced */
+    s32 work;      /* 0x0c: redraw request flags, cleared once serviced */
     s32 highlight; /* 0x10: nonzero forces the alternate (highlight) CLUTs; bound as
                       g_bunit_status_display_highlight and the WORLD display globals */
 } battle_menu_status_panel_display_thread_t;
@@ -7178,32 +7178,6 @@ typedef struct battle_menu_window_spec {
     u8 _unused_1c[0x10];                      /* 0x1c */
     s16 style;                                /* 0x2c */
 } battle_menu_window_spec_t;
-
-/* Provisional menu text image record rendered by
- * battle_menu_render_text_image_at_record_origin: a text image buffer is
- * built (the wide builder when box_type is 0x10), the text at +0x10 is
- * drawn from the origin at +0x40, and the RECT at +0x08 is uploaded. Same
- * layout as the WORLD world_menu_text_image_t and the text threads' dialog
- * records. */
-typedef struct battle_menu_text_image {
-    void* buffer; /* 0x00 */
-    u16 width;    /* 0x04 */
-    u16 height;   /* 0x06 */
-    RECT rect;    /* 0x08 */
-    void* text;   /* 0x10 */
-    u8 _unused_14[2];
-    u16 dialog_type; /* 0x16; window-image mode */
-    u16 box_type;    /* 0x18: 0 skips rendering, 0x10 selects the wide builder */
-    u8 _unused_1a[8];
-    u16 first_line; /* 0x22 */
-    u16 last_line;  /* 0x24 */
-    u8 _unused_26[0x30 - 0x26];
-    s16 tail_offset; /* 0x30; arrow position */
-    u8 _unused_32[0x40 - 0x32];
-    u16 origin_x; /* 0x40 */
-    u16 origin_y; /* 0x42 */
-} battle_menu_text_image_t;
-typedef char battle_menu_text_image_size_must_be_0x44[(sizeof(battle_menu_text_image_t) == 0x44) ? 1 : -1];
 
 /* Provisional 8-byte header copied out of the request for the caller. */
 typedef struct battle_menu_window_header {
@@ -7570,7 +7544,7 @@ void battle_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
 void battle_set_menu_sprite_clut_variant_1(SPRT* sprite);
 void battle_menu_open_illegal_move_help(void);
 s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input);
-void battle_menu_render_text_image_at_record_origin(battle_menu_text_image_t* record);
+void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 
 void battle_menu_build_window_sprites(
     battle_menu_window_header_t* header, battle_menu_window_spec_t* spec, battle_menu_window_record_t* record);

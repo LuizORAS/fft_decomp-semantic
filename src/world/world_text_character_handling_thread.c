@@ -213,7 +213,7 @@ void world_text_character_handling_thread(void) {
         value = world_get_misc_id(world_thread_get_current_parameter_3());
         world_unit_project_misc_to_screen(value, g_world_text_speaker_screen_coords);
         cursor_x = center;
-        rec.offset = 0;
+        rec.tail_offset = 0;
         rec.x = g_world_text_speaker_screen_coords[0] - center - 4;
         if (rec.position == 0) {
             if (world_thread_get_current_parameter_3() == (u16)g_world_text_speaker_swap_unit_a) {
@@ -239,32 +239,32 @@ void world_text_character_handling_thread(void) {
             rec.y = g_world_text_speaker_screen_coords[1];
         }
         if (rec.x < 0x88) {
-            rec.offset = rec.x - 0x88;
+            rec.tail_offset = rec.x - 0x88;
             rec.x = 0x88;
         } else if (rec.x + rec.width > 0x180) {
-            rec.offset = rec.x + rec.width - 0x180;
+            rec.tail_offset = rec.x + rec.width - 0x180;
             rec.x = 0x180 - rec.width;
         }
         rec.x += rec.x_offset;
         rec.y += rec.y_offset;
         if (rec.x < 0x88) {
-            rec.offset += rec.x - 0x88;
+            rec.tail_offset += rec.x - 0x88;
             rec.x = 0x88;
         } else if (rec.x + rec.width > 0x180) {
-            rec.offset += rec.x + rec.width - 0x180;
+            rec.tail_offset += rec.x + rec.width - 0x180;
             rec.x = 0x180 - rec.width;
         }
-        rec.offset += rec.arrow_offset;
+        rec.tail_offset += rec.arrow_offset;
         if (rec.y < 0x16) {
             rec.y = 0x16;
         } else if (rec.y + rec.height > 0xE4) {
             rec.y = 0xE4 - rec.height;
         }
-        if (rec.offset > cursor_x - 0x18) {
-            rec.offset = cursor_x - 0x18;
+        if (rec.tail_offset > cursor_x - 0x18) {
+            rec.tail_offset = cursor_x - 0x18;
         }
-        if (rec.offset < -cursor_x + 0x18) {
-            rec.offset = -cursor_x + 0x18;
+        if (rec.tail_offset < -cursor_x + 0x18) {
+            rec.tail_offset = -cursor_x + 0x18;
         }
         if (rec.position == 1) {
             bottom = rec.y + rec.height - 8;
@@ -272,9 +272,9 @@ void world_text_character_handling_thread(void) {
         if (rec.position == 2) {
             bottom = rec.y + 8;
         }
-        right = rec.x + rec.offset + (rec.width >> 1);
+        right = rec.x + rec.tail_offset + (rec.width >> 1);
     } else {
-        rec.offset = 0;
+        rec.tail_offset = 0;
         half_w = rec.width >> 1;
         rec.x = (0x100 - half_w) & 0xFFFE;
         half_h = rec.height >> 1;
@@ -307,7 +307,7 @@ void world_text_character_handling_thread(void) {
             win->portrait_code = rec.portrait;
         }
         value = world_thread_get_current_parameter_3();
-        world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.offset);
+        world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
         win->portrait_battle_id = value;
     } else if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         win[0].quads[0].clut = 0x7CBC;
@@ -316,7 +316,7 @@ void world_text_character_handling_thread(void) {
     } else {
         rec.first_line = 0;
         rec.last_line = rec.lines;
-        world_menu_render_text_image_at_record_origin((world_menu_text_image_t*)&rec);
+        world_menu_render_text_image_at_record_origin(&rec);
     }
     if (g_world_formation_screen_active != 0) {
         right -= 0x100;
@@ -360,7 +360,7 @@ void world_text_character_handling_thread(void) {
         win->quads[1].y2 = bottom;
         win->quads[1].x3 = right;
         win->quads[1].y3 = bottom;
-        if (rec.offset < 0) {
+        if (rec.tail_offset < 0) {
             to.x = rec.x + 8;
             if (rec.portrait < 8) {
                 rec.origin_x += 0x28;
@@ -383,7 +383,7 @@ void world_text_character_handling_thread(void) {
         }
         to.w = 0x1F;
         to.h = 0x30;
-        if (rec.offset < 0) {
+        if (rec.tail_offset < 0) {
             win[1].portrait_flipped = 1;
             win[0].portrait_flipped = 1;
         }
@@ -421,7 +421,7 @@ void world_text_character_handling_thread(void) {
     base = win->quads[0].u0;
     rec.x = base + 8;
     rec.y = win->quads[0].v0 + 8;
-    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.offset < 0 && rec.portrait < 8) {
+    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.tail_offset < 0 && rec.portrait < 8) {
         rec.x = base + 0x30;
     }
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != 8 && rec.position == 2) {
@@ -530,7 +530,7 @@ void world_text_character_handling_thread(void) {
                                         WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
-                                        world_menu_render_text_image_at_record_origin((world_menu_text_image_t*)&rec);
+                                        world_menu_render_text_image_at_record_origin(&rec);
                                     }
                                     if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
@@ -538,7 +538,7 @@ void world_text_character_handling_thread(void) {
                                         WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line++;
                                         rec.last_line = rec.first_line + rec.lines;
-                                        world_menu_render_text_image_at_record_origin((world_menu_text_image_t*)&rec);
+                                        world_menu_render_text_image_at_record_origin(&rec);
                                     }
                                     if (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)) {
                                         win[0].icon_flags = 0;
@@ -557,7 +557,7 @@ void world_text_character_handling_thread(void) {
                                     WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                     rec.first_line++;
                                     rec.last_line = rec.first_line + rec.lines;
-                                    world_menu_render_text_image_at_record_origin((world_menu_text_image_t*)&rec);
+                                    world_menu_render_text_image_at_record_origin(&rec);
                                 } else {
                                     break;
                                 }
@@ -594,7 +594,7 @@ void world_text_character_handling_thread(void) {
                     text = world_text_find_entry(rec.text);
                     no_wait = 0;
                     world_menu_build_and_upload_window_image(
-                        rec.width, rec.height, &rec.rect, rec.dialog_type, rec.offset);
+                        rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                     color = 1;
                     cursor_x = rec.x;
                     width_override = no_value;
@@ -617,12 +617,12 @@ void world_text_character_handling_thread(void) {
                 }
                 if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
                     world_menu_build_and_upload_window_image(
-                        rec.width, rec.height, &rec.rect, rec.dialog_type, rec.offset);
+                        rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 } else if (rec.box_type != 0) {
                     g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_PAGE;
                     rec.first_line = rec.line;
                     rec.last_line = rec.line + rec.lines;
-                    world_menu_render_text_image_at_record_origin((world_menu_text_image_t*)&rec);
+                    world_menu_render_text_image_at_record_origin(&rec);
                 }
                 cursor_y = rec.y - 0x10;
                 world_thread_yield();
@@ -695,7 +695,8 @@ void world_text_character_handling_thread(void) {
                 column = 0;
                 text = world_text_find_entry(rec.text);
                 no_wait = 0;
-                world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.offset);
+                world_menu_build_and_upload_window_image(
+                    rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 color = 1;
                 width_override = no_value;
                 cursor_x = rec.x;

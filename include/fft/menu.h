@@ -746,8 +746,10 @@ typedef struct world_text_backreference_state {
     s32 glyph_page;    /* 0x2c; pending 0xDx page-prefix byte, 0 otherwise (world_measure_text_pixels) */
 } world_text_backreference_state_t;
 
-/* Dialog record handed to world_menu_render_text_image_at_record_origin;
- * the leading fields follow world_menu_text_image_t. */
+/* Text window record of the dialog and message-box threads, rendered by the
+ * BATTLE and WORLD *_menu_render_text_image_at_* functions: they build an
+ * image buffer (the window builder when box_type is 0x10), draw `text` into
+ * it and upload `rect`. */
 typedef struct world_text_dialog_record {
     void* buffer;      /* 0x00 */
     u16 width;         /* 0x04 */
@@ -768,7 +770,7 @@ typedef struct world_text_dialog_record {
     s16 _unknown_2a;   /* 0x2a */
     s16 mark;          /* 0x2c: measured width, later the 0xFB cursor mark */
     s16 lines;         /* 0x2e */
-    s16 offset;        /* 0x30 */
+    s16 tail_offset;   /* 0x30: dialog tail offset from the window centre */
     u8 _padding_32[2]; /* 0x32; aligns x */
     s32 x;             /* 0x34 */
     s32 y;             /* 0x38 */

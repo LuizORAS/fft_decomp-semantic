@@ -20,7 +20,7 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_menu_status_panel_editor_packet_t* editor_base;
     battle_menu_status_panel_numeric_entry_t* env_a;
     battle_menu_status_panel_editor_state_t* state;
-    void* portrait_arg;
+    s32 portrait_arg;
     const RECT* transition;
     u8* image;
     u8* render_b;
@@ -327,11 +327,11 @@ void bunit_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                portrait_arg = *(void* volatile*)&thread->work;
+                portrait_arg = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
                 cur_unit = state->unit;
             } else {
-                portrait_arg = *(void* volatile*)&thread->work;
+                portrait_arg = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
                 cur_unit = state->unit;
@@ -343,7 +343,7 @@ void bunit_render_unit_status_panel_thread(void) {
             }
         }
         bunit_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, image, (POLY_FT4*)&editor->portrait[0], (s32)portrait_arg);
+            transition, &anim_state, &cur_unit, &prev_unit, image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             u16* py;

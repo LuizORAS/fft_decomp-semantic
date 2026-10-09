@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void battle_menu_render_text_image_at_record_origin(battle_menu_text_image_t* record) {
+void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record) {
     if (record->box_type != 0) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {
             record->buffer = battle_menu_build_window_image(
@@ -16,7 +16,7 @@ void battle_menu_render_text_image_at_record_origin(battle_menu_text_image_t* re
         g_menu_text_state.stride = record->rect.w * 4;
         g_menu_text_param_22 = record->first_line;
         g_menu_text_param_24 = record->last_line;
-        battle_menu_display_text_entry((s32)record->text, record->buffer, &g_menu_text_state.origin_x);
+        battle_menu_display_text_entry(record->text, record->buffer, &g_menu_text_state.origin_x);
         LoadImage(&record->rect, record->buffer);
         battle_thread_yield();
         battle_menu_free_memory(record->buffer);
