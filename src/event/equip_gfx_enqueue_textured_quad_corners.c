@@ -72,7 +72,6 @@ void equip_gfx_enqueue_textured_quad_corners(
 
     {
         equip_gfx_context_t* context = g_equip_gfx_context;
-        setaddr(poly, getaddr(&context->otag[quad_otag]));
-        setaddr(&context->otag[quad_otag], poly);
+        addPrim(&context->otag[quad_otag], poly);
     }
 }

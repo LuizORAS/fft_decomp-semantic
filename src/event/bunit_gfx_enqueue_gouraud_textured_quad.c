@@ -57,7 +57,6 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
 
     {
         bunit_gfx_context_t* context = g_bunit_gfx_context;
-        setaddr(poly, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], poly);
+        addPrim(&context->otag[otag_index], poly);
     }
 }

@@ -16,7 +16,6 @@ void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_inde
     prim->h = src->h;
     {
         jobstts_gfx_context_t* context = g_jobstts_gfx_context;
-        setaddr(prim, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], prim);
+        addPrim(&context->otag[otag_index], prim);
     }
 }

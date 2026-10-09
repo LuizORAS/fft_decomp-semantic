@@ -15,6 +15,5 @@ void world_menu_add_gradient_line_primitive(s16* endpoints, u8* rgb, s32 semi_tr
     line->r1 = rgb[3];
     line->g1 = rgb[4];
     line->b1 = rgb[5];
-    setaddr(line, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], line);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], line);
 }

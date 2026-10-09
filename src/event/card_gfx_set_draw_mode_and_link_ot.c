@@ -9,7 +9,6 @@ void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* textu
     SetDrawMode(mode, dfe, dtd, tpage, texture_window);
     {
         card_graphics_context_t* link_context = g_card_gfx_context;
-        setaddr(mode, getaddr(&link_context->otag[otag_index]));
-        setaddr(&link_context->otag[otag_index], mode);
+        addPrim(&link_context->otag[otag_index], mode);
     }
 }

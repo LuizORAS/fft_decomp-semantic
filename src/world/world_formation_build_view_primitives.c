@@ -40,8 +40,7 @@ void world_formation_build_view_primitives(world_formation_view_t* view, POLY_FT
             (world_formation_screen_point_t*)&g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i],
             &position, (world_formation_sprite_origin_t*)view->origin);
         if (view->link_quads != 0) {
-            setaddr(poly, getaddr(view->ordering_table));
-            setaddr(view->ordering_table, poly);
+            addPrim(view->ordering_table, poly);
             poly++;
         }
     }
@@ -60,6 +59,5 @@ void world_formation_build_view_primitives(world_formation_view_t* view, POLY_FT
     poly->y2 = 0xFF;
     poly->x3 = 0xFF;
     poly->y3 = 0xFF;
-    setaddr(poly, getaddr(view->ordering_table));
-    setaddr(view->ordering_table, poly);
+    addPrim(view->ordering_table, poly);
 }

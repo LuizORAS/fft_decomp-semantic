@@ -5,6 +5,5 @@
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* prim) {
     u32* entries = g_current_otag_entry;
 
-    setaddr(prim, getaddr(&entries[1]));
-    setaddr(&entries[1], prim);
+    addPrim(&entries[1], prim);
 }

@@ -52,6 +52,5 @@ void world_gfx_enqueue_textured_quad(rect, u, v, color, semi_trans, texture_page
     poly->v3 = v + rect->h;
     poly->clut = clut;
     poly->tpage = texture_page;
-    setaddr(poly, getaddr(&g_world_gfx_active_packet_buffer->otag[priority]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[priority], poly);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[priority], poly);
 }

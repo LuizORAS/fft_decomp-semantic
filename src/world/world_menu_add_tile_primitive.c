@@ -15,6 +15,5 @@ void world_menu_add_tile_primitive(RECT* rect, u8* rgb, u8 semi_trans, s32 ot_in
     tile->y0 = rect->y;
     tile->w = rect->w + 0x80;
     tile->h = rect->h;
-    setaddr(tile, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], tile);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], tile);
 }

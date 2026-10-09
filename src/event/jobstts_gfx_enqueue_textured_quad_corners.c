@@ -55,6 +55,6 @@ void jobstts_gfx_enqueue_textured_quad_corners(jobstts_quad_t* quad, u8* color, 
     poly->clut = quad->clut;
     poly->tpage = quad->tpage;
 
-    ((P_TAG*)poly)->addr = g_jobstts_gfx_context->otag[ot_index];
-    ((P_TAG*)&g_jobstts_gfx_context->otag[ot_index])->addr = (u32)poly;
+    setaddr(poly, g_jobstts_gfx_context->otag[ot_index]);
+    catPrim(&g_jobstts_gfx_context->otag[ot_index], poly);
 }

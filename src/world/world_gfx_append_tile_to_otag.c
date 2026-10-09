@@ -16,6 +16,5 @@ void world_gfx_append_tile_to_otag(RECT* box, u8* rgb, s32 semi_trans, s32 ot_in
     tile->y0 = box->y;
     tile->w = box->w;
     tile->h = box->h;
-    setaddr(tile, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], tile);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], tile);
 }

@@ -12,7 +12,6 @@ void jobstts_gfx_enqueue_draw_area(RECT* rect, s32 idx) {
     SetDrawArea(p, rect);
     {
         jobstts_gfx_context_t* context = g_jobstts_gfx_context;
-        setaddr(p, getaddr(&context->otag[idx]));
-        setaddr(&context->otag[idx], p);
+        addPrim(&context->otag[idx], p);
     }
 }

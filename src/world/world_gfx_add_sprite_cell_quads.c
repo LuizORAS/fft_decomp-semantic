@@ -41,7 +41,6 @@ void world_gfx_add_sprite_cell_quads(
         poly->tpage = tpage;
         count--;
         cell++;
-        setaddr(poly, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-        setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);
+        addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);
     }
 }

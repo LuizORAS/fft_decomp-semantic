@@ -340,8 +340,7 @@ s32 effect_e483_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             n = (depth[0][i] + depth[0][i + 1] + depth[1][i] + depth[1][i + 1]) / 16;
             if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
-                setaddr(&work->quads[buffer][i], getaddr(&ot[n]));
-                setaddr(&ot[n], &work->quads[buffer][i]);
+                addPrim(&ot[n], &work->quads[buffer][i]);
             }
         }
         work->buffer = 1 - work->buffer;

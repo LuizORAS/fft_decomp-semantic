@@ -92,6 +92,5 @@ void world_gfx_enqueue_oriented_textured_quad(
 
     poly->clut = descriptor->clut;
     poly->tpage = descriptor->tpage;
-    setaddr(poly, getaddr(&g_world_gfx_active_packet_buffer->otag[otag_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[otag_index], poly);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[otag_index], poly);
 }

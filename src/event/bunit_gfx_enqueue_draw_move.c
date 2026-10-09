@@ -17,7 +17,6 @@ void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index)
     prim->h = src->h;
     {
         bunit_gfx_context_t* context = g_bunit_gfx_context;
-        setaddr(prim, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], prim);
+        addPrim(&context->otag[otag_index], prim);
     }
 }

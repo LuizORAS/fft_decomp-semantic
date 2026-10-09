@@ -78,8 +78,7 @@ void battle_effect_submit_sprite_to_ordering_table(
 
     prim = battle_effect_alloc_primitive(1);
     SetDrawMode((DR_MODE*)prim, 1, 1, 1, 0);
-    setaddr(prim, getaddr(ot));
-    setaddr(ot, prim);
+    addPrim(ot, prim);
     g_battle_effect_matrix.t[0] = position[0];
     g_battle_effect_matrix.t[1] = position[1];
     cosine = rcos(angle);
@@ -131,11 +130,9 @@ void battle_effect_submit_sprite_to_ordering_table(
         quad->v0 = quad->v1 = frame->v;
         quad->v2 = quad->v3 = quad->v0 + frame->height;
         gte_stsxy(&quad->xy3);
-        setaddr(quad, getaddr(ot));
-        setaddr(ot, quad);
+        addPrim(ot, quad);
     }
     prim = battle_effect_alloc_primitive(1);
     SetDrawMode((DR_MODE*)prim, 1, 0, 1, 0);
-    setaddr(prim, getaddr(ot));
-    setaddr(ot, prim);
+    addPrim(ot, prim);
 }

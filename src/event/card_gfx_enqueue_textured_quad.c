@@ -52,7 +52,6 @@ void card_gfx_enqueue_textured_quad(
 
     {
         card_graphics_context_t* context = g_card_gfx_context;
-        setaddr(poly, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], poly);
+        addPrim(&context->otag[otag_index], poly);
     }
 }

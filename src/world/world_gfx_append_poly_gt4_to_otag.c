@@ -42,6 +42,5 @@ void world_gfx_append_poly_gt4_to_otag(
     poly->b3 = rgb[11];
     poly->clut = source->clut;
     poly->tpage = source->tpage;
-    ((P_TAG*)poly)->addr = ((P_TAG*)&g_world_gfx_active_packet_buffer->otag[ot_index])->addr;
-    ((P_TAG*)&g_world_gfx_active_packet_buffer->otag[ot_index])->addr = (u32)poly;
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);
 }

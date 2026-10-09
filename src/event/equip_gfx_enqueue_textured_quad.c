@@ -51,7 +51,6 @@ void equip_gfx_enqueue_textured_quad(
 
     {
         equip_gfx_context_t* context = g_equip_gfx_context;
-        setaddr(poly, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], poly);
+        addPrim(&context->otag[otag_index], poly);
     }
 }

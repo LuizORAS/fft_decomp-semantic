@@ -13,7 +13,6 @@ void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx) {
     SetDrawArea(p, rect);
     {
         equip_gfx_context_t* context = g_equip_gfx_context;
-        setaddr(p, getaddr(&context->otag[idx]));
-        setaddr(&context->otag[idx], p);
+        addPrim(&context->otag[idx], p);
     }
 }

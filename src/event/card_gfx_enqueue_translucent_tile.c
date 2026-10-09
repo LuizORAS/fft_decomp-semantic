@@ -18,7 +18,6 @@ void card_gfx_enqueue_translucent_tile(const RECT* rect, const u8* color, s32 se
     tile->h = tile_rect->h;
     {
         card_graphics_context_t* context = g_card_gfx_context;
-        setaddr(tile, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], tile);
+        addPrim(&context->otag[otag_index], tile);
     }
 }

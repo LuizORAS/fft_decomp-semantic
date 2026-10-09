@@ -8,7 +8,6 @@ void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx)
     SetDrawMode(primitive, dfe, dtd, tpage, tw);
     {
         bunit_gfx_context_t* db = g_bunit_gfx_context;
-        setaddr(primitive, getaddr(&db->otag[idx]));
-        setaddr(&db->otag[idx], primitive);
+        addPrim(&db->otag[idx], primitive);
     }
 }

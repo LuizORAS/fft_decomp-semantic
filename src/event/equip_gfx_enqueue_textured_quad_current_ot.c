@@ -51,7 +51,6 @@ void equip_gfx_enqueue_textured_quad_current_ot(
 
     {
         u32* ot = g_equip_gfx_current_ot;
-        setaddr(poly, getaddr(ot));
-        setaddr(ot, poly);
+        addPrim(ot, poly);
     }
 }

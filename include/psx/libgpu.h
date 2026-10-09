@@ -137,9 +137,11 @@ typedef struct {
     u8 code;
 } P_TAG;
 
-#define setaddr(p, a)  (((P_TAG*)(p))->addr = (u32)(a))
-#define getaddr(p)     ((u32)((P_TAG*)(p))->addr)
-#define addPrim(ot, p) setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define setaddr(p, a)   (((P_TAG*)(p))->addr = (u32)(a))
+#define getaddr(p)      ((u32)((P_TAG*)(p))->addr)
+#define addPrim(ot, p)  setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define catPrim(p0, p1) setaddr(p0, p1)
+#define termPrim(p)     setaddr(p, 0xffffffff)
 
 typedef struct {
     s16 x;

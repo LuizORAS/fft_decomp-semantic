@@ -28,7 +28,6 @@ void bunit_gfx_enqueue_gouraud_quad(u16* pts, u8* color, s32 semi, s32 idx) {
     poly->b3 = color[11];
     {
         bunit_gfx_context_t* ctx = g_bunit_gfx_context;
-        setaddr(poly, getaddr(&ctx->otag[idx]));
-        setaddr(&ctx->otag[idx], poly);
+        addPrim(&ctx->otag[idx], poly);
     }
 }

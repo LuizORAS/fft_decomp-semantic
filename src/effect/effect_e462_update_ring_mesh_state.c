@@ -443,8 +443,7 @@ s32 effect_e462_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
                         + scratch->depth[j + 1][i + 1])
                     / 16;
                 if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
-                    setaddr(&work->quads[buffer][j * RING_MESH_SEGMENTS + i], getaddr(&ot[n]));
-                    setaddr(&ot[n], &work->quads[buffer][j * RING_MESH_SEGMENTS + i]);
+                    addPrim(&ot[n], &work->quads[buffer][j * RING_MESH_SEGMENTS + i]);
                 }
             }
         }

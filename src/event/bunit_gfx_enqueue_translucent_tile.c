@@ -15,7 +15,6 @@ void bunit_gfx_enqueue_translucent_tile(RECT* rect, u8* color, u8 semi, s32 idx)
     tile->h = rect->h;
     {
         bunit_gfx_context_t* ctx = g_bunit_gfx_context;
-        setaddr(tile, getaddr(&ctx->otag[idx]));
-        setaddr(&ctx->otag[idx], tile);
+        addPrim(&ctx->otag[idx], tile);
     }
 }

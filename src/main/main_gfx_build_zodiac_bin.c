@@ -32,8 +32,7 @@ void main_gfx_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly) {
         main_gfx_build_zodiac_sprite_polygon(poly, &g_main_gfx_zodiac_texture_position,
             &g_main_gfx_zodiac_screen_position, &g_main_gfx_zodiac_sprite_frames[i], &scale, &context->offset);
         if (context->link_primitives != 0) {
-            setaddr(poly, getaddr(context->ot));
-            setaddr(context->ot, poly);
+            addPrim(context->ot, poly);
             poly++;
         }
     }
@@ -53,6 +52,5 @@ void main_gfx_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly) {
     poly->y2 = 0xff;
     poly->x3 = 0xff;
     poly->y3 = 0xff;
-    setaddr(poly, getaddr(context->ot));
-    setaddr(context->ot, poly);
+    addPrim(context->ot, poly);
 }

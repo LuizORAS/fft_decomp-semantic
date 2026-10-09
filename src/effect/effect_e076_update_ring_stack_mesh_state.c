@@ -383,14 +383,12 @@ s32 effect_e076_update_ring_stack_mesh_state(s32 record_index, s32 byte_offset, 
             for (i = 0; i < 7; i++) {
                 n = (depth[j][i] + depth[j][i + 1] + depth[j + 1][i] + depth[j + 1][i + 1]) / 16;
                 if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
-                    setaddr(&work->quads[buffer][j * 8 + i], getaddr(&ot[n]));
-                    setaddr(&ot[n], &work->quads[buffer][j * 8 + i]);
+                    addPrim(&ot[n], &work->quads[buffer][j * 8 + i]);
                 }
             }
             n = (depth[j][0] + depth[j][7] + depth[j + 1][0] + depth[j + 1][7]) / 16;
             if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
-                setaddr(&work->quads[buffer][j * 8 + 7], getaddr(&ot[n]));
-                setaddr(&ot[n], &work->quads[buffer][j * 8 + 7]);
+                addPrim(&ot[n], &work->quads[buffer][j * 8 + 7]);
             }
         }
         work->buffer = 1 - work->buffer;

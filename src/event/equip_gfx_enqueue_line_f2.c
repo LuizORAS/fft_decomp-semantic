@@ -19,7 +19,6 @@ void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, s32 semitrans,
     line->y1 = endpoints->h;
     {
         equip_gfx_context_t* context = g_equip_gfx_context;
-        setaddr(line, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], line);
+        addPrim(&context->otag[otag_index], line);
     }
 }

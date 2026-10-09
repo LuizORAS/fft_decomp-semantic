@@ -89,6 +89,6 @@ void jobstts_enqueue_oriented_textured_quad(
     poly->clut = uv->clut;
     poly->tpage = uv->tpage;
 
-    ((P_TAG*)poly)->addr = g_jobstts_gfx_context->otag[quad_ot_index];
-    ((P_TAG*)&g_jobstts_gfx_context->otag[quad_ot_index])->addr = (u32)poly;
+    setaddr(poly, g_jobstts_gfx_context->otag[quad_ot_index]);
+    catPrim(&g_jobstts_gfx_context->otag[quad_ot_index], poly);
 }

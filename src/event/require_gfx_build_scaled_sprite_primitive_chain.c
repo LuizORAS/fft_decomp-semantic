@@ -33,8 +33,7 @@ void require_gfx_build_scaled_sprite_primitive_chain(battle_menu_status_panel_sc
         require_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_require_gfx_scaled_sprite_texture_page,
             &g_require_gfx_draw_area_template, &g_require_gfx_scaled_sprite_uv_rects[i], &scale, sprite->offset);
         if (sprite->link_primitive != 0) {
-            setaddr(poly, getaddr(sprite->ordering_tag));
-            setaddr(sprite->ordering_tag, poly);
+            addPrim(sprite->ordering_tag, poly);
             poly++;
         }
     }
@@ -54,6 +53,5 @@ void require_gfx_build_scaled_sprite_primitive_chain(battle_menu_status_panel_sc
     poly->y2 = 0xff;
     poly->x3 = 0xff;
     poly->y3 = 0xff;
-    setaddr(poly, getaddr(sprite->ordering_tag));
-    setaddr(sprite->ordering_tag, poly);
+    addPrim(sprite->ordering_tag, poly);
 }

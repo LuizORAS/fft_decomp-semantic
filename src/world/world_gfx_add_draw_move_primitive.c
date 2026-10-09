@@ -14,6 +14,5 @@ void world_gfx_add_draw_move_primitive(RECT* src, s32 x, s32 y, s32 ot_index) {
     move->y1 = y;
     move->w = src->w;
     move->h = src->h;
-    setaddr(move, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], move);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], move);
 }
