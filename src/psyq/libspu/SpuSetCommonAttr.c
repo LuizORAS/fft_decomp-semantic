@@ -2,17 +2,11 @@
 #include "psx/libspu.h"
 
 void SpuSetCommonAttr(SpuCommonAttr* attr) {
-    u16 left = 0;
-    /* Unpinned right volume shifts the mask/all temporaries to different registers. */
-    register u16 right __asm__("$8") = 0;
+    s16 left = 0;
+    s16 right = 0;
     u32 mask = attr->mask;
     s32 all = mask == 0;
     u32 mode;
-    /* Removing this dead local removes the retail 16-byte frame. */
-    u32 scratch[4];
-    s32 volume;
-    /* Unpinned register pointer swaps v0/v1 throughout the four mixer controls. */
-    register psyq_spu_registers_t* registers __asm__("$2");
     u16 control;
     if (all || (mask & 1)) {
         if (all || (mask & 4)) {
@@ -39,6 +33,9 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
                 mode = 0xe000;
                 break;
             case 0:
+                left = attr->mvol.left;
+                mode = 0;
+                break;
             default:
                 left = attr->mvol.left;
                 mode = 0;
@@ -49,22 +46,15 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
             mode = 0;
         }
         if (mode != 0) {
-            /* Unpinned input removes the retail a3-to-v1 clamp copy. */
-            register s32 requested __asm__("$7") = attr->mvol.left;
-            volume = requested;
-            if (requested >= 128) {
+            if (attr->mvol.left >= 128) {
                 left = 127;
-            } else if (requested < 0) {
+            } else if (attr->mvol.left < 0) {
                 left = 0;
             } else {
-                left = volume;
+                left = attr->mvol.left;
             }
         }
-        {
-            u32 packed = left & 0x7fff;
-            packed |= mode;
-            _spu_RXX->main_volume_left = packed;
-        }
+        _spu_RXX->rxx.main_volume_left = (left & 0x7fff) | mode;
     }
     if (all || (mask & 2)) {
         if (all || (mask & 8)) {
@@ -91,6 +81,9 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
                 mode = 0xe000;
                 break;
             case 0:
+                right = attr->mvol.right;
+                mode = 0;
+                break;
             default:
                 right = attr->mvol.right;
                 mode = 0;
@@ -101,74 +94,70 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
             mode = 0;
         }
         if (mode != 0) {
-            /* Unpinned input removes the retail a2-to-v1 clamp copy. */
-            register s32 requested __asm__("$6") = attr->mvol.right;
-            volume = requested;
-            if (requested >= 128) {
+            if (attr->mvol.right >= 128) {
                 right = 127;
-            } else if (requested < 0) {
+            } else if (attr->mvol.right < 0) {
                 right = 0;
             } else {
-                right = volume;
+                right = attr->mvol.right;
             }
         }
-        {
-            /* Unpinned packing clobbers the right-volume register and its branch delay. */
-            register u32 packed __asm__("$2") = right & 0x7fff;
-            packed |= mode;
-            _spu_RXX->main_volume_right = packed;
-        }
+        _spu_RXX->rxx.main_volume_right = (right & 0x7fff) | mode;
     }
     if (all || (mask & 0x40)) {
-        _spu_RXX->cd_volume_left = attr->cd.volume.left;
+        _spu_RXX->rxx.cd_volume_left = attr->cd.volume.left;
     }
     if (all || (mask & 0x80)) {
-        _spu_RXX->cd_volume_right = attr->cd.volume.right;
+        _spu_RXX->rxx.cd_volume_right = attr->cd.volume.right;
     }
     if (all || (mask & 0x400)) {
-        _spu_RXX->external_volume_left = attr->ext.volume.left;
+        _spu_RXX->rxx.external_volume_left = attr->ext.volume.left;
     }
     if (all || (mask & 0x800)) {
-        _spu_RXX->external_volume_right = attr->ext.volume.right;
+        _spu_RXX->rxx.external_volume_right = attr->ext.volume.right;
     }
     if (all || (mask & 0x100)) {
         if (attr->cd.reverb == 0) {
-            registers = _spu_RXX;
-            control = registers->control & 0xfffb;
+            control = _spu_RXX->rxx.control;
+            control &= 0xfffb;
+            _spu_RXX->rxx.control = control;
         } else {
-            registers = _spu_RXX;
-            control = registers->control | 4;
+            control = _spu_RXX->rxx.control;
+            control |= 4;
+            _spu_RXX->rxx.control = control;
         }
-        registers->control = control;
     }
     if (all || (mask & 0x200)) {
         if (attr->cd.mix == 0) {
-            registers = _spu_RXX;
-            control = registers->control & 0xfffe;
+            control = _spu_RXX->rxx.control;
+            control &= 0xfffe;
+            _spu_RXX->rxx.control = control;
         } else {
-            registers = _spu_RXX;
-            control = registers->control | 1;
+            control = _spu_RXX->rxx.control;
+            control |= 1;
+            _spu_RXX->rxx.control = control;
         }
-        registers->control = control;
     }
     if (all || (mask & 0x1000)) {
         if (attr->ext.reverb == 0) {
-            registers = _spu_RXX;
-            control = registers->control & 0xfff7;
+            control = _spu_RXX->rxx.control;
+            control &= 0xfff7;
+            _spu_RXX->rxx.control = control;
         } else {
-            registers = _spu_RXX;
-            control = registers->control | 8;
+            control = _spu_RXX->rxx.control;
+            control |= 8;
+            _spu_RXX->rxx.control = control;
         }
-        registers->control = control;
     }
     if (all || (mask & 0x2000)) {
         if (attr->ext.mix == 0) {
-            registers = _spu_RXX;
-            control = registers->control & 0xfffd;
+            control = _spu_RXX->rxx.control;
+            control &= 0xfffd;
+            _spu_RXX->rxx.control = control;
         } else {
-            registers = _spu_RXX;
-            control = registers->control | 2;
+            control = _spu_RXX->rxx.control;
+            control |= 2;
+            _spu_RXX->rxx.control = control;
         }
-        registers->control = control;
     }
 }

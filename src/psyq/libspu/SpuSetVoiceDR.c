@@ -2,7 +2,6 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceDR(s32 v_num, u16 dr) {
-    volatile psyq_spu_voice_t* voice = &_spu_RXX->voices[v_num];
-    voice->adsr1 = (voice->adsr1 & 0xff0f) | (dr << 4);
+    _spu_RXX->raw[(v_num << 3) + 4] = (_spu_RXX->raw[(v_num << 3) + 4] & 0xff0f) | (dr << 4);
     PSYQ_SPU_REGISTER_DELAY();
 }

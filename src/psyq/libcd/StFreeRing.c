@@ -13,8 +13,7 @@ s32 StFreeRing(void* frame_data) {
         return 1;
     /* Retail compares the unsigned sector count through its signed halfword view. */
     for (sector_index = 0; sector_index < (s16)frame_sectors; sector_index++) {
-        psyq_cd_ring_record_t* ring = g_psyq_cd_stream_ring;
-        ring[sector_index + first_sector].status = StFREE;
+        *(s16*)&g_psyq_cd_stream_ring[sector_index + first_sector].status = StFREE;
     }
     g_psyq_cd_stream_read_index = sector_index + first_sector;
     return 0;

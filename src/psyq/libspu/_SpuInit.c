@@ -17,11 +17,11 @@ void _SpuInit(s32 hot) {
     SpuStart();
     _spu_rev_flag = 0;
     _spu_rev_reserve_wa = 0;
-    _spu_rev_attr_mode = 0;
-    _spu_rev_attr_depth_left = 0;
-    _spu_rev_attr_depth_right = 0;
-    _spu_rev_attr_delay = 0;
-    _spu_rev_attr_feedback = 0;
+    _spu_rev_attr.mode = 0;
+    _spu_rev_attr.depth.left = 0;
+    _spu_rev_attr.depth.right = 0;
+    _spu_rev_attr.delay = 0;
+    _spu_rev_attr.feedback = 0;
     _spu_rev_offsetaddr = _spu_rev_startaddr[0];
     _spu_FsetRXX(PSYQ_SPU_REG_REVERB_START, _spu_rev_offsetaddr, PSYQ_SPU_REGISTER_RAW);
     _spu_AllocBlockNum = 0;

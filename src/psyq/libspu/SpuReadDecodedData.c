@@ -21,6 +21,6 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
         break;
     }
     _spu_Fr_(d_data, address, blocks);
-    status = _spu_RXX->status & 0x800;
+    status = _spu_RXX->rxx.status & 0x800;
     return status != 0;
 }

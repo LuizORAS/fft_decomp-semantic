@@ -4,16 +4,12 @@
 #include "psx/libapi.h"
 
 void SpuQuit(void) {
-    void (*callback)(void);
     if (_spu_isCalled == 1) {
         _spu_isCalled = 0;
         EnterCriticalSection();
-        /* The barrier retains retail's zero argument setup before clearing state. */
-        callback = 0;
-        __asm__("" : "=r"(callback) : "0"(callback));
         _spu_transferCallback = 0;
         _spu_IRQCallback = 0;
-        _SpuDataCallback(callback);
+        _SpuDataCallback(0);
         CloseEvent(_spu_EVdma);
         DisableEvent(_spu_EVdma);
         ExitCriticalSection();

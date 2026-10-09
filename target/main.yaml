@@ -973,11 +973,7 @@ data:
   - {addr: 0x8002a8e4, name: _spu_rev_flag}
   - {addr: 0x8002a8e8, name: _spu_rev_reserve_wa}
   - {addr: 0x8002a8ec, name: _spu_rev_offsetaddr}
-  - {addr: 0x8002a8f4, name: _spu_rev_attr_mode}
-  - {addr: 0x8002a8f8, name: _spu_rev_attr_depth_left}
-  - {addr: 0x8002a8fa, name: _spu_rev_attr_depth_right}
-  - {addr: 0x8002a8fc, name: _spu_rev_attr_delay}
-  - {addr: 0x8002a900, name: _spu_rev_attr_feedback}
+  - {addr: 0x8002a8f0, name: _spu_rev_attr}
   - {addr: 0x8002a904, name: _spu_RQvoice}
   - {addr: 0x8002a908, name: _spu_RQmask}
   - {addr: 0x8002a90c, name: _spu_voice_centerNote}
@@ -1199,7 +1195,6 @@ data:
   - {addr: 0x80036eb4, name: g_psyq_gpu_clear_packet}
   - {addr: 0x80036ed4, name: g_psyq_gpu_clear_restore}
   - {addr: 0x80036ef4, name: g_psyq_gpu_gp1_cache}
-  - {addr: 0x80036ef8, name: g_psyq_spu_queued_register_base}
   - {addr: 0x80036ff4, name: g_psyq_gpu_tim_cursor}
   - {addr: 0x80036ff8, name: g_psyq_gpu_tmd_vertices}
   - {addr: 0x80036ffc, name: g_psyq_gpu_tmd_normals}

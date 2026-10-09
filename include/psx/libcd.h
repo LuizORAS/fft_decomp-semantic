@@ -77,7 +77,7 @@ extern int CdGetSector(void*, int);
 extern int CdDataSync(int);
 
 s32 CdMix(CdlATV* vol);
-s32 CdControlB(s32 command, const u8* parameter, u8* result);
+s32 CdControlB(u8 command, const u8* parameter, u8* result);
 s32 CdRead2(s32 mode);
 s32 StGetBackloc(CdlLOC* position);
 s32 StGetNext(void** frame_data, void** header);
@@ -153,8 +153,8 @@ void CD_set_test_parmnum(s32 mode);
 /* Current SDK caller ABI corrections, established by original v0 use. */
 s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous);
 void callback(void);
-void init_ring_status(u32 first_sector, u32 sector_count);
-void mem2mem(u32* destination, u32* source, u32 words);
+s32 init_ring_status(u32 first_sector, u32 sector_count);
+void mem2mem(u32* destination, u32* source, u32 words, s32 unused_frame_complete);
 
 /* Original data pointers (typed volatile at hardware register accesses). */
 extern volatile u8* g_psyq_cd_index_status_register;
@@ -172,7 +172,9 @@ extern u8 g_psyq_cd_sync_interrupt;
 extern volatile u8 g_psyq_cd_ready_interrupt;        /* CD IRQ updates this result byte. */
 extern volatile u8 g_psyq_cd_second_ready_interrupt; /* CD IRQ updates this result byte. */
 
-/* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses. */
+/* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses.
+ * Retail reads and writes status through halfword pointers (volatile where the CD
+ * interrupt shares it), never as a struct member: those accesses keep an explicit view. */
 typedef struct {
     u16 status;
     u16 type;
@@ -185,7 +187,7 @@ typedef struct {
     u32 dummy2;
     CdlLOC position;
 } psyq_cd_ring_record_t;
-extern psyq_cd_ring_record_t* volatile g_psyq_cd_stream_ring; /* Streaming IRQ updates the ring base. */
+extern psyq_cd_ring_record_t* g_psyq_cd_stream_ring;
 extern u32 g_psyq_cd_stream_write_index;
 extern u32 g_psyq_cd_stream_frame_start_index;
 extern u32 g_psyq_cd_stream_read_index;

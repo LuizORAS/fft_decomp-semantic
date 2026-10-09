@@ -88,13 +88,8 @@ u32 _spu_Fr(void* addr, u32 size);
 
 /* libspu internals. */
 extern s32 _spu_inTransfer;
-/* Sound interrupt callbacks read and update these reverb attributes. */
-extern volatile s32 _spu_rev_attr_delay;
-extern volatile u16 _spu_rev_attr_depth_left;
-extern volatile u16 _spu_rev_attr_depth_right;
-extern volatile s32 _spu_rev_attr_feedback;
-extern volatile s32 _spu_rev_attr_mode;
-extern void (*_spu_transferCallback)(void);
+extern SpuReverbAttr _spu_rev_attr; /* current reverb settings; mask is never written */
+extern void (*volatile _spu_transferCallback)(void);
 void _SpuInit(s32 hot);
 u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_high);
 
@@ -237,7 +232,13 @@ typedef struct psyq_spu_registers {
 typedef char assert_psyq_spu_voice_size[(sizeof(psyq_spu_voice_t) == 0x10) ? 1 : -1];
 typedef char assert_psyq_spu_register_size[(sizeof(psyq_spu_registers_t) == 0x200) ? 1 : -1];
 
-extern volatile psyq_spu_registers_t* _spu_RXX;
+/* The library addresses the block through the named layout and as raw halfword registers. */
+typedef union psyq_spu_register_block {
+    psyq_spu_registers_t rxx;
+    u16 raw[0x100];
+} psyq_spu_register_block_t;
+
+extern volatile psyq_spu_register_block_t* _spu_RXX;
 
 extern volatile u32* g_psyq_spu_dma_address_register;  /* DMA4 MADR */
 extern volatile u32* g_psyq_spu_dma_block_register;    /* DMA4 BCR */
@@ -251,7 +252,7 @@ extern s32 _spu_mem_mode;       /* address alignment enabled */
 extern s32 _spu_mem_mode_plus;  /* byte-address shift */
 extern s32 _spu_mem_mode_unit;  /* address alignment */
 extern s32 _spu_mem_mode_unitM; /* alignment mask */
-extern void (*_spu_IRQCallback)(void);
+extern void (*volatile _spu_IRQCallback)(void);
 extern u16 g_psyq_spu_init_fifo_data[8]; /* initialization block sent through the FIFO */
 extern s32 g_psyq_spu_dma_direction;     /* transfer direction: 0 to SPU, 1 from SPU */
 extern void* g_psyq_spu_dma_buffer;
@@ -264,8 +265,8 @@ extern s32 _spu_trans_mode; /* caller's transfer-mode value */
 extern s32 _spu_rev_flag;
 extern s32 _spu_rev_reserve_wa; /* reserve reverb work RAM */
 extern u32 _spu_rev_offsetaddr; /* reverb work start, in eight-byte units */
-extern u32 _spu_RQvoice;
-extern u32 _spu_RQmask;
+extern volatile u32 _spu_RQvoice;
+extern volatile u32 _spu_RQmask;
 extern volatile u16 _spu_RQ[10]; /* deferred key, LFO, noise and reverb masks */
 
 typedef struct psyq_spu_heap_record {
@@ -285,7 +286,6 @@ extern psyq_spu_heap_record_t* _spu_memList;
 extern u32 _spu_rev_startaddr[10]; /* reverb work starts, in eight-byte units */
 extern u8 _spu_zerobuf[0x400];     /* zero block used to clear reverb work RAM */
 extern u16 _spu_voice_centerNote[24];
-extern volatile u16 g_psyq_spu_queued_register_base[]; /* shifted alias: indices 0xc4..0xcd reach _spu_RQ */
 extern const char g_psyq_spu_timeout_format[];
 extern const char g_psyq_spu_init_timeout_name[];
 extern const char g_psyq_spu_fifo_ready_timeout_name[];
