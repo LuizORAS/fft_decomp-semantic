@@ -737,7 +737,7 @@ restart_script:
                     battle_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
                     g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    battle_thread_call_on_main_stack((void*)draw_misc_id);
+                    battle_thread_call_on_main_stack(draw_misc_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {

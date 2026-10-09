@@ -38,7 +38,7 @@ void open_movie_present_frame(void) {
             move_rect.h = 240;
             MoveImage(&move_rect, image_rect.x, image_rect.y);
         } else {
-            LoadImage(&image_rect, (u32*)g_open_file_destination);
+            LoadImage(&image_rect, g_open_file_destination);
         }
     }
 

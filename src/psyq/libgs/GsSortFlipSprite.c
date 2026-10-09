@@ -49,6 +49,6 @@ void GsSortFlipSprite(const GsSPRITE* sp, GsOT* otp, u16 pri) {
         p->uv2 = u0 | (v1 << 8);
         p->xy3 = ((x + sp->w) & 0xffff) | ((y + sp->h) << 16);
         p->uv3 = u1 | (v1 << 8);
-        GsOUT_PACKET_P = (void*)psyq_gs_sort_sprite_bg((u32*)p, otp, pri, 9);
+        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)p, otp, pri, 9);
     }
 }

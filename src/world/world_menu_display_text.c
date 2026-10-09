@@ -31,7 +31,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
     for (i = 0; i < 16; i++) {
         g_world_text_player_name_buffer[i] = party->name[i];
     }
-    if (text == (u8*)0 || text == (u8*)1) {
+    if (text == 0 || text == (u8*)1) {
         cursor = world_text_find_entry(text_id);
     } else {
         cursor = text;

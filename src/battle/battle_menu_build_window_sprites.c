@@ -43,9 +43,9 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
         battle_gfx_init_image_loading(record->icons[2], &g_battle_menu_texture_location, (const RECT*)&param->window_x,
             &g_battle_menu_icon_strip_image_params[index + 3]);
     } else {
-        record->icons[0] = (SPRT*)0;
-        record->icons[1] = (SPRT*)0;
-        record->icons[2] = (SPRT*)0;
+        record->icons[0] = 0;
+        record->icons[1] = 0;
+        record->icons[2] = 0;
     }
     battle_gfx_set_draw_mode_from_rect(record, (const u16*)param);
     SetDrawMode(

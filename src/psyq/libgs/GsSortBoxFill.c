@@ -36,6 +36,6 @@ void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
         packet->y0 = bp->y + g_psyq_gs_offset_y;
         packet->w = bp->w;
         packet->h = bp->h;
-        GsOUT_PACKET_P = (void*)psyq_gs_sort_sprite_bg((u32*)packet, otp, pri, 4);
+        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)packet, otp, pri, 4);
     }
 }

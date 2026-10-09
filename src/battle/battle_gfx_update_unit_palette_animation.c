@@ -20,7 +20,7 @@ void battle_gfx_update_unit_palette_animation(void) {
             src = g_battle_unit_palette_animation_offset * 2 + 2;
             g_battle_gfx_cycled_deployed_palettes[0][0] = ((u8*)g_battle_deployed_unit_palettes)[0];
             g_battle_gfx_cycled_deployed_palettes[0][1] = ((u8*)g_battle_deployed_unit_palettes)[1];
-            g_battle_gfx_cycled_deployed_palettes[1][0] = ((u8*)g_battle_deployed_unit_palettes[1])[0];
+            g_battle_gfx_cycled_deployed_palettes[1][0] = g_battle_deployed_unit_palettes[1][0];
             g_battle_gfx_cycled_deployed_palettes[1][1] = ((u8*)g_battle_deployed_unit_palettes[1])[1];
             for (; src < 32; src++, dst++) {
                 g_battle_gfx_cycled_deployed_palettes[0][dst] = ((u8*)g_battle_deployed_unit_palettes)[src];

@@ -115,10 +115,9 @@ s32 world_formation_run_set_ability_menu(void) {
             if (g_world_set_ability_slot == 1) {
                 value = 0x9800;
             }
-            g_world_menu_description_text_id
-                = value + (((u16*)g_world_menu_entry_ids)[cursor] & ABILITY_LIST_ENTRY_ID_MASK);
+            g_world_menu_description_text_id = value + (g_world_menu_entry_ids[cursor] & ABILITY_LIST_ENTRY_ID_MASK);
             if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
-                selected = ((u16*)g_world_menu_entry_ids)[cursor];
+                selected = g_world_menu_entry_ids[cursor];
                 if (selected & ABILITY_LIST_ENTRY_DISABLED) {
                     world_text_show_message_and_play_sound(0xD81D, MAIN_SFX_ERROR_MESSAGE);
                 } else {

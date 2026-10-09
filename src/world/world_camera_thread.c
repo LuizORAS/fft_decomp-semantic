@@ -39,7 +39,7 @@ void world_camera_thread(void) {
     group = (g_world_camera_speed_curve & 0xC) >> 2;
     ease = (g_world_camera_speed_curve & 0xF0) >> 4;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    script = (const u8*)world_thread_get_current_parameter_1();
+    script = world_thread_get_current_parameter_1();
     for (i = 0; i < 8; i++) {
         target[i] = world_script_load_halfword(script);
         script += 2;

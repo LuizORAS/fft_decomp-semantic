@@ -10,7 +10,7 @@ void battle_menu_open_companion_data_file(void) {
         if (battle_thread_call_on_main_stack(
                 g_battle_menu_companion_data_file_lbas[g_battle_menu_companion_data_file_request_index],
                 g_battle_menu_companion_data_file_sizes[g_battle_menu_companion_data_file_request_index],
-                (s32)g_battle_text_message_buffer)
+                g_battle_text_message_buffer)
             == 0) {
             g_battle_menu_companion_data_file_loading = 1;
         }

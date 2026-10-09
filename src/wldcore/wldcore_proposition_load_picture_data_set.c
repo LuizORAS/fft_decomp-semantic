@@ -8,6 +8,6 @@ void wldcore_proposition_load_picture_data_set(s32 set) {
         g_wldcore_loaded_picture_set = set;
         wldcore_file_wait_then_build_header(&g_main_file_cd_state, g_wldcore_picture_sector_offsets[set] + 0x11DAE,
             g_wldcore_picture_sector_offsets[set + 1] - g_wldcore_picture_sector_offsets[set],
-            (void*)g_wldcore_picture_buffer);
+            g_wldcore_picture_buffer);
     }
 }

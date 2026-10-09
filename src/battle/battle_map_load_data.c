@@ -298,7 +298,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
                 battle_map_dispatch_gns_resource(
                     g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type,
-                    (u8*)g_battle_map_data_load_buffer);
+                    g_battle_map_data_load_buffer);
                 g_battle_map_loaded_gns_records[g_battle_map_gns_record_cursor]
                     = g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor];
                 g_battle_map_gns_record_cursor++;
@@ -315,7 +315,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             break;
         case MAP_LOAD_STATE_APPLY_TEXTURE:
             if (g_battle_map_texture_pending != 0) {
-                battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE, (u8*)g_battle_map_data_load_buffer);
+                battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE, g_battle_map_data_load_buffer);
             }
             if (g_battle_map_palette_pending != 0) {
                 battle_map_dispatch_gns_resource(GNS_RESOURCE_APPLY_PALETTES, g_battle_map_pending_palette_data);

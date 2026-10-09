@@ -45,6 +45,6 @@ void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
         prim->y0 = line->y0 + g_psyq_gs_offset_y;
         prim->x1 = line->x1 + g_psyq_gs_offset_x;
         prim->y1 = line->y1 + g_psyq_gs_offset_y;
-        GsOUT_PACKET_P = (void*)psyq_gs_sort_sprite_bg((u32*)prim, ot, z, 4);
+        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)prim, ot, z, 4);
     }
 }

@@ -34,6 +34,6 @@ void require_gfx_init_poly_gt4_array_8(s32 x, s32 y) {
         }
         count++;
         poly->tpage = 6;
-        poly->clut = ((((u16*)texture_page)[0] + y) << 6) | (((texture_page[-1] + x) >> 4) & 0x3f);
+        poly->clut = ((texture_page[0] + y) << 6) | (((texture_page[-1] + x) >> 4) & 0x3f);
     } while (count < 8);
 }

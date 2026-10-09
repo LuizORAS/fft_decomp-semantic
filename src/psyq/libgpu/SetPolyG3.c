@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 void SetPolyG3(void* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
+    P_TAG* tag = primitive;
 
     tag->len = PSYQ_GPU_PACKET_WORDS(POLY_G3);
     tag->code = PSYQ_GPU_CODE_POLY_G3;

@@ -108,8 +108,8 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
                 && g_battle_action_current_ability_view.weapon_proc_pending == 0) {
                 g_battle_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
-                main_util_copy_byte_data((u8*)g_main_item_weapon_data,
-                    (u8*)&g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
+                main_util_copy_byte_data(
+                    g_main_item_weapon_data, &g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
             }
             ability = &g_main_ability_range_data[(s16)action.ability_id];
             main_util_copy_byte_data(

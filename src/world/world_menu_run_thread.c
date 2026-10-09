@@ -8,7 +8,7 @@ s32 world_menu_run_thread(s32 thread_id, void* arg) {
         }
         {
             void (*fn)(void) = ((world_menu_entry_t*)arg)->thread_entry;
-            g_world_menu_thread_menu_data = (world_menu_entry_t*)arg;
+            g_world_menu_thread_menu_data = arg;
             world_thread_start(thread_id, fn);
         }
         world_thread_set_parameters(thread_id, (s32)g_world_menu_thread_menu_data, 0, 0);

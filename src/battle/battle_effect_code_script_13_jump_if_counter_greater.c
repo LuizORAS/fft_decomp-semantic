@@ -2,7 +2,7 @@
 
 s32 battle_effect_code_script_13_jump_if_counter_greater(effect_record_t* ctx) {
     s16 pc = ctx->pc;
-    u8* cur = (u8*)(pc + (s32)ctx->script);
+    u8* cur = (u8*)(pc + ctx->script);
     s16* counter = &ctx->counters[cur[1] >> 6];
     if (*counter > *(s16*)(cur + 2)) {
         ctx->pc = *(u16*)(cur + 4);

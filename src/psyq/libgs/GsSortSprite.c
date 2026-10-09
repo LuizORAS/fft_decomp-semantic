@@ -78,7 +78,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             sprt->xy = ((x - sp->mx) & 0xffff) | ((y - sp->my) << 16);
             sprt->uv_clut = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
             sprt->wh = sp->w | (sp->h << 16);
-            packet = (void*)psyq_gs_sort_sprite_bg((u32*)packet, ot, pri, 5);
+            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 5);
         } else {
             if (sp->rotate == 0) {
                 mat = GsIDMATRIX;
@@ -143,7 +143,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             poly->uv2 = u_left | (v_bottom << 8);
             poly->xy3 = sxy3;
             poly->uv3 = u_right | (v_bottom << 8);
-            packet = (void*)psyq_gs_sort_sprite_bg((u32*)packet, ot, pri, 9);
+            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 9);
         }
         GsOUT_PACKET_P = packet;
     }

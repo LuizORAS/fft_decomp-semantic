@@ -112,7 +112,7 @@ restart_event:
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = (u16)first_halfword;
             world_script_run_variable_command(opcode, operand_1,
-                world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 3) & 0xFFFF, 0);
+                world_script_load_halfword(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_world_event_map_jump_in_request = operand_1;
             world_thread_wait_frames(2);
@@ -354,11 +354,11 @@ restart_event:
             g_world_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction[7];
             g_world_thread_contexts[operand_1].task_words[2] = world_script_load_halfword(dialogue_instruction + 8);
             g_world_thread_contexts[operand_1].task_words[3]
-                = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 0xA);
+                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xA);
             g_world_thread_contexts[operand_1].task_words[4]
-                = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 0xC);
+                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xC);
             g_world_thread_contexts[operand_1].task_words[5]
-                = ((u8*)(((u32)g_world_event_script) + instruction_offset))[0xE];
+                = ((u8*)((g_world_event_script) + instruction_offset))[0xE];
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -366,13 +366,13 @@ restart_event:
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (world_thread_is_running_80100164(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
-                    operand_1 = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 2);
+                    operand_1 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 2);
                     if ((operand_1 & 0xFFFF) != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_world_thread_contexts[operand_2].function_parameter_2 = operand_1;
                     g_world_thread_contexts[operand_2].function_parameter_4
-                        = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 4);
+                        = world_script_load_halfword(instruction_offset + (g_world_event_script) + 4);
                     g_world_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
                     break;
                 }
@@ -469,7 +469,7 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_halfword;
             g_world_event_effect_target_misc_id
-                = world_script_get_misc_id(((u8*)(((u32)g_world_event_script) + instruction_offset))[3]);
+                = world_script_get_misc_id(((u8*)((g_world_event_script) + instruction_offset))[3]);
             focus_instruction = (u8*)g_world_event_script;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
@@ -523,7 +523,7 @@ restart_event:
             if (operand_1 != EVENT_MISC_ID_NONE) {
 
                 g_world_unit_pending_animations[operand_1]
-                    = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 3);
+                    = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
                 g_world_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
@@ -562,7 +562,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_world_text_speaker_swap_unit_a = first_halfword;
             g_world_text_speaker_swap_unit_b
-                = world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 3);
+                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, &world_script_map_darkness);
@@ -597,8 +597,7 @@ restart_event:
             world_script_copy_bytes(&g_world_event_background_colors.first, parameters, 3);
             world_script_copy_bytes(&g_world_event_background_colors.second, parameters + 3, 3);
             if (parameters[7] == 0) {
-                battle_map_transition_and_store_background_gradient(
-                    parameters[6], (const u8*)&g_world_event_background_colors);
+                battle_map_transition_and_store_background_gradient(parameters[6], &g_world_event_background_colors);
             } else {
                 battle_map_set_background_gradient(parameters[6], &g_world_event_background_colors);
             }
@@ -688,8 +687,8 @@ restart_event:
         else if (opcode == EVENT_OPCODE_LOAD_EVTCHR) {
             operand_2 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_2, world_gfx_load_evtchr_thread);
-            world_thread_set_parameters(operand_2, operand_1,
-                world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 2), 0);
+            world_thread_set_parameters(
+                operand_2, operand_1, world_script_load_halfword(instruction_offset + (g_world_event_script) + 2), 0);
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_world_event_pending_loaded_evtchr_clear_slot = operand_1;
@@ -886,7 +885,7 @@ restart_event:
             if (first_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_get_battle_index_by_misc_id(first_misc_id);
                 second_misc_id = world_script_get_misc_id(
-                    world_script_load_halfword(instruction_offset + ((u32)g_world_event_script) + 3));
+                    world_script_load_halfword(instruction_offset + (g_world_event_script) + 3));
                 if (second_misc_id != EVENT_MISC_ID_NONE) {
                     battle_unit_get_battle_index_by_misc_id(second_misc_id);
                 }

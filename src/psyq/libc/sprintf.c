@@ -279,7 +279,7 @@ int sprintf(char* destination, const char* format, ...) {
             arguments = (char*)value + sizeof(u32);
             segment = *(char**)value;
             if (state.flags.bits & PSYQ_PRINTF_ALTERNATE) {
-                length = *(u8*)segment++;
+                length = *segment++;
                 if ((state.flags.bits & PSYQ_PRINTF_PRECISION) && state.precision < length)
                     length = state.precision;
             } else if (!(state.flags.bits & PSYQ_PRINTF_PRECISION)) {

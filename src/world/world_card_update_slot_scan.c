@@ -158,7 +158,7 @@ void world_card_update_slot_scan(void) {
             entry = 0;
             while (entry < g_world_card_save_file_count) {
                 status = strcmp(g_world_card_save_file_names[g_world_card_slot_scan_index],
-                    (const char*)((DIRENTRY*)g_world_card_directory_buffer)[entry].name);
+                    ((DIRENTRY*)g_world_card_directory_buffer)[entry].name);
                 if (status == 0) {
                     break;
                 }

@@ -2,5 +2,5 @@
 #include "psx/types.h"
 
 void battle_map_update_all_palettes_from_color_data(s32 map_slot, const void* color_data) {
-    battle_map_update_palette_colors(map_slot, MAP_PALETTE_BANK_MAP, 0, 1, (const u16*)color_data);
+    battle_map_update_palette_colors(map_slot, MAP_PALETTE_BANK_MAP, 0, 1, color_data);
 }

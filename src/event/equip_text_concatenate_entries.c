@@ -10,7 +10,7 @@ void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s3
     if (*list != -1) {
         entry = list;
         do {
-            src = equip_text_find_entry_by_index(text_table, *(u16*)entry & 0x7FF, 1);
+            src = equip_text_find_entry_by_index(text_table, *entry & 0x7FF, 1);
             while (*src != 0xFE) {
                 *dst = *src;
                 src++;

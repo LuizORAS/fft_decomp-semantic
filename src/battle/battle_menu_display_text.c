@@ -32,7 +32,7 @@ void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin
     u8 variable_base;
 
     main_party_get_data_pointer(0);
-    if (text == (u8*)0 || text == (u8*)1) {
+    if (text == 0 || text == (u8*)1) {
         cursor = battle_text_find_entry(text_id);
     } else {
         cursor = text;

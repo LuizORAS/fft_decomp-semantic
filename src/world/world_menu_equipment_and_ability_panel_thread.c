@@ -131,7 +131,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         }
         g_world_gfx_draw_area_y = (u16)g_world_frame_arg != 0xf0 ? 0xf0 : 0;
         world_gfx_build_scaled_draw_area_packets(
-            &screen->portrait, &g_world_equipment_ability_panel_draw_area, frame, (u16)g_world_frame_arg, (s32*)thread);
+            &screen->portrait, &g_world_equipment_ability_panel_draw_area, frame, (u16)g_world_frame_arg, thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);

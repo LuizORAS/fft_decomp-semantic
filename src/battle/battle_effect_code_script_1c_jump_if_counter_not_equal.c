@@ -9,7 +9,7 @@ s32 battle_effect_code_script_1c_jump_if_counter_not_equal(effect_record_t* effe
     s16 pc;
 
     pc = effect->pc;
-    cur = (u8*)(pc + (s32)effect->script);
+    cur = (u8*)(pc + effect->script);
     slot = cur[1] >> 6;
     if (effect->counters[slot] != *(s16*)(cur + 2)) {
         effect->pc = *(u16*)(cur + 4);

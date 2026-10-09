@@ -37,7 +37,7 @@ void world_script_run_sprite_move(void* arg, s32 use_speed) {
     s32 elapsed;
     s32 half;
 
-    parameters = (u8*)arg;
+    parameters = arg;
     mode = use_speed;
     misc_id = world_script_get_misc_id(world_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {

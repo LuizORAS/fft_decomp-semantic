@@ -11,5 +11,5 @@ battle_stats_t* battle_unit_find_active_data_pointer(void) {
         i++;
         unit++;
     } while (i < BATTLE_UNIT_SLOT_COUNT);
-    return (battle_stats_t*)0;
+    return 0;
 }

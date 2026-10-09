@@ -58,10 +58,10 @@ void require_apply_post_battle_unit_changes(void) {
     initial_unit_index_ptr = g_require_party_affected_battle_unit_indices;
     selected_unit_index_ptr = (s32*)&g_require_active_unit_data;
     battle_unit_get_stats_from_battle_id(*initial_unit_index_ptr);
-    g_require_active_unit_data.battle_id = *(u16*)initial_unit_index_ptr;
-    *(u16*)selected_unit_index_ptr = *(u16*)initial_unit_index_ptr;
+    g_require_active_unit_data.battle_id = *initial_unit_index_ptr;
+    *(u16*)selected_unit_index_ptr = *initial_unit_index_ptr;
     require_editor_load_selected_unit();
-    g_require_panel_selected_billboard.unit_index = *(u16*)initial_unit_index_ptr;
+    g_require_panel_selected_billboard.unit_index = *initial_unit_index_ptr;
 
     /* `affected_index < count` (not `count > 0`): combine folds the known
      * zero into a `blez` and leaves the eliminated compare pseudo with a
@@ -112,13 +112,13 @@ void require_apply_post_battle_unit_changes(void) {
                 } while (transition < 0x101);
 
                 battle_unit_get_stats_from_battle_id(*unit_index_ptr);
-                index_value = *(u16*)unit_index_ptr;
+                index_value = *unit_index_ptr;
                 *(u16*)(unit_display_data + 0x0a) = index_value;
                 *(u16*)(unit_display_data + 0) = index_value;
                 require_editor_load_selected_unit();
                 battle_menu_copy_billboard_data_in(
                     &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
-                index_value = *(u16*)unit_index_ptr;
+                index_value = *unit_index_ptr;
                 g_require_status_display_redraw_request = one;
                 g_require_numeric_editor_redraw_request = one;
                 g_require_character_status_redraw_request = one;
@@ -231,11 +231,11 @@ void require_apply_post_battle_unit_changes(void) {
                     /* The target reads the index into v0 here and reloads it
                      * into v1 after the call; one shared local is one allocno
                      * and takes v1 at both sites. */
-                    display_index = *(u16*)selected_unit_index_ptr;
+                    display_index = *selected_unit_index_ptr;
                     *(u16*)(unit_display_data + 0x0a) = display_index;
                     *(u16*)(unit_display_data + 0) = display_index;
                     require_editor_load_selected_unit();
-                    index_value = *(u16*)selected_unit_index_ptr;
+                    index_value = *selected_unit_index_ptr;
                     g_require_status_display_redraw_request = one;
                     g_require_numeric_editor_redraw_request = one;
                     g_require_character_status_redraw_request = one;

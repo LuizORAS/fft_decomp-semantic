@@ -43,7 +43,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
             rect.w = 0x100;
             rect.h = 0xF0;
         }
-        StoreImage(&rect, (u32*)g_open_file_destination);
+        StoreImage(&rect, g_open_file_destination);
         DrawSync(0);
 
         if (g_active_graphics_buffer_index == 0) {
@@ -57,12 +57,12 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
             rect.w = 0x100;
             rect.h = 0xF0;
         }
-        LoadImage(&rect, (u32*)g_open_file_destination);
+        LoadImage(&rect, g_open_file_destination);
         DrawSync(0);
 
         g_open_file_current_openbk_image_id = -1;
         name = (open_title_party_name_block_t*)world_name_run_entry_screen(
-            world_text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), (u32*)g_open_file_destination);
+            world_text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), g_open_file_destination);
         party = main_party_get_data_pointer(0);
         *(open_title_party_name_block_t*)party->name = *name;
         g_open_current_controller_index -= 1;

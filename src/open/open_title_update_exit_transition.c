@@ -28,7 +28,7 @@ void open_title_update_exit_transition(open_title_exit_state_t* transition) {
             index = 0;
             source = (s32*)g_open_work_buffer_0;
             g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
-            destination = (s32*)g_open_file_destination;
+            destination = g_open_file_destination;
             do {
                 *destination = *source;
                 source++;

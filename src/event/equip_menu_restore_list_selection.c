@@ -22,7 +22,7 @@ void equip_menu_restore_list_selection(s32 idx, s16* p1, s16* p2, s16* list) {
     }
 
     for (i = 0; list[i] != -1; i++) {
-        if ((((u16*)list)[i] & 0x3FF) == key) {
+        if ((list[i] & 0x3FF) == key) {
             *p1 = i;
             return;
         }

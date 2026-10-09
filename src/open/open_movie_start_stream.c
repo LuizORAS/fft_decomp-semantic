@@ -15,7 +15,7 @@ void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 so
     open_movie_init_mdec_stream_state(&g_open_movie_mdec_stream_state, 0, 8, 0, 0xf8);
 
     for (;;) {
-        open_movie_init_stream(sector, (void*)open_movie_handle_mdec_output_slice);
+        open_movie_init_stream(sector, open_movie_handle_mdec_output_slice);
         while (CdRead2(0x1e0) == 0) { }
         if (open_movie_decode_next_frame(&g_open_movie_mdec_stream_state) != 0) {
             break;

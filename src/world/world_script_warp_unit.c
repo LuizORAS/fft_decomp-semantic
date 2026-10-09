@@ -6,7 +6,7 @@
  * the four parameter bytes (x, y, elevation, facing) and, when the unit is on
  * the map, teleports its renderer record and resets its rotation state. */
 s32 world_script_warp_unit(void* instruction) {
-    const u8* parameters = (const u8*)instruction;
+    const u8* parameters = instruction;
     world_unit_coordinates_t coordinates;
     s32 resolved_id;
     battle_stats_t* unit;

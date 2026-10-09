@@ -17,7 +17,7 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
         return;
     }
 
-    source = (s32*)g_open_file_destination;
+    source = g_open_file_destination;
     destination = (s32*)g_open_work_buffer_0;
     do {
         *destination = *source;
