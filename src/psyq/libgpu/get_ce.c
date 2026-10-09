@@ -19,7 +19,6 @@ u32 get_ce(int x, int y) {
         value = *limit;
         __asm__("" : "=r"(value) : "0"(value)); /* Keep the original unsigned load followed by signed narrowing. */
         value = (s16)value;
-        __asm__("" : "=r"(value) : "0"(value)); /* Keep the signed narrow in v0 before calculating the limit. */
         max = value - 1;
         if (max < x) {
             x = max;
@@ -28,7 +27,6 @@ u32 get_ce(int x, int y) {
     }
     x = value;
     value = (u32)y << 16;
-    __asm__("" : "=r"(value) : "0"(value)); /* Preserve separate narrowing registers. */
     y0 = value >> 16;
     y = 0;
     if (y0 >= 0) {

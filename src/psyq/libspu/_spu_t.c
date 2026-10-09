@@ -88,8 +88,6 @@ s32 _spu_t(s32 operation, ...) {
             *dma_address = (u32)buffer;
         }
         *g_psyq_spu_dma_block_register = (g_psyq_spu_dma_blocks << 16) | 0x10;
-        /* Without this tie the low command bits move before the DMA register stores. */
-        __asm__ volatile("" : "=r"(dma_control_word) : "0"(dma_control_word));
         dma_control_word |= 0x201;
         if (g_psyq_spu_dma_direction == 1)
             dma_control_word = 0x01000200;

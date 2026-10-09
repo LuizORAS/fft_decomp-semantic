@@ -40,7 +40,6 @@ DISPENV* PutDispEnv(DISPENV* env) {
     }
     command = first | second;
     start_dispatch = g_psyq_gpu_dispatch;
-    __asm__("" : "=r"(start_dispatch) : "0"(start_dispatch));
     start_dispatch->control(command);
     cached = &g_psyq_gpu_cached_screen_x;
     __asm__("" : "=r"(cached) : "0"(cached));
@@ -74,7 +73,6 @@ timings_changed:
     env->pad0 = GetVideoMode();
     compare = env->screen.x;
     value = compare * 10;
-    __asm__("" : "=r"(value) : "0"(value));
     horizontal_start = value + 608;
     value = env->pad0;
     __asm__("" : "=r"(value) : "0"(value) : "$4");
@@ -86,7 +84,6 @@ timings_changed:
     __asm__("" : "=r"(compare) : "0"(compare));
     if (compare) {
         value = compare * 10;
-        __asm__("" : "=r"(value) : "0"(value));
         horizontal_end = horizontal_start + value;
     } else {
         horizontal_end = horizontal_start + 2560;
@@ -156,24 +153,20 @@ end_clamped:
     vertical_end = compare;
     /* Keep timing bits in v0 while the control function is loaded through v1. */
     first = (horizontal_end & 0xfff) << 12;
-    __asm__("" : "=r"(first) : "0"(first));
     command = horizontal_start & 0xfff;
     second = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_HORIZONTAL_RANGE);
     timing_dispatch = g_psyq_gpu_dispatch;
     __asm__("" : "=r"(timing_dispatch) : "0"(timing_dispatch));
     command |= second;
     control = timing_dispatch->control;
-    __asm__("" : "=r"(control) : "0"(control));
     control(first | command);
     first = (vertical_end & 0x3ff) << 10;
-    __asm__("" : "=r"(first) : "0"(first));
     command = vertical_start & 0x3ff;
     second = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_VERTICAL_RANGE);
     timing_dispatch = g_psyq_gpu_dispatch;
     __asm__("" : "=r"(timing_dispatch) : "0"(timing_dispatch));
     command |= second;
     control = timing_dispatch->control;
-    __asm__("" : "=r"(control) : "0"(control));
     control(first | command);
 check_mode:
     if (g_psyq_gpu_cached_display_flags != *(u32*)&env->isinter)

@@ -24,7 +24,6 @@ int _exeque(void) {
                 u32 sample;
                 do {
                     sample = *polling_status;
-                    __asm__("" : "=r"(sample) : "0"(sample)); /* Preserve sample-then-mask operand order. */
                     sample &= ready;
                 } while (!sample);
             }

@@ -19,15 +19,12 @@ void psyq_gte_normalize_register_vector(void) {
     register s32 factor __asm__("$13");
     register u32 table_base __asm__("$13");
     register s32 zero __asm__("$0");
-    __asm__("" : "=r"(x), "=r"(y), "=r"(z), "=r"(zero));
     PSYQ_GTE_NORMALIZE_SQUARE(x, y, z, square_x, square_y, square_z);
     PSYQ_CPU_TRAP_ADD(square_x, square_x, square_y);
     PSYQ_CPU_TRAP_ADD(sum, square_x, square_z);
     PSYQ_GTE_LZCS(sum, leading);
     mask = -2;
-    __asm__("" : "=r"(mask) : "0"(mask));
     leading &= mask;
-    __asm__("" : "=r"(leading) : "0"(leading));
     PSYQ_CPU_SIGNED_CONSTANT(exponent, 31);
     PSYQ_CPU_TRAP_SUB(exponent, exponent, leading);
     PSYQ_CPU_TRAP_ADDI(difference, leading, -24);
@@ -47,7 +44,6 @@ normalized_ready:
     table_base += normalized;
     __asm__("" : "=r"(table_base) : "0"(table_base));
     factor = *(s16*)table_base; /* The paired LO16 relocation supplies the table offset at this load. */
-    __asm__("" : "=r"(factor) : "0"(factor));
     PSYQ_GTE_NORMALIZE_SCALE(x, y, z, factor);
     x >>= exponent;
     y >>= exponent;

@@ -111,8 +111,8 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
             level->selected_entry = level->selected_entry - 1;
         } else {
             register s32 main_window asm("$2");
-            register s32 record_offset asm("$4");
-            register s32 entry_count asm("$3");
+            s32 record_offset;
+            s32 entry_count;
 
             main_window = level->main_window;
             entry_count = level->entry_count;

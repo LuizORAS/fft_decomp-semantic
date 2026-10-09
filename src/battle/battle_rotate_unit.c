@@ -44,8 +44,6 @@ void battle_rotate_unit(const u8* parameters) {
                         state->step_counter = 0;
                         state->rotating = 1;
                         state->delay = parameters[5] * order++ / 4;
-                        /* Keep the restore arm's stores separate from the absolute arm. */
-                        __asm__ volatile("");
                     }
                     restore_misc_index = *(volatile s32*)&misc_index;
                     /* Keep the restore arm's stack reload before its loop exit. */

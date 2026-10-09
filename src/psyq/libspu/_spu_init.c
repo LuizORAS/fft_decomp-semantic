@@ -76,8 +76,6 @@ s32 _spu_init(s32 hot) {
         _spu_Fw1ts();
         _spu_Fw1ts();
         result = 0;
-        /* The tie keeps the cold-path return value live across the join. */
-        __asm__("" : "=r"(result) : "0"(result));
     }
     {
         volatile psyq_spu_registers_t* final_registers = _spu_RXX;

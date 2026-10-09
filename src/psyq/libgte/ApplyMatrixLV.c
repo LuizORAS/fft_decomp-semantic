@@ -15,13 +15,11 @@ VECTOR* ApplyMatrixLV(MATRIX* matrix, VECTOR* input, VECTOR* output) {
     register s32 high_y __asm__("$12");
     register s32 high_z __asm__("$13");
     register s32 zero __asm__("$0"); /* The hardware zero register preserves the retail relative joins. */
-    __asm__("" : "=r"(zero));
     PSYQ_GTE_LOAD_MATRIX(rotation, PSYQ_GTE_CTRL_R11_R12, PSYQ_GTE_CTRL_R13_R21, PSYQ_GTE_CTRL_R22_R23,
         PSYQ_GTE_CTRL_R31_R32, PSYQ_GTE_CTRL_R33);
     x = vector->vx;
     y = vector->vy;
     z = vector->vz;
-    __asm__("" : : "r"(x), "r"(y), "r"(z));
     if (x < 0) {
         x = -x;
         high_x = x >> 15;
@@ -62,7 +60,6 @@ z_ready:
     PSYQ_GTE_APPLY_LONG_LOW(x, y, z);
     if (high_x < 0) {
         high_x = -high_x;
-        __asm__("" : "=r"(high_x) : "0"(high_x)); /* Retain the original signed three-step scale. */
         high_x <<= 3;
         __asm__("" : "=r"(high_x) : "0"(high_x));
         high_x = -high_x;
@@ -73,7 +70,6 @@ z_ready:
 high_x_ready:
     if (high_y < 0) {
         high_y = -high_y;
-        __asm__("" : "=r"(high_y) : "0"(high_y)); /* Retain the original signed three-step scale. */
         high_y <<= 3;
         __asm__("" : "=r"(high_y) : "0"(high_y));
         high_y = -high_y;
@@ -84,7 +80,6 @@ high_x_ready:
 high_y_ready:
     if (high_z < 0) {
         high_z = -high_z;
-        __asm__("" : "=r"(high_z) : "0"(high_z)); /* Retain the original signed three-step scale. */
         high_z <<= 3;
         __asm__("" : "=r"(high_z) : "0"(high_z));
         high_z = -high_z;
@@ -97,7 +92,6 @@ high_z_ready:
     x += high_x;
     y += high_y;
     z += high_z;
-    __asm__("" : : "r"(x), "r"(y), "r"(z));
     destination->vx = x;
     destination->vy = y;
     destination->vz = z;

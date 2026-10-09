@@ -23,18 +23,13 @@ MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output) {
     left_x = left_operand->t[0];
     left_y = left_operand->t[1];
     left_z = left_operand->t[2];
-    __asm__ volatile(""
-        :
-        : "r"(left_x), "r"(left_y), "r"(left_z)); /* Finish all input loads before the trapping sums. */
     PSYQ_CPU_TRAP_ADD(x, x, left_x);
     PSYQ_CPU_TRAP_ADD(y, y, left_y);
     PSYQ_CPU_TRAP_ADD(z, z, left_z);
-    __asm__ volatile("" : : "r"(x), "r"(y), "r"(z) : "memory");
     destination->t[0] = x;
     destination->t[1] = y;
     destination->t[2] = z;
     __asm__ volatile("" : "=r"(destination) : "0"(destination) : "memory");
     __asm__("" : "=r"(result) : "0"(destination));
-    __asm__ volatile("" : : "r"(result)); /* Retail copies the result before JR and keeps its delay slot empty. */
     return result;
 }

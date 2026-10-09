@@ -19,7 +19,6 @@ void RotMatrix(SVECTOR* rotation, MATRIX* output) {
     register s32 packed __asm__("$25");
     angle = angles->vx;
     result = destination;
-    __asm__ volatile("" : : "r"(angle), "r"(result));
     packed = angle & 0xfff;
     if (angle >= 0)
         goto positive_x;

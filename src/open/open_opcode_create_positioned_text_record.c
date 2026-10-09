@@ -49,8 +49,8 @@ void open_opcode_create_positioned_text_record(const s16* command) {
                     / 2;
         }
         if (x & 0x100) {
-            register s32 glyph_offset __asm__("$4");
-            register s32 width __asm__("$2");
+            s32 glyph_offset;
+            s32 width;
             s32 record_offset;
 
             glyph_offset = (x & 0xFF) * sizeof(open_script_glyph_t);

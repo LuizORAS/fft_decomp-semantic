@@ -117,8 +117,6 @@ u32* FntFlush(int id) {
             sprite->v0 = first;
             sprite->x0 = x;
             sprite->y0 = y;
-            /* Keep XY/UV stores ahead of the color-byte loads. */
-            __asm__ volatile("" : : : "memory");
             value = red.color.low_byte;
             /* Keep the AddPrim argument copy between this color load/store. */
             __asm__("" : "=r"(value) : "0"(value) : "$5");

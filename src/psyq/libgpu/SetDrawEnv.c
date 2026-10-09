@@ -11,9 +11,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
     /* The shared clamp limit remains in a0 during background-packet construction. */
     register int maximum __asm__("$4");
     u16* limit;
-    __asm__(""
-        : "=r"(env), "=r"(packet)
-        : "0"(env), "1"(packet)); /* Preserve the original two saved argument copies. */
     packet->code[0] = get_cs(env->clip.x, env->clip.y);
     packet->code[1] = get_ce((s16)(env->clip.w + env->clip.x - 1), (s16)(env->clip.y + env->clip.h - 1));
     packet->code[2] = get_ofs(env->ofs[0], env->ofs[1]);
@@ -28,7 +25,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
         rectangle.rect.w = value;
         dimension = (u16)env->clip.h;
         rectangle.rect.h = dimension;
-        __asm__("" : "=r"(value) : "0"(value)); /* Keep separate unsigned load and signed narrowing. */
         value = (u32)value << 16;
         dimension = value >> 16;
         value = 0;
@@ -38,7 +34,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
             value = *limit;
             __asm__("" : "=r"(value) : "0"(value));
             value = (s16)value;
-            __asm__("" : "=r"(value) : "0"(value));
             maximum = value - 1;
             if (maximum < dimension)
                 dimension = maximum;
@@ -52,7 +47,6 @@ void SetDrawEnv(DR_ENV* input_packet, DRAWENV* input_env) {
             value = *limit;
             __asm__("" : "=r"(value) : "0"(value));
             value = (s16)value;
-            __asm__("" : "=r"(value) : "0"(value));
             maximum = value - 1;
             if (maximum < dimension)
                 dimension = maximum;

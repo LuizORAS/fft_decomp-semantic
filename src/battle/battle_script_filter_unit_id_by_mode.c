@@ -26,7 +26,7 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     s32 blocked;
     s32 query;
     /* These return and flag registers preserve the shared epilogue. */
-    register s32 team_bits __asm__("$3");
+    s32 team_bits;
     register s32 zero_result __asm__("$2");
     u8 first;
 
@@ -58,8 +58,6 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
             return 1;
         }
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            /* Preserve the empty loop back-edge delay slot. */
-            __asm__ volatile("");
             if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_PROVISIONAL_8][i])
                 != 0) {
                 break;

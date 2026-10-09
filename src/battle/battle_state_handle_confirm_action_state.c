@@ -1,9 +1,7 @@
 #include "fft/battle.h"
 
 void battle_state_handle_confirm_action_state(void) {
-    /* Pin: unpinned (either declaration order) GCC puts the selected-ability
-     * pointer in $s0 and the unit in $s1, the reverse of the target. */
-    register battle_unit_misc_data_t* unit asm("$16");
+    battle_unit_misc_data_t* unit;
     s32* selected_ability_address;
     battle_unit_misc_data_t* target;
     s32 selected_ability;

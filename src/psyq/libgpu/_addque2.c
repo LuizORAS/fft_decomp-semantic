@@ -33,7 +33,6 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
         u32 sample;
         do {
             sample = *status;
-            __asm__("" : "=r"(sample) : "0"(sample)); /* Preserve sample-then-mask operand order. */
             sample &= ready;
         } while (!sample);
         operation(source, argument);
@@ -55,10 +54,6 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
     if (copy_size) {
         register u32* payload __asm__("$8") = g_psyq_gpu_operation_queue[0].packet_words;
         psyq_gpu_queue_packet_view_t* packets;
-        __asm__(""
-            : "=r"(payload)
-            : "0"(payload)
-            : "$7"); /* Retain payload-base setup before the source register copy. */
         words = source;
         __asm__(""
             : "=r"(words)

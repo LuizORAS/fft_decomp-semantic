@@ -9,7 +9,7 @@ void VectorNormal(VECTOR* input, VECTOR* output) {
     register s32 x __asm__("$8");
     register s32 y __asm__("$9");
     register s32 z __asm__("$10");
-    register s32 sum __asm__("$2");
+    s32 sum;
     register u32 saved_ra __asm__("$7");
     x = source->vx;
     y = source->vy;

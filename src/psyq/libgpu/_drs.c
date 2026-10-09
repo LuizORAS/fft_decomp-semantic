@@ -23,11 +23,8 @@ int _drs(void* rectangle, u32 pixels) {
     result = width;
     if (width >= 0) {
         width_limit = &g_psyq_gpu_vram_width;
-        __asm__("" : "=r"(width_limit) : "0"(width_limit)); /* Preserve the materialized clamp address. */
         value = *width_limit;
-        __asm__("" : "=r"(value) : "0"(value));
         value = (s16)value;
-        __asm__("" : "=r"(value) : "0"(value));
         if (value < width)
             result = *width_limit;
     } else
@@ -38,11 +35,8 @@ int _drs(void* rectangle, u32 pixels) {
     if (height >= 0) {
         __asm__("" : "=r"(result) : "0"(result)); /* Preserve the retail copy of the input height in v1. */
         height_limit = &g_psyq_gpu_vram_height;
-        __asm__("" : "=r"(height_limit) : "0"(height_limit));
         value = *height_limit;
-        __asm__("" : "=r"(value) : "0"(value));
         value = (s16)value;
-        __asm__("" : "=r"(value) : "0"(value));
         if (value < height)
             width = *height_limit;
         else
@@ -54,10 +48,8 @@ int _drs(void* rectangle, u32 pixels) {
     remainder = words >> 4;
     if (words <= 0)
         return -1;
-    __asm__("" : "=r"(remainder) : "0"(remainder)); /* The retail first quotient and final remainder share s0. */
     block_count = remainder;
     value = block_count << 4;
-    __asm__("" : "=r"(value) : "0"(value)); /* The original subtracts its block-size temporary from words. */
     remainder = words - value;
     blocks = block_count;
     while (!(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND)) {

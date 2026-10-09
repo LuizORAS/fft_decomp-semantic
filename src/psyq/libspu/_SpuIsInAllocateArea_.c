@@ -6,8 +6,6 @@ s32 _SpuIsInAllocateArea_(u32 address) {
     u32 start;
     address <<= _spu_mem_mode_plus;
     if (_spu_memList == 0) {
-        /* Without this barrier GCC reverses the null branch and removes the retail jump. */
-        __asm__ volatile("");
         return 0;
     }
     for (index = 0;; index++) {
