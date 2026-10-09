@@ -3,7 +3,7 @@
 void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc_data_t* unit) {
     u8* item;
     u32 palette_id;
-    s32 row;
+    s32 clut_index;
     s32 idx;
     battle_unit_misc_data_t* unit2;
     /* The last test re-reads the ability id rather than reusing the value the
@@ -20,13 +20,13 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
         palette_id = 0x15;
     }
     idx = graphic_id * 2;
-    row = unit->unit_id;
-    /* The header types this as u8[0x200]; the palette rows are 16 colours of
+    clut_index = unit->unit_id;
+    /* The header types this as u8[0x200]; the palettes are 16 colours of
      * two bytes, so the index has to stay in halfwords or the stride halves. */
     battle_map_load_palette_data(&((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] >> 4) * 16],
-        MAP_PALETTE_BANK_ITEM_A, row, 0);
+        MAP_CLUT_ROW_ITEM_A, clut_index, 0);
     battle_map_load_palette_data(&((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] & 0xF) * 16],
-        MAP_PALETTE_BANK_ITEM_B, row, 0);
+        MAP_CLUT_ROW_ITEM_B, clut_index, 0);
     unit->used_item_or_weapon_id = graphic_id;
     unit->equipped_weapon_type = palette_id;
 }

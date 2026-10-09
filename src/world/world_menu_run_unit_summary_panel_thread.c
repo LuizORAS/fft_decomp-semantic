@@ -184,9 +184,9 @@ void world_menu_run_unit_summary_panel_thread(void) {
         }
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_mode_0);
         if (value != 0) {
-            world_menu_init_primitive_colors_palette_bank_1(frame_record->palette);
+            world_menu_init_primitive_colors_dimmed(frame_record->palette);
         } else {
-            world_menu_init_primitive_colors_palette_bank_0(frame_record->palette);
+            world_menu_init_primitive_colors_normal(frame_record->palette);
         }
         world_menu_submit_numeric_display_frame_primitives(frame_record->palette);
         world_gfx_draw_or_append_gpu_primitive(frame_record->draw_offset_a);

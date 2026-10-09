@@ -7,11 +7,11 @@
 
 void world_gfx_load_evtchr_thread(void) {
     void* param;
-    s32 id;
+    s32 block;
     void* buffer;
 
     param = world_thread_get_current_parameter_1();
-    id = world_thread_get_current_parameter_2();
+    block = world_thread_get_current_parameter_2();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
     buffer = main_heap_alloc(EVTCHR_BLOCK_BYTES);
 
@@ -19,7 +19,7 @@ void world_gfx_load_evtchr_thread(void) {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (world_thread_call_on_main_stack(
-                 id * EVTCHR_BLOCK_SECTORS + EVTCHR_ARCHIVE_START_SECTOR, EVTCHR_BLOCK_BYTES, buffer)
+                 block * EVTCHR_BLOCK_SECTORS + EVTCHR_ARCHIVE_START_SECTOR, EVTCHR_BLOCK_BYTES, buffer)
         != 0);
 
     do {

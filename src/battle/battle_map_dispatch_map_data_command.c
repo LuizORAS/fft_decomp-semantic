@@ -24,7 +24,7 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
             }
         }
         switch (g_battle_map_texture_animations[index].mode) {
-        case MAP_TEXTURE_ANIMATION_MODE_UV_LOOP ... MAP_TEXTURE_ANIMATION_MODE_POLYGON_RANGE:
+        case MAP_TEXTURE_ANIMATION_MODE_UV_LOOP ... MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE:
         case MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK ... MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING:
             g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].frame_x;
             g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].frame_y;

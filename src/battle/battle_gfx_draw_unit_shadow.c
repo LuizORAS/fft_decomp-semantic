@@ -55,7 +55,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
-        prim->clut = unit->vram_palette_id + 0x40;
+        prim->clut = unit->clut + 0x40; /* the unit's CLUT of MAP_CLUT_ROW_UNIT_SHADOWS */
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         switch (frame & 0x30) {
         case 0:
@@ -85,7 +85,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         }
     } else {
         prim->tpage = 0x5f;
-        prim->clut = unit->vram_palette_id + 0x40;
+        prim->clut = unit->clut + 0x40; /* the unit's CLUT of MAP_CLUT_ROW_UNIT_SHADOWS */
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         prim->u0 = prim->u2 = 0x90;
         prim->u1 = prim->u3 = 0xa3;

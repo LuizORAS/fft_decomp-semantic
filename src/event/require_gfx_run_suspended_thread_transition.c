@@ -11,8 +11,8 @@ void require_gfx_run_suspended_thread_transition(void) {
     g_require_panel_status_group_count = 2;
     while (1) {
         s32 buffer = frame & 1;
-        require_gfx_build_gradient_grid_primitives(g_require_gfx_poly_gt4_banks[buffer]);
-        require_gfx_build_status_group_primitives(g_require_gfx_poly_ft4_banks[buffer]);
+        require_gfx_build_gradient_grid_primitives(g_require_gfx_poly_gt4_buffers[buffer]);
+        require_gfx_build_status_group_primitives(g_require_gfx_poly_ft4_buffers[buffer]);
         battle_thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;

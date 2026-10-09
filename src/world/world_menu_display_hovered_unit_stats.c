@@ -351,9 +351,9 @@ void world_menu_display_hovered_unit_stats(
         world_gfx_draw_or_append_gpu_primitive(&page->draw_mode_0);
         world_gfx_draw_or_append_gpu_primitive(&page->portrait);
         if (running != 0) {
-            world_menu_init_primitive_colors_palette_bank_1(&page->palette);
+            world_menu_init_primitive_colors_dimmed(&page->palette);
         } else {
-            world_menu_init_primitive_colors_palette_bank_0(&page->palette);
+            world_menu_init_primitive_colors_normal(&page->palette);
         }
         world_menu_submit_numeric_display_frame_primitives(&page->palette);
         world_gfx_draw_or_append_gpu_primitive(&offs->a);

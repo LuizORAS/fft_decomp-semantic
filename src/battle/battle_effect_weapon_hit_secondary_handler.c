@@ -90,7 +90,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                         &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A],
                         &slot->motion);
                     battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A,
-                        g_battle_effect_current_secondary->parameter + 0x7ac0, slot);
+                        g_battle_effect_current_secondary->parameter + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
                     state->count_a++;
                     if (state->count_a == 8) {
                         break;
@@ -111,7 +111,8 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                     slot = &g_battle_effect_slots[state->ids_b[j]];
                     slot->life = battle_effect_spawn_particle_motion(
                         &g_battle_effect_trap_particle_configs[group], &slot->motion);
-                    battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B, 0x7aca, slot);
+                    battle_effect_init_trap_animation(
+                        BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 10), slot);
                     slot->red = slot->green = slot->blue = 0xff;
                     state->count_b++;
                     if (state->count_b == 16) {

@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_menu_init_primitive_colors_palette_bank_0(world_menu_palette_primitives_t* menu) {
+/* Give the twelve frame lines the colours of the normal menu palette (the first
+ * sixteen of the menu palette colours) and the sprite the normal menu CLUT, GetClut(0x3c0, 0x1f0). */
+void battle_menu_init_primitive_colors_normal(world_menu_palette_primitives_t* menu) {
     s32 index;
     s32 palette_offset;
     LINE_F2* line;

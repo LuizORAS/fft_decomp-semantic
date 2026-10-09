@@ -1726,8 +1726,8 @@ extern world_gfx_image_load_parameters_t g_world_unit_summary_value_sprite_param
 extern RECT g_world_unit_status_panel_origin;
 extern world_gfx_image_load_parameters_t g_world_unit_status_sprite_params[];
 extern u8 g_world_unit_status_portrait_params[];
-extern u16 g_world_unit_summary_value_cluts[4][2]; /* [row][highlighted] */
-extern u16 g_world_unit_summary_label_cluts[7][2]; /* [row][highlighted] */
+extern u16 g_world_unit_summary_value_cluts[4][2]; /* [row][dimmed] */
+extern u16 g_world_unit_summary_label_cluts[7][2]; /* [row][dimmed] */
 extern u8 g_world_unit_summary_mode_row_params[];
 extern RECT g_world_selected_unit_portrait_rect;
 extern world_status_thread_t g_world_stat_preview_panel_thread_params;
@@ -2438,7 +2438,7 @@ s32 world_menu_get_party_unit_name_id(void);
 u8* world_menu_get_script(s32 index);
 s32 world_menu_get_value_1(s32 unused_row);
 s32 world_menu_get_value_2(s32 unused_row);
-void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* prim, s32 icon_index);
+void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* prim, s32 clut_offset);
 s32 world_menu_is_busy(s32 unused);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
 u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
@@ -2525,8 +2525,8 @@ void world_menu_icon_list_thread(void);
 void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_index, u8* text_table, void* menu);
 void world_menu_init_at_list(world_menu_entry_t* entry);
 void world_menu_init_palette_and_text(s32 unused);
-void world_menu_init_primitive_colors_palette_bank_0(world_menu_palette_primitives_t*);
-void world_menu_init_primitive_colors_palette_bank_1(world_menu_palette_primitives_t*);
+void world_menu_init_primitive_colors_normal(world_menu_palette_primitives_t*);
+void world_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t*);
 void world_gfx_init_default_poly_ft4(POLY_FT4* poly);
 void world_gfx_init_scaled_draw_area_packets_4(world_gfx_scaled_draw_area_pair_t* pair);
 void world_menu_init_scrollable_list(const s16* values, s32 value, s32 selected, u8* text_table);

@@ -14,7 +14,7 @@ u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprit
         return 0;
     }
 
-    out->vram_palette_id = unit->vram_palette_id;
+    out->clut = unit->clut;
     if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
         out->tpage = 11;
     } else {

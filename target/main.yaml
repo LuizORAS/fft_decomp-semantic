@@ -1291,7 +1291,7 @@ data:
   - {addr: 0x8004c6bc, name: g_main_tutorial_progress_masks}
   - {addr: 0x8004c6c4, name: g_main_system_graphics_error}
   - {addr: 0x8004c6c8, name: g_require_gfx_poly_gt4_array_32}
-  - {addr: 0x8004c6c8, name: g_require_gfx_poly_gt4_banks}
+  - {addr: 0x8004c6c8, name: g_require_gfx_poly_gt4_buffers}
   - {addr: 0x8004cd48, name: g_require_gfx_poly_gt4_array_8}
   - {addr: 0x8004d720, name: g_main_gfx_now_loading_primitives}
   - {addr: 0x8004d950, name: g_main_system_flags}

@@ -29,7 +29,7 @@ void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_
         line++;
     }
 
-    battle_menu_init_primitive_colors_palette_bank_0(menu);
+    battle_menu_init_primitive_colors_normal(menu);
     line = menu->lines;
     offset = 0;
     for (index = 0; index < 12; index++) {

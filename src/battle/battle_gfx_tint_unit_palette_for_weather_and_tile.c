@@ -12,10 +12,10 @@
  *
  * Each branch makes its own palette call, as the original evidently did:
  * cross-jumping merges them only after register allocation, so the extra
- * references still rank row above unit in global allocation. The two snow
+ * references still rank clut_index above unit in global allocation. The two snow
  * (weather bit 0) branches are identical. */
 void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* unit, s32 level, s32 final_value) {
-    s32 row;
+    s32 clut_index;
     s32 stored_palette;
     s32 slot;
     s32 weather;
@@ -26,15 +26,15 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
 
     slot = unit->spritesheet_vram_slot;
     stored_palette = unit->stored_palette;
-    row = unit->unit_id;
+    clut_index = unit->unit_id;
 
     if (g_battle_gfx_spritesheet_slots[slot].spritesheet_id >= 0x60
         && g_battle_gfx_spritesheet_slots[slot].spritesheet_id <= 0x9a) {
-        battle_map_load_palette_data(
-            g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8], MAP_PALETTE_BANK_UNITS_SECOND, row, 0);
+        battle_map_load_palette_data(g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8],
+            MAP_CLUT_ROW_UNITS_SECOND, clut_index, 0);
     } else {
         battle_map_load_palette_data(
-            g_battle_gfx_spritesheet_slots[slot].palettes[8], MAP_PALETTE_BANK_UNITS_SECOND, row, 0);
+            g_battle_gfx_spritesheet_slots[slot].palettes[8], MAP_CLUT_ROW_UNITS_SECOND, clut_index, 0);
     }
 
     blue = 0;
@@ -156,24 +156,24 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
 
     switch (unit->spritesheet_id) {
     case BATTLE_SPRITESHEET_ID_CRYSTAL:
-        battle_map_update_palette_from_other(
-            g_battle_gfx_crystal_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
+        battle_map_update_palette_from_other(g_battle_gfx_crystal_palettes[stored_palette], MAP_CLUT_ROW_UNITS,
+            clut_index, 0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_CHICKEN:
-        battle_map_update_palette_from_other(
-            g_battle_gfx_chicken_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
+        battle_map_update_palette_from_other(g_battle_gfx_chicken_palettes[stored_palette], MAP_CLUT_ROW_UNITS,
+            clut_index, 0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_FROG:
-        battle_map_update_palette_from_other(
-            g_battle_gfx_frog_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
+        battle_map_update_palette_from_other(g_battle_gfx_frog_palettes[stored_palette], MAP_CLUT_ROW_UNITS, clut_index,
+            0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_TREASURE:
-        battle_map_update_palette_from_other(
-            g_battle_gfx_treasure_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
+        battle_map_update_palette_from_other(g_battle_gfx_treasure_palettes[stored_palette], MAP_CLUT_ROW_UNITS,
+            clut_index, 0, red, green, blue, final_value);
         break;
     default:
-        battle_map_update_palette_from_other(
-            g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
+        battle_map_update_palette_from_other(g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette],
+            MAP_CLUT_ROW_UNITS, clut_index, 0, red, green, blue, final_value);
         break;
     }
 }

@@ -7,7 +7,7 @@
  * battle_map_append_mesh_geometry, then appends UV coordinates, CLUT commands,
  * texture-page commands, and the initial state of untextured records.
  * Target 0x800f5578 reads five-halfword textured triangles and six-halfword
- * textured quads. CLUT rows keep their low six bits and gain 0x7800;
+ * textured quads. clut words keep their low six bits (the CLUT) and gain the map CLUT row;
  * texture pages are copied verbatim. Destination strides are 0x28/0x34 for
  * textured triangles/quads and 0x14/0x18 for untextured triangles/quads.
  * Untextured POLY_F3/POLY_F4 packets start with colour 0/0/1.
@@ -59,7 +59,8 @@ void battle_map_init_mesh_render_records(void* geometry_data) {
         g_battle_gfx_current_render_buffer->gt3[polygon_index].v0 = v0;
         g_battle_gfx_current_render_buffer->gt3[polygon_index].v1 = v1;
         g_battle_gfx_current_render_buffer->gt3[polygon_index].v2 = v2;
-        g_battle_gfx_current_render_buffer->gt3[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
+        g_battle_gfx_current_render_buffer->gt3[polygon_index].clut
+            = (clut_data & 0x3f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
         g_battle_gfx_current_render_buffer->gt3[polygon_index].tpage = texture_page;
     }
 
@@ -89,7 +90,8 @@ void battle_map_init_mesh_render_records(void* geometry_data) {
         g_battle_gfx_current_render_buffer->gt4[polygon_index].v1 = v1;
         g_battle_gfx_current_render_buffer->gt4[polygon_index].v2 = v2;
         g_battle_gfx_current_render_buffer->gt4[polygon_index].v3 = v3;
-        g_battle_gfx_current_render_buffer->gt4[polygon_index].clut = (clut_data & 0x3f) | 0x7800;
+        g_battle_gfx_current_render_buffer->gt4[polygon_index].clut
+            = (clut_data & 0x3f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
         g_battle_gfx_current_render_buffer->gt4[polygon_index].tpage = texture_page;
     }
 

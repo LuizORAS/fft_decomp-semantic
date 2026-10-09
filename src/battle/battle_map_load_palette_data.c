@@ -1,32 +1,32 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_map_load_palette_data(const u16* palette, s32 bank, s32 palette_row_index, s32 load_all_rows) {
+void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all) {
     s32 clear_index;
-    s32 row_index;
-    const u16* palette_row;
+    s32 i;
+    const u16* clut;
 
-    if (g_battle_map_palette_state.banks[bank].updates_disabled != 0) {
+    if (g_battle_map_palette_state.clut_rows[clut_row].updates_disabled != 0) {
         return;
     }
 
-    if (load_all_rows == 1) {
-        clear_index = MAP_PALETTE_ROW_COUNT - 1;
+    if (load_all == 1) {
+        clear_index = MAP_CLUTS_PER_ROW - 1;
         do {
-            g_battle_map_palette_state.banks[bank].animations[clear_index].active = 0;
+            g_battle_map_palette_state.clut_rows[clut_row].animations[clear_index].active = 0;
             clear_index--;
         } while (clear_index >= 0);
 
-        row_index = 0;
-        palette_row = palette;
+        i = 0;
+        clut = palette;
         do {
-            battle_map_extract_palette_colors(palette_row, bank, row_index);
-            row_index++;
-            palette_row += MAP_PALETTE_COLORS_PER_ROW;
-        } while (row_index < MAP_PALETTE_ROW_COUNT);
+            battle_map_extract_palette_colors(clut, clut_row, i);
+            i++;
+            clut += MAP_CLUT_COLOR_COUNT;
+        } while (i < MAP_CLUTS_PER_ROW);
     } else {
-        g_battle_map_palette_state.banks[bank].animations[palette_row_index].active = 0;
-        battle_map_extract_palette_colors(palette, bank, palette_row_index);
+        g_battle_map_palette_state.clut_rows[clut_row].animations[clut_index].active = 0;
+        battle_map_extract_palette_colors(palette, clut_row, clut_index);
     }
 
     g_battle_map_palette_state.upload_pending = 1;

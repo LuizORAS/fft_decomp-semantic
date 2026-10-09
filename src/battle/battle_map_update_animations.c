@@ -3,21 +3,21 @@
 
 /* Advances the per-frame map animations: texture palette rotations, the
  * background gradient, ambient light and darkness transitions, and the
- * per-bank palette colour blends.
+ * colour blends of each map CLUT row.
  *
  * red/green/blue are s16: the extensions of their u8 + s8 sums fold into
  * copies, which reproduces the target's separate stored and packed values
  * and the reloads of the component bytes. The components are indexed from a
- * row pointer so loop.c reduces one address giv, as in the target. */
+ * pointer to the CLUT's first colour so loop.c reduces one address giv, as in the target. */
 void battle_map_update_animations(void) {
     map_palette_color_components_t saved_component;
     map_background_gradient_colors_t gradient;
     map_texture_animation_state_t* state;
-    map_palette_runtime_bank_t* bank;
+    map_clut_row_state_t* row_state;
     map_palette_color_components_t* component;
     s32 i;
     s32 j;
-    s32 row;
+    s32 k;
     u16 last;
     s16 red;
     s16 green;
@@ -33,29 +33,29 @@ void battle_map_update_animations(void) {
             state->elapsed_frames++;
             if (state->elapsed_frames >= state->frame_duration) {
                 state->elapsed_frames = 0;
-                bank = &g_battle_map_palette_state.banks[state->polygon_group];
-                saved_component = bank->components[state->last_polygon];
-                last = state->last_polygon;
-                saved_packed = bank->packed_colors[last];
-                saved_modified = g_battle_map_palette_modified_colors[state->polygon_group][last];
-                if (state->first_polygon < last) {
-                    for (row = last; state->first_polygon < row; row--) {
-                        bank->components[row] = bank->components[row - 1];
-                        bank->packed_colors[row] = bank->packed_colors[row - 1];
-                        g_battle_map_palette_modified_colors[state->polygon_group][row]
-                            = g_battle_map_palette_modified_colors[state->polygon_group][row - 1];
+                row_state = &g_battle_map_palette_state.clut_rows[state->clut_row];
+                saved_component = row_state->components[state->last_color];
+                last = state->last_color;
+                saved_packed = row_state->packed_colors[last];
+                saved_modified = g_battle_map_palette_modified_colors[state->clut_row][last];
+                if (state->first_color < last) {
+                    for (k = last; state->first_color < k; k--) {
+                        row_state->components[k] = row_state->components[k - 1];
+                        row_state->packed_colors[k] = row_state->packed_colors[k - 1];
+                        g_battle_map_palette_modified_colors[state->clut_row][k]
+                            = g_battle_map_palette_modified_colors[state->clut_row][k - 1];
                     }
                 } else {
-                    for (row = last; row < state->first_polygon; row++) {
-                        bank->components[row] = bank->components[row + 1];
-                        bank->packed_colors[row] = bank->packed_colors[row + 1];
-                        g_battle_map_palette_modified_colors[state->polygon_group][row]
-                            = g_battle_map_palette_modified_colors[state->polygon_group][row + 1];
+                    for (k = last; k < state->first_color; k++) {
+                        row_state->components[k] = row_state->components[k + 1];
+                        row_state->packed_colors[k] = row_state->packed_colors[k + 1];
+                        g_battle_map_palette_modified_colors[state->clut_row][k]
+                            = g_battle_map_palette_modified_colors[state->clut_row][k + 1];
                     }
                 }
-                bank->components[state->first_polygon] = saved_component;
-                bank->packed_colors[state->first_polygon] = saved_packed;
-                g_battle_map_palette_modified_colors[state->polygon_group][state->first_polygon] = saved_modified;
+                row_state->components[state->first_color] = saved_component;
+                row_state->packed_colors[state->first_color] = saved_packed;
+                g_battle_map_palette_modified_colors[state->clut_row][state->first_color] = saved_modified;
                 g_battle_map_palette_state.upload_pending = 1;
             }
         }
@@ -224,18 +224,18 @@ void battle_map_update_animations(void) {
         }
     }
 
-    for (i = 0; i < 14; i++) {
-        if (g_battle_map_palette_state.banks[i].enabled == 0) {
-            for (row = 0; row < 16; row++) {
-                if (g_battle_map_palette_state.banks[i].animations[row].active == 0) {
+    for (i = 0; i < MAP_CLUT_ROW_COUNT; i++) {
+        if (g_battle_map_palette_state.clut_rows[i].enabled == 0) {
+            for (k = 0; k < 16; k++) {
+                if (g_battle_map_palette_state.clut_rows[i].animations[k].active == 0) {
                     continue;
                 }
-                if (g_battle_map_palette_state.banks[i].animations[row].mode >= 4) {
-                    if (++g_battle_map_palette_state.banks[i].animations[row].delay_counter
-                        >= g_battle_map_palette_state.banks[i].animations[row].mode >> 2) {
-                        step = g_battle_map_palette_state.banks[i].animations[row].blend_step;
-                        g_battle_map_palette_state.banks[i].animations[row].delay_counter = 0;
-                        component = &g_battle_map_palette_state.banks[i].components[row * 16];
+                if (g_battle_map_palette_state.clut_rows[i].animations[k].mode >= 4) {
+                    if (++g_battle_map_palette_state.clut_rows[i].animations[k].delay_counter
+                        >= g_battle_map_palette_state.clut_rows[i].animations[k].mode >> 2) {
+                        step = g_battle_map_palette_state.clut_rows[i].animations[k].blend_step;
+                        g_battle_map_palette_state.clut_rows[i].animations[k].delay_counter = 0;
+                        component = &g_battle_map_palette_state.clut_rows[i].components[k * 16];
                         for (j = 0; j < 16; j++) {
                             if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                                 red = component[j].red_5bit
@@ -250,32 +250,34 @@ void battle_map_update_animations(void) {
                                 component[j].blue_5bit = blue;
                                 component[j].red_5bit = red;
                                 component[j].green_5bit = green;
-                                g_battle_map_palette_modified_colors[i][row * 16 + j]
+                                g_battle_map_palette_modified_colors[i][k * 16 + j]
                                     = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
                             }
                         }
 
-                        if (++g_battle_map_palette_state.banks[i].animations[row].blend_step >= 0x20) {
-                            if (g_battle_map_palette_state.banks[i].animations[row].repeat == MAP_COLOR_REPEAT_TINTED) {
+                        if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step >= 0x20) {
+                            if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat
+                                == MAP_COLOR_REPEAT_TINTED) {
                                 battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
-                                    g_battle_map_palette_state.banks[i].animations[row].mode, i, row, 0, 0, 0, 0);
-                                g_battle_map_palette_state.banks[i].animations[row].repeat = MAP_COLOR_REPEAT_RESTORED;
-                            } else if (g_battle_map_palette_state.banks[i].animations[row].repeat
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0, 0, 0, 0);
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat
+                                    = MAP_COLOR_REPEAT_RESTORED;
+                            } else if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat
                                 == MAP_COLOR_REPEAT_RESTORED) {
                                 battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
-                                    g_battle_map_palette_state.banks[i].animations[row].mode, i, row, 0,
-                                    g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[0],
-                                    g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[1],
-                                    g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[2]);
-                                g_battle_map_palette_state.banks[i].animations[row].repeat = MAP_COLOR_REPEAT_TINTED;
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0,
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[0],
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[1],
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[2]);
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat = MAP_COLOR_REPEAT_TINTED;
                             } else {
-                                g_battle_map_palette_state.banks[i].animations[row].active = 0;
+                                g_battle_map_palette_state.clut_rows[i].animations[k].active = 0;
                             }
                         }
                     }
                 } else {
-                    step = g_battle_map_palette_state.banks[i].animations[row].blend_step;
-                    component = &g_battle_map_palette_state.banks[i].components[row * 16];
+                    step = g_battle_map_palette_state.clut_rows[i].animations[k].blend_step;
+                    component = &g_battle_map_palette_state.clut_rows[i].components[k * 16];
                     for (j = 0; j < 16; j++) {
                         if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                             red = component[j].red_5bit
@@ -290,38 +292,38 @@ void battle_map_update_animations(void) {
                             component[j].blue_5bit = blue;
                             component[j].red_5bit = red;
                             component[j].green_5bit = green;
-                            g_battle_map_palette_modified_colors[i][row * 16 + j]
+                            g_battle_map_palette_modified_colors[i][k * 16 + j]
                                 = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
                         }
                     }
 
-                    if (++g_battle_map_palette_state.banks[i].animations[row].blend_step >= 8) {
-                        if (g_battle_map_palette_state.banks[i].animations[row].repeat == MAP_COLOR_REPEAT_TINTED) {
+                    if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step >= 8) {
+                        if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat == MAP_COLOR_REPEAT_TINTED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
-                                g_battle_map_palette_state.banks[i].animations[row].mode, i, row, 0, 0, 0, 0);
-                            g_battle_map_palette_state.banks[i].animations[row].repeat = MAP_COLOR_REPEAT_RESTORED;
-                        } else if (g_battle_map_palette_state.banks[i].animations[row].repeat
+                                g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0, 0, 0, 0);
+                            g_battle_map_palette_state.clut_rows[i].animations[k].repeat = MAP_COLOR_REPEAT_RESTORED;
+                        } else if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat
                             == MAP_COLOR_REPEAT_RESTORED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
-                                g_battle_map_palette_state.banks[i].animations[row].mode, i, row, 0,
-                                g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[0],
-                                g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[1],
-                                g_battle_map_palette_state.banks[i].animations[row].repeat_rgb[2]);
-                            g_battle_map_palette_state.banks[i].animations[row].repeat = MAP_COLOR_REPEAT_TINTED;
+                                g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0,
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[0],
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[1],
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[2]);
+                            g_battle_map_palette_state.clut_rows[i].animations[k].repeat = MAP_COLOR_REPEAT_TINTED;
                         } else {
-                            g_battle_map_palette_state.banks[i].animations[row].active = 0;
+                            g_battle_map_palette_state.clut_rows[i].animations[k].active = 0;
                         }
                     }
                 }
                 g_battle_map_palette_state.upload_pending = 1;
             }
-        } else if (g_battle_map_palette_state.banks[i].animations[0].active != 0) {
-            if (g_battle_map_palette_state.banks[i].animations[0].mode >= 4) {
-                if (++g_battle_map_palette_state.banks[i].animations[0].delay_counter
-                    >= g_battle_map_palette_state.banks[i].animations[0].mode >> 2) {
-                    step = g_battle_map_palette_state.banks[i].animations[0].blend_step;
-                    g_battle_map_palette_state.banks[i].animations[0].delay_counter = 0;
-                    component = g_battle_map_palette_state.banks[i].components;
+        } else if (g_battle_map_palette_state.clut_rows[i].animations[0].active != 0) {
+            if (g_battle_map_palette_state.clut_rows[i].animations[0].mode >= 4) {
+                if (++g_battle_map_palette_state.clut_rows[i].animations[0].delay_counter
+                    >= g_battle_map_palette_state.clut_rows[i].animations[0].mode >> 2) {
+                    step = g_battle_map_palette_state.clut_rows[i].animations[0].blend_step;
+                    g_battle_map_palette_state.clut_rows[i].animations[0].delay_counter = 0;
+                    component = g_battle_map_palette_state.clut_rows[i].components;
                     for (j = 0; j < 256; j++) {
                         if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                             red = component[j].red_5bit
@@ -341,29 +343,29 @@ void battle_map_update_animations(void) {
                         }
                     }
 
-                    if (++g_battle_map_palette_state.banks[i].animations[0].blend_step >= 0x20) {
-                        if (g_battle_map_palette_state.banks[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
+                    if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step >= 0x20) {
+                        if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
-                                g_battle_map_palette_state.banks[i].animations[0].mode, i, 0, 1, 0, 0, 0);
-                            g_battle_map_palette_state.banks[i].animations[0].repeat = MAP_COLOR_REPEAT_RESTORED;
-                        } else if (g_battle_map_palette_state.banks[i].animations[0].repeat
+                                g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1, 0, 0, 0);
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_RESTORED;
+                        } else if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat
                             == MAP_COLOR_REPEAT_RESTORED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
-                                g_battle_map_palette_state.banks[i].animations[0].mode, i, 0, 1,
-                                g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[0],
-                                g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[1],
-                                g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[2]);
-                            g_battle_map_palette_state.banks[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
+                                g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1,
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[0],
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[1],
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[2]);
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
                         } else {
                             for (j = 15; j >= 0; j--) {
-                                g_battle_map_palette_state.banks[i].animations[j].active = 0;
+                                g_battle_map_palette_state.clut_rows[i].animations[j].active = 0;
                             }
                         }
                     }
                 }
             } else {
-                step = g_battle_map_palette_state.banks[i].animations[0].blend_step;
-                component = g_battle_map_palette_state.banks[i].components;
+                step = g_battle_map_palette_state.clut_rows[i].animations[0].blend_step;
+                component = g_battle_map_palette_state.clut_rows[i].components;
                 for (j = 0; j < 256; j++) {
                     if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                         red = component[j].red_5bit
@@ -383,21 +385,22 @@ void battle_map_update_animations(void) {
                     }
                 }
 
-                if (++g_battle_map_palette_state.banks[i].animations[0].blend_step >= 8) {
-                    if (g_battle_map_palette_state.banks[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
+                if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step >= 8) {
+                    if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
                         battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
-                            g_battle_map_palette_state.banks[i].animations[0].mode, i, 0, 1, 0, 0, 0);
-                        g_battle_map_palette_state.banks[i].animations[0].repeat = MAP_COLOR_REPEAT_RESTORED;
-                    } else if (g_battle_map_palette_state.banks[i].animations[0].repeat == MAP_COLOR_REPEAT_RESTORED) {
+                            g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1, 0, 0, 0);
+                        g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_RESTORED;
+                    } else if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat
+                        == MAP_COLOR_REPEAT_RESTORED) {
                         battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
-                            g_battle_map_palette_state.banks[i].animations[0].mode, i, 0, 1,
-                            g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[0],
-                            g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[1],
-                            g_battle_map_palette_state.banks[i].animations[0].repeat_rgb[2]);
-                        g_battle_map_palette_state.banks[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
+                            g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1,
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[0],
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[1],
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[2]);
+                        g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
                     } else {
                         for (j = 15; j >= 0; j--) {
-                            g_battle_map_palette_state.banks[i].animations[j].active = 0;
+                            g_battle_map_palette_state.clut_rows[i].animations[j].active = 0;
                         }
                     }
                 }

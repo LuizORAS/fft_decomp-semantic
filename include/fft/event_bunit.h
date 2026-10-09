@@ -39,7 +39,7 @@ s32 bunit_bits_read(s32 bit_count);
 /* character */
 extern u8 g_bunit_character_status_frame_config;
 extern s32 g_bunit_character_status_redraw_request;
-extern s32 g_bunit_character_status_highlight;
+extern s32 g_bunit_character_status_dimmed;
 extern u8 g_bunit_character_status_ability_text_image[];
 extern RECT g_bunit_character_status_ability_text_rect;
 extern RECT g_bunit_character_status_draw_area_rect;
@@ -156,7 +156,7 @@ extern u32 g_bunit_status_display_thread_params;
 extern s32 g_bunit_status_display_offset_y;
 extern u32 g_bunit_status_display_flags; /* menu_status_panel_flags_e */
 extern s32 g_bunit_status_display_redraw_request;
-extern s32 g_bunit_status_display_highlight;
+extern s32 g_bunit_status_display_dimmed;
 extern u8 g_bunit_status_banner_at_bottom;
 extern u8 g_bunit_status_banner_at_bottom_latch;
 extern s8 g_bunit_status_banner_slide_step;
@@ -168,7 +168,7 @@ extern battle_menu_status_panel_glyph_t g_bunit_text_decimal_glyph;
 extern s32 g_bunit_text_selection_id;
 extern u8 g_bunit_numeric_editor_thread_params;
 extern s32 g_bunit_numeric_editor_redraw_request;
-extern s32 g_bunit_numeric_editor_highlight;
+extern s32 g_bunit_numeric_editor_dimmed;
 extern u16 g_bunit_text_digit_texture_page;
 extern u16 g_bunit_text_clut_2_mode0;
 extern u16 g_bunit_text_clut_2_mode1;

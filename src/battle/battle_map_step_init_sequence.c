@@ -17,7 +17,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         step++;
         battle_camera_init_defaults();
         battle_map_init_palette_state();
-        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_PALETTE_BANK_SPRITES, 0, 0);
+        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
         g_main_gfx_unit_graphics_load_queue.count = 0;
         battle_menu_request_open_small();
         break;
@@ -83,7 +83,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         battle_map_init_background_gradient();
         battle_map_init_ambient_light();
         battle_map_init_darkness();
-        battle_map_update_lighting();
+        battle_map_upload_clut_rows();
         battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RESET);
         battle_ai_init_workspace();
         step++;

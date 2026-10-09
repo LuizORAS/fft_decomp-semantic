@@ -109,7 +109,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     }
     prim->code |= 2;
     color = 0x80;
-    prim->clut = GetClut(0x40, 0x1e2);
+    prim->clut = GetClut(0x40, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
     prim->r0 = prim->g0 = prim->b0 = color;
     prim->u2 = 0x40;
     prim->u0 = 0x40;

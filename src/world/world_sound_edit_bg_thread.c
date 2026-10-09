@@ -14,7 +14,7 @@ void world_sound_edit_bg_thread(void) {
     s32 accumulator;
     s32 step;
     s32 echo;
-    s32 sound_bank;
+    s32 resource;
     u8 unused[8]; /* retail frame reserves eight bytes of locals */
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
@@ -24,7 +24,7 @@ void world_sound_edit_bg_thread(void) {
     start_echo = parameter[1];
     steps = parameter[4];
     end_echo = parameter[2];
-    sound_bank = 0x10000;
+    resource = 0x10000;
     if (steps != 0) {
         delta = end_echo - start_echo;
         accumulator = 0;
@@ -38,10 +38,10 @@ void world_sound_edit_bg_thread(void) {
                 echo = 1;
             }
             accumulator += delta;
-            main_sound_set_sfx_echo(sound_id + sound_bank, echo);
+            main_sound_set_sfx_echo(sound_id + resource, echo);
             step++;
         } while (step < steps);
     }
-    main_sound_set_sfx_echo(sound_id | sound_bank, end_echo);
+    main_sound_set_sfx_echo(sound_id | resource, end_echo);
     world_thread_exit_current();
 }

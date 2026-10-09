@@ -18,6 +18,6 @@ void battle_gfx_load_wep_spr_data(u8* data) {
         g_battle_gfx_eff_palettes[i] = *cursor++;
     }
     LoadTPage((u32*)(data + 0x8400), 0, 0, 0x200, 0, 0x100, 0x100);
-    battle_map_load_palette_data((u16*)(data + 0x10400), MAP_PALETTE_BANK_WEAPONS, 0, 1);
+    battle_map_load_palette_data((u16*)(data + 0x10400), MAP_CLUT_ROW_WEAPONS, 0, 1);
     LoadTPage((u32*)(data + 0x10600), 0, 0, 0x200, 0x70, 0x100, 0x90);
 }

@@ -749,7 +749,7 @@ typedef struct entd_file {
 } entd_file_t;
 typedef char entd_file_size_must_be_0x14000[(sizeof(entd_file_t) == 0x14000) ? 1 : -1];
 
-/* The high byte of party_data_t.name_id selects the text bank used for the
+/* The high byte of party_data_t.name_id selects the page of unit-name text ids used for the
  * four persistent-unit name classes. */
 typedef enum party_name_class {
     PARTY_NAME_CLASS_SPECIAL = 0x0000,

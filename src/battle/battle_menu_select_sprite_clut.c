@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
-/* Select the CLUT bank for a menu sprite: the highlighted palette while the
+/* Select the CLUT of a menu sprite: the dimmed one while the
  * previous event thread is running or event mode is active, otherwise the
- * normal palette.
+ * normal one.
  *
  * Target 0x801383c8. Structurally the BATTLE twin of
  * world_menu_select_icon_cluts. */

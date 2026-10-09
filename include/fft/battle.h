@@ -1945,7 +1945,7 @@ typedef struct battle_unit_misc_data {
     u16 draw_enabled;                       /* 0x00a; set by event Draw, cleared by Erase; a halfword */
     u16 requested_animation;                /* 0x00c */
     u16 tpage;                              /* 0x00e; VRAM slot + 0x14: the sheet's texture page */
-    u16 vram_palette_id;                    /* 0x010 */
+    u16 clut;                               /* 0x010 */
     /* Read-modify-written as a halfword over 0x012..0x013
      * (battle_gfx_update_sprite_transparency_flag). */
     battle_gfx_sprite_display_flags_t sprite_display_flags; /* 0x012 */
@@ -2889,7 +2889,7 @@ typedef struct battle_effect_emitter_values {
 
 /* One textured quad of a multi-part effect sprite. */
 typedef struct battle_effect_sprite_part {
-    u16 flags; /* 0x00; 0x0f CLUT row, 0x10 upper CLUT bank, 0x200 semi-transparent */
+    u16 flags; /* 0x00; 0x0f CLUT, 0x10 of MAP_CLUT_ROW_EFFECT_SECOND, 0x200 semi-transparent */
     u16 tpage; /* 0x02 */
     u8 u;
     u8 v;
@@ -4098,7 +4098,7 @@ extern s32 g_battle_effect_projectile_speed;
 extern s16 g_battle_effect_projectile_spin_passes;
 extern s16 g_battle_effect_projectile_step_count;
 
-/* Six RGB byte triples, packed into both CLUT rows as 15-bit colours. */
+/* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
 extern u8 g_battle_effect_reflect_palette_colors[];
 
 /* Secondary-animation id per ability, indexed by the low halfword of the
@@ -4288,7 +4288,7 @@ s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t*
 s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_init_data(void);
 void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
-void battle_effect_init_trap_animation(s32 group, u16 palette_id, battle_effect_slot_t* slot);
+void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
 u32 battle_effect_load_ability(s32 ability_id);
 void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red, s32 green, s32 blue);
@@ -4643,7 +4643,7 @@ typedef char battle_unit_height_data_size_must_be_8[sizeof(battle_unit_height_da
 
 /* Sprite lookup result filled in by battle_gfx_get_unit_sprite_frame_and_vram_ids. */
 typedef struct {
-    s16 vram_palette_id;  /* 0x00 */
+    s16 clut;             /* 0x00; the unit's CLUT of MAP_CLUT_ROW_UNITS */
     s16 tpage;            /* 0x02 */
     s16 graphic_height;   /* 0x04 */
     s16 graphic_y_offset; /* 0x06 */
@@ -5246,8 +5246,8 @@ void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_
 
 void battle_gfx_load_unit_into_evtchr_slot(battle_unit_misc_data_t* unit, s32 slot, s32 image_slot);
 
-void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 bank, s32 row, s32 preset,
-    s16 red, s16 green, s16 blue, s32 final_value);
+void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 clut_row, s32 clut_index,
+    s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination);
 
@@ -5313,7 +5313,7 @@ void battle_gfx_modify_palette_based_on_team(struct battle_unit_misc_data* unit,
 u32 battle_gfx_read_compressed_nibble(void);
 void battle_gfx_reset_jumping_unit_graphic_triggers(void);
 s32 battle_gfx_reset_unit_graphic_trigger(u32 misc_id);
-void battle_gfx_set_evtchr_palette_by_misc_id(s32 palette_row_index, s32 slot_index, s32 clut_index);
+void battle_gfx_set_evtchr_palette_by_misc_id(s32 misc_id, s32 slot_index, s32 clut_index);
 s32 battle_gfx_set_shadow_graphic_trigger_by_misc_id(u32 misc_id);
 void battle_gfx_set_thrown_item_palette_by_misc_id(u32 item_id, u32 misc_id);
 void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s32 level);
@@ -5349,8 +5349,8 @@ u8* battle_gfx_init_unit_sprite_display(s32 unit_index);
 s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
 s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
 
-void battle_gfx_modify_vram_palette(
-    s32 mode, const u16* source, s32 bank, s32 row, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red,
+    s16 green, s16 blue, s32 final_value);
 
 s32 battle_gfx_release_reserved_vram_slot(s32 slot_index);
 void battle_gfx_release_unit_vram_slot(struct battle_unit_misc_data* unit);
@@ -6814,10 +6814,10 @@ typedef struct map_texture_animation_state {
     u8 active;
     u8 elapsed_frames;
     u8 frame_duration;
-    u8 _padding_03; /* aligns polygon_group */
-    u16 polygon_group;
-    u16 first_polygon;
-    u16 last_polygon;
+    u8 _padding_03;  /* aligns clut_row */
+    u16 clut_row;    /* 0x04; map_clut_row_e */
+    u16 first_color; /* 0x06; colour index in the row: the colours first..last rotate one place */
+    u16 last_color;  /* 0x08; every frame_duration frames, towards last */
 } map_texture_animation_state_t;
 typedef char map_texture_animation_state_size_must_be_0xa[(sizeof(map_texture_animation_state_t) == 0xa) ? 1 : -1];
 
@@ -6898,9 +6898,9 @@ typedef enum gns_resource_type {
     GNS_RESOURCE_TERRAIN = 0x1a,
     GNS_RESOURCE_TEXTURE_ANIMATIONS = 0x1b,
     GNS_RESOURCE_PALETTE_ANIMATION_FRAMES = 0x1c,
-    GNS_RESOURCE_PALETTES_BANK_1 = 0x1f, /* palette row of mesh bank 1 */
-    GNS_RESOURCE_STATE_RECORDS = 0x23,   /* battle_map_state_record_t list */
-    GNS_RESOURCE_PART_GEOMETRY_1 = 0x24, /* geometry of mesh parts 1-8 */
+    GNS_RESOURCE_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
+    GNS_RESOURCE_STATE_RECORDS = 0x23,        /* battle_map_state_record_t list */
+    GNS_RESOURCE_PART_GEOMETRY_1 = 0x24,      /* geometry of mesh parts 1-8 */
     GNS_RESOURCE_PART_GEOMETRY_2 = 0x25,
     GNS_RESOURCE_PART_GEOMETRY_3 = 0x26,
     GNS_RESOURCE_PART_GEOMETRY_4 = 0x27,
@@ -7062,36 +7062,44 @@ typedef enum map_color_mode {
     MAP_COLOR_MODE_STOP_REPEAT = 10, /* only clear the repeat record */
 } map_color_mode_e;
 
-/* The repeat member of the map colour transitions and of the palette row animations. */
+/* The repeat member of the map colour transitions and of the CLUT animations. */
 typedef enum map_color_repeat {
     MAP_COLOR_REPEAT_OFF = 0,
     MAP_COLOR_REPEAT_TINTED = 1,   /* fading to the recorded offsets; a fade back to the base follows */
     MAP_COLOR_REPEAT_RESTORED = 2, /* fading back to the base; the offsets follow again */
 } map_color_repeat_e;
 
-/* Index into map_palette_state_t.banks: one 256-colour VRAM row each, from y 0x1e0. */
-typedef enum map_palette_bank {
-    MAP_PALETTE_BANK_MAP = 0,
-    MAP_PALETTE_BANK_MAP_1 = 1,   /* GNS_RESOURCE_PALETTES_BANK_1 */
-    MAP_PALETTE_BANK_SPRITES = 2, /* weather particles, deploy portraits, arrow, cursor, shadow, status bubble */
-    MAP_PALETTE_BANK_UNITS = 3,   /* one row per unit, as in banks 4 to 7 and 10 */
-    MAP_PALETTE_BANK_UNIT_SHADOWS = 4,
-    MAP_PALETTE_BANK_ITEM_A = 5, /* the two palettes of the item a unit holds or throws */
-    MAP_PALETTE_BANK_ITEM_B = 6,
-    MAP_PALETTE_BANK_ACTION_RESULTS = 7,
-    MAP_PALETTE_BANK_UNITS_SECOND = 10, /* the second eight palettes of each unit's sheet */
-    MAP_PALETTE_BANK_WEAPONS = 11,
-    MAP_PALETTE_BANK_EFFECT = 12,
-    MAP_PALETTE_BANK_EFFECT_SECOND = 13,
-} map_palette_bank_e;
+/* A CLUT row of the battle map: one VRAM line of sixteen 16-colour CLUTs, from y 0x1e0 down
+ * (battle_map_upload_clut_rows uploads the rows as one 256x14 image). Index into
+ * map_palette_state_t.clut_rows and g_battle_map_palette_modified_colors. */
+typedef enum map_clut_row {
+    MAP_CLUT_ROW_MAP = 0,
+    MAP_CLUT_ROW_MARKED_TILES = 1, /* the map's CLUTs for the polygons of marked tiles */
+    MAP_CLUT_ROW_SPRITES = 2,      /* weather particles, deploy portraits, arrow, cursor, shadow, status bubble */
+    MAP_CLUT_ROW_UNITS = 3,        /* one CLUT per unit, as in rows 4 to 7 and 10 */
+    MAP_CLUT_ROW_UNIT_SHADOWS = 4,
+    MAP_CLUT_ROW_ITEM_A = 5, /* the two palettes of the item a unit holds or throws */
+    MAP_CLUT_ROW_ITEM_B = 6,
+    MAP_CLUT_ROW_ACTION_RESULTS = 7,
+    MAP_CLUT_ROW_UNITS_SECOND = 10, /* the second eight palettes of each unit's sheet */
+    MAP_CLUT_ROW_WEAPONS = 11,
+    MAP_CLUT_ROW_EFFECT = 12,
+    MAP_CLUT_ROW_EFFECT_SECOND = 13,
+} map_clut_row_e;
 
 enum {
-    MAP_PALETTE_ROW_COUNT = 16,
-    MAP_PALETTE_COLORS_PER_ROW = 16,
-    MAP_PALETTE_COLOR_COUNT = 256,
+    MAP_CLUT_ROW_COUNT = 14,
+    MAP_CLUTS_PER_ROW = 16,
+    MAP_CLUT_COLOR_COUNT = 16,
+    MAP_CLUT_ROW_COLOR_COUNT = 256, /* MAP_CLUTS_PER_ROW * MAP_CLUT_COLOR_COUNT */
+    MAP_CLUT_ROWS_Y = 0x1e0,        /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
 };
 
-/* Eight runtime slots rotate the palette colors for map texture animations.
+/* The clut word of CLUT clut_index of a map CLUT row: the value of
+ * GetClut(clut_index * 16, MAP_CLUT_ROWS_Y + clut_row), as a constant. */
+#define MAP_CLUT(clut_row, clut_index) (((MAP_CLUT_ROWS_Y + (clut_row)) << 6) | (clut_index))
+
+/* Eight runtime slots rotate a range of colours of a CLUT row for map texture animations.
  * They are separate from the 32 serialized 0x14-byte animation instructions
  * described by the Maps/Mesh format. */
 enum {
@@ -7135,26 +7143,27 @@ typedef struct map_palette_animation_state {
 } map_palette_animation_state_t;
 typedef char map_palette_animation_state_size_must_be_8[(sizeof(map_palette_animation_state_t) == 8) ? 1 : -1];
 
-/* One 0x982-byte runtime bank per map_palette_bank_e value, based at 0x800995f4.
- * Components and packed_colors are runtime state/mirror, not the separate
- * 0x200-byte-per-bank upload staging at 0x800e4ea4. Palette extraction fills
+/* The 0x982-byte runtime state of one CLUT row (map_clut_row_e), based at 0x800995f4:
+ * an animation per CLUT, then the 256 colours of the row. Components and
+ * packed_colors are runtime state/mirror, not the separate 0x200-byte-per-row
+ * upload staging at 0x800e4ea4 (g_battle_map_palette_modified_colors). Palette extraction fills
  * both; 0x80092f98 uploads staging and clears the pending word at 0x800995ec. */
-typedef struct map_palette_runtime_bank {
+typedef struct map_clut_row_state {
     u8 enabled;
     u8 updates_disabled;
-    map_palette_animation_state_t animations[MAP_PALETTE_ROW_COUNT];
-    map_palette_color_components_t components[MAP_PALETTE_COLOR_COUNT];
-    u16 packed_colors[MAP_PALETTE_COLOR_COUNT];
-} map_palette_runtime_bank_t;
-typedef char map_palette_runtime_bank_size_must_be_0x982[(sizeof(map_palette_runtime_bank_t) == 0x982) ? 1 : -1];
+    map_palette_animation_state_t animations[MAP_CLUTS_PER_ROW];
+    map_palette_color_components_t components[MAP_CLUT_ROW_COLOR_COUNT];
+    u16 packed_colors[MAP_CLUT_ROW_COLOR_COUNT];
+} map_clut_row_state_t;
+typedef char map_clut_row_state_size_must_be_0x982[(sizeof(map_clut_row_state_t) == 0x982) ? 1 : -1];
 
 /* Palette runtime state block at 0x800995ec: battle_map_update_animations
- * addresses the banks (0x800995f4) from this base. The upload/move words are
- * the pending flags battle_map_update_lighting (0x80092f98) services. */
+ * addresses the CLUT rows (0x800995f4) from this base. The upload/move words are
+ * the pending flags battle_map_upload_clut_rows (0x80092f98) services. */
 typedef struct map_palette_state {
     s32 upload_pending;
     s32 move_pending;
-    map_palette_runtime_bank_t banks[14];
+    map_clut_row_state_t clut_rows[MAP_CLUT_ROW_COUNT];
 } map_palette_state_t;
 typedef char map_palette_state_size_must_be_0x8524[(sizeof(map_palette_state_t) == 0x8524) ? 1 : -1];
 
@@ -7426,8 +7435,8 @@ typedef enum map_texture_animation_mode {
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_5 = 0x1a,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_6 = 0x1b,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 0x1c,
-    /* starts a battle_map_start_texture_animation over polygons canvas_x .. canvas_x + width - 1 */
-    MAP_TEXTURE_ANIMATION_MODE_POLYGON_RANGE = 0x1d,
+    /* starts a battle_map_start_texture_animation over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
+    MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 0x1d,
     /* 0x80 up: set while running, never loaded: the return half of UV_PING_PONG */
     MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 0x80,
     MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK = 0x81,
@@ -7437,8 +7446,8 @@ typedef enum map_texture_animation_mode {
 /* Provisional runtime copy of one 0x14-byte map texture animation
  * instruction (32 rows).
  * UV animations move a canvas-sized frame through VRAM with the DR_MOVE
- * packet of the same index; palette animations reload CLUT row
- * canvas_x / 16 from the palette frames at g_battle_map_palette_animation_frames. */
+ * packet of the same index; palette animations reload CLUT
+ * canvas_x / 16 of MAP_CLUT_ROW_MAP from the palette frames at g_battle_map_palette_animation_frames. */
 typedef struct battle_map_texture_animation {
     s16 canvas_x;   /* 0x00 */
     s16 canvas_y;   /* 0x02 */
@@ -7493,7 +7502,7 @@ extern s32 g_battle_map_mesh_data_buffer;
 extern void* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
 extern map_move_find_item_data_t g_battle_map_move_find_item_data[];
-extern u16 g_battle_map_palette_modified_colors[][0x100];
+extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
 extern s32 g_battle_map_resource_load_state;
 extern s32 g_battle_map_texture_animation_handles[];
 extern map_texture_animation_state_t g_battle_map_texture_animation_states[];
@@ -7670,7 +7679,7 @@ void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
 void battle_map_data_load_complete_thread(void);
 s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
-void battle_map_extract_palette_colors(const u16* palette, s32 bank, s32 palette_row_index);
+void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index);
 s32 battle_map_get_effective_weather(void);
 map_tile_t* battle_map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
@@ -7688,7 +7697,7 @@ void battle_map_start_ambient_light_blend(s32 mode, s32 frame_duration, s16 red,
 void battle_map_set_darkness_color(s32 frame_duration, const map_color_t* color);
 s32 battle_map_step_init_sequence(s32 map_id, s32 step);
 s32 battle_map_stop_texture_animation(s32 handle);
-void battle_map_store_modified_palette_colors(s32 bank, s32 row, s32 store_all);
+void battle_map_store_modified_palette_colors(s32 clut_row, s32 clut_index, s32 store_all);
 void battle_map_store_selected_tile_coordinates(void* destination);
 void battle_map_store_selected_tile_data(void);
 s32 battle_map_try_start_deep_dungeon_mesh_load(void);
@@ -7696,19 +7705,19 @@ s32 battle_map_update_deep_dungeon_and_animation(void);
 void battle_map_wait_for_refresh(void);
 
 void battle_map_modify_palette(
-    s32 command, s32 amount, s32 bank, s32 row_index, s32 all_colors, s16 red, s16 green, s16 blue);
+    s32 command, s32 amount, s32 clut_row, s32 clut_index, s32 all_colors, s16 red, s16 green, s16 blue);
 
 s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
 s32 battle_map_load_data(s32 map_id, s32 kind);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
-void battle_map_update_palette_colors_inner(s32 mode, s32 bank, s32 row, const u16* colors);
+void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors);
 void* battle_map_determine_rare_common_item(battle_stats_t* unit);
 battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 layer);
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
 void battle_map_update_animations(void);
-void battle_map_update_lighting(void);
+void battle_map_upload_clut_rows(void);
 void battle_map_draw_mesh_and_weather(MATRIX* camera_matrix);
 void battle_map_freeze(void);
 void battle_map_unfreeze(void);
@@ -7725,12 +7734,12 @@ void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t*
 /* Map data, palette and mesh interfaces implemented in the battle overlay. */
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
-void battle_map_load_palette_data(const u16* palette, s32 bank, s32 palette_row_index, s32 load_all_rows);
+void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
 s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 
-void battle_map_update_palette_colors(s32 mode, s32 bank, s32 row, s32 update_all, const u16* colors);
+void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors);
 
 u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
@@ -7750,11 +7759,11 @@ s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
 s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
 void battle_map_set_light_matrices(MATRIX* first, MATRIX* second);
 void battle_map_run_weather_command(s32 command);
-s32 battle_map_start_texture_animation(s32 frame_duration, s32 polygon_group, s32 first_polygon, s32 last_polygon);
+s32 battle_map_start_texture_animation(s32 frame_duration, s32 clut_row, s32 first_color, s32 last_color);
 void battle_map_update_mesh_part_animations(void);
 
 void battle_map_update_palette_from_other(
-    const u16* source, s32 bank, s32 row, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+    const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 void battle_map_update_texture_animations(void);
 void battle_map_init_mesh_render_records(void* geometry_data);
@@ -8099,8 +8108,8 @@ s32 battle_menu_get_dead_unit_selection(s32 battle_id);
 s32 battle_unit_has_any_current_status(s32 unit_id);
 s32 battle_menu_init_attack_resources_and_threads(void);
 void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_palette_primitives_t* menu);
-void battle_menu_init_primitive_colors_palette_bank_0(world_menu_palette_primitives_t* menu);
-void battle_menu_init_primitive_colors_palette_bank_1(world_menu_palette_primitives_t* menu);
+void battle_menu_init_primitive_colors_normal(world_menu_palette_primitives_t* menu);
+void battle_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t* menu);
 void battle_menu_init_semitransparent_sprt(SPRT* sprite);
 void battle_menu_run_icon_selection_loop(void);
 void battle_menu_select_sprite_clut(SPRT* sprite);
@@ -8285,7 +8294,7 @@ void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
 void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
 void battle_text_character_handling_thread(void);
-void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, SPRT* sprite, s32 palette_row);
+void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, SPRT* sprite, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);

@@ -366,7 +366,7 @@ written that way.
   `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
-  Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
+  Move-Find bits) are proven; the next 64-byte block is saved with it but has no
   known meaning.
 
 ## Duplicated code
@@ -434,7 +434,7 @@ translation unit. Share their types and constants through headers.
 - `g_battle_effect_disc_entries` (`0x801b53e8`) stores whole-sector sizes, and entry 0 repeats entry 1: effect id 0 loads E001.BIN, so E000.BIN's code is never loaded through the table.
 - `src/world/world_gfx_load_wldface_to_frame_buffer.c`: the WLDFACE rectangles (`g_world_wldface_vram_rects`) use x = 1664–1856; the GPU masks VRAM transfer coordinates, so the pages land at x = 640–832.
 - `SuzukiSPUInitialiser`: `main_sound_init_sfx_music` reaches `main_smd_insert_music`, which disables and re-enables `g_main_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `main_sound_quit` closed on a soft reset.
-- `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUT rows into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
+- `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUTs into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
 - EFFECT scripts never run six state handlers: E314's script names no file function, and E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires.
 - `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_run_weather_command(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
@@ -464,3 +464,7 @@ translation unit. Share their types and constants through headers.
   (`world_item_get_half_price`) keeps half price at 1 or more.
 - `battle_move_start_teleport_step` builds a secondary-effect record in a
   local and never uses it.
+- A change to a map CLUT row reaches VRAM on the second call of
+  `battle_map_upload_clut_rows`: one call loads the 256x14 image to y 0x1ee,
+  the next moves it to y 0x1e0. Rows 8 and 9 have state and are uploaded, but
+  no clut word in the code addresses them.

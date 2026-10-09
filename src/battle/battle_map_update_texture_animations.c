@@ -9,10 +9,10 @@
  * ping-pong, 0x15-0x1C fast-forward to the last frame and then play 0x82 in
  * reverse, 5-0xC play once) and queue the DR_MOVE packet of the row;
  * palette modes (3 loops, 4/0x81 ping-pong, 0xD-0x14 play once) reload
- * CLUT row canvas_x / 16 from palette frame frame_x + frame. Mode 0x1D
- * starts a mesh texture animation over polygons canvas_x..canvas_x + width - 1.
+ * CLUT canvas_x / 16 of the map row from palette frame frame_x + frame. Mode 0x1D
+ * starts a rotation of the map row's colours canvas_x..canvas_x + width - 1.
  * Only the low byte of g_main_system_animation_speed is read (lbu), and the start call
- * passes the polygon range unmasked, as the target does.
+ * passes the colour range unmasked, as the target does.
  */
 void battle_map_update_texture_animations(void) {
     s32 i;
@@ -110,7 +110,7 @@ void battle_map_update_texture_animations(void) {
             battle_map_load_palette_data(
                 g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
                     + g_battle_map_texture_animations[i].column * 16,
-                MAP_PALETTE_BANK_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
+                MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             break;
         case MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG:
             g_battle_map_texture_animations[i].timer += g_main_system_animation_speed;
@@ -123,7 +123,7 @@ void battle_map_update_texture_animations(void) {
                 battle_map_load_palette_data(
                     g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
                         + g_battle_map_texture_animations[i].frame * 16,
-                    MAP_PALETTE_BANK_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
+                    MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
         case MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK:
@@ -137,7 +137,7 @@ void battle_map_update_texture_animations(void) {
                 battle_map_load_palette_data(
                     g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
                         + g_battle_map_texture_animations[i].frame * 16,
-                    MAP_PALETTE_BANK_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
+                    MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
         case MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_0:
@@ -242,18 +242,19 @@ void battle_map_update_texture_animations(void) {
                 battle_map_load_palette_data(
                     g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
                         + g_battle_map_texture_animations[i].frame * 16,
-                    MAP_PALETTE_BANK_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
+                    MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
                 g_battle_map_texture_animations[i].frame++;
                 if (g_battle_map_texture_animations[i].frame == g_battle_map_texture_animations[i].frame_count) {
                     g_battle_map_texture_animations[i].active = 0;
                 }
             }
             break;
-        case MAP_TEXTURE_ANIMATION_MODE_POLYGON_RANGE:
+        case MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE:
             if (g_battle_map_texture_animation_handles[i] == 0) {
-                g_battle_map_texture_animation_handles[i] = battle_map_start_texture_animation(
-                    g_battle_map_texture_animations[i].duration, 0, g_battle_map_texture_animations[i].canvas_x,
-                    g_battle_map_texture_animations[i].canvas_x + g_battle_map_texture_animations[i].width - 1);
+                g_battle_map_texture_animation_handles[i]
+                    = battle_map_start_texture_animation(g_battle_map_texture_animations[i].duration, MAP_CLUT_ROW_MAP,
+                        g_battle_map_texture_animations[i].canvas_x,
+                        g_battle_map_texture_animations[i].canvas_x + g_battle_map_texture_animations[i].width - 1);
                 if (g_battle_map_texture_animation_handles[i] == 0) {
                     main_system_handle_malloc_exception(2, 0x3CC);
                 }

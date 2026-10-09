@@ -69,7 +69,7 @@ s32 effect_e070_update_textured_quad_grid_4x4(s16 record_index, s32 byte_offset,
                     quad->code &= 0xfd;
                 }
                 quad->tpage = texture_page;
-                quad->clut = 0x7b00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 quad->x0 = quad->x2 = (column << 6) + 0x80;
                 quad->y0 = quad->y1 = row << 6;
                 quad->x1 = quad->x3 = (column << 6) + 0xc0;

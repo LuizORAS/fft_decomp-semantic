@@ -203,9 +203,9 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             }
         }
         if (value == 0) {
-            battle_menu_init_primitive_colors_palette_bank_0(frame_record->palette);
+            battle_menu_init_primitive_colors_normal(frame_record->palette);
         } else {
-            battle_menu_init_primitive_colors_palette_bank_1(frame_record->palette);
+            battle_menu_init_primitive_colors_dimmed(frame_record->palette);
         }
         if (battle_menu_can_accept_input() != 0) {
             if (g_battle_script_event_input & PSX_PAD_CROSS) {

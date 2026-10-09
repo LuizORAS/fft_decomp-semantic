@@ -35,7 +35,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     flags = frame_data->flags;
     if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
         display->tpage = (flags & 0x60) | 0xb;
-        display->clut = unit->vram_palette_id;
+        display->clut = unit->clut;
         for (i = 0; i < count; i++) {
             part = &frame_data->parts[i];
             attr = part->attributes;
@@ -57,7 +57,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
         }
     } else if (frame < (u32)sprite->shp[0]) {
         display->tpage = unit->tpage | (flags & 0x60);
-        display->clut = unit->vram_palette_id;
+        display->clut = unit->clut;
         i = 0;
         if (count != 0) {
             do {

@@ -15,18 +15,18 @@ void battle_sound_bg_thread(void) {
     s32 sound;
     s32 volume;
     s32 find_channel;
-    s32 bank = 0x10000;
+    s32 resource = 0x10000;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
     request = (battle_sound_bg_request_t*)battle_thread_get_current_parameter_1();
     find_channel = request->find_channel;
     sound_id = request->sound_id;
     if (find_channel != 0) {
-        sound = sound_id + bank;
+        sound = sound_id + resource;
         main_sound_stop_sfx(sound);
         main_sound_play_sfx_find_channel(sound);
     } else {
-        sound = sound_id + bank;
+        sound = sound_id + resource;
         main_sound_stop_sfx(sound);
         main_sound_play_bg_sfx(sound);
     }
@@ -34,6 +34,6 @@ void battle_sound_bg_thread(void) {
     if (volume == 0) {
         volume = 1;
     }
-    main_sound_set_sfx_echo(sound_id | bank, volume);
+    main_sound_set_sfx_echo(sound_id | resource, volume);
     battle_sound_edit_bg_thread();
 }

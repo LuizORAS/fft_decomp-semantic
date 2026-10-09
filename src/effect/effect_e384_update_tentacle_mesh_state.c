@@ -116,7 +116,7 @@ s32 effect_e384_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
                     quad->code &= ~2;
                 }
                 quad->tpage = tpage;
-                quad->clut = 0x7B00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 work->segments[i].quads[1][scratch] = *quad;
                 work->segments[i].quads[2][scratch] = *quad;
                 work->segments[i].quads[3][scratch] = *quad;

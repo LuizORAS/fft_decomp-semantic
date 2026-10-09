@@ -13,11 +13,11 @@
     }
 
 /* An id of 0 or with all eleven low bits set stores an empty string. */
-#define APPEND_TEXT_ID(id, bank)                                                                                       \
+#define APPEND_TEXT_ID(id, base)                                                                                       \
     if (id == 0 || ((id) & 0x7ff) == 0x7ff) {                                                                          \
         *dst++ = 0xfe;                                                                                                 \
     } else {                                                                                                           \
-        APPEND_TEXT((id) + bank);                                                                                      \
+        APPEND_TEXT((id) + base);                                                                                      \
     }
 
 /*

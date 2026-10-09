@@ -1088,7 +1088,7 @@ typedef struct wldcore_map_dot {
     s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
     s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sequence changes */
     s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
-    /* 0x24; CLUT row offset read as wldcore_window_record_t.palette (0 keeps the
+    /* 0x24; CLUT selector read as wldcore_window_record_t.palette (0 keeps the
      * sprite's own CLUT). The player's marker (0x8009f278) takes 0, 2 or 3 from
      * EVENT_SCRIPT_VAR_TOWN_BACKGROUND, Ramza's chapter palette. */
     s32 palette;
@@ -1374,7 +1374,7 @@ typedef struct wldcore_window_record {
     s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of 0x8009036c */
     s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
     s32 anim_counter; /* 0x10; frames spent on the current frame */
-    /* 0x14; CLUT row offset: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
+    /* 0x14; CLUT selector: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
      * window-state routines at 0x80076744/0x8007688c store 0, 6 or 10. */
     s32 palette;
     wldcore_point32_t position; /* 0x18 */
@@ -1868,7 +1868,7 @@ typedef struct wldcore_window_render_record {
     s32 priority; /* 0x08; OT priority passed to the sprite sort; 1 from the pool init */
     s32 coordinate_mode;
     s32 anim_counter; /* 0x10; flag-0x100 open-animation counter, cleared on every rebind */
-    /* 0x14; CLUT row offset: nonzero gives cx = clut_x + (palette - 1) << 4. The window-state
+    /* 0x14; CLUT selector: nonzero gives cx = clut_x + (palette - 1) << 4. The window-state
      * routines at 0x80076744/0x8007688c clear it or set it to 2. */
     s32 palette;
     wldcore_point32_t base; /* 0x18 */

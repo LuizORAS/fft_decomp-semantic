@@ -48,7 +48,7 @@ void open_script_init_state(void) {
     g_open_script_state.dispatch.external_counter = 0;
     g_open_script_state.dispatch.timing_fraction = 0;
     g_open_script_state.dispatch.timing_step = 0;
-    g_open_script_state.dispatch.font_bank = 0;
+    g_open_script_state.dispatch.font_index = 0;
     g_open_script_state.dispatch.wide_glyphs = 0;
     g_open_script_state.dispatch.skew = 0;
     g_open_script_state.dispatch.byte_offset = 0;

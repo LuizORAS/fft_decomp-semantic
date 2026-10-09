@@ -61,7 +61,8 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
                 slot = &g_battle_effect_slots[state->ids[i]];
                 slot->life = battle_effect_spawn_particle_motion(
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF], &slot->motion);
-                battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF, animation + 0x7ac0, slot);
+                battle_effect_init_trap_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF, animation + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP3_SLOT_COUNT) {
                     break;

@@ -1,7 +1,7 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-/* Each of the two otag banks holds 16 words per graphics buffer. */
+/* Each graphics buffer's ordering table holds 16 words. */
 #define OPEN_OTAG_BUFFER_BYTES 64
 
 s32 open_system_run_main_loop(s32 skip_movie) {
@@ -23,7 +23,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             open_controller_dispatch_current();
 
             graphics_buffer_index = g_active_graphics_buffer_index;
-            /* index * 64 + bank: the retail addu sums the offset first. */
+            /* index * 64 + base: the retail addu sums the offset first. */
             current_otag = (u32*)(graphics_buffer_index * OPEN_OTAG_BUFFER_BYTES + (u32)otag_0);
             open_gfx_draw_render_record_pointer_list(
                 current_otag, g_open_gfx_render_record_pointers, g_open_gfx_render_record_pointer_count);

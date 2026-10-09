@@ -57,8 +57,8 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     battle_gfx_load_spritesheet_into_vram_slot(data, slot, unit_id, unit, palette);
     tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
-    battle_map_load_palette_data(g_battle_gfx_shadow_palette, MAP_PALETTE_BANK_UNIT_SHADOWS, unit_id, 0);
-    unit->vram_palette_id = GetClut(unit_id << 4, 0x1e3);
+    battle_map_load_palette_data(g_battle_gfx_shadow_palette, MAP_CLUT_ROW_UNIT_SHADOWS, unit_id, 0);
+    unit->clut = GetClut(unit_id << 4, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS);
     unit->tpage = slot + 0x14;
     if (flags == 0) {
         unit->draw_enabled = 1;
@@ -130,7 +130,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
         = BATTLE_GFX_TPAGE_FRAME;
     unit->numeric_displays[0]->clut = unit->numeric_displays[1]->clut = unit->numeric_displays[2]->clut
-        = unit->vram_palette_id + 0x100;
+        = unit->clut + 0x100; /* the unit's CLUT of MAP_CLUT_ROW_ACTION_RESULTS */
     unit->numeric_displays[0]->part_count = unit->numeric_displays[1]->part_count
         = unit->numeric_displays[2]->part_count = 1;
     unit->status_bubble_active = 0;

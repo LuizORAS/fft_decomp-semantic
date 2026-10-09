@@ -41,7 +41,7 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
         prim->x1 = prim->x3 = transformed.vx + 7;
         prim->y0 = prim->y1 = transformed.vy - 7;
         prim->y2 = prim->y3 = transformed.vy + 7;
-        prim->clut = GetClut(0x30, 0x1e2);
+        prim->clut = GetClut(0x30, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         facing_bits = unit->facing & 0xc00;
         if (i == facing_bits / 0x400) {

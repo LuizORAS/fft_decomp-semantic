@@ -81,7 +81,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
                     quad->code &= 0xfd;
                 }
                 quad->tpage = texture_page;
-                quad->clut = 0x7b00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 work->quads[1][row * 8 + column] = *quad;
             }
         }

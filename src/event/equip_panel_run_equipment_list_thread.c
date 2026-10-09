@@ -23,7 +23,7 @@ void equip_panel_run_equipment_list_thread(void) {
     battle_menu_status_panel_buffer_t* screen;
     s32 frame;
     s32 mode;
-    s32 bank;
+    s32 color_bits;
     s16 id;
     s32 i;
 
@@ -94,8 +94,8 @@ void equip_panel_run_equipment_list_thread(void) {
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
-                    bank = state->equipment[i] & 0xc000;
-                    g_battle_menu_text_palette_offset = bank >> 12;
+                    color_bits = state->equipment[i] & 0xc000;
+                    g_battle_menu_text_palette_offset = color_bits >> 12;
                     battle_menu_display_text_entry(
                         (state->equipment[i] & 0xff) | TEXT_ID_ITEM_NAME_BASE, text, &g_menu_text_state.pen);
                 }

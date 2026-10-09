@@ -494,7 +494,7 @@ typedef struct effect_tentacle_mesh_segment {
     SVECTOR tip;                            /* 0x000 */
     VECTOR velocity;                        /* 0x008: 20.12 fixed */
     VECTOR position;                        /* 0x018: 20.12 fixed */
-    POLY_GT4 quads[4][8];                   /* 0x028: banks buffer and buffer + 2 */
+    POLY_GT4 quads[4][8];                   /* 0x028: sets buffer and buffer + 2 */
     effect_tentacle_mesh_point_t points[9]; /* 0x6a8 */
     s16 head;                               /* 0x6de */
     s16 length;                             /* 0x6e0 */

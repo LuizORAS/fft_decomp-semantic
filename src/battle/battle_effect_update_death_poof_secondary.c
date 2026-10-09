@@ -14,7 +14,7 @@ extern battle_effect_trap_state_t g_battle_effect_death_poof_states[];
 
 enum {
     BATTLE_EFFECT_TRAP_SLOT_COUNT = 2,
-    BATTLE_EFFECT_TRAP_ANIMATION = 0x7acf,
+    BATTLE_EFFECT_TRAP_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15),
 };
 
 /*
@@ -79,7 +79,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
                 slot->life = battle_effect_spawn_particle_motion(
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF], &slot->motion);
                 battle_effect_init_trap_animation(
-                    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF, BATTLE_EFFECT_TRAP_ANIMATION, slot);
+                    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF, BATTLE_EFFECT_TRAP_CLUT, slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP_SLOT_COUNT) {
                     break;

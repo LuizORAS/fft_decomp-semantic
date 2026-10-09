@@ -9,7 +9,7 @@
  * semi-transparency, and bit 8 runs the pop-in scale: pop_in_step counts the
  * animation, open_gfx_calculate_scaled_rectangle turns half of it into a
  * shrunken source rectangle, and the flag clears once the record is at full
- * size. palette picks a palette row relative to tail.clut.x.
+ * size. A nonzero palette picks the CLUT (palette - 1) * 16 pixels right of tail.clut.
  *
  * The retail code loads record fields at their declared width before
  * truncating them into the primitive (as if built with -fforce-mem); the

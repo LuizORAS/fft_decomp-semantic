@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-/* Skip -1, otherwise draw the banked text ID.
+/* Skip -1, otherwise draw the text id in text section 17 (0x8800).
  * This is a variable record-relative word offset, not a fixed struct field. */
 void wldcore_window_draw_indexed_text(wldcore_window_text_table_t* table, s32 index) {
     s32 text_id = ((s32*)table)[index + table->table_word_offset];

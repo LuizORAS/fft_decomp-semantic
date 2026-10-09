@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_map_update_palette_colors(s32 mode, s32 bank, s32 row, s32 update_all, const u16* colors) {
+void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors) {
     s32 index;
 
     if (update_all == 1) {
@@ -10,13 +10,13 @@ void battle_map_update_palette_colors(s32 mode, s32 bank, s32 row, s32 update_al
         index = 0;
         current_colors = colors;
         while (index < 16) {
-            battle_map_update_palette_colors_inner(mode, bank, index, current_colors);
+            battle_map_update_palette_colors_inner(mode, clut_row, index, current_colors);
             index++;
             current_colors += 16;
         }
         g_battle_map_palette_state.upload_pending = 1;
     } else {
-        battle_map_update_palette_colors_inner(mode, bank, row, colors);
+        battle_map_update_palette_colors_inner(mode, clut_row, clut_index, colors);
         g_battle_map_palette_state.upload_pending = 1;
     }
 }

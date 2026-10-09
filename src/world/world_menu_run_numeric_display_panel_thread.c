@@ -4,7 +4,7 @@
 
 /* Thread task 0x23: renders three text images into VRAM, builds two
  * alternating 18-sprite panel records with line boxes, then redraws the panel
- * every frame (highlighted palette while thread 6 runs) until the thread's
+ * every frame (dimmed palette while thread 6 runs) until the thread's
  * third parameter becomes non-zero. */
 void world_menu_run_numeric_display_panel_thread(void) {
     world_panel_record_t* records;
@@ -60,7 +60,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
                 record->sprites[i].clut = 0x7D3C;
             }
             record->sprites[10].clut = 0x7EBC;
-            world_menu_init_primitive_colors_palette_bank_1(record->palette);
+            world_menu_init_primitive_colors_dimmed(record->palette);
         } else {
             for (i = 17; i >= 0; i--) {
                 record->sprites[i].clut = 0x7C3C;
@@ -69,7 +69,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
             record->sprites[14].clut = 0x7FFC;
             record->sprites[15].clut = 0x7FFC;
             record->sprites[16].clut = 0x7FFC;
-            world_menu_init_primitive_colors_palette_bank_0(record->palette);
+            world_menu_init_primitive_colors_normal(record->palette);
         }
         world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[1]);
         for (i = 0; i < 14; i++) {

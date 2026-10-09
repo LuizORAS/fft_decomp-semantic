@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_menu_init_primitive_colors_palette_bank_1(world_menu_palette_primitives_t* menu) {
+/* Give the twelve frame lines the colours of the dimmed menu palette (the second
+ * sixteen of the menu palette colours) and the sprite the dimmed menu CLUT, GetClut(0x3c0, 0x1f4). */
+void battle_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t* menu) {
     s32 index;
     s32 palette_offset;
     LINE_F2* line;

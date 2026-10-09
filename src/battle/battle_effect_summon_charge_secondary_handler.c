@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 enum {
-    BATTLE_EFFECT_RING_ANIMATION = 0x7acc,
+    BATTLE_EFFECT_RING_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 12),
     BATTLE_EFFECT_RING_SLOT_COUNT = 30,
 };
 
@@ -54,7 +54,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                 slot->life = battle_effect_spawn_particle_motion(
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE], &slot->motion);
                 battle_effect_init_trap_animation(
-                    BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE, BATTLE_EFFECT_RING_ANIMATION, slot);
+                    BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE, BATTLE_EFFECT_RING_CLUT, slot);
             }
         }
         g_battle_effect_current_secondary->timer = 0;

@@ -63,7 +63,7 @@ s32 effect_e481_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
                     quad->code &= 0xfd;
                 }
                 quad->tpage = texture_page;
-                quad->clut = 0x7b00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 quad->x0 = quad->x2 = (column << 7) + 0x80;
                 quad->y0 = quad->y1 = row << 7;
                 quad->x1 = quad->x3 = (column << 7) + 0x100;

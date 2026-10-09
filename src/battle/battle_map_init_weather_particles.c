@@ -34,7 +34,7 @@ void battle_map_init_weather_particles(s32 command) {
                 g_battle_render_buffers[j].ft3[i].r0 = 0x80;
                 g_battle_render_buffers[j].ft3[i].g0 = 0x80;
                 g_battle_render_buffers[j].ft3[i].b0 = 0x80;
-                g_battle_render_buffers[j].ft3[i].clut = GetClut(0, 0x1e2);
+                g_battle_render_buffers[j].ft3[i].clut = GetClut(0, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
                 g_battle_render_buffers[j].ft3[i].tpage = GetTPage(0, 3, 0x3c0, 0x100);
                 g_battle_render_buffers[j].ft3[i].u0 = rects.rects[sprite].x;
                 g_battle_render_buffers[j].ft3[i].u1 = rects.rects[sprite].x + rects.rects[sprite].w;
@@ -72,7 +72,7 @@ void battle_map_init_weather_particles(s32 command) {
                 g_battle_render_buffers[j].ft3[i].r0 = 0x64;
                 g_battle_render_buffers[j].ft3[i].g0 = 0x64;
                 g_battle_render_buffers[j].ft3[i].b0 = 0x64;
-                g_battle_render_buffers[j].ft3[i].clut = GetClut(0, 0x1e2);
+                g_battle_render_buffers[j].ft3[i].clut = GetClut(0, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
                 g_battle_render_buffers[j].ft3[i].tpage = GetTPage(0, 3, 0x3c0, 0x100);
                 prim = (POLY_FT3*)((u8*)g_battle_render_buffers[0].ft3
                     + (j * sizeof(battle_render_buffer_t) + i * sizeof(POLY_FT3)));
@@ -86,7 +86,7 @@ void battle_map_init_weather_particles(s32 command) {
                 g_battle_render_buffers[j].ft3[i + 32].r0 = 0x80;
                 g_battle_render_buffers[j].ft3[i + 32].g0 = 0x80;
                 g_battle_render_buffers[j].ft3[i + 32].b0 = 0x80;
-                g_battle_render_buffers[j].ft3[i + 32].clut = GetClut(0, 0x1e2);
+                g_battle_render_buffers[j].ft3[i + 32].clut = GetClut(0, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
                 g_battle_render_buffers[j].ft3[i + 32].tpage = GetTPage(0, 3, 0x3c0, 0x100);
                 g_battle_render_buffers[j].ft3[i + 32].u0 = 0x10;
                 g_battle_render_buffers[j].ft3[i + 32].u1 = 0x1f;

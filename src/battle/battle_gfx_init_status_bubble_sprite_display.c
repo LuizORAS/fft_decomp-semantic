@@ -11,7 +11,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s
     display->scale_y = ONE;
     display->scale_x = ONE;
     display->tpage = BATTLE_GFX_TPAGE_FRAME;
-    display->clut = 0x7887;
+    display->clut = MAP_CLUT(MAP_CLUT_ROW_SPRITES, 7);
     display->rotation = 0;
     display->part_count = 1;
     for (i = 0; i < 1; i++) {

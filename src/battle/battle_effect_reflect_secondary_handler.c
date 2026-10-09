@@ -7,7 +7,7 @@ typedef struct battle_effect_reflect_prim {
     u8 data[0x28];
 } battle_effect_reflect_prim_t;
 
-/* 0x798-byte work buffer: two 6-entry CLUT rows then two 24-polygon strips. */
+/* 0x798-byte work buffer: two 6-colour CLUT images then two 24-polygon strips. */
 typedef struct battle_effect_reflect_work {
     u16 clut[2][6];
     battle_effect_reflect_prim_t prims[2][24];

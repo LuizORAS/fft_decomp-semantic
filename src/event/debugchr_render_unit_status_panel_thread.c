@@ -35,7 +35,7 @@ void debugchr_render_unit_status_panel_thread(void) {
     battle_active_unit_t* unit_info;                       /* spB0 */
     battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
     s32 shake;                                             /* spC0 */
-    s32 highlight;                                         /* spC8 */
+    s32 dimmed;                                            /* spC8 */
     s32 hide_portrait;                                     /* spD0 */
 
     s32 thread_id;
@@ -169,31 +169,31 @@ void debugchr_render_unit_status_panel_thread(void) {
         } else {
             panel->portrait.clut = 0x7FBD;
         }
-        highlight = 0;
+        dimmed = 0;
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
-            highlight = g_battle_menu_input_lock_mode != 0;
+            dimmed = g_battle_menu_input_lock_mode != 0;
         }
-        if (thread->highlight != 0) {
-            highlight = 1;
+        if (thread->dimmed != 0) {
+            dimmed = 1;
         }
         for (i = 0; i < 4; i++) {
-            editor->value_sprites[i].clut = g_debugchr_panel_editor_value_cluts[i][highlight];
+            editor->value_sprites[i].clut = g_debugchr_panel_editor_value_cluts[i][dimmed];
         }
         for (i = 0; i < 7; i++) {
-            editor->label_sprites[i].clut = g_debugchr_panel_editor_label_cluts[i][highlight];
+            editor->label_sprites[i].clut = g_debugchr_panel_editor_label_cluts[i][dimmed];
         }
         i = 0;
         do {
-            if (highlight != 0) {
+            if (dimmed != 0) {
                 panel->sprites[i].clut = 0x7D3C;
             } else {
                 panel->sprites[i].clut = 0x7C3C;
             }
             i += 1;
         } while (i < 7);
-        if (highlight != 0) {
-            battle_menu_init_primitive_colors_palette_bank_1(&editor->numeric_frame);
-            battle_menu_init_primitive_colors_palette_bank_1(&panel->numeric_frame);
+        if (dimmed != 0) {
+            battle_menu_init_primitive_colors_dimmed(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_dimmed(&panel->numeric_frame);
             if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
@@ -214,8 +214,8 @@ void debugchr_render_unit_status_panel_thread(void) {
             editor->portrait[3].b0 = 0x38;
         } else {
             s32 shade;
-            battle_menu_init_primitive_colors_palette_bank_0(&editor->numeric_frame);
-            battle_menu_init_primitive_colors_palette_bank_0(&panel->numeric_frame);
+            battle_menu_init_primitive_colors_normal(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_normal(&panel->numeric_frame);
             if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
@@ -236,7 +236,7 @@ void debugchr_render_unit_status_panel_thread(void) {
             editor->portrait[3].g0 = shade;
             editor->portrait[3].b0 = shade;
         }
-        if (highlight != 0) {
+        if (dimmed != 0) {
             panel->portrait.r0 = 0x40;
             panel->portrait.g0 = 0x40;
             panel->portrait.b0 = 0x60;
@@ -351,7 +351,7 @@ void debugchr_render_unit_status_panel_thread(void) {
                 editor->bars[i].y3 = g_debugchr_gfx_portrait_origin.y + y + 3;
                 editor->bars[i].x2 -= 3;
                 editor->bars[i].x3 -= 3;
-                if (highlight != 0) {
+                if (dimmed != 0) {
                     editor->bars[i].r0 = color->r >> 1;
                     editor->bars[i].g0 = color->g >> 1;
                     editor->bars[i].b0 = color->b;

@@ -23,7 +23,7 @@ void world_menu_unit_status_banner_thread(void) {
     battle_menu_status_panel_display_thread_t* display;     /* spB8 */
     s32 frame;                                              /* spC0 */
     s32 shake;                                              /* spC8 */
-    s32 highlight;                                          /* spD0 */
+    s32 dimmed;                                             /* spD0 */
     s32 suppress;                                           /* spD8 */
 
     s32 thread_id;
@@ -153,29 +153,29 @@ void world_menu_unit_status_banner_thread(void) {
         } else {
             status->portrait.clut = 0x7FBD;
         }
-        highlight = 0;
+        dimmed = 0;
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
-            highlight = g_world_thread_task_active != 0;
+            dimmed = g_world_thread_task_active != 0;
         }
-        if (display->highlight != 0) {
-            highlight = 1;
+        if (display->dimmed != 0) {
+            dimmed = 1;
         }
         for (i = 0; i < 4; i++) {
-            summary->value_sprites[i].clut = g_world_unit_summary_value_cluts[i][highlight];
+            summary->value_sprites[i].clut = g_world_unit_summary_value_cluts[i][dimmed];
         }
         for (i = 0; i < 7; i++) {
-            summary->label_sprites[i].clut = g_world_unit_summary_label_cluts[i][highlight];
+            summary->label_sprites[i].clut = g_world_unit_summary_label_cluts[i][dimmed];
         }
         for (i = 0; i < 7; i++) {
-            if (highlight != 0) {
+            if (dimmed != 0) {
                 status->sprites[i].clut = 0x7D3C;
             } else {
                 status->sprites[i].clut = 0x7C3C;
             }
         }
-        if (highlight != 0) {
-            world_menu_init_primitive_colors_palette_bank_1(&summary->numeric_frame);
-            world_menu_init_primitive_colors_palette_bank_1(&status->numeric_frame);
+        if (dimmed != 0) {
+            world_menu_init_primitive_colors_dimmed(&summary->numeric_frame);
+            world_menu_init_primitive_colors_dimmed(&status->numeric_frame);
             if ((anim_state - 4) < 6U) {
                 summary->portrait[0].r0 = 0x20;
                 summary->portrait[0].g0 = 0x28;
@@ -196,8 +196,8 @@ void world_menu_unit_status_banner_thread(void) {
             summary->portrait[3].b0 = 0x38;
         } else {
             s32 shade;
-            world_menu_init_primitive_colors_palette_bank_0(&summary->numeric_frame);
-            world_menu_init_primitive_colors_palette_bank_0(&status->numeric_frame);
+            world_menu_init_primitive_colors_normal(&summary->numeric_frame);
+            world_menu_init_primitive_colors_normal(&status->numeric_frame);
             if ((anim_state - 4) >= 6U) {
                 summary->portrait[0].r0 = 0x80;
                 summary->portrait[0].g0 = 0x80;
@@ -218,7 +218,7 @@ void world_menu_unit_status_banner_thread(void) {
             summary->portrait[3].g0 = shade;
             summary->portrait[3].b0 = shade;
         }
-        if (highlight != 0) {
+        if (dimmed != 0) {
             status->portrait.r0 = 0x40;
             status->portrait.g0 = 0x40;
             status->portrait.b0 = 0x60;
@@ -318,7 +318,7 @@ void world_menu_unit_status_banner_thread(void) {
                 summary->bars[i].y3 = g_world_gfx_portrait_origin.y + y + 3;
                 summary->bars[i].x2 -= 3;
                 summary->bars[i].x3 -= 3;
-                if (highlight != 0) {
+                if (dimmed != 0) {
                     summary->bars[i].r0 = color->r >> 1;
                     summary->bars[i].g0 = color->g >> 1;
                     summary->bars[i].b0 = color->b;

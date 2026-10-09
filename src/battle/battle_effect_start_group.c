@@ -30,7 +30,7 @@ void battle_effect_start_group(s32 group, s32 animation) {
             slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[i]];
             slot->life
                 = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[group], &slot->motion);
-            battle_effect_init_trap_animation(group, animation + 0x7ac0, slot);
+            battle_effect_init_trap_animation(group, animation + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
             effect = g_battle_effect_current_secondary;
             effect->active_count++;
             if (effect->active_count == g_battle_effect_trap_particle_configs[group].count) {

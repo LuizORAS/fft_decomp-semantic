@@ -182,19 +182,19 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         }
         break;
     case GNS_RESOURCE_APPLY_PALETTES:
-        g_battle_map_vram_load_rect.y = 0x1e0;
+        g_battle_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MAP;
         g_battle_map_vram_load_rect.w = 0x100;
         g_battle_map_palette_pending = 0;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data((u16*)data, MAP_PALETTE_BANK_MAP, 0, 1);
+        battle_map_load_palette_data((u16*)data, MAP_CLUT_ROW_MAP, 0, 1);
         break;
-    case GNS_RESOURCE_PALETTES_BANK_1:
-        g_battle_map_vram_load_rect.y = 0x1e1;
+    case GNS_RESOURCE_MARKED_TILE_PALETTES:
+        g_battle_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MARKED_TILES;
         g_battle_map_vram_load_rect.w = 0x100;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data((u16*)data, MAP_PALETTE_BANK_MAP_1, 0, 1);
+        battle_map_load_palette_data((u16*)data, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
         break;
     case GNS_RESOURCE_UNSUPPORTED_12:
         main_system_handle_malloc_exception(2, 0x3ca);
@@ -317,7 +317,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             g_battle_map_texture_animation_moves[i].x1 = g_battle_map_texture_animations[i].canvas_x;
             g_battle_map_texture_animation_moves[i].y1 = g_battle_map_texture_animations[i].canvas_y;
             if (g_battle_map_texture_animations[i].mode >= MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_0
-                && g_battle_map_texture_animations[i].mode < MAP_TEXTURE_ANIMATION_MODE_POLYGON_RANGE) {
+                && g_battle_map_texture_animations[i].mode < MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE) {
                 g_battle_map_texture_animations[i].active = 0;
             } else if (g_battle_map_texture_animations[i].mode != MAP_TEXTURE_ANIMATION_MODE_NONE) {
                 g_battle_map_texture_animations[i].active = 1;

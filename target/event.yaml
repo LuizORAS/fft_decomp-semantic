@@ -547,17 +547,17 @@ data:
   - {addr: 0x801cf4bc, name: g_bunit_status_display_offset_y}
   - {addr: 0x801cf4c0, name: g_bunit_status_display_flags}
   - {addr: 0x801cf4c4, name: g_bunit_status_display_redraw_request}
-  - {addr: 0x801cf4c8, name: g_bunit_status_display_highlight}
+  - {addr: 0x801cf4c8, name: g_bunit_status_display_dimmed}
   - {addr: 0x801cf4cc, name: g_bunit_comparison_display_thread_params}
   - {addr: 0x801cf4d0, name: g_bunit_comparison_display_offset_y}
   - {addr: 0x801cf4d4, name: g_bunit_comparison_display_flags}
   - {addr: 0x801cf4d8, name: g_bunit_comparison_display_redraw_request}
   - {addr: 0x801cf4e0, name: g_bunit_character_status_frame_config}
   - {addr: 0x801cf4ec, name: g_bunit_character_status_redraw_request}
-  - {addr: 0x801cf4f0, name: g_bunit_character_status_highlight}
+  - {addr: 0x801cf4f0, name: g_bunit_character_status_dimmed}
   - {addr: 0x801cf4f4, name: g_bunit_numeric_editor_thread_params}
   - {addr: 0x801cf500, name: g_bunit_numeric_editor_redraw_request}
-  - {addr: 0x801cf504, name: g_bunit_numeric_editor_highlight}
+  - {addr: 0x801cf504, name: g_bunit_numeric_editor_dimmed}
   - {addr: 0x801cf508, name: g_bunit_status_banner_at_bottom}
   - {addr: 0x801cf509, name: g_bunit_status_banner_at_bottom_latch}
   - {addr: 0x801cf50a, name: g_bunit_unit_grid_selected_cell}
@@ -2408,7 +2408,7 @@ data:
   - {addr: 0x801d71f8, name: g_require_party_affected_unit_message_args}
   - {addr: 0x801d72c0, name: g_require_party_affected_unit_message_ids}
   - {addr: 0x801d7388, name: g_require_party_affected_battle_unit_indices}
-  - {addr: 0x801d7450, name: g_require_gfx_poly_ft4_banks}
+  - {addr: 0x801d7450, name: g_require_gfx_poly_ft4_buffers}
   - {addr: 0x801d7db0, name: g_require_formation_job_data}
   - {addr: 0x801d7db4, name: g_require_portrait_cell_rect}
   - {addr: 0x801d7dbc, name: g_require_portrait_palette_rect}

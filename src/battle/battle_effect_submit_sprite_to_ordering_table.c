@@ -120,9 +120,9 @@ void battle_effect_submit_sprite_to_ordering_table(
         quad->tpage = frame->tpage;
         value = frame->flags & 0xf;
         if (frame->flags & 0x10) {
-            clut = value + 0x7b40;
+            clut = value + MAP_CLUT(MAP_CLUT_ROW_EFFECT_SECOND, 0);
         } else {
-            clut = value + 0x7b00;
+            clut = value + MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
         }
         quad->clut = clut;
         quad->u0 = quad->u2 = frame->u;

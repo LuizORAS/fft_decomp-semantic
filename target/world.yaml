@@ -78,8 +78,8 @@ functions:
   - {addr: 0x800e3298, size: 192, name: world_menu_free_memory, hash: 38f2c6070f4c7dc3}
   - {addr: 0x800e3358, size: 596, name: world_menu_init_numeric_display_frame_primitives, hash: 6931206a75791ec9}
   - {addr: 0x800e35ac, size: 108, name: world_menu_submit_numeric_display_frame_primitives, hash: 052f8a7955660a7e}
-  - {addr: 0x800e3618, size: 136, name: world_menu_init_primitive_colors_palette_bank_0, hash: 0eafa6c1e9a53c86}
-  - {addr: 0x800e36a0, size: 140, name: world_menu_init_primitive_colors_palette_bank_1, hash: ed7ffbf13272f8dc}
+  - {addr: 0x800e3618, size: 136, name: world_menu_init_primitive_colors_normal, hash: 0eafa6c1e9a53c86}
+  - {addr: 0x800e36a0, size: 140, name: world_menu_init_primitive_colors_dimmed, hash: ed7ffbf13272f8dc}
   - {addr: 0x800e372c, size: 380, name: world_text_build_display_message, hash: 340aa3e43d90fd1d}
   - {addr: 0x800e38a8, size: 656, name: world_input_update_menu_state, hash: 13af0965fdb71ad6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e3b38, size: 84, name: world_menu_release_current_thread_slot, hash: 83ddde4c1bebdfdd}

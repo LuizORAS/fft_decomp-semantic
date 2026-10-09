@@ -442,8 +442,8 @@ typedef struct open_script_dispatch_state {
     /* 0x00 */ u32 flags; /* open_script_dispatch_flag_e */
     /* 0x04 */ s32 tpage;
     /* 0x08 */ s32 clut;
-    /* 0x0c */ s32 font_bank;
-    /* 0x10 */ s32 skew; /* copied into each text record's skew */
+    /* 0x0c */ s32 font_index; /* each font has 0x380 bytes of glyph metrics */
+    /* 0x10 */ s32 skew;       /* copied into each text record's skew */
     /* 0x14 */ s32 wide_glyphs;
     /* 0x18 */ s32 timing_step;
     /* 0x1c */ s32 timing_fraction;

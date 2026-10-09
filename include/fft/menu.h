@@ -12,7 +12,7 @@
 /* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct world_ability_list {
-    u16 ids[0x52];     /* 0x000; 0xffff terminated, item/ability text-bank row flags */
+    u16 ids[0x52];     /* 0x000; 0xffff terminated; the text id base of the names is ORed in */
     u16 values[0x52];  /* 0x0a4 */
     u16 extras[0x52];  /* 0x148 */
     u8 mp_costs[0x52]; /* 0x1ec; 0xff terminated */
@@ -126,7 +126,7 @@ typedef char battle_menu_status_panel_draw_offset_size_must_be_0x10
     [(sizeof(battle_menu_status_panel_draw_offset_t) == 0x10) ? 1 : -1];
 
 /* 0x13c primitive block of the *_menu_draw_thread_status_indicators letterbox
- * panels: draw mode, the panel frame tile, and two banks of nine one-pixel
+ * panels: draw mode, the panel frame tile, and two sets of nine one-pixel
  * scanline tiles that produce the top and bottom gradients. Each overlay
  * double-buffers one block per panel ([panel][buffer]). */
 typedef struct battle_menu_status_panel_indicator_prims {
@@ -139,8 +139,8 @@ typedef char battle_menu_status_panel_indicator_prims_size_must_be_0x13c
     [(sizeof(battle_menu_status_panel_indicator_prims_t) == 0x13c) ? 1 : -1];
 
 /* Menu line-box layout, established by the builder at 0x800e3358: two DR_MODE
- * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6) the
- * palette-bank initialisers set. */
+ * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)
+ * *_menu_init_primitive_colors_normal and _dimmed set. */
 typedef struct world_menu_palette_primitives {
     DR_MODE draw_mode;      /* 0x00: texture window g_world_gfx_texture_window */
     DR_MODE draw_mode_menu; /* 0x0c: texture window g_world_menu_numeric_display_texture_window */
@@ -192,7 +192,7 @@ typedef struct world_status_thread {
     s32 flags;          /* 0x08: menu_status_panel_flags_e in the status display record */
     s32 redraw_request; /* 0x0c: set to 1 elsewhere to request a text/portrait rebuild; the status
                            display record also keeps the selection-slide direction here */
-    s32 style;          /* 0x10: 1 selects palette bank 1 */
+    s32 style;          /* 0x10: 1 selects the dimmed menu colours */
 } world_status_thread_t;
 typedef char world_status_thread_size_must_be_0x14[(sizeof(world_status_thread_t) == 0x14) ? 1 : -1];
 
@@ -224,17 +224,17 @@ typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) =
 typedef struct battle_menu_status_panel_slot_state {
     u8 _unused_00[0x0e]; /* 0x00: move, speed, jump, right/left weapon power and evade */
     s16 generic_monster; /* 0x0e: star icons instead of ability-type icons; selects the
-                          * ability-name text bank and gates the per-slot portrait
+                          * ability-name text section and gates the per-slot portrait
                           * hiding pass; low bit of display_mode */
     s16 two_hands;       /* 0x10: two-hands flag; high bit of display_mode */
     u8 _unused_12[0x12]; /* 0x12: PA to magic accessory evade (world_item_stat_detail_t) */
     s16 equipment[5];    /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
                           * means "no entry"; otherwise rendered through the
-                          * item-name text bank and passed to
+                          * item-name text section and passed to
                           * battle_gfx_set_item_icon_sprite */
     s16 ability_ids[5];  /* 0x2e: primary/secondary skillset, reaction, support,
                           * movement; -1 means no label; the first two rows select
-                          * the skillset-name or ability-name text bank by mode,
+                          * the skillset-name or ability-name text section by mode,
                           * and the remaining rows use ability names */
 } battle_menu_status_panel_slot_state_t;
 typedef char
@@ -344,10 +344,10 @@ typedef struct battle_menu_status_panel_display_thread {
         s32 word; /* 0x04 */
         u16 low;
     } shake_y;
-    s32 flags;     /* 0x08: menu_status_panel_flags_e */
-    s32 work;      /* 0x0c: redraw request flags, cleared once serviced */
-    s32 highlight; /* 0x10: nonzero forces the alternate (highlight) CLUTs; bound as
-                      g_bunit_status_display_highlight and the WORLD display globals */
+    s32 flags;  /* 0x08: menu_status_panel_flags_e */
+    s32 work;   /* 0x0c: redraw request flags, cleared once serviced */
+    s32 dimmed; /* 0x10: nonzero forces the dimmed CLUTs and colours; bound as
+                      g_bunit_status_display_dimmed and the WORLD display globals */
 } battle_menu_status_panel_display_thread_t;
 
 /* Per-frame character status buffer (0x3d8 bytes), double buffered by the
@@ -1486,7 +1486,7 @@ enum {
     TEXT_ID_ENTRY_MASK = 0x07ff,
 };
 
-/* String-table bank bases used by text resolution and unit-name loading.
+/* Text ids of the first entry of the text sections that text resolution and unit-name loading use.
  * Unit-name classes reserve one 0x100-entry page each. */
 typedef enum text_id_base {
     TEXT_ID_SKILLSET_NAME_BASE = 0x1000,

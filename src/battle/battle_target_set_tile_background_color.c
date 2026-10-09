@@ -12,9 +12,9 @@
  * Each textured triangle/quad whose packed terrain tile (layer bit 0, z bits
  * 1..7, x bits 8..15; 0xfffe for none) resolves to a map tile with the mode's
  * mark bit in ceiling_depth_and_marks is recoloured: modes 1/2/7 tint marks
- * 0x20/0x40/0x80 and select CLUT row 0x1e1, modes 5/3/8 restore CLUT row 0x1e0
+ * 0x20/0x40/0x80 and select the marked-tile CLUT row (y 0x1e1), modes 5/3/8 restore the map CLUT row (y 0x1e0)
  * and the ambient colour g_battle_map_ambient_polygon_color (keeping polygons whose flag bit 15 is
- * set), and mode 0 resets every CLUT row. g_battle_target_tile_mark_modes[0..2] record the state
+ * set), and mode 0 returns every polygon to the map CLUT row. g_battle_target_tile_mark_modes[0..2] record the state
  * of the three mark layers; when the other two are both clear, or in their
  * restored states, the tint modes also shift the unit palettes. Mode 1 is the
  * blue movement-range highlight.
@@ -38,11 +38,11 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
     case BATTLE_TILE_MARK_NONE:
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             g_battle_gfx_current_render_buffer->gt3[i].clut
-                = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7800;
+                = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             g_battle_gfx_current_render_buffer->gt4[i].clut
-                = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7800;
+                = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
         }
         g_battle_target_tile_mark_modes[0] = BATTLE_TILE_MARK_HIDE_MOVE;
         g_battle_target_tile_mark_modes[1] = BATTLE_TILE_MARK_HIDE_RANGE;
@@ -63,7 +63,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     g_battle_gfx_current_render_buffer->gt3[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt3[i].r0 = 0x20;
                     g_battle_gfx_current_render_buffer->gt3[i].r1 = 0x20;
                     g_battle_gfx_current_render_buffer->gt3[i].r2 = 0x20;
@@ -88,7 +89,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     g_battle_gfx_current_render_buffer->gt4[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt4[i].r0 = 0x20;
                     g_battle_gfx_current_render_buffer->gt4[i].r1 = 0x20;
                     g_battle_gfx_current_render_buffer->gt4[i].r2 = 0x20;
@@ -110,7 +112,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
         other_state_b = g_battle_target_tile_mark_modes[2];
         if ((other_state_a | other_state_b) == 0
             || (other_state_a == BATTLE_TILE_MARK_HIDE_RANGE && other_state_b == BATTLE_TILE_MARK_HIDE_TARGETS)) {
-            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_PALETTE_BANK_MAP_1, 0, 1, 10, 10, 10);
+            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_CLUT_ROW_MARKED_TILES, 0, 1, 10, 10, 10);
         }
         break;
     case BATTLE_TILE_MARK_HIDE_MOVE:
@@ -125,7 +127,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     g_battle_gfx_current_render_buffer->gt3[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7800;
+                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                     if (g_battle_map_textured_triangle_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                         g_battle_map_textured_triangle_positions[i].polygon_flags |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
                     } else {
@@ -153,7 +155,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     g_battle_gfx_current_render_buffer->gt4[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7800;
+                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                     if (g_battle_map_textured_quad_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                         g_battle_map_textured_quad_positions[i].polygon_flags |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
                     } else {
@@ -188,7 +190,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     g_battle_gfx_current_render_buffer->gt3[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt3[i].r0 = 0x60;
                     g_battle_gfx_current_render_buffer->gt3[i].r1 = 0x60;
                     g_battle_gfx_current_render_buffer->gt3[i].r2 = 0x60;
@@ -213,7 +216,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     g_battle_gfx_current_render_buffer->gt4[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt4[i].r0 = 0x60;
                     g_battle_gfx_current_render_buffer->gt4[i].r1 = 0x60;
                     g_battle_gfx_current_render_buffer->gt4[i].r2 = 0x60;
@@ -235,7 +239,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
         other_state_b = g_battle_target_tile_mark_modes[2];
         if ((other_state_a | other_state_b) == 0
             || (other_state_a == BATTLE_TILE_MARK_HIDE_MOVE && other_state_b == BATTLE_TILE_MARK_HIDE_TARGETS)) {
-            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_PALETTE_BANK_MAP_1, 0, 1, 10, 10, 10);
+            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_CLUT_ROW_MARKED_TILES, 0, 1, 10, 10, 10);
         }
         break;
     case BATTLE_TILE_MARK_HIDE_RANGE:
@@ -250,7 +254,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     g_battle_gfx_current_render_buffer->gt3[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7800;
+                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                     if (g_battle_map_textured_triangle_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                         g_battle_map_textured_triangle_positions[i].polygon_flags |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
                     } else {
@@ -278,7 +282,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
                     g_battle_gfx_current_render_buffer->gt4[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7800;
+                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                     if (g_battle_map_textured_quad_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                         g_battle_map_textured_quad_positions[i].polygon_flags |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
                     } else {
@@ -313,7 +317,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
                     g_battle_gfx_current_render_buffer->gt3[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt3[i].r0 = 0x50;
                     g_battle_gfx_current_render_buffer->gt3[i].r1 = 0x50;
                     g_battle_gfx_current_render_buffer->gt3[i].r2 = 0x50;
@@ -338,7 +343,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
                     g_battle_gfx_current_render_buffer->gt4[i].clut
-                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7840;
+                        = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f)
+                        | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     g_battle_gfx_current_render_buffer->gt4[i].r0 = 0x50;
                     g_battle_gfx_current_render_buffer->gt4[i].r1 = 0x50;
                     g_battle_gfx_current_render_buffer->gt4[i].r2 = 0x50;
@@ -360,7 +366,7 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
         other_state_b = g_battle_target_tile_mark_modes[1];
         if ((other_state_a | other_state_b) == 0
             || (other_state_a == BATTLE_TILE_MARK_HIDE_MOVE && other_state_b == BATTLE_TILE_MARK_HIDE_RANGE)) {
-            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_PALETTE_BANK_MAP_1, 0, 1, 10, 10, 10);
+            battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 8, MAP_CLUT_ROW_MARKED_TILES, 0, 1, 10, 10, 10);
         }
         break;
     case BATTLE_TILE_MARK_HIDE_TARGETS:
@@ -377,7 +383,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 if (marks & MAP_TILE_FLAG_TARGETED) {
                     if (!(marks & MAP_TILE_FLAG_ABILITY_RANGE)) {
                         g_battle_gfx_current_render_buffer->gt3[i].clut
-                            = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f) | 0x7800;
+                            = (g_battle_gfx_current_render_buffer->gt3[i].clut & 0x803f)
+                            | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                         if (g_battle_map_textured_triangle_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                             g_battle_map_textured_triangle_positions[i].polygon_flags
                                 |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
@@ -419,7 +426,8 @@ void battle_target_set_tile_background_color(s32 mode, s32 unused) {
                 if (marks & MAP_TILE_FLAG_TARGETED) {
                     if (!(marks & MAP_TILE_FLAG_ABILITY_RANGE)) {
                         g_battle_gfx_current_render_buffer->gt4[i].clut
-                            = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f) | 0x7800;
+                            = (g_battle_gfx_current_render_buffer->gt4[i].clut & 0x803f)
+                            | MAP_CLUT(MAP_CLUT_ROW_MAP, 0);
                         if (g_battle_map_textured_quad_positions[i].polygon_flags & MAP_POLYGON_FLAG_OWN_COLOUR) {
                             g_battle_map_textured_quad_positions[i].polygon_flags |= MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE;
                         } else {

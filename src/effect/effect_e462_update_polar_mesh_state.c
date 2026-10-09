@@ -55,7 +55,7 @@ s32 effect_e462_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
                 quad->code &= ~2;
             }
             quad->tpage = scratch->tpage;
-            quad->clut = 0x7B00;
+            quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             work->quads[1][i] = *quad;
         }
         work->scroll_v = 0;

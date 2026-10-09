@@ -200,9 +200,9 @@ void world_menu_run_unit_editor_panel_thread(void) {
             }
         }
         if (value == 0) {
-            world_menu_init_primitive_colors_palette_bank_0(frame_record->palette);
+            world_menu_init_primitive_colors_normal(frame_record->palette);
         } else {
-            world_menu_init_primitive_colors_palette_bank_1(frame_record->palette);
+            world_menu_init_primitive_colors_dimmed(frame_record->palette);
         }
         if (world_menu_is_input_allowed() != 0) {
             if (g_world_menu_new_button_input & PSX_PAD_CROSS) {

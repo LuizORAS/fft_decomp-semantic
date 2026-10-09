@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Builds the twelve-line menu box primitives for `box` (x, y, w, h) into
- * `menu`: line endpoints from the layout table, palette-bank-0 colours,
+ * `menu`: line endpoints from the layout table, the normal menu colours,
  * two draw modes and a sprite covering the box. */
 void world_menu_init_numeric_display_frame_primitives(RECT* box, world_menu_palette_primitives_t* menu) {
     LINE_F2* line;
@@ -15,7 +15,7 @@ void world_menu_init_numeric_display_frame_primitives(RECT* box, world_menu_pale
         SetLineF2(line);
         line++;
     }
-    world_menu_init_primitive_colors_palette_bank_0(menu);
+    world_menu_init_primitive_colors_normal(menu);
     line = menu->lines;
     offset = 0;
     for (i = 0; i < 12; i++) {

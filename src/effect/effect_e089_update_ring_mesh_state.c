@@ -83,7 +83,7 @@ s32 effect_e089_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
                     quad->code &= ~2;
                 }
                 quad->tpage = tpage;
-                quad->clut = 0x7b00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             }
         }
         work->spin = 0;

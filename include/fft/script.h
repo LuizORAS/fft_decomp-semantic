@@ -153,7 +153,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_USE_FIELD_OBJECT = 0x55,  /* 2: texture animation id, value */
     EVENT_OPCODE_WAIT_3D_OBJECT = 0x56,    /* 0 */
     EVENT_OPCODE_WAIT_FIELD_OBJECT = 0x57, /* 0 */
-    EVENT_OPCODE_LOAD_EVTCHR = 0x58,       /* 3: slot, EVTCHR bank (u16) */
+    EVENT_OPCODE_LOAD_EVTCHR = 0x58,       /* 3: slot, EVTCHR.BIN block (u16) */
     EVENT_OPCODE_SAVE_EVTCHR = 0x59,       /* 1: slot */
     EVENT_OPCODE_SAVE_EVTCHR_CLEAR = 0x5a, /* 1: slot */
     EVENT_OPCODE_LOAD_EVTCHR_CLEAR = 0x5b, /* 1: slot */

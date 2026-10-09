@@ -18,7 +18,7 @@ void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_
     flags = src->flags;
     count = display->part_count;
     display->tpage = (flags & 0x60) | sheet_flags;
-    display->clut = unit->vram_palette_id;
+    display->clut = unit->clut;
     for (i = 0; i < count; i++) {
         part = &src->parts[i];
         attr = part->attributes;

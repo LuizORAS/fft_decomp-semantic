@@ -13,12 +13,12 @@
 #include "psx/types.h"
 
 /* Start the animation script of trap group on slot: reset the colour and
- * script state and store palette_id (the VRAM palette; callers
- * pass CLUT-shaped values such as 0x7aca) at 0x88. */
-void battle_effect_init_trap_animation(s32 group, u16 palette_id, battle_effect_slot_t* slot) {
+ * script state and store the clut word (callers pass CLUTs of
+ * MAP_CLUT_ROW_WEAPONS) at 0x88. */
+void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot) {
     u32 offset;
 
-    slot->clut = palette_id;
+    slot->clut = clut;
     offset = *(
         u16*)(g_battle_effect_trap_animation_data + (g_battle_effect_trap_particle_configs[group].trap_animation << 1));
     slot->blue = 0x80;

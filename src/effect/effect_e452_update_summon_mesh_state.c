@@ -86,7 +86,7 @@ s32 effect_e452_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
                     quad->code &= ~2;
                 }
                 quad->tpage = tpage;
-                quad->clut = 0x7B00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             }
         }
         work->spin = 0;

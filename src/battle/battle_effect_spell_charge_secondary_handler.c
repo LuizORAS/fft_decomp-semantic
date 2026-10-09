@@ -158,7 +158,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 slot = &g_battle_effect_slots[state->ids_b[j]];
                 slot->life = battle_effect_spawn_particle_motion(
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
-                battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, 0x7acf, slot);
+                battle_effect_init_trap_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15), slot);
                 state->count.n.b++;
                 if (state->count.n.b == 14) {
                     break;

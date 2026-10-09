@@ -52,7 +52,7 @@ extern RECT g_require_gfx_draw_area_template;
 extern s16 g_require_gfx_draw_offset_y;
 extern u8 g_require_gfx_fade_rgb[3];
 extern u8 g_require_gfx_formation_sprite_groups[][3];
-extern POLY_FT4 g_require_gfx_poly_ft4_banks[2][30];
+extern POLY_FT4 g_require_gfx_poly_ft4_buffers[2][30];
 extern RECT g_require_gfx_portrait_origin;
 extern u8 g_require_gfx_portrait_transition_offsets[];
 extern u8 g_require_gfx_scaled_sprite_count;
@@ -69,7 +69,7 @@ extern RECT g_require_portrait_sheet_rect_2;
 extern RECT g_require_portrait_sheet_rect_3;
 extern POLY_GT4 g_require_gfx_poly_gt4_array_32[];
 extern POLY_GT4 g_require_gfx_poly_gt4_array_8[];
-extern POLY_GT4 g_require_gfx_poly_gt4_banks[2][40];
+extern POLY_GT4 g_require_gfx_poly_gt4_buffers[2][40];
 
 /* find (BATTLE) */
 void require_menu_select_primitive_color_palette(
