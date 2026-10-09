@@ -67,7 +67,7 @@ s32 effect_e259_update_ring_stack_mesh_state(s32 record_index, s32 byte_offset, 
 
     record_index = (s16)record_index;
     record = &g_effect_state_records[record_index];
-    entry = (effect_ring_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].ring_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 

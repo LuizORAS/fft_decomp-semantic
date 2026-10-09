@@ -1,26 +1,23 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
-struct world_menu_icon_thread_param;
-struct world_menu_icon_sprites;
-
 /* Menu window thread: rebuilds the text image whenever the entry's refresh
  * flag is raised and alternates between two sprite records until the menu
  * closes. The DEBUGCHR twin of world_menu_icon_list_thread. */
 void debugchr_menu_icon_list_thread(void) {
     RECT rect;
-    battle_menu_window_record_t records[2];
+    world_menu_icon_record_t records[2];
     s32 cursor;
-    battle_menu_idle_action_entry_t* state;
+    world_menu_entry_t* state;
     u32* buffer;
     s32 i;
     s32 fresh;
-    battle_menu_window_record_t* record;
+    world_menu_icon_record_t* record;
     s16* redraw;
 
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
-    state = (battle_menu_idle_action_entry_t*)battle_thread_get_current_parameter_1();
-    state->flags_0a &= ~1;
+    state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    state->window_y &= ~1;
     cursor = state->selected_index;
     record = &records[0];
     if (cursor == -1) {
@@ -29,7 +26,7 @@ void debugchr_menu_icon_list_thread(void) {
     battle_menu_build_window_sprites((battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)state, record);
     battle_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 0;
-    redraw = state->refresh_flag;
+    redraw = (s16*)state->text_binding;
     *redraw = 1;
     for (i = 0;; i++) {
         if (*redraw == 1) {
@@ -56,8 +53,7 @@ void debugchr_menu_icon_list_thread(void) {
         battle_menu_handle_action(state, cursor);
         battle_handle_menu_cancel_input(state);
         battle_menu_select_icon_cluts(record);
-        battle_menu_update_icon_cursor_sprites(
-            (struct world_menu_icon_thread_param*)state, (struct world_menu_icon_sprites*)record, i, cursor);
+        battle_menu_update_icon_cursor_sprites(state, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);
     }
     battle_thread_yield();

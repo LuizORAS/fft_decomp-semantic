@@ -17,11 +17,11 @@
  * action menu if the unit's menu id changes. */
 void battle_menu_auto_battle_setting_thread(void) {
     RECT rect;
-    battle_menu_window_record_t records[2];
+    world_menu_icon_record_t records[2];
     s32 cursor;
     s32 previous;
     battle_stats_t* stats;
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 j;
@@ -30,10 +30,10 @@ void battle_menu_auto_battle_setting_thread(void) {
     s32 after;
     s32 selected;
     s16* colour;
-    battle_menu_window_record_t* record;
+    world_menu_icon_record_t* record;
 
-    param = (world_menu_icon_thread_param_t*)battle_thread_get_current_parameter_1();
-    cursor = param->cursor;
+    param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    cursor = param->selected_index;
     stats = battle_unit_get_attacker_data_pointer();
     if (stats->auto_battle_setting == 0) {
         cursor = 0;
@@ -56,7 +56,7 @@ void battle_menu_auto_battle_setting_thread(void) {
     for (;; i++) {
         record = &records[i & 1];
         if (i == 0 || (g_battle_script_event_input & PSX_PAD_CIRCLE)) {
-            buffer = battle_menu_build_and_upload_window_frame_image(param->width, param->height, &rect, 1);
+            buffer = battle_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
             if (((g_battle_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_previous_running() == 0)
                 || i == 0) {
                 selected = cursor;
@@ -96,7 +96,7 @@ void battle_menu_auto_battle_setting_thread(void) {
             }
             for (j = 0; j < 5; j++) {
                 g_menu_text_palette_offset = colour[j];
-                g_menu_text_state.stride = param->width;
+                g_menu_text_state.stride = param->inner_width;
                 battle_menu_set_text_origin(8, j * 16 + 9);
                 battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.origin_x);
             }
@@ -108,14 +108,14 @@ void battle_menu_auto_battle_setting_thread(void) {
             battle_menu_free_memory(buffer);
             fresh = 0;
         }
-        param->cursor = cursor;
+        param->selected_index = cursor;
         if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
             break;
         }
-        battle_menu_step_wrapping_cursor_on_scroll_buttons((battle_menu_idle_action_entry_t*)param, &cursor);
+        battle_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
         battle_handle_menu_cancel_input(param);
         battle_menu_select_icon_cluts(record);
-        battle_menu_update_icon_cursor_sprites(param, (world_menu_icon_sprites_t*)record, i, cursor);
+        battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);
     }
     battle_thread_yield();

@@ -37,7 +37,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     wldcore_window_record_t* records;
     wldcore_location_list_level_t* level;
     wldcore_point32_t* base;
-    wldcore_window_record_position_view_t* position;
+    wldcore_window_xy_t* position;
 
     g_wldcore_map_projection_state.marker.sub_kind
         = wldcore_proposition_load_picture(g_wldcore_map_projection_state.marker.kind);
@@ -101,7 +101,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         g_wldcore_window_records[index].priority = 0xB;
         records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
-        position = (wldcore_window_record_position_view_t*)&records->x;
+        position = (wldcore_window_xy_t*)&records->x;
         position[index].x = -8;
         position[index].y = 0x10;
         color[index].red = 0;

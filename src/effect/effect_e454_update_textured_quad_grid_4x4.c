@@ -41,7 +41,7 @@ s32 effect_e454_update_textured_quad_grid_4x4(s16 record_index, s32 byte_offset,
     u8 v;
 
     record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[geometry_index];
+    geometry = &g_effect_geometry_table->entries[geometry_index].emitter;
     ot = main_gfx_get_otag();
 
     switch (record->phase[byte_offset]) {

@@ -191,7 +191,7 @@ void world_menu_build_ability_list(s32 mode) {
 
     g_world_menu_thread_menu_data[3].inner_width = window_x;
     g_world_menu_thread_menu_data[3].window_width = window_x;
-    g_world_menu_thread_menu_data[3].overall_width = window_x;
+    g_world_menu_thread_menu_data[3].text_image.width = window_x;
     g_world_menu_thread_menu_data[3].header_id = row_mode;
     g_world_menu_thread_menu_data[3].select_text_table = columns;
     for (i = 0; i < count; i++) {

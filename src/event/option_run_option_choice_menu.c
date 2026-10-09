@@ -21,12 +21,12 @@ void option_run_option_choice_menu(void) {
     native_thread_t* thread;
     s32 kind;
     s32 height;
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     s32 width;
     u32* buffer;
     s32 i;
     s32 cursor;
-    battle_menu_window_record_t* record;
+    world_menu_icon_record_t* record;
 
     input = battle_script_get_controller_input_pointer(0);
     battle_script_get_controller_input_pointer(1);
@@ -54,14 +54,14 @@ void option_run_option_choice_menu(void) {
     if (height <= 0) {
         cursor = 0;
     }
-    param->icon_x = 0x170 - width;
-    param->flags = 0xA0 - (height >> 1);
-    param->width = param->window_width = param->text_image.width = width;
-    param->height = param->window_height = param->text_image.height = height;
-    param->x = 0x1C0;
-    param->y = 0x100 - height;
+    param->window_x = 0x170 - width;
+    param->window_y = 0xA0 - (height >> 1);
+    param->inner_width = param->window_width = param->text_image.width = width;
+    param->inner_height = param->window_height = param->text_image.height = height;
+    param->vram_x = 0x1C0;
+    param->vram_y = 0x100 - height;
     if (kind == 3) {
-        param->x = 0x1AE;
+        param->vram_x = 0x1AE;
     }
     param->text_image.width -= 4;
     battle_menu_build_window_sprites(
@@ -120,7 +120,7 @@ void option_run_option_choice_menu(void) {
             }
         }
         battle_menu_select_icon_cluts(record);
-        battle_menu_update_icon_cursor_sprites(param, (world_menu_icon_sprites_t*)record, width, cursor);
+        battle_menu_update_icon_cursor_sprites(param, &record->base, width, cursor);
         battle_menu_submit_icon_primitives(record);
         battle_thread_wait_frames(1);
     }

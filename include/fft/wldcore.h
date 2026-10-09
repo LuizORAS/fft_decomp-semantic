@@ -587,11 +587,6 @@ void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_
 s32 wldcore_script_run_until_yield(void);
 
 /* text */
-typedef struct wldcore_text_dimensions {
-    s32 width;
-    s32 height;
-} wldcore_text_dimensions_t;
-typedef char wldcore_text_dimensions_size_must_be_8[(sizeof(wldcore_text_dimensions_t) == 8) ? 1 : -1];
 
 /* Provisional: owner of a text-list render record, as
  * wldcore_list_build_tutorial_category_panel_image reads it; only the record
@@ -1142,13 +1137,6 @@ typedef struct wldcore_window_record {
 } wldcore_window_record_t;
 typedef char wldcore_window_record_size_must_be_0x24[sizeof(wldcore_window_record_t) == 0x24 ? 1 : -1];
 
-/* Position view starting at a window record's x field with its 0x24-byte stride. */
-typedef struct wldcore_window_record_position_view {
-    s32 x;
-    s32 y;
-    u8 stride_padding[0x1c];
-} wldcore_window_record_position_view_t;
-
 /* Window-layout request at the start of a layout-window menu level. The
  * first three words are what wldcore_window_apply_layout (0x8006f67c) reads. */
 typedef struct wldcore_window_layout_request {
@@ -1591,16 +1579,6 @@ typedef struct wldcore_window_entry_52_s16 {
 } wldcore_window_entry_52_s16_t;
 typedef char wldcore_entry_52_s16_size_must_be_0x34[sizeof(wldcore_window_entry_52_s16_t) == 0x34 ? 1 : -1];
 
-/* Colour triple of the 36-byte window records (+0x20), which the header
- * record spells as one word. */
-typedef struct wldcore_window_entry_36_rgb {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 rest[33];
-} wldcore_window_entry_36_rgb_t;
-typedef char wldcore_entry_36_rgb_size_must_be_0x24[sizeof(wldcore_window_entry_36_rgb_t) == 0x24 ? 1 : -1];
-
 /* Colour triple of the 52-byte render records (+0x30). */
 typedef struct wldcore_window_entry_52_rgb {
     u8 red;
@@ -1623,15 +1601,6 @@ typedef struct wldcore_window_tint_request {
     s32 window_c; /* 0x40; cleared only by 0x80076744 */
     s32 window_d;
 } wldcore_window_tint_request_t;
-
-/* Provisional: the column view of the 36-byte window records rebased on the
- * x/y pair wldcore_window_record_t places at +0x18. */
-typedef struct wldcore_window_xy {
-    s32 x;
-    s32 y;
-    s8 rest[28];
-} wldcore_window_xy_t;
-typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 0x24 ? 1 : -1];
 
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 

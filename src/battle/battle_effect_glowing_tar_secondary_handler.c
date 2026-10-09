@@ -2,14 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Local view of battle_effect_secondary_data_t::target.fields including the
- * result-animation byte copied from the init record's +0x07. */
-typedef struct battle_effect_secondary_target_fields {
-    s16 target_type;
-    u8 target_id;        /* 0x1c */
-    u8 result_animation; /* 0x1d */
-} battle_effect_secondary_target_fields_t;
-
 /* Provisional 0x28-byte heap state kept in the secondary effect's allocation. */
 typedef struct battle_effect_burst_state {
     s32 frame;    /* 0x00 */
@@ -39,7 +31,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch ((u32)effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
-        if (((battle_effect_secondary_target_fields_t*)&effect->target)->result_animation == 4) {
+        if (effect->target.fields.result_animation == 4) {
             return 0;
         }
         if (effect->allocation != 0) {
@@ -64,18 +56,16 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         state = effect->allocation;
         group = 1;
-        if (((battle_effect_secondary_target_fields_t*)&effect->target)->result_animation == 3) {
+        if (effect->target.fields.result_animation == 3) {
             group = 9;
         }
         if (group == 1) {
             if (state->frame == 0) {
-                battle_gfx_start_misc_unit_palette_modulation(
-                    5, 0, ((battle_effect_secondary_target_fields_t*)&effect->target)->target_id, 0x1f, 0x1f, 0x1f);
+                battle_gfx_start_misc_unit_palette_modulation(5, 0, effect->target.fields.target_id, 0x1f, 0x1f, 0x1f);
             }
             if (state->frame == group) {
-                battle_gfx_start_misc_unit_palette_modulation(8, 2,
-                    ((battle_effect_secondary_target_fields_t*)&g_battle_effect_current_secondary->target)->target_id,
-                    0, 0, 0);
+                battle_gfx_start_misc_unit_palette_modulation(
+                    8, 2, g_battle_effect_current_secondary->target.fields.target_id, 0, 0, 0);
             }
         }
         if (state->frame < 4) {
@@ -150,8 +140,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
         }
         battle_effect_restore_inertia_threshold();
         battle_effect_copy_second_section_to_on_hit_data();
-        if (((battle_effect_secondary_target_fields_t*)&g_battle_effect_current_secondary->target)->result_animation
-            == 1) {
+        if (g_battle_effect_current_secondary->target.fields.result_animation == 1) {
             if (state->frame == 0) {
                 zoom.vx = zoom.vy = zoom.vz = -0x80;
                 battle_camera_execute_zoom_command(0x500, 0, 2, &zoom);

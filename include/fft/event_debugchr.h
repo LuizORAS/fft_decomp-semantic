@@ -90,12 +90,12 @@ extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 extern debug_chr_texture_page_t g_debugchr_gfx_scaled_sprite_texture_page;
 void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void debugchr_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
+void debugchr_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
 
 void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
 void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void debugchr_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet);
+void debugchr_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const debug_chr_texture_page_t* texture,
     const s16* position, const s16* uv_rect, const s16* scale, const s16* offset);
@@ -108,7 +108,7 @@ void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
 void debugchr_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
+    world_menu_palette_primitives_t* output, const world_status_thread_t* context);
 
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction);
@@ -120,12 +120,12 @@ extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
 
 /* panel */
-extern battle_menu_status_panel_editor_state_t g_debugchr_panel_comparison_billboard;
+extern battle_unit_status_record_t g_debugchr_panel_comparison_billboard;
 extern s16 g_debugchr_panel_comparison_unit_id;
 extern s32 g_debugchr_panel_refresh_a;
 extern s32 g_debugchr_panel_refresh_b;
 extern s32 g_debugchr_panel_refresh_c;
-extern battle_menu_status_panel_editor_state_t g_debugchr_panel_selected_billboard;
+extern battle_unit_status_record_t g_debugchr_panel_selected_billboard;
 extern u8 g_debugchr_panel_status_animation[];
 extern u8 g_debugchr_panel_status_group_bounds[];
 extern u8 g_debugchr_panel_status_group_count;
@@ -178,14 +178,14 @@ extern u8 g_debugchr_panel_comparison_portrait_image[];
 extern battle_menu_status_panel_buffer_t g_debugchr_panel_frames_a[];
 extern u8 g_debugchr_panel_text_image_a[];
 extern u8 g_debugchr_panel_text_image_b[];
-extern battle_menu_status_panel_numeric_entry_t g_debugchr_panel_comparison_numeric_entries[];
+extern menu_number_entry_t g_debugchr_panel_comparison_numeric_entries[];
 extern CVECTOR g_debugchr_panel_gauge_bar_colors[];
-extern battle_menu_status_panel_numeric_entry_t g_debugchr_panel_selected_numeric_entries[];
+extern menu_number_entry_t g_debugchr_panel_selected_numeric_entries[];
 extern const debug_chr_texture_page_t g_debugchr_panel_status_texture;
 void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, u8* output);
 
 void debugchr_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void debugchr_panel_run_character_status_thread(void);
 
@@ -193,14 +193,13 @@ void debugchr_panel_run_character_status_thread(void);
 extern battle_menu_status_panel_glyph_t g_debugchr_text_decimal_glyph;
 void debugchr_text_clear_string_buffer(u8* output);
 
-void debugchr_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* output, s32 count);
+void debugchr_text_render_decimal_entry_list(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
-void debugchr_text_render_decimal_value(
-    s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
+void debugchr_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 
-void debugchr_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* output, s32 count);
+void debugchr_text_render_signed_decimal_entries(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 /* thread */
 extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];

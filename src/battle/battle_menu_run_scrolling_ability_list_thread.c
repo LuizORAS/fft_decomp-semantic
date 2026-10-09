@@ -3,21 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: one of the two 0x134-byte packet pages the list alternates
- * between frames (BATTLE twin of the WORLD scroll-list page). */
-typedef struct battle_menu_scroll_list_page {
-    SPRT frame;                        /* 0x00: cursor frame */
-    SPRT arrows[2];                    /* 0x14: scroll arrows */
-    SPRT arrow_marks[2];               /* 0x3c */
-    SPRT thumb;                        /* 0x64: scroll-bar thumb */
-    DR_MODE text_mode;                 /* 0x78 */
-    DR_MODE icon_mode;                 /* 0x84 */
-    battle_menu_window_record_t icons; /* 0x90 */
-    u8 _unused_10c[0x28];
-} battle_menu_scroll_list_page_t;
-
-struct battle_menu_text_position;
-extern void battle_menu_draw_stacked_glyph_pair(void* pixels, struct battle_menu_text_position* position);
+extern void battle_menu_draw_stacked_glyph_pair(void* pixels, world_glyph_blit_t* position);
 
 /*
  * Scrolling three-column ability list thread, the BATTLE twin of
@@ -52,7 +38,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     s16 toggle;
     s32 ring;
     s32 cursor;
-    battle_menu_scroll_list_page_t* base;
+    world_menu_list_page_t* base;
     world_menu_scroll_text_layout_t* layout;
     s32 scroll_accum;
     s32 scroll_delta;
@@ -60,7 +46,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     s32 redraw_pending;
     s32 row_buffer_live;
     world_menu_entry_t* entry;
-    battle_menu_scroll_list_page_t* page;
+    world_menu_list_page_t* page;
     u8* buffer;
     s32 i;
     s32 column;
@@ -80,11 +66,11 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     hold_time = 0;
     if (g_battle_menu_scroll_list_depth != 0) {
         /* Nested list: page pair in the event overlay area, 0x1000 bytes in. */
-        page = (battle_menu_scroll_list_page_t*)(g_main_heap_companion_overlay_load_address + 0x1000);
+        page = (world_menu_list_page_t*)(g_main_heap_companion_overlay_load_address + 0x1000);
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
-        page = (battle_menu_scroll_list_page_t*)((u8*)g_battle_ai_workspace_ptr + 0x388);
+        page = (world_menu_list_page_t*)((u8*)g_battle_ai_workspace_ptr + 0x388);
         base = page;
     }
     toggle = 0;
@@ -93,7 +79,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     layout = (world_menu_scroll_text_layout_t*)entry->text_binding;
     entry->window_height = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
-    entry->overall_height = layout->columns.row_count * 16 + 0x1C;
+    entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
     window.rect.x = 0x108 - entry->inner_width;
     window.rect.y = 0xFE;
     window.x_screen_offset = 8;
@@ -110,9 +96,9 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     texture_window.w = 0x100;
     texture_window.h = 0x80;
     for (i = 0; i < 2; i++) {
-        base[i].icons.extra[0] = &icons0[i];
-        base[i].icons.extra[1] = &icons1[i];
-        base[i].icons.extra[2] = &icons2[i];
+        base[i].icons.icons[0] = &icons0[i];
+        base[i].icons.icons[1] = &icons1[i];
+        base[i].icons.icons[2] = &icons2[i];
         battle_menu_build_window_sprites(
             (battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry, &base[i].icons);
     }
@@ -178,11 +164,11 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
     LoadImage(&image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(battle_menu_scroll_list_page_t));
+    battle_copy_bytes(&base[1], base, sizeof(world_menu_list_page_t));
     for (i = 0; i < 2; i++) {
-        base[i].icons.extra[0] = &icons0[i];
-        base[i].icons.extra[1] = &icons1[i];
-        base[i].icons.extra[2] = &icons2[i];
+        base[i].icons.icons[0] = &icons0[i];
+        base[i].icons.icons[1] = &icons1[i];
+        base[i].icons.icons[2] = &icons2[i];
     }
     i = 0;
     scroll_accum = 0;
@@ -289,7 +275,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                                     == 0)) {
                             g_menu_text_state.origin_y += 2;
                             battle_menu_draw_stacked_glyph_pair(
-                                buffer, (struct battle_menu_text_position*)&g_menu_text_state.origin_x);
+                                buffer, (world_glyph_blit_t*)&g_menu_text_state.origin_x);
                         } else {
                             value = (u16)layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
@@ -354,16 +340,15 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             break;
         }
         battle_menu_select_icon_cluts(&page->icons);
-        battle_menu_select_icon_sprite_clut(page->icons.extra[0]);
-        battle_menu_select_icon_sprite_clut(page->icons.extra[1]);
-        battle_menu_select_icon_sprite_clut(page->icons.extra[2]);
+        battle_menu_select_icon_sprite_clut(page->icons.icons[0]);
+        battle_menu_select_icon_sprite_clut(page->icons.icons[1]);
+        battle_menu_select_icon_sprite_clut(page->icons.icons[2]);
         if (battle_thread_is_previous_running() != 0 || g_battle_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;
         }
-        battle_menu_update_icon_cursor_sprites(
-            (world_menu_icon_thread_param_t*)entry, (world_menu_icon_sprites_t*)&page->icons, i, cursor);
+        battle_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         if (layout->columns.hidden_rows != 0 && battle_thread_is_previous_running() == 0) {
             if (row_offset != 0) {
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
@@ -414,26 +399,26 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
         }
         if (layout->columns.mode[1] == 0 && toggle == 1) {
-            page->icons.sprites[1].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
-            page->icons.sprites[2].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
+            page->icons.base.sprites[1].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
+            page->icons.base.sprites[2].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
         }
-        page->icons.sprites[1].y0 += 4;
-        page->icons.sprites[2].y0 += 4;
+        page->icons.base.sprites[1].y0 += 4;
+        page->icons.base.sprites[2].y0 += 4;
         if ((s16)entry->header_id >= 5) {
-            battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[0]);
-            battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[1]);
+            battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
+            battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[1]);
             if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0) {
-                battle_gfx_draw_or_append_gpu_primitive(page->icons.extra[2]);
+                battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[2]);
             }
         }
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[2]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icon_mode);
         battle_gfx_draw_or_append_gpu_primitive(frame);
         battle_gfx_draw_or_append_gpu_primitive(&page->text_mode);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.mode1);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[0]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[0]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icons);
         i++;
     }

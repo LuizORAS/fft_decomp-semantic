@@ -5,7 +5,7 @@
 /* Provisional view of the menu entry passed to the action handler: the
  * action word at 0x24 is either a small negative code (-15..-1) or a pointer
  * to one s16 action per option; 0x34 points at the halfword that receives
- * the chosen option. Same stride as battle_menu_idle_action_entry_t. */
+ * the chosen option. Same stride as world_menu_entry_t. */
 typedef struct battle_menu_action_entry {
     u8 _unused_00[0x24];
     s16* actions; /* 0x24 */
@@ -80,7 +80,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
                 for (j = 0; j < action; j++) {
                     if (battle_thread_is_running_8014cc94(8 - j) != 0) {
                         g_battle_menu_pending_selection[j]
-                            = ((battle_menu_idle_action_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
+                            = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
                                   ->selected_index;
                     }
                 }

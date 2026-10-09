@@ -14,12 +14,12 @@ extern void battle_menu_size_entry_to_text(
  * BATTLE twin of world_menu_icon_linked_entry_thread. */
 void battle_menu_icon_linked_entry_thread(void) {
     RECT rect;
-    battle_menu_window_record_t records[2];
+    world_menu_icon_record_t records[2];
     world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 parent;
-    battle_menu_window_record_t* record;
+    world_menu_icon_record_t* record;
     s16 width;
     s16 height;
     s32 pad;
@@ -59,8 +59,7 @@ void battle_menu_icon_linked_entry_thread(void) {
             battle_menu_select_icon_cluts(&records[i & 1]);
         }
         record = &records[i & 1];
-        battle_menu_update_icon_cursor_sprites(
-            (world_menu_icon_thread_param_t*)param, (world_menu_icon_sprites_t*)record, i, -1);
+        battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         battle_menu_handle_action(param, 0);
         battle_handle_menu_cancel_input(param);
         battle_menu_submit_icon_primitives(record);

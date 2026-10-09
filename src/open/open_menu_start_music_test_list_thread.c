@@ -25,15 +25,15 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point
     g_open_music_test_list_params.window_y = origin->y - 0x78;
     g_open_music_test_list_params.window_width = width;
     g_open_music_test_list_params.window_height = 0;
-    g_open_music_test_list_params._unknown_10[0] = 0;
-    g_open_music_test_list_params._unknown_10[1] = 0;
-    g_open_music_test_list_params.overall_width = width;
-    g_open_music_test_list_params.overall_height = 0;
-    g_open_music_test_list_params._unknown_18[0] = 0;
-    g_open_music_test_list_params._unknown_18[1] = 0;
+    g_open_music_test_list_params.text_image.x_load = 0;
+    g_open_music_test_list_params.text_image.y_load = 0;
+    g_open_music_test_list_params.text_image.width = width;
+    g_open_music_test_list_params.text_image.height = 0;
+    g_open_music_test_list_params.text_image.x_screen_offset = 0;
+    g_open_music_test_list_params.text_image.y_screen_offset = 0;
     g_open_music_test_list_params.text_id = 0;
     g_open_music_test_list_params.max_row_index = extent->y;
-    g_open_music_test_list_params.field_0x20 = 0;
+    g_open_music_test_list_params.thread_count = 0;
     g_open_music_test_list_params.parent_indices = g_open_music_test_row_actions;
     g_open_music_test_list_params.header_id = 1;
     /* The list thread reads text_binding as a column layout, not a binding. */

@@ -104,9 +104,9 @@ void world_shop_run_screen(s32 shop_type) {
         0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
     last_step = -1;
     world_formation_init_menu_state();
-    g_world_shop_main_menu_thread_data.cursor = 0;
-    g_world_shop_fur_menu_thread_data.cursor = 0;
-    g_world_shop_hire_menu_thread_data.cursor = 0;
+    g_world_shop_main_menu_thread_data.selected_index = 0;
+    g_world_shop_fur_menu_thread_data.selected_index = 0;
+    g_world_shop_hire_menu_thread_data.selected_index = 0;
     world_gfx_bind_data_pointer(8);
     g_world_text_section_pointers[30] = g_world_text_shop_menu_labels_data;
     world_thread_start(2, world_text_message_box_thread);

@@ -66,7 +66,7 @@ void bunit_menu_update_node_cursor(s16 mode) {
         } else if (flags & 0x8000) {
             node_index = g_bunit_help_nodes[node_index].destination[3];
         }
-        if (g_bunit_panel_selected_billboard.mode != 0) {
+        if (g_bunit_panel_selected_billboard.team_kind != 0) {
             if (g_bunit_help_node_index == 2 && node_index == 6) {
                 node_index = 7;
             }

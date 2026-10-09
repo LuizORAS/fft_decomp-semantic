@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 s32 equip_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const equip_text_image_position_t* position, s32 style) {
+    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style) {
     s32 row;
     const u8* glyph_bitmap;
     s32 col;

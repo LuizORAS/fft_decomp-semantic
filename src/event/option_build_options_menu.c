@@ -3,27 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: one of the two 0x190-byte options-menu packet pages at
- * 0x801cbc5c, alternated by frame (OPTION twin of the WORLD page at
- * 0x801ae894). */
-typedef struct option_menu_page {
-    SPRT title;                                   /* 0x000: window title image */
-    SPRT value;                                   /* 0x014: selected value image */
-    world_gfx_scaled_draw_area_pair_t title_area; /* 0x028 */
-    world_gfx_scaled_draw_area_pair_t value_area; /* 0x050 */
-    DR_MODE text_mode;                            /* 0x078 */
-    DR_MODE window_mode;                          /* 0x084 */
-    DR_MODE icon_mode;                            /* 0x090 */
-    battle_menu_window_record_t icons;            /* 0x09c */
-    SPRT frame;                                   /* 0x118: cursor frame */
-    SPRT arrows[2];                               /* 0x12c: scroll arrows */
-    SPRT arrow_marks[2];                          /* 0x154 */
-    SPRT thumb;                                   /* 0x17c: scroll-bar thumb */
-} option_menu_page_t;
-
-typedef char option_menu_page_size_must_be_0x190[(sizeof(option_menu_page_t) == 0x190) ? 1 : -1];
-
-extern option_menu_page_t g_option_menu_pages[2];
+extern world_options_menu_page_t g_option_menu_pages[2];
 
 /*
  * Options-menu thread, the OPTION twin of world_build_options_menu (same code,
@@ -49,9 +29,9 @@ void option_build_options_menu(void) {
     s32 accum;
     s32 timer;
     world_menu_entry_t* entry;
-    option_menu_page_t* page;
-    option_menu_page_t* base;
-    option_menu_text_layout_t* layout;
+    world_options_menu_page_t* page;
+    world_options_menu_page_t* base;
+    world_menu_text_layout_t* layout;
     s32 delta;
     s32 i;
     s32 column;
@@ -79,7 +59,7 @@ void option_build_options_menu(void) {
     layout = g_option_menu_entry_table;
     entry->window_height = layout->row_count * 16 + 0x10;
     entry->inner_height = layout->row_count * 16 + 0x10;
-    entry->overall_height = layout->row_count * 16 + 0x10;
+    entry->text_image.height = layout->row_count * 16 + 0x10;
     window.x_screen_offset = 8;
     window.rect.x = 0;
     window.rect.y = 0;
@@ -89,7 +69,7 @@ void option_build_options_menu(void) {
     battle_menu_build_window_sprites(
         (battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry, &page->icons);
     buffer = battle_menu_alloc_memory(0x1E0);
-    g_option_menu_pages[0].icons.sprites[3].y0 -= 2;
+    g_option_menu_pages[0].icons.base.sprites[3].y0 -= 2;
     clear.x = entry->vram_x;
     clear.y = 0xFE;
     clear.w = window.rect.w / 4;
@@ -146,7 +126,7 @@ void option_build_options_menu(void) {
     accum = 0;
     timer = 0;
     battle_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
-    option_menu_draw_text_columns((option_menu_entry_t*)entry, &row_offset, image);
+    option_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
     image_rect.w = g_menu_text_state.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
@@ -184,7 +164,7 @@ void option_build_options_menu(void) {
     battle_menu_set_text_origin(0, 0);
     battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.origin_x);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(option_menu_page_t));
+    battle_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
     for (;;) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
@@ -266,14 +246,13 @@ void option_build_options_menu(void) {
             break;
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
-            option_menu_redraw_text_page_on_scroll((option_menu_entry_t*)entry, &row_offset, &ring, &cursor);
+            option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         battle_menu_select_icon_cluts(&page->icons);
-        battle_menu_update_icon_cursor_sprites(
-            (world_menu_icon_thread_param_t*)entry, (world_menu_icon_sprites_t*)&page->icons, i, cursor);
-        page->icons.sprites[1].y0 += 2;
-        page->icons.sprites[2].y0 += 2;
+        battle_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
+        page->icons.base.sprites[1].y0 += 2;
+        page->icons.base.sprites[2].y0 += 2;
         entry->selected_index = row_offset + cursor;
         if ((g_battle_event_speed == 1 && !(battle_script_get_event_initial_repeat_counter() & 1))
             || g_battle_event_speed == 2) {
@@ -300,10 +279,10 @@ void option_build_options_menu(void) {
         battle_menu_select_sprite_clut(&page->title);
         battle_menu_select_sprite_clut(&page->value);
         battle_menu_select_sprite_clut(frame);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.sprites[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.mode1);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
+        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
         if (layout->hidden_rows != 0 && battle_menu_can_accept_input() != 0) {
             if (row_offset != 0) {
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);

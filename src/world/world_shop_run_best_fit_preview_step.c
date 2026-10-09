@@ -86,16 +86,15 @@ void world_shop_run_best_fit_preview_step(void) {
                 (*unit_slot)->equipment[i] = *reserved;
             }
         }
-        /* The callee's buffer is s16*; the cast reconciles the u16 equipment field and emits nothing. */
         world_shop_build_fitting_room_best_fit_equipment(
-            g_world_formation_selected_unit_index, g_world_shop_id, (s16*)g_world_item_preview_stat_detail.equipment);
+            g_world_formation_selected_unit_index, g_world_shop_id, g_world_item_preview_stat_detail.equipment);
         g_world_item_preview_stat_detail.equipment[4]
             = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
         bcopy(staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, 8);
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
-            g_world_item_preview_stat_detail.equipment);
+            (u16*)g_world_item_preview_stat_detail.equipment);
         g_world_item_preview_stat_detail.two_hands
             = world_unit_is_two_handing_weapon((struct weapon_pair*)g_world_item_preview_stat_detail.equipment,
                 world_ability_has_two_hands(g_world_formation_selected_unit_index));

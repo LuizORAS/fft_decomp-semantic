@@ -15,7 +15,7 @@
  * incoming counts; the persistent totals advance at the end.
  */
 
-void battle_map_append_mesh_geometry(u16* geometry_data, battle_map_mesh_part_metadata_t* metadata) {
+void battle_map_append_mesh_geometry(u16* geometry_data, battle_map_mesh_part_t* metadata) {
     u16* source = geometry_data;
     s32 i;
     s32 textured_triangle_count;

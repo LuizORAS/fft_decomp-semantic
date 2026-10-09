@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Stack view of bunit_oriented_quad_t whose clut/tpage slots receive the
+/* Stack view of world_oriented_quad_t whose clut/tpage slots receive the
  * sprite query's palette and spritesheet IDs directly; the query's last two
  * halfwords extend it to 0x18 bytes. */
 typedef struct {
@@ -80,7 +80,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
                 value = 6;
             }
         }
-        bunit_gfx_enqueue_oriented_textured_quad((bunit_oriented_quad_t*)&quad, rgb, orientation, 0, value);
+        bunit_gfx_enqueue_oriented_textured_quad((world_oriented_quad_t*)&quad, rgb, orientation, 0, value);
     }
     if (g_bunit_unit_data[unit]->formation_order_key & 0x40) {
         return;

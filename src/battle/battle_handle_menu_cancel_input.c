@@ -12,15 +12,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef struct battle_menu_cancel_context {
-    u8 _unused_00[0x20];
-    s16 count; /* 0x20 */
-    u8 _unused_22[0x12];
-    s16* cursor; /* 0x34 */
-} battle_menu_cancel_context_t;
-
 void battle_handle_menu_cancel_input(void* menu) {
-    battle_menu_cancel_context_t* ctx = (battle_menu_cancel_context_t*)menu;
+    world_menu_entry_t* ctx = menu;
     s32 count;
     s32 i;
     s32 idx;
@@ -31,7 +24,7 @@ void battle_handle_menu_cancel_input(void* menu) {
     char unused[8];
 
     if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_can_accept_input() != 0) {
-        count = ctx->count;
+        count = ctx->thread_count;
         if (count != -1) {
             /* The counter is zeroed ahead of the guard, not inside the arm.
                That is what puts `move a0,zero` immediately before the `blez`,
@@ -69,7 +62,7 @@ void battle_handle_menu_cancel_input(void* menu) {
                 j++;
             } while (i < 0x10);
         }
-        cur = ctx->cursor;
+        cur = ctx->value;
         g_battle_script_event_input = 0;
         *cur = -1;
         battle_sound_set_effect_to_cancel();

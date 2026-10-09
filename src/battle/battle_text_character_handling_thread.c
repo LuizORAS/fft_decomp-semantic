@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef union battle_texture_prim battle_texture_prim_t;
-
 /* Members of g_battle_text_typewriter_glyph (+0x02, +0x04, +0x0c, +0x0e),
  * bound separately: member stores add a spill slot to this function. */
 extern s16 g_battle_text_typewriter_glyph_y;
@@ -231,7 +229,7 @@ void battle_text_character_handling_thread(void) {
     rec.text = battle_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    battle_gfx_alloc_tpage7_vram(&rec.rect, (battle_texture_prim_t*)win->quads, (u32*)-1);
+    battle_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         if (text[0] == TEXT_SET_PORTRAIT) {
             win->portrait_code = text[1];
@@ -761,7 +759,7 @@ void battle_text_character_handling_thread(void) {
                         started = 1;
                         value -= character * g_battle_text_decimal_divisors[i];
                     }
-                    g_battle_text_typewriter_glyph.flags_0 = cursor_x;
+                    g_battle_text_typewriter_glyph.x = cursor_x;
                     g_battle_text_typewriter_glyph_y = cursor_y;
                     g_battle_text_typewriter_glyph_character = character;
                     g_battle_text_typewriter_glyph_dialogue_type = rec.dialog_type & 0x70;
@@ -799,7 +797,7 @@ void battle_text_character_handling_thread(void) {
                     }
                     character += *text;
                 }
-                g_battle_text_typewriter_glyph.flags_0 = cursor_x;
+                g_battle_text_typewriter_glyph.x = cursor_x;
                 g_battle_text_typewriter_glyph_y = cursor_y;
                 g_battle_text_typewriter_glyph_character = character;
                 g_battle_text_typewriter_glyph_dialogue_type = rec.box_type;

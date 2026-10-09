@@ -2,14 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Two DR_OFFSET packets, each followed by the x/y pair SetDrawOffset reads. */
-typedef struct battle_menu_unit_status_offsets {
-    u32 draw_offset_a[3]; /* 0x00 */
-    s16 offset_a[2];      /* 0x0c */
-    u32 draw_offset_b[3]; /* 0x10 */
-    s16 offset_b[2];      /* 0x1c */
-} battle_menu_unit_status_offsets_t;
-
 /* 0x2ec-byte pages in pairs at 0x8017225c; the first page depends on the mode. */
 extern world_unit_status_page_t g_battle_unit_status_panel_pages[];
 /* g_battle_menu_sprite_page_image_params[5..7], the unscaled templates of
@@ -34,7 +26,7 @@ extern world_gfx_image_load_parameters_t g_battle_menu_sprite_page_image_param_b
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, struct menu_number_entry* entries, battle_unit_status_record_t* status) {
     RECT rects[4];
-    battle_menu_unit_status_offsets_t offsets[2];
+    world_unit_status_offsets_t offsets[2];
     u16 extent_w;
     u16 extent_h;
     u8* buffer;
@@ -48,7 +40,7 @@ void battle_menu_display_hovered_unit_stats(
     battle_stats_t* unit;
     world_unit_status_page_t* page;
     world_gfx_image_load_parameters_t* params;
-    battle_menu_unit_status_offsets_t* offs;
+    world_unit_status_offsets_t* offs;
     POLY_G4* poly;
     battle_unit_status_gauge_t* gauge;
     CVECTOR* color;
@@ -60,7 +52,7 @@ void battle_menu_display_hovered_unit_stats(
     s32 row_y;
     u16 width;
 
-    unit_id = status->battle_id;
+    unit_id = status->unit_index;
     speed = 0x16;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
@@ -245,7 +237,7 @@ void battle_menu_display_hovered_unit_stats(
             poly->y2 = row_y + 3;
             poly->x3 = extent_w + width;
             poly->y3 = row_y + 3;
-            width = (gauge->value2 << 5) / gauge->max;
+            width = (gauge->bonus << 5) / gauge->max;
             if (width == 0) {
                 extent_w = 0;
             }
@@ -333,20 +325,20 @@ void battle_menu_display_hovered_unit_stats(
         offs = &offsets[frame & 1];
         base_y = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
         if (mode == 2 || mode == 3) {
-            offs->offset_a[0] = slide - 0x80;
+            offs->a.x = slide - 0x80;
         } else {
-            offs->offset_a[0] = -0x80 - slide;
+            offs->a.x = -0x80 - slide;
         }
         if (g_battle_unit_status_bounce_step != 0) {
-            offs->offset_a[1] = base_y + g_battle_unit_status_bounce_offsets[g_battle_unit_status_bounce_step];
+            offs->a.y = base_y + g_battle_unit_status_bounce_offsets[g_battle_unit_status_bounce_step];
         } else {
-            offs->offset_a[1] = base_y;
+            offs->a.y = base_y;
         }
-        SetDrawOffset(offs->draw_offset_a, offs->offset_a);
-        offs->offset_b[0] = -0x80;
-        offs->offset_b[1] = base_y;
-        SetDrawOffset(offs->draw_offset_b, offs->offset_b);
-        battle_gfx_draw_or_append_gpu_primitive(offs->draw_offset_b);
+        SetDrawOffset(&offs->a, &offs->a.x);
+        offs->b.x = -0x80;
+        offs->b.y = base_y;
+        SetDrawOffset(&offs->b, &offs->b.x);
+        battle_gfx_draw_or_append_gpu_primitive(&offs->b);
         battle_gfx_draw_or_append_gpu_primitive(&page->quads[0]);
         battle_gfx_draw_or_append_gpu_primitive(&page->quads[1]);
         battle_gfx_draw_or_append_gpu_primitive(&page->draw_mode_1);
@@ -377,7 +369,7 @@ void battle_menu_display_hovered_unit_stats(
             battle_menu_init_primitive_colors_palette_bank_0(&page->palette);
         }
         battle_menu_submit_numeric_display_frame_primitives(&page->palette);
-        battle_gfx_draw_or_append_gpu_primitive(offs->draw_offset_a);
+        battle_gfx_draw_or_append_gpu_primitive(&offs->a);
         battle_thread_yield();
         g_battle_menu_hide_numeric_values = unit->unit_flags & 4;
         if (battle_thread_get_current_task_id() == 0x11) {

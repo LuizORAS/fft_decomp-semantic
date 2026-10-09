@@ -4,9 +4,8 @@
 
 /* The primitive block is battle_menu_status_panel_numeric_buffer_t, double buffered
  * (g_equip_editor_numeric_state_a for thread 12, g_equip_editor_numeric_state_b otherwise); the thread parameter
- * block is battle_menu_status_panel_frame_config_t. */
+ * block is world_status_thread_t. */
 
-struct menu_number_entry;
 struct menu_number_position;
 
 /* Thread task 0x3b: numeric editor panel.
@@ -19,7 +18,7 @@ struct menu_number_position;
  * `buffers` is assigned in each branch (not after the if) so the spilled store
  * precedes upload_c's at the join, as in the target. */
 void equip_editor_run_numeric_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
@@ -34,8 +33,7 @@ void equip_editor_run_numeric_thread(void) {
     s32 use_offset;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0) + 1;
     if (g_battle_current_thread_id == 12) {
         buffer = g_equip_editor_numeric_state_a;
@@ -84,7 +82,7 @@ void equip_editor_run_numeric_thread(void) {
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
                 equip_text_render_signed_decimal_entries(
-                    text_pixels, (equip_stat_entry_t*)entries, (equip_stat_out_t*)&g_menu_text_state.origin_x, 3);
+                    text_pixels, (menu_number_entry_t*)entries, (world_glyph_blit_t*)&g_menu_text_state.origin_x, 3);
             } else {
                 battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
                     (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
@@ -92,8 +90,8 @@ void equip_editor_run_numeric_thread(void) {
             g_menu_text_state.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x168, (equip_stat_entry_t*)(entries + 0x24),
-                    (equip_stat_out_t*)&g_menu_text_state.origin_x, 4);
+                equip_text_render_signed_decimal_entries(text_pixels + 0x168, (menu_number_entry_t*)(entries + 0x24),
+                    (world_glyph_blit_t*)&g_menu_text_state.origin_x, 4);
             } else {
                 battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
                     (struct menu_number_entry*)(entries + 0x24),
@@ -102,8 +100,8 @@ void equip_editor_run_numeric_thread(void) {
             g_menu_text_state.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x468, (equip_stat_entry_t*)(entries + 0x54),
-                    (equip_stat_out_t*)&g_menu_text_state.origin_x, 8);
+                equip_text_render_signed_decimal_entries(text_pixels + 0x468, (menu_number_entry_t*)(entries + 0x54),
+                    (world_glyph_blit_t*)&g_menu_text_state.origin_x, 8);
             } else {
                 battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
                     (struct menu_number_entry*)(entries + 0x54),
@@ -118,8 +116,8 @@ void equip_editor_run_numeric_thread(void) {
         g_equip_gfx_draw_offset_y = -use_offset & 0xF0;
         equip_gfx_build_scaled_draw_area_packets(
             &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, (s16*)thread);
-        buffer->draw_offsets[0].x = thread->origin_x - 0x80;
-        buffer->draw_offsets[0].y = thread->origin_y + g_equip_gfx_draw_offset_y;
+        buffer->draw_offsets[0].x = thread->x - 0x80;
+        buffer->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_equip_gfx_draw_offset_y;

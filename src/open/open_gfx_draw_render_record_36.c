@@ -22,16 +22,6 @@
  * own locals keeps the target's x + byte operand order and v0/v1 allocation.
  */
 
-typedef struct open_gfx_sprite_animation_frame {
-    /* 0x00 */ u16 sprite_id;
-    /* 0x02 */ u16 duration;
-} open_gfx_sprite_animation_frame_t;
-
-typedef struct open_gfx_sprite_animation {
-    /* 0x00 */ s32 frame_count;
-    /* 0x04 */ open_gfx_sprite_animation_frame_t frames[1];
-} open_gfx_sprite_animation_t;
-
 /* One sprite part: its first word also carries the texture/palette flag bits
  * read as sprite[t]; the part list is walked two words at a time. */
 typedef struct open_gfx_sprite_part {
@@ -46,11 +36,11 @@ typedef struct open_gfx_sprite_part {
 
 #define PART(index) ((open_gfx_sprite_part_t*)&sprite[index])
 
-extern open_gfx_sprite_animation_t** g_open_gfx_record_36_animations;
+extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
 
-void open_gfx_draw_render_record_36(open_sprite_actor_t* actor, u32* ot) {
+void open_gfx_draw_render_record_36(open_render_record_36_t* actor, u32* ot) {
     u32** sprites;
-    open_gfx_sprite_animation_t* anim;
+    wldcore_anim_sequence_t* anim;
     u32* sprite;
     s32 value;
     s32 i;
@@ -79,7 +69,7 @@ loop:
         goto loop;
     }
 
-    value = (anim->frames + actor->frame_index)->sprite_id;
+    value = (anim->frames + actor->frame_index)->cel;
     sprite = sprites[value];
     tpage_x = sprite[1] & 0xffff;
     tpage_y = (sprite[1] & 0xffff0000) >> 16;

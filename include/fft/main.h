@@ -114,6 +114,67 @@ typedef struct card_save_header {
     u8 icon_image[0x80]; /* 0x80 */
 } card_save_header_t;
 
+/* The 0x1e00-byte memory-card save image, parity-covered per 128-byte block.
+ * WORLD holds it in g_world_load_work_buffer (0x801cd1ec) and its serializer
+ * and loader establish the fields below; CARD fills the same layout from the
+ * SCUS globals in card_save_build_buffer (0x801c01ac) through
+ * g_card_save_buffer_pointer. */
+typedef struct card_save_buffer {
+    card_save_header_t header; /* 0x000 */
+    u8 slot;                   /* 0x100; save slot, 0xff while the buffer is incomplete */
+    u8 name[0x10];             /* 0x101; save-description leader name, 0xfe-terminated */
+    u8 name_terminator;        /* 0x111 */
+    u8 job_id;                 /* 0x112 */
+    u8 level;                  /* 0x113 */
+    u8 month;                  /* 0x114; script variable 0x2e */
+    u8 day;                    /* 0x115; script variable 0x2f */
+    u8 location;               /* 0x116; script variable 0x31, location text index */
+    u8 format_version;         /* 0x117; CARD writes 4 and WORLD load requires 4 */
+    u8 parity_bits[8];         /* 0x118; one parity bit per 128-byte block */
+    s32 elapsed_seconds;       /* 0x120 */
+    /* 0x124-0x1dbe: filled by world_card_build_save_image and
+     * card_save_build_buffer from the SCUS globals named in their bcopy calls. */
+    u8 treasure_acquisition_date_bits[0x35];     /* 0x124; 47 packed 9-bit dates and 1 spare bit */
+    u8 land_discovery_date_bits[0x12];           /* 0x159; packed 9-bit discovery dates */
+    u8 proposition_last_attempt_date_bits[0x6c]; /* 0x16b; packed 9-bit dates */
+    u8 proposition_states[0x60];                 /* 0x1d7; low 6 bits are a remaining-day counter */
+    u8 _unused_0237[1];                          /* 0x237; serialized and parity-covered */
+    u8 saved_records[5][0x38];                   /* 0x238; domain remains unproven */
+    u32 saved_data_bits[40];                     /* 0x350 */
+    u32 secondary_saved_data_bits[2];            /* 0x3f0 */
+    u8 brave_story_character_ages[0x40];         /* 0x3f8 */
+    u8 proposition_count;                        /* 0x438 */
+    u8 active_propositions[8][9];                /* 0x439 */
+    u8 _unused_0481[3];                          /* 0x481; serialized and parity-covered */
+    u8 party_records[20][0xe0];                  /* 0x484; party_data_t records truncated to 0xe0 bytes */
+    u8 item_quantities[ITEM_ID_COUNT];           /* 0x1604; g_main_item_quantities */
+    u8 poached_item_quantities[ITEM_ID_COUNT];   /* 0x1704; g_main_item_poached_quantities */
+    /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
+    u8 item_location_flags[0x80];
+    s32 script_variables[0x100];   /* 0x1884 */
+    game_options_fields_t options; /* 0x1c84; copied to g_main_game_options by world_card_init_screen */
+    u8 _unknown_1c88;              /* 0x1c88 */
+    s8 item_type_order_0[0xc];     /* 0x1c89; signed, -1-terminated */
+    u8 _unused_1c95[1];            /* 0x1c95; serialized and parity-covered */
+    s8 item_type_order_1[8];       /* 0x1c96; signed, -1-terminated */
+    u8 _unused_1c9e[1];            /* 0x1c9e; serialized and parity-covered */
+    s8 item_type_order_2[7];       /* 0x1c9f; signed, -1-terminated */
+    s8 item_type_order_3[5];       /* 0x1ca6; signed, -1-terminated */
+    s8 item_type_order_4[5];       /* 0x1cab; signed, -1-terminated */
+    s8 item_type_order_5[7];       /* 0x1cb0; signed, -1-terminated */
+    s8 item_type_order_6[5];       /* 0x1cb7; signed, -1-terminated */
+    u8 weapon_page_order[0x8a];    /* 0x1cbc */
+    u8 helmet_page_order[0x1d];    /* 0x1d46 */
+    u8 armor_page_order[0x25];     /* 0x1d63 */
+    u8 accessory_page_order[0x21]; /* 0x1d88 */
+    u8 item_page_order[0x15];      /* 0x1da9 */
+    u8 _unused_1dbe[0x42];         /* 0x1dbe; parity-covered tail */
+} card_save_buffer_t;
+typedef char
+    card_save_buffer_options_offset_must_be_0x1c84[((unsigned long)&((card_save_buffer_t*)0)->options == 0x1c84) ? 1
+                                                                                                                 : -1];
+typedef char card_save_buffer_size_must_be_0x1e00[(sizeof(card_save_buffer_t) == 0x1e00) ? 1 : -1];
+
 extern s32 g_main_card_bios_events[MAIN_CARD_EVENT_COUNT];
 extern u8 g_main_card_bios_events_opened;
 extern u8 g_main_card_save_last_used_slot;
@@ -1294,8 +1355,7 @@ typedef struct main_zodiac_draw_offset {
 /* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
 typedef struct zodiac_draw_context {
     u32* ot;             /* 0x00: ordering table entry the primitives link into */
-    u8 brightness;       /* 0x04: r0/g0/b0 of every sprite */
-    u8 _padding_05[3];   /* aligns link_primitives */
+    s32 brightness;      /* 0x04: low byte is r0/g0/b0 of every sprite; WORLD stores g_world_menu_color_red */
     s32 link_primitives; /* 0x08: nonzero: link each sprite into the OT */
     s16 scale_x;         /* 0x0c: 12.12 */
     s16 scale_y;         /* 0x0e: 12.12 */

@@ -265,7 +265,7 @@ written that way.
   `src/world/world_menu_open_entry_window.c` needs it signed.
 - The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`)
   is redeclared per overlay: `status_panel_gauges_t` (ATTACK, REQUIRE), the head
-  of `equip_unit_data_t`, `world_unit_status_billboard_t`, and HELPMENU's raw
+  of `equip_unit_data_t`, `battle_unit_status_record_t`, and HELPMENU's raw
   `g_helpmenu_active_banner`.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer

@@ -56,25 +56,29 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         break;
     case MAP_DATA_COMMAND_SPLIT_MESH_PARTS:
         for (i = 1; i < 9; i++) {
-            g_battle_map_mesh_parts[i].counts[0] = (g_battle_map_primary_textured_triangle_count - 1) / 8 + 1;
-            g_battle_map_mesh_parts[i].counts[1] = (g_battle_map_primary_textured_quad_count - 1) / 8 + 1;
-            g_battle_map_mesh_parts[i].counts[2] = (g_battle_map_primary_untextured_triangle_count - 1) / 8 + 1;
-            g_battle_map_mesh_parts[i].counts[3] = (g_battle_map_primary_untextured_quad_count - 1) / 8 + 1;
-            g_battle_map_mesh_parts[i].starts[0]
+            g_battle_map_mesh_parts[i].textured_triangle_count
+                = (g_battle_map_primary_textured_triangle_count - 1) / 8 + 1;
+            g_battle_map_mesh_parts[i].textured_quad_count = (g_battle_map_primary_textured_quad_count - 1) / 8 + 1;
+            g_battle_map_mesh_parts[i].untextured_triangle_count
+                = (g_battle_map_primary_untextured_triangle_count - 1) / 8 + 1;
+            g_battle_map_mesh_parts[i].untextured_quad_count = (g_battle_map_primary_untextured_quad_count - 1) / 8 + 1;
+            g_battle_map_mesh_parts[i].textured_triangle_start
                 = ((g_battle_map_primary_textured_triangle_count - 1) / 8 + 1) * (i - 1);
-            g_battle_map_mesh_parts[i].starts[1] = ((g_battle_map_primary_textured_quad_count - 1) / 8 + 1) * (i - 1);
-            g_battle_map_mesh_parts[i].starts[2]
+            g_battle_map_mesh_parts[i].textured_quad_start
+                = ((g_battle_map_primary_textured_quad_count - 1) / 8 + 1) * (i - 1);
+            g_battle_map_mesh_parts[i].untextured_triangle_start
                 = ((g_battle_map_primary_untextured_triangle_count - 1) / 8 + 1) * (i - 1);
-            g_battle_map_mesh_parts[i].starts[3] = ((g_battle_map_primary_untextured_quad_count - 1) / 8 + 1) * (i - 1);
+            g_battle_map_mesh_parts[i].untextured_quad_start
+                = ((g_battle_map_primary_untextured_quad_count - 1) / 8 + 1) * (i - 1);
         }
-        g_battle_map_mesh_parts[0].counts[0] = 0;
-        g_battle_map_mesh_parts[0].counts[1] = 0;
-        g_battle_map_mesh_parts[0].counts[2] = 0;
-        g_battle_map_mesh_parts[0].counts[3] = 0;
-        g_battle_map_mesh_parts[0].starts[0] = 0;
-        g_battle_map_mesh_parts[0].starts[1] = 0;
-        g_battle_map_mesh_parts[0].starts[2] = 0;
-        g_battle_map_mesh_parts[0].starts[3] = 0;
+        g_battle_map_mesh_parts[0].textured_triangle_count = 0;
+        g_battle_map_mesh_parts[0].textured_quad_count = 0;
+        g_battle_map_mesh_parts[0].untextured_triangle_count = 0;
+        g_battle_map_mesh_parts[0].untextured_quad_count = 0;
+        g_battle_map_mesh_parts[0].textured_triangle_start = 0;
+        g_battle_map_mesh_parts[0].textured_quad_start = 0;
+        g_battle_map_mesh_parts[0].untextured_triangle_start = 0;
+        g_battle_map_mesh_parts[0].untextured_quad_start = 0;
         break;
     case MAP_DATA_COMMAND_DISABLE_OVERLAY_DITHER:
         SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 0, 0, 0);

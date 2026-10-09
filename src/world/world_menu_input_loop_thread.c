@@ -11,7 +11,7 @@ void world_menu_input_loop_thread(void) {
             break;
         }
         world_menu_handle_entry_confirm(parameter, 0);
-        world_menu_cancel_thread_group((world_menu_cancel_context_t*)parameter);
+        world_menu_cancel_thread_group(parameter);
     }
     world_thread_yield();
     g_world_menu_sound_muted = 0;

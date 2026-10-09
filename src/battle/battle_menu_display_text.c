@@ -18,14 +18,14 @@
  * Reading each control operand through the byte local and the u8
  * variable_base keep the outer loop large enough that loop.c does not hoist
  * the 0xFFFF pending-width constant, as in the target. */
-void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin, u8* text) {
+void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin, u8* text) {
     world_text_backreference_state_t* state;
     u8* cursor;
     u8 operand;
     s32 width;
     u32* divisor;
     u32* powers;
-    battle_text_pen_t* pen;
+    world_glyph_blit_t* pen;
     s32 digit;
     s32 started;
     s32 count;
@@ -47,13 +47,13 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
     TEXT_STATE->column = 0;
     TEXT_STATE->max_column = 0;
     TEXT_STATE->row = 0;
-    g_battle_menu_text_pen.x = origin->x;
+    g_battle_menu_text_pen.rect.x = origin->rect.x;
     pen = &g_battle_menu_text_pen;
     count = 0;
     g_battle_text_substitution_value_27 = 0;
-    g_battle_menu_text_pen.y = origin->y;
+    g_battle_menu_text_pen.rect.y = origin->rect.y;
     g_battle_text_substitution_value_28 = 0x10;
-    g_battle_menu_text_pen.right_limit = origin->right_limit;
+    g_battle_menu_text_pen.stride = origin->stride;
 
     while (1) {
         state->command = *cursor;
@@ -88,12 +88,12 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
                     g_menu_text_palette_offset = operand;
                 } else if (state->command == TEXT_CHOICE_MARK) {
                 } else if (state->command == TEXT_SPACE) {
-                    pen->x += 4;
+                    pen->rect.x += 4;
                 } else if (state->command == TEXT_NEWLINE) {
-                    pen->x = origin->x;
+                    pen->rect.x = origin->rect.x;
                     if (count >= g_menu_text_param_22) {
                         g_battle_text_substitution_value_27 = 0;
-                        pen->y += 16;
+                        pen->rect.y += 16;
                     }
                     count++;
                 } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
@@ -130,13 +130,13 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
                                 }
                                 if (count >= g_menu_text_param_22) {
                                     battle_text_render_glyph_to_4bpp_image(
-                                        g_text_glyph_bitmap_data + state->command * 35, image,
-                                        &g_battle_menu_text_pen.x, g_menu_text_palette_offset);
+                                        g_text_glyph_bitmap_data + state->command * 35, image, &g_battle_menu_text_pen,
+                                        g_menu_text_palette_offset);
                                 }
                             }
                             divisor--;
                             digit--;
-                            pen->x += 6;
+                            pen->rect.x += 6;
                         } while (digit >= 0);
                     }
                 }
@@ -179,10 +179,10 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
         }
         if (count >= g_menu_text_param_22) {
             battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + state->command * 35, image,
-                &g_battle_menu_text_pen.x, g_menu_text_palette_offset);
+                &g_battle_menu_text_pen, g_menu_text_palette_offset);
         }
-        pen->x += g_text_glyph_widths[state->command];
-        if ((s16)pen->x >= pen->right_limit - 8) {
+        pen->rect.x += g_text_glyph_widths[state->command];
+        if (pen->rect.x >= pen->stride - 8) {
             break;
         }
     }

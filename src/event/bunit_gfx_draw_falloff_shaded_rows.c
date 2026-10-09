@@ -1,20 +1,10 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* One stack frame block: the quad rectangle at sp+0x10, its twelve vertex
- * colour bytes at sp+0x28 and the brightness grid at sp+0x38 (five samples
- * per 32-pixel row). */
-typedef struct {
-    bunit_gouraud_rect_t rect; /* 0x00 */
-    u8 _unused_10[8];          /* 0x10 */
-    u8 colors[16];             /* 0x18 */
-    u8 brightness[16][5];      /* 0x28 */
-} bunit_gfx_shaded_background_work_t;
-
 /* Draw rows of gouraud-textured quads whose vertex brightness falls off with
  * distance from the animated focal point. */
 void bunit_gfx_draw_falloff_shaded_rows(s32 y) {
-    bunit_gfx_shaded_background_work_t work;
+    world_formation_background_draw_state_t work;
     s32 row;
     s32 col;
     s32 brightness;
@@ -34,23 +24,23 @@ void bunit_gfx_draw_falloff_shaded_rows(s32 y) {
             if (brightness > 0xDC) {
                 brightness = 0xDC;
             }
-            work.brightness[i][col] = brightness;
+            work.shades[i][col] = brightness;
         }
     }
 
     work.rect.clut = g_bunit_gfx_background_clut;
     work.rect.tpage = g_bunit_menu_icon_texture_page;
-    for (; (s16)work.rect.y < 0xF0; work.rect.y += 0x20, row++) {
-        if ((s16)work.rect.y >= -0x20) {
+    for (; work.rect.y < 0xF0; work.rect.y += 0x20, row++) {
+        if (work.rect.y >= -0x20) {
             for (col = 0; col < 4; col++) {
                 work.rect.x = g_bunit_gfx_background_tile_layout[row % 2][col * 2];
                 u = g_bunit_gfx_background_tile_layout[row % 2][col * 2 + 1];
                 work.rect.u = u;
-                work.colors[0] = work.colors[1] = work.colors[2] = work.brightness[row][col];
-                work.colors[3] = work.colors[4] = work.colors[5] = work.brightness[row][col + 1];
-                work.colors[6] = work.colors[7] = work.colors[8] = work.brightness[row + 1][col];
-                work.colors[9] = work.colors[10] = work.colors[11] = work.brightness[row + 1][col + 1];
-                bunit_gfx_enqueue_gouraud_textured_quad(&work.rect, work.colors, 0, u == 0x58);
+                work.rgb[0] = work.rgb[1] = work.rgb[2] = work.shades[row][col];
+                work.rgb[3] = work.rgb[4] = work.rgb[5] = work.shades[row][col + 1];
+                work.rgb[6] = work.rgb[7] = work.rgb[8] = work.shades[row + 1][col];
+                work.rgb[9] = work.rgb[10] = work.rgb[11] = work.shades[row + 1][col + 1];
+                bunit_gfx_enqueue_gouraud_textured_quad(&work.rect, work.rgb, 0, u == 0x58);
             }
         }
     }

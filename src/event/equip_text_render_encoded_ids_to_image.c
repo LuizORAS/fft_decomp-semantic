@@ -9,7 +9,7 @@
 void equip_text_render_encoded_ids_to_image(void* image, const battle_menu_text_image_bounds_t* bounds,
     s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,
     s32 unused_style) {
-    equip_text_image_position_t position;
+    bunit_text_image_position_t position;
     s32 row;
     s32 remaining_entries = max_entries;
     s32 packed_fill_glyph_id;

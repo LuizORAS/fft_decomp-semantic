@@ -33,10 +33,10 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
     u8* previous;
     s32 row;
     s32 offset;
-    world_text_glyph_request_t* request;
+    battle_text_glyph_state_t* request;
 
     request = &g_world_text_typewriter_glyph;
-    if (g_world_text_typewriter_glyph.bits_per_pixel == 0x10 || g_world_text_typewriter_glyph.bits_per_pixel == 0) {
+    if (g_world_text_typewriter_glyph.mode == 0x10 || g_world_text_typewriter_glyph.mode == 0) {
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
@@ -120,7 +120,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         for (row = 0; row < 14; row++) {
             offset = row * pitch;
             for (i = phase >> 1; i < (s32)pitch / 2; i++) {
-                if (request->bits_per_pixel == 0) {
+                if (request->mode == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {
                     (image + i)[offset / 2] = ((u8*)g_world_menu_glyph_sheet
@@ -136,7 +136,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             world_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
                 world_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
             world_text_blit_font_glyph_to_4bpp(request->glyph * 0x23 + g_world_text_glyph_bitmap_data, image,
-                (u16*)&g_world_text_typewriter_state.origin_x, request->palette);
+                (world_glyph_blit_t*)&g_world_text_typewriter_state.origin_x, request->palette);
             g_world_text_typewriter_vram_rect.x
                 = (pen_x >> 2) + (s16)(world_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_world_text_typewriter_vram_rect.y = pen_y;
@@ -179,7 +179,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             }
         }
 
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->bits_per_pixel != 0) {
+        if (world_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
             g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_GLYPH;
         }
     }

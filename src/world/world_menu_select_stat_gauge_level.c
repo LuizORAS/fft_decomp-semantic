@@ -3,7 +3,7 @@
 
 void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value) {
     s32 level;
-    world_oriented_sprite_t* sprite;
+    world_oriented_quad_t* sprite;
 
     if (value < 0x50) {
         level = 0;
@@ -38,5 +38,5 @@ void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value)
     sprite->x = x + 7;
     g_world_job_wheel_mastered_icon_sprite.y = y - 0xC;
     g_world_job_wheel_mastered_icon_sprite.u = level * 10 + 0x24;
-    world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)sprite, 0, 0, 0, otag_index);
+    world_gfx_enqueue_oriented_textured_quad(sprite, 0, 0, 0, otag_index);
 }

@@ -58,7 +58,7 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
     s32 n;
 
     record = &g_effect_state_records[record_index];
-    entry = (effect_summon_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].summon_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 

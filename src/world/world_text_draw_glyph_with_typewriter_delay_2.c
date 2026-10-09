@@ -2,14 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-typedef struct world_text_glyph_blit_desc {
-    s16 x; /* 0x00 */
-    s16 y; /* 0x02 */
-    u8 _unused_04[4];
-    s32 width; /* 0x08 */
-} world_text_glyph_blit_desc_t;
-
-extern world_text_glyph_blit_desc_t g_world_text_message_box_state;
+extern world_glyph_blit_t g_world_text_message_box_state;
 
 /* Draw the pending glyph into VRAM and hold it for the typewriter delay.
  *
@@ -60,11 +53,11 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
     }
 
     ring = (u8)g_world_text_message_box_slot_glyph_counters[slot];
-    phase = g_world_text_message_box_glyph.pixel_x & 3;
+    phase = g_world_text_message_box_glyph.x & 3;
     dst = g_world_text_message_box_glyph_images[slot][ring];
     src = g_world_text_message_box_previous_images[slot];
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 4
-        || g_world_text_message_box_glyph.code == TEXT_SPACE) {
+    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+        || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             width = 8;
             g_world_text_message_box_vram_rect.w = 2;
@@ -72,10 +65,10 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
             width = 4;
             g_world_text_message_box_vram_rect.w = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 2) {
+    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         width = 4;
         g_world_text_message_box_vram_rect.w = 1;
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 6) {
+    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         width = 8;
         g_world_text_message_box_vram_rect.w = 2;
     } else {
@@ -94,20 +87,20 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
         }
     }
 
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 4
-        || g_world_text_message_box_glyph.code == TEXT_SPACE) {
+    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+        || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 2;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 2) {
+    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 0;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.code] == 6) {
+    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 3;
         } else {
@@ -129,17 +122,17 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
                 (dst + i)[offset / 2] = 0;
             } else {
                 (dst + i)[offset / 2] = ((u8*)g_world_menu_glyph_sheet
-                    + ((((g_world_text_message_box_glyph.pixel_x + (i << 1)) & 0xF) + 8) / 2))[(j << 7) + 0x400];
+                    + ((((g_world_text_message_box_glyph.x + (i << 1)) & 0xF) + 8) / 2))[(j << 7) + 0x400];
             }
         }
     }
 
-    if (g_world_text_message_box_glyph.code != TEXT_SPACE) {
-        g_world_text_message_box_state.x = phase;
-        g_world_text_message_box_state.y = 0;
-        g_world_text_message_box_state.width = width;
-        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + g_world_text_message_box_glyph.code * 35,
-            dst, (u16*)&g_world_text_message_box_state, g_world_text_message_box_glyph.color);
+    if (g_world_text_message_box_glyph.glyph != TEXT_SPACE) {
+        g_world_text_message_box_state.rect.x = phase;
+        g_world_text_message_box_state.rect.y = 0;
+        g_world_text_message_box_state.stride = width;
+        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + g_world_text_message_box_glyph.glyph * 35,
+            dst, &g_world_text_message_box_state, g_world_text_message_box_glyph.palette);
         g_world_text_message_box_vram_rect.x = (x >> 2) + 0x1c0;
         g_world_text_message_box_vram_rect.y = y;
         g_world_text_message_box_vram_rect.h = 14;

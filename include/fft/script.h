@@ -261,6 +261,15 @@ typedef struct event_walk_to_parameters {
 } event_walk_to_parameters_t;
 typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parameters_t) == 8 ? 1 : -1];
 
+/* Operand view of the event jump instruction that
+ * *_script_jump_event_instruction reads: a unit id halfword, then the two
+ * byte operands. */
+typedef struct battle_script_jump_instruction {
+    u8 _unused_00[2];
+    u8 param0;
+    u8 param1;
+} battle_script_jump_instruction_t;
+
 /* Provisional event work block at *g_battle_ai_workspace_ptr; only the staged-status
  * snapshot at 0x5f0 is known. */
 typedef struct world_event_work {

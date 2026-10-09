@@ -29,7 +29,7 @@ void world_run_option_choice_menu(void) {
     native_thread_t* thread;
     s32 kind;
     s32 height;
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     s32 width;
     void* buffer;
     s32 i;
@@ -63,14 +63,14 @@ void world_run_option_choice_menu(void) {
     if (height <= 0) {
         cursor = 0;
     }
-    param->icon_x = 0x74 - width;
-    param->flags = 0x28 - (height >> 1);
-    param->width = param->window_width = param->text_image.width = width;
-    param->height = param->window_height = param->text_image.height = height;
-    param->x = 0x600;
-    param->y = 0x700 - height;
+    param->window_x = 0x74 - width;
+    param->window_y = 0x28 - (height >> 1);
+    param->inner_width = param->window_width = param->text_image.width = width;
+    param->inner_height = param->window_height = param->text_image.height = height;
+    param->vram_x = 0x600;
+    param->vram_y = 0x700 - height;
     if (kind == 3) {
-        param->x = 0x1AE;
+        param->vram_x = 0x1AE;
     }
     param->text_image.width -= 4;
     world_menu_build_icon_record(&rect, param, &g_world_option_picker_icon_records[0]);

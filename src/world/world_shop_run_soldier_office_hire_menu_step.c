@@ -11,8 +11,8 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
 
     if (g_world_shop_hire_menu_initialized == 0) {
         i = 0;
-        g_world_formation_dismiss_final_confirm_menu.cursor = 0;
-        g_world_shop_rename_confirm_menu.cursor = 0;
+        g_world_formation_dismiss_final_confirm_menu.selected_index = 0;
+        g_world_shop_rename_confirm_menu.selected_index = 0;
         g_world_shop_hire_result_shown = 0;
         g_world_shop_hire_menu_initialized = 1;
         g_world_status_display_thread_params.y = 0;

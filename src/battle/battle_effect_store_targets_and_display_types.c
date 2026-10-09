@@ -1,24 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Array view of battle_effect_secondary_init_t's sixteen ten-byte target
- * blocks at 0x04..0xa3. Indexing a real array member keeps the target's
- * `addu rD,record,offset` operand order; pointer arithmetic on the header's
- * single `target` block commutes it. */
-typedef struct battle_effect_secondary_init_targets {
-    u16 target_count;
-    u8 palette_target_count;
-    u8 math_skill_flag;
-    union {
-        struct {
-            s16 target_type;
-            u8 target_id;
-            u8 result_animation;
-        } fields;
-        battle_effect_secondary_block_t block;
-    } target[16];
-} battle_effect_secondary_init_targets_t;
-
 /* Build the secondary-effect init record for an ability and hand it to the
  * effect selector.
  *
@@ -53,32 +35,32 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
-            ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.target_type = 0;
-            ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.target_id = target->unit_id;
+            init.target[i].fields.target_type = 0;
+            init.target[i].fields.target_id = target->unit_id;
             {
                 battle_stats_t* target_stats;
 
                 target_stats = target->battle_data;
 
                 if (target_stats == 0) {
-                    ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.result_animation = 0;
+                    init.target[i].fields.result_animation = 0;
                 } else if (target_stats->action.critical != 0) {
-                    ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.result_animation = 1;
+                    init.target[i].fields.result_animation = 1;
                 } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                    ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.result_animation = 2;
+                    init.target[i].fields.result_animation = 2;
                 } else if (target_stats->action.miss_type != 0) {
-                    ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.result_animation = 3;
+                    init.target[i].fields.result_animation = 3;
                 } else {
-                    ((battle_effect_secondary_init_targets_t*)&init)->target[i].fields.result_animation = 0;
+                    init.target[i].fields.result_animation = 0;
                 }
             }
         }
     } else if (unit->animate_on_miss_flag == 0) {
         init.target_count = 1;
-        init.target.block.values[0] = 1;
-        init.target.block.values[1] = unit->target_new_x;
-        init.target.block.values[3] = unit->target_new_y;
-        init.target.block.values[2] = unit->target_new_map_level;
+        init.target[0].block.values[0] = 1;
+        init.target[0].block.values[1] = unit->target_new_x;
+        init.target[0].block.values[3] = unit->target_new_y;
+        init.target[0].block.values[2] = unit->target_new_map_level;
     }
     spectators = 0;
     for (i = 0; i < 0x10; i++) {

@@ -28,7 +28,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
     battle_text_glyph_state_t* request;
 
     request = &g_battle_text_typewriter_glyph;
-    if (g_battle_text_typewriter_glyph.dialogue_type_c == 0x10 || g_battle_text_typewriter_glyph.dialogue_type_c == 0) {
+    if (g_battle_text_typewriter_glyph.mode == 0x10 || g_battle_text_typewriter_glyph.mode == 0) {
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
@@ -56,10 +56,10 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         }
 
         ring = (u8)g_battle_menu_slot_states[slot];
-        phase = request->flags_0 & 3;
+        phase = request->x & 3;
         image = g_battle_text_typewriter_glyph_images[slot][ring];
         previous = g_battle_text_typewriter_previous_images[slot];
-        glyph = request->character_4;
+        glyph = request->glyph;
         kind = g_text_glyph_widths[glyph];
         if (kind == 4 || glyph == TEXT_SPACE) {
             if (phase == 2) {
@@ -92,7 +92,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
         }
 
-        next_glyph = request->character_4;
+        next_glyph = request->glyph;
         next_kind = g_text_glyph_widths[next_glyph];
         if (next_kind == 4 || next_glyph == 0xFA) {
             g_battle_text_slot_source_columns[slot] = phase == 2 ? 2 : 1;
@@ -112,23 +112,23 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         for (row = 0; row < 14; row++) {
             offset = row * pitch;
             for (i = phase >> 1; i < (s32)pitch / 2; i++) {
-                if (request->dialogue_type_c == 0) {
+                if (request->mode == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {
-                    (image + i)[offset / 2] = (g_battle_menu_glyph_image
-                        + ((((request->flags_0 + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
+                    (image + i)[offset / 2]
+                        = (g_battle_menu_glyph_image + ((((request->x + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
                 }
             }
         }
 
-        if (request->character_4 != 0xFA) {
+        if (request->glyph != 0xFA) {
             g_battle_text_typewriter_state.origin_x = phase;
             g_battle_text_typewriter_state.origin_y = 0;
             g_battle_text_typewriter_state.stride = pitch;
             battle_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
                 battle_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
-            battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + request->character_4 * 0x23, (s32)image,
-                (u16*)&g_battle_text_typewriter_state.origin_x, request->palette_e);
+            battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + request->glyph * 0x23, (s32)image,
+                (world_glyph_blit_t*)&g_battle_text_typewriter_state.origin_x, request->palette);
             g_battle_text_typewriter_vram_rect.x
                 = (pen_x >> 2) + (s16)(battle_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_battle_text_typewriter_vram_rect.y = pen_y;
@@ -171,7 +171,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
         }
 
-        if (battle_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->dialogue_type_c != 0) {
+        if (battle_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
             g_battle_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
         }
     }

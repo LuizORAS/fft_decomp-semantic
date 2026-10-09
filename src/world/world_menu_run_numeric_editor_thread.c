@@ -10,11 +10,11 @@
  * directly from g_world_frame_arg (lhu) where the overlays compute
  * g_main_gfx_screen_polarity * 0xf0. */
 void world_menu_run_numeric_editor_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
-    world_menu_number_entry_t* entries;
+    menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
@@ -25,7 +25,7 @@ void world_menu_run_numeric_editor_thread(void) {
     s32 use_offset;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (battle_menu_status_panel_frame_config_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0) + 1;
     if (g_world_thread_current_id == 12) {
         buffer = g_world_editor_numeric_state_a;
@@ -106,8 +106,8 @@ void world_menu_run_numeric_editor_thread(void) {
         g_world_gfx_draw_area_y = -use_offset & 0xF0;
         world_gfx_build_scaled_draw_area_packets(
             &buffer->portrait, &g_world_editor_numeric_table[1], frame, field_y, thread);
-        buffer->draw_offsets[0].x = thread->origin_x - 0x80;
-        buffer->draw_offsets[0].y = thread->origin_y + g_world_gfx_draw_area_y;
+        buffer->draw_offsets[0].x = thread->x - 0x80;
+        buffer->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_world_gfx_draw_area_y;
@@ -129,7 +129,7 @@ void world_menu_run_numeric_editor_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        world_menu_select_primitive_color_palette(&buffer->numeric_frame, (world_menu_color_input_t*)thread);
+        world_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }

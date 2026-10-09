@@ -8,7 +8,7 @@
  * offset, followed by a black backdrop quad; the backdrop is always linked
  * into the ordering table and the quads only when the view asks for it.
  */
-void world_gfx_build_zodiac_primitives(world_formation_view_t* view, POLY_FT4* poly) {
+void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly) {
     world_formation_screen_point_t position;
     s32 i;
     s32 x;
@@ -17,9 +17,9 @@ void world_gfx_build_zodiac_primitives(world_formation_view_t* view, POLY_FT4* p
     for (i = 0; i < g_world_formation_view_graphic_count; i++) {
         SetPolyFT4(poly);
         poly->clut = GetClut(0, 0x1FD);
-        poly->r0 = view->color;
-        poly->g0 = view->color;
-        poly->b0 = view->color;
+        poly->r0 = view->brightness;
+        poly->g0 = view->brightness;
+        poly->b0 = view->brightness;
         SetSemiTrans(poly, 1);
         SetShadeTex(poly, 0);
         x = g_world_formation_view_graphic_offsets[i].x;
@@ -38,9 +38,9 @@ void world_gfx_build_zodiac_primitives(world_formation_view_t* view, POLY_FT4* p
         position.y = y;
         world_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_world_formation_view_texture_page,
             (world_formation_screen_point_t*)&g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i],
-            &position, (world_formation_sprite_origin_t*)view->origin);
-        if (view->link_quads != 0) {
-            addPrim(view->ordering_table, poly);
+            &position, &view->offset);
+        if (view->link_primitives != 0) {
+            addPrim(view->ot, poly);
             poly++;
         }
     }
@@ -59,5 +59,5 @@ void world_gfx_build_zodiac_primitives(world_formation_view_t* view, POLY_FT4* p
     poly->y2 = 0xFF;
     poly->x3 = 0xFF;
     poly->y3 = 0xFF;
-    addPrim(view->ordering_table, poly);
+    addPrim(view->ot, poly);
 }

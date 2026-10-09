@@ -4,7 +4,7 @@
 
 /* Initialize the center tile and two nine-tile scanline strips. */
 void battle_menu_init_panel_fade_tiles(void) {
-    battle_scanline_frame_t* frame;
+    world_fade_tile_frame_t* frame;
     s32 i;
     /* GetTPage's argument registers, tied by the barrier below. */
     register s32 mode __asm__("$4") = 0;
@@ -12,7 +12,7 @@ void battle_menu_init_panel_fade_tiles(void) {
     register s32 x __asm__("$6") = 0x3c0;
     register s32 y __asm__("$7") = 0x100;
 
-    frame = (battle_scanline_frame_t*)&g_battle_menu_panel_fade_frames[0];
+    frame = &g_battle_menu_panel_fade_frames[0];
 
     /* Materializes the frame base before the register saves and the GetTPage
      * call; without it GCC sets up the base after the call. */
@@ -52,5 +52,5 @@ void battle_menu_init_panel_fade_tiles(void) {
     }
 
     battle_copy_bytes(
-        &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(battle_scanline_frame_t));
+        &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(world_fade_tile_frame_t));
 }

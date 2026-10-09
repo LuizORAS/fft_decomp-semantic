@@ -3,23 +3,23 @@
 #include "psx/types.h"
 
 void bunit_menu_text_entry_wait_thread(void) {
-    world_menu_text_entry_wait_param_t* obj;
-    world_menu_text_entry_wait_task_t* task;
+    world_menu_entry_t* obj;
+    world_menu_text_binding_t* task;
     u32* ctl;
     u16 id;
     u16 arg;
     u16 header_id;
     u16 text_id;
 
-    obj = (world_menu_text_entry_wait_param_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    obj->task->setup();
+    obj = (world_menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    obj->text_binding->prepare();
     ctl = battle_script_get_controller_input_pointer(0);
     text_id = obj->text_id;
-    task = obj->task;
+    task = obj->text_binding;
     header_id = obj->header_id;
     g_bunit_input_controller = ctl;
     id = task->text_thread_id;
-    arg = task->text_parameter;
+    arg = task->speaker_id;
     *ctl = PSX_PAD_CIRCLE;
     battle_menu_handle_action(obj, 0);
     battle_thread_start(id, battle_text_character_handling_thread);

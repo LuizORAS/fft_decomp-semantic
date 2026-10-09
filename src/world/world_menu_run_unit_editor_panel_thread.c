@@ -13,10 +13,7 @@
 void world_menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records at 0x80195ed0. */
-    union {
-        world_menu_palette_primitives_t primitives;
-        u8 storage[0x100];
-    } palette;
+    world_menu_palette_slot_t palette;
     world_unit_editor_frame_t* records;
     world_unit_editor_frame_t* frame_record;
     LINE_F2* line;
@@ -219,7 +216,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
             if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_running_80100164(3) == 0
                 && (world_unit_has_any_current_status(g_world_unit_view_battle_id) != 0
                     || (g_world_unit_editor_panel_data.flag == 0
-                        && g_world_unit_selected_status_billboard.status_icon != 1))) {
+                        && g_world_unit_selected_status_billboard.team_kind != 1))) {
                 world_thread_start(g_world_thread_current_id - 1, world_menu_build_unit_status_list);
                 world_thread_set_parameters(
                     g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[8], 0, 0);

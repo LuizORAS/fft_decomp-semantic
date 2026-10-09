@@ -19,7 +19,7 @@ void equip_panel_run_equipment_list_thread(void) {
     battle_menu_status_panel_slot_state_t* state;
     RECT* upload;
     RECT* area;
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_buffer_t* screen;
     s32 frame;
     s32 mode;
@@ -28,8 +28,7 @@ void equip_panel_run_equipment_list_thread(void) {
     s32 i;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     if (g_battle_current_thread_id == 10) {
         text = g_equip_panel_text_image_a;
@@ -124,9 +123,9 @@ void equip_panel_run_equipment_list_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        screen->draw_offsets[0].x = thread->origin_x - 0x80;
+        screen->draw_offsets[0].x = thread->x - 0x80;
         g_equip_gfx_draw_offset_y = g_main_gfx_screen_polarity * 0xf0 != 0xf0 ? 0xf0 : 0;
-        screen->draw_offsets[0].y = thread->origin_y + g_equip_gfx_draw_offset_y;
+        screen->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_equip_gfx_draw_offset_y;

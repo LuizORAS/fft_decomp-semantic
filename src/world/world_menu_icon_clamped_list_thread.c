@@ -9,7 +9,7 @@
 void world_menu_icon_clamped_list_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 cursor;
@@ -18,15 +18,15 @@ void world_menu_icon_clamped_list_thread(void) {
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     param = world_thread_get_current_parameter_1();
-    cursor = param->cursor;
+    cursor = param->selected_index;
     record = &records[0];
     if (cursor == -1) {
         cursor = 0;
     }
     world_menu_build_icon_record(&rect, param, record);
     world_script_copy_bytes(&records[1], record, 0x7C);
-    buffer = world_menu_build_and_upload_window_frame_image(param->width, param->height, &rect, 1);
-    g_world_menu_text_state.stride = param->width;
+    buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+    g_world_menu_text_state.stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     g_world_menu_text_color = 0;
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
@@ -37,7 +37,7 @@ void world_menu_icon_clamped_list_thread(void) {
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
-        param->cursor = cursor;
+        param->selected_index = cursor;
         if (world_menu_check_thread_completion(g_world_menu_list_controller_input) != 0) {
             break;
         }
@@ -45,11 +45,11 @@ void world_menu_icon_clamped_list_thread(void) {
             if ((*g_world_menu_list_controller_input & PSX_PAD_UP) && cursor != 0) {
                 cursor--;
             }
-            if (!(*g_world_menu_list_controller_input & PSX_PAD_DOWN) && cursor != param->max_index) {
+            if (!(*g_world_menu_list_controller_input & PSX_PAD_DOWN) && cursor != param->max_row_index) {
                 cursor++;
             }
-            world_menu_handle_entry_confirm((world_menu_entry_t*)param, cursor);
-            world_menu_cancel_thread_group((world_menu_cancel_context_t*)param);
+            world_menu_handle_entry_confirm(param, cursor);
+            world_menu_cancel_thread_group(param);
         }
         sprites = &record->base;
         world_menu_select_icon_cluts(sprites);

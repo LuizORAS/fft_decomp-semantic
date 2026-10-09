@@ -71,7 +71,7 @@ s32 world_ability_run_learn_list(void) {
             } else {
                 g_world_learn_confirm_prompt_state = world_menu_run_thread(6, g_world_learn_confirm_menu);
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-                g_world_learn_confirm_submenu.cursor = 0;
+                g_world_learn_confirm_submenu.selected_index = 0;
                 g_world_menu_sound_muted = 1;
             }
         } else if (g_world_input_primary_repeat & PSX_PAD_CROSS) {

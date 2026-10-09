@@ -62,7 +62,7 @@ void battle_menu_build_skillset_entries(void) {
     height = count * 16 + 16;
     rows[count - 1].terminator = 0xff;
     g_battle_menu_thread_menu_data[4].max_row_index = count - 1;
-    g_battle_menu_thread_menu_data[4].overall_height = height;
+    g_battle_menu_thread_menu_data[4].text_image.height = height;
     g_battle_menu_thread_menu_data[4].window_height = height;
     g_battle_menu_thread_menu_data[4].inner_height = height;
 }

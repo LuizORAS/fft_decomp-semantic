@@ -2,7 +2,6 @@
 #include "fft/event_attack.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-typedef struct battle_script_jump_instruction battle_script_jump_instruction_t;
 
 /* BATTLE scenario interpreter.
  *

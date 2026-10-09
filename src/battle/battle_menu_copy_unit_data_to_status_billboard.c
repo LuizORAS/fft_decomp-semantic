@@ -29,13 +29,13 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
     if (value == 0)
         output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value + 1;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value2 = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
     value = unit->max_mp;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
     if (value == 0)
         output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value + 1;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value2 = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;

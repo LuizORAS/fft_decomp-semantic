@@ -107,7 +107,7 @@ void debugchr_run_character_debug_session(void) {
         if (EDITOR_UNIT_IDS[i] != 0) {
             g_debugchr_panel_selected_unit_data[5] = i;
             g_debugchr_panel_selected_unit_data[0] = i;
-            g_debugchr_panel_selected_billboard.unit = i;
+            g_debugchr_panel_selected_billboard.unit_index = i;
             debugchr_editor_load_selected_unit();
             g_debugchr_editor_selected_unit_slot = i;
             break;
@@ -178,7 +178,7 @@ loop_outer:
             unit_index = g_debugchr_editor_selected_unit_slot;
             menu_state[0] = unit_index;
             menu_state[-5] = unit_index;
-            g_debugchr_panel_selected_billboard.unit = unit_index;
+            g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
             if (g_debugchr_editor_display_mode != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
@@ -203,7 +203,7 @@ loop_outer:
             unit_index = g_debugchr_editor_selected_unit_slot;
             menu_state[0] = unit_index;
             menu_state[-5] = unit_index;
-            g_debugchr_panel_selected_billboard.unit = unit_index;
+            g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
             if (g_debugchr_editor_display_mode != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);

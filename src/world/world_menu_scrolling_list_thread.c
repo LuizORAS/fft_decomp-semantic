@@ -59,7 +59,7 @@ void world_menu_scrolling_list_thread(void) {
     entry->window_height = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
     row_buffer_live = 0;
-    entry->overall_height = layout->columns.row_count * 16 + 0x1C;
+    entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
     window.rect.x = 0x108 - entry->inner_width;
     window.rect.y = 0xFE;
     window.x_screen_offset = 8;
@@ -81,7 +81,7 @@ void world_menu_scrolling_list_thread(void) {
         page[i].icons.icons[0] = &icons0[i];
         page[i].icons.icons[1] = &icons1[i];
         page[i].icons.icons[2] = &icons2[i];
-        world_menu_build_icon_record(&image_rect, (world_menu_icon_thread_param_t*)entry, &page[i].icons);
+        world_menu_build_icon_record(&image_rect, entry, &page[i].icons);
     }
     SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_world_gfx_texture_window);
     SetDrawMode(
@@ -279,7 +279,7 @@ void world_menu_scrolling_list_thread(void) {
         } else {
             frame->clut = 0x7FFC;
         }
-        world_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)entry, &page->icons.base, i, cursor);
+        world_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         if (layout->columns.hidden_rows != 0 && world_thread_is_previous_running() == 0) {
             if (row_offset != 0) {
                 world_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
@@ -300,7 +300,7 @@ void world_menu_scrolling_list_thread(void) {
         if (g_world_menu_scrolling_list_depth < 2 && delta == 0) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
-        world_menu_cancel_thread_group((world_menu_cancel_context_t*)entry);
+        world_menu_cancel_thread_group(entry);
         if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;

@@ -3,7 +3,7 @@
 
 /* Formation sprite record: destination rectangle followed by the 12-byte
  * source entry filled by world_formation_build_unit_graphic_entry (so the
- * source clut/tpage land at 0x10/0x12, as world_gfx_sprite_desc_t expects). */
+ * source clut/tpage land at 0x10/0x12, as world_oriented_quad_t expects). */
 typedef struct world_formation_unit_sprite {
     s16 x;                                  /* 0x00 */
     s16 y;                                  /* 0x02 */
@@ -53,5 +53,5 @@ void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s
             backdrop_rgb, 0, 1, ot_index + 2);
         rgb = g_world_formation_away_unit_color;
     }
-    world_formation_draw_sprite_with_shadow((world_gfx_sprite_desc_t*)&sprite, (s32)rgb, ot_index);
+    world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, (s32)rgb, ot_index);
 }

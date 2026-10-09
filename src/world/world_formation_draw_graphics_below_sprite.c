@@ -24,7 +24,7 @@ void world_formation_draw_graphics_below_sprite(
     s16 num_y;
     u16 clut;
     u8* rgb;
-    world_gfx_sprite_desc_t* sprite;
+    world_oriented_quad_t* sprite;
 
     if (mode < 0) {
         return;
@@ -210,5 +210,5 @@ void world_formation_draw_graphics_below_sprite(
     }
     sprite->y = y + 40;
     sprite->tpage = GetTPage(0, 0, 0x180, 0);
-    world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)sprite, color, 0, 0, priority);
+    world_gfx_enqueue_oriented_textured_quad(sprite, color, 0, 0, priority);
 }

@@ -2,25 +2,10 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Title-menu controller state (handler 2), pushed into the next controller record. */
-typedef struct open_title_menu_state {
-    /* 0x00 */ s32 records_36[5]; /* logo, then the four menu items */
-    /* 0x14 */ s32 idle_timer;
-    /* 0x18 */ s32 cd_end_position;
-    /* 0x1c */ s32 selected_item;
-    /* 0x20 */ s32 state;
-    /* 0x24 */ s32 cursor_record_36;
-    /* 0x28 */ s32 _unused_28;
-    /* 0x2c */ s32 _unused_2c;
-    /* 0x30 */ s32 _unused_30;
-    /* 0x34 */ s32 exiting;
-    /* 0x38 */ u8 _unused_38[0x64 - 0x38];
-} open_title_menu_state_t;
-
 /* Title-menu view of g_open_controller_stream_start; indexing it as an array of
  * this type (rather than casting the controller-record array) is required for
  * the target's constant-folded field addresses. */
-extern open_title_menu_state_t g_open_title_menu_states[];
+extern open_title_controller_t g_open_title_menu_states[];
 
 /* Build the title menu (logo, four items and cursor) and push its controller.
  *
@@ -36,8 +21,8 @@ void open_title_push_menu_controller(s32 argument) {
     s32 record;
     s32 y;
     s32 controller;
-    open_render_record_36_position_t* positions;
-    open_render_record_36_position_t* position;
+    wldcore_window_xy_t* positions;
+    wldcore_window_xy_t* position;
     open_render_record_36_t* records;
     open_render_record_36_t* entry;
     s32* field;
@@ -59,7 +44,7 @@ void open_title_push_menu_controller(s32 argument) {
     entry = g_open_gfx_render_records_36;
     records = entry;
     field = &records->x;
-    positions = (open_render_record_36_position_t*)field;
+    positions = (wldcore_window_xy_t*)field;
     g_open_title_menu_states[g_open_current_controller_index].records_36[0] = record;
     g_open_gfx_render_records_36[record].anim_id = 0x11;
     g_open_gfx_render_records_36[record].ot_layer = 4;
@@ -90,7 +75,7 @@ void open_title_push_menu_controller(s32 argument) {
     g_open_gfx_render_records_36[record].frame_timer = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
     g_open_gfx_render_records_36[record].flags |= OPEN_RENDER_RECORD_VISIBLE;
-    position = (open_render_record_36_position_t*)&g_open_gfx_render_records_36[record].x;
+    position = (wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x;
     position->x = 0x60;
     position->y = 0x58;
 
@@ -99,12 +84,12 @@ void open_title_push_menu_controller(s32 argument) {
     }
 
     controller = g_open_current_controller_index;
-    g_open_title_menu_states[controller].selected_item = 0;
+    g_open_title_menu_states[controller].cursor = 0;
     g_open_title_menu_states[controller].idle_timer = 0;
     g_open_title_menu_states[controller].cd_end_position = argument;
     g_open_title_menu_states[controller].state = 0;
     g_open_title_menu_states[controller].exiting = 0;
-    record = g_open_title_menu_states[controller].records_36[g_open_title_menu_states[controller].selected_item + 1];
+    record = g_open_title_menu_states[controller].records_36[g_open_title_menu_states[controller].cursor + 1];
     g_open_current_controller_index = controller + 1;
     g_open_gfx_render_records_36[record].palette = 9;
     field = &g_open_controller_handler_indices[controller];

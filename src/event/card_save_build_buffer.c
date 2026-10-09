@@ -44,7 +44,7 @@ void card_save_build_buffer(s32 slot) {
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
     g_card_save_buffer_pointer->format_version = 4;
 
-    card_build_save_file_header(slot, unit->level, (card_save_header_t*)g_card_save_buffer_pointer);
+    card_build_save_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],
@@ -59,7 +59,7 @@ void card_save_build_buffer(s32 slot) {
         sizeof(g_card_save_buffer_pointer->item_location_flags));
     g_card_save_buffer_pointer->_unknown_1c88 = D_80057b1c;
     bcopy(g_main_script_variables, g_card_save_buffer_pointer->script_variables, sizeof(g_main_script_variables));
-    bcopy(&g_main_game_options, g_card_save_buffer_pointer->game_options, 4);
+    bcopy(&g_main_game_options, &g_card_save_buffer_pointer->options, 4);
     bcopy(g_main_item_type_order_tables.order_0, g_card_save_buffer_pointer->item_type_order_0, 0xc);
     bcopy(g_main_item_type_order_tables.order_1, g_card_save_buffer_pointer->item_type_order_1, 8);
     bcopy(g_main_item_type_order_tables.order_2, g_card_save_buffer_pointer->item_type_order_2, 7);

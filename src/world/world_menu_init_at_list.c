@@ -101,7 +101,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->window_x = 0x8C;
         entry->window_y = 0x20;
         entry->window_width = 0xE8;
-        entry->overall_width = 0xE8;
+        entry->text_image.width = 0xE8;
         entry->inner_width = 0xE8;
     } else {
         entry->window_y = 0x20;
@@ -109,7 +109,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->window_x = 0xBE;
         entry->window_y = 0x20;
         entry->window_width = 0x84;
-        entry->overall_width = 0x84;
+        entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
     }
     if (count < 10) {

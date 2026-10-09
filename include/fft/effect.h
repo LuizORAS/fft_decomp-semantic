@@ -132,52 +132,6 @@ typedef struct effect_particle_ribbon_record_view {
 typedef char
     assert_effect_particle_ribbon_record_view_size[sizeof(effect_particle_ribbon_record_view_t) == 0xf8 ? 1 : -1];
 
-/* This renderer's view of one effect_geometry_entry_t. */
-typedef struct effect_particle_ribbon_geometry_view {
-    u8 _unused_00[0x02];
-    u16 placement_flags; /* 0x02 */
-    u8 _unused_04[0x02];
-    u16 flags;                              /* 0x06 */
-    u32 curve_indices[2];                   /* 0x08 */
-    u32 colour_curves;                      /* 0x10 */
-    effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
-    u16 texture_page_flags;                 /* 0x4c */
-    s16 brightness_row;                     /* 0x4e */
-    u8 _unused_50[0x04];
-    s16 ot_depth; /* 0x54 */
-    u8 _unused_56[0x06];
-    s16 radial_speed_min_start; /* 0x5c */
-    s16 radial_speed_max_start; /* 0x5e */
-    s16 radial_speed_min_end;   /* 0x60 */
-    s16 radial_speed_max_end;   /* 0x62 */
-    s16 texture_u;              /* 0x64 */
-    u8 _unused_66[0x02];
-    s16 texture_v; /* 0x68 */
-    u8 _unused_6a[0x02];
-    s16 frame_count; /* 0x6c */
-    s16 frame_delay; /* 0x6e */
-    u8 _unused_70[0x0c];
-    s16 target_spread_start[6]; /* 0x7c: x/y/z at even indices */
-    s16 target_spread_end[6];   /* 0x88 */
-    s16 lifetime_start[2];      /* 0x94 */
-    s16 lifetime_end[2];        /* 0x98 */
-    s16 target_offset_start[3]; /* 0x9c */
-    s16 target_offset_end[3];   /* 0xa2 */
-    s16 texture_width;          /* 0xa8 */
-    s16 texture_height;         /* 0xaa */
-    u8 _unused_ac[0x04];
-    s16 particle_count_start; /* 0xb0 */
-    s16 particle_count_end;   /* 0xb2 */
-    s16 spawn_interval_start; /* 0xb4 */
-    s16 spawn_interval_end;   /* 0xb6 */
-    u8 _unused_b8[0x08];
-    u8 child_emitter_on_death; /* 0xc0 */
-    u8 child_emitter_mid_life; /* 0xc1 */
-    u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
-} effect_particle_ribbon_geometry_view_t;
-typedef char
-    assert_effect_particle_ribbon_geometry_view_size[sizeof(effect_particle_ribbon_geometry_view_t) == 0xc4 ? 1 : -1];
-
 extern u32 g_effect_e070_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_e403_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_e461_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
@@ -299,75 +253,6 @@ typedef struct effect_polar_mesh_work {
 } effect_polar_mesh_work_t;
 typedef char assert_effect_polar_mesh_work_size[sizeof(effect_polar_mesh_work_t) == 0x20fc ? 1 : -1];
 
-/* This renderer's view of one effect_geometry_entry_t. It keeps the particle
- * emitter's slot-to-curve bindings but gives the slots its own meanings; each
- * field notes the emitter slot it occupies, and offsets it never reads stay
- * unknown. Curve nibbles: curve_indices[0] 0 centre, 1 radius, 2 velocity,
- * 3 acceleration, 4 angle, 7 radius step; curve_indices[1] 0 radius step
- * delta, 1 scroll, 3 angle step, 6 angle step delta. */
-typedef struct effect_polar_mesh_geometry_view {
-    u8 _unused_00[0x06];
-    u16 flags;            /* 0x06: bit 6 = per-channel colour curves */
-    u32 curve_indices[2]; /* 0x08 */
-    u32 colour_curves;    /* 0x10: nibbles 0-2 = r/g/b */
-    s16 center_start[3];  /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
-    s16 center_end[3];    /* 0x1a */
-    s16 radius_start;     /* 0x20: spawn spread x */
-    u8 _unused_22[0x04];
-    s16 radius_end; /* 0x26 */
-    u8 _unused_28[0x04];
-    s16 velocity_angle_start; /* 0x2c: velocity base angle x */
-    s16 velocity_speed_start; /* 0x2e: velocity base angle y */
-    u8 _unused_30[0x02];
-    s16 velocity_angle_end; /* 0x32 */
-    s16 velocity_speed_end; /* 0x34 */
-    u8 _unused_36[0x02];
-    s16 acceleration_angle_start; /* 0x38: velocity spread x */
-    s16 acceleration_speed_start; /* 0x3a: velocity spread y */
-    u8 _unused_3c[0x02];
-    s16 acceleration_angle_end; /* 0x3e */
-    s16 acceleration_speed_end; /* 0x40 */
-    u8 _unused_42[0x02];
-    s16 angle_start; /* 0x44: minimum inertia */
-    u8 _unused_46[0x02];
-    s16 angle_end; /* 0x48 */
-    u8 _unused_4a[0x02];
-    u16 texture_page_flags; /* 0x4c: bits 0-1 tpage x, bit 2 clears ABE */
-    s16 brightness_row;     /* 0x4e */
-    u8 _unused_50[0x04];
-    s16 ot_depth; /* 0x54 */
-    u8 _unused_56[0x06];
-    s16 radius_step_start; /* 0x5c: minimum radial speed */
-    u8 _unused_5e[0x02];
-    s16 radius_step_end; /* 0x60 */
-    u8 _unused_62[0x02];
-    s16 radius_step_delta_start; /* 0x64: minimum x acceleration */
-    u8 _unused_66[0x0a];
-    s16 radius_step_delta_end; /* 0x70 */
-    u8 _unused_72[0x0a];
-    s16 scroll_u_speed_start; /* 0x7c: minimum x drag */
-    u8 _unused_7e[0x02];
-    s16 scroll_v_speed_start; /* 0x80: minimum y drag */
-    u8 _unused_82[0x06];
-    s16 scroll_u_speed_end; /* 0x88 */
-    u8 _unused_8a[0x02];
-    s16 scroll_v_speed_end; /* 0x8c */
-    u8 _unused_8e[0x0e];
-    s16 angle_step_start; /* 0x9c: target offset x */
-    u8 _unused_9e[0x04];
-    s16 angle_step_end; /* 0xa2 */
-    u8 _unused_a4[0x04];
-    s16 texture_width;  /* 0xa8 */
-    s16 texture_height; /* 0xaa */
-    u8 _unused_ac[0x08];
-    s16 angle_step_delta_start; /* 0xb4: spawn interval */
-    s16 angle_step_delta_end;   /* 0xb6 */
-    u16 texture_u;              /* 0xb8: minimum start homing strength */
-    u16 texture_v;              /* 0xba: maximum start homing strength */
-    u8 _unused_bc[0x08];
-} effect_polar_mesh_geometry_view_t;
-typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
-
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
 extern u32 g_effect_anchored_polar_mesh_brightness_table[][6];
@@ -455,66 +340,6 @@ enum {
     RING_MESH_SEGMENTS = 32,  /* quads around one ring */
     RING_MESH_ARC_POINTS = 9, /* lattice points of one 90-degree arc */
 };
-
-/* This renderer's view of one effect_geometry_entry_t. It shares the layout of
- * effect_summon_mesh_geometry_view_t and adds the per-row radius terms at
- * 0x6c/0x78 and 0x84/0x90. */
-typedef struct effect_ring_mesh_geometry_view {
-    u8 _unused_00[0x02];
-    u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
-    u8 _unused_04[0x02];
-    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;      /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    u32 wave_curves;        /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];    /* 0x14 */
-    s16 origin_end[3];      /* 0x1a */
-    s16 u_span;             /* 0x20 */
-    s16 v_span;             /* 0x22 */
-    u16 texture_page_flags; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
-    u8 _unused_26[0x06];
-    s16 u_start;        /* 0x2c */
-    s16 v_start;        /* 0x2e */
-    u16 v_scroll_speed; /* 0x30 */
-    s16 u_end;          /* 0x32 */
-    s16 v_end;          /* 0x34 */
-    u8 _unused_36[0x06];
-    s16 brightness_row; /* 0x3c */
-    u8 _unused_3e[0x1e];
-    s16 spin_speed_start; /* 0x5c */
-    u8 _unused_5e[0x02];
-    s16 spin_speed_end; /* 0x60 */
-    u8 _unused_62[0x02];
-    s16 growth_start; /* 0x64 */
-    u8 _unused_66[0x02];
-    s16 height_start; /* 0x68 */
-    u8 _unused_6a[0x02];
-    s16 row_radius_start; /* 0x6c */
-    u8 _unused_6e[0x02];
-    s16 growth_end; /* 0x70 */
-    u8 _unused_72[0x02];
-    s16 height_end; /* 0x74 */
-    u8 _unused_76[0x02];
-    s16 row_radius_end; /* 0x78 */
-    u8 _unused_7a[0x02];
-    s16 growth_step_start; /* 0x7c */
-    u8 _unused_7e[0x02];
-    s16 height_step_start; /* 0x80 */
-    u8 _unused_82[0x02];
-    s16 row_radius_step_start; /* 0x84 */
-    u8 _unused_86[0x02];
-    s16 growth_step_end; /* 0x88 */
-    u8 _unused_8a[0x02];
-    s16 height_step_end; /* 0x8c */
-    u8 _unused_8e[0x02];
-    s16 row_radius_step_end; /* 0x90 */
-    u8 _unused_92[0x16];
-    s16 radius_start; /* 0xa8 */
-    u8 _unused_aa[0x02];
-    s16 radius_end; /* 0xac */
-    u8 _unused_ae[0x16];
-} effect_ring_mesh_geometry_view_t;
-typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
 
 /* Work block: two POLY_GT4 buffers of two rings of 32 quads. */
 typedef struct effect_ring_mesh_work {
@@ -635,69 +460,6 @@ typedef struct effect_summon_mesh_work {
 } effect_summon_mesh_work_t;
 typedef char assert_effect_summon_mesh_work_size[sizeof(effect_summon_mesh_work_t) == 0x341c ? 1 : -1];
 
-typedef struct effect_summon_mesh_curve_halves {
-    u16 low;  /* 0x00 */
-    u16 high; /* 0x02 */
-} effect_summon_mesh_curve_halves_t;
-
-/* The target reads the radius curve nibble with its own halfword load. */
-typedef union effect_summon_mesh_curve_word {
-    u32 word;
-    effect_summon_mesh_curve_halves_t half;
-} effect_summon_mesh_curve_word_t;
-
-/* This renderer's view of one effect_geometry_entry_t. The shared entry type
- * names several of these offsets for other effect kinds; the curve nibbles
- * select rows of g_effect_palette_table. */
-typedef struct effect_summon_mesh_geometry_view {
-    u8 _unused_00[0x02];
-    u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
-    u8 _unused_04[0x02];
-    u16 flags;                                   /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;                           /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    effect_summon_mesh_curve_word_t wave_curves; /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;                           /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];                         /* 0x14 */
-    s16 origin_end[3];                           /* 0x1a */
-    s16 u_span;                                  /* 0x20 */
-    s16 v_span;                                  /* 0x22 */
-    u16 texture_page_flags;                      /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
-    u8 _unused_26[0x06];
-    s16 u_start;        /* 0x2c */
-    s16 v_start;        /* 0x2e */
-    u16 v_scroll_speed; /* 0x30 */
-    s16 u_end;          /* 0x32 */
-    s16 v_end;          /* 0x34 */
-    u8 _unused_36[0x06];
-    s16 brightness_row; /* 0x3c */
-    u8 _unused_3e[0x1e];
-    s16 spin_speed_start; /* 0x5c */
-    u8 _unused_5e[0x02];
-    s16 spin_speed_end; /* 0x60 */
-    u8 _unused_62[0x02];
-    s16 growth_start; /* 0x64 */
-    u8 _unused_66[0x02];
-    s16 height_start; /* 0x68 */
-    u8 _unused_6a[0x06];
-    s16 growth_end; /* 0x70 */
-    u8 _unused_72[0x02];
-    s16 height_end; /* 0x74 */
-    u8 _unused_76[0x06];
-    s16 growth_step_start; /* 0x7c */
-    u8 _unused_7e[0x02];
-    s16 height_step_start; /* 0x80 */
-    u8 _unused_82[0x06];
-    s16 growth_step_end; /* 0x88 */
-    u8 _unused_8a[0x02];
-    s16 height_step_end; /* 0x8c */
-    u8 _unused_8e[0x1a];
-    s16 radius_start; /* 0xa8 */
-    u8 _unused_aa[0x02];
-    s16 radius_end; /* 0xac */
-    u8 _unused_ae[0x16];
-} effect_summon_mesh_geometry_view_t;
-typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
-
 /* Leading flags word of the effect section at *g_battle_effect_flags_section. */
 typedef struct effect_summon_mesh_effect_header {
     u32 flags; /* 0x00: bit 3 is passed as the add_depth argument */
@@ -797,68 +559,6 @@ typedef struct effect_trail_work {
 } effect_trail_work_t;
 typedef char assert_effect_trail_work_size[sizeof(effect_trail_work_t) == 0x28c ? 1 : -1];
 
-/* These renderers' view of one effect_geometry_entry_t. They spawn segments as
- * the BATTLE particle emitter spawns particles, so the fields they share with
- * it keep its names and curve nibbles: curve_indices[0] nibbles 0 spawn
- * position, 1 spawn spread, 2 velocity base angle, 3 velocity spread and
- * 7 radial speed; curve_indices[1] nibbles 1 tip spread, 2 lifetime, 3 target
- * offset, 5 particle count and 6 spawn interval. The remaining named fields
- * are renderer-specific. */
-typedef struct effect_tentacle_mesh_geometry_view {
-    u8 _unused_00[0x02];
-    u16 placement_flags; /* 0x02: bits 9-11 place the spawn origin, bits 5-7 the tip */
-    u8 _unused_04[0x02];
-    u16 flags;                              /* 0x06: bits 0-1 and 2-3 enable death and mid-life children */
-    u32 curve_indices[2];                   /* 0x08 */
-    u32 colour_curves;                      /* 0x10 */
-    effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
-    u16 texture_page_flags;                 /* 0x4c */
-    s16 brightness_row;                     /* 0x4e */
-    u8 _unused_50[0x04];
-    s16 ot_depth; /* 0x54: added to each quad's depth */
-    u8 _unused_56[0x06];
-    s16 radial_speed_min_start; /* 0x5c */
-    s16 radial_speed_max_start; /* 0x5e */
-    s16 radial_speed_min_end;   /* 0x60 */
-    s16 radial_speed_max_end;   /* 0x62 */
-    s16 texture_u;              /* 0x64 */
-    u8 _unused_66[0x02];
-    s16 texture_v; /* 0x68 */
-    u8 _unused_6a[0x02];
-    s16 frame_count; /* 0x6c */
-    s16 frame_delay; /* 0x6e */
-    u8 _unused_70[0x0c];
-    s16 tip_spread_start_x; /* 0x7c */
-    u8 _unused_7e[0x02];
-    s16 tip_spread_start_y; /* 0x80 */
-    u8 _unused_82[0x02];
-    s16 tip_spread_start_z; /* 0x84 */
-    u8 _unused_86[0x02];
-    s16 tip_spread_end_x; /* 0x88 */
-    u8 _unused_8a[0x02];
-    s16 tip_spread_end_y; /* 0x8c */
-    u8 _unused_8e[0x02];
-    s16 tip_spread_end_z; /* 0x90 */
-    u8 _unused_92[0x02];
-    s16 lifetime_start[2];      /* 0x94: min, max; the segment's length */
-    s16 lifetime_end[2];        /* 0x98 */
-    s16 target_offset_start[3]; /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
-    s16 target_offset_end[3];   /* 0xa2 */
-    s16 texture_width;          /* 0xa8 */
-    s16 texture_height;         /* 0xaa */
-    u8 _unused_ac[0x04];
-    s16 particle_count_start; /* 0xb0: segments spawned per interval */
-    s16 particle_count_end;   /* 0xb2 */
-    s16 spawn_interval_start; /* 0xb4 */
-    s16 spawn_interval_end;   /* 0xb6 */
-    u8 _unused_b8[0x08];
-    u8 child_emitter_on_death; /* 0xc0 */
-    u8 child_emitter_mid_life; /* 0xc1: spawned at the trailing point each frame */
-    u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
-} effect_tentacle_mesh_geometry_view_t;
-typedef char
-    assert_effect_tentacle_mesh_geometry_view_size[sizeof(effect_tentacle_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
-
 extern u32 g_effect_e384_tentacle_mesh_brightness_table[][9];
 extern u32 g_effect_e453_tentacle_mesh_brightness_table[][9];
 extern u32 g_effect_tentacle_mesh_brightness_table[][9];
@@ -912,18 +612,6 @@ extern u32 g_effect_e453_wave_mesh_brightness_table[][9];
 extern u32 g_effect_wave_mesh_brightness_table[][9];
 
 /* other */
-/* The E454 and E464 particle handlers use the renderer-specific meanings of
- * the geometry entry's 0x4c and 0xa8 fields. */
-typedef struct effect_particle_vertex_emitter_view {
-    u8 _unused_00[0x4c];
-    s16 vertex_group; /* 0x4c: selects a vertex in the effect work buffer */
-    u8 _unused_4e[0x5a];
-    s16 start_frame; /* 0xa8 */
-    s16 end_frame;   /* 0xaa */
-    u8 _unused_ac[0x18];
-} effect_particle_vertex_emitter_view_t;
-typedef char
-    assert_effect_particle_vertex_emitter_view_size[sizeof(effect_particle_vertex_emitter_view_t) == 0xc4 ? 1 : -1];
 
 /* Low halfwords of a VECTOR's components, as effect_add_scratchpad_xyz_components
  * reads them (lhu at +0, +4 and +8). */

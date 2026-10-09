@@ -15,7 +15,7 @@ void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** 
         /* Flags bits 0 and 1 select the record layout behind the common prefix. */
         if ((flags & 0x18) == 0) {
             if ((flags & 1) != 0) {
-                open_gfx_draw_render_record_36((open_sprite_actor_t*)record, otag);
+                open_gfx_draw_render_record_36((open_render_record_36_t*)record, otag);
             } else if ((flags & 2) != 0) {
                 open_gfx_draw_window_record((open_render_record_56_t*)record, otag);
             }

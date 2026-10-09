@@ -55,7 +55,7 @@ s32 effect_e465_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
 
     record_index = (s16)record_index;
     record = &g_effect_state_records[record_index];
-    entry = (effect_ring_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].ring_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
     scratch = (effect_ring_mesh_scratch_t*)0x1f800000;

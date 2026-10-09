@@ -1,11 +1,6 @@
 #include "fft/open.h"
 
-typedef struct open_text_image_dimensions {
-    s32 width;
-    s32 height;
-} open_text_image_dimensions_t;
-
-void open_text_measure_menu_image(s32 combined_text_index, open_text_image_dimensions_t* dimensions) {
+void open_text_measure_menu_image(s32 combined_text_index, wldcore_text_dimensions_t* dimensions) {
     s16 columns;
     s16 rows;
     const u8* text;

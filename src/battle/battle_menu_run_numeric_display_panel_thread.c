@@ -6,18 +6,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Provisional 0x1AC-byte double-buffered panel record at 0x80172834; layout
- * of world_panel_record_t (WORLD 0x801a2bd0). */
-typedef struct battle_menu_numeric_panel_record {
-    DR_MODE mode0;                                 /* 0x000 */
-    DR_MODE mode1;                                 /* 0x00c */
-    battle_gfx_scaled_draw_area_pair_t draw_areas; /* 0x018; battle_gfx_init_scaled_draw_area_packets */
-    SPRT sprites[18];                              /* 0x040 */
-    world_menu_palette_primitives_t* palette;      /* 0x1a8 */
-} battle_menu_numeric_panel_record_t;
-
-extern battle_menu_numeric_panel_record_t g_battle_menu_numeric_display_panel_records[2];
-struct menu_number_entry;
+extern world_panel_record_t g_battle_menu_numeric_display_panel_records[2];
 struct menu_number_position;
 
 /* Thread task 0x23: renders three text images into VRAM, builds two
@@ -26,8 +15,8 @@ struct menu_number_position;
  * third parameter becomes non-zero. Started by
  * battle_menu_run_unit_editor_panel_thread on thread 0xA. */
 void battle_menu_run_numeric_display_panel_thread(void) {
-    battle_menu_numeric_panel_record_t* records;
-    battle_menu_numeric_panel_record_t* record;
+    world_panel_record_t* records;
+    world_panel_record_t* record;
     u8* buffer;
     s32 i;
     s32 frame;

@@ -4,7 +4,7 @@
 /* Resets the memory card menu state and allocates the 0x2000-byte load
  * buffer; also used by "Open tutorial files". */
 void world_card_init_menu_state(void) {
-    world_card_save_buffer_t* buffer;
+    card_save_buffer_t* buffer;
 
     g_world_card_list_scroll_y = 0x18;
     g_world_card_list_scroll_velocity = 0;

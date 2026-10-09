@@ -4,7 +4,7 @@
 
 /* Callers pass unrelated pointer types. Keeping the packet view at each use
  * avoids the extra copies that a typed local adds to the target code. */
-#define PAIR ((battle_gfx_scaled_draw_area_pair_t*)packets)
+#define PAIR ((world_gfx_scaled_draw_area_pair_t*)packets)
 
 /*
  * Build a double-buffered draw-area pair whose rectangle is cropped to a

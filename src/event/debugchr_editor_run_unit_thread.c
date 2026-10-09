@@ -41,7 +41,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         unit_ids[1] = partner_id & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
         g_debugchr_editor_selected_unit_id = selected_id;
         g_debugchr_panel_selected_unit_data[0] = comparison_id;
-        g_debugchr_panel_selected_billboard.unit = type_id;
+        g_debugchr_panel_selected_billboard.unit_index = type_id;
     }
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
@@ -174,7 +174,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
             selected_unit[-5] = *chosen_unit;
-            unit_type_ptr = &g_debugchr_panel_selected_billboard.unit;
+            unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(
@@ -195,7 +195,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
             selected_unit[-5] = *chosen_unit;
-            unit_type_ptr = &g_debugchr_panel_selected_billboard.unit;
+            unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(
@@ -212,7 +212,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         s16* unit_type_id_ptr;
 
         selected_unit_ptr = &g_debugchr_editor_selected_unit_id;
-        unit_type_id_ptr = &g_debugchr_panel_selected_billboard.unit;
+        unit_type_id_ptr = &g_debugchr_panel_selected_billboard.unit_index;
         selected_unit_ptr[0] = g_debugchr_editor_unit_ids[0];
         /* A register address keeps cse from folding this store to a direct
          * global address. */

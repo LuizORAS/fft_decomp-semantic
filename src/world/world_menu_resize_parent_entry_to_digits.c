@@ -22,7 +22,7 @@ void world_menu_resize_parent_entry_to_digits(void) {
         old_width = entry->inner_width;
         entry->inner_width = width;
         entry->window_width = width;
-        entry->overall_width = width;
+        entry->text_image.width = width;
         entry->window_x -= width - old_width;
     }
 }

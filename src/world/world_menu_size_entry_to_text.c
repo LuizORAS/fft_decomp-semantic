@@ -21,11 +21,11 @@ void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* h
     *height = *height * 16 + 16;
     entry->window_x = 0x102 - (*width >> 1);
     w = *width;
-    entry->overall_width = w;
+    entry->text_image.width = w;
     entry->inner_width = w;
     entry->window_width = w;
     h = *height;
-    entry->overall_height = h;
+    entry->text_image.height = h;
     entry->inner_height = h;
     entry->window_height = h;
 }

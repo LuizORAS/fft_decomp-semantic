@@ -13,7 +13,7 @@ s32 world_menu_dispatch_system_function(
     s32 count;
     s32 i;
     item_data_t* item;
-    world_system_function_t* entry;
+    battle_system_function_t* entry;
     s32 flags;
 
     g_world_menu_thread_menu_data = g_world_menu_system_entries;

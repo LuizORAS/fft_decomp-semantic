@@ -13,8 +13,8 @@
  * text id, which keeps both in one callee-saved register as in the target. */
 void world_menu_equipment_and_ability_panel_thread(void) {
     world_status_thread_t* thread;
-    world_status_frame_t* screen;
-    world_status_frame_t* base;
+    battle_menu_status_panel_buffer_t* screen;
+    battle_menu_status_panel_buffer_t* base;
     world_item_stat_detail_t* state;
     u8* cursor;
     s32 frame;
@@ -27,9 +27,9 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     screen = g_world_change_banner_panel_frames;
     base = g_world_change_banner_panel_frames;
     state = &g_world_selected_unit_stat_detail;
-    world_menu_init_numeric_display_frame_primitives(&g_world_equipment_ability_panel_origin, &screen->menu);
-    world_gfx_init_menu_tile_and_line_primitives((battle_menu_status_panel_menu_primitives_t*)screen);
-    world_gfx_init_scaled_draw_area_packets_3(&screen->draw_area);
+    world_menu_init_numeric_display_frame_primitives(&g_world_equipment_ability_panel_origin, &screen->numeric_frame);
+    world_gfx_init_menu_tile_and_line_primitives(screen);
+    world_gfx_init_scaled_draw_area_packets_3(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += g_world_equipment_ability_panel_origin.x;
         screen->tiles[i].y0 += g_world_equipment_ability_panel_origin.y;
@@ -45,7 +45,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     world_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    world_script_copy_bytes(&screen[1], screen, sizeof(world_status_frame_t));
+    world_script_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -94,7 +94,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
-                    world_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
+                    world_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
                         g_world_change_banner_text_image, &g_world_menu_text_state.origin_x);
                 }
                 g_world_menu_text_state.origin_y += 0x10;
@@ -134,26 +134,25 @@ void world_menu_equipment_and_ability_panel_thread(void) {
                 (const world_image_location_t*)&g_world_equipment_ability_panel_origin,
                 &g_world_equipment_panel_icon_params[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
-                world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
+                world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
-                ((world_status_frame_t*)cursor)->sprites[19].x0 = -0x200;
+                ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
             }
             cursor += sizeof(SPRT);
         }
         g_world_gfx_draw_area_y = (u16)g_world_frame_arg != 0xf0 ? 0xf0 : 0;
-        world_gfx_build_scaled_draw_area_packets(&screen->draw_area, &g_world_equipment_ability_panel_draw_area, frame,
-            (u16)g_world_frame_arg, (s32*)thread);
+        world_gfx_build_scaled_draw_area_packets(
+            &screen->portrait, &g_world_equipment_ability_panel_draw_area, frame, (u16)g_world_frame_arg, (s32*)thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_world_gfx_draw_area_y;
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
-        world_menu_configure_status_panel_primitive_colors(
-            (battle_menu_status_panel_primitives_t*)screen, (const battle_menu_status_panel_frame_config_t*)thread);
-        world_menu_select_primitive_color_palette(&screen->menu, (world_menu_color_input_t*)thread);
+        world_menu_configure_status_panel_primitive_colors((battle_menu_status_panel_primitives_t*)screen, thread);
+        world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->draw_area.areas[1]);
+            world_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         for (i = 0; i < 12; i++) {
@@ -175,10 +174,10 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         for (i = 0; i < 8; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->menu);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         if (frame < 13) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->draw_area);
+            world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         }
         world_thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {

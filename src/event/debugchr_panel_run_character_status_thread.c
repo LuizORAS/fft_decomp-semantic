@@ -7,7 +7,7 @@
 /* Thread task 0x3b: the combined status panel for the selected unit. REQUIRE
  * twin of bunit_menu_equipment_and_ability_panel_thread. */
 void debugchr_panel_run_character_status_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_buffer_t* base;
     battle_menu_status_panel_slot_state_t* state;
@@ -21,8 +21,7 @@ void debugchr_panel_run_character_status_thread(void) {
     RECT* offsets;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_debugchr_panel_frames_a;
     base = g_debugchr_panel_frames_a;
@@ -139,8 +138,8 @@ void debugchr_panel_run_character_status_thread(void) {
         g_debugchr_gfx_draw_offset_y = mask & 0xf0;
         debugchr_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_debugchr_character_status_draw_area_rect, frame, scale, (const s16*)thread);
-        screen->draw_offsets[0].x = thread->origin_x - 0x80;
-        screen->draw_offsets[0].y = thread->origin_y + g_debugchr_gfx_draw_offset_y;
+        screen->draw_offsets[0].x = thread->x - 0x80;
+        screen->draw_offsets[0].y = thread->y + g_debugchr_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_debugchr_gfx_draw_offset_y;

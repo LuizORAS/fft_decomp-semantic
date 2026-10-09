@@ -2,8 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void attack_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const RECT* source, s32 scale_index, s32 lower_half, const s16* offset) {
+void attack_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset) {
     s32 percent;
     s32 w;
     s32 h;

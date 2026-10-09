@@ -6,16 +6,16 @@ void debugchr_menu_icon_strip_thread(void) {
         battle_menu_window_header_t header;
         RECT rect;
     } local_10;
-    battle_menu_window_record_t frames[2];
-    battle_menu_window_record_t* frame_pair;
-    battle_menu_window_record_t* frame_base;
+    world_menu_icon_record_t frames[2];
+    world_menu_icon_record_t* frame_pair;
+    world_menu_icon_record_t* frame_base;
     s32* display_x;
     s32 done = 0;
     s32 frame;
     s32 redraw;
     u32* render;
     s32 frame_parity;
-    battle_menu_idle_action_entry_t* state = (battle_menu_idle_action_entry_t*)battle_thread_get_current_parameter_1();
+    world_menu_entry_t* state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
 
     frame_pair = frames;
     battle_menu_build_window_sprites(&local_10.header, state, frame_pair);

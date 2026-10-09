@@ -91,7 +91,7 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
         world_text_blit_glyph((u16*)g_world_menu_glyph_sheet, image, &g_world_menu_window_sprite_source,
             &g_world_menu_window_sprite_position);
         if (i != 0) {
-            world_gfx_mirror_4bpp_rect((u8*)image, (world_gfx_4bpp_rect_t*)&g_world_menu_window_sprite_position);
+            world_gfx_mirror_4bpp_rect((u8*)image, &g_world_menu_window_sprite_position);
         }
     }
     if (keep != 0) {

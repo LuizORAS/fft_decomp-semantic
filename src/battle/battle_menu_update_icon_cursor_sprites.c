@@ -8,7 +8,7 @@
  * the phase restarts at 2 while input is blocked and clears once the timer
  * reaches 27 frames. The cursor sprites follow the selected row. */
 void battle_menu_update_icon_cursor_sprites(
-    world_menu_icon_thread_param_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor) {
+    world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor) {
     native_thread_t* thread = &g_battle_threads[g_battle_current_thread_id];
     s32 x;
     s32 y;
@@ -35,10 +35,10 @@ void battle_menu_update_icon_cursor_sprites(
         thread->task_words[0] += g_battle_event_speed;
         x -= 12;
         y = cursor * 16 + 10;
-        record->sprites[1].x0 = param->icon_x + x;
-        record->sprites[1].y0 = param->flags + y;
-        record->sprites[2].x0 = param->icon_x + x + 2;
-        record->sprites[2].y0 = param->flags + y + 2;
+        record->sprites[1].x0 = param->window_x + x;
+        record->sprites[1].y0 = param->window_y + y;
+        record->sprites[2].x0 = param->window_x + x + 2;
+        record->sprites[2].y0 = param->window_y + y + 2;
     }
     if (g_battle_event_speed == 2) {
         frame *= 2;

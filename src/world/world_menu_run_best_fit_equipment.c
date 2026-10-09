@@ -12,13 +12,13 @@ s32 world_menu_run_best_fit_equipment(void) {
     s16* choice;
 
     if (g_world_item_best_remove_initialized == 0) {
-        g_world_best_fit_confirm_menu.cursor = 0;
+        g_world_best_fit_confirm_menu.selected_index = 0;
         world_unit_build_best_fit_equipment(
-            g_world_formation_selected_unit_index, (s16*)g_world_item_preview_stat_detail.equipment);
+            g_world_formation_selected_unit_index, g_world_item_preview_stat_detail.equipment);
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
-            g_world_item_preview_stat_detail.equipment);
+            (u16*)g_world_item_preview_stat_detail.equipment);
         g_world_item_preview_stat_detail.two_hands
             = world_unit_is_two_handing_weapon((struct weapon_pair*)g_world_item_preview_stat_detail.equipment,
                 world_ability_has_two_hands(g_world_formation_selected_unit_index));
@@ -52,7 +52,7 @@ s32 world_menu_run_best_fit_equipment(void) {
             for (i = 0; i < 5; i++) {
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
                     = g_world_item_preview_stat_detail.equipment[i];
-                world_item_adjust_inventory_count((s16)g_world_item_preview_stat_detail.equipment[i], -1);
+                world_item_adjust_inventory_count(g_world_item_preview_stat_detail.equipment[i], -1);
             }
             world_formation_save_records_to_party_data();
             world_formation_stage_selected_unit();

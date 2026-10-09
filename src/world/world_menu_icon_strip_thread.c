@@ -8,7 +8,7 @@ void world_menu_icon_strip_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     s32 input;
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 fresh;
@@ -23,9 +23,9 @@ void world_menu_icon_strip_thread(void) {
     for (i = 0;; i++) {
         if (i % 7 == 0) {
             fresh = 1;
-            buffer = world_menu_build_and_upload_window_frame_image(param->width, param->height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
             world_menu_set_text_origin(8, 9);
-            g_world_menu_text_state.stride = param->width;
+            g_world_menu_text_state.stride = param->inner_width;
             world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
             LoadImage(&rect, buffer);
         }

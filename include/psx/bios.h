@@ -1,6 +1,8 @@
 #ifndef PSX_BIOS_H
 #define PSX_BIOS_H
 
+#include "psx/types.h"
+
 /* Selectors used by linked retail veneers and exception-table patches. */
 typedef enum {
     PSYQ_BIOS_TABLE_A = 0xa0,
@@ -77,5 +79,12 @@ typedef enum {
     PSYQ_BIOS_SYSCALL_ENTER_CRITICAL_SECTION = 1,
     PSYQ_BIOS_SYSCALL_EXIT_CRITICAL_SECTION = 2,
 } psyq_bios_syscall_e;
+
+/* View of the BIOS C0 dispatch table returned by B(0x56): only entry 6, the
+ * exception handler the libcard and libgte patches rewrite, is dereferenced. */
+typedef struct {
+    void* _unknown_00[6];
+    u32* exception_handler;
+} psyq_bios_c0_table_t;
 
 #endif

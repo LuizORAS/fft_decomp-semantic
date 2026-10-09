@@ -29,7 +29,7 @@ void world_shop_run_rename_unit_confirm_step(void) {
             g_world_shop_hire_menu_initialized = 0;
         } else {
             world_thread_set_parameters(2, 0x19, -1, 0);
-            g_world_shop_rename_confirm_menu.cursor = 0;
+            g_world_shop_rename_confirm_menu.selected_index = 0;
             g_world_shop_menu_step = 0x17;
         }
     }

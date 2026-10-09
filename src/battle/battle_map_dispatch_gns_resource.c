@@ -59,14 +59,14 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_untextured_triangle_count = 0;
         g_battle_map_untextured_quad_count = 0;
         for (i = 0; i < 9; i++) {
-            g_battle_map_mesh_parts[i].counts[0] = 0;
-            g_battle_map_mesh_parts[i].counts[1] = 0;
-            g_battle_map_mesh_parts[i].counts[2] = 0;
-            g_battle_map_mesh_parts[i].counts[3] = 0;
+            g_battle_map_mesh_parts[i].textured_triangle_count = 0;
+            g_battle_map_mesh_parts[i].textured_quad_count = 0;
+            g_battle_map_mesh_parts[i].untextured_triangle_count = 0;
+            g_battle_map_mesh_parts[i].untextured_quad_count = 0;
             g_battle_map_mesh_part_geometry[i] = 0;
         }
         g_battle_map_mesh_part_geometry[0] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[0]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[0]);
         g_battle_map_primary_textured_triangle_count = g_battle_map_textured_triangle_count;
         g_battle_map_primary_textured_quad_count = g_battle_map_textured_quad_count;
         g_battle_map_primary_untextured_triangle_count = g_battle_map_untextured_triangle_count;
@@ -74,35 +74,35 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         break;
     case 0x24:
         g_battle_map_mesh_part_geometry[1] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[1]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[1]);
         break;
     case 0x25:
         g_battle_map_mesh_part_geometry[2] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[2]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[2]);
         break;
     case 0x26:
         g_battle_map_mesh_part_geometry[3] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[3]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[3]);
         break;
     case 0x27:
         g_battle_map_mesh_part_geometry[4] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[4]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[4]);
         break;
     case 0x28:
         g_battle_map_mesh_part_geometry[5] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[5]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[5]);
         break;
     case 0x29:
         g_battle_map_mesh_part_geometry[6] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[6]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[6]);
         break;
     case 0x2a:
         g_battle_map_mesh_part_geometry[7] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[7]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[7]);
         break;
     case 0x2b:
         g_battle_map_mesh_part_geometry[8] = data;
-        battle_map_append_mesh_geometry((u16*)data, (battle_map_mesh_part_metadata_t*)&g_battle_map_mesh_parts[8]);
+        battle_map_append_mesh_geometry((u16*)data, &g_battle_map_mesh_parts[8]);
         break;
     case 0x2c:
         polygon_flags = (u16*)(data + 0x380);

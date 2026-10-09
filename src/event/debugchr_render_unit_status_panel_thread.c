@@ -13,8 +13,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-struct world_menu_palette_primitives;
-struct menu_number_entry;
 struct menu_number_position;
 
 /* Thread task 0x39: draws the character editor and status panels. DEBUGCHR
@@ -26,21 +24,21 @@ void debugchr_render_unit_status_panel_thread(void) {
     s32 cur_unit;
     s32 prev_unit;
 
-    u8* number_pixels;                                        /* sp60 */
-    battle_menu_status_panel_editor_packet_t* editor_base;    /* sp68 */
-    battle_menu_status_panel_numeric_entry_t* number_entries; /* sp70 */
-    battle_menu_status_panel_editor_state_t* state;           /* sp78 */
-    s32 portrait_request;                                     /* sp80 */
-    const RECT* transition;                                   /* sp88 */
-    u8* portrait_image;                                       /* sp90 */
-    u8* value_pixels;                                         /* sp98 */
-    u8* name_pixels;                                          /* spA0 */
-    battle_menu_status_panel_packet_t* panel_base;            /* spA8 */
-    s16* unit_info;                                           /* spB0 */
-    battle_menu_status_panel_display_thread_t* thread;        /* spB8 */
-    s32 shake;                                                /* spC0 */
-    s32 highlight;                                            /* spC8 */
-    s32 hide_portrait;                                        /* spD0 */
+    u8* number_pixels;                                     /* sp60 */
+    battle_menu_status_panel_editor_packet_t* editor_base; /* sp68 */
+    menu_number_entry_t* number_entries;                   /* sp70 */
+    battle_unit_status_record_t* state;                    /* sp78 */
+    s32 portrait_request;                                  /* sp80 */
+    const RECT* transition;                                /* sp88 */
+    u8* portrait_image;                                    /* sp90 */
+    u8* value_pixels;                                      /* sp98 */
+    u8* name_pixels;                                       /* spA0 */
+    battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
+    s16* unit_info;                                        /* spB0 */
+    battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
+    s32 shake;                                             /* spC0 */
+    s32 highlight;                                         /* spC8 */
+    s32 hide_portrait;                                     /* spD0 */
 
     s32 thread_id;
     u8* threads;
@@ -119,12 +117,12 @@ void debugchr_render_unit_status_panel_thread(void) {
         battle_gfx_init_image_loading(&editor->value_sprites[frame], g_debugchr_editor_numeric_geometry,
             &g_debugchr_gfx_portrait_origin.location, &g_debugchr_panel_editor_value_cells[frame * 0xC]);
     }
-    if (state->mode >= 4) {
-        state->mode = 0;
+    if (state->team_kind >= 4) {
+        state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
         battle_copy_bytes(
-            g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells + state->mode * 0xC, 0xC);
+            g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
     } else {
         battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
     }
@@ -149,7 +147,7 @@ void debugchr_render_unit_status_panel_thread(void) {
     }
     battle_gfx_init_image_loading(&panel->portrait, g_debugchr_editor_numeric_geometry,
         &g_debugchr_panel_frame_rect.location, g_debugchr_panel_portrait_cell);
-    if (state->mode == 1) {
+    if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
         panel->portrait.clut = 0x7FBD;
@@ -158,24 +156,24 @@ void debugchr_render_unit_status_panel_thread(void) {
     battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
-    prev_unit = state->unit;
-    cur_unit = state->unit;
+    prev_unit = state->unit_index;
+    cur_unit = state->unit_index;
     for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->bars[2].value >= 0x65) {
-            state->bars[2].value = 0x64;
+        if (state->gauges[2].value >= 0x65) {
+            state->gauges[2].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(
-                g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells + state->mode * 0xC, 0xC);
+                g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
         } else {
             battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_debugchr_editor_numeric_geometry,
             &g_debugchr_gfx_portrait_origin.location, g_debugchr_panel_editor_mode_cell);
-        if (state->mode == 1) {
+        if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
             panel->portrait.clut = 0x7FBD;
@@ -203,8 +201,8 @@ void debugchr_render_unit_status_panel_thread(void) {
             i += 1;
         } while (i < 7);
         if (highlight != 0) {
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_1(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_1(&panel->numeric_frame);
             if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
@@ -225,8 +223,8 @@ void debugchr_render_unit_status_panel_thread(void) {
             editor->portrait[3].b0 = 0x38;
         } else {
             s32 shade;
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_0(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_0(&panel->numeric_frame);
             if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
@@ -315,12 +313,12 @@ void debugchr_render_unit_status_panel_thread(void) {
             if (anim_state == 0) {
                 prev_unit = cur_unit;
                 portrait_request = thread->work;
-                cur_unit = state->unit;
+                cur_unit = state->unit_index;
             } else {
                 anim_state = 2;
                 prev_unit = cur_unit;
                 portrait_request = thread->work;
-                cur_unit = state->unit;
+                cur_unit = state->unit_index;
             }
         }
         if (cur_unit != prev_unit) {
@@ -332,10 +330,10 @@ void debugchr_render_unit_status_panel_thread(void) {
             transition, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
-            battle_menu_status_panel_bar_t* bar;
+            battle_unit_status_gauge_t* bar;
 
             color = g_debugchr_panel_gauge_bar_colors;
-            bar = state->bars;
+            bar = state->gauges;
             for (i = 0; i < 3; i++) {
                 s32 x0;
                 s32 w;
@@ -343,10 +341,10 @@ void debugchr_render_unit_status_panel_thread(void) {
 
                 SetPolyG4(&editor->bars[i]);
                 x0 = g_debugchr_gfx_portrait_origin.coordinates[0] + 0x2F;
-                if (bar->limit == 0) {
+                if (bar->max == 0) {
                     w = 4;
                 } else {
-                    w = (bar->value << 5) / bar->limit;
+                    w = (bar->value << 5) / bar->max;
                 }
                 if (w == 0) {
                     x0 = 0;
@@ -415,13 +413,13 @@ void debugchr_render_unit_status_panel_thread(void) {
             window_width = &g_menu_inner_window_width;
             text_position = window_width - 2;
             *window_width = 0x38;
-            battle_menu_draw_numeric_display_entries((s32)number_pixels, (struct menu_number_entry*)number_entries,
-                (struct menu_number_position*)text_position, 6);
+            battle_menu_draw_numeric_display_entries(
+                (s32)number_pixels, number_entries, (struct menu_number_position*)text_position, 6);
             LoadImage(&rects[0], number_pixels);
             number_pixels_b = number_pixels + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_pixels_b,
-                (struct menu_number_entry*)&number_entries[6], (struct menu_number_position*)text_position, 4);
+            battle_menu_draw_numeric_display_entries(
+                (s32)number_pixels_b, &number_entries[6], (struct menu_number_position*)text_position, 4);
             LoadImage(&rects[1], number_pixels_b);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_pixels, 0x580);

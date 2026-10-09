@@ -1,17 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Crystal/treasure pickup result at 0x8006623c. */
-typedef struct battle_unit_crystal_pickup_result {
-    s32 result;                 /* 0x00; -1 none, 4 treasure, 2 crystal, |1 learned */
-    u8 _unused_04[0x14];        /* 0x04 */
-    u8 learned[19][3];          /* 0x18 */
-    u8 unit_index;              /* 0x51 */
-    u8 treasure_item;           /* 0x52 */
-    u8 learned_abilities[0x40]; /* 0x53 */
-} crystal_pickup_result_t;
-
 extern crystal_pickup_result_t g_main_crystal_pickup_result;
+
 /* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
  * bytes. The 2D indexing is what makes loop.c reduce `unit + i * 3` as the
  * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */

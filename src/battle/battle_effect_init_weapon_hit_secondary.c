@@ -13,7 +13,7 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
     if (source->target_count != 0) {
         elements = battle_effect_get_ninja_ball(elements);
         target_id = battle_effect_allocate_secondary_slot();
-        switch (source->target.fields.result_animation) {
+        switch (source->target[0].fields.result_animation) {
         case 0:
         case 1:
         case 3:
@@ -32,7 +32,7 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
         g_battle_effect_secondary_data[target_id].function_id
             = g_battle_effect_secondary_animations[g_battle_effect_secondary_data[target_id].animation_id].function_id;
         g_battle_effect_secondary_data[target_id].caster_block = source->caster.block;
-        g_battle_effect_secondary_data[target_id].target.block = source->target.block;
+        g_battle_effect_secondary_data[target_id].target.block = source->target[0].block;
         g_battle_effect_secondary_data[target_id].timer = 0;
         g_battle_effect_secondary_data[target_id].phase = BATTLE_SECONDARY_EFFECT_INITIALIZING;
     } else {

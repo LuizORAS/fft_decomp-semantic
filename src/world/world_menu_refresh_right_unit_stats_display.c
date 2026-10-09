@@ -3,9 +3,9 @@
 
 void world_menu_refresh_right_unit_stats_display(void) {
     world_menu_load_selected_unit();
-    g_world_menu_right_unit_stats_setup[6].param = 2;
-    if (g_world_unit_comparison_status_billboard.layout < 0)
-        g_world_menu_right_unit_stats_setup[6].param = 0xc00;
+    g_world_menu_right_unit_stats_setup[6].format = 2;
+    if (g_world_unit_comparison_status_billboard.list_index < 0)
+        g_world_menu_right_unit_stats_setup[6].format = 0xc00;
     world_menu_display_hovered_unit_stats(&g_world_menu_right_unit_stats_display, 3,
         g_world_menu_right_unit_stats_setup, &g_world_unit_comparison_status_billboard);
 }

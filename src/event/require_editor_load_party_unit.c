@@ -37,25 +37,27 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         g_require_editor_team_state = 2;
     }
-    g_require_panel_selected_billboard._04 = 0;
-    g_require_panel_selected_billboard._06 = 0;
+    g_require_panel_selected_billboard.list_index = 0;
+    g_require_panel_selected_billboard.unit_count = 0;
     g_require_panel_selected_billboard.unit_index = party_index + 0x100;
     g_require_panel_selected_billboard.level = unit->level;
     g_require_panel_selected_billboard.experience = unit->experience;
     maximum_hp = unit->max_hp;
-    g_require_panel_selected_billboard.max_hp = maximum_hp;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        g_require_panel_selected_billboard.max_hp = maximum_hp + 1;
+        g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    g_require_panel_selected_billboard.hp = g_require_panel_selected_billboard.max_hp;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value
+        = g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max;
     maximum_mp = unit->max_mp;
-    g_require_panel_selected_billboard.max_mp = maximum_mp;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        g_require_panel_selected_billboard.max_mp = maximum_mp + 1;
+        g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    g_require_panel_selected_billboard.mp = g_require_panel_selected_billboard.max_mp;
-    g_require_panel_selected_billboard.max_ct = 100;
-    g_require_panel_selected_billboard.ct = 100;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value
+        = g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
+    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
 
     editor[0] = unit->move;
     editor[1] = unit->attributes[UNIT_ATTRIBUTE_SPEED];

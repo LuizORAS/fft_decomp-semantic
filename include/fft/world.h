@@ -11,33 +11,6 @@
 struct battle_ai_command_action;
 
 /* camera */
-/* Provisional camera interpolation key: frame time and target value. */
-typedef struct world_camera_key {
-    s32 time;  /* 0x00; cumulative frame of this key */
-    s32 value; /* 0x04 */
-    u8 _unused_08[8];
-} world_camera_key_t;
-
-/* Provisional per-component camera track, seeded by world_camera_fusion_thread
- * and advanced by world_camera_step_track. */
-typedef struct world_camera_track {
-    world_camera_key_t keys[8]; /* 0x00 */
-    s32 key_count;              /* 0x80 */
-    s32 segment;                /* 0x84; first key of the active segment */
-    s32 frame;                  /* 0x88; frames since the track started */
-    s32 segment_frame;          /* 0x8c; frames into the active segment */
-    s32 prev_time;              /* 0x90; Q12 */
-    s32 prev_value;             /* 0x94; Q12 */
-    s32 start_value;            /* 0x98; Q12 */
-    s32 segment_duration;       /* 0x9c */
-    s32 finished;               /* 0xa0 */
-} world_camera_track_t;
-
-typedef char world_camera_track_offsets_ok[(sizeof(world_camera_key_t) == 0x10
-                                               && (s32) & ((world_camera_track_t*)0)->key_count == 0x80
-                                               && (s32) & ((world_camera_track_t*)0)->finished == 0xa0)
-        ? 1
-        : -1];
 
 extern s32 g_world_camera_speed_curve;
 extern u16 g_world_camera_script_variable_indices[7];
@@ -49,7 +22,7 @@ extern s16 g_world_camera_candidate_yaws[4];
 s32 world_camera_wrap_yaw_angle(void);
 void world_camera_init_tilt_and_zoom(void);
 void world_camera_init_yaw_angle(void);
-s32 world_camera_step_track(world_camera_track_t* track, s32 component);
+s32 world_camera_step_track(battle_camera_track_t* track, s32 component);
 void world_camera_store_yaw_band(s32 value);
 s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void world_camera_fusion_thread(void);
@@ -57,48 +30,11 @@ void world_camera_wait_until_idle(void);
 void world_camera_thread(void);
 
 /* dead unit */
-/* Provisional layouts for the dead-unit ("treasure/crystal") result panel
- * started by world_menu_start_dead_unit_threads. Only the fields that routine
- * touches are named; the surrounding bytes stay anonymous. */
-typedef struct world_dead_unit_entry_counts {
-    s16 visible_count;  /* 0x00 */
-    s16 overflow_count; /* 0x02 */
-} world_dead_unit_entry_counts_t;
-
-typedef struct world_dead_unit_menu {
-    /* 0x00-0x3b: the 0x3c-byte menu record (see world_menu_entry_t). */
-    u8 _unused_000[4];
-    s16 inner_width; /* 0x04 */
-    u8 _unused_006[2];
-    s16 window_x;     /* 0x08 */
-    s16 window_y;     /* 0x0a */
-    s16 window_width; /* 0x0c */
-    u8 _unused_00e[6];
-    s16 overall_width; /* 0x14 */
-    u8 _unused_016[0x18];
-    world_dead_unit_entry_counts_t* entries; /* 0x30 */
-    u8 _unused_034[6];
-    s16 menu_type;         /* 0x3a */
-    u8 at_list_menu[0x78]; /* 0x3c */
-    u8 confirm_menu[0x78]; /* 0xb4 */
-    u8 message_menu[0x1c]; /* 0x12c */
-    s16 message_id;        /* 0x148 */
-    u8 _unused_14a[0x1e];
-    u8 move_menu[4]; /* 0x168 */
-} world_dead_unit_menu_t;
-
-/* 0x00 selects which panel variant runs; 0x52 is the roster/item id. */
-typedef struct world_dead_unit_context {
-    s32 kind; /* 0x00 */
-    u8 _unused_04[0x4e];
-    u8 item_id;     /* 0x52 */
-    u8 flags[0x40]; /* 0x53 */
-} world_dead_unit_context_t;
 
 extern s32 g_world_dead_unit_action; /* committed action */
 extern s32 g_world_dead_unit_result;
-extern world_dead_unit_entry_counts_t g_world_dead_unit_menu_entries;
-extern world_dead_unit_menu_t g_world_dead_unit_menu;
+extern dead_unit_entry_counts_t g_world_dead_unit_menu_entries;
+extern dead_unit_menu_t g_world_dead_unit_menu;
 extern RECT g_world_dead_unit_panel_b_texture_windows[7];
 
 /* One libgpu texture window per DR_MODE packet (the seven RECTs after
@@ -112,40 +48,6 @@ extern s16 g_world_dead_unit_menu_result; /* primary menu result */
 extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
 
 /* help */
-/* Help-menu descriptor for a pending help request. It is reached through the
- * native thread record's first function-parameter word, so its offsets are
- * its own and do not overlap native_thread_t. */
-typedef struct world_help_request_table {
-    u8 _unused_00[0x10];
-    s16* primary_ids;   /* 0x10 */
-    s16* secondary_ids; /* 0x14 */
-    s16* mode_flag;     /* 0x18 */
-} world_help_request_table_t;
-typedef char world_help_request_table_mode_flag_offset_must_be_0x18
-    [((unsigned long)&((world_help_request_table_t*)0)->mode_flag == 0x18) ? 1 : -1];
-
-typedef struct world_help_request {
-    u8 _unused_00[0x30];
-    world_help_request_table_t* table; /* 0x30 */
-    s16* value;                        /* 0x34 */
-    s16 selected_index;                /* 0x38 */
-    s16 kind;                          /* 0x3a */
-} world_help_request_t;
-typedef char
-    world_help_request_kind_offset_must_be_0x3a[((unsigned long)&((world_help_request_t*)0)->kind == 0x3a) ? 1 : -1];
-
-/* One help-menu cursor node: the value it edits, the four neighbour indices
- * and the cursor placement (tables at 0x801573ac, 0x8015743c, 0x801574ac and
- * 0x801574fc). */
-typedef struct world_help_navigation_entry {
-    s16* value;
-    s16 value_base;
-    u8 neighbors[4];
-    s16 cursor_x;
-    s16 cursor_y;
-    s16 orientation;
-} world_help_navigation_entry_t;
-typedef char world_help_navigation_entry_size_must_be_0x10[sizeof(world_help_navigation_entry_t) == 0x10 ? 1 : -1];
 
 extern u16 g_world_help_portrait_clut_by_sheet_id[];
 extern u8 g_world_help_menu_cursor_tile[];
@@ -155,10 +57,10 @@ extern u8 g_world_help_active_unit_data[];
 /* Copy of the 0x40-byte unit editor fields (world_menu_copy_billboard_data_out);
  * the layout is battle_menu_status_panel_slot_state_t, as in the HELPMENU twin. */
 extern battle_menu_status_panel_slot_state_t g_world_help_billboard;
-extern world_help_navigation_entry_t g_world_help_terrain_navigation[];
-extern world_help_navigation_entry_t g_world_help_attack_preview_navigation[];
-extern world_help_navigation_entry_t g_world_help_unit_box_navigation[];
-extern world_help_navigation_entry_t g_world_help_require_navigation[];
+extern help_navigation_record_t g_world_help_terrain_navigation[];
+extern help_navigation_record_t g_world_help_attack_preview_navigation[];
+extern help_navigation_record_t g_world_help_unit_box_navigation[];
+extern help_navigation_record_t g_world_help_require_navigation[];
 extern u8 g_world_help_menu_text_id_tables[];
 
 /* Help-file offsets of the text sections the help menus rebind, added to
@@ -234,7 +136,7 @@ extern world_menu_text_binding_t g_world_option_menu_entry_table;
 extern s32 g_world_option_menu_text_widths[];    /* option menu text-image width, per option */
 extern s32 g_world_option_menu_entry_counts[];   /* option menu entry count, per option */
 extern s32 g_world_option_menu_first_text_ids[]; /* first text id of the option's entries */
-extern world_menu_icon_thread_param_t g_world_option_menu_icon_thread_param;
+extern world_menu_entry_t g_world_option_menu_icon_thread_param;
 extern RECT g_world_options_menu_window_rect;
 extern RECT g_world_options_menu_title_rect;
 extern RECT g_world_options_menu_value_rect;
@@ -243,16 +145,10 @@ void world_build_options_menu(void);
 void world_run_option_choice_menu(void);
 
 /* screen */
-/* Full-screen tint tile and its blend mode, one pair per packet buffer at
- * 0x801a6650, drawn by world_gfx_submit_screen_fade_overlay. */
-typedef struct world_screen_tint_prims {
-    TILE tile;    /* 0x00 */
-    DR_MODE mode; /* 0x10 */
-} world_screen_tint_prims_t;
 
 extern s32 g_world_screen_fade;
 extern RECT g_world_screen_clear_rect;
-extern world_screen_tint_prims_t g_world_screen_tint_tiles[]; /* one tint tile per packet buffer */
+extern battle_gfx_fade_overlay_t g_world_screen_tint_tiles[]; /* one tint tile per packet buffer */
 
 /* script */
 /* Operand pairs that one world_script_execute_event opcode stores together;
@@ -453,30 +349,6 @@ void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);
 
 /* status */
-/* Per-frame status panel primitive block (0x3d8 bytes), double buffered at
- * 0x801c3d8c and 0x801c453c. Same layout as attack_status_primitives_t in the
- * ATTACK twin. */
-typedef struct world_status_frame {
-    DR_MODE draw_modes[3];                                  /* 0x000 */
-    SPRT sprites[24];                                       /* 0x024 */
-    TILE tiles[2];                                          /* 0x204 */
-    LINE_F2 lines[8];                                       /* 0x224 */
-    battle_menu_status_panel_draw_offset_t draw_offsets[2]; /* 0x2a4 */
-    world_menu_palette_primitives_t menu;                   /* 0x2c4 */
-    world_gfx_scaled_draw_area_pair_t draw_area;            /* 0x3b0 */
-} world_status_frame_t;
-typedef char world_status_frame_size_must_be_0x3d8[sizeof(world_status_frame_t) == 0x3d8 ? 1 : -1];
-
-/* Thread record of the task-0x3b status panels. The origin is read as whole
- * words (lw) for the draw-area offset; the halfword reads that feed the s16
- * draw-offset stores are the compiler narrowing those loads. */
-typedef struct world_status_thread {
-    s32 x;              /* 0x00 */
-    s32 y;              /* 0x04 */
-    s32 flags;          /* 0x08 */
-    s32 redraw_request; /* 0x0c */
-    s32 style;          /* 0x10 */
-} world_status_thread_t;
 
 /* Status-ID-indexed image source rectangles at 0x8018cf68. Not const: a const
  * qualifier lets GCC hoist world_item_build_status_list_polygons' loads above
@@ -494,25 +366,6 @@ extern world_status_thread_t g_world_status_display_thread_params;
 extern world_status_thread_t g_world_preview_stats_thread_params;
 
 /* status panel */
-/* Menu primitive block written by the *_gfx_init_menu_tile_and_line_primitives
- * builders: three DR_MODE packets, two translucent 16x90 backdrop tiles and
- * eight vertical frame lines. The sprites between belong to
- * battle_menu_status_panel_buffer_t (battle.h) and are not touched by the
- * builder. */
-typedef struct battle_menu_status_panel_menu_primitives {
-    DR_MODE draw_modes[3]; /* 0x000 */
-    u8 _unused_024[0x204 - 0x24];
-    TILE tiles[2];    /* 0x204 */
-    LINE_F2 lines[8]; /* 0x224 */
-} battle_menu_status_panel_menu_primitives_t;
-/* world_gfx_init_menu_tile_and_line_primitives (0x80110260) fills the shared menu
- * primitive block: three DR_MODEs select image pages 0/2/4; two 16x90 TILEs
- * and eight vertical LINE_F2 borders frame two columns. */
-typedef char world_menu_column_frame_tiles_offset_must_be_0x204
-    [((unsigned long)&((battle_menu_status_panel_menu_primitives_t*)0)->tiles == 0x204) ? 1 : -1];
-typedef char battle_menu_status_panel_menu_primitives_size_must_be_0x2a4
-    [(sizeof(battle_menu_status_panel_menu_primitives_t) == 0x2a4) ? 1 : -1];
-
 /* Status panel sprite view used by the *_panel_set_primitive_colors helpers:
  * a 0x10-byte head followed by 0x14-byte SPRT packets, so sprites[n + 1] is
  * battle_menu_status_panel_buffer_t.sprites[n]. */
@@ -527,22 +380,10 @@ extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
 void world_menu_run_battle_help(void);
 
 /* system */
-/* Provisional: 0x14-byte system-function record (table at 0x80156750). */
-typedef struct world_system_function {
-    s16 value_00;               /* 0x00; copied to g_world_menu_current_id */
-    u16 text_id;                /* 0x02; menu entry text id */
-    s16 menu_entry_index;       /* 0x04; g_world_menu_thread_menu_data index */
-    u16 value_06;               /* 0x06; copied to g_world_menu_system_function_row_actions */
-    u16 value_08;               /* 0x08; menu entry field_0x20 */
-    u8 _padding_0a[2];          /* aligns thread_entry */
-    void (*thread_entry)(void); /* 0x0c; started as thread 8 */
-    s16 alternate_id;           /* 0x10; replaces the id when navigation messages are not On */
-    u8 _padding_12[2];          /* tail padding to 4-byte alignment */
-} world_system_function_t;
 
 /* System-function table. Declared as an array: as a scalar, GCC hoists
  * world_menu_run_system_function_thread's menu-index reload above its store. */
-extern world_system_function_t g_world_system_function_table[];
+extern battle_system_function_t g_world_system_function_table[];
 extern s32 g_world_bin_load_request;
 extern s32 g_world_primary_bit_read_index;
 extern s32 g_world_primary_bit_write_index;
@@ -589,17 +430,6 @@ void world_noop_800e7808(s32 unused_unit_id);
 void world_noop_800fd074(const u8* unused_parameters);
 
 /* thread */
-/* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
- * returned through g_world_thread_inner_subroutine_result by
- * battle_unit_generate_crystal_or_treasure. Same object as the BATTLE
- * crystal_pickup_result_t view. */
-typedef struct world_crystal_pickup_result {
-    s32 result;          /* 0x00; -1 none, 4 treasure, 2 crystal, |1 learned */
-    u8 _unused_04[0x14]; /* 0x04 */
-    u8 learned[19][3];   /* 0x18 */
-    u8 unit_index;       /* 0x51 */
-    u8 treasure_item;    /* 0x52 */
-} world_crystal_pickup_result_t;
 
 extern u16 g_world_thread_change_cooldown;
 
@@ -616,7 +446,7 @@ extern u8 g_world_thread_status_snapshot[16];
 extern s32 g_world_thread_task_active;
 extern s32 g_world_thread_task_ids[][256];
 extern battle_menu_status_panel_indicator_prims_t g_world_thread_indicator_packets[2][2];
-extern world_crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
+extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 
 /* The unspecified argument list is intentional for the same stack-switching
  * callback bridge used by BATTLE. */
@@ -667,20 +497,6 @@ void world_thread_wait_until_inactive(s32 thread_id);
 void world_thread_yield(void);
 
 /* turn */
-/* One AT-list (turn order) descriptor. The four-byte stride is proven by the
- * index register world_menu_build_ability_preview_at_list advances by 4 and
- * by the +1 byte read for the turn value.
- *
- * flags bits: 0x1f = battle unit id, 0x1f meaning "end of list";
- *             0x20 = fixed "wait" label instead of a turn value;
- *             0x40 = the entry is the acting/queued unit (bracketed name);
- *             0x80 = turn value biased by 0x100. */
-typedef struct world_at_descriptor {
-    u8 flags;
-    u8 turn_value;
-    u8 _unused_02;
-    u8 _unused_03;
-} world_at_descriptor_t;
 
 extern world_menu_list_page_t g_world_at_list_pages[2];
 void world_build_at_list(void);
@@ -832,18 +648,6 @@ extern s8 g_world_remove_all_equipment_prompt_active;
 extern volatile u16 g_world_remove_all_equipment_blink_counter;
 
 /* editor */
-/* Positioned menu-number entry drawn by world_menu_draw_numeric_display_entries:
- * a screen position, a pointer to the live value, and the renderer selector.
- * The 0xC stride is proved by g_world_numeric_display_entries's three sublists at +0, +0x24 and
- * +0x54 (entries 0, 3 and 7). */
-typedef struct world_menu_number_entry {
-    u16 x;
-    u16 y;
-    s16* value;
-    s16 param;
-    s16 type;
-} world_menu_number_entry_t;
-typedef char world_menu_number_entry_size_must_be_0xc[(sizeof(world_menu_number_entry_t) == 0xC) ? 1 : -1];
 
 extern u8 g_world_editor_numeric_geometry[];
 extern RECT g_world_editor_numeric_table[2];
@@ -854,8 +658,8 @@ extern RECT g_world_editor_numeric_entries_d[];
 extern RECT g_world_editor_numeric_entries_e[];
 extern RECT g_world_editor_numeric_entries_f[];
 extern world_gfx_image_load_parameters_t g_world_editor_numeric_texture[];
-extern world_menu_number_entry_t g_world_editor_numeric_descriptor_a[];
-extern world_menu_number_entry_t g_world_editor_numeric_descriptor_b[];
+extern menu_number_entry_t g_world_editor_numeric_descriptor_a[];
+extern menu_number_entry_t g_world_editor_numeric_descriptor_b[];
 extern battle_menu_status_panel_numeric_buffer_t g_world_editor_numeric_state_a[2];
 extern battle_menu_status_panel_numeric_buffer_t g_world_editor_numeric_state_b[2];
 extern u8 g_world_editor_numeric_text_a[];
@@ -879,7 +683,7 @@ typedef char world_unit_status_identity_size_must_be_0xe[sizeof(world_unit_statu
 
 extern u8 g_world_comparison_unit_stat_summary[];
 extern world_unit_status_identity_t g_world_comparison_unit_identity;
-extern world_menu_number_entry_t g_world_comparison_unit_number_entries[];
+extern menu_number_entry_t g_world_comparison_unit_number_entries[];
 extern RECT g_world_comparison_unit_portrait_rect;
 extern world_status_thread_t g_world_comparison_display_thread_params;
 extern u8 g_world_comparison_unit_summary_packets[];
@@ -960,18 +764,47 @@ typedef struct world_gfx_packet_buffer {
 typedef char world_packet_buffer_gradient_lines_offset
     [((unsigned long)&((world_gfx_packet_buffer_t*)0)->gradient_lines == 0x30) ? 1 : -1];
 
-/* Provisional: sprite placement record passed to world_gfx_enqueue_oriented_textured_quad:
- * position and size followed by a world_formation_graphic_entry_t source rectangle
- * at 0x08 (world_menu_select_stat_gauge_level sets the halfword at 0x08). */
-typedef struct world_gfx_sprite_desc {
-    s16 x; /* 0x00 */
-    s16 y; /* 0x02 */
-    u8 _unused_04[0x0c - 0x04];
-    s16 texture_width; /* 0x0c: source width; >= 0x19 selects the wide shadow offset */
-    u8 _unused_0e[0x10 - 0x0e];
-    u16 clut;  /* 0x10; set by world_formation_draw_egg_sprite */
-    u16 tpage; /* 0x12 */
-} world_gfx_sprite_desc_t;
+/* One frame of a WLDCORE display-object or OPEN sprite-actor animation
+ * sequence: the cel (part list) it draws and how long it holds. duration
+ * 0xffff pins the frame. */
+typedef struct wldcore_anim_frame {
+    u16 cel;      /* 0x00 */
+    u16 duration; /* 0x02 */
+} wldcore_anim_frame_t;
+
+/* An animation: a frame count followed by its frames. */
+typedef struct wldcore_anim_sequence {
+    s32 frame_count;                /* 0x00 */
+    wldcore_anim_frame_t frames[1]; /* 0x04 */
+} wldcore_anim_sequence_t;
+
+/* Padded pixel size of a text image (wldcore_text_get_padded_dimensions,
+ * open_text_measure_menu_image). */
+typedef struct wldcore_text_dimensions {
+    s32 width;
+    s32 height;
+} wldcore_text_dimensions_t;
+typedef char wldcore_text_dimensions_size_must_be_8[(sizeof(wldcore_text_dimensions_t) == 8) ? 1 : -1];
+
+/* Provisional: the column view of the 36-byte WLDCORE window records and OPEN
+ * render records, rebased on their x/y pair (+0x18) and keeping the 0x24-byte
+ * stride. */
+typedef struct wldcore_window_xy {
+    s32 x;
+    s32 y;
+    u8 _unused_08[0x1c];
+} wldcore_window_xy_t;
+typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 0x24 ? 1 : -1];
+
+/* Colour triple of the 36-byte WLDCORE window records and OPEN render records
+ * (+0x20), rebased so the stores are `sb 0/1/2(records + 0x20 + index * 36)`. */
+typedef struct wldcore_window_entry_36_rgb {
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 _unused_03[0x21];
+} wldcore_window_entry_36_rgb_t;
+typedef char wldcore_entry_36_rgb_size_must_be_0x24[sizeof(wldcore_window_entry_36_rgb_t) == 0x24 ? 1 : -1];
 
 /* Provisional: 6-byte sprite slot (g_world_gfx_sprite_slots, 14 entries / 0x54 bytes, cleared by
  * world_gfx_clear_sprite_slots; written by world_gfx_set_sprite_slot; read by
@@ -993,95 +826,7 @@ typedef struct world_primitive_group {
     /* 0xD8 */ s32 tail;
 } world_primitive_group_t;
 
-/* Texture primitive placed by world_gfx_alloc_tpage7_vram: a SPRT
- * (code 0x64-0x67) or a POLY_FT4. Both carry the CLUT at 0x0e, which the icon
- * slot helpers overwrite. */
-typedef union world_texture_prim {
-    SPRT sprt;
-    POLY_FT4 ft4;
-} world_texture_prim_t;
-
-/* Textured menu quad source for world_gfx_enqueue_textured_quad_corners (0x8012ccd0):
- * four screen points, four texture points (only the low byte of each
- * halfword is used), then the CLUT and texture page. */
-typedef struct world_gfx_textured_quad_source {
-    s16 x0, y0;    /* 0x00 */
-    s16 x1, y1;    /* 0x04 */
-    s16 x2, y2;    /* 0x08 */
-    s16 x3, y3;    /* 0x0c */
-    u8 u0, u0_pad; /* 0x10 */
-    u8 v0, v0_pad; /* 0x12 */
-    u8 u1, u1_pad; /* 0x14 */
-    u8 v1, v1_pad; /* 0x16 */
-    u8 u2, u2_pad; /* 0x18 */
-    u8 v2, v2_pad; /* 0x1a */
-    u8 u3, u3_pad; /* 0x1c */
-    u8 v3, v3_pad; /* 0x1e */
-    u16 clut;      /* 0x20 */
-    u16 tpage;     /* 0x22 */
-} world_gfx_textured_quad_source_t;
-
-/* Textured rectangle source for 0x8012cfd4: screen rectangle, texture
- * origin (only the low byte of u/v is used), CLUT and texture page. The
- * caller also passes four RGB triples, one per corner. */
-typedef struct world_gfx_textured_rect_source {
-    s16 x, y;         /* 0x00 */
-    s16 w, h;         /* 0x04 */
-    u16 u;            /* 0x08 */
-    u16 v;            /* 0x0a */
-    u16 clut;         /* 0x0c */
-    u16 tpage;        /* 0x0e */
-    u8 _unused_10[8]; /* 0x10; not read by 0x8012cfd4, but 0x80116e74 reserves it */
-} world_gfx_textured_rect_source_t;
-typedef char world_textured_rect_source_size_must_be_0x18[sizeof(world_gfx_textured_rect_source_t) == 0x18 ? 1 : -1];
-
-/* Sprite placement record passed to world_gfx_enqueue_oriented_textured_quad:
- * screen rectangle, texture origin and size, CLUT and texture page. */
-typedef struct world_oriented_quad {
-    u16 x;
-    u16 y;
-    u16 w;
-    u16 h;
-    u8 u;
-    u8 _unused_09;
-    u8 v;
-    u8 _unused_0b;
-    u8 uw;
-    u8 _unused_0d;
-    u8 vh;
-    u16 clut;
-    u16 tpage;
-} world_oriented_quad_t;
-
-/* The same 0x14-byte sprite record with halfword texture fields, as the
- * formation cursor sprites, the item-category tab cursor and the job-wheel
- * mastered icon are written. */
-typedef struct world_oriented_sprite {
-    s16 x;     /* 0x00 */
-    s16 y;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    u16 u;     /* 0x08 */
-    u16 v;     /* 0x0a */
-    u16 u_w;   /* 0x0c */
-    u16 v_h;   /* 0x0e */
-    u16 clut;  /* 0x10 */
-    u16 tpage; /* 0x12 */
-} world_oriented_sprite_t;
-typedef char world_oriented_sprite_size_must_be_0x14[sizeof(world_oriented_sprite_t) == 0x14 ? 1 : -1];
-
-/* The 0x10-byte glyph blit descriptor used by the dead-unit panels and filled
- * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
- * the surface width in pixels. */
-typedef struct world_glyph_blit {
-    RECT rect;  /* 0x00 */
-    s32 stride; /* 0x08 */
-    u32 color;  /* 0x0c: colour word the decimal renderers set by value sign
-                 * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
-} world_glyph_blit_t;
-typedef char world_glyph_blit_size_must_be_0x10[sizeof(world_glyph_blit_t) == 0x10 ? 1 : -1];
-
-extern world_status_frame_t g_world_change_banner_panel_frames[2];
+extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
 /* Scenario interpreter interfaces shared by battle_script_execute_event and
  * world_script_execute_event. Signatures are as the interpreters bind them;
@@ -1235,7 +980,7 @@ void world_gfx_clip_portrait_poly_from_left(world_gfx_sprite_record_t* record, s
 void world_menu_copy_billboard_data_in(const void* source_a, const void* source_b, const void* source_c);
 void world_menu_copy_billboard_data_out(void* dest0, void* dest1, void* dest2, void* dest3);
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
-void world_gfx_submit_screen_fade_overlay(world_screen_tint_prims_t* prims, s32 intensity);
+void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
 void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, u16* x);
 
 void world_gfx_enqueue_oriented_textured_quad(
@@ -1255,7 +1000,7 @@ void world_gfx_init_image_loading(POLY_FT4* primitive, const world_image_locatio
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_menu_lerp_rect_to_poly_ft4_b(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 u32* world_shop_load_background_tim(s32 index);
-void world_gfx_mirror_4bpp_rect(u8* pixels, world_gfx_4bpp_rect_t* rect);
+void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void world_gfx_init_scaled_draw_area_packets(void* record);
 void world_gfx_init_scaled_draw_area_packets_3(void* record);
@@ -1295,16 +1040,6 @@ void world_gfx_load_evtchr_thread(void);
 void world_script_resetpalette_event_instruction(const u8* parameters);
 
 /* job */
-/* A job-wheel portrait quad (0x8018c8a4 and 0x8018c8b4): a
- * world_gfx_textured_rect_source_t without its unread trailing 8 bytes. */
-typedef struct world_job_wheel_portrait_quad {
-    s16 x, y;  /* 0x00 */
-    s16 w, h;  /* 0x04 */
-    u16 u;     /* 0x08 */
-    u16 v;     /* 0x0a */
-    u16 clut;  /* 0x0c */
-    u16 tpage; /* 0x0e */
-} world_job_wheel_portrait_quad_t;
 
 extern s32 g_world_job_cached_level;
 extern s32 g_world_job_cached_level_jp_requirement;
@@ -1321,8 +1056,8 @@ extern s16 g_world_job_wheel_unit_index;
 
 /* The current and the new job's portrait; separate objects, since
  * world_formation_run_job_wheel_menu addresses each with its own lui/addiu. */
-extern world_job_wheel_portrait_quad_t g_world_job_wheel_portrait_quad;
-extern world_job_wheel_portrait_quad_t g_world_job_wheel_new_portrait_quad;
+extern world_gfx_textured_rect_source_t g_world_job_wheel_portrait_quad;
+extern world_gfx_textured_rect_source_t g_world_job_wheel_new_portrait_quad;
 extern u8 g_world_job_wheel_script[];
 extern u8 g_world_job_wheel_job_selected;
 extern world_menu_point_t g_world_job_wheel_unit_sprite_position;
@@ -1338,12 +1073,12 @@ extern u8 g_world_job_wheel_close_frame;
 extern u8 g_world_job_wheel_open_frame;
 extern u8 g_world_job_wheel_closing;
 extern u8 g_world_job_wheel_opening;
-extern world_oriented_sprite_t g_world_job_wheel_mastered_icon_sprite;
+extern world_oriented_quad_t g_world_job_wheel_mastered_icon_sprite;
 extern u8 g_world_learn_job_list_script[];
 extern u8 g_world_learn_confirm_menu[];
 
 /* The prompt chained after g_world_learn_confirm_menu. */
-extern world_menu_icon_thread_param_t g_world_learn_confirm_submenu;
+extern world_menu_entry_t g_world_learn_confirm_submenu;
 extern u16 g_world_learn_job_name_list[];
 extern u16 g_world_view_job_name_list[];
 extern s8 g_world_job_wheel_spin_progress;
@@ -1390,33 +1125,6 @@ s32 world_job_calculate_next_level_jp_requirement(s32 index);
 s32 world_job_is_locked_for_all_units(s16 job_id);
 
 /* panel */
-/* Provisional layout of the dead-unit panel primitive block at 0x801cc074,
- * which holds two identical frame records. The 0x158 record size is fixed by
- * the second frame starting there and by the byte copy between them. Members
- * come from the panels' own accesses plus two helpers:
- * world_menu_init_sprite_array (0x8012e2b8) is handed the nine SPRT packets,
- * and world_gfx_init_scaled_draw_area_packets (0x80138adc) writes +0x1c and the
- * 8-byte window at +0x20 of the cursor record, which lands on the cursor
- * sprite's w and the RECT that follows it. The block is zero-filled in the
- * overlay image, so none of it is initialized data. */
-typedef struct world_panel_frame {
-    DR_MODE modes[7];                  /* 0x000: one per texture window */
-    SPRT sprites[9];                   /* 0x054: 5 border spans then 4 corners */
-    world_texture_prim_t texture_prim; /* 0x108: tpage-7 VRAM allocation record */
-    DR_MODE cursor_mode;               /* 0x130 */
-    SPRT cursor;                       /* 0x13c */
-    RECT cursor_texture_window;        /* 0x150 */
-} world_panel_frame_t;
-typedef char world_panel_frame_size_must_be_0x158[sizeof(world_panel_frame_t) == 0x158 ? 1 : -1];
-
-/* Provisional 0x1ac-byte double-buffered panel record at 0x801a2bd0. */
-typedef struct world_panel_record {
-    DR_MODE mode0;                                /* 0x000 */
-    DR_MODE mode1;                                /* 0x00c */
-    world_gfx_scaled_draw_area_pair_t draw_areas; /* 0x018; world_gfx_init_scaled_draw_area_packets */
-    SPRT sprites[18];                             /* 0x040 */
-    world_menu_palette_primitives_t* palette;     /* 0x1a8 */
-} world_panel_record_t;
 
 extern s16 g_world_panel_slide_up_y[];
 extern u8 g_world_panel_item_icon_texture[];
@@ -1452,15 +1160,6 @@ extern u8 g_world_tutorial_highlight_colors_b[4][3];  /* second quad corner colo
 extern u8 g_world_tutorial_highlight_quad_count;
 
 /* input */
-typedef struct world_menu_input_state {
-    s32 new_buttons;
-    s32 current_buttons;
-    s32 previous_buttons;
-    s32 repeat_counter_0;
-    s32 repeat_counter_1;
-    s32 repeat_counter_2;
-} world_menu_input_state_t;
-
 extern u8 g_world_input_activation_timer;
 extern u32 g_world_input_frame_current;
 extern u32 g_world_input_frame_initial_repeat_counter;
@@ -1513,32 +1212,6 @@ typedef struct world_formation_graphic_entry {
 } world_formation_graphic_entry_t;
 typedef char world_formation_graphic_entry_size_must_be_0xc[(sizeof(world_formation_graphic_entry_t) == 0xc) ? 1 : -1];
 
-/* Provisional: formation view record at 0x8018a144 driven by the thread at
- * 0x80108f9c. Only the fields it touches are named. */
-typedef struct world_formation_view {
-    void* ordering_table; /* 0x00 */
-    s32 color;            /* 0x04; copied from g_world_menu_color_red */
-    s32 link_quads;       /* 0x08; nonzero: 0x80108ce8 links every quad into the ordering table */
-    s16 scale_x;          /* 0x0c; 12-bit fixed, eased down to 0x1000 */
-    s16 scale_y;          /* 0x0e */
-    u8 _unused_10[8];
-    u8 origin[8]; /* 0x18; start of the world_formation_sprite_origin_t view whose x/y are offset_x/offset_y */
-    s16 offset_x; /* 0x20: added to every quad x (0 or 0x100 by screen mode) */
-    s16 offset_y; /* 0x22: added to every quad y (8 or 0x80) */
-} world_formation_view_t;
-
-/* Provisional: signed view of world_formation_graphic_entry_t as read by
- * world_gfx_set_scaled_poly_ft4_geometry_and_uv (0x80108a18), which multiplies w/h and
- * the 0x08/0x0a offsets by a 12-bit fixed scale as signed halfwords. */
-typedef struct world_formation_graphic_rect {
-    s16 u;     /* 0x00 */
-    s16 v;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    s16 x_off; /* 0x08 */
-    s16 y_off; /* 0x0a */
-} world_formation_graphic_rect_t;
-
 /* Provisional: texture page location (0x80173e4c) and screen point
  * (0x80173d7c) passed to world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
 typedef struct world_formation_texture_page_location {
@@ -1556,15 +1229,6 @@ typedef struct world_formation_fixed_scale {
     s16 x; /* 0x00 */
     s16 y; /* 0x02 */
 } world_formation_fixed_scale_t;
-
-/* Provisional: the formation view record from +0x18 as seen by
- * world_gfx_set_scaled_poly_ft4_geometry_and_uv (its caller passes view + 0x18); the
- * two words at +0x08/+0x0a are the view's offset_x/offset_y origin. */
-typedef struct world_formation_sprite_origin {
-    u8 _unused_00[8];
-    u16 x; /* 0x08 */
-    u16 y; /* 0x0a */
-} world_formation_sprite_origin_t;
 
 typedef enum world_monster_breed_rarity {
     WORLD_MONSTER_BREED_RARITY_NONE = 0,
@@ -1695,23 +1359,8 @@ typedef struct world_formation_unit_ability_slots {
 typedef char world_formation_unit_ability_slots_offset_must_be_0x5e
     [((unsigned long)&((world_formation_unit_ability_slots_t*)0)->ability_slots == 0x5e) ? 1 : -1];
 
-/* Menu-script "draw number" command: an opcode/length prefix followed by the
- * value getter, layout and byte position operands. */
-typedef struct world_draw_number_command {
-    u8 opcode;
-    u8 length;
-    u8 style;
-    u8 getter;
-    u8 width;
-    u8 spacing;
-    u8 alternate_palette;
-    u8 x;
-    u8 y;
-    u8 value;
-} world_draw_number_command_t;
-
-extern world_oriented_sprite_t g_world_formation_cursor_shadow_sprite;
-extern world_oriented_sprite_t g_world_formation_cursor_sprite;
+extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
+extern world_oriented_quad_t g_world_formation_cursor_sprite;
 extern s32 g_world_formation_current_menu;
 extern s32 g_world_formation_display_mode;
 extern world_menu_point_t g_world_formation_cursor_position;
@@ -1745,10 +1394,10 @@ extern s16 g_world_formation_open_request_state;
 extern world_formation_texture_page_location_t g_world_formation_view_texture_page;
 extern u32 g_world_formation_menu_entry_mask;
 extern s32 g_world_formation_name_string_revision;
-extern world_formation_graphic_rect_t g_world_formation_view_graphic_rects[];
+extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
 extern world_formation_fixed_scale_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
 extern u8 g_world_formation_view_graphic_count;                                /* formation graphic entry count */
-extern world_formation_view_t g_world_formation_view;
+extern zodiac_draw_context_t g_world_formation_view;
 
 /* Portrait code per sprite set: low byte is the portrait index. */
 extern u16 g_world_formation_sprite_by_portrait[];
@@ -1767,10 +1416,10 @@ extern u8 g_world_formation_saved_banner_enabled;
 extern u8 g_world_formation_screen_running;
 extern u32 g_world_formation_status_label_image[];
 extern RECT g_world_formation_status_label_image_rect;
-extern world_menu_icon_thread_param_t g_world_formation_egg_triangle_menu;
+extern world_menu_entry_t g_world_formation_egg_triangle_menu;
 
 /* Chained after the egg triangle menu; world_formation_process_frame only resets it. */
-extern world_menu_icon_thread_param_t g_world_formation_egg_submenu;
+extern world_menu_entry_t g_world_formation_egg_submenu;
 extern u8 g_world_formation_unit_slide_pending;
 extern s8 g_world_formation_scroll_position;
 extern s8 g_world_formation_scroll_velocity;
@@ -1792,16 +1441,16 @@ extern world_menu_window_command_t g_world_formation_stat_bar_window_top;
 extern world_menu_window_command_t g_world_formation_stat_bar_window_bottom;
 
 /* Three consecutive sprite records at 0x8018c704 / 0x8018c718 / 0x8018c72c. */
-extern world_gfx_sprite_desc_t g_world_formation_shadow_egg_sprites[3];
+extern world_oriented_quad_t g_world_formation_shadow_egg_sprites[3];
 extern u8 g_world_formation_gauge_bar_offsets[4];
 extern u8 g_world_formation_hp_gauge_colors[12];
 extern u8 g_world_formation_mp_gauge_colors[12];
 extern u8 g_world_formation_ct_gauge_colors[12];
-extern world_gfx_sprite_desc_t g_world_formation_label_cant_equip;
-extern world_gfx_sprite_desc_t g_world_formation_label_equipping;
-extern world_gfx_sprite_desc_t g_world_formation_label_leaving;
-extern world_gfx_sprite_desc_t g_world_formation_unit_dot_sprite;
-extern world_gfx_sprite_desc_t g_world_formation_label_missing;
+extern world_oriented_quad_t g_world_formation_label_cant_equip;
+extern world_oriented_quad_t g_world_formation_label_equipping;
+extern world_oriented_quad_t g_world_formation_label_leaving;
+extern world_oriented_quad_t g_world_formation_unit_dot_sprite;
+extern world_oriented_quad_t g_world_formation_label_missing;
 extern world_order_menu_entry_t g_world_formation_panel_windows[];
 extern battle_menu_sprite_cell_t g_world_formation_label_tiles[];
 extern battle_menu_sprite_cell_t g_world_formation_label_tiles_bottom[];
@@ -1813,13 +1462,13 @@ extern u8 g_world_formation_grid_return_frame;
 extern u8 g_world_formation_grid_return_done;
 extern u8 g_world_formation_portrait_slide_frame;
 extern s8 g_world_formation_away_unit_color[];
-extern world_menu_icon_thread_param_t g_world_formation_triangle_menu;
+extern world_menu_entry_t g_world_formation_triangle_menu;
 extern u8 g_world_formation_dismiss_prompt[];
 extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
 extern s8 g_world_formation_sort_field_indices[];
-extern world_menu_icon_thread_param_t g_world_formation_dismiss_final_confirm_menu;
+extern world_menu_entry_t g_world_formation_dismiss_final_confirm_menu;
 extern u8 g_world_formation_dismiss_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
 extern u8 g_world_formation_view_quads[2][0x4b0];
@@ -1852,8 +1501,8 @@ s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
 void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_formation_texture_page_location_t* page,
-    world_formation_screen_point_t* position, world_formation_graphic_rect_t* rect,
-    world_formation_fixed_scale_t* scale, world_formation_sprite_origin_t* origin);
+    world_formation_screen_point_t* position, main_zodiac_sprite_frame_t* rect, world_formation_fixed_scale_t* scale,
+    main_zodiac_draw_offset_t* origin);
 s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(
@@ -1862,7 +1511,7 @@ void world_formation_build_unit_graphic_entry(
 void world_formation_build_unit_record(
     struct battle_stats* unit, struct world_formation_unit* record, struct party_data* party);
 
-void world_gfx_build_zodiac_primitives(world_formation_view_t* view, POLY_FT4* poly);
+void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s32 item_id);
 s32 world_formation_can_scroll_slots(s32 scroll_position);
@@ -1875,10 +1524,10 @@ void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y, s32 unused_1);
 void world_formation_draw_cursor_trail(s16* cursor);
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y);
-void world_formation_draw_sprite_with_shadow(world_gfx_sprite_desc_t* pos, s32 rgb, s32 ot_index);
+void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, s32 rgb, s32 ot_index);
 
 void world_formation_draw_egg_sprite(
-    world_gfx_sprite_desc_t* pos, s32 palette, s32 rgb, s32 hatch_countdown, s32 ot_index);
+    world_oriented_quad_t* pos, s32 palette, s32 rgb, s32 hatch_countdown, s32 ot_index);
 
 void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s8* rgb, s32 ot_index);
 s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s32 item_id);
@@ -1948,25 +1597,6 @@ void world_formation_sort_roster(s32 index);
 s32 world_get_formation_unit_stat_by_mode(s32 unit_index);
 
 /* unit */
-/* Provisional: status-billboard record filled by world_menu_copy_unit_data_to_status_billboard
- * (0x800e7c40), the WORLD twin of debugchr_menu_copy_unit_data_to_status_billboard. */
-typedef struct world_unit_status_billboard {
-    s16 level;      /* 0x00 */
-    s16 team_kind;  /* 0x02; 0 ally, 1 enemy, 2 neutral, 3 auto-battle */
-    s16 list_index; /* 0x04 */
-    s16 unit_count; /* 0x06 */
-    s16 experience; /* 0x08 */
-    s16 battle_id;  /* 0x0a */
-    u16 hp;         /* 0x0c */
-    s16 hp_delta;   /* 0x0e */
-    u16 max_hp;     /* 0x10 */
-    u16 mp;         /* 0x12 */
-    s16 mp_delta;   /* 0x14 */
-    u16 max_mp;     /* 0x16 */
-    s16 ct;         /* 0x18 */
-    s16 _unused_1a; /* 0x1a */
-    s16 max_ct;     /* 0x1c; always 100 */
-} world_unit_status_billboard_t;
 
 /* Provisional: one 4-byte breeding entry per monster job from 0x5e
  * (0x8018debc): the hatch-day range and the three offspring jobs by rarity
@@ -1977,33 +1607,6 @@ typedef struct world_unit_monster_breed_entry {
 } world_unit_monster_breed_entry_t;
 typedef char world_unit_monster_breed_entry_size_must_be_4[(sizeof(world_unit_monster_breed_entry_t) == 4) ? 1 : -1];
 
-/* The unit status panel's two draw offsets. */
-typedef struct world_unit_status_offsets {
-    battle_menu_status_panel_draw_offset_t a; /* 0x00 */
-    battle_menu_status_panel_draw_offset_t b; /* 0x10 */
-} world_unit_status_offsets_t;
-
-/* Provisional: one gauge of the status record. */
-typedef struct world_unit_status_gauge {
-    s16 value;  /* 0x00 */
-    s16 value2; /* 0x02 */
-    s16 max;    /* 0x04 */
-} world_unit_status_gauge_t;
-
-/* Provisional status record passed to the unit status panel thread body and
- * world_menu_display_hovered_unit_stats; g_world_unit_selected_status_billboard
- * and g_world_unit_comparison_status_billboard are two of them. */
-typedef struct world_unit_status_record {
-    u8 _unused_00[2];
-    s16 status_icon; /* 0x02: 0-3, selects g_world_unit_status_icon_image_params */
-    s16 layout;      /* 0x04 */
-    u8 _unused_06[4];
-    s16 battle_id;                       /* 0x0a */
-    world_unit_status_gauge_t gauges[3]; /* 0x0c */
-    u8 _unused_1e[4];
-} world_unit_status_record_t;
-typedef char world_unit_status_record_size_must_be_0x22[(sizeof(world_unit_status_record_t) == 0x22) ? 1 : -1];
-
 /* Unpadded unsigned 16-bit x/y/z triple (6 bytes). */
 typedef struct vec3u16 {
     u16 x;
@@ -2013,9 +1616,9 @@ typedef struct vec3u16 {
 typedef char assert_vec3u16_size[sizeof(vec3u16_t) == 6 ? 1 : -1];
 
 extern world_item_stat_summary_t g_world_selected_unit_stat_summary;
-extern world_unit_status_record_t g_world_unit_selected_status_billboard;
-extern world_unit_status_record_t g_world_unit_comparison_status_billboard;
-extern world_status_frame_t g_world_stat_preview_panel_frames[2];
+extern battle_unit_status_record_t g_world_unit_selected_status_billboard;
+extern battle_unit_status_record_t g_world_unit_comparison_status_billboard;
+extern battle_menu_status_panel_buffer_t g_world_stat_preview_panel_frames[2];
 extern world_unit_editor_panel_data_t g_world_unit_editor_panel_data;
 
 /* The comparison unit's flag and label_text_ids[2], copied by
@@ -2074,7 +1677,7 @@ extern u8 g_world_unit_view_panel_fade_modes[];
 extern s16 g_world_unit_face_slot_order[];
 extern world_unit_status_identity_t g_world_selected_unit_identity;
 extern CVECTOR g_world_unit_panel_bar_colors[];
-extern world_menu_number_entry_t g_world_selected_unit_number_entries[];
+extern menu_number_entry_t g_world_selected_unit_number_entries[];
 extern world_gfx_image_load_parameters_t g_world_unit_summary_label_sprite_params[];
 extern world_gfx_image_load_parameters_t g_world_unit_summary_value_sprite_params[];
 extern RECT g_world_unit_status_panel_origin;
@@ -2159,15 +1762,6 @@ enum {
     WORLD_TEXT_FILE_HEADER_BYTES = 0x80,
 };
 
-/* Provisional: the text draw cursor at 0x8019a22c, passed to the text
- * renderer so it can advance across a line and wrap at the right margin. */
-typedef struct world_text_draw_origin {
-    u16 x;            /* 0x00 */
-    u16 y;            /* 0x02 */
-    u8 _unused_04[4]; /* 0x04 */
-    s32 right_limit;  /* 0x08: last usable x, minus an 8 pixel margin */
-} world_text_draw_origin_t;
-
 /* Provisional: destination placement for the packed-font glyph decoder at
  * 0x80129e4c.  x is a 4bpp pixel column (bit 0 selects the odd nibble),
  * y a row, and stride the destination row pitch in halfwords. */
@@ -2177,48 +1771,13 @@ typedef struct world_text_glyph_target {
     s16 stride; /* 0x04: halfwords per row */
 } world_text_glyph_target_t;
 
-/* Provisional: the pending text glyph request at 0x8019a338, consumed by
- * world_text_draw_glyph_with_typewriter_delay. The menu text state and the LoadImage RECT follow it
- * in memory but are addressed as separate globals. */
-typedef struct world_text_glyph_request {
-    u16 x;              /* 0x00: pen x; the low two bits select the sub-byte phase */
-    s16 y;              /* 0x02: pen y */
-    u16 glyph;          /* 0x04: 0xfa is the blank that skips the upload */
-    u8 _unused_06[6];   /* 0x06 */
-    s16 bits_per_pixel; /* 0x0c: 0 blanks the image, 0x10 draws it */
-    s16 palette;        /* 0x0e */
-} world_text_glyph_request_t;
-
-/* Pending message-box glyph (0x801c3474), written by world_text_message_box_thread
- * and drawn by world_text_draw_glyph_with_typewriter_delay_2. */
-typedef struct world_glyph_draw_state {
-    u16 pixel_x;      /* 0x00 */
-    u16 y;            /* 0x02; the text cursor y */
-    u16 code;         /* 0x04 */
-    u8 _unused_06[6]; /* 0x06 */
-    s16 mode;         /* 0x0c */
-    s16 color;        /* 0x0e */
-} world_glyph_draw_state_t;
-
 /* Provisional: menu text origin/stride words at 0x80153280 (the WORLD
  * script variable region; world_menu_set_text_origin writes +0x04/+0x06).
  * The text-image builders address these through one base register, so they
  * are modelled as one aggregate; the two parameter words at 0x80153304 and
  * 0x80153308 schedule as plain scalars and stay separate globals. */
-/* The world state block at 0x80153280. Its first word is the script-variable
- * pointer, which world_menu_init_subsystem_pointers points at g_word_flags; code that
- * only needs that word binds the same address as g_world_script_variables. */
-typedef struct world_menu_text_state {
-    s32* script_variables; /* 0x00; also bound as g_world_script_variables */
-    s16 origin_x;          /* 0x04 (0x80153284) */
-    s16 origin_y;          /* 0x06 (0x80153286) */
-    s32 _unused_08;
-    s32 stride; /* 0x0c (0x8015328c): rect width * 4 */
-    s32 color;  /* 0x10 (0x80153290): glyph blit fill; 0x44444444 while text colour 4 is drawn
-                   (world_menu_draw_text_columns) */
-} world_menu_text_state_t;
 
-extern world_glyph_draw_state_t g_world_text_message_box_glyph;
+extern battle_text_glyph_state_t g_world_text_message_box_glyph;
 extern s32 g_world_text_item_names;
 extern u8 g_world_numeric_display_palette_indices[12];
 extern u8 g_world_text_glyph_widths[];
@@ -2254,7 +1813,7 @@ extern RECT g_world_numeric_display_text_rect_a;
 extern RECT g_world_numeric_display_text_rect_b;
 extern RECT g_world_numeric_display_text_rect_c;
 extern world_gfx_image_load_parameters_t g_world_numeric_display_image_params[18];
-extern world_menu_number_entry_t g_world_numeric_display_entries[];
+extern menu_number_entry_t g_world_numeric_display_entries[];
 extern u16 g_world_text_message_duration_frames;
 
 /* Same layout as g_world_decimal_glyph_source. */
@@ -2284,13 +1843,13 @@ extern u8 g_world_text_shop_dialogue_data[];
 extern u8 g_world_text_shop_menu_labels_data[];
 extern u8 g_world_text_name_entry_keys_data[];
 extern world_menu_palette_slot_t g_world_numeric_display_palettes[];
-extern world_text_draw_origin_t g_world_text_draw_origin;
-extern world_text_glyph_request_t g_world_text_typewriter_glyph;
-extern world_menu_text_state_t g_world_text_typewriter_state; /* origin/stride passed to 0x800ff284 */
-extern RECT g_world_text_typewriter_vram_rect;                /* VRAM destination of the finished glyph */
-extern u8 g_world_text_typewriter_glyph_images[3][8][0x54];   /* eight glyph images per slot */
-extern u8 g_world_text_typewriter_previous_images[3][0x54];   /* previous image per slot */
-extern u8 g_world_text_typewriter_column_scratch[14];         /* one-column scratch used by the phase shift */
+extern world_glyph_blit_t g_world_text_draw_origin;
+extern battle_text_glyph_state_t g_world_text_typewriter_glyph;
+extern menu_text_state_t g_world_text_typewriter_state;     /* origin/stride passed to 0x800ff284 */
+extern RECT g_world_text_typewriter_vram_rect;              /* VRAM destination of the finished glyph */
+extern u8 g_world_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
+extern u8 g_world_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
+extern u8 g_world_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */
 extern s16 g_world_text_partner_screen_coords[];
 extern s16 g_world_text_speaker_screen_coords[3];
 extern world_panel_record_t g_world_numeric_display_panel_records[2];
@@ -2322,7 +1881,7 @@ extern void* g_world_text_location_names;
 extern u8* g_world_text_skillset_names;
 extern void* g_world_text_message_section;
 void world_text_message_box_thread(void);
-void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, u16* x, s32 arg3);
+void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, world_glyph_blit_t* origin, s32 arg3);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 u8* world_text_advance_cursor_with_backreferences_2(world_text_backreference_state_t* state, u8* cursor);
@@ -2334,7 +1893,7 @@ void world_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* dest);
 u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 
 void world_text_render_decimal_entry_list(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
@@ -2344,7 +1903,7 @@ void world_text_render_encoded_ids_to_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette);
 
 void world_text_render_signed_decimal_entries(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 s32 world_text_resolve_format_string_id(s32 event_code, s32 value);
 u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
@@ -2412,11 +1971,6 @@ typedef struct world_menu_list_record {
     u8 width_b; /* 0x0a */
 } world_menu_list_record_t;
 
-typedef struct world_menu_color_input {
-    u8 _unused_00[0x10];
-    s32 style; /* 0x10: 1 selects palette bank 1 (battle_menu_status_panel_frame_config_t.style) */
-} world_menu_color_input_t;
-
 typedef char world_menu_line_f2_size_must_be_16[(sizeof(LINE_F2) == 16) ? 1 : -1];
 
 /* Provisional record handed to the world text character thread by
@@ -2425,14 +1979,6 @@ typedef struct world_menu_description_record {
     u8 _unused_00[0x38];
     u8 description_text[1]; /* 0x38: rendered menu description text */
 } world_menu_description_record_t;
-
-/* Provisional record whose cursor is stepped with wrap-around by
- * world_menu_step_wrapping_cursor_on_scroll_buttons; only the inclusive upper cursor bound at +0x1e is
- * known. */
-typedef struct world_menu_wrapping_cursor_bounds {
-    u8 _unused_00[0x1e];
-    s16 max_index; /* 0x1e: cursor wraps between 0 and this value */
-} world_menu_wrapping_cursor_bounds_t;
 
 /* Provisional record read by world_menu_build_layout_sprites: an x/y origin at +0x08
  * and a layout mode halfword at +0x2c (1 or 2). Other fields are unknown. */
@@ -2443,16 +1989,6 @@ typedef struct world_menu_sprite_layout {
     u8 _unused_0c[0x2c - 0x0c];
     s16 mode; /* 0x2c */
 } world_menu_sprite_layout_t;
-
-/* Provisional: first thread parameter of world_menu_input_loop_thread's menu loop
- * (also passed to world_menu_handle_entry_confirm). Only the fields touched by
- * world_menu_cancel_thread_group (0x800ebe7c) are known. */
-typedef struct world_menu_cancel_context {
-    u8 _unused_00[0x20];
-    s16 thread_count; /* 0x20; -1 when there is no thread group */
-    u8 _unused_22[0x34 - 0x22];
-    s16* result_pointer; /* 0x34; set to -1 on cancel */
-} world_menu_cancel_context_t;
 
 /* Partial image view used by 0x801061e0. Upload rectangles determine the
  * second page's size; it begins at byte +0x8000 in both resource layouts. */
@@ -2479,35 +2015,11 @@ typedef struct world_menu_palette_source {
     u8 colors[64];
 } world_menu_palette_source_t;
 
-/* 17-byte per-unit menu row at 0x8013a750, 21 rows (one per battle unit slot).
- * The BATTLE twin battle_menu_reset_unit_records (0x8013f8b4) proves the
- * 17-byte stride and the entry count for the same table. */
-typedef struct world_menu_record {
-    u8 bytes[17];
-} world_menu_record_t;
-typedef char world_menu_record_size_must_be_17[(sizeof(world_menu_record_t) == 17) ? 1 : -1];
-
 /* Selection caches read the low byte of a little-endian halfword. */
 typedef union world_menu_halfword_view {
     s16 value;
     u8 bytes[2];
 } world_menu_halfword_view_t;
-
-/* Menu allocator slot, 16 at 0x8019b368; buffer is -1 when the slot is free.
- * WORLD twin of the BATTLE menu allocator slot. */
-typedef struct world_menu_allocation {
-    u8* buffer;
-    s32 page_count;
-} world_menu_allocation_t;
-typedef char world_menu_allocation_size_must_be_8[(sizeof(world_menu_allocation_t) == 8) ? 1 : -1];
-
-/* Per-menu command remap at 0x8013a658 (31 entries; the first 12 are the
- * stored-unit menus): map[0] handles 0xff, map[n + 1] other values. */
-typedef struct world_menu_command_map {
-    u16 menu_id;
-    u16 _padding_02; /* aligns map */
-    u8* map;
-} world_menu_command_map_t;
 
 /* Value range of a numeric menu entry (world_menu_number_entry_thread and
  * world_menu_labeled_number_entry_thread). */
@@ -2517,13 +2029,6 @@ typedef struct world_menu_number_range {
     s16 _unknown_04[2];      /* 0x04: -1 from wldcore_window_init_number_panel_render_thread */
     void (*on_change)(void); /* 0x08 */
 } world_menu_number_range_t;
-
-/* Shared window record whose signed rectangle the window-frame and tiled
- * rectangle commands use for source 2 (pointer at 0x801cd720). */
-typedef struct world_menu_window_rect_source {
-    u8 _unused_00[6];
-    RECT rect; /* 0x06 */
-} world_menu_window_rect_source_t;
 
 /* The menu thread's first parameter as the dead-unit panels read it. Only the
  * leading window rectangle is used and the record is certainly longer, so no
@@ -2544,42 +2049,11 @@ typedef union world_menu_panel_buffer {
     menu_sprite_page_t sprite_pages[2];
 } world_menu_panel_buffer_t;
 
-/* Provisional: the AT-list work area world_menu_build_ability_preview_at_list
- * fills, reached through g_main_heap_companion_overlay_load_address. The five parallel
- * halfword columns become the layout's text_ids/text_colors tables, `text` is
- * published through g_world_text_section_pointers[31], and `request` is the block handed to the
- * main-stack preview call, whose descriptor array follows it. */
-typedef struct world_menu_at_list_work {
-    s16 primary_values[40];                /* 0x000: turn-value column */
-    s16 secondary_values[40];              /* 0x050: unit-name column */
-    s16 entry_numbers[40];                 /* 0x0a0: ordinal column */
-    s16 primary_colors[40];                /* 0x0f0 */
-    s16 secondary_colors[40];              /* 0x140 */
-    u8 text[0x4f0];                        /* 0x190: packed 0xfe-terminated names */
-    s32 request;                           /* 0x680: preview request header */
-    world_at_descriptor_t descriptors[40]; /* 0x684 */
-} world_menu_at_list_work_t;
-typedef char world_menu_at_list_work_descriptors_offset_must_be_0x684
-    [((unsigned long)&((world_menu_at_list_work_t*)0)->descriptors == 0x684) ? 1 : -1];
-
 /* Result slots the shop menus share. */
 enum {
     WORLD_MENU_SELECTION_SHOP_QUANTITY = 3, /* chosen purchase/sale quantity */
     WORLD_MENU_SELECTION_PROMPT_RESULT = 4, /* yes/no prompt result (0 confirms) */
 };
-
-/* Provisional: 12-byte textured-sprite source record filled by
- * world_gfx_build_item_graphic_descriptor and world_item_build_type_icon_source and
- * consumed by the menu icon strip at 0x801c8464. */
-typedef struct world_item_icon_source {
-    s16 u;     /* 0x00 */
-    s16 v;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    u16 clut;  /* 0x08 */
-    u16 tpage; /* 0x0a */
-} world_item_icon_source_t;
-typedef char world_item_icon_source_size_must_be_12[sizeof(world_item_icon_source_t) == 12 ? 1 : -1];
 
 extern u8 g_menu_controller_input_0[];
 extern u8 g_menu_controller_input_1[];
@@ -2633,15 +2107,15 @@ extern world_menu_entry_t g_world_menu_system_entries[];
 extern s8 g_world_menu_temporary_draw_area_active;
 extern s32 g_world_menu_text_color;
 extern s32 g_world_menu_text_file_buffer[];
-extern s32 g_world_menu_text_param_22;                  /* 0x80153304: record +0x22 */
-extern s32 g_world_menu_text_param_24;                  /* 0x80153308: record +0x24 */
-extern world_menu_text_state_t g_world_menu_text_state; /* 0x80153280 */
+extern s32 g_world_menu_text_param_22;            /* 0x80153304: record +0x22 */
+extern s32 g_world_menu_text_param_24;            /* 0x80153308: record +0x24 */
+extern menu_text_state_t g_world_menu_text_state; /* 0x80153280 */
 extern u16 g_world_menu_texture_page;
 extern s32 g_world_menu_thread_result;
 extern s32 g_world_menu_thread_running_status;
 extern u16 g_world_menu_transition_active;
 extern u16 g_world_menu_transition_timeout;
-extern world_menu_record_t g_world_menu_unit_selection_rows[];
+extern battle_menu_record_t g_world_menu_unit_selection_rows[];
 extern s32 g_world_menu_use_alternate_main_palette;
 extern u8 g_world_menu_use_alternate_palette;
 extern s16 g_world_menu_use_scroll_position;
@@ -2655,7 +2129,7 @@ extern s32 g_world_menu_last_dispatched_command;
 extern s32 g_world_menu_last_dispatched_option;
 extern u8 g_world_menu_restore_depth;
 extern u8 g_world_menu_restore_unit_id;
-extern world_menu_command_map_t g_world_menu_command_maps[31];
+extern battle_menu_id_record_t g_world_menu_command_maps[31];
 extern world_menu_palette_source_t g_world_menu_glyph_image[];
 extern u8 g_world_menu_default_palette_colors[];
 extern RECT g_world_menu_portrait_pixel_rect;
@@ -2698,10 +2172,10 @@ extern RECT g_world_menu_hovered_unit_stats_display;
 extern RECT g_world_menu_attack_caster_stats_display;
 extern RECT g_world_menu_attack_target_stats_display;
 extern RECT g_world_menu_right_unit_stats_display;
-extern world_menu_number_entry_t g_world_menu_hovered_unit_stats_setup[];
-extern world_menu_number_entry_t g_world_menu_right_unit_stats_setup[];
-extern world_menu_number_entry_t g_world_menu_attack_caster_stats_setup[];
-extern world_menu_number_entry_t g_world_menu_attack_target_stats_setup[];
+extern menu_number_entry_t g_world_menu_hovered_unit_stats_setup[];
+extern menu_number_entry_t g_world_menu_right_unit_stats_setup[];
+extern menu_number_entry_t g_world_menu_attack_caster_stats_setup[];
+extern menu_number_entry_t g_world_menu_attack_target_stats_setup[];
 
 /* Four image-load parameter blocks per icon kind, for kinds 5..15. */
 extern world_gfx_image_load_parameters_t g_world_menu_icon_strip_image_params[];
@@ -2780,7 +2254,7 @@ extern u8* (*g_world_menu_script_handlers[])(u8* script);
 extern u8 g_world_menu_script_sprite_command[];
 extern world_menu_window_command_t g_world_menu_window_interior_command;
 extern s16 g_world_menu_window_scale_table[];
-extern world_gfx_sprite_desc_t g_world_menu_number_blank_sprite;
+extern world_oriented_quad_t g_world_menu_number_blank_sprite;
 extern u8 g_world_menu_cursor_bob_thresholds[];
 extern u8 g_world_menu_cursor_bob_active_thresholds[];
 extern s16 g_world_menu_list_row_text_ids[];
@@ -2798,7 +2272,7 @@ extern s32 g_world_menu_monster_skillset_flag;
 extern u16 g_world_menu_anything_ability_id;
 extern s16 g_world_menu_selected_option;
 extern s16 g_world_menu_action_slot_selected_option;
-extern world_menu_allocation_t g_world_menu_buffer_allocations[16];
+extern battle_menu_allocation_t g_world_menu_buffer_allocations[16];
 extern u8 g_world_menu_buffer_arena[0x70][0x100];
 extern s32 g_world_menu_preview_target_action;
 extern world_fade_tile_frame_t g_world_menu_panel_fade_frames[];
@@ -2861,7 +2335,7 @@ void world_menu_equipment_panel_thread(void);
 void world_menu_ability_panel_thread(void);
 
 void world_menu_display_hovered_unit_stats(
-    RECT* frame_rect, s32 mode, world_menu_number_entry_t* entries, world_unit_status_record_t* status);
+    RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status);
 
 void world_menu_build_ability_preview_at_list(void);
 void world_menu_scrolling_list_thread(void);
@@ -2874,8 +2348,7 @@ void world_menu_run_script_with_callback_suppressed(void);
 void world_menu_open_name_entry_key_list(void);
 void world_clear_menu_render_buffer(u8* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
-void world_gfx_copy_sprite_position_uv_and_size(
-    const world_menu_icon_thread_param_t* param, SPRT* sprite, s32 unused_frame);
+void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_init_panel_fade_tiles(void);
 void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
@@ -2898,7 +2371,7 @@ s32 world_menu_dispatch_system_function(
 void world_menu_draw_active_window_frames(void);
 
 void world_menu_draw_numeric_display_entries(
-    s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
+    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
 void world_menu_draw_pressable_button(s32 index, s32 x, s32 y, s32 pressed, s32 disabled, s32 sound_effect_id);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
@@ -2937,7 +2410,7 @@ void* world_menu_alloc_ui_buffer(s32 size);
 void world_menu_announce_entry_value_thread(void);
 void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
 void world_gfx_enqueue_line_f2(RECT* rect, u8* data, u8 semi_trans, s32 priority);
-void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* param, world_menu_icon_record_t* buffer);
+void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* buffer);
 void world_menu_submit_icon_primitives(world_menu_icon_sprites_t* prims);
 void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* sprite, s32 unused_2);
 void world_menu_init_numeric_display_frame_primitives(RECT* rect, world_menu_palette_primitives_t* menu);
@@ -2946,8 +2419,8 @@ void world_menu_build_skillset_entries(void);
 void world_menu_build_unit_status_list(void);
 s32 world_menu_build_window_frame_image(s32 width, s32 height, u16* destination);
 void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 d, s32 e, s32 f);
-void world_menu_cancel_thread_group(world_menu_cancel_context_t* context);
-void world_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_wrapping_cursor_bounds_t* bounds, s32* cursor);
+void world_menu_cancel_thread_group(world_menu_entry_t* context);
+void world_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* bounds, s32* cursor);
 void world_menu_check_action_restrictions(void);
 s32 world_menu_check_thread_completion(s32* input);
 void world_menu_confirm_action_silently(s32 parameter);
@@ -2958,9 +2431,9 @@ void world_menu_clear_transition_active_flag(void);
 void world_menu_clear_window_buffer_pointers(void);
 
 void world_menu_configure_status_panel_primitive_colors(
-    battle_menu_status_panel_primitives_t* primitives, const battle_menu_status_panel_frame_config_t* state);
+    battle_menu_status_panel_primitives_t* primitives, const world_status_thread_t* state);
 
-void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t* origin, u8* text);
+void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* origin, u8* text);
 void world_menu_display_triangle_selection(void);
 void world_menu_draw_animated_cursor(world_menu_point_t* position, u16* state, s32 mode);
 void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16* state, s32 mode);
@@ -2982,7 +2455,7 @@ s32 world_menu_get_item_price_display_value(s32 entry_index);
 s32 world_menu_get_learn_job_jp(s32 index);
 s32 world_job_calculate_current_level(s32 index);
 s32 world_menu_get_window_scale_step(void);
-void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, world_unit_status_billboard_t* output);
+void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, battle_unit_status_record_t* output);
 void world_menu_init_quad_from_record(u16* source, u16* record, POLY_FT4* poly);
 void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
@@ -3043,7 +2516,7 @@ u8* world_menu_script_add_blend_draw_mode(u8* script);
 u8* world_menu_script_clear_temporary_draw_area(u8* script);
 u8* world_menu_script_set_draw_area(u8* script);
 u8* world_menu_script_set_sprite_color(u8* script);
-void world_menu_select_primitive_color_palette(world_menu_palette_primitives_t* menu, world_menu_color_input_t* input);
+void world_menu_select_primitive_color_palette(world_menu_palette_primitives_t* menu, world_status_thread_t* input);
 void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value);
 void world_menu_select_icon_sprite_clut(SPRT* slot);
 void world_menu_set_brightness(s32 red, s32 green, s32 blue);
@@ -3091,7 +2564,7 @@ void world_menu_update_entry_cursor_quads(
 void world_menu_update_grid_cursor(s16 alternate);
 
 void world_menu_update_icon_cursor_sprites(
-    world_menu_icon_thread_param_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor);
+    world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 void world_menu_update_panel_fade(void);
 void world_menu_update_thread_7_idle_countdown(void);
@@ -3106,63 +2579,6 @@ void world_menu_init_sprite(SPRT* sprite);
 void world_menu_set_text_origin(s32 x, s32 y);
 
 /* card */
-/* Save-file image held in g_world_load_work_buffer (0x801cd1ec). WORLD's
- * serializer and loader establish the fields below; CARD uses the same
- * layout through g_card_save_buffer_pointer. */
-typedef struct world_card_save_buffer {
-    u8 _unused_0000[0x100];
-    u8 slot;             /* 0x100; save slot, 0xff while the buffer is incomplete */
-    u8 name[0x10];       /* 0x101; save-description leader name, 0xfe-terminated */
-    u8 name_terminator;  /* 0x111 */
-    u8 job_id;           /* 0x112 */
-    u8 level;            /* 0x113 */
-    u8 month;            /* 0x114; script variable 0x2e */
-    u8 day;              /* 0x115; script variable 0x2f */
-    u8 location;         /* 0x116; script variable 0x31, location text index */
-    u8 format_version;   /* 0x117; CARD writes 4 and WORLD load requires 4 */
-    u8 parity_bits[8];   /* 0x118; one parity bit per 128-byte block */
-    s32 elapsed_seconds; /* 0x120 */
-    /* 0x124-0x1dbe: same layout as CARD's card_save_buffer_t, filled by
-     * world_card_build_save_image from the SCUS globals named in its bcopy calls. */
-    u8 treasure_acquisition_date_bits[0x35];     /* 0x124; 47 packed 9-bit dates and 1 spare bit */
-    u8 land_discovery_date_bits[0x12];           /* 0x159; packed 9-bit discovery dates */
-    u8 proposition_last_attempt_date_bits[0x6c]; /* 0x16b; packed 9-bit dates */
-    u8 proposition_states[0x60];                 /* 0x1d7; low 6 bits are a remaining-day counter */
-    u8 _unused_0237[1];                          /* 0x237; serialized and parity-covered */
-    u8 saved_records[5][0x38];                   /* 0x238; domain remains unproven */
-    u32 saved_data_bits[40];                     /* 0x350 */
-    u32 secondary_saved_data_bits[2];            /* 0x3f0 */
-    u8 brave_story_character_ages[0x40];         /* 0x3f8 */
-    u8 proposition_count;                        /* 0x438 */
-    u8 active_propositions[8][9];                /* 0x439 */
-    u8 _unused_0481[3];                          /* 0x481; serialized and parity-covered */
-    u8 party_records[20][0xe0];                  /* 0x484; party_data_t records truncated to 0xe0 bytes */
-    u8 item_quantities[ITEM_ID_COUNT];           /* 0x1604; g_main_item_quantities */
-    u8 poached_item_quantities[ITEM_ID_COUNT];   /* 0x1704; g_main_item_poached_quantities */
-    /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
-    u8 item_location_flags[0x80];
-    s32 script_variables[0x100];   /* 0x1884 */
-    game_options_fields_t options; /* 0x1c84; copied to g_main_game_options by world_card_init_screen */
-    u8 _unknown_1c88;              /* 0x1c88 */
-    s8 item_type_order_0[0xc];     /* 0x1c89; signed, -1-terminated */
-    u8 _unused_1c95[1];            /* 0x1c95; serialized and parity-covered */
-    s8 item_type_order_1[8];       /* 0x1c96; signed, -1-terminated */
-    u8 _unused_1c9e[1];            /* 0x1c9e; serialized and parity-covered */
-    s8 item_type_order_2[7];       /* 0x1c9f; signed, -1-terminated */
-    s8 item_type_order_3[5];       /* 0x1ca6; signed, -1-terminated */
-    s8 item_type_order_4[5];       /* 0x1cab; signed, -1-terminated */
-    s8 item_type_order_5[7];       /* 0x1cb0; signed, -1-terminated */
-    s8 item_type_order_6[5];       /* 0x1cb7; signed, -1-terminated */
-    u8 weapon_page_order[0x8a];    /* 0x1cbc */
-    u8 helmet_page_order[0x1d];    /* 0x1d46 */
-    u8 armor_page_order[0x25];     /* 0x1d63 */
-    u8 accessory_page_order[0x21]; /* 0x1d88 */
-    u8 item_page_order[0x15];      /* 0x1da9 */
-    u8 _unused_1dbe[0x42];         /* 0x1dbe; parity-covered tail */
-} world_card_save_buffer_t;
-typedef char world_save_buffer_options_offset_must_be_0x1c84
-    [((unsigned long)&((world_card_save_buffer_t*)0)->options == 0x1c84) ? 1 : -1];
-typedef char world_save_buffer_size_must_be_0x1e00[(sizeof(world_card_save_buffer_t) == 0x1e00) ? 1 : -1];
 
 /* Partial card-file header: WORLD 0x8013300c puts byte +3 into the upper
  * half of open's creation mode. The remaining header is not modeled. */
@@ -3171,7 +2587,7 @@ typedef struct world_card_file_header {
     u8 allocation_blocks;
 } world_card_file_header_t;
 
-extern world_card_save_buffer_t* g_world_load_work_buffer;
+extern card_save_buffer_t* g_world_load_work_buffer;
 extern u8 g_world_card_info_pending;
 extern s16 g_world_card_list_scroll_velocity;
 extern u8 g_world_card_menu_step;
@@ -3195,7 +2611,7 @@ extern u8 g_world_card_slot_select_running;
  * below; world_card_run_mode_select_step assigns each into g_world_card_pending_message. */
 extern world_menu_thread_data_t g_world_card_save_unavailable_message[];
 extern world_menu_thread_data_t g_world_card_no_save_data_message[];
-extern world_menu_icon_thread_param_t g_world_card_mode_select_menu;
+extern world_menu_entry_t g_world_card_mode_select_menu;
 extern u8 g_world_card_mode_select_running;
 
 /* A pointer cell, not a record: cleared to 0, tested, and assigned
@@ -3226,11 +2642,11 @@ extern u16 g_world_card_slot_cursor_anim;
 extern u8 g_world_card_slot_list_input_ready;
 extern u8 g_world_card_overwrite_prompt_running;
 extern u8 g_world_card_load_prompt_running;
-extern world_gfx_sprite_desc_t g_world_card_slot_quad_0;
-extern world_gfx_sprite_desc_t g_world_card_slot_quad_1;
-extern world_gfx_sprite_desc_t g_world_card_slot_quad_2;
-extern world_gfx_sprite_desc_t g_world_card_slot_quad_3;
-extern world_gfx_sprite_desc_t g_world_card_slot_quad_4;
+extern world_oriented_quad_t g_world_card_slot_quad_0;
+extern world_oriented_quad_t g_world_card_slot_quad_1;
+extern world_oriented_quad_t g_world_card_slot_quad_2;
+extern world_oriented_quad_t g_world_card_slot_quad_3;
+extern world_oriented_quad_t g_world_card_slot_quad_4;
 extern u8 g_world_card_load_failed;
 extern u8 g_world_card_save_failed;
 extern s8 g_world_card_probe_result;
@@ -3303,7 +2719,7 @@ typedef union world_item_list_entry {
 } world_item_list_entry_t;
 typedef char world_item_list_entry_size_must_be_2[(sizeof(world_item_list_entry_t) == 2) ? 1 : -1];
 
-extern world_oriented_sprite_t g_world_item_category_tab_cursor_sprite;
+extern world_oriented_quad_t g_world_item_category_tab_cursor_sprite;
 extern struct world_item_stat_detail g_world_item_preview_stat_detail;
 extern u8* g_world_item_sorted_lists[];
 extern world_image_location_t g_world_item_icon_image_location;
@@ -3329,18 +2745,18 @@ extern s16 g_world_remove_item_saved_secondary_input;
 extern u16 g_world_remove_item_saved_newly_pressed;
 extern world_menu_number_range_t g_world_item_action_quantity_range;
 extern s16 g_world_item_action_option_states[3];
-extern world_menu_icon_thread_param_t g_world_item_action_menu;
+extern world_menu_entry_t g_world_item_action_menu;
 extern u16 g_world_remove_item_cursor_anim;
 extern world_menu_point_t g_world_remove_item_cursor_point;
-extern world_menu_icon_thread_param_t g_world_item_quantity_change_menu;
-extern world_menu_icon_thread_param_t g_world_item_unequip_all_menu;
+extern world_menu_entry_t g_world_item_quantity_change_menu;
+extern world_menu_entry_t g_world_item_unequip_all_menu;
 extern u8 g_world_item_list_window_script[];
 extern u8 g_world_item_hp_mp_bonus_window_script[];
 extern s8 g_world_item_menu_mode; /* item menu mode; -1 closes */
 
 /* The two item-category icon strips; the active one is kept in g_world_item_category_icon_strip. */
-extern world_menu_icon_thread_param_t g_world_item_category_icon_strip_a;
-extern world_menu_icon_thread_param_t g_world_item_category_icon_strip_b;
+extern world_menu_entry_t g_world_item_category_icon_strip_a;
+extern world_menu_entry_t g_world_item_category_icon_strip_b;
 extern s16 g_world_item_category_tabs_script;       /* window descriptor (narrow variant) */
 extern s16 g_world_item_category_tabs_wide_script;  /* window descriptor (wide variant) */
 extern s16 g_world_item_category_tab_sprites[][10]; /* 20-byte rects, one per row */
@@ -3356,7 +2772,7 @@ extern u16 g_world_item_rearrange_picked_scroll;   /* scroll offset when picked 
 extern u16 g_world_item_rearrange_preview_cursor;  /* last previewed cursor position */
 extern u8 g_world_item_rearrange_anim_frame;       /* animation frame counter */
 extern s16 g_world_item_category_strip_text_ids[]; /* option text ids of the active strip, -1 terminated */
-extern world_menu_icon_thread_param_t* g_world_item_category_icon_strip;
+extern world_menu_entry_t* g_world_item_category_icon_strip;
 extern u16 g_world_item_saved_selected_unit_index;
 extern u8 g_world_item_menu_category;
 extern u8 g_world_item_category_view;
@@ -3430,11 +2846,11 @@ extern s16 g_world_shop_menu_step;
 extern s16 g_world_shop_quantity_limit;
 extern world_menu_thread_data_t g_world_shop_quantity_menu_data;
 extern u8 g_world_shop_background_visible;
-extern world_menu_icon_thread_param_t g_world_shop_main_menu_thread_data;
-extern world_menu_icon_thread_param_t g_world_shop_fur_menu_thread_data;
+extern world_menu_entry_t g_world_shop_main_menu_thread_data;
+extern world_menu_entry_t g_world_shop_fur_menu_thread_data;
 
 /* The cursor doubles as the soldier-office mode (world_shop_get_soldier_office_entry_fee). */
-extern world_menu_icon_thread_param_t g_world_shop_hire_menu_thread_data;
+extern world_menu_entry_t g_world_shop_hire_menu_thread_data;
 extern RECT g_world_shop_background_rect;
 extern RECT g_world_shop_backdrop_tile_rect;
 extern RECT g_world_shop_edge_tile_rect;
@@ -3459,7 +2875,7 @@ extern u8 g_world_shop_fitting_room_initialized;
 
 /* Two-entry menu chain: row 3 of [0] opens [1] through [0]'s parent-index
  * table at 0x80195518. */
-extern world_menu_icon_thread_param_t g_world_shop_fitting_room_menu_thread_data[2];
+extern world_menu_entry_t g_world_shop_fitting_room_menu_thread_data[2];
 extern u8 g_world_shop_fitting_item_list_menu_script[];
 extern s8 g_world_shop_fitting_equip_menu_initialized;
 extern s8 g_world_shop_fitting_equip_slot;
@@ -3493,7 +2909,7 @@ extern s8 g_world_shop_fur_purchase_list_initialized;
 extern s8 g_world_shop_fur_equip_check_pending;
 extern s16 g_world_shop_fur_purchase_message_wait;
 extern u8 g_world_shop_repurchase_result; /* repurchase-menu thread result */
-extern world_menu_icon_thread_param_t g_world_shop_rename_confirm_menu;
+extern world_menu_entry_t g_world_shop_rename_confirm_menu;
 extern u8 g_world_shop_recruit_preview_initialized;
 extern u8 g_world_shop_rename_entry_initialized;
 extern u8 g_world_shop_rename_message_wait;
@@ -3586,7 +3002,7 @@ extern s16 g_world_debug_variable_list_request_state;
 extern world_menu_quad_page_t world_D_80173CBC[2];
 extern s32 g_world_preview_stats_window_active;
 extern u8 g_world_dismiss_unit_prompt_running;
-extern world_menu_icon_thread_param_t g_world_best_fit_confirm_menu;
+extern world_menu_entry_t g_world_best_fit_confirm_menu;
 extern u8 g_world_order_unit_menu[];
 extern s8* g_world_sort_key_lists[];
 extern u8 g_world_best_fit_slot_categories[5];

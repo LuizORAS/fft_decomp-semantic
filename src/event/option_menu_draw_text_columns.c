@@ -5,10 +5,9 @@
  * what reproduces the target's single s5 base register and the
  * MEM_IN_STRUCT_P reordering of the g_menu_text_palette_offset load across the color
  * store. */
-/* option_menu_text_layout_t and option_menu_entry_t live in fft/event_option.h. */
 
-void option_menu_draw_text_columns(option_menu_entry_t* entry, s32* row_offset, void* buffer) {
-    option_menu_text_layout_t* layout = entry->text_binding;
+void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
+    world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     s32 row;
     s32 column;
     s32 index;

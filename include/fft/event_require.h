@@ -60,17 +60,6 @@ typedef struct require_gfx_point {
     s16 y;
 } require_gfx_point_t;
 
-typedef struct require_gfx_sprite_rect {
-    u8 u; /* 0x00 */
-    u8 _unused_01;
-    u8 v;           /* 0x02 */
-    u8 _padding_03; /* aligns width */
-    s16 width;      /* 0x04 */
-    s16 height;     /* 0x06 */
-    s16 offset_x;   /* 0x08 */
-    s16 offset_y;   /* 0x0a */
-} require_gfx_sprite_rect_t;
-
 /* One display-condition sprite: texture rectangle and screen offset, shared by
  * the general- and special-case display-condition renderers. */
 typedef struct require_display_condition_quad {
@@ -92,7 +81,7 @@ extern battle_menu_panel_frame_geometry_t g_require_gfx_portrait_origin;
 extern u8 g_require_gfx_portrait_transition_offsets[];
 extern u8 g_require_gfx_scaled_sprite_count;
 extern require_gfx_point_t g_require_gfx_scaled_sprite_scale[];
-extern require_gfx_sprite_rect_t g_require_gfx_scaled_sprite_uv_rects[];
+extern main_zodiac_sprite_frame_t g_require_gfx_scaled_sprite_uv_rects[];
 extern require_texture_page_t g_require_gfx_scaled_sprite_texture_page;
 extern u8 g_require_portrait_cell_pixels[];
 extern RECT g_require_portrait_cell_rect;
@@ -108,27 +97,27 @@ extern POLY_GT4 g_require_gfx_poly_gt4_banks[2][40];
 
 /* find (BATTLE) */
 void require_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* output, const battle_menu_status_panel_frame_config_t* context);
+    world_menu_palette_primitives_t* output, const world_status_thread_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
 void require_gfx_build_portrait_poly_ft4(s32 flags, void* output);
 
-void require_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
+void require_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
 
 void require_gfx_build_status_group_primitives(POLY_FT4* poly);
 void require_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void require_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2);
 void require_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void require_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet);
+void require_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
 void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, require_gfx_texture_page_position_t* texture_page,
-    require_gfx_point_t* position, require_gfx_sprite_rect_t* sprite_rect, require_gfx_point_t* scale, POLY_FT4* base);
+    require_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, require_gfx_point_t* scale, POLY_FT4* base);
 
 void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const require_texture_page_t* texture,
-    const RECT* position, const require_gfx_sprite_rect_t* uv_rect, const require_gfx_point_t* scale,
+    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const require_gfx_point_t* scale,
     const s16* offset);
 
 void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
@@ -171,12 +160,12 @@ void require_menu_wait_selection_threads(void);
 /* panel */
 extern u8 g_require_panel_active_unit_banner[];
 extern u8 g_require_panel_billboard_data[];
-extern battle_menu_status_panel_gauges_t g_require_panel_comparison_billboard;
+extern battle_unit_status_record_t g_require_panel_comparison_billboard;
 extern s16 g_require_panel_comparison_unit_id;
 extern s32 g_require_panel_dim_a;
 extern s32 g_require_panel_dim_b;
 extern s32 g_require_panel_dim_c;
-extern battle_menu_status_panel_gauges_t g_require_panel_selected_billboard;
+extern battle_unit_status_record_t g_require_panel_selected_billboard;
 extern u8 g_require_panel_status_animation[];
 extern u8 g_require_panel_status_group_bounds[];
 extern u8 g_require_panel_status_group_count;
@@ -202,7 +191,7 @@ extern battle_menu_status_panel_editor_packet_t g_require_panel_comparison_edito
 extern u8 g_require_panel_comparison_large_number_image[];
 extern u8 g_require_panel_comparison_name_image[];
 extern u8 g_require_panel_comparison_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_require_panel_comparison_numeric_entries[];
+extern menu_number_entry_t g_require_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_require_panel_comparison_packets[2];
 extern u8 g_require_panel_comparison_portrait_image[];
 extern RECT g_require_panel_comparison_portrait_rect;
@@ -220,16 +209,16 @@ extern battle_menu_status_panel_editor_packet_t g_require_panel_selected_editor_
 extern u8 g_require_panel_selected_large_number_image[];
 extern u8 g_require_panel_selected_name_image[];
 extern u8 g_require_panel_selected_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_require_panel_selected_numeric_entries[];
+extern menu_number_entry_t g_require_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_require_panel_selected_packets[2];
 extern u8 g_require_panel_selected_portrait_image[];
 extern RECT g_require_panel_selected_portrait_rect;
 extern u8 g_require_panel_sprite_cells[];
 extern const require_texture_page_t g_require_panel_status_texture;
-void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_menu_status_panel_gauges_t* output);
+void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_unit_status_record_t* output);
 
 void require_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
@@ -289,14 +278,13 @@ extern s32 g_require_numeric_editor_thread_params;
 extern require_glyph_t g_require_text_decimal_glyph;
 void require_text_clear_string_buffer(u8* data);
 
-void require_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* output, s32 count);
+void require_text_render_decimal_entry_list(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
-void require_text_render_decimal_value(
-    s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
+void require_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 
-void require_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* output, s32 count);
+void require_text_render_signed_decimal_entries(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 void require_text_show_battle_congratulations(void);
 void require_text_build_battle_nicknames(void);

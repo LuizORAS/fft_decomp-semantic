@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void bunit_gfx_enqueue_gouraud_textured_quad(
-    const bunit_gouraud_rect_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
+    const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
     POLY_GT4* poly;
     u16 index = g_bunit_gfx_poly_gt4_count;
 
@@ -13,21 +13,11 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
 
     poly->x0 = rect->x + 0x80;
     poly->y0 = rect->y;
-    {
-        s32 right_offset = rect->w + 0x80;
-        s32 right_x = rect->x;
-        right_x += right_offset;
-        poly->x1 = right_x;
-    }
+    poly->x1 = (rect->x + 0x80) + rect->w;
     poly->y1 = rect->y;
     poly->x2 = rect->x + 0x80;
     poly->y2 = rect->y + rect->h;
-    {
-        s32 right_offset = rect->w + 0x80;
-        s32 right_x = rect->x;
-        right_x += right_offset;
-        poly->x3 = right_x;
-    }
+    poly->x3 = (rect->x + 0x80) + rect->w;
     poly->y3 = rect->y + rect->h;
 
     poly->u0 = rect->u;

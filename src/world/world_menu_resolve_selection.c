@@ -2,17 +2,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The selection slots are four halfwords. Command and option use their low
- * bytes; item uses its full halfword. */
-typedef struct {
-    u8 command;
-    u8 _unused_01;
-    u8 option;
-    u8 _padding_03; /* aligns item */
-    u16 item;
-    u16 _unused_06;
-} world_menu_selection_view_t;
-
 /**
  * Resolve the pending action-menu command, option, and item selection.
  *

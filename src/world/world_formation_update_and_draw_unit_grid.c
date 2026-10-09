@@ -8,7 +8,7 @@
 #endif
 
 /* The slot record passed to the unit sprite and egg portrait drawers: the
- * world_gfx_sprite_desc_t layout with the quad size at +0x04/+0x06. */
+ * world_oriented_quad_t layout with the quad size at +0x04/+0x06. */
 typedef struct world_formation_slot_sprite {
     s16 x;
     s16 y;
@@ -28,7 +28,7 @@ typedef struct world_formation_slot_sprite {
  */
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
-    world_gfx_sprite_desc_t unused_desc;
+    world_oriented_quad_t unused_desc;
     world_formation_slot_sprite_t pos;
     u8 unused_rgb[3];
     u8 rgb[3];
@@ -200,7 +200,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
                 world_formation_draw_egg_sprite(
-                    (world_gfx_sprite_desc_t*)&pos, unit->egg_color, (s32)rgb, unit->birthday & 0xf, 6);
+                    (world_oriented_quad_t*)&pos, unit->egg_color, (s32)rgb, unit->birthday & 0xf, 6);
             } else {
                 world_formation_draw_unit_sprite(i, (world_menu_point_t*)&pos, (s8*)rgb, 6);
             }
@@ -219,8 +219,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 rgb[1] += g_world_formation_dot_glow_timer;
                 rgb[2] += g_world_formation_dot_glow_timer;
             }
-            world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_formation_unit_dot_sprite, rgb, 0, 1, 8);
+            world_gfx_enqueue_oriented_textured_quad(&g_world_formation_unit_dot_sprite, rgb, 0, 1, 8);
         }
     }
     world_menu_set_sprite_color(g_world_formation_saved_sprite_color);

@@ -326,10 +326,13 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     if (g_battle_map_mesh_part_geometry[i] != 0) {
                         battle_map_init_mesh_render_records((u16*)g_battle_map_mesh_part_geometry[i]);
                     }
-                    g_battle_map_textured_triangle_render_record_count += g_battle_map_mesh_parts[i].counts[0];
-                    g_battle_map_textured_quad_render_record_count += g_battle_map_mesh_parts[i].counts[1];
-                    g_battle_map_untextured_triangle_render_record_count += g_battle_map_mesh_parts[i].counts[2];
-                    g_battle_map_untextured_quad_render_record_count += g_battle_map_mesh_parts[i].counts[3];
+                    g_battle_map_textured_triangle_render_record_count
+                        += g_battle_map_mesh_parts[i].textured_triangle_count;
+                    g_battle_map_textured_quad_render_record_count += g_battle_map_mesh_parts[i].textured_quad_count;
+                    g_battle_map_untextured_triangle_render_record_count
+                        += g_battle_map_mesh_parts[i].untextured_triangle_count;
+                    g_battle_map_untextured_quad_render_record_count
+                        += g_battle_map_mesh_parts[i].untextured_quad_count;
                 }
                 g_battle_map_resource_load_state = 0x91;
             }
@@ -345,10 +348,13 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         battle_map_init_mesh_render_records((u16*)g_battle_map_mesh_part_geometry[i]);
                     }
                     g_battle_map_mesh_part_geometry[i] = 0;
-                    g_battle_map_textured_triangle_render_record_count += g_battle_map_mesh_parts[i].counts[0];
-                    g_battle_map_textured_quad_render_record_count += g_battle_map_mesh_parts[i].counts[1];
-                    g_battle_map_untextured_triangle_render_record_count += g_battle_map_mesh_parts[i].counts[2];
-                    g_battle_map_untextured_quad_render_record_count += g_battle_map_mesh_parts[i].counts[3];
+                    g_battle_map_textured_triangle_render_record_count
+                        += g_battle_map_mesh_parts[i].textured_triangle_count;
+                    g_battle_map_textured_quad_render_record_count += g_battle_map_mesh_parts[i].textured_quad_count;
+                    g_battle_map_untextured_triangle_render_record_count
+                        += g_battle_map_mesh_parts[i].untextured_triangle_count;
+                    g_battle_map_untextured_quad_render_record_count
+                        += g_battle_map_mesh_parts[i].untextured_quad_count;
                 }
                 g_battle_map_resource_load_state = 0;
             }

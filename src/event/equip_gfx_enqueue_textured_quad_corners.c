@@ -1,37 +1,8 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-typedef struct equip_quad_descriptor {
-    u16 x0;
-    u16 y0;
-    u16 x1;
-    u16 y1;
-    u16 x2;
-    u16 y2;
-    u16 x3;
-    u16 y3;
-    u8 u0;
-    u8 _unused_11;
-    u8 v0;
-    u8 _unused_13;
-    u8 u1;
-    u8 _unused_15;
-    u8 v1;
-    u8 _unused_17;
-    u8 u2;
-    u8 _unused_19;
-    u8 v2;
-    u8 _unused_1b;
-    u8 u3;
-    u8 _unused_1d;
-    u8 v3;
-    u8 _padding_1f; /* aligns clut */
-    u16 clut;
-    u16 tpage;
-} equip_quad_descriptor_t;
-
 void equip_gfx_enqueue_textured_quad_corners(
-    const equip_quad_descriptor_t* descriptor, const u8* color, s32 semitrans, s32 otag_index) {
+    const world_gfx_textured_quad_source_t* descriptor, const u8* color, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_otag = otag_index;
     POLY_FT4* poly;

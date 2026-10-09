@@ -22,8 +22,8 @@ void battle_display_menu_number_entry(s32 value, u8 digit_count, s32 image, u16*
 
     *origin += (digit_count - 1) * 6;
     do {
-        battle_text_render_glyph_to_4bpp_image(
-            g_text_glyph_bitmap_data + (value % 10) * 35, image, origin, g_menu_text_palette_offset);
+        battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + (value % 10) * 35, image,
+            (world_glyph_blit_t*)origin, g_menu_text_palette_offset);
         value = value / 10;
         cell = *origin;
         *origin = cell - 6;

@@ -185,14 +185,14 @@ void world_menu_build_ability_preview_at_list(void) {
         entry->window_x = 0x8c;
         entry->window_y = 0x30;
         entry->window_width = 0xe8;
-        entry->overall_width = 0xe8;
+        entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
         LAYOUT(entry)->columns.row_count = 6;
         entry->window_x = 0xbe;
         entry->window_y = 0x30;
         entry->window_width = 0x84;
-        entry->overall_width = 0x84;
+        entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
         g_world_menu_at_list_layout.columns.mode[2] = 2;
     }

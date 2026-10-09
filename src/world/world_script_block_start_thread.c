@@ -3,8 +3,7 @@
 
 /* Defined with this record in world_script_jump_event_instruction.c; the
  * BATTLE twin forward-declares it the same way. */
-typedef struct world_script_event_instruction world_script_event_instruction_t;
-extern void world_script_jump_event_instruction(world_script_event_instruction_t* parameters);
+extern void world_script_jump_event_instruction(battle_script_jump_instruction_t* parameters);
 
 /* Thread body for an event BLOCK_START: runs the enclosed instructions up to
  * BLOCK_END on its own thread, dispatching the unit-movement, animation and
@@ -47,7 +46,7 @@ void world_script_block_start_thread(void) {
             }
             g_world_unit_was_moving_latch[misc_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
-            world_script_jump_event_instruction((world_script_event_instruction_t*)parameters);
+            world_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
             world_script_waitwalk_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM) {

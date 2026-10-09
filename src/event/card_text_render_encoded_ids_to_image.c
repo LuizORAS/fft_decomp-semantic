@@ -6,7 +6,7 @@
  * same unused style value; card_text_render_id_rows_to_vram passes it. */
 void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds, s32 glyph_spacing,
     s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_glyphs, s32 terminator, s32 unused_style) {
-    card_text_image_position_t position;
+    bunit_text_image_position_t position;
     s32 row;
     s32 remaining_glyphs = max_glyphs;
     s32 packed_terminator;

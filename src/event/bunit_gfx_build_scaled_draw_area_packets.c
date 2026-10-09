@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 void bunit_gfx_build_scaled_draw_area_packets(
-    bunit_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset) {
+    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset) {
     s32 percent;
     s32 w;
     s32 h;

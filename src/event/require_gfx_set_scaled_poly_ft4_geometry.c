@@ -6,11 +6,12 @@
  * they live in fft/event_require.h so the callers share one spelling. */
 typedef char require_texture_page_position_size_must_be_4[sizeof(require_gfx_texture_page_position_t) == 4 ? 1 : -1];
 typedef char require_point_size_must_be_4[sizeof(require_gfx_point_t) == 4 ? 1 : -1];
-typedef char require_sprite_rect_size_must_be_0x0c[sizeof(require_gfx_sprite_rect_t) == 0x0c ? 1 : -1];
+typedef char require_sprite_rect_size_must_be_0x0c[sizeof(main_zodiac_sprite_frame_t) == 0x0c ? 1 : -1];
 
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
 void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, require_gfx_texture_page_position_t* texture_page,
-    require_gfx_point_t* position, require_gfx_sprite_rect_t* sprite_rect, require_gfx_point_t* scale, POLY_FT4* base) {
+    require_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, require_gfx_point_t* scale,
+    POLY_FT4* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;

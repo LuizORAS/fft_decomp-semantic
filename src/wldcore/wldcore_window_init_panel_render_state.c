@@ -35,16 +35,16 @@ void wldcore_window_init_panel_render_state(
     g_wldcore_window_panel_render_state.window_y = y - 0x78;
     g_wldcore_window_panel_render_state.window_width = text_width;
     g_wldcore_window_panel_render_state.window_height = 0;
-    g_wldcore_window_panel_render_state._unknown_10[0] = 0;
-    g_wldcore_window_panel_render_state._unknown_10[1] = 0;
-    g_wldcore_window_panel_render_state.overall_width = text_width;
-    g_wldcore_window_panel_render_state.overall_height = 0;
-    g_wldcore_window_panel_render_state._unknown_18[0] = 0;
-    g_wldcore_window_panel_render_state._unknown_18[1] = 0;
+    g_wldcore_window_panel_render_state.text_image.x_load = 0;
+    g_wldcore_window_panel_render_state.text_image.y_load = 0;
+    g_wldcore_window_panel_render_state.text_image.width = text_width;
+    g_wldcore_window_panel_render_state.text_image.height = 0;
+    g_wldcore_window_panel_render_state.text_image.x_screen_offset = 0;
+    g_wldcore_window_panel_render_state.text_image.y_screen_offset = 0;
     g_wldcore_window_panel_render_state.text_id = 0;
     last_row = dimensions->y;
     g_wldcore_window_panel_render_state.max_row_index = last_row;
-    g_wldcore_window_panel_render_state.field_0x20 = 0;
+    g_wldcore_window_panel_render_state.thread_count = 0;
     g_wldcore_window_panel_render_state.parent_indices = g_wldcore_panel_row_actions;
     g_wldcore_window_panel_render_state.header_id = 1;
     g_wldcore_window_panel_render_state.text_binding

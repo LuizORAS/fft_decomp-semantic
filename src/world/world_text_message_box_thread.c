@@ -404,11 +404,11 @@ void world_text_message_box_thread(void) {
                         started = 1;
                         value -= code * g_world_text_message_box_digit_divisors[i];
                     }
-                    g_world_text_message_box_glyph.code = code;
-                    g_world_text_message_box_glyph.pixel_x = cursor_x;
+                    g_world_text_message_box_glyph.glyph = code;
+                    g_world_text_message_box_glyph.x = cursor_x;
                     g_world_text_message_box_glyph.y = cursor_y;
                     g_world_text_message_box_glyph.mode = rec.dialog_type & 0x70;
-                    g_world_text_message_box_glyph.color = rec.color;
+                    g_world_text_message_box_glyph.palette = rec.color;
                     world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, color);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
@@ -435,10 +435,10 @@ void world_text_message_box_thread(void) {
                     NEXT();
                     code = code + *text;
                 }
-                g_world_text_message_box_glyph.code = code;
+                g_world_text_message_box_glyph.glyph = code;
                 g_world_text_message_box_glyph.mode = rec.box_type;
-                g_world_text_message_box_glyph.color = rec.color;
-                g_world_text_message_box_glyph.pixel_x = cursor_x;
+                g_world_text_message_box_glyph.palette = rec.color;
+                g_world_text_message_box_glyph.x = cursor_x;
                 g_world_text_message_box_glyph.y = cursor_y;
                 world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, color);
                 if (code == TEXT_SPACE) {

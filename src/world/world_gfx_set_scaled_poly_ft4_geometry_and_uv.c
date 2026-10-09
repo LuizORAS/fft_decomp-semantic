@@ -6,12 +6,12 @@
  * offset and size by a 12-bit fixed scale (rounded to the nearest pixel,
  * size made positive) and places it at position + origin. */
 void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_formation_texture_page_location_t* page,
-    world_formation_screen_point_t* position, world_formation_graphic_rect_t* rect,
-    world_formation_fixed_scale_t* scale, world_formation_sprite_origin_t* origin) {
-    s32 x_off = rect->x_off * scale->x;
-    s32 y_off = rect->y_off * scale->y;
-    s32 w = rect->w * scale->x;
-    s32 h = rect->h * scale->y;
+    world_formation_screen_point_t* position, main_zodiac_sprite_frame_t* rect, world_formation_fixed_scale_t* scale,
+    main_zodiac_draw_offset_t* origin) {
+    s32 x_off = rect->offset_x * scale->x;
+    s32 y_off = rect->offset_y * scale->y;
+    s32 w = rect->width * scale->x;
+    s32 h = rect->height * scale->y;
     s32 round_x = 0;
     s32 round_y = 0;
     s32 round_w = 0;
@@ -50,12 +50,12 @@ void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_formati
     poly->tpage = GetTPage(1, 0, page->x, page->y & 0xF00);
     poly->u0 = rect->u;
     poly->v0 = rect->v;
-    poly->u1 = rect->u + rect->w;
+    poly->u1 = rect->u + rect->width;
     poly->v1 = rect->v;
     poly->u2 = rect->u;
-    poly->v2 = rect->v + rect->h;
-    poly->u3 = rect->u + rect->w;
-    poly->v3 = rect->v + rect->h;
+    poly->v2 = rect->v + rect->height;
+    poly->u3 = rect->u + rect->width;
+    poly->v3 = rect->v + rect->height;
     poly->x0 = position->x + x_off + origin->x;
     poly->y0 = position->y + y_off + origin->y;
     poly->x1 = position->x + x_off + origin->x + w;

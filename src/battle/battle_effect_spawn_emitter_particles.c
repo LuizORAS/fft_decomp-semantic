@@ -78,7 +78,7 @@ s32 battle_effect_spawn_emitter_particles(
     u8 colour_b;
     map_tile_t* tile;
 
-    entry = &g_effect_geometry_table->entries[emitter_index];
+    entry = &g_effect_geometry_table->entries[emitter_index].emitter;
     time = frame;
     frame = frame % 160;
     kind = entry->work_kind_flags;

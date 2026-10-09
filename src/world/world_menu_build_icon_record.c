@@ -5,7 +5,7 @@
 /* Publish the icon strip's text-image upload rectangle to the caller, build the
  * four menu sprites of the icon record, and place the icon sprites that the
  * strip's icon kind selects. */
-void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* param, world_menu_icon_record_t* record) {
+void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* record) {
     s32 kind;
     s32 index;
     u16 width;
@@ -23,16 +23,16 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
     u8 unused_scratch[8];
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
-    rect->x = param->x;
-    rect->y = param->y;
-    width = param->width;
+    rect->x = param->vram_x;
+    rect->y = param->vram_y;
+    width = param->inner_width;
     rect->w = (s16)width >> 2;
-    rect->h = param->height;
+    rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
     world_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
     world_gfx_init_image_loading((POLY_FT4*)record->base.sprites, (const world_image_location_t*)param,
-        (const world_image_location_t*)&param->icon_x, &param->text_image);
+        (const world_image_location_t*)&param->window_x, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
     size = 0x10;
@@ -44,7 +44,8 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
     record->base.sprites[1].v0 = 0;
     record->base.sprites[2].u0 = 0xb8;
     record->base.sprites[2].v0 = 0;
-    kind = param->icon_kind;
+    /* The icon kind is read as a signed halfword. */
+    kind = *(s16*)&param->header_id;
     /* The range test below reads its own halfword copy of the kind. */
     index = (s16)kind;
     if (kind == 0x10) {
@@ -54,13 +55,13 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
         record->icons[0]->w = size;
         record->icons[0]->h = 8;
         record->icons[0]->x0
-            = ((const world_gfx_image_load_parameters_t*)param->redraw_flag)->height + param->icon_x + 7;
-        record->icons[0]->y0 = param->flags - 1;
+            = ((const world_gfx_image_load_parameters_t*)param->text_binding)->height + param->window_x + 7;
+        record->icons[0]->y0 = param->window_y - 1;
         world_gfx_init_image_loading((POLY_FT4*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-            (const world_image_location_t*)&param->icon_x, &g_world_menu_single_icon_image_params[1]);
+            (const world_image_location_t*)&param->window_x, &g_world_menu_single_icon_image_params[1]);
     } else if (kind < 5) {
         world_gfx_init_image_loading((POLY_FT4*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-            (const world_image_location_t*)&param->icon_x, &g_world_menu_single_icon_image_params[kind]);
+            (const world_image_location_t*)&param->window_x, &g_world_menu_single_icon_image_params[kind]);
     } else {
         if (index >= 5 && index < 0x10) {
             world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
@@ -71,13 +72,16 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
              * instruction short; `(kind << 2) + n` selects the target's 4-op form. */
             kind -= 5;
             world_gfx_init_image_loading((POLY_FT4*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&param->icon_x, &g_world_menu_icon_strip_image_params[(kind << 2)]);
+                (const world_image_location_t*)&param->window_x, &g_world_menu_icon_strip_image_params[(kind << 2)]);
             world_gfx_init_image_loading((POLY_FT4*)record->icons[0], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&param->icon_x, &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
+                (const world_image_location_t*)&param->window_x,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
             world_gfx_init_image_loading((POLY_FT4*)record->icons[1], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&param->icon_x, &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
+                (const world_image_location_t*)&param->window_x,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
             world_gfx_init_image_loading((POLY_FT4*)record->icons[2], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&param->icon_x, &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
+                (const world_image_location_t*)&param->window_x,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
         } else {
             record->icons[0] = 0;
             record->icons[1] = 0;

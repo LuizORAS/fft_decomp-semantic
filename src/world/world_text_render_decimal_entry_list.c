@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void world_text_render_decimal_entry_list(
-    s32 pixels, world_menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, out->color = 0) {
@@ -11,7 +11,7 @@ void world_text_render_decimal_entry_list(
 
         out->rect.x = entries->x;
         out->rect.y = entries->y;
-        flags = entries->param;
+        flags = entries->format;
         flags &= MENU_DECIMAL_SIGN_CLEAR_MASK;
         if (amount < 0) {
             amount = -amount;

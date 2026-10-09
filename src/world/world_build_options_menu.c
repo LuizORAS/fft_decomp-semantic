@@ -3,23 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: one of the two 0x190-byte options-menu packet pages at
- * 0x801ae894, alternated by frame. */
-typedef struct world_options_menu_page {
-    SPRT title;                                   /* 0x000: window title image */
-    SPRT value;                                   /* 0x014: selected value image */
-    world_gfx_scaled_draw_area_pair_t title_area; /* 0x028 */
-    world_gfx_scaled_draw_area_pair_t value_area; /* 0x050 */
-    DR_MODE text_mode;                            /* 0x078 */
-    DR_MODE window_mode;                          /* 0x084 */
-    DR_MODE icon_mode;                            /* 0x090 */
-    world_menu_icon_record_t icons;               /* 0x09c */
-    SPRT frame;                                   /* 0x118: cursor frame */
-    SPRT arrows[2];                               /* 0x12c: scroll arrows */
-    SPRT arrow_marks[2];                          /* 0x154 */
-    SPRT thumb;                                   /* 0x17c: scroll-bar thumb */
-} world_options_menu_page_t;
-
 extern world_options_menu_page_t g_world_options_menu_pages[2];
 
 /*
@@ -83,14 +66,14 @@ void world_build_options_menu(void) {
     layout = (world_menu_text_layout_t*)&g_world_option_menu_entry_table;
     entry->window_height = layout->row_count * 16 + 0x10;
     entry->inner_height = layout->row_count * 16 + 0x10;
-    entry->overall_height = layout->row_count * 16 + 0x10;
+    entry->text_image.height = layout->row_count * 16 + 0x10;
     window.x_screen_offset = 8;
     window.rect.x = 0;
     window.rect.y = 0;
     window.y_screen_offset = 0xA;
     window.rect.w = entry->window_width - 0x20;
     window.rect.h = entry->window_height - 0xE;
-    world_menu_build_icon_record(&image_rect, (world_menu_icon_thread_param_t*)entry, &page->icons);
+    world_menu_build_icon_record(&image_rect, entry, &page->icons);
     buffer = world_menu_alloc_ui_buffer(0x1E0);
     g_world_options_menu_pages[0].icons.base.sprites[3].y0 -= 2;
     clear.x = entry->vram_x;
@@ -254,7 +237,7 @@ void world_build_options_menu(void) {
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
-                world_menu_cancel_thread_group((world_menu_cancel_context_t*)entry);
+                world_menu_cancel_thread_group(entry);
             }
         }
         if (g_world_thread_task_active == 0) {
@@ -275,7 +258,7 @@ void world_build_options_menu(void) {
             ClearImage(&clear, 0, 0, 0);
         }
         world_menu_select_icon_cluts(&page->icons.base);
-        world_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)entry, &page->icons.base, i, cursor);
+        world_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         page->icons.base.sprites[1].y0 += 2;
         page->icons.base.sprites[2].y0 += 2;
         entry->selected_index = row_offset + cursor;

@@ -171,7 +171,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
             if (*(u16*)&g_battle_effect_current_secondary->target.fields.target_type == 0
-                && (u32)(g_battle_effect_current_secondary->target.fields.target_byte_1d - 3) >= 2) {
+                && (u32)(g_battle_effect_current_secondary->target.fields.result_animation - 3) >= 2) {
                 battle_effect_play();
                 battle_state_set_animation_speed(2);
             } else if (battle_effect_get_phase() == 1) {

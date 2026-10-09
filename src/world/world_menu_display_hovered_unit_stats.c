@@ -21,7 +21,7 @@ extern world_gfx_image_load_parameters_t g_world_menu_sprite_page_image_params_f
  * `extent_w`'s lifetime and swaps its register with the gauge width.
  */
 void world_menu_display_hovered_unit_stats(
-    RECT* frame_rect, s32 mode, world_menu_number_entry_t* entries, world_unit_status_record_t* status) {
+    RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status) {
     RECT rects[4];
     world_unit_status_offsets_t offsets[2];
     u16 extent_w;
@@ -39,7 +39,7 @@ void world_menu_display_hovered_unit_stats(
     world_gfx_image_load_parameters_t* params;
     world_unit_status_offsets_t* offs;
     POLY_G4* poly;
-    world_unit_status_gauge_t* gauge;
+    battle_unit_status_gauge_t* gauge;
     CVECTOR* color;
     s32* stride;
     s32 frame;
@@ -49,7 +49,7 @@ void world_menu_display_hovered_unit_stats(
     s32 row_y;
     u16 width;
 
-    unit_id = status->battle_id;
+    unit_id = status->unit_index;
     speed = 0x16;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
@@ -171,15 +171,15 @@ void world_menu_display_hovered_unit_stats(
             page->portrait.g0 = 0x80;
             page->portrait.b0 = 0x80;
         }
-        status->status_icon = 0;
+        status->team_kind = 0;
         if (unit->initial_team_flags & 0x30) {
-            status->status_icon = 1;
+            status->team_kind = 1;
         }
         if (!(unit->initial_team_flags & 0x38)) {
-            status->status_icon = 2;
+            status->team_kind = 2;
         }
         if (unit->auto_battle_setting != 0) {
-            status->status_icon = 3;
+            status->team_kind = 3;
         }
         params = g_world_unit_status_sprite_image_params_by_mode[mode];
         if (g_world_unit_status_bounce_step == 0) {
@@ -192,7 +192,7 @@ void world_menu_display_hovered_unit_stats(
             page->portrait.x3 = frame_rect->x + 0x21;
             page->portrait.y3 = frame_rect->y + 0x32;
             world_script_copy_bytes(
-                &params[6], &g_world_unit_status_icon_image_params[status->status_icon], sizeof(*params));
+                &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
                 world_gfx_init_image_loading((POLY_FT4*)&page->sprites[i], &g_world_gfx_menu_image_source,
                     (const world_image_location_t*)frame_rect, params);
@@ -235,7 +235,7 @@ void world_menu_display_hovered_unit_stats(
             poly->y2 = row_y + 3;
             poly->x3 = extent_w + width;
             poly->y3 = row_y + 3;
-            width = (gauge->value2 << 5) / gauge->max;
+            width = (gauge->bonus << 5) / gauge->max;
             if (width == 0) {
                 extent_w = 0;
             }

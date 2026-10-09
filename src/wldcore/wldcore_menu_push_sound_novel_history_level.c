@@ -27,7 +27,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     wldcore_window_render_bounds16_t bounds;
     u8 unused[8];
     wldcore_window_record_t* windows;
-    wldcore_window_record_position_view_t* positions;
+    wldcore_window_xy_t* positions;
     wldcore_point32_t* position;
     wldcore_window_entry_52_rgb_t* colors;
     s16* newest;
@@ -38,7 +38,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     world_thread_suspend(0xE);
 
     windows = g_wldcore_window_records;
-    positions = (wldcore_window_record_position_view_t*)&windows->x;
+    positions = (wldcore_window_xy_t*)&windows->x;
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.upper_window = index;

@@ -22,7 +22,7 @@ void world_menu_build_unit_status_list(void) {
 
     for (i = 0; i < 8; i++) {
         flag_a = (s16*)&g_world_unit_editor_panel_data;
-        flag_b = &g_world_unit_selected_status_billboard.status_icon;
+        flag_b = &g_world_unit_selected_status_billboard.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
         } else {

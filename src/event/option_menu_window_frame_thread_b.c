@@ -8,8 +8,6 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-union battle_texture_prim;
-
 void option_menu_window_frame_thread_b(void) {
     RECT texture;
     /* The target holds the frame record base in one callee-saved register across
@@ -18,7 +16,7 @@ void option_menu_window_frame_thread_b(void) {
        tied empty asm below breaks that equivalence. The two stride pointers are
        locals for the same reason: the target keeps each one live and re-derives
        the descriptor base from it (addiu -8) for the glyph calls. */
-    option_panel_frame_t* prim = g_option_menu_panel_frames;
+    world_panel_frame_t* prim = g_option_menu_panel_frames;
     s32* source_stride = &g_option_text_glyph_source.stride;
     s32* dest_stride = &g_option_text_glyph_dest.stride;
     /* The menu thread's first parameter. Only its leading window rectangle is
@@ -41,7 +39,7 @@ void option_menu_window_frame_thread_b(void) {
     battle_clear_menu_render_buffer(pixels, 0x400);
     texture.w = 0x80;
     texture.h = 0x10;
-    battle_gfx_alloc_tpage7_vram(&texture, (union battle_texture_prim*)prim->texture_prim, (u32*)-1);
+    battle_gfx_alloc_tpage7_vram(&texture, &prim->texture_prim, (u32*)-1);
     *source_stride = 0x100;
     *dest_stride = 0x80;
 
@@ -133,7 +131,7 @@ void option_menu_window_frame_thread_b(void) {
     prim->sprites[8].h = border_thin;
 
     battle_gfx_init_scaled_draw_area_packets(&prim->cursor_mode);
-    battle_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(option_panel_frame_t));
+    battle_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(world_panel_frame_t));
 
     frame = 0;
     while (battle_thread_get_current_parameter_3() == 0) {

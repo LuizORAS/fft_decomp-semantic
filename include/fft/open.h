@@ -183,13 +183,6 @@ typedef struct open_render_record_36 {
 } open_render_record_36_t;
 typedef char open_render_record_36_size_must_be_0x24[(sizeof(open_render_record_36_t) == 0x24) ? 1 : -1];
 
-/* x/y view of a 36-byte render record, based at its x field. */
-typedef struct open_render_record_36_position {
-    /* 0x00 */ s32 x; /* == g_open_gfx_render_records_36[i].x */
-    /* 0x04 */ s32 y;
-    /* 0x08 */ u8 _unused_08[0x24 - 8];
-} open_render_record_36_position_t;
-
 /* Common prefix used to dispatch either render-record layout. */
 typedef struct open_render_record {
     u32 flags;
@@ -235,6 +228,21 @@ typedef struct open_birthday_render_record_indices {
     s32 _unused_00;
     s32 indices[4];
 } open_birthday_render_record_indices_t;
+
+/* Title-menu controller state (handler 2), pushed into the next controller
+ * record by open_title_push_menu_controller and run by open_title_update_menu. */
+typedef struct open_title_controller {
+    /* 0x00 */ s32 records_36[5]; /* logo, then the four menu items */
+    /* 0x14 */ s32 idle_timer;
+    /* 0x18 */ s32 cd_end_position;
+    /* 0x1c */ s32 cursor;
+    /* 0x20 */ s32 state;
+    /* 0x24 */ s32 cursor_record_36;
+    /* 0x28 */ s32 _unused_28[2];
+    /* 0x30 */ s32 exit_timer;
+    /* 0x34 */ s32 exiting;
+    /* 0x38 */ u8 _unused_38[0x64 - 0x38];
+} open_title_controller_t;
 
 /* Birthday date-selection controller state shared with its redraw routine. */
 typedef struct open_birthday_date_state {
@@ -286,15 +294,6 @@ void open_birthday_load_window_image(s32 record_index, u32* image);
 void open_birthday_push_confirmation_controller(void);
 
 /* menu */
-/* Text origin record passed to world_menu_display_text_entry; the same
- * layout as the origin_x..stride tail of world_menu_text_state_t, which most
- * WORLD callers pass directly. */
-typedef struct menu_text_origin {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-    /* 0x04 */ s32 _unused_04;
-    /* 0x08 */ s32 stride; /* OPEN/WLDCORE pass their window record's width */
-} menu_text_origin_t;
 
 extern s32 g_open_menu_formation_entry_mask;
 extern s32 g_open_menu_formation_otag_index;
@@ -482,22 +481,6 @@ typedef struct open_sprite_prim {
 } open_sprite_prim_t;
 typedef char open_sprite_prim_size_must_be_0x20[(sizeof(open_sprite_prim_t) == 0x20) ? 1 : -1];
 
-/* open_gfx_draw_render_record_36's view of a 36-byte render record:
- * the same layout as open_render_record_36_t, with the fields it animates
- * named. */
-typedef struct open_sprite_actor {
-    /* 0x00 */ s32 _unused_00;
-    /* 0x04 */ s32 anim_id;
-    /* 0x08 */ s32 ot_layer;
-    /* 0x0c */ s32 frame_index;
-    /* 0x10 */ s32 frame_timer;
-    /* 0x14 */ s32 palette;
-    /* 0x18 */ s32 x;
-    /* 0x1c */ s32 y;
-    /* 0x20 */ CVECTOR color;
-} open_sprite_actor_t;
-typedef char open_sprite_actor_size_must_be_0x24[(sizeof(open_sprite_actor_t) == 0x24) ? 1 : -1];
-
 /* Double-buffered draw/display environments at 0x800851c0, one pair per
  * frame buffer (0x70 bytes each); open_initialize_screen_environments fills
  * both and the movie presenter flips between them. */
@@ -549,7 +532,7 @@ extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
 extern u32** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
-void open_gfx_draw_render_record_36(open_sprite_actor_t* actor, u32* ot);
+void open_gfx_draw_render_record_36(open_render_record_36_t* actor, u32* ot);
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
 s32 open_gfx_update_transition_sequence(void);
 void open_gfx_draw_transition_line_strips(s32 intensity);

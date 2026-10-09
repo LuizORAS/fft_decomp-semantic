@@ -11,7 +11,7 @@
 void world_menu_icon_timed_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
-    world_menu_icon_thread_param_t* param;
+    world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 hold;
@@ -28,7 +28,7 @@ void world_menu_icon_timed_thread(void) {
     }
     i = 0;
     param = world_thread_get_current_parameter_1();
-    world_menu_size_entry_to_text((world_menu_entry_t*)param, &width, &height, &pad, 1);
+    world_menu_size_entry_to_text(param, &width, &height, &pad, 1);
     world_menu_build_icon_record(&rect, param, &records[0]);
     world_script_copy_bytes(&records[1], &records[0], 0x7C);
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
@@ -59,8 +59,8 @@ void world_menu_icon_timed_thread(void) {
         record = &records[i & 1];
         world_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         if (hold == 0) {
-            world_menu_handle_entry_confirm((world_menu_entry_t*)param, 0);
-            world_menu_cancel_thread_group((world_menu_cancel_context_t*)param);
+            world_menu_handle_entry_confirm(param, 0);
+            world_menu_cancel_thread_group(param);
         }
         world_menu_submit_icon_primitives(&record->base);
     }

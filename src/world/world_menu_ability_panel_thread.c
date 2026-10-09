@@ -15,11 +15,11 @@ void world_menu_ability_panel_thread(void) {
        offset pair and the spill slots of u/base/upload. */
     s32 unused[4];
     s32 u;
-    world_status_frame_t* base;
+    battle_menu_status_panel_buffer_t* base;
     RECT* upload;
     world_status_thread_t* thread;
     u8* text;
-    world_status_frame_t* screen;
+    battle_menu_status_panel_buffer_t* screen;
     world_item_stat_detail_t* state;
     s32 frame;
     s32 i;
@@ -43,9 +43,9 @@ void world_menu_ability_panel_thread(void) {
         base = g_world_stat_preview_panel_frames;
         u = 0x50;
     }
-    world_menu_init_numeric_display_frame_primitives(&g_world_ability_panel_origin, &screen->menu);
-    world_gfx_init_menu_tile_and_line_primitives((battle_menu_status_panel_menu_primitives_t*)screen);
-    world_gfx_init_scaled_draw_area_packets_3(&screen->draw_area);
+    world_menu_init_numeric_display_frame_primitives(&g_world_ability_panel_origin, &screen->numeric_frame);
+    world_gfx_init_menu_tile_and_line_primitives(screen);
+    world_gfx_init_scaled_draw_area_packets_3(&screen->portrait);
     screen->tiles[1].x0 += g_world_equipment_panel_origin.x;
     screen->tiles[1].y0 += g_world_equipment_panel_origin.y;
     for (i = 4; i < 8; i++) {
@@ -58,7 +58,7 @@ void world_menu_ability_panel_thread(void) {
     world_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    world_script_copy_bytes(&screen[1], screen, sizeof(world_status_frame_t));
+    world_script_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -127,11 +127,10 @@ void world_menu_ability_panel_thread(void) {
         offset[0] = thread->x - 0x73;
         offset[1] = thread->y;
         world_gfx_build_scaled_draw_area_packets(
-            &screen->draw_area, &g_world_ability_panel_draw_area, frame, (u16)g_world_frame_arg, offset);
-        world_menu_configure_status_panel_primitive_colors(
-            (battle_menu_status_panel_primitives_t*)screen, (const battle_menu_status_panel_frame_config_t*)thread);
-        world_menu_select_primitive_color_palette(&screen->menu, (world_menu_color_input_t*)thread);
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_area.areas[1]);
+            &screen->portrait, &g_world_ability_panel_draw_area, frame, (u16)g_world_frame_arg, offset);
+        world_menu_configure_status_panel_primitive_colors((battle_menu_status_panel_primitives_t*)screen, thread);
+        world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
+        world_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         world_gfx_draw_or_append_gpu_primitive(&screen->sprites[1]);
         for (i = 7; i < 12; i++) {
@@ -144,9 +143,9 @@ void world_menu_ability_panel_thread(void) {
         for (i = 4; i < 8; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->menu);
+        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_area);
+        world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         world_thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;

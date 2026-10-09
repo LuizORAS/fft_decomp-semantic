@@ -7,14 +7,6 @@ typedef struct world_formation_background_tile {
     u16 u;
 } world_formation_background_tile_t;
 
-/* Local working set: the tile rectangle, its four corner RGB triples and the
- * per-grid-point shade table (rows 32 pixels apart, columns 64). */
-typedef struct world_formation_background_draw_state {
-    world_gfx_textured_rect_source_t rect; /* 0x00 */
-    u8 rgb[16];                            /* 0x18 */
-    u8 shades[16][5];                      /* 0x28 */
-} world_formation_background_draw_state_t;
-
 extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
 
 /*

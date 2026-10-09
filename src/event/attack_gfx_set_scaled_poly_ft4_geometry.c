@@ -2,7 +2,7 @@
 
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
 void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
-    attack_gfx_point_t* position, attack_gfx_sprite_rect_t* sprite_rect, attack_gfx_point_t* scale, POLY_FT4* base) {
+    attack_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, attack_gfx_point_t* scale, POLY_FT4* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;

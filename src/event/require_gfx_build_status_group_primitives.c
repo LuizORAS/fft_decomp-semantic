@@ -44,7 +44,7 @@ void require_gfx_build_status_group_primitives(POLY_FT4* poly) {
             require_gfx_set_scaled_poly_ft4_geometry(poly,
                 (require_gfx_texture_page_position_t*)&g_require_panel_status_texture,
                 (require_gfx_point_t*)(position_y - 1),
-                (require_gfx_sprite_rect_t*)g_require_panel_status_uv_rects[status],
+                (main_zodiac_sprite_frame_t*)g_require_panel_status_uv_rects[status],
                 (require_gfx_point_t*)g_require_panel_status_scales[status],
                 (POLY_FT4*)g_require_panel_status_offsets[group]);
             *position_y -= g_require_panel_status_y_offsets[group * 2];

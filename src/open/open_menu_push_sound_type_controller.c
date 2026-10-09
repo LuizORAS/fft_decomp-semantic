@@ -27,8 +27,8 @@ void open_menu_push_sound_type_controller(void) {
         g_open_gfx_render_records_36[record].anim_id = i + 7;
         (&g_open_gfx_render_records_36[record])->frame_timer = 0;
         g_open_gfx_render_records_36[record].frame_index = 0;
-        ((open_render_record_36_position_t*)&g_open_gfx_render_records_36[record].x)->y = i * 0xc + 0x1e;
-        ((open_render_record_36_position_t*)&g_open_gfx_render_records_36[record].x)->x = -0x14;
+        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x)->y = i * 0xc + 0x1e;
+        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x)->x = -0x14;
     }
 
     g_open_controller_selected_options[g_open_current_controller_index * 25 + 1] = 0;

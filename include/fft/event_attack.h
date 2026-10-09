@@ -26,7 +26,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table
 extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern u8 g_attack_editor_numeric_texture[];
-extern battle_menu_status_panel_gauges_t g_attack_panel_selected_billboard;
+extern battle_unit_status_record_t g_attack_panel_selected_billboard;
 extern s16 g_attack_editor_team_state;
 extern s16 g_attack_editor_job_id;
 extern s16 g_attack_editor_brave;
@@ -65,18 +65,6 @@ typedef struct attack_gfx_point {
 } attack_gfx_point_t;
 typedef char attack_point_size_must_be_4[(sizeof(attack_gfx_point_t) == 4) ? 1 : -1];
 
-typedef struct attack_gfx_sprite_rect {
-    u8 u; /* 0x00 */
-    u8 _unused_01;
-    u8 v;           /* 0x02 */
-    u8 _padding_03; /* aligns width */
-    s16 width;      /* 0x04 */
-    s16 height;     /* 0x06 */
-    s16 offset_x;   /* 0x08 */
-    s16 offset_y;   /* 0x0A */
-} attack_gfx_sprite_rect_t;
-typedef char attack_sprite_rect_size_must_be_0x0c[(sizeof(attack_gfx_sprite_rect_t) == 0x0C) ? 1 : -1];
-
 extern const u16 g_attack_gfx_draw_area_scale_percent[12];
 extern POLY_FT4 g_attack_gfx_frame_ft4[];
 extern battle_menu_panel_frame_geometry_t g_attack_gfx_portrait_origin;
@@ -84,7 +72,7 @@ extern u8 g_attack_gfx_portrait_transition_offsets[];
 extern u8 g_attack_gfx_scaled_sprite_count;
 extern attack_gfx_point_t g_attack_gfx_scaled_sprite_scale[];
 extern attack_gfx_texture_page_position_t g_attack_gfx_scaled_sprite_texture_page[];
-extern attack_gfx_sprite_rect_t g_attack_gfx_scaled_sprite_uv_rects[];
+extern main_zodiac_sprite_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
 extern RECT g_attack_gfx_draw_area_template;
 extern u16 g_attack_gfx_draw_offset_y;
 extern u16 g_attack_portrait_index_by_sprite_set[];
@@ -97,27 +85,27 @@ extern u8 g_attack_portrait_staging[];
 extern RECT g_attack_portrait_upload_rect;
 
 void attack_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const battle_menu_status_panel_frame_config_t* thread);
+    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
 
 void attack_gfx_build_formation_sprites(void);
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void attack_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
+void attack_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
 
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
-    const RECT* position, attack_gfx_sprite_rect_t* sprite_rect, attack_gfx_point_t* scale, const s16* offset);
+    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, attack_gfx_point_t* scale, const s16* offset);
 
 void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void attack_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void attack_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void attack_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* data);
+void attack_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* data);
 void attack_gfx_load_portraits(void);
 void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
 
 void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
-    attack_gfx_point_t* position, attack_gfx_sprite_rect_t* sprite_rect, attack_gfx_point_t* scale, POLY_FT4* base);
+    attack_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, attack_gfx_point_t* scale, POLY_FT4* base);
 
 void attack_gfx_prepare_formation_sprites(void);
 
@@ -308,7 +296,7 @@ extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
 /* panel */
-extern battle_menu_status_panel_gauges_t g_attack_panel_comparison_billboard;
+extern battle_unit_status_record_t g_attack_panel_comparison_billboard;
 extern battle_image_location_t g_attack_panel_item_icon_texture[];
 extern battle_image_location_t g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;
@@ -327,7 +315,7 @@ extern battle_menu_status_panel_editor_packet_t g_attack_panel_comparison_editor
 extern u8 g_attack_panel_comparison_large_number_image[];
 extern u8 g_attack_panel_comparison_name_image[];
 extern u8 g_attack_panel_comparison_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_attack_panel_comparison_numeric_entries[];
+extern menu_number_entry_t g_attack_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
 extern u8 g_attack_panel_comparison_portrait_image[];
 extern RECT g_attack_panel_comparison_portrait_rect;
@@ -345,7 +333,7 @@ extern battle_menu_status_panel_editor_packet_t g_attack_panel_selected_editor_p
 extern u8 g_attack_panel_selected_large_number_image[];
 extern u8 g_attack_panel_selected_name_image[];
 extern u8 g_attack_panel_selected_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_attack_panel_selected_numeric_entries[];
+extern menu_number_entry_t g_attack_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_selected_packets[2];
 extern u8 g_attack_panel_selected_portrait_image[];
 extern RECT g_attack_panel_selected_portrait_rect;
@@ -361,10 +349,10 @@ extern u8 g_attack_panel_status_group_count;
 extern u8 g_attack_panel_status_group_ids[];
 extern u16 g_attack_panel_status_position_y;
 extern attack_gfx_point_t g_attack_panel_status_scales[];
-extern attack_gfx_sprite_rect_t g_attack_panel_status_uv_rects[];
+extern main_zodiac_sprite_frame_t g_attack_panel_status_uv_rects[];
 
 void attack_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void attack_panel_run_character_status_thread(void);
 
@@ -380,14 +368,13 @@ extern u8 g_attack_numeric_editor_thread_params[];
 extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;
 void attack_text_build_deployment_strings(void);
 
-void attack_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* out, s32 count);
+void attack_text_render_decimal_entry_list(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
-void attack_text_render_decimal_value(
-    s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
+void attack_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 
-void attack_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* out, s32 count);
+void attack_text_render_signed_decimal_entries(
+    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
 void attack_text_init_battle_pointers(s32* offsets);
 

@@ -2,19 +2,17 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* option_scroll_layout_t lives in fft/event_option.h. */
-
 /* Apply scroll input, rebuild the menu image, and upload the changed region. */
 void* option_menu_redraw_text_page_on_scroll(
-    option_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor) {
+    world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor) {
     RECT source;
     RECT clear_strip;
-    option_scroll_layout_t* layout;
+    world_menu_text_layout_t* layout;
     u32* primary_input;
     u32* secondary_input;
     s32 changed;
 
-    layout = (option_scroll_layout_t*)menu->text_binding;
+    layout = (world_menu_text_layout_t*)menu->text_binding;
     primary_input = battle_script_get_controller_input_pointer(0);
     secondary_input = battle_script_get_controller_input_pointer(1);
     source.x = menu->vram_x;
@@ -33,16 +31,16 @@ void* option_menu_redraw_text_page_on_scroll(
     }
 
     if ((*primary_input & PSX_PAD_UP) != 0 && *first_row != 0) {
-        *first_row -= layout->step;
+        *first_row -= layout->row_count;
         if (*first_row < 0) {
             *first_row = 0;
         }
         changed = 1;
         g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-    } else if ((*primary_input & PSX_PAD_DOWN) != 0 && *first_row != layout->maximum) {
-        *first_row += layout->step;
-        if (*first_row > layout->maximum) {
-            *first_row = layout->maximum;
+    } else if ((*primary_input & PSX_PAD_DOWN) != 0 && *first_row != layout->hidden_rows) {
+        *first_row += layout->row_count;
+        if (*first_row > layout->hidden_rows) {
+            *first_row = layout->hidden_rows;
         }
         changed = 1;
         g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
@@ -55,7 +53,7 @@ void* option_menu_redraw_text_page_on_scroll(
         return 0;
     }
 
-    battle_clear_menu_render_buffer(g_option_menu_render_buffer, (menu->inner_width * *(s16*)&menu->inner_height) / 2);
+    battle_clear_menu_render_buffer(g_option_menu_render_buffer, (menu->inner_width * menu->inner_height) / 2);
     option_menu_draw_text_columns(menu, first_row, (void*)g_option_menu_render_buffer);
     *render_pending = 0;
     LoadImage(&source, (u32*)g_option_menu_render_buffer);

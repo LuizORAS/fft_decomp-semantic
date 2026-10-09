@@ -2,8 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-struct battle_event_input_state;
-
 /* Per-frame event input update: derives the edge/auto-repeat input word,
  * publishes it, and yields once while tracking thread status changes.
  *
@@ -77,7 +75,7 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     }
 
     g_battle_sound_pending_sfx_id = -1;
-    battle_script_load_event_input_state((struct battle_event_input_state*)&g_bunit_input_event);
+    battle_script_load_event_input_state((world_menu_input_state_t*)&g_bunit_input_event);
     if (g_bunit_input_event != PSX_PAD_SELECT && g_bunit_input_event != 0) {
         g_event_input_suppression_frames = 5;
     }

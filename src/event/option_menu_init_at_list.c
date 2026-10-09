@@ -1,19 +1,6 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/*
- * One AT-list (turn order) descriptor. The overlay keeps 0x28 of them at
- * 0x801cb6fc; the four-byte stride is proven by the strength-reduced index
- * register the target advances by 4 and by the +1 byte read for the turn
- * value.
- */
-typedef struct option_at_descriptor {
-    u8 flags;
-    u8 turn_value;
-    u8 _unused_02;
-    u8 _unused_03;
-} option_at_descriptor_t;
-
 enum {
     OPTION_AT_UNIT_ID_MASK = 0x1f,
     OPTION_AT_END_OF_LIST = 0x1f,
@@ -22,9 +9,9 @@ enum {
     OPTION_AT_TURN_VALUE_HIGH_BIT = 0x80,
 };
 
-/* option_scroll_layout_t and option_at_menu_t live in fft/event_option.h. */
+/* option_at_menu_t lives in fft/event_option.h. */
 
-extern option_at_descriptor_t g_option_menu_at_list_descriptors[];
+extern world_at_descriptor_t g_option_menu_at_list_descriptors[];
 
 /*
  * Rebuild the AT (turn order) list from the descriptor table and size the
@@ -123,7 +110,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
 
     if (has_special_entry != 0) {
         menu->window_y = 0x20;
-        menu->layout->step = 10;
+        menu->layout->row_count = 10;
         menu->window_x = 0x8c;
         menu->window_y = 0x20;
         menu->window_width = 0xe8;
@@ -131,7 +118,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
         menu->inner_width = 0xe8;
     } else {
         menu->window_y = 0x20;
-        menu->layout->step = 10;
+        menu->layout->row_count = 10;
         menu->window_x = 0xbe;
         menu->window_y = 0x20;
         menu->window_width = 0x84;
@@ -141,9 +128,9 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
 
     if (entry_count < 10) {
         menu->window_y = (10 - entry_count) * 8 + 0x20;
-        menu->layout->step = entry_count;
-        menu->layout->maximum = 0;
+        menu->layout->row_count = entry_count;
+        menu->layout->hidden_rows = 0;
     } else {
-        menu->layout->maximum = entry_count - 10;
+        menu->layout->hidden_rows = entry_count - 10;
     }
 }

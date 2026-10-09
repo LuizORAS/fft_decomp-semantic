@@ -12,7 +12,7 @@
  * Numbers (0xE4/0xE6) are drawn one digit per 6-pixel column. Indexing the
  * divisor table inside the digit loop, rather than walking a pointer, is
  * what gives the target's strength-reduced pointer and register choice. */
-void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t* origin, u8* text) {
+void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* origin, u8* text) {
     party_data_t* party;
     u8* cursor;
     s32 i;
@@ -45,11 +45,11 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
     TEXT_STATE->column = 0;
     TEXT_STATE->max_column = 0;
     TEXT_STATE->row = 0;
-    g_world_text_draw_origin.x = origin->x;
+    g_world_text_draw_origin.rect.x = origin->rect.x;
     g_world_text_glyph_first_row = 0;
-    g_world_text_draw_origin.y = origin->y;
+    g_world_text_draw_origin.rect.y = origin->rect.y;
     g_world_text_glyph_row_limit = 0x10;
-    g_world_text_draw_origin.right_limit = origin->right_limit;
+    g_world_text_draw_origin.stride = origin->stride;
     line = 0;
 
     while (1) {
@@ -85,12 +85,12 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
                         break;
                     }
                 } else if (state->command == TEXT_SPACE) {
-                    g_world_text_draw_origin.x += 4;
+                    g_world_text_draw_origin.rect.x += 4;
                 } else if (state->command == TEXT_NEWLINE) {
-                    g_world_text_draw_origin.x = origin->x;
+                    g_world_text_draw_origin.rect.x = origin->rect.x;
                     if (line >= g_world_menu_text_param_22) {
                         g_world_text_glyph_first_row = 0;
-                        g_world_text_draw_origin.y += 0x10;
+                        g_world_text_draw_origin.rect.y += 0x10;
                     }
                     line++;
                 } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
@@ -124,10 +124,10 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
                             if (line >= g_world_menu_text_param_22) {
                                 world_text_blit_font_glyph_to_4bpp(
                                     g_world_text_glyph_bitmap_data + state->command * 0x23, pixels,
-                                    &g_world_text_draw_origin.x, g_world_menu_text_color);
+                                    &g_world_text_draw_origin, g_world_menu_text_color);
                             }
                         }
-                        g_world_text_draw_origin.x += 6;
+                        g_world_text_draw_origin.rect.x += 6;
                     }
                 }
 
@@ -170,10 +170,10 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
         }
         if (line >= g_world_menu_text_param_22) {
             world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * 0x23, pixels,
-                &g_world_text_draw_origin.x, g_world_menu_text_color);
+                &g_world_text_draw_origin, g_world_menu_text_color);
         }
-        g_world_text_draw_origin.x += g_world_text_glyph_widths[state->command];
-        if ((s16)g_world_text_draw_origin.x >= g_world_text_draw_origin.right_limit - 8) {
+        g_world_text_draw_origin.rect.x += g_world_text_glyph_widths[state->command];
+        if (g_world_text_draw_origin.rect.x >= g_world_text_draw_origin.stride - 8) {
             break;
         }
     }

@@ -44,7 +44,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
         work = record->work_slots[byte_offset];
         emitter_index = 0;
         do {
-            emitter = (effect_particle_vertex_emitter_view_t*)&g_effect_geometry_table->entries[emitter_index];
+            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             i = emitter->vertex_group - 1;
             if ((u32)i < 12 && frame >= emitter->start_frame && frame < emitter->end_frame) {
                 offset = (&g_effect_e464_particle_work_offset_scale_16)[i * 2] << 4;

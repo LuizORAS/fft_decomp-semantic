@@ -38,7 +38,7 @@ s32 world_item_run_rearrange_mode(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
         if (cursor == picked) {
             g_world_item_rearrange_initialized = 0;
-            g_world_item_action_menu.cursor = 0;
+            g_world_item_action_menu.selected_index = 0;
             return 2;
         }
         item = g_world_menu_entry_ids[picked];

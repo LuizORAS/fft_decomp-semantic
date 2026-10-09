@@ -53,7 +53,7 @@ void option_build_at_list(void) {
     layout = (world_menu_text_layout_t*)entry->text_binding;
     entry->window_height = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;
-    entry->overall_height = layout->row_count * 16 + 0x1C;
+    entry->text_image.height = layout->row_count * 16 + 0x1C;
     window.rect.x = 0;
     window.rect.y = 0x7E;
     window.x_screen_offset = 8;
@@ -70,7 +70,7 @@ void option_build_at_list(void) {
         g_option_at_list_pages[i].icons.icons[1] = &icons1[i];
         g_option_at_list_pages[i].icons.icons[2] = &icons2[i];
         battle_menu_build_window_sprites((battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry,
-            (battle_menu_window_record_t*)&g_option_at_list_pages[i].icons);
+            &g_option_at_list_pages[i].icons);
     }
     battle_gfx_init_scaled_draw_area_packets((u8*)&page->draw_areas);
     SetDrawMode(
@@ -114,7 +114,7 @@ void option_build_at_list(void) {
     redraw_pending = 1;
     battle_thread_start(g_battle_current_thread_id + 1, option_menu_window_frame_thread);
     battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
-    option_menu_draw_text_columns((option_menu_entry_t*)entry, &row_offset, buffer);
+    option_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
     image_rect.w = g_menu_text_state.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
@@ -222,8 +222,7 @@ void option_build_at_list(void) {
             redraw_pending = 0;
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
-            redraw_pending
-                = (s32)option_menu_redraw_text_page_on_scroll((option_menu_entry_t*)entry, &row_offset, &ring, &cursor);
+            redraw_pending = (s32)option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         entry->selected_index = cursor + row_offset;
@@ -287,13 +286,13 @@ void option_build_at_list(void) {
         battle_gfx_draw_or_append_gpu_primitive(frame);
         battle_gfx_draw_or_append_gpu_primitive(&page->text_mode);
         battle_gfx_draw_or_append_gpu_primitive(&page->draw_areas);
-        battle_menu_select_icon_cluts((battle_menu_window_record_t*)&page->icons.base);
-        battle_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)entry, &page->icons.base, i, cursor);
+        battle_menu_select_icon_cluts(&page->icons);
+        battle_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         i++;
         page->icons.base.sprites[0].x0 = 1000;
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;
-        battle_menu_submit_icon_primitives((battle_menu_window_record_t*)&page->icons.base);
+        battle_menu_submit_icon_primitives(&page->icons);
     }
     battle_thread_set_parameters(g_battle_current_thread_id + 1, 0, 0, 1);
     battle_thread_yield();

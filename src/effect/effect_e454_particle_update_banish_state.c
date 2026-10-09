@@ -46,7 +46,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
         work = record->work_slots[byte_offset];
         emitter_index = 0;
         do {
-            emitter = (effect_particle_vertex_emitter_view_t*)&g_effect_geometry_table->entries[emitter_index];
+            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             group = emitter->vertex_group;
             if ((u32)(group - 1) < 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {

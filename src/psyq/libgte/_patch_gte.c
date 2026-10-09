@@ -1,12 +1,7 @@
+#include "psx/bios.h"
 #include "psx/gte_inline.h"
 #include "psx/libapi.h"
 #include "psx/libgte.h"
-
-/* One-function view of BIOS C0 dispatch; only entry6 is dereferenced. */
-typedef struct {
-    void* _unused_00[6];
-    u32* exception_handler;
-} psyq_bios_c0_table_t;
 
 /* main 0x8001da68–0x8001dad0: replace the BIOS exception-handler prefix.
  * Critical-section/cache calls and BIOS dispatch remain actual interfaces. */

@@ -12,8 +12,8 @@ void world_display_menu_number_entry(s32 value, u8 digit_count, s32 image, u16* 
 
     *origin += (digit_count - 1) * 6;
     do {
-        world_text_blit_font_glyph_to_4bpp(
-            g_world_text_glyph_bitmap_data + (value % 10) * 35, (void*)image, origin, g_world_menu_text_color);
+        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + (value % 10) * 35, (void*)image,
+            (world_glyph_blit_t*)origin, g_world_menu_text_color);
         value = value / 10;
         cell = *origin;
         *origin = cell - 6;

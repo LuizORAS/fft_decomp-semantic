@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-typedef struct battle_script_jump_instruction {
-    u8 _unused_00[2];
-    u8 param0;
-    u8 param1;
-} battle_script_jump_instruction_t;
-
 void battle_script_jump_event_instruction(battle_script_jump_instruction_t* instr) {
     battle_screen_coords_t vec;
     s32 misc_id;

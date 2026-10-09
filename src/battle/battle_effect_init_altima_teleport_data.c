@@ -9,9 +9,9 @@ void battle_effect_init_altima_teleport_data(
     teleport_data->caster.fields.target_type = 0;
     misc_id = unit->unit_id;
     teleport_data->target_count = 1;
-    teleport_data->target.fields.target_type = 0;
+    teleport_data->target[0].fields.target_type = 0;
     teleport_data->caster.fields.caster_id = misc_id;
     repeated_misc_id = unit->unit_id;
     teleport_data->palette_target_count = 0;
-    teleport_data->target.fields.target_id = repeated_misc_id;
+    teleport_data->target[0].fields.target_id = repeated_misc_id;
 }

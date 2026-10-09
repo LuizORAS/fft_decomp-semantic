@@ -1,16 +1,7 @@
 #include "fft/event_jobstts.h"
 
-typedef struct jobstts_tex_region {
-    u16 u;
-    u16 v;
-    u16 w;
-    u16 h;
-    u16 clut;
-    u16 tpage;
-} jobstts_tex_region_t;
-
 void jobstts_gfx_enqueue_textured_quad_rect(
-    urect16_t* rect, jobstts_tex_region_t* tex, u8* color, s32 semitrans, s32 ot_index) {
+    urect16_t* rect, world_item_icon_source_t* tex, u8* color, s32 semitrans, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];

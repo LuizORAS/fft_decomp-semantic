@@ -10,28 +10,6 @@ extern u8 g_helpmenu_menu_text_id_tables[];
 void helpmenu_menu_run_require_help(void);
 void helpmenu_menu_close(void);
 
-/* Menu descriptor for a pending help request. It is reached through the
- * native thread record's first function-parameter word, so its offsets are
- * its own and do not overlap native_thread_t. WORLD's help menu uses the same
- * layout as world_help_request_table_t / world_help_request_t. */
-typedef struct help_request_table {
-    u8 _unused_00[0x10];
-    s16* primary_ids;   /* 0x10 */
-    s16* secondary_ids; /* 0x14 */
-    s16* mode_flag;     /* 0x18 */
-} help_request_table_t;
-typedef char help_request_table_mode_flag_offset_must_be_0x18
-    [((unsigned long)&((help_request_table_t*)0)->mode_flag == 0x18) ? 1 : -1];
-
-typedef struct help_request {
-    u8 _unused_00[0x30];
-    help_request_table_t* table; /* 0x30 */
-    s16* value;                  /* 0x34 */
-    s16 selected_index;          /* 0x38 */
-    s16 kind;                    /* 0x3a */
-} help_request_t;
-typedef char help_request_kind_offset_must_be_0x3a[((unsigned long)&((help_request_t*)0)->kind == 0x3a) ? 1 : -1];
-
 extern u8 g_helpmenu_active_banner[];
 extern u8 g_helpmenu_active_unit_data[];
 

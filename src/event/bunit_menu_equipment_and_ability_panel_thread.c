@@ -3,14 +3,12 @@
 #include "psx/types.h"
 
 /* The status buffer is battle_menu_status_panel_buffer_t and the thread record
- * battle_menu_status_panel_frame_config_t, as in the WORLD twin world_menu_equipment_and_ability_panel_thread. The
- * buffer's +0x3b0 tail is this overlay's scaled draw-area packet pair. */
-#define DRAW_AREA(screen) ((bunit_gfx_scaled_draw_area_pair_t*)&screen->portrait)
+ * world_status_thread_t, as in the WORLD twin world_menu_equipment_and_ability_panel_thread. */
 
 /* Thread task 0x3b: the combined status panel for the selected unit. BUNIT
  * twin of WORLD world_menu_equipment_and_ability_panel_thread. */
 void bunit_menu_equipment_and_ability_panel_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_buffer_t* base;
     battle_menu_status_panel_slot_state_t* state;
@@ -20,8 +18,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     s32 i;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_bunit_character_status_frames;
     base = g_bunit_character_status_frames;
@@ -136,10 +133,10 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             cursor += sizeof(SPRT);
         }
         g_bunit_gfx_draw_offset_y = (u16)g_bunit_frame_arg != 0xf0 ? 0xf0 : 0;
-        bunit_gfx_build_scaled_draw_area_packets(DRAW_AREA(screen), &g_bunit_character_status_draw_area_rect, frame,
+        bunit_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_bunit_character_status_draw_area_rect, frame,
             (u16)g_bunit_frame_arg, (const s16*)thread);
-        screen->draw_offsets[0].x = thread->origin_x - 0x80;
-        screen->draw_offsets[0].y = thread->origin_y + g_bunit_gfx_draw_offset_y;
+        screen->draw_offsets[0].x = thread->x - 0x80;
+        screen->draw_offsets[0].y = thread->y + g_bunit_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_bunit_gfx_draw_offset_y;
@@ -147,7 +144,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         bunit_panel_set_primitive_colors(screen, thread);
         bunit_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
-            battle_gfx_draw_or_append_gpu_primitive(&DRAW_AREA(screen)->areas[1]);
+            battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         for (i = 0; i < 12; i++) {
@@ -172,7 +169,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         battle_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         if (frame < 13) {
-            battle_gfx_draw_or_append_gpu_primitive(DRAW_AREA(screen));
+            battle_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         }
         battle_thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {

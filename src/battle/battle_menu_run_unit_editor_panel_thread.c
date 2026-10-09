@@ -14,10 +14,7 @@
 void battle_menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records (WORLD 0x80195ed0). */
-    union {
-        world_menu_palette_primitives_t primitives;
-        u8 storage[0x100];
-    } palette;
+    world_menu_palette_slot_t palette;
     world_unit_editor_frame_t* records;
     world_unit_editor_frame_t* frame_record;
     LINE_F2* line;

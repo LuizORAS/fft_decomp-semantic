@@ -1,15 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Command and option use their s16 slots' low bytes; item uses its full halfword. */
-typedef struct {
-    u8 command;
-    u8 _unused_01;
-    u8 option;
-    u8 _padding_03; /* aligns item */
-    u16 item;
-} battle_menu_selection_t;
-
 /**
  * Resolve the pending action-menu command, option, and item selection.
  *
@@ -23,11 +14,11 @@ s32 battle_menu_resolve_selection(void) {
     s32 index;
     s32 i;
     s32 menu;
-    const battle_menu_selection_t* selection;
+    const world_menu_selection_view_t* selection;
 
     /* The object is four halfwords; command and option use their slots'
      * low bytes and item uses the full halfword at slot 2. */
-    selection = (const battle_menu_selection_t*)g_battle_menu_pending_selection;
+    selection = (const world_menu_selection_view_t*)g_battle_menu_pending_selection;
     command = selection->command;
     option = selection->option;
     item = selection->item;

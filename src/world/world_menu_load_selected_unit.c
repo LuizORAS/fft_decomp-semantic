@@ -18,15 +18,13 @@ void world_menu_load_selected_unit(void) {
     unit = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
     editor = g_world_unit_editor_fields;
     if (unit != 0) {
-        world_menu_copy_unit_data_to_status_billboard(
-            unit, (world_unit_status_billboard_t*)&g_world_unit_comparison_status_billboard);
+        world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_comparison_status_billboard);
     }
 
     unit = battle_unit_get_stats_from_battle_id(g_world_unit_view_battle_id);
     if (unit == 0)
         return;
-    world_menu_copy_unit_data_to_status_billboard(
-        unit, (world_unit_status_billboard_t*)&g_world_unit_selected_status_billboard);
+    world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_selected_status_billboard);
 
     g_world_unit_editor_job_id = unit->job_id;
     g_world_unit_editor_brave = unit->brave;

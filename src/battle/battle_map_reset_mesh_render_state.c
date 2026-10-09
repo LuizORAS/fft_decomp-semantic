@@ -80,10 +80,10 @@ void battle_map_reset_mesh_render_state(void) {
     g_battle_map_untextured_triangle_count = 0;
     g_battle_map_untextured_quad_count = 0;
     for (i = 0; i < 9; i++) {
-        g_battle_map_mesh_parts[i].counts[0] = 0;
-        g_battle_map_mesh_parts[i].counts[1] = 0;
-        g_battle_map_mesh_parts[i].counts[2] = 0;
-        g_battle_map_mesh_parts[i].counts[3] = 0;
+        g_battle_map_mesh_parts[i].textured_triangle_count = 0;
+        g_battle_map_mesh_parts[i].textured_quad_count = 0;
+        g_battle_map_mesh_parts[i].untextured_triangle_count = 0;
+        g_battle_map_mesh_parts[i].untextured_quad_count = 0;
         g_battle_map_mesh_parts[i].vectors_a[1] = zero_vector;
         g_battle_map_mesh_parts[i].vectors_a[0] = zero_vector;
         g_battle_map_mesh_parts[i].vectors_a[2] = zero_vector;

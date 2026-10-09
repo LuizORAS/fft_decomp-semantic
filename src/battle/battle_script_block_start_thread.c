@@ -1,7 +1,6 @@
 #include "fft/battle.h"
 
-struct battle_script_jump_instruction;
-extern void battle_script_jump_event_instruction(struct battle_script_jump_instruction* parameters);
+extern void battle_script_jump_event_instruction(battle_script_jump_instruction_t* parameters);
 
 /* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
  * up to BLOCK_END on its own thread, dispatching the unit-movement, animation and wait opcodes that may appear inside a
@@ -44,7 +43,7 @@ void battle_script_block_start_thread(void) {
             }
             g_battle_unit_was_moving_latch[misc_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
-            battle_script_jump_event_instruction((struct battle_script_jump_instruction*)parameters);
+            battle_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
             battle_script_waitwalk_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM) {

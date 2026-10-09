@@ -16,8 +16,8 @@ void world_menu_run_require_help(void) {
     POLY_FT4 cursor[2];
     POLY_FT4 shadow[2];
     native_thread_t* self;
-    world_help_navigation_entry_t* navigation;
-    world_help_navigation_entry_t* entry;
+    help_navigation_record_t* navigation;
+    help_navigation_record_t* entry;
     POLY_FT4* poly;
     POLY_FT4* shadow_poly;
     s32 menu_index;
@@ -59,15 +59,15 @@ void world_menu_run_require_help(void) {
     world_menu_copy_billboard_data_out(g_world_help_active_banner, g_world_help_active_unit_data,
         &g_world_help_billboard, g_world_help_menu_cursor_tile);
     if (g_world_selected_unit_stat_summary.team_state != 0 || g_world_unit_join_screen_active != 0) {
-        g_world_help_require_navigation[2].neighbors[2] = 7;
-        g_world_help_require_navigation[7].neighbors[3] = 2;
+        g_world_help_require_navigation[2].destination[2] = 7;
+        g_world_help_require_navigation[7].destination[3] = 2;
     }
     g_world_help_controller_state_ptr = world_input_get_menu_controller(0);
     menu_index = 0;
-    g_world_help_require_navigation[0].cursor_x = 0xC4;
-    g_world_help_require_navigation[2].cursor_x = 0xE0;
-    g_world_help_require_navigation[0].neighbors[3] = 0;
-    g_world_help_require_navigation[3].neighbors[0] = 0;
+    g_world_help_require_navigation[0].x = 0xC4;
+    g_world_help_require_navigation[2].x = 0xE0;
+    g_world_help_require_navigation[0].destination[3] = 0;
+    g_world_help_require_navigation[3].destination[0] = 0;
     navigation = g_world_help_require_navigation;
     text_thread_id = world_thread_resolve_id(0x10);
     text_thread = &g_world_threads[text_thread_id];
@@ -81,8 +81,8 @@ void world_menu_run_require_help(void) {
                 self->task_words[0] = 0;
             }
             entry = &navigation[menu_index];
-            y = entry->cursor_y;
-            x = entry->cursor_x;
+            y = entry->y;
+            x = entry->x;
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
                 y += 8;
             }
@@ -96,8 +96,8 @@ void world_menu_run_require_help(void) {
             }
             if (input & PSX_PAD_CIRCLE) {
                 if (entry->value != 0) {
-                    help_id = entry->value_base + *entry->value;
-                    if (entry->value_base == -0x6800 && g_world_help_billboard.generic_monster != 0) {
+                    help_id = entry->help_base + *entry->value;
+                    if (entry->help_base == -0x6800 && g_world_help_billboard.generic_monster != 0) {
                         help_id = *entry->value | 0x7800;
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_world_help_controller_state_ptr = 0;
@@ -106,11 +106,11 @@ void world_menu_run_require_help(void) {
                             world_thread_start(text_thread_id, world_text_character_handling_thread);
                             world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
-                    } else if (entry->value_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
+                    } else if (entry->help_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
                         *g_world_help_controller_state_ptr = 0;
-                    } else if (entry->value_base == 0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->help_base == 0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
-                    } else if (entry->value_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->help_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
                         g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
@@ -118,7 +118,7 @@ void world_menu_run_require_help(void) {
                         world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
-                    help_id = entry->value_base;
+                    help_id = entry->help_base;
                     g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(text_thread_id, world_text_character_handling_thread);
                     world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
@@ -133,10 +133,10 @@ void world_menu_run_require_help(void) {
                 } else {
                     help_id = 3;
                 }
-                if (menu_index != entry->neighbors[help_id]) {
+                if (menu_index != entry->destination[help_id]) {
                     g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
                 }
-                menu_index = entry->neighbors[help_id];
+                menu_index = entry->destination[help_id];
             }
         } else {
             /* The help text is up: entry, x and y keep the values of the last
@@ -157,7 +157,7 @@ void world_menu_run_require_help(void) {
         self->task_words[0] += g_world_event_speed;
         bob -= 4;
         buffer = frame & 1;
-        if (entry->orientation != 0) {
+        if (entry->vertical_cursor != 0) {
             POLY_FT4* quad;
             POLY_FT4* shadow_quad;
 

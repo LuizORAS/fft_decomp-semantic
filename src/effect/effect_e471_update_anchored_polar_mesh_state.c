@@ -28,7 +28,7 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
 
     scratch = (effect_anchored_polar_mesh_scratch_t*)0x1F800000;
     record = &g_effect_state_records[record_index];
-    entry = (effect_polar_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].polar_mesh;
     ot = main_gfx_get_otag();
 
     switch (record->phase[byte_offset]) {

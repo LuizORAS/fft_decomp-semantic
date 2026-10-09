@@ -16,12 +16,12 @@ extern void battle_menu_size_entry_to_text(
  * BATTLE twin of world_menu_icon_timed_thread. */
 void battle_menu_icon_timed_thread(void) {
     RECT rect;
-    battle_menu_window_record_t records[2];
-    world_menu_icon_thread_param_t* param;
+    world_menu_icon_record_t records[2];
+    world_menu_entry_t* param;
     void* buffer;
     s32 i;
     s32 hold;
-    battle_menu_window_record_t* record;
+    world_menu_icon_record_t* record;
     s16 width;
     s16 height;
     s32 pad;
@@ -33,7 +33,7 @@ void battle_menu_icon_timed_thread(void) {
         g_battle_text_message_duration_frames &= 0xFF;
     }
     i = 0;
-    param = (world_menu_icon_thread_param_t*)battle_thread_get_current_parameter_1();
+    param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text((struct battle_text_message_window_layout*)param, &width, &height, &pad, 1);
     battle_menu_build_window_sprites(
         (battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)param, &records[0]);
@@ -64,7 +64,7 @@ void battle_menu_icon_timed_thread(void) {
             battle_menu_select_icon_cluts(&records[i & 1]);
         }
         record = &records[i & 1];
-        battle_menu_update_icon_cursor_sprites(param, (world_menu_icon_sprites_t*)record, i, -1);
+        battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         if (hold == 0) {
             battle_menu_handle_action(param, 0);
             battle_handle_menu_cancel_input(param);

@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const require_texture_page_t* texture,
-    const RECT* position, const require_gfx_sprite_rect_t* uv_rect, const require_gfx_point_t* scale,
+    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const require_gfx_point_t* scale,
     const s16* offset) {
     s32 xoff = uv_rect->offset_x * scale->x;
     s32 yoff = uv_rect->offset_y * scale->y;

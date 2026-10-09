@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, world_unit_status_billboard_t* output) {
+void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output) {
     battle_stats_t* linked_unit;
     s32 resolved_id;
     s32 count;
@@ -23,27 +23,27 @@ void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, world_u
         output->team_kind = 3;
     output->experience = linked_unit->experience;
     value = linked_unit->max_hp;
-    output->max_hp = value;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value;
     if (value == 0) {
         value++;
-        output->max_hp = value;
+        output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value;
     }
-    output->hp = linked_unit->hp;
-    output->hp_delta = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = linked_unit->hp;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
     value = linked_unit->max_mp;
-    output->max_mp = value;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
     if (value == 0) {
         value++;
-        output->max_mp = value;
+        output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
     }
     mp = linked_unit->mp;
-    output->mp_delta = 0;
-    output->max_ct = 100;
-    output->mp = mp;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = mp;
     ct = linked_unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
-    output->ct = ct;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = ct;
     if (output->list_index >= 0)
         output->list_index++;
     output->unit_count = BATTLE_UNIT_SLOT_COUNT;

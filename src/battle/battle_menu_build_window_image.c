@@ -2,17 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Provisional: sprite source/destination records passed to blit_text_glyph. */
-typedef struct {
-    s16 x; /* 0x00 */
-    s16 y; /* 0x02 */
-    u8 _unused_04[4];
-    s32 stride; /* 0x08 */
-    u8 _unused_0c[4];
-} battle_menu_window_sprite_pos_t;
-
-extern battle_menu_window_sprite_pos_t g_battle_menu_window_sprite_glyph;
-extern battle_menu_window_sprite_pos_t g_battle_menu_window_sprite_position;
+extern world_glyph_blit_t g_battle_menu_window_sprite_glyph;
+extern world_glyph_blit_t g_battle_menu_window_sprite_position;
 
 /* Battle twin of world_menu_build_window_image: build a 4bpp menu window image from the shared menu graphics,
  * optionally with its pointer tail, and upload it to `rect` unless `keep` is set.
@@ -72,40 +63,39 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         battle_menu_build_window_image_row(src, row, words, src_index);
     }
     if (kind != 8) {
-        g_battle_menu_window_sprite_glyph.x = 0x58;
-        g_battle_menu_window_sprite_glyph.y = 0;
+        g_battle_menu_window_sprite_glyph.rect.x = 0x58;
+        g_battle_menu_window_sprite_glyph.rect.y = 0;
         if ((mode & 0xC) == 4) {
-            g_battle_menu_window_sprite_glyph.x = 0x68;
+            g_battle_menu_window_sprite_glyph.rect.x = 0x68;
         }
         if ((mode & 3) == 1) {
-            g_battle_menu_window_sprite_glyph.y = 0x10;
+            g_battle_menu_window_sprite_glyph.rect.y = 0x10;
         }
-        g_battle_menu_window_sprite_position.x = (width >> 1) + tail_offset - 8;
+        g_battle_menu_window_sprite_position.rect.x = (width >> 1) + tail_offset - 8;
         if ((mode & 3) != 2) {
-            g_battle_menu_window_sprite_position.y = 0x38;
+            g_battle_menu_window_sprite_position.rect.y = 0x38;
         } else {
-            g_battle_menu_window_sprite_position.y = 0;
+            g_battle_menu_window_sprite_position.rect.y = 0;
         }
         g_battle_menu_window_sprite_position.stride = words * 4;
         i = g_battle_threads[g_battle_current_thread_id].task_words[5] & 0xF0;
         if (i != 0) {
             if ((mode & 3) == 1) {
-                g_battle_menu_window_sprite_position.x -= 0x10;
+                g_battle_menu_window_sprite_position.rect.x -= 0x10;
             } else {
-                g_battle_menu_window_sprite_position.x += 0x10;
+                g_battle_menu_window_sprite_position.rect.x += 0x10;
             }
         }
-        if (g_battle_menu_window_sprite_position.x < 0x10) {
-            g_battle_menu_window_sprite_position.x = 0x10;
+        if (g_battle_menu_window_sprite_position.rect.x < 0x10) {
+            g_battle_menu_window_sprite_position.rect.x = 0x10;
         }
-        if (width - 0x10 < g_battle_menu_window_sprite_position.x) {
-            g_battle_menu_window_sprite_position.x = width - 0x10;
+        if (width - 0x10 < g_battle_menu_window_sprite_position.rect.x) {
+            g_battle_menu_window_sprite_position.rect.x = width - 0x10;
         }
         blit_text_glyph((u16*)g_battle_menu_glyph_image, buf, &g_battle_menu_window_sprite_glyph,
             &g_battle_menu_window_sprite_position);
         if (i != 0) {
-            battle_text_mirror_packed_nibble_region_horizontal(
-                (u8*)buf, (world_gfx_4bpp_rect_t*)&g_battle_menu_window_sprite_position);
+            battle_text_mirror_packed_nibble_region_horizontal((u8*)buf, &g_battle_menu_window_sprite_position);
         }
     }
     if (keep != 0) {

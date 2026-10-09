@@ -44,8 +44,7 @@ void battle_menu_run_equip_thread(void) {
     if (g_battle_companion_overlay_primitives != 0) {
         for (j = 0; j < 2; j++) {
             g_battle_menu_pending_selection[j]
-                = ((battle_menu_idle_action_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
-                      ->selected_index;
+                = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
     battle_menu_free_high_overlay();

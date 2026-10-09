@@ -47,7 +47,7 @@ void world_formation_process_frame(void) {
                         g_world_formation_main_menu_initialized = 0;
                         g_world_menu_sound_effect_id = MAIN_SFX_DISMISS;
                     }
-                    g_world_formation_egg_submenu.cursor = 0;
+                    g_world_formation_egg_submenu.selected_index = 0;
                     world_menu_reset_selection_results();
                     g_world_equipment_ability_panel_thread_params.style = 0;
                     g_world_numeric_editor_thread_params.style = 0;
@@ -104,12 +104,12 @@ void world_formation_process_frame(void) {
                 if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)
                     || g_world_formation_triangle_menu_open != 0) {
                     if (g_world_formation_scroll_enabled != 0) {
-                        g_world_formation_triangle_menu.flags = 0x20;
+                        g_world_formation_triangle_menu.window_y = 0x20;
                     } else {
-                        g_world_formation_triangle_menu.flags = 0x78;
+                        g_world_formation_triangle_menu.window_y = 0x78;
                     }
-                    g_world_formation_triangle_menu.icon_x = ((g_world_formation_selected_unit_index % 4) < 2
-                                                                 || g_world_formation_unit_browse_enabled != 0)
+                    g_world_formation_triangle_menu.window_x = ((g_world_formation_selected_unit_index % 4) < 2
+                                                                   || g_world_formation_unit_browse_enabled != 0)
                         ? 0x12C
                         : 0x8A;
                     g_world_equipment_ability_panel_thread_params.style = 1;

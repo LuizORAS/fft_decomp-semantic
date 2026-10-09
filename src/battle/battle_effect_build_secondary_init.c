@@ -4,6 +4,6 @@ void battle_effect_build_secondary_init(battle_unit_misc_data_t* unit, battle_ef
     effect->caster.fields.target_type = 0;
     effect->caster.fields.caster_id = unit->unit_id;
     effect->target_count = 1;
-    effect->target.fields.target_type = 0;
-    effect->target.fields.target_id = unit->unit_id;
+    effect->target[0].fields.target_type = 0;
+    effect->target[0].fields.target_id = unit->unit_id;
 }

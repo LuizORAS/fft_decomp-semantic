@@ -31,15 +31,15 @@ void world_menu_update_panel_fade(void) {
             if (intensity != 0) {
                 intensity -= 8;
             }
-            /* Pointer walks preserve the target's two biased tile indices. */
-            (frame->sides + (8 - i))->r0 = intensity;
-            (frame->sides + (8 - i))->g0 = intensity;
-            (frame->sides + (8 - i))->b0 = intensity;
-            (frame->sides + i + 9)->r0 = intensity;
-            (frame->sides + i + 9)->g0 = intensity;
-            (frame->sides + i + 9)->b0 = intensity;
-            world_gfx_draw_or_append_gpu_primitive(&frame->sides[8 - i]);
-            world_gfx_draw_or_append_gpu_primitive(&frame->sides[i + 9]);
+            /* The pointer walk preserves the target's operand order for the biased index. */
+            (frame->backdrop + (8 - i))->r0 = intensity;
+            (frame->backdrop + (8 - i))->g0 = intensity;
+            (frame->backdrop + (8 - i))->b0 = intensity;
+            frame->bar[i].r0 = intensity;
+            frame->bar[i].g0 = intensity;
+            frame->bar[i].b0 = intensity;
+            world_gfx_draw_or_append_gpu_primitive(&frame->backdrop[8 - i]);
+            world_gfx_draw_or_append_gpu_primitive(&frame->bar[i]);
         }
         world_gfx_draw_or_append_gpu_primitive(
             &g_world_menu_panel_fade_frames[g_world_menu_packet_buffer_index].center);

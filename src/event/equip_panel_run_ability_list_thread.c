@@ -5,14 +5,6 @@
 /* Same double-buffered battle_menu_status_panel_buffer_t frame as equip_panel_run_equipment_list_thread and the
  * WORLD twin world_menu_ability_panel_thread. */
 
-/* Thread record; the origin is read as words for the draw-area offset. */
-typedef struct equip_ability_panel_thread {
-    s32 x; /* 0x00 */
-    s32 y; /* 0x04 */
-    s32 _unused_08;
-    s32 redraw_request; /* 0x0c */
-} equip_ability_panel_thread_t;
-
 /* Two-column ability panel thread (task 0x3b); EQUIP twin of WORLD
  * world_menu_ability_panel_thread. Thread 10 draws the unit editor stats into the first
  * frame pair, other threads draw g_equip_item_preview_stat_detail into the second. */
@@ -24,7 +16,7 @@ void equip_panel_run_ability_list_thread(void) {
     s32 u;
     battle_menu_status_panel_buffer_t* base;
     RECT* upload;
-    equip_ability_panel_thread_t* thread;
+    world_status_thread_t* thread;
     u8* text;
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_slot_state_t* state;
@@ -33,7 +25,7 @@ void equip_panel_run_ability_list_thread(void) {
     s32 id;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (equip_ability_panel_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     if (g_battle_current_thread_id == 10) {
         text = g_equip_panel_text_image_a;
@@ -134,7 +126,7 @@ void equip_panel_run_ability_list_thread(void) {
         offset[1] = thread->y;
         equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[2], frame,
             g_main_gfx_screen_polarity * 0xf0, (const s16*)offset);
-        equip_panel_set_primitive_colors(screen, (const battle_menu_status_panel_frame_config_t*)thread);
+        equip_panel_set_primitive_colors(screen, thread);
         equip_menu_select_primitive_color_palette(&screen->numeric_frame, (s32*)thread);
         battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);

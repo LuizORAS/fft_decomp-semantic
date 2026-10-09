@@ -8,8 +8,6 @@
  * g_equip_selected_unit_stat_summary / g_equip_panel_comparison_billboard, and the per-thread display record.
  * g_equip_panel_gauge_bar_colors holds the four Gouraud vertex colours of each bar. */
 
-struct world_menu_palette_primitives;
-struct menu_number_entry;
 struct menu_number_position;
 
 /*
@@ -26,21 +24,21 @@ void equip_render_unit_status_panel_thread(void) {
     s32 cur_unit;
     s32 prev_unit;
 
-    u8* number_image;                                          /* sp60 */
-    battle_menu_status_panel_editor_packet_t* editor_base;     /* sp68 */
-    battle_menu_status_panel_numeric_entry_t* numeric_entries; /* sp70 */
-    battle_menu_status_panel_editor_state_t* state;            /* sp78 */
-    s32 portrait_arg;                                          /* sp80 */
-    const RECT* portrait_rect;                                 /* sp88 */
-    u8* portrait_image;                                        /* sp90 */
-    u8* small_text_image;                                      /* sp98 */
-    u8* name_image;                                            /* spA0 */
-    battle_menu_status_panel_packet_t* panel_base;             /* spA8 */
-    s16* unit_data;                                            /* spB0 */
-    battle_menu_status_panel_display_thread_t* thread;         /* spB8 */
-    s32 shake;                                                 /* spC0 */
-    s32 highlight;                                             /* spC8 */
-    s32 suppress;                                              /* spD0 */
+    u8* number_image;                                      /* sp60 */
+    battle_menu_status_panel_editor_packet_t* editor_base; /* sp68 */
+    menu_number_entry_t* numeric_entries;                  /* sp70 */
+    battle_unit_status_record_t* state;                    /* sp78 */
+    s32 portrait_arg;                                      /* sp80 */
+    const RECT* portrait_rect;                             /* sp88 */
+    u8* portrait_image;                                    /* sp90 */
+    u8* small_text_image;                                  /* sp98 */
+    u8* name_image;                                        /* spA0 */
+    battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
+    s16* unit_data;                                        /* spB0 */
+    battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
+    s32 shake;                                             /* spC0 */
+    s32 highlight;                                         /* spC8 */
+    s32 suppress;                                          /* spD0 */
 
     s32 thread_id;
     u8* threads;
@@ -85,7 +83,7 @@ void equip_render_unit_status_panel_thread(void) {
         numeric_entries = g_equip_panel_selected_numeric_entries;
         /* Declared elsewhere in EQUIP as the 0x28-byte world_item_stat_summary_t;
          * this function reads it as the first of two 0x24-spaced editor states. */
-        state = (battle_menu_status_panel_editor_state_t*)&g_equip_selected_unit_stat_summary;
+        state = (battle_unit_status_record_t*)&g_equip_selected_unit_stat_summary;
         unit_data = (s16*)g_equip_panel_selected_unit_data;
         portrait_rect = &g_equip_panel_selected_portrait_rect;
         panel_base = panel;
@@ -121,11 +119,12 @@ void equip_render_unit_status_panel_thread(void) {
         battle_gfx_init_image_loading(&editor->value_sprites[frame], g_equip_editor_numeric_geometry,
             &g_equip_gfx_portrait_origin.location, &g_equip_panel_editor_value_cells[frame * 0xC]);
     }
-    if (state->mode >= 4) {
-        state->mode = 0;
+    if (state->team_kind >= 4) {
+        state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
-        battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells + state->mode * 0xC, 0xC);
+        battle_copy_bytes(
+            g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
     } else {
         battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
     }
@@ -150,7 +149,7 @@ void equip_render_unit_status_panel_thread(void) {
     }
     battle_gfx_init_image_loading(&panel->portrait, g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect.location,
         g_equip_panel_portrait_cell);
-    if (state->mode == 1) {
+    if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
         panel->portrait.clut = 0x7FBD;
@@ -159,23 +158,24 @@ void equip_render_unit_status_panel_thread(void) {
     battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
-    prev_unit = state->unit;
-    cur_unit = state->unit;
+    prev_unit = state->unit_index;
+    cur_unit = state->unit_index;
     for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->bars[2].value >= 0x65) {
-            state->bars[2].value = 0x64;
+        if (state->gauges[2].value >= 0x65) {
+            state->gauges[2].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
-            battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells + state->mode * 0xC, 0xC);
+            battle_copy_bytes(
+                g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
         } else {
             battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_equip_editor_numeric_geometry,
             &g_equip_gfx_portrait_origin.location, g_equip_panel_editor_mode_cell);
-        if (state->mode == 1) {
+        if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
             panel->portrait.clut = 0x7FBD;
@@ -203,8 +203,8 @@ void equip_render_unit_status_panel_thread(void) {
             i += 1;
         } while (i < 7);
         if (highlight != 0) {
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_1(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_1(&panel->numeric_frame);
             if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
@@ -225,8 +225,8 @@ void equip_render_unit_status_panel_thread(void) {
             editor->portrait[3].b0 = 0x38;
         } else {
             s32 shade;
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_0(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_0(&panel->numeric_frame);
             if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
@@ -315,12 +315,12 @@ void equip_render_unit_status_panel_thread(void) {
             if (anim_state == 0) {
                 prev_unit = cur_unit;
                 portrait_arg = thread->work;
-                cur_unit = state->unit;
+                cur_unit = state->unit_index;
             } else {
                 anim_state = 2;
                 prev_unit = cur_unit;
                 portrait_arg = thread->work;
-                cur_unit = state->unit;
+                cur_unit = state->unit_index;
             }
         }
         if (cur_unit != prev_unit) {
@@ -332,10 +332,10 @@ void equip_render_unit_status_panel_thread(void) {
             portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
-            battle_menu_status_panel_bar_t* bar;
+            battle_unit_status_gauge_t* bar;
 
             color = g_equip_panel_gauge_bar_colors;
-            bar = state->bars;
+            bar = state->gauges;
             for (i = 0; i < 3; i++) {
                 s32 x0;
                 s32 w;
@@ -343,10 +343,10 @@ void equip_render_unit_status_panel_thread(void) {
 
                 SetPolyG4(&editor->bars[i]);
                 x0 = g_equip_gfx_portrait_origin.coordinates[0] + 0x2F;
-                if (bar->limit == 0) {
+                if (bar->max == 0) {
                     w = 4;
                 } else {
-                    w = (bar->value << 5) / bar->limit;
+                    w = (bar->value << 5) / bar->max;
                 }
                 if (w == 0) {
                     x0 = 0;
@@ -418,22 +418,20 @@ void equip_render_unit_status_panel_thread(void) {
                 stride = &g_menu_inner_window_width;
                 *stride = 0x38;
                 if (g_equip_item_numeric_thread_enabled == 0) {
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
-                        (struct menu_number_entry*)numeric_entries, (struct menu_number_position*)(stride - 2), 6);
+                    battle_menu_draw_numeric_display_entries(
+                        (s32)number_image, numeric_entries, (struct menu_number_position*)(stride - 2), 6);
                 } else {
                     position = stride - 2;
-                    equip_text_render_decimal_entry_list((s32)number_image,
-                        (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[10],
-                        (battle_menu_status_panel_text_position_t*)position, 1);
-                    equip_text_render_decimal_entry_list((s32)number_image,
-                        (battle_menu_status_panel_gauge_entry_t*)&numeric_entries[12],
-                        (battle_menu_status_panel_text_position_t*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
-                        (struct menu_number_entry*)&numeric_entries[11], (struct menu_number_position*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
-                        (struct menu_number_entry*)&numeric_entries[13], (struct menu_number_position*)position, 1);
-                    battle_menu_draw_numeric_display_entries((s32)number_image,
-                        (struct menu_number_entry*)&numeric_entries[4], (struct menu_number_position*)position, 2);
+                    equip_text_render_decimal_entry_list(
+                        (s32)number_image, &numeric_entries[10], (world_glyph_blit_t*)position, 1);
+                    equip_text_render_decimal_entry_list(
+                        (s32)number_image, &numeric_entries[12], (world_glyph_blit_t*)position, 1);
+                    battle_menu_draw_numeric_display_entries(
+                        (s32)number_image, &numeric_entries[11], (struct menu_number_position*)position, 1);
+                    battle_menu_draw_numeric_display_entries(
+                        (s32)number_image, &numeric_entries[13], (struct menu_number_position*)position, 1);
+                    battle_menu_draw_numeric_display_entries(
+                        (s32)number_image, &numeric_entries[4], (struct menu_number_position*)position, 2);
                 }
             }
             LoadImage(&rects[0], number_image);
@@ -441,8 +439,8 @@ void equip_render_unit_status_panel_thread(void) {
             text_position = window_width - 2;
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_image_lower,
-                (struct menu_number_entry*)&numeric_entries[6], (struct menu_number_position*)text_position, 4);
+            battle_menu_draw_numeric_display_entries(
+                (s32)number_image_lower, &numeric_entries[6], (struct menu_number_position*)text_position, 4);
             LoadImage(&rects[1], number_image_lower);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_image, 0x580);

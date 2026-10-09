@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void card_gfx_enqueue_oriented_textured_quad(
-    const card_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index) {
+    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     POLY_FT4* poly;

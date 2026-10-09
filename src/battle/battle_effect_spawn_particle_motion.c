@@ -36,7 +36,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
 
     init.caster.block = g_battle_effect_current_secondary->caster_block;
     battle_effect_resolve_target_render_coords(0, -1, (battle_effect_coord_data_t*)&init, &origin);
-    init.target.block = g_battle_effect_current_secondary->target.block;
+    init.target[0].block = g_battle_effect_current_secondary->target.block;
     battle_effect_resolve_target_render_coords(0, 0, (battle_effect_coord_data_t*)&init, &target);
     oriented = 0;
     SetTransMatrix(&g_battle_effect_projectile_matrix);

@@ -18,9 +18,9 @@
 #define WORLD_CAMERA_FUSION_HOLD 10000
 
 void world_camera_fusion_thread(void) {
-    world_camera_track_t* tracks;
-    world_camera_track_t* track;
-    world_camera_key_t* key;
+    battle_camera_track_t* tracks;
+    battle_camera_track_t* track;
+    battle_camera_key_t* key;
     u8* script;
     u8* cursor;
     s32 values[WORLD_CAMERA_FUSION_COMPONENT_COUNT];
@@ -32,10 +32,10 @@ void world_camera_fusion_thread(void) {
     s32 opcode;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    tracks = (world_camera_track_t*)world_menu_alloc_ui_buffer(
-        sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    tracks = (battle_camera_track_t*)world_menu_alloc_ui_buffer(
+        sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
     script = (u8*)world_thread_get_current_parameter_1();
-    world_clear_menu_render_buffer((u8*)tracks, sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    world_clear_menu_render_buffer((u8*)tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
 
     cursor = script;
     key_count = 0;

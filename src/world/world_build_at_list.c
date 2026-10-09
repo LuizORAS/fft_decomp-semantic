@@ -49,7 +49,7 @@ void world_build_at_list(void) {
     layout = (world_menu_text_layout_t*)entry->text_binding;
     entry->window_height = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;
-    entry->overall_height = layout->row_count * 16 + 0x1C;
+    entry->text_image.height = layout->row_count * 16 + 0x1C;
     window.rect.x = 0;
     window.rect.y = 0x7E;
     window.x_screen_offset = 8;
@@ -65,8 +65,7 @@ void world_build_at_list(void) {
         g_world_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_world_at_list_pages[i].icons.icons[1] = &icons1[i];
         g_world_at_list_pages[i].icons.icons[2] = &icons2[i];
-        world_menu_build_icon_record(
-            &image_rect, (world_menu_icon_thread_param_t*)entry, &g_world_at_list_pages[i].icons);
+        world_menu_build_icon_record(&image_rect, entry, &g_world_at_list_pages[i].icons);
     }
     world_gfx_init_scaled_draw_area_packets(&page->draw_areas);
     SetDrawMode(
@@ -231,7 +230,7 @@ void world_build_at_list(void) {
         if (delta == 0) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
-        world_menu_cancel_thread_group((world_menu_cancel_context_t*)entry);
+        world_menu_cancel_thread_group(entry);
         if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step << 1;
@@ -285,7 +284,7 @@ void world_build_at_list(void) {
         world_gfx_draw_or_append_gpu_primitive(&page->text_mode);
         world_gfx_draw_or_append_gpu_primitive(&page->draw_areas);
         world_menu_select_icon_cluts(&page->icons.base);
-        world_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)entry, &page->icons.base, i, cursor);
+        world_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         i++;
         page->icons.base.sprites[0].x0 = 1000;
         page->icons.base.sprites[1].y0 += 4;

@@ -56,7 +56,7 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 byte_offset, 
     s32 wrap;
 
     record = &g_effect_state_records[record_index];
-    entry = (effect_tentacle_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].tentacle_mesh;
     placement = entry->placement_flags;
     flags = entry->flags;
 

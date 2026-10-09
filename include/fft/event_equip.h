@@ -75,29 +75,6 @@ extern s32 g_equip_equipment_panel_style;
 extern s16 g_equip_equipment_render_commands[];
 
 /* gfx */
-/* 20-byte textured-quad descriptor consumed by
- * equip_gfx_enqueue_oriented_textured_quad, which establishes every field:
- * the x/y/w/h screen rectangle, the u/v/uw/vh texture window (each byte padded
- * to a halfword except vh) and the clut/tpage halfwords.
- * equip_menu_draw_equipment_slot_marker (0x801C5DD0) proves the 20-byte stride
- * of its marker arrays. WORLD's world_menu_draw_row_window_and_cursor models
- * the same record as s16[10]. */
-typedef struct equip_gfx_marker_rect {
-    u16 x; /* 0x00 */
-    u16 y; /* 0x02 */
-    u16 w; /* 0x04 */
-    u16 h; /* 0x06 */
-    u8 u;  /* 0x08 */
-    u8 _unused_09;
-    u8 v; /* 0x0a */
-    u8 _unused_0b;
-    u8 uw; /* 0x0c */
-    u8 _unused_0d;
-    u8 vh;     /* 0x0e */
-    u16 clut;  /* 0x10 */
-    u16 tpage; /* 0x12 */
-} equip_gfx_marker_rect_t;
-typedef char equip_marker_rect_size_must_be_0x14[(sizeof(equip_gfx_marker_rect_t) == 0x14) ? 1 : -1];
 
 /* Per-buffer primitive-pool pointers used by EQUIP.OUT's renderer. The 25
  * stores at 0x801cda80 establish the offsets in this 0x64-byte table. */
@@ -223,12 +200,12 @@ extern u16 g_equip_gfx_sprite_16_count;
 /* The scratch marker rect this routine drives; uncatalogued, but the same
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
-extern equip_gfx_marker_rect_t g_equip_gfx_blank_cell_rect;
+extern world_oriented_quad_t g_equip_gfx_blank_cell_rect;
 void equip_menu_select_primitive_color_palette(world_menu_palette_primitives_t* primitives, s32* thread);
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, void* poly);
 
-void equip_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const void* source, s32 scale_index, s32 lower_half, const s16* offset);
+void equip_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packet, const void* source, s32 scale_index, s32 lower_half, const s16* offset);
 
 void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -237,7 +214,7 @@ void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx)
 void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_oriented_textured_quad(
-    const equip_gfx_marker_rect_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
 
@@ -251,7 +228,7 @@ u8* equip_gfx_get_draw_color(void);
 s32 equip_gfx_get_transition_frame(void);
 void equip_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
-void equip_gfx_init_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* data);
+void equip_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* data);
 void equip_gfx_load_image_and_wait(RECT* rect, u32* data);
 void equip_gfx_set_clut_rect_from_id(s16* rect, u32 clut_id);
 void equip_gfx_set_otag_index(s32 ot_index);
@@ -297,17 +274,6 @@ enum {
     EQUIP_ITEM_COUNT_EQUIPPED_FLAG = 0x40000000,
 };
 
-/* Item-type icon row returned by equip_item_build_type_icon_source through the
- * list-row callback table: the icon's source rect from
- * equip_item_get_type_icon_rect, then the two halfwords that routine copies
- * from g_equip_text_metric_2 and the texture page at g_equip_menu_cursor_texture_page. */
-typedef struct equip_icon_rect {
-    RECT rect;
-    u16 clut;  /* 0x08 */
-    u16 tpage; /* 0x0a: texture page */
-} equip_icon_rect_t;
-typedef char equip_icon_rect_size_must_be_0xc[(sizeof(equip_icon_rect_t) == 0xc) ? 1 : -1];
-
 extern u8* g_equip_item_category_lists[];
 extern battle_menu_status_panel_graphic_descriptor_t g_equip_item_graphic_descriptor;
 extern u8 g_equip_item_inventory_totals[];
@@ -327,7 +293,7 @@ extern u8 g_equip_item_list_has_multiple_entries;
 extern s16 g_equip_item_type_order[];
 extern u8 g_equip_item_type_order_names[];
 extern world_menu_entry_t* g_equip_item_action_active_menu;
-extern equip_icon_rect_t g_equip_item_row_icon_rect;
+extern world_item_icon_source_t g_equip_item_row_icon_rect;
 extern world_menu_entry_t* g_equip_item_type_order_active_menu;
 extern u16 g_equip_remove_item_cursor_anim[];
 extern s16 g_equip_remove_item_equipment[];
@@ -336,7 +302,7 @@ extern s8 g_equip_remove_item_previewed_slot;
 void equip_item_clear_stat_sums(s16* summary, s16* detail);
 s32 equip_item_adjust_inventory_count(s32 g_main_item_item_flags, s32 delta);
 void equip_item_build_inventory_totals(void);
-equip_icon_rect_t* equip_item_build_type_icon_source(s32 index);
+world_item_icon_source_t* equip_item_build_type_icon_source(s32 index);
 
 void equip_item_calculate_swap_stat_delta(
     struct world_item_stat_detail* output, struct world_item_stat_summary* out, s16 from, s16 to, s32 slot);
@@ -348,7 +314,7 @@ item_menu_category_e equip_item_get_menu_category(s32 item_id);
 s32 equip_item_get_total_count(s32 item_id);
 s32 equip_menu_get_entry_item_count(s32 row);
 s32 equip_item_get_type(s32 item_id);
-void equip_item_get_type_icon_rect(s32 item_type, RECT* output);
+void equip_item_get_type_icon_rect(s32 item_type, world_item_icon_source_t* output);
 s32 equip_item_is_in_category_list(s32 item_id, s32 category_index);
 void equip_item_prepend_to_category_list(s32 item_id, s32 category_index);
 void equip_item_rebuild_category_list(s32 category);
@@ -368,17 +334,6 @@ void equip_item_subtract_scaled_stats(struct world_item_stat_detail* out, struct
 /* menu */
 typedef s32 (*equip_row_callback_t)(s32 row);
 
-/* 6-byte per-list selection records (0x1E bytes total) at 0x801e12c4. The
- * memset callers use the raw-byte name; equip_menu_set_selection_record and
- * equip_menu_restore_list_selection use the record view, which has its own
- * catalog name at the same address because reaching it through a cast of the
- * byte array moves equip_menu_restore_list_selection's codegen. */
-typedef struct equip_menu_selection_record {
-    u16 selected_index; /* 0x00: g_equip_menu_selected_list_index */
-    u16 scroll_index;   /* 0x02: g_equip_menu_scroll_base_index */
-    s16 item_id;        /* 0x04: low 10 bits of the selected list entry */
-} equip_menu_selection_record_t;
-
 extern point16_t g_equip_menu_clear_all_prompt_draw_params;
 extern volatile u16 g_equip_menu_clear_all_prompt_frame;
 extern s8 g_equip_menu_event_speed;
@@ -394,15 +349,19 @@ extern s16 g_equip_menu_list_visible_rows;
 extern u16 g_equip_menu_list_vram_width;
 extern u8 g_equip_menu_screen_state;
 extern s16 g_equip_menu_scroll_base_index;
-extern equip_gfx_marker_rect_t g_equip_menu_secondary_slot_marker;
+extern world_oriented_quad_t g_equip_menu_secondary_slot_marker;
 
 /* Signed halfword: EQUIP reads this state with lh at 0x801c4584,
  * 0x801c45bc, and 0x801c4614. */
 extern s16 g_equip_menu_selected_list_index;
+/* The memset callers use the raw-byte name; equip_menu_set_selection_record
+ * and equip_menu_restore_list_selection use the record view, which has its own
+ * catalog name at the same address because reaching it through a cast of the
+ * byte array moves equip_menu_restore_list_selection's codegen. */
 extern u8 g_equip_menu_selection_records[];
-extern equip_menu_selection_record_t g_equip_menu_selection_entries[];
+extern bunit_menu_selection_record_t g_equip_menu_selection_entries[];
 extern s16 g_equip_menu_selection_values[4];
-extern equip_gfx_marker_rect_t g_equip_menu_slot_marker_rects[];
+extern world_oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern s16 g_equip_menu_slot_marker_window;
 extern u8 g_equip_menu_slot_marker_x[];
 extern s8 g_equip_menu_thread_running;
@@ -494,12 +453,12 @@ extern world_gfx_image_load_parameters_t g_equip_panel_item_icon_layouts[];
 extern battle_menu_status_panel_buffer_t g_equip_panel_frames_a[];
 extern u8 g_equip_panel_text_image_a[];
 extern u8 g_equip_panel_text_image_b[];
-extern battle_menu_status_panel_editor_state_t g_equip_panel_comparison_billboard;
+extern battle_unit_status_record_t g_equip_panel_comparison_billboard;
 extern battle_menu_status_panel_editor_packet_t g_equip_panel_comparison_editor_packets[2];
 extern u8 g_equip_panel_comparison_large_number_image[];
 extern u8 g_equip_panel_comparison_name_image[];
 extern u8 g_equip_panel_comparison_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_equip_panel_comparison_numeric_entries[];
+extern menu_number_entry_t g_equip_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_equip_panel_comparison_packets[2];
 extern u8 g_equip_panel_comparison_portrait_image[];
 extern RECT g_equip_panel_comparison_portrait_rect;
@@ -518,7 +477,7 @@ extern battle_menu_status_panel_editor_packet_t g_equip_panel_selected_editor_pa
 extern u8 g_equip_panel_selected_large_number_image[];
 extern u8 g_equip_panel_selected_name_image[];
 extern u8 g_equip_panel_selected_number_image[];
-extern battle_menu_status_panel_numeric_entry_t g_equip_panel_selected_numeric_entries[];
+extern menu_number_entry_t g_equip_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_equip_panel_selected_packets[2];
 extern u8 g_equip_panel_selected_portrait_image[];
 extern RECT g_equip_panel_selected_portrait_rect;
@@ -527,7 +486,7 @@ extern s16 g_equip_panel_slide_up_y[];
 extern u8 g_equip_panel_sprite_cells[];
 
 void equip_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state);
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void equip_panel_toggle_equipment_threads(s32 enable);
 void equip_panel_toggle_item_numeric_thread(s32 enable);
@@ -570,31 +529,6 @@ extern s8 g_equip_slot_item_browser_previewed_index;
 extern point16_t g_equip_slot_marker_rect;
 
 /* text */
-typedef struct equip_stat_entry {
-    u16 x;
-    u16 y;
-    s16* value;
-    u16 flags;
-    u16 _padding_0a; /* tail padding to 4-byte alignment */
-} equip_stat_entry_t;
-
-typedef struct equip_stat_out {
-    s16 x;
-    s16 y;
-    s32 _unused_04;
-    s32 _unused_08;
-    u32 color;
-} equip_stat_out_t;
-
-/* Glyph cursor of equip_text_render_encoded_ids_to_image, read by
- * equip_text_render_glyph_to_4bpp_image: y and row_stride are loaded signed,
- * and x is advanced by each glyph's width. */
-typedef struct equip_text_image_position {
-    u16 x;
-    s16 y;
-    s16 row_stride;
-} equip_text_image_position_t;
-
 extern u8 g_equip_text_compact_layout;
 extern u16 g_equip_text_digit_texture_page;
 extern s32 g_equip_text_help_message_id;
@@ -624,14 +558,12 @@ extern u16 g_equip_text_metric_5;
 extern const char g_equip_text_decimal_format[];
 extern battle_menu_status_panel_glyph_t g_equip_text_decimal_glyph;
 
-void equip_text_render_decimal_entry_list(s32 pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* out, s32 count);
+void equip_text_render_decimal_entry_list(s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
-void equip_text_render_decimal_value(
-    s32 value, s32 flags, void* pixels, battle_menu_status_panel_text_position_t* position);
+void equip_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 
 s32 equip_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const equip_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
 void equip_text_set_palette_and_metrics(s32 compact);
 void equip_text_start_help_thread(s32 text_id);
@@ -644,7 +576,7 @@ void equip_text_render_encoded_ids_to_image(void* image, const battle_menu_text_
 void equip_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style);
 
 void equip_text_render_signed_decimal_entries(
-    void* pixels, equip_stat_entry_t* entry, equip_stat_out_t* out, s32 count);
+    void* pixels, menu_number_entry_t* entry, world_glyph_blit_t* out, s32 count);
 
 void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);

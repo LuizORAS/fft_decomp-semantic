@@ -7,8 +7,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-struct world_menu_palette_primitives;
-struct menu_number_entry;
 struct menu_number_position;
 
 void require_render_unit_status_panel_thread(void) {
@@ -19,8 +17,8 @@ void require_render_unit_status_panel_thread(void) {
 
     u8* number_image;
     battle_menu_status_panel_editor_packet_t* editor_base;
-    battle_menu_status_panel_numeric_entry_t* numeric_entries;
-    battle_menu_status_panel_gauges_t* state;
+    menu_number_entry_t* numeric_entries;
+    battle_unit_status_record_t* state;
     s32 portrait_arg;
     const RECT* portrait_rect;
     u8* portrait_image;
@@ -99,12 +97,12 @@ void require_render_unit_status_panel_thread(void) {
         battle_gfx_init_image_loading(&editor->value_sprites[frame], g_require_editor_numeric_geometry,
             &g_require_gfx_portrait_origin.location, &g_require_panel_editor_value_cells[frame * 0xC]);
     }
-    if (state->team_state >= 4) {
-        state->team_state = 0;
+    if (state->team_kind >= 4) {
+        state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
         battle_copy_bytes(
-            g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_state * 0xC, 0xC);
+            g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
     } else {
         battle_copy_bytes(g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells, 0xC);
     }
@@ -129,7 +127,7 @@ void require_render_unit_status_panel_thread(void) {
     }
     battle_gfx_init_image_loading(&panel->portrait, g_require_editor_numeric_geometry,
         &g_require_panel_frame_rect.location, g_require_panel_portrait_cell);
-    if (state->team_state == 1) {
+    if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
         panel->portrait.clut = 0x7FBD;
@@ -144,18 +142,18 @@ void require_render_unit_status_panel_thread(void) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->ct >= 0x65) {
-            state->ct = 0x64;
+        if (state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
+            state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(
-                g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_state * 0xC, 0xC);
+                g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells + state->team_kind * 0xC, 0xC);
         } else {
             battle_copy_bytes(g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_require_editor_numeric_geometry,
             &g_require_gfx_portrait_origin.location, g_require_panel_editor_mode_cell);
-        if (state->team_state == 1) {
+        if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
             panel->portrait.clut = 0x7FBD;
@@ -183,8 +181,8 @@ void require_render_unit_status_panel_thread(void) {
             i += 1;
         } while (i < 7);
         if (highlight != 0) {
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_1(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_1(&panel->numeric_frame);
             if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
@@ -205,8 +203,8 @@ void require_render_unit_status_panel_thread(void) {
             editor->portrait[3].b0 = 0x38;
         } else {
             s32 shade;
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)editor);
-            battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)panel);
+            battle_menu_init_primitive_colors_palette_bank_0(&editor->numeric_frame);
+            battle_menu_init_primitive_colors_palette_bank_0(&panel->numeric_frame);
             if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
@@ -342,7 +340,7 @@ void require_render_unit_status_panel_thread(void) {
         panel->sprites[6].h = 0x14;
         panel->sprites[6].v0 = (icon_index / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (thread->work != 0)) {
-            if (state->_04 < 0) {
+            if (state->list_index < 0) {
                 numeric_entries[6].format = 0xC00;
             } else {
                 numeric_entries[6].format = 2;
@@ -351,13 +349,13 @@ void require_render_unit_status_panel_thread(void) {
             window_width = &g_menu_inner_window_width;
             text_position = window_width - 2;
             *window_width = 0x38;
-            battle_menu_draw_numeric_display_entries((s32)number_image, (struct menu_number_entry*)numeric_entries,
-                (struct menu_number_position*)text_position, 6);
+            battle_menu_draw_numeric_display_entries(
+                (s32)number_image, numeric_entries, (struct menu_number_position*)text_position, 6);
             LoadImage(&rects[0], (u32*)number_image);
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries((s32)number_image_lower,
-                (struct menu_number_entry*)&numeric_entries[8], (struct menu_number_position*)text_position, 2);
+            battle_menu_draw_numeric_display_entries(
+                (s32)number_image_lower, &numeric_entries[8], (struct menu_number_position*)text_position, 2);
             LoadImage(&rects[1], (u32*)number_image_lower);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_image, 0x580);

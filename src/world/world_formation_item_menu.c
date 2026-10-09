@@ -43,7 +43,7 @@ void world_formation_item_menu(void) {
         g_world_item_menu_initialized = running;
         if (running == 0) {
             g_world_formation_current_menu = 0;
-            g_world_formation_triangle_menu.cursor = 0;
+            g_world_formation_triangle_menu.selected_index = 0;
         }
         return;
     }

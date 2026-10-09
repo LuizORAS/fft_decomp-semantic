@@ -4,18 +4,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* One frame of an animation sequence: the cel it draws and how long it holds.
- * duration 0xffff pins the frame. */
-typedef struct wldcore_anim_frame {
-    u16 cel;      /* 0x00 */
-    u16 duration; /* 0x02 */
-} wldcore_anim_frame_t;
-
-typedef struct wldcore_anim_sequence {
-    s32 frame_count;                /* 0x00 */
-    wldcore_anim_frame_t frames[1]; /* 0x04 */
-} wldcore_anim_sequence_t;
-
 /* One sprite part of a cel, two packed words. The byte view supplies the
  * position and the source rectangle; the word view supplies the bitfields. */
 typedef union wldcore_sprite_part {

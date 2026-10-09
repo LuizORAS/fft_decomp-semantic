@@ -20,7 +20,7 @@ void world_menu_icon_linked_entry_thread(void) {
 
     param = world_thread_get_current_parameter_1();
     world_menu_size_entry_to_text(param, &width, &height, &pad, 0);
-    world_menu_build_icon_record(&rect, (world_menu_icon_thread_param_t*)param, &records[0]);
+    world_menu_build_icon_record(&rect, param, &records[0]);
     world_script_copy_bytes(&records[1], &records[0], 0x7C);
     parent = param->parent_indices[0];
     if (parent >= 0) {
@@ -51,9 +51,9 @@ void world_menu_icon_linked_entry_thread(void) {
             world_menu_select_icon_cluts(&records[i & 1].base);
         }
         record = &records[i & 1];
-        world_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)param, &record->base, i, -1);
+        world_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         world_menu_handle_entry_confirm(param, 0);
-        world_menu_cancel_thread_group((world_menu_cancel_context_t*)param);
+        world_menu_cancel_thread_group(param);
         world_menu_submit_icon_primitives(&record->base);
     }
     g_world_menu_sound_muted = 0;

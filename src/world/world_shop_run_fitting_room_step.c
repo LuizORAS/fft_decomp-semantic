@@ -44,8 +44,8 @@ void world_shop_run_fitting_room_step(void) {
             g_world_formation_unit_browse_enabled = 1;
             g_world_formation_scroll_enabled = 0;
             g_world_shop_cost_window_visible = 1;
-            g_world_shop_fitting_room_menu_thread_data[0].cursor = 0;
-            g_world_shop_fitting_room_menu_thread_data[1].cursor = 0;
+            g_world_shop_fitting_room_menu_thread_data[0].selected_index = 0;
+            g_world_shop_fitting_room_menu_thread_data[1].selected_index = 0;
             world_gfx_clear_sprite_slots();
         } else {
             world_formation_update_and_draw_unit_grid(1, 1, 0, g_world_input_secondary_repeat,

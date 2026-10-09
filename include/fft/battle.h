@@ -6,9 +6,6 @@
 #include "fft/main.h"
 #include "psx/libc.h"
 
-struct battle_event_input_state;
-union battle_texture_prim;
-
 /* ability */
 typedef enum battle_ability_facing_modifier {
     BATTLE_ABILITY_FACING_FRONT = 0,
@@ -909,16 +906,9 @@ void animation_exception_handler(s32 exception_id);
 void battle_script_rotate_unit(const u8* parameters);
 
 /* dead unit */
-/* 0x00 selects which panel variant runs; 0x52 is the roster/item id. */
-typedef struct dead_unit_context {
-    s32 kind; /* 0x00 */
-    u8 _unused_04[0x4e];
-    u8 item_id;     /* 0x52 */
-    u8 flags[0x40]; /* 0x53 */
-} dead_unit_context_t;
 
 extern s32 g_dead_unit_action;
-extern dead_unit_context_t* g_dead_unit_context;
+extern crystal_pickup_result_t* g_dead_unit_context;
 extern s32 g_dead_unit_result;
 
 /* deploy */
@@ -1127,7 +1117,7 @@ void battle_script_run_sprite_move(s32 arg, s32 use_speed);
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons);
-void battle_script_load_event_input_state(const struct battle_event_input_state* saved);
+void battle_script_load_event_input_state(const world_menu_input_state_t* saved);
 void battle_script_clear_indexed_variable_bit0(void);
 void battle_script_copy_32_bytes(void* destination, const void* source);
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
@@ -1316,21 +1306,6 @@ typedef enum battle_game_state {
     BATTLE_GAME_STATE_MAP_JUMPING_IN_2 = 0x3a,
     BATTLE_GAME_STATE_CLOSE_BATTLE = 0x3b,
 } battle_game_state_e;
-
-/* Provisional 0x14-byte system-function record, table at 0x801692c0
- * (battle_menu_run_system_function_thread, battle_menu_dispatch_system_function). */
-typedef struct battle_system_function {
-    s16 value_00;               /* 0x00; copied to g_battle_menu_current_id */
-    u16 text_id;                /* 0x02; menu entry text id */
-    s16 menu_entry_index;       /* 0x04; g_battle_menu_thread_menu_data index */
-    u16 value_06;               /* 0x06; copied to g_battle_menu_system_function_row_actions */
-    u16 value_08;               /* 0x08; menu entry value_20 */
-    u8 _padding_0a[2];          /* aligns thread_entry */
-    void (*thread_entry)(void); /* 0x0c; started as thread 8 */
-    s16 alternate_id;           /* 0x10; replaces the id when navigation messages are not On */
-    u8 _padding_12[2];          /* tail padding to 4-byte alignment */
-} battle_system_function_t;
-typedef char battle_system_function_size_must_be_0x14[(sizeof(battle_system_function_t) == 0x14) ? 1 : -1];
 
 /* Battle heap block header: blocks are counted in 8-byte units and linked
  * either on the circular free list (g_battle_heap_rover) or on one of the 16
@@ -2014,28 +1989,6 @@ typedef struct battle_camera_rotation {
 } battle_camera_rotation_t;
 typedef char battle_camera_rotation_size_must_be_6[sizeof(battle_camera_rotation_t) == 6 ? 1 : -1];
 
-/* Provisional camera interpolation key: frame time and target value. */
-typedef struct battle_camera_key {
-    s32 time;  /* 0x00; cumulative frame of this key */
-    s32 value; /* 0x04 */
-    u8 _unused_08[8];
-} battle_camera_key_t;
-
-/* Provisional per-component camera fusion track (0xa4 bytes). */
-typedef struct battle_camera_track {
-    battle_camera_key_t keys[8]; /* 0x00 */
-    s32 key_count;               /* 0x80 */
-    s32 segment;                 /* 0x84; first key of the active segment */
-    s32 frame;                   /* 0x88; frames since the track started */
-    s32 segment_frame;           /* 0x8c; frames into the active segment */
-    s32 prev_time;               /* 0x90; Q12 */
-    s32 prev_value;              /* 0x94; Q12 */
-    s32 start_value;             /* 0x98; Q12 */
-    s32 segment_duration;        /* 0x9c */
-    s32 finished;                /* 0xa0 */
-} battle_camera_track_t;
-typedef char battle_camera_track_size_must_be_0xa4[sizeof(battle_camera_track_t) == 0xa4 ? 1 : -1];
-
 extern u16 g_battle_camera_shake_z_offset;
 extern s32 g_battle_previous_camera_yaw;
 extern u16 g_battle_camera_script_variable_indices[7];
@@ -2323,9 +2276,11 @@ typedef struct battle_effect_secondary_data {
             s16 y; /* 0x20 */
         } position;
         struct {
-            s16 target_type;   /* 0 identifies a unit target (battle_effect_target_t) */
-            u8 target_id;      /* 0x1c; read by the Splash handler 0x801b2a88 */
-            u8 target_byte_1d; /* 0x1d; the arrow and projectile handlers compare it with 3 and 4..5 */
+            s16 target_type; /* 0 identifies a unit target (battle_effect_target_t) */
+            u8 target_id;    /* 0x1c; read by the Splash handler 0x801b2a88 */
+            /* 0x1d; the init record's result_animation: the arrow and
+             * projectile handlers compare it with 3 and 4..5 */
+            u8 result_animation;
         } fields;
     } target;           /* 0x1a */
     s32 used_weapon_id; /* 0x24; init record used_weapon_id */
@@ -2371,8 +2326,7 @@ typedef struct battle_effect_secondary_init {
             u8 result_animation;
         } fields;
         battle_effect_secondary_block_t block;
-    } target; /* 0x04; first of up to 16 ten-byte target blocks */
-    u8 _unused_0e[0x96];
+    } target[16]; /* 0x04; ten-byte target blocks */
     union {
         struct {
             s16 target_type; /* 0xa4; copied whole from g_battle_effect_targets[16] */
@@ -3290,13 +3244,337 @@ typedef struct effect_geometry_entry {
 } effect_geometry_entry_t;
 typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 0xc4 ? 1 : -1];
 
+typedef struct effect_summon_mesh_curve_halves {
+    u16 low;  /* 0x00 */
+    u16 high; /* 0x02 */
+} effect_summon_mesh_curve_halves_t;
+
+/* The target reads the radius curve nibble with its own halfword load. */
+typedef union effect_summon_mesh_curve_word {
+    u32 word;
+    effect_summon_mesh_curve_halves_t half;
+} effect_summon_mesh_curve_word_t;
+
+/* This renderer's view of one effect_geometry_entry_t. */
+typedef struct effect_particle_ribbon_geometry_view {
+    u8 _unused_00[0x02];
+    u16 placement_flags; /* 0x02 */
+    u8 _unused_04[0x02];
+    u16 flags;                              /* 0x06 */
+    u32 curve_indices[2];                   /* 0x08 */
+    u32 colour_curves;                      /* 0x10 */
+    effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
+    u16 texture_page_flags;                 /* 0x4c */
+    s16 brightness_row;                     /* 0x4e */
+    u8 _unused_50[0x04];
+    s16 ot_depth; /* 0x54 */
+    u8 _unused_56[0x06];
+    s16 radial_speed_min_start; /* 0x5c */
+    s16 radial_speed_max_start; /* 0x5e */
+    s16 radial_speed_min_end;   /* 0x60 */
+    s16 radial_speed_max_end;   /* 0x62 */
+    s16 texture_u;              /* 0x64 */
+    u8 _unused_66[0x02];
+    s16 texture_v; /* 0x68 */
+    u8 _unused_6a[0x02];
+    s16 frame_count; /* 0x6c */
+    s16 frame_delay; /* 0x6e */
+    u8 _unused_70[0x0c];
+    s16 target_spread_start[6]; /* 0x7c: x/y/z at even indices */
+    s16 target_spread_end[6];   /* 0x88 */
+    s16 lifetime_start[2];      /* 0x94 */
+    s16 lifetime_end[2];        /* 0x98 */
+    s16 target_offset_start[3]; /* 0x9c */
+    s16 target_offset_end[3];   /* 0xa2 */
+    s16 texture_width;          /* 0xa8 */
+    s16 texture_height;         /* 0xaa */
+    u8 _unused_ac[0x04];
+    s16 particle_count_start; /* 0xb0 */
+    s16 particle_count_end;   /* 0xb2 */
+    s16 spawn_interval_start; /* 0xb4 */
+    s16 spawn_interval_end;   /* 0xb6 */
+    u8 _unused_b8[0x08];
+    u8 child_emitter_on_death; /* 0xc0 */
+    u8 child_emitter_mid_life; /* 0xc1 */
+    u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
+} effect_particle_ribbon_geometry_view_t;
+typedef char
+    assert_effect_particle_ribbon_geometry_view_size[sizeof(effect_particle_ribbon_geometry_view_t) == 0xc4 ? 1 : -1];
+
+/* This renderer's view of one effect_geometry_entry_t. It keeps the particle
+ * emitter's slot-to-curve bindings but gives the slots its own meanings; each
+ * field notes the emitter slot it occupies, and offsets it never reads stay
+ * unknown. Curve nibbles: curve_indices[0] 0 centre, 1 radius, 2 velocity,
+ * 3 acceleration, 4 angle, 7 radius step; curve_indices[1] 0 radius step
+ * delta, 1 scroll, 3 angle step, 6 angle step delta. */
+typedef struct effect_polar_mesh_geometry_view {
+    u8 _unused_00[0x06];
+    u16 flags;            /* 0x06: bit 6 = per-channel colour curves */
+    u32 curve_indices[2]; /* 0x08 */
+    u32 colour_curves;    /* 0x10: nibbles 0-2 = r/g/b */
+    s16 center_start[3];  /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
+    s16 center_end[3];    /* 0x1a */
+    s16 radius_start;     /* 0x20: spawn spread x */
+    u8 _unused_22[0x04];
+    s16 radius_end; /* 0x26 */
+    u8 _unused_28[0x04];
+    s16 velocity_angle_start; /* 0x2c: velocity base angle x */
+    s16 velocity_speed_start; /* 0x2e: velocity base angle y */
+    u8 _unused_30[0x02];
+    s16 velocity_angle_end; /* 0x32 */
+    s16 velocity_speed_end; /* 0x34 */
+    u8 _unused_36[0x02];
+    s16 acceleration_angle_start; /* 0x38: velocity spread x */
+    s16 acceleration_speed_start; /* 0x3a: velocity spread y */
+    u8 _unused_3c[0x02];
+    s16 acceleration_angle_end; /* 0x3e */
+    s16 acceleration_speed_end; /* 0x40 */
+    u8 _unused_42[0x02];
+    s16 angle_start; /* 0x44: minimum inertia */
+    u8 _unused_46[0x02];
+    s16 angle_end; /* 0x48 */
+    u8 _unused_4a[0x02];
+    u16 texture_page_flags; /* 0x4c: bits 0-1 tpage x, bit 2 clears ABE */
+    s16 brightness_row;     /* 0x4e */
+    u8 _unused_50[0x04];
+    s16 ot_depth; /* 0x54 */
+    u8 _unused_56[0x06];
+    s16 radius_step_start; /* 0x5c: minimum radial speed */
+    u8 _unused_5e[0x02];
+    s16 radius_step_end; /* 0x60 */
+    u8 _unused_62[0x02];
+    s16 radius_step_delta_start; /* 0x64: minimum x acceleration */
+    u8 _unused_66[0x0a];
+    s16 radius_step_delta_end; /* 0x70 */
+    u8 _unused_72[0x0a];
+    s16 scroll_u_speed_start; /* 0x7c: minimum x drag */
+    u8 _unused_7e[0x02];
+    s16 scroll_v_speed_start; /* 0x80: minimum y drag */
+    u8 _unused_82[0x06];
+    s16 scroll_u_speed_end; /* 0x88 */
+    u8 _unused_8a[0x02];
+    s16 scroll_v_speed_end; /* 0x8c */
+    u8 _unused_8e[0x0e];
+    s16 angle_step_start; /* 0x9c: target offset x */
+    u8 _unused_9e[0x04];
+    s16 angle_step_end; /* 0xa2 */
+    u8 _unused_a4[0x04];
+    s16 texture_width;  /* 0xa8 */
+    s16 texture_height; /* 0xaa */
+    u8 _unused_ac[0x08];
+    s16 angle_step_delta_start; /* 0xb4: spawn interval */
+    s16 angle_step_delta_end;   /* 0xb6 */
+    u16 texture_u;              /* 0xb8: minimum start homing strength */
+    u16 texture_v;              /* 0xba: maximum start homing strength */
+    u8 _unused_bc[0x08];
+} effect_polar_mesh_geometry_view_t;
+typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+
+/* This renderer's view of one effect_geometry_entry_t. It shares the layout of
+ * effect_summon_mesh_geometry_view_t and adds the per-row radius terms at
+ * 0x6c/0x78 and 0x84/0x90. */
+typedef struct effect_ring_mesh_geometry_view {
+    u8 _unused_00[0x02];
+    u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
+    u8 _unused_04[0x02];
+    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
+    u32 scroll_curves;      /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
+    u32 wave_curves;        /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
+    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
+    s16 origin_start[3];    /* 0x14 */
+    s16 origin_end[3];      /* 0x1a */
+    s16 u_span;             /* 0x20 */
+    s16 v_span;             /* 0x22 */
+    u16 texture_page_flags; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u8 _unused_26[0x06];
+    s16 u_start;        /* 0x2c */
+    s16 v_start;        /* 0x2e */
+    u16 v_scroll_speed; /* 0x30 */
+    s16 u_end;          /* 0x32 */
+    s16 v_end;          /* 0x34 */
+    u8 _unused_36[0x06];
+    s16 brightness_row; /* 0x3c */
+    u8 _unused_3e[0x1e];
+    s16 spin_speed_start; /* 0x5c */
+    u8 _unused_5e[0x02];
+    s16 spin_speed_end; /* 0x60 */
+    u8 _unused_62[0x02];
+    s16 growth_start; /* 0x64 */
+    u8 _unused_66[0x02];
+    s16 height_start; /* 0x68 */
+    u8 _unused_6a[0x02];
+    s16 row_radius_start; /* 0x6c */
+    u8 _unused_6e[0x02];
+    s16 growth_end; /* 0x70 */
+    u8 _unused_72[0x02];
+    s16 height_end; /* 0x74 */
+    u8 _unused_76[0x02];
+    s16 row_radius_end; /* 0x78 */
+    u8 _unused_7a[0x02];
+    s16 growth_step_start; /* 0x7c */
+    u8 _unused_7e[0x02];
+    s16 height_step_start; /* 0x80 */
+    u8 _unused_82[0x02];
+    s16 row_radius_step_start; /* 0x84 */
+    u8 _unused_86[0x02];
+    s16 growth_step_end; /* 0x88 */
+    u8 _unused_8a[0x02];
+    s16 height_step_end; /* 0x8c */
+    u8 _unused_8e[0x02];
+    s16 row_radius_step_end; /* 0x90 */
+    u8 _unused_92[0x16];
+    s16 radius_start; /* 0xa8 */
+    u8 _unused_aa[0x02];
+    s16 radius_end; /* 0xac */
+    u8 _unused_ae[0x16];
+} effect_ring_mesh_geometry_view_t;
+typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+
+/* This renderer's view of one effect_geometry_entry_t. The shared entry type
+ * names several of these offsets for other effect kinds; the curve nibbles
+ * select rows of g_effect_palette_table. */
+typedef struct effect_summon_mesh_geometry_view {
+    u8 _unused_00[0x02];
+    u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
+    u8 _unused_04[0x02];
+    u16 flags;                                   /* 0x06: bit 6 = per-channel colour curves */
+    u32 scroll_curves;                           /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
+    effect_summon_mesh_curve_word_t wave_curves; /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
+    u32 colour_curves;                           /* 0x10: nibbles 0-2 = r/g/b */
+    s16 origin_start[3];                         /* 0x14 */
+    s16 origin_end[3];                           /* 0x1a */
+    s16 u_span;                                  /* 0x20 */
+    s16 v_span;                                  /* 0x22 */
+    u16 texture_page_flags;                      /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u8 _unused_26[0x06];
+    s16 u_start;        /* 0x2c */
+    s16 v_start;        /* 0x2e */
+    u16 v_scroll_speed; /* 0x30 */
+    s16 u_end;          /* 0x32 */
+    s16 v_end;          /* 0x34 */
+    u8 _unused_36[0x06];
+    s16 brightness_row; /* 0x3c */
+    u8 _unused_3e[0x1e];
+    s16 spin_speed_start; /* 0x5c */
+    u8 _unused_5e[0x02];
+    s16 spin_speed_end; /* 0x60 */
+    u8 _unused_62[0x02];
+    s16 growth_start; /* 0x64 */
+    u8 _unused_66[0x02];
+    s16 height_start; /* 0x68 */
+    u8 _unused_6a[0x06];
+    s16 growth_end; /* 0x70 */
+    u8 _unused_72[0x02];
+    s16 height_end; /* 0x74 */
+    u8 _unused_76[0x06];
+    s16 growth_step_start; /* 0x7c */
+    u8 _unused_7e[0x02];
+    s16 height_step_start; /* 0x80 */
+    u8 _unused_82[0x06];
+    s16 growth_step_end; /* 0x88 */
+    u8 _unused_8a[0x02];
+    s16 height_step_end; /* 0x8c */
+    u8 _unused_8e[0x1a];
+    s16 radius_start; /* 0xa8 */
+    u8 _unused_aa[0x02];
+    s16 radius_end; /* 0xac */
+    u8 _unused_ae[0x16];
+} effect_summon_mesh_geometry_view_t;
+typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+
+/* These renderers' view of one effect_geometry_entry_t. They spawn segments as
+ * the BATTLE particle emitter spawns particles, so the fields they share with
+ * it keep its names and curve nibbles: curve_indices[0] nibbles 0 spawn
+ * position, 1 spawn spread, 2 velocity base angle, 3 velocity spread and
+ * 7 radial speed; curve_indices[1] nibbles 1 tip spread, 2 lifetime, 3 target
+ * offset, 5 particle count and 6 spawn interval. The remaining named fields
+ * are renderer-specific. */
+typedef struct effect_tentacle_mesh_geometry_view {
+    u8 _unused_00[0x02];
+    u16 placement_flags; /* 0x02: bits 9-11 place the spawn origin, bits 5-7 the tip */
+    u8 _unused_04[0x02];
+    u16 flags;                              /* 0x06: bits 0-1 and 2-3 enable death and mid-life children */
+    u32 curve_indices[2];                   /* 0x08 */
+    u32 colour_curves;                      /* 0x10 */
+    effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
+    u16 texture_page_flags;                 /* 0x4c */
+    s16 brightness_row;                     /* 0x4e */
+    u8 _unused_50[0x04];
+    s16 ot_depth; /* 0x54: added to each quad's depth */
+    u8 _unused_56[0x06];
+    s16 radial_speed_min_start; /* 0x5c */
+    s16 radial_speed_max_start; /* 0x5e */
+    s16 radial_speed_min_end;   /* 0x60 */
+    s16 radial_speed_max_end;   /* 0x62 */
+    s16 texture_u;              /* 0x64 */
+    u8 _unused_66[0x02];
+    s16 texture_v; /* 0x68 */
+    u8 _unused_6a[0x02];
+    s16 frame_count; /* 0x6c */
+    s16 frame_delay; /* 0x6e */
+    u8 _unused_70[0x0c];
+    s16 tip_spread_start_x; /* 0x7c */
+    u8 _unused_7e[0x02];
+    s16 tip_spread_start_y; /* 0x80 */
+    u8 _unused_82[0x02];
+    s16 tip_spread_start_z; /* 0x84 */
+    u8 _unused_86[0x02];
+    s16 tip_spread_end_x; /* 0x88 */
+    u8 _unused_8a[0x02];
+    s16 tip_spread_end_y; /* 0x8c */
+    u8 _unused_8e[0x02];
+    s16 tip_spread_end_z; /* 0x90 */
+    u8 _unused_92[0x02];
+    s16 lifetime_start[2];      /* 0x94: min, max; the segment's length */
+    s16 lifetime_end[2];        /* 0x98 */
+    s16 target_offset_start[3]; /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
+    s16 target_offset_end[3];   /* 0xa2 */
+    s16 texture_width;          /* 0xa8 */
+    s16 texture_height;         /* 0xaa */
+    u8 _unused_ac[0x04];
+    s16 particle_count_start; /* 0xb0: segments spawned per interval */
+    s16 particle_count_end;   /* 0xb2 */
+    s16 spawn_interval_start; /* 0xb4 */
+    s16 spawn_interval_end;   /* 0xb6 */
+    u8 _unused_b8[0x08];
+    u8 child_emitter_on_death; /* 0xc0 */
+    u8 child_emitter_mid_life; /* 0xc1: spawned at the trailing point each frame */
+    u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
+} effect_tentacle_mesh_geometry_view_t;
+typedef char
+    assert_effect_tentacle_mesh_geometry_view_size[sizeof(effect_tentacle_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+
+/* The E454 and E464 particle handlers use the renderer-specific meanings of
+ * the geometry entry's 0x4c and 0xa8 fields. */
+typedef struct effect_particle_vertex_emitter_view {
+    u8 _unused_00[0x4c];
+    s16 vertex_group; /* 0x4c: selects a vertex in the effect work buffer */
+    u8 _unused_4e[0x5a];
+    s16 start_frame; /* 0xa8 */
+    s16 end_frame;   /* 0xaa */
+    u8 _unused_ac[0x18];
+} effect_particle_vertex_emitter_view_t;
+typedef char
+    assert_effect_particle_vertex_emitter_view_size[sizeof(effect_particle_vertex_emitter_view_t) == 0xc4 ? 1 : -1];
+
 /* Particle-system section addressed by effect-file header word 0x0c. */
 typedef struct effect_geometry_table {
     u16 _unused_00;        /* 2, or 1 in seven shipped files */
     u16 entry_count;       /* 0x02 */
     s32 gravity[3];        /* 0x04: copied to g_battle_effect_gravity by effect script opcode 0x27 */
     s32 inertia_threshold; /* 0x10: passed to battle_effect_set_inertia_threshold by opcode 0x27 */
-    effect_geometry_entry_t entries[1];
+    /* One 0xc4-byte record per emitter or mesh. The slots keep their curve
+     * bindings, but each native EFFECT renderer gives them its own meanings,
+     * so a record is read through the member of the renderer that owns it. */
+    union {
+        effect_geometry_entry_t emitter;
+        effect_particle_ribbon_geometry_view_t particle_ribbon;
+        effect_polar_mesh_geometry_view_t polar_mesh;
+        effect_ring_mesh_geometry_view_t ring_mesh;
+        effect_summon_mesh_geometry_view_t summon_mesh;
+        effect_tentacle_mesh_geometry_view_t tentacle_mesh;
+        effect_particle_vertex_emitter_view_t particle_vertex_emitter;
+    } entries[1];
 } effect_geometry_table_t;
 
 /* Animation-curve row: one interpolation factor per frame. The section begins
@@ -3961,37 +4239,6 @@ typedef struct battle_unit_height_data {
 } battle_unit_height_data_t;
 typedef char battle_unit_height_data_size_must_be_8[sizeof(battle_unit_height_data_t) == 8 ? 1 : -1];
 
-/* Provisional: one gauge of the status record. */
-typedef struct battle_unit_status_gauge {
-    s16 value;  /* 0x00 */
-    s16 value2; /* 0x02 */
-    s16 max;    /* 0x04 */
-} battle_unit_status_gauge_t;
-
-enum {
-    BATTLE_UNIT_STATUS_GAUGE_HP = 0,
-    BATTLE_UNIT_STATUS_GAUGE_MP = 1,
-    BATTLE_UNIT_STATUS_GAUGE_CT = 2,
-};
-
-/* Provisional 0x22-byte unit status record: the AT banner at 0x8014d038 and the
- * status billboard at 0x8014d05c. battle_menu_copy_unit_data_to_status_billboard
- * (and its DEBUGCHR twin) fills the first 0x1e bytes,
- * battle_menu_display_hovered_unit_stats draws it, and
- * battle_menu_copy_billboard_data_out saves the banner whole as 0x22 bytes. */
-typedef struct battle_unit_status_record {
-    s16 level;                            /* 0x00 */
-    s16 team_kind;                        /* 0x02: 0-3 from team flags, 3 = auto-battle; selects the status icon */
-    s16 list_index;                       /* 0x04: AT-list position + 1, negative when the unit is not listed */
-    s16 unit_count;                       /* 0x06 */
-    s16 experience;                       /* 0x08 */
-    s16 battle_id;                        /* 0x0a */
-    battle_unit_status_gauge_t gauges[3]; /* 0x0c: BATTLE_UNIT_STATUS_GAUGE_*; CT max is always 100 */
-    s16 projected_display_value;          /* 0x1e */
-    u16 projected_hit_percent;            /* 0x20 */
-} battle_unit_status_record_t;
-typedef char battle_unit_status_record_size_must_be_0x22[(sizeof(battle_unit_status_record_t) == 0x22) ? 1 : -1];
-
 /* Sprite lookup result filled in by battle_gfx_get_unit_sprite_frame_and_vram_ids. */
 typedef struct {
     s16 vram_palette_id;     /* 0x00 */
@@ -4273,15 +4520,6 @@ void battle_unit_set_screen_coords_from_real_coords(struct battle_unit_misc_data
 void battle_unit_clear_misc_units(void);
 
 /* gfx */
-/* 0x8013b6e4 initializes independent nine-tile strips at +0x1c and +0xac
- * in the same 0x13c-byte storage used by world_fade_tile_frame_t. */
-typedef struct battle_scanline_frame {
-    DR_MODE draw_mode; /* 0x00 */
-    TILE center;       /* 0x0c */
-    TILE backdrop[9];  /* 0x1c */
-    TILE bar[9];       /* 0xac */
-} battle_scanline_frame_t;
-typedef char battle_scanline_frame_size_must_be_0x13c[(sizeof(battle_scanline_frame_t) == 0x13c) ? 1 : -1];
 
 /* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
 typedef enum battle_background_color_command {
@@ -4394,23 +4632,6 @@ typedef struct battle_gfx_spritesheet_data {
 typedef char battle_gfx_spritesheet_data_size_must_be_4[(sizeof(battle_gfx_spritesheet_data_t) == 4) ? 1 : -1];
 
 enum { BATTLE_SPRITESHEET_ID_COUNT = 0x9f };
-
-/* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
- * selects its texture page and window. */
-typedef struct battle_gfx_fade_overlay {
-    TILE tile;    /* 0x00 */
-    DR_MODE mode; /* 0x10 */
-} battle_gfx_fade_overlay_t;
-typedef char battle_gfx_fade_overlay_size_must_be_0x1c[(sizeof(battle_gfx_fade_overlay_t) == 0x1c) ? 1 : -1];
-
-/* Draw-area pair: two DR_AREA packets followed by their rectangles; the
- * BATTLE twin of world_gfx_scaled_draw_area_pair_t. */
-typedef struct battle_gfx_scaled_draw_area_pair {
-    DR_AREA areas[2]; /* 0x00 */
-    RECT rects[2];    /* 0x18 */
-} battle_gfx_scaled_draw_area_pair_t;
-typedef char
-    battle_gfx_scaled_draw_area_pair_size_must_be_0x28[(sizeof(battle_gfx_scaled_draw_area_pair_t) == 0x28) ? 1 : -1];
 
 /* Sprite part dimensions in 8-pixel tiles, indexed by attribute bits 10-13. */
 typedef struct battle_gfx_part_size {
@@ -4683,7 +4904,7 @@ void battle_gfx_update_status_bubble_graphic_trigger(struct battle_unit_misc_dat
 void battle_gfx_update_status_bubbles_and_graphics(void);
 void battle_gfx_update_unit_palette_animation(void);
 void battle_gfx_update_unit_palettes(void);
-void battle_gfx_alloc_tpage7_vram(RECT* rect, union battle_texture_prim* prim, u32* image);
+void battle_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* image);
 u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out);
 void battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(u32 misc_id);
 s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index);
@@ -6359,19 +6580,6 @@ typedef struct battle_map_mesh_quad_normals {
     SVECTOR vertex[4];
 } battle_map_mesh_quad_normals_t;
 
-/* Per-part start indices and counts stored after the mesh transform data. */
-typedef struct battle_map_mesh_part_metadata {
-    u8 _unused_00[0x88];
-    u16 textured_triangle_start;
-    u16 textured_quad_start;
-    u16 untextured_triangle_start;
-    u16 untextured_quad_start;
-    u16 textured_triangle_count;
-    u16 textured_quad_count;
-    u16 untextured_triangle_count;
-    u16 untextured_quad_count;
-} battle_map_mesh_part_metadata_t;
-
 /* Halfword-aligned view of a 20-byte GNS record: the target copies these
  * records with lwl/lwr pairs, so the loader's type has no word member. */
 typedef struct gns_record_view {
@@ -6424,8 +6632,7 @@ typedef struct map_gradient_transition {
 } map_gradient_transition_t;
 typedef char map_gradient_transition_size_must_be_0x40[(sizeof(map_gradient_transition_t) == 0x40) ? 1 : -1];
 
-/* 0x98-byte map mesh part records at 0x800fbe00. The +0x88..+0x96 start
- * and count halfwords are map_mesh_part_metadata_t's (0x800f4dd4). The
+/* 0x98-byte map mesh part records at 0x800fbe00. The
  * vector triples are the rotation, translation and scale channels; element
  * [1] is the current value, [0] the start of the running keyframe and [2]
  * its target or step. */
@@ -6440,8 +6647,16 @@ typedef struct battle_map_mesh_part {
     u8 value_85;          /* 0x85 */
     u8 parent;            /* 0x86; parent part, from mesh properties byte 0 */
     u8 value_87;          /* 0x87 */
-    u16 starts[4];        /* 0x88 */
-    u16 counts[4];        /* 0x90 */
+    /* 0x88: per-part start indices and counts of its render records, written
+     * by battle_map_append_mesh_geometry (0x800f4dd4). */
+    u16 textured_triangle_start;
+    u16 textured_quad_start;
+    u16 untextured_triangle_start;
+    u16 untextured_quad_start;
+    u16 textured_triangle_count; /* 0x90 */
+    u16 textured_quad_count;
+    u16 untextured_triangle_count;
+    u16 untextured_quad_count;
 } battle_map_mesh_part_t;
 typedef char battle_map_mesh_part_size_must_be_0x98[(sizeof(battle_map_mesh_part_t) == 0x98) ? 1 : -1];
 
@@ -6786,7 +7001,7 @@ void battle_map_update_palette_colors(
 
 u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 u8* battle_map_light_state_command(s32 command, u8* data);
-void battle_map_append_mesh_geometry(u16* geometry_data, battle_map_mesh_part_metadata_t* metadata);
+void battle_map_append_mesh_geometry(u16* geometry_data, battle_map_mesh_part_t* metadata);
 void battle_map_copy_xy_coords_and_tile_data(u8* p);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
@@ -6819,93 +7034,6 @@ typedef enum battle_menu_system_command {
     BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE = 5,
     BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT = 7,
 } battle_menu_system_command_e;
-
-/* One 17-byte per-unit menu record, one per battle-unit slot.
- * battle_menu_reset_unit_records (0x8013f8b4) proves the 17-byte stride and
- * 21 entries and marks byte 1 unset (0xFF); battle_menu_restore_selection_for_selected_unit and
- * battle_menu_record_selection_for_selected_unit (0x8014088c) treat byte 0 as
- * the unit's remembered selection for a tracked menu. */
-typedef struct battle_menu_record {
-    u8 bytes[17];
-} battle_menu_record_t;
-typedef char battle_menu_record_size_must_be_0x11[(sizeof(battle_menu_record_t) == 0x11) ? 1 : -1];
-
-/* One row of the 31-entry menu table at g_battle_menu_id_records; its first 12 rows are the
- * menus whose selection is remembered per unit.
- * battle_menu_restore_selection_for_selected_unit and battle_menu_record_selection_for_selected_unit
- * prove the 8-byte stride and read only the leading menu id;
- * battle_menu_resolve_selection walks all 31 rows. */
-typedef struct battle_menu_id_record {
-    u16 menu_id;
-    u16 _padding_02; /* aligns map */
-    /* 0x04: per-menu command remap table. map[0] handles the 0xFF selection
-     * and map[n + 1] any other value; named by battle_menu_resolve_selection,
-     * its only reader. The other readers use menu_id alone. */
-    u8* map;
-} battle_menu_id_record_t;
-typedef char battle_menu_id_record_size_must_be_0x8[(sizeof(battle_menu_id_record_t) == 8) ? 1 : -1];
-
-/* The menu threads' view of one 0x3c-byte menu record (world_menu_entry_t).
- * BATTLE and event-overlay menu threads receive an entry of
- * g_battle_menu_thread_menu_data as parameter 1 (battle_menu_start_mini_menu_display_thread
- * passes &g_battle_menu_thread_menu_data[10]) and read 0x0a as flags and
- * 0x30 as their redraw-flag pointer, where WORLD's record keeps window_y and
- * text_binding; other fields use world_menu_entry_t's names.
- * battle_menu_build_idle_action_menu (0x8013cf58) proves the stride and stores
- * window_x at 0x08 (0x80 plus a per-entry byte picked from the unit's screen
- * position). The halfword at 0x38 holds the entry's current selection
- * (menu struct 0x38): battle_menu_restore_selection_for_selected_unit and
- * battle_menu_record_selection_for_selected_unit move it to and from
- * battle_menu_record_t byte 0, battle_menu_confirm_auto_battle_selection_thread
- * (0x801416a0) reads it, and battle_menu_clear_entry_selections
- * (0x8013f76c) clears it. */
-typedef struct battle_menu_idle_action_entry {
-    u8 _unused_00[4];
-    s16 inner_width;  /* 0x04; also stored to g_menu_inner_window_width */
-    s16 inner_height; /* 0x06 */
-    s16 window_x;     /* 0x08 */
-    u16 flags_0a;     /* 0x0a; the menu threads clear bit 0 on entry */
-    u8 _unused_0c[2];
-    s16 window_height; /* 0x0e; set with inner_height by battle_menu_build_skillset_entries */
-    u8 _unused_10[6];
-    s16 overall_height; /* 0x16; set with inner_height by battle_menu_build_skillset_entries */
-    u8 _unused_18[4];
-    s16 text_id;     /* 0x1c; text entry drawn into the window */
-    s16 last_option; /* 0x1e; highest option index (battle_menu_step_wrapping_cursor_on_scroll_buttons) */
-    u16 value_20;    /* 0x20; set from the system-function table by battle_menu_run_system_function_thread */
-    u8 _unused_22[6];
-    void (*thread_entry)(void); /* 0x28; menu thread started by battle_menu_start_entry_thread */
-    u8 _unused_2c[4];
-    s16* refresh_flag; /* 0x30; the menu threads redraw while *refresh_flag == 1 */
-    u8 _unused_34[4];
-    s16 selected_index; /* 0x38 */
-    u8 _padding_3a[2];  /* tail padding to 4-byte alignment */
-} battle_menu_idle_action_entry_t;
-typedef char battle_idle_action_menu_entry_refresh_must_be_0x30
-    [((unsigned long)&((battle_menu_idle_action_entry_t*)0)->refresh_flag == 0x30) ? 1 : -1];
-typedef char
-    battle_idle_action_menu_entry_size_must_be_0x3c[(sizeof(battle_menu_idle_action_entry_t) == 0x3c) ? 1 : -1];
-
-/* Menu allocator slot (16 at g_battle_menu_allocator_slot_records); buffer is
- * -1 when the slot is free. The slots hand out runs of the 53 256-byte pages
- * of g_battle_menu_buffer_arena. */
-typedef struct battle_menu_allocation {
-    u8* buffer;     /* 0x00 */
-    s32 page_count; /* 0x04 */
-} battle_menu_allocation_t;
-typedef char battle_menu_allocation_size_must_be_8[(sizeof(battle_menu_allocation_t) == 8) ? 1 : -1];
-
-/* One 12-byte entry of a menu number table drawn by
- * battle_menu_draw_numeric_display_entries; kind 0 and 1 select the plain
- * and coloured number renderers. */
-typedef struct menu_number_entry {
-    u16 x;      /* 0x00 */
-    u16 y;      /* 0x02 */
-    s16* value; /* 0x04 */
-    s16 digits; /* 0x08; digit count, 0x400/0x800/0xc00/0x1000 sign flags */
-    s16 kind;   /* 0x0a */
-} menu_number_entry_t;
-typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 12) ? 1 : -1];
 
 /* Text origin rewritten from each menu_number_entry_t before it is drawn. */
 typedef struct menu_number_position {
@@ -6942,36 +7070,6 @@ typedef struct battle_menu_status_panel_numeric_geometry {
     RECT draw_area_rect; /* 0x08 */
 } battle_menu_status_panel_numeric_geometry_t;
 
-/* Per-frame character status buffer (0x3d8 bytes), double buffered by the
- * *_panel_run_character_status_thread routines, which copy the first buffer
- * to the second (base + 0x3d8) before the render loop starts. Evidence, from
- * the DEBUGCHR routine and its byte-identical twins:
- *  - the DR_MODE packets at +0x00/+0x0c/+0x18 are submitted individually, and
- *    the numeric threads fill the same slots with
- *    battle_gfx_set_draw_mode_for_texture_page;
- *  - the submit loops walk the SPRTs from +0x24 with the sprite index as their
- *    counter (0..11 from +0x24, 12 at +0x114, 13 at +0x128, 14..18 from
- *    +0x13c, 19..23 from +0x1a0);
- *  - the TILE/LINE_F2 pair at +0x204/+0x224 is the one
- *    battle_menu_status_panel_menu_primitives_t describes;
- *  - the two draw-offset packets follow from the SetDrawOffset(packet,
- *    position) calls at +0x2a4/+0x2b0 and +0x2b4/+0x2c0;
- *  - +0x2c4 and +0x3b0 are the arguments of
- *    battle_menu_init_numeric_display_frame_primitives and the
- *    *_gfx_init_scaled_draw_area_packets / *_gfx_build_scaled_draw_area_packets
- *    pair. */
-typedef struct battle_menu_status_panel_buffer {
-    DR_MODE draw_modes[3];                                       /* 0x000 */
-    SPRT sprites[24];                                            /* 0x024 */
-    TILE tiles[2];                                               /* 0x204 */
-    LINE_F2 lines[8];                                            /* 0x224 */
-    battle_menu_status_panel_draw_offset_t draw_offsets[2];      /* 0x2a4 */
-    world_menu_palette_primitives_t numeric_frame;               /* 0x2c4 */
-    battle_menu_status_panel_portrait_primitive_tail_t portrait; /* 0x3b0 */
-} battle_menu_status_panel_buffer_t;
-typedef char
-    battle_menu_status_panel_buffer_size_must_be_0x3d8[(sizeof(battle_menu_status_panel_buffer_t) == 0x3d8) ? 1 : -1];
-
 /* Editor storage is addressed both as a status record and as 28 halfwords. */
 typedef union battle_menu_status_panel_slot_storage {
     battle_menu_status_panel_slot_state_t state;
@@ -6979,123 +7077,6 @@ typedef union battle_menu_status_panel_slot_storage {
 } battle_menu_status_panel_slot_storage_t;
 typedef char battle_menu_status_panel_slot_storage_size_must_be_0x38
     [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x38) ? 1 : -1];
-
-/* Unit gauge record (0x1e bytes) copied from battle_stats_t for the status
- * panel; the same shape as the first 0x1e bytes of battle_unit_status_record_t. */
-typedef struct battle_menu_status_panel_gauges {
-    s16 level;      /* 0x00 */
-    s16 team_state; /* 0x02 */
-    s16 _04;
-    s16 _06;
-    s16 experience; /* 0x08 */
-    s16 unit_index; /* 0x0a */
-    u16 hp;         /* 0x0c */
-    s16 _0e;
-    u16 max_hp; /* 0x10 */
-    u16 mp;     /* 0x12 */
-    s16 _14;
-    u16 max_mp; /* 0x16 */
-    s16 ct;     /* 0x18 */
-    s16 _1a;
-    s16 max_ct; /* 0x1c */
-} battle_menu_status_panel_gauges_t;
-typedef char
-    battle_menu_status_panel_gauges_size_must_be_0x1e[(sizeof(battle_menu_status_panel_gauges_t) == 0x1e) ? 1 : -1];
-
-/* One value bar: the Gouraud bar is drawn value/limit wide. */
-typedef struct battle_menu_status_panel_bar {
-    s16 value;
-    s16 _unused_02;
-    s16 limit; /* 0x04; a zero limit draws the fixed 4-pixel stub */
-} battle_menu_status_panel_bar_t;
-typedef char battle_menu_status_panel_bar_size_must_be_6[(sizeof(battle_menu_status_panel_bar_t) == 6) ? 1 : -1];
-
-/* Editor state record (0x24 bytes) of the editor display threads. DEBUGCHR's
- * two instances, g_debugchr_panel_selected_billboard and
- * g_debugchr_panel_comparison_billboard, are 0x24 apart. `mode` selects
- * one of the 0xc-byte geometry rows and the panel's CLUT; `bars` holds the
- * three value/limit triples the Gouraud bars are drawn from. */
-typedef struct battle_menu_status_panel_editor_state {
-    u8 level;       /* 0x00; debugchr_editor_apply_values_to_battle_unit writes it back */
-    u8 _padding_01; /* aligns mode */
-    s16 mode;       /* 0x02 */
-    s16 list_index; /* 0x04: AT-list position; drawn as dashes (format 0xc00)
-                       when negative */
-    s16 _unused_06;
-    u8 experience;                          /* 0x08; written back with level */
-    u8 _padding_09;                         /* aligns unit */
-    s16 unit;                               /* 0x0a */
-    battle_menu_status_panel_bar_t bars[3]; /* 0x0c */
-    s16 _unused_1e[3];
-} battle_menu_status_panel_editor_state_t;
-typedef char battle_menu_status_panel_editor_state_size_must_be_0x24
-    [(sizeof(battle_menu_status_panel_editor_state_t) == 0x24) ? 1 : -1];
-
-/* One numeric-display entry (0xc bytes). battle_menu_draw_numeric_display_entries
- * takes a base and a count of these; the display threads write only the
- * halfword at +8, choosing the code the value is drawn with. */
-typedef struct battle_menu_status_panel_numeric_entry {
-    u8 _unused_00[8];
-    s16 format; /* 0x08: digits argument; low byte digit count, high byte sign/marker
-                   flags (0xc00/0xe00 draw dashes) */
-    u8 _unused_0a[2];
-} battle_menu_status_panel_numeric_entry_t;
-typedef char battle_menu_status_panel_numeric_entry_size_must_be_0xc
-    [(sizeof(battle_menu_status_panel_numeric_entry_t) == 0xc) ? 1 : -1];
-
-/* Character-editor packet block (0x30c bytes) built by the editor display
- * threads. Two copies sit back to back and `frame & 1` selects one, so the
- * copy stride proves the size. The head is the numeric display frame that
- * battle_menu_init_numeric_display_frame_primitives builds, the SPRT/POLY
- * strides come from the walks that configure and submit them, and the
- * draw-offset packets from the SetDrawOffset pairs. */
-typedef struct battle_menu_status_panel_editor_packet {
-    world_menu_palette_primitives_t numeric_frame;        /* 0x000 */
-    DR_MODE draw_mode_a;                                  /* 0x0ec */
-    DR_MODE draw_mode_b;                                  /* 0x0f8 */
-    SPRT value_sprites[4];                                /* 0x104 */
-    SPRT label_sprites[7];                                /* 0x154; [6] at 0x1cc is the mode row */
-    POLY_G4 bars[3];                                      /* 0x1e0 */
-    POLY_FT4 portrait[4];                                 /* 0x24c */
-    battle_menu_status_panel_draw_offset_t draw_offset_a; /* 0x2ec */
-    battle_menu_status_panel_draw_offset_t draw_offset_b; /* 0x2fc */
-} battle_menu_status_panel_editor_packet_t;
-typedef char battle_menu_status_panel_editor_packet_size_must_be_0x30c
-    [(sizeof(battle_menu_status_panel_editor_packet_t) == 0x30c) ? 1 : -1];
-
-/* Status-panel packet block (0x1d8 bytes), doubled the same way as the editor
- * block. sprites[6] doubles as the scroll cursor: the display threads write
- * its texture window from the scroll row/column. */
-typedef struct battle_menu_status_panel_packet {
-    world_menu_palette_primitives_t numeric_frame;        /* 0x000 */
-    SPRT sprites[7];                                      /* 0x0ec */
-    DR_MODE draw_mode_a;                                  /* 0x178 */
-    DR_MODE draw_mode_b;                                  /* 0x184 */
-    battle_menu_status_panel_draw_offset_t draw_offset_a; /* 0x190 */
-    battle_menu_status_panel_draw_offset_t draw_offset_b; /* 0x1a0 */
-    POLY_FT4 portrait;                                    /* 0x1b0 */
-} battle_menu_status_panel_packet_t;
-typedef char
-    battle_menu_status_panel_packet_size_must_be_0x1d8[(sizeof(battle_menu_status_panel_packet_t) == 0x1d8) ? 1 : -1];
-
-/* Parameter block of the editor display threads, reached through the
- * 0x400-byte battle thread table. The shake offset is written as a word from
- * the s16 shake tables and read back as its low halfword, which is how the
- * target loads it into the draw-offset y. Only the members the display threads
- * use are named; the record's total size is not proven. */
-typedef struct battle_menu_status_panel_display_thread {
-    u16 x;           /* 0x00 */
-    u16 _padding_02; /* aligns shake_y */
-    union {
-        s32 word; /* 0x04 */
-        u16 low;
-    } shake_y;
-    s32 flags;     /* 0x08: 0x20 and 0x40 start the two shake tables, 0x80
-                      suppresses all drawing */
-    s32 work;      /* 0x0c: redraw request flags, cleared once serviced */
-    s32 highlight; /* 0x10: nonzero forces the alternate (highlight) CLUTs; bound as
-                      g_bunit_status_display_highlight and the WORLD display globals */
-} battle_menu_status_panel_display_thread_t;
 
 /* Item graphic load descriptor filled by *_gfx_build_item_graphic_descriptor. */
 typedef struct battle_menu_status_panel_graphic_descriptor {
@@ -7131,48 +7112,6 @@ typedef struct battle_menu_status_panel_glyph {
     s16 width;
     s16 height;
 } battle_menu_status_panel_glyph_t;
-
-/* One gauge value for the *_text_render_decimal_entry_list and
- * *_text_render_signed_decimal_entries renderers: the text position, a
- * pointer to the value and the decimal-format flags. */
-typedef struct battle_menu_status_panel_gauge_entry {
-    u16 x;
-    u16 y;
-    s16* value;
-    s16 flags;
-    u16 _padding_0a; /* tail padding to 4-byte alignment */
-} battle_menu_status_panel_gauge_entry_t;
-typedef char
-    battle_menu_status_panel_gauge_entry_size_must_be_0xc[(sizeof(battle_menu_status_panel_gauge_entry_t) == 0xc) ? 1
-                                                                                                                  : -1];
-
-/* Text cursor passed to *_text_render_decimal_value. The entry-list renderers
- * set the word at +0x0c to a 4bpp colour fill pattern (0x77777777 or
- * 0x88888888 for negative values, 0xbbbbbbbb or 0xcccccccc for positive ones)
- * and clear it after each value; the value renderer clears it while it draws
- * the sign glyphs. */
-typedef struct battle_menu_status_panel_text_position {
-    u16 x;
-    u16 y;
-    u8 _unused_04[4];
-    u16 row_stride;  /* 0x08 */
-    u16 _padding_0a; /* aligns color */
-    u32 color;       /* 0x0c */
-} battle_menu_status_panel_text_position_t;
-typedef char battle_menu_status_panel_text_position_size_must_be_0x10
-    [(sizeof(battle_menu_status_panel_text_position_t) == 0x10) ? 1 : -1];
-
-/* Provisional 0x7c-byte menu window record built by this routine: two draw
- * modes, four sprites (background, left cap, right cap and a style icon) and
- * three optional extra sprites for the compound styles. */
-typedef struct battle_menu_window_record {
-    DR_MODE mode0;   /* 0x00 */
-    DR_MODE mode1;   /* 0x0c */
-    SPRT sprites[4]; /* 0x18 */
-    SPRT* extra[3];  /* 0x68 */
-    s32 _unknown_74; /* 0x74 */
-    s32 _unknown_78; /* 0x78 */
-} battle_menu_window_record_t;
 
 /* Provisional window request: VRAM source point, size, screen point and the
  * load parameters for the window background quad. */
@@ -7210,41 +7149,28 @@ typedef struct battle_rect {
     s16 y; /* 0x02 */
 } battle_rect_t;
 
-/* The BATTLE twin of the block above, at 0x80165f9c: same layout, but its
- * first word is not the script-variable pointer.  Named separately so the
- * BATTLE object does not have to borrow the WORLD record's type. */
-typedef struct menu_text_state {
-    s32 _unused_00; /* 0x00 (0x80165f9c) */
-    s16 origin_x;   /* 0x04 (0x80165fa0): battle_menu_set_text_origin */
-    s16 origin_y;   /* 0x06 (0x80165fa2) */
-    s32 _unused_08; /* 0x08 (0x80165fa4) */
-    s32 stride;     /* 0x0c (0x80165fa8): g_menu_inner_window_width */
-    s32 color;      /* 0x10 (0x80165fac): glyph blit fill; 0x44444444 while text colour 4 is drawn */
-} menu_text_state_t;
+/* Pen of the BUNIT, CARD, EQUIP and JOBSTTS *_text_render_glyph_to_4bpp_image: x in pixels (two per byte),
+ * y in rows, and the image's row stride in halfwords. */
+typedef struct bunit_text_image_position {
+    u16 x;          /* 0x00 */
+    s16 y;          /* 0x02 */
+    s16 row_stride; /* 0x04 */
+} bunit_text_image_position_t;
+typedef char bunit_text_image_position_size_must_be_6[(sizeof(bunit_text_image_position_t) == 6) ? 1 : -1];
 
-/* One cursor-navigation node of the HELPMENU, BUNIT, ATTACK deployment and
- * DEBUGCHR editor screens (WORLD's world_help_navigation_entry_t has the same
- * layout): the value or text id it refers to, its help-text base, the node
- * reached for each d-pad direction (up 0x1000, down 0x4000, right 0x2000,
- * left 0x8000) and the cursor position. */
-typedef struct help_navigation_record {
-    s16* value;          /* 0x00 */
-    s16 help_base;       /* 0x04 */
-    u8 destination[4];   /* 0x06: up, down, right, left */
-    s16 x;               /* 0x0a */
-    s16 y;               /* 0x0c */
-    s16 vertical_cursor; /* 0x0e: nonzero: the cursor points down and bobs along y */
-} help_navigation_record_t;
-typedef char help_navigation_record_size_must_be_0x10[(sizeof(help_navigation_record_t) == 0x10) ? 1 : -1];
-
-/* Provisional: text pen position and right margin. The caller passes
- * &g_menu_text_state.origin_x, whose stride sits at +0x08. */
-typedef struct battle_text_pen {
-    u16 x;           /* 0x00 */
-    u16 y;           /* 0x02 */
-    s32 _unused_04;  /* 0x04 */
-    s32 right_limit; /* 0x08 */
-} battle_text_pen_t;
+/*
+ * One remembered list position, 6 bytes per entry: 14 entries at BUNIT
+ * 0x801eb22c, 5 at EQUIP 0x801e12c4 (item lists) and 5 in JOBSTTS (ability
+ * lists). The *_menu_set_selection_record helpers store the cursor index, the
+ * scroll base and the masked id of the entry under the cursor; the getters
+ * read them back and re-find entry_id in the live list when the remembered
+ * index no longer points at the same entry.
+ */
+typedef struct bunit_menu_selection_record {
+    s16 selected_index;    /* 0x00 */
+    s16 scroll_base_index; /* 0x02 */
+    s16 entry_id;          /* 0x04: list entry id, low 10 bits */
+} bunit_menu_selection_record_t;
 
 extern battle_menu_allocation_t g_battle_menu_allocator_slot_records[16];
 extern u8 g_battle_menu_buffer_arena[53][0x100];
@@ -7385,7 +7311,7 @@ extern world_menu_scroll_text_layout_t g_battle_menu_at_list_layout;
 extern world_menu_quad_piece_t g_battle_menu_quad_pieces[]; /* quad piece table */
 extern world_menu_quad_colors_t g_battle_menu_quad_colors;  /* vertex colours */
 extern world_menu_quad_origin_t g_battle_menu_quad_origin;  /* screen origin */
-extern battle_text_pen_t g_battle_menu_text_pen;
+extern world_glyph_blit_t g_battle_menu_text_pen;
 extern world_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
 
 /* Full record bases, not the legacy aliases biased to thread_id. */
@@ -7485,7 +7411,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out);
 
 s32 battle_menu_collect_throwable_items(s32 unit_id, u8 ability, u8* items);
-void battle_menu_select_icon_cluts(struct battle_menu_window_record* frame);
+void battle_menu_select_icon_cluts(struct world_menu_icon_record* frame);
 void battle_clear_menu_render_buffer(void* buffer, s32 bytes);
 void* battle_menu_alloc_window_buffer_pair(void);
 void battle_menu_build_ability_list(s32 mode);
@@ -7525,11 +7451,11 @@ void battle_menu_init_semitransparent_sprt(SPRT* sprite);
 void battle_menu_run_icon_selection_loop(void);
 void battle_menu_select_sprite_clut(SPRT* sprite);
 void battle_gfx_init_scaled_draw_area_packets(u8* menu);
-void battle_menu_submit_icon_primitives(struct battle_menu_window_record* frame);
-void battle_menu_step_wrapping_cursor_on_scroll_buttons(battle_menu_idle_action_entry_t* ctx, s32* sel);
+void battle_menu_submit_icon_primitives(struct world_menu_icon_record* frame);
+void battle_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* ctx, s32* sel);
 
 void battle_menu_update_icon_cursor_sprites(
-    struct world_menu_icon_thread_param* param, struct world_menu_icon_sprites* record, s32 frame, s32 cursor);
+    world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 s32 battle_menu_load_charge_skillset(s32 unit_id, s32 skillset, s16* abilities, u8* ability_ct, u8* turns);
 s32 battle_menu_load_draw_out_abilities(s32 unit_id, s32 skillset, u8* out_item_ids);
@@ -7549,15 +7475,14 @@ void battle_menu_store_auto_battle_main_target_id(s32 target_id, s32 battle_id);
 void battle_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* display);
 void battle_menu_copy_bytes_to_halfwords(s16* dst, u8* src, s32 count);
 void battle_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
-void battle_gfx_copy_sprite_position_uv_and_size(
-    const world_menu_icon_thread_param_t* param, SPRT* sprite, s32 unused_frame);
+void battle_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_open_illegal_move_help(void);
 s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input);
 void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 
 void battle_menu_build_window_sprites(
-    battle_menu_window_header_t* header, battle_menu_window_spec_t* spec, battle_menu_window_record_t* record);
+    battle_menu_window_header_t* header, battle_menu_window_spec_t* spec, world_menu_icon_record_t* record);
 
 s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_image_location_t* base_load,
     const battle_image_location_t* base_screen, world_gfx_image_load_parameters_t* params);
@@ -7567,7 +7492,7 @@ void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_set_option_menu_open(void);
 void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, battle_rect_t* pos);
-void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin, u8* text);
+void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin, u8* text);
 
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area);
@@ -7621,18 +7546,6 @@ typedef enum battle_numeric_display_selector {
     BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
     BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
 } battle_numeric_display_selector_e;
-
-/* Glyph state of the dialogue text renderer at 0x8016dad4, filled by
- * battle_text_character_handling_thread and drawn by battle_text_draw_glyph_with_typewriter_delay. */
-typedef struct battle_text_glyph_state {
-    u16 flags_0;         /* 0x00; bits 0-1 give the glyph's pixel phase */
-    u16 _unused_02;      /* 0x02 */
-    u16 character_4;     /* 0x04 */
-    u8 _unused_06[6];    /* 0x06 */
-    s16 dialogue_type_c; /* 0x0c */
-    s16 palette_e;       /* 0x0e */
-} battle_text_glyph_state_t;
-typedef char battle_text_glyph_state_size_must_be_0x10[(sizeof(battle_text_glyph_state_t) == 0x10) ? 1 : -1];
 
 /* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
  * bound separately: battle_menu_display_text also takes the table base, and
@@ -7705,7 +7618,8 @@ void battle_text_run_spell_quote_thread(void);
 const u8* battle_text_skip_to_entry(const u8* text_section, s32 entry_id);
 void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
 u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
-void battle_text_render_glyph_to_4bpp_image(const u8* glyph_bitmap, s32 image, u16* origin, s32 palette_offset);
+void battle_text_render_glyph_to_4bpp_image(
+    const u8* glyph_bitmap, s32 image, world_glyph_blit_t* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);
 u8* battle_text_find_entry(u32 text_id);
@@ -7726,7 +7640,7 @@ s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_fill_field_with_terminators(u8* text);
-void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_gfx_4bpp_rect_t* region);
+void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_glyph_blit_t* region);
 u8* battle_text_advance_cursor_with_backreferences_2(world_text_backreference_state_t* reader, u8* p);
 
 /* other */

@@ -91,7 +91,7 @@ s32 effect_e403_update_particle_ribbons_long_state(s16 record_index, s32 byte_of
     battle_effect_target_t* caster_target;
 
     record = (effect_particle_ribbon_record_view_t*)&g_effect_state_records[record_index];
-    entry = (effect_particle_ribbon_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[geometry_index].particle_ribbon;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();

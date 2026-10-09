@@ -20,11 +20,12 @@ void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, u16* x) {
         *x += 6;
     }
     for (i = 0; i < (u8)digits; i++) {
-        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + (value % 10) * 0x23, image, x, 0);
+        world_text_blit_font_glyph_to_4bpp(
+            g_world_text_glyph_bitmap_data + (value % 10) * 0x23, image, (world_glyph_blit_t*)x, 0);
         *x -= 6;
         value /= 10;
     }
     if (original < 0) {
-        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + 0x2067, image, x, 0);
+        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + 0x2067, image, (world_glyph_blit_t*)x, 0);
     }
 }

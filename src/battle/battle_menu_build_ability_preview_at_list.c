@@ -5,46 +5,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * One AT-list (turn order) descriptor, the BATTLE copy of the record
- * option_menu_init_at_list walks as option_at_descriptor_t. The four-byte
- * stride is proven by the index register the target advances by 4 and by the
- * +1 byte read for the turn value.
- *
- * flags bits: 0x1f = battle unit id, 0x1f meaning "end of list";
- *             0x20 = fixed "wait" label instead of a turn value;
- *             0x40 = the entry is the acting/queued unit (bracketed name);
- *             0x80 = turn value biased by 0x100.
- */
-typedef struct battle_menu_at_descriptor {
-    u8 flags;
-    u8 turn_value;
-    u8 _unused_02;
-    u8 _unused_03;
-} battle_menu_at_descriptor_t;
-
-/*
- * Provisional: the AT-list work area this builder fills, reached through
- * g_main_heap_companion_overlay_load_address. Every offset below is written or published by
- * this function: the five parallel halfword columns become the layout's
- * text_ids/text_colors tables at the end, `text` is published through
- * g_menu_text_pointer, and `request` is the block handed to the main-stack
- * preview call, whose descriptor array follows it.
- */
-typedef struct battle_menu_at_list_work {
-    s16 primary_values[40];                      /* 0x000: turn-value column */
-    s16 secondary_values[40];                    /* 0x050: unit-name column */
-    s16 entry_numbers[40];                       /* 0x0a0: ordinal column */
-    s16 primary_colors[40];                      /* 0x0f0 */
-    s16 secondary_colors[40];                    /* 0x140 */
-    u8 text[0x4f0];                              /* 0x190: packed 0xfe-terminated names */
-    s32 request;                                 /* 0x680: preview request header */
-    battle_menu_at_descriptor_t descriptors[40]; /* 0x684 */
-} battle_menu_at_list_work_t;
-
-typedef char battle_menu_at_list_work_descriptors_offset_must_be_0x684
-    [((unsigned long)&((battle_menu_at_list_work_t*)0)->descriptors == 0x684) ? 1 : -1];
-
 #define LAYOUT(entry) ((world_menu_scroll_text_layout_t*)(entry)->text_binding)
 
 /*
@@ -69,7 +29,7 @@ typedef char battle_menu_at_list_work_descriptors_offset_must_be_0x684
  *     delay slot.
  */
 void battle_menu_build_ability_preview_at_list(void) {
-    battle_menu_at_list_work_t* work;
+    world_menu_at_list_work_t* work;
     world_menu_entry_t* entry;
     battle_stats_t* stats;
     u8* text;
@@ -84,7 +44,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     const u16* at_table;
 
     at_table = (const u16*)g_battle_ai_workspace_ptr;
-    work = (battle_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
+    work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_battle_menu_thread_menu_data[52].select_text_table = 0x13;
     g_battle_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_battle_menu_at_list_layout;
     text_id = at_table[g_battle_menu_thread_menu_data[3].selected_index];
@@ -131,7 +91,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         turn--;
     }
     for (index = 0; index < 39; index++) {
-        battle_menu_at_descriptor_t* slot = &work->descriptors[index];
+        world_at_descriptor_t* slot = &work->descriptors[index];
         s32 name_index;
 
         if ((slot->flags & 0x1f) == 0x1f) {
@@ -201,14 +161,14 @@ void battle_menu_build_ability_preview_at_list(void) {
         entry->window_x = 0x8c;
         entry->window_y = 0x30;
         entry->window_width = 0xe8;
-        entry->overall_width = 0xe8;
+        entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
         LAYOUT(entry)->columns.row_count = 6;
         entry->window_x = 0xbe;
         entry->window_y = 0x30;
         entry->window_width = 0x84;
-        entry->overall_width = 0x84;
+        entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
         g_battle_menu_at_list_layout.columns.mode[2] = 2;
     }

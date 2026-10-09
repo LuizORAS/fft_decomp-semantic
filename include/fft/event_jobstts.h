@@ -14,13 +14,6 @@ typedef enum jobstts_ability_category {
     JOBSTTS_ABILITY_CATEGORY_ALL = 15,
 } jobstts_ability_category_e;
 
-typedef struct jobstts_ability_selection_state {
-    s16 selected_index;
-    s16 scroll_index;
-    u16 selected_ability_id;
-} jobstts_ability_selection_state_t;
-typedef char assert_jobstts_ability_selection_state_size[sizeof(jobstts_ability_selection_state_t) == 6 ? 1 : -1];
-
 extern s16 g_jobstts_ability_category;
 extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u8* g_jobstts_ability_selected_specific;
@@ -265,7 +258,7 @@ extern s8 g_jobstts_menu_list_scroll_direction; /* read with lb (jobstts_cmd_dra
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern u16 g_jobstts_menu_list_scroll_entry_ids;
 extern u16 g_jobstts_menu_list_scroll_progress;
-extern jobstts_ability_selection_state_t g_jobstts_menu_selection_records[5];
+extern bunit_menu_selection_record_t g_jobstts_menu_selection_records[5];
 
 /* Window right edge; WORLD's twin stores it to g_world_menu_window_right_x. */
 extern s16 g_jobstts_menu_window_right_x;
@@ -285,12 +278,6 @@ void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* 
 void jobstts_menu_update_and_draw_animated_cursor(urect16_t* anchor, u16* state, s32 mode);
 
 /* text */
-typedef struct jobstts_text_image_position {
-    u16 x;
-    s16 y;
-    s16 row_stride;
-} jobstts_text_image_position_t;
-
 extern u8 g_jobstts_text_color[3];
 extern u8 g_jobstts_text_thread_running_state;
 extern u16 g_jobstts_text_clut_2_mode0;
@@ -320,7 +307,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_
 void jobstts_text_render_id_rows_to_vram(s32 text_table, s16* list, RECT* rect, s32 style);
 
 s32 jobstts_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
 void jobstts_text_set_palette_and_metrics(s32 mode);
 const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);
