@@ -16,16 +16,16 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     s32 i;
     s32 pre_chapter_4_job;
     s32 level_range;
-    /* Pin required: every unpinned spelling of the maximum leaves it out of $v1. */
-    register u32 highest __asm__("$3");
     s32 year_day;
-    u32 month;
+    /* One temporary: the highest party level, then the birthday month. */
+    u32 number;
     s32 level_base;
     s32 zodiac;
     u8 value;
     u8 sprite;
     u8 level;
-    /* Pin required: unpinned, day is loaded into $a0 instead of $s0. */
+    /* Pin required: unpinned, day is loaded into $a0 instead of $s0 (it does
+     * not cross a call, and reusing `value` keeps its zero-extension). */
     register u8 day __asm__("$16");
     u8 skillset;
     u8 level_bonus;
@@ -79,9 +79,9 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
 
     value = entd->level;
     if (value == 0 || value == 0xfe) {
-        highest = g_highest_party_level;
-        level_range = (highest >> 3) + 1;
-        level_base = highest - (highest >> 3);
+        number = g_highest_party_level;
+        level_range = (number >> 3) + 1;
+        level_base = number - (number >> 3);
         value = level_base + (level_range * rand()) / 0x8000;
     } else if (value >= 100) {
         level_bonus = g_highest_party_level - 100;
@@ -97,12 +97,12 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     }
     unit->level = value;
 
-    month = entd->birthday[0];
+    number = entd->birthday[0];
     day = entd->birthday[1];
-    if (month == 0 || month >= 13 || day == 0 || day >= 32) {
+    if (number == 0 || number >= 13 || day == 0 || day >= 32) {
         birthday = (365 * rand()) / 0x8000 + 1;
     } else {
-        birthday = g_main_month_start_day_offsets[month] + day;
+        birthday = g_main_month_start_day_offsets[number] + day;
     }
     year_day = birthday;
     unit->birthday.value = (unit->birthday.value & 0xfe00) | (year_day & 0x1ff);

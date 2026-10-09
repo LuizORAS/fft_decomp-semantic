@@ -8,10 +8,8 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
     u32 unlocked;
     u32 flags;
     u8 selected;
-    s32 random_job;
-    s32 raw_value;
+    u16 skillset;
     u8 levels;
-    u32 job;
 
     main_util_clear_byte_data(unit->job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
     unlocked = 0;
@@ -29,11 +27,9 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
                 if (!(selected & 1))
                     levels <<= 4;
                 unit->job_levels[selected / UNIT_JOBS_PER_LEVEL_BYTE] = levels;
-                i = 0;
-                job = selected;
-                for (; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
-                    if (job)
-                        levels = g_job_unlock_requirements[job - 1][i];
+                for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
+                    if (selected)
+                        levels = g_job_unlock_requirements[selected - 1][i];
                     else {
                         levels = UNIT_JOB_LEVEL_ONE_LOW_NIBBLE;
                         if (i != 0)
@@ -66,18 +62,15 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
             if (unit->unit_flags & UNIT_FLAG_MONSTER)
                 unit->secondary_skillset = 0;
             else {
-                raw_value = main_job_get_random_unlocked(unit);
-                levels = raw_value;
+                /* The job-level temporary holds the random job id here. */
+                levels = main_job_get_random_unlocked(unit);
                 if (levels)
-                    random_job = g_job_data_pointer[levels].skillset;
+                    skillset = g_job_data_pointer[levels].skillset;
                 else
-                    random_job = raw_value & 0xff;
-                /* Keep the wide return separate from the final skillset at
-                 * this join; GCC otherwise coalesces them into one register. */
-                __asm__("" : : "r"(raw_value));
-                if (random_job == unit->primary_skillset)
-                    random_job = 0;
-                unit->secondary_skillset = random_job;
+                    skillset = levels;
+                if (skillset == unit->primary_skillset)
+                    skillset = 0;
+                unit->secondary_skillset = skillset;
             }
         } else
             unit->secondary_skillset = selected;

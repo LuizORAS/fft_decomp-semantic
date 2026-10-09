@@ -11,11 +11,9 @@ void* main_heap_alloc(u32 size) {
     if ((size & 0x7ff) != 0) {
         needed++;
     }
-    index = 0;
-    do {
-        u32 cell;
+    for (index = 0; index < 0x40; index++) {
+        u32 cell = g_main_heap_game_allocator_table[index];
 
-        cell = g_main_heap_game_allocator_table[index];
         if (cell == 0) {
             if (run == 0) {
                 start = index;
@@ -30,17 +28,12 @@ void* main_heap_alloc(u32 size) {
             }
             run = 0;
         }
-        index++;
-    } while (index < 0x40);
-    if (run < needed) {
-        return 0;
     }
-    for (index = 0; index < run; index++) {
-        /* Stops reorg copying the address add into the bnez delay slot (a nop in the target). */
-        __asm__ volatile("");
-        /* Integer sum first: `g_main_heap_game_allocator_table[start + index]` emits
-         * `addu rd,table,sum`; the target adds the indices before the base. */
-        *(u8*)((start + index) + (u32)g_main_heap_game_allocator_table) = tag;
+    if (run >= needed) {
+        for (index = 0; index < run; index++) {
+            g_main_heap_game_allocator_table[start + index] = tag;
+        }
+        return (start << 11) + g_main_heap_high_overlay_load_address;
     }
-    return (start << 11) + g_main_heap_high_overlay_load_address;
+    return 0;
 }

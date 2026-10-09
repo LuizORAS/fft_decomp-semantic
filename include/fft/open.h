@@ -121,7 +121,7 @@ extern u8 g_open_movie_mdec_output_buffer_0[];
 extern u8 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
 extern s32 g_open_movie_stream_status;
-extern u32 g_open_movie_width;
+extern s32 g_open_movie_width;
 extern u32 g_open_mdec_quant_table_command[];
 extern u32 g_open_mdec_luma_quant_table[16];
 extern u32 g_open_mdec_chroma_quant_table[16];
@@ -307,8 +307,7 @@ typedef struct menu_text_origin {
 extern s32 g_open_menu_formation_entry_mask;
 extern s32 g_open_menu_formation_otag_index;
 
-void open_menu_start_music_test_list_thread(
-    s32 thread_id, s32 limit, const open_point32_t* extent, const open_point32_t* origin);
+void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point32_t* extent, open_point32_t* origin);
 
 void open_menu_start_music_test_controller(void);
 void open_menu_update_world_formation(void);

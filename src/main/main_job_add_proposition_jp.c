@@ -7,13 +7,12 @@
 s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
     s32 slot;
     party_data_t* party;
-    s32 job;
+    u8 job;
     s32 byte_index;
     s32 total;
     s32 level;
     s32 levels;
     u8 level_byte;
-    party_data_t* record;
 
     if (jp < 0) {
         return -1;
@@ -29,32 +28,27 @@ s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
         return -1;
     }
     job = party->job_id;
-    if ((u32)(job - JOB_ID_SQUIRE) < JOB_ID_GENERIC_COUNT) {
-        /* Zero-byte hint: the original recomputes job - 0x4a here instead
-         * of reusing the range-check temporary. */
-        __asm__("" : "=r"(job) : "0"(job));
-        slot = job - JOB_ID_SQUIRE;
+    if (job >= JOB_ID_GENERIC_FIRST && job <= JOB_ID_GENERIC_LAST) {
+        slot = job - JOB_ID_GENERIC_FIRST;
     } else {
         slot = 0;
     }
 
-    /* Each serialized JP entry is a little-endian byte pair. The local base
-     * and doubled index preserve the target's base-before-index addition. */
-    record = party;
-    byte_index = slot + slot;
-    total = record->job_points[byte_index] + (record->job_points[byte_index + 1] << 8) + jp;
+    /* Each serialized JP entry is a little-endian byte pair. */
+    byte_index = slot * 2;
+    total = party->job_points[byte_index] + (party->job_points[byte_index + 1] << 8) + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    record->job_points[byte_index] = total;
-    record->job_points[byte_index + 1] = total / 256;
+    party->job_points[byte_index] = total;
+    party->job_points[byte_index + 1] = total / 256;
 
-    total = record->total_job_points[byte_index] + (record->total_job_points[byte_index + 1] << 8) + jp;
+    total = party->total_job_points[byte_index] + (party->total_job_points[byte_index + 1] << 8) + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    record->total_job_points[byte_index] = total;
-    record->total_job_points[byte_index + 1] = total / 256;
+    party->total_job_points[byte_index] = total;
+    party->total_job_points[byte_index + 1] = total / 256;
     level = main_job_calculate_level(total & 0xFFFF);
 
     levels = party->job_levels[slot / 2];

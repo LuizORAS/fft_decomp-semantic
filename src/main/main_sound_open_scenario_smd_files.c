@@ -1,31 +1,20 @@
 #include "fft/main.h"
 
+/* Loads the scenario's SMD file into the first free scenario music slot (1 or
+ * 2) and returns that slot, or 0 when both are taken or the load fails. */
 int main_sound_open_scenario_smd_files(int scenario) {
-    int checked_slots = 0;
-    /* Byte-offset form kept: indexing g_main_sound_scenario_smd_files[scenario]
-     * schedules the scale away from where the target computes it. */
-    int file_offset = scenario * 8;
-    int slot = 1;
-    suzuki_smd_header_t** loaded_smd_base = &g_main_sound_music.slots.smd[1];
-    /* Pinned: unpinned, GCC gives the la to the walking pointer and copies
-     * it to the base ($s1/$s4 swapped); index forms bias the pointer by 4. */
-    register suzuki_smd_header_t** loaded_smd __asm__("$17") = loaded_smd_base;
+    int i;
     suzuki_smd_header_t* buffer;
 
-    do {
-        checked_slots++;
-        if (*loaded_smd == 0) {
-            buffer = main_heap_alloc_smd(
-                ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->size);
+    for (i = 0; i < 2; i++) {
+        if (g_main_sound_music.slots.smd[i + 1] == 0) {
+            buffer = main_heap_alloc_smd(g_main_sound_scenario_smd_files[scenario].size);
             if (buffer != 0) {
-                if (main_file_call_build_header(
-                        ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->sector,
-                        ((main_sound_smd_file_t*)((char*)g_main_sound_scenario_smd_files + file_offset))->size, buffer)
+                if (main_file_call_build_header(g_main_sound_scenario_smd_files[scenario].sector,
+                        g_main_sound_scenario_smd_files[scenario].size, buffer)
                     == 0) {
-                    *loaded_smd = buffer;
-                    /* slots.handles[0], addressed from the smd base: the member
-                     * spelling stores through a fresh absolute address. */
-                    *(s32*)((char*)loaded_smd_base - 0x20) = slot;
+                    g_main_sound_music.slots.smd[i + 1] = buffer;
+                    g_main_sound_music.slots.handles[0] = i + 1;
                 } else {
                     main_system_handle_animation_exception(0x11);
                     return 0;
@@ -34,10 +23,8 @@ int main_sound_open_scenario_smd_files(int scenario) {
                 main_system_handle_animation_exception(0x11);
                 return 0;
             }
-            return slot;
+            return i + 1;
         }
-        slot++;
-        loaded_smd++;
-    } while (checked_slots < 2);
+    }
     return 0;
 }

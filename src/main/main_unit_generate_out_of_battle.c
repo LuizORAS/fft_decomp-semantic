@@ -7,8 +7,7 @@
  * monster (3) or Ramza (anything else, forced to 2).
  */
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
-    /* Pin: unpinned, combine turns the text-id addu into an or (disjoint known bits). */
-    register s32 name_flags __asm__("$23");
+    s32 name_flags;
     u32 name_modifier;
     u16 birthday;
     s32 zodiac;
@@ -22,6 +21,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     s32 found;
     s32 jp;
     u32 hi;
+    u8 name_id_hi;
 
     if (unit_type == MAIN_UNIT_TYPE_MALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
@@ -121,12 +121,11 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
             }
         } while (found == 0);
     }
-    /* Reuse the earlier arithmetic temporary: a separate single-set value
-     * sinks the shift; reusing hi conflicts with v0 and selects v1. */
-    zodiac = name_id >> PARTY_NAME_CLASS_SHIFT;
+    name_id_hi = name_id >> PARTY_NAME_CLASS_SHIFT;
     party->name_id[0] = name_id;
-    party->name_id[1] = zodiac;
-    main_util_copy_bytes(world_text_find_entry(name_flags + (name_id & 0xff)), party->name, 0x10);
+    party->name_id[1] = name_id_hi;
+    name_flags += name_id & 0xff;
+    main_util_copy_bytes(world_text_find_entry(name_flags), party->name, 0x10);
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
