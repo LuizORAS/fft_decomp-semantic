@@ -315,6 +315,13 @@ void wldcore_noop_8008ffd8(void);
 void wldcore_reset_game_if_special_keycode_is_pressed(void);
 
 /* thread */
+/* Slots that the WLDCORE screens use for threads of their own. */
+typedef enum wldcore_thread_slot {
+    WLDCORE_THREAD_SLOT_TRANSITION = 4,    /* the zoom thread of a screen transition */
+    WLDCORE_THREAD_SLOT_WINDOW_PANEL = 12, /* a list or number panel */
+    WLDCORE_THREAD_SLOT_MESSAGE = 14,      /* the message box and script text */
+} wldcore_thread_slot_e;
+
 /* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
  * 12 and 9; each thread receives its block's address as its first
  * parameter. */

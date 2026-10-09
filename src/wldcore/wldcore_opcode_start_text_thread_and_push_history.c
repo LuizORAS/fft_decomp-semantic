@@ -13,8 +13,8 @@ void wldcore_opcode_start_text_thread_and_push_history(void) {
     s32 operand;
 
     operand = g_wldcore_active_saved_record.instruction.bytes.operand_0;
-    world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_character_handling_thread);
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 9, operand | 0x8800, 0);
+    world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 9, operand | 0x8800, 0);
     history_1 = g_wldcore_active_saved_record.text_history_1;
     history_2 = g_wldcore_active_saved_record.text_history_2;
     history_3 = g_wldcore_active_saved_record.text_history_3;

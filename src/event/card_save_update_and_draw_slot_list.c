@@ -27,15 +27,15 @@ void card_save_update_and_draw_slot_list(u16 input) {
         row = card_io_poll_operation_result();
         if (row > CARD_IO_RESULT_COMPLETE) {
             if (card_io_wait_operation_result(3) != CARD_IO_RESULT_COMPLETE) {
-                card_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
-                card_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD);
+                card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+                card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD);
                 g_card_save_overwrite_prompt_active = 0;
                 g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
                 g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         } else if (g_card_save_overwrite_prompt_active != 0) {
             g_card_save_overwrite_prompt_active
-                = card_thread_start_managed(NATIVE_THREAD_SLOT_SCREEN_MENU, g_card_save_overwrite_prompt_descriptor);
+                = card_thread_start_managed(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_overwrite_prompt_descriptor);
             if (g_card_save_overwrite_prompt_active == 0 && g_card_save_slot_index == 0) {
                 g_card_save_menu_state = CARD_SAVE_MENU_WRITING;
             }

@@ -37,8 +37,8 @@ s32 world_formation_run_item_submenu_step(void) {
         g_world_item_submenu_initialized = 1;
         g_world_item_menu_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
-        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_UNIT_STATUS);
-        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         world_menu_stop_unit_status_banner_thread(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
         g_world_item_menu_mode = MENU_ITEM_LIST_STATE_BROWSE;
         g_world_formation_unit_banner_enabled = 0;
@@ -89,7 +89,7 @@ s32 world_formation_run_item_submenu_step(void) {
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_ITEM_LIST_TRIANGLE, 0xB8, 0x3C,
         (u16)g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
     busy = 0;
-    if (world_thread_is_task_active(0) != 0 || world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) != 0) {
+    if (world_thread_is_task_active(0) != 0 || world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) != 0) {
         busy = 1;
     }
     world_menu_run_script_with_palette_mode(g_world_item_list_window_script, input, busy);

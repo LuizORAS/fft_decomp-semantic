@@ -47,22 +47,22 @@ void world_menu_run_require_help(void) {
     }
     world_script_copy_bytes(
         g_world_text_section_pointer_backup, g_world_text_section_pointers, WORLD_TEXT_SECTION_TABLE_BYTES);
-    g_world_text_section_pointers[TEXT_SECTION_HELP_UNIT_STATUS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_UNIT_STATUS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_MENU_COMMANDS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_MENU_COMMANDS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_TERRAIN]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_TERRAIN];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_JOBS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_JOBS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_ITEMS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_ITEMS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_ABILITIES]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_ABILITIES];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_SKILLSETS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_SKILLSETS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_STATUSES]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_STATUSES];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_JOBS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
     world_menu_copy_billboard_data_out(g_world_help_active_banner, g_world_help_active_unit_data,
         &g_world_help_billboard, g_world_help_menu_cursor_tile);

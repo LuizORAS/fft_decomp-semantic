@@ -73,7 +73,7 @@ s8 world_item_run_sort_order_menu(void) {
             &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
         g_world_preview_stats_thread_params.redraw_request = 1;
     }
-    if (world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_item_category_icon_strip) == 0) {
+    if (world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_item_category_icon_strip) == 0) {
         g_world_item_sort_order_initialized = 0;
         return MENU_ITEM_LIST_STATE_ACTION;
     }

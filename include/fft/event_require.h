@@ -257,6 +257,14 @@ typedef struct require_glyph {
 } require_glyph_t;
 
 /* Section offsets of the REQUIRE text file, relative to g_require_text_data (0x80 bytes before it). */
+/* REQUIRE's text, which its post-battle routines bind over the resident
+ * sections; it binds its job names as TEXT_SECTION_JOB_NAMES. */
+typedef enum require_text_section {
+    REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS = 1,   /* a unit's Brave is low or its Faith high */
+    REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES = 2, /* the unit leaves the party for it */
+    REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES = 3,   /* what a unit turned away or dismissed says */
+} require_text_section_e;
+
 extern s32 g_require_text_section_offsets[32];
 extern u8 g_require_text_data[];
 extern s16 g_require_message_menu_result;
@@ -277,8 +285,8 @@ void require_text_show_battle_congratulations(void);
 void require_text_build_battle_nicknames(void);
 
 /* thread */
-/* Slots of the post-battle screens' own threads; native_thread_slot_e has
- * the shared ones. */
+/* Slots of the post-battle screens' own threads; native_screen_thread_slot_e
+ * has the shared ones. */
 typedef enum require_thread_slot {
     REQUIRE_THREAD_SLOT_MENU = 5,        /* selection menus, prompts and the special-case display */
     REQUIRE_THREAD_SLOT_MESSAGE = 7,     /* the icon strip, message text or menu shown with them */

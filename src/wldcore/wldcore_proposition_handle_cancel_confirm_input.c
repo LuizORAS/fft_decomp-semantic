@@ -63,7 +63,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
     if (level->choice == 1) {
         goto close;
     }
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB81E, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB81E, 0);
     level->confirmed = 1;
     g_main_active_propositions[level->proposition].flags |= WLDCORE_PROPOSITION_PROGRESS_RECALLED;
     g_wldcore_window_records[level->window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

@@ -46,8 +46,8 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_window_panel_render_state.header_id = 0x10;
     g_wldcore_window_panel_render_state.selected_index = 0;
     g_wldcore_menu_scroll_offset = 0;
-    world_thread_start(WORLD_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+    world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
@@ -202,7 +202,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     }
     g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB812, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB812, 0);
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].send_unit.shown_preview = -1;

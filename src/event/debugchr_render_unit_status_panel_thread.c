@@ -65,7 +65,7 @@ void debugchr_render_unit_status_panel_thread(void) {
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0) + 1;
     thread_id = g_battle_current_thread_id;
     thread = (battle_menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
-    if (thread_id == NATIVE_THREAD_SLOT_UNIT_STATUS) {
+    if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         panel = g_debugchr_panel_selected_packets;
         editor = g_debugchr_panel_selected_editor_packets;
         number_pixels = g_debugchr_panel_selected_number_image;

@@ -7,11 +7,11 @@ void require_party_remove_low_brave_high_faith_units(void) {
 
     if (require_party_find_low_brave_high_faith_departures() == 0)
         battle_thread_exit_current();
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = g_require_text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
         = g_require_text_data + g_require_text_section_offsets[2];
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
         = g_require_text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
     battle_thread_yield();

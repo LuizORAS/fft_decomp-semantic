@@ -33,7 +33,7 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .window_pair_render.render_index]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB81D, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB81D, 0);
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

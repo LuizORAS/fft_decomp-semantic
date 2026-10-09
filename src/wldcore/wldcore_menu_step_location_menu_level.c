@@ -46,9 +46,9 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     }
     if (level->delay != 0) {
         if (level->delay == 8) {
-            world_thread_start(WORLD_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+            world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
             world_thread_set_parameters(
-                WORLD_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+                WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         }
         level->delay--;
         return;
@@ -57,7 +57,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_gfx_toggle_captured_world_frame(0);
         g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
             & ~(MAIN_SYSTEM_FLAG_DRAW_MAP | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION);
@@ -130,7 +130,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         if ((value & 0xF800) == 0xB800) {
             wldcore_sound_play_effect(MAIN_SFX_CANCEL);
             level->slots.result = 0;
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
             g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         }
     } else if (g_wldcore_new_button_presses & PSX_PAD_SELECT) {
@@ -153,7 +153,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->slots.result = 1;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     }
 }

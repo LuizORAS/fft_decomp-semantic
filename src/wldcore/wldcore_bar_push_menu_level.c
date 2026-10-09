@@ -20,8 +20,8 @@ void wldcore_bar_push_menu_level(void) {
     wldcore_gfx_load_background_set(set);
     wldcore_wait_for_file_load();
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
-    world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB806, 0);
+    world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB806, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render.first_window
         = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

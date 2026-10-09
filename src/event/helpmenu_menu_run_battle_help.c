@@ -56,22 +56,22 @@ void helpmenu_menu_run_battle_help(void) {
     unit_data = g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;
     cursor_tile = g_helpmenu_menu_cursor_tile;
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_UNIT_STATUS]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_UNIT_STATUS];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_MENU_COMMANDS]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_MENU_COMMANDS];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_TERRAIN]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_TERRAIN];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_JOBS]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_JOBS];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_ITEMS]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ITEMS];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_ABILITIES]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ABILITIES];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_SKILLSETS]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_SKILLSETS];
-    g_battle_text_section_pointers[TEXT_SECTION_HELP_STATUSES]
-        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_STATUSES];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_JOBS];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
+    g_battle_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self_thread = &g_battle_threads[g_battle_current_thread_id];
     battle_menu_copy_billboard_data_out(banner, unit_data, billboard, cursor_tile);
     if ((g_helpmenu_selected_unit_panel_mode != 0) || (g_battle_post_battle_unit_changes_active != 0)) {
@@ -235,10 +235,11 @@ void helpmenu_menu_run_battle_help(void) {
         help_mode = g_battle_unit_view_mode;
         if (help_mode == UNIT_VIEW_MODE_TILE_INFO || help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-            battle_thread_start(NATIVE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile[0] + 0x5800, 0);
-            g_battle_threads[NATIVE_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
-            battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MESSAGE);
+            battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
+            battle_thread_set_parameters(
+                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile[0] + 0x5800, 0);
+            g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
+            battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;
             battle_thread_wait_frames(1);
             helpmenu_menu_close();

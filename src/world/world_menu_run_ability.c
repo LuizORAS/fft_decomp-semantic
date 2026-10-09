@@ -23,7 +23,7 @@ void world_menu_run_ability(void) {
             g_world_formation_scroll_enabled = 0;
             g_world_formation_unit_browse_enabled = 0;
             g_world_ability_menu_saved_browse_enabled = saved;
-            world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
             g_world_ability_menu_initialized = 1;
             g_world_ability_menu_slots_changed = 0;
         }

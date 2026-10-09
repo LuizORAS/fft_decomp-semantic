@@ -36,7 +36,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
         g_wldcore_proposition_send_units[level->slot] = unit;
         wldcore_window_draw_text_rows(level);
         wldcore_proposition_load_send_unit_candidates(level);
-        world_thread_request_redraw(WORLD_THREAD_SLOT_WINDOW_PANEL);
+        world_thread_request_redraw(WLDCORE_THREAD_SLOT_WINDOW_PANEL);
     close:
         g_wldcore_window_records[level->frame_window_a].palette
             = g_wldcore_window_records[level->frame_window_b].palette = 0;

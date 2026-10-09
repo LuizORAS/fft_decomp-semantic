@@ -42,14 +42,14 @@ void require_apply_post_battle_unit_changes(void) {
     battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
         = text_data + g_require_text_section_offsets[2];
     saved_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
     g_battle_menu_thread_menu_data = (world_menu_entry_t*)menu_base;
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
         = text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
@@ -91,14 +91,15 @@ void require_apply_post_battle_unit_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                battle_thread_start(NATIVE_THREAD_SLOT_UNIT_STATUS, require_render_unit_status_panel_thread);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_render_unit_status_panel_thread);
                 battle_thread_set_parameters(
-                    NATIVE_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
-                battle_thread_start(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
+                    NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
                 battle_thread_set_parameters(
-                    NATIVE_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(NATIVE_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
-                battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
+                    NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
+                battle_thread_start(
+                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
+                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
             } else {
                 u16 index_value;
 
@@ -293,12 +294,12 @@ void require_apply_post_battle_unit_changes(void) {
         transition += 0x20;
         battle_thread_yield();
     } while (transition < 0x101);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_STATUS);
-    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
-    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
     battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;

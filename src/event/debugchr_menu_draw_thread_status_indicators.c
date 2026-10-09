@@ -23,15 +23,17 @@ void debugchr_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (debugchr_thread_is_running(NATIVE_THREAD_SLOT_UNIT_STATUS) != 0) {
-        if (g_battle_threads[NATIVE_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[NATIVE_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+    if (debugchr_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            thread = (native_thread_t*)g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (thread->function_parameter_1 == 0) * 8;
         }
     }
-    if (debugchr_thread_is_running(NATIVE_THREAD_SLOT_COMPARISON_STATUS) != 0) {
-        if (g_battle_threads[NATIVE_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[NATIVE_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
+    if (debugchr_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].task_id
+            == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            descriptor
+                = (native_thread_t*)g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->function_parameter_1 == 0) {
                 active = 7;
                 thread = descriptor;

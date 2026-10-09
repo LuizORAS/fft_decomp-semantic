@@ -33,7 +33,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
 
     mode = level->mode;
     if (mode == WLDCORE_SEND_UNIT_MODE_CANCEL) {
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_result = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
@@ -42,7 +42,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         return;
     }
     if (mode == WLDCORE_SEND_UNIT_MODE_ACCEPT) {
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_result = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
@@ -92,7 +92,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->mode = WLDCORE_SEND_UNIT_MODE_CANCEL;
     suspend:
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_wldcore_window_record_count -= 7;
         g_wldcore_window_render_record_count -= 5;
         g_wldcore_window_render_object_count -= 0xC;
@@ -100,8 +100,8 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         return;
     }
     if (buttons & PSX_PAD_SQUARE) {
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_wldcore_window_records[level->list_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[level->layout_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_a].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -126,7 +126,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
             g_wldcore_proposition_send_unit_count--;
             wldcore_window_draw_text_rows(level);
             wldcore_proposition_load_send_unit_candidates(level);
-            world_thread_request_redraw(WORLD_THREAD_SLOT_WINDOW_PANEL);
+            world_thread_request_redraw(WLDCORE_THREAD_SLOT_WINDOW_PANEL);
             return;
         }
     }
@@ -153,5 +153,5 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
 
     wldcore_window_draw_text_rows(level);
     wldcore_proposition_load_send_unit_candidates(level);
-    world_thread_request_redraw(WORLD_THREAD_SLOT_WINDOW_PANEL);
+    world_thread_request_redraw(WLDCORE_THREAD_SLOT_WINDOW_PANEL);
 }

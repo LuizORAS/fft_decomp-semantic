@@ -108,9 +108,9 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_shop_fur_menu_thread_data.selected_index = 0;
     g_world_shop_hire_menu_thread_data.selected_index = 0;
     world_gfx_bind_data_pointer(WORLD_TEXT_DATA_SHOP_DIALOGUE);
-    g_world_text_section_pointers[TEXT_SECTION_SHOP_MENU_LABELS] = g_world_text_shop_menu_labels_data;
-    world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);
+    g_world_text_section_pointers[WORLD_TEXT_SECTION_SHOP_MENU_LABELS] = g_world_text_shop_menu_labels_data;
+    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);
     g_world_menu_music_slot = main_sound_open_music_into_free_slot(ot_index);
     main_sound_switch_music_track(g_world_menu_music_slot, 0x7F, 0);
     g_world_shop_background_visible = 1;
@@ -144,7 +144,7 @@ void world_shop_run_screen(s32 shop_type) {
             if (disabled == 0) {
                 buttons = g_world_input_secondary_repeat;
             }
-            if (world_thread_is_running(NATIVE_THREAD_SLOT_COMPARISON_STATUS) == 0) {
+            if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0) {
                 if (buttons & PSX_PAD_L1) {
                     g_world_formation_selected_unit_index = g_world_formation_selected_unit_index == 0
                         ? g_world_formation_unit_count - 1

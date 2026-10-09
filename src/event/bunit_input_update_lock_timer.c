@@ -4,7 +4,7 @@
 void bunit_input_update_lock_timer(void) {
     s32 timer;
 
-    if (battle_thread_is_running(NATIVE_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+    if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
         timer = 0xA;
     } else if ((g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) != 0) {
         timer = 0xA;

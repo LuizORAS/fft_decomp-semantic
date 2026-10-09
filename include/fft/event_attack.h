@@ -110,18 +110,24 @@ typedef enum attack_deployment_orientation {
     ATTACK_DEPLOYMENT_ORIENTATION_ROTATE_270 = 3,
 } attack_deployment_orientation_e;
 
-/* Slots of the deployment screen's own threads; native_thread_slot_e has the
- * shared ones (unit status 8, character status 9, numeric editor 12). */
+/* Slots of the deployment screen's own threads; the screen itself runs in
+ * NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT and its panels in the
+ * native_screen_thread_slot_e slots (unit status 8, character status 9,
+ * numeric editor 12). */
 typedef enum attack_thread_slot {
-    ATTACK_THREAD_SLOT_CONFIRM_MENU_CHILD = 3, /* the child of the confirm menu */
-    ATTACK_THREAD_SLOT_SELECT_MENU = 3,        /* attack_deploy_run_select_menu */
-    ATTACK_THREAD_SLOT_CONFIRM_MENU = 4,       /* the menu that sets g_attack_deploy_confirm_result */
-    ATTACK_THREAD_SLOT_ROSTER_STEP = 4,        /* attack_deploy_select_next/previous_roster_unit */
-    ATTACK_THREAD_SLOT_DETAIL_MARKER = 13,     /* a wait-forever thread while the unit detail panels are open */
-    ATTACK_THREAD_SLOT_NOTICE = 13,            /* the notice shown for an invalid deployment input */
-    ATTACK_THREAD_SLOT_SCREEN_GRAPHICS = 14,   /* attack_deploy_update_screen_graphics, then the map title */
-    ATTACK_THREAD_SLOT_DEPLOY_RENDER = 15,     /* attack_deploy_run_render_thread */
+    ATTACK_THREAD_SLOT_SELECT_MENU = 3,      /* attack_deploy_run_select_menu */
+    ATTACK_THREAD_SLOT_ROSTER_STEP = 4,      /* attack_deploy_select_next/previous_roster_unit */
+    ATTACK_THREAD_SLOT_NOTICE = 13,          /* the notice shown for an invalid deployment input */
+    ATTACK_THREAD_SLOT_SCREEN_GRAPHICS = 14, /* attack_deploy_update_screen_graphics, then the map title */
+    ATTACK_THREAD_SLOT_DEPLOY_RENDER = 15,   /* attack_deploy_run_render_thread */
 } attack_thread_slot_e;
+
+/* The same slots while the confirm prompt or the unit detail view is up. */
+typedef enum attack_prompt_thread_slot {
+    ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD = 3, /* the child of the confirm menu */
+    ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU = 4,       /* the menu that sets g_attack_deploy_confirm_result */
+    ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER = 13,     /* a wait-forever thread while the unit detail panels are open */
+} attack_prompt_thread_slot_e;
 
 enum {
     ATTACK_DEPLOYMENT_ORIENTATION_MASK = 0x0f,

@@ -271,12 +271,12 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;
         }
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         return;
     case -1:
     case 18:
     case 99:
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         level->state++;

@@ -500,10 +500,8 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET = 0x59,
     /* Written by text control TEXT_SET_PORTRAIT. */
     EVENT_SCRIPT_VAR_DIALOG_PORTRAIT = 0x5a,
-    /* The Deep Dungeon location menu stores the chosen floor here. WLDCORE
-     * also stages a script's pending sound effect, weather sound and music
-     * track in 0x5c-0x5e and clears all three once they have played. */
-    EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION = 0x5c,
+    /* WLDCORE stages a script's pending sound effect, weather sound and
+     * music track in 0x5c-0x5e and clears all three once they have played. */
     EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT = 0x5c,
     EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND = 0x5d,
     EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK = 0x5e,
@@ -580,6 +578,12 @@ typedef enum event_script_variable_id {
      * a profile that has reached 12. */
     EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST = 0x3c0,
 } event_script_variable_id_e;
+
+/* The Deep Dungeon location menu stores the chosen floor in the pending
+ * sound effect's variable before it runs the entry script. */
+enum {
+    EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION = 0x5c,
+};
 
 /* Ordinary variables are whole words; the remaining script-variable domains
  * are packed as 32 one-bit values or eight four-bit values per word. */

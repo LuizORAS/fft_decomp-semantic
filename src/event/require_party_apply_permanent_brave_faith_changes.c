@@ -9,11 +9,11 @@ void require_party_apply_permanent_brave_faith_changes(void) {
         battle_thread_exit_current();
     if (require_apply_permanent_brave_faith_changes_and_collect_warnings() == 0)
         battle_thread_exit_current();
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = g_require_text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
         = g_require_text_data + g_require_text_section_offsets[2];
-    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES]
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
         = g_require_text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
     main_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);

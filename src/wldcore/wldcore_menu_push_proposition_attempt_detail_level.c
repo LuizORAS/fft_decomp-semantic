@@ -54,7 +54,7 @@ void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
                                         .window_render.render_index]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_world_text_substitution_values[0] = value + 0x6000;
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB849, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB849, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

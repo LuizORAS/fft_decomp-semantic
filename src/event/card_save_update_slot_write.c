@@ -20,7 +20,7 @@ void card_save_update_slot_write(s32 slot) {
         g_card_save_write_failed = 0;
         D_801ca964 = 0;
         card_save_build_buffer(slot);
-        card_menu_start_or_poll_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_card_save_in_progress_thread_descriptor);
+        card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_in_progress_thread_descriptor);
         g_battle_sound_suppressed = 1;
         return;
     } else {
@@ -32,9 +32,9 @@ void card_save_update_slot_write(s32 slot) {
 
     g_battle_sound_suppressed = 0;
     if (g_card_save_write_failed != 0) {
-        card_menu_start_or_poll_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_card_save_failure_thread_descriptor);
+        card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_failure_thread_descriptor);
         if ((g_card_input_primary_repeat & PSX_PAD_CIRCLE) != 0 || (g_card_input_primary_repeat & PSX_PAD_CROSS) != 0) {
-            card_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
+            card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
             g_card_save_write_phase = 0;
             g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
         }
@@ -43,7 +43,7 @@ void card_save_update_slot_write(s32 slot) {
 
     write_result = card_file_write_buffer(g_card_save_file_names[slot], (const u8*)g_card_save_buffer_pointer, 0x1e00,
         g_card_save_slot_file_states[slot]);
-    card_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
+    card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
     header_result = 0;
     if (write_result == 0x1e00) {
         g_card_save_buffer_pointer->slot = slot;

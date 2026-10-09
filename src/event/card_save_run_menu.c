@@ -27,8 +27,8 @@ void card_save_run_menu(s32 unused) {
     card_io_consume_all_events();
     g_card_save_menu_work_buffer = save_buffer;
     card_save_init_menu_state();
-    battle_thread_start(NATIVE_THREAD_SLOT_CARD_GRAPHIC, card_save_run_menu_graphic_thread);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_CARD_GRAPHIC, 0, 0, 0);
+    battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, card_save_run_menu_graphic_thread);
+    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
     g_card_save_initial_prompt_timer = 0;
 
     while (card_gfx_update_increasing_fade() != 0) {
@@ -38,7 +38,7 @@ void card_save_run_menu(s32 unused) {
         card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE
-                && battle_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0
+                && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
             ? g_card_input_primary_repeat
             : 0;
         if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE
@@ -70,8 +70,8 @@ void card_save_run_menu(s32 unused) {
         input = PadRead(0) & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
         buttons = g_card_input_newly_pressed & 0x0fff;
         input |= buttons;
-        if (battle_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT) == 0
-            && battle_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0
+        if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT) == 0
+            && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
             && battle_thread_is_running(14) == 0) {
             input &= 0xff00;
         }
@@ -92,6 +92,6 @@ void card_save_run_menu(s32 unused) {
         g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
 
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_CARD_GRAPHIC, 0, -1, 0);
+    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
     main_sound_unload_scenario_mus(music_slot);
 }

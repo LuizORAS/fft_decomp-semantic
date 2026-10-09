@@ -6,7 +6,7 @@
 void world_menu_update_thread_7_idle_countdown(void) {
     s32 value;
 
-    if (world_thread_is_running(NATIVE_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+    if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
         value = 10;
     } else if (g_world_status_display_thread_params.flags
         & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) {

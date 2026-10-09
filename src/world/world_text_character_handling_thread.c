@@ -859,7 +859,7 @@ end:
             && g_world_formation_screen_active == 0)) {
         world_text_restore_section_pointers();
     }
-    if (g_world_thread_current_id != NATIVE_THREAD_SLOT_MENU_TEXT || rec.options != 0xC) {
+    if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_TEXT || rec.options != 0xC) {
         world_thread_exit_current();
     }
 }

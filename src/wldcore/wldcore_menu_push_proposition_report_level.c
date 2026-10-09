@@ -27,7 +27,7 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
     } else {
         wldcore_sound_enqueue_music_start(0x223);
     }
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_REPORT;
     g_wldcore_menu_stack_depth++;
 }

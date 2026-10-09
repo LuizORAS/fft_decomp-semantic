@@ -355,6 +355,10 @@ void open_birthday_push_confirmation_controller(void);
 extern s32 g_open_menu_formation_entry_mask;
 extern s32 g_open_menu_formation_otag_index;
 
+/* The slot of the music test's list thread. */
+enum {
+    OPEN_THREAD_SLOT_MUSIC_TEST_LIST = 12,
+};
 void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point32_t* extent, open_point32_t* origin);
 
 void open_menu_start_music_test_controller(void);

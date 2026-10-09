@@ -131,15 +131,15 @@ void option_menu_start_dead_unit_threads(void) {
         if ((context->result == 3 && g_option_dead_unit_secondary_result == 0) || context->result == 1) {
             battle_thread_start(g_battle_current_thread_id - 2, option_build_at_list);
             battle_thread_set_parameters(g_battle_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
-            battle_thread_start(NATIVE_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_AT_LIST_MENU,
+            battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
+            battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
                 (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 battle_thread_yield();
                 if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 3) != 0) {
-                    battle_thread_start(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD, option_thread_wait_forever);
+                    battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, option_thread_wait_forever);
                 } else {
-                    battle_thread_suspend(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD);
+                    battle_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }
                 if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
                     break;
@@ -151,8 +151,8 @@ void option_menu_start_dead_unit_threads(void) {
             }
 
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_AT_LIST_MENU, 0, 0, 1);
-            battle_thread_suspend(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD);
+            battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, 0, 0, 1);
+            battle_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
             if (g_option_dead_unit_primary_result == 0) {
                 g_battle_dead_unit_action = 1;
                 break;

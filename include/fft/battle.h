@@ -155,18 +155,28 @@ typedef enum battle_ai_simulation_phase {
     BATTLE_AI_SIMULATION_SCORE_STATE = 2,
 } battle_ai_simulation_phase_e;
 
+/* The four AI flag bytes of an ability, one enum per byte. */
 enum {
-    BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES = 0x01,
+    BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     BATTLE_AI_ABILITY_FLAG_1_AFFECTS_HP = 0x80,
+};
+
+enum {
     BATTLE_AI_ABILITY_FLAG_2_EVADEABLE = 0x02,
     BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE = 0x20,
     BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES = 0x80,
+};
+
+enum {
     BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK = 0x01,
     BATTLE_AI_ABILITY_FLAG_3_MAGICAL_ATTACK = 0x02,
     BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK = 0x3c,
     BATTLE_AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY = 0x40,
     BATTLE_AI_ABILITY_FLAG_3_ARC_TRAJECTORY = 0x80,
+};
+
+enum {
     BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION = 0x01, /* the static table's bit; the AI working copy reuses byte 4 */
     BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
@@ -902,9 +912,12 @@ typedef enum battle_facing {
     BATTLE_FACING_NORTH_EAST = 0xa00,
     BATTLE_FACING_EAST = 0xc00,
     BATTLE_FACING_SOUTH_EAST = 0xe00,
+} battle_unit_facing_e;
+
+enum {
     BATTLE_FACING_QUARTER_TURN = 0x400,
     BATTLE_FACING_MASK = 0x0fff,
-} battle_unit_facing_e;
+};
 
 /* Unit animation ids (SEQ script indices) that the code selects by number. */
 typedef enum battle_unit_animation {
@@ -2365,8 +2378,11 @@ void battle_camera_thread(void);
  * battle_gfx_run_unit_seq_script and battle_gfx_run_wep_eff_seq_script.
  * UNKNOWN_XX commands have no known effect beyond their operand skip. For
  * 0xf0 (MoveUnitRL) the unit interpreter calls battle_unit_shift_right_or_left. */
-typedef enum battle_seq_opcode {
+enum {
     BATTLE_SEQ_OP_PREFIX = 0xff,
+};
+
+typedef enum battle_seq_opcode {
     BATTLE_SEQ_OP_UNKNOWN_BE = 0xbe,
     BATTLE_SEQ_OP_UNKNOWN_BF = 0xbf,
     BATTLE_SEQ_OP_WAIT_FOR_DISTORT = 0xc0,
@@ -6774,8 +6790,12 @@ typedef enum battle_weather {
     BATTLE_WEATHER_SNOW = 5,
     BATTLE_WEATHER_SNOWSTORM = 6,
     BATTLE_WEATHER_STRONG_SNOWSTORM = 7,
-    BATTLE_WEATHER_SNOW_OFFSET = 3,
 } battle_map_weather_e;
+
+/* Added to a rain value to give its snow counterpart. */
+enum {
+    BATTLE_WEATHER_SNOW_OFFSET = 3,
+};
 
 /* Bits of the map weather flag word at 0x800b6698 ("weather palette mods"). */
 typedef enum battle_map_weather_flags {

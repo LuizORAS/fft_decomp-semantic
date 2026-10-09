@@ -87,12 +87,20 @@ typedef struct {
     u32 mask;
 } psyq_api_interrupt_controller_t;
 
-typedef enum {
+enum {
     PSYQ_RCNT_SPEC_MASK = 0xffff,
     PSYQ_RCNT_HARDWARE_COUNT = 3,
-    PSYQ_RCNT_API_SYNC_ENABLE = 0x10,
+};
+
+/* The mode argument of SetRCnt. */
+typedef enum {
     PSYQ_RCNT_API_SYSTEM_CLOCK = 0x1,
+    PSYQ_RCNT_API_SYNC_ENABLE = 0x10,
     PSYQ_RCNT_API_IRQ_ENABLE = 0x1000,
+} psyq_root_counter_api_mode_e;
+
+/* The hardware mode word SetRCnt builds from it. */
+typedef enum {
     PSYQ_RCNT_SYNC_ENABLE = 0x1,
     PSYQ_RCNT_RESET_AT_TARGET = 0x8,
     PSYQ_RCNT_IRQ_ON_TARGET = 0x10,

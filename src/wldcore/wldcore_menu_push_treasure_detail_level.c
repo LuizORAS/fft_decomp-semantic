@@ -73,7 +73,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_world_text_substitution_values[0] = value + 0xe000;
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB849, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB849, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.timer = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_TREASURE_DETAIL;

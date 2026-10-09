@@ -19,8 +19,8 @@ void wldcore_menu_push_countdown_level(void) {
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].countdown.remaining = 1;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].countdown.current += 2 + count;
     }
-    if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
-        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
+    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     wldcore_menu_show_next_sequence_message(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].countdown);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_COUNTDOWN;

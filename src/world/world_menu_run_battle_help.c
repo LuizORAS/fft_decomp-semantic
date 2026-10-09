@@ -56,22 +56,22 @@ void world_menu_run_battle_help(void) {
     setup_unit_data = g_world_help_active_unit_data;
     setup_billboard = &g_world_help_billboard;
     setup_cursor_tile = g_world_help_menu_cursor_tile;
-    g_world_text_section_pointers[TEXT_SECTION_HELP_UNIT_STATUS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_UNIT_STATUS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_MENU_COMMANDS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_MENU_COMMANDS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_TERRAIN]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_TERRAIN];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_JOBS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_JOBS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_ITEMS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_ITEMS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_ABILITIES]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_ABILITIES];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_SKILLSETS]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_SKILLSETS];
-    g_world_text_section_pointers[TEXT_SECTION_HELP_STATUSES]
-        = g_world_help_data_base + g_world_help_text_section_offsets[TEXT_SECTION_HELP_STATUSES];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_JOBS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
+    g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+        = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
     world_menu_copy_billboard_data_out(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);
     if ((g_world_selected_unit_stat_summary.team_kind != 0) || (g_world_unit_join_screen_active != 0)) {
@@ -235,11 +235,11 @@ void world_menu_run_battle_help(void) {
         view_mode = g_world_unit_view_mode;
         if (view_mode == UNIT_VIEW_MODE_TILE_INFO || view_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
-            world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
+            world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
             world_thread_set_parameters(
-                NATIVE_THREAD_SLOT_MESSAGE, 0x3B, (*(s16*)g_world_help_menu_cursor_tile) + 0x5800, 0);
-            g_world_threads[NATIVE_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
-            world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MESSAGE);
+                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, (*(s16*)g_world_help_menu_cursor_tile) + 0x5800, 0);
+            g_world_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
+            world_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_world_help_controller_state_ptr = 0;
             world_thread_wait_frames(1);
             world_menu_close_help_menu();

@@ -14,7 +14,7 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+        && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         flags = g_main_system_flags;
         if ((flags & MAIN_SYSTEM_FLAG_FADING) == 0) {
             value = *selection;
@@ -30,7 +30,7 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[*selection]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         return;

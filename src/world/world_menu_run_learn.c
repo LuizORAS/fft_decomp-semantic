@@ -10,7 +10,7 @@ s32 world_menu_run_learn(void) {
     if (g_world_learn_menu_initialized == 0) {
         g_world_learn_menu_step = MENU_JOB_LIST_STEP_JOBS;
         g_world_formation_unit_banner_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         world_menu_stop_unit_status_banner_thread(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
         g_world_formation_unit_cycle_mode = 0;
         world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_ABILITY_TAB, 0);

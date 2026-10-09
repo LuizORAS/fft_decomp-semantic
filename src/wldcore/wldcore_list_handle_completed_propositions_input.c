@@ -9,7 +9,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
     wldcore_point32_t origin;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
         g_wldcore_menu_result = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
@@ -23,7 +23,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
@@ -38,7 +38,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_world_text_substitution_values[0]
             = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB81A, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB81A, 0);
         origin.x = 0x48;
         origin.y = 0x20;
         wldcore_window_build_yes_no_panel(origin);

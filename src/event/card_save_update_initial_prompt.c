@@ -13,7 +13,7 @@ void card_save_update_initial_prompt(void) {
         }
     } else {
         g_card_save_initial_prompt_thread_state
-            = card_thread_start_managed(NATIVE_THREAD_SLOT_SCREEN_MENU, g_card_save_initial_prompt_descriptor);
+            = card_thread_start_managed(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_initial_prompt_descriptor);
         if (g_card_save_initial_prompt_thread_state == 0) {
             if (g_card_save_slot_index != 0) {
                 g_card_save_menu_state = CARD_SAVE_MENU_LEAVE;

@@ -117,8 +117,8 @@ void world_build_at_list_2(void) {
     buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
-    world_thread_start(WORLD_THREAD_SLOT_WINDOW_FRAME, world_menu_window_frame_thread_2);
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
+    world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_menu_window_frame_thread_2);
+    world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;
     world_menu_draw_text_columns(entry, &row_offset, buffer);
@@ -146,9 +146,9 @@ void world_build_at_list_2(void) {
         page = &g_world_text_list_pages[i & 1];
         frame = &page->frame;
         if (world_thread_is_previous_running() != 0 && g_world_thread_task_active == 0) {
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 1, 0);
+            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 1, 0);
         } else {
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
+            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0 && i != 0) {
             if ((*input0 & PSX_PAD_UP) && !(*input1 & PSX_PAD_SQUARE)) {
@@ -300,7 +300,7 @@ void world_build_at_list_2(void) {
         page->icons.base.sprites[2].y0 += 4;
         world_menu_submit_icon_primitives(&page->icons.base);
     }
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, 0, 0, 1);
+    world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, 0, 0, 1);
     entry->select_text_table = row_offset;
     if (accum & 0xF) {
         world_menu_free_memory(buffer);

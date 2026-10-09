@@ -37,7 +37,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_participant_list_le
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+        && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         g_wldcore_menu_stack_depth--;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_menu_push_participant_detail_level(level->proposition, level->cursor);
@@ -59,7 +59,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_participant_list_le
         g_wldcore_participant_list_saved_cursor = level->cursor;
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count -= 2;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         return;
     }

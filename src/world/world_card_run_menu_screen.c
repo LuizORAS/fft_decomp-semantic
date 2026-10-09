@@ -79,8 +79,8 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_card_clear_events();
     g_world_card_directory_buffer = packets.directory_buffer;
     world_card_init_menu_state();
-    world_thread_start(NATIVE_THREAD_SLOT_CARD_GRAPHIC, world_formation_view_zoom_thread);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_CARD_GRAPHIC, 0, 0, 0);
+    world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_formation_view_zoom_thread);
+    world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
     while (world_gfx_update_fade_out_tile() != 0) {
         g_world_script_tutorial_id = 0;
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
@@ -88,7 +88,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         world_gfx_update_fade_in_tile();
         world_gfx_enqueue_tile(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
         if (g_world_card_menu_step == WORLD_CARD_MENU_STEP_SELECT_SAVE
-            && world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0) {
+            && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0) {
             input = (u16)g_world_input_primary_repeat;
         } else {
             input = 0;
@@ -118,8 +118,8 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         world_menu_draw_active_window_frames();
         buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
         buttons |= g_world_input_newly_pressed & 0xfff;
-        if (world_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT) == 0
-            && world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT) == 0
+            && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
             && world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
             buttons &= 0xff00;
         }
@@ -127,7 +127,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             g_world_gfx_active_packet_buffer->otag + 60, buttons, g_world_gfx_draw_buffer_clip_y == 0 ? 0xf0 : 0);
         world_sound_dispatch_effect();
     }
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_CARD_GRAPHIC, 0, -1, 0);
+    world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
     world_free_work_buffer();
     world_noop_801325d4();
     main_sound_unload_scenario_mus((s16)music_handle);

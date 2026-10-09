@@ -19,7 +19,7 @@ void world_card_run_slot_select_step(void) {
         return;
     }
     g_world_card_slot_select_running
-        = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, &g_world_card_slot_select_menu);
+        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_slot_select_menu);
     if (g_world_card_slot_select_running == 0) {
         selected = &g_world_menu_selection_results[5];
         slot = *selected;

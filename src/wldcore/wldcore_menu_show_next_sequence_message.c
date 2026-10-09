@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void wldcore_menu_show_next_sequence_message(wldcore_menu_countdown_t* countdown) {
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, countdown->current, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, countdown->current, 0);
     countdown->current++;
     countdown->remaining--;
     if (countdown->remaining == 0) {

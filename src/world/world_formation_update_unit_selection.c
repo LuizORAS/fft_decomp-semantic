@@ -92,7 +92,7 @@ void world_formation_update_unit_selection(void) {
         g_world_formation_banner_slide_step--;
         if (g_world_formation_banner_slide_step < -0xf) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
         }
     } else if (g_world_formation_banner_slide_step > 0) {
         g_world_status_display_thread_params.y = g_world_formation_banner_slide_step * 8 - 0x78;
@@ -100,7 +100,7 @@ void world_formation_update_unit_selection(void) {
         g_world_formation_banner_slide_step++;
         if (g_world_formation_banner_slide_step >= 0x10) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
         }
     }
 }

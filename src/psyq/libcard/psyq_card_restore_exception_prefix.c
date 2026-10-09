@@ -20,7 +20,7 @@ void psyq_card_restore_exception_prefix(void) {
     do {
         word = *source++;
         destination++;
-        destination[PSYQ_CARD_EXCEPTION_RESTORE_WORD - 1] = word;
+        destination[PSYQ_CARD_EXCEPTION_ADDRESS_HIGH_WORD - 1] = word;
     } while (source != end);
     PSYQ_CPU_GLOBAL_CALL(FlushCache);
     PSYQ_CPU_GLOBAL_CALL(ExitCriticalSection);

@@ -24,9 +24,9 @@ void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t*
         g_wldcore_proposition_gil_amount = total;
         if (total != 0) {
             g_world_text_substitution_values[0] = total;
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB810, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB810, 0);
         } else {
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80F, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80F, 0);
         }
         wldcore_window_set_render_state_2_from_arg_0x04((s32*)owner);
         origin.x = 0x48;

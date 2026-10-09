@@ -894,8 +894,7 @@ typedef enum battle_ai_autobattle_mode {
 enum {
     ITEM_ID_MASK = 0xff,
     ITEM_ID_COUNT = 0x100,
-    ENTD_EQUIPMENT_RANDOM = 0xfe,
-    ENTD_VALUE_RANDOM = 0xfe, /* the same sentinel in the ENTD level and secondary skillset bytes */
+    ENTD_VALUE_RANDOM = 0xfe, /* in an ENTD equipment, level or secondary skillset byte: pick one at random */
     ITEM_TYPE_FILTER_ANY = 0xff,
 };
 

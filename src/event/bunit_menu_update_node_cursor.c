@@ -38,7 +38,7 @@ void bunit_menu_update_node_cursor(s16 mode) {
             g_bunit_help_nodes = g_bunit_help_nodes_unit_browse;
         }
     }
-    running = battle_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT);
+    running = battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
     if (running == 0) {
         flags = g_bunit_input_primary_repeat;
         node_index = g_bunit_help_node_index;

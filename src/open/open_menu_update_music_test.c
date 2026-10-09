@@ -37,7 +37,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             extent.y = 0xB;
             origin.x = 0x8C;
             origin.y = 0x14;
-            open_menu_start_music_test_list_thread(WORLD_THREAD_SLOT_WINDOW_PANEL, 0x60, &extent, &origin);
+            open_menu_start_music_test_list_thread(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0x60, &extent, &origin);
             state->step = OPEN_MUSIC_TEST_STEP_IDLE;
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_START_TRACK) {
@@ -54,7 +54,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             open_title_push_menu_controller(0);
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_CLOSE) {
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        if (world_thread_is_running(OPEN_THREAD_SLOT_MUSIC_TEST_LIST) == 0) {
             state->step = OPEN_MUSIC_TEST_STEP_FADE_OUT;
             open_gfx_start_overlay_fade_in(0x20);
         }
@@ -98,7 +98,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
                 state->delay = 0x20;
             } else {
                 state->step = OPEN_MUSIC_TEST_STEP_CLOSE;
-                world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+                world_thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
                 g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
             }
         } else if (buttons & PSX_PAD_SELECT) {

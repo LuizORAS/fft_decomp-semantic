@@ -1485,7 +1485,9 @@ typedef enum text_id_base {
 
 /* Index into the 32 text section pointers (g_battle_text_section_pointers,
  * g_world_text_section_pointers): a text id's top five bits. Only the
- * sections the code binds or reads by a fixed role are named. */
+ * sections the code binds or reads by a fixed role are named. A screen
+ * rebinds a slot to its own text while it is up: help_text_section_e here,
+ * world_text_section_e and require_text_section_e map those bindings. */
 typedef enum text_section {
     TEXT_SECTION_EVENT_MESSAGES = 0,      /* the loaded event's text; BUNIT binds its menu text here */
     TEXT_SECTION_SKILLSET_NAMES_COPY = 2, /* TEXT_ID_SKILLSET_NAME_BASE; a copy of section 22 */
@@ -1493,42 +1495,31 @@ typedef enum text_section {
     TEXT_SECTION_ITEM_NAMES = 7,          /* TEXT_ID_ITEM_NAME_BASE */
     TEXT_SECTION_ROSTER_UNIT_NAMES = 8,   /* TEXT_ID_UNIT_NAME_BASE */
     TEXT_SECTION_UNIT_NAMES = 9,
-    TEXT_SECTION_ABILITY_NAMES = 14, /* TEXT_ID_ABILITY_NAME_BASE */
+    TEXT_SECTION_PARTY_UNIT_NAMES = 11, /* names by party slot, which ATTACK writes for the deployment screen */
+    TEXT_SECTION_ABILITY_NAMES = 14,    /* TEXT_ID_ABILITY_NAME_BASE */
     TEXT_SECTION_MESSAGES = 17,
     TEXT_SECTION_LOCATION_NAMES = 18,
-    TEXT_SECTION_UNIT_MESSAGE = 21,   /* SPELL.MES while the spell quote thread runs */
-    TEXT_SECTION_SKILLSET_NAMES = 22, /* TEXT_ID_SKILLSET_NAME_SOURCE_BASE */
-    TEXT_SECTION_OVERLAY_SCREEN = 27, /* each overlay screen binds its own text here */
-    /* A screen rebinds a slot to its own text while it is up, so the names
-     * below share numbers with each other and with the sections above: each
-     * says what one binder puts there. */
-    TEXT_SECTION_PARTY_UNIT_NAMES = 11,     /* names by party slot, which ATTACK writes for the deployment screen */
-    TEXT_SECTION_TUTORIAL_MESSAGES = 23,    /* WORLD: the running tutorial's message file */
+    TEXT_SECTION_UNIT_MESSAGE = 21,         /* SPELL.MES while the spell quote thread runs */
+    TEXT_SECTION_SKILLSET_NAMES = 22,       /* TEXT_ID_SKILLSET_NAME_SOURCE_BASE */
     TEXT_SECTION_FORMATION_MESSAGES = 24,   /* WORLD formation and name-entry messages; CARD binds its own copy */
     TEXT_SECTION_COMPOSED_TEXT = 25,        /* a buffer the screen fills: a sort or reorder list, the entered name */
     TEXT_SECTION_DEPLOYMENT_UNIT_HELP = 26, /* ATTACK: eleven help strings per party slot */
-    TEXT_SECTION_NAME_ENTRY_KEYS = 28,      /* WORLD name entry: the key rows */
-    TEXT_SECTION_DISMISS_UNIT_REPLIES = 29, /* WORLD formation: what a dismissed unit says */
-    TEXT_SECTION_JOB_DESCRIPTIONS = 29,     /* WORLD formation: the job wheel's descriptions */
-    TEXT_SECTION_SHOP_MENU_LABELS = 30,     /* WORLD shops */
+    TEXT_SECTION_OVERLAY_SCREEN = 27,       /* each overlay screen binds its own text here */
     TEXT_SECTION_AT_LIST = 31,              /* the AT list's text, built when the list opens */
-    TEXT_SECTION_SHOP_DIALOGUE = 31,        /* WORLD shops: the shopkeeper's lines */
-    /* The help text file, which HELPMENU and WORLD's help menu bind section
-     * by section while a help window is open. */
-    TEXT_SECTION_HELP_UNIT_STATUS = 1,   /* the fields of the unit status panels */
-    TEXT_SECTION_HELP_MENU_COMMANDS = 2, /* the rows of each command menu */
-    TEXT_SECTION_HELP_TERRAIN = 11,      /* by the cursor tile's surface type */
-    TEXT_SECTION_HELP_JOBS = 12,         /* by job id */
-    TEXT_SECTION_HELP_ITEMS = 13,        /* by item id */
-    TEXT_SECTION_HELP_ABILITIES = 15,    /* by ability id */
-    TEXT_SECTION_HELP_SKILLSETS = 19,    /* by skillset id */
-    TEXT_SECTION_HELP_STATUSES = 20,     /* by status id */
-    /* REQUIRE's text, which its post-battle routines bind over the resident
-     * sections; it binds its job names as TEXT_SECTION_JOB_NAMES. */
-    TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS = 1,   /* a unit's Brave is low or its Faith high */
-    TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES = 2, /* the unit leaves the party for it */
-    TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES = 3,   /* what a unit turned away or dismissed says */
 } text_section_e;
+
+/* The help text file, which HELPMENU and WORLD's help menu bind section by
+ * section while a help window is open. */
+typedef enum help_text_section {
+    HELP_TEXT_SECTION_UNIT_STATUS = 1,   /* the fields of the unit status panels */
+    HELP_TEXT_SECTION_MENU_COMMANDS = 2, /* the rows of each command menu */
+    HELP_TEXT_SECTION_TERRAIN = 11,      /* by the cursor tile's surface type */
+    HELP_TEXT_SECTION_JOBS = 12,         /* by job id */
+    HELP_TEXT_SECTION_ITEMS = 13,        /* by item id */
+    HELP_TEXT_SECTION_ABILITIES = 15,    /* by ability id */
+    HELP_TEXT_SECTION_SKILLSETS = 19,    /* by skillset id */
+    HELP_TEXT_SECTION_STATUSES = 20,     /* by status id */
+} help_text_section_e;
 
 /* Substitution opcodes shared by battle messages and WORLD event text. */
 typedef enum text_format_code {

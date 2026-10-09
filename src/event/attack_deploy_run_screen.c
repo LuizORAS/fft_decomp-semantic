@@ -77,8 +77,9 @@ ramza_placed:
     battle_thread_start(ATTACK_THREAD_SLOT_DEPLOY_RENDER, attack_deploy_run_render_thread);
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 0);
     attack_deploy_select_unit_for_stats_display();
-    battle_thread_start(NATIVE_THREAD_SLOT_UNIT_STATUS, attack_render_unit_status_panel_thread);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
+    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, attack_render_unit_status_panel_thread);
+    battle_thread_set_parameters(
+        NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
     transition = 0;
     for (g_attack_deploy_current_squad = 0;
         g_attack_deploy_current_squad < battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT);
@@ -221,7 +222,7 @@ ramza_placed:
                     g_attack_panel_status_animation[2] = 1;
                 }
             }
-            if (battle_thread_is_running(ATTACK_THREAD_SLOT_DETAIL_MARKER) == 0
+            if (battle_thread_is_running(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER) == 0
                 && g_attack_panel_status_animation[3] < 2) {
                 g_attack_panel_status_animation[3] = 0;
             }
@@ -325,11 +326,12 @@ ramza_placed:
 
                         cursor = *deployed;
                         *deployed = 1;
-                        battle_thread_start(ATTACK_THREAD_SLOT_CONFIRM_MENU, battle_menu_icon_linked_entry_thread);
+                        battle_thread_start(
+                            ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, battle_menu_icon_linked_entry_thread);
                         battle_thread_set_parameters(
-                            ATTACK_THREAD_SLOT_CONFIRM_MENU, (s32)&g_battle_menu_thread_menu_data[3], 0, 0);
-                        battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_CONFIRM_MENU);
-                        battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_CONFIRM_MENU_CHILD);
+                            ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, (s32)&g_battle_menu_thread_menu_data[3], 0, 0);
+                        battle_thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU);
+                        battle_thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD);
                         *deployed = cursor;
                         if (g_attack_deploy_confirm_result != 0) {
                             continue;
@@ -478,13 +480,14 @@ ramza_placed:
                 if (g_attack_panel_status_animation[4] < 2) {
                     g_attack_panel_status_animation[4] = 1;
                 }
-                battle_thread_start(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
                 battle_thread_set_parameters(
-                    NATIVE_THREAD_SLOT_NUMERIC_EDITOR, (s32)g_attack_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(NATIVE_THREAD_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
+                    NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)g_attack_numeric_editor_thread_params, 0, 0);
+                battle_thread_start(
+                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
                 battle_thread_set_parameters(
-                    NATIVE_THREAD_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
-                battle_thread_start(ATTACK_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
+                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
+                battle_thread_start(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
                 do {
                     battle_thread_yield();
                     if (*input & PSX_PAD_SELECT) {
@@ -495,10 +498,10 @@ ramza_placed:
                     attack_deploy_handle_roster_navigation_input();
                 } while (!(*input & PSX_PAD_CROSS));
                 g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
-                battle_thread_set_parameters(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-                battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-                battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
-                battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+                battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
                 battle_script_set_event_speed(1);
             }
             if (*input & PSX_PAD_TRIANGLE) {
@@ -520,7 +523,7 @@ ramza_placed:
                     }
                 }
             }
-            battle_thread_suspend(ATTACK_THREAD_SLOT_DETAIL_MARKER);
+            battle_thread_suspend(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER);
         }
         if (g_attack_deploy_deployed_unit_count >= g_attack_deploy_fieldable_unit_count) {
             break;
@@ -647,8 +650,8 @@ ramza_placed:
         g_battle_screen_fade += 4;
     } while (g_battle_screen_fade < 0x100);
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
     battle_thread_wait_frames(3);
     g_battle_screen_fade = 0;
     battle_script_set_event_speed(1);

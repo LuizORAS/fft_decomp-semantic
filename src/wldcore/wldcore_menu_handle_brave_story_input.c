@@ -46,7 +46,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         if (level->mode != WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT) {
             return;
         }
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) && g_wldcore_audio_queue.count != 0) {
@@ -74,7 +74,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             return;
         }
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
@@ -94,7 +94,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB84A, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB84A, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 4;
         g_wldcore_window_render_record_count -= 2;
@@ -149,7 +149,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_list_open_treasures();
             return;
         case WLDCORE_BRAVE_STORY_ROW_LEAVE:
-            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB84A, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB84A, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 4;
             g_wldcore_window_render_record_count -= 2;

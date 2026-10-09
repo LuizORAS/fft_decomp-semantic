@@ -57,7 +57,7 @@ void wldcore_list_open_available_propositions(void) {
         }
     }
     if (count != 0) {
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80B, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80B, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
         if (count < 6) {
             i = count;
@@ -69,11 +69,11 @@ void wldcore_list_open_available_propositions(void) {
         dimensions.y = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS, count, i);
-        wldcore_window_start_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL,
+        wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     } else {
         wldcore_menu_dispatch_resume_handler();
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80D, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80D, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.content_render = 1;
         return;
     }

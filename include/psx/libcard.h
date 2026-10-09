@@ -28,7 +28,6 @@ enum {
     PSYQ_CARD_EXCEPTION_ADDRESS_LOW_WORD = 0x74 / 4,
     PSYQ_CARD_INTERRUPT_PATCH_WORD = 0x28 / 4,
     PSYQ_CARD_PAD_DELAY_PATCH_WORD = 0x9c8 / 4,
-    PSYQ_CARD_EXCEPTION_RESTORE_WORD = 0x70 / 4,
 };
 
 extern u32 g_psyq_card_patch_saved_ra;

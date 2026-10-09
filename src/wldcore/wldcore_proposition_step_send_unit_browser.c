@@ -23,10 +23,10 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     s16* menu_selected_index;
 
     if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_OPEN) {
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) != 0) {
             return;
         }
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         g_wldcore_window_records[level->left_arrow].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -41,9 +41,9 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
             g_wldcore_window_records[level->left_arrow].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[level->right_arrow].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             level->mode = WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE;
-            world_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-            world_thread_set_parameters(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-            world_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
             return;
         }
         if (buttons & PSX_PAD_SELECT) {
@@ -103,21 +103,21 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     done:
         wldcore_sound_play_effect(MAIN_SFX_PAGE_SWITCH);
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE) {
-        if (world_thread_is_running(NATIVE_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) != 0) {
             return;
         }
-        if (world_thread_is_running(NATIVE_THREAD_SLOT_NUMERIC_EDITOR) != 0) {
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) != 0) {
             return;
         }
-        if (world_thread_is_running(NATIVE_THREAD_SLOT_CHARACTER_STATUS) != 0) {
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) != 0) {
             return;
         }
         level->mode = WLDCORE_SEND_UNIT_MODE_SELECT;
         g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS);
-        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB812, 0);
-        world_thread_start(WORLD_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB812, 0);
+        world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         g_wldcore_window_records[level->list_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[level->layout_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_a].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;

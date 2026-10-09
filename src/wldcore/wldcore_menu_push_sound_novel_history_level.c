@@ -35,7 +35,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     s32 depth;
     s32 top;
 
-    world_thread_suspend(WORLD_THREAD_SLOT_WLDCORE_MESSAGE);
+    world_thread_suspend(WLDCORE_THREAD_SLOT_MESSAGE);
 
     windows = g_wldcore_window_records;
     positions = (wldcore_window_xy_t*)&windows->position.x;

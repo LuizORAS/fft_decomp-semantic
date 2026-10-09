@@ -430,21 +430,22 @@ void world_noop_800fd074(const u8* unused_parameters);
 
 /* thread */
 
-/* Slots that the WORLD, WLDCORE and OPENING screens use for threads of their
- * own; native_thread_slot_e has the uses shared with BATTLE. */
+/* Slots that the WORLD screens use for threads of their own; thread.h has the
+ * maps shared with BATTLE, wldcore.h and open.h the WLDCORE and OPENING ones. */
 typedef enum world_thread_slot {
     WORLD_THREAD_SLOT_MENU_GROUP = 2,           /* world_menu_thread_group_supervisor_thread */
-    WORLD_THREAD_SLOT_WLDCORE_TRANSITION = 4,   /* the zoom thread of a WLDCORE screen transition */
     WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL = 10, /* the equipment (change banner) or the ability panel */
     WORLD_THREAD_SLOT_PREVIEW_STATS = 11,       /* the numeric editor thread of the preview stats window */
-    WORLD_THREAD_SLOT_WINDOW_PANEL = 12,        /* a WLDCORE list or number panel, the OPENING music test list */
     WORLD_THREAD_SLOT_UPPER_MENU_CHILD = 14,    /* the child of the menu in slot 15, or a wait-forever thread
                                                  * standing in for it */
-    WORLD_THREAD_SLOT_WLDCORE_MESSAGE = 14,     /* the WLDCORE message box and script text */
     WORLD_THREAD_SLOT_UPPER_MENU = 15,          /* a second menu beside the one in slot 6 */
-    WORLD_THREAD_SLOT_WINDOW_FRAME = 15,        /* the window frame thread of world_build_at_list */
     WORLD_THREAD_SLOT_TUTORIAL_TEXT = 16,       /* tutorial script text: the slot past the sixteen reset ones */
 } world_thread_slot_e;
+
+/* world_build_at_list runs its window frame thread in the upper menu's slot. */
+enum {
+    WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME = 15,
+};
 
 extern u16 g_world_thread_change_cooldown;
 
@@ -966,10 +967,10 @@ typedef enum world_text_data {
     WORLD_TEXT_DATA_JOB_NAMES = 1,
     WORLD_TEXT_DATA_ABILITY_NAMES = 2,
     WORLD_TEXT_DATA_FORMATION_MESSAGES = 3,   /* TEXT_SECTION_FORMATION_MESSAGES */
-    WORLD_TEXT_DATA_DISMISS_UNIT_REPLIES = 4, /* TEXT_SECTION_DISMISS_UNIT_REPLIES */
-    WORLD_TEXT_DATA_JOB_DESCRIPTIONS = 5,     /* TEXT_SECTION_JOB_DESCRIPTIONS */
+    WORLD_TEXT_DATA_DISMISS_UNIT_REPLIES = 4, /* WORLD_TEXT_SECTION_FORMATION_TEXT */
+    WORLD_TEXT_DATA_JOB_DESCRIPTIONS = 5,     /* WORLD_TEXT_SECTION_FORMATION_TEXT */
     WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD = 7,
-    WORLD_TEXT_DATA_SHOP_DIALOGUE = 8, /* TEXT_SECTION_SHOP_DIALOGUE */
+    WORLD_TEXT_DATA_SHOP_DIALOGUE = 8, /* WORLD_TEXT_SECTION_SHOP_DIALOGUE */
 } world_text_data_e;
 u8* world_gfx_bind_data_pointer(u32 index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
@@ -1813,6 +1814,17 @@ enum {
     WORLD_TEXT_SECTION_TABLE_BYTES = 0x80,
     WORLD_TEXT_FILE_HEADER_BYTES = 0x80,
 };
+
+/* The text sections WORLD's screens bind while they are up (text_section_e
+ * has the resident ones). */
+typedef enum world_text_section {
+    WORLD_TEXT_SECTION_TUTORIAL_MESSAGES = 23, /* the running tutorial's message file */
+    WORLD_TEXT_SECTION_NAME_ENTRY_KEYS = 28,   /* name entry: the key rows */
+    WORLD_TEXT_SECTION_FORMATION_TEXT = 29,    /* formation: what a dismissed unit says, or the job wheel's
+                                                * descriptions, whichever was bound last */
+    WORLD_TEXT_SECTION_SHOP_MENU_LABELS = 30,
+    WORLD_TEXT_SECTION_SHOP_DIALOGUE = 31, /* the shopkeeper's lines */
+} world_text_section_e;
 
 /* Provisional: destination placement for the packed-font glyph decoder at
  * 0x80129e4c.  x is a 4bpp pixel column (bit 0 selects the odd nibble),

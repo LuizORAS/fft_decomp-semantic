@@ -43,7 +43,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     }
     if (level->phase == WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING) {
         if (g_wldcore_audio_queue.count == 0 && g_wldcore_audio_queue.current_command == WLDCORE_AUDIO_COMMAND_NONE
-            && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+            && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.gate == 0) {
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x221);
             }
@@ -122,6 +122,6 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.gate == 0) {
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
     }
-    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
     level->phase = WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING;
 }

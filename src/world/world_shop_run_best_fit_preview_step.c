@@ -106,7 +106,7 @@ void world_shop_run_best_fit_preview_step(void) {
         g_world_formation_unit_cycle_mode = 1;
         g_world_menu_sound_muted = 1;
     }
-    i = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, &g_world_shop_best_fit_menu);
+    i = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_best_fit_menu);
     if (i == 0) {
         if (g_world_menu_selection_results[5] == 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_EQUIP;
@@ -148,7 +148,7 @@ void world_shop_run_best_fit_preview_step(void) {
         }
         g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         g_world_menu_sound_muted = 0;
-        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
     }
     if (g_world_shop_cost_window_visible != 0) {
         world_shop_install_callbacks_and_run();

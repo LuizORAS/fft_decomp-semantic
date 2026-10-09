@@ -27,10 +27,10 @@ void wldcore_proposition_push_detail_level(s32 value) {
         chance = 0xA;
     }
     if ((rand() * 100 >> 15) < chance) {
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, value + 0xB879, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + 0xB879, 0);
     } else {
         g_world_text_substitution_values[0] = value + 0xD000;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80C, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80C, 0);
     }
     wldcore_unpack_proposition_row(g_wldcore_selected_proposition_row, value);
     index = wldcore_window_append_render_record_and_reset_color(

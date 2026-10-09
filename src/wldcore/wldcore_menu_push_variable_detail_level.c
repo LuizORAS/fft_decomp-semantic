@@ -35,10 +35,10 @@ void wldcore_menu_push_variable_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     if (variable == 0) {
         g_world_text_substitution_values[0] = (value & 0xF) + 0xB869;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB868, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB868, 0);
     } else {
         g_world_text_substitution_values[0] = value + 0xF000;
-        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB849, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB849, 0);
     }
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;

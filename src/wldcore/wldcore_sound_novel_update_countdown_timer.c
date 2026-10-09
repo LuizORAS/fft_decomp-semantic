@@ -12,7 +12,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
     s32 days;
 
     if (g_wldcore_sound_novel_countdown_frames == -1) {
-        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return 0;
         }
         g_wldcore_sound_novel_countdown_frames = 0;
@@ -34,7 +34,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
             g_wldcore_displayed_numeric_value = days % 24;
         }
         if (g_wldcore_sound_novel_countdown_frames == elapsed) {
-            world_thread_set_task_id_to_three(WORLD_THREAD_SLOT_WLDCORE_MESSAGE);
+            world_thread_set_task_id_to_three(WLDCORE_THREAD_SLOT_MESSAGE);
             g_wldcore_sound_novel_countdown_frames = -1;
         }
     }

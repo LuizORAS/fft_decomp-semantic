@@ -596,7 +596,7 @@ const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2
 /* thread */
 /* Slots of the equip screen's own threads. The WORLD formation screen runs
  * the same threads in other slots (world_thread_slot_e and
- * native_thread_slot_e); here BATTLE's suspended menu threads stay in 7 and 8. */
+ * native_screen_thread_slot_e); here BATTLE's suspended menu threads stay in 7 and 8. */
 typedef enum equip_thread_slot {
     EQUIP_THREAD_SLOT_POPUP_MENU = 3,         /* the item action and type order menus */
     EQUIP_THREAD_SLOT_COMMAND_MENU_CHILD = 4, /* a wait-forever thread while a command's mode runs */

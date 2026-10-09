@@ -7,7 +7,7 @@ void world_script_start_tutorial(s32 index) {
     if (index != 0) {
         world_script_load_tutorial_files(index, &g_world_tutorial_saved_game_image);
         g_world_script_tutorial_command_ptr = g_world_tutorial_saved_game_image.tim_pointers[1];
-        g_world_text_section_pointers[TEXT_SECTION_TUTORIAL_MESSAGES]
+        g_world_text_section_pointers[WORLD_TEXT_SECTION_TUTORIAL_MESSAGES]
             = g_world_tutorial_saved_game_image.tim_pointers[0];
         world_card_init_menu_state();
         world_card_build_save_image(-1);

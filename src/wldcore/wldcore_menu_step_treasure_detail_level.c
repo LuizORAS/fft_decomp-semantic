@@ -74,7 +74,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
     default:
         if ((g_main_system_flags & (MAIN_SYSTEM_FLAG_INPUT_BLOCKED | MAIN_SYSTEM_FLAG_FADING))
                 == MAIN_SYSTEM_FLAG_INPUT_BLOCKED
-            && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+            && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             slot = level->_unknown_08;
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_window_record_count -= 4;
@@ -118,7 +118,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
                     wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-                world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+                world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
                 wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             }
         }

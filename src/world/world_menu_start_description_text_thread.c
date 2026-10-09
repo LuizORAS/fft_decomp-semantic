@@ -11,9 +11,9 @@ void world_menu_start_description_text_thread(world_menu_description_record_t* r
         return;
     }
     if (text_id > 0) {
-        world_thread_start(NATIVE_THREAD_SLOT_MENU_TEXT, world_text_character_handling_thread);
+        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_TEXT, world_text_character_handling_thread);
         world_thread_set_parameters(
-            NATIVE_THREAD_SLOT_MENU_TEXT, (s32)record->description_text, g_world_menu_description_text_id, 0);
+            NATIVE_SCREEN_THREAD_SLOT_TEXT, (s32)record->description_text, g_world_menu_description_text_id, 0);
         g_world_thread_task_active = 1;
     }
 }

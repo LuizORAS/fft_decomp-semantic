@@ -47,7 +47,7 @@ void world_menu_unit_status_banner_thread(void) {
     threads = (u8*)g_world_threads;
     g_world_input_frame_controller_input = (u32*)(cur + 4);
     display = *(battle_menu_status_panel_display_thread_t**)((thread_id * NATIVE_THREAD_STRIDE) + (u32)threads);
-    if (thread_id == NATIVE_THREAD_SLOT_UNIT_STATUS) {
+    if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         status = (battle_menu_status_panel_packet_t*)g_world_selected_unit_status_packets;
         summary = (battle_menu_status_panel_editor_packet_t*)g_world_selected_unit_summary_packets;
         render_a = g_world_selected_unit_stat_text_image;
