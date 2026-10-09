@@ -1105,7 +1105,7 @@ functions:
   - {addr: 0x8017567c, size: 732, name: battle_move_init_source_panel, hash: 30b7924ca24f1d23}
   - {addr: 0x80175958, size: 1352, name: battle_move_propagate_destination, hash: 8934859d8d97de21}
   - {addr: 0x80175ea0, size: 260, name: battle_move_check_and_spread_one_tile_around, hash: 27482367ddbd84a5}
-  - {addr: 0x80175fa4, size: 448, name: battle_move_check_occupied_tile_standing_height, hash: bbc32a8c37f6f379, profile: gcc-2.6.3_O2_aspsx-2.21}
+  - {addr: 0x80175fa4, size: 448, name: battle_move_check_occupied_tile_standing_height, hash: bbc32a8c37f6f379}
   - {addr: 0x80176164, size: 200, name: battle_move_calculate_tile_ceiling, hash: a741ccdfa1c4e7c8}
   - {addr: 0x8017622c, size: 684, name: battle_move_check_horizontal_jump, hash: 551a8a31fcf7897c}
   - {addr: 0x801764d8, size: 476, name: battle_move_spread_horizontal_jump, hash: 87e689eaa38fd655}
@@ -1215,7 +1215,7 @@ functions:
   - {addr: 0x80180a08, size: 244, name: battle_unit_generate_treasure, hash: 486b5c1afca4d5da}
   - {addr: 0x80180afc, size: 48, name: battle_unit_get_stats_from_battle_id, hash: 26e24b2d2a4d7e4b}
   - {addr: 0x80180b2c, size: 356, name: battle_classify_character_identity_slot, hash: f9ed5f8240111bf4}
-  - {addr: 0x80180c90, size: 288, name: battle_find_unit_data_pointer_for_entd_unit_id, hash: d281a4ed17f14bc3, profile: gcc-2.6.3_O2_aspsx-2.21}
+  - {addr: 0x80180c90, size: 288, name: battle_find_unit_data_pointer_for_entd_unit_id, hash: d281a4ed17f14bc3}
   - {addr: 0x80180db0, size: 80, name: battle_unit_set_enemy_level_data, hash: 6a61e1e649890419}
   - {addr: 0x80180e00, size: 320, name: battle_unit_find_war_trophies_and_bonus_money, hash: 96bcca3f5912fedd}
   - {addr: 0x80180f40, size: 164, name: battle_status_reapply_active_flags, hash: c848dacc8c483afd}
@@ -1275,7 +1275,7 @@ functions:
   - {addr: 0x8018430c, size: 48, name: battle_formula_force_attack_miss, hash: c4a705e8091a8683}
   - {addr: 0x8018433c, size: 36, name: battle_formula_cause_action_miss, hash: 0c3f4b4ac3a1aa90}
   - {addr: 0x80184360, size: 140, name: battle_formula_calculate_dance_song_hit, hash: 2f58bba7c54f0b89}
-  - {addr: 0x801843ec, size: 548, name: battle_formula_calculate_knockback, hash: 30c933b534bf5a2b, profile: gcc-2.6.3_O2_aspsx-2.21}
+  - {addr: 0x801843ec, size: 548, name: battle_formula_calculate_knockback, hash: 30c933b534bf5a2b}
   - {addr: 0x80184610, size: 712, name: battle_move_check_knockback_destination, hash: fb9351b2bfdb7550}
   - {addr: 0x801848d8, size: 140, name: battle_formula_calculate_attack_evaded, hash: c21cf5ca5200fff7}
   - {addr: 0x80184964, size: 448, name: battle_formula_apply_zodiac_compatibility, hash: aa5ea5e4e7c4fa1d}
@@ -1535,7 +1535,7 @@ functions:
   - {addr: 0x8018e5e4, size: 68, name: battle_ai_store_considered_action_data, hash: fe5832bd488feff2}
   - {addr: 0x8018e628, size: 56, name: battle_ai_restore_considered_action_data, hash: e8fd203a8ad070a3}
   - {addr: 0x8018e660, size: 88, name: battle_map_get_effective_weather, hash: 83cb512131bff44c}
-  - {addr: 0x8018e6b8, size: 500, name: battle_ability_find_learn_on_hit_unit, hash: 78408e9469d00e1a, profile: gcc-2.6.3_O2_aspsx-2.21}
+  - {addr: 0x8018e6b8, size: 500, name: battle_ability_find_learn_on_hit_unit, hash: 78408e9469d00e1a}
   - {addr: 0x8018e8ac, size: 272, name: battle_unit_learn_used_ability, hash: 98bc0928423ea1a9}
   - {addr: 0x8018e9bc, size: 44, name: battle_status_enable_special_flags, hash: ae28f5eb0645fce2}
   - {addr: 0x8018e9e8, size: 176, name: battle_action_increment_item_quantity_for_steal_break, hash: a77514b9289587a0}
