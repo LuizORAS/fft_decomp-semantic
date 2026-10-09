@@ -275,7 +275,59 @@ When a cleanup changes the bytes, look here first.
 - Two stores sharing one `la` base (`sw 0(v1)` / `sw -4(v1)`) point to `-O1`:
   `-O2`'s second CSE pass folds them back to absolute stores.
 - A frame bigger than its spills means unused locals in the original;
-  declaration order sets slot order.
+  declaration order sets slot order. Eight untouched bytes are more often a
+  compiler ghost: an `s16` local read both sign-extended and as 16 bits, or
+  a `for` whose entry test folded away.
+
+### Reading residue
+
+A pin, barrier, `volatile` or `goto` usually stands for something the source
+said plainly. What each has turned out to be, most common first:
+
+- Narrower locals (`u8 mask`, `s16 code`, `u16 value`): a temp plus a copy
+  plus a barrier, a pinned "copy in `$v1`", a reload after a store.
+- One variable where the code has two, or two where it has one: two pins on
+  one register are one variable reused (`i` holding an id before it counts);
+  a `thread_id = id - 1` pinned in a callee-saved register is no variable.
+  In a long function, one function-scope variable per role (one `unit`, one
+  index) instead of one per block.
+- Indexed access written out: `for (i = 0; a[i] != END; i++)`, `g[i].f`,
+  the global named in every arm. Pointer walkers, "base + offset" cursors and
+  reversed scans are strength reduction's output, not source.
+- A global read directly in each argument or test instead of a local copy
+  ("memory" barriers, reloads). A range written as two comparisons
+  (`x < A || x > B`) reloads where a folded range test does not.
+- Chained assignment `a.x = a.y = b.z = v;` for same-value stores that come
+  out in reverse order or keep one base register; the same store written in
+  both arms of an `if` where a fence kept it early; `p = base; p += n;` as
+  two statements where a cursor keeps its own register.
+- Statement and declaration order: a tied barrier after a call is the
+  mask/or written before the call; exact allocation ties go to the earlier
+  declaration.
+- Return shapes: `if (a && b) return 1; return 0;` (a `$2` pin zeroed before
+  the tests); a `?:` inside the returned expression (a temp pinned to `$2`);
+  the failure `return` last; `if (c) { ...; return 0; } return 0;` (a
+  constant load sitting last); a callee declared `int` that returns nothing
+  (`li v0` in a delay slot after a call).
+- Bit-field members and struct-typed globals: separate loads of one packed
+  byte, a load kept after a struct store.
+- SDK macros (`setXY4`, `setRGB0`, `setSemiTrans`, `getTPage`, `addPrim` in
+  `psx/libgpu.h`): several stores on one source line.
+- A `do { } while (0)` wrapper is itself a lever (a loop note doubles
+  reference weights and fences scheduling); remove it with the pins it
+  caused.
+- `goto`: a shared `return` tail is `return` written at each place; a
+  backward jump is a loop; a jump past the next block is the same condition
+  tested again; bound tests to one label are case ranges; `default: common:`
+  is code after the `switch`. The AI's resume dispatch
+  (`switch (phase) { case N: goto stage_n; }`) is real.
+
+When only registers differ, compute instead of permuting: `cc1 -da` writes
+`.lreg`/`.greg`; local-alloc and global-alloc rank pseudos by
+`floor_log2(refs) * refs / live_length` with references doubled per loop
+depth, and loop.c hoists an invariant while `threshold * uses * lifetime >=
+loop length` (threshold 26 with a call in the loop, 52 without, minus 3 per
+value already moved).
 
 Tolerated residue (zero-instruction only, each with a comment): the tied
 operand barrier `__asm__("" : "=r"(x) : "0"(x))`, an empty `asm volatile`, a
