@@ -22,7 +22,7 @@ s32 world_menu_dispatch_system_function(
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {
         value = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if ((u32)(value - 0x19A) < 0x10) {
+        if (value >= 0x19A && value <= 0x1A9) {
             if (option != 2) {
                 world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }
@@ -196,7 +196,7 @@ s32 world_menu_dispatch_system_function(
                 g_world_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
-                if ((u32)(value - 0x3C) < 0x1A) {
+                if (value >= 0x3C && value <= 0x55) {
                     g_world_text_substitution_values[0] = value + 0xB7C4;
                 } else {
                     g_world_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
@@ -258,7 +258,7 @@ s32 world_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT) {
         entry = &g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT];
         flags = parameter;
-        if ((u32)(option - BATTLE_ACTION_DISPLAY_IMAGE_CT) < 7) {
+        if (option >= BATTLE_ACTION_DISPLAY_IMAGE_CT && option <= BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
             g_world_text_substitution_values[0] = unit_id;
             g_world_text_substitution_values[1] = option + 0x506B;
             if (option == BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
@@ -290,7 +290,7 @@ s32 world_menu_dispatch_system_function(
             g_world_text_substitution_values[0] = parameter & 0x7F;
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508E;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
-        } else if ((u32)(option - BATTLE_ACTION_DISPLAY_IMAGE_STOLEN) < 2) {
+        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_STOLEN || option == BATTLE_ACTION_DISPLAY_IMAGE_BROKEN) {
             if (parameter & 0x8000) {
                 g_world_text_substitution_values[0] = (parameter & 0xFF) + TEXT_ID_ITEM_NAME_BASE;
                 g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x509B;

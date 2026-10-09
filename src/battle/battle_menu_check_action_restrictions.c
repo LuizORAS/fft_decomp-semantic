@@ -19,7 +19,8 @@ void battle_menu_check_action_restrictions(void) {
 
     unit = battle_unit_get_attacker_data_pointer();
     menu = g_battle_menu_current_id;
-    if ((u32)(menu - BATTLE_MENU_ID_TURN_ACTED) < 2 || (u32)(menu - BATTLE_MENU_ID_RIDER_TURN_ACTED) < 2) {
+    if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
+        || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
             battle_sound_set_effect_to_invalid();
@@ -57,7 +58,7 @@ void battle_menu_check_action_restrictions(void) {
                 g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[35], 0, 0);
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         }
-        if ((u32)(message - 0x1002) < 2) {
+        if (message == 0x1002 || message == 0x1003) {
             battle_thread_exit_current();
         }
     } else {

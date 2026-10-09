@@ -16,7 +16,7 @@ s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST && value >= battle_script_get_variable(id))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if ((u32)(type - 4) < 7) {
+    if (type >= 4 && type <= 10) {
         unit = battle_unit_get_by_unit_id(id);
         if (unit != (battle_stats_t*)-1) {
             if (type == EVENT_SCENARIO_CONDITION_UNIT_PRESENT)

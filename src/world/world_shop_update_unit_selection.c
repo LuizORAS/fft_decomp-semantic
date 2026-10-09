@@ -46,7 +46,7 @@ void world_shop_update_unit_selection(void) {
             }
         }
         previous = g_world_formation_selected_unit_index_latch;
-        if ((u16)(g_world_shop_menu_step - 6) < 7) {
+        if (g_world_shop_menu_step >= 6 && g_world_shop_menu_step <= 12) {
             world_formation_recalculate_selected_unit_stats();
         } else {
             world_formation_stage_selected_unit();

@@ -19,7 +19,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
     for (i = 0; i < 5; i++) {
         status = world_formation_can_equip_item_in_slot(
             unit_id, i, (s16)g_world_formation_unit_pointers[unit_id]->equipment[i]);
-        if ((u32)(status + 1) < 2 || status == -6) {
+        if (status == -1 || status == 0 || status == -6) {
             if (unit_id != 20) {
                 world_item_adjust_inventory_count((s16)g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
             }

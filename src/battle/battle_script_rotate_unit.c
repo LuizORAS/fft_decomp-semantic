@@ -28,7 +28,7 @@ void battle_script_rotate_unit(const u8* parameters) {
             if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
                 != 0) {
                 facing = parameters[2];
-                if ((u32)(facing - EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST) < 3) {
+                if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     facing = facing & 0xF;
                     facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
                     facing = facing & 0xF;

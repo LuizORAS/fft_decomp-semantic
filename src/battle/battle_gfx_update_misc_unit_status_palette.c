@@ -38,8 +38,8 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
         } else if (status & BATTLE_MISC_STATUS_CURSED) {
             battle_gfx_modify_misc_unit_palette(
                 misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, -8, -8, -8, final_value);
-        } else if ((status & BATTLE_MISC_STATUS_UNDEAD)
-            && (u8)(misc->spritesheet_id - BATTLE_SPRITESHEET_ID_SKELETON) >= 2) {
+        } else if ((status & BATTLE_MISC_STATUS_UNDEAD) && misc->spritesheet_id != BATTLE_SPRITESHEET_ID_SKELETON
+            && misc->spritesheet_id != BATTLE_SPRITESHEET_ID_GHOUL) {
             battle_gfx_modify_misc_unit_palette(
                 misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, 4, 0, 5, final_value);
         } else {

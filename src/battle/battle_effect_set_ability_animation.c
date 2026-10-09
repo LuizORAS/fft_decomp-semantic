@@ -48,9 +48,9 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         return;
     }
 
-    if ((u32)(ability - 0x8a) < 8)
+    if (ability >= 0x8a && ability <= 0x91)
         battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK, 0, source);
-    if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST
+    if ((ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)
         || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
         battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS, 0, source);
 }

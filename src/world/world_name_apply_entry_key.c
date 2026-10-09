@@ -21,7 +21,7 @@ void world_name_apply_entry_key(s16 key) {
     j = 0;
     slot = 0;
     while (g_world_name_entry_text[j] != TEXT_END_WAIT_FOR_CONFIRM) {
-        if ((u8)(g_world_name_entry_text[j] + 0x30) >= 0x10) {
+        if (g_world_name_entry_text[j] < 0xd0 || g_world_name_entry_text[j] > 0xdf) {
             chars[slot] = g_world_name_entry_text[j++];
         } else {
             chars[slot] = (g_world_name_entry_text[j] << 8) + g_world_name_entry_text[j + 1];

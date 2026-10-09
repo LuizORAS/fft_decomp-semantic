@@ -26,7 +26,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
             g_world_thread_contexts[g_world_thread_current_id].task_words[0] = 0;
         }
         row_actions = entry->row_actions;
-        target = ((u32)((s32)row_actions + 0xf) < 0xf) ? (s32)row_actions : row_actions[row_index];
+        target = ((s32)row_actions >= -0xf && (s32)row_actions <= -1) ? (s32)row_actions : row_actions[row_index];
         if (target >= 0) {
             if (target & 0x1000) {
                 silent = 1;

@@ -82,7 +82,7 @@ void battle_menu_load_selected_unit(void) {
     }
 
     editor[7] = 0;
-    if ((u8)(unit->primary_skillset + 0x50) < 0x30)
+    if (unit->primary_skillset >= 0xb0 && unit->primary_skillset <= 0xdf)
         editor[7] = 1;
 
     if (editor[7] != 0) {

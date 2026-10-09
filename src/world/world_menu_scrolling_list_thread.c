@@ -310,7 +310,7 @@ void world_menu_scrolling_list_thread(void) {
             accum += delta * (step << 1);
         }
         timer += g_world_event_speed;
-        if ((u32)(accum + 0xF) >= 0x1F) {
+        if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = world_input_get_menu_repeat_counter();

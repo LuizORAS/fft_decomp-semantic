@@ -74,7 +74,8 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                 in.vx = *points++;
                 in.vy = *points++;
                 RotTransSV(&in, &vertex[slot], &projected);
-                if ((u16)(vertex[slot].vx + 127) < 255 && (u16)(vertex[slot].vy + 111) < 227) {
+                if (vertex[slot].vx >= -127 && vertex[slot].vx <= 127 && vertex[slot].vy >= -111
+                    && vertex[slot].vy <= 115) {
                     flags[slot] = 1;
                 } else {
                     flags[slot] = 0;

@@ -29,7 +29,7 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
                 /* Rejected units continue with the shared scan tail below. */
             } else {
                 battle_unit_calculate_height_data(&height, unit->misc_unit_id);
-                if ((u32)(reference_height - height.total_height + 5) < 11) {
+                if ((reference_height - height.total_height) >= -5 && (reference_height - height.total_height) <= 5) {
                     return 1;
                 }
             }

@@ -6,7 +6,7 @@
  * routine returns slot index + 1. Keep this byte view until their apparent
  * indexing disagreement is explained; do not silently normalize the handle. */
 s32 battle_map_stop_texture_animation(s32 handle) {
-    if ((u32)(handle - 1) < MAP_TEXTURE_ANIMATION_CAPACITY) {
+    if (handle >= 1 && handle <= 8) {
         ((u8*)g_battle_map_texture_animation_states)[handle * MAP_TEXTURE_ANIMATION_STATE_BYTES] = 0;
         return 1;
     }

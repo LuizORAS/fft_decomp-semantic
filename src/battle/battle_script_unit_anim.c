@@ -29,7 +29,7 @@ void battle_script_unit_anim(u8* parameters) {
             }
             animation = battle_script_load_halfword(parameters + 2);
             battle_unit_set_animation(misc_id, animation);
-            if ((u32)(animation - 0x53) < 3) {
+            if (animation >= 0x53 && animation <= 0x55) {
                 battle_script_play_effect_and_wait();
             }
             if (state == 0) {

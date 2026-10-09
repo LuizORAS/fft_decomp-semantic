@@ -193,8 +193,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 while (
                     (g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type == GNS_RESOURCE_NONE
                         && (u32)g_battle_map_gns_record_cursor < GNS_RESOURCE_END)
-                    || (u32)(g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type - 0x12)
-                        < 6) {
+                    || (g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type >= 0x12
+                        && g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type <= 0x17)) {
                     g_battle_map_gns_record_cursor++;
                 }
                 if ((u32)g_battle_map_gns_record_cursor < GNS_RESOURCE_END) {

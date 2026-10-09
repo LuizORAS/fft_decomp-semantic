@@ -41,7 +41,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     if (unit->numeric_display_active) {
         battle_gfx_animate_post_action_text(unit, (u16*)&position);
     }
-    if (!(((u16)position.vx >= 0x61 && (u16)position.vx < 0x1a0) && ((u16)(position.vy + 0x1f) < 0x12f))
+    if (!(((u16)position.vx >= 0x61 && (u16)position.vx < 0x1a0) && (position.vy >= -0x1f && position.vy <= 0x10f))
         && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }

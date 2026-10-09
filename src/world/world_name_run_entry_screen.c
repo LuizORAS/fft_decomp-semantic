@@ -154,7 +154,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         if (value != g_world_name_entry_last_state) {
             g_world_name_entry_last_state = value;
         }
-        if ((u32)(g_world_sound_effect_id_to_play - 2) < 2) {
+        if (g_world_sound_effect_id_to_play == 2 || g_world_sound_effect_id_to_play == 3) {
             g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
         }
         if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {

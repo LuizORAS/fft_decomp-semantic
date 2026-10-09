@@ -6,7 +6,7 @@ s32 bunit_job_get_generic_index(s32 job_id) {
     u16 id = job_id;
     s16 result;
 
-    if ((u16)(id - JOB_ID_SQUIRE) < JOB_ID_GENERIC_COUNT) {
+    if (id >= JOB_ID_SQUIRE && id <= JOB_ID_MIME) {
         result = id;
         result -= JOB_ID_SQUIRE;
     } else {

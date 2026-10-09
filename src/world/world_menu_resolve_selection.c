@@ -48,7 +48,7 @@ s32 world_menu_resolve_selection(void) {
         }
         if (i < 16) {
             g_world_menu_resolved_command = command;
-        } else if ((u32)(command - 5) < 2) {
+        } else if (command == 5 || command == 6) {
             g_world_menu_preview_action.targeting_type = command;
         }
         if (command == 1) {
@@ -70,7 +70,7 @@ s32 world_menu_resolve_selection(void) {
         g_world_selected_ability = command;
         if ((option & 0xFE) != 0xFE) {
             option = g_world_action_menu_skillsets[index];
-            if ((u32)(option - 1) < 2 || (u32)(option - 3) < 2 || (u32)(option - 0x11) < 2) {
+            if (option == 1 || option == 2 || option == 3 || option == 4 || option == 0x11 || option == 0x12) {
                 g_world_menu_preview_action.ability_id = 0;
                 item = 0xFFFE;
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_world_menu_monster_skillset_flag == 0) {
@@ -81,7 +81,7 @@ s32 world_menu_resolve_selection(void) {
             g_world_menu_preview_action.skillset = option;
             g_world_menu_resolved_skillset = option;
             if (item != 0xFFFE) {
-                if (option == 6 || (u32)(option - 0x13) < 2) {
+                if (option == 6 || option == 0x13 || option == 0x14) {
                     g_world_menu_preview_action.item_id = item;
                 } else {
                     g_world_menu_preview_action.ability_id = item;

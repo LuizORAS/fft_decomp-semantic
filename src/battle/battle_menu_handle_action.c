@@ -44,7 +44,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         g_battle_thread_contexts[g_battle_current_thread_id].task_words[0] = 0;
     }
     actions = entry->actions;
-    if ((u32)((s32)actions + 15) < 15) {
+    if ((s32)actions >= -15 && (s32)actions <= -1) {
         action = (s32)actions;
     } else {
         action = actions[selected_option];

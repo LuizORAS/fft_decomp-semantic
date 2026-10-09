@@ -32,7 +32,7 @@ s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, 
     }
     for (i = 0; i < ability_count; i++) {
         ability = abilities[i];
-        if ((u16)(ability - ABILITY_ID_MATH_FIRST) < CALCULATOR_ABILITY_COUNT) {
+        if (ability >= ABILITY_ID_MATH_FIRST && ability < ABILITY_ID_REACTION_FIRST) {
             secondary_flags = &g_main_math_rsm_ability_data[(s16)ability - ABILITY_ID_MATH_FIRST];
             flag_bits = *secondary_flags;
             if (flag_bits & mask) {

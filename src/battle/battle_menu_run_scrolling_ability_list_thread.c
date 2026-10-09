@@ -379,7 +379,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             scroll_accum += scroll_delta * (step << 1);
         }
         hold_time += g_battle_event_speed;
-        if ((u32)(scroll_accum + 0xF) >= 0x1F) {
+        if (scroll_accum < -0xF || scroll_accum > 0xF) {
             ring += scroll_delta;
             row_offset += scroll_delta;
             repeat = battle_script_get_event_initial_repeat_counter();

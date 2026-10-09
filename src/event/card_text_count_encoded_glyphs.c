@@ -5,7 +5,7 @@ s32 card_text_count_encoded_glyphs(const u8* data) {
 
     if (*data != 0xfe) {
         do {
-            if ((u8)(*data + 0x30) < 0x10) {
+            if (*data >= 0xd0 && *data <= 0xdf) {
                 data += 2;
             } else {
                 data++;

@@ -9,7 +9,7 @@ s32 world_job_get_generic_index(s32 job_id) {
     u16 id = job_id;
     s16 index;
 
-    if ((u16)(id - JOB_ID_SQUIRE) < JOB_ID_GENERIC_COUNT) {
+    if (id >= JOB_ID_SQUIRE && id <= JOB_ID_MIME) {
         index = id;
         index -= JOB_ID_SQUIRE;
     } else {

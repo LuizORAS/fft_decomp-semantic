@@ -37,7 +37,8 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                     value = table[frame + 2];
                 } else if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_TREASURE) {
                     value = table[frame + 2];
-                } else if ((u8)(unit->spritesheet_id - BATTLE_SPRITESHEET_ID_CHICKEN) < 2) {
+                } else if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_CHICKEN
+                    || unit->spritesheet_id == BATTLE_SPRITESHEET_ID_FROG) {
                     if ((tile->height + (tile->depth_half_height.value >> 5)) * 12 >= -unit->screen.vy + 4) {
                         value = table[frame + 0xd2];
                     } else {

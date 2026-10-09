@@ -33,7 +33,7 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
         }
     }
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
-        || (u32)(menu_type - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2
+        || menu_type == ACTION_MENU_TYPE_ITEM_INVENTORY || menu_type == ACTION_MENU_TYPE_WEAPON_INVENTORY
         || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         result = battle_target_validate_weapon_target(action);
     } else {

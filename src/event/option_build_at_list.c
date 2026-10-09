@@ -242,7 +242,7 @@ void option_build_at_list(void) {
             accum += delta * step;
         }
         timer += g_battle_event_speed;
-        if ((u32)(accum + 0xF) >= 0x1F) {
+        if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = battle_script_get_event_initial_repeat_counter();

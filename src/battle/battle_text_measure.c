@@ -78,8 +78,9 @@ void battle_text_measure(s16* columns, s16* rows, const u8* text) {
                 state->column += state->pending_width;
                 state->pending_width = 0xFFFF;
             }
-        } else if ((u32)(state->command - TEXT_SET_GLYPH_DELAY) < 2
-            || (u32)(state->command - TEXT_SET_VARIABLE_BASE) < 2 || state->command == TEXT_SET_PORTRAIT) {
+        } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
+            || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
+            || state->command == TEXT_SET_PORTRAIT) {
             cursor = battle_text_advance_cursor_with_backreferences(
                 state, battle_text_advance_cursor_with_backreferences(state, cursor));
             continue;

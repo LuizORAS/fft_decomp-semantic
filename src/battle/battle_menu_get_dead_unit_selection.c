@@ -11,7 +11,7 @@ s32 battle_menu_get_dead_unit_selection(s32 battle_id) {
     g_battle_thread_call_target = (void (*)(void))battle_unit_generate_crystal_or_treasure;
     result = (crystal_pickup_result_t*)battle_thread_call_on_main_stack(stats);
     g_battle_dead_unit_context = result;
-    if ((u32)(result->result + 1) < 2) {
+    if (result->result == -1 || result->result == 0) {
         main_noop_800449f8(0x11, 7);
     }
     /* Reload the published context after the call; reusing result changes the frame and registers. */

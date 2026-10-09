@@ -41,7 +41,7 @@ void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code) {
     poly->u3 = u + 31;
     poly->v3 = v + 48;
     poly->tpage = GetTPage(0, 0, page_x + 0x680, 0x100);
-    if ((u32)(index - 0x3F) < 20) {
+    if (index >= 0x3F && index <= 0x52) {
         s32 x;
 
         index -= 0x3F;

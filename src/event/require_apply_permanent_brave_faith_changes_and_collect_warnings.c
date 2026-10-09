@@ -57,7 +57,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
             continue;
         }
 
-        if ((u32)(brave - 6) < 10) {
+        if (brave >= 6 && brave <= 15) {
             if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 column;
 
@@ -93,7 +93,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
             warning_count++;
         }
 
-        if ((u32)(faith - 0x55) < 10) {
+        if (faith >= 0x55 && faith <= 0x5e) {
             if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 group_index;
                 s32 column;

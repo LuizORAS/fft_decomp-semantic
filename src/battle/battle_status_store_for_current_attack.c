@@ -71,7 +71,7 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
                 g_battle_action_target->auto_battle_target = 0;
             }
         }
-        if (!(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) && (u32)(i - 1) < 2) {
+        if (!(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) && (i == 1 || i == 2)) {
             g_battle_player_unit_fallen = 1;
         }
     }

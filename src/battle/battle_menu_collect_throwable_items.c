@@ -38,7 +38,7 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
         return 0;
     }
     for (i = 0; i < ability_count; i++) {
-        if ((u16)(abilities[i] - 0x17e) < 12) {
+        if (abilities[i] >= 0x17e && abilities[i] <= 0x189) {
             type_table = g_main_throw_ability_item_types;
             throw_index = abilities[i];
             throw_index = throw_index - 0x17e;

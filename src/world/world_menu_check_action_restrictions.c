@@ -18,7 +18,8 @@ void world_menu_check_action_restrictions(void) {
 
     unit = world_unit_get_battle_stats_for_stored();
     menu = g_world_menu_current_id;
-    if ((u32)(menu - BATTLE_MENU_ID_TURN_ACTED) < 2 || (u32)(menu - BATTLE_MENU_ID_RIDER_TURN_ACTED) < 2) {
+    if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
+        || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
             world_sound_set_effect_to_invalid();
@@ -55,7 +56,7 @@ void world_menu_check_action_restrictions(void) {
             world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[35], 0, 0);
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         }
-        if ((u32)(message - 0x1002) < 2) {
+        if (message == 0x1002 || message == 0x1003) {
             world_thread_exit_current();
         }
     } else {

@@ -52,11 +52,11 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.parameters.bytes.item_id = ability_id - 0x26;
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
-        if ((u32)(ability_id - 0x7a) < 3) {
+        if (ability_id >= 0x7a && ability_id <= 0x7c) {
             ai->considered_ability.ability_id = ABILITY_ID_THROW_SHURIKEN;
             ai->considered_ability.parameters.bytes.item_id = ability_id;
             ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
-        } else if ((u32)(ability_id - 0x7d) < 3) {
+        } else if (ability_id >= 0x7d && ability_id <= 0x7f) {
             ai->considered_ability.ability_id = ABILITY_ID_THROW_BALL;
             ai->considered_ability.parameters.bytes.item_id = ability_id;
             ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
@@ -113,7 +113,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     }
     battle_ai_transfer_halfword_values(
         &ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
-    if ((u32)(menu - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2)
+    if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
     ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
     if (ability_id < ABILITY_ID_ITEM_FIRST) {

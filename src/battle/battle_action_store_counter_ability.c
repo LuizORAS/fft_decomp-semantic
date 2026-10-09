@@ -19,7 +19,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     acting_unit = &g_battle_unit_stats[acting_unit_id];
     if (validate_target != 0) {
         result = battle_target_set_panels_for_action(action);
-        if (result == -1 || (u32)(result - 2) < 2) {
+        if (result == -1 || result == 2 || result == 3) {
             return -1;
         }
         if ((g_battle_map_tile_data[battle_map_calculate_location(acting_unit)].ceiling_depth_and_marks.value
@@ -39,7 +39,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     saved_charged_ability_ct = unit->charged_ability_ct;
     result = battle_action_call_attack_preparation_at_preview(action);
     unit->charged_ability_ct = saved_charged_ability_ct;
-    if (result == -1 || (preview_result = (u32)(result - 2) < 2, preview_result != 0)) {
+    if (result == -1 || (preview_result = (result == 2 || result == 3), preview_result != 0)) {
         preview_result = -3;
     }
     return preview_result;

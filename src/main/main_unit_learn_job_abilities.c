@@ -32,7 +32,8 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     job_index = job_id - JOB_ID_SQUIRE;
     if (job_id == JOB_ID_SQUIRE) {
         character = unit->character_identity;
-        if ((u8)(character - CHARACTER_IDENTITY_SELECTOR_FIRST) >= CHARACTER_IDENTITY_GENERIC_HUMAN_COUNT) {
+        if (character < CHARACTER_IDENTITY_SELECTOR_FIRST
+            || character >= CHARACTER_IDENTITY_SELECTOR_FIRST + CHARACTER_IDENTITY_GENERIC_HUMAN_COUNT) {
             if (character == CHARACTER_IDENTITY_MONSTER) {
                 job_id = unit->job_id;
             } else {

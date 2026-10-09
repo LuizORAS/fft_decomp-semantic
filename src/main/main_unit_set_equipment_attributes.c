@@ -37,7 +37,8 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check
                 unit->equipped_flags |= BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE;
             }
             if (item_id < ITEM_ID_SHIELD_FIRST) {
-                if ((u32)(g_main_item_primary_data[item_id].type - ITEM_TYPE_SWORD) < 2) {
+                if (g_main_item_primary_data[item_id].type == ITEM_TYPE_SWORD
+                    || g_main_item_primary_data[item_id].type == ITEM_TYPE_KNIGHT_SWORD) {
                     unit->equipped_flags |= BATTLE_UNIT_EQUIPPED_FLAG_SWORD;
                 }
             }

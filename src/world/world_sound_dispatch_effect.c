@@ -18,7 +18,7 @@ void world_sound_dispatch_effect(void) {
         main_sound_play_sfx_find_channel(MAIN_SFX_ERROR_MESSAGE);
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
     }
-    if ((u32)(g_world_sound_effect_id_to_play - 2) < 2) {
+    if (g_world_sound_effect_id_to_play == 2 || g_world_sound_effect_id_to_play == 3) {
         g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
     }
     if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {

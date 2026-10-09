@@ -8,7 +8,7 @@ void jobstts_input_update_with_message_state(void) {
     running = 0;
     jobstts_update_controller_input();
     frame = jobstts_gfx_get_transition_frame();
-    if ((u32)(frame - 1) >= 7) {
+    if (frame < 1 || frame > 7) {
         running = battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
         if (running != 0) {
             g_jobstts_input_newly_pressed = 0;

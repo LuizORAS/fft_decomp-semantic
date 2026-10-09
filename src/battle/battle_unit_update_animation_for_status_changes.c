@@ -22,7 +22,8 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         battle_unit_set_animation_based_on_status(unit);
     }
     if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
-        if ((u32)(g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id - BATTLE_SEQ_CYOKO) < 2) {
+        if (g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_CYOKO
+            || g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_MON) {
             battle_effect_set_secondary_death_smoke(unit);
         }
         if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {

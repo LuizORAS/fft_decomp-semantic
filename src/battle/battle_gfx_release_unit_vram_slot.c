@@ -6,7 +6,7 @@ void battle_gfx_release_unit_vram_slot(battle_unit_misc_data_t* unit) {
 
     for (i = 0; i < 2; i++) {
         slot_id = g_battle_gfx_vram_slots[i].owner;
-        if ((u32)(slot_id - 0xfe) >= 2 && (slot_id & 0x1f) == unit->unit_id && (slot_id & 0x40) == 0) {
+        if (slot_id != 0xfe && slot_id != 0xff && (slot_id & 0x1f) == unit->unit_id && (slot_id & 0x40) == 0) {
             g_battle_gfx_vram_slots[i].owner = 0xff;
             g_battle_gfx_vram_slots[i].evtchr_load_state = 0;
         }

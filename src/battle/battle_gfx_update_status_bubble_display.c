@@ -10,7 +10,7 @@ void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     /* The camera-relative position is read unsigned (lhu) here. */
     screen_x = unit->camera_relative_x;
     screen_coords[0] = screen_x;
-    screen_x_in_range = (u32)(screen_x - 0x61) < 0x13f;
+    screen_x_in_range = screen_x >= 0x61 && screen_x <= 0x19f;
     screen_y = unit->camera_relative_y;
     screen_coords[1] = screen_y;
     if (!screen_x_in_range) {

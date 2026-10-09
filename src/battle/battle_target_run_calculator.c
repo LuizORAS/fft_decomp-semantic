@@ -32,10 +32,10 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     type = action.calculator_type;
     multiplier = action.calculator_multiplier;
     actor = &g_battle_unit_stats[action.unit_id];
-    if ((u16)(type - ABILITY_ID_MATH_FIRST) >= CALCULATOR_ABILITY_COUNT) {
+    if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
         return -1;
     }
-    if ((u16)(multiplier - ABILITY_ID_MATH_FIRST) >= CALCULATOR_ABILITY_COUNT) {
+    if (multiplier < ABILITY_ID_MATH_FIRST || multiplier >= ABILITY_ID_REACTION_FIRST) {
         return -1;
     }
     type_entry = &g_main_math_rsm_ability_data[(s16)type - ABILITY_ID_MATH_FIRST];

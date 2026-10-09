@@ -10,7 +10,7 @@
 s32 battle_unit_load_job_level(battle_stats_t* unit, s32 job_id, s32* out_slot) {
     s32 slot;
     s32 packed;
-    if ((u32)(job_id - JOB_ID_CHEMIST) < (JOB_ID_GENERIC_LAST - JOB_ID_CHEMIST + 1)) {
+    if (job_id >= JOB_ID_CHEMIST && job_id <= JOB_ID_MIME) {
         *out_slot = job_id - JOB_ID_SQUIRE;
     } else {
         *out_slot = 0;

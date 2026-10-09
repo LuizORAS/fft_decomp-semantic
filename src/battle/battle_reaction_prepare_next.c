@@ -105,7 +105,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         result = battle_action_call_attack_preparation_at_preview(action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->last_ability_id = ABILITY_ID_REACTION_AUTO_POTION;
-                        if (result == -1 || (u32)(result - 2) < 2) {
+                        if (result == -1 || result == 2 || result == 3) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
                         break;
@@ -122,7 +122,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                                 == 0);
                         break;
                     }
-                    if ((u32)(outcome - 1) < 2 && battle_action_check_and_consume_mp(unit) != 0) {
+                    if ((outcome == 1 || outcome == 2) && battle_action_check_and_consume_mp(unit) != 0) {
                         outcome = BATTLE_REACTION_OUTCOME_NONE;
                     }
                     if (outcome == BATTLE_REACTION_OUTCOME_NONE) {
@@ -130,7 +130,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         i++;
                         continue;
                     }
-                    if ((u32)(outcome - 1) < 3) {
+                    if (outcome >= 1 && outcome <= 3) {
                         battle_action_init_current_ability_strike_data(unit);
                     } else {
                         g_battle_action_current_ability.strike_count = 1;

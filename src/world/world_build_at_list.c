@@ -240,7 +240,7 @@ void world_build_at_list(void) {
             accum += delta * step;
         }
         timer += g_world_event_speed;
-        if ((u32)(accum + 0xF) >= 0x1F) {
+        if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = world_input_get_menu_repeat_counter();

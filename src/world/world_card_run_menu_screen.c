@@ -93,7 +93,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         } else {
             input = 0;
         }
-        if ((u32)(g_world_card_menu_step - 3) < 3) {
+        if (g_world_card_menu_step >= 3 && g_world_card_menu_step <= 5) {
             world_card_update_and_draw_slot_list(input);
         }
         step = g_world_card_menu_step;

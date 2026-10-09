@@ -8,7 +8,7 @@ u32 battle_effect_load_ability(s32 ability_id) {
     u32 result;
     s32 effect_id;
 
-    if ((u32)(ability_id - ABILITY_ID_JUMP_VERTICAL_8) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_JUMP_VERTICAL_8)) {
+    if (ability_id >= ABILITY_ID_JUMP_VERTICAL_8 && ability_id < ABILITY_ID_MATH_FIRST) {
         return 0;
     }
     if (ability_id == ABILITY_ID_BASIC_SKILL_ACCUMULATE) {

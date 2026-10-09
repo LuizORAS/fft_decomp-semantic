@@ -50,7 +50,7 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             == 0) {
         flags = unit_id;
         id = unit->job_id;
-        if ((u32)(id - JOB_ID_CHOCOBO) >= JOB_ID_CHOCOBO_FAMILY_COUNT)
+        if (id < JOB_ID_CHOCOBO || id > JOB_ID_RED_CHOCOBO)
             flags = unit_id | BATTLE_UNIT_HEIGHT_NON_CHOCOBO;
         x = unit->x;
         height.x = x;

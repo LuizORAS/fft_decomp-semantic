@@ -17,7 +17,7 @@ void wldcore_convert_date_to_zodiac_date(s32* month_ptr, s32* day_ptr) {
     u8(*m2)[2];
 
     index = 0;
-    if ((u32)(*month_ptr - 1) >= 12 || (u32)(*day_ptr - 1) >= 31) {
+    if (*month_ptr < 1 || *month_ptr > 12 || *day_ptr < 1 || *day_ptr > 31) {
         wldcore_sound_play_effect(MAIN_SFX_INVALID);
         *day_ptr = 1;
         *month_ptr = 1;

@@ -21,8 +21,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     index = unit->formation_index;
     unit_slot = index & 0xff;
 
-    if ((kind & 0xff) == 0
-        && (u32)(index - PARTY_GUEST_SLOT_FIRST) < PARTY_ROSTER_SLOT_COUNT - PARTY_GUEST_SLOT_FIRST) {
+    if ((kind & 0xff) == 0 && index >= PARTY_GUEST_SLOT_FIRST && index < PARTY_ROSTER_SLOT_COUNT) {
         /* A non-guest save of a unit that currently sits in a guest slot. */
         main_party_remove_unit(index);
         index = main_party_find_free_slot(0, &palette);

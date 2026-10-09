@@ -12,7 +12,7 @@ s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit) {
     if ((unit->unit_flags & UNIT_FLAG_MONSTER) != 0) {
         return 1;
     }
-    if ((u32)(skillset_id - SKILLSET_ID_BASIC_SKILL) < (SKILLSET_ID_MIMIC - SKILLSET_ID_BASIC_SKILL)) {
+    if (skillset_id >= SKILLSET_ID_BASIC_SKILL && skillset_id < SKILLSET_ID_MIMIC) {
         skillset_id = skillset_id - SKILLSET_ID_BASIC_SKILL;
     } else {
         if (skillset_id != unit->primary_skillset && skillset_id != unit->base_job_skillset)

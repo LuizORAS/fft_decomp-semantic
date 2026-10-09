@@ -47,7 +47,7 @@ s32 battle_target_calculate_for_menu_types(const u8* source) {
         ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        if ((u32)(action.item_id - 0x26) >= 10) {
+        if (action.item_id < 0x26 || action.item_id > 0x2f) {
             return -1;
         }
         ability_id = action.item_id + 0x26;

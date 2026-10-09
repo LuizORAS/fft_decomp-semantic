@@ -45,7 +45,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
-        if ((u32)(action.item_id - 0x26) >= 0xa) {
+        if (action.item_id < 0x26 || action.item_id > 0x2f) {
             return BATTLE_TARGET_PANELS_INVALID;
         }
         ability_id = action.item_id + 0x26;

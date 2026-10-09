@@ -22,7 +22,7 @@ void battle_action_set_item_throw_stone_ability_display(void) {
         return;
     }
     if ((ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
-        || ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST))) {
+        || (ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)) {
         if (battle_effect_is_item_ability(ability) != 0) {
             g_main_system_animation_speed = 1;
             battle_action_clear_at_list_active();

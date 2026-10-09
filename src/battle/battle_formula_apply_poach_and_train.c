@@ -39,7 +39,7 @@ void battle_formula_apply_poach_and_train(void) {
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
         && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
         && !(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL)) {
-        if ((u32)(target->job_id - JOB_ID_MONSTER_FIRST) >= JOB_ID_MONSTER_COUNT) {
+        if (target->job_id < JOB_ID_MONSTER_FIRST || target->job_id > JOB_ID_MONSTER_LAST) {
             return;
         }
         battle_action_clear_knockback_flag();

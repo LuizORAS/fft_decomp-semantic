@@ -77,7 +77,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         }
         if (parameter == -1) {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(item - 0x7a) < 3) {
+            if (item >= 0x7a && item <= 0x7c) {
                 work16 = main_heap_alloc(0x380);
                 g_battle_effect_current_secondary->allocation = work16;
                 for (i = 0; i < 2; i++) {
@@ -141,7 +141,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         } else {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(item - 0x7a) < 3) {
+            if (item >= 0x7a && item <= 0x7c) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
@@ -155,7 +155,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         }
         if (g_battle_effect_projectile_spin_passes == 2 && g_battle_effect_trajectory_hit_unit_id != -1) {
             kind = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(kind - 0x7d) >= 3 && (u32)(kind - 0xf0) >= 0xe
+            if ((kind < 0x7d || kind > 0x7f) && (kind < 0xf0 || kind > 0xfd)
                 && g_battle_effect_current_secondary->target_count != 0) {
                 battle_unit_call_bow_hardcoding_by_misc_id(
                     (u8)g_battle_effect_current_secondary->caster_block.values[1],
@@ -171,7 +171,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
             if (*(u16*)&g_battle_effect_current_secondary->target.fields.target_type == 0
-                && (u32)(g_battle_effect_current_secondary->target.fields.result_animation - 3) >= 2) {
+                && g_battle_effect_current_secondary->target.fields.result_animation != 3
+                && g_battle_effect_current_secondary->target.fields.result_animation != 4) {
                 battle_effect_play();
                 battle_state_set_animation_speed(2);
             } else if (battle_effect_get_phase() == 1) {

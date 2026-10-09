@@ -89,9 +89,9 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         u = (tile_index & 0x1f) * 8;
                         row = tile_index >> 5;
                         part_flags = (u8)mask | ((attr & 0xc000) >> 13);
-                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)(part->y_shift + 0x18),
-                            (s16)u, (row * 8 + 0x18), 0x30, 0x18, part_flags);
-                        battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, (s16)u,
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)(part->y_shift + 0x18), u,
+                            (row * 8 + 0x18), 0x30, 0x18, part_flags);
+                        battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, u,
                             (s16)(row * 8), 0x30, 0x18, part_flags | 0x80);
                         display->part_count++;
                         return;

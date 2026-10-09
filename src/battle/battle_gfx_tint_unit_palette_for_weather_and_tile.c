@@ -28,7 +28,8 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     stored_palette = unit->stored_palette;
     row = unit->unit_id;
 
-    if ((u32)(g_battle_gfx_spritesheet_slots[slot].spritesheet_id - 0x60) < 0x3b) {
+    if (g_battle_gfx_spritesheet_slots[slot].spritesheet_id >= 0x60
+        && g_battle_gfx_spritesheet_slots[slot].spritesheet_id <= 0x9a) {
         battle_map_load_palette_data(
             g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8], MAP_PALETTE_BANK_UNITS_SECOND, row, 0);
     } else {

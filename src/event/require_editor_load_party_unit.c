@@ -103,7 +103,7 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     }
 
     editor[7] = 0;
-    if ((u8)(unit->primary_skillset + 0x50) < 0x30)
+    if (unit->primary_skillset >= 0xb0 && unit->primary_skillset <= 0xdf)
         editor[7] = 1;
 
     if (editor[7] != 0) {

@@ -5,7 +5,7 @@
 s32 world_text_count_characters(u8* text) {
     s32 count = 0;
     while (*text != 0xFE) {
-        if ((u8)(*text + 0x30) < 0x10) {
+        if (*text >= 0xd0 && *text <= 0xdf) {
             text += 2;
         } else {
             text += 1;

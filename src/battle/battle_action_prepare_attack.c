@@ -76,10 +76,10 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         ability = action.ability_id;
         type = action.calculator_type;
         multiplier = action.calculator_multiplier;
-        if ((u16)(type - ABILITY_ID_MATH_FIRST) >= 8) {
+        if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        if ((u16)(multiplier - ABILITY_ID_MATH_FIRST) >= 8) {
+        if (multiplier < ABILITY_ID_MATH_FIRST || multiplier >= ABILITY_ID_REACTION_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
@@ -95,7 +95,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         item = action.item_id;
-        if ((u32)(item - 0x26) >= 10) {
+        if (item < 0x26 || item > 0x2f) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         ability = item + 0x26;
@@ -131,7 +131,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         return BATTLE_ATTACK_PREPARATION_JUMP;
     case ACTION_MENU_TYPE_CHARGE:
         ability = action.ability_id;
-        if ((u16)(ability - ABILITY_ID_CHARGE_FIRST) >= 8) {
+        if (ability < ABILITY_ID_CHARGE_FIRST || ability >= ABILITY_ID_MATH_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
