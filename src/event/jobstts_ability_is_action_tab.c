@@ -2,5 +2,5 @@
 #include "psx/types.h"
 
 s32 jobstts_ability_is_action_tab(s32 unused_row) {
-    return g_jobstts_ability_category == 0;
+    return g_jobstts_ability_category == JOBSTTS_ABILITY_CATEGORY_ACTION;
 }

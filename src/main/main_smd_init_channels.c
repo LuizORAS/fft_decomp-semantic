@@ -51,14 +51,14 @@ void main_smd_init_channels(suzuki_music_t* music) {
             if (*offsets != 0) {
                 channels |= bit;
                 if (music->mute_mask & bit) {
-                    channel->flags = 0x421;
+                    channel->flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_MUTED | SUZUKI_CHANNEL_IN_USE;
                 } else {
-                    channel->flags = 0x401;
+                    channel->flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_IN_USE;
                 }
-                if (music->status & 0x2000) {
-                    channel->flags |= 4;
+                if (music->status & SUZUKI_MUSIC_STATUS_IMMEDIATE_INSTRUMENT) {
+                    channel->flags |= SUZUKI_CHANNEL_IMMEDIATE_INSTRUMENT;
                 }
-                channel->voice_update_flags = 0x300;
+                channel->voice_update_flags = SUZUKI_VOICE_UPDATE_VOLUME | SUZUKI_VOICE_UPDATE_PITCH;
                 channel->ramp_flags = 0;
                 channel->sound_id.raw = smd->id;
                 channel->priority = 0x10;

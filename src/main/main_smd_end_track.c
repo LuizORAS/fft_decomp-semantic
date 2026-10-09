@@ -17,7 +17,7 @@ u8* main_smd_end_track(u8* note_data, suzuki_music_t* music, suzuki_music_channe
 
     SpuGetVoiceEnvelopeAttr(channel->voice, &key_stat, &envx);
     if (envx == 0) {
-        channel->voice_update_flags &= ~3;
+        channel->voice_update_flags &= ~(SUZUKI_VOICE_UPDATE_KEY_ON | SUZUKI_VOICE_UPDATE_KEY_OFF);
         if (music->status & SUZUKI_MUSIC_STATUS_SFX) {
             g_main_sound_sfx_key_off_voices |= channel->voice_mask;
             mask = ~channel->voice_mask;
@@ -25,7 +25,7 @@ u8* main_smd_end_track(u8* note_data, suzuki_music_t* music, suzuki_music_channe
             music->noise_voice_mask &= mask;
             music->reverb_voice_mask &= mask;
             g_main_mask_exclusion &= mask;
-            channel->voice_attr_flags |= 0x54;
+            channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_SUSTAIN | SUZUKI_VOICE_ATTR_ATTACK | SUZUKI_VOICE_ATTR_PITCH;
         } else {
             g_main_sound_music_key_off_voices |= channel->voice_mask;
         }

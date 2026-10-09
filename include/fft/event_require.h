@@ -196,6 +196,13 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+/* g_require_reward_war_trophy_entry_types[]: what a war trophy entry's
+ * value in g_require_reward_war_trophy_entry_values is. */
+typedef enum require_war_trophy_entry {
+    REQUIRE_WAR_TROPHY_ENTRY_ITEM = 0,        /* an item id */
+    REQUIRE_WAR_TROPHY_ENTRY_BONUS_MONEY = 1, /* the gil amount */
+} require_war_trophy_entry_e;
+
 extern RECT g_require_reward_bonus_image_rect;
 extern RECT g_require_reward_bonus_palette_rect;
 extern s32 g_require_reward_war_trophy_entry_count;
@@ -230,6 +237,14 @@ void require_reward_collect_war_trophies_and_bonus_money(void);
 s32 require_reward_get_war_trophy_column_x(s32 value, s32 index);
 s32 require_reward_get_war_trophy_entry_offset(s32 value, s32 index);
 void require_reward_load_bonus_image(s32 image_id);
+/* The mode byte of the bonus-image burst parameters: the distance that sets
+ * each tile's start delay. Any other value measures along a rotated x axis. */
+typedef enum require_reward_burst_mode {
+    REQUIRE_REWARD_BURST_FROM_CENTRE = 0,
+    REQUIRE_REWARD_BURST_FROM_ORIGIN = 1, /* the top-left corner */
+    REQUIRE_REWARD_BURST_HORIZONTAL = 2,  /* x only */
+} require_reward_burst_mode_e;
+
 void require_reward_animate_bonus_image_burst(void);
 
 /* text */

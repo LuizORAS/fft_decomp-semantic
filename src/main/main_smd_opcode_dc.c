@@ -3,6 +3,6 @@
 
 /* SMD opcode 0xDC: clears bit 0 of ramp_flags. */
 u8* main_smd_opcode_dc(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
-    channel->ramp_flags &= ~1;
+    channel->ramp_flags &= ~SUZUKI_RAMP_PITCH_SLIDE;
     return note_data;
 }

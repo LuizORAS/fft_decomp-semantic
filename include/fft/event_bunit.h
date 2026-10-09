@@ -56,6 +56,12 @@ extern RECT g_bunit_character_status_sprite_origin;
 
 /* command */
 extern u8 g_bunit_cmd_row_quad[];
+/* The opcode that ends a BUNIT menu script stream (menu_script_opcode_e
+ * names the others). */
+enum {
+    BUNIT_CMD_END = 0x1c,
+};
+
 extern u8* (*g_bunit_cmd_handlers[])(u8*);
 extern u32 g_bunit_cmd_stream_input;
 extern world_menu_window_command_t g_bunit_cmd_window_interior_command;
@@ -459,7 +465,14 @@ extern s16 g_bunit_menu_scroll_pixel_offset;
 extern bunit_menu_selection_record_t g_bunit_menu_selection_records[];
 extern s16 g_bunit_menu_selection_values[];
 extern u8 g_bunit_menu_thread_running;
-extern s32 g_bunit_menu_current_menu;
+/* g_bunit_menu_current_menu: what bunit_entrypoint runs. */
+typedef enum bunit_menu {
+    BUNIT_MENU_UNIT_LIST = -1,   /* bunit_menu_run_unit_list_frame: the grid and its triangle menu */
+    BUNIT_MENU_REORDER_LIST = 0, /* bunit_menu_run_reorder_list, the triangle menu's first row */
+    BUNIT_MENU_JOB = 2,          /* bunit_menu_update_job: the selected unit's jobs and abilities */
+} bunit_menu_e;
+
+extern s32 g_bunit_menu_current_menu; /* bunit_menu_e */
 extern s16 g_bunit_menu_reorder_list_redraw_request;
 extern world_menu_entry_t g_bunit_menu_reorder_list_desc[];
 extern u16 g_bunit_menu_icon_texture_page;
@@ -544,6 +557,8 @@ typedef enum bunit_unit_stat {
     BUNIT_UNIT_STAT_HP = 0,
     BUNIT_UNIT_STAT_MP = 1,
     BUNIT_UNIT_STAT_CT = 2,
+    BUNIT_UNIT_STAT_LEVEL_EXP = 3,
+    BUNIT_UNIT_STAT_BRAVE_FAITH = 4, /* the last one: L2/R2 wrap between it and HP */
 } bunit_unit_stat_e;
 
 /*
@@ -648,7 +663,7 @@ extern s8 g_bunit_unit_list_scroll_step;
 extern s16 g_bunit_unit_max_stat_value;
 extern s8 g_bunit_unit_reorderable_indices[];
 extern s16 g_bunit_unit_selected_index;
-extern u8 g_bunit_unit_stat_mode;
+extern u8 g_bunit_unit_stat_mode; /* bunit_unit_stat_e */
 extern u16 g_bunit_unit_comparison_index;
 extern u8 g_bunit_unit_browse_enabled;
 extern u8 g_bunit_unit_grid_selected_cell;

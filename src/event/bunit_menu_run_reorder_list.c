@@ -28,7 +28,7 @@ void bunit_menu_run_reorder_list(void) {
 
     if (bunit_menu_run_descriptor_thread(0xF, g_bunit_menu_reorder_list_desc) == 0) {
         g_bunit_menu_reorder_list_initialized = 0;
-        g_bunit_menu_current_menu = -1;
+        g_bunit_menu_current_menu = BUNIT_MENU_UNIT_LIST;
     }
 
     g_bunit_text_selection_id = g_bunit_menu_reorder_list_entries[g_bunit_menu_reorder_list_index] + 0x1002;

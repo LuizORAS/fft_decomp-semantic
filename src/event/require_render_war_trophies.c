@@ -77,7 +77,7 @@ void require_render_war_trophies(void) {
                 battle_clear_menu_render_buffer(image, 0x280);
                 g_menu_text_state.pen.stride = 0x50;
                 timer = 0;
-                if (g_require_reward_war_trophy_entry_types[last] == 0) {
+                if (g_require_reward_war_trophy_entry_types[last] == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
                     battle_menu_set_text_origin(0, 0);
                     battle_menu_display_text_entry(
                         g_require_reward_war_trophy_entry_values[last] + TEXT_ID_ITEM_NAME_BASE, image,
@@ -107,7 +107,7 @@ void require_render_war_trophies(void) {
             }
             for (i = start; i <= last; i++) {
                 quad = &buffer->quads[i];
-                if (g_require_reward_war_trophy_entry_types[i] == 0) {
+                if (g_require_reward_war_trophy_entry_types[i] == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
                     quad->x0 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count);
                     quad->y0 = require_reward_get_war_trophy_entry_offset(
                         i - start, g_require_reward_war_trophy_entry_count);

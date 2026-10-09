@@ -26,10 +26,10 @@ void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel) {
     channel->release_time = channel->note_release_time = entry->release_rate;
     channel->sustain_level = entry->sustain_level;
     channel->fine_tune = entry->fine_tune;
-    if (channel->flags & 0xc) {
-        channel->voice_update_flags |= 0x300;
-        channel->voice_attr_flags |= 0x1ff;
+    if (channel->flags & (SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IMMEDIATE_INSTRUMENT)) {
+        channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME | SUZUKI_VOICE_UPDATE_PITCH;
+        channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_ALL;
     } else {
-        channel->flags |= 0x8000;
+        channel->flags |= SUZUKI_CHANNEL_INSTRUMENT_PENDING;
     }
 }

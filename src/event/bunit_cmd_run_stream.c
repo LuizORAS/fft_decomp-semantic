@@ -7,9 +7,9 @@ void bunit_cmd_run_stream(u8* data, s32 flags) {
     g_bunit_gfx_semitrans_enabled = 0;
     g_bunit_cmd_stream_input = flags;
     g_bunit_gfx_otag_index_locked = 0;
-    if (data[0] != 0x1C) {
+    if (data[0] != BUNIT_CMD_END) {
         do {
             data = g_bunit_cmd_handlers[data[0]](data);
-        } while (data[0] != 0x1C);
+        } while (data[0] != BUNIT_CMD_END);
     }
 }

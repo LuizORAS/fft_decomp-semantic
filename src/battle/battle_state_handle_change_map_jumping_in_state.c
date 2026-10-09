@@ -29,10 +29,10 @@ void battle_state_handle_change_map_jumping_in_state(void) {
         battle_action_check_between_turn_events();
         break;
     case 9:
-        battle_state_halve_animation_speed_and_queue_close(8, 0);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_BATTLE);
         break;
     case 10:
-        battle_state_halve_animation_speed_and_queue_close(8, 1);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_WORLD);
         break;
     }
 

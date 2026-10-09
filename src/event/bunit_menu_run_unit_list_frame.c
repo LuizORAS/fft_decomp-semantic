@@ -10,7 +10,7 @@ s32 bunit_menu_run_unit_list_frame(void) {
     u8 mode_b4;
 
     input = g_bunit_menu_input_active_mask;
-    if (g_bunit_menu_current_menu == -1) {
+    if (g_bunit_menu_current_menu == BUNIT_MENU_UNIT_LIST) {
         if (g_bunit_unit_list_initialized == 0) {
             g_bunit_status_banner_enabled = g_bunit_saved_status_banner_enabled;
             g_bunit_unit_browse_enabled = g_bunit_saved_unit_browse_enabled;
@@ -39,7 +39,7 @@ s32 bunit_menu_run_unit_list_frame(void) {
                 if (g_bunit_menu_primary_result == 0) {
                     mode_b3 = g_bunit_status_banner_enabled;
                     mode_b4 = g_bunit_unit_browse_enabled;
-                    g_bunit_menu_current_menu = 0;
+                    g_bunit_menu_current_menu = BUNIT_MENU_REORDER_LIST;
                     g_bunit_status_banner_enabled = 0;
                     g_bunit_unit_browse_enabled = 0;
                     g_bunit_saved_status_banner_enabled = mode_b3;
@@ -81,13 +81,13 @@ s32 bunit_menu_run_unit_list_frame(void) {
                 g_bunit_character_status_highlight = 1;
                 g_bunit_unit_list_initialized = 0;
                 g_bunit_saved_unit_browse_enabled = g_bunit_unit_browse_enabled;
-                g_bunit_menu_current_menu = 2;
+                g_bunit_menu_current_menu = BUNIT_MENU_JOB;
                 g_bunit_saved_status_banner_enabled = g_bunit_status_banner_enabled;
             }
         } else if (g_bunit_unit_browse_enabled == 0 && (input & PSX_PAD_CROSS)) {
             bunit_gfx_start_increasing_fade();
         }
-    } else if (g_bunit_menu_current_menu == 0) {
+    } else if (g_bunit_menu_current_menu == BUNIT_MENU_REORDER_LIST) {
         bunit_menu_run_reorder_list();
     }
     return 1;

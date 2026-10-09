@@ -503,11 +503,36 @@ typedef struct suzuki_modulator {
     u16 delay_reset;                       /* 0x16; reload of delay */
     s16 fade_level;                        /* 0x18; output scale, 0x100 = full */
     u16 fade_step;                         /* 0x1a; per-tick fade-in increment */
-    u8 target;                             /* 0x1c; 0 pitch, 1 volume, 2 balance */
-    u8 waveform;                           /* 0x1d; index into g_main_smd_modulator_waveforms */
-    s16 flags;                             /* 0x1e; bit 0: active; bits 2-3: step state */
+    u8 target;                             /* 0x1c; suzuki_modulator_target_e */
+    u8 waveform;                           /* 0x1d; suzuki_modulator_waveform_e */
+    s16 flags;                             /* 0x1e; suzuki_modulator_flag_e */
 } suzuki_modulator_t;
 typedef char suzuki_modulator_size_must_be_0x20[(sizeof(suzuki_modulator_t) == 0x20) ? 1 : -1];
+
+/* suzuki_modulator_t.target: the channel output main_smd_update_modulators
+ * adds the modulator to. */
+typedef enum suzuki_modulator_target {
+    SUZUKI_MODULATOR_TARGET_PITCH = 0,
+    SUZUKI_MODULATOR_TARGET_VOLUME = 1,
+    SUZUKI_MODULATOR_TARGET_BALANCE = 2,
+} suzuki_modulator_target_e;
+
+/* suzuki_modulator_t.waveform: index into g_main_smd_modulator_waveforms.
+ * Only the waveforms whose amplitude main_smd_modulator_calculate_step
+ * scales are named. */
+typedef enum suzuki_modulator_waveform {
+    SUZUKI_MODULATOR_WAVEFORM_TRIANGLE = 2,          /* main_smd_modulator_step_triangle */
+    SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED = 3, /* main_smd_modulator_step_triangle_centered */
+    SUZUKI_MODULATOR_WAVEFORM_SAWTOOTH = 4,          /* main_smd_modulator_step_sawtooth */
+} suzuki_modulator_waveform_e;
+
+/* suzuki_modulator_t.flags. */
+typedef enum suzuki_modulator_flag {
+    SUZUKI_MODULATOR_ACTIVE = 0x1,
+    SUZUKI_MODULATOR_RESTART_ON_KEY_ON = 0x2, /* main_smd_read_instructions restarts it at each key-on */
+    SUZUKI_MODULATOR_HALF_PERIOD_DONE = 0x4,  /* centred triangle: later half-periods last twice as long */
+    SUZUKI_MODULATOR_NEGATED = 0x8,           /* the next step or amplitude is negated */
+} suzuki_modulator_flag_e;
 
 typedef s32 (*suzuki_modulator_step_t)(suzuki_modulator_t* modulator);
 
@@ -526,21 +551,13 @@ typedef struct suzuki_repeat {
  * SMD opcode handler (note data, music, channel). Field names follow the
  * opcode that writes them; _unknown_XXX members are written by unnamed opcodes.
  *
- * active is the note flag word: 0x1 in use, 0x4 set from MUS status 0x2000,
- * 0x8 keeps the velocity, 0x20 muted, 0x100 fermata, 0x400 note end or rest,
- * 0x800 set and cleared by opcodes 0xB0/0xB1, 0x4000 stream set
- * (main_smd_init_channel_streams); main_smd_set_flags_all_channels ORs a mask
- * into every non-zero word.
- *
- * voice_attr_flags marks the SPU voice attributes main_sound_update_voice_attrs
- * pushes: 0x1 volume, 0x2 volume and volume mode, 0x4 pitch, 0x8 start and
- * loop addresses, 0x10 attack (time and mode), 0x20 decay, 0x40 sustain
- * (time and mode), 0x80 release (time and mode), 0x100 sustain level. 0x4,
- * 0x10 and 0x40 also request the pitch-LFO, noise and reverb voice-mask
- * updates. voice_update_flags bit 0 queues a key-on, bit 1 a key-off, bit 8 a
- * volume/balance change and bit 9 a pitch change for main_smd_update_voices.
- * ramp_flags bits 0, 3 and 4 mark the pitch-slide, volume and balance ramps
- * stepped by main_smd_update_channel_ramps.
+ * flags is the note flag word (suzuki_channel_flag_e); a channel is
+ * allocated while it is non-zero, and main_smd_set_flags_all_channels ORs a
+ * mask into every non-zero word. voice_update_flags (suzuki_voice_update_e)
+ * queues work for main_smd_update_voices, voice_attr_flags
+ * (suzuki_voice_attr_e) marks the SPU voice attributes
+ * main_sound_update_voice_attrs pushes, and ramp_flags (suzuki_ramp_flag_e)
+ * marks the ramps stepped by main_smd_update_channel_ramps.
  *
  * octave_base is written at halfword width (Octave, Raise/Lower Octave, End
  * Bar & Loop) but saved into the u8 loop_octave_base by Loop (0x91) and
@@ -550,10 +567,10 @@ typedef struct suzuki_repeat {
  * sounds; Play VFX SMD (0x80015c38) reads the resource id half with `lh`,
  * the SFX API compares the whole word. */
 typedef struct suzuki_music_channel {
-    u16 flags;              /* 0x00; 1 in use */
-    u16 voice_update_flags; /* 0x02; 1 key on */
-    u16 voice_attr_flags;   /* 0x04 */
-    u16 ramp_flags;         /* 0x06; bit 1 toggled by 0xD5, bit 2 by 0xD6, bit 3 ramp active */
+    u16 flags;              /* 0x00; suzuki_channel_flag_e */
+    u16 voice_update_flags; /* 0x02; suzuki_voice_update_e */
+    u16 voice_attr_flags;   /* 0x04; suzuki_voice_attr_e */
+    u16 ramp_flags;         /* 0x06; suzuki_ramp_flag_e */
     union {
         u32 raw;
         struct {
@@ -630,19 +647,94 @@ typedef struct suzuki_music_channel {
 } suzuki_music_channel_t;
 typedef char suzuki_music_channel_size_must_be_0x160[(sizeof(suzuki_music_channel_t) == 0x160) ? 1 : -1];
 
+/* suzuki_music_channel_t.flags. */
+typedef enum suzuki_channel_flag {
+    SUZUKI_CHANNEL_IN_USE = 0x0001,
+    /* Set at initialisation from SUZUKI_MUSIC_STATUS_IMMEDIATE_INSTRUMENT:
+     * main_smd_set_instrument marks the voice attributes at once. */
+    SUZUKI_CHANNEL_IMMEDIATE_INSTRUMENT = 0x0004,
+    /* Sound-effect channel (main_sound_start_sfx): notes keep the channel
+     * velocity, and main_smd_set_instrument marks the voice attributes at once. */
+    SUZUKI_CHANNEL_SFX = 0x0008,
+    SUZUKI_CHANNEL_NO_RETRIGGER = 0x0010,       /* never set by the driver itself; a held note is not keyed on again */
+    SUZUKI_CHANNEL_MUTED = 0x0020,              /* by music->mute_mask; blocks key-on */
+    SUZUKI_CHANNEL_NOTE_READ = 0x0080,          /* set with SOUNDING by every note; never tested */
+    SUZUKI_CHANNEL_SOUNDING = 0x0100,           /* a note or Fermata holds the channel; ends the tick's opcode reads */
+    SUZUKI_CHANNEL_TIED = 0x0200,               /* the gate time does not key the note off */
+    SUZUKI_CHANNEL_KEYED_OFF = 0x0400,          /* resting or past the gate time; the next note keys on */
+    SUZUKI_CHANNEL_SLUR = 0x0800,               /* opcodes 0xB0/0xB1: every note is tied */
+    SUZUKI_CHANNEL_NOTE_FOLLOWS = 0x1000,       /* the look-ahead found a note as the next event */
+    SUZUKI_CHANNEL_STREAMS_SET = 0x4000,        /* main_smd_init_channel_streams; never tested */
+    SUZUKI_CHANNEL_INSTRUMENT_PENDING = 0x8000, /* the next note marks the voice attributes */
+} suzuki_channel_flag_e;
+
+/* suzuki_music_channel_t.voice_update_flags: work queued for
+ * main_smd_update_voices. */
+typedef enum suzuki_voice_update {
+    SUZUKI_VOICE_UPDATE_KEY_ON = 0x0001,
+    SUZUKI_VOICE_UPDATE_KEY_OFF = 0x0002,
+    SUZUKI_VOICE_UPDATE_VOLUME = 0x0100, /* volume and balance */
+    SUZUKI_VOICE_UPDATE_PITCH = 0x0200,
+} suzuki_voice_update_e;
+
+/* suzuki_music_channel_t.voice_attr_flags: the SPU voice attributes
+ * main_sound_update_voice_attrs pushes. PITCH, ATTACK and SUSTAIN double as
+ * the marks of the LFO, noise and reverb opcodes, so they also request the
+ * voice-mask updates of suzuki_voice_mask_request_e. Callers also set bits
+ * 0x7000, which nothing tests. */
+typedef enum suzuki_voice_attr {
+    SUZUKI_VOICE_ATTR_VOLUME = 0x0001,
+    SUZUKI_VOICE_ATTR_VOLUME_MODE = 0x0002, /* volume and volume mode */
+    SUZUKI_VOICE_ATTR_PITCH = 0x0004,
+    SUZUKI_VOICE_ATTR_ADDRESS = 0x0008, /* start and loop addresses */
+    SUZUKI_VOICE_ATTR_ATTACK = 0x0010,  /* time and mode */
+    SUZUKI_VOICE_ATTR_DECAY = 0x0020,
+    SUZUKI_VOICE_ATTR_SUSTAIN = 0x0040, /* time and mode */
+    SUZUKI_VOICE_ATTR_RELEASE = 0x0080, /* time and mode */
+    SUZUKI_VOICE_ATTR_SUSTAIN_LEVEL = 0x0100,
+    SUZUKI_VOICE_ATTR_ALL = 0x01ff,
+} suzuki_voice_attr_e;
+
+/* suzuki_music_channel_t.ramp_flags. */
+typedef enum suzuki_ramp_flag {
+    SUZUKI_RAMP_PITCH_SLIDE = 0x01,
+    SUZUKI_RAMP_PITCH_SLIDE_HOLD = 0x02, /* toggled by opcode 0xD5: the slide count does not run down */
+    SUZUKI_RAMP_PORTAMENTO = 0x04,       /* opcode 0xD6: a key-on slides from the previous key */
+    SUZUKI_RAMP_VOLUME = 0x08,
+    SUZUKI_RAMP_BALANCE = 0x10,
+} suzuki_ramp_flag_e;
+
+/* g_main_sound_voice_update_requests: the voice masks the root-counter
+ * handler recalculates. */
+typedef enum suzuki_voice_mask_request {
+    SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO = 0x1,
+    SUZUKI_VOICE_MASK_REQUEST_NOISE = 0x2,
+    SUZUKI_VOICE_MASK_REQUEST_REVERB = 0x4,
+} suzuki_voice_mask_request_e;
+
+/* SMD opcodes the look-ahead of main_smd_read_instructions tests, named
+ * after their handlers in g_main_smd_opcode_handlers. Bytes below 0x80 are
+ * notes. */
+typedef enum suzuki_smd_opcode {
+    SUZUKI_SMD_OPCODE_REST = 0x80,
+    SUZUKI_SMD_OPCODE_FERMATA = 0x81,
+    SUZUKI_SMD_OPCODE_END_BAR = 0x90,
+    SUZUKI_SMD_OPCODE_CODA = 0x99,
+    SUZUKI_SMD_OPCODE_TO_CODA = 0x9a,
+    SUZUKI_SMD_OPCODE_SLUR_ON = 0xb0,  /* main_smd_opcode_b0 */
+    SUZUKI_SMD_OPCODE_SLUR_OFF = 0xb1, /* main_smd_opcode_b1 */
+} suzuki_smd_opcode_e;
+
 /* Suzuki MUS (music sequence) record: 0xb8 bytes followed by channel_count
  * channels, allocated by SuzukiPutPlaySMD. It is the second argument of every
  * SMD opcode handler. Queued records form a linked list through next, headed
  * by g_main_sound_active_music_list; snapshot chains saved copies of the
  * whole record (main_smd_save_snapshot) through their own snapshot fields.
  *
- * status bit 15 is set while the music plays (SuzukiGetMusicPlaying);
- * main_sound_calculate_reverb_voices tests that bit as a sign (`lh` and
- * `bgez`), and bit 0 there marks the reverb voices as excludable. Bit 4 marks
- * a saved snapshot, bit 1 the SFX record, 0x100 music paused by
- * main_smd_pause_music (cleared on resume), 0x4000 a pending full voice
- * update (main_sound_update_voice_attrs clears it) and 0x2000 sets channel
- * active bit 0x4 at initialisation.
+ * status (suzuki_music_status_e) has bit 15 set while the music plays
+ * (SuzukiGetMusicPlaying); main_sound_calculate_reverb_voices tests that bit
+ * as a sign (`lh` and `bgez`), and bit 0 there marks the reverb voices as
+ * excludable.
  *
  * tempo is tempo byte << 16. It is a union because Scale Tempo (0x80016e14)
  * reads the tempo byte back with `lh 0x7e`, while Tempo, Accelerando and
@@ -652,7 +744,7 @@ typedef struct suzuki_music {
     struct suzuki_music* snapshot; /* 0x04; freed by main_smd_free_snapshots */
     suzuki_smd_header_t* smd;      /* 0x08 */
     u8 _unused_00c[4];             /* 0x0c */
-    u16 status;                    /* 0x10 */
+    u16 status;                    /* 0x10; suzuki_music_status_e */
     u16 id;                        /* 0x12; SMD id */
     u8 _unknown_014;               /* 0x14; SMD _unknown_12 */
     u8 tick_divisor;               /* 0x15 */
@@ -712,10 +804,14 @@ typedef char suzuki_music_channels_must_be_at_0xb8[(sizeof(suzuki_music_t) == 0x
 
 /* suzuki_music_t.status. */
 typedef enum suzuki_music_status {
-    SUZUKI_MUSIC_STATUS_SMD = 0x0001,      /* the record plays SMD music */
-    SUZUKI_MUSIC_STATUS_SFX = 0x0002,      /* the sound-effect record */
-    SUZUKI_MUSIC_STATUS_SNAPSHOT = 0x0010, /* a saved copy exists */
-    SUZUKI_MUSIC_STATUS_PAUSED = 0x0100,
+    SUZUKI_MUSIC_STATUS_SMD = 0x0001,            /* the record plays SMD music */
+    SUZUKI_MUSIC_STATUS_SFX = 0x0002,            /* the sound-effect record */
+    SUZUKI_MUSIC_STATUS_SNAPSHOT = 0x0010,       /* a saved copy exists */
+    SUZUKI_MUSIC_STATUS_NO_VOICE_ATTRS = 0x0020, /* never set; main_sound_update_voice_attrs skips the record */
+    SUZUKI_MUSIC_STATUS_PAUSED = 0x0100,         /* main_smd_pause_music; cleared on resume */
+    /* Never set; main_smd_init_channels gives every channel
+     * SUZUKI_CHANNEL_IMMEDIATE_INSTRUMENT. */
+    SUZUKI_MUSIC_STATUS_IMMEDIATE_INSTRUMENT = 0x2000,
     SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE = 0x4000, /* push every voice attribute once */
     SUZUKI_MUSIC_STATUS_PLAYING = 0x8000,
 } suzuki_music_status_e;
@@ -747,6 +843,49 @@ typedef struct suzuki_spu_state {
     suzuki_ramp_t cd_ramp;    /* 0x3c 0x8003705c */
 } suzuki_spu_state_t;
 typedef char suzuki_spu_state_size_must_be_0x48[(sizeof(suzuki_spu_state_t) == 0x48) ? 1 : -1];
+
+/* g_main_sound_driver_flags. */
+typedef enum main_sound_driver_flag {
+    MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT = 0x0001, /* the root-counter-2 event is enabled */
+    /* An SPU RAM transfer is in progress; the transfer callback clears it
+     * together with SPU_WRITE and SPU_READ. */
+    MAIN_SOUND_DRIVER_SPU_TRANSFER = 0x0010,
+    MAIN_SOUND_DRIVER_SPU_WRITE = 0x0020,
+    MAIN_SOUND_DRIVER_SPU_READ = 0x0040,
+    MAIN_SOUND_DRIVER_STEREO = 0x0100,        /* every sound type but mono */
+    MAIN_SOUND_DRIVER_WIDE = 0x0200,          /* MAIN_SOUND_TYPE_WIDE */
+    MAIN_SOUND_DRIVER_WIDE_OPPOSITE = 0x0400, /* MAIN_SOUND_TYPE_WIDE_OPPOSITE */
+    MAIN_SOUND_DRIVER_SFX_ENABLED = 0x1000,   /* main_sound_set_sfx_enabled */
+    /* Only the flags argument of SuzukiSPUInitialiser can set it (the game
+     * passes 0): start-up and main_sound_set_type also call main_sound_put_type. */
+    MAIN_SOUND_DRIVER_PUT_TYPE = 0x2000,
+    MAIN_SOUND_DRIVER_INITIALISED = 0x8000,
+} main_sound_driver_flag_e;
+
+/* Output sound type of main_sound_set_type and main_sound_get_type (which
+ * reports both wide types as WIDE). */
+typedef enum main_sound_type {
+    MAIN_SOUND_TYPE_MONO = 0,
+    MAIN_SOUND_TYPE_STEREO = 1,
+    MAIN_SOUND_TYPE_WIDE = 2,          /* one side phase-inverted */
+    MAIN_SOUND_TYPE_WIDE_OPPOSITE = 3, /* the other side inverted; no menu offers it */
+} main_sound_type_e;
+
+/* Low nibble of the mode argument of main_sound_transfer_spu_data. */
+typedef enum main_sound_spu_transfer {
+    MAIN_SOUND_SPU_TRANSFER_WRITE = 1,
+    MAIN_SOUND_SPU_TRANSFER_READ = 2,
+    MAIN_SOUND_SPU_TRANSFER_READ_DECODED = 3,    /* SpuReadDecodedData, every buffer */
+    MAIN_SOUND_SPU_TRANSFER_READ_DECODED_CD = 4, /* SpuReadDecodedData, CD buffers only */
+    MAIN_SOUND_SPU_TRANSFER_NONE = 5,
+} main_sound_spu_transfer_e;
+
+/* Mode argument of main_smd_dispatch_snapshot. */
+typedef enum suzuki_snapshot_mode {
+    SUZUKI_SNAPSHOT_DISCARD = 0,
+    SUZUKI_SNAPSHOT_SAVE = 1,
+    SUZUKI_SNAPSHOT_RESTORE = 2,
+} suzuki_snapshot_mode_e;
 
 /* SMD opcode handler, called through g_main_smd_opcode_handlers by
  * main_smd_read_instructions with the byte after the opcode; it returns the
@@ -881,12 +1020,10 @@ extern CdlATV g_main_sound_cd_mix;                 /* 0x80032a3c; written by Put
 extern s16 g_main_sound_decoded_data_result;        /* SPU transfer controller state */
 extern suzuki_waveset_t* g_main_sound_waveset_list; /* 0x80032a44 */
 extern s32 g_main_sound_spu_event;                  /* 0x80032a48; OpenEvent handle of main_sound_spu_event_handler */
-extern u16 g_main_sound_voice_update_requests;      /* voice-mask updates: bit 0 pitch LFO, 1 noise, 2 reverb */
+extern u16 g_main_sound_voice_update_requests;      /* suzuki_voice_mask_request_e */
 extern suzuki_music_t* g_main_sound_active_music_list; /* 0x80032a50 */
 
-/* Driver status: bit 0 root-counter event enabled, 0x10-0x40 SPU transfer
- * in progress (cleared by the transfer callback), 0x700 sound type, 0x1000
- * SFX enabled, 0x2000 apply the sound type at start-up, 0x8000 initialised. */
+/* Driver status (main_sound_driver_flag_e). */
 extern u16 g_main_sound_driver_flags;
 extern s32 g_main_root_counter_2_event;        /* 0x80032a5c; OpenEvent handle of main_sound_root_counter_2_handler */
 extern suzuki_music_t* g_main_sound_sfx_music; /* 0x80032a60; eight channels on SPU voices 16-23 */
@@ -1167,8 +1304,32 @@ extern u8 g_main_heap_smd_allocator_table[16];
 extern u8 g_main_heap_smd_base[];
 extern game_options_t g_main_game_options;
 extern game_options_t g_main_game_options_defaults;
+
+/* g_main_system_game_flow_state: what follows when the BATTLE.BIN loop
+ * closes a battle or event. */
+typedef enum main_game_flow_state {
+    MAIN_GAME_FLOW_BATTLE = 0, /* stay in battle_state_run_game_loop for the next event */
+    MAIN_GAME_FLOW_WORLD = 1,  /* back to the world map */
+    MAIN_GAME_FLOW_RESET = 2,  /* stop display and audio and restart from the opening */
+    MAIN_GAME_FLOW_ENDING = 3, /* run the ending, then restart */
+} main_game_flow_state_e;
+
+/* Error codes passed to main_system_handle_animation_exception, whose report
+ * hook is empty in retail. */
+typedef enum main_system_error {
+    MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,              /* main_file_load_to_heap got no block */
+    MAIN_SYSTEM_ERROR_FILE_LOAD = 2,               /* a checked file load returned 0 */
+    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,       /* battle_unit_claim_misc_slot found none free */
+    MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
+    MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
+    MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
+    MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
+    MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
+    MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
+} main_system_error_e;
+
 extern s32 g_main_system_frontend_world_result;
-extern u32 g_main_system_game_flow_state;
+extern u32 g_main_system_game_flow_state; /* main_game_flow_state_e */
 extern u32 g_main_system_game_loop_stack_pointer;
 extern u8 g_main_system_go_straight_to_battle;
 extern int g_main_system_graphics_error;

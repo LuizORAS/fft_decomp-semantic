@@ -37,7 +37,7 @@ void etc_graphic_open(s32 graphic_id) {
         }
     } else {
         g_battle_etc_graphics_enabled = 1;
-        if (graphic_id == 8) {
+        if (graphic_id == ETC_GRAPHIC_END1) {
             g_battle_screen_fade = -0xff;
             do {
                 battle_thread_yield();
@@ -52,21 +52,21 @@ void etc_graphic_open(s32 graphic_id) {
         }
         g_battle_screen_fade = 0;
 
-        if (graphic_id == 8) {
+        if (graphic_id == ETC_GRAPHIC_END1) {
             frame = 0;
             do {
                 frame++;
                 battle_thread_yield();
                 g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
             } while (frame < 0x4ec);
-        } else if (graphic_id == 10) {
+        } else if (graphic_id == ETC_GRAPHIC_END3) {
             frame = 0;
             do {
                 frame++;
                 battle_thread_yield();
                 g_battle_threads[g_battle_current_thread_id].function_parameter_4 = 1;
             } while (frame < 0x5a0);
-        } else if (graphic_id == 11) {
+        } else if (graphic_id == ETC_GRAPHIC_END4) {
             frame = 0;
             do {
                 frame++;
@@ -75,7 +75,7 @@ void etc_graphic_open(s32 graphic_id) {
             } while (frame < 0x8ac);
         } else {
             frame = 0;
-            if (graphic_id == 12) {
+            if (graphic_id == ETC_GRAPHIC_END5) {
                 do {
                     frame++;
                     battle_thread_yield();
@@ -98,7 +98,7 @@ void etc_graphic_open(s32 graphic_id) {
         } while (g_battle_screen_fade < 0x100);
         g_battle_screen_fade = 0xff;
         g_battle_etc_graphics_enabled = 0;
-        if (graphic_id == 10) {
+        if (graphic_id == ETC_GRAPHIC_END3) {
             g_battle_screen_fade = 0;
         }
     }

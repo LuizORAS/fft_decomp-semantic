@@ -21,7 +21,7 @@ u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
     params[3] = cmd[6];
 
     table = g_bunit_gfx_sprite_color;
-    if (cmd[0] == 4) {
+    if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         table = 0;
     }
 

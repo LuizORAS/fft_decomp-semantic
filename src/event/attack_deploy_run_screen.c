@@ -54,7 +54,7 @@ void attack_deploy_run_screen(void) {
     g_attack_deploy_deployed_unit_count = 0;
     g_world_shop_purchase_unit_price = 0;
     g_attack_deploy_selected_roster_index = 0;
-    g_attack_deploy_menu_state = 0;
+    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_EMPTY_TILE;
     g_attack_deploy_active_cursor = 0;
     g_attack_status_display_offset_y[0] = -0x9c;
     for (i = 0; i < 5; i++) {
@@ -89,7 +89,7 @@ ramza_placed:
             g_attack_deploy_current_squad_data->unit_limit = 4;
         }
         g_attack_deploy_deployed_unit_count = 0;
-        g_attack_deploy_menu_state = 5;
+        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_HIDDEN;
         g_attack_deploy_active_cursor = 0;
         row = 0;
         tiles = g_attack_deploy_roster_id_by_tile[0];
@@ -102,7 +102,7 @@ ramza_placed:
         entry = row_entries;
         end = row_entries + 5;
     count_entry:
-        if (*entry++ != 0xff) {
+        if (*entry++ != ATTACK_DEPLOY_ROSTER_ID_NONE) {
             g_attack_deploy_deployed_unit_count++;
         }
         if ((s32)entry < (s32)end) {
@@ -121,7 +121,7 @@ ramza_placed:
         g_attack_deploy_cursor_row[1] = 2;
         for (row = 0; row < 5; row++) {
             for (column = 0; column < 5; column++) {
-                if (g_attack_deploy_roster_id_by_tile[row][column] != 0xff) {
+                if (g_attack_deploy_roster_id_by_tile[row][column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     g_attack_deploy_cursor_column[0] = column;
                     g_attack_deploy_cursor_row[0] = row;
                     g_attack_deploy_cursor_column[1] = column;
@@ -214,7 +214,7 @@ ramza_placed:
             if (g_attack_panel_status_animation[2] < 2) {
                 if (g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]
                                                      [g_attack_deploy_cursor_column[g_attack_deploy_active_cursor]]
-                    != 0xff) {
+                    != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     g_attack_panel_status_animation[2] = 0;
                 } else {
                     g_attack_panel_status_animation[2] = 1;
@@ -259,25 +259,25 @@ ramza_placed:
             row = g_attack_deploy_cursor_row[cursor];
             if (g_attack_deploy_active_cursor == 0) {
                 tile = g_attack_deploy_roster_id_by_tile[row][column];
-                if (tile == 0xff) {
+                if (tile == ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     if (g_attack_deploy_valid_tiles[row][column] != 0
                         && g_attack_deploy_deployed_unit_count < g_attack_deploy_current_squad_data->unit_limit) {
-                        g_attack_deploy_menu_state = 0;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_EMPTY_TILE;
                     } else {
-                        g_attack_deploy_menu_state = 1;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_BLOCKED_TILE;
                     }
                 } else if (g_attack_deploy_selected_roster_index == tile) {
-                    g_attack_deploy_menu_state = 2;
+                    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_SELECTED_UNIT;
                 } else {
-                    g_attack_deploy_menu_state = 3;
+                    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_OTHER_UNIT;
                 }
             } else if (g_attack_deploy_active_cursor == 1) {
                 tile = g_attack_deploy_roster_id_by_tile[row][column];
-                if (tile == 0xff) {
+                if (tile == ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     if (g_attack_deploy_valid_tiles[row][column] != 0) {
-                        g_attack_deploy_menu_state = 0;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_EMPTY_TILE;
                     } else {
-                        g_attack_deploy_menu_state = 1;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_BLOCKED_TILE;
                     }
                 } else if (g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[0]]
                                                             [g_attack_deploy_cursor_column[0]]
@@ -285,12 +285,12 @@ ramza_placed:
                     if (g_attack_deploy_selected_roster_index
                         == g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[0]]
                                                             [g_attack_deploy_cursor_column[0]]) {
-                        g_attack_deploy_menu_state = 2;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_SELECTED_UNIT;
                     } else {
-                        g_attack_deploy_menu_state = 3;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_OTHER_UNIT;
                     }
                 } else {
-                    g_attack_deploy_menu_state = 4;
+                    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_SWAP_UNIT;
                 }
             }
             if (*input & PSX_PAD_START) {
@@ -306,7 +306,7 @@ ramza_placed:
                     if (battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT) - 1
                             != g_attack_deploy_current_squad
                         && g_attack_deploy_fieldable_unit_count > g_attack_deploy_deployed_unit_count) {
-                        g_attack_deploy_menu_state = 5;
+                        g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_HIDDEN;
                         for (i = 0; i < 5; i++) {
                             if (g_attack_panel_status_animation[i] < 2) {
                                 g_attack_panel_status_animation[i] = 1;
@@ -347,7 +347,7 @@ ramza_placed:
             }
             if ((*input & PSX_PAD_CROSS) && g_attack_deploy_active_cursor == 0 && g_attack_deploy_current_squad != 0) {
                 g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
-                g_attack_deploy_menu_state = 5;
+                g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_HIDDEN;
                 for (i = 0; i < 5; i++) {
                     if (g_attack_panel_status_animation[i] < 2) {
                         g_attack_panel_status_animation[i] = 1;
@@ -372,7 +372,7 @@ ramza_placed:
                 column = g_attack_deploy_cursor_column[cursor];
                 row = g_attack_deploy_cursor_row[cursor];
                 if (g_attack_deploy_valid_tiles[row][column] != 0) {
-                    if (g_attack_deploy_roster_id_by_tile[row][column] == 0xff) {
+                    if (g_attack_deploy_roster_id_by_tile[row][column] == ATTACK_DEPLOY_ROSTER_ID_NONE) {
                         if (attack_deploy_has_roster_id_on_tiles(g_attack_deploy_selected_roster_index) == 0) {
                             if (g_attack_deploy_deployed_unit_count < g_attack_deploy_current_squad_data->unit_limit) {
                                 g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
@@ -440,7 +440,7 @@ ramza_placed:
                                 g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                                 g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
                                 g_attack_deploy_deployed_unit_count--;
-                                g_attack_deploy_roster_id_by_tile[row][column] = 0xff;
+                                g_attack_deploy_roster_id_by_tile[row][column] = ATTACK_DEPLOY_ROSTER_ID_NONE;
                             }
                         } else {
                             attack_deploy_swap_roster_unit_tile(column, row,
@@ -496,7 +496,7 @@ ramza_placed:
             if (*input & PSX_PAD_TRIANGLE) {
                 if (g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]
                                                      [g_attack_deploy_cursor_column[g_attack_deploy_active_cursor]]
-                    != 0xff) {
+                    != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     g_attack_panel_status_animation[2] = 7;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                     if (battle_thread_is_running(4) == 0) {
@@ -519,7 +519,7 @@ ramza_placed:
         }
     }
     battle_thread_wait_frames(0x20);
-    g_attack_deploy_menu_state = -1;
+    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_CLOSED;
     battle_thread_set_parameters(14, 0, 0, 1);
     battle_thread_yield();
     for (i = 0; i < 0x100; i += 2) {
@@ -536,18 +536,18 @@ ramza_placed:
         }
     }
     battle_thread_wait_frames(0x3c);
-    g_attack_deployed_unit_map_coordinates[0].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[1].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[2].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[3].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[4].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[5].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[6].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[7].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[8].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[9].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[10].roster_id = 0xff;
-    g_attack_deployed_unit_map_coordinates[11].roster_id = 0xff;
+    g_attack_deployed_unit_map_coordinates[0].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[1].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[2].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[3].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[4].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[5].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[6].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[7].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[8].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[9].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[10].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[11].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
     slots = g_attack_deployed_unit_map_coordinates;
     count = 0;
     for (i = 0; i < battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT); i++) {
@@ -571,7 +571,7 @@ ramza_placed:
         if (orientation == 0) {
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
-                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != 0xff) {
+                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                         slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x - column + 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + row - 2;
@@ -585,7 +585,7 @@ ramza_placed:
         } else if (orientation == 1) {
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
-                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != 0xff) {
+                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                         slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x - row + 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - column + 2;
@@ -599,7 +599,7 @@ ramza_placed:
         } else if (orientation == 2) {
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
-                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != 0xff) {
+                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                         slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x + column - 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - row + 2;
@@ -613,7 +613,7 @@ ramza_placed:
         } else if (orientation == 3) {
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
-                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != 0xff) {
+                    if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                         slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x + row - 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + column - 2;

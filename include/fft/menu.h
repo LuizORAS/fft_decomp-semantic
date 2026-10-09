@@ -409,6 +409,18 @@ typedef struct world_menu_window_command {
     u8 height;
 } world_menu_window_command_t;
 
+/* Opcode byte of a menu script command, the index of its handler in the
+ * *_cmd_handlers table of BUNIT, EQUIP and JOBSTTS (CARD calls the same
+ * handlers directly). Only the opcodes the code tests are named. Each
+ * overlay ends a stream with its own opcode, the first one past its table
+ * (BUNIT_CMD_END, EQUIP_CMD_END, JOBSTTS_CMD_END). */
+typedef enum menu_script_opcode {
+    MENU_SCRIPT_OP_IF_GROUP = 1,           /* *_cmd_run_if_group_handler */
+    MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,      /* *_cmd_run_if_else_group_handler */
+    MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,    /* *_cmd_draw_textured_quad_handler; opcode 5 applies the draw colour */
+    MENU_SCRIPT_OP_SCROLLABLE_LIST = 0x10, /* the list geometry *_menu_draw_scrollable_list reads */
+} menu_script_opcode_e;
+
 /* Six-byte menu sprite cell: screen rectangle and texture origin. */
 typedef struct battle_menu_sprite_cell {
     u8 x;

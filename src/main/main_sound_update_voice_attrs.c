@@ -25,7 +25,7 @@ void main_sound_update_voice_attrs(void) {
     while (music != 0) {
         status = music->status;
         if ((status & (SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE | SUZUKI_MUSIC_STATUS_PLAYING)) != 0
-            && (status & 0x20) == 0) {
+            && (status & SUZUKI_MUSIC_STATUS_NO_VOICE_ATTRS) == 0) {
             music->status = status & ~SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE;
             count = music->channel_count;
             channel = music->channels;
@@ -34,39 +34,39 @@ void main_sound_update_voice_attrs(void) {
             else
                 allowed = ~(g_main_mask_exclusion | g_main_sound_sfx_key_off_voices);
             do {
-                if ((channel->flags & 1) != 0 && (allowed & channel->voice_mask) != 0) {
+                if ((channel->flags & SUZUKI_CHANNEL_IN_USE) != 0 && (allowed & channel->voice_mask) != 0) {
                     flags = channel->voice_attr_flags;
                     if (flags != 0) {
                         voice = channel->voice;
-                        if ((flags & 2) != 0) {
+                        if ((flags & SUZUKI_VOICE_ATTR_VOLUME_MODE) != 0) {
                             SpuSetVoiceVolumeAttr(voice, channel->spu_volume_left, channel->spu_volume_right,
                                 channel->spu_volume_mode_left, channel->spu_volume_mode_right);
-                            flags &= ~1;
+                            flags &= ~SUZUKI_VOICE_ATTR_VOLUME;
                         }
-                        if ((flags & 1) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_VOLUME) != 0)
                             SpuSetVoiceVolume(voice, channel->spu_volume_left, channel->spu_volume_right);
-                        if ((flags & 4) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_PITCH) != 0)
                             SpuSetVoicePitch(voice, channel->spu_pitch);
-                        if ((flags & 8) != 0) {
+                        if ((flags & SUZUKI_VOICE_ATTR_ADDRESS) != 0) {
                             SpuSetVoiceStartAddr(voice, channel->start_address);
                             SpuSetVoiceLoopStartAddr(voice, channel->loop_address);
                         }
-                        if ((flags & 0x10) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_ATTACK) != 0)
                             SpuSetVoiceARAttr(voice, channel->attack_time, channel->attack_mode);
-                        if ((flags & 0x20) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_DECAY) != 0)
                             SpuSetVoiceDR(voice, channel->decay_time);
-                        if ((flags & 0x40) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_SUSTAIN) != 0)
                             SpuSetVoiceSRAttr(voice, channel->sustain_time, channel->sustain_mode);
-                        if ((flags & 0x80) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_RELEASE) != 0)
                             SpuSetVoiceRRAttr(voice, channel->release_time, channel->release_mode);
-                        if ((flags & 0x100) != 0)
+                        if ((flags & SUZUKI_VOICE_ATTR_SUSTAIN_LEVEL) != 0)
                             SpuSetVoiceSL(voice, channel->sustain_level);
-                        if ((flags & 4) != 0)
-                            g_main_sound_voice_update_requests |= 1;
-                        if ((flags & 0x10) != 0)
-                            g_main_sound_voice_update_requests |= 2;
-                        if ((flags & 0x40) != 0)
-                            g_main_sound_voice_update_requests |= 4;
+                        if ((flags & SUZUKI_VOICE_ATTR_PITCH) != 0)
+                            g_main_sound_voice_update_requests |= SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO;
+                        if ((flags & SUZUKI_VOICE_ATTR_ATTACK) != 0)
+                            g_main_sound_voice_update_requests |= SUZUKI_VOICE_MASK_REQUEST_NOISE;
+                        if ((flags & SUZUKI_VOICE_ATTR_SUSTAIN) != 0)
+                            g_main_sound_voice_update_requests |= SUZUKI_VOICE_MASK_REQUEST_REVERB;
                         channel->voice_attr_flags = 0;
                     }
                 }

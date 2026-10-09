@@ -35,19 +35,19 @@ void battle_state_update_event_mode(void) {
         break;
     case 9:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 1);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_WORLD);
         break;
     case 10:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 0);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_BATTLE);
         break;
     case 11:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 2);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_RESET);
         break;
     case 19:
         battle_gfx_init_evtchr_vram_slots();
-        battle_state_halve_animation_speed_and_queue_close(8, 3);
+        battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_ENDING);
         break;
     }
 

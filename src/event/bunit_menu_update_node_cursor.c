@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Select the menu's node table, handle directional/confirm/cancel input, and
@@ -41,12 +42,12 @@ void bunit_menu_update_node_cursor(s16 mode) {
     if (running == 0) {
         flags = g_bunit_input_primary_repeat;
         node_index = g_bunit_help_node_index;
-        if (flags & 0x40) {
+        if (flags & PSX_PAD_CROSS) {
             g_bunit_text_selection_id = g_bunit_help_screen_id;
             g_bunit_help_screen_id = 0;
             g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
             g_bunit_help_cursor_initialized = 0;
-        } else if (flags & 0x20) {
+        } else if (flags & PSX_PAD_CIRCLE) {
             text_id = 0;
             if (g_bunit_help_nodes[node_index].value != 0) {
                 text_id = g_bunit_help_nodes[node_index].value[0];
@@ -57,13 +58,13 @@ void bunit_menu_update_node_cursor(s16 mode) {
                     = text_id + (u16)g_bunit_help_nodes_reload[g_bunit_help_node_index_reload_2].help_base;
                 bunit_text_start_selection_thread(3);
             }
-        } else if (flags & 0x1000) {
+        } else if (flags & PSX_PAD_UP) {
             node_index = g_bunit_help_nodes[node_index].destination[0];
-        } else if (flags & 0x4000) {
+        } else if (flags & PSX_PAD_DOWN) {
             node_index = g_bunit_help_nodes[node_index].destination[1];
-        } else if (flags & 0x2000) {
+        } else if (flags & PSX_PAD_RIGHT) {
             node_index = g_bunit_help_nodes[node_index].destination[2];
-        } else if (flags & 0x8000) {
+        } else if (flags & PSX_PAD_LEFT) {
             node_index = g_bunit_help_nodes[node_index].destination[3];
         }
         if (g_bunit_panel_selected_billboard.team_kind != 0) {

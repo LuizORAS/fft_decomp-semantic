@@ -19,14 +19,15 @@ u8* main_smd_pitch_shift(u8* note_data, suzuki_music_t* music, suzuki_music_chan
         } else {
             depth = depth * depth;
         }
-        channel->modulators[0].amplitude = main_smd_modulator_calculate_step(depth << 14, speed, 3);
+        channel->modulators[0].amplitude
+            = main_smd_modulator_calculate_step(depth << 14, speed, SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED);
         channel->modulators[0].timer_reset = speed;
         channel->modulators[0].delay_reset = note_data[2];
         channel->modulators[0].fade_step = 0x100;
         channel->modulators[0].step = main_smd_modulator_step_triangle_centered;
-        channel->modulators[0].waveform = 3;
-        channel->modulators[0].target = 0;
-        channel->modulators[0].flags = 3;
+        channel->modulators[0].waveform = SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED;
+        channel->modulators[0].target = SUZUKI_MODULATOR_TARGET_PITCH;
+        channel->modulators[0].flags = SUZUKI_MODULATOR_RESTART_ON_KEY_ON | SUZUKI_MODULATOR_ACTIVE;
         main_smd_modulator_reset(&channel->modulators[0]);
     }
     return note_data + 3;

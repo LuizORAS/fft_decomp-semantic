@@ -114,6 +114,13 @@ enum {
     ATTACK_DEPLOYMENT_ORIENTATION_MASK = 0x0f,
 };
 
+/* The roster id of a deployment tile or placement record that holds no unit
+ * (g_attack_deploy_roster_id_by_tile, g_attack_deploy_units_by_squad and
+ * attack_deployed_unit_coordinate_t.roster_id). */
+enum {
+    ATTACK_DEPLOY_ROSTER_ID_NONE = 0xff,
+};
+
 /* Four-byte placement record per deployed unit at
  * g_attack_deployed_unit_map_coordinates: party ID, X, Y, flags. */
 typedef struct attack_deployed_unit_coordinate {
@@ -174,7 +181,19 @@ extern s32 g_attack_deploy_current_squad_id;
 extern s32 g_attack_deploy_cursor_column[2];
 extern s32 g_attack_deploy_cursor_row[2];
 extern s32 g_attack_deploy_fieldable_unit_count;
-extern s32 g_attack_deploy_menu_state;
+/* g_attack_deploy_menu_state: what the deployment cursor is over. It selects
+ * the button hint attack_deploy_build_menu_cursor_primitives draws. */
+typedef enum attack_deploy_menu_state {
+    ATTACK_DEPLOY_MENU_CLOSED = -1,       /* attack_deploy_run_screen is done */
+    ATTACK_DEPLOY_MENU_EMPTY_TILE = 0,    /* a unit can be placed here */
+    ATTACK_DEPLOY_MENU_BLOCKED_TILE = 1,  /* not a deployment tile, or the squad is full */
+    ATTACK_DEPLOY_MENU_SELECTED_UNIT = 2, /* the tile of the selected roster unit */
+    ATTACK_DEPLOY_MENU_OTHER_UNIT = 3,    /* another placed unit */
+    ATTACK_DEPLOY_MENU_SWAP_UNIT = 4,     /* the second cursor over a unit other than the picked one */
+    ATTACK_DEPLOY_MENU_HIDDEN = 5,        /* between squads and in tiles-only mode: no hint */
+} attack_deploy_menu_state_e;
+
+extern s32 g_attack_deploy_menu_state; /* attack_deploy_menu_state_e */
 extern s32 g_attack_deploy_pending_roster_index;
 extern u8 g_attack_deploy_roster_id_by_tile[5][5];
 extern s32 g_attack_deploy_roster_navigation_direction;

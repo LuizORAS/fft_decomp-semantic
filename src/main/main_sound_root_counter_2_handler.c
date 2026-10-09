@@ -23,11 +23,11 @@ s32 main_sound_root_counter_2_handler(void) {
 
     main_sound_update_voice_attrs();
     requests = g_main_sound_voice_update_requests;
-    if ((requests & 1) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO) != 0)
         main_sound_calculate_pitch_lfo_voices();
-    if ((requests & 2) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_NOISE) != 0)
         main_sound_calculate_noise_voices();
-    if ((requests & 4) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_REVERB) != 0)
         main_sound_calculate_reverb_voices();
     g_main_sound_voice_update_requests = 0;
     main_sound_flush_key_on_inline();
@@ -63,15 +63,15 @@ s32 main_sound_root_counter_2_handler(void) {
             }
             if (music->master_volume.count != 0) {
                 main_smd_step_ramp(&music->master_volume);
-                main_smd_set_voice_update_flags_all_channels(0x100, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
             }
             if (music->pitch_shift.count != 0) {
                 main_smd_step_ramp(&music->pitch_shift);
-                main_smd_set_voice_update_flags_all_channels(0x200, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_PITCH, music);
             }
             if (music->balance_shift.count != 0) {
                 main_smd_step_ramp(&music->balance_shift);
-                main_smd_set_voice_update_flags_all_channels(0x100, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
             }
             music->timer_ticks++;
             music->ticks += music->tempo_scale.value >> 16;

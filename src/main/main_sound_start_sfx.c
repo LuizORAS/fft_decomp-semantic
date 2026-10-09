@@ -73,9 +73,9 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             i = 3;
             started |= bit;
             voices |= channel->voice_mask;
-            flags = 0x409;
+            flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IN_USE;
             channel->flags = flags;
-            flags = 0x100;
+            flags = SUZUKI_VOICE_UPDATE_VOLUME;
             channel->voice_update_flags = flags;
             channel->ramp_flags = 0;
             data = (u8*)resource + *offsets;
@@ -109,7 +109,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
                 main_smd_set_instrument(g_main_sound_sfx_instrument, channel);
             }
         } else {
-            if (channel->flags & 1) {
+            if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                 stopped |= channel->voice_mask;
             }
             channel->flags = 0;
@@ -130,7 +130,8 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
     music->reverb_voice_mask &= ~stopped;
     g_main_sound_sfx_restart_channels = 0;
     g_main_sound_sfx_restart_voices = 0;
-    g_main_sound_voice_update_requests |= 7;
+    g_main_sound_voice_update_requests
+        |= SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO | SUZUKI_VOICE_MASK_REQUEST_NOISE | SUZUKI_VOICE_MASK_REQUEST_REVERB;
     music->status |= SUZUKI_MUSIC_STATUS_PLAYING;
     if (voices != 0) {
         for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
@@ -139,9 +140,9 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
                 channel = music->channels;
                 count = music->channel_count;
                 do {
-                    if (channel->flags & 1) {
+                    if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                         if (voices & channel->voice_mask) {
-                            channel->voice_attr_flags |= 0x71ff;
+                            channel->voice_attr_flags |= 0x7000 | SUZUKI_VOICE_ATTR_ALL;
                         }
                     }
                     channel++;

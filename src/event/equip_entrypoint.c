@@ -12,10 +12,10 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     s32 message_idle;
     battle_stats_t* stats;
 
-    if (g_equip_menu_screen_state == 0) {
+    if (g_equip_menu_screen_state == EQUIP_SCREEN_STATE_INIT) {
         equip_menu_init_screen(unit);
         bcopy(g_equip_unit_data[0]->equipment, g_equip_unit_initial_equipment, 0xA);
-        g_equip_menu_screen_state = 1;
+        g_equip_menu_screen_state = EQUIP_SCREEN_STATE_COMMAND_MENU;
     }
     g_equip_gfx_current_ot = otag;
     equip_gfx_swap_context_and_clear_otag(0, -1);
@@ -44,7 +44,7 @@ s32 equip_entrypoint(s32 unit, void* otag) {
         g_battle_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
     }
     g_equip_sound_queued_effect_id = 0;
-    if (g_equip_menu_screen_state != 0xFF) {
+    if (g_equip_menu_screen_state != EQUIP_SCREEN_STATE_CLOSED) {
         return result;
     }
     for (i = 0; i < 5; i++) {

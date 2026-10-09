@@ -222,7 +222,10 @@ typedef enum card_save_menu_state {
     CARD_SAVE_MENU_SCAN_RESULT = 2,
     CARD_SAVE_MENU_SCANNING = 3,
     CARD_SAVE_MENU_SELECT_SAVE = 4,
-    CARD_SAVE_MENU_WRITING = 6
+    CARD_SAVE_MENU_WRITING = 6,
+    CARD_SAVE_MENU_LEAVE_ALT = 9, /* never stored; handled like LEAVE */
+    CARD_SAVE_MENU_LEAVE = 10,    /* the player declined or is done: fade the music and the screen out */
+    CARD_SAVE_MENU_CLOSING = 0xff /* fading out; no state handler runs */
 } card_save_menu_state_e;
 
 /* The 0x1e00-byte serialized save is parity-covered in 0x80-byte blocks;
@@ -253,7 +256,7 @@ extern world_menu_entry_t g_card_save_in_progress_thread_descriptor[];
 extern world_menu_entry_t g_card_save_initial_prompt_descriptor[];
 extern u8 g_card_save_initial_prompt_thread_state;
 extern u16 g_card_save_menu_palette_image[0x100];
-extern u8 g_card_save_menu_state;
+extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 extern card_directory_entry_t* g_card_save_menu_work_buffer;
 extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];
 extern u16 g_card_save_slot_cursor_animation[];

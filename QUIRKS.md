@@ -190,6 +190,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `wldcore_proposition_step_result_level` clears the in-progress bit with
   `& 0xFFFD` on an `s32`, which also drops the variable's high half.
 - OPENING's runtime flags 8, 0x20000 and 0x80000 are tested and never set.
+- Suzuki driver: music status bits 0x20 and 0x2000, channel flag 0x10 and
+  driver flag 0x2000 are tested and never set; channel flags 0x80 and 0x4000
+  and voice-attribute bits 0x7000 are set and never tested;
+  `main_smd_set_flags_all_channels` and `main_smd_dispatch_snapshot` have no
+  caller.
+- CARD save menu state 9 is compared and never stored. EQUIP refuses command
+  row 1, so its screen state 3 is never entered. `g_etc_graphics` entries 0, 5
+  and 6 all name CHAPTER1.BIN.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

@@ -7,7 +7,7 @@ void* main_file_get_smd(int sector, int size) {
 
     buffer = main_heap_alloc_smd(size);
     if (buffer == 0) {
-        main_system_handle_animation_exception(0x11);
+        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SMD_LOAD);
     }
     while (main_file_build_header_nnl(&g_main_file_cd_state, sector, (u32)size >> 11, buffer) != 0) {
         VSync(0);

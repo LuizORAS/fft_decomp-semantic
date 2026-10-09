@@ -6,7 +6,7 @@ u8* main_smd_sustain_time(u8* note_data, suzuki_music_t* music, suzuki_music_cha
     u16 value;
 
     value = *note_data++;
-    channel->voice_attr_flags |= 0x40;
+    channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_SUSTAIN;
     channel->sustain_time = value;
     return note_data;
 }

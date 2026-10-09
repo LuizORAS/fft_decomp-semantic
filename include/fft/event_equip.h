@@ -22,6 +22,12 @@ s32 equip_bits_read_secondary(s32 count);
  * command pointer; every row callback is indexed by a list row. */
 typedef u8* (*equip_command_handler_t)(u8*);
 
+/* The opcode that ends an EQUIP menu script stream (menu_script_opcode_e
+ * names the others). */
+enum {
+    EQUIP_CMD_END = 0x19,
+};
+
 extern equip_command_handler_t g_equip_cmd_handlers[];
 extern u8 g_equip_cmd_row_sprite_body[];
 
@@ -332,6 +338,19 @@ void equip_item_subtract_scaled_stats(struct world_item_stat_detail* out, struct
     struct world_item_stat_detail* base, s32 scale);
 
 /* menu */
+/* g_equip_menu_screen_state: the index of the screen's handler in
+ * g_equip_menu_screen_state_handlers. The command menu enters its picked row
+ * + EQUIP: Equip, Remove and the item list are rows 0, 2 and 3 (row 1 is
+ * refused). */
+typedef enum equip_screen_state {
+    EQUIP_SCREEN_STATE_INIT = 0, /* equip_entrypoint builds the screen */
+    EQUIP_SCREEN_STATE_COMMAND_MENU = 1,
+    EQUIP_SCREEN_STATE_EQUIP = 2,     /* equip_menu_run_equip_mode */
+    EQUIP_SCREEN_STATE_REMOVE = 4,    /* equip_menu_run_remove_mode */
+    EQUIP_SCREEN_STATE_ITEM_LIST = 5, /* equip_menu_update_equipment */
+    EQUIP_SCREEN_STATE_CLOSED = 0xff, /* equip_entrypoint returns its result */
+} equip_screen_state_e;
+
 typedef s32 (*equip_row_callback_t)(s32 row);
 
 extern point16_t g_equip_menu_clear_all_prompt_draw_params;
@@ -347,7 +366,7 @@ extern s16 g_equip_menu_list_scroll_offset;
 extern u8* g_equip_menu_list_text_table;
 extern s16 g_equip_menu_list_visible_rows;
 extern u16 g_equip_menu_list_vram_width;
-extern u8 g_equip_menu_screen_state;
+extern u8 g_equip_menu_screen_state; /* equip_screen_state_e */
 extern s16 g_equip_menu_scroll_base_index;
 extern world_oriented_quad_t g_equip_menu_secondary_slot_marker;
 

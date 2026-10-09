@@ -33,7 +33,7 @@ u8* main_smd_pitch_shift_waveform(u8* note_data, suzuki_music_t* music, suzuki_m
         modulator->fade_step = 0x100;
         modulator->step = g_main_smd_modulator_waveforms[waveform];
         modulator->waveform = waveform;
-        modulator->target = 0;
+        modulator->target = SUZUKI_MODULATOR_TARGET_PITCH;
         modulator->flags = flags + 1;
         main_smd_modulator_reset(modulator);
     }

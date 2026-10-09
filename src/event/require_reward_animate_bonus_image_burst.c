@@ -80,15 +80,15 @@ void require_reward_animate_bonus_image_burst(void) {
             if (col & 1) {
                 tile->y = row * 24 - 24;
             }
-            if (mode == 0) {
+            if (mode == REQUIRE_REWARD_BURST_FROM_CENTRE) {
                 dx = tile->x - 0x80;
                 dy = tile->y - 0x80;
                 dist = SquareRoot0(dx * dx + dy * dy);
-            } else if (mode == 1) {
+            } else if (mode == REQUIRE_REWARD_BURST_FROM_ORIGIN) {
                 dx = tile->x;
                 dy = tile->y;
                 dist = SquareRoot0(dx * dx + dy * dy);
-            } else if (mode == 2) {
+            } else if (mode == REQUIRE_REWARD_BURST_HORIZONTAL) {
                 dx = tile->x;
                 dist = SquareRoot0(dx * dx);
             } else {

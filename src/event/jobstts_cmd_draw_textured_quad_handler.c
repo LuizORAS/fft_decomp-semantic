@@ -19,7 +19,7 @@ u8* jobstts_cmd_draw_textured_quad_handler(u8* data) {
     rect.w = data[5];
     rect.h = data[6];
     pal = g_jobstts_text_color;
-    if (data[0] == 4) {
+    if (data[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         pal = 0;
     }
     jobstts_gfx_enqueue_textured_quad(&rect, data[7], data[8], pal, g_jobstts_gfx_semitransparency,

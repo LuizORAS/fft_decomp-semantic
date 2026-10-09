@@ -12,10 +12,10 @@ s32 main_smd_modulator_step_triangle(suzuki_modulator_t* modulator) {
     if (timer == 0) {
         increment = modulator->amplitude;
         modulator->timer = modulator->timer_reset;
-        if ((modulator->flags & 8) != 0)
+        if ((modulator->flags & SUZUKI_MODULATOR_NEGATED) != 0)
             increment = -increment;
         modulator->increment = increment;
-        modulator->flags ^= 8;
+        modulator->flags ^= SUZUKI_MODULATOR_NEGATED;
     }
     modulator->value += modulator->increment;
     return modulator->value;

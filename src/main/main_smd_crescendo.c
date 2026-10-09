@@ -8,7 +8,7 @@ u8* main_smd_crescendo(s8* note_data, suzuki_music_t* music, suzuki_music_channe
 
     volume_delta = note_data[0];
     channel->volume = (channel->volume + (volume_delta << 24)) & 0x7fffffff;
-    channel->voice_update_flags |= 0x100;
-    channel->ramp_flags &= ~8;
+    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
+    channel->ramp_flags &= ~SUZUKI_RAMP_VOLUME;
     return note_data + 1;
 }

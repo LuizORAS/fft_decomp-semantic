@@ -13,7 +13,7 @@ void card_save_update_card_slot_selection(void) {
     if (g_card_save_slot_selection_thread_state == 0) {
         if (g_card_save_slot_index == -1) {
             if (g_card_save_completed != 0) {
-                g_card_save_menu_state = 10;
+                g_card_save_menu_state = CARD_SAVE_MENU_LEAVE;
             } else {
                 g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
             }

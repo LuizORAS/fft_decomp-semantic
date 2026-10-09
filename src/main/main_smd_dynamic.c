@@ -5,7 +5,7 @@
  * volume ends any crescendo/decrescendo ramp (ramp_flags bit 3). */
 u8* main_smd_dynamic(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     channel->volume = note_data[0] << 24;
-    channel->voice_update_flags |= 0x100;
-    channel->ramp_flags &= ~8;
+    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
+    channel->ramp_flags &= ~SUZUKI_RAMP_VOLUME;
     return note_data + 1;
 }

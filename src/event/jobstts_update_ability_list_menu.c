@@ -31,10 +31,10 @@ s32 jobstts_update_ability_list_menu(void) {
         g_jobstts_cmd_conditions[13] = jobstts_ability_is_action_tab;
         g_jobstts_cmd_conditions[14] = jobstts_ability_is_non_action_unlearned;
         g_jobstts_cmd_conditions[15] = jobstts_ability_is_action;
-        jobstts_menu_clear_selection_record(0);
-        jobstts_menu_clear_selection_record(1);
-        jobstts_menu_clear_selection_record(2);
-        jobstts_menu_clear_selection_record(3);
+        jobstts_menu_clear_selection_record(JOBSTTS_ABILITY_CATEGORY_ACTION);
+        jobstts_menu_clear_selection_record(JOBSTTS_ABILITY_CATEGORY_REACTION);
+        jobstts_menu_clear_selection_record(JOBSTTS_ABILITY_CATEGORY_SUPPORT);
+        jobstts_menu_clear_selection_record(JOBSTTS_ABILITY_CATEGORY_MOVEMENT);
         rect.x = 0x100;
         rect.y = 0xc8;
         rect.w = 0x14;
@@ -63,12 +63,12 @@ s32 jobstts_update_ability_list_menu(void) {
     if (input & PSX_PAD_CROSS) {
         g_jobstts_ability_list_initialized = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
-        return 0;
+        return JOBSTTS_PAGE_JOB_LIST;
     }
     if (input & PSX_PAD_CIRCLE) {
         g_jobstts_ability_list_initialized = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
-        return -1;
+        return JOBSTTS_PAGE_CLOSE;
     }
 
     category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, g_jobstts_input_secondary_repeat);
@@ -93,5 +93,5 @@ s32 jobstts_update_ability_list_menu(void) {
     rect.h = 0x10;
     jobstts_gfx_enqueue_textured_quad(
         (urect16_t*)&rect, 0, 0xc8, 0, 0, g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0, 0xb);
-    return 1;
+    return JOBSTTS_PAGE_ABILITY_LIST;
 }

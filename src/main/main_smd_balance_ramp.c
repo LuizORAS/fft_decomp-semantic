@@ -12,7 +12,7 @@ u8* main_smd_balance_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_cha
     delta = (s8)note_data[1] - (channel->balance >> 8);
     if (count != 0 && delta != 0) {
         channel->balance_step_count = count;
-        channel->ramp_flags |= 0x10;
+        channel->ramp_flags |= SUZUKI_RAMP_BALANCE;
         channel->balance_step = (delta << 8) / count;
     }
     return note_data + 2;

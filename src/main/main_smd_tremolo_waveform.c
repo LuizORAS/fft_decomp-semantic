@@ -28,7 +28,7 @@ u8* main_smd_tremolo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music
         modulator->fade_step = 0x100;
         modulator->step = g_main_smd_modulator_waveforms[waveform];
         modulator->waveform = waveform;
-        modulator->target = 1;
+        modulator->target = SUZUKI_MODULATOR_TARGET_VOLUME;
         modulator->flags = flags + 1;
         main_smd_modulator_reset(modulator);
     }

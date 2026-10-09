@@ -15,7 +15,7 @@ void bunit_menu_update_job(void) {
         g_bunit_job_menu_phase = bunit_run_ability_list_menu();
     }
     if (g_bunit_job_menu_phase == -1) {
-        g_bunit_menu_current_menu = -1;
+        g_bunit_menu_current_menu = BUNIT_MENU_UNIT_LIST;
         bunit_input_clear_state();
         g_bunit_job_menu_active = 0;
     }

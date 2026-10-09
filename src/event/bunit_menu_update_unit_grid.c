@@ -84,12 +84,15 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     if (allow_stat_cycle != 0) {
         if (g_bunit_unit_browse_enabled == 0) {
             if (input & PSX_PAD_L2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP ? 4 : g_bunit_unit_stat_mode - 1;
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_HP ? BUNIT_UNIT_STAT_BRAVE_FAITH
+                                                                                      : g_bunit_unit_stat_mode - 1;
                 input &= ~PSX_PAD_R2;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
             if (input & PSX_PAD_R2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 4 ? BUNIT_UNIT_STAT_HP : g_bunit_unit_stat_mode + 1;
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_BRAVE_FAITH
+                    ? BUNIT_UNIT_STAT_HP
+                    : g_bunit_unit_stat_mode + 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
         }
@@ -165,10 +168,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         if (mode < 3) {
             row = mode;
             col = 1;
-        } else if (mode == 3) {
+        } else if (mode == BUNIT_UNIT_STAT_LEVEL_EXP) {
             row = 3;
             col = 2;
-        } else if (mode == 4) {
+        } else if (mode == BUNIT_UNIT_STAT_BRAVE_FAITH) {
             row = 5;
             col = 3;
         }
@@ -266,7 +269,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     bar_points[6] += bar_points[4];
                     bar_points[7] = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
                     bunit_gfx_enqueue_gouraud_quad(bar_points, gradient, 0, 8);
-                } else if (g_bunit_unit_stat_mode == 3) {
+                } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_LEVEL_EXP) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y3 = top;
@@ -293,7 +296,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                     g_bunit_unit_grid_experience_number.y = number_y3;
                     g_bunit_unit_grid_experience_number.value = unit_index;
                     bunit_menu_script_draw_formatted_number(&g_bunit_unit_grid_experience_number);
-                } else if (g_bunit_unit_stat_mode == 4) {
+                } else if (g_bunit_unit_stat_mode == BUNIT_UNIT_STAT_BRAVE_FAITH) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y4 = top;

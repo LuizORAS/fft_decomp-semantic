@@ -38,7 +38,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
         pos -= 2;
     }
     if (seq->frames[anim_index] == (u8*)-1) {
-        main_system_handle_animation_exception(9);
+        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
     for (;;) {
         u8 op;
@@ -176,7 +176,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 block_id = seq->frames[anim_index][pos++];
                 block_anim = seq->frames[anim_index][pos++];
                 if (block_id == 0) {
-                    main_system_handle_animation_exception(0xd);
+                    main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 }
                 block = &unit->sprite_blocks[block_id - 1];
                 block->wait = 1;
@@ -312,7 +312,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 pos++;
                 break;
             default:
-                main_system_handle_animation_exception(0xd);
+                main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 break;
             }
         } else {

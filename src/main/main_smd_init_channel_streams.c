@@ -15,7 +15,7 @@ void main_smd_init_channel_streams(suzuki_music_t* music, suzuki_smd_header_t* s
     count = music->channel_count;
     remaining = smd->channel_count;
     do {
-        channel->flags |= 0x4000;
+        channel->flags |= SUZUKI_CHANNEL_STREAMS_SET;
         if (remaining != 0) {
             channel->restart_note_data = *offsets != 0 ? (u8*)smd + *offsets : 0;
             remaining--;

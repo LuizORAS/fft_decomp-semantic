@@ -7,6 +7,6 @@ u8* main_smd_modulator_disable(u8* note_data, suzuki_music_t* music, suzuki_musi
     u32 index;
 
     index = *note_data;
-    channel->modulators[index].flags &= ~1;
+    channel->modulators[index].flags &= ~SUZUKI_MODULATOR_ACTIVE;
     return note_data + 1;
 }

@@ -55,11 +55,12 @@ void card_save_run_menu(s32 unused) {
             card_save_update_slot_scan_result();
         } else if (g_card_save_menu_state == CARD_SAVE_MENU_WRITING) {
             card_save_update_slot_write(g_card_save_list_selected_slot);
-        } else if (g_card_save_menu_state == 10 || g_card_save_menu_state == 9) {
+        } else if (g_card_save_menu_state == CARD_SAVE_MENU_LEAVE
+            || g_card_save_menu_state == CARD_SAVE_MENU_LEAVE_ALT) {
             main_sound_set_current_music_target(0, 0xf0);
             while (card_io_poll_operation_result() == CARD_IO_RESULT_PENDING) { }
             card_gfx_start_increasing_fade();
-            g_card_save_menu_state = 0xff;
+            g_card_save_menu_state = CARD_SAVE_MENU_CLOSING;
         }
 
         card_gfx_set_render_otag(g_card_gfx_context->otag + 1);

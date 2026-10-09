@@ -16,11 +16,11 @@ int main_sound_open_scenario_smd_files(int scenario) {
                     g_main_sound_music.slots.smd[i + 1] = buffer;
                     g_main_sound_music.slots.handles.loading_slot = i + 1;
                 } else {
-                    main_system_handle_animation_exception(0x11);
+                    main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SMD_LOAD);
                     return 0;
                 }
             } else {
-                main_system_handle_animation_exception(0x11);
+                main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SMD_LOAD);
                 return 0;
             }
             return i + 1;

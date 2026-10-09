@@ -6,9 +6,9 @@ extern volatile u16 g_main_sound_driver_flags;
 
 s16 main_sound_wait_for_spu_transfer(s32 flags) {
     if (flags & 0x10) {
-        while (g_main_sound_driver_flags & 0x10) { }
+        while (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_SPU_TRANSFER) { }
     }
-    if (g_main_sound_driver_flags & 0x10) {
+    if (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_SPU_TRANSFER) {
         return g_main_sound_spu_transfer_status_records[g_main_sound_spu_transfer_status_index * 8];
     }
     return 0;

@@ -54,7 +54,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             }
         } else {
             input = g_equip_cmd_stream_input;
-            if ((input & 0x10000000) || (input & PSX_PAD_UP)) {
+            if ((input & (PSX_PAD_UP << 16)) || (input & PSX_PAD_UP)) {
                 scroll_base = g_equip_menu_scroll_base_index;
                 if (scroll_base == g_equip_menu_selected_list_index) {
                     if (scroll_base > 0) {
@@ -73,7 +73,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
                 } else if (input & PSX_PAD_UP) {
                     g_equip_menu_selected_list_index--;
                 }
-            } else if ((input & 0x40000000) || (input & PSX_PAD_DOWN)) {
+            } else if ((input & (PSX_PAD_DOWN << 16)) || (input & PSX_PAD_DOWN)) {
                 if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
                     == g_equip_menu_selected_list_index) {
                     if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1

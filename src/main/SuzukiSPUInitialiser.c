@@ -15,7 +15,7 @@ void SuzukiSPUInitialiser(s32 flags) {
     if ((s16)g_main_sound_driver_flags < 0) {
         return;
     }
-    g_main_sound_driver_flags = flags | 0x8000;
+    g_main_sound_driver_flags = flags | MAIN_SOUND_DRIVER_INITIALISED;
     SpuInitMalloc(6, g_main_sound_spu_malloc_table);
     main_sound_init_heap(g_main_sound_heap_memory, 0x8000);
     main_noop_80014544();
@@ -44,15 +44,15 @@ void SuzukiSPUInitialiser(s32 flags) {
     StartRCnt(0xf2000002);
     EnableEvent(g_main_root_counter_2_event);
     SpuSetTransferCallback(main_suzuki_spu_callback_func);
-    g_main_sound_driver_flags |= 1;
+    g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
     ExitCriticalSection();
-    main_sound_set_type(1);
+    main_sound_set_type(MAIN_SOUND_TYPE_STEREO);
     g_main_sound_reverb_attr.mode = -1;
     main_sound_set_reverb_mode(4, 0, 0, 0);
     main_sound_set_cd_reverb(0, 1);
     main_sound_set_master_volume(0x3fff, 0);
     main_sound_set_cd_volume(0x6400, 0);
-    if (g_main_sound_driver_flags & 0x2000) {
+    if (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_PUT_TYPE) {
         main_sound_put_type(0xc0);
     }
     main_sound_set_sfx_enabled(1);

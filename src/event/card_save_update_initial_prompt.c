@@ -15,7 +15,7 @@ void card_save_update_initial_prompt(void) {
         g_card_save_initial_prompt_thread_state = card_thread_start_managed(6, g_card_save_initial_prompt_descriptor);
         if (g_card_save_initial_prompt_thread_state == 0) {
             if (g_card_save_slot_index != 0) {
-                g_card_save_menu_state = 10;
+                g_card_save_menu_state = CARD_SAVE_MENU_LEAVE;
             } else {
                 g_card_save_menu_state = CARD_SAVE_MENU_SELECT_CARD;
             }

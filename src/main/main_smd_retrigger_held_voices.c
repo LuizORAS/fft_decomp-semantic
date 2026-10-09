@@ -17,10 +17,10 @@ u32 main_smd_retrigger_held_voices(suzuki_music_t* music) {
     channel = music->channels;
     voices = 0;
     do {
-        if ((channel->flags & 1) && (channel->flags & 0x100)) {
-            if ((channel->flags & 0x30) == 0) {
+        if ((channel->flags & SUZUKI_CHANNEL_IN_USE) && (channel->flags & SUZUKI_CHANNEL_SOUNDING)) {
+            if ((channel->flags & (SUZUKI_CHANNEL_MUTED | SUZUKI_CHANNEL_NO_RETRIGGER)) == 0) {
                 voices |= channel->voice_mask;
-                channel->voice_update_flags |= 1;
+                channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_KEY_ON;
             }
         }
         count--;

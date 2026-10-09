@@ -13,8 +13,8 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     s16 entry_count;
     s16 selected;
 
-    while (script[0] != 0x10) {
-        if (script[0] == 0x1c) {
+    while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
+        if (script[0] == BUNIT_CMD_END) {
             return;
         }
         script += script[1];

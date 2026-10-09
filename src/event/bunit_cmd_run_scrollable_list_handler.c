@@ -58,7 +58,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             }
         } else {
             input = g_bunit_cmd_stream_input;
-            if ((input & 0x10000000) || (input & PSX_PAD_UP)) {
+            if ((input & (PSX_PAD_UP << 16)) || (input & PSX_PAD_UP)) {
                 scroll_base = g_bunit_menu_scroll_base_index;
                 if (scroll_base == g_bunit_menu_list_selected_index) {
                     if (scroll_base > 0) {
@@ -77,7 +77,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                 } else if (input & PSX_PAD_UP) {
                     g_bunit_menu_list_selected_index--;
                 }
-            } else if ((input & 0x40000000) || (input & PSX_PAD_DOWN)) {
+            } else if ((input & (PSX_PAD_DOWN << 16)) || (input & PSX_PAD_DOWN)) {
                 if (g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1
                     == g_bunit_menu_list_selected_index) {
                     if (g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1 < ENTRY_COUNT - 1) {

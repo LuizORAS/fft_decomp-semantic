@@ -21,7 +21,7 @@ void main_smd_update_modulators(suzuki_music_t* music, suzuki_music_channel_t* c
     do {
         if (channel->flags != 0) {
             for (i = 4, modulator = channel->modulators; i != 0; modulator++, i--) {
-                if ((modulator->flags & 1) == 0)
+                if ((modulator->flags & SUZUKI_MODULATOR_ACTIVE) == 0)
                     continue;
                 if (modulator->delay != 0) {
                     modulator->delay--;
@@ -34,17 +34,17 @@ void main_smd_update_modulators(suzuki_music_t* music, suzuki_music_channel_t* c
                 }
                 value >>= 16;
                 switch (modulator->target) {
-                case 0:
+                case SUZUKI_MODULATOR_TARGET_PITCH:
                     channel->pitch_modulation += value;
-                    channel->voice_update_flags |= 0x200;
+                    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_PITCH;
                     break;
-                case 1:
+                case SUZUKI_MODULATOR_TARGET_VOLUME:
                     channel->volume_modulation += value;
-                    channel->voice_update_flags |= 0x100;
+                    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                     break;
-                case 2:
+                case SUZUKI_MODULATOR_TARGET_BALANCE:
                     channel->balance_modulation += value;
-                    channel->voice_update_flags |= 0x100;
+                    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                     break;
                 }
             }

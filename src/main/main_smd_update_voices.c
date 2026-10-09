@@ -36,7 +36,7 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
     do {
         if (channel->flags != 0 && channel->voice < 25) {
             voice_update_flags = channel->voice_update_flags;
-            if ((voice_update_flags & 0x100) != 0) {
+            if ((voice_update_flags & SUZUKI_VOICE_UPDATE_VOLUME) != 0) {
                 volume = (channel->volume >> 16) + channel->volume_modulation;
                 if (volume > 0x7fff)
                     volume = 0x7fff;
@@ -49,7 +49,7 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
                     balance = 0x7f00;
                 if (balance < 0)
                     balance = 0;
-                if ((g_main_sound_driver_flags & 0x100) != 0) {
+                if ((g_main_sound_driver_flags & MAIN_SOUND_DRIVER_STEREO) != 0) {
                     if (balance < 0x4000) {
                         right = (balance * 0x5a00) >> 14;
                         left = 0x7f00 - ((balance * 0x2500) >> 14);
@@ -66,17 +66,17 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
                 }
                 channel->spu_volume_left = left;
                 channel->spu_volume_right = right;
-                channel->voice_attr_flags |= 1;
+                channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_VOLUME;
             }
-            if ((voice_update_flags & 0x200) != 0) {
+            if ((voice_update_flags & SUZUKI_VOICE_UPDATE_PITCH) != 0) {
                 channel->spu_pitch = main_smd_calculate_pitch((channel->pitch_slide >> 16) + channel->pitch_modulation
                                          + (music->pitch_shift.value >> 16))
                     & 0x3fff;
-                channel->voice_attr_flags |= 4;
+                channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_PITCH;
             }
-            if ((voice_update_flags & 1) != 0 && (channel->flags & 0x20) == 0)
+            if ((voice_update_flags & SUZUKI_VOICE_UPDATE_KEY_ON) != 0 && (channel->flags & SUZUKI_CHANNEL_MUTED) == 0)
                 key_on |= channel->voice_mask;
-            if ((voice_update_flags & 2) != 0)
+            if ((voice_update_flags & SUZUKI_VOICE_UPDATE_KEY_OFF) != 0)
                 key_off |= channel->voice_mask;
             channel->voice_update_flags = 0;
         }

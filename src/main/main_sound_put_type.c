@@ -13,7 +13,8 @@ void main_sound_put_type(s16 level) {
     s16 cross;
 
     g_main_sound_spu_state.sound_type = level;
-    if (g_main_sound_driver_flags & 0x700) {
+    if (g_main_sound_driver_flags
+        & (MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_WIDE | MAIN_SOUND_DRIVER_STEREO)) {
         cross = 0;
         g_main_sound_cd_mix.val0 = g_main_sound_cd_mix.val2 = level;
     } else {

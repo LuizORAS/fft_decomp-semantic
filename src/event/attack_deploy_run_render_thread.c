@@ -53,7 +53,7 @@ void attack_deploy_run_render_thread(void) {
     frame = 0;
     while (1) {
         battle_thread_yield();
-        if (g_attack_deploy_tiles_only_mode == 0 && g_attack_deploy_menu_state != 5) {
+        if (g_attack_deploy_tiles_only_mode == 0 && g_attack_deploy_menu_state != ATTACK_DEPLOY_MENU_HIDDEN) {
             attack_deploy_build_menu_cursor_primitives(
                 frame, g_attack_deploy_menu_state, &g_attack_deploy_render_buffers[frame & 1]);
         }
@@ -127,7 +127,8 @@ void attack_deploy_run_render_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(g_attack_deploy_cursor_0_poly);
         for (y = 0; y < 5; y++) {
             for (x = 0; x < 5; x++) {
-                if (g_attack_deploy_tiles_only_mode == 0 && g_attack_deploy_roster_id_by_tile[y][x] != 0xff) {
+                if (g_attack_deploy_tiles_only_mode == 0
+                    && g_attack_deploy_roster_id_by_tile[y][x] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     attack_deploy_build_portrait_quads(x, y, g_attack_deploy_roster_id_by_tile[y][x],
                         &g_attack_deploy_render_buffers[frame & 1].portraits[count]);
                     battle_gfx_draw_or_append_gpu_primitive(
@@ -154,7 +155,7 @@ void attack_deploy_run_render_thread(void) {
                 if (g_attack_deploy_tiles_only_mode == 0) {
                     if (g_attack_deploy_valid_tiles[y][x] != 0) {
                         tile->u0 = 0x28;
-                        if (g_attack_deploy_roster_id_by_tile[y][x] == 0xff) {
+                        if (g_attack_deploy_roster_id_by_tile[y][x] == ATTACK_DEPLOY_ROSTER_ID_NONE) {
                             tile->clut
                                 = GetClut(g_attack_deploy_tile_clut_rect.x + 0x10, g_attack_deploy_tile_clut_rect.y);
                         } else {

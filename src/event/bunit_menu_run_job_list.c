@@ -29,7 +29,7 @@ s32 bunit_menu_run_job_list(void) {
         g_bunit_job_list_initialized = 0;
         return -1;
     }
-    if ((mask & PSX_PAD_CIRCLE) && g_bunit_menu_current_menu == 2) {
+    if ((mask & PSX_PAD_CIRCLE) && g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
         g_bunit_job_selected_id = g_bunit_job_ids[g_bunit_menu_list_selected_index];
         g_bunit_job_selected_generic_index = bunit_job_get_generic_index(g_bunit_job_selected_id);
         bunit_job_calculate_current_level(g_bunit_menu_list_selected_index);

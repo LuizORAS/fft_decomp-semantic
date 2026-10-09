@@ -8,6 +8,6 @@ u8* main_smd_modulator_enable(u8* note_data, suzuki_music_t* music, suzuki_music
 
     modulator = &channel->modulators[*note_data++];
     main_smd_modulator_reset(modulator);
-    modulator->flags |= 1;
+    modulator->flags |= SUZUKI_MODULATOR_ACTIVE;
     return note_data;
 }

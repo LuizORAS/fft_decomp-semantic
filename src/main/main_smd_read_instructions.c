@@ -48,14 +48,14 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
             if (channel->rest_length == 0) {
                 flags = channel->flags;
                 note_data = channel->note_data;
-                channel->flags = flags & 0xf8ff;
+                channel->flags = flags & ~(SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_TIED | SUZUKI_CHANNEL_SOUNDING);
                 do {
                     op = *note_data++;
                     if (op < 0x80) {
-                        if (!(channel->flags & 8)) {
+                        if (!(channel->flags & SUZUKI_CHANNEL_SFX)) {
                             channel->velocity = op << 8;
                         }
-                        channel->voice_update_flags |= 0x100;
+                        channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                         note = *note_data++;
                         op = channel->key = channel->octave_base + g_main_smd_note_semitones[note];
                         note = g_main_smd_note_durations[note];
@@ -65,18 +65,18 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                             channel->rest_length = *note_data++;
                         }
                         channel->release_time = channel->note_release_time;
-                        channel->voice_attr_flags |= 0x80;
+                        channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_RELEASE;
                         channel->pitch_slide = ((op << 8) + channel->pitch_offset + channel->fine_tune) << 16;
-                        channel->voice_update_flags |= 0x200;
-                        channel->flags |= 0x180;
-                        if (flags & 0x400) {
+                        channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_PITCH;
+                        channel->flags |= SUZUKI_CHANNEL_SOUNDING | SUZUKI_CHANNEL_NOTE_READ;
+                        if (flags & SUZUKI_CHANNEL_KEYED_OFF) {
                             key_on = 1;
-                            channel->voice_update_flags |= 1;
+                            channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_KEY_ON;
                         }
-                        if (channel->flags & 0x8000) {
-                            channel->flags &= 0x7fff;
-                            channel->voice_update_flags |= 0x300;
-                            channel->voice_attr_flags |= 0x1ff;
+                        if (channel->flags & SUZUKI_CHANNEL_INSTRUMENT_PENDING) {
+                            channel->flags &= ~SUZUKI_CHANNEL_INSTRUMENT_PENDING;
+                            channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME | SUZUKI_VOICE_UPDATE_PITCH;
+                            channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_ALL;
                         }
                     } else {
                         op -= 0x80;
@@ -86,40 +86,40 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                             break;
                         }
                     }
-                } while (!(channel->flags & 0x500));
+                } while (!(channel->flags & (SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_SOUNDING)));
                 channel->note_data = note_data;
-                if (channel->flags & 0x800) {
-                    channel->flags |= 0x200;
+                if (channel->flags & SUZUKI_CHANNEL_SLUR) {
+                    channel->flags |= SUZUKI_CHANNEL_TIED;
                 }
                 repeat = &channel->repeats[channel->repeat_depth];
                 while ((op = *note_data) >= 0x80) {
-                    if (op == 0x90) {
+                    if (op == SUZUKI_SMD_OPCODE_END_BAR) {
                         note_data = channel->loop_note_data;
                         if (note_data != 0) {
                             continue;
                         }
                         break;
                     }
-                    if (op == 0x80) {
-                        channel->flags &= ~0x200;
+                    if (op == SUZUKI_SMD_OPCODE_REST) {
+                        channel->flags &= ~SUZUKI_CHANNEL_TIED;
                         break;
                     }
-                    if (op == 0x81) {
-                        channel->flags |= 0x200;
+                    if (op == SUZUKI_SMD_OPCODE_FERMATA) {
+                        channel->flags |= SUZUKI_CHANNEL_TIED;
                         break;
                     }
-                    if (op == 0xb0 || op == 0xb1) {
-                        channel->flags &= ~0x200;
+                    if (op == SUZUKI_SMD_OPCODE_SLUR_ON || op == SUZUKI_SMD_OPCODE_SLUR_OFF) {
+                        channel->flags &= ~SUZUKI_CHANNEL_TIED;
                         break;
                     }
-                    if (op == 0x99) {
+                    if (op == SUZUKI_SMD_OPCODE_CODA) {
                         if (repeat->count != 0) {
                             note_data = repeat->start;
                             continue;
                         }
                         repeat--;
                     }
-                    if (op == 0x9a && repeat->count == 0) {
+                    if (op == SUZUKI_SMD_OPCODE_TO_CODA && repeat->count == 0) {
                         note_data = repeat->coda;
                         repeat--;
                     } else {
@@ -128,9 +128,9 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                     }
                 }
                 if (op < 0x80) {
-                    channel->flags |= 0x1000;
+                    channel->flags |= SUZUKI_CHANNEL_NOTE_FOLLOWS;
                 } else {
-                    channel->flags &= ~0x1000;
+                    channel->flags &= ~SUZUKI_CHANNEL_NOTE_FOLLOWS;
                 }
                 length = (s8)channel->length_adjust + channel->rest_length;
                 if (length <= 0) {
@@ -157,11 +157,11 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                 channel->note_ticks = ticks;
                 channel->rest_length = length;
                 if (key_on) {
-                    if (channel->ramp_flags & 4) {
+                    if (channel->ramp_flags & SUZUKI_RAMP_PORTAMENTO) {
                         diff = (channel->key - channel->previous_key) << 24;
                         if (diff != 0) {
                             channel->pitch_slide_count = channel->portamento_ticks;
-                            channel->ramp_flags |= 1;
+                            channel->ramp_flags |= SUZUKI_RAMP_PITCH_SLIDE;
                             channel->pitch_slide
                                 = ((channel->previous_key << 8) + channel->pitch_offset + channel->fine_tune) << 16;
                             channel->pitch_slide_step = diff / channel->portamento_ticks;
@@ -171,16 +171,16 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                     modulator = channel->modulators;
                     for (i = 4; i != 0; i--) {
                         mod_flags = modulator->flags;
-                        if (mod_flags & 1) {
-                            if (mod_flags & 2) {
+                        if (mod_flags & SUZUKI_MODULATOR_ACTIVE) {
+                            if (mod_flags & SUZUKI_MODULATOR_RESTART_ON_KEY_ON) {
                                 modulator->value = 0;
                                 modulator->timer = 1;
                                 modulator->delay = modulator->delay_reset;
                                 modulator->fade_level = modulator->fade_step;
-                                if (mod_flags & 3) {
-                                    channel->voice_update_flags |= 0x100;
+                                if (mod_flags & (SUZUKI_MODULATOR_RESTART_ON_KEY_ON | SUZUKI_MODULATOR_ACTIVE)) {
+                                    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                                 }
-                                modulator->flags &= ~0xc;
+                                modulator->flags &= ~(SUZUKI_MODULATOR_NEGATED | SUZUKI_MODULATOR_HALF_PERIOD_DONE);
                             }
                         }
                         modulator++;

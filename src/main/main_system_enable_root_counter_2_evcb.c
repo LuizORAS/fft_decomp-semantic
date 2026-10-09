@@ -6,8 +6,8 @@ void main_system_enable_root_counter_2_evcb(void) {
     u16 flags;
 
     flags = g_main_sound_driver_flags;
-    if ((flags & 1) == 0) {
-        g_main_sound_driver_flags = flags | 1;
+    if ((flags & MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT) == 0) {
+        g_main_sound_driver_flags = flags | MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
         EnableEvent(g_main_root_counter_2_event);
     }
 }

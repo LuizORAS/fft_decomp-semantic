@@ -44,10 +44,10 @@ void battle_gfx_run_wep_eff_seq_script(
         pos -= 2;
     }
     if (anim > 0x100) {
-        main_system_handle_animation_exception(9);
+        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
     if (seq[anim] == (u8*)-1) {
-        main_system_handle_animation_exception(9);
+        main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
     for (;;) {
         data = seq[anim];
@@ -134,7 +134,7 @@ void battle_gfx_run_wep_eff_seq_script(
                 slot = seq[anim][pos++];
                 animation = seq[anim][pos++];
                 if (slot == 0) {
-                    main_system_handle_animation_exception(0xd);
+                    main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 }
                 block = &unit->sprite_blocks[slot - 1];
                 block->animation_id = animation;
@@ -190,7 +190,7 @@ void battle_gfx_run_wep_eff_seq_script(
             case BATTLE_SEQ_OP_SET_SHADOW:
                 break;
             default:
-                main_system_handle_animation_exception(0xd);
+                main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 break;
             }
         } else {
@@ -202,10 +202,10 @@ void battle_gfx_run_wep_eff_seq_script(
             }
             src = shp->frames[frame];
             if (frame > 0x200) {
-                main_system_handle_animation_exception(8);
+                main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SHP_FRAME);
             }
             if (src == (battle_gfx_source_frame_t*)-1) {
-                main_system_handle_animation_exception(8);
+                main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_SHP_FRAME);
             }
             display = sprite->display;
             parts = display->part_count = (src->part_count_and_rotation & 7) + 1;

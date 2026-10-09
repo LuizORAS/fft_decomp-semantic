@@ -33,8 +33,8 @@ s32 jobstts_menu_update_job_list(void) {
             4, g_jobstts_menu_list_selected_index, g_jobstts_menu_scroll_base_index, g_jobstts_job_ids);
         g_jobstts_job_list_menu_initialized = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CONFIRM;
-        return 1;
+        return JOBSTTS_PAGE_ABILITY_LIST;
     }
     jobstts_cmd_run_stream_with_mode(g_jobstts_job_list_render_commands, input, g_battle_menu_input_lock_mode);
-    return 0;
+    return JOBSTTS_PAGE_JOB_LIST;
 }

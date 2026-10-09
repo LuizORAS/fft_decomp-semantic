@@ -3,6 +3,6 @@
 
 /* SMD opcode 0xEE: activates modulator 2. */
 u8* main_smd_pan_lfo_on(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
-    channel->modulators[2].flags |= 1;
+    channel->modulators[2].flags |= SUZUKI_MODULATOR_ACTIVE;
     return note_data;
 }

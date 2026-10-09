@@ -25,7 +25,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
         it = g_require_reward_war_trophy_entry_types;
         j = g_require_reward_war_trophy_entry_count;
         iv[j] = g_require_reward_war_trophy_search_result.bonus_money;
-        it[j] = 1;
+        it[j] = REQUIRE_WAR_TROPHY_ENTRY_BONUS_MONEY;
         if (iv[j] != 0) {
             next = j + 1;
             g_require_reward_war_trophy_entry_count = next;
@@ -47,7 +47,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
             item_id = g_require_reward_war_trophy_search_result.item_ids[i];
             i++;
             vb[entry] = item_id;
-            tb[entry] = 0;
+            tb[entry] = REQUIRE_WAR_TROPHY_ENTRY_ITEM;
             loop_count = *cp;
             g_require_reward_war_trophy_entry_count = entry + 1;
         } while (i < loop_count);
@@ -58,7 +58,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
         s32* vp = g_require_reward_war_trophy_entry_values;
         s32* tp = g_require_reward_war_trophy_entry_types;
         do {
-            if (*tp == 0) {
+            if (*tp == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
                 item_id = *vp;
                 quantity = main_item_get_total_equipment_quantity(item_id, 1);
                 if (quantity == 99) {

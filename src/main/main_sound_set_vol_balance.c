@@ -16,9 +16,9 @@ void main_sound_set_vol_balance(s32 volume, SpuVolume* volume_out, u8 mode) {
 
     volume_out->right = volume;
     volume_out->left = volume;
-    if (g_main_sound_driver_flags & 0x600) {
+    if (g_main_sound_driver_flags & (MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_WIDE)) {
         invert_left = mode;
-        if ((g_main_sound_driver_flags & 0x200) == 0) {
+        if ((g_main_sound_driver_flags & MAIN_SOUND_DRIVER_WIDE) == 0) {
             invert_left = invert_left != 1;
             if (invert_left) {
                 volume_out->left = -volume;

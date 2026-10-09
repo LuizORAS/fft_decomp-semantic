@@ -14,9 +14,9 @@ u8* main_smd_modulator_enable_mask(u8* note_data, suzuki_music_t* music, suzuki_
     do {
         if (mask & 1) {
             main_smd_modulator_reset(modulator);
-            modulator->flags |= 1;
+            modulator->flags |= SUZUKI_MODULATOR_ACTIVE;
         } else {
-            modulator->flags &= ~1;
+            modulator->flags &= ~SUZUKI_MODULATOR_ACTIVE;
         }
         mask >>= 1;
         modulator++;

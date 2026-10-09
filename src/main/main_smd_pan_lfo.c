@@ -16,14 +16,15 @@ u8* main_smd_pan_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
         modulator = &channel->modulators[2];
-        modulator->amplitude = main_smd_modulator_calculate_step(depth << 24, speed, 3);
+        modulator->amplitude
+            = main_smd_modulator_calculate_step(depth << 24, speed, SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED);
         modulator->timer_reset = speed;
         modulator->delay_reset = note_data[2];
         modulator->fade_step = 0x100;
         modulator->step = main_smd_modulator_step_triangle_centered;
-        modulator->waveform = 3;
-        modulator->target = 2;
-        modulator->flags = 3;
+        modulator->waveform = SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED;
+        modulator->target = SUZUKI_MODULATOR_TARGET_BALANCE;
+        modulator->flags = SUZUKI_MODULATOR_RESTART_ON_KEY_ON | SUZUKI_MODULATOR_ACTIVE;
         main_smd_modulator_reset(modulator);
     }
     return note_data + 3;

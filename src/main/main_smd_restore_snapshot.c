@@ -15,7 +15,7 @@ void main_smd_restore_snapshot(suzuki_music_t* music) {
         tick = music->sequence_ticks;
         main_smd_copy_snapshot(music, music->snapshot);
         music->snapshot_restore_tick = tick;
-        main_smd_set_voice_attr_flags_all_channels(music, 0x71ff);
+        main_smd_set_voice_attr_flags_all_channels(music, 0x7000 | SUZUKI_VOICE_ATTR_ALL);
         music->key_off_mask = 0;
         music->key_on_mask = 0;
         main_smd_retrigger_held_voices(music);

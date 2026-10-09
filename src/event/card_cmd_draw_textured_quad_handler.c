@@ -14,7 +14,7 @@ u8* card_cmd_draw_textured_quad_handler(u8* command) {
     rect.w = command[5];
     rect.h = command[6];
     color = g_card_text_color;
-    if (command[0] == 4) {
+    if (command[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }
     card_gfx_enqueue_textured_quad(&rect, command[7], command[8], color, g_card_gfx_draw_semitrans,

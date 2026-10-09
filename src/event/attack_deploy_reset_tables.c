@@ -9,7 +9,7 @@ void attack_deploy_reset_tables(void) {
     do {
         column = 4;
         do {
-            g_attack_deploy_roster_id_by_tile[row][column] = 0xff;
+            g_attack_deploy_roster_id_by_tile[row][column] = ATTACK_DEPLOY_ROSTER_ID_NONE;
             column--;
         } while (column >= 0);
         row++;
@@ -19,7 +19,7 @@ void attack_deploy_reset_tables(void) {
     do {
         column = 24;
         do {
-            g_attack_deploy_units_by_squad[row][column] = 0xff;
+            g_attack_deploy_units_by_squad[row][column] = ATTACK_DEPLOY_ROSTER_ID_NONE;
             column--;
         } while (column >= 0);
         row++;

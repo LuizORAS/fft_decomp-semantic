@@ -102,7 +102,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             battle_text_restore_section_pointers();
         }
         bunit_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
-        if (g_bunit_menu_current_menu == 2) {
+        if (g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
             bunit_menu_update_job();
             /* The target also passes a1 = 0 to this one-argument callee. */
             ((void (*)(s32, s32))bunit_gfx_draw_falloff_shaded_rows)(

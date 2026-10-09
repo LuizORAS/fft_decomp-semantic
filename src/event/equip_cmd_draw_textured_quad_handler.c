@@ -21,7 +21,7 @@ u8* equip_cmd_draw_textured_quad_handler(u8* cmd) {
     rect.h = cmd[6];
 
     color = g_equip_gfx_sprite_color;
-    if (cmd[0] == 4) {
+    if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }
 

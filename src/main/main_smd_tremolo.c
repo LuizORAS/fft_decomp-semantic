@@ -13,14 +13,15 @@ u8* main_smd_tremolo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
         modulator = &channel->modulators[1];
-        modulator->amplitude = main_smd_modulator_calculate_step(-depth << 24, speed, 2);
+        modulator->amplitude
+            = main_smd_modulator_calculate_step(-depth << 24, speed, SUZUKI_MODULATOR_WAVEFORM_TRIANGLE);
         modulator->timer_reset = speed;
         modulator->delay_reset = note_data[2];
         modulator->fade_step = 0x100;
         modulator->step = main_smd_modulator_step_triangle;
-        modulator->waveform = 2;
-        modulator->target = 1;
-        modulator->flags = 3;
+        modulator->waveform = SUZUKI_MODULATOR_WAVEFORM_TRIANGLE;
+        modulator->target = SUZUKI_MODULATOR_TARGET_VOLUME;
+        modulator->flags = SUZUKI_MODULATOR_RESTART_ON_KEY_ON | SUZUKI_MODULATOR_ACTIVE;
         main_smd_modulator_reset(modulator);
     }
     return note_data + 3;

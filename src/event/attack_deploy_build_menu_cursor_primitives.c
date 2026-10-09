@@ -21,7 +21,7 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
         i += 1;
     } while (i < 4);
 
-    if (mode != 1) {
+    if (mode != ATTACK_DEPLOY_MENU_BLOCKED_TILE) {
         palette = 0x7D7C;
         for (i = 3; i >= 0; i--) {
             render_buffer->menu_cursor[i].clut = palette;
@@ -36,9 +36,9 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
     battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_draw_mode);
     if (mode < 2) {
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
-    } else if (mode == 2) {
+    } else if (mode == ATTACK_DEPLOY_MENU_SELECTED_UNIT) {
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
-    } else if (mode == 3) {
+    } else if (mode == ATTACK_DEPLOY_MENU_OTHER_UNIT) {
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
         if ((frame & 0x3F) < 0x20) {
@@ -46,7 +46,7 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
         } else {
             render_buffer->menu_cursor[1].clut = 0x7DFC;
         }
-    } else if (mode == 4) {
+    } else if (mode == ATTACK_DEPLOY_MENU_SWAP_UNIT) {
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[3]);
         battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[2]);
         if ((frame & 0x3F) < 0x20) {

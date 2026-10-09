@@ -3,7 +3,7 @@
 
 void attack_deploy_init_valid_tiles(void) {
     g_attack_deploy_tiles_only_mode = 1;
-    g_attack_deploy_menu_state = 5;
+    g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_HIDDEN;
     g_attack_deploy_active_cursor = 0;
     g_attack_deploy_grid_slide_x = 0;
     g_attack_deploy_grid_slide_y = 0;

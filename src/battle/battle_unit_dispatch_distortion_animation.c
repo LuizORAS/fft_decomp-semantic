@@ -11,7 +11,7 @@ void battle_unit_dispatch_distortion_animation(battle_unit_misc_data_t* unit) {
         if (distortion_id < 0x12) {
             g_battle_unit_distortion_animation_handlers[distortion_id](unit);
         } else {
-            main_system_handle_animation_exception(0x17);
+            main_system_handle_animation_exception(MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION);
         }
     }
 }

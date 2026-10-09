@@ -33,31 +33,31 @@ void main_smd_update_channel_ramps(suzuki_music_t* music, suzuki_music_channel_t
                 channel->pitch_modulation = 0;
                 channel->volume_modulation = 0;
                 channel->balance_modulation = 0;
-                if ((flags & 8) != 0) {
-                    voice_update_flags |= 0x100;
+                if ((flags & SUZUKI_RAMP_VOLUME) != 0) {
+                    voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                     if (--channel->volume_step_count == 0)
-                        flags &= ~8;
+                        flags &= ~SUZUKI_RAMP_VOLUME;
                     channel->volume += channel->volume_step;
                 }
-                if ((flags & 1) != 0) {
-                    voice_update_flags |= 0x200;
-                    if ((flags & 2) == 0 && --channel->pitch_slide_count == 0)
-                        flags &= ~1;
+                if ((flags & SUZUKI_RAMP_PITCH_SLIDE) != 0) {
+                    voice_update_flags |= SUZUKI_VOICE_UPDATE_PITCH;
+                    if ((flags & SUZUKI_RAMP_PITCH_SLIDE_HOLD) == 0 && --channel->pitch_slide_count == 0)
+                        flags &= ~SUZUKI_RAMP_PITCH_SLIDE;
                     channel->pitch_slide += channel->pitch_slide_step;
                 }
-                if ((flags & 0x10) != 0) {
-                    voice_update_flags |= 0x100;
+                if ((flags & SUZUKI_RAMP_BALANCE) != 0) {
+                    voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
                     if (--channel->balance_step_count == 0)
-                        flags &= ~0x10;
+                        flags &= ~SUZUKI_RAMP_BALANCE;
                     channel->balance += channel->balance_step;
                 }
-                if (--channel->rest_length == 1 && (active & 0x1000) != 0) {
+                if (--channel->rest_length == 1 && (active & SUZUKI_CHANNEL_NOTE_FOLLOWS) != 0) {
                     channel->release_time = 6;
-                    channel->voice_attr_flags |= 0x80;
+                    channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_RELEASE;
                 }
-                if ((active & 0x600) == 0 && --channel->note_ticks == 0) {
-                    voice_update_flags |= 2;
-                    channel->flags |= 0x400;
+                if ((active & (SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_TIED)) == 0 && --channel->note_ticks == 0) {
+                    voice_update_flags |= SUZUKI_VOICE_UPDATE_KEY_OFF;
+                    channel->flags |= SUZUKI_CHANNEL_KEYED_OFF;
                 }
             }
             channel->voice_update_flags = voice_update_flags;
