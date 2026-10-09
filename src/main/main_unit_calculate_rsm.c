@@ -98,11 +98,11 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
                 continue;
             if (flags & RSM_ABILITY_FILTER_REACTION) {
                 rel = id - ABILITY_ID_REACTION_FIRST;
-                keep = rel < 0x20;
+                keep = rel < ABILITY_ID_SUPPORT_FIRST - ABILITY_ID_REACTION_FIRST;
             }
             if (flags & RSM_ABILITY_FILTER_SUPPORT) {
                 rel = id - ABILITY_ID_SUPPORT_FIRST;
-                if (rel < 0x20) {
+                if (rel < ABILITY_ID_MOVEMENT_FIRST - ABILITY_ID_SUPPORT_FIRST) {
                     keep = 1;
                 }
             }

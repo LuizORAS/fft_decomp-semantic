@@ -66,7 +66,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         return BATTLE_TARGET_PANELS_NO_TARGETING;
     }
     if (mode == 1) {
-        if (ability_id >= 0x170) {
+        if (ability_id >= ABILITY_ID_ITEM_FIRST) {
             return BATTLE_TARGET_PANELS_INVALID;
         }
         ability = &g_main_ability_range_data[ability_id];

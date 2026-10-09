@@ -91,7 +91,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
         packed = 0;
     } else {
         if (ability == ABILITY_ID_THROW_BALL) {
-            packed = g_battle_ability_animation_data[0x189].charge_animation_set_id;
+            packed = g_battle_ability_animation_data[ABILITY_ID_THROW_BALL].charge_animation_set_id;
             packed |= g_main_item_weapon_data[item].element << 16;
         } else {
             packed = g_battle_ability_animation_data[ability].charge_animation_set_id;

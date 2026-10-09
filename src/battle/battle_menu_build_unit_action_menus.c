@@ -35,7 +35,7 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
         entries[0] = primary;
         empty[0] = 0;
         menu_types[0] = g_main_action_menu_types_by_skillset[primary];
-        entries[1] = 0xff;
+        entries[1] = SKILLSET_ID_NONE;
         return 1;
     }
     supports = unit->support_abilities[3];
@@ -46,7 +46,7 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
         || (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
-        *entries = 0xff;
+        *entries = SKILLSET_ID_NONE;
         return 0;
     }
     *entries++ = SKILLSET_ID_ATTACK;
@@ -62,11 +62,11 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
     if (supports & BATTLE_SUPPORT_SET_4_EQUIP_CHANGE) {
         *entries++ = SKILLSET_ID_EQUIP_CHANGE;
     }
-    *entries = 0xff;
+    *entries = SKILLSET_ID_NONE;
     entries = list;
     for (i = 0; i < 6; i++) {
         id = entries[i];
-        if (id == 0xff) {
+        if (id == SKILLSET_ID_NONE) {
             break;
         }
         menu_type = g_main_action_menu_types_by_skillset[id] & 0xf;

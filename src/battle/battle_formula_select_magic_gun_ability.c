@@ -13,29 +13,29 @@ void battle_formula_select_magic_gun_ability(void) {
     pct = (roll * 100) / 0x8000;
     if (element & BATTLE_ELEMENT_FIRE) {
         if (pct < 10) {
-            id = 0x12;
+            id = ABILITY_ID_BLACK_MAGIC_FIRE_3;
         } else {
-            id = 0x10;
+            id = ABILITY_ID_BLACK_MAGIC_FIRE;
             if (pct < 40) {
-                id = 0x11;
+                id = ABILITY_ID_BLACK_MAGIC_FIRE_2;
             }
         }
     } else if (element & BATTLE_ELEMENT_LIGHTNING) {
         if (pct < 10) {
-            id = 0x16;
+            id = ABILITY_ID_BLACK_MAGIC_BOLT_3;
         } else {
-            id = 0x14;
+            id = ABILITY_ID_BLACK_MAGIC_BOLT;
             if (pct < 40) {
-                id = 0x15;
+                id = ABILITY_ID_BLACK_MAGIC_BOLT_2;
             }
         }
     } else {
         if (pct < 10) {
-            id = 0x1A;
+            id = ABILITY_ID_BLACK_MAGIC_ICE_3;
         } else {
-            id = 0x18;
+            id = ABILITY_ID_BLACK_MAGIC_ICE;
             if (pct < 40) {
-                id = 0x19;
+                id = ABILITY_ID_BLACK_MAGIC_ICE_2;
             }
         }
     }

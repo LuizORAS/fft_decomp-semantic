@@ -45,7 +45,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
-        ability = item + 0x80;
+        ability = item + (ABILITY_ID_ITEM_FIRST - ITEM_ID_CONSUMABLE_FIRST);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
             battle_action_decrement_player_item_quantity(unit, item & 0xff, 1);

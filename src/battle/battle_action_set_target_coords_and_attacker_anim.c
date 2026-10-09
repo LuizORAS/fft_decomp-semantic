@@ -76,7 +76,7 @@ void battle_action_set_target_coords_and_attacker_anim(void) {
                 battle_unit_select_weapon_attack_animation(unit, 0);
             }
         }
-    } else if (unit->used_ability_id == 0x200) {
+    } else if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
         for (i = 0; i < unit->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
             if (target != 0) {

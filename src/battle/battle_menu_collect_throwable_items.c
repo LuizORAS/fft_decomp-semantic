@@ -38,10 +38,10 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
         return 0;
     }
     for (i = 0; i < ability_count; i++) {
-        if (abilities[i] >= 0x17e && abilities[i] <= 0x189) {
+        if (abilities[i] >= ABILITY_ID_THROW_FIRST && abilities[i] <= ABILITY_ID_JUMP_FIRST - 1) {
             type_table = g_main_throw_ability_item_types;
             throw_index = abilities[i];
-            throw_index = throw_index - 0x17e;
+            throw_index = throw_index - ABILITY_ID_THROW_FIRST;
             item_types[i] = type_table[throw_index];
         }
     }

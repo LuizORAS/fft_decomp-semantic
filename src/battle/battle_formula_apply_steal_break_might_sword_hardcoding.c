@@ -17,14 +17,14 @@ s32 battle_formula_apply_steal_break_might_sword_hardcoding(void) {
     g_battle_action_target_data->equipment_destroyed = 0xfe;
     if (!(g_battle_action_target->unit_flags & UNIT_FLAG_MONSTER)) {
         ability = g_battle_action_current_ability.ability_id;
-        if (ability == ABILITY_ID_BATTLE_SKILL_HEAD_BREAK || ability == ABILITY_ID_MIGHT_SWORD_BLASTAR_PUNCH
+        if (ability == ABILITY_ID_BATTLE_SKILL_HEAD_BREAK || ability == ABILITY_ID_MIGHTY_SWORD_BLASTAR_PUNCH
             || ability == ABILITY_ID_STEAL_HELMET) {
             if (g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_HEAD] != ITEM_ID_NONE) {
                 g_battle_action_target_data->equipment_destroyed = BATTLE_ACTION_EQUIPMENT_SLOT_HEAD;
                 g_battle_action_target_data->item_lost = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
                 return 0;
             }
-        } else if (ability == ABILITY_ID_BATTLE_SKILL_ARMOR_BREAK || ability == ABILITY_ID_MIGHT_SWORD_SHELLBUST_STAB
+        } else if (ability == ABILITY_ID_BATTLE_SKILL_ARMOR_BREAK || ability == ABILITY_ID_MIGHTY_SWORD_SHELLBUST_STAB
             || ability == ABILITY_ID_STEAL_ARMOR) {
             if (g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_BODY] != ITEM_ID_NONE) {
                 g_battle_action_target_data->equipment_destroyed = BATTLE_ACTION_EQUIPMENT_SLOT_BODY;
@@ -44,14 +44,14 @@ s32 battle_formula_apply_steal_break_might_sword_hardcoding(void) {
                     = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
                 return 0;
             }
-        } else if (ability == ABILITY_ID_MIGHT_SWORD_ICEWOLF_BITE || ability == ABILITY_ID_STEAL_ACCESSORY) {
+        } else if (ability == ABILITY_ID_MIGHTY_SWORD_ICEWOLF_BITE || ability == ABILITY_ID_STEAL_ACCESSORY) {
             if (g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] != ITEM_ID_NONE) {
                 g_battle_action_target_data->equipment_destroyed = BATTLE_ACTION_EQUIPMENT_SLOT_ACCESSORY;
                 g_battle_action_target_data->item_lost
                     = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
                 return 0;
             }
-        } else if (ability == ABILITY_ID_BATTLE_SKILL_WEAPON_BREAK || ability == ABILITY_ID_MIGHT_SWORD_HELLCRY_PUNCH
+        } else if (ability == ABILITY_ID_BATTLE_SKILL_WEAPON_BREAK || ability == ABILITY_ID_MIGHTY_SWORD_HELLCRY_PUNCH
             || ability == ABILITY_ID_STEAL_WEAPON) {
             left_level = -1;
             right_level = -1;

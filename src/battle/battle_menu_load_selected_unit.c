@@ -82,7 +82,7 @@ void battle_menu_load_selected_unit(void) {
     }
 
     editor[7] = 0;
-    if (unit->primary_skillset >= 0xb0 && unit->primary_skillset <= 0xdf)
+    if (unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset <= SKILLSET_ID_END - 1)
         editor[7] = 1;
 
     if (editor[7] != 0) {

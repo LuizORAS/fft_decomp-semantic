@@ -7,7 +7,7 @@ void battle_target_check_moldball_virus_depth(s16 ability_id) {
     targeting_panel_entry_t* panel;
     s32 i;
 
-    if (ability_id != ABILITY_ID_MONSTER_SKILL_MOLDBALL_VIRUS)
+    if (ability_id != ABILITY_ID_MONSTER_GREAT_MORBOL_MOLDBALL_VIRUS)
         return;
     i = 0;
     panel = g_battle_target_panel_data;

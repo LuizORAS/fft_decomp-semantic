@@ -1,20 +1,15 @@
 #include "fft/battle.h"
 
-enum {
-    EFFECT_ALTIMA_HOLY_ANGEL_TELEPORT_ARRIVAL_0B8 = 0xb8,
-    EFFECT_ALTIMA_ARCH_ANGEL_TELEPORT_ARRIVAL_028 = 0x28,
-};
-
 s32 battle_effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit) {
     battle_effect_secondary_init_t teleport_data;
 
     battle_effect_init_altima_teleport_data(unit, &teleport_data);
     switch (unit->spritesheet_id) {
     case BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM:
-        battle_effect_set_ability_animation(0, EFFECT_ALTIMA_HOLY_ANGEL_TELEPORT_ARRIVAL_0B8, &teleport_data);
+        battle_effect_set_ability_animation(0, ABILITY_ID_ALTIMA_HOLY_ANGEL_TELEPORT_ARRIVAL, &teleport_data);
         return 1;
     case BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM:
-        battle_effect_set_ability_animation(0, EFFECT_ALTIMA_ARCH_ANGEL_TELEPORT_ARRIVAL_028, &teleport_data);
+        battle_effect_set_ability_animation(0, ABILITY_ID_ALTIMA_ARCH_ANGEL_TELEPORT_ARRIVAL, &teleport_data);
         return 1;
     }
     battle_effect_set_secondary_teleport(unit);

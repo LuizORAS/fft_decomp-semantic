@@ -253,6 +253,13 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0x20000-byte buffer.
 - `battle_camera_toggle_tilt`: from tilt target 3 it starts a decrease toward
   target 4, which `battle_camera_update_tilt` has no branch to finish.
+- `battle_action_run_pre_formula_setup`: both tests bound the default
+  ability class at `ABILITY_ID_ITEM_FIRST + 1`, so the Potion ability indexes
+  `g_main_ability_range_data` one record past its end, which is the bytes of
+  `g_main_item_ability_item_ids`. The other callers bound it at
+  `ABILITY_ID_ITEM_FIRST`.
+- `battle_reaction_prepare_next`: Counter Tackle performs Dash under the
+  Black Magic skillset, the skillset Counter Magic passes.
 
 ## Calls that disagree with the callee
 
@@ -439,3 +446,10 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_unit_generate_treasure.c`: outside action execution (AI simulation, preview) it returns with no value, so `$v0` still holds `g_battle_action_state` and the crystal pickup result names item 1 or 2 as the treasure.
 - `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (dead-unit panel) of `world_menu_run_main_mode` never run; the world map's Options row runs mode 0.
+- Abilities no skillset lists: 0x16f (Attack), Reflect (0x1b8), Non-charge,
+  Teleport 2, Move Underwater and Silent Walk. Four ids with no name text are
+  played as Altima's teleport effects (0x28, 0xb8, 0xdb, 0xdc), and 0x200 is
+  the follow-up strike that resolves a knockback.
+- Skillset rows 0x86-0x8d, 0xa7 and 0xa8 have no name text but hold
+  abilities; 0xa7 is the row the AI uses for a unit under Blood Suck, and
+  0xa9, which it pairs with ability 0x16f, is empty.

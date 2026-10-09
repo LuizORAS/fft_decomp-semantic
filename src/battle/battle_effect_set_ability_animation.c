@@ -26,7 +26,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         }
     } else {
         /* Ids from 0x200 up continue the table after the action abilities. */
-        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
+        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
     }
 
     if (g_battle_ability_effect_id >= 0) {
@@ -48,7 +48,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         return;
     }
 
-    if (ability >= 0x8a && ability <= 0x91)
+    if (ability >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK && ability <= ABILITY_ID_BATTLE_SKILL_MIND_BREAK)
         battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK, 0, source);
     if ((ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)
         || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)

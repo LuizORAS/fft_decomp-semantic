@@ -120,7 +120,7 @@ void helpmenu_menu_run_battle_help(void) {
                     helpmenu_menu_close();
                 } else if (request_kind == 4) {
                     help_id = g_battle_action_menu_skillsets[request->selected_index];
-                    if (help_id == 0xBC) {
+                    if (help_id == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING) {
                         *g_helpmenu_controller_state_ptr = 0;
                         battle_thread_wait_frames(1);
                         helpmenu_menu_close();

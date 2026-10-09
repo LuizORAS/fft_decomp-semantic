@@ -58,11 +58,11 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                     *(u16*)(action + 2) = reaction_id;
                     last_attack = unit->action.last_received_attack;
                     unit->action.reaction_id = 0;
-                    switch ((s16)(reaction_id - 0x1B2)) {
-                    case 6:
+                    switch ((s16)(reaction_id - ABILITY_ID_REACTION_MEATBONE_SLASH)) {
+                    case ABILITY_ID_REACTION_REFLECT - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         outcome = -(battle_target_apply_reflect(unit) == 0) & 3;
                         break;
-                    case 0:
+                    case ABILITY_ID_REACTION_MEATBONE_SLASH - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         if (battle_action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         } else {
@@ -70,17 +70,19 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                             action[0xA] = 5;
                         }
                         break;
-                    case 1:
+                    case ABILITY_ID_REACTION_COUNTER_MAGIC - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         outcome
                             = (battle_action_store_counter_ability(unit, SKILLSET_ID_BLACK_MAGIC, last_attack, 0) == 0)
                             * 2;
                         break;
-                    case 2:
-                        if (battle_action_store_counter_ability(unit, SKILLSET_ID_BLACK_MAGIC, 0x93, 1) != 0) {
+                    case ABILITY_ID_REACTION_COUNTER_TACKLE - ABILITY_ID_REACTION_MEATBONE_SLASH:
+                        if (battle_action_store_counter_ability(
+                                unit, SKILLSET_ID_BLACK_MAGIC, ABILITY_ID_BASIC_SKILL_DASH, 1)
+                            != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
                         break;
-                    case 3:
+                    case ABILITY_ID_REACTION_COUNTER_FLOOD - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         outcome = (battle_action_store_counter_ability(unit, SKILLSET_ID_ELEMENTAL,
                                        g_main_terrain_geomancy_abilities
                                            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
@@ -89,7 +91,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                                       == 0)
                             * 2;
                         break;
-                    case 7:
+                    case ABILITY_ID_REACTION_AUTO_POTION - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         result = battle_action_select_auto_potion_item(unit);
                         if (result == -1) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
@@ -109,7 +111,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
                         break;
-                    case 8:
+                    case ABILITY_ID_REACTION_COUNTER - ABILITY_ID_REACTION_MEATBONE_SLASH:
                         if (battle_action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }

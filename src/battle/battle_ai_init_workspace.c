@@ -16,8 +16,8 @@ void battle_ai_init_workspace(void) {
     ai->resume_pending = 0;
     ai->selected_action.rank.rank_byte = 0;
     ai->selected_action.coords.bytes.zero = 0;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_ELMDOR_BLOOD_SUCK;
-    ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_ELMDOR_BLOOD_SUCK;
+    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
+    ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_BLOOD_SUCK;
     ai->hardcoded_status_abilities[0].skillset_flags.bytes.usage_flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     ai->hardcoded_status_abilities[1].skillset_flags.bytes.skillset = SKILLSET_ID_FROG_ATTACK;

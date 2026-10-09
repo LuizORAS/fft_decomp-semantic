@@ -6,7 +6,7 @@ s32 world_is_skillset_in_spell_quote_exception_list(s32 value) {
     s32 i;
     s32 found = 0;
 
-    for (i = 0; g_world_spell_quote_exception_skillsets[i] != 0xFF; i++) {
+    for (i = 0; g_world_spell_quote_exception_skillsets[i] != SKILLSET_ID_NONE; i++) {
         if (g_world_spell_quote_exception_skillsets[i] == value) {
             found = 1;
             break;

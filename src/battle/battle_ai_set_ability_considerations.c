@@ -120,8 +120,10 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         continue;
                     }
                     best_level = -1;
-                    for (throw_id = 0x17f, type_index = 1; throw_id < 0x189; throw_id++, type_index++) {
-                        if (battle_ai_load_known_ability_flag(unit_id, ability->skillset, throw_id - 0x17d)) {
+                    for (throw_id = ABILITY_ID_THROW_KNIFE, type_index = 1; throw_id < ABILITY_ID_THROW_BALL;
+                        throw_id++, type_index++) {
+                        if (battle_ai_load_known_ability_flag(
+                                unit_id, ability->skillset, throw_id - (ABILITY_ID_THROW_KNIFE - 2))) {
                             item_type = g_main_throw_ability_item_types[type_index];
                             for (item_id = 0; item_id < 0x100; item_id++) {
                                 if (g_main_item_primary_data[item_id].type == item_type) {

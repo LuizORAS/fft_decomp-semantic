@@ -41,7 +41,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->left_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
     record->right_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
     record->left_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
-    i = unit->primary_skillset >= 0xb0 && unit->primary_skillset <= 0xdf;
+    i = unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset <= SKILLSET_ID_END - 1;
     record->uses_monster_skillset = i;
     record->physical_attack = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
     record->physical_class_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];

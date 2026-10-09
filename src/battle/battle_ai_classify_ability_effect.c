@@ -275,7 +275,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTS_STATS) {
         ability_id = ai->considered_ability.ability_id;
         if (ability_id != ABILITY_ID_TALK_PRAISE && ability_id != ABILITY_ID_BASIC_SKILL_ACCUMULATE
-            && ability_id != ABILITY_ID_BASIC_SKILL_YELL)
+            && ability_id != ABILITY_ID_GUTS_YELL)
             return BATTLE_AI_ABILITY_EFFECT_USEFUL;
         if (!(rand() & 1))
             return BATTLE_AI_ABILITY_EFFECT_USEFUL;

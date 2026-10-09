@@ -72,7 +72,8 @@ s32 battle_menu_resolve_selection(void) {
         g_battle_menu_selected_command = command;
         if ((option & 0xFE) != 0xFE) {
             option = g_battle_action_menu_skillsets[index];
-            if (option == 1 || option == 2 || option == 3 || option == 4 || option == 0x11 || option == 0x12) {
+            if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE
+                || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
                 g_battle_menu_selected_action.ability_id = 0;
                 item = 0xFFFE;
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_action_menu_build_result == 0) {
@@ -83,7 +84,7 @@ s32 battle_menu_resolve_selection(void) {
             g_battle_menu_selected_action.skillset = option;
             g_battle_menu_used_skillset_id = option;
             if (item != 0xFFFE) {
-                if (option == 6 || option == 0x13 || option == 0x14) {
+                if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
                     g_battle_menu_selected_action.item_id = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;

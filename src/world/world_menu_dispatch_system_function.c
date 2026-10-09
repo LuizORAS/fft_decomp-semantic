@@ -196,7 +196,7 @@ s32 world_menu_dispatch_system_function(
                 g_world_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
-                if (value >= 0x3C && value <= 0x55) {
+                if (value >= ABILITY_ID_SUMMON_MAGIC_MOOGLE && value <= ABILITY_ID_DRAW_OUT_CHIRIJIRADEN) {
                     g_world_text_substitution_values[0] = value + 0xB7C4;
                 } else {
                     g_world_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;

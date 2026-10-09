@@ -53,7 +53,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
         unit->job_id = entd->job_id;
         main_unit_copy_job_data(unit);
         selected = entd->primary_skillset;
-        if (selected != 0xff && selected != 0) {
+        if (selected != SKILLSET_ID_NONE && selected != 0) {
             unit->primary_skillset = selected;
             unit->ability_outcome = 0xff;
         }

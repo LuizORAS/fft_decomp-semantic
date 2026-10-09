@@ -32,7 +32,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     }
     ai->current_action.act_before_move = 0;
     ai->current_action.skillset = 0;
-    if (action->ability_id >= 0x56 && action->ability_id <= 0x63) {
+    if (action->ability_id >= ABILITY_ID_SONG_ANGEL_SONG && action->ability_id <= ABILITY_ID_DANCE_LAST_DANCE) {
     evaluate_song_dance:
         if (battle_ai_check_set_highest_unit_priority() == -1) {
             ai->charging_state = 0;
