@@ -6,11 +6,11 @@
  * This reverses world_formation_step_grid_transition: the frame counter runs
  * down from 24, sliding the selected unit from its rest point back to its
  * grid cell while the other rows close in. Returns 1 while animating and 0 on
- * the call after the last frame. The unused volatile array reproduces the
+ * the call after the last frame. The unused array reproduces the
  * original 16-byte gap below positions. Compiled at -O1.
  */
 s32 world_formation_step_grid_return_transition(s32 mode) {
-    volatile world_menu_point_t unused[4];
+    world_menu_point_t unused[4];
     world_menu_point_t positions[20];
     u8 frame;
     s32 spread;

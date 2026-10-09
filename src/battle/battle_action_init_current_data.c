@@ -24,7 +24,7 @@ s32 battle_action_init_current_data(s32 id) {
         return mp_result;
     }
     /* The target loads the s16 last_ability_id unsigned (lhu). */
-    ability = *(u16*)&unit->last_ability_id;
+    ability = unit->last_ability_id;
     g_battle_acting_unit_id = id;
     g_battle_acting_unit_used_ability_id = ability;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {

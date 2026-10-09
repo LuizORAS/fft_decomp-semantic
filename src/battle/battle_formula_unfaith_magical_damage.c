@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* volatile: the target reloads each unit pointer before every status test. */
-extern battle_stats_t* volatile g_battle_action_attacker;
-extern battle_stats_t* volatile g_battle_action_target;
-
 /* Formula 1F: damage (MA + Y) * MA / 2 scaled by (100 - caster faith) and
  * (100 - target faith), with Faith treated as 0 and Innocent as 100. */
 void battle_formula_unfaith_magical_damage(void) {

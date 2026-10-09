@@ -40,7 +40,7 @@ void battle_load_seq_data(u32* destination, const u8* source) {
     u32 length;
     u32 sentinel;
     u32* out;
-    volatile s32 unused[2];
+    s32 unused[2];
 
     original_source = source;
     __asm__ volatile("");

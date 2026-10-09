@@ -2,15 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Double-buffer index, current level, fade level and state, one pair each for
- * the two status panels. */
-extern s32 g_equip_menu_indicator_buffer_index[2];
-extern s32 g_equip_menu_indicator_brightness[2];
-extern s32 g_equip_menu_indicator_edge_brightness[2];
-extern s32 g_equip_menu_indicator_state[2];
-
-extern void SetSemiTrans(void* prim, s32 enable);
-
 /*
  * Builds and submits the two translucent letterbox panels used by the event
  * dialogue overlay.

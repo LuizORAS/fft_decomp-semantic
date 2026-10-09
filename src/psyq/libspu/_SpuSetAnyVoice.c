@@ -6,10 +6,10 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
     u32 voices = voice_bit;
     u32 current;
     /* This view keeps queued-state updates after their mask-register writes. */
-    extern volatile u32 queued_flags __asm__("_spu_RQmask");
+    extern u32 queued_flags __asm__("_spu_RQmask");
     {
         /* The high/low pins preserve the retail v1/v0 register reads. */
-        volatile u16* registers;
+        u16* registers;
         register u32 high __asm__("$3");
         register u32 low __asm__("$2");
         if (_spu_env & 1) {
@@ -30,9 +30,9 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
         /* A typed array index recomputes the retail shared low-register byte offset. */
         s32 low_offset = reg_index_low << 1;
         if (_spu_env & 1) {
-            volatile u16* registers = g_psyq_spu_queued_register_base;
-            volatile u16* low = (u16*)((u8*)registers + low_offset);
-            volatile u16* high = &registers[reg_index_high];
+            u16* registers = g_psyq_spu_queued_register_base;
+            u16* low = (u16*)((u8*)registers + low_offset);
+            u16* high = &registers[reg_index_high];
             u32 bits = *low;
             bits |= voices;
             *low = bits;
@@ -43,10 +43,10 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
             }
         } else {
             /* The bank and low-word pins preserve the retail a1/v0 registers. */
-            register volatile u16* registers __asm__("$5") = (u16*)_spu_RXX;
+            register u16* registers __asm__("$5") = (u16*)_spu_RXX;
             volatile u16* low = (u16*)(low_offset + (u32)registers);
             u32 high_offset = reg_index_high << 1;
-            volatile u16* high;
+            u16* high;
             register u32 bits __asm__("$2");
             /* This tie keeps the high-index shift in the register-pointer load delay. */
             __asm__("" : "=r"(high_offset) : "0"(high_offset));
@@ -71,10 +71,10 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
         /* The offset pin preserves the retail v1 low-register address calculation. */
         register s32 low_offset __asm__("$3") = reg_index_low << 1;
         if (_spu_env & 1) {
-            volatile u16* registers = g_psyq_spu_queued_register_base;
-            volatile u16* low = (u16*)((u8*)registers + low_offset);
+            u16* registers = g_psyq_spu_queued_register_base;
+            u16* low = (u16*)((u8*)registers + low_offset);
             u32 bits = *low;
-            volatile u16* high;
+            u16* high;
             bits &= ~voices;
             high = &registers[reg_index_high];
             *low = bits;
@@ -82,12 +82,12 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
             queued_flags |= 1 << ((reg_index_low - PSYQ_SPU_REG_KEY_OFF_LOW) >> 1);
         } else {
             /* The clear-mask and high-offset pins preserve retail reuse of a0. */
-            volatile u16* registers = (u16*)_spu_RXX;
-            volatile u16* low = (u16*)(low_offset + (u32)registers);
+            u16* registers = (u16*)_spu_RXX;
+            u16* low = (u16*)(low_offset + (u32)registers);
             u32 bits = *low;
             register u32 clear __asm__("$4");
             register u32 high_offset __asm__("$4");
-            volatile u16* high;
+            u16* high;
             clear = ~voices;
             bits &= clear;
             high_offset = reg_index_high << 1;

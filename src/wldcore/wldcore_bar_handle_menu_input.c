@@ -22,7 +22,7 @@ void wldcore_menu_pop_level_and_rebuild_screen();
 void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     s32 flags;
     u32 buttons;
-    volatile s32* selected_entry;
+    s32* selected_entry;
 
     if (g_wldcore_window_render_records[level->frame_render].flags & 0x100) {
         return;

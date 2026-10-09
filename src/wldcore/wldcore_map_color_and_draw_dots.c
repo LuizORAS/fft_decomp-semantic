@@ -3,12 +3,12 @@
 
 typedef union wldcore_map_dot_source_word {
     volatile s32 w;
-    volatile u8 b[4];
+    u8 b[4];
 } wldcore_map_dot_source_word_t;
 
 typedef struct wldcore_map_dot_source {
     wldcore_map_dot_source_word_t a;
-    volatile s32 y;
+    s32 y;
 } wldcore_map_dot_source_t;
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;

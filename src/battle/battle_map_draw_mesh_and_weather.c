@@ -30,14 +30,6 @@ extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
 
 extern battle_map_mesh_part_view_t g_battle_map_mesh_parts_view[9];
 
-extern void MulMatrix0(MATRIX* m0, void* m1, MATRIX* m2);
-extern void SetLightMatrix(MATRIX* m);
-extern void PushMatrix(void);
-extern void PopMatrix(void);
-extern void MulMatrix2(MATRIX* m0, MATRIX* m1);
-extern void TransMatrix(void* m, void* v);
-extern void ScaleMatrix(void* m, void* v);
-
 /* The -0x20 colour deltas are passed as sign-extended words (0xffffffe0 in
  * the argument registers and stack slots); the u16 prototype would
  * zero-extend them, so this caller uses an all-s32 view.

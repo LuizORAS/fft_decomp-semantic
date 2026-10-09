@@ -1,11 +1,5 @@
 #include "fft/battle.h"
 
-/* volatile: the target reloads g_current_attacker before each status test
- * instead of keeping it in a register. */
-extern battle_stats_t* volatile g_battle_action_attacker;
-
-extern battle_stats_t* volatile g_battle_action_target;
-
 void battle_formula_calculate_faith(void) {
     u8* act;
 

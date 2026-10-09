@@ -24,10 +24,10 @@ u8* world_menu_script_draw_callback_sprite(u8* cmd) {
         dst[0] = cmd[4];
         dst[1] = cmd[5];
         /* The icon source stores halfwords; the menu script copies their low bytes. */
-        dst[2] = *(u8*)&entry->w;
-        dst[3] = *(u8*)&entry->h;
-        dst[4] = *(u8*)&entry->u;
-        dst[5] = *(u8*)&entry->v;
+        dst[2] = entry->w;
+        dst[3] = entry->h;
+        dst[4] = entry->u;
+        dst[5] = entry->v;
         g_world_menu_clut = entry->clut;
         g_world_menu_texture_page = entry->tpage;
         world_menu_script_draw_sprite(dst - 3);

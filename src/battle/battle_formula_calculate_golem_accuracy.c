@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* volatile: the target reloads g_current_attacker before each status test
- * instead of keeping it in a register. */
-extern battle_stats_t* volatile g_battle_action_attacker;
-
 s32 battle_formula_calculate_golem_accuracy(void) {
     battle_action_data_t* action;
 

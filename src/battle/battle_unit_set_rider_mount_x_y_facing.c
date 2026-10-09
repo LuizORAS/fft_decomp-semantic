@@ -9,7 +9,7 @@ void battle_unit_set_rider_mount_x_y_facing(battle_unit_misc_data_t* unit) {
     if (unit != 0) {
         if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) == 0) {
             /* The facing halfwords are read signed (lh) here. */
-            rot = *(s16*)&unit->attack_facing;
+            rot = unit->attack_facing;
             if (rot != -1) {
                 unit->facing = rot;
                 battle_unit_set_tile_position(

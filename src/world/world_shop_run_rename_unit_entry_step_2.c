@@ -9,7 +9,7 @@ void world_shop_run_rename_unit_entry_step_2(void) {
         g_world_shop_rename_entry_2_initialized = 1;
     }
     world_formation_update_and_draw_unit_grid(
-        1, 0, 0, 0, *(s16*)&g_world_thread_task_active, world_shop_rename_unit_get_unit_marker, 0);
+        1, 0, 0, 0, g_world_thread_task_active, world_shop_rename_unit_get_unit_marker, 0);
     /* The target also passes a1 = 0 to this one-argument keyboard frame. */
     g_world_shop_entered_unit_name = (const u8*)((s32 (*)(u8*, s32))world_name_run_entry_keyboard_frame)(
         g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->name, 0);

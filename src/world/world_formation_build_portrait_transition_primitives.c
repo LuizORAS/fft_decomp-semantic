@@ -15,7 +15,7 @@ void world_formation_build_portrait_transition_primitives(const RECT* texture_re
     s32 direction_v = direction;
     s32 phase;
     s32 transition_value;
-    volatile u8* cursor;
+    u8* cursor;
 
     /* Emits nothing; moves the three pointer arguments into their
      * callee-saved registers at entry, in the target's order and registers. */

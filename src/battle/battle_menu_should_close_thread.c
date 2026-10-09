@@ -15,7 +15,7 @@ s32 battle_menu_should_close_thread(s32* out_flag) {
     offset = 0;
     for (; i < 16; i++, offset += NATIVE_THREAD_STRIDE) {
         if (i != g_battle_current_thread_id && battle_thread_is_running_8014cc94(i) != 0
-            && *(volatile s32*)((s8*)g_battle_thread_task_ids + offset) == task_state) {
+            && *(s32*)((s8*)g_battle_thread_task_ids + offset) == task_state) {
             *out_flag = 0;
             break;
         }

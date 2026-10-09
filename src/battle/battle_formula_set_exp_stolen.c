@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-/* volatile views: the target reloads these globals at every use. */
-extern battle_stats_t* volatile g_battle_action_attacker;
-extern battle_stats_t* volatile g_battle_action_target;
-
 /*
  * Record the stolen EXP on both action results.
  *

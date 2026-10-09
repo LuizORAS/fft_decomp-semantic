@@ -3,7 +3,6 @@
 
 /* volatile views: the target reloads these globals at every use. */
 extern volatile s32 g_battle_entd_selection_mode;
-extern volatile s32 g_main_entd_current_event_id;
 
 s32 battle_unit_select_and_open_entd(void) {
     volatile s32* current_event_id;

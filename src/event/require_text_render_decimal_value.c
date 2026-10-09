@@ -14,7 +14,7 @@ void require_text_render_decimal_value(
     /* Pin: with the use below, the offset is built in $v0 and the x load lands in $a0. */
     register s32 offset __asm__("$2");
     /* Unused: the target frame reserves 8 more bytes. */
-    volatile u32 stack_padding[2];
+    u32 stack_padding[2];
 
     saved_color = position->color;
     position->color = 0;

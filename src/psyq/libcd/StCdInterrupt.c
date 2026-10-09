@@ -2,7 +2,7 @@
 #include "psx/libcd.h"
 /* These source-local views preserve original reloads after descriptor publication. */
 extern volatile s32 stream_emulation_base __asm__("g_psyq_cd_stream_emulation_base");
-extern psyq_cd_ring_record_t* volatile current_header_address __asm__("g_psyq_cd_stream_current_header");
+extern psyq_cd_ring_record_t* current_header_address __asm__("g_psyq_cd_stream_current_header");
 
 /* DMA writes the sector header; the original rereads individual halfwords. */
 #define CURRENT_HEADER (*(volatile psyq_cd_ring_record_t*)g_psyq_cd_stream_current_header)
@@ -72,7 +72,7 @@ void StCdInterrupt(void) {
         s32 required_frame = g_psyq_cd_stream_start_frame;
         if (required_frame) {
             /* The original comparison reads the low halfword of the frame word. */
-            if (required_frame != *(volatile u16*)&CURRENT_HEADER.frame_count) {
+            if (required_frame != *(u16*)&CURRENT_HEADER.frame_count) {
                 CURRENT_HEADER.status = StFREE;
                 if (stream_emulation_base)
                     g_psyq_cd_stream_emulation_sector_index++;
@@ -92,8 +92,7 @@ void StCdInterrupt(void) {
         return;
     }
     if (g_psyq_cd_stream_expected_sector_index != CURRENT_HEADER.sector_index
-        || (g_psyq_cd_stream_frame_count
-            && g_psyq_cd_stream_frame_count != *(volatile u16*)&CURRENT_HEADER.frame_count)) {
+        || (g_psyq_cd_stream_frame_count && g_psyq_cd_stream_frame_count != *(u16*)&CURRENT_HEADER.frame_count)) {
         g_psyq_cd_stream_frame_count = 0;
         g_psyq_cd_stream_expected_sector_index = 0;
         init_ring_status(
@@ -117,7 +116,7 @@ void StCdInterrupt(void) {
         return;
     }
     if (CURRENT_HEADER.sector_index == 0) {
-        u16 frame = *(volatile u16*)&CURRENT_HEADER.frame_count;
+        u16 frame = *(u16*)&CURRENT_HEADER.frame_count;
         g_psyq_cd_stream_expected_sector_index = 0;
         g_psyq_cd_stream_frame_count = frame;
         if (g_psyq_cd_stream_end_frame && (u32)g_psyq_cd_stream_frame_count >= (u32)g_psyq_cd_stream_end_frame) {
@@ -127,7 +126,7 @@ void StCdInterrupt(void) {
                 g_psyq_cd_stream_frame_start_index, g_psyq_cd_stream_write_index - g_psyq_cd_stream_frame_start_index);
             {
                 u32 next = g_psyq_cd_stream_frame_start_index;
-                volatile psyq_cd_ring_record_t* header;
+                psyq_cd_ring_record_t* header;
                 /* Keep the rollback index load before the current-header load. */
                 __asm__("" : "=r"(next) : "0"(next));
                 header = g_psyq_cd_stream_current_header;

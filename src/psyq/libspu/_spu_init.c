@@ -78,7 +78,7 @@ s32 _spu_init(s32 hot) {
         result = 0;
     }
     {
-        volatile psyq_spu_registers_t* final_registers = _spu_RXX;
+        psyq_spu_registers_t* final_registers = _spu_RXX;
         _spu_inTransfer = 1;
         final_registers->control = 0xc000;
         /* Without the barrier the control store moves after callback clearing. */

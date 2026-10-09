@@ -14,7 +14,7 @@ void open_script_update_screen_fade(void) {
     s32 intensity;
 
     {
-        volatile u32* control = &g_open_script_state.dispatch.flags;
+        u32* control = &g_open_script_state.dispatch.flags;
         u32 flags;
 
         flags = *control;
@@ -35,7 +35,7 @@ void open_script_update_screen_fade(void) {
         }
     }
     {
-        volatile u32* control = &g_open_script_state.dispatch.flags;
+        u32* control = &g_open_script_state.dispatch.flags;
         u32 flags;
 
         flags = *control;

@@ -3,7 +3,7 @@
 
 void etc_graphic_show_game_over(s32 graphic_id) {
     /* The target reserves two otherwise unreferenced local words. */
-    volatile s32 reserved_stack_words[2];
+    s32 reserved_stack_words[2];
     s32 frame;
     s32 fade;
     s32 color;

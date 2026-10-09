@@ -3,7 +3,7 @@
 
 int main_gfx_swap_display_area(u32 otag) {
     /* Matching constraint: the retail function reserves one unused RECT. */
-    volatile RECT matching_stack_space;
+    RECT matching_stack_space;
     int elapsed;
 
     g_main_gfx_screen_polarity = g_main_gfx_screen_polarity == 0;

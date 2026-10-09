@@ -3,7 +3,7 @@
 
 void card_save_build_slot_description(s32 mode, u8* destination) {
     s32 index;
-    volatile u8 stack_padding[4];
+    u8 stack_padding[4];
     const u8* source;
 
     if (mode == 1) {

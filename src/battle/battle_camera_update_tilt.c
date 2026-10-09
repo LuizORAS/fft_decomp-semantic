@@ -5,7 +5,7 @@ void battle_camera_update_tilt(void) {
 
     if (g_battle_camera_tilt_action == 2 && g_battle_map_tilt_target == g_battle_camera_tilt_action) {
         u16* state = (u16*)&g_battle_camera_render_state.vx;
-        tilt = *state + *(u16*)&g_battle_camera_tilt_increment;
+        tilt = *state + g_battle_camera_tilt_increment;
         *state = tilt;
         if (tilt >= 0x1C0) {
             g_battle_camera_tilt_action = 0;
@@ -13,7 +13,7 @@ void battle_camera_update_tilt(void) {
         }
     } else if (g_battle_camera_tilt_action == 4 && g_battle_map_tilt_target == 1) {
         u16* state = (u16*)&g_battle_camera_render_state.vx;
-        tilt = *state - *(u16*)&g_battle_camera_tilt_increment;
+        tilt = *state - g_battle_camera_tilt_increment;
         *state = tilt;
         if (tilt < 0x12F) {
             g_battle_camera_tilt_action = 0;
@@ -21,7 +21,7 @@ void battle_camera_update_tilt(void) {
         }
     } else if (g_battle_camera_tilt_action == 4 && g_battle_map_tilt_target == 2) {
         u16* state = (u16*)&g_battle_camera_render_state.vx;
-        tilt = *state - *(u16*)&g_battle_camera_tilt_increment;
+        tilt = *state - g_battle_camera_tilt_increment;
         *state = tilt;
         if (tilt < 0x1C1) {
             g_battle_camera_tilt_action = 0;
@@ -29,7 +29,7 @@ void battle_camera_update_tilt(void) {
         }
     } else if (g_battle_camera_tilt_action == 2 && g_battle_map_tilt_target == 1) {
         u16* state = (u16*)&g_battle_camera_render_state.vx;
-        tilt = *state + *(u16*)&g_battle_camera_tilt_increment;
+        tilt = *state + g_battle_camera_tilt_increment;
         *state = tilt;
         if (tilt >= 0x12E) {
             g_battle_camera_tilt_action = 0;

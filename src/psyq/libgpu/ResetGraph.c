@@ -3,8 +3,6 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
-/* Preserve the original volatile ordering relative to the GPU-type byte. */
-extern volatile u8 g_psyq_gpu_queue_enabled;
 int ResetGraph(int mode) {
     int input = mode; /* The original copies the input before masking it. */
     int reset_mode;
@@ -24,7 +22,7 @@ int ResetGraph(int mode) {
         draw = &state->draw;
         __asm__("" : "=r"(draw) : "0"(draw)); /* Keep the original draw-address preparation before scalar stores. */
         /* The volatile view retains the queue-enable store before the type-index shift. */
-        type = *(volatile u8*)&state->graph_type;
+        type = state->graph_type;
         /* Retain the original shared type/index register. */
         g_psyq_gpu_queue_enabled = 1;
         type *= 2;

@@ -21,8 +21,8 @@ void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
     unit->experience = g_debugchr_panel_selected_billboard.experience;
     /* Halfword objects (the loader stores sh); this function reads only the
      * low byte, and the lvalue form emits the target's bare lbu. */
-    unit->brave = *(u8*)&g_debugchr_editor_brave;
-    unit->faith = *(u8*)&g_debugchr_editor_faith;
+    unit->brave = g_debugchr_editor_brave;
+    unit->faith = g_debugchr_editor_faith;
     /* Zodiac is the top nibble of the birthday halfword. Union-member access
      * instead of the u16 view reorders the stores. */
     zodiac = g_debugchr_editor_zodiac << 12;

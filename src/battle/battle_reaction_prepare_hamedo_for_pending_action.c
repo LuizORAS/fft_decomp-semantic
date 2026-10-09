@@ -48,7 +48,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
     menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
     flags_1 = 0;
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_DEFAULT || (menu_type & 0xff) == ACTION_MENU_TYPE_MONSTER) {
-        ability_id = *(u16*)&unit->last_ability_id;
+        ability_id = unit->last_ability_id;
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
             flags_1 = g_main_ability_range_data[ability_id].flags_1;
         }
@@ -92,7 +92,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, u16* out_ability) 
     target->action_actor_id = tid;
     if (battle_action_store_counter_ability(target, 1, 0, 1) == 0 && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);
-        *out_ability = *(u16*)&g_battle_current_reaction_ability_id;
+        *out_ability = g_battle_current_reaction_ability_id;
         g_current_ability_hamedo_flag = count;
         if (unit->job_id == JOB_ID_MIME) {
             unit->equipment[3] = ITEM_ID_NONE;

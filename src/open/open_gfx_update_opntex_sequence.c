@@ -4,7 +4,7 @@
 /* Volatile scalar view of g_open_script_state.dispatch.flags: the struct
  * member makes GCC hold the flags address in a register, but the target
  * addresses the flags by symbol for both the load and the store. */
-extern volatile u32 g_open_script_dispatch_flags;
+extern u32 g_open_script_dispatch_flags;
 
 /* Advance the OPNTEX sequence and start a fade for each loaded frame.
  *

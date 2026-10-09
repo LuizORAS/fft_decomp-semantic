@@ -4,8 +4,6 @@
 
 struct battle_event_input_state;
 
-extern u16 g_battle_menu_input_block_frames;
-
 /* Per-frame event input update: derives the edge/auto-repeat input word,
  * publishes it, and yields once while tracking thread status changes.
  *

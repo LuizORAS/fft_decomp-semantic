@@ -144,7 +144,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         *(s16*)(action + 0x10) = unit->position.bits.y;
                         *(u16*)(action + 0xE) = unit->position.raw >> 15;
                     }
-                    *out_ability = *(u16*)&g_battle_current_reaction_ability_id;
+                    *out_ability = g_battle_current_reaction_ability_id;
                     action[0] = i;
                     return i;
                 }

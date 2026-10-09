@@ -3,14 +3,10 @@
 /* Recolour the birthday menu's render records for the confirmation prompt:
  * dim the date cursor, grey the label, and mark both windows as step 2.
  *
- * The controller record is re-read before every store, so it is addressed
- * through a volatile alias.
- *
  * The target reserves a 24-byte frame it never touches (the stack adjustment
  * is even scheduled into the last load-delay slot), so the original body
  * declared an unused aggregate local of 17..24 bytes. */
-void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* menu) {
-    volatile const open_birthday_date_state_t* state = menu;
+void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* state) {
     s32 unused_scratch[6];
     s32 cursor;
 

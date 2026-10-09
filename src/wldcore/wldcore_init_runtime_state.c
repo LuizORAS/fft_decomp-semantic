@@ -3,7 +3,7 @@
 /* Initialize runtime tables and graphics state used by WLDCORE.
  * The matched range includes the jr delay slot at 0x800683f8. */
 void wldcore_init_runtime_state(void) {
-    volatile s32 reserved_stack_words[2];
+    s32 reserved_stack_words[2];
     s32 count;
     SetDispMask(0);
     g_wldcore_map_projection_state.marker.sub_kind

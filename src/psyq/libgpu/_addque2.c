@@ -29,7 +29,7 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
     if (!g_psyq_gpu_queue_enabled
         || (g_psyq_gpu_queue_head == g_psyq_gpu_queue_tail && !(*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)
             && !g_psyq_gpu_draw_sync_callback)) {
-        volatile u32* status = g_psyq_gpu_gp1_port;
+        u32* status = g_psyq_gpu_gp1_port;
         u32 sample;
         do {
             sample = *status;

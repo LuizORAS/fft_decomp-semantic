@@ -41,7 +41,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     step = ONE / g_world_job_wheel_job_count;
     g_world_job_wheel_animation_counter++;
     ot_index = 30;
-    index = *(u16*)&g_world_job_wheel_cursor_index;
+    index = g_world_job_wheel_cursor_index;
     sprite.w = sprite.source.w = 0x18;
     sprite.h = sprite.source.h = 0x28;
     g_world_job_wheel_animation_counter = g_world_job_wheel_animation_counter % 102;

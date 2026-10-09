@@ -16,7 +16,7 @@ void attack_text_render_decimal_value(
     register s32 digit_index __asm__("$18");
     s32 quotient;
     /* Unused: the target reserves this frame space. */
-    volatile u32 stack_padding[2];
+    u32 stack_padding[2];
 
     saved_color = position->color;
     position->color = 0;

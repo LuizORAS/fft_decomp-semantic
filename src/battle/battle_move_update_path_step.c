@@ -1,8 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-extern void battle_unit_init_coordinates(battle_unit_misc_data_t* unit);
-
 /*
  * Advance a walking unit by one frame: the elaborate sibling of
  * battle_move_update_knockback_step at 0x8006db10, with the full 0x3c-entry

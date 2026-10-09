@@ -54,7 +54,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     } else {
         height = 0x3c;
     }
-    base->vy -= height - *(u16*)&bob[g_battle_gfx_selection_cursor_bob_frame];
+    base->vy -= height - bob[g_battle_gfx_selection_cursor_bob_frame];
     RotTrans(base, &transformed, &flag);
 
     half_width = g_battle_camera_zoom.vx;

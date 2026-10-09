@@ -2,7 +2,7 @@
 
 /* Volatile views of the script state: required to keep the target's access order. */
 extern volatile s32 g_wldcore_script_flags;
-extern volatile u16 g_wldcore_script_ip;
+extern u16 g_wldcore_script_ip;
 
 /* Stage the two operands for the deferred SetVar2 request.
  *

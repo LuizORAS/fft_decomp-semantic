@@ -50,7 +50,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
             g_current_ability.mp_cost = cost;
             /* A signed member view retains the target store-before-load order;
              * casting the unsigned value hoists the MP load and loses a nop. */
-            mp = *(s16*)&unit->mp;
+            mp = unit->mp;
             if (mp < (s32)cost)
                 return 3;
             if (g_battle_action_state != BATTLE_ACTION_STATE_PREVIEW)

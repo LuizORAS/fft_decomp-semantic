@@ -13,7 +13,7 @@ void _spu_writeByIO(const u16* source, u32 size) {
     u32 wait;
     volatile psyq_spu_registers_t* registers;
     {
-        register volatile psyq_spu_registers_t* initial_registers __asm__("$2") = _spu_RXX;
+        register psyq_spu_registers_t* initial_registers __asm__("$2") = _spu_RXX;
         initial_status = initial_registers->status;
         status = initial_status & PSYQ_SPU_STATUS_MASK;
         initial_registers->transfer_address = _spu_tsa;

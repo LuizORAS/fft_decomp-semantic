@@ -281,7 +281,7 @@ extern u8 g_open_birthday_window_image[];
  * day after storing through its month pointer. */
 extern u8 g_open_birthday_zodiac_months[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
-void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* menu);
+void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* state);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
 s32 open_birthday_calculate_day_index(s32 month, s32 day);
 void open_birthday_convert_to_zodiac_position(s32* month, s32* day);

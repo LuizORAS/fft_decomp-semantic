@@ -2,7 +2,7 @@
 #include "psx/libspu.h"
 
 u32 _spu_FgetRXXa(s32 reg_index, s32 raw) {
-    u16 value = ((volatile u16*)_spu_RXX)[reg_index];
+    u16 value = ((u16*)_spu_RXX)[reg_index];
     if (raw == -1) {
         return value;
     }

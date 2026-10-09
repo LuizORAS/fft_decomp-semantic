@@ -6,7 +6,7 @@
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color) {
     /* Locals the retail build keeps on the stack, one word apart. */
-    volatile struct {
+    struct {
         s32 reverse_order;
         s32 _unused_04;
         s32 dimension_base;
@@ -94,12 +94,12 @@ void etc_graphic_build_game_over_polygons(
                 if (GetGraphType() == enabled || GetGraphType() == 2) {
                     tpage = 0x286;
                 } else {
-                    tpage = *(volatile u16*)&stack.first_tpage;
+                    tpage = stack.first_tpage;
                 }
             } else if (GetGraphType() == enabled || GetGraphType() == 2) {
-                tpage = *(volatile u16*)&stack.second_tpage;
+                tpage = stack.second_tpage;
             } else {
-                tpage = *(volatile u16*)&stack.third_tpage;
+                tpage = stack.third_tpage;
             }
             scratch = 1;
             /* Hides the 1 so the clut test stays a runtime branch, with `li t0,1` in the jump delay slots. */
@@ -234,19 +234,19 @@ void etc_graphic_build_game_over_polygons(
 
     scratch = stack.reverse_order;
     if (scratch != 0) {
-        scratch = *(s32 volatile*)&primitives;
+        scratch = primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x34));
         battle_gfx_draw_or_append_gpu_primitive(primitives);
-        scratch = *(s32 volatile*)&primitives;
+        scratch = primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x9c));
-        scratch = *(s32 volatile*)&primitives;
+        scratch = primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x68));
     } else {
-        scratch = *(s32 volatile*)&primitives;
+        scratch = primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x9c));
-        scratch = *(s32 volatile*)&primitives;
+        scratch = primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x68));
-        scratch = *(s32 volatile*)&primitives;
+        scratch = *(s32*)&primitives;
         battle_gfx_draw_or_append_gpu_primitive((scratch + 0x34));
         battle_gfx_draw_or_append_gpu_primitive(primitives);
     }

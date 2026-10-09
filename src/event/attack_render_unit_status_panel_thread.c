@@ -467,7 +467,7 @@ void attack_render_unit_status_panel_thread(void) {
                     color++;
                 }
                 bar_y += 0xB;
-                packet = (volatile battle_menu_status_panel_editor_packet_t*)((u8*)packet + sizeof(POLY_G4));
+                packet = (battle_menu_status_panel_editor_packet_t*)((u8*)packet + sizeof(POLY_G4));
                 i += 1;
                 bar_offset += 0x24;
             } while (i < 3);

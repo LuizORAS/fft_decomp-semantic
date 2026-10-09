@@ -17,7 +17,7 @@ int _exeque(void) {
                 DMACallback(PSYQ_GPU_DMA_GPU_CHANNEL, 0);
         }
         {
-            volatile u32* status = g_psyq_gpu_gp1_port;
+            u32* status = g_psyq_gpu_gp1_port;
             if (!(*status & PSYQ_GPU_STATUS_READY_COMMAND)) {
                 volatile u32* polling_status = status;
                 u32 ready = PSYQ_GPU_STATUS_READY_COMMAND;

@@ -14,7 +14,7 @@ typedef struct wldcore_window_render_record {
 /* volatile (see above): the target keeps the read-modify-write order. */
 extern volatile u16 g_wldcore_state_flags;
 extern s16 g_wldcore_sound_novel_picture_render_index;
-extern volatile s16 g_wldcore_sound_novel_picture_id;
+extern s16 g_wldcore_sound_novel_picture_id;
 extern wldcore_window_render_record_t g_wldcore_window_render_records[];
 
 void wldcore_opcode_hide_picture(void) {

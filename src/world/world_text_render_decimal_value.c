@@ -20,7 +20,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
     register s32 updated_flags __asm__("$2");
     register s32 minimum_digits __asm__("$5");
     register s32 scratch __asm__("$3");
-    volatile u32 stack_padding[2];
+    u32 stack_padding[2];
     s32 field_digits;
     s32 quotient;
 

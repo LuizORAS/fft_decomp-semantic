@@ -6,7 +6,7 @@
 
 void _spu_FiDMA(void) {
     /* Volatile local alias keeps the retail callback reload with symbolic addressing. */
-    extern void (*volatile callback)(void) __asm__("_spu_transferCallback");
+    extern void (*callback)(void) __asm__("_spu_transferCallback");
     u32 wait;
     volatile psyq_spu_registers_t* registers;
     if (g_psyq_spu_dma_direction == 0) {

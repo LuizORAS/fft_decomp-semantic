@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 void require_input_wait_frames_or_skip(s32 frames) {
-    volatile s32 reserved_stack_words[2];
+    s32 reserved_stack_words[2];
     s32 i = 0;
     u32* input;
 

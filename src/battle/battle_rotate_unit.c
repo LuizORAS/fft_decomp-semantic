@@ -45,7 +45,7 @@ void battle_rotate_unit(const u8* parameters) {
                         state->rotating = 1;
                         state->delay = parameters[5] * order++ / 4;
                     }
-                    restore_misc_index = *(volatile s32*)&misc_index;
+                    restore_misc_index = misc_index;
                     /* Keep the restore arm's stack reload before its loop exit. */
                     __asm__("" : "=r"(restore_misc_index) : "0"(restore_misc_index));
                     if (restore_misc_index == 0) {

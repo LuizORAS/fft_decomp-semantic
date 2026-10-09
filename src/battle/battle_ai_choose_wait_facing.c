@@ -47,8 +47,7 @@ s32 battle_ai_choose_wait_facing(void) {
         battle_ai_transfer_unit_coordinates(acting_unit_id, acting_coords);
     }
     do {
-        *(volatile u8*)&work.target_coords.bytes.x
-            = ai->acting_unit_coords.bytes.x + g_battle_ai_facing_tile_offsets.bytes[offset];
+        work.target_coords.bytes.x = ai->acting_unit_coords.bytes.x + g_battle_ai_facing_tile_offsets.bytes[offset];
         work.target_coords.bytes.y = ai->acting_unit_coords.bytes.y + g_battle_ai_facing_tile_offsets.bytes[offset + 1];
         work.target_coords.bytes.elevation = 0;
         if (battle_ai_check_facing_tile(&ai->acting_unit_coords, (battle_ai_coords_t*)&work.target_coords) != 0) {

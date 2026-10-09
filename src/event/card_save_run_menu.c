@@ -6,12 +6,12 @@ void card_save_run_menu(s32 unused) {
     TILE tile_storage[20];
     u32 otag_storage[0x80];
     u8 context_storage[0x1f8];
-    volatile s32 leading_alignment;
+    s32 leading_alignment;
     s32 input;
     s32 unused_local;
     s32 buttons;
     u16 menu_input;
-    volatile u16 alignment;
+    u16 alignment;
     s16 music_slot;
     card_directory_entry_t save_buffer[15];
 
@@ -43,7 +43,7 @@ void card_save_run_menu(s32 unused) {
         card_gfx_enqueue_translucent_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE && battle_thread_is_running(5) == 0
-            ? *(u16*)&g_card_input_primary_repeat
+            ? g_card_input_primary_repeat
             : 0;
         if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE
             && g_card_save_menu_state < CARD_SAVE_MENU_WRITING + 1) {

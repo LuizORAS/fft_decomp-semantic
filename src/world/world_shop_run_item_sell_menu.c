@@ -6,7 +6,7 @@ s32 world_shop_run_item_sell_menu(void) {
 
     if (g_world_shop_sell_result == 0) {
         g_world_shop_sell_confirm_shown = 0;
-        g_world_shop_sell_item = *(u16*)&g_world_menu_entry_ids[g_world_menu_cursor_position];
+        g_world_shop_sell_item = g_world_menu_entry_ids[g_world_menu_cursor_position];
         g_world_menu_prompt_active = 1;
         count = world_item_change_quantity_on_equip((s16)g_world_shop_sell_item, 0);
         if (count == 0) {

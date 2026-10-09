@@ -173,13 +173,13 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             }
             flag = 1;
         }
-        *(s8*)&g_world_dismiss_unit_prompt_running = flag;
+        g_world_dismiss_unit_prompt_running = flag;
         g_world_menu_description_text_id = -1;
     }
 
     if (g_world_formation_dismiss_step == 2) {
         running = world_thread_is_running(1);
-        *(s8*)&g_world_dismiss_unit_prompt_running = running;
+        g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
         }
@@ -189,7 +189,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
 
     running = world_menu_run_thread(6, g_world_formation_dismiss_menu_data);
     step = g_world_formation_dismiss_step;
-    *(s8*)&g_world_dismiss_unit_prompt_running = running;
+    g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {
         if (world_thread_is_running(3) != 0) {
             step = g_world_formation_dismiss_step;
@@ -222,7 +222,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             g_world_formation_current_menu = 0;
             return;
         }
-        g_world_formation_dismiss_anim_timer = (*(u16*)&g_world_formation_selected_unit_index << 8) + 1;
+        g_world_formation_dismiss_anim_timer = (g_world_formation_selected_unit_index << 8) + 1;
         return;
     }
     if (running != 0) {

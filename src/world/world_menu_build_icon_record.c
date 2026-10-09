@@ -27,7 +27,7 @@ void world_menu_build_icon_record(RECT* rect, world_menu_icon_thread_param_t* pa
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
     rect->x = param->x;
     rect->y = param->y;
-    width = *(u16*)&param->width;
+    width = param->width;
     rect->w = (s16)width >> 2;
     rect->h = param->height;
     record->_unknown_74 = 0;

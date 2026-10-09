@@ -502,7 +502,7 @@ void world_menu_unit_status_banner_thread(void) {
                     color++;
                 }
                 row_offset += 0xB;
-                dst = (volatile world_formation_summary_packet_t*)((u8*)dst + sizeof(POLY_G4));
+                dst = (world_formation_summary_packet_t*)((u8*)dst + sizeof(POLY_G4));
                 i += 1;
                 bar_offset += 0x24;
             } while (i < 3);

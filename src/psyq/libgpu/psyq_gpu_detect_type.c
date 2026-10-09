@@ -3,7 +3,7 @@
 /* LIBGPU, retail 0x80026e7c-0x80026f58. Detects draw-mode and extended GPU support. */
 int psyq_gpu_detect_type(int mode) {
     register int result __asm__("$2");
-    volatile u32* data;
+    u32* data;
     *g_psyq_gpu_gp1_port = (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_GET_INFO) | PSYQ_GPU_INFO_VERSION);
     data = g_psyq_gpu_gp0_port;
     if ((*data & PSYQ_GPU_PARAMETER_MASK) != 2) {

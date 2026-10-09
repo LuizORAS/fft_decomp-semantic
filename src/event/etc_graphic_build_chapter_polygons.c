@@ -11,7 +11,7 @@
 void etc_graphic_build_chapter_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, volatile s32 primitives, s32 color) {
     /* Locals the retail build keeps on the stack, one word apart. */
-    volatile struct {
+    struct {
         s32 layer;
         s32 _unused_04;
         s32 dimensions;
@@ -103,14 +103,14 @@ void etc_graphic_build_chapter_polygons(
         PRIM->y3 = 0;
         if (column != 0) {
             if ((GetGraphType() == one) || (GetGraphType() == 2)) {
-                PRIM->tpage = *(volatile u16*)&stack.tpage_right_alt;
+                PRIM->tpage = stack.tpage_right_alt;
             } else {
-                PRIM->tpage = *(volatile u16*)&stack.tpage_right;
+                PRIM->tpage = stack.tpage_right;
             }
         } else if ((GetGraphType() == one) || (GetGraphType() == 2)) {
-            PRIM->tpage = *(volatile u16*)&stack.tpage_left_alt;
+            PRIM->tpage = stack.tpage_left_alt;
         } else {
-            PRIM->tpage = *(volatile u16*)&stack.tpage_left;
+            PRIM->tpage = stack.tpage_left;
         }
         clut = 0x7F80;
         scratch = stack.texture_mode;

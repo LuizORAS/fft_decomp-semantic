@@ -9,7 +9,7 @@ void trapIntr(void) {
     psyq_interrupt_callback_t* callbacks;
     psyq_interrupt_callback_t* callback;
     volatile u16* status;
-    volatile u16* mask;
+    u16* mask;
     if (!state->initialized) {
         printf(g_psyq_etc_uninitialized_irq_format, *g_psyq_etc_irq_status);
         ReturnFromException();

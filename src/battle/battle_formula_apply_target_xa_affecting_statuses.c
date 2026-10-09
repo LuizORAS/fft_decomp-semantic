@@ -1,8 +1,5 @@
 #include "fft/battle.h"
 
-/* volatile view: the target reloads this global at every use. */
-extern battle_stats_t* volatile g_battle_action_target;
-
 void battle_formula_apply_target_xa_affecting_statuses(void) {
     battle_stats_t* target;
 

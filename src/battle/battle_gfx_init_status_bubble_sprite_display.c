@@ -17,7 +17,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s
     display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_status_bubble_sprite_display_data[unit_index * 0x440];
     /* The target walks the part records from the slot base (parts[0] sits
      * two record-sizes in), so index by 2 rather than starting at ->parts. */
-    part = (volatile battle_gfx_sprite_part_display_data_t*)display;
+    part = (battle_gfx_sprite_part_display_data_t*)display;
     display->blue = 0x80;
     display->green = 0x80;
     display->red = 0x80;

@@ -2,8 +2,8 @@
 
 /* Volatile views of the script state: required to keep the target's access order. */
 extern volatile s32 g_wldcore_script_flags;
-extern u16* volatile g_wldcore_script_data_ptr;
-extern volatile u16 g_wldcore_script_ip;
+extern u16* g_wldcore_script_data_ptr;
+extern u16 g_wldcore_script_ip;
 
 /* Stage the two operands for a deferred DrawPath request.
  *
@@ -16,7 +16,7 @@ void wldcore_opcode_load_draw_path_arguments(void) {
     s32 flags;
 
     ip = g_wldcore_script_ip;
-    data = (volatile u16*)g_wldcore_script_data_ptr;
+    data = (u16*)g_wldcore_script_data_ptr;
     operand = data[ip];
     g_wldcore_script_ip = ip + 1;
     g_wldcore_script_state.args[0] = operand;

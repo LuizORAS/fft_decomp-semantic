@@ -6,8 +6,8 @@
 
 /* Volatile views of g_battle_text_section_pointers[2], [6] and [8]: this
  * function matches only with volatile stores. */
-extern u8* volatile g_battle_text_pointer_2;
-extern u8* volatile g_battle_text_pointer_6;
+extern u8* g_battle_text_pointer_2;
+extern u8* g_battle_text_pointer_6;
 extern u8* volatile g_battle_text_pointer_8;
 
 void attack_deploy_find_fieldable_units(void) {

@@ -5,7 +5,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
     s8 digits[16];
     RECT destination;
     RECT glyph;
-    volatile u8 unused_stack[16];
+    u8 unused_stack[16];
     const u8* color;
     u16 clut;
     s32 destination_y;

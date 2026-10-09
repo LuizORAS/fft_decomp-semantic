@@ -29,7 +29,7 @@ psyq_interrupt_callback_t setIntrDMA(s32 channel, psyq_interrupt_callback_t call
             *dma_control = control;
         } else {
             s32 shift;
-            volatile u32* dma_control = g_psyq_etc_dma_dicr;
+            u32* dma_control = g_psyq_etc_dma_dicr;
             u32 control;
             mask |= 0xffff;
             g_psyq_etc_dma_callbacks[selected_channel] = 0;

@@ -17,7 +17,7 @@ void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 contr
     /* Volatile keeps the original stack stores of both MMIO readbacks. */
     volatile u32 observed_register;
     volatile u32* dma;
-    volatile psyq_cd_dma_interrupt_register_t* interrupt_control;
+    psyq_cd_dma_interrupt_register_t* interrupt_control;
     /* Removing this pin changes the original IRQ-byte register allocation. */
     register u32 enabled_channels __asm__("$4");
     u32 priority_mask;
@@ -62,7 +62,7 @@ void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 contr
     /* Typed field stores change the original consecutive MADR, BCR and CHCR access sequence. */
     dma = &CD_DMA_CHANNELS[channel].address;
     {
-        volatile u32* priority = g_psyq_cd_stream_dma_priority_register;
+        u32* priority = g_psyq_cd_stream_dma_priority_register;
         /* Removing this pin changes the original DPCR register allocation. */
         register u32 previous __asm__("$6") = *priority;
         previous |= priority_mask;

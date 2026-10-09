@@ -33,7 +33,7 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
     battle_effect_timeline_state_t* state;
     s32 i;
     s16 child;
-    volatile u8 unused_stack[16]; /* Unread locals that size the target's 0x48-byte frame. */
+    u8 unused_stack[16]; /* Unread locals that size the target's 0x48-byte frame. */
 
     state = (battle_effect_timeline_state_t*)&record->target_index;
     if (state->frame >= g_battle_effect_misc_data->phase1_duration) {

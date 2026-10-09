@@ -5,7 +5,7 @@ psyq_interrupt_state_t* startIntr(void) {
     if (state->initialized)
         return 0;
     {
-        volatile u16* status = g_psyq_etc_irq_status;
+        u16* status = g_psyq_etc_irq_status;
         volatile u16* mask = g_psyq_etc_irq_mask;
         *mask = 0;
         *status = *mask;

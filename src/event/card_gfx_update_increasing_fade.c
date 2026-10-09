@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 s32 card_gfx_update_increasing_fade(void) {
-    volatile u32 stack_padding[4];
+    u32 stack_padding[4];
     s32 result = 1;
     s32 speed = card_menu_get_event_speed();
 

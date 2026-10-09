@@ -102,7 +102,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     battle_target_set_coordinates_for_ability(attacker, work);
     if (count == 0) {
         g_current_ability.strike_counter++;
-        work->last_attack_id = *(u16*)&attacker->last_ability_id;
+        work->last_attack_id = attacker->last_ability_id;
         work->reaction_id_1a = 0;
         if (!(flags_3 & 1)) {
             work->animate_on_miss_flag = 1;
@@ -125,7 +125,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else {
         work->last_attack_id = attacker->last_ability_id;
     }
-    *(s16*)&work->reaction_id_1a = g_current_ability.reaction_id;
+    work->reaction_id_1a = g_current_ability.reaction_id;
     if (g_current_ability.knockback_flags != 0) {
         work->knockback_flags = g_current_ability.knockback_flags & 0x7f;
         work->target_new_x = g_current_ability.target_x;

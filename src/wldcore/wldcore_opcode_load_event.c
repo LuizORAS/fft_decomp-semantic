@@ -2,8 +2,8 @@
 
 /* Volatile views of the script state: required to keep the target's access order. */
 extern volatile s32 g_wldcore_script_flags;
-extern u16* volatile g_wldcore_script_data_ptr;
-extern volatile u16 g_wldcore_script_ip;
+extern u16* g_wldcore_script_data_ptr;
+extern u16 g_wldcore_script_ip;
 
 /* Stage the two-word event identifier for a deferred LoadEvent request.
  *
@@ -18,7 +18,7 @@ void wldcore_opcode_load_event(void) {
     s32 flags;
 
     ip = g_wldcore_script_ip;
-    data = (volatile u16*)g_wldcore_script_data_ptr;
+    data = (u16*)g_wldcore_script_data_ptr;
     first_operand = data[ip];
     g_wldcore_script_ip = ip + 1;
     g_wldcore_script_state.args[0] = first_operand;

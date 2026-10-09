@@ -11,7 +11,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 item_count;
     item_data_t* item;
     u8* qp;
-    volatile u32 pad[4];
+    u32 pad[4];
     s32* iv;
     s32* it;
 

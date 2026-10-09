@@ -437,7 +437,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 }
                 rec++;
                 scale += 0xB;
-                dst = (volatile battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(POLY_G4));
+                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(POLY_G4));
                 i += 1;
                 arg += 0x24;
             } while (i < 3);

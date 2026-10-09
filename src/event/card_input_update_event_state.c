@@ -2,8 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern u16 g_battle_menu_input_block_frames;
-
 void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
     u32 filtered_input;
     s32 initial_delay;

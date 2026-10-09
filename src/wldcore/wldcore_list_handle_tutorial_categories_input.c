@@ -16,7 +16,7 @@
  * provisional. */
 void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
-    volatile s32* selected_entry;
+    s32* selected_entry;
 
     if (g_wldcore_window_render_records[level->frame_render].flags & 0x100) {
         return;

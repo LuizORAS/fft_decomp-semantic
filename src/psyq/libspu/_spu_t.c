@@ -79,7 +79,7 @@ s32 _spu_t(s32 operation, ...) {
         {
             /* The byte-count and buffer pins preserve retail reuse of a0 across the DMA address load. */
             register u32 bytes __asm__("$4") = *arguments;
-            volatile u32* dma_address = g_psyq_spu_dma_address_register;
+            u32* dma_address = g_psyq_spu_dma_address_register;
             u32 blocks = bytes >> 6;
             u32 partial = (bytes & 0x3f) != 0;
             register void* buffer __asm__("$4") = g_psyq_spu_dma_buffer;

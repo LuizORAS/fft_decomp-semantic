@@ -1,8 +1,5 @@
 #include "fft/battle.h"
 
-/* volatile view: the target reloads this global at every use. */
-extern volatile u16 g_battle_menu_input_block_frames;
-
 /* Returns 1 when a menu thread may act on input: no previous event thread
  * running, no third thread parameter, not in event mode, no help menu open,
  * and g_battle_menu_input_block_frames clear. */

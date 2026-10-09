@@ -3,7 +3,7 @@
 
 s32 SpuSetReverb(s32 on_off) {
     /* An unpinned pointer exchanges the retail v0/v1 register roles. */
-    register volatile psyq_spu_registers_t* registers __asm__("$2");
+    register psyq_spu_registers_t* registers __asm__("$2");
     u16 control;
     /* The alias preserves the separate case-0 store and MMIO ordering. */
     extern s32 state __asm__("_spu_rev_flag");

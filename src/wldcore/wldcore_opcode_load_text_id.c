@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Volatile views of the script state: required to keep the target's access order. */
-extern u16* volatile g_wldcore_script_data_ptr;
+extern u16* g_wldcore_script_data_ptr;
 extern volatile u16 g_wldcore_script_ip;
 
 /* Stage the text ID consumed by the deferred world-script text request.
@@ -16,7 +16,7 @@ void wldcore_opcode_load_text_id(void) {
     s32 flags;
 
     ip = g_wldcore_script_ip;
-    data = (volatile u16*)g_wldcore_script_data_ptr;
+    data = (u16*)g_wldcore_script_data_ptr;
     value = data[ip];
     flags = g_wldcore_script_flags;
     g_wldcore_script_ip = ip + 1;

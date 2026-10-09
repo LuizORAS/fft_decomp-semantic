@@ -12,7 +12,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
     u32 scratch[4];
     s32 volume;
     /* Unpinned register pointer swaps v0/v1 throughout the four mixer controls. */
-    register volatile psyq_spu_registers_t* registers __asm__("$2");
+    register psyq_spu_registers_t* registers __asm__("$2");
     u16 control;
     if (all || (mask & 1)) {
         if (all || (mask & 4)) {
@@ -40,12 +40,12 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
                 break;
             case 0:
             default:
-                left = *(u16*)&attr->mvol.left;
+                left = attr->mvol.left;
                 mode = 0;
                 break;
             }
         } else {
-            left = *(u16*)&attr->mvol.left;
+            left = attr->mvol.left;
             mode = 0;
         }
         if (mode != 0) {
@@ -92,12 +92,12 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
                 break;
             case 0:
             default:
-                right = *(u16*)&attr->mvol.right;
+                right = attr->mvol.right;
                 mode = 0;
                 break;
             }
         } else {
-            right = *(u16*)&attr->mvol.right;
+            right = attr->mvol.right;
             mode = 0;
         }
         if (mode != 0) {
@@ -120,16 +120,16 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
     }
     if (all || (mask & 0x40)) {
-        _spu_RXX->cd_volume_left = *(u16*)&attr->cd.volume.left;
+        _spu_RXX->cd_volume_left = attr->cd.volume.left;
     }
     if (all || (mask & 0x80)) {
-        _spu_RXX->cd_volume_right = *(u16*)&attr->cd.volume.right;
+        _spu_RXX->cd_volume_right = attr->cd.volume.right;
     }
     if (all || (mask & 0x400)) {
-        _spu_RXX->external_volume_left = *(u16*)&attr->ext.volume.left;
+        _spu_RXX->external_volume_left = attr->ext.volume.left;
     }
     if (all || (mask & 0x800)) {
-        _spu_RXX->external_volume_right = *(u16*)&attr->ext.volume.right;
+        _spu_RXX->external_volume_right = attr->ext.volume.right;
     }
     if (all || (mask & 0x100)) {
         if (attr->cd.reverb == 0) {

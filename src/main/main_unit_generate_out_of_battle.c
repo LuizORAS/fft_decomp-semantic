@@ -18,7 +18,6 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     u8 generic_id;
     main_unit_generation_base_data_t* base;
     main_unit_generation_base_data_t* table;
-    volatile party_data_t* volatile_name_view;
     party_data_t* other;
     s32 found;
     s32 jp;
@@ -107,11 +106,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
         name_id = 1;
     } else {
-        /* volatile keeps the two byte stores ordered as the target has them
-         * (the scheduler otherwise sinks the low byte past the high byte). */
-        volatile_name_view = party;
-        volatile_name_view->name_id[0] = 0xff;
-        volatile_name_view->name_id[1] = hi;
+        party->name_id[0] = 0xff;
+        party->name_id[1] = hi;
         do {
             found = 1;
             name_id = name_modifier + (rand() * 255) / 0x8000;

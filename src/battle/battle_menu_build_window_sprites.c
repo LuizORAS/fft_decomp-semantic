@@ -13,7 +13,7 @@ void battle_menu_build_window_sprites(
     const battle_image_location_t* load;
     register const battle_image_location_t* call_load __asm__("$5");
     register const battle_image_location_t* screen __asm__("$6");
-    volatile u8 unused_stack[8];
+    u8 unused_stack[8];
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
     header->texture_x = spec->load.x;

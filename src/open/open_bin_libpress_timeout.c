@@ -9,7 +9,7 @@ s32 open_bin_libpress_timeout(const char* tag) {
     /* Unpinned, the `result = 0` set sinks below the MDEC reset and the reset
      * uses $v0/$v1 instead of the target's $v1/$a0. */
     register u32 decoder_status __asm__("$3");
-    register volatile u32* decoder_control __asm__("$4");
+    register u32* decoder_control __asm__("$4");
 
     printf(g_open_text_mdec_timeout_format, tag);
     status = *g_open_mdec_status_reg;

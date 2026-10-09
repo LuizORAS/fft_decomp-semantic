@@ -10,7 +10,7 @@
  * item-stat preview follows the cursor. */
 s32 world_item_run_rearrange_mode(void) {
     RECT rect;
-    volatile s32 unused[2];
+    s32 unused[2];
     s32 cursor;
     s32 picked;
     s32 item;

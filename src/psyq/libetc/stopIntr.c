@@ -9,7 +9,7 @@ psyq_interrupt_state_t* stopIntr(void) {
         g_psyq_etc_saved_irq_mask = *mask;
         {
             u32 priority = *g_psyq_etc_dma_dpcr;
-            volatile u16* status = g_psyq_etc_irq_status;
+            u16* status = g_psyq_etc_irq_status;
             g_psyq_etc_saved_dma_dpcr = priority;
             *mask = 0;
             *status = *mask;

@@ -157,12 +157,12 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
     }
     {
         if (all || (mask & 2)) {
-            _spu_RXX->reverb_depth_left = *(u16*)&attr->depth.left;
-            _spu_rev_attr_depth_left = *(u16*)&attr->depth.left;
+            _spu_RXX->reverb_depth_left = attr->depth.left;
+            _spu_rev_attr_depth_left = attr->depth.left;
         }
         if (all || (mask & 4)) {
-            _spu_RXX->reverb_depth_right = *(u16*)&attr->depth.right;
-            _spu_rev_attr_depth_right = *(u16*)&attr->depth.right;
+            _spu_RXX->reverb_depth_right = attr->depth.right;
+            _spu_rev_attr_depth_right = attr->depth.right;
         }
     }
     goto depth_done;
@@ -186,7 +186,7 @@ depth_done:
         _spu_FsetRXX(PSYQ_SPU_REG_REVERB_START, _spu_rev_offsetaddr, PSYQ_SPU_REGISTER_RAW);
         if (was_enabled) {
             /* Unpinned control pointer changes the final enable-store register. */
-            register volatile psyq_spu_registers_t* control_registers __asm__("$2") = _spu_RXX;
+            register psyq_spu_registers_t* control_registers __asm__("$2") = _spu_RXX;
             control_registers->control |= 0x80;
         }
     }

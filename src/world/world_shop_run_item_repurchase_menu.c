@@ -13,7 +13,7 @@ s32 world_shop_run_item_repurchase_menu(void) {
 
     if (g_world_shop_repurchase_result == 0) {
         g_world_shop_repurchase_confirm_shown = 0;
-        g_world_shop_repurchase_item = *(u16*)&g_world_menu_entry_ids[g_world_menu_cursor_position];
+        g_world_shop_repurchase_item = g_world_menu_entry_ids[g_world_menu_cursor_position];
         g_world_menu_prompt_active = 1;
         owned = world_item_count_owned_and_equipped((s16)g_world_shop_repurchase_item);
         if (owned >= 99) {
