@@ -81,10 +81,10 @@ void battle_unit_set_target_animation_from_attack_type(
 
             if (animation != 0) {
                 if (target->spritesheet_id < BATTLE_SPRITESHEET_ID_CRYSTAL) {
-                    battle_unit_store_animation_facing_movement_data(animation, (s16)target->facing, target);
+                    battle_unit_store_animation_facing_movement_data(animation, target->facing, target);
                 } else if (animation == BATTLE_UNIT_ANIMATION_HURT) {
                     battle_unit_store_animation_facing_movement_data(
-                        BATTLE_UNIT_ANIMATION_HURT, (s16)target->facing, target);
+                        BATTLE_UNIT_ANIMATION_HURT, target->facing, target);
                 }
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK) {
@@ -106,5 +106,5 @@ void battle_unit_set_target_animation_from_attack_type(
         }
         animation = BATTLE_UNIT_ANIMATION_HURT;
     }
-    battle_unit_store_animation_facing(animation, (s16)target->facing, target);
+    battle_unit_store_animation_facing(animation, target->facing, target);
 }

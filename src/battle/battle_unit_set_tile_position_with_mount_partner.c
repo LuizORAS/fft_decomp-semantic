@@ -4,7 +4,7 @@ void battle_unit_set_tile_position_with_mount_partner(battle_unit_misc_data_t* u
     battle_unit_misc_data_t* mounted_unit;
 
     battle_unit_set_tile_position(unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z,
-        (*(s16*)&unit->facing / BATTLE_FACING_QUARTER_TURN));
+        (unit->facing / BATTLE_FACING_QUARTER_TURN));
 
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
         mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
@@ -14,7 +14,7 @@ void battle_unit_set_tile_position_with_mount_partner(battle_unit_misc_data_t* u
             mounted_unit->camera_facing_sixteenth.u = unit->camera_facing_sixteenth.u;
 
             battle_unit_set_tile_position(mounted_unit->battle_data->misc_unit_id, unit->map_x, unit->map_y,
-                unit->map_z, (*(s16*)&unit->facing / BATTLE_FACING_QUARTER_TURN));
+                unit->map_z, (unit->facing / BATTLE_FACING_QUARTER_TURN));
         }
     }
 }

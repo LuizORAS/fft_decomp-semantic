@@ -5,25 +5,25 @@
 void battle_unit_decide_facing_direction(battle_unit_misc_data_t* unit, s32 facing) {
     switch (facing) {
     case BATTLE_FACING_NORTH:
-        if ((s16)unit->facing == BATTLE_FACING_NORTH) {
+        if (unit->facing == BATTLE_FACING_NORTH) {
             return;
         }
         unit->facing = BATTLE_FACING_NORTH;
         break;
     case BATTLE_FACING_SOUTH:
-        if ((s16)unit->facing == BATTLE_FACING_SOUTH) {
+        if (unit->facing == BATTLE_FACING_SOUTH) {
             return;
         }
         unit->facing = BATTLE_FACING_SOUTH;
         break;
     case BATTLE_FACING_WEST:
-        if ((s16)unit->facing == BATTLE_FACING_WEST) {
+        if (unit->facing == BATTLE_FACING_WEST) {
             return;
         }
         unit->facing = BATTLE_FACING_WEST;
         break;
     case BATTLE_FACING_EAST:
-        if ((s16)unit->facing == BATTLE_FACING_EAST) {
+        if (unit->facing == BATTLE_FACING_EAST) {
             return;
         }
         unit->facing = BATTLE_FACING_EAST;
@@ -31,6 +31,7 @@ void battle_unit_decide_facing_direction(battle_unit_misc_data_t* unit, s32 faci
     case BATTLE_FACING_SOUTH_WEST:
     case BATTLE_FACING_NORTH_WEST:
     case BATTLE_FACING_NORTH_EAST:
+    case BATTLE_FACING_SOUTH_EAST:
     default:
         return;
     }

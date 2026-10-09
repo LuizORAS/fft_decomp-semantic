@@ -1801,7 +1801,7 @@ typedef struct battle_unit_misc_data {
      * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
     battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
     battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
-    u16 facing;                                          /* 0x070 */
+    s16 facing;                                          /* 0x070 */
     u16 attack_facing;                                   /* 0x072 */
     u16 depth_height_offset;                             /* 0x074 */
     u16 float_bob_offset;                                /* 0x076; from the float bob table */

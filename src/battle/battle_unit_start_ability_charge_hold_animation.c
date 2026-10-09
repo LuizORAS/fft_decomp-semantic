@@ -15,6 +15,6 @@ void battle_unit_start_ability_charge_hold_animation(battle_unit_misc_data_t* un
             selected_animation = animation;
         }
         /* facing is read signed (lh) here. */
-        battle_unit_store_animation_facing(selected_animation, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(selected_animation, unit->facing, unit);
     }
 }

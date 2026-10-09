@@ -22,13 +22,13 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
     if (target != 0) {
         if (attacker->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
             battle_unit_store_animation_facing_movement_data(
-                g_battle_weapon_attack_animations[0][1], (s16)attacker->facing, attacker);
+                g_battle_weapon_attack_animations[0][1], attacker->facing, attacker);
             return;
         }
         if (attacker->equipped_weapon_type == ITEM_TYPE_BOW) {
             battle_unit_store_animation_facing_movement_data(
-                g_battle_weapon_attack_animations[ITEM_TYPE_BOW][battle_effect_get_bow_shot_angle()],
-                (s16)attacker->facing, attacker);
+                g_battle_weapon_attack_animations[ITEM_TYPE_BOW][battle_effect_get_bow_shot_angle()], attacker->facing,
+                attacker);
             return;
         }
         miss_type = target->battle_data->action.miss_type;
@@ -37,7 +37,7 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
                 if (miss_type < BATTLE_ACTION_MISS_TYPE_BUGGED_REFLECTION) {
                     if (miss_type >= BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD) {
                         battle_unit_store_animation_facing_movement_data(
-                            g_battle_weapon_attack_animations[attacker->equipped_weapon_type][0], (s16)attacker->facing,
+                            g_battle_weapon_attack_animations[attacker->equipped_weapon_type][0], attacker->facing,
                             attacker);
                         return;
                     }
@@ -51,15 +51,15 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
         difference = attacker_centre - target_centre;
         if (difference < -11) {
             battle_unit_store_animation_facing_movement_data(
-                g_battle_weapon_attack_animations[attacker->equipped_weapon_type][0], (s16)attacker->facing, attacker);
+                g_battle_weapon_attack_animations[attacker->equipped_weapon_type][0], attacker->facing, attacker);
             return;
         }
         if (difference >= 12) {
             battle_unit_store_animation_facing_movement_data(
-                g_battle_weapon_attack_animations[attacker->equipped_weapon_type][2], (s16)attacker->facing, attacker);
+                g_battle_weapon_attack_animations[attacker->equipped_weapon_type][2], attacker->facing, attacker);
             return;
         }
     }
     battle_unit_store_animation_facing_movement_data(
-        g_battle_weapon_attack_animations[attacker->equipped_weapon_type][1], (s16)attacker->facing, attacker);
+        g_battle_weapon_attack_animations[attacker->equipped_weapon_type][1], attacker->facing, attacker);
 }

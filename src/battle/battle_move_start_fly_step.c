@@ -43,7 +43,7 @@ void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile,
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
         rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
         if (rider != 0) {
-            battle_unit_store_animation_facing(0x32, (s16)unit->facing, rider);
+            battle_unit_store_animation_facing(0x32, unit->facing, rider);
         }
     }
     battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->movement_path_count, step);

@@ -8,6 +8,6 @@ void battle_unit_start_ability_charge_animation(battle_unit_misc_data_t* unit) {
             .charge_animation_set_id][0];
     if (animation != 0) {
         /* facing is passed sign-extended (lh) here. */
-        battle_unit_store_animation_facing(animation, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(animation, unit->facing, unit);
     }
 }

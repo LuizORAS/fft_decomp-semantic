@@ -15,7 +15,7 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
 
     if (rider->battle_data != 0) {
         battle_unit_set_tile_position(
-            rider->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, ((s16)rider->facing / 1024));
+            rider->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));
         if (rider->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
             mount = battle_unit_get_misc_data_by_misc_id(rider->mount_partner_misc_id);
             if (mount != 0) {
@@ -26,8 +26,8 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
                 mount->screen = rider->screen;
                 mount->screen.vy -= 10;
                 mount->real.vy -= 0xa000;
-                battle_unit_set_tile_position(mount->battle_data->misc_unit_id, rider->map_x, rider->map_y,
-                    rider->map_z, ((s16)rider->facing / 1024));
+                battle_unit_set_tile_position(
+                    mount->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));
             }
         }
     }

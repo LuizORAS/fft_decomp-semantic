@@ -10,6 +10,6 @@ void battle_move_return_to_previous_map_square(battle_unit_misc_data_t* unit) {
     unit->standing_on_unit_id_plus_one = unit->previous_standing_on_unit_id_plus_one;
     battle_unit_set_move_and_screen_coords(unit);
     battle_unit_set_tile_position(unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z,
-        (*(s16*)&unit->facing / BATTLE_FACING_QUARTER_TURN));
-    battle_unit_store_animation_facing_movement_data(unit->encoded_animation >> 1, *(s16*)&unit->facing, (u8*)unit);
+        (unit->facing / BATTLE_FACING_QUARTER_TURN));
+    battle_unit_store_animation_facing_movement_data(unit->encoded_animation >> 1, unit->facing, (u8*)unit);
 }
