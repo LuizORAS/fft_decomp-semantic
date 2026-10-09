@@ -867,11 +867,17 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
 void battle_ai_clear_words(void* destination, s32 byte_count);
 
 /* animation */
+/* A facing is an angle with 0x1000 to the turn. Units rest on the four
+ * cardinals; the diagonals are the boundaries a free angle is snapped at. */
 typedef enum battle_facing {
     BATTLE_FACING_SOUTH = 0x000,
+    BATTLE_FACING_SOUTH_WEST = 0x200,
     BATTLE_FACING_WEST = 0x400,
+    BATTLE_FACING_NORTH_WEST = 0x600,
     BATTLE_FACING_NORTH = 0x800,
+    BATTLE_FACING_NORTH_EAST = 0xa00,
     BATTLE_FACING_EAST = 0xc00,
+    BATTLE_FACING_SOUTH_EAST = 0xe00,
     BATTLE_FACING_QUARTER_TURN = 0x400,
     BATTLE_FACING_MASK = 0x0fff,
 } battle_unit_facing_e;
