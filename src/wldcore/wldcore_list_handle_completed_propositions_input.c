@@ -20,7 +20,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        wldcore_list_clear_cursor_state(4);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_main_system_flags |= 4;
         world_thread_set_parameters(0xC, 0, 0, 1);
         return;
@@ -34,7 +34,7 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_list_completed_propositions_clear_result(values);
         wldcore_proposition_prepare_report(values[g_wldcore_window_panel_render_state.selected_index + 13]);
-        wldcore_list_store_cursor_state(4);
+        wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_world_text_substitution_values[0]
             = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
         world_thread_set_parameters(0xE, 0x19, 0xB81A, 0);

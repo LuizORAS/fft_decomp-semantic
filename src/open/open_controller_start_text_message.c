@@ -29,7 +29,7 @@ void open_controller_start_text_message(s32 parameter, s32 run_followup) {
         s32 controller = g_open_current_controller_index;
         s32 next_controller = controller + 1;
 
-        g_open_controller_handler_indices[controller] = 8;
+        g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TEXT_MESSAGE;
         g_open_current_controller_index = next_controller;
     }
 }

@@ -20,7 +20,7 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
     }
 
     index = g_wldcore_proposition_selected_entry - 1;
-    request.flags = 1;
+    request.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
     request.position.x = g_wldcore_map_dot_screen_x[index].value;
     request.position.y = g_wldcore_map_dot_screen_y[index].value;
     shade = g_wldcore_location_marker_shade;
@@ -35,6 +35,6 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
     request.color.r = color.r;
     request.color.g = color.g;
     request.color.b = color.b;
-    request.sequence = g_wldcore_proposition_selected_entry + 0x36;
+    request.sequence = g_wldcore_proposition_selected_entry + (WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST - 1);
     wldcore_gfx_draw_animated_display_object(&request, ot);
 }

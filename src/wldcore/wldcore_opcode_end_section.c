@@ -5,5 +5,5 @@ void wldcore_opcode_end_section(void) {
     u16* flags;
 
     flags = &g_wldcore_active_saved_record.state_flags;
-    *flags |= 0x0a;
+    *flags |= WLDCORE_OPCODE_STATE_BRANCH | WLDCORE_OPCODE_STATE_YIELD;
 }

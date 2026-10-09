@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 void wldcore_menu_push_sound_novel_level(s32 argument) {
     wldcore_window_render_bounds16_t bounds;
@@ -28,12 +29,12 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.left_window = index;
-    g_wldcore_window_records[index].sequence = 0x6E;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON;
     window1 = &g_wldcore_window_records[index];
     window1->priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags |= 0x10;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     pos1 = &g_wldcore_window_records[index].position;
     pos1->x = -0x7A;
     pos1->y = 0x60;
@@ -42,9 +43,9 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.right_window = index;
-    g_wldcore_window_records[index].sequence = 0x70;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON;
     g_wldcore_window_records[index].priority = 0xA;
-    g_wldcore_window_records[index].flags |= 0x10;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     window2 = &g_wldcore_window_records[index];
     window2->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -67,14 +68,14 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     pos3->x = 0x34;
     pos3->y = 0x55;
     g_wldcore_window_render_records[index].priority = 8;
-    g_wldcore_window_render_records[index].flags |= 0x410;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED;
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.overlay_window = index;
-    g_wldcore_window_records[index].sequence = 0x72;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_OVERLAY;
     g_wldcore_window_records[index].priority = 8;
-    g_wldcore_window_records[index].flags |= 0x410;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED;
     window4 = &g_wldcore_window_records[index];
     window4->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -85,14 +86,14 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
 
     SuzukiAppendVFXSMD(g_wldcore_sound_novel_sound_resource);
     wldcore_sound_novel_restore_saved_state(bar_render);
-    g_wldcore_menu_result = 0x1C0;
+    g_wldcore_menu_result = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_screen_fade_state.priorities[0] = 8;
-    g_wldcore_screen_fade_state.flags[1] |= 8;
+    g_wldcore_screen_fade_state.flags[1] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel._unknown_20 = 1;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.countdown = 0x270F;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.fade_timer = 0;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.phase = 0;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.phase = WLDCORE_SOUND_NOVEL_PHASE_RUN;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SOUND_NOVEL;
     g_wldcore_menu_stack_depth++;
     wldcore_fade_start_screen(0, 0x10);

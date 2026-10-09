@@ -27,13 +27,13 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     wldcore_point32_t* base;
 
     switch (level->phase) {
-    case 1:
+    case WLDCORE_DETAIL_PHASE_LOAD:
         level->timer = level->timer + 1;
         if (g_main_file_cd_state.state == MAIN_FILE_LOAD_STATE_IDLE) {
             level->phase = level->phase + 1;
         }
         return;
-    case 2:
+    case WLDCORE_DETAIL_PHASE_BUILD:
         if (level->timer < 8 || world_menu_get_event_state_flag() == 0) {
             level->timer = level->timer + 1;
             return;
@@ -88,34 +88,35 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             g_wldcore_scrollable_text_window.extra_base = *base;
             g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render_index].bounds;
         } else {
-            g_wldcore_window_render_records[render_index].flags |= 8;
+            g_wldcore_window_render_records[render_index].flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
         }
         level->phase = level->phase + 1;
         return;
-    case 3:
-        if (!(g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags & 0x100)) {
-            g_wldcore_window_render_records[level->render_index].flags &= ~0x10;
-            level->phase = 0;
+    case WLDCORE_DETAIL_PHASE_POP_IN:
+        if (!(g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
+                & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+            g_wldcore_window_render_records[level->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            level->phase = WLDCORE_DETAIL_PHASE_SHOWN;
         }
         return;
     default:
         if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) == 0) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                |= 0x100;
+                |= WLDCORE_DISPLAY_OBJECT_POP_IN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_menu_stack_depth = depth - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
             g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             wldcore_list_open_set_script_variables_03c0_03ff();
         }
     }

@@ -28,34 +28,34 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
     if (state->blink_frames != 0 && ++state->blink_frames >= 10) {
         state->blink_frames = 0;
         world_formation_set_display_mode(0);
-        g_open_menu_formation_entry_mask ^= 0x5000;
+        g_open_menu_formation_entry_mask ^= PSX_PAD_UP | PSX_PAD_DOWN;
     }
 
-    if (state->step == 4) {
+    if (state->step == OPEN_MUSIC_TEST_STEP_OPEN) {
         if (!(g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE)) {
             extent.x = 0x15;
             extent.y = 0xB;
             origin.x = 0x8C;
             origin.y = 0x14;
             open_menu_start_music_test_list_thread(0xC, 0x60, &extent, &origin);
-            state->step = 0;
+            state->step = OPEN_MUSIC_TEST_STEP_IDLE;
         }
-    } else if (state->step == 3) {
+    } else if (state->step == OPEN_MUSIC_TEST_STEP_START_TRACK) {
         if (main_return_zero_80043708() == 0) {
             g_open_music_test_sound_handle = main_sound_switch_music_track(state->music_slot, 0x7F, 0x10);
-            state->step = 0;
+            state->step = OPEN_MUSIC_TEST_STEP_IDLE;
         }
-    } else if (state->step == 2) {
+    } else if (state->step == OPEN_MUSIC_TEST_STEP_FADE_OUT) {
         if (!(g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE)) {
-            g_open_system_runtime_flags ^= 0x410;
+            g_open_system_runtime_flags ^= OPEN_RUNTIME_INPUT_DISABLED | OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
             open_file_build_openbk_header(0, g_open_file_destination);
             open_file_wait_for_pending();
             g_open_current_controller_index--;
             open_title_push_menu_controller(0);
         }
-    } else if (state->step == 1) {
+    } else if (state->step == OPEN_MUSIC_TEST_STEP_CLOSE) {
         if (world_thread_is_running(0xC) == 0) {
-            state->step = 2;
+            state->step = OPEN_MUSIC_TEST_STEP_FADE_OUT;
             open_gfx_start_overlay_fade_in(0x20);
         }
     } else if (state->delay != 0) {
@@ -65,7 +65,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
                     main_sound_unload_scenario_mus(state->music_slot);
                 }
                 state->music_slot = main_sound_open_music_into_free_slot(state->music_id);
-                state->step = 3;
+                state->step = OPEN_MUSIC_TEST_STEP_START_TRACK;
             } else {
                 if (state->music_slot != 0) {
                     main_sound_unload_scenario_mus(state->music_slot);
@@ -83,7 +83,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
         if (buttons & PSX_PAD_CIRCLE) {
             world_formation_set_display_mode(1);
             state->blink_frames = 1;
-            g_open_menu_formation_entry_mask |= 0x5000;
+            g_open_menu_formation_entry_mask |= PSX_PAD_UP | PSX_PAD_DOWN;
             if (state->music_id != 0) {
                 state->delay = 0x20;
                 main_sound_set_current_music_target(0, 0x78);
@@ -97,7 +97,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
                 state->music_id = 0;
                 state->delay = 0x20;
             } else {
-                state->step = 1;
+                state->step = OPEN_MUSIC_TEST_STEP_CLOSE;
                 world_thread_set_parameters(0xC, 0, 0, 1);
                 g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
             }

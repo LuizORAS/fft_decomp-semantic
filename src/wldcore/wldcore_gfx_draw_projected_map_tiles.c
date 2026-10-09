@@ -16,7 +16,6 @@
 #define WLDCORE_MAP_TILE_ROWS    12
 #define WLDCORE_MAP_TILE_COLUMNS 16
 #define WLDCORE_MAP_ROW_STRIDE   17
-#define WLDCORE_TILE_CULLED_MASK 0x300
 #define WLDCORE_MAP_DOT_CLUT_Y   0x1e0
 
 void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
@@ -50,10 +49,10 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
             s32 w;
             s32 h;
 
-            if (flags & WLDCORE_TILE_CULLED_MASK) {
+            if (flags & (WLDCORE_MAP_TILE_OFF_SCREEN | WLDCORE_MAP_TILE_EMPTY)) {
                 continue;
             }
-            poly.tpage = flags & 0xff;
+            poly.tpage = flags & WLDCORE_MAP_TILE_TPAGE_MASK;
             poly.x0 = poly.x2 = g_wldcore_map_projected_tiles[index].screen_x;
             poly.x1 = poly.x3 = g_wldcore_map_projected_tiles[index + 1].screen_x;
 

@@ -18,7 +18,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
             g_wldcore_menu_result = 0;
             g_main_system_flags ^= 0x44;
             g_wldcore_menu_stack_depth--;
-            wldcore_menu_push_screen_transition_level(0x2C, 0, 0);
+            wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS, 0, 0);
         }
         return;
     }
@@ -27,7 +27,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
     }
     if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
         if (level->result != 0) {
-            wldcore_list_store_cursor_state(0x12);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS);
             level->result = 2;
             g_main_system_flags |= 0x40;
             world_thread_set_parameters(0xE, 0, -1, 0);
@@ -37,7 +37,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         g_wldcore_menu_result = 0;
         g_main_system_flags ^= 4;
         g_wldcore_menu_stack_depth--;
-        wldcore_list_clear_cursor_state(0x12);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS);
         wldcore_menu_dispatch_resume_handler();
         return;
     }
@@ -54,6 +54,6 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         level->result = 1;
         g_main_system_flags |= 4;
         world_thread_set_parameters(0xC, 0, 0, 1);
-        wldcore_fade_start_screen(2, 0x10);
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
     }
 }

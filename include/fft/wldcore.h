@@ -57,6 +57,24 @@ typedef struct wldcore_job_report_confirm_level {
     s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
 } wldcore_job_report_confirm_level_t;
 
+/* Outcome of a proposition (wldcore_job_selection_t.result), from the
+ * participants' total score. Only SUCCESS completes the proposition and earns
+ * its reward. */
+typedef enum wldcore_proposition_result {
+    WLDCORE_PROPOSITION_RESULT_SUCCESS = 0,     /* score of 99 or more, or the preferred-job roll */
+    WLDCORE_PROPOSITION_RESULT_FAILURE = 1,     /* score of 59 to 98: a tenth of the JP, a fifth of the gil */
+    WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
+} wldcore_proposition_result_e;
+
+/* What a successful proposition brought back (wldcore_job_selection_t.reward_type);
+ * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
+typedef enum wldcore_proposition_reward {
+    WLDCORE_PROPOSITION_REWARD_NONE = 0,
+    WLDCORE_PROPOSITION_REWARD_TREASURE = 1,
+    WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND = 2,
+    WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS = 3, /* the three-tier random reward */
+} wldcore_proposition_reward_e;
+
 /* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
  * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
  * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
@@ -66,8 +84,8 @@ typedef struct wldcore_job_selection {
     s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
     s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
     s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
-    s32 result;               /* 0x10; 0 success, 1 and 2 failure kinds */
-    s32 reward_type;          /* 0x14 */
+    s32 result;               /* 0x10; wldcore_proposition_result_e */
+    s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
     s32 reward_index;         /* 0x18 */
     s32 reward_value;         /* 0x1c */
     s32 gate;                 /* 0x20; set for a dispatched proposition */
@@ -80,6 +98,19 @@ extern wldcore_job_selection_t g_wldcore_job_selection;
 void wldcore_proposition_prepare_report(s32 job_id);
 
 /* opcode */
+/* Interpreter state of the sound-novel script (wldcore_saved_record_t.state_flags),
+ * stepped by wldcore_script_run_until_yield. */
+typedef enum wldcore_opcode_state_flag {
+    WLDCORE_OPCODE_STATE_BRANCH = 0x002,  /* a branch was taken: mark its saved-data bit and enter the next section */
+    WLDCORE_OPCODE_STATE_FETCH = 0x004,   /* the handler is done: load the next instruction word */
+    WLDCORE_OPCODE_STATE_YIELD = 0x008,   /* leave the interpreter until the next frame */
+    WLDCORE_OPCODE_STATE_FETCHED = 0x010, /* the instruction word was loaded this turn: the handler's first call */
+    WLDCORE_OPCODE_STATE_END = 0x020,     /* the script ended */
+    WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE = 0x040,
+    WLDCORE_OPCODE_STATE_VALUE_DISPLAY = 0x080, /* the numeric value display is up */
+    WLDCORE_OPCODE_STATE_WHITE_OVERLAY = 0x100, /* the white full-screen overlay is up */
+} wldcore_opcode_state_flag_e;
+
 /* The world-script state from the instruction word at 0x800d4848 onwards
  * (the tail of wldcore_world_script_record_t). Handlers must reach it as
  * in-struct references: the target keeps each state_flags store ahead of the
@@ -92,7 +123,7 @@ typedef struct wldcore_opcode_state {
         u32 word;
         wldcore_opcode_instruction_bytes_t bytes;
     } instruction;   /* 0x00 */
-    u16 state_flags; /* 0x04; g_wldcore_state_flags */
+    u16 state_flags; /* 0x04; g_wldcore_state_flags; wldcore_opcode_state_flag_e */
     u8 _unused_06[0x0e];
     s16 render_index; /* 0x14 */
     s16 picture;      /* 0x16 */
@@ -138,14 +169,33 @@ typedef struct wldcore_route_record {
 extern s32 g_wldcore_route_search_depth;
 extern s32 g_wldcore_route_search_cost;
 
+/* wldcore_audio_music_slots_t.flags. */
+typedef enum wldcore_audio_music_flag {
+    WLDCORE_AUDIO_MUSIC_PLAYING = 0x01, /* the current slot's music is audible: a new start fades it out first */
+} wldcore_audio_music_flag_e;
+
 /* sound */
 /* The music words at +0x8c: the first is both the music flags and slot 0 of
  * the per-slot loaded-track table, since the target indexes the table from
  * that address. */
 typedef union wldcore_audio_music_slots {
-    s32 flags;
+    s32 flags; /* wldcore_audio_music_flag_e */
     s32 tracks[3];
 } wldcore_audio_music_slots_t;
+
+/* Commands of the audio queue (wldcore_sound_enqueue_audio_command), and the
+ * wait states wldcore_sound_process_audio_queue moves the current command
+ * through. */
+typedef enum wldcore_audio_command {
+    WLDCORE_AUDIO_COMMAND_NONE = 0x00,       /* idle: takes the next queued command */
+    WLDCORE_AUDIO_COMMAND_PLAY_MUSIC = 0x01, /* value: slot << 8 | track */
+    WLDCORE_AUDIO_COMMAND_FADE_OUT = 0x02,   /* value << 2: fade time */
+    WLDCORE_AUDIO_COMMAND_FADE_IN = 0x03,    /* the current slot, to the stored volume over value << 2 */
+    WLDCORE_AUDIO_COMMAND_UNLOAD = 0x04,     /* value: slot, 0 for the current one */
+    WLDCORE_AUDIO_COMMAND_WAIT_LOAD = 0x10,
+    WLDCORE_AUDIO_COMMAND_WAIT_FADE_OUT = 0x11,
+    WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN = 0x12,
+} wldcore_audio_command_e;
 
 /* Audio command FIFO at 0x800d45a4, filled by
  * wldcore_sound_enqueue_audio_command and serviced by wldcore_sound_process_audio_queue, followed
@@ -154,7 +204,7 @@ typedef union wldcore_audio_music_slots {
 typedef struct wldcore_audio_queue {
     s32 commands[16];
     s32 values[16];
-    s32 current_command;               /* 0x80 */
+    s32 current_command;               /* 0x80; wldcore_audio_command_e */
     s32 current_value;                 /* 0x84 */
     s32 count;                         /* 0x88 */
     wldcore_audio_music_slots_t music; /* 0x8c */
@@ -202,6 +252,12 @@ void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
 s32 wldcore_sound_novel_update_countdown_timer(void);
 void wldcore_load_sound_novel_files(s32 chapter);
 
+/* wldcore_slideshow_t.flags. */
+typedef enum wldcore_slideshow_flag {
+    WLDCORE_SLIDESHOW_RUNNING = 0x01,  /* the page timer runs */
+    WLDCORE_SLIDESHOW_REVERSED = 0x02, /* the route is shown end to start */
+} wldcore_slideshow_flag_e;
+
 /* story */
 /* Provisional: the slideshow page list at 0x800d3bbc. A route travel reuses
  * the record: the route id is the script variable (offset by 0x22c, the
@@ -209,7 +265,7 @@ void wldcore_load_sound_novel_files(s32 chapter);
  * polyline that follows the page list, shown for its length / 32 frames, and
  * page i runs from point 2i to point 2i + 2. */
 typedef struct wldcore_slideshow {
-    u16 flags;           /* 0x00; bit 0 runs the page timer, bit 1 = reversed */
+    u16 flags;           /* 0x00; wldcore_slideshow_flag_e */
     s16 script_variable; /* 0x02; script variable base, offset by 0x22c */
     s16 page_count;      /* 0x04 */
     s16 page_index;      /* 0x06 */
@@ -290,10 +346,32 @@ typedef struct wldcore_window_render_bounds16 {
     upoint16_t dimensions;
 } wldcore_window_render_bounds16_t;
 
+/* g_wldcore_context_value_display_mode: the layout of the HUD numeric readout
+ * (wldcore_gfx_draw_context_value_display). */
+typedef enum wldcore_value_display_mode {
+    WLDCORE_VALUE_DISPLAY_PLAIN = 0,          /* eight digits */
+    WLDCORE_VALUE_DISPLAY_FUNDS = 1,          /* labelled and underlined; the war funds */
+    WLDCORE_VALUE_DISPLAY_PLAY_TIME = 2,      /* hours, minutes and seconds */
+    WLDCORE_VALUE_DISPLAY_LABELLED = 3,       /* PLAIN under a small label */
+    WLDCORE_VALUE_DISPLAY_COST_AND_FUNDS = 4, /* a labelled five-digit secondary value, then FUNDS */
+} wldcore_value_display_mode_e;
+
+/* g_wldcore_screen_fade_state.flags[]: word 0 is the screen fade and its fill
+ * box, word 1 a second fill box. wldcore_fade_start_screen takes OUT,
+ * REDRAW_MAP, STOP_MUSIC and START_MUSIC and adds RUNNING. */
+typedef enum wldcore_screen_fade_flag {
+    WLDCORE_SCREEN_FADE_RUNNING = 0x01,
+    WLDCORE_SCREEN_FADE_OUT = 0x02,         /* fades to black; stays set while the screen is dark */
+    WLDCORE_SCREEN_FADE_REDRAW_MAP = 0x04,  /* every fade step sets system flag 0x02 */
+    WLDCORE_SCREEN_FADE_BOX_VISIBLE = 0x08, /* the fill box is drawn without a running fade */
+    WLDCORE_SCREEN_FADE_STOP_MUSIC = 0x10,  /* also fades the music out and unloads it */
+    WLDCORE_SCREEN_FADE_START_MUSIC = 0x20, /* also loads track 0x11b and fades it in */
+} wldcore_screen_fade_flag_e;
+
 /* The three parallel arrays share one object, which is why the target builds
  * all three walk pointers from a single symbol address. */
 typedef struct wldcore_sortbox_state {
-    u32 flags[2];
+    u32 flags[2];      /* 0x00; wldcore_screen_fade_flag_e */
     s32 priorities[2]; /* 0x08; GsSortBoxFill OT priority of each box, read as a halfword */
     s32 elapsed;       /* 0x10; fade frames run, stepped by wldcore_fade_step_screen */
     s32 duration;      /* 0x14 */
@@ -357,7 +435,7 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot);
 void wldcore_clear_screen_and_set_map_clip_rect(s32 mode);
 void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count);
 void wldcore_fade_draw_screen_overlays(void);
-void wldcore_fade_start_screen(s32 command, s32 operand);
+void wldcore_fade_start_screen(s32 flags, s32 duration);
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch);
 void wldcore_gfx_copy_color_with_tint(CVECTOR* source, CVECTOR* out);
 void wldcore_gfx_draw_world_frame(void);
@@ -390,13 +468,19 @@ typedef struct wldcore_location_list_level {
     s32 entries[10]; /* 0x34 */
 } wldcore_location_list_level_t;
 
+/* wldcore_location_entry_state_t.flags. */
+typedef enum wldcore_route_travel_flag {
+    WLDCORE_ROUTE_TRAVEL_ACTIVE = 0x01,   /* a path was found and is being travelled */
+    WLDCORE_ROUTE_TRAVEL_REVERSED = 0x02, /* the current leg runs its route end to start */
+} wldcore_route_travel_flag_e;
+
 /* Provisional: location-entry state at 0x800d0b24, filled by the route search
  * wldcore_map_find_best_route_path, staged per route leg by wldcore_location_begin_route_segment and stepped by
  * wldcore_map_step_route_travel. The vertices are SVECTORs: their 2-byte alignment is what
  * makes `previous_position = position` take GCC's unaligned block-move path
  * (lwl/lwr, swl/swr) that the target emits. */
 typedef struct wldcore_location_entry_state {
-    s32 flags;                       /* 0x00; bit 0 entry found, bit 1 descending leg */
+    s32 flags;                       /* 0x00; wldcore_route_travel_flag_e */
     s32 route_id;                    /* 0x04; route & 0xff, index into g_wldcore_map_route_tables */
     s32 segment_index;               /* 0x08; current segment of the leg, the step for begin_route_segment */
     s32 segment_count;               /* 0x0c; wldcore_location_begin_route_segment result (record count - 1) */
@@ -512,7 +596,7 @@ typedef enum wldcore_script_request_flags {
  * wldcore_opcode_read_four_halfword_pairs reaches ip at -4 and the choice
  * values at +0x10 from its &choice_vars base. */
 typedef struct wldcore_script_state {
-    s32 flags;          /* 0x00 */
+    s32 flags;          /* 0x00; wldcore_script_result_flags_e | wldcore_script_action_flags_e */
     u16* list;          /* 0x04; script list for the current location */
     u16* data;          /* 0x08 */
     u16 ip;             /* 0x0c */
@@ -550,6 +634,26 @@ typedef struct wldcore_text_list_panel {
     s32 text_ids[1]; /* 0x34; row_count entries, relative to text 0xb8d9 */
 } wldcore_text_list_panel_t;
 
+/* wldcore_text_scrollable_window_t.scroll_state. */
+typedef enum wldcore_text_scroll_state {
+    WLDCORE_TEXT_SCROLL_PAGING = 0,
+    WLDCORE_TEXT_SCROLL_MANUAL = 1, /* while square is held: up and down scroll by rows */
+    WLDCORE_TEXT_SCROLL_RETURN = 2, /* scrolls back to the page start */
+} wldcore_text_scroll_state_e;
+
+/* Blocks of the message file (wldcore_load_message_block_if_changed). */
+typedef enum wldcore_message_block {
+    WLDCORE_MESSAGE_BLOCK_RUMORS = 0x00,
+    WLDCORE_MESSAGE_BLOCK_PROPOSITIONS = 0x01,
+    WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS = 0x02,
+    WLDCORE_MESSAGE_BLOCK_TREASURES = 0x03,
+    WLDCORE_MESSAGE_BLOCK_STORY_EVENTS = 0x04,
+    WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS = 0x05,
+    WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS = 0x0a,
+    WLDCORE_MESSAGE_BLOCK_SCRIPT_FLAGS_01A4_01BB = 0x0b,
+    WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST = 0x10, /* one block per proposition id */
+} wldcore_message_block_e;
+
 /* State for a paged text window and its four decorative window records. */
 typedef struct wldcore_text_scrollable_window {
     s32 image_x; /* 0x00; text image position.x for wldcore_window_build_render_record_image; cleared by the setups */
@@ -564,9 +668,7 @@ typedef struct wldcore_text_scrollable_window {
      * y and height from the bounds. */
     wldcore_point32_t extra_base;                  /* 0x20 */
     wldcore_window_render_bounds16_t extra_bounds; /* 0x28 */
-    /* 0x30; wldcore_text_is_window_finished: 0 paging, 1 manual scroll while button 0x80 is held, 2 scrolling
-     * back to page_start_row */
-    s32 scroll_state;
+    s32 scroll_state;                              /* 0x30; wldcore_text_scroll_state_e */
     s32 text_id;
     s32 left_window_index;
     s32 middle_window_index;
@@ -606,6 +708,79 @@ typedef struct wldcore_proposition_data {
     u8 message_adjustments[9];
 } wldcore_proposition_data_t;
 
+/* wldcore_proposition_progress_t.flags of an active proposition. */
+typedef enum wldcore_proposition_progress_flag {
+    WLDCORE_PROPOSITION_PROGRESS_DISPATCHED = 0x01,
+    WLDCORE_PROPOSITION_PROGRESS_RECALLED = 0x02, /* cancelled: returns on the next day */
+    WLDCORE_PROPOSITION_PROGRESS_RETURNED = 0x04, /* the days are up: waiting for the report */
+} wldcore_proposition_progress_flag_e;
+
+/* Value of a proposition's script variable (EVENT_SCRIPT_VAR_PROPOSITION_FIRST + id). */
+typedef enum wldcore_proposition_variable_flag {
+    WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS = 0x02,
+    WLDCORE_PROPOSITION_VARIABLE_COMPLETED = 0x04,
+    WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED = 0x08, /* dispatched at least once */
+} wldcore_proposition_variable_flag_e;
+
+/* g_main_proposition_states[]: days until a failed proposition is offered
+ * again, and which failure it was. */
+typedef enum wldcore_proposition_state {
+    WLDCORE_PROPOSITION_STATE_DAYS_MASK = 0x3f,
+    WLDCORE_PROPOSITION_STATE_FAILURE = 0x40,
+    WLDCORE_PROPOSITION_STATE_BAD_FAILURE = 0x80,
+} wldcore_proposition_state_e;
+
+/* Records of the proposition data file (wldcore_proposition_get_data_pointer). */
+typedef enum wldcore_proposition_data_record {
+    WLDCORE_PROPOSITION_DATA_ROWS = 0,                /* 23-byte proposition rows */
+    WLDCORE_PROPOSITION_DATA_FEES = 1,                /* halfwords behind the rows' two fee indices */
+    WLDCORE_PROPOSITION_DATA_MESSAGE_ADJUSTMENTS = 2, /* by faith and bravery band */
+    WLDCORE_PROPOSITION_DATA_CATEGORY_JOB_SCORES = 3,
+    WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES = 4,
+    WLDCORE_PROPOSITION_DATA_BRAVERY_LEVEL_SCORES = 5,
+    WLDCORE_PROPOSITION_DATA_FAITH_SCORES = 6,
+    WLDCORE_PROPOSITION_DATA_JP_AMOUNTS = 8,
+    WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS = 9,
+    WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS = 10,
+    WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS = 11,
+    WLDCORE_PROPOSITION_DATA_EXTRA_DAY_JP_SCALES = 12,
+    WLDCORE_PROPOSITION_DATA_EXTRA_DAY_GIL_SCALES = 13,
+    WLDCORE_PROPOSITION_DATA_JOB_LISTS = 14, /* nine job ids per job list */
+} wldcore_proposition_data_record_e;
+
+/* wldcore_proposition_report_level_t.load_phase. */
+typedef enum wldcore_proposition_report_load {
+    WLDCORE_PROPOSITION_REPORT_LOAD_DONE = 0,
+    WLDCORE_PROPOSITION_REPORT_LOAD_MESSAGES = 1, /* waits for the audio queue, then loads the message block */
+    WLDCORE_PROPOSITION_REPORT_LOAD_PICTURE = 2,  /* waits for it, then loads the reward's picture set */
+} wldcore_proposition_report_load_e;
+
+/* wldcore_proposition_result_level_t.phase. */
+typedef enum wldcore_proposition_result_phase {
+    WLDCORE_PROPOSITION_RESULT_PHASE_INPUT = 0,
+    WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING = 1, /* waits for the audio queue and the message thread */
+    WLDCORE_PROPOSITION_RESULT_PHASE_DONE = 2,    /* waits for the audio queue, then pops */
+} wldcore_proposition_result_phase_e;
+
+/* Which participant reports (proposition row speaker_mode). */
+typedef enum wldcore_proposition_speaker {
+    WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY = 1,
+    WLDCORE_PROPOSITION_SPEAKER_LOWEST_BRAVERY = 2,
+    WLDCORE_PROPOSITION_SPEAKER_HIGHEST_FAITH = 3,
+    WLDCORE_PROPOSITION_SPEAKER_LOWEST_FAITH = 4,
+} wldcore_proposition_speaker_e;
+
+/* wldcore_menu_send_unit_level_t.mode. */
+typedef enum wldcore_send_unit_mode {
+    WLDCORE_SEND_UNIT_MODE_SELECT = 0,
+    WLDCORE_SEND_UNIT_MODE_CANCEL = 1,       /* cross: closes back to the available propositions */
+    WLDCORE_SEND_UNIT_MODE_REPLACE = 2,      /* three are chosen: picks the slot the unit replaces */
+    WLDCORE_SEND_UNIT_MODE_STATUS_OPEN = 3,  /* square: waits for the list threads, then opens the status panels */
+    WLDCORE_SEND_UNIT_MODE_STATUS = 4,       /* unit status, browsed with L1 and R1 */
+    WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE = 5, /* waits for the status threads, then reopens the list */
+    WLDCORE_SEND_UNIT_MODE_ACCEPT = 6,       /* start: closes and moves on to the day count */
+} wldcore_send_unit_mode_e;
+
 /* Provisional: the type-0x10 proposition report level pushed by
  * wldcore_menu_push_proposition_report_level (0x800779d0), which stores its argument at
  * +0x2c and starts WORLD thread 14, and stepped by
@@ -614,7 +789,7 @@ typedef struct wldcore_proposition_report_level {
     s32 state; /* 0x00; step index, -1 .. 0x12; pushed as -1, or 0x63 when g_wldcore_job_selection.gate is set */
     s32 phase; /* 0x04; wldcore_proposition_step_message phase; cleared at push */
     u8 _unused_08[4];
-    s32 load_phase;   /* 0x0c; 1 chapter data, 2 picture data; 1 at push */
+    s32 load_phase;   /* 0x0c; wldcore_proposition_report_load_e; MESSAGES at push */
     s32 render_index; /* 0x10; picture render record; -1 at push */
     u8 _unused_14[0x18];
     s32 proposition; /* 0x2c; argument of the push */
@@ -625,7 +800,7 @@ typedef struct wldcore_proposition_report_level {
 typedef struct wldcore_proposition_result_level {
     s32 render_index; /* 0x00 */
     u8 _unused_04[0xc];
-    s32 phase; /* 0x10; 0 waiting for input, 1 fading out, 2 finished */
+    s32 phase; /* 0x10; wldcore_proposition_result_phase_e */
     u8 _unused_14[0x14];
     s32 delay;       /* 0x28; frames before the success jingle restarts */
     s32 proposition; /* 0x2c; index into g_main_active_propositions */
@@ -638,25 +813,25 @@ typedef struct wldcore_proposition_result_level {
 typedef union wldcore_proposition_fields {
     u16 values[23];
     struct {
-        u16 category_index;         /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
-        u16 job_list_index;         /* 0x02 */
-        u16 id;                     /* 0x04 */
-        u16 _unused_06;             /* 0x06 */
-        u16 fee_a;                  /* 0x08; remapped through data record 1 */
-        u16 fee_b;                  /* 0x0a; remapped through data record 1 */
-        u16 min_days;               /* 0x0c */
-        u16 max_days;               /* 0x0e */
-        u16 name_text;              /* 0x10; 1-based errand name, text 0xf7ff + n */
-        u16 jp_reward;              /* 0x12 */
-        u16 discovery_kind;         /* 0x14; 1 treasure, 2 unexplored land, else see random_bonus */
-        u16 random_bonus;           /* 0x16; 1 enables the three-tier random reward */
-        u16 gil_reward;             /* 0x18 */
-        u16 _unused_1a[3];          /* 0x1a */
-        u16 location;               /* 0x20; 0 for any location */
-        u16 condition_flags;        /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
-        u16 _unused_24;             /* 0x24 */
-        u16 speaker_mode;           /* 0x26 */
-        u16 preferred_job;          /* 0x28 */
+        u16 category_index;  /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
+        u16 job_list_index;  /* 0x02 */
+        u16 id;              /* 0x04 */
+        u16 _unused_06;      /* 0x06 */
+        u16 fee_a;           /* 0x08; remapped through data record 1 */
+        u16 fee_b;           /* 0x0a; remapped through data record 1 */
+        u16 min_days;        /* 0x0c */
+        u16 max_days;        /* 0x0e */
+        u16 name_text;       /* 0x10; 1-based errand name, text 0xf7ff + n */
+        u16 jp_reward;       /* 0x12 */
+        u16 discovery_kind;  /* 0x14; wldcore_proposition_reward_e TREASURE or UNEXPLORED_LAND, else see random_bonus */
+        u16 random_bonus;    /* 0x16; 1 enables the three-tier random reward */
+        u16 gil_reward;      /* 0x18 */
+        u16 _unused_1a[3];   /* 0x1a */
+        u16 location;        /* 0x20; 0 for any location */
+        u16 condition_flags; /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
+        u16 _unused_24;      /* 0x24 */
+        u16 speaker_mode;    /* 0x26; wldcore_proposition_speaker_e */
+        u16 preferred_job;   /* 0x28 */
         u16 required_script_var_6f; /* 0x2a */
         u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
     } fields;
@@ -679,7 +854,7 @@ typedef struct wldcore_menu_send_unit_level {
     s32 list_render;    /* 0x14 */
     s32 cursor_window;  /* 0x18 */
     u8 _unused_1c[4];
-    s32 mode;          /* 0x20 */
+    s32 mode;          /* 0x20; wldcore_send_unit_mode_e */
     s32 shown_preview; /* 0x24 */
     s32 slot;          /* 0x28 */
     u8 _unused_2c[4];
@@ -716,7 +891,7 @@ s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t
 s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index);
 void wldcore_proposition_advance_daily_counters(void);
 s32 wldcore_proposition_count_completed(s32 location);
-wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 proposition_index);
+wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
@@ -765,6 +940,52 @@ typedef struct wldcore_menu_panel_level {
     s32 entries[10];
 } wldcore_menu_panel_level_t;
 
+/* Phases of a list-window level (wldcore_menu_list_window_level_t.mode). The
+ * town menu uses only the first two. */
+typedef enum wldcore_list_window_mode {
+    WLDCORE_LIST_WINDOW_MODE_BROWSE = 0,
+    WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE = 1, /* the farewell text is up; waits for circle or cross */
+    WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP = 2,  /* fading out after the farewell, or under the help message */
+    WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT = 3,    /* faded out; waits for thread 14 to end, then pops */
+} wldcore_list_window_mode_e;
+
+/* Row kinds of the town menu list (wldcore_bar_build_menu_rows); the row text
+ * is 0xb800 + kind. */
+typedef enum wldcore_bar_menu_row {
+    WLDCORE_BAR_MENU_ROW_RUMORS = 0,
+    WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS = 1,
+    WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS = 2,
+    WLDCORE_BAR_MENU_ROW_PROPOSITIONS = 3,
+    WLDCORE_BAR_MENU_ROW_LEAVE = 4,
+} wldcore_bar_menu_row_e;
+
+/* Row kinds of the brave-story list (wldcore_menu_build_brave_story_entries),
+ * named after the level each row opens. */
+typedef enum wldcore_brave_story_row {
+    WLDCORE_BRAVE_STORY_ROW_SCRIPT_FLAGS_01A4_01BB = 0,
+    WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS = 1,
+    WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF = 2,
+    WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS = 3,
+    WLDCORE_BRAVE_STORY_ROW_UNEXPLORED_LANDS = 4,
+    WLDCORE_BRAVE_STORY_ROW_TREASURES = 5,
+    WLDCORE_BRAVE_STORY_ROW_LEAVE = 6,
+} wldcore_brave_story_row_e;
+
+/* Row kinds of the tutorial category list (wldcore_list_open_tutorial_categories). */
+typedef enum wldcore_tutorial_category_row {
+    WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION = 0,
+    WLDCORE_TUTORIAL_CATEGORY_ROW_MASK_1_ENTRIES = 1,
+    WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS = 2,
+    WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE = 3,
+} wldcore_tutorial_category_row_e;
+
+/* Row kinds of the brave-story proposition category list
+ * (wldcore_menu_push_proposition_category_level). */
+typedef enum wldcore_proposition_category_row {
+    WLDCORE_PROPOSITION_CATEGORY_ROW_ACTIVE = 0,
+    WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY = 1,
+} wldcore_proposition_category_row_e;
+
 /* Provisional: list-window level beneath the flag-list panels; 0x80087b94
  * and 0x8008343c hide its content render record (flag 0x10) when they push.
  * 0x800928ac clears flag 0x10 on the upper and lower windows when it pops
@@ -775,13 +996,13 @@ typedef struct wldcore_menu_list_window_level {
     s32 frame_render;   /* 0x08 */
     s32 content_render; /* 0x0c */
     u8 _unused_10[8];
-    s32 mode;           /* 0x18; cleared by the 0x80080e54 push */
+    s32 mode;           /* 0x18; wldcore_list_window_mode_e */
     s32 selected_entry; /* 0x1c; initial row from g_wldcore_brave_story_saved_cursor */
     s32 upper_window;   /* 0x20 */
     s32 lower_window;   /* 0x24 */
     u8 _unused_28[8];
     s32 entry_count; /* 0x30; rows drawn by 0x80080e54 */
-    s32 entries[10]; /* 0x34; entry kinds, text id 0xb83f + kind */
+    s32 entries[10]; /* 0x34; row kinds of the owning list (wldcore_*_row_e); brave story: text id 0xb83f + kind */
 } wldcore_menu_list_window_level_t;
 
 extern s32 g_wldcore_bar_menu_saved_cursor;
@@ -853,8 +1074,8 @@ typedef struct wldcore_map_dot {
     s32 kind;
     s32 sub_kind;
     SVECTOR position; /* 0x08; world-map position, RotTrans input */
-    s32 flags;
-    s32 sprite_id;
+    s32 flags;        /* 0x10; wldcore_display_object_flag_e */
+    s32 sprite_id;    /* 0x14; wldcore_anim_sequence_id_e */
     s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
     s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sprite changes */
     s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
@@ -869,6 +1090,14 @@ typedef struct wldcore_map_dot {
 } wldcore_map_dot_t;
 typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
 
+/* wldcore_projection_state_t.flags: work pending for
+ * wldcore_map_update_camera_direction_and_projection, and the marker's sprite set. */
+typedef enum wldcore_projection_flags {
+    WLDCORE_PROJECTION_FLAG_UPDATE_POSITION = 0x01,
+    WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION = 0x02,
+    WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04, /* set while the marker travels a route */
+} wldcore_projection_flags_e;
+
 /* The world map camera projection state at 0x8009f24c: two control words
  * followed by the player's own map dot. The marker's +8 base is what makes
  * the views of this address agree field for field -- the camera update
@@ -876,17 +1105,10 @@ typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34
  * its kind, position and flags. For the player's marker, kind is the current
  * location id and sub_kind the proposition picture id. */
 typedef struct wldcore_projection_state {
-    s32 flags;
+    s32 flags; /* 0x00; wldcore_projection_flags_e */
     s32 angle;
     wldcore_map_dot_t marker;
 } wldcore_projection_state_t;
-
-/* wldcore_projection_state_t.flags. */
-typedef enum wldcore_projection_flags {
-    WLDCORE_PROJECTION_FLAG_UPDATE_POSITION = 0x01,
-    WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION = 0x02,
-    WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04,
-} wldcore_projection_flags_e;
 
 /* The volatile first store preserves the target's R3000 load-delay slot. */
 typedef struct wldcore_map_clamped_point32 {
@@ -894,21 +1116,22 @@ typedef struct wldcore_map_clamped_point32 {
     s32 y;
 } wldcore_map_clamped_point32_t;
 
+/* wldcore_projection_motion_t.flags. */
+typedef enum wldcore_projection_motion_flag {
+    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
+    WLDCORE_PROJECTION_MOTION_ZOOMED_OUT = 0x02, /* g_wldcore_map_zoom_motion: the wide view, or the move to it */
+} wldcore_projection_motion_flag_e;
+
 /* The camera's in-progress wrapped projection. The three map-step routines
  * agree on this complete 0x24-byte record; flags is the active bitfield. */
 typedef struct wldcore_projection_motion {
-    s32 flags;
+    s32 flags; /* 0x00; wldcore_projection_motion_flag_e */
     s32 distance;
     s32 progress;
     VECTOR origin;
     wldcore_map_clamped_point32_t target;
 } wldcore_projection_motion_t;
 typedef char wldcore_projection_motion_size_must_be_0x24[sizeof(wldcore_projection_motion_t) == 0x24 ? 1 : -1];
-
-/* wldcore_projection_motion_t.flags. */
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
 
 /* Provisional: one axis of the accelerating map scroll stepped by
  * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its
@@ -922,10 +1145,17 @@ typedef struct wldcore_axis_state {
     s32 output; /* 0x10; value >> 8, truncated toward zero */
 } wldcore_axis_state_t;
 
+/* wldcore_projected_entry_t.flags. */
+typedef enum wldcore_map_tile_flag {
+    WLDCORE_MAP_TILE_TPAGE_MASK = 0x0ff,
+    WLDCORE_MAP_TILE_OFF_SCREEN = 0x100, /* set by the projection pass */
+    WLDCORE_MAP_TILE_EMPTY = 0x200,      /* the atlas has no tile here */
+} wldcore_map_tile_flag_e;
+
 /* Provisional: the 24-byte projected-tile table at 0x800c7320, filled by
  * wldcore_map_init_tile_atlas and projected by the RotTrans pass. */
 typedef struct wldcore_projected_entry {
-    s32 flags;    /* 0x00; texture page */
+    s32 flags;    /* 0x00; wldcore_map_tile_flag_e */
     s32 texture;  /* 0x04; texture rectangle packed u << 24 | v << 16 | w << 8 | h, unpacked into the poly UVs */
     s32 map_x;    /* 0x08; tile x (-256 + widths), RotTrans vx */
     s32 map_y;    /* 0x0c; tile y (-192 + heights), RotTrans vy */
@@ -1052,11 +1282,76 @@ typedef struct wldcore_window_text_table {
 typedef char wldcore_text_table_offset_must_be_0x1c
     [((unsigned long)&((wldcore_window_text_table_t*)0)->table_word_offset == 0x1c) ? 1 : -1];
 
+/* Slots of g_wldcore_menu_cursor_states: the remembered row of each list. */
+typedef enum wldcore_cursor_slot {
+    WLDCORE_CURSOR_SLOT_LOCATION_MENU = 0x00,
+    WLDCORE_CURSOR_SLOT_BAR_MENU = 0x01,
+    WLDCORE_CURSOR_SLOT_RUMORS = 0x02,
+    WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS = 0x03,
+    WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS = 0x04,
+    WLDCORE_CURSOR_SLOT_PROPOSITIONS = 0x05,
+    WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS = 0x07,
+    WLDCORE_CURSOR_SLOT_TREASURES = 0x08,
+    WLDCORE_CURSOR_SLOT_STORY_EVENTS = 0x0a,
+    WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF = 0x0b,
+    WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS = 0x0c,
+    WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST = 0x0f,
+    WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS = 0x10,
+    WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS = 0x12,
+    WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES = 0x13,
+    WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB = 0x14,
+} wldcore_cursor_slot_e;
+
 typedef struct wldcore_menu_cursor_state {
     s32 selected_index;
     s32 scroll_offset;
 } wldcore_menu_cursor_state_t;
 typedef char wldcore_menu_cursor_state_size_must_be_8[sizeof(wldcore_menu_cursor_state_t) == 8 ? 1 : -1];
+
+/* Rows of g_wldcore_anim_sequence_table that the code selects: the animation
+ * a window record plays. The CURSOR and *_PRESS sequences other than
+ * CURSOR_IDLE end on a pinned frame. */
+typedef enum wldcore_anim_sequence_id {
+    WLDCORE_ANIM_SEQUENCE_CURSOR_STILL = 0x00, /* list cursor, one pinned frame */
+    WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS = 0x01, /* list cursor after its row is confirmed */
+    WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE = 0x02,  /* list cursor of the level with focus, looping */
+    WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL = 0x04,
+    WLDCORE_ANIM_SEQUENCE_MAP_FRAME = 0x05,
+    WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME = 0x06,
+    WLDCORE_ANIM_SEQUENCE_TEXT_PAGE_PROMPT = 0x08, /* shown while a paged text window has more pages */
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_UP = 0x09,
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_DOWN = 0x0a,
+    WLDCORE_ANIM_SEQUENCE_LOCATION_PICTURE_BORDER = 0x0b,
+    WLDCORE_ANIM_SEQUENCE_CHOICE_PANEL_HEADER = 0x0c,
+    WLDCORE_ANIM_SEQUENCE_MAP_EDGE_ARROWS = 0x0d, /* four arrows at the screen edges, two alternating frames */
+    WLDCORE_ANIM_SEQUENCE_MESSAGE_LABEL = 0x0e,
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_THUMB = 0x0f,
+    WLDCORE_ANIM_SEQUENCE_MARKER_FIRST = 0x10,           /* the player's marker, eight facings */
+    WLDCORE_ANIM_SEQUENCE_MARKER_ALTERNATE_FIRST = 0x18, /* the same eight at the faster frame rate */
+    WLDCORE_ANIM_SEQUENCE_MONTH_FIRST = 0x20,            /* twelve month labels */
+    WLDCORE_ANIM_SEQUENCE_DIGIT_FIRST = 0x2c,            /* ten date digits */
+    WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST = 0x37,    /* one label per map dot */
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_TITLE_LABEL = 0x63,
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_COUNT_LABEL = 0x64,
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_DAYS_LABEL = 0x65,
+    WLDCORE_ANIM_SEQUENCE_L1_BUTTON = 0x66,
+    WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS = 0x67,
+    WLDCORE_ANIM_SEQUENCE_R1_BUTTON = 0x68,
+    WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS = 0x69,
+    WLDCORE_ANIM_SEQUENCE_MAP_DOT = 0x6a, /* the next row is the dot of a kind-2 location */
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_UPPER = 0x6c,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_LOWER = 0x6d,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON = 0x6e,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON_PRESS = 0x6f,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON = 0x70,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON_PRESS = 0x71,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_OVERLAY = 0x72,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_A = 0x73,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_B = 0x74,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_PORTRAIT = 0x75,
+    WLDCORE_ANIM_SEQUENCE_LAYOUT_CURSOR_IDLE = 0x78, /* the layout windows' cursor, looping */
+    WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER = 0x79, /* the brave-story list's two completion markers */
+} wldcore_anim_sequence_id_e;
 
 /* 36-byte window records at 0x800bb504: animated display objects. The pool
  * init 0x8006ad28 sets flags = 1, so the display-object dispatcher 0x8006ae20
@@ -1065,8 +1360,8 @@ typedef char wldcore_menu_cursor_state_size_must_be_8[sizeof(wldcore_menu_cursor
  * (flags |= 0x810, sequence/priority from arguments, frame_index and
  * anim_counter cleared); 0x80090a28 toggles flag 0x10 by record index. */
 typedef struct wldcore_window_record {
-    s32 flags;        /* 0x00 */
-    s32 sequence;     /* 0x04; row of g_wldcore_anim_sequence_table; second argument of 0x8009036c */
+    s32 flags;        /* 0x00; wldcore_display_object_flag_e */
+    s32 sequence;     /* 0x04; wldcore_anim_sequence_id_e; second argument of 0x8009036c */
     s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of 0x8009036c */
     s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
     s32 anim_counter; /* 0x10; frames spent on the current frame */
@@ -1136,13 +1431,21 @@ typedef struct wldcore_menu_window_pair_level {
     s32 second_window; /* 0x04 */
 } wldcore_menu_window_pair_level_t;
 
+/* wldcore_menu_countdown_t.phase. */
+typedef enum wldcore_countdown_phase {
+    WLDCORE_COUNTDOWN_PHASE_MESSAGES = 0,     /* circle shows the next message */
+    WLDCORE_COUNTDOWN_PHASE_LAST_MESSAGE = 1, /* waits for the message box, then starts music 0x214 */
+    WLDCORE_COUNTDOWN_PHASE_JINGLE = 2,       /* 180 frames, then back to music 0x221 */
+    WLDCORE_COUNTDOWN_PHASE_CLOSE = 3,        /* waits for the audio queue, then pops */
+} wldcore_countdown_phase_e;
+
 /* Provisional: countdown menu object stepped by wldcore_menu_show_next_sequence_message
  * (0x8007a6b8) and driven by 0x8007a86c. The stepper sets phase 1 and clears
  * the timer when the count expires; 0x8007a86c then advances phases 1-3. */
 typedef struct wldcore_menu_countdown {
     s32 current;
     s32 remaining;
-    s32 phase;
+    s32 phase; /* 0x08; wldcore_countdown_phase_e */
     s32 timer; /* 0x0c; frames spent in phase 2 */
 } wldcore_menu_countdown_t;
 
@@ -1197,6 +1500,15 @@ typedef struct wldcore_menu_participant_level {
     s32 participant;  /* 0x14; slot in participant_indices */
 } wldcore_menu_participant_level_t;
 
+/* wldcore_menu_variable_detail_level_t.phase, shared by the variable,
+ * treasure and unexplored-land detail steps. */
+typedef enum wldcore_detail_phase {
+    WLDCORE_DETAIL_PHASE_SHOWN = 0,
+    WLDCORE_DETAIL_PHASE_LOAD = 1,   /* waits for the file */
+    WLDCORE_DETAIL_PHASE_BUILD = 2,  /* waits for the message box, then builds the text and picture */
+    WLDCORE_DETAIL_PHASE_POP_IN = 3, /* waits for the text window's opening animation */
+} wldcore_detail_phase_e;
+
 /* Provisional: script-variable detail level (type 0x20) pushed by
  * 0x8008389c over the list-window level; it keeps the selected entry value
  * (variable index * 16 + value) and the render record it appends. */
@@ -1204,9 +1516,37 @@ typedef struct wldcore_menu_variable_detail_level {
     s32 value;        /* 0x00 */
     s32 render_index; /* 0x04 */
     s32 _unknown_08;
-    s32 phase; /* 0x0c; set to 1 at push; the detail steps switch on it */
+    s32 phase; /* 0x0c; wldcore_detail_phase_e; LOAD at push */
     s32 timer; /* 0x10; cleared at push; text delay or dissolve step, counted per frame */
 } wldcore_menu_variable_detail_level_t;
+
+/* wldcore_menu_event_transition_level_t.mode, the argument of
+ * wldcore_menu_push_event_transition_level; any other value spins the screen
+ * in and fades without spinning it back out. */
+typedef enum wldcore_event_transition_mode {
+    WLDCORE_EVENT_TRANSITION_MODE_SPIN = 0,
+    WLDCORE_EVENT_TRANSITION_MODE_FADE = 2, /* a plain screen fade */
+} wldcore_event_transition_mode_e;
+
+/* wldcore_menu_event_transition_level_t.phase. */
+typedef enum wldcore_event_transition_phase {
+    WLDCORE_EVENT_TRANSITION_PHASE_SPIN_IN = 0,
+    WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT = 1,
+    WLDCORE_EVENT_TRANSITION_PHASE_DONE = 2,
+} wldcore_event_transition_phase_e;
+
+/* wldcore_menu_event_transition_level_t.fade_phase. */
+typedef enum wldcore_event_transition_fade {
+    WLDCORE_EVENT_TRANSITION_FADE_NONE = 0,
+    WLDCORE_EVENT_TRANSITION_FADE_FLASH = 1,     /* the fill box ramps by 0x10 up to 0x80, then restarts as WHITE_OUT */
+    WLDCORE_EVENT_TRANSITION_FADE_WHITE_OUT = 2, /* ramps by 8 to white, then leaves the world loop */
+} wldcore_event_transition_fade_e;
+
+/* wldcore_menu_event_transition_level_t.drift_direction. */
+typedef enum wldcore_event_transition_drift {
+    WLDCORE_EVENT_TRANSITION_DRIFT_RIGHT = 0x01, /* clear: left */
+    WLDCORE_EVENT_TRANSITION_DRIFT_DOWN = 0x02,  /* clear: up */
+} wldcore_event_transition_drift_e;
 
 /* Provisional: the type-0x23 event-transition level pushed by
  * wldcore_menu_push_event_transition_level (0x8008047c), which stores its
@@ -1215,13 +1555,13 @@ typedef struct wldcore_menu_variable_detail_level {
  * 0x8009f288 while the parent level's mode is not 2. */
 typedef struct wldcore_menu_event_transition_level {
     s32 frame;           /* 0x00; counts step frames; the sprite updates every third, 1 restores the captured screen */
-    s32 drift_direction; /* 0x04; rand() * 4 >> 15 at push; bits 0/1 pick the sprite's x/y drift sign */
+    s32 drift_direction; /* 0x04; wldcore_event_transition_drift_e; rand() * 4 >> 15 at push */
     s32 spin_direction;  /* 0x08; rand() * 2 >> 15 at push; selects +/-0x2000 rotation per update */
-    s32 phase;           /* 0x0c; 0 spin/scale in, 1 spin out, 2 done */
-    s32 fade_phase;      /* 0x10; 0 none, 1 fade overlay ramps by 0x10, 2 ramps by 8 and restores the screen */
+    s32 phase;           /* 0x0c; wldcore_event_transition_phase_e */
+    s32 fade_phase;      /* 0x10; wldcore_event_transition_fade_e */
     s32 anim_step;       /* 0x14; +2/+4 per update; drives scale, shade, sounds 0x6c/0x6d and phase changes */
     u8 _unused_18[8];
-    s32 mode; /* 0x20; argument of 0x8008047c; 2 fades the screen instead */
+    s32 mode; /* 0x20; wldcore_event_transition_mode_e; argument of 0x8008047c */
 } wldcore_menu_event_transition_level_t;
 
 /* Type-0x14 sound-novel resume level pushed by
@@ -1244,7 +1584,7 @@ typedef struct wldcore_menu_sound_novel_resume_level {
  * wldcore_menu_push_screen_transition_level (0x80088308) and stepped by
  * wldcore_menu_step_screen_transition_level. */
 typedef struct wldcore_menu_screen_transition_level {
-    s32 screen;     /* 0x00; screen type 0x1b..0x2d to reopen */
+    s32 screen;     /* 0x00; wldcore_menu_level_type_e of the level to open */
     s32 param_a;    /* 0x04 */
     s32 param_b;    /* 0x08 */
     s32 _unused_0c; /* 0x0c */
@@ -1266,6 +1606,13 @@ typedef struct wldcore_menu_save_confirm_level {
     s32 choice;      /* 0x1c */
 } wldcore_menu_save_confirm_level_t;
 
+/* wldcore_menu_sound_novel_history_level_t.phase. */
+typedef enum wldcore_sound_novel_history_phase {
+    WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE = 0,
+    WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM = 1,     /* five steps: the picture darkens under the fill box */
+    WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE = 2, /* the reverse ramp, then the level pops */
+} wldcore_sound_novel_history_phase_e;
+
 /* Provisional: the type-0x17 history-text level pushed by
  * wldcore_menu_push_sound_novel_history_level, which stores the newest
  * history text at +0x0c, the three older ones at +0x10..+0x18, phase 1 and
@@ -1278,7 +1625,7 @@ typedef struct wldcore_menu_sound_novel_history_level {
     s32 newest_text_id; /* 0x0c; newest history text */
     s32 text_ids[3];    /* 0x10 */
     s32 scroll;         /* 0x1c */
-    s32 phase;          /* 0x20; 0 input, 1 fading in, 2 fading out */
+    s32 phase;          /* 0x20; wldcore_sound_novel_history_phase_e */
     s32 step;           /* 0x24; 0..4 fade step */
 } wldcore_menu_sound_novel_history_level_t;
 
@@ -1296,13 +1643,20 @@ typedef struct wldcore_menu_location_transition_level {
 typedef char wldcore_menu_location_transition_level_size_must_be_0x5c
     [sizeof(wldcore_menu_location_transition_level_t) == 0x5c ? 1 : -1];
 
+/* wldcore_menu_choice_panel_level_t.mode as wldcore_proposition_handle_accept_confirm_input steps it. */
+typedef enum wldcore_accept_confirm_mode {
+    WLDCORE_ACCEPT_CONFIRM_MODE_CHOOSE = 0,
+    WLDCORE_ACCEPT_CONFIRM_MODE_NO_UNIT_MESSAGE = 1, /* nobody can go: a press shows the second message */
+    WLDCORE_ACCEPT_CONFIRM_MODE_CLOSE_MESSAGE = 3,   /* a refusal message is up: a press closes the panel */
+} wldcore_accept_confirm_mode_e;
+
 /* The two-choice confirmation panel built by wldcore_window_build_yes_no_panel and stepped by
  * wldcore_proposition_handle_accept_confirm_input and wldcore_proposition_handle_dispatch_confirm_input. */
 typedef struct wldcore_menu_choice_panel_level {
     s32 cursor_window; /* 0x00 */
     s32 render_index;  /* 0x04 */
     s32 row;           /* 0x08; 0 = yes, 1 = no */
-    s32 mode;          /* 0x0c; 0 choosing, 1 and 3 waiting on a message */
+    s32 mode;          /* 0x0c; wldcore_accept_confirm_mode_e */
     s32 header_window; /* 0x10 */
 } wldcore_menu_choice_panel_level_t;
 
@@ -1337,6 +1691,13 @@ typedef struct wldcore_menu_location_menu_level {
     s32 entry_count; /* 0x30 */
 } wldcore_menu_location_menu_level_t;
 
+/* wldcore_menu_sound_novel_level_t.phase. */
+typedef enum wldcore_sound_novel_phase {
+    WLDCORE_SOUND_NOVEL_PHASE_RUN = 0,          /* the script runs */
+    WLDCORE_SOUND_NOVEL_PHASE_OPEN_HISTORY = 2, /* square: counts down, then pushes the history level */
+    WLDCORE_SOUND_NOVEL_PHASE_END = 3,          /* the script ended: waits for thread 14, then leaves */
+} wldcore_sound_novel_phase_e;
+
 /* Provisional: the type-0x15 sound-novel level pushed by
  * wldcore_menu_push_sound_novel_level and stepped by
  * wldcore_menu_step_sound_novel_level: title, header and footer windows
@@ -1356,7 +1717,9 @@ typedef struct wldcore_menu_sound_novel_level {
 
 /* Menu-stack level types: the g_wldcore_menu_stack_types value that selects a
  * level's idle, publish and resume handlers. Each value is stored by exactly
- * one push routine, which supplies its name; no routine pushes 0x01. */
+ * one push routine, which supplies its name. 0x01, the return level, is stored
+ * by wldcore_menu_push_entry_window_level from a local it shares with the
+ * value display mode. */
 typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_ROOT = 0x00,
     WLDCORE_MENU_LEVEL_TEXT_WINDOW = 0x02,
@@ -1481,7 +1844,7 @@ typedef struct wldcore_window_owner {
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
  * sprites through wldcore_gfx_draw_display_object_sprite. */
 typedef struct wldcore_window_render_record {
-    s32 flags;
+    s32 flags; /* 0x00; wldcore_display_object_flag_e */
     s32 tpage;
     s32 priority; /* 0x08; OT priority passed to the sprite sort; 1 from the pool init */
     s32 coordinate_mode;

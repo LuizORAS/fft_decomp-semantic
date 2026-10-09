@@ -26,19 +26,19 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant.proposition = proposition;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.first_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.second_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .window_pair_render.render_index]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     world_thread_set_parameters(0xE, 0x19, 0xB81D, 0);
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -46,7 +46,7 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window = index;
-    g_wldcore_window_records[index].sequence = 0xC;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CHOICE_PANEL_HEADER;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;

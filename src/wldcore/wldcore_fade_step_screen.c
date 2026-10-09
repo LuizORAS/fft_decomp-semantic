@@ -10,15 +10,16 @@ s32 wldcore_fade_step_screen(void) {
     s32 box_level;
 
     flags = g_wldcore_screen_fade_state.flags[0];
-    if (flags & 1) {
+    if (flags & WLDCORE_SCREEN_FADE_RUNNING) {
         if (g_wldcore_screen_fade_state.elapsed == g_wldcore_screen_fade_state.duration) {
-            g_wldcore_screen_fade_state.flags[0] = flags & ~0xD;
+            g_wldcore_screen_fade_state.flags[0] = flags
+                & ~(WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_REDRAW_MAP | WLDCORE_SCREEN_FADE_BOX_VISIBLE);
         } else {
             if (g_wldcore_screen_fade_state.elapsed + 1 == g_wldcore_screen_fade_state.duration) {
                 g_main_system_flags &= ~8;
                 wldcore_sound_wait_for_queue_drain();
             }
-            if (g_wldcore_screen_fade_state.flags[0] & 2) {
+            if (g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_OUT) {
                 elapsed = g_wldcore_screen_fade_state.elapsed;
                 brightness = 0x70 - (elapsed << 7) / g_wldcore_screen_fade_state.duration;
                 box_level = (elapsed << 8) / g_wldcore_screen_fade_state.duration + 0x20;
@@ -55,7 +56,7 @@ s32 wldcore_fade_step_screen(void) {
             g_wldcore_screen_fade_state.boxes[0].r = box_level;
             g_wldcore_screen_fade_state.boxes[0].g = box_level;
             g_wldcore_screen_fade_state.boxes[0].b = box_level;
-            if (g_wldcore_screen_fade_state.flags[0] & 4) {
+            if (g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_REDRAW_MAP) {
                 g_main_system_flags |= 2;
             }
             return 1;

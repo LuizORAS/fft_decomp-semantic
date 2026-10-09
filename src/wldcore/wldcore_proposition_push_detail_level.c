@@ -19,11 +19,11 @@ void wldcore_proposition_push_detail_level(s32 value) {
     wldcore_point32_t* base;
 
     state = g_main_proposition_states[value];
-    chance = (state & 0x40) ? 0x14 : 0;
-    if (state & 0x80) {
+    chance = (state & WLDCORE_PROPOSITION_STATE_FAILURE) ? 0x14 : 0;
+    if (state & WLDCORE_PROPOSITION_STATE_BAD_FAILURE) {
         chance = 0x28;
     }
-    if (!(state & 0xC0)) {
+    if (!(state & (WLDCORE_PROPOSITION_STATE_FAILURE | WLDCORE_PROPOSITION_STATE_BAD_FAILURE))) {
         chance = 0xA;
     }
     if ((rand() * 100 >> 15) < chance) {
@@ -47,11 +47,11 @@ void wldcore_proposition_push_detail_level(s32 value) {
     base->x = -0x7A;
     base->y = -0x28;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
     g_wldcore_menu_stack_types_next[depth] = WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL;
 }

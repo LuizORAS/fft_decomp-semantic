@@ -28,7 +28,8 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
             wldcore_menu_render_debug_variable_list(&g_wldcore_menu_stack_records[depth].variable_list);
         }
         parent = g_wldcore_menu_stack_depth - 1;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[parent].window_render.window_index].sequence = 2;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[parent].window_render.window_index].sequence
+            = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
         slot = g_wldcore_menu_stack_records_next[parent].window_render.window_index;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[parent].window_render.render_index].palette
             = 0;

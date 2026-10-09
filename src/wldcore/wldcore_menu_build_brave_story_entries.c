@@ -22,33 +22,36 @@ void wldcore_menu_build_brave_story_entries(void) {
             }
         }
         if (count != 0) {
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0] = 0;
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0]
+                = WLDCORE_BRAVE_STORY_ROW_SCRIPT_FLAGS_01A4_01BB;
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count = 1;
         }
     }
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
-        .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count] = 1;
+        .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
+        = WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
         .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count + 1]
-        = 2;
+        = WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count += 2;
 
     count = g_main_save_proposition_count;
     for (i = 0; i < 0x60; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & 4) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
+            & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
             count++;
         }
     }
     if (count != 0) {
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
             .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
-            = 3;
+            = WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count++;
     }
 
     count = 0;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window]
-        .flags |= 8;
+        .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
     for (i = 0; i < 0x10; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
             count++;
@@ -61,17 +64,17 @@ void wldcore_menu_build_brave_story_entries(void) {
         if (count >= 0x10) {
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                          .list_window.upper_window]
-                .flags &= ~8;
+                .flags &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
         }
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
             .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
-            = 4;
+            = WLDCORE_BRAVE_STORY_ROW_UNEXPLORED_LANDS;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count++;
     }
 
     count = 0;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window]
-        .flags |= 8;
+        .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
     for (i = 0; i < 0x2F; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             count++;
@@ -90,14 +93,15 @@ void wldcore_menu_build_brave_story_entries(void) {
         if (count >= 0x1F) {
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                          .list_window.lower_window]
-                .flags &= ~8;
+                .flags &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
         }
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
             .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
-            = 5;
+            = WLDCORE_BRAVE_STORY_ROW_TREASURES;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count++;
     }
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
-        .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count] = 6;
+        .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
+        = WLDCORE_BRAVE_STORY_ROW_LEAVE;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count++;
 }

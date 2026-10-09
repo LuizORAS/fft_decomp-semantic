@@ -44,11 +44,11 @@ void wldcore_menu_push_tutorial_topic_text_level(s32 topic) {
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_types_next[depth] = WLDCORE_MENU_LEVEL_TUTORIAL_TOPIC_TEXT;
 }

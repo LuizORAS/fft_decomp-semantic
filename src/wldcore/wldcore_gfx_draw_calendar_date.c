@@ -11,7 +11,7 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
         return;
     }
 
-    request.flags = 1;
+    request.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
     request.priority = 4;
     request.palette = 0;
     request.anim_counter = 0;
@@ -25,7 +25,7 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
 
     first = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     second = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    request.sequence = first + 0x1F;
+    request.sequence = first + (WLDCORE_ANIM_SEQUENCE_MONTH_FIRST - 1);
     wldcore_gfx_draw_animated_display_object(&request, ot);
 
     request.position.x += 0x1A;
@@ -33,10 +33,10 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     if (second >= 10) {
         request.anim_counter = 0;
         request.frame_index = 0;
-        request.sequence = second / 10 + 0x2C;
+        request.sequence = second / 10 + WLDCORE_ANIM_SEQUENCE_DIGIT_FIRST;
         wldcore_gfx_draw_animated_display_object(&request, ot);
         request.position.x += 8;
     }
-    request.sequence = second % 10 + 0x2C;
+    request.sequence = second % 10 + WLDCORE_ANIM_SEQUENCE_DIGIT_FIRST;
     wldcore_gfx_draw_animated_display_object(&request, ot);
 }

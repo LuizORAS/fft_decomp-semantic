@@ -39,7 +39,7 @@ s32 open_script_build_text_record(u8* text) {
 
     font = g_open_script_font_metrics;
     for (i = 0; i < 16; i++) {
-        if (!(g_open_script_state.records[i].flags & 1)) {
+        if (!(g_open_script_state.records[i].flags & OPEN_SCRIPT_RECORD_ACTIVE)) {
             break;
         }
     }
@@ -48,7 +48,7 @@ s32 open_script_build_text_record(u8* text) {
     }
     index = i;
 
-    g_open_script_state.records[index].flags = 1;
+    g_open_script_state.records[index].flags = OPEN_SCRIPT_RECORD_ACTIVE;
     pen = 0;
     slot = index * 42;
     drawn = 0;

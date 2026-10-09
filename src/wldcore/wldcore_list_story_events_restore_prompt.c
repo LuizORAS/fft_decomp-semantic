@@ -1,7 +1,8 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 void wldcore_list_story_events_restore_prompt(void) {
     world_thread_set_parameters(14, 0x19, 0xB848, 0);
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
 }

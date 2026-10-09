@@ -10,14 +10,14 @@ void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index) {
     s32 x;
     s32 y;
 
-    if (g_open_script_state.dispatch.flags & 1) {
+    if (g_open_script_state.dispatch.flags & OPEN_SCRIPT_DISPATCH_RUNNING) {
         if (g_open_script_state.opntex.fade_intensity != 0) {
             AddPrim((void*)otag[15], &g_open_gfx_fade_primitives[graphics_buffer_index]);
         }
         AddPrim((void*)otag[8], &g_open_gfx_credit_band_primitives[0]);
         AddPrim((void*)otag[8], &g_open_gfx_credit_band_primitives[1]);
         for (i = 0; i < 16; i++) {
-            if (g_open_script_state.records[i].flags & 1) {
+            if (g_open_script_state.records[i].flags & OPEN_SCRIPT_RECORD_ACTIVE) {
                 prim_index = i * 42;
                 for (j = 0; j < g_open_script_state.records[i].glyph_count; j++, prim_index++) {
                     x = g_open_script_state.records[i].x + g_open_script_state.records[i].glyphs[j].x - 256;

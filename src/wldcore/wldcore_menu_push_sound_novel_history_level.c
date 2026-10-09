@@ -42,7 +42,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.upper_window = index;
-    g_wldcore_window_records[index].sequence = 0x6C;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_UPPER;
     g_wldcore_window_records[index].priority = 9;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -52,11 +52,11 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.lower_window = index;
-    g_wldcore_window_records[index].sequence = 0x6D;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_LOWER;
     g_wldcore_window_records[index].priority = 9;
     windows[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags |= 0x10;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     positions[index].x = 0;
     positions[index].y = 0x5E;
 
@@ -87,7 +87,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     g_wldcore_screen_fade_state.boxes[0].r = 0;
     g_wldcore_screen_fade_state.boxes[0].g = 0;
     g_wldcore_screen_fade_state.boxes[0].b = 0;
-    g_wldcore_screen_fade_state.flags[0] |= 8;
+    g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
 
     top = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.scroll = 0;
@@ -97,11 +97,12 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     g_wldcore_menu_result = -1;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[2] = newest[-3];
     if (g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[0] == -1) {
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[top].sound_novel_history.upper_window].flags |= 0x10;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[top].sound_novel_history.upper_window].flags
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
 
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_stack_records_next[depth].sound_novel_history.phase = 1;
+    g_wldcore_menu_stack_records_next[depth].sound_novel_history.phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM;
     g_wldcore_menu_stack_records_next[depth].sound_novel_history.step = 0;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_SOUND_NOVEL_HISTORY;
     g_wldcore_menu_stack_depth = depth + 1;

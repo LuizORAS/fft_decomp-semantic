@@ -29,13 +29,13 @@ void wldcore_map_step_location_visibility_change(wldcore_map_visibility_level_t*
         return;
     }
     if (level->was_set != 0) {
-        g_wldcore_map_dots[level->dot_index].flags |= 0x10;
+        g_wldcore_map_dots[level->dot_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         world_script_set_variable(level->dot_index + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST, 0);
     }
     g_main_system_flags |= 2;
     g_wldcore_menu_stack_depth--;
     index = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index;
     g_main_system_flags &= ~0x2000;
-    g_wldcore_window_records[index].flags &= ~0x10;
+    g_wldcore_window_records[index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     wldcore_menu_dispatch_resume_handler();
 }

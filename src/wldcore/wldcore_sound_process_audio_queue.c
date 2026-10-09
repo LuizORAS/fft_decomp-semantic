@@ -21,7 +21,7 @@ void wldcore_sound_process_audio_queue(void) {
 
 next:
     switch (g_wldcore_audio_queue.current_command) {
-    case 0:
+    case WLDCORE_AUDIO_COMMAND_NONE:
         if (g_wldcore_audio_queue.count == 0) {
             return;
         }
@@ -33,7 +33,7 @@ next:
         }
         g_wldcore_audio_queue.count--;
         break;
-    case 1:
+    case WLDCORE_AUDIO_COMMAND_PLAY_MUSIC:
         if (g_main_file_still_loading != 0) {
             return;
         }
@@ -42,7 +42,7 @@ next:
         slot_track = &g_wldcore_audio_queue.music.tracks[slot];
         if (*slot_track == track) {
             g_wldcore_audio_queue.current_slot = slot;
-            g_wldcore_audio_queue.current_command = 0;
+            g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
             main_sound_switch_music_track(slot, 0, 0);
             return;
         }
@@ -50,26 +50,26 @@ next:
             main_sound_unload_scenario_mus(slot);
         }
         if (main_sound_open_and_play_music(track, slot) != 0) {
-            g_wldcore_audio_queue.current_command = 0x10;
+            g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_WAIT_LOAD;
             g_wldcore_audio_queue.current_slot = slot;
             *slot_track = track;
             return;
         }
-        g_wldcore_audio_queue.current_command = 0;
+        g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
         return;
-    case 2:
-        if ((g_wldcore_audio_queue.music.flags & 1) == 0) {
+    case WLDCORE_AUDIO_COMMAND_FADE_OUT:
+        if ((g_wldcore_audio_queue.music.flags & WLDCORE_AUDIO_MUSIC_PLAYING) == 0) {
             goto clear_command;
         }
         main_sound_set_current_music_target(0, g_wldcore_audio_queue.current_value << 2);
-        g_wldcore_audio_queue.current_command = 0x11;
+        g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_WAIT_FADE_OUT;
         return;
-    case 3:
+    case WLDCORE_AUDIO_COMMAND_FADE_IN:
         main_sound_switch_music_track(g_wldcore_audio_queue.current_slot, 0, 0);
         main_sound_set_current_music_target(g_wldcore_audio_queue.volume, g_wldcore_audio_queue.current_value << 2);
-        g_wldcore_audio_queue.current_command = 0x12;
+        g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN;
         return;
-    case 4:
+    case WLDCORE_AUDIO_COMMAND_UNLOAD:
         value = g_wldcore_audio_queue.current_value;
         if (value != 0) {
             slot = value;
@@ -78,31 +78,31 @@ next:
         }
         main_sound_unload_scenario_mus(slot);
         if (slot == g_wldcore_audio_queue.current_slot) {
-            g_wldcore_audio_queue.music.flags &= ~1;
+            g_wldcore_audio_queue.music.flags &= ~WLDCORE_AUDIO_MUSIC_PLAYING;
         }
         g_wldcore_audio_queue.music.tracks[slot] = 0;
     default:
     clear_command:
-        g_wldcore_audio_queue.current_command = 0;
+        g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
         break;
-    case 0x10:
+    case WLDCORE_AUDIO_COMMAND_WAIT_LOAD:
         if (g_main_file_still_loading == 0) {
             goto clear_command;
         }
         return;
-    case 0x11:
+    case WLDCORE_AUDIO_COMMAND_WAIT_FADE_OUT:
         if (--g_wldcore_audio_queue.current_value != 0) {
             return;
         }
-        g_wldcore_audio_queue.music.flags &= ~1;
+        g_wldcore_audio_queue.music.flags &= ~WLDCORE_AUDIO_MUSIC_PLAYING;
         main_sound_stop_current_music();
         goto clear_command;
-    case 0x12:
+    case WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN:
         if (--g_wldcore_audio_queue.current_value != 0) {
             return;
         }
-        g_wldcore_audio_queue.current_command = 0;
-        g_wldcore_audio_queue.music.flags |= 1;
+        g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
+        g_wldcore_audio_queue.music.flags |= WLDCORE_AUDIO_MUSIC_PLAYING;
         break;
     }
     goto next;

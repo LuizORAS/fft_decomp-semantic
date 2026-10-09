@@ -6,9 +6,9 @@ void wldcore_opcode_wait_for_fade(void) {
 
     if ((g_main_system_flags & 8) == 0) {
         flags = &g_wldcore_active_saved_record.state_flags;
-        *flags |= 4;
+        *flags |= WLDCORE_OPCODE_STATE_FETCH;
     } else {
         flags = &g_wldcore_active_saved_record.state_flags;
-        *flags |= 8;
+        *flags |= WLDCORE_OPCODE_STATE_YIELD;
     }
 }

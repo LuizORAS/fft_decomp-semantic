@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Appends one entry to the panel list: its value column (g_wldcore_list_entry_values), a
@@ -44,11 +45,11 @@ void wldcore_list_open_tutorial_topics(void) {
     origin.x = 0x54;
     dimensions.y = visible;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(0xc, count, visible);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS, count, visible);
     wldcore_window_start_panel_render_thread(
         0xc, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     record_index = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_TUTORIAL_TOPICS;
     g_wldcore_menu_stack_depth = record_index + 1;

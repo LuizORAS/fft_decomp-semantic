@@ -39,10 +39,10 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
     separator.y = sprite.y = g_wldcore_context_value_display_position.y;
 
     switch (g_wldcore_context_value_display_mode) {
-    case 1:
+    case WLDCORE_VALUE_DISPLAY_FUNDS:
         wldcore_gfx_draw_cursor_sprite_and_underline(ot, &sprite, &line);
         break;
-    case 2:
+    case WLDCORE_VALUE_DISPLAY_PLAY_TIME:
         sprite.u = 0x60;
         sprite.v = 0x10;
         sprite.w = 0x14;
@@ -70,7 +70,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         sprite.x += 6;
         wldcore_gfx_draw_number_digits_with_fill(g_wldcore_displayed_numeric_value_tertiary, 2, &sprite, ot, 1);
         break;
-    case 3:
+    case WLDCORE_VALUE_DISPLAY_LABELLED:
         sprite.u = 0xA8;
         sprite.v = 0x20;
         sprite.w = 0xD;
@@ -78,12 +78,12 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
         sprite.cx = 0x20;
         GsSortFastSprite(&sprite, ot, g_wldcore_hud_ot_priority);
         /* fallthrough */
-    case 0:
+    case WLDCORE_VALUE_DISPLAY_PLAIN:
         sprite.x -= 0xC;
         sprite.y += 8;
         wldcore_gfx_draw_number_digits(g_wldcore_displayed_numeric_value, 8, &sprite, ot);
         break;
-    case 4:
+    case WLDCORE_VALUE_DISPLAY_COST_AND_FUNDS:
         sprite.u = 0x60;
         sprite.w = 0x18;
         sprite.h = 8;

@@ -36,7 +36,7 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
             menu->sound_mode_selection = GAME_SOUND_MODE_WIDE;
         }
         record = menu->render_records[menu->sound_mode_selection];
-        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 
@@ -49,7 +49,7 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
             menu->sound_mode_selection = GAME_SOUND_MODE_MONO;
         }
         record = menu->render_records[menu->sound_mode_selection];
-        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 }

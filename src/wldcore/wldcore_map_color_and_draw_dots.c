@@ -37,7 +37,7 @@ void wldcore_map_color_and_draw_dots(void) {
         g_wldcore_map_dots[i].sub_kind = src[i].a.b[3];
         g_wldcore_map_dots[i].position.vx = src[i].a.w;
         y = src[i].y;
-        g_wldcore_map_dots[i].flags = 1;
+        g_wldcore_map_dots[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_wldcore_map_dots[i].priority = 0xf;
         color = g_wldcore_map_dots[i].rgb;
         g_wldcore_map_dots[i].position.vz = 0;
@@ -46,7 +46,7 @@ void wldcore_map_color_and_draw_dots(void) {
         color[1] = 0x80;
         color[2] = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sprite_id = is_castle + 0x6a;
+        g_wldcore_map_dots[i].sprite_id = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < 0x18) {
                 g_wldcore_map_dots[i].palette = 0xc;
@@ -59,7 +59,7 @@ void wldcore_map_color_and_draw_dots(void) {
         dot->anim_counter = 0;
         g_wldcore_map_dots[i].frame_index = 0;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
-            g_wldcore_map_dots[i].flags |= 0x10;
+            g_wldcore_map_dots[i].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;

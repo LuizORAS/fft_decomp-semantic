@@ -42,16 +42,16 @@ void wldcore_menu_push_script_flag_01a4_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.text_substitutions[0] = -1;
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.frame_render]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.upper_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_world_text_substitution_values[0] = value + 0x9800;
     world_thread_set_parameters(0xE, 0x19, 0xB849, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL;

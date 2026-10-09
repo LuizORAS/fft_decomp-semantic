@@ -13,12 +13,12 @@ void wldcore_list_handle_rumors_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
         wldcore_list_rumors_close_level(level);
         if (level->result != 0) {
-            wldcore_list_store_cursor_state(2);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS);
             wldcore_bar_push_rumor_detail_level(
                 g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
             return;
         }
-        wldcore_list_clear_cursor_state(2);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS);
         g_main_system_flags &= ~0x800;
         wldcore_menu_dispatch_resume_handler();
         return;

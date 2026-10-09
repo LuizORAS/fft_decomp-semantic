@@ -1,5 +1,6 @@
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
+#include "psx/pad.h"
 
 /* Scalar view of g_wldcore_window_panel_render_state.select_text_table: as a
  * struct field its address would share the selected_index base register, but
@@ -57,15 +58,15 @@ void wldcore_proposition_push_send_unit_level(void) {
         position->x = 0xE;
         position->y = -0x29;
     }
-    g_wldcore_window_records[index].sequence = 0x64;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_PROPOSITION_COUNT_LABEL;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.cursor_window = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 9;
-    g_wldcore_window_records[index].flags |= 0x10;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_render_record_and_reset_color(
@@ -93,7 +94,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         position->x = -0x60;
         position->y = 0x60;
     }
-    g_wldcore_window_records[index].sequence = 0x73;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_A;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_record_and_reset_color(
@@ -105,14 +106,14 @@ void wldcore_proposition_push_send_unit_level(void) {
         position->x = -0x12;
         position->y = 0x60;
     }
-    g_wldcore_window_records[index].sequence = 0x74;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_B;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.preview_render = index;
     g_wldcore_window_render_records[index].priority = 9;
-    g_wldcore_window_render_records[index].flags |= 0x10;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
         wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x11;
@@ -139,7 +140,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.portrait_render = index;
     g_wldcore_window_render_records[index].priority = 9;
-    g_wldcore_window_render_records[index].flags |= 0x10;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
         wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x4D;
@@ -155,7 +156,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     bounds.dimensions.y = 0x3B;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
-    g_wldcore_window_render_records[index].flags |= 0x10;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
         wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x48;
@@ -168,11 +169,11 @@ void wldcore_proposition_push_send_unit_level(void) {
     {
         wldcore_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
-        g_wldcore_window_records[index].flags |= 0x10;
+        g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         position->x = 0x3E;
         position->y = 0x28;
     }
-    g_wldcore_window_records[index].sequence = 0x75;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SEND_UNIT_PORTRAIT;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_record_and_reset_color(
@@ -181,11 +182,11 @@ void wldcore_proposition_push_send_unit_level(void) {
     {
         wldcore_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
-        g_wldcore_window_records[index].flags |= 0x10;
+        g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         position->x = -0x74;
         position->y = -0x69;
     }
-    g_wldcore_window_records[index].sequence = 0x66;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
 
     index = wldcore_window_append_record_and_reset_color(
@@ -193,19 +194,19 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.right_arrow = index;
     {
         wldcore_point32_t* position = &g_wldcore_window_records[index].position;
-        g_wldcore_menu_result = 0x1E0;
+        g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
         g_wldcore_window_records[index].priority = 9;
-        g_wldcore_window_records[index].flags |= 0x10;
+        g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         position->x = 0x60;
         position->y = -0x69;
     }
-    g_wldcore_window_records[index].sequence = 0x68;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
     world_thread_set_parameters(0xE, 0x19, 0xB812, 0);
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].send_unit.shown_preview = -1;
-    g_wldcore_menu_stack_records_next[depth].send_unit.mode = 0;
+    g_wldcore_menu_stack_records_next[depth].send_unit.mode = WLDCORE_SEND_UNIT_MODE_SELECT;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_SEND_UNIT;
     g_wldcore_menu_stack_depth = depth + 1;
 }

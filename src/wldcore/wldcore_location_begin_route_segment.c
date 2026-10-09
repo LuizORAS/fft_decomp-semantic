@@ -48,9 +48,9 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     record = (wldcore_route_record_t*)g_wldcore_map_route_tables;
     state->route_id = route & 0xff;
     flags = state->flags;
-    state->flags = flags | (((u32)route >> 7) & 2);
+    state->flags = flags | (((u32)route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
     record = ((wldcore_route_record_t**)record)[state->route_id];
-    if (state->flags & 2) {
+    if (state->flags & WLDCORE_ROUTE_TRAVEL_REVERSED) {
         state->leg_end_location = record->start_location;
         state->leg_start_location = record->end_location;
         index = (record->count - step - 1) * 3 + 1;

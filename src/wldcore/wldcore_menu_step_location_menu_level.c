@@ -59,7 +59,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         wldcore_gfx_toggle_captured_world_frame(0);
         g_main_system_flags = (g_main_system_flags | 4) & 0xF7FFFFFD;
         if (level->slots.result != 0) {
-            wldcore_list_store_cursor_state(0);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU);
             selected = &g_wldcore_window_panel_render_state.selected_index;
             values = g_wldcore_list_entry_values;
             value = values[*selected];
@@ -87,7 +87,9 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                 default:
                     world_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION, value - 0xED);
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    if (wldcore_script_process_conditional_set(g_wldcore_map_projection_state.marker.kind, 0x20) != 0) {
+                    if (wldcore_script_process_conditional_set(
+                            g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY)
+                        != 0) {
                         offset = g_wldcore_script_state.args[0] * 10;
                         records = g_wldcore_deep_dungeon_battles;
                         /* The byte offset and shared base preserve the target's choice-index calculation. */
@@ -115,7 +117,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
             return;
         }
         g_main_system_flags = (g_main_system_flags | 2) & ~4;
-        wldcore_list_clear_cursor_state(0);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU);
         wldcore_menu_close_level_and_release_records(&level->slots, 1);
         return;
     }
@@ -142,9 +144,9 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         }
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
         && g_main_file_still_loading == 0) {
-        wldcore_fade_start_screen(2, 0x10);
-        wldcore_sound_enqueue_audio_command(2, 0x10);
-        wldcore_sound_enqueue_audio_command(4, 2);
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->slots.result = 1;
         world_thread_set_parameters(0xC, 0, 0, 1);

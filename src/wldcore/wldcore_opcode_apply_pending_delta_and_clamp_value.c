@@ -21,5 +21,5 @@ void wldcore_opcode_apply_pending_delta_and_clamp_value(void) {
         *value = 0;
     }
     g_wldcore_displayed_numeric_value = *value;
-    g_wldcore_active_saved_record.state_flags |= 4;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

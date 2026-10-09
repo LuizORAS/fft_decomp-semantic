@@ -41,7 +41,7 @@ void open_script_init_state(void) {
     ClearImage(&rect, 0, 0, 0);
     DrawSync(0);
 
-    g_open_script_state.dispatch.flags = 1;
+    g_open_script_state.dispatch.flags = OPEN_SCRIPT_DISPATCH_RUNNING;
     g_open_script_state.dispatch.tpage = (s16)GetTPage(0, 2, 0x300, 0);
     g_open_script_state.dispatch.clut = (s16)GetClut(0, 0x1e0);
     g_open_script_state._unknown_1674 = 0;

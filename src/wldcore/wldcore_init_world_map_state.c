@@ -56,7 +56,7 @@ void wldcore_init_world_map_state(void) {
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].g = 0;
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].b = 0;
     }
-    g_wldcore_screen_fade_state.flags[0] = 2;
+    g_wldcore_screen_fade_state.flags[0] = WLDCORE_SCREEN_FADE_OUT;
 
     cursor = g_wldcore_menu_cursor_states;
     for (offset = 0; offset < 0xa8; offset += 8) {
@@ -86,7 +86,7 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_audio_queue.music.flags = 0;
     g_wldcore_audio_queue.music.tracks[2] = 0;
     g_wldcore_audio_queue.music.tracks[1] = 0;
-    g_wldcore_audio_queue.current_command = 0;
+    g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
     g_wldcore_sound_novel_countdown_frames = 0;
     g_wldcore_location_entry_state.flags = 0;
 

@@ -18,9 +18,9 @@ s32 open_script_init_and_dispatch_entries(void) {
     open_script_update_screen_fade();
 
     state = &g_open_script_state.dispatch;
-    result = state->flags | 2;
+    result = state->flags | OPEN_SCRIPT_DISPATCH_CONTINUE;
     state->flags = result;
-    if (result & 2) {
+    if (result & OPEN_SCRIPT_DISPATCH_CONTINUE) {
         dispatch_arguments = &state->data_base;
         handlers = g_open_opcode_handlers;
         do {
@@ -30,10 +30,10 @@ s32 open_script_init_and_dispatch_entries(void) {
              * handler call and reads flags at -0x28 from it; `state->flags`
              * allocates a separate base register. */
             flags = *(u32*)((u8*)dispatch_arguments - 0x28);
-            if ((flags & 1) == 0) {
+            if ((flags & OPEN_SCRIPT_DISPATCH_RUNNING) == 0) {
                 return 0;
             }
-        } while (flags & 2);
+        } while (flags & OPEN_SCRIPT_DISPATCH_CONTINUE);
     }
     return 1;
 }

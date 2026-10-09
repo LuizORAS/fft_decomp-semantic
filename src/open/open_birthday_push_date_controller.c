@@ -52,12 +52,13 @@ void open_birthday_push_date_controller(void) {
         (open_birthday_date_state_t*)&g_open_controller_stream_start[g_open_current_controller_index]);
 
     controller = g_open_current_controller_index;
-    g_open_gfx_render_records_56[g_open_controller_stream_start[controller]._unknown_0c].flags |= 0x100;
+    g_open_gfx_render_records_56[g_open_controller_stream_start[controller]._unknown_0c].flags
+        |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     g_open_gfx_render_records_36[g_open_controller_stream_start[controller].stream_start].x
         = g_open_gfx_render_records_56[g_open_controller_stream_start[controller]._unknown_0c].x + 0x46;
     g_open_current_controller_index = controller + 1;
     g_open_gfx_render_records_36[g_open_controller_stream_start[controller].stream_start].y
         = g_open_gfx_render_records_56[g_open_controller_stream_start[controller]._unknown_0c].y + 0x18;
     g_open_controller_stream_start[controller]._unknown_28 = 0;
-    g_open_controller_handler_indices[controller] = 5;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_BIRTHDAY_DATE;
 }

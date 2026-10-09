@@ -16,27 +16,28 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
 
     load_phase = level->load_phase;
     switch (load_phase) {
-    case 1:
+    case WLDCORE_PROPOSITION_REPORT_LOAD_MESSAGES:
         if (g_wldcore_audio_queue.count != 0) {
             return;
         }
-        level->load_phase = 2;
-        wldcore_load_message_block_if_changed(g_main_active_propositions[level->proposition].proposition_id + 0x10);
+        level->load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_PICTURE;
+        wldcore_load_message_block_if_changed(g_main_active_propositions[level->proposition].proposition_id
+            + WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST);
         return;
-    case 2:
+    case WLDCORE_PROPOSITION_REPORT_LOAD_PICTURE:
         if (g_main_file_still_loading != 0) {
             return;
         }
         kind = &g_wldcore_job_selection.reward_type;
-        if (*kind == 1) {
+        if (*kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
             wldcore_proposition_load_picture_data_set(
                 g_wldcore_treasure_picture_sets[g_wldcore_job_selection.reward_index]);
         }
-        if (*kind == 2) {
+        if (*kind == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
             wldcore_proposition_load_picture_data_set(
                 g_wldcore_unexplored_land_picture_sets[g_wldcore_job_selection.reward_index]);
         }
-        level->load_phase = 0;
+        level->load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_DONE;
         break;
     }
 
@@ -63,7 +64,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         if (wldcore_proposition_step_message(level, 0x42) == 0) {
             return;
         }
-        if (g_wldcore_job_selection.result == 2) {
+        if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_BAD_FAILURE) {
             level->state = 9;
             return;
         }
@@ -126,7 +127,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         if (wldcore_proposition_step_message(level, 0x6C) == 0) {
             return;
         }
-        if (g_wldcore_job_selection.result == 0) {
+        if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
             level->state = 0xC;
             return;
         }
@@ -163,7 +164,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         }
         if (level->phase == 0) {
             picture = &g_wldcore_job_selection.reward_type;
-            if (*picture == 1) {
+            if (*picture == WLDCORE_PROPOSITION_REWARD_TREASURE) {
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
                 level->render_index = record;
@@ -177,9 +178,9 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.dimensions.y = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds, clut, 4);
+                wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
                 g_wldcore_window_render_records[record].priority = 9;
-                g_wldcore_window_render_records[record].flags |= 0x100;
+                g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
                 {
                     wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw - 4;
@@ -201,7 +202,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 }
                 wldcore_sound_play_effect(0x85);
             }
-            if (*picture == 2) {
+            if (*picture == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
                 level->render_index = record;
@@ -215,9 +216,9 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.dimensions.y = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds, clut, 4);
+                wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
                 g_wldcore_window_render_records[record].priority = 9;
-                g_wldcore_window_render_records[record].flags |= 0x100;
+                g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
                 {
                     wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw;
@@ -262,11 +263,11 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
             return;
         }
         (*(s32*)level)++;
-        if (g_wldcore_job_selection.reward_type == 1) {
+        if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;
         }
-        if (g_wldcore_job_selection.reward_type == 2) {
+        if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;
         }

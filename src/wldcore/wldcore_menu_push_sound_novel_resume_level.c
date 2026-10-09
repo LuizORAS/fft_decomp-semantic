@@ -32,7 +32,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.cursor_window = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -47,7 +47,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.dimensions.y = image.ph;
     clut.x = image.cx;
     clut.y = image.cy;
-    wldcore_window_init_vram_render_record(index, bounds, clut, 4);
+    wldcore_window_init_vram_render_record(index, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
     g_wldcore_window_render_records[index].priority = 0xA;
     wldcore_gfx_step_dissolve_image_upload(&image, 0);
 

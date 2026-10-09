@@ -9,7 +9,7 @@ void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 so
     g_open_movie_aligned_height = 0;
     g_open_movie_width = 0;
     g_open_movie_current_frame = 0;
-    g_open_movie_stream_status = 0;
+    g_open_movie_stream_status = OPEN_MOVIE_STREAM_PLAYING;
     g_open_movie_first_frame = first_frame;
     g_open_movie_last_frame = last_frame;
     open_movie_init_mdec_stream_state(&g_open_movie_mdec_stream_state, 0, 8, 0, 0xf8);
@@ -28,5 +28,6 @@ void open_movie_start_stream(s32 sector, s32 first_frame, s32 last_frame, s32 so
     PutDispEnv(&g_open_gfx_screen_environments[0].disp);
     g_open_file_current_openbk_image_id = -1;
     g_open_system_runtime_flags
-        = (g_open_system_runtime_flags & ~(OPEN_FLAG_WORLD_OVERLAY_LOADED | OPEN_FLAG_PARTY_CHOSEN)) | 6;
+        = (g_open_system_runtime_flags & ~(OPEN_FLAG_WORLD_OVERLAY_LOADED | OPEN_FLAG_PARTY_CHOSEN))
+        | (OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING | OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING);
 }

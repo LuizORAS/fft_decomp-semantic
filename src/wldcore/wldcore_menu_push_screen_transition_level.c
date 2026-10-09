@@ -36,12 +36,12 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     g_main_system_flags |= 0x3800;
     wldcore_fade_start_screen(0, 0x10);
     switch (screen) {
-    case 0x1C:
+    case WLDCORE_MENU_LEVEL_BRAVE_STORY:
         wldcore_window_set_render_objects_visible(0);
         wldcore_sound_wait_for_queue_drain();
         wldcore_sound_enqueue_music_start(0x220);
         break;
-    case 0x1D:
+    case WLDCORE_MENU_LEVEL_STORY_EVENTS:
         wldcore_window_set_render_objects_visible(0);
         world_menu_set_slot_4_cursor_index(2);
         count = 0;
@@ -63,21 +63,21 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_menu_push_brave_story_level();
         g_main_system_flags |= 0x800;
         wldcore_window_close_parent_list_all_windows();
-        wldcore_load_message_block_if_changed(4);
+        wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
         wldcore_wait_for_file_load();
         g_wldcore_story_events_cursor_state = g_main_saved_list_cursor_state;
         break;
-    case 0x2B:
+    case WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES:
         wldcore_window_set_render_objects_visible(0);
         wldcore_sound_wait_for_queue_drain();
         wldcore_sound_enqueue_music_start(0x21A);
         break;
-    case 0x2C:
+    case WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS:
         wldcore_list_build_tutorial_category_panel_image(
             &g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].text_list);
         wldcore_window_close_parent_list_frame_windows();
         break;
-    case 0x2D:
+    case WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES:
         wldcore_window_set_render_objects_visible(0);
         world_menu_set_slot_4_cursor_index(3);
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
@@ -85,9 +85,9 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_window_close_parent_list_frame_windows();
         g_wldcore_tutorial_entries_cursor_state = g_main_saved_list_cursor_state;
         break;
-    case 0x1B:
+    case WLDCORE_MENU_LEVEL_TREASURE_DETAIL:
         wldcore_window_close_parent_list_all_windows();
-        wldcore_load_message_block_if_changed(3);
+        wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
         wldcore_wait_for_file_load();
         wldcore_sound_wait_for_queue_drain();
         main_sound_set_master_volume(0x3FFF, 1);

@@ -15,7 +15,7 @@ void open_gfx_update_opntex_sequence(void) {
     if (g_open_script_state.opntex.delay != 0) {
         g_open_script_state.opntex.delay--;
         if (g_open_script_state.opntex.delay == 0) {
-            g_open_script_state.dispatch.flags |= 0x80;
+            g_open_script_state.dispatch.flags |= OPEN_SCRIPT_DISPATCH_DECREASE_FADE_INTENSITY;
             g_open_script_state.opntex.fade_intensity = 0x80;
             g_open_script_state.opntex.fade_elapsed_frames = 0;
             g_open_script_state.opntex.fade_duration_frames = g_open_script_state.opntex_control_value;
@@ -35,7 +35,7 @@ void open_gfx_update_opntex_sequence(void) {
     source = g_open_gfx_opntex_data;
     source += frame * 23 * 2048;
     open_gfx_load_opntex_into_frame_buffer(source);
-    g_open_script_state.dispatch.flags |= 0x40;
+    g_open_script_state.dispatch.flags |= OPEN_SCRIPT_DISPATCH_INCREASE_FADE_INTENSITY;
     g_open_script_state.opntex.fade_elapsed_frames = 0;
     g_open_script_state.opntex.fade_intensity = 0;
     g_open_script_state.opntex.fade_duration_frames = g_open_script_state.opntex_control_value;

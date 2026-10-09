@@ -10,5 +10,5 @@ void open_movie_stop_stream(s32 pause_cd_audio) {
         open_movie_pause_cd_audio();
     }
 
-    g_open_system_runtime_flags &= ~2;
+    g_open_system_runtime_flags &= ~OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING;
 }

@@ -34,15 +34,15 @@ s32 wldcore_script_run_until_yield(void) {
             low, high, world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK));
         wldcore_sound_novel_update_countdown_timer();
 
-        if (g_wldcore_active_saved_record.state_flags & 2) {
+        if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_BRANCH) {
             wldcore_set_bit_value(
                 g_main_saved_data_bits, (g_wldcore_saved_record_index << 8) + g_wldcore_active_saved_record.section, 1);
-            g_wldcore_active_saved_record.state_flags &= ~2;
+            g_wldcore_active_saved_record.state_flags &= ~WLDCORE_OPCODE_STATE_BRANCH;
             offset = ((wldcore_save_slot_table_t*)g_wldcore_active_saved_record.buffer)
                          ->offsets[g_wldcore_active_saved_record.section];
             g_wldcore_active_saved_record.section++;
             g_wldcore_active_saved_record.word_index = 0;
-            g_wldcore_active_saved_record.state_flags |= 4;
+            g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
             g_wldcore_active_saved_record.script_words = &((u32*)g_main_save_slot_buffer)[offset >> 2];
             if (g_wldcore_saved_record_index < 5) {
                 memcpy(&g_main_saved_records[g_wldcore_saved_record_index], &g_wldcore_active_saved_record,
@@ -50,8 +50,10 @@ s32 wldcore_script_run_until_yield(void) {
             }
         }
 
-        if (g_wldcore_active_saved_record.state_flags & 4) {
-            g_wldcore_active_saved_record.state_flags = (g_wldcore_active_saved_record.state_flags & ~4) | 0x10;
+        if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_FETCH) {
+            g_wldcore_active_saved_record.state_flags
+                = (g_wldcore_active_saved_record.state_flags & ~WLDCORE_OPCODE_STATE_FETCH)
+                | WLDCORE_OPCODE_STATE_FETCHED;
             g_wldcore_active_saved_record.instruction.word
                 = g_wldcore_active_saved_record.script_words[g_wldcore_active_saved_record.word_index];
             g_wldcore_active_saved_record.word_index++;
@@ -60,10 +62,10 @@ s32 wldcore_script_run_until_yield(void) {
         g_wldcore_opcode_handlers[g_wldcore_active_saved_record.instruction.bytes.opcode]();
 
         flags = g_wldcore_active_saved_record.state_flags;
-        g_wldcore_active_saved_record.state_flags = flags & ~0x10;
-    } while ((flags & 0x28) == 0);
+        g_wldcore_active_saved_record.state_flags = flags & ~WLDCORE_OPCODE_STATE_FETCHED;
+    } while ((flags & (WLDCORE_OPCODE_STATE_YIELD | WLDCORE_OPCODE_STATE_END)) == 0);
 
-    aborted = g_wldcore_active_saved_record.state_flags & 0x20;
-    g_wldcore_active_saved_record.state_flags &= ~8;
+    aborted = g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_END;
+    g_wldcore_active_saved_record.state_flags &= ~WLDCORE_OPCODE_STATE_YIELD;
     return aborted == 0;
 }

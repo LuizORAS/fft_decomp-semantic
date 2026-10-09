@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Opens a panel list of the set script flags 0x1bc-0x1fb (entry values
  * 0xe800 + flag index), shows up to eight rows at (0x4c, 0x4f) with width
@@ -37,10 +38,10 @@ void wldcore_list_open_story_events(void) {
     origin.x = 0x4C;
     dimensions.y = i;
     origin.y = 0x4F;
-    wldcore_list_clamp_cursor_state(0xA, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_STORY_EVENTS, count, i);
     wldcore_window_start_panel_render_thread(
         0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
     record_index = g_wldcore_menu_stack_depth;
     g_main_system_flags |= 0x800;

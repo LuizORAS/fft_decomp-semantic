@@ -46,7 +46,7 @@ void wldcore_menu_push_focus_location_level(s32 dot_index) {
     if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
         g_main_system_flags |= 0x2000;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
-            |= 0x10;
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_FOCUS_LOCATION;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;

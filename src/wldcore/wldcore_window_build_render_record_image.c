@@ -13,7 +13,8 @@ void wldcore_window_build_render_record_image(
     u8* color;
     s32 transformed[2];
 
-    g_wldcore_window_render_records[index].flags &= ~0x1C;
+    g_wldcore_window_render_records[index].flags
+        &= ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN);
     g_wldcore_window_render_records[index].base.x = (s16)bounds.position.x - 0x80;
     g_wldcore_window_render_records[index].base.y = (s16)bounds.position.y - 0x78;
     g_wldcore_window_render_records[index].coordinate_mode = coordinate_mode;

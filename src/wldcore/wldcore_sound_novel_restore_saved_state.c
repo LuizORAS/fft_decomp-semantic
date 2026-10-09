@@ -25,7 +25,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     }
     g_wldcore_active_saved_record.picture_render_index = render_record;
     g_wldcore_active_saved_record.buffer = g_main_save_slot_buffer;
-    g_wldcore_active_saved_record.state_flags &= 0xFFF9;
+    g_wldcore_active_saved_record.state_flags &= ~(WLDCORE_OPCODE_STATE_BRANCH | WLDCORE_OPCODE_STATE_FETCH);
     for (i = 0; i < 1; i++) {
         g_wldcore_sound_novel_local_flags[i] = 0;
     }
@@ -34,8 +34,8 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
     picture = (wldcore_script_picture_state_t*)&g_wldcore_active_saved_record.picture_render_index;
     g_wldcore_window_render_records[picture->render_index].priority = 0xC;
-    g_wldcore_window_render_records[picture->render_index].flags |= 0x10;
-    g_wldcore_window_render_records[picture->render_index].flags &= ~0x100;
+    g_wldcore_window_render_records[picture->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[picture->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
 
     picture_id = picture->picture;
     if (picture_id != -1) {
@@ -54,8 +54,8 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     if (g_wldcore_active_saved_record.music_selection & 0xFF) {
         wldcore_sound_enqueue_music_start((s16)g_wldcore_active_saved_record.music_selection);
     } else {
-        wldcore_sound_enqueue_audio_command(2, 0x10);
-        wldcore_sound_enqueue_audio_command(4, 2);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         g_wldcore_active_saved_record.music_selection = 0;
     }
     sound = g_wldcore_active_saved_record.sound_id;
@@ -67,14 +67,14 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
         }
     }
     state_flags = &g_wldcore_active_saved_record.state_flags;
-    if (*state_flags & 0x40) {
+    if (*state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair.first_window]
-            .flags &= ~0x10;
+            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .window_pair.second_window]
-            .flags &= ~0x10;
+            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    if (*state_flags & 0x80) {
+    if (*state_flags & WLDCORE_OPCODE_STATE_VALUE_DISPLAY) {
         g_wldcore_opcode_state.instruction.word = (s16)g_wldcore_active_saved_record.value_display_mode << 8;
         wldcore_opcode_start_pending_value_transition();
     }
@@ -96,8 +96,8 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
         /* A struct-field store: as a scalar global the store would be
          * scheduled above the table load (GCC 2.7 alias rule). */
         g_wldcore_active_saved_record.word_index = 0;
-        *state_flags |= 4;
+        *state_flags |= WLDCORE_OPCODE_STATE_FETCH;
     } else {
-        *state_flags |= 2;
+        *state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
     }
 }

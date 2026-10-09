@@ -20,9 +20,9 @@ void wldcore_map_update_camera_direction_and_projection(void) {
     flags = state->flags;
     if (flags & WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION) {
         angle_direction = ((state->angle + 0x100) >> 9) & 7;
-        direction = angle_direction + 0x10;
+        direction = angle_direction + WLDCORE_ANIM_SEQUENCE_MARKER_FIRST;
         if (flags & WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET) {
-            direction = angle_direction + 0x18;
+            direction = angle_direction + WLDCORE_ANIM_SEQUENCE_MARKER_ALTERNATE_FIRST;
         }
         if (state->marker.sprite_id != direction) {
             state->marker.sprite_id = direction;

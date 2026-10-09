@@ -18,13 +18,13 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
     s32 variable;
     s32 dead[2];
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
         g_wldcore_window_records[level->window_index].palette = 0xA;
         g_wldcore_window_render_records[level->render_index].palette = 2;
-        g_wldcore_window_records[level->window_index].sequence = 1;
+        g_wldcore_window_records[level->window_index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         g_wldcore_window_records[level->window_index].anim_counter
             = g_wldcore_window_records[level->window_index].frame_index = 0;
         variable = level->first_variable + level->cursor;

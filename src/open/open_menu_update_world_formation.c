@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void open_menu_update_world_formation(void) {
-    if (g_open_system_runtime_flags & 0x400) {
+    if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME) {
         u32 entry_mask = g_open_menu_formation_entry_mask;
 
         g_active_graphics_buffer_index ^= 1;

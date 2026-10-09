@@ -15,31 +15,32 @@ s32 wldcore_proposition_select_report_speaker(s32 index) {
     if (g_main_active_propositions[index].participant_count == 1) {
         return g_main_active_propositions[index].participant_indices[0];
     }
-    best = (g_wldcore_selected_proposition_row[0].fields.speaker_mode == 1
-               || g_wldcore_selected_proposition_row[0].fields.speaker_mode == 3)
+    best
+        = (g_wldcore_selected_proposition_row[0].fields.speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY
+              || g_wldcore_selected_proposition_row[0].fields.speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_FAITH)
         ? -1
         : 99999;
     for (i = 0; i < g_main_active_propositions[index].participant_count; i++) {
         unit = wldcore_get_party_data_pointer(g_main_active_propositions[index].participant_indices[i]);
         switch (g_wldcore_selected_proposition_row[0].fields.speaker_mode) {
-        case 1:
+        case WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY:
             if (best < unit->bravery) {
                 goto take_bravery;
             }
             break;
-        case 2:
+        case WLDCORE_PROPOSITION_SPEAKER_LOWEST_BRAVERY:
             if (unit->bravery < best) {
             take_bravery:
                 best = unit->bravery;
                 selected = g_main_active_propositions[index].participant_indices[i];
             }
             break;
-        case 3:
+        case WLDCORE_PROPOSITION_SPEAKER_HIGHEST_FAITH:
             if (best < unit->faith) {
                 goto take_faith;
             }
             break;
-        case 4:
+        case WLDCORE_PROPOSITION_SPEAKER_LOWEST_FAITH:
             if (unit->faith < best) {
             take_faith:
                 best = unit->faith;

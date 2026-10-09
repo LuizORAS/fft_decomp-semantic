@@ -13,5 +13,5 @@ void wldcore_opcode_change_volume_balance(void) {
         volume = 0x3FFF;
     }
     main_sound_set_master_volume(volume, balance);
-    g_wldcore_active_saved_record.state_flags |= 4;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

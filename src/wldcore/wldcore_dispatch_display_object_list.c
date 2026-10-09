@@ -13,12 +13,12 @@ void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count) {
     }
     for (i = 0; i < count; i++) {
         object = list[i];
-        if (*object & 0x18) {
+        if (*object & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
             continue;
         }
-        if (*object & 1) {
+        if (*object & WLDCORE_DISPLAY_OBJECT_ANIMATED) {
             wldcore_gfx_draw_animated_display_object((wldcore_window_record_t*)object, ot);
-        } else if (*object & 2) {
+        } else if (*object & WLDCORE_DISPLAY_OBJECT_IMAGE) {
             wldcore_gfx_draw_display_object_sprite((wldcore_window_render_record_t*)object, ot);
         }
     }

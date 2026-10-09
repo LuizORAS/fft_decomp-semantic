@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "psx/pad.h"
 
 void open_menu_start_music_test_controller(void) {
     s32 i;
@@ -14,12 +15,12 @@ void open_menu_start_music_test_controller(void) {
     }
 
     world_script_set_event_speed(1);
-    g_open_menu_formation_entry_mask = 0x160;
+    g_open_menu_formation_entry_mask = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     /* The same 4 is stored twice; the local keeps it in a saved register
      * across the fade-out call instead of being rematerialized. */
     four = 4;
     g_open_menu_formation_otag_index = four;
-    g_open_system_runtime_flags |= 0x400;
+    g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
     open_gfx_start_overlay_fade_out(0x20);
 
     controller = g_open_current_controller_index;
@@ -28,6 +29,6 @@ void open_menu_start_music_test_controller(void) {
     g_open_controller_stream_start[controller]._unknown_08 = 0;
     g_open_controller_stream_start[controller]._unknown_0c = four;
     g_open_controller_stream_start[controller]._unknown_10 = 0;
-    g_open_controller_handler_indices[controller] = 7;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_MUSIC_TEST;
     g_open_current_controller_index = controller + 1;
 }

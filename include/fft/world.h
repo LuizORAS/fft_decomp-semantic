@@ -722,6 +722,25 @@ typedef struct world_gfx_packet_buffer {
 typedef char world_packet_buffer_gradient_lines_offset
     [((unsigned long)&((world_gfx_packet_buffer_t*)0)->gradient_lines == 0x30) ? 1 : -1];
 
+/* Flags word that leads every display object: the WLDCORE window and render
+ * records and the OPEN render records. The two kind bits select the draw
+ * routine; an object with either BLANK or HIDDEN set is skipped. */
+typedef enum wldcore_display_object_flag {
+    WLDCORE_DISPLAY_OBJECT_ANIMATED = 0x001,  /* 36-byte record drawn from its animation sequence */
+    WLDCORE_DISPLAY_OBJECT_IMAGE = 0x002,     /* 52- or 56-byte record drawn as one sprite */
+    WLDCORE_DISPLAY_OBJECT_8BIT_CLUT = 0x004, /* image: 8-bit texture instead of 4-bit */
+    WLDCORE_DISPLAY_OBJECT_BLANK = 0x008,     /* nothing to draw, whatever HIDDEN says */
+    WLDCORE_DISPLAY_OBJECT_HIDDEN = 0x010,    /* the show/hide toggle */
+    /* Semi-transparent at the rate in BLEND_RATE_MASK; a WLDCORE animated object otherwise takes
+     * both from each cel part. */
+    WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT = 0x020,
+    WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK = 0x0c0,
+    WLDCORE_DISPLAY_OBJECT_POP_IN = 0x100,   /* image: the opening animation is running; clears itself */
+    WLDCORE_DISPLAY_OBJECT_UNTINTED = 0x400, /* WLDCORE: the colour is used as is, without the fade tint */
+    /* WLDCORE animated object: steps its frame counter even while system flag 0x08000000 is set. */
+    WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED = 0x800,
+} wldcore_display_object_flag_e;
+
 /* One frame of a WLDCORE display-object or OPEN sprite-actor animation
  * sequence: the cel (part list) it draws and how long it holds. duration
  * 0xffff pins the frame. */

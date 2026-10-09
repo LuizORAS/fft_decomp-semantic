@@ -42,15 +42,15 @@ void wldcore_bar_push_rumor_detail_level(s32 value) {
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_records_next[depth].rumor_detail.first_window
         = g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_records_next[depth].rumor_detail.second_window
         = g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
     g_wldcore_menu_stack_records_next[depth].rumor_detail.render_index
         = g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index;

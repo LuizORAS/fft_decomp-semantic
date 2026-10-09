@@ -19,7 +19,7 @@ void open_input_update_buttons_and_check_game_reset(void) {
         g_open_input_new_button_presses = input & ~previous;
     }
 
-    if (!(g_open_system_runtime_flags & 0x80000)
+    if (!(g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_SOFT_RESET_DISABLED)
         && g_open_input_polled_buttons == (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_SELECT | PSX_PAD_START)) {
         DrawSync(0);
         main_sound_set_master_volume(0x3fff, 1);

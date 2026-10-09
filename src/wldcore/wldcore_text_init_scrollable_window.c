@@ -26,23 +26,23 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->left_window_index = index;
-    wldcore_window_init_record(index, state->priority, 8);
+    wldcore_window_init_record(index, state->priority, WLDCORE_ANIM_SEQUENCE_TEXT_PAGE_PROMPT);
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->middle_window_index = index;
-    wldcore_window_init_record(index, state->priority, 9);
+    wldcore_window_init_record(index, state->priority, WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_UP);
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->right_window_index = index;
-    wldcore_window_init_record(index, state->priority, 10);
+    wldcore_window_init_record(index, state->priority, WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_DOWN);
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->lower_window_index = index;
-    wldcore_window_init_record(index, state->priority, 15);
+    wldcore_window_init_record(index, state->priority, WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_THUMB);
     render_index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->render_record_index = render_index;
-    g_wldcore_window_render_records[render_index].flags |= 0x100;
+    g_wldcore_window_render_records[render_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     g_wldcore_window_render_records[state->render_record_index].priority = state->priority;
     g_wldcore_window_render_records[state->render_record_index].base = state->base;
 
@@ -71,7 +71,7 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     last_page_row = (rows - 1) / state->rows_per_page * state->rows_per_page;
     state->page_start_row = 0;
     columns = text_metrics[0];
-    state->scroll_state = 0;
+    state->scroll_state = WLDCORE_TEXT_SCROLL_PAGING;
     state->measured_rows = rows;
     state->measured_columns = columns;
     state->last_page_row = last_page_row;

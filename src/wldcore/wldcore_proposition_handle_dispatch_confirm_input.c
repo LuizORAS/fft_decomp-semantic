@@ -10,7 +10,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
     s32 row;
     s32 i;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
@@ -18,7 +18,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
         /* Shared tail: the target keeps this copy and both confirm paths
          * jump into it; duplicated copies cross-jump into the last one. */
     block_tail:
-        g_wldcore_context_value_display_mode = 1;
+        g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_FUNDS;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 4;
@@ -44,8 +44,8 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
                 g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 world_script_get_variable(
                     g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
-                    | 8);
-            g_main_active_propositions[g_main_save_proposition_count].flags = 1;
+                    | WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED);
+            g_main_active_propositions[g_main_save_proposition_count].flags = WLDCORE_PROPOSITION_PROGRESS_DISPATCHED;
             g_main_active_propositions[g_main_save_proposition_count].proposition_id
                 = g_wldcore_selected_proposition_row[0].fields.id - 1;
             g_main_active_propositions[g_main_save_proposition_count].elapsed_days = 0;
@@ -65,7 +65,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
                 g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 world_script_get_variable(
                     g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
-                    | 2);
+                    | WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS);
         }
         goto block_tail;
     }

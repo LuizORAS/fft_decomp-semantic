@@ -33,9 +33,9 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
     s32 x;
     s32 y;
 
-    if (level->phase != 0) {
+    if (level->phase != WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE) {
         switch (level->phase) {
-        case 1:
+        case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM:
             shade = 0x80 - level->step * 8;
             index1 = &g_wldcore_active_saved_record.picture_render_index;
             g_wldcore_window_render_records[*index1].color.r = shade;
@@ -52,10 +52,10 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             level->step = step;
             if (step >= 5) {
                 level->step = 0;
-                level->phase = 0;
+                level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;
             }
             break;
-        case 2:
+        case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE:
             index2 = &g_wldcore_active_saved_record.picture_render_index;
             shade = level->step * 0x10 + 0x40;
             g_wldcore_window_render_records[*index2].color.r = shade;
@@ -102,9 +102,9 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
             }
             level->step = 0;
-            level->phase = 0;
-            g_wldcore_menu_result = 0x1C0;
-            g_wldcore_screen_fade_state.flags[0] ^= 8;
+            level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;
+            g_wldcore_menu_result = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
+            g_wldcore_screen_fade_state.flags[0] ^= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
@@ -122,24 +122,24 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 4);
             level->scroll = level->scroll + 1;
             if (level->scroll == 3 || level->text_ids[level->scroll] == -1) {
-                g_wldcore_window_records[level->upper_window].flags |= 0x10;
+                g_wldcore_window_records[level->upper_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             } else {
-                g_wldcore_window_records[level->upper_window].flags &= ~0x10;
+                g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             }
-            g_wldcore_window_records[level->lower_window].flags &= ~0x10;
+            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
         wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 2);
         level->scroll = level->scroll - 1;
         if (level->scroll == 0) {
-            g_wldcore_window_records[level->lower_window].flags |= 0x10;
+            g_wldcore_window_records[level->lower_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         } else {
-            g_wldcore_window_records[level->lower_window].flags &= ~0x10;
+            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
-        g_wldcore_window_records[level->upper_window].flags &= ~0x10;
+        g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
-        level->phase = 2;
+        level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE;
     }
 }

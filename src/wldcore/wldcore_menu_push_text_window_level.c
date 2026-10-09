@@ -40,7 +40,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.window_index = index;
-    g_wldcore_window_records[index].sequence = 0xE;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_MESSAGE_LABEL;
     g_wldcore_window_records[index].priority = 1;
     g_wldcore_window_records[index].anim_counter = 0;
     records = g_wldcore_window_records;

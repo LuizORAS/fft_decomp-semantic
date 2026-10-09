@@ -184,6 +184,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   - In WORLD, WalkTo is an empty arm outside a block, Arrow resolves both
     units and never sets the trajectory, and ChangeMap calls an empty
     function where BATTLE resets the camera script transform.
+- `wldcore_menu_step_location_menu_level` opens the outfitter with shop id 0
+  for every town; `world_shop_run_screen` then takes the id from the
+  location variable. The fur shop and soldier office pass their own ids.
+- `wldcore_proposition_step_result_level` clears the in-progress bit with
+  `& 0xFFFD` on an `s32`, which also drops the variable's high half.
+- OPENING's runtime flags 8, 0x20000 and 0x80000 are tested and never set.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

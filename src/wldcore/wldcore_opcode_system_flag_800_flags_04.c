@@ -10,5 +10,5 @@ void wldcore_opcode_system_flag_800_flags_04(void) {
     sys = g_main_system_flags;
     value = *flags;
     g_main_system_flags = sys | 0x800;
-    *flags = (value & 0xFF7F) | 4;
+    *flags = (value & ~WLDCORE_OPCODE_STATE_VALUE_DISPLAY) | WLDCORE_OPCODE_STATE_FETCH;
 }

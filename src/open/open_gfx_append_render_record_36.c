@@ -11,7 +11,8 @@
  * returns its pool index. */
 s32 open_gfx_append_render_record_36(open_render_record_t** list, s32* count) {
     list[*count] = (open_render_record_t*)&g_open_gfx_render_records_36[g_open_gfx_next_render_record_36];
-    g_open_gfx_render_records_36[g_open_gfx_next_render_record_36].flags &= ~0x38;
+    g_open_gfx_render_records_36[g_open_gfx_next_render_record_36].flags
+        &= ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT);
     g_open_gfx_render_records_36[g_open_gfx_next_render_record_36].palette = 0;
     OPEN_SET_RGB(&g_open_gfx_render_records_36[g_open_gfx_next_render_record_36].color, 0x80, 0x80, 0x80);
     (*count)++;

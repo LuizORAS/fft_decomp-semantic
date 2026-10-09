@@ -33,7 +33,7 @@ void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant
     pos1 = &g_wldcore_window_records[index].position;
     pos1->x = -0x74;
     pos1->y = -0x69;
-    g_wldcore_window_records[index].sequence = 0x66;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
     window1 = &g_wldcore_window_records[index];
     window1->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -45,7 +45,7 @@ void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant
     pos2 = &g_wldcore_window_records[index].position;
     pos2->x = 0x60;
     pos2->y = -0x69;
-    g_wldcore_window_records[index].sequence = 0x68;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
     window2 = &g_wldcore_window_records[index];
     window2->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;

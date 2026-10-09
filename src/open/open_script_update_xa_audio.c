@@ -7,7 +7,7 @@ void open_script_update_xa_audio(void) {
     u8 play[2];
     u8 mode;
 
-    if (g_open_script_state.dispatch.flags & 0x20) {
+    if (g_open_script_state.dispatch.flags & OPEN_SCRIPT_DISPATCH_XA_STARTING) {
         switch (g_open_script_state.control_state) {
         case 0:
             mode = 0x68;
@@ -70,7 +70,7 @@ void open_script_update_xa_audio(void) {
                 u32* control = &g_open_script_state.dispatch.flags;
 
                 g_open_script_state.xa_wait_frames = 0;
-                *control = (*control | 8) ^ 0x20;
+                *control = (*control | OPEN_SCRIPT_DISPATCH_XA_PLAYING) ^ OPEN_SCRIPT_DISPATCH_XA_STARTING;
             }
             break;
         default: {
@@ -84,26 +84,26 @@ void open_script_update_xa_audio(void) {
     {
         u32* control = &g_open_script_state.dispatch.flags;
 
-        if (*control & 8) {
+        if (*control & OPEN_SCRIPT_DISPATCH_XA_PLAYING) {
             g_open_script_state.xa_wait_frames++;
             if (g_open_script_state.xa_wait_frames < 0x78) {
                 return;
             }
             if (!(CdStatus() & CdlStatRead)) {
                 g_open_script_state.control_state = 0;
-                *control = (*control ^ 8) | 0x20;
+                *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STARTING;
                 return;
             }
             if (CdControl(0x10, 0, result) != 0 && CdPosToInt(result) > 0x3586c) {
                 open_sound_set_type_and_volume(0, 1);
                 g_open_script_state.control_state = 0;
-                *control = (*control ^ 8) | 0x10;
+                *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STOPPING;
                 return;
             }
         }
     }
 
-    if (g_open_script_state.dispatch.flags & 0x10) {
+    if (g_open_script_state.dispatch.flags & OPEN_SCRIPT_DISPATCH_XA_STOPPING) {
         switch (g_open_script_state.control_state) {
         case 0:
             CdControlF(9, 0);
@@ -133,7 +133,7 @@ void open_script_update_xa_audio(void) {
         case 6: {
             u32* control = &g_open_script_state.dispatch.flags;
 
-            *control ^= 0x10;
+            *control ^= OPEN_SCRIPT_DISPATCH_XA_STOPPING;
             open_sound_set_type_and_volume(0xc0, 1);
         } break;
         default: {

@@ -15,7 +15,7 @@ void open_title_start_new_game_transition(void) {
 
     controller = g_open_current_controller_index;
     g_open_controller_stream_start[controller]._unknown_10 = 0;
-    g_open_controller_handler_indices[controller] = 4;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_NEW_GAME_START;
     g_open_current_controller_index = controller + 1;
 }
 

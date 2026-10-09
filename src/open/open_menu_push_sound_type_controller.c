@@ -43,6 +43,6 @@ void open_menu_push_sound_type_controller(void) {
     sound_type += (s32)menu;
     selected_record = *(s32*)sound_type;
     g_open_current_controller_index = controller_index + 1;
-    g_open_gfx_render_records_36[selected_record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
-    g_open_controller_handler_indices[controller_index] = 3;
+    g_open_gfx_render_records_36[selected_record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
+    g_open_controller_handler_indices[controller_index] = OPEN_CONTROLLER_SOUND_TYPE_MENU;
 }

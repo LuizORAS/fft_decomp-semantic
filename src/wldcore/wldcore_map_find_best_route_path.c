@@ -75,7 +75,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
                 g_wldcore_location_entry_state.best_cost = g_wldcore_route_search_cost + cost;
                 g_wldcore_location_entry_state.best_length_bound = g_wldcore_location_entry_state.best_path_length
                     = g_wldcore_route_search_depth + 1;
-                g_wldcore_location_entry_state.flags |= 1;
+                g_wldcore_location_entry_state.flags |= WLDCORE_ROUTE_TRAVEL_ACTIVE;
                 continue;
             }
             if (from == start) {

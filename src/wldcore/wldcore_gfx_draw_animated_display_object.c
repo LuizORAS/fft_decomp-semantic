@@ -71,7 +71,7 @@ void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, G
     sprite.scalex = ONE;
     sprite.rotate = 0;
     cels = g_wldcore_anim_cel_table;
-    if (object->flags & 0x400) {
+    if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
         color = object->color;
     } else {
         wldcore_gfx_copy_color_with_tint(&object->color, &color);
@@ -79,7 +79,7 @@ void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, G
     sprite.r = color.r;
     sprite.g = color.g;
     sprite.b = color.b;
-    if ((object->flags & 0x800) || !(g_main_system_flags & 0x08000000)) {
+    if ((object->flags & WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED) || !(g_main_system_flags & 0x08000000)) {
         object->anim_counter = object->anim_counter + 1;
     }
     /* A goto loop: as a for/while loop, GCC's loop pass hoists the 0xffff
@@ -105,10 +105,10 @@ step_frame:
     for (i = 0; i < count; i++) {
         index = ((count - i) * 2) | 1;
         sprite.attribute = words[index] & 0x80000000;
-        if (object->flags & 0x20) {
+        if (object->flags & WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT) {
             sprite.attribute |= 0x40000000;
-            sprite.attribute |= (object->flags & 0xc0) << 22;
-            mode = (object->flags & 0xc0) >> 6;
+            sprite.attribute |= (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) << 22;
+            mode = (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) >> 6;
         } else {
             sprite.attribute |= words[index] & 0x70000000;
             mode = (words[index] >> 28) & 3;

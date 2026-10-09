@@ -6,7 +6,7 @@
 #define OPEN_PAD_START_OR_CIRCLE  0x820
 
 void open_birthday_handle_menu_input(open_birthday_date_state_t* menu) {
-    if (g_open_gfx_render_records_56[menu->window_record_56].flags & 0x100) {
+    if (g_open_gfx_render_records_56[menu->window_record_56].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
 

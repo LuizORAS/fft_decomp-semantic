@@ -1,5 +1,6 @@
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
+#include "psx/pad.h"
 
 /* Pushes the town/location service list level (type 4) for menu id `menu`.
  *
@@ -87,17 +88,17 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         bounds.dimensions.y = image.ph;
         origin.x = image.cx;
         origin.y = image.cy;
-        wldcore_window_init_vram_render_record(index, bounds, origin, 4);
+        wldcore_window_init_vram_render_record(index, bounds, origin, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
         base = &g_wldcore_window_render_records[index].base;
         g_wldcore_window_render_records[index].priority = 0xB;
         base->x = -0x40;
         base->y = -0x4C;
-        g_wldcore_window_render_records[index].flags |= 0x100;
+        g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
 
         index = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.label_window = index;
-        g_wldcore_window_records[index].sequence = 0xB;
+        g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_LOCATION_PICTURE_BORDER;
         g_wldcore_window_records[index].priority = 0xB;
         records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
@@ -139,7 +140,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     } else {
         origin.y = 0x70 - i * 8;
     }
-    wldcore_list_clamp_cursor_state(0, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU, count, i);
     wldcore_window_init_panel_render_state(0xC,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &dimensions, &origin);
     g_wldcore_window_panel_render_state.vram_x = 0x240;
@@ -165,7 +166,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     }
 
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_stack_records_next[depth].location_list.delay = 8;
     g_main_system_flags |= 0x08000000;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_LOCATION_MENU;

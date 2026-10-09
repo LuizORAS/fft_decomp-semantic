@@ -10,10 +10,10 @@ void wldcore_opcode_branch_if_dialog_option(s32 branch_if_equal) {
     if (operand == world_script_get_variable(EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION) ? branch_if_equal == 1
                                                                                       : branch_if_equal == 0) {
         g_wldcore_active_saved_record.section = g_wldcore_active_saved_record.instruction.bytes.operand_0;
-        g_wldcore_active_saved_record.state_flags |= 2;
+        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
     } else {
         u16* flags = &g_wldcore_active_saved_record.state_flags;
 
-        *flags |= 4;
+        *flags |= WLDCORE_OPCODE_STATE_FETCH;
     }
 }

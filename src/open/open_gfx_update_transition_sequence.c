@@ -9,37 +9,38 @@ s32 open_gfx_update_transition_sequence(void) {
     s32 type;
 
     open_gfx_step_image_crossfade();
-    if (!(g_open_gfx_transition.flags & 0x20)) {
+    if (!(g_open_gfx_transition.flags & OPEN_GFX_TRANSITION_SKIP)) {
         if (g_open_input_new_button_presses & PSX_PAD_START) {
             main_sound_play_sfx(0x85);
-            g_open_gfx_transition.flags |= 0x20;
+            g_open_gfx_transition.flags |= OPEN_GFX_TRANSITION_SKIP;
         }
         flags = g_open_gfx_transition.flags;
-        if (!(flags & 0x20)) {
-            if (flags & 0x10) {
+        if (!(flags & OPEN_GFX_TRANSITION_SKIP)) {
+            if (flags & OPEN_GFX_TRANSITION_DIM) {
                 g_open_gfx_transition.intensity -= 2;
                 open_gfx_draw_transition_line_strips(g_open_gfx_transition.intensity);
                 if (g_open_gfx_transition.intensity == 0) {
                     g_open_gfx_transition.intensity = 0x80;
-                    g_open_gfx_transition.flags = (g_open_gfx_transition.flags ^ 0x10) | 1;
+                    g_open_gfx_transition.flags
+                        = (g_open_gfx_transition.flags ^ OPEN_GFX_TRANSITION_DIM) | OPEN_GFX_TRANSITION_NEXT_ENTRY;
                 }
                 return 1;
             }
-            if (flags & 8) {
+            if (flags & OPEN_GFX_TRANSITION_WAIT_CIRCLE) {
                 if (g_open_input_new_button_presses & PSX_PAD_CIRCLE) {
-                    g_open_gfx_transition.flags = (flags ^ 8) | 0x10;
+                    g_open_gfx_transition.flags = (flags ^ OPEN_GFX_TRANSITION_WAIT_CIRCLE) | OPEN_GFX_TRANSITION_DIM;
                     g_open_gfx_transition.intensity = 0x80;
                 }
                 open_gfx_draw_transition_line_strips(g_open_gfx_transition.intensity);
                 return 1;
             }
-            if (flags & 1) {
-                flags ^= 1;
+            if (flags & OPEN_GFX_TRANSITION_NEXT_ENTRY) {
+                flags ^= OPEN_GFX_TRANSITION_NEXT_ENTRY;
                 g_open_gfx_transition.flags = flags;
                 if (g_open_gfx_transition.current_index == g_open_gfx_transition.target_index) {
                     return 0;
                 }
-                g_open_gfx_transition.flags = flags | 2;
+                g_open_gfx_transition.flags = flags | OPEN_GFX_TRANSITION_NEXT_STEP;
                 entry = g_open_gfx_transition.entry_table[g_open_gfx_transition.current_index];
                 g_open_gfx_transition.entry = entry;
                 g_open_gfx_transition.step_count = entry->bytes[0];
@@ -66,10 +67,11 @@ s32 open_gfx_update_transition_sequence(void) {
     }
 
     flags = g_open_gfx_transition.flags;
-    if (flags & 2) {
-        g_open_gfx_transition.flags = flags ^ 2;
+    if (flags & OPEN_GFX_TRANSITION_NEXT_STEP) {
+        g_open_gfx_transition.flags = flags ^ OPEN_GFX_TRANSITION_NEXT_STEP;
         if (g_open_gfx_transition.step == g_open_gfx_transition.step_count) {
-            g_open_gfx_transition.flags = (flags ^ 2) | 9;
+            g_open_gfx_transition.flags = (flags ^ OPEN_GFX_TRANSITION_NEXT_STEP)
+                | (OPEN_GFX_TRANSITION_NEXT_ENTRY | OPEN_GFX_TRANSITION_WAIT_CIRCLE);
             open_gfx_draw_transition_line_strips(g_open_gfx_transition.intensity);
             return 1;
         }
@@ -87,9 +89,9 @@ s32 open_gfx_update_transition_sequence(void) {
         }
     }
     if (++g_open_gfx_transition.timer == g_open_gfx_transition.step_durations[g_open_gfx_transition.step - 1]) {
-        g_open_gfx_transition.flags |= 2;
+        g_open_gfx_transition.flags |= OPEN_GFX_TRANSITION_NEXT_STEP;
     }
-    if (g_open_gfx_transition.flags & 0x20) {
+    if (g_open_gfx_transition.flags & OPEN_GFX_TRANSITION_SKIP) {
         if (g_open_gfx_transition.intensity != 0) {
             g_open_gfx_transition.intensity -= 2;
         } else if (g_open_gfx_image_copy_row_flags[0] == 0) {

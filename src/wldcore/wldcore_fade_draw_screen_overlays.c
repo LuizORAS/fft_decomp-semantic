@@ -13,7 +13,7 @@ void wldcore_fade_draw_screen_overlays(void) {
         /* Reloaded inside the loop so that the priority walk, not its invariant
          * copy, holds the register the exit test compares. */
         priorities = g_wldcore_screen_fade_state.priorities;
-        if (flags[i] & 9) {
+        if (flags[i] & (WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_BOX_VISIBLE)) {
             if (g_wldcore_screen_fade_state.boxes[i].r != 0 || g_wldcore_screen_fade_state.boxes[i].g != 0
                 || g_wldcore_screen_fade_state.boxes[i].b != 0) {
                 GsSortBoxFill(&boxes[i], &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index], priorities[i]);

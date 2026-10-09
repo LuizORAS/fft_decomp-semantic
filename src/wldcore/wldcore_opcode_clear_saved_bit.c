@@ -4,5 +4,5 @@
 void wldcore_opcode_clear_saved_bit(void) {
     wldcore_set_bit_value(
         g_main_secondary_saved_data_bits, g_wldcore_active_saved_record.instruction.bytes.operand_0, 0);
-    g_wldcore_active_saved_record.state_flags |= 4;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

@@ -22,30 +22,30 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     s32 i;
 
     index = level->main_window;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
     index = level->side_window;
-    g_wldcore_window_records[index].sequence = 4;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    level->entries[0] = 0;
+    level->entries[0] = WLDCORE_BAR_MENU_ROW_RUMORS;
     level->entry_count = 1;
     if (world_script_get_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED) != 0) {
-        level->entries[1] = 1;
+        level->entries[1] = WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS;
         level->entry_count++;
     }
     if (wldcore_proposition_count_completed(g_wldcore_map_projection_state.marker.kind) != 0) {
-        level->entries[level->entry_count] = 2;
+        level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS;
         level->entry_count++;
     }
     if (g_main_save_proposition_count != wldcore_proposition_count_completed(-1)) {
-        level->entries[level->entry_count] = 3;
+        level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_PROPOSITIONS;
         level->entry_count++;
     }
-    level->entries[level->entry_count] = 4;
+    level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_LEAVE;
     level->entry_count++;
     index = level->frame_render;
     bounds.position.x = 0;
@@ -54,7 +54,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     bounds.dimensions.y = level->entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
-    g_wldcore_window_render_records[index].flags |= 0x100;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;
@@ -65,12 +65,12 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
         point.y += 0x10;
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
-    cursor = &g_wldcore_menu_cursor_states[1];
+    cursor = &g_wldcore_menu_cursor_states[WLDCORE_CURSOR_SLOT_BAR_MENU];
     if (level->entry_count < cursor->selected_index + 1) {
         cursor->selected_index = 0;
     }
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry = cursor->selected_index;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.mode = 0;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
     render = &g_wldcore_window_render_records[index];
     g_wldcore_window_records[level->main_window].position.x = g_wldcore_window_render_records[index].base.x + 6;
     g_wldcore_window_records[level->main_window].position.y

@@ -9,7 +9,7 @@ void open_system_run_ending_cutscene(void) {
     u32* otag_1;
 
     open_movie_init_and_play_end();
-    if ((g_open_system_runtime_flags & 1) != 0) {
+    if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0) {
         otag_0 = g_open_gfx_otags[0];
         otag_1 = g_open_gfx_otags[1];
         do {
@@ -31,7 +31,7 @@ void open_system_run_ending_cutscene(void) {
             current_otag = (u32*)((g_active_graphics_buffer_index ^ 1) * OPEN_OTAG_BUFFER_BYTES + (u32)otag_1);
             DrawOTag(current_otag - 1);
             main_noop_800449ec();
-        } while ((g_open_system_runtime_flags & 1) != 0);
+        } while ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0);
     }
 
     open_gfx_restore_frame_vram_page();

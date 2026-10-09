@@ -11,15 +11,15 @@ void wldcore_list_handle_story_events_input(wldcore_menu_panel_level_t* level) {
         g_main_system_flags ^= 4;
         g_wldcore_menu_stack_depth--;
         if (level->result != 0) {
-            wldcore_list_store_cursor_state(0xA);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_STORY_EVENTS);
             wldcore_menu_push_story_event_text_level(
                 g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
             return;
         }
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                             .list_window.content_render]
-            .flags |= 0x100;
-        wldcore_list_clear_cursor_state(0xA);
+            .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_STORY_EVENTS);
         wldcore_menu_dispatch_resume_handler();
         return;
     }

@@ -7,7 +7,7 @@
  * the x/y/w/h halfword copies exactly as the target does.  Per-block locals
  * give block 2 its own a2/a1/a0/v1 registers. */
 void open_gfx_update_fade_overlay(u32* ot) {
-    if (g_open_gfx_overlay_fade.flags & 1) {
+    if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_OUT) {
         s32 duration = g_open_gfx_overlay_fade.duration;
         s32 frame = g_open_gfx_overlay_fade.frame;
         g_open_gfx_overlay_fade.level = 0xff - (0x100 / duration) * frame;
@@ -15,14 +15,14 @@ void open_gfx_update_fade_overlay(u32* ot) {
             g_open_gfx_overlay_fade.level = 0;
         }
         if (frame == 1) {
-            g_open_system_runtime_flags &= ~0x40;
+            g_open_system_runtime_flags &= ~OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
         }
         g_open_gfx_overlay_fade.frame = frame + 1;
         if (duration < frame + 1) {
-            g_open_gfx_overlay_fade.flags &= ~5;
+            g_open_gfx_overlay_fade.flags &= ~(OPEN_OVERLAY_FADE_OUT | OPEN_OVERLAY_FADE_ACTIVE);
         }
     }
-    if (g_open_gfx_overlay_fade.flags & 2) {
+    if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_IN) {
         s32 duration = g_open_gfx_overlay_fade.duration;
         s32 frame = g_open_gfx_overlay_fade.frame;
         g_open_gfx_overlay_fade.level = (0x100 / duration) * frame;
@@ -30,11 +30,11 @@ void open_gfx_update_fade_overlay(u32* ot) {
             g_open_gfx_overlay_fade.level = 0xff;
         }
         if (frame == duration - 1) {
-            g_open_system_runtime_flags |= 0x40;
+            g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
         }
         g_open_gfx_overlay_fade.frame = frame + 1;
         if (duration < frame + 1) {
-            g_open_gfx_overlay_fade.flags &= ~6;
+            g_open_gfx_overlay_fade.flags &= ~(OPEN_OVERLAY_FADE_IN | OPEN_OVERLAY_FADE_ACTIVE);
         }
     }
     if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {

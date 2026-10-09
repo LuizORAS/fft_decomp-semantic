@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Opens the list of active propositions at the current location as menu
  * level type 0xe.
@@ -30,15 +31,15 @@ void wldcore_list_open_completed_propositions(void) {
     previous = g_wldcore_menu_stack_depth - 1;
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
             .flags
-        & 0x10) {
+        & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.first_window].flags
-            &= ~0x10;
+            &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.second_window].flags
-            &= ~0x10;
+            &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
-            .flags &= ~0x10;
+            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
-            .flags |= 0x100;
+            .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     }
     if (world_thread_is_running(0xE) == 0) {
         world_thread_start(0xE, world_text_message_box_thread);
@@ -51,7 +52,8 @@ void wldcore_list_open_completed_propositions(void) {
         entry_value_base = 0xD000;
         total = loaded_count;
         do {
-            if ((g_main_active_propositions[i].flags & 4) && g_main_active_propositions[i].location == *location) {
+            if ((g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RETURNED)
+                && g_main_active_propositions[i].location == *location) {
                 g_wldcore_list_entry_values[count] = g_main_active_propositions[i].proposition_id + entry_value_base;
                 g_wldcore_list_row_flags[count] = 0;
                 g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entries[count] = i;
@@ -71,7 +73,7 @@ void wldcore_list_open_completed_propositions(void) {
         origin.x = 0x48;
         dimensions.y = i;
         origin.y = 0x50;
-        wldcore_list_clamp_cursor_state(4, count, i);
+        wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS, count, i);
         wldcore_window_start_panel_render_thread(0xC,
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
             &origin);
@@ -81,7 +83,7 @@ void wldcore_list_open_completed_propositions(void) {
         return;
     }
     g_wldcore_menu_ordering_table_offset = 9;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS;
     g_wldcore_menu_stack_depth++;
 }

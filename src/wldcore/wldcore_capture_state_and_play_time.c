@@ -15,7 +15,7 @@ void wldcore_capture_state_and_play_time(void) {
     s32 seconds;
 
     g_wldcore_context_value_display_position = g_wldcore_saved_context_value_display_position;
-    g_wldcore_context_value_display_mode = 2;
+    g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_PLAY_TIME;
     /* The target stores the whole word (sw), not the u16 the sorts read. */
     *(s32*)&g_wldcore_hud_ot_priority = 1;
     flags = g_main_system_flags;

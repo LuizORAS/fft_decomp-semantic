@@ -12,7 +12,7 @@ void wldcore_opcode_stop_pending_music(void) {
     track = *music;
     if (track != 0) {
         state = &g_wldcore_audio_queue.music;
-        state->flags &= ~1;
+        state->flags &= ~WLDCORE_AUDIO_MUSIC_PLAYING;
         main_sound_stop_current_music();
         main_sound_unload_scenario_mus((s16)*music >> 8);
         /* Indexed one word above the table wldcore_sound_change_scenario_music fills. */
@@ -21,5 +21,5 @@ void wldcore_opcode_stop_pending_music(void) {
         g_wldcore_audio_queue.current_slot = 0;
         *music = 0;
     }
-    g_wldcore_active_saved_record.state_flags |= 4;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

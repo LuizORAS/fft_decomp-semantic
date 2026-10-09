@@ -17,7 +17,7 @@ void wldcore_window_clear_slot_state(s32* param) {
     g_wldcore_window_render_records[param[2]].palette = 0;
     g_wldcore_window_records[second].palette = 0;
     g_wldcore_window_records[first].palette = 0;
-    g_wldcore_window_records[param[0]].sequence = 2;
+    g_wldcore_window_records[param[0]].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     index = param[0];
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;

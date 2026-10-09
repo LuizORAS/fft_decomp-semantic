@@ -24,7 +24,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     party_data_t* unit;
 
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
-    messages = wldcore_proposition_get_data_pointer(0xE);
+    messages = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
     count = 0;
 
     if (g_wldcore_selected_proposition_row[0].fields.preferred_job != 0) {

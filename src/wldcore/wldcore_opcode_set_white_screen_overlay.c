@@ -29,8 +29,8 @@ void wldcore_opcode_set_white_screen_overlay(void) {
         g_wldcore_screen_fade_state.boxes[0].g = 0xff;
         g_wldcore_screen_fade_state.boxes[0].b = 0xff;
         g_main_system_flags &= ~8;
-        *state = (*state & ~3) | 8;
-        g_wldcore_active_saved_record.state_flags |= 0x100;
+        *state = (*state & ~(WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_OUT)) | WLDCORE_SCREEN_FADE_BOX_VISIBLE;
+        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_WHITE_OVERLAY;
         world_menu_set_brightness(0, 0, 0);
     } else {
         u32* state = (u32*)&g_wldcore_screen_fade_state;
@@ -39,10 +39,10 @@ void wldcore_opcode_set_white_screen_overlay(void) {
         g_wldcore_screen_fade_state.boxes[0].g = 0;
         g_wldcore_screen_fade_state.boxes[0].b = 0;
         g_main_system_flags &= ~8;
-        *state &= ~0xb;
-        g_wldcore_active_saved_record.state_flags &= ~0x100;
+        *state &= ~(WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_OUT | WLDCORE_SCREEN_FADE_BOX_VISIBLE);
+        g_wldcore_active_saved_record.state_flags &= ~WLDCORE_OPCODE_STATE_WHITE_OVERLAY;
         world_menu_set_brightness(0x80, 0x80, 0x80);
     }
     flags = &g_wldcore_active_saved_record.state_flags;
-    *flags = *flags | 0xc;
+    *flags = *flags | (WLDCORE_OPCODE_STATE_FETCH | WLDCORE_OPCODE_STATE_YIELD);
 }

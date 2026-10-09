@@ -10,5 +10,5 @@ void wldcore_opcode_load_background_set(void) {
         wldcore_gfx_load_background_set(value);
         wldcore_wait_for_file_load();
     }
-    g_wldcore_active_saved_record.state_flags |= 4;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

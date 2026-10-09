@@ -25,12 +25,12 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
     s32 depth;
 
     switch (level->phase) {
-    case 1:
-        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & 0x100)) {
-            level->phase = 2;
+    case WLDCORE_DETAIL_PHASE_LOAD:
+        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+            level->phase = WLDCORE_DETAIL_PHASE_BUILD;
         }
         break;
-    case 2:
+    case WLDCORE_DETAIL_PHASE_BUILD:
         if (g_main_file_still_loading != 0) {
             break;
         }
@@ -44,41 +44,47 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         bounds.dimensions.y = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
         g_wldcore_window_render_records[render].priority = 0xA;
         base = &g_wldcore_window_render_records[render].base;
         base->x = -0x74;
         base->y = -0x22;
-        g_wldcore_window_render_records[render].flags = (g_wldcore_window_render_records[render].flags & ~0x10) | 0x100;
+        g_wldcore_window_render_records[render].flags
+            = (g_wldcore_window_render_records[render].flags & ~WLDCORE_DISPLAY_OBJECT_HIDDEN)
+            | WLDCORE_DISPLAY_OBJECT_POP_IN;
         g_wldcore_scrollable_text_window.extra_render_index = render;
         g_wldcore_scrollable_text_window.extra_base = *base;
         g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
-    case 3:
-        if (!(g_wldcore_window_render_records[level->render_index].flags & 0x100)) {
-            level->phase = 0;
+    case WLDCORE_DETAIL_PHASE_POP_IN:
+        if (!(g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+            level->phase = WLDCORE_DETAIL_PHASE_SHOWN;
         }
         break;
     default:
         index = &g_wldcore_scrollable_text_window.render_record_index;
-        if (g_wldcore_window_render_records[*index].flags & 0x100) {
+        if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
             break;
         }
         if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
             break;
         }
         depth = g_wldcore_menu_stack_depth;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags ^= 0x10;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags ^= 0x10;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
+            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
+            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-            ^= 0x10;
+            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-            |= 0x100;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags ^= 0x10;
+            |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
+            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count--;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags ^= 0x10;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
+            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_menu_stack_depth = depth - 1;
         wldcore_list_open_unexplored_lands();
         break;

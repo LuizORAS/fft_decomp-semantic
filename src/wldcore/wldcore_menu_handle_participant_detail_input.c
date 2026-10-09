@@ -43,16 +43,16 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         return;
     }
     if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {
-        g_wldcore_window_records[level->left_window].sequence = 0x66;
-        g_wldcore_window_records[level->right_window].sequence = 0x68;
+        g_wldcore_window_records[level->left_window].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
+        g_wldcore_window_records[level->right_window].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
         g_wldcore_window_records[level->left_window].frame_index
             = g_wldcore_window_records[level->left_window].anim_counter
             = g_wldcore_window_records[level->right_window].frame_index
             = g_wldcore_window_records[level->right_window].anim_counter = 0;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_R1) != 0
-        && g_wldcore_window_records[level->left_window].sequence != 0x67) {
-        g_wldcore_window_records[level->right_window].sequence = 0x69;
+        && g_wldcore_window_records[level->left_window].sequence != WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS) {
+        g_wldcore_window_records[level->right_window].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS;
         g_wldcore_window_records[level->right_window].frame_index
             = g_wldcore_window_records[level->right_window].anim_counter = 0;
         count = g_main_active_propositions[level->proposition].participant_count;
@@ -71,10 +71,10 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         direction = 1;
     } else {
         if (wldcore_input_check_repeating_directional(PSX_PAD_L1) == 0
-            || g_wldcore_window_records[level->right_window].sequence == 0x69) {
+            || g_wldcore_window_records[level->right_window].sequence == WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS) {
             return;
         }
-        g_wldcore_window_records[level->left_window].sequence = 0x67;
+        g_wldcore_window_records[level->left_window].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS;
         g_wldcore_window_records[level->left_window].frame_index
             = g_wldcore_window_records[level->left_window].anim_counter = 0;
         if (g_main_active_propositions[level->proposition].participant_count == 1) {

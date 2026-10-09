@@ -22,7 +22,9 @@ void open_menu_init_render_record_fields(s32 record_index, open_menu_packed_half
     CVECTOR* color;
 
     g_open_gfx_render_records_56[record_index].flags
-        = (g_open_gfx_render_records_56[record_index].flags & ~0x1c) | flags;
+        = (g_open_gfx_render_records_56[record_index].flags
+              & ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+        | flags;
     /* The retail code materialises each field base from the tail before
      * adding the record stride. */
     tail_base = (open_menu_render_record_tail_pair_t*)&g_open_gfx_render_records_56[0].tail;

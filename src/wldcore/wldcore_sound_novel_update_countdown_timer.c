@@ -18,7 +18,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
         g_wldcore_sound_novel_countdown_frames = 0;
         g_wldcore_sound_novel_countdown_frames_reset = 0;
         g_wldcore_active_saved_record.section = g_wldcore_sound_novel_countdown_section;
-        g_wldcore_active_saved_record.state_flags |= 2;
+        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
         return 1;
     }
 
@@ -26,7 +26,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
         elapsed = g_wldcore_sound_novel_countdown_elapsed + 1;
         g_wldcore_sound_novel_countdown_elapsed = elapsed;
         remaining = g_wldcore_sound_novel_countdown_frames - elapsed;
-        if (g_wldcore_context_value_display_mode == 2) {
+        if (g_wldcore_context_value_display_mode == WLDCORE_VALUE_DISPLAY_PLAY_TIME) {
             days = remaining / 216000;
             hours = remaining / 3600;
             g_wldcore_displayed_numeric_value_secondary = hours - days * 60;

@@ -36,11 +36,11 @@ void wldcore_map_project_and_cull_tiles(void) {
         g_wldcore_map_projected_tiles[i].screen_x = projected.vx;
         g_wldcore_map_projected_tiles[i].screen_y = projected.vy;
         flags = entry->flags;
-        if (!(flags & 0x200)) {
+        if (!(flags & WLDCORE_MAP_TILE_EMPTY)) {
             if ((u32)(projected.vx + 0xa0) >= 0x121 || (u32)(projected.vy + 0x98) >= 0x111) {
-                updated = flags | 0x100;
+                updated = flags | WLDCORE_MAP_TILE_OFF_SCREEN;
             } else {
-                updated = flags & ~0x100;
+                updated = flags & ~WLDCORE_MAP_TILE_OFF_SCREEN;
             }
             entry->flags = updated;
         }

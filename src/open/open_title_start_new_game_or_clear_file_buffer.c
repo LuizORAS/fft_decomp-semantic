@@ -38,6 +38,6 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     position[0] = -4;
     position[1] = -16;
     g_open_controller_stream_start[controller].stream_start = 0;
-    g_open_controller_handler_indices[controller] = 12;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TITLE_EXIT;
     g_open_current_controller_index = controller + 1;
 }

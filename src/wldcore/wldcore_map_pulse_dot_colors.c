@@ -42,7 +42,7 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].flags & 0x10)) {
+        if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
             color = g_wldcore_map_dots[i].rgb;
             if (g_wldcore_map_dots[i].palette != 0) {
                 color[0] = bright;

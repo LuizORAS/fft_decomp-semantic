@@ -13,7 +13,7 @@ void wldcore_gfx_copy_color_with_tint(CVECTOR* source, CVECTOR* out) {
     s32 green;
     s32 blue;
 
-    if (g_wldcore_screen_fade_state.flags[0] & 1) {
+    if (g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_RUNNING) {
         red = ((source->r << 16) / 128 * g_wldcore_screen_brightness_rgb[0]) >> 16;
         green = ((source->g << 16) / 128 * g_wldcore_screen_brightness_rgb[1]) >> 16;
         blue = ((source->b << 16) / 128 * g_wldcore_screen_brightness_rgb[2]) >> 16;

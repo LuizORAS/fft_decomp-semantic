@@ -16,7 +16,7 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     s32 j;
     s32 frames;
 
-    if (!(g_wldcore_map_path_animation.flags & 1)) {
+    if (!(g_wldcore_map_path_animation.flags & WLDCORE_SLIDESHOW_RUNNING)) {
         return;
     }
     SetPolyFT4(&poly);
@@ -36,7 +36,7 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
     if (g_wldcore_map_path_animation.page_index < 0
         || g_wldcore_map_path_animation.page_index == g_wldcore_map_path_animation.page_count) {
-        g_wldcore_map_path_animation.flags &= ~1;
+        g_wldcore_map_path_animation.flags &= ~WLDCORE_SLIDESHOW_RUNNING;
         return;
     }
     for (i = 0; i < g_wldcore_map_path_animation.page_index + 1; i++) {

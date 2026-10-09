@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Opens an eight-row panel list (entry values 0xc010 + row) whose rows are
  * flagged 8 when bit 32 + row of 0x8004c6bc is set, shown at (0x54, 0x50)
@@ -30,11 +31,11 @@ void wldcore_list_open_tutorial_mask_1_entries(void) {
     origin.x = 0x54;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(0x13, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES, count, i);
     wldcore_window_start_panel_render_thread(
         0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     record_index = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_menu_stack_records_next[record_index].panel.result = 0;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES;

@@ -24,5 +24,5 @@ void wldcore_opcode_start_text_thread_and_push_history(void) {
     g_wldcore_active_saved_record.text_history_0 = history_1;
     g_wldcore_active_saved_record.text_history_1 = history_2;
     g_wldcore_active_saved_record.text_history_2 = history_3;
-    g_wldcore_active_saved_record.state_flags = flags | 4;
+    g_wldcore_active_saved_record.state_flags = flags | WLDCORE_OPCODE_STATE_FETCH;
 }

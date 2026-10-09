@@ -16,9 +16,9 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
 
         map_window_index = g_wldcore_map_window_index;
         menu_window_index = g_wldcore_menu_stack_types[0];
-        g_wldcore_window_records[map_window_index].flags &= ~0x10;
+        g_wldcore_window_records[map_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_main_system_flags = g_wldcore_saved_system_flags | 2;
-        g_wldcore_window_records[menu_window_index].flags &= ~0x10;
+        g_wldcore_window_records[menu_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         return;
     }
 
@@ -63,9 +63,9 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
         menu_window_index = g_wldcore_menu_stack_types[0];
         map_window_index = g_wldcore_map_window_index;
         g_wldcore_saved_system_flags = saved_system_flags;
-        g_wldcore_window_records[map_window_index].flags |= 0x10;
+        g_wldcore_window_records[map_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_main_system_flags = saved_system_flags | 0x3C20;
-        g_wldcore_window_records[menu_window_index].flags |= 0x10;
+        g_wldcore_window_records[menu_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         wldcore_dispatch_display_object_list(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index],
             g_wldcore_window_render_object_queue, g_wldcore_window_render_object_count);
     }

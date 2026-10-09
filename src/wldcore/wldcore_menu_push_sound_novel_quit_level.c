@@ -22,14 +22,14 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].save_confirm.cursor_window = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].save_confirm.second_window = index;
-    g_wldcore_window_records[index].sequence = 4;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -60,7 +60,7 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     fade->boxes[0].r = 0;
     fade->boxes[0].g = 0;
     fade->boxes[0].b = 0;
-    fade->flags[0] |= 8;
+    fade->flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
     g_wldcore_menu_stack_records_next[depth].save_confirm.choice = 0;
     g_wldcore_menu_stack_records_next[depth].save_confirm._unknown_18 = 0;
     g_wldcore_menu_stack_records_next[depth].save_confirm.fade_in = 0;

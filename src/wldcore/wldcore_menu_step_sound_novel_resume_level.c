@@ -17,7 +17,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
     s32 toggle;
     s32 buttons;
 
-    if (g_wldcore_window_render_records[level->message_render].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->message_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (level->dissolve_step != 0) {
@@ -54,10 +54,10 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         return;
     }
     if (buttons & PSX_PAD_CIRCLE) {
-        g_wldcore_window_records[level->cursor_window].sequence = 1;
+        g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         g_wldcore_window_records[level->cursor_window].frame_index
             = g_wldcore_window_records[level->cursor_window].anim_counter = 0;
-        wldcore_fade_start_screen(2, 0x10);
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
         g_main_system_flags |= 4;
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         return;

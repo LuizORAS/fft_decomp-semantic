@@ -23,7 +23,7 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 file_slot) {
         = wldcore_map_build_location_menu_entries(
             *selected, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries);
     wldcore_menu_push_location_menu_level(*selected);
-    wldcore_fade_start_screen(4, 0x10);
+    wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
     wldcore_clear_screen_and_set_map_clip_rect(0);
     i = 0x77FF;
     clear = &g_wldcore_scratch_buffer[0x77FF];

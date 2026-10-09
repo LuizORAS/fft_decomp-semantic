@@ -14,7 +14,7 @@ void open_movie_present_frame(void) {
     PutDispEnv(&g_open_gfx_screen_environments[display_index].disp);
 
     flags = g_open_system_runtime_flags;
-    if ((flags & 2) == 0) {
+    if ((flags & OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING) == 0) {
         image_rect.h = 240;
         image_rect.x = 0;
         if ((flags & OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN) != 0) {
@@ -29,9 +29,9 @@ void open_movie_present_frame(void) {
         }
 
         flags = g_open_system_runtime_flags;
-        if ((flags & 0x20000) != 0) {
+        if ((flags & OPEN_SYSTEM_RUNTIME_FLAG_CLEAR_FRAME) != 0) {
             ClearImage(&image_rect, 0, 0, 0);
-        } else if ((flags & 0x40000) != 0) {
+        } else if ((flags & OPEN_SYSTEM_RUNTIME_FLAG_FRAME_FROM_VRAM) != 0) {
             move_rect.x = 512;
             move_rect.y = 256;
             move_rect.w = 512;

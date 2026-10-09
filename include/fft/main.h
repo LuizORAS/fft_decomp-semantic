@@ -331,7 +331,7 @@ typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_opcode_inst
  * 0x80074a34 stores the current world-map location at +0x04; 0x80074c40
  * filters completed records by that byte. */
 typedef struct wldcore_proposition_progress {
-    u8 flags;
+    u8 flags;          /* 0x00; wldcore_proposition_progress_flag_e */
     u8 proposition_id; /* 0x01; text 0xd000 | id names it */
     u8 elapsed_days;
     u8 assigned_days;
@@ -354,7 +354,7 @@ typedef struct wldcore_saved_record {
         wldcore_opcode_instruction_bytes_t bytes;
     } instruction; /* 0x08 */
     /* 0x0c-0x37 mirror the live sound-novel state at 0x800d484c. */
-    u16 state_flags; /* 0x0c */
+    u16 state_flags; /* 0x0c; wldcore_opcode_state_flag_e */
     s16 section;     /* 0x0e */
     s16 word_index;  /* 0x10; instruction word index in the section; cleared by wldcore_sound_novel_restore_saved_state
                       */
@@ -395,7 +395,7 @@ extern s32 g_main_saved_weather_variable;
 extern u32 g_main_proposition_last_attempt_date_bits[27];
 extern u32 g_main_treasure_acquisition_date_bits[14];
 extern u32 g_main_land_discovery_date_bits[5];
-extern u8 g_main_proposition_states[96];
+extern u8 g_main_proposition_states[96]; /* wldcore_proposition_state_e */
 extern u8 g_main_save_slot_buffer[];
 extern u32 g_main_saved_data_bits[40];
 extern wldcore_word_pair_t g_main_saved_list_cursor_state;

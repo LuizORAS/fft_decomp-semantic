@@ -33,7 +33,7 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
         level->confirmed = 0;
         /* Scheduling barrier: keeps the store ahead of the cursor argument. */
         __asm__ volatile("");
-        wldcore_list_clear_cursor_state(5);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);
         g_main_system_flags |= 4;
         world_thread_set_parameters(0xC, 0, 0, 1);
     } else if (buttons & PSX_PAD_SELECT) {
@@ -48,7 +48,7 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
             level->confirmed = 1;
             /* Scheduling barrier: keeps the store ahead of the cursor argument. */
             __asm__ volatile("");
-            wldcore_list_store_cursor_state(5);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);
             g_main_system_flags |= 4;
             world_thread_set_parameters(0xC, 0, 0, 1);
         }

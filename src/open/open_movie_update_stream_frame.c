@@ -12,7 +12,7 @@ void open_movie_update_stream_frame(void) {
     open_movie_ring_status_t status;
     s32 words;
 
-    if ((g_open_system_runtime_flags & 2) == 0) {
+    if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING) == 0) {
         return;
     }
 
@@ -30,10 +30,10 @@ void open_movie_update_stream_frame(void) {
     open_movie_decode_next_frame(&g_open_movie_mdec_stream_state);
     open_movie_wait_for_mdec_output(&g_open_movie_mdec_stream_state, 0);
 
-    if (g_open_movie_stream_status == 1) {
+    if (g_open_movie_stream_status == OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO) {
         open_movie_stop_stream(1);
     }
-    if (g_open_movie_stream_status == 2) {
+    if (g_open_movie_stream_status == OPEN_MOVIE_STREAM_STOP) {
         open_movie_stop_stream(0);
     }
 }

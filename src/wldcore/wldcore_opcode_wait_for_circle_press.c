@@ -9,12 +9,12 @@ void wldcore_opcode_wait_for_circle_press(void) {
         u16* state_flags;
 
         state_flags = &g_wldcore_active_saved_record.state_flags;
-        *state_flags |= 4;
+        *state_flags |= WLDCORE_OPCODE_STATE_FETCH;
     }
     {
         u16* state_flags;
 
         state_flags = &g_wldcore_active_saved_record.state_flags;
-        *state_flags |= 8;
+        *state_flags |= WLDCORE_OPCODE_STATE_YIELD;
     }
 }

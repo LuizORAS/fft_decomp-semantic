@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Opens a panel list of the 64 entries whose location mask (word table at
  * g_wldcore_rumor_location_masks) includes the current location and whose script variable
@@ -49,7 +50,7 @@ void wldcore_list_open_rumors(void) {
         origin.x = 0x4C;
         dimensions.y = i;
         origin.y = 0x50;
-        wldcore_list_clamp_cursor_state(2, count, i);
+        wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS, count, i);
         wldcore_window_start_panel_render_thread(
             0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     } else {
@@ -63,7 +64,7 @@ void wldcore_list_open_rumors(void) {
                   .palette = 0;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair_render.first_window]
-            .sequence = 2;
+            .sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair_render.first_window]
             .frame_index = g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
@@ -74,7 +75,7 @@ void wldcore_list_open_rumors(void) {
         return;
     }
     g_wldcore_menu_ordering_table_offset = 9;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_RUMORS;
     g_wldcore_menu_stack_depth = record_index + 1;

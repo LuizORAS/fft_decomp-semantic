@@ -33,7 +33,7 @@ typedef struct wldcore_menu_participant_list_level {
 void wldcore_menu_handle_participant_list_input(wldcore_menu_participant_list_level_t* level) {
     s32 count;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if ((g_main_system_flags & 4) && world_thread_is_running(0xE) == 0) {

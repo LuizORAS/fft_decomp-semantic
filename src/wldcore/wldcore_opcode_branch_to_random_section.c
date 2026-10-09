@@ -16,5 +16,5 @@ void wldcore_opcode_branch_to_random_section(void) {
         value = g_wldcore_active_saved_record.instruction.bytes.operand_2;
     }
     g_wldcore_active_saved_record.section = value;
-    g_wldcore_active_saved_record.state_flags |= 2;
+    g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
 }

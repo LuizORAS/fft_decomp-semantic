@@ -23,7 +23,7 @@ typedef struct wldcore_menu_proposition_confirm_level {
 void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_confirm_level_t* level) {
     s32 choice;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (level->confirmed != 0) {
@@ -65,8 +65,8 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
     }
     world_thread_set_parameters(0xE, 0x19, 0xB81E, 0);
     level->confirmed = 1;
-    g_main_active_propositions[level->proposition].flags |= 2;
-    g_wldcore_window_records[level->window].flags |= 0x10;
-    g_wldcore_window_records[level->second_window].flags |= 0x10;
-    g_wldcore_window_render_records[level->render_index].flags |= 0x10;
+    g_main_active_propositions[level->proposition].flags |= WLDCORE_PROPOSITION_PROGRESS_RECALLED;
+    g_wldcore_window_records[level->window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[level->second_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

@@ -10,16 +10,16 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
     s32 depth;
 
     wldcore_file_seek_to_battle_bin();
-    if (mode == 2) {
+    if (mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
         g_main_system_flags |= 0x08000000;
-        wldcore_fade_start_screen(2, 0x20);
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x20);
     } else {
         rect.x = 0x100;
         rect.y = 0;
         rect.w = 0x80;
         rect.h = 0x100;
         g_main_system_flags |= 0x3A32;
-        g_wldcore_map_projection_state.marker.flags |= 0x10;
+        g_wldcore_map_projection_state.marker.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         MoveImage(&rect, 0x200, 0x100);
         DrawSync(0);
         rect.x = 0x100;
@@ -45,15 +45,17 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
         g_wldcore_menu_indicator_sprite.r = 0x80;
         g_wldcore_menu_indicator_sprite.g = 0x80;
         g_wldcore_menu_indicator_sprite.b = 0x80;
-        wldcore_sound_enqueue_audio_command(2, 0x10);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.frame = 0;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.anim_step = 0;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.drift_direction
             = (rand() * 4) >> 15;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.spin_direction
             = (rand() * 2) >> 15;
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.phase = 0;
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.fade_phase = 0;
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.phase
+            = WLDCORE_EVENT_TRANSITION_PHASE_SPIN_IN;
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.fade_phase
+            = WLDCORE_EVENT_TRANSITION_FADE_NONE;
     }
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].event_transition.mode = mode;

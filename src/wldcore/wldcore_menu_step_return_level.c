@@ -40,7 +40,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     g_wldcore_menu_stack_depth -= 1;
     if (flags & 0x100) {
         g_main_system_flags = cleared ^ 2;
-        wldcore_menu_push_screen_transition_level(0x1C, 0, 0);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_BRAVE_STORY, 0, 0);
         return;
     }
     if (flags & 0x4000) {
@@ -54,7 +54,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     }
     if (flags & 0x100000) {
         g_main_system_flags = cleared ^ 2;
-        wldcore_menu_push_screen_transition_level(0x2B, 0, 1);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES, 0, 1);
         return;
     }
     if (flags & 0x800000) {

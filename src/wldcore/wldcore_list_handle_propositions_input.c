@@ -13,12 +13,12 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
         wldcore_list_propositions_close_level(level);
         if (level->result != 0) {
-            wldcore_list_store_cursor_state(3);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS);
             wldcore_proposition_push_detail_level(
                 g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
             return;
         }
-        wldcore_list_clear_cursor_state(3);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS);
         wldcore_menu_dispatch_resume_handler();
         return;
     }
@@ -47,15 +47,15 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         if (world_script_get_variable(
                 (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF)
                 + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
-            & 8) {
+            & WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.first_window].flags
-                |= 0x10;
+                |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.second_window]
-                .flags |= 0x10;
+                .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2]
                                                 .window_pair_render.render_index]
-                .flags |= 0x10;
+                .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             world_thread_set_parameters(0xE, 0x19, 0xB85C, 0);
             level->result = 2;
             return;

@@ -28,20 +28,21 @@ void wldcore_proposition_determine_success(void) {
     s32 i;
 
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
-    job_table_a = (const u8*)wldcore_proposition_get_data_pointer(3);
-    job_table_b = (const u8*)wldcore_proposition_get_data_pointer(4);
-    tier_table_a = (const u8*)wldcore_proposition_get_data_pointer(5);
+    job_table_a = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_CATEGORY_JOB_SCORES);
+    job_table_b = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES);
+    tier_table_a = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_BRAVERY_LEVEL_SCORES);
     total = 0;
-    tier_table_b = (const u8*)wldcore_proposition_get_data_pointer(6);
+    tier_table_b = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_FAITH_SCORES);
 
-    if (g_main_active_propositions[g_wldcore_job_selection.proposition_index].flags & 2) {
+    if (g_main_active_propositions[g_wldcore_job_selection.proposition_index].flags
+        & WLDCORE_PROPOSITION_PROGRESS_RECALLED) {
         for (i = 0; i < participant_count; i++) {
             g_wldcore_job_selection.rows[2][i] = 0;
             g_wldcore_job_selection.rows[0][i] = 0;
         }
         g_wldcore_job_selection.gate = 1;
-        g_wldcore_job_selection.result = 2;
-        g_wldcore_job_selection.reward_type = 0;
+        g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_BAD_FAILURE;
+        g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
         return;
     }
 
@@ -87,14 +88,14 @@ void wldcore_proposition_determine_success(void) {
         g_wldcore_job_selection.rows[1][i] = score;
     }
 
-    g_wldcore_job_selection.result = 0;
+    g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_SUCCESS;
     if (total < 0x63) {
-        g_wldcore_job_selection.result = 1;
+        g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_FAILURE;
     }
     if (total < 0x3B) {
-        g_wldcore_job_selection.result = 2;
+        g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_BAD_FAILURE;
     }
-    if (g_wldcore_job_selection.result == 0) {
+    if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
     if (g_wldcore_selected_proposition_row[0].fields.preferred_job == 0) {
@@ -107,7 +108,7 @@ void wldcore_proposition_determine_success(void) {
         if (g_wldcore_selected_proposition_row[0].fields.preferred_job - 1
             == wldcore_map_job_id_to_category_index(unit->job_id)) {
             if (((rand() * 100) >> 15) < 0x3D) {
-                g_wldcore_job_selection.result = 0;
+                g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_SUCCESS;
                 return;
             }
         }

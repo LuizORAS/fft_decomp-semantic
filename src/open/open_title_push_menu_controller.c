@@ -75,24 +75,24 @@ void open_title_push_menu_controller(s32 argument) {
     g_open_gfx_render_records_36[record].ot_layer = 4;
     g_open_gfx_render_records_36[record].frame_timer = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
-    g_open_gfx_render_records_36[record].flags |= OPEN_RENDER_RECORD_VISIBLE;
+    g_open_gfx_render_records_36[record].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     position = (wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x;
     position->x = 0x60;
     position->y = 0x58;
 
-    if (g_open_system_runtime_flags & 0x40) {
+    if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED) {
         open_gfx_start_overlay_fade_out(0x20);
     }
 
     controller = g_open_current_controller_index;
-    g_open_title_menu_states[controller].cursor = 0;
+    g_open_title_menu_states[controller].cursor = OPEN_TITLE_MENU_NEW_GAME;
     g_open_title_menu_states[controller].idle_timer = 0;
     g_open_title_menu_states[controller].cd_end_position = argument;
-    g_open_title_menu_states[controller].state = 0;
+    g_open_title_menu_states[controller].state = OPEN_TITLE_STATE_MENU;
     g_open_title_menu_states[controller].exiting = 0;
     record = g_open_title_menu_states[controller].records_36[g_open_title_menu_states[controller].cursor + 1];
     g_open_current_controller_index = controller + 1;
-    g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
+    g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
     field = &g_open_controller_handler_indices[controller];
-    *field = 2;
+    *field = OPEN_CONTROLLER_TITLE_MENU;
 }

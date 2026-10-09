@@ -25,7 +25,7 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
         }
         level->pending_sound = 0;
     }
-    if (g_wldcore_map_path_animation.flags & 1) {
+    if (g_wldcore_map_path_animation.flags & WLDCORE_SLIDESHOW_RUNNING) {
         if (level->erase == 0) {
             g_wldcore_map_path_animation.frame_timer++;
             if ((s16)g_wldcore_map_path_animation.frame_timer
@@ -56,6 +56,6 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
     g_wldcore_menu_stack_depth = depth - 1;
     window_index = g_wldcore_menu_stack_records_next[depth - 2].window_index;
     g_main_system_flags &= ~0x2000;
-    g_wldcore_window_records[window_index].flags &= ~0x10;
+    g_wldcore_window_records[window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     wldcore_menu_dispatch_resume_handler();
 }

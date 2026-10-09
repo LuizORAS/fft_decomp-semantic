@@ -28,7 +28,7 @@ void open_title_update_menu(open_title_controller_t* state) {
     }
 
     if (state->exiting != 0) {
-        if (g_open_system_runtime_flags & 4) {
+        if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) {
             state->exit_timer--;
             if (state->exit_timer == 3) {
                 CdControl(CdlPause, 0, 0);
@@ -46,14 +46,14 @@ void open_title_update_menu(open_title_controller_t* state) {
                 return;
             }
             state->exiting = 0;
-            g_open_system_runtime_flags ^= 4;
+            g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING;
             return;
         }
         state->exiting = 0;
         return;
     }
 
-    if (g_open_system_runtime_flags & 4) {
+    if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) {
         CdControlB(0x10, 0, loc);
         if (CdPosToInt(loc) >= state->cd_end_position) {
             open_sound_set_type_and_volume(0, 0x20);
@@ -63,7 +63,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         }
     }
 
-    if (state->state == 3) {
+    if (state->state == OPEN_TITLE_STATE_DEMO_MOVIE) {
         if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
             return;
         }
@@ -101,8 +101,8 @@ void open_title_update_menu(open_title_controller_t* state) {
         return;
     }
 
-    if (state->state == 2) {
-        state->state = 0;
+    if (state->state == OPEN_TITLE_STATE_SOUND_MENU) {
+        state->state = OPEN_TITLE_STATE_MENU;
         open_gfx_show_four_render_records((open_birthday_render_record_indices_t*)state);
         open_menu_push_sound_type_controller();
         return;
@@ -121,7 +121,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         open_gfx_init_screen_environments(1);
         cursor = state->cursor;
         switch (cursor) {
-        case 0:
+        case OPEN_TITLE_MENU_NEW_GAME:
             g_main_debug_display_enabled = 0;
             g_open_system_runtime_flags &= ~(OPEN_FLAG_WORLD_OVERLAY_LOADED | OPEN_FLAG_PARTY_CHOSEN);
             g_open_gfx_next_render_record_36 -= 6;
@@ -129,8 +129,8 @@ void open_title_update_menu(open_title_controller_t* state) {
             g_open_current_controller_index--;
             open_title_start_new_game_or_clear_file_buffer();
             return;
-        case 1:
-            g_open_system_runtime_flags |= 0x40;
+        case OPEN_TITLE_MENU_CONTINUE:
+            g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
             open_title_init_new_game_party(1, 1);
             DrawSync(0);
             VSync(0);
@@ -143,11 +143,11 @@ void open_title_update_menu(open_title_controller_t* state) {
                 g_open_gfx_render_record_pointer_count -= 6;
                 g_open_current_controller_index--;
                 SetDispMask(0);
-                g_open_system_runtime_flags |= 0x40;
+                g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
                 open_title_push_menu_controller(0);
                 return;
             }
-            g_open_system_runtime_flags ^= 1;
+            g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
             if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
                 || world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
                 g_open_system_result = cursor;
@@ -155,22 +155,22 @@ void open_title_update_menu(open_title_controller_t* state) {
             }
             g_open_system_result = 0;
             return;
-        case 2:
+        case OPEN_TITLE_MENU_TUTORIAL:
             open_title_init_new_game_party(0, 1);
             g_open_system_result = 2;
             g_open_gfx_next_render_record_36 -= 6;
             g_open_gfx_render_record_pointer_count -= 6;
             g_open_current_controller_index--;
             g_main_system_flags |= 0x80000;
-            g_open_system_runtime_flags ^= 1;
+            g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
             return;
         }
         return;
     }
 
     state->idle_timer++;
-    if (!(flags & 4) && state->idle_timer >= 0x259) {
-        state->state = 3;
+    if (!(flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) && state->idle_timer >= 0x259) {
+        state->state = OPEN_TITLE_STATE_DEMO_MOVIE;
         g_open_gfx_overlay_fade.ot_index = 2;
         open_gfx_start_overlay_fade_in(0x20);
         g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
@@ -183,15 +183,15 @@ void open_title_update_menu(open_title_controller_t* state) {
         state->exiting = 1;
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         switch (state->cursor) {
-        case 0:
-        case 1:
-        case 2:
+        case OPEN_TITLE_MENU_NEW_GAME:
+        case OPEN_TITLE_MENU_CONTINUE:
+        case OPEN_TITLE_MENU_TUTORIAL:
             g_open_gfx_overlay_fade.ot_index = 2;
             open_gfx_start_overlay_fade_in(0x20);
             g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
             return;
-        case 3:
-            state->state = 2;
+        case OPEN_TITLE_MENU_SOUND:
+            state->state = OPEN_TITLE_STATE_SOUND_MENU;
             return;
         }
         return;
@@ -202,9 +202,10 @@ void open_title_update_menu(open_title_controller_t* state) {
         g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 0;
         state->cursor--;
         if (state->cursor < 0) {
-            state->cursor = 3;
+            state->cursor = OPEN_TITLE_MENU_SOUND;
         }
-        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette
+            = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
     if (open_input_check_repeating_directional(PSX_PAD_DOWN) != 0
@@ -213,9 +214,10 @@ void open_title_update_menu(open_title_controller_t* state) {
         g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 0;
         state->cursor++;
         if (state->cursor >= 4) {
-            state->cursor = 0;
+            state->cursor = OPEN_TITLE_MENU_NEW_GAME;
         }
-        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = OPEN_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette
+            = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 }

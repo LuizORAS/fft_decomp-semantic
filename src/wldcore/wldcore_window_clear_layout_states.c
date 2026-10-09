@@ -9,6 +9,6 @@ void wldcore_window_clear_layout_states(s32* param) {
     g_wldcore_window_records[param[0]].palette = g_wldcore_window_records[param[1]].palette
         = g_wldcore_window_records[param[2]].palette = g_wldcore_window_records[param[3]].palette
         = g_wldcore_window_render_records[param[4]].palette = 0;
-    g_wldcore_window_records[param[0]].sequence = 2;
+    g_wldcore_window_records[param[0]].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[param[0]].frame_index = g_wldcore_window_records[param[0]].anim_counter = 0;
 }

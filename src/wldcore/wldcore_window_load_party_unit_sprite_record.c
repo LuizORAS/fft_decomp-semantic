@@ -24,5 +24,5 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     color->g = 0x80;
     color->b = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
-    g_wldcore_window_render_records[index].flags &= ~0x10;
+    g_wldcore_window_render_records[index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

@@ -21,24 +21,24 @@ void wldcore_menu_restore_level_on_world_entry(void) {
         } else {
             wldcore_menu_dispatch_pending_script_requests();
         }
-        wldcore_sound_enqueue_audio_command(1, 0x11B);
-        wldcore_sound_enqueue_audio_command(3, 4);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x11B);
+        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 4);
         return;
     }
     if (flags & 0x40000) {
         g_main_system_flags = flags ^ 0x40000;
         world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
-        wldcore_menu_push_screen_transition_level(0x1D, 0, 0);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_STORY_EVENTS, 0, 0);
     } else if (flags & 0x200000) {
         g_main_system_flags = flags ^ 0x200000;
         world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
         g_wldcore_audio_queue.music.tracks[1] = 0x1B;
         g_wldcore_audio_queue.music.tracks[2] = 0x1A;
         g_wldcore_audio_queue.current_slot = 2;
-        wldcore_menu_push_screen_transition_level(0x2D, 1, 0);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES, 1, 0);
     } else if (flags & 0x80000) {
-        wldcore_menu_push_screen_transition_level(0x2B, 0, 1);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES, 0, 1);
     } else if (flags & 0x20000000) {
-        wldcore_menu_push_screen_transition_level(0x1C, 0, 0);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_BRAVE_STORY, 0, 0);
     }
 }

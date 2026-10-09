@@ -10,7 +10,7 @@ void wldcore_opcode_wait_frames(void) {
 
     state_flags = &g_wldcore_active_saved_record.state_flags;
     flags = *state_flags;
-    updated = flags | 8;
+    updated = flags | WLDCORE_OPCODE_STATE_YIELD;
     *state_flags = updated;
     if ((updated & 0x10) != 0) {
         g_wldcore_sound_novel_wait_counter = 0;
@@ -19,7 +19,7 @@ void wldcore_opcode_wait_frames(void) {
     counter = g_wldcore_sound_novel_wait_counter;
     operand = g_wldcore_sound_novel_wait_frames;
     if (operand < counter) {
-        *state_flags = flags | 0xc;
+        *state_flags = flags | (WLDCORE_OPCODE_STATE_FETCH | WLDCORE_OPCODE_STATE_YIELD);
     } else {
         g_wldcore_sound_novel_wait_counter = counter + 1;
     }

@@ -20,7 +20,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;
 
-    if (g_wldcore_window_render_records[level->frame_render].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->frame_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     flags = g_main_system_flags;
@@ -33,14 +33,14 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         return;
     }
 
-    if (level->mode != 0) {
+    if (level->mode != WLDCORE_LIST_WINDOW_MODE_BROWSE) {
         if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
             return;
         }
-        level->mode = 0;
+        level->mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
         world_thread_set_parameters(0xE, 0, -1, 0);
         g_main_system_flags |= 4;
-        wldcore_fade_start_screen(2, 0x10);
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
         wldcore_sound_enqueue_music_start(0x11B);
         return;
     }
@@ -51,7 +51,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         /* Same exit as case 4 below; GCC cross-jumps the two copies. */
         g_wldcore_bar_menu_saved_cursor = 0;
         world_thread_set_parameters(0xE, 0x19, 0xB807, 0);
-        level->mode = 1;
+        level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 1;
         g_wldcore_window_render_object_count -= 3;
@@ -67,32 +67,32 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         selected_entry = &level->selected_entry;
         g_wldcore_bar_menu_saved_cursor = *selected_entry;
-        if (level->entries[*selected_entry] != 4) {
-            g_wldcore_window_records[level->main_window].sequence = 1;
+        if (level->entries[*selected_entry] != WLDCORE_BAR_MENU_ROW_LEAVE) {
+            g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         }
         switch (level->entries[level->selected_entry]) {
-        case 0:
-            wldcore_load_message_block_if_changed(0);
+        case WLDCORE_BAR_MENU_ROW_RUMORS:
+            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_RUMORS);
             wldcore_window_publish_slot_b806(level);
             wldcore_list_open_rumors();
             return;
-        case 1:
-            wldcore_load_message_block_if_changed(1);
+        case WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS:
+            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITIONS);
             wldcore_window_publish_slot_b806(level);
             wldcore_list_open_available_propositions();
             return;
-        case 2:
+        case WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS:
             wldcore_window_publish_slot_b806(level);
             wldcore_list_open_completed_propositions();
             return;
-        case 3:
+        case WLDCORE_BAR_MENU_ROW_PROPOSITIONS:
             wldcore_window_publish_slot_b806(level);
             wldcore_list_open_propositions();
             return;
-        case 4:
+        case WLDCORE_BAR_MENU_ROW_LEAVE:
             g_wldcore_bar_menu_saved_cursor = 0;
             world_thread_set_parameters(0xE, 0x19, 0xB807, 0);
-            level->mode = 1;
+            level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;
             g_wldcore_window_render_object_count -= 3;

@@ -11,18 +11,18 @@ void open_opcode_wait_for_external_counter(s16* entry) {
     state = &g_open_script_state.dispatch;
     flags = state->flags;
     entry++;
-    if (flags & 4) {
+    if (flags & OPEN_SCRIPT_DISPATCH_WAITING) {
         limit = *entry;
         counter = state->external_counter;
         if (counter >= limit) {
             offset = state->byte_offset;
-            state->flags = flags ^ 4;
+            state->flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
             state->byte_offset = offset + 4;
         } else {
-            state->flags = flags ^ 2;
+            state->flags = flags ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
         }
     } else {
-        state->flags = (flags | 4) ^ 2;
+        state->flags = (flags | OPEN_SCRIPT_DISPATCH_WAITING) ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
         state->external_counter = 0;
     }
 }

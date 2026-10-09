@@ -33,13 +33,13 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     g_wldcore_proposition_gil_amount += g_wldcore_job_selection.reward_value;
     g_world_text_substitution_values[1] = g_wldcore_proposition_gil_amount;
     switch (g_wldcore_job_selection.reward_type) {
-    case 1:
+    case WLDCORE_PROPOSITION_REWARD_TREASURE:
         g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x782E;
         break;
-    case 2:
+    case WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND:
         g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x781B;
         break;
-    case 3:
+    case WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS:
         g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x7800;
         break;
     default:
@@ -86,7 +86,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
-    g_wldcore_window_render_records[index].flags |= 0x100;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x2A;
@@ -107,19 +107,19 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.proposition = proposition;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;
     switch (g_wldcore_job_selection.result) {
-    case 0:
+    case WLDCORE_PROPOSITION_RESULT_SUCCESS:
         main_sound_play_2_sfx(0x4D, 0x4E);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0x78;
         break;
-    case 1:
+    case WLDCORE_PROPOSITION_RESULT_FAILURE:
         main_sound_play_2_sfx(0x4F, 0x50);
         break;
-    case 2:
+    case WLDCORE_PROPOSITION_RESULT_BAD_FAILURE:
         wldcore_sound_play_effect(0x51);
         break;
     }
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_stack_records_next[depth].proposition_result.phase = 0;
+    g_wldcore_menu_stack_records_next[depth].proposition_result.phase = WLDCORE_PROPOSITION_RESULT_PHASE_INPUT;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_RESULT;
     g_wldcore_menu_stack_depth = depth + 1;
 }

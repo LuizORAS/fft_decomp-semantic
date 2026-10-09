@@ -16,15 +16,15 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     u32 buttons;
     s32* selected_entry;
 
-    if (g_wldcore_window_render_records[level->frame_render].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->frame_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (g_main_system_flags & 4) {
-        if (level->mode == 2 && !(g_main_system_flags & 8)) {
-            level->mode = 3;
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP && !(g_main_system_flags & 8)) {
+            level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT;
             wldcore_gfx_clear_vram_and_scratch(1);
         }
-        if (level->mode == 3 && world_thread_is_running(0xE) == 0) {
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT && world_thread_is_running(0xE) == 0) {
             if ((g_main_system_flags & 0x80000) == 0 || g_wldcore_audio_queue.count == 0) {
                 g_main_system_flags ^= 4;
                 wldcore_window_set_render_objects_visible(1);
@@ -35,21 +35,21 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                     g_main_system_flags = (g_main_system_flags ^ 0x80001) | 0x10000000;
                     return;
                 }
-                wldcore_fade_start_screen(4, 0x10);
+                wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
                 wldcore_menu_push_entry_window_level();
             }
         }
         return;
     }
-    if (level->mode == 1) {
+    if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE) {
         if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
-            level->mode = 2;
+            level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
             world_thread_set_parameters(0xE, 0, -1, 0);
             g_main_system_flags = g_main_system_flags | 4;
-            wldcore_fade_start_screen(2, 0x10);
+            wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
             if (g_main_system_flags & 0x80000) {
-                wldcore_sound_enqueue_audio_command(2, 0x10);
-                wldcore_sound_enqueue_audio_command(4, 0);
+                wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
+                wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
             } else {
                 wldcore_sound_enqueue_music_start(0x11B);
             }
@@ -64,7 +64,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
-        level->mode = 1;
+        level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 1;
         g_wldcore_window_render_object_count -= 3;
@@ -80,25 +80,25 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         selected_entry = &level->selected_entry;
         g_wldcore_tutorial_category_saved_cursor = *selected_entry;
         switch (level->entries[*selected_entry]) {
-        case 0:
+        case WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION:
             wldcore_window_publish_slot_b8dd(level);
-            g_wldcore_window_records[level->main_window].sequence = 1;
+            g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_formation_tutorials();
             return;
-        case 1:
+        case WLDCORE_TUTORIAL_CATEGORY_ROW_MASK_1_ENTRIES:
             wldcore_window_publish_slot_b8dd(level);
-            g_wldcore_window_records[level->main_window].sequence = 1;
+            g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_tutorial_mask_1_entries();
             return;
-        case 2:
-            wldcore_load_message_block_if_changed(5);
+        case WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS:
+            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS);
             wldcore_window_publish_slot_b8dd(level);
-            g_wldcore_window_records[level->main_window].sequence = 1;
+            g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_tutorial_topics();
             return;
-        case 3:
+        case WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE:
             world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
-            level->mode = 1;
+            level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;
             g_wldcore_window_render_object_count -= 3;

@@ -9,7 +9,10 @@ void wldcore_window_init_vram_render_record(
     wldcore_window_render_bounds16_t* record_bounds;
     CVECTOR* rgb;
 
-    g_wldcore_window_render_records[index].flags = (g_wldcore_window_render_records[index].flags & ~0x18) | flags;
+    g_wldcore_window_render_records[index].flags
+        = (g_wldcore_window_render_records[index].flags
+              & ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+        | flags;
     g_wldcore_window_render_records[index].clut = clut;
     g_wldcore_window_render_records[index].tpage
         = GetTPage(0, 0, (s16)bounds.position.x, (s16)bounds.position.y) & 0xFFFF;

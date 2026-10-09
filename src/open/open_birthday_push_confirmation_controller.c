@@ -59,5 +59,5 @@ void open_birthday_push_confirmation_controller(void) {
     g_open_gfx_render_records_36[g_open_controller_stream_start[controller].stream_length].y
         = g_open_gfx_render_records_56[record].y - 2;
     g_open_controller_stream_start[controller]._unknown_0c = 0;
-    g_open_controller_handler_indices[controller] = 6;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_BIRTHDAY_CONFIRMATION;
 }

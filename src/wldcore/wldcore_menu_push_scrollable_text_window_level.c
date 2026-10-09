@@ -29,11 +29,11 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         index = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = index;
-        g_wldcore_window_records[index].sequence = 0xC;
+        g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CHOICE_PANEL_HEADER;
         g_wldcore_window_records[index].priority = 3;
         g_wldcore_window_records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
-        g_wldcore_window_records[index].flags |= 0x10;
+        g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
 
         g_wldcore_scrollable_text_window.text_id = text;
         g_wldcore_scrollable_text_window.image_x = 0;
@@ -49,7 +49,8 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         g_wldcore_scrollable_text_window.text_substitutions[0] = -1;
         wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
 
-        g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags |= 0x10;
+        g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].position.x
             = g_wldcore_scrollable_text_window.base.x + 3;
@@ -57,7 +58,8 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
             = g_wldcore_scrollable_text_window.base.y - 2;
         g_main_system_flags |= 0x08002000;
         g_wldcore_menu_stack_depth = depth + 1;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_index].flags |= 0x10;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_index].flags
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_menu_stack_records_next[depth].event_transition.mode = 0x28;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW;
     }

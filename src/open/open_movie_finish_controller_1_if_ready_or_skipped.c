@@ -6,15 +6,15 @@ void open_movie_finish_controller_1_if_ready_or_skipped(void) {
     u32 flags;
     s32 controller;
 
-    if (!(g_open_system_runtime_flags & 2)) {
+    if (!(g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING)) {
         SetDispMask(0);
         flags = g_open_system_runtime_flags;
         controller = g_open_current_controller_index;
         g_open_system_result = 0;
-        flags |= 0x40;
+        flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
         controller--;
         g_open_system_runtime_flags = flags;
-        flags ^= 1;
+        flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
         g_open_current_controller_index = controller;
         g_open_system_runtime_flags = flags;
         return;

@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Pushes the number-panel menu level (type 0x30) that edits script variable
  * `variable_id`, starting the panel at `value`. */
@@ -6,7 +7,7 @@ void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 val
     wldcore_point32_t origin;
     s32 record_index;
 
-    g_wldcore_menu_result = 0x60;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS;
     g_wldcore_menu_ordering_table_offset = 2;
     g_wldcore_active_menu_value = value;
     origin.x = 0x20;

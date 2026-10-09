@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
 /* Opens a panel list of the set script flags 0x350-0x35f (entry values
  * 0xd800 + flag index), shows up to eight rows at (0x80, 0x50) with width
@@ -29,11 +30,11 @@ void wldcore_list_open_unexplored_lands(void) {
     origin.x = 0x80;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(7, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS, count, i);
     wldcore_window_start_panel_render_thread(
         0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     record_index = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_UNEXPLORED_LANDS;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

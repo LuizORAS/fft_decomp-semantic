@@ -25,7 +25,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
     s32 green_red_sum;
     s32 angle;
 
-    if (level->mode == 2) {
+    if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
         if (!(g_main_system_flags & 8)) {
             g_main_system_flags = g_main_system_flags ^ 1;
         }
@@ -38,10 +38,10 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
         rect.h = 0xF0;
         MoveImage(&rect, 0x100, 0);
         DrawSync(0);
-        g_wldcore_window_records[g_wldcore_map_window_index].flags |= 0x10;
-        g_wldcore_window_records[g_wldcore_menu_root_window_index].flags |= 0x10;
+        g_wldcore_window_records[g_wldcore_map_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[g_wldcore_menu_root_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    if (level->fade_phase == 2) {
+    if (level->fade_phase == WLDCORE_EVENT_TRANSITION_FADE_WHITE_OUT) {
         red_sum = g_wldcore_screen_fade_box_0_color.r + 8;
         g_wldcore_screen_fade_box_0_color.r = red_sum;
         g_wldcore_screen_fade_box_0_color.g = g_wldcore_screen_fade_box_0_color.g + 8;
@@ -60,7 +60,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
         }
         return;
     }
-    if (level->fade_phase == 1) {
+    if (level->fade_phase == WLDCORE_EVENT_TRANSITION_FADE_FLASH) {
         g_wldcore_screen_fade_box_0_color.r = g_wldcore_screen_fade_box_0_color.r + 0x10;
         green_red_sum = g_wldcore_screen_fade_box_0_color.g + 0x10;
         g_wldcore_screen_fade_box_0_color.g = green_red_sum;
@@ -69,17 +69,17 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
             g_wldcore_screen_fade_box_0_color.r = 0;
             g_wldcore_screen_fade_box_0_color.g = 0;
             g_wldcore_screen_fade_box_0_color.b = 0;
-            level->fade_phase = 2;
+            level->fade_phase = WLDCORE_EVENT_TRANSITION_FADE_WHITE_OUT;
         }
     }
     switch (level->phase) {
-    case 0:
-        if (level->drift_direction & 1) {
+    case WLDCORE_EVENT_TRANSITION_PHASE_SPIN_IN:
+        if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_RIGHT) {
             g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x + 1;
         } else {
             g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x - 1;
         }
-        if (level->drift_direction & 2) {
+        if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_DOWN) {
             g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y + 1;
         } else {
             g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y - 1;
@@ -99,12 +99,12 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
             g_wldcore_menu_indicator_sprite.b = shade;
             g_wldcore_menu_indicator_sprite.g = shade;
             g_wldcore_menu_indicator_sprite.r = shade;
-            if (level->mode == 0) {
+            if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_SPIN) {
                 if (level->anim_step == 4) {
                     wldcore_sound_play_effect(0x6C);
                 }
                 if (level->anim_step >= 0x20) {
-                    level->phase = 1;
+                    level->phase = WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT;
                     g_wldcore_menu_indicator_sprite.attribute = 0x52000000;
                     g_wldcore_menu_indicator_sprite.tpage = GetTPage(2, 1, 0x100, 0);
                     g_wldcore_menu_indicator_sprite.scaley = ONE;
@@ -115,25 +115,25 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
                     wldcore_sound_play_effect(0x6D);
                 }
                 if (level->anim_step >= 0x20) {
-                    level->phase = 2;
+                    level->phase = WLDCORE_EVENT_TRANSITION_PHASE_DONE;
                 }
                 if (level->anim_step == 0x18) {
                     g_wldcore_screen_fade_box_0_color.r = 0;
                     g_wldcore_screen_fade_box_0_color.g = 0;
                     g_wldcore_screen_fade_box_0_color.b = 0;
-                    g_wldcore_screen_fade_state.flags[0] |= 8;
-                    level->fade_phase = 2;
+                    g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
+                    level->fade_phase = WLDCORE_EVENT_TRANSITION_FADE_WHITE_OUT;
                 }
             }
         }
         break;
-    case 1:
-        if (level->drift_direction & 1) {
+    case WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT:
+        if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_RIGHT) {
             g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x - 1;
         } else {
             g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x + 1;
         }
-        if (level->drift_direction & 2) {
+        if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_DOWN) {
             g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y - 1;
         } else {
             g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y + 1;
@@ -154,14 +154,14 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
                 g_wldcore_screen_fade_box_0_color.r = 0;
                 g_wldcore_screen_fade_box_0_color.g = 0;
                 g_wldcore_screen_fade_box_0_color.b = 0;
-                g_wldcore_screen_fade_state.flags[0] |= 8;
-                level->fade_phase = 1;
+                g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
+                level->fade_phase = WLDCORE_EVENT_TRANSITION_FADE_FLASH;
             }
             if (level->anim_step >= 0x50) {
                 g_wldcore_menu_indicator_sprite.r = 0;
                 g_wldcore_menu_indicator_sprite.g = 0;
                 g_wldcore_menu_indicator_sprite.b = 0;
-                level->phase = 2;
+                level->phase = WLDCORE_EVENT_TRANSITION_PHASE_DONE;
             }
         }
         break;

@@ -24,10 +24,10 @@ void open_script_update_timing_and_record_values(void) {
     }
 
     for (index = 0; index < 16; index++) {
-        if (g_open_script_state.records[index].flags & 1) {
+        if (g_open_script_state.records[index].flags & OPEN_SCRIPT_RECORD_ACTIVE) {
             g_open_script_state.records[index].y += work;
             if (g_open_script_state.records[index].y < 0x10 || g_open_script_state.records[index].y > 0x100) {
-                g_open_script_state.records[index].flags ^= 1;
+                g_open_script_state.records[index].flags ^= OPEN_SCRIPT_RECORD_ACTIVE;
             }
         }
     }

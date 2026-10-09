@@ -33,12 +33,12 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
     s32 entry;
 
     switch (level->phase) {
-    case 1:
-        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & 0x100)) {
-            level->phase = 2;
+    case WLDCORE_DETAIL_PHASE_LOAD:
+        if (!(g_wldcore_window_render_records[level->_unknown_08].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+            level->phase = WLDCORE_DETAIL_PHASE_BUILD;
         }
         break;
-    case 2:
+    case WLDCORE_DETAIL_PHASE_BUILD:
         if (g_main_file_still_loading != 0) {
             break;
         }
@@ -51,9 +51,10 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         bounds.dimensions.y = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
         g_wldcore_window_render_records[render].priority = 0xA;
-        g_wldcore_window_render_records[render].flags &= ~0x110;
+        g_wldcore_window_render_records[render].flags
+            &= ~(WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_POP_IN);
         base = &g_wldcore_window_render_records[render].base;
         base->x = -0x3E - image.pw;
         base->y = 0x10 - (image.ph >> 1);
@@ -63,11 +64,11 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
-    case 3:
+    case WLDCORE_DETAIL_PHASE_POP_IN:
         level->timer = level->timer + 1;
         GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         if (wldcore_gfx_step_dissolve_image_upload(&image, level->timer) == 0) {
-            level->phase = 0;
+            level->phase = WLDCORE_DETAIL_PHASE_SHOWN;
         }
         break;
     default:
@@ -90,19 +91,19 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) == 0) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
-                ^= 0x10;
+                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
-                ^= 0x10;
+                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                ^= 0x10;
+                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                |= 0x100;
+                |= WLDCORE_DISPLAY_OBJECT_POP_IN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
-                ^= 0x10;
+                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count--;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
-                ^= 0x10;
+                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_menu_stack_depth = depth - 1;
             wldcore_list_open_treasures();
             break;
@@ -112,7 +113,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
             if (entry != 0) {
                 level->_unknown_08 = entry - 1;
                 if (entry - 1 >= 5 || g_main_saved_records[entry - 1].section == 0) {
-                    wldcore_fade_start_screen(2, 0x10);
+                    wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
                 g_main_system_flags |= 4;
                 world_thread_set_parameters(0xE, 0, -1, 0);

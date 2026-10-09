@@ -9,7 +9,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
     u32* otag_1;
 
     open_movie_init_and_stream_opening(skip_movie);
-    if ((g_open_system_runtime_flags & 1) != 0) {
+    if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0) {
         otag_0 = g_open_gfx_otags[0];
         otag_1 = g_open_gfx_otags[1];
         do {
@@ -36,7 +36,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             VSync(0);
             open_movie_present_frame();
             main_noop_800449ec();
-        } while ((g_open_system_runtime_flags & 1) != 0);
+        } while ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0);
     }
 
     SetDispMask(0);

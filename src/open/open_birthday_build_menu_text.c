@@ -46,5 +46,5 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu) {
     translation->y = -0x10;
     translation->x = -((s16)window_width / 2);
     g_open_gfx_render_records_56[index].ot_layer = 4;
-    g_open_gfx_render_records_56[index].flags &= ~0x100;
+    g_open_gfx_render_records_56[index].flags &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
 }

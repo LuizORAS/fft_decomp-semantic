@@ -9,7 +9,7 @@ void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t*
     s32 total;
     wldcore_point32_t origin;
 
-    if (g_wldcore_window_render_records[owner->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[owner->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {

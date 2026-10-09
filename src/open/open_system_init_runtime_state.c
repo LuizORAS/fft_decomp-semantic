@@ -2,7 +2,8 @@
 #include "psx/types.h"
 
 void open_system_init_runtime_state(void) {
-    g_open_system_runtime_flags = 0x1041;
+    g_open_system_runtime_flags = OPEN_SYSTEM_RUNTIME_FLAG_RUNNING | OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED
+        | OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN;
     g_open_file_destination = (u8*)0x801d0000;
     g_open_file_current_openbk_image_id = -1;
     g_open_gfx_opntex_data = (u8*)0x80140000;

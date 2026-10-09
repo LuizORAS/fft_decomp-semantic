@@ -22,7 +22,7 @@ void wldcore_window_init_record_pools(void) {
     g_wldcore_window_render_object_count = 0;
     g_wldcore_window_aux_render_object_count = 0;
     for (i = 0; i < 0x20; i++) {
-        g_wldcore_window_records[i].flags = 1;
+        g_wldcore_window_records[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_wldcore_window_records[i].priority = 1;
         window_color[i].red = 0x80;
         window_color[i].green = 0x80;
@@ -32,7 +32,7 @@ void wldcore_window_init_record_pools(void) {
     render_geometry = (wldcore_render_geometry_init_t*)&g_wldcore_window_render_records->clut.x;
     render_color = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
     for (i = 0; i < 0x20; i++) {
-        g_wldcore_window_render_records[i].flags = 2;
+        g_wldcore_window_render_records[i].flags = WLDCORE_DISPLAY_OBJECT_IMAGE;
         g_wldcore_window_render_records[i].priority = 1;
         render_geometry[i].clut_x = 0x3c0;
         render_geometry[i].clut_y = 0x1f0;
