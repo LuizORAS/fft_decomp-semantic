@@ -289,7 +289,7 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
             red = g_effect_palette_table[entry->colour_curves & 0xF].factor[frame];
             k = entry->colour_curves & 0xFFF;
             green = g_effect_palette_table[(k >> 4) & 0xF].factor[frame];
-            blue = g_effect_palette_table[(u32)k >> 8].factor[frame];
+            blue = g_effect_palette_table[(k >> 8) & 0xF].factor[frame];
         } else {
             red = green = blue = 0x80;
         }
@@ -331,12 +331,12 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 15; j++) {
                 n = (depth[i][j] + depth[i][j + 1] + depth[i + 1][j] + depth[i + 1][j + 1]) / 16;
-                if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+                if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                     addPrim(&ot[n], &work->quads[work->buffer][i * 16 + j]);
                 }
             }
             n = (depth[i][0] + depth[i][15] + depth[i + 1][0] + depth[i + 1][15]) / 16;
-            if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+            if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                 addPrim(&ot[n], &work->quads[work->buffer][i * 16 + 15]);
             }
         }

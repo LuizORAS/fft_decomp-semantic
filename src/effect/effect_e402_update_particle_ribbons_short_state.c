@@ -37,7 +37,7 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
     VECTOR tail;
     effect_work_record_t parent;
     SVECTOR map_origin;
-    effect_particle_ribbon_record_view_t* record;
+    effect_record_t* record;
     effect_particle_ribbon_short_work_t* work;
     effect_particle_ribbon_geometry_view_t* entry;
     s16 speed_min;
@@ -90,13 +90,13 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
     map_tile_t* tile;
     battle_effect_target_t* caster_target;
 
-    record = (effect_particle_ribbon_record_view_t*)&g_effect_state_records[record_index];
+    record = &g_effect_state_records[record_index];
     entry = &g_effect_geometry_table->entries[geometry_index].particle_ribbon;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[byte_offset]) {
     case EFFECT_PHASE_IDLE:
         break;
 
@@ -138,7 +138,7 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
@@ -213,7 +213,7 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
                 RotTrans(&vector, &spread, &result.pad);
             }
 
-            j = (u32)scroll >> 28;
+            j = (scroll >> 28) & 0xf;
             j--;
             if (j != -1) {
                 factor = g_effect_palette_table[j].factor[frame];
@@ -426,7 +426,7 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
                 factor = entry->colour_curves & 0xfff;
                 red = g_effect_palette_table[entry->colour_curves & 0xf].factor[slot->age];
                 green = g_effect_palette_table[(factor >> 4) & 0xf].factor[slot->age];
-                blue = g_effect_palette_table[(u32)factor >> 8].factor[slot->age];
+                blue = g_effect_palette_table[(factor >> 8) & 0xf].factor[slot->age];
             } else {
                 blue = 0x80;
                 green = 0x80;
@@ -585,7 +585,7 @@ s32 effect_e402_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
             battle_heap_free_block(work);
             record->work_slots[byte_offset] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
         break;
     }
 }

@@ -25,7 +25,7 @@ s32 effect_e411_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
     u16 placement;
     s32 translucent;
     u16 tpage;
-    s32 target_index;
+    u8 target_index;
     s32 j;
     s32 i;
     s32 k;
@@ -311,7 +311,7 @@ s32 effect_e411_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
             k = entry->colour_curves & 0xfff;
             red = g_effect_palette_table[entry->colour_curves & 0xf].factor[frame];
             green = g_effect_palette_table[(k >> 4) & 0xf].factor[frame];
-            blue = g_effect_palette_table[(u32)k >> 8].factor[frame];
+            blue = g_effect_palette_table[(k >> 8) & 0xf].factor[frame];
         } else {
             green = 0x80;
             red = 0x80;
@@ -339,7 +339,7 @@ s32 effect_e411_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
 
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             n = (depth[0][i] + depth[0][i + 1] + depth[1][i] + depth[1][i + 1]) / 16;
-            if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+            if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                 addPrim(&ot[n], &work->quads[buffer][i]);
             }
         }

@@ -3438,8 +3438,7 @@ typedef struct effect_record {
     u16 flags;            /* 0x1e: bit 0 marks an allocated record with a work list */
     s16 frame_counter;    /* 0x20: passed by script opcode 26; reset to -1 */
     u8 callback_phase[4]; /* 0x22: per-handler phase, indexed by the handler's byte_offset */
-    u8 target_index;      /* 0x26: current target, resolved to an anchor position by the emitter and native handlers */
-    u8 _padding_27;       /* aligns timeline_frame */
+    s16 target_index;     /* 0x26: current target, resolved to an anchor position by the emitter and native handlers */
     s16 timeline_frame;   /* 0x28: frame counter of battle_effect_code_script_29_step_parent_timeline; tested by opcodes
                              1d/1e */
     u8 _unused_2a[0xa6];
@@ -3449,18 +3448,6 @@ typedef struct effect_record {
     void* file_function;             /* 0xf4: the file function effect script opcode 07 last called */
 } effect_record_t;
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
-
-/* View of effect_record_t with the s16 at 0x26, read with lh as a
- * coordinate-target index. The access must be a member of an array element
- * (folded %lo(sym + 0x26) on the shared record_index * 0xf8 register); a
- * pointer cast CSEs into `record` instead. g_effect_state_records_view is
- * g_effect_state_records through this view. */
-typedef struct effect_record_target_view {
-    u8 _unused_00[0x26];
-    s16 target_index; /* 0x26 */
-    u8 _unused_28[0xd0];
-} effect_record_target_view_t;
-typedef char assert_effect_record_target_view_size[sizeof(effect_record_target_view_t) == 0xf8 ? 1 : -1];
 
 /* One playback step of the animation script referenced by an effect slot:
  * a hold count and the frame id written to the slot. */
@@ -4141,7 +4128,6 @@ extern s32 g_battle_effect_sprite_count_peak;
 extern effect_geometry_table_t* g_effect_geometry_table;
 extern effect_palette_entry_t* g_effect_palette_table;
 extern effect_record_t g_effect_state_records[];
-extern effect_record_target_view_t g_effect_state_records_view[];
 extern s16 g_battle_effect_current_record_index;
 extern s32 g_battle_effect_work_record_peak;
 extern effect_work_record_t* g_battle_effect_free_work_record_head;

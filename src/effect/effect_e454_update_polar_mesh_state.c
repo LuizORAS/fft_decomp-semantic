@@ -141,7 +141,7 @@ s32 effect_e454_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
             j = entry->colour_curves & 0xFFF;
             scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
             scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->colour[2] = g_effect_palette_table[(u32)j >> 8].factor[work->frame];
+            scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
         } else {
             scratch->colour[2] = 0x80;
             scratch->colour[1] = 0x80;

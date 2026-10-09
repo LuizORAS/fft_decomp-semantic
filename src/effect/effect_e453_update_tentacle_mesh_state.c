@@ -136,7 +136,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         i = frame - 1;
         work = record->work_slots[byte_offset];
         curves1 = entry->curve_indices[1];
-        target_index = *(s16*)&record->target_index;
+        target_index = record->target_index;
         curves0 = entry->curve_indices[0];
         frame %= 160;
         READ_CURVE(factor, index, (curves1 >> 24) & 0xF, frame);
@@ -200,7 +200,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
                 RotTrans(&rotation, &spread, &out.pad);
             }
 
-            index = (u32)curves0 >> 28;
+            index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
                 factor = g_effect_palette_table[index].factor[frame];
@@ -399,7 +399,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
                 red = g_effect_palette_table[entry->colour_curves & 0xF].factor[seg->head];
                 factor = entry->colour_curves & 0xFFF;
                 green = g_effect_palette_table[(factor >> 4) & 0xF].factor[seg->head];
-                blue = g_effect_palette_table[(u32)factor >> 8].factor[seg->head];
+                blue = g_effect_palette_table[(factor >> 8) & 0xF].factor[seg->head];
             } else {
                 red = green = blue = 0x80;
             }

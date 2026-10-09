@@ -118,21 +118,6 @@ typedef struct effect_particle_ribbon_long_work {
 typedef char
     assert_effect_particle_ribbon_long_work_size[sizeof(effect_particle_ribbon_long_work_t) == 0x1c9c ? 1 : -1];
 
-/* This renderer's view of one effect_record_t. It reads the target index at
- * 0x26 as a halfword, where effect_record_t declares a byte. */
-typedef struct effect_particle_ribbon_record_view {
-    u8 _unused_00[0x02];
-    s16 record_index; /* 0x02 */
-    u8 _unused_04[0x1e];
-    u8 phase[4];      /* 0x22 */
-    s16 target_index; /* 0x26: read as a halfword */
-    u8 _unused_28[0xbc];
-    void* work_slots[4]; /* 0xe4 */
-    void* file_function; /* 0xf4 */
-} effect_particle_ribbon_record_view_t;
-typedef char
-    assert_effect_particle_ribbon_record_view_size[sizeof(effect_particle_ribbon_record_view_t) == 0xf8 ? 1 : -1];
-
 extern u32 g_effect_e070_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_e403_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_e461_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];

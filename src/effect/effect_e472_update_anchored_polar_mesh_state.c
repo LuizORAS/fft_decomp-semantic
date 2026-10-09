@@ -74,7 +74,7 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
         scratch->half_width = entry->texture_width / 2;
         scratch->half_height = entry->texture_height / 2;
 
-        scratch->target_index = g_effect_state_records_view[record_index].target_index;
+        scratch->target_index = g_effect_state_records[record_index].target_index;
         battle_effect_resolve_target_render_coords(
             g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, scratch->target_index,
             &g_battle_effect_coord_data, &scratch->position);
@@ -156,7 +156,7 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
             j = entry->colour_curves & 0xFFF;
             scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
             scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->colour[2] = g_effect_palette_table[(u32)j >> 8].factor[work->frame];
+            scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
         } else {
             scratch->colour[2] = 0x80;
             scratch->colour[1] = 0x80;

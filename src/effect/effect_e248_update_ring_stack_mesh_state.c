@@ -48,7 +48,7 @@ s32 effect_e248_update_ring_stack_mesh_state(s16 record_index, s32 byte_offset, 
     u16 placement;
     s32 translucent;
     u16 tpage;
-    s32 target_index;
+    u8 target_index;
     s32 j;
     s32 i;
     s32 k;
@@ -342,7 +342,7 @@ s32 effect_e248_update_ring_stack_mesh_state(s16 record_index, s32 byte_offset, 
             k = entry->colour_curves & 0xfff;
             red = g_effect_palette_table[k & 0xf].factor[frame];
             green = g_effect_palette_table[(k >> 4) & 0xf].factor[frame];
-            blue = g_effect_palette_table[(u32)k >> 8].factor[frame];
+            blue = g_effect_palette_table[(k >> 8) & 0xf].factor[frame];
         } else {
             green = 0x80;
             red = 0x80;
@@ -381,12 +381,12 @@ s32 effect_e248_update_ring_stack_mesh_state(s16 record_index, s32 byte_offset, 
         for (j = 0; j < 8; j++) {
             for (i = 0; i < 7; i++) {
                 n = (depth[j][i] + depth[j][i + 1] + depth[j + 1][i] + depth[j + 1][i + 1]) / 16;
-                if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+                if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                     addPrim(&ot[n], &work->quads[buffer][j * 8 + i]);
                 }
             }
             n = (depth[j][0] + depth[j][7] + depth[j + 1][0] + depth[j + 1][7]) / 16;
-            if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+            if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                 addPrim(&ot[n], &work->quads[buffer][j * 8 + 7]);
             }
         }
