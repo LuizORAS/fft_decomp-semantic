@@ -76,12 +76,12 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_gfx_draw_mode_capacity = 0x1E;
     g_world_shop_id = shop_type;
     buttons = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
-    if (shop_type == 0x64) {
+    if (shop_type == WORLD_SHOP_ID_FUR_SHOP) {
         ot_index = 0x1E;
         g_world_shop_menu_step = 0xE;
         disabled = 0xF82F;
         tim_index = 3;
-    } else if (shop_type == 0x65) {
+    } else if (shop_type == WORLD_SHOP_ID_SOLDIER_OFFICE) {
         ot_index = 0x1D;
         g_world_shop_menu_step = 0x14;
         disabled = 0xF820;

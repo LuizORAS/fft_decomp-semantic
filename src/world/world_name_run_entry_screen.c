@@ -68,7 +68,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0,
         packets.tiles_24, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
         packets.draw_modes);
-    g_world_shop_id = -2;
+    g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
     world_formation_init_menu_display();
     world_thread_start(2, world_text_message_box_thread);
     world_thread_set_parameters(2, 0x21, 0xC015, 0);

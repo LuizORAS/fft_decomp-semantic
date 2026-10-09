@@ -4,11 +4,11 @@
 void world_formation_rebuild_unit_list(void) {
     s32 mode;
 
-    if (g_world_shop_id == -1) {
+    if (g_world_shop_id == WORLD_SHOP_ID_FORMATION) {
         mode = 0;
     } else {
         mode = 2;
-        if (g_world_shop_id != 0x65) {
+        if (g_world_shop_id != WORLD_SHOP_ID_SOLDIER_OFFICE) {
             mode = 1;
         }
     }

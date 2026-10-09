@@ -2730,7 +2730,40 @@ void world_item_sort_id_list(s32 mode, s16* list);
 void world_item_sum_equipment_stat_details(struct world_item_stat_detail* total, u16* equipment);
 
 /* shop */
-/* Two-byte shop availability mask, stored most significant byte first. */
+/* World-map location ids (EVENT_SCRIPT_VAR_LOCATION). The first fifteen are
+ * the towns; a town's id is also its outfitter's shop id and its bit, counted
+ * from the top, in g_world_shop_item_availability. */
+typedef enum world_location_id {
+    WORLD_LOCATION_LESALIA = 0,
+    WORLD_LOCATION_RIOVANES = 1,
+    WORLD_LOCATION_IGROS = 2,
+    WORLD_LOCATION_LIONEL = 3,
+    WORLD_LOCATION_LIMBERRY = 4,
+    WORLD_LOCATION_ZELTENNIA = 5,
+    WORLD_LOCATION_GARILAND = 6,
+    WORLD_LOCATION_YARDOW = 7,
+    WORLD_LOCATION_GOLAND = 8,
+    WORLD_LOCATION_DORTER = 9,
+    WORLD_LOCATION_ZALAND = 10,
+    WORLD_LOCATION_GOUG = 11,
+    WORLD_LOCATION_WARJILIS = 12,
+    WORLD_LOCATION_BERVENIA = 13,
+    WORLD_LOCATION_ZARGHIDAS = 14,
+    WORLD_LOCATION_TOWN_COUNT = 15,
+    WORLD_LOCATION_DEEP_DUNGEON = 0x16,
+} world_location_id_e;
+
+/* g_world_shop_id: a town's location id while its outfitter is open, or one of
+ * these. */
+enum {
+    WORLD_SHOP_ID_NAME_ENTRY = -2,
+    WORLD_SHOP_ID_FORMATION = -1,
+    WORLD_SHOP_ID_FUR_SHOP = 0x64,
+    WORLD_SHOP_ID_SOLDIER_OFFICE = 0x65,
+};
+
+/* Two-byte shop availability mask, stored most significant byte first: bit
+ * 0x8000 >> location id is set when that town's outfitter sells the item. */
 typedef struct world_shop_item_availability {
     u8 high;
     u8 low;
