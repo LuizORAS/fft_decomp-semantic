@@ -107,7 +107,7 @@ enum { CARD_SAVE_SLOT_COUNT = 15 };
 
 /* g_main_card_save_last_used_slot when no slot was loaded or written. */
 enum {
-    CARD_LAST_WRITTEN_SAVE_SLOT_NONE = 0xff,
+    CARD_SAVE_LAST_USED_SLOT_NONE = 0xff,
 };
 
 /* PlayStation memory-card save-file header block (256 bytes), as built by
@@ -195,7 +195,7 @@ typedef char card_save_buffer_size_must_be_0x1e00[(sizeof(card_save_buffer_t) ==
 
 extern s32 g_main_card_bios_events[MAIN_CARD_EVENT_COUNT];
 extern u8 g_main_card_bios_events_opened;
-extern u8 g_main_card_save_last_used_slot;
+extern u8 g_main_card_save_last_used_slot; /* the save slot last loaded or written */
 extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
 extern u8 g_main_card_save_slot_metadata[][0x18];

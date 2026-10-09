@@ -13,7 +13,7 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     s32 result;
 
     g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
-    if (g_world_menu_input_disabled != 0) {
+    if (g_world_menu_input_disabled != MENU_INPUT_PLAYER) {
         input = g_world_input_unfiltered_controller;
     }
     world_map_store_selected_tile_data();

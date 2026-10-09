@@ -7,7 +7,7 @@ void world_menu_start_equipment_and_ability_panel_thread(s32 enabled) {
         return;
     }
     enabled = 1;
-    if (g_world_status_display_thread_params.flags & 0x60) {
+    if (g_world_status_display_thread_params.flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) {
         return;
     }
     if (world_thread_is_running(NATIVE_THREAD_SLOT_CHARACTER_STATUS) == 0

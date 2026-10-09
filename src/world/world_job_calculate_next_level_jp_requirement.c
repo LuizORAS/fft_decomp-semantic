@@ -9,7 +9,7 @@ s32 world_job_calculate_next_level_jp_requirement(s32 index) {
     level = g_world_job_cached_level & 0xf;
     if (level >= 8) {
         /* job level 8 = mastered: no next-level requirement */
-        g_world_job_cached_level_jp_requirement |= 0x20000000;
+        g_world_job_cached_level_jp_requirement |= MENU_NUMBER_VALUE_DASHES;
     } else {
         g_world_job_cached_level_jp_requirement = g_main_job_level_jp_requirements[level];
     }

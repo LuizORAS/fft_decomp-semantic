@@ -234,10 +234,10 @@ void bunit_render_unit_status_panel_thread(void) {
             panel->portrait.b0 = 0x80;
         }
         g_bunit_gfx_draw_offset_y = (u16)g_bunit_frame_arg != 0xF0 ? 0xF0 : 0;
-        if ((thread->flags & 0x20) && (shake == 0)) {
+        if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
-        if (thread->flags & 0x40) {
+        if (thread->flags & MENU_STATUS_PANEL_SLIDE_UP) {
             if (shake == 0) {
                 shake = 0xB;
             }
@@ -250,7 +250,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 }
                 if (shake >= 7) {
                     shake = 0;
-                    thread->flags = thread->flags & 0x80;
+                    thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
                 thread->shake_y.word = g_bunit_panel_slide_up_y[shake];
@@ -259,7 +259,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 }
                 if (shake >= 0x11) {
                     shake = 0;
-                    thread->flags = thread->flags & 0x80;
+                    thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             }
         }
@@ -286,7 +286,7 @@ void bunit_render_unit_status_panel_thread(void) {
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;
-            suppress = thread->flags & 0x80;
+            suppress = thread->flags & MENU_STATUS_PANEL_HIDDEN;
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
@@ -429,7 +429,7 @@ void bunit_render_unit_status_panel_thread(void) {
             }
             LoadImage(&rects[5], (u32*)(render_b + 0xA0));
         }
-        if (!(thread->flags & 0x80)) {
+        if (!(thread->flags & MENU_STATUS_PANEL_HIDDEN)) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_b);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);

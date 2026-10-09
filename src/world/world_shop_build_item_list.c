@@ -34,29 +34,30 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
     u16 primary_category;
     u16 secondary_category;
 
-    if (mode == 1 && g_main_game_options.fields.show_unequippable_items != GAME_OPTION_ON) {
-        mode = 2;
+    if (mode == ITEM_LIST_MODE_MARK_UNEQUIPPABLE
+        && g_main_game_options.fields.show_unequippable_items != GAME_OPTION_ON) {
+        mode = ITEM_LIST_MODE_EQUIPPABLE;
     }
 
     count = 0;
     if (category < 2) {
         primary_category = ITEM_MENU_CATEGORY_WEAPON;
         secondary_category = ITEM_MENU_CATEGORY_SHIELD;
-    } else if (category == 2) {
+    } else if (category == ITEM_LIST_FILTER_HEADGEAR) {
         primary_category = ITEM_MENU_CATEGORY_HEADGEAR;
         secondary_category = ITEM_MENU_CATEGORY_HEADGEAR;
-    } else if (category == 3) {
+    } else if (category == ITEM_LIST_FILTER_BODY_ARMOR) {
         primary_category = ITEM_MENU_CATEGORY_BODY_ARMOR;
         secondary_category = ITEM_MENU_CATEGORY_BODY_ARMOR;
-    } else if (category == 4) {
+    } else if (category == ITEM_LIST_FILTER_ACCESSORY) {
         primary_category = ITEM_MENU_CATEGORY_ACCESSORY;
         secondary_category = ITEM_MENU_CATEGORY_ACCESSORY;
-    } else if (category == 5) {
+    } else if (category == ITEM_LIST_FILTER_WEAPON) {
         primary_category = ITEM_MENU_CATEGORY_WEAPON;
         secondary_category = ITEM_MENU_CATEGORY_WEAPON;
     } else {
         secondary_category = ITEM_MENU_CATEGORY_OTHER;
-        if (category == 6) {
+        if (category == ITEM_LIST_FILTER_SHIELD) {
             primary_category = ITEM_MENU_CATEGORY_SHIELD;
             secondary_category = ITEM_MENU_CATEGORY_SHIELD;
         } else {
@@ -85,13 +86,13 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
             if (progression < g_main_item_primary_data[item_id].shop_availability) {
                 continue;
             }
-            if (mode != 0) {
+            if (mode != ITEM_LIST_MODE_ALL) {
                 can_equip = world_unit_can_equip_item_id(unit_id, (s16)item_id);
-                if (mode == 2 && can_equip == -1) {
+                if (mode == ITEM_LIST_MODE_EQUIPPABLE && can_equip == -1) {
                     continue;
                 }
-                if (mode == 1 && can_equip == -1) {
-                    entry = item_id | 0x4000;
+                if (mode == ITEM_LIST_MODE_MARK_UNEQUIPPABLE && can_equip == -1) {
+                    entry = item_id | WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE;
                 }
             }
             entries[count] = entry;
@@ -107,13 +108,13 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
             if (world_shop_adjust_poached_item_quantity((s16)item_id, 0) == 0) {
                 continue;
             }
-            if (mode != 0) {
+            if (mode != ITEM_LIST_MODE_ALL) {
                 can_equip = world_unit_can_equip_item_id(unit_id, (s16)item_id);
-                if (mode == 2 && can_equip == -1) {
+                if (mode == ITEM_LIST_MODE_EQUIPPABLE && can_equip == -1) {
                     continue;
                 }
-                if (mode == 1 && can_equip == -1) {
-                    entry = item_id | 0x4000;
+                if (mode == ITEM_LIST_MODE_MARK_UNEQUIPPABLE && can_equip == -1) {
+                    entry = item_id | WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE;
                 }
             }
             entries[count] = entry;

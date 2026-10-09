@@ -19,7 +19,7 @@ void world_formation_item_menu(void) {
     s16* selection;
 
     state = g_world_formation_current_menu;
-    if (state == 0x10 || state == 0x17) {
+    if (state == WORLD_FORMATION_MENU_ITEM_ENTER || state == WORLD_FORMATION_MENU_ITEM_ENTER_NO_SLIDE) {
         if (g_world_item_menu_initialized == 0) {
             saved = g_world_formation_unit_browse_enabled;
             g_world_formation_scroll_enabled = 0;
@@ -28,21 +28,21 @@ void world_formation_item_menu(void) {
             world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
             g_world_item_menu_initialized = 1;
         }
-        if (g_world_formation_current_menu == 0x10) {
+        if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM_ENTER) {
             g_world_item_menu_initialized = world_formation_step_grid_transition(0);
         } else {
             g_world_item_menu_initialized = 0;
         }
         if (g_world_item_menu_initialized == 0) {
-            g_world_formation_current_menu = 1;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM;
         }
         return;
     }
-    if (state == 0x11) {
+    if (state == WORLD_FORMATION_MENU_ITEM_LEAVE) {
         running = world_formation_step_grid_return_transition(1);
         g_world_item_menu_initialized = running;
         if (running == 0) {
-            g_world_formation_current_menu = 0;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
             g_world_formation_triangle_menu.selected_index = 0;
         }
         return;
@@ -74,7 +74,7 @@ void world_formation_item_menu(void) {
         world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
         g_world_item_submenu_exit_pending = 0;
     }
-    if (g_world_formation_current_menu == 1) {
+    if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM) {
         g_world_formation_unit_cycle_mode = 2;
         if ((u16)g_world_menu_selection_results[1] < 3
             && world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index) < 0) {
@@ -86,42 +86,42 @@ void world_formation_item_menu(void) {
         if (*selection != -1) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_thread_idle_wait_forever);
-            g_world_formation_current_menu = *selection + 6;
-            world_menu_set_cursor_position(2, 0);
-            world_menu_set_cursor_position(3, 0);
-            world_menu_set_cursor_position(7, 0);
+            g_world_formation_current_menu = *selection + WORLD_FORMATION_MENU_ITEM_EQUIP;
+            world_menu_set_cursor_position(WORLD_MENU_CURSOR_EQUIP_SLOT, 0);
+            world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_SLOT, 0);
+            world_menu_set_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         }
         running = world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_item_menu_initialized = running;
         if (running == 0) {
             world_menu_toggle_change_banner_panel_thread(0);
             roster_slot = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
-            world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
+            world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(roster_slot);
-            g_world_formation_current_menu = 0x11;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_LEAVE;
             g_world_formation_unit_browse_enabled = g_world_item_menu_saved_browse_enabled;
             g_world_formation_unit_banner_enabled = g_world_formation_saved_banner_enabled;
         }
         return;
     }
     switch (g_world_formation_current_menu) {
-    case 6:
+    case WORLD_FORMATION_MENU_ITEM_EQUIP:
         done = world_formation_run_equip_item_menu();
         break;
-    case 7:
+    case WORLD_FORMATION_MENU_ITEM_BEST_FIT:
         done = world_menu_run_best_fit_equipment();
         break;
-    case 8:
+    case WORLD_FORMATION_MENU_ITEM_REMOVE:
         done = world_menu_run_remove_item();
         break;
-    case 9:
+    case WORLD_FORMATION_MENU_ITEM_LIST:
         done = world_formation_run_item_submenu_step();
         break;
     }
     if (done == 0) {
         g_world_item_menu_unit_index = 0xFF;
         world_formation_stage_selected_unit();
-        g_world_formation_current_menu = 1;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM;
         g_world_item_submenu_exit_pending = 1;
     }
 }

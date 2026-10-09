@@ -50,8 +50,8 @@ void world_menu_run_main_mode(s32 mode) {
     g_world_menu_hide_numeric_values = 0;
     /* The target keeps this constant in a callee-saved register across the
      * mode 0 and mode 1 calls, so it is its own variable. */
-    last_mode = 2;
-    if (mode == 0) {
+    last_mode = OPTION_MENU_DEAD_UNIT;
+    if (mode == OPTION_MENU_GAME_OPTIONS) {
         world_script_pulse_tutorial_wait_value(0xFD);
         world_thread_start(g_world_thread_current_id - 1, world_build_options_menu);
         entry->select_text_table = 1;
@@ -60,7 +60,7 @@ void world_menu_run_main_mode(s32 mode) {
         world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         world_thread_exit_current();
     }
-    if (mode == 1) {
+    if (mode == OPTION_MENU_AT_LIST) {
         world_script_pulse_tutorial_wait_value(0xF9);
         world_menu_start_at_list_thread();
     }

@@ -21,7 +21,7 @@ void world_card_update_slot_scan(void) {
     if (g_world_card_error_message_closing != 0) {
         if (world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU) == 0) {
             g_world_card_slot_scan_active = 0;
-            g_world_card_menu_step = 0;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
             g_world_card_error_message_closing = 0;
         }
         return;
@@ -34,7 +34,7 @@ void world_card_update_slot_scan(void) {
             g_world_card_slot_scan_active = 0;
             g_world_card_format_delay_counter = 0;
             world_card_format_selected_slot();
-            g_world_card_menu_step = 0;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
         }
         return;
     }
@@ -55,10 +55,10 @@ void world_card_update_slot_scan(void) {
                     }
                     g_world_card_slot_scan_index++;
                 }
-                g_world_card_menu_step = 1;
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_MODE;
                 return;
             } else {
-                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+                g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         }
 
@@ -106,7 +106,7 @@ void world_card_update_slot_scan(void) {
         }
         g_world_menu_selection_results[5] = -1;
         g_world_card_format_prompt[0].selection = 1;
-        g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+        g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
         g_world_card_scan_prompt_active = 1;
         g_world_card_slot_scan_index = 0;
         g_world_card_slot_scan_active = 1;
@@ -123,7 +123,7 @@ void world_card_update_slot_scan(void) {
             if (g_world_menu_selection_results[5] == 0) {
                 g_world_card_format_delay_counter = 1;
             } else {
-                g_world_card_menu_step = 0;
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
             }
             g_world_card_slot_scan_active = 0;
         } else {
@@ -221,7 +221,7 @@ void world_card_update_slot_scan(void) {
         } else {
             g_main_card_save_last_used_slot = 0;
             world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
-            g_world_card_menu_step = 1;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_MODE;
             g_world_card_slot_scan_active = 0;
         }
     }

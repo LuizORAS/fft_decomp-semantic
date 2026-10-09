@@ -40,7 +40,7 @@ void option_entrypoint(s32 menu_type) {
         }
     }
 
-    if (menu_type != 2) {
+    if (menu_type != OPTION_MENU_DEAD_UNIT) {
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
@@ -53,7 +53,7 @@ void option_entrypoint(s32 menu_type) {
 
     g_option_menu_open = 0;
     g_option_menu_state = 0;
-    if (menu_type == 0) {
+    if (menu_type == OPTION_MENU_GAME_OPTIONS) {
         s32 child_thread;
 
         battle_script_pulse_tutorial_wait_value(0xfd);
@@ -65,11 +65,11 @@ void option_entrypoint(s32 menu_type) {
         battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         battle_thread_exit_current();
     }
-    if (menu_type == 1) {
+    if (menu_type == OPTION_MENU_AT_LIST) {
         battle_script_pulse_tutorial_wait_value(0xf9);
         option_menu_start_at_list_thread();
     }
-    if (menu_type == 2) {
+    if (menu_type == OPTION_MENU_DEAD_UNIT) {
         option_menu_start_dead_unit_threads();
     }
 }

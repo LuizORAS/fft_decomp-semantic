@@ -409,7 +409,7 @@ void world_text_message_box_thread(void) {
                     g_world_text_message_box_glyph.glyph = code;
                     g_world_text_message_box_glyph.x = cursor_x;
                     g_world_text_message_box_glyph.y = cursor_y;
-                    g_world_text_message_box_glyph.mode = rec.dialog_type & 0x70;
+                    g_world_text_message_box_glyph.mode = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
                     g_world_text_message_box_glyph.palette = rec.color;
                     world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, delay);
                     if (code == TEXT_SPACE) {

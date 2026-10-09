@@ -18,24 +18,24 @@ void battle_menu_start_entry_thread(void) {
     while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         battle_thread_yield();
     }
-    if (g_battle_menu_input_disabled == 0) {
+    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER) {
         if (battle_script_is_tutorial_event_slot() != 0) {
-            g_battle_menu_input_disabled = 2;
+            g_battle_menu_input_disabled = MENU_INPUT_TUTORIAL;
             battle_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             battle_script_start_current_event_thread();
             battle_thread_wait_frames(0x1E);
         }
-        if (g_battle_menu_input_disabled != 0) {
+        if (g_battle_menu_input_disabled != MENU_INPUT_PLAYER) {
             battle_thread_wait_frames(2);
         }
     } else {
         battle_thread_wait_frames(2);
     }
     battle_script_pulse_tutorial_wait_value(0xFF);
-    if (menu_id == 0x10 || menu_id == 0x12) {
+    if (menu_id == BATTLE_MENU_ID_OTHER_UNIT || menu_id == BATTLE_MENU_ID_OTHER_UNIT_INSPECT) {
         if (battle_unit_get_attacker_data_pointer()->unit_flags & UNIT_FLAG_EGG) {
-            menu_id = 0x36;
+            menu_id = BATTLE_MENU_ID_EGG;
         }
     }
     battle_thread_start(NATIVE_THREAD_SLOT_MENU, g_battle_menu_thread_menu_data[menu_id].thread_entry);

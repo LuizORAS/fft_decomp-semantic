@@ -3,5 +3,5 @@
 
 /* Sibling of world_ability_is_category_action (category 0). */
 s32 world_ability_is_category_reaction(s32 unused_row) {
-    return g_world_ability_category == 1;
+    return g_world_ability_category == MENU_ABILITY_CATEGORY_REACTION;
 }

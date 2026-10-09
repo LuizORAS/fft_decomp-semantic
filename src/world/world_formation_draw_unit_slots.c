@@ -22,14 +22,15 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
             continue;
         }
         if (i != g_world_formation_selected_unit_index) {
-            if (g_world_formation_unit_pointers[i]->proposition_status & 1) {
-                palette = 9;
+            if (g_world_formation_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
+                palette = WORLD_FORMATION_READOUT_LEAVING;
             } else {
                 if (g_world_formation_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
-                    palette = 10;
+                    palette = WORLD_FORMATION_READOUT_EGG;
                 } else {
-                    if (g_world_formation_unit_pointers[i]->proposition_status & 2) {
-                        palette = 11;
+                    if (g_world_formation_unit_pointers[i]->proposition_status
+                        & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
+                        palette = WORLD_FORMATION_READOUT_MISSING;
                     } else {
                         palette = g_world_formation_stat_display_mode;
                     }

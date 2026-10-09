@@ -19,7 +19,7 @@ void battle_menu_check_action_restrictions(void) {
 
     unit = battle_unit_get_attacker_data_pointer();
     menu = g_battle_menu_current_id;
-    if ((u32)(menu - 0x13) < 2 || (u32)(menu - 0x30) < 2) {
+    if ((u32)(menu - BATTLE_MENU_ID_TURN_ACTED) < 2 || (u32)(menu - BATTLE_MENU_ID_RIDER_TURN_ACTED) < 2) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
             battle_sound_set_effect_to_invalid();

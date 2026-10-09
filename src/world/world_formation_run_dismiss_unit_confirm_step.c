@@ -15,7 +15,7 @@ void world_formation_run_dismiss_unit_confirm_step(void) {
         }
         if (world_thread_is_running(NATIVE_THREAD_SLOT_MESSAGE) == 0) {
             g_world_formation_dismiss_message_wait = 0;
-            g_world_shop_menu_step = 0x17;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_NAME_ENTRY;
         }
     } else if (world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_formation_dismiss_final_confirm_menu)
         == 0) {
@@ -24,10 +24,10 @@ void world_formation_run_dismiss_unit_confirm_step(void) {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF827, 0);
             g_world_shop_hire_menu_initialized = 0;
             main_party_remove_unit(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot);
-            g_world_shop_menu_step = 0x14;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
         } else if (selection == 2) {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
-            g_world_shop_menu_step = 0x15;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_PREVIEW;
         } else {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF829, 0);
             g_world_formation_dismiss_message_wait = 1;

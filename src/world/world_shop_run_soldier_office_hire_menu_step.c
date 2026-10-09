@@ -30,20 +30,21 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
     }
     if (g_world_shop_hire_result_shown != 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
-            g_world_shop_menu_step = 0x19;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
         }
     } else {
         i = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_shop_hire_menu_thread_data);
         if (i == 0) {
             if (g_world_menu_selection_results[0] == 3 || g_world_menu_selection_results[0] == -1) {
                 g_world_shop_hire_menu_initialized = 0;
-                g_world_shop_menu_step = 0xD;
+                g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
                 world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF825, 0);
                 world_item_cash_out_excess_inventory();
             } else if (g_world_menu_selection_results[0] == 2) {
-                g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, 2);
+                g_world_formation_unit_count = world_formation_build_record_list(
+                    0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_MONSTERS);
                 if (g_world_formation_unit_count != 0) {
-                    g_world_shop_menu_step = 0x1A;
+                    g_world_shop_menu_step = WORLD_SHOP_STEP_RENAME_SELECT_UNIT;
                     i = 0xF847;
                 } else {
                     i = 0xF846;
@@ -68,7 +69,7 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
                         g_world_formation_scroll_enabled = 0;
                         g_world_formation_scroll_enabled_latch = 0;
                         world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF824, 0);
-                        g_world_shop_menu_step = 0x15;
+                        g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_PREVIEW;
                     }
                 } else {
                     world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF822, 0);

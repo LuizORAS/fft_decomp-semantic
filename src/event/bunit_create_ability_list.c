@@ -29,16 +29,16 @@ s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, 
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
 
-    if (ability_category == 0) {
+    if (ability_category == MENU_ABILITY_CATEGORY_ACTION) {
         lo = 1;
         hi = ABILITY_ID_REACTION_FIRST - 1;
-    } else if (ability_category == 1) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_REACTION) {
         lo = ABILITY_ID_REACTION_FIRST;
         hi = ABILITY_ID_SUPPORT_FIRST - 1;
-    } else if (ability_category == 2) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_SUPPORT) {
         lo = ABILITY_ID_SUPPORT_FIRST;
         hi = ABILITY_ID_MOVEMENT_FIRST - 1;
-    } else if (ability_category == 3) {
+    } else if (ability_category == MENU_ABILITY_CATEGORY_MOVEMENT) {
         lo = ABILITY_ID_MOVEMENT_FIRST;
         hi = ABILITY_ID_RANDOM_FIRST - 1;
     } else {

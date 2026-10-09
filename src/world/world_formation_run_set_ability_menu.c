@@ -54,7 +54,7 @@ s32 world_formation_run_set_ability_menu(void) {
         g_world_set_ability_list_close_pending = 1;
     }
     lock_state = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
-    if (lock_state == 1) {
+    if (lock_state == WORLD_FORMATION_UNIT_UNLOCKED) {
         lock_state = 0;
     }
     if (lock_state != 0) {
@@ -81,7 +81,7 @@ s32 world_formation_run_set_ability_menu(void) {
             g_world_menu_description_text_id = current + 0x9800;
         }
         slot = world_menu_update_vertical_selection_and_mark_change(
-                   4, 4, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
+                   4, WORLD_MENU_CURSOR_SET_ABILITY_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
             + 1;
         g_world_set_ability_slot = slot;
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
@@ -89,8 +89,8 @@ s32 world_formation_run_set_ability_menu(void) {
             if (slot == 1) {
                 g_world_set_ability_entry_count
                     = world_ability_find_unit_abilities(g_world_formation_selected_unit_index,
-                        g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id, 0,
-                        g_world_menu_entry_ids, slot);
+                        g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id,
+                        MENU_ABILITY_CATEGORY_ACTION, g_world_menu_entry_ids, slot);
             } else {
                 g_world_set_ability_entry_count = world_ability_build_equippable_rsm_list(
                     g_world_formation_selected_unit_index, slot - 1, g_world_menu_entry_ids);
@@ -119,7 +119,7 @@ s32 world_formation_run_set_ability_menu(void) {
                 = value + (((u16*)g_world_menu_entry_ids)[cursor] & ABILITY_LIST_ENTRY_ID_MASK);
             if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
                 selected = ((u16*)g_world_menu_entry_ids)[cursor];
-                if (selected & 0x4000) {
+                if (selected & ABILITY_LIST_ENTRY_DISABLED) {
                     world_text_show_message_and_play_sound(0xD81D, MAIN_SFX_ERROR_MESSAGE);
                 } else {
                     value = world_ability_is_equip_support_change(g_world_formation_selected_unit_index, selected);

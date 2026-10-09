@@ -58,7 +58,8 @@ s32 equip_run_item_type_order_mode(void) {
         category = g_equip_selected_slot;
         g_equip_menu_text_redraw_flag = 1;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 0x81,
-            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
+            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : ITEM_LIST_FILTER_OTHER,
+            g_equip_item_list_entries, ITEM_LIST_MODE_ALL);
         equip_item_store_category_list(g_equip_selected_slot, g_equip_item_list_entries);
         equip_menu_init_scrollable_list_core(g_equip_item_list_entries, g_equip_menu_selected_list_index,
             g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
@@ -69,7 +70,7 @@ s32 equip_run_item_type_order_mode(void) {
     }
     if (equip_thread_start_managed(EQUIP_THREAD_SLOT_POPUP_MENU, g_equip_item_type_order_active_menu) == 0) {
         g_equip_type_order_ready = 0;
-        return 2;
+        return MENU_ITEM_LIST_STATE_ACTION;
     }
-    return 5;
+    return MENU_ITEM_LIST_STATE_SORT_ORDER;
 }

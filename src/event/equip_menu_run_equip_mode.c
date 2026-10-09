@@ -60,7 +60,8 @@ s32 equip_menu_run_equip_mode(void) {
             } else {
                 slot = selected_slot;
             }
-            equip_item_build_filtered_list(unit, slot, g_equip_equip_item_slot, g_equip_item_list_entries, 1);
+            equip_item_build_filtered_list(
+                unit, slot, g_equip_equip_item_slot, g_equip_item_list_entries, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);
             g_equip_equip_item_list_open = 1;
             g_equip_equipment_panel_style = 1;
             battle_thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);

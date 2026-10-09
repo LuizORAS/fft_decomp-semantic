@@ -12,7 +12,7 @@ void world_thread_update_task_state_2(void) {
         world_input_clear_state();
     } else {
         running = world_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT);
-        if (running != 0 || g_world_grid_menu_id != 0) {
+        if (running != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
             world_input_clear_state();
             if (running != 0 && g_world_thread_task_active != 0) {
                 value = 1;

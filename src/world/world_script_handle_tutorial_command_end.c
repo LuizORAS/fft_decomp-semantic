@@ -14,7 +14,8 @@ s32 world_script_handle_tutorial_command_end(void) {
             world_card_load_globals_from_save_image(1);
             world_text_generate_formation_unit_name_string();
             main_heap_call_free(g_world_load_work_buffer);
-            world_formation_build_record_list(0, (world_formation_unit_t**)&g_world_formation_unit_pointers, 0);
+            world_formation_build_record_list(
+                0, (world_formation_unit_t**)&g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             return 0;
         }
     } else {

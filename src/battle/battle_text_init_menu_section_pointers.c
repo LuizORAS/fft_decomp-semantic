@@ -20,7 +20,7 @@ void battle_text_init_menu_section_pointers(void) {
     text = source + 32;
     destination = g_battle_text_section_pointers;
     do {
-        if (menu_input_disabled == 0 || index != TEXT_SECTION_EVENT_MESSAGES) {
+        if (menu_input_disabled == MENU_INPUT_PLAYER || index != TEXT_SECTION_EVENT_MESSAGES) {
             offset = *source;
             offset += (s32)text;
             *destination = (u8*)offset;

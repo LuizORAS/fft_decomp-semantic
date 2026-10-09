@@ -46,7 +46,7 @@ s32 world_menu_run_remove_item(void) {
         return 0;
     }
     locked = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
-    if (locked == 1) {
+    if (locked == WORLD_FORMATION_UNIT_UNLOCKED) {
         locked = 0;
     }
     if (locked != 0) {
@@ -79,7 +79,7 @@ s32 world_menu_run_remove_item(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
     slot = world_menu_update_vertical_selection_and_mark_change(
-        5, 3, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+        5, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
     cursor_y = &g_world_remove_item_cursor_point.y;
     index = slot;
     *cursor_y = index * 16 + 0x90;

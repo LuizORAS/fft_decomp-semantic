@@ -6,7 +6,7 @@
 #include "fft/battle.h"
 
 /* ability */
-extern s16 g_bunit_ability_category;
+extern s16 g_bunit_ability_category; /* menu_ability_category_e */
 extern u8* g_bunit_ability_selected_data_1;
 extern u8* g_bunit_ability_selected_specific;
 extern s32 g_bunit_ability_type;
@@ -118,7 +118,7 @@ extern help_navigation_record_t g_bunit_help_nodes_banner_top[];
  * instead of reusing the cached copies, which separate symbols reproduce. */
 extern help_navigation_record_t* g_bunit_help_nodes_reload;
 extern help_navigation_record_t g_bunit_help_nodes_unit_browse[];
-extern s32 g_bunit_help_screen_id;
+extern s32 g_bunit_help_screen_id; /* menu_grid_help_id_e */
 
 /* job */
 extern u32 g_bunit_job_current_jp;
@@ -128,7 +128,7 @@ extern u32 g_bunit_job_current_total_jp;
 extern s16 g_bunit_job_ids[];
 extern u8 g_bunit_job_list_initialized;
 extern s8 g_bunit_job_menu_active;
-extern s8 g_bunit_job_menu_phase;
+extern s8 g_bunit_job_menu_phase; /* menu_job_list_step_e */
 extern u32 g_bunit_job_next_level_jp_requirement;
 extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
@@ -154,7 +154,7 @@ s32 bunit_job_get_skillset(s32 job_id);
 extern u8 g_bunit_status_banner_enabled;
 extern u32 g_bunit_status_display_thread_params;
 extern s32 g_bunit_status_display_offset_y;
-extern u32 g_bunit_status_display_flags;
+extern u32 g_bunit_status_display_flags; /* menu_status_panel_flags_e */
 extern s32 g_bunit_status_display_redraw_request;
 extern s32 g_bunit_status_display_highlight;
 extern u8 g_bunit_status_banner_at_bottom;

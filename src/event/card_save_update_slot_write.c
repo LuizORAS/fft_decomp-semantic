@@ -73,7 +73,7 @@ void card_save_update_slot_write(s32 slot) {
         return;
     }
 
-    g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+    g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
     g_card_save_write_failed = 1;
     g_card_sound_queued_effect_id = MAIN_SFX_ERROR_MESSAGE;
 }

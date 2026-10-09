@@ -56,7 +56,7 @@ void card_save_update_slot_scan(void) {
                 g_card_save_menu_state = CARD_SAVE_MENU_SCAN_RESULT;
                 return;
             } else {
-                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+                g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         }
 
@@ -102,7 +102,7 @@ void card_save_update_slot_scan(void) {
         }
         g_card_save_slot_index = -1;
         g_card_save_format_prompt_descriptor[1].selected_index = 1;
-        g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+        g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
         g_card_save_format_prompt_active = 1;
         g_card_save_slot_scan_index = 0;
         g_card_save_slot_scan_active = 1;

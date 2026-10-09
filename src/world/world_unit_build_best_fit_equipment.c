@@ -37,14 +37,14 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     held_weapon = ITEM_ID_NOTHING;
     if (two_swords) {
         held_weapon = right_hand;
-        g_world_best_fit_slot_categories[1] = 5;
+        g_world_best_fit_slot_categories[1] = ITEM_LIST_FILTER_WEAPON;
         held_off_hand = left_hand;
         if (held_weapon == ITEM_ID_NOTHING) {
             held_weapon = left_hand;
             held_off_hand = ITEM_ID_NOTHING;
         }
     } else {
-        g_world_best_fit_slot_categories[1] = 6;
+        g_world_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
         if (right_hand >= ITEM_ID_THROWABLE_FIRST)
             held_off_hand = right_hand;
         else if (right_hand != ITEM_ID_NOTHING)
@@ -57,9 +57,10 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
 
     for (slot = 0; slot < 5; slot++) {
         category = g_world_best_fit_slot_categories[slot];
-        count = world_item_build_category_list(unit_index, 7, (s8)g_world_best_fit_slot_categories[slot], list, 3);
+        count = world_item_build_category_list(
+            unit_index, 7, (s8)g_world_best_fit_slot_categories[slot], list, ITEM_LIST_MODE_EQUIPPABLE_IN_INVENTORY);
         length = count;
-        if (category == 5) {
+        if (category == ITEM_LIST_FILTER_WEAPON) {
             if (held_weapon < ITEM_ID_THROWABLE_FIRST)
                 list[length++] = held_weapon;
             if (held_off_hand < ITEM_ID_THROWABLE_FIRST)
@@ -78,7 +79,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
                 retry = 0;
                 for (i = 0;; i++) {
                     if (list[i] == -1) {
-                        g_world_best_fit_slot_categories[1] = 6;
+                        g_world_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
                         if (slot == 1) {
                             retry = 1;
                             slot--;
@@ -104,7 +105,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
                 if (retry)
                     continue;
             }
-        } else if (category == 6) {
+        } else if (category == ITEM_LIST_FILTER_SHIELD) {
             if ((world_ability_has_two_hands(unit_index)
                     && (g_main_item_weapon_data[equipment[0]].flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE))
                 || (g_main_item_weapon_data[equipment[0]].flags & WEAPON_FLAG_FORCED_TWO_HANDS)) {

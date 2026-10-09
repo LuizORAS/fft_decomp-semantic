@@ -12,6 +12,6 @@ void world_formation_step_job_wheel_open_animation(void) {
     g_world_job_wheel_open_frame--;
     if (g_world_job_wheel_open_frame == 0) {
         g_world_job_wheel_opening = 0;
-        g_world_formation_current_menu = 3;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL;
     }
 }

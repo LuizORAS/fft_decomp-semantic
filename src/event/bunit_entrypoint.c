@@ -95,7 +95,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         if (g_bunit_menu_input_mask & PSX_PAD_SELECT) {
             bunit_text_start_selection_thread(3);
         }
-        if (g_bunit_help_screen_id != 0) {
+        if (g_bunit_help_screen_id != MENU_GRID_HELP_NONE) {
             bunit_menu_update_node_cursor(g_bunit_unit_data[g_bunit_unit_selected_index]->uses_monster_skillset);
         }
         if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
@@ -110,7 +110,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         } else {
             running = bunit_menu_run_unit_list_frame();
             bunit_menu_update_unit_grid(1, 1, 1, 1, 0,
-                g_bunit_help_screen_id == 0 ? (s16)g_bunit_input_secondary_repeat : 0,
+                g_bunit_help_screen_id == MENU_GRID_HELP_NONE ? (s16)g_bunit_input_secondary_repeat : 0,
                 (s16)bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();

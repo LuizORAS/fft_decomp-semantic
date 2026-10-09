@@ -12,17 +12,17 @@ void world_shop_run_main_menu_step(void) {
     if (running == 0) {
         world_gfx_clear_sprite_slots();
         if (g_world_menu_selection_results[0] == 0) {
-            g_world_shop_menu_step = 1;
-            g_world_shop_item_category = world_menu_set_cursor_position_2(0, 0);
+            g_world_shop_menu_step = WORLD_SHOP_STEP_BUY_LIST;
+            g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
         } else if (g_world_menu_selection_results[0] == 1) {
-            g_world_shop_menu_step = 4;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SELL_LIST;
         } else if (g_world_menu_selection_results[0] == 2) {
-            g_world_shop_menu_step = 6;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
             g_world_formation_selected_unit_index = 0;
             world_formation_stage_selected_unit();
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF818, 0);
         } else {
-            g_world_shop_menu_step = 0xD;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF803, 0);
         }
     }

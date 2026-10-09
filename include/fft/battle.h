@@ -1004,7 +1004,7 @@ enum {
     BATTLE_EVENT_STATUS_MASK_COUNT = 3,
 };
 
-extern s16 g_battle_script_attack_entry_mode;
+extern s16 g_battle_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s32 g_battle_script_condition_unit_battle_id;
 extern s32 g_battle_script_rand16_state;
 extern u32 g_battle_script_unfiltered_controller_input;
@@ -7116,20 +7116,20 @@ extern u8 g_battle_menu_buffer_arena[53][0x100];
 extern u8 g_battle_menu_buffer_allocation_map[53];
 extern s32 g_battle_menu_companion_executable_loading;
 extern s32 g_battle_menu_companion_executable_request_index;
-extern s32 g_battle_menu_current_id;
+extern s32 g_battle_menu_current_id; /* battle_menu_id_e */
 extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;
 extern s16 g_battle_menu_hovered_unit_display_mode;
 extern RECT g_battle_menu_hovered_unit_stats_display;
 extern world_menu_entry_t g_battle_menu_idle_action_entries[];
-extern u16 g_battle_menu_input_disabled;
+extern u16 g_battle_menu_input_disabled; /* menu_input_mode_e */
 extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
 extern u8 g_battle_menu_numeric_display_palette_indices[12];
 extern RECT g_battle_menu_numeric_display_texture_window;
 extern s32 g_battle_menu_packet_buffer_index;
 extern u8 g_battle_menu_palette_colors[];
 extern s32 g_battle_menu_panel_fade_intensity;
-extern s32 g_battle_menu_panel_fade_mode;
+extern s32 g_battle_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern RECT g_battle_menu_portrait_palette_rect;
 extern RECT g_battle_menu_portrait_pixel_rect;
 extern u8 g_battle_menu_restore_pending;

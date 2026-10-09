@@ -18,7 +18,7 @@ s32 world_shop_run_item_repurchase_menu(void) {
         owned = world_item_count_owned_and_equipped((s16)g_world_shop_repurchase_item);
         if (owned >= 99) {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF834, 0);
-            return -2;
+            return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
         count = world_shop_obtain_gil(0);
         price = world_item_get_price((s16)g_world_shop_repurchase_item) >> 1;
@@ -30,7 +30,7 @@ s32 world_shop_run_item_repurchase_menu(void) {
         }
         if (count == 0) {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF833, 0);
-            return -1;
+            return WORLD_SHOP_QUANTITY_CANNOT_AFFORD;
         }
         world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF835, 0);
         stock = world_shop_adjust_poached_item_quantity((s16)g_world_shop_repurchase_item, 0);

@@ -24,15 +24,15 @@ void world_card_run_slot_select_step(void) {
         selected = &g_world_menu_selection_results[5];
         slot = *selected;
         if (slot == -1) {
-            g_world_card_menu_step = 9;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEAVE;
         } else {
             g_world_text_substitution_values[0] = slot + 1;
             if (g_card_save_selected_slot != slot) {
-                g_main_card_save_last_used_slot = CARD_LAST_WRITTEN_SAVE_SLOT_NONE;
+                g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
             g_card_save_selected_slot = *selected;
             world_card_set_selected_slot(slot);
-            g_world_card_menu_step = 2;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_SCANNING;
         }
     }
 }

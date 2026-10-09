@@ -16,7 +16,8 @@ void battle_menu_confirm_move_command_thread(void) {
         battle_thread_exit_current();
     }
     menu = g_battle_menu_current_id;
-    if (menu == 0xE || menu == 0x14 || menu == 0x21 || menu == 0x2F || menu == 0x31 || menu == 0x33) {
+    if (menu == BATTLE_MENU_ID_TURN_MOVED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED || menu == 0x21
+        || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED || menu == 0x33) {
         battle_sound_set_effect_to_invalid();
         battle_thread_exit_current();
     }

@@ -24,7 +24,7 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode) {
     job = world_job_get_base(unit_index);
     if (mode == WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS
         && job == g_world_formation_unit_pointers[unit_index]->job_id) {
-        job |= WORLD_JOB_LIST_ENTRY_FLAGGED;
+        job |= WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
     }
     jobs[count++] = job;
     if (world_job_is_special_monster(g_world_formation_unit_pointers[unit_index]->job_id) == 0
@@ -41,12 +41,12 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode) {
             }
             if (mode == WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS
                 && job == g_world_formation_unit_pointers[unit_index]->job_id) {
-                jobs[count++] = job | WORLD_JOB_LIST_ENTRY_FLAGGED;
+                jobs[count++] = job | WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
             } else if (unlocked != 0) {
                 jobs[count++] = job;
             } else if (mode == WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS
                 && world_job_is_locked_for_all_units(job) == 0) {
-                jobs[count++] = job + WORLD_JOB_LIST_ENTRY_FLAGGED;
+                jobs[count++] = job + WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
             }
         }
     }

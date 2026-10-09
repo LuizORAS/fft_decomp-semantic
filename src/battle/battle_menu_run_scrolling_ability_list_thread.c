@@ -207,7 +207,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 }
             }
             if ((g_battle_script_event_input & PSX_PAD_UP)
-                && (!(g_battle_script_event_current_input & PSX_PAD_SQUARE) || g_battle_menu_input_disabled != 0)) {
+                && (!(g_battle_script_event_current_input & PSX_PAD_SQUARE)
+                    || g_battle_menu_input_disabled != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     battle_sound_set_effect_to_cursor_move();
@@ -219,7 +220,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     battle_sound_set_effect_to_cursor_move();
                 }
             } else if ((g_battle_script_event_input & PSX_PAD_DOWN)
-                && (!(g_battle_script_event_current_input & PSX_PAD_SQUARE) || g_battle_menu_input_disabled != 0)) {
+                && (!(g_battle_script_event_current_input & PSX_PAD_SQUARE)
+                    || g_battle_menu_input_disabled != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->columns.row_count - 1) {
                     cursor++;
                     battle_sound_set_effect_to_cursor_move();

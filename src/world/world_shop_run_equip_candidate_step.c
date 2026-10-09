@@ -42,9 +42,9 @@ void world_shop_run_equip_candidate_step(void) {
         g_world_status_display_thread_params.redraw_request = 1;
     }
     if (g_world_formation_unit_banner_enabled != 0 && g_world_formation_unit_browse_enabled == 0) {
-        text_id = 0x20000;
+        text_id = MENU_GRID_HELP_BANNER_TOP;
         if (g_world_formation_scroll_enabled != 0) {
-            text_id = 0x20001;
+            text_id = MENU_GRID_HELP_BANNER_BOTTOM;
         }
         g_world_menu_description_text_id = text_id;
     } else {
@@ -80,7 +80,8 @@ void world_shop_run_equip_candidate_step(void) {
                     = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.equipment,
                         world_ability_has_two_hands(g_world_formation_selected_unit_index));
                 g_world_shop_equip_candidate_preview_visible = 1;
-                g_world_item_preview_stat_detail.equipment[slot] = g_world_shop_equip_candidate_item | 0x8000;
+                g_world_item_preview_stat_detail.equipment[slot]
+                    = g_world_shop_equip_candidate_item | WORLD_EQUIPMENT_SHOP_ITEM;
             }
         }
     } else {
@@ -88,7 +89,7 @@ void world_shop_run_equip_candidate_step(void) {
         if (g_world_shop_equip_candidate_saved_browse == 0 && (input & PSX_PAD_CROSS)) {
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
             g_world_formation_unit_banner_enabled = 0;
-            g_world_shop_menu_step = 1;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_BUY_LIST;
             world_script_set_vsync_mode_and_event_speed(2);
             g_world_shop_background_visible = 1;
             g_world_shop_equip_candidate_initialized = 0;

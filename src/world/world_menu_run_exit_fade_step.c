@@ -12,7 +12,7 @@ void world_menu_run_exit_fade_step(void) {
     }
     if (g_world_shop_exit_fade_started != 0) {
         if (world_gfx_update_fade_out_tile() == 0) {
-            g_world_shop_menu_step = -1;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT;
             g_world_shop_exit_step_initialized = 0;
         }
     } else if (g_world_input_newly_pressed & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {

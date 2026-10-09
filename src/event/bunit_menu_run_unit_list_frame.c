@@ -57,9 +57,10 @@ s32 bunit_menu_run_unit_list_frame(void) {
             return 1;
         }
         if (g_bunit_unit_browse_enabled != 0) {
-            g_bunit_text_selection_id = 0x20002;
+            g_bunit_text_selection_id = MENU_GRID_HELP_UNIT_BROWSE;
         } else if (g_bunit_status_banner_enabled != 0) {
-            g_bunit_text_selection_id = g_bunit_status_banner_at_bottom != 0 ? 0x20001 : 0x20000;
+            g_bunit_text_selection_id
+                = g_bunit_status_banner_at_bottom != 0 ? MENU_GRID_HELP_BANNER_BOTTOM : MENU_GRID_HELP_BANNER_TOP;
         } else {
             g_bunit_text_selection_id = 0;
         }

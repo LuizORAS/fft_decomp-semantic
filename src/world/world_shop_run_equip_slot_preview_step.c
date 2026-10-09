@@ -40,12 +40,12 @@ void world_shop_run_equip_slot_preview_step(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
         world_menu_toggle_preview_stats_window(0);
         g_world_status_display_thread_params.redraw_request = 1;
-        g_world_shop_menu_step = 6;
+        g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         g_world_shop_equip_slot_preview_initialized = 0;
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
     }
     slot = world_menu_update_vertical_selection_and_mark_change(
-        5, 3, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
+        5, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
     if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot]
         != ITEM_ID_NOTHING) {
         value = (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot]

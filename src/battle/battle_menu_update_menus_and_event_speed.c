@@ -15,7 +15,7 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
     s32 fill;
 
     g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
-    if (g_battle_menu_input_disabled != 0) {
+    if (g_battle_menu_input_disabled != MENU_INPUT_PLAYER) {
         controller_input = g_battle_script_unfiltered_controller_input;
     }
     battle_map_store_selected_tile_data();

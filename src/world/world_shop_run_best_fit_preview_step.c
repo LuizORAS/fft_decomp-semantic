@@ -146,7 +146,7 @@ void world_shop_run_best_fit_preview_step(void) {
             }
             world_formation_recalculate_selected_unit_stats();
         }
-        g_world_shop_menu_step = 6;
+        g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         g_world_menu_sound_muted = 0;
         world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
     }

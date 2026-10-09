@@ -5,11 +5,11 @@ void world_formation_rebuild_unit_list(void) {
     s32 mode;
 
     if (g_world_shop_id == WORLD_SHOP_ID_FORMATION) {
-        mode = 0;
+        mode = WORLD_FORMATION_RECORD_LIST_ALL;
     } else {
-        mode = 2;
+        mode = WORLD_FORMATION_RECORD_LIST_MONSTERS;
         if (g_world_shop_id != WORLD_SHOP_ID_SOLDIER_OFFICE) {
-            mode = 1;
+            mode = WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS;
         }
     }
     g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, mode);

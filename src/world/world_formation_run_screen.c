@@ -81,15 +81,17 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
                 world_menu_start_description_text_thread((world_menu_description_record_t*)3);
             }
-            if (g_world_grid_menu_id != 0) {
+            if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
                 world_menu_update_grid_cursor(
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
             }
             world_menu_set_palette_mode(g_world_thread_task_active);
             g_world_formation_menu_handlers[g_world_formation_current_menu]();
-            if (g_world_formation_current_menu == 0 || (u32)(g_world_formation_current_menu - 4) < 2) {
-                world_formation_update_and_draw_unit_grid(1, g_world_formation_current_menu == 0,
-                    g_world_formation_current_menu == 0,
+            if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID
+                || (u32)(g_world_formation_current_menu - 4) < 2) {
+                world_formation_update_and_draw_unit_grid(1,
+                    g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID,
+                    g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID,
                     g_world_formation_triangle_menu_open + g_world_grid_menu_id != 0
                         ? 0
                         : g_world_input_secondary_repeat_latched,
@@ -100,22 +102,24 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             i = 0;
             if (g_world_formation_unit_cycle_mode != 0 || g_world_formation_unit_browse_enabled != 0) {
-                if (g_world_thread_task_active != 0 || g_world_grid_menu_id != 0
+                if (g_world_thread_task_active != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
                     || g_world_formation_unit_cycle_mode == 1 || g_world_formation_triangle_menu_running != 0) {
                     i = 1;
                 }
                 buttons = 0;
-                if (g_world_formation_current_menu == 4) {
+                if (g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT) {
                     i = 1;
                 }
                 if (i == 0) {
                     buttons = g_world_input_secondary_repeat;
                 }
                 world_formation_cycle_selected_unit((s16)buttons);
-                world_menu_draw_pressable_button(0, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, MAIN_SFX_PAGE_SWITCH);
-                world_menu_draw_pressable_button(1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, MAIN_SFX_PAGE_SWITCH);
+                world_menu_draw_pressable_button(
+                    MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, MAIN_SFX_PAGE_SWITCH);
+                world_menu_draw_pressable_button(
+                    MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, MAIN_SFX_PAGE_SWITCH);
             }
-            if (g_world_formation_current_menu != 8) {
+            if (g_world_formation_current_menu != WORLD_FORMATION_MENU_ITEM_REMOVE) {
                 world_formation_update_unit_selection();
             }
             if (g_world_formation_unit_slide_pending != 0) {
@@ -123,13 +127,13 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
             world_menu_draw_active_window_frames();
-            if (g_world_formation_current_menu == 9 || g_world_formation_current_menu >= 14
-                || g_world_formation_current_menu == 3) {
+            if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM_LIST || g_world_formation_current_menu >= 14
+                || g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL) {
                 i = 0x3E;
             } else {
                 i = 9;
             }
-            if (g_world_grid_menu_id != 0) {
+            if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
                 i = 9;
             }
             if (g_world_formation_cursor_ot_override != 0) {

@@ -365,6 +365,8 @@ typedef enum item_id {
  * shields, headgear, body armor, accessories, and consumables. */
 enum {
     WORLD_ITEM_ID_MASK = 0x3ff,
+    WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE = 0x4000, /* item list entries: the unit cannot equip the item */
+    WORLD_EQUIPMENT_SHOP_ITEM = 0x8000, /* equipment halfwords: an unpaid shop item tried on in the fitting room */
     ITEM_ID_THROWABLE_FIRST = 0x7a,
     ITEM_ID_SHIELD_FIRST = 0x80,
     ITEM_ID_HEADGEAR_FIRST = 0x90,

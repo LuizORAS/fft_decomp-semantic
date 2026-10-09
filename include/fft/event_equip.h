@@ -406,7 +406,7 @@ extern s16 g_equip_menu_list_scroll_entry_ids;
 extern u16 g_equip_menu_list_scroll_progress;
 extern s8 g_equip_menu_ready;
 extern void (*g_equip_menu_screen_state_handlers[])(void);
-extern s8 g_equip_menu_substate;
+extern s8 g_equip_menu_substate; /* menu_item_list_state_e */
 extern s16 g_equip_menu_window_right_x;
 void equip_menu_clear_selection_records(void);
 void equip_menu_clear_selection_values(void);

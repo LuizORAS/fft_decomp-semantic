@@ -43,7 +43,7 @@ s32 world_menu_run_remove_ability(void) {
         return 0;
     }
     lock_state = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
-    if (lock_state == 1) {
+    if (lock_state == WORLD_FORMATION_UNIT_UNLOCKED) {
         lock_state = 0;
     }
     if (lock_state != 0) {
@@ -75,7 +75,7 @@ s32 world_menu_run_remove_ability(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
     slot = world_menu_update_vertical_selection_and_mark_change(
-               4, 5, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
+               4, WORLD_MENU_CURSOR_REMOVE_ABILITY_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
         + 1;
     cursor_y = &g_world_remove_ability_cursor_point.y;
     slot_index = slot;

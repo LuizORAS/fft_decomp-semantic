@@ -66,10 +66,11 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
     world_formation_init_menu_display();
-    g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
+    g_world_formation_unit_count
+        = world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
     g_world_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_card_slot_text_table;
-    world_gfx_bind_data_pointer(3);
-    g_world_card_menu_step = 0;
+    world_gfx_bind_data_pointer(WORLD_TEXT_DATA_FORMATION_MESSAGES);
+    g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
     /* 1 from the world menu, 0 from the title screen's Continue (load only). */
     g_world_card_mode_select_enabled = mode_select_enabled;
     music_handle = main_sound_open_music_into_free_slot(0x29);
@@ -86,7 +87,8 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         world_thread_update_task_state_2();
         world_gfx_update_fade_in_tile();
         world_gfx_enqueue_tile(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
-        if (g_world_card_menu_step == 3 && world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0) {
+        if (g_world_card_menu_step == WORLD_CARD_MENU_STEP_SELECT_SAVE
+            && world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) == 0) {
             input = (u16)g_world_input_primary_repeat;
         } else {
             input = 0;
@@ -95,21 +97,21 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             world_card_update_and_draw_slot_list(input);
         }
         step = g_world_card_menu_step;
-        if (step == 0) {
+        if (step == WORLD_CARD_MENU_STEP_SELECT_CARD) {
             world_card_run_slot_select_step();
-        } else if (step == 2) {
+        } else if (step == WORLD_CARD_MENU_STEP_SCANNING) {
             world_card_update_slot_scan();
-        } else if (step == 1) {
+        } else if (step == WORLD_CARD_MENU_STEP_SELECT_MODE) {
             world_card_run_mode_select_step();
-        } else if (step == 4) {
+        } else if (step == WORLD_CARD_MENU_STEP_LOADING) {
             world_card_run_load_step(g_world_card_active_slot);
-        } else if (step == 5) {
+        } else if (step == WORLD_CARD_MENU_STEP_SAVING) {
             world_card_run_save_step(g_world_card_active_slot);
-        } else if (step == 9) {
+        } else if (step == WORLD_CARD_MENU_STEP_LEAVE) {
             main_sound_set_current_music_target(0, 0xf0);
             while (world_card_check_selected() == CARD_IO_RESULT_PENDING) { }
             world_gfx_start_increasing_fade();
-            g_world_card_menu_step = 0xff;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEFT;
         }
         world_formation_set_ordering_table_pointer(g_world_gfx_active_packet_buffer->otag + 1);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 60;

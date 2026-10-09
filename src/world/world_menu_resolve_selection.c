@@ -27,7 +27,7 @@ s32 world_menu_resolve_selection(void) {
         for (i = 0; i < 31; i++) {
             if (menu == g_world_menu_command_maps[i].menu_id) {
                 if (command != 0xFF) {
-                    if (menu == 0x69) {
+                    if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_world_dead_unit_action;
                         g_world_menu_preview_action.item_id = g_world_dead_unit_result;
                         option = 0xFFFE;

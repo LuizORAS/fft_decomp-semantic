@@ -57,7 +57,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
         negative = 1;
     }
     opcode = command->opcode;
-    if (opcode == 0x1B || opcode == 0x19) {
+    if (opcode == MENU_SCRIPT_OP_NUMBER_TINTED || opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
         color = g_bunit_gfx_sprite_color;
     } else {
         color = 0;
@@ -67,9 +67,9 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
     } else {
         clut = g_bunit_text_metric_2;
     }
-    if (value & 0x40000000) {
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
         clut = g_bunit_text_metric_3;
-        value &= 0xBFFFFFFF;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (command->style == 1) {
         glyph.x = 0x78;
@@ -87,7 +87,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
         glyph.w = 0xA;
         glyph.h = 0x10;
     }
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         value = command->width;
         while (value > 0) {
             next_remaining = value - 1;
@@ -117,16 +117,16 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
                     g_bunit_text_digit_texture_page, clut, g_bunit_gfx_otag_index);
                 negative = 0;
             } else {
-                if (command->opcode == 0x1A) {
+                if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
                     clut = g_bunit_text_metric_2;
                 }
                 if (blanks != 0) {
                     digit = 0;
                     blanks--;
-                    if (command->opcode == 0x19) {
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
                         continue;
                     }
-                    if (command->opcode == 0x1A && i < command->width - 1) {
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS && i < command->width - 1) {
                         clut = g_bunit_text_metric_3;
                     }
                 } else {

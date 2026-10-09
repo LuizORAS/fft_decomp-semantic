@@ -245,7 +245,7 @@ void require_render_unit_status_panel_thread(void) {
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;
-            suppress = thread->flags & 0x80;
+            suppress = thread->flags & MENU_STATUS_PANEL_HIDDEN;
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
@@ -375,7 +375,7 @@ void require_render_unit_status_panel_thread(void) {
                 LoadImage(&rects[5], (u32*)(small_text_image + 0xA0));
             }
         }
-        if (!(thread->flags & 0x80)) {
+        if (!(thread->flags & MENU_STATUS_PANEL_HIDDEN)) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_b);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);

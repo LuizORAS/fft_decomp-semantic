@@ -82,10 +82,10 @@ void battle_text_character_handling_thread(void) {
     rec._unknown_2a = 0;
     rec.origin_x = 8;
     rec.origin_y = 8;
-    rec.box_type = rec.dialog_type & 0x70;
-    rec.position = rec.dialog_type & 3;
-    rec.options = rec.dialog_type & 0xC;
-    rec.no_box = rec.dialog_type & 0x80;
+    rec.box_type = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
+    rec.position = rec.dialog_type & DIALOG_TYPE_POSITION_MASK;
+    rec.options = rec.dialog_type & DIALOG_TYPE_OPTIONS_MASK;
+    rec.no_box = rec.dialog_type & DIALOG_TYPE_NO_BOX;
     rec.arrow_offset = thread->task_words[4];
     rec.x_offset = thread->task_words[2];
     rec.y_offset = thread->task_words[3];
@@ -123,14 +123,14 @@ void battle_text_character_handling_thread(void) {
         if (rec.portrait < 8) {
             rec.width = rec.mark + 0x40;
         }
-        if (rec.options == 0) {
+        if (rec.options == DIALOG_OPTIONS_TAIL) {
             rec.height = rec.lines * 16 + 0x18;
         }
-        if (rec.options == 4) {
+        if (rec.options == DIALOG_OPTIONS_ALTERNATE_TAIL) {
             rec.height += 0x10;
         }
     }
-    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != 8) {
+    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL) {
         center = rec.width >> 1;
         value = battle_script_get_misc_id(battle_thread_get_current_parameter_3());
         battle_unit_project_misc_to_screen(value, g_battle_scratch_coords);
@@ -286,7 +286,7 @@ void battle_text_character_handling_thread(void) {
             rec.arrow_x -= 0x20;
         }
         to.y = rec.y + 7;
-        if (rec.options != 8) {
+        if (rec.options != DIALOG_OPTIONS_NO_TAIL) {
             if (rec.position == 2) {
                 to.y = rec.y + 0xF;
                 rec.origin_y += 8;
@@ -294,7 +294,7 @@ void battle_text_character_handling_thread(void) {
                 rec.arrow_y -= 8;
             }
         }
-        if (rec.options == 4) {
+        if (rec.options == DIALOG_OPTIONS_ALTERNATE_TAIL) {
             rec.arrow_y -= 8;
         }
         to.w = 0x1F;
@@ -340,7 +340,7 @@ void battle_text_character_handling_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.tail_offset < 0 && rec.portrait < 8) {
         rec.x = window_u + 0x30;
     }
-    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != 8 && rec.position == 2) {
+    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL && rec.position == 2) {
         rec.y += 8;
     }
     no_wait = 0;
@@ -450,12 +450,14 @@ void battle_text_character_handling_thread(void) {
                                         scroll_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
                                         scroll_window->scroll_range = rec.line - rec.lines;
                                         scroll_window->scroll_position = rec.first_line;
-                                        scroll_window->icon_flags = 4;
+                                        scroll_window->icon_flags = MENU_WINDOW_ICON_SCROLL_MARKER;
                                         if (rec.first_line != 0) {
-                                            scroll_window->icon_flags = 5;
+                                            scroll_window->icon_flags
+                                                = MENU_WINDOW_ICON_SCROLL_UP | MENU_WINDOW_ICON_SCROLL_MARKER;
                                         }
                                         if (rec.first_line != rec.line - rec.lines) {
-                                            WINDOW_AT(g_battle_menu_packet_buffer_index)->icon_flags |= 2;
+                                            WINDOW_AT(g_battle_menu_packet_buffer_index)->icon_flags
+                                                |= MENU_WINDOW_ICON_SCROLL_DOWN;
                                         }
                                     }
                                     if ((g_battle_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
@@ -756,7 +758,7 @@ void battle_text_character_handling_thread(void) {
                         glyph->x = cursor_x;
                         glyph->y = cursor_y;
                         glyph->glyph = character;
-                        glyph->mode = rec.dialog_type & 0x70;
+                        glyph->mode = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
                         glyph->palette = rec.color;
                     }
                     battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);

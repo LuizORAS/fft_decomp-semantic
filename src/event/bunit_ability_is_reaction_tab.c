@@ -3,5 +3,5 @@
 
 /* Reaction abilities occupy category one. */
 s32 bunit_ability_is_reaction_tab(s32 unused_row) {
-    return g_bunit_ability_category == 1;
+    return g_bunit_ability_category == MENU_ABILITY_CATEGORY_REACTION;
 }

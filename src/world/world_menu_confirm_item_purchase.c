@@ -10,7 +10,7 @@ void world_menu_confirm_item_purchase(void) {
             g_world_shop_purchase_message_wait = 0;
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF805, 0);
             g_world_menu_prompt_active = 0;
-            g_world_shop_menu_step = 1;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_BUY_LIST;
         }
     } else {
         result = world_shop_run_item_purchase_quantity_menu();
@@ -32,6 +32,6 @@ void world_menu_confirm_item_purchase(void) {
     }
     world_menu_switch_item_category(0);
     world_menu_run_script_with_palette_mode(g_world_shop_purchase_menu_script, 0, g_world_thread_task_active);
-    world_menu_draw_pressable_button(3, 0xBA, 0x4C, 0, 1, MAIN_SFX_CONFIRM);
+    world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_SHOP_LIST_TRIANGLE, 0xBA, 0x4C, 0, 1, MAIN_SFX_CONFIRM);
     world_shop_run_obtain_gil_menu();
 }

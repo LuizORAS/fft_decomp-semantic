@@ -69,13 +69,13 @@ void battle_menu_build_ability_list(s32 mode) {
         battle_menu_load_throw_abilities(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.mp_costs);
     }
     if (type == ACTION_MENU_TYPE_ARITHMETICKS) {
-        if (mode == 2) {
+        if (mode == MENU_ARITHMETICKS_LIST_ATTRIBUTES) {
             battle_menu_load_math_skill_attributes(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.ids);
         }
-        if (mode == 1) {
+        if (mode == MENU_ARITHMETICKS_LIST_MULTIPLES) {
             battle_menu_load_math_skill_multiples(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.ids);
         }
-        if (mode == 0) {
+        if (mode == MENU_ARITHMETICKS_LIST_ABILITIES) {
             battle_menu_collect_calculator_abilities(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.ids);
         }
     }
@@ -94,7 +94,7 @@ void battle_menu_build_ability_list(s32 mode) {
     }
     window_x = 0xAC;
     if (type != ACTION_MENU_TYPE_ARITHMETICKS) {
-        mode = 0;
+        mode = MENU_ARITHMETICKS_LIST_ABILITIES;
     }
 
     g_battle_ability_menu_layout.mode[1] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;

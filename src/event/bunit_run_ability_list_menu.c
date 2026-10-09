@@ -61,12 +61,12 @@ s32 bunit_run_ability_list_menu(void) {
     if (g_bunit_menu_input_active_mask & PSX_PAD_CROSS) {
         g_bunit_ability_list_ready = 0;
         g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
-        return 0;
+        return MENU_JOB_LIST_STEP_JOBS;
     }
     if (g_bunit_menu_input_active_mask & PSX_PAD_CIRCLE) {
         g_bunit_ability_list_ready = 0;
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
-        return -1;
+        return MENU_JOB_LIST_STEP_CLOSE;
     }
     category = bunit_menu_update_horizontal_selection_and_mark_change(
         4, 0, g_bunit_menu_input_repeat_mask, MAIN_SFX_PAGE_SWITCH);
@@ -88,5 +88,5 @@ s32 bunit_run_ability_list_menu(void) {
     rect.w = 0x50;
     rect.h = 0x10;
     bunit_gfx_enqueue_textured_quad(&rect, 0, 0xC8, 0, 0, g_bunit_text_digit_texture_page, g_bunit_text_metric_0, 0xB);
-    return 1;
+    return MENU_JOB_LIST_STEP_ABILITIES;
 }

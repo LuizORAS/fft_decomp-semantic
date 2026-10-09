@@ -59,11 +59,11 @@ s32 attack_load_scenario_conditionals(void) {
         if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 8) {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 9);
             battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
-            g_battle_script_attack_entry_mode = 1;
+            g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
             g_main_system_go_straight_to_battle = 0;
         }
     }
-    if (ENTRY_MODE == 2) {
+    if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         g_main_special_portrait_wldface_id = 0;
         g_main_special_portrait_unit_id = 0;
         value = g_main_scenario_event_finish_operations[battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];

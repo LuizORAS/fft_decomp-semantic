@@ -20,7 +20,7 @@ s32 battle_menu_is_still_building(void) {
         }
         i += 1;
     } while (i < 0xA);
-    if (g_battle_menu_input_disabled != 1) {
+    if (g_battle_menu_input_disabled != MENU_INPUT_BLOCKED) {
         result = i != 0xA;
         return result * 4;
     }

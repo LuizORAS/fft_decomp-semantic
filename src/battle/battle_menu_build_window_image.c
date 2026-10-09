@@ -19,7 +19,7 @@ extern world_glyph_blit_t g_battle_menu_window_sprite_position;
  * the target has no return value on that path. `i` is reused for the thread
  * flag because a separate local swaps the $s0/$s1 allocation. */
 void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
-    u16 kind = mode & 0xC;
+    u16 kind = mode & DIALOG_TYPE_OPTIONS_MASK;
     s32 words;
     s32 partial;
     s32 byte_count;
@@ -33,19 +33,19 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
     words = width & 3;
     partial = words != 0;
     words = (width >> 2) + partial;
-    byte_count = (width * (kind == 8 ? height : height + 0x10)) >> 1;
+    byte_count = (width * (kind == DIALOG_OPTIONS_NO_TAIL ? height : height + 0x10)) >> 1;
     buf = battle_menu_alloc_memory(byte_count);
     battle_clear_menu_render_buffer((u8*)buf, byte_count);
     x_off = 0;
     src = (u16*)g_battle_menu_glyph_image;
-    if (kind != 8) {
-        if ((mode & 3) == 2) {
+    if (kind != DIALOG_OPTIONS_NO_TAIL) {
+        if ((mode & DIALOG_TYPE_POSITION_MASK) == 2) {
             x_off = words * 8;
         }
-        if ((mode & 0xC) == 0) {
+        if ((mode & DIALOG_TYPE_OPTIONS_MASK) == DIALOG_OPTIONS_TAIL) {
             height -= 8;
         }
-        if ((mode & 0xC) == 4) {
+        if ((mode & DIALOG_TYPE_OPTIONS_MASK) == DIALOG_OPTIONS_ALTERNATE_TAIL) {
             height -= 0x10;
         }
     }
@@ -62,17 +62,17 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         row[words - 2] = 0;
         battle_menu_build_window_image_row(src, row, words, src_index);
     }
-    if (kind != 8) {
+    if (kind != DIALOG_OPTIONS_NO_TAIL) {
         g_battle_menu_window_sprite_glyph.rect.x = 0x58;
         g_battle_menu_window_sprite_glyph.rect.y = 0;
-        if ((mode & 0xC) == 4) {
+        if ((mode & DIALOG_TYPE_OPTIONS_MASK) == DIALOG_OPTIONS_ALTERNATE_TAIL) {
             g_battle_menu_window_sprite_glyph.rect.x = 0x68;
         }
-        if ((mode & 3) == 1) {
+        if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
             g_battle_menu_window_sprite_glyph.rect.y = 0x10;
         }
         g_battle_menu_window_sprite_position.rect.x = (width >> 1) + tail_offset - 8;
-        if ((mode & 3) != 2) {
+        if ((mode & DIALOG_TYPE_POSITION_MASK) != 2) {
             g_battle_menu_window_sprite_position.rect.y = 0x38;
         } else {
             g_battle_menu_window_sprite_position.rect.y = 0;
@@ -80,7 +80,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         g_battle_menu_window_sprite_position.stride = words * 4;
         i = g_battle_threads[g_battle_current_thread_id].task_words[5] & 0xF0;
         if (i != 0) {
-            if ((mode & 3) == 1) {
+            if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
                 g_battle_menu_window_sprite_position.rect.x -= 0x10;
             } else {
                 g_battle_menu_window_sprite_position.rect.x += 0x10;

@@ -16,7 +16,7 @@ void world_shop_run_item_sell_confirm_step(void) {
             & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_DPAD_MASK)) {
             g_world_shop_sell_message_wait = 0;
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF80D, 0);
-            g_world_shop_menu_step = 4;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SELL_LIST;
             g_world_menu_prompt_active = 0;
         }
     } else {
@@ -35,9 +35,9 @@ void world_shop_run_item_sell_confirm_step(void) {
             if (g_world_shop_item_category != 4) {
                 message = (s8)(category + 1);
             } else {
-                message = 7;
+                message = ITEM_LIST_FILTER_OTHER;
             }
-            world_item_build_category_list(0, next_category, message, g_world_menu_entry_ids, 0);
+            world_item_build_category_list(0, next_category, message, g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
                 g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], g_world_shop_sell_list_menu_script);
             world_menu_set_window_scale_step(10);

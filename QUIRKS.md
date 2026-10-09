@@ -219,6 +219,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - Words 0xab-0xff of the script variable block are reachable by no variable
   id, yet word 0xff gates the BATTLE call in
   `main_overlay_call_battle_return_zero`.
+- Formation menu states 22 and 23 have handler table entries and code paths
+  and no code stores them. Menu input mode 1 is tested in four places and
+  never stored. The confirm-move thread rejects Move for menu ids 0x21 and
+  0x33 and the selection resolver special-cases 0x19; nothing produces them.
+- `world_item_build_category_list` and `world_shop_build_item_list` treat
+  filters 0 and 1 (the two hand slots) identically.
+- The fur shop's "sell" list sells ordinary inventory at half price; its
+  "buy" list is the poached stock.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

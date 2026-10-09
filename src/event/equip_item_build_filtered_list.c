@@ -24,8 +24,9 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     s32 matches;
     s32 sort_key;
 
-    if (equip_filter == 1 && g_main_game_options.fields.show_unequippable_items != GAME_OPTION_ON) {
-        equip_filter = 2;
+    if (equip_filter == ITEM_LIST_MODE_MARK_UNEQUIPPABLE
+        && g_main_game_options.fields.show_unequippable_items != GAME_OPTION_ON) {
+        equip_filter = ITEM_LIST_MODE_EQUIPPABLE;
     }
     item_id = 1;
     count = 0;
@@ -38,27 +39,27 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
         matches = 0;
         if (category < 2) {
             matches = item_category < 2;
-        } else if (category == 2) {
+        } else if (category == ITEM_LIST_FILTER_HEADGEAR) {
             if (item_category == ITEM_MENU_CATEGORY_HEADGEAR) {
                 matches = 1;
             }
-        } else if (category == 3) {
+        } else if (category == ITEM_LIST_FILTER_BODY_ARMOR) {
             if (item_category == category) {
                 matches = 1;
             }
-        } else if (category == 4) {
+        } else if (category == ITEM_LIST_FILTER_ACCESSORY) {
             if (item_category == category) {
                 matches = 1;
             }
-        } else if (category == 5) {
+        } else if (category == ITEM_LIST_FILTER_WEAPON) {
             if (item_category == ITEM_MENU_CATEGORY_WEAPON) {
                 matches = 1;
             }
-        } else if (category == 6) {
+        } else if (category == ITEM_LIST_FILTER_SHIELD) {
             if (item_category == ITEM_MENU_CATEGORY_SHIELD) {
                 matches = 1;
             }
-        } else if (category == 7) {
+        } else if (category == ITEM_LIST_FILTER_OTHER) {
             if (item_category == ITEM_MENU_CATEGORY_OTHER) {
                 matches = 1;
             }
@@ -66,12 +67,12 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
         if (matches == 0) {
             continue;
         }
-        if (equip_filter != 0) {
+        if (equip_filter != ITEM_LIST_MODE_ALL) {
             matches = equip_unit_can_equip_item_id(unit_index, (s16)entry);
-            if (equip_filter == 2 && matches == -1) {
+            if (equip_filter == ITEM_LIST_MODE_EQUIPPABLE && matches == -1) {
                 continue;
             }
-            if (equip_filter == 1 && matches == -1) {
+            if (equip_filter == ITEM_LIST_MODE_MARK_UNEQUIPPABLE && matches == -1) {
                 entry |= 0x4000; /* listed but not equippable */
             }
         }
@@ -81,11 +82,11 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     list[count] = -1;
 
     sort_key = 100;
-    if (category == 0) {
+    if (category == ITEM_LIST_FILTER_HAND) {
         sort_key = 0;
     } else if (category < 5) {
         sort_key = category - 1;
-    } else if (category == 7) {
+    } else if (category == ITEM_LIST_FILTER_OTHER) {
         sort_key = 4;
     }
     if (sort_key < 5 && (u16)(sort_mode - 1) < 5) {

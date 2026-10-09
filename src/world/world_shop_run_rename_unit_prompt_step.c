@@ -28,9 +28,9 @@ void world_shop_run_rename_unit_prompt_step(void) {
         g_world_shop_background_visible = 0;
     }
     if (g_world_formation_unit_banner_enabled != 0) {
-        text_id = 0x20000;
+        text_id = MENU_GRID_HELP_BANNER_TOP;
         if (g_world_formation_scroll_enabled != 0) {
-            text_id = 0x20001;
+            text_id = MENU_GRID_HELP_BANNER_BOTTOM;
         }
         g_world_menu_description_text_id = text_id;
     } else {
@@ -60,7 +60,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
                 g_world_shop_rename_error_shown = 1;
             } else {
-                g_world_shop_menu_step = 0x1B;
+                g_world_shop_menu_step = WORLD_SHOP_STEP_RENAME_NAME_ENTRY;
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_formation_unit_banner_enabled = 0;
                 g_world_shop_rename_prompt_initialized = 0;
@@ -72,7 +72,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
             world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
-            g_world_shop_menu_step = 0x19;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
         }
     }
 }

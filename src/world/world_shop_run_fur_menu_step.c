@@ -29,7 +29,7 @@ void world_shop_run_fur_menu_step(void) {
             }
         }
         if (g_world_shop_fur_has_secret_hunt == 0) {
-            g_world_shop_menu_step = 0xD;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF82D, 0);
             return;
         }
@@ -45,8 +45,8 @@ void world_shop_run_fur_menu_step(void) {
         world_gfx_clear_sprite_slots();
         if (g_world_menu_selection_results[0] == 0) {
             if (g_world_shop_fur_has_poached_stock != 0) {
-                g_world_shop_item_category = world_menu_set_cursor_position_2(0, 0);
-                g_world_shop_menu_step = 0xF;
+                g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_BUY_LIST;
                 g_world_shop_fur_opened = 0;
             } else {
                 world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF82E, 0);
@@ -54,14 +54,14 @@ void world_shop_run_fur_menu_step(void) {
             }
         } else if (g_world_menu_selection_results[0] == 1) {
             if (world_menu_has_items(0) != 0) {
-                g_world_shop_menu_step = 0x12;
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_SELL_LIST;
                 g_world_shop_fur_opened = 0;
             } else {
                 world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF845, 0);
                 g_world_shop_fur_waiting_message = 1;
             }
         } else {
-            g_world_shop_menu_step = 0xD;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF831, 0);
             g_world_shop_fur_opened = 0;
         }

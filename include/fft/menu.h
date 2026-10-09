@@ -64,6 +64,14 @@ typedef struct world_item_stat_detail {
 typedef char world_stat_detail_size_must_be_0x40[(sizeof(world_item_stat_detail_t) == 0x40) ? 1 : -1];
 
 /* menu */
+/* menu_window_buffer_t::icon_flags: which of the window's three icon sprites
+ * are drawn. */
+typedef enum menu_window_icon_flags {
+    MENU_WINDOW_ICON_SCROLL_UP = 1,     /* icon_sprites[0]: lines above the first drawn line */
+    MENU_WINDOW_ICON_SCROLL_DOWN = 2,   /* icon_sprites[1]: lines below the last drawn line */
+    MENU_WINDOW_ICON_SCROLL_MARKER = 4, /* icon_sprites[2]: the scroll position */
+} menu_window_icon_flags_e;
+
 /* Six menu buffers, allocated/released as three adjacent pairs. The BATTLE
  * allocator at 0x8012e348 and WORLD counterpart establish the 0x118 stride.
  * Event ChangeDialog scans records 0, 2 and 4, compares +0x14 with operand 0,
@@ -83,7 +91,7 @@ typedef struct menu_window_buffer {
     s32 box_type;           /* 0x18: dialog type & 0x70; 0x10 is the portrait box */
     s32 portrait_flipped;   /* 0x1c: 1 when the tail offset is negative; event
                                instruction 0x37 toggles it */
-    s32 icon_flags;         /* 0x20: visibility bits for the three window icons */
+    s32 icon_flags;         /* 0x20: menu_window_icon_flags_e */
     s32 scroll_range;       /* 0x24: scrollable lines (line - lines); 1 when freshly allocated */
     s32 scroll_position;    /* 0x28: first drawn line; the scroll marker sits at
                                scroll_position / scroll_range of its span; 1 when freshly allocated */
@@ -164,6 +172,14 @@ typedef struct battle_menu_status_panel_numeric_buffer {
 typedef char battle_menu_status_panel_numeric_buffer_size_must_be_0x2c0
     [(sizeof(battle_menu_status_panel_numeric_buffer_t) == 0x2c0) ? 1 : -1];
 
+/* Flags of a unit status panel (battle_menu_status_panel_display_thread_t and
+ * the WORLD status display's world_status_thread_t). */
+typedef enum menu_status_panel_flags {
+    MENU_STATUS_PANEL_SLIDE_DOWN = 0x20, /* run the slide-down table once */
+    MENU_STATUS_PANEL_SLIDE_UP = 0x40,   /* run the slide-up table once */
+    MENU_STATUS_PANEL_HIDDEN = 0x80,     /* draw nothing; the only flag kept when a slide ends */
+} menu_status_panel_flags_e;
+
 /* Parameter block of the task-0x3b status panel threads (WORLD's formation
  * panels and the overlays' character status and numeric editor threads): the
  * panel origin, a redraw request and the frame style read by
@@ -173,7 +189,7 @@ typedef char battle_menu_status_panel_numeric_buffer_size_must_be_0x2c0
 typedef struct world_status_thread {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
-    s32 flags;          /* 0x08 */
+    s32 flags;          /* 0x08: menu_status_panel_flags_e in the status display record */
     s32 redraw_request; /* 0x0c: set to 1 elsewhere to request a text/portrait rebuild; the status
                            display record also keeps the selection-slide direction here */
     s32 style;          /* 0x10: 1 selects palette bank 1 */
@@ -328,8 +344,7 @@ typedef struct battle_menu_status_panel_display_thread {
         s32 word; /* 0x04 */
         u16 low;
     } shake_y;
-    s32 flags;     /* 0x08: 0x20 and 0x40 start the two shake tables, 0x80
-                      suppresses all drawing */
+    s32 flags;     /* 0x08: menu_status_panel_flags_e */
     s32 work;      /* 0x0c: redraw request flags, cleared once serviced */
     s32 highlight; /* 0x10: nonzero forces the alternate (highlight) CLUTs; bound as
                       g_bunit_status_display_highlight and the WORLD display globals */
@@ -397,6 +412,126 @@ typedef enum action_menu_pseudo_skillset {
     ACTION_MENU_PSEUDO_SKILLSET_ANYTHING = 0xbc,
 } action_menu_pseudo_skillset_e;
 
+/* g_battle_menu_input_disabled / g_world_menu_input_disabled: who drives the
+ * battle menus. */
+typedef enum menu_input_mode {
+    MENU_INPUT_PLAYER = 0,   /* the controller */
+    MENU_INPUT_BLOCKED = 1,  /* the event frame returns early and no idle action menu is built;
+                                no code stores this value */
+    MENU_INPUT_TUTORIAL = 2, /* a tutorial event supplies the input; set by *_menu_start_entry_thread */
+} menu_input_mode_e;
+/* The index argument of *_menu_draw_pressable_button: an on-screen button,
+ * named after the pad button its callers test. */
+typedef enum menu_pressable_button {
+    MENU_PRESSABLE_BUTTON_L1 = 0,
+    MENU_PRESSABLE_BUTTON_R1 = 1,
+    MENU_PRESSABLE_BUTTON_ITEM_LIST_TRIANGLE = 2, /* formation item list */
+    MENU_PRESSABLE_BUTTON_SHOP_LIST_TRIANGLE = 3, /* shop buy lists */
+    MENU_PRESSABLE_BUTTON_L2 = 4,
+    MENU_PRESSABLE_BUTTON_R2 = 5,
+} menu_pressable_button_e;
+/* State of the item list screen (g_world_item_menu_mode in the formation
+ * screen, g_equip_menu_substate in EQUIP). Each state's handler returns the
+ * next state. */
+typedef enum menu_item_list_state {
+    MENU_ITEM_LIST_STATE_CLOSE = -1,
+    MENU_ITEM_LIST_STATE_BROWSE = 0,
+    MENU_ITEM_LIST_STATE_REARRANGE = 1,
+    MENU_ITEM_LIST_STATE_ACTION = 2, /* action strip for the selected item */
+    MENU_ITEM_LIST_STATE_SORT_ORDER = 5,
+    MENU_ITEM_LIST_STATE_EQUIPPED_BY = 6, /* WORLD only: the units equipping the selected item */
+} menu_item_list_state_e;
+/* Ability list tab of the WORLD and BUNIT ability menus (g_world_ability_category,
+ * g_bunit_ability_category) and the kind argument of their list builders.
+ * JOBSTTS keeps the same values as jobstts_ability_category_e. */
+typedef enum menu_ability_category {
+    MENU_ABILITY_CATEGORY_ACTION = 0,
+    MENU_ABILITY_CATEGORY_REACTION = 1,
+    MENU_ABILITY_CATEGORY_SUPPORT = 2,
+    MENU_ABILITY_CATEGORY_MOVEMENT = 3,
+    MENU_ABILITY_CATEGORY_ALL = 15, /* the list builders take any other value as all */
+} menu_ability_category_e;
+/* g_battle_script_attack_entry_mode / g_world_script_attack_entry_mode:
+ * whether an event instruction loaded the ATTACK overlay and its graphics
+ * before the deployment screen starts. */
+typedef enum script_attack_entry_mode {
+    SCRIPT_ATTACK_ENTRY_NORMAL = 1,       /* set when an event thread starts */
+    SCRIPT_ATTACK_ENTRY_PRELOADED = 2,    /* *_script_load_attack_graphics_event_instruction ran */
+    SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
+} script_attack_entry_mode_e;
+
+/* The argument of option_entrypoint and world_menu_run_main_mode: which of
+ * the OPTION overlay's screens to run. */
+typedef enum option_menu_type {
+    OPTION_MENU_GAME_OPTIONS = 0,
+    OPTION_MENU_AT_LIST = 1,
+    OPTION_MENU_DEAD_UNIT = 2, /* crystal and treasure panel */
+} option_menu_type_e;
+/* A key in the list *_item_sort_id_list / equip_item_sort_list_by_criteria
+ * sorts by (g_world_sort_key_lists, g_equip_item_type_order_lists); -1 ends
+ * the list. TYPE sorts ascending, the others descending. */
+typedef enum item_sort_key {
+    ITEM_SORT_KEY_TYPE = 0,
+    ITEM_SORT_KEY_PRICE = 1,
+    ITEM_SORT_KEY_RANKING = 2, /* *_item_get_ranking_value */
+    ITEM_SORT_KEY_PHYSICAL_EVADE = 3,
+    ITEM_SORT_KEY_MAGIC_EVADE = 4,
+    ITEM_SORT_KEY_HELD_COUNT = 5, /* inventory plus equipped copies */
+} item_sort_key_e;
+
+/* The category argument of world_item_build_category_list,
+ * world_shop_build_item_list and equip_item_build_filtered_list. 0 to 4
+ * select what fits that equipment slot. The item menus pass their tab + 1 for
+ * the first four tabs and OTHER for the fifth; the best-fit builders pass
+ * WEAPON or SHIELD for the left hand. */
+typedef enum item_list_filter {
+    ITEM_LIST_FILTER_HAND = 0, /* weapons and shields; 1, the left hand, selects the same */
+    ITEM_LIST_FILTER_HEADGEAR = 2,
+    ITEM_LIST_FILTER_BODY_ARMOR = 3,
+    ITEM_LIST_FILTER_ACCESSORY = 4,
+    ITEM_LIST_FILTER_WEAPON = 5,
+    ITEM_LIST_FILTER_SHIELD = 6,
+    ITEM_LIST_FILTER_OTHER = 7,
+} item_list_filter_e;
+
+/* The last argument of the same functions: the equip check against the unit. */
+typedef enum item_list_mode {
+    ITEM_LIST_MODE_ALL = 0,                     /* no check */
+    ITEM_LIST_MODE_MARK_UNEQUIPPABLE = 1,       /* 0x4000 on entries the unit cannot equip; taken as
+                                                   EQUIPPABLE unless Show Unequippable Items is on */
+    ITEM_LIST_MODE_EQUIPPABLE = 2,              /* entries the unit cannot equip are left out */
+    ITEM_LIST_MODE_EQUIPPABLE_IN_INVENTORY = 3, /* world_item_build_category_list only: as
+                                                   EQUIPPABLE, counting no equipped copies */
+} item_list_mode_e;
+
+/* The grid help cursor over a unit's status display. A value above the text
+ * ids in the pending description id (g_world_menu_description_text_id,
+ * g_bunit_text_selection_id) selects one; it is latched in
+ * g_world_grid_menu_id / g_bunit_help_screen_id instead of showing a
+ * description. */
+typedef enum menu_grid_help_id {
+    MENU_GRID_HELP_NONE = 0,
+    MENU_GRID_HELP_BANNER_TOP = 0x20000, /* the status banner is at the top of the screen */
+    MENU_GRID_HELP_BANNER_BOTTOM = 0x20001,
+    MENU_GRID_HELP_UNIT_BROWSE = 0x20002,
+    MENU_GRID_HELP_RECRUIT_PREVIEW = 0x20003, /* WORLD: the cursor skips cell 7 */
+} menu_grid_help_id_e;
+
+/* Step of the job list menus (WORLD learn and view-abilities menus, BUNIT job
+ * menu); each list's handler returns the next step. */
+typedef enum menu_job_list_step {
+    MENU_JOB_LIST_STEP_CLOSE = -1,
+    MENU_JOB_LIST_STEP_JOBS = 0,
+    MENU_JOB_LIST_STEP_ABILITIES = 1,
+} menu_job_list_step_e;
+
+/* The mode argument of *_menu_build_ability_list: which list an Arithmeticks
+ * (Math Skill) menu shows. Any other menu type builds its ability list. */
+typedef enum menu_arithmeticks_list {
+    MENU_ARITHMETICKS_LIST_ABILITIES = 0,  /* *_menu_collect_calculator_abilities */
+    MENU_ARITHMETICKS_LIST_MULTIPLES = 1,  /* *_menu_load_math_skill_multiples */
+    MENU_ARITHMETICKS_LIST_ATTRIBUTES = 2, /* *_menu_load_math_skill_attributes */
+} menu_arithmeticks_list_e;
 /* Seven-byte window command in the menu script streams. The length field
  * advances to the next command, which may have a different size. */
 typedef struct world_menu_window_command {
@@ -419,6 +554,11 @@ typedef enum menu_script_opcode {
     MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,      /* *_cmd_run_if_else_group_handler */
     MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,    /* *_cmd_draw_textured_quad_handler; opcode 5 applies the draw colour */
     MENU_SCRIPT_OP_SCROLLABLE_LIST = 0x10, /* the list geometry *_menu_draw_scrollable_list reads */
+    /* The "draw number" opcodes of the WORLD and BUNIT scripts that
+     * *_menu_script_draw_formatted_number tells apart from its plain form (0x0d). */
+    MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS = 0x19, /* sprite colour; leading zeros not drawn */
+    MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS = 0x1a,       /* leading zeros in the disabled clut */
+    MENU_SCRIPT_OP_NUMBER_TINTED = 0x1b,                  /* sprite colour */
 } menu_script_opcode_e;
 
 /* Six-byte menu sprite cell: screen rectangle and texture origin. */
@@ -511,7 +651,7 @@ typedef enum menu_text_column_mode {
 /* Provisional: three-column menu text layout walked by world_menu_draw_text_columns (0x80109374) /
  * world_menu_draw_text_columns_2 (reached through world_menu_entry_t::text_binding when
  * that record is a layout rather than a binding). Column i uses x[i],
- * mode[i] (0 text, 1 number, 2 hidden, 3 alternate number), text_ids[i] and
+ * mode[i] (menu_text_column_mode_e), text_ids[i] and
  * text_colors[i], each indexed by row + row offset. */
 typedef struct world_menu_text_layout {
     s16 row_count;       /* 0x00 */
@@ -820,12 +960,6 @@ typedef struct help_navigation_record {
 } help_navigation_record_t;
 typedef char help_navigation_record_size_must_be_0x10[(sizeof(help_navigation_record_t) == 0x10) ? 1 : -1];
 
-/* g_battle_menu_current_id / g_world_menu_current_id values the code tests
- * by number; the id also indexes the *_menu_thread_menu_data entries. */
-enum {
-    BATTLE_MENU_ID_MINI_MENU = 10,
-};
-
 /* Provisional 0x14-byte system-function record, tables at BATTLE 0x801692c0
  * and WORLD 0x80156750 (*_menu_run_system_function_thread,
  * battle_menu_dispatch_system_function). The member comments name the BATTLE
@@ -865,6 +999,38 @@ typedef enum battle_menu_system_command {
     BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT = 0x11, /* option: battle_action_display_image_id_e */
 } battle_menu_system_command_e;
 
+/* Result of *_menu_dispatch_system_function (and of
+ * battle_menu_init_system_function, which returns it). */
+typedef enum battle_menu_system_dispatch_result {
+    BATTLE_MENU_SYSTEM_DISPATCH_UNKNOWN_COMMAND = 0, /* the CLOSE function was started instead */
+    BATTLE_MENU_SYSTEM_DISPATCH_DONE = 1,            /* a system function was started, or nothing had to run */
+    BATTLE_MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
+} battle_menu_system_dispatch_result_e;
+/* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu.
+ * The unit menus are entries of g_battle_menu_idle_action_entries picked by
+ * battle_menu_get_id_based_on_mount_moveable_actable; ids from 0x64 belong to
+ * system functions (battle_system_function_t::menu_id). 0x19, 0x21 and 0x33
+ * are tested without a producer in the C and have no name here. */
+typedef enum battle_menu_id {
+    BATTLE_MENU_ID_NONE = -1,
+    BATTLE_MENU_ID_TURN = 0x00,        /* the unit's turn: it can move and act */
+    BATTLE_MENU_ID_MINI_MENU = 0x0a,   /* *_menu_start_mini_menu_display_thread */
+    BATTLE_MENU_ID_TURN_MOVED = 0x0e,  /* moved, or Don't Move */
+    BATTLE_MENU_ID_PLAYER_UNIT = 0x0f, /* a player unit, not its turn */
+    BATTLE_MENU_ID_OTHER_UNIT = 0x10,  /* any other unit, not its turn */
+    /* The same two while the active unit is not under the player's control,
+     * or while the status menu is open. */
+    BATTLE_MENU_ID_PLAYER_UNIT_INSPECT = 0x11,
+    BATTLE_MENU_ID_OTHER_UNIT_INSPECT = 0x12,
+    BATTLE_MENU_ID_TURN_ACTED = 0x13, /* acted, or cannot act */
+    BATTLE_MENU_ID_TURN_MOVED_ACTED = 0x14,
+    BATTLE_MENU_ID_RIDER_TURN = 0x2e, /* the four TURN menus of a mounted unit */
+    BATTLE_MENU_ID_RIDER_TURN_MOVED = 0x2f,
+    BATTLE_MENU_ID_RIDER_TURN_ACTED = 0x30,
+    BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED = 0x31,
+    BATTLE_MENU_ID_EGG = 0x36,       /* replaces OTHER_UNIT and OTHER_UNIT_INSPECT for an egg */
+    BATTLE_MENU_ID_DEAD_UNIT = 0x69, /* crystal or treasure options */
+} battle_menu_id_e;
 /* Indices of the system function table (g_battle_system_function_table and
  * its WORLD twin) that the dispatcher names; the rest are message variants. */
 typedef enum battle_system_function_id {
@@ -1025,6 +1191,13 @@ typedef struct world_menu_window_rect_source {
     RECT rect; /* 0x06 */
 } world_menu_window_rect_source_t;
 
+/* Flags a menu-script number getter (a row callback) returns above its
+ * value, read by *_menu_script_draw_formatted_number and the overlays'
+ * *_cmd_draw_formatted_number_handler. */
+typedef enum menu_number_value_flags {
+    MENU_NUMBER_VALUE_DASHES = 0x20000000,   /* a row of dashes instead of the digits */
+    MENU_NUMBER_VALUE_DISABLED = 0x40000000, /* drawn with the disabled number clut */
+} menu_number_value_flags_e;
 /* Ten-byte menu-script "draw number" command (opcodes 0x19-0x1b): an
  * opcode/length prefix followed by the value getter (a row-callback index),
  * layout and byte position operands. world_menu_script_draw_formatted_number
@@ -1248,6 +1421,23 @@ typedef enum dialog_box_type {
     DIALOG_BOX_TYPE_EIGHT_LINE = 0x50,
 } dialog_box_type_e;
 
+/* Fields of a DisplayMessage dialog type byte
+ * (world_text_dialog_record_t::dialog_type). */
+enum {
+    DIALOG_TYPE_POSITION_MASK = 0x03,
+    DIALOG_TYPE_OPTIONS_MASK = 0x0c,
+    DIALOG_TYPE_BOX_TYPE_MASK = 0x70, /* dialog_box_type_e */
+    DIALOG_TYPE_NO_BOX = 0x80,
+};
+
+/* The DIALOG_TYPE_OPTIONS_MASK field of a portrait box, as
+ * *_menu_build_window_image and the text thread read it. 0x0c is tested with
+ * the Help box only and has no name here. */
+typedef enum dialog_options {
+    DIALOG_OPTIONS_TAIL = 0x00,           /* a tail pointing at the speaker */
+    DIALOG_OPTIONS_ALTERNATE_TAIL = 0x04, /* the second tail graphic, 16 rows tall */
+    DIALOG_OPTIONS_NO_TAIL = 0x08,        /* plain frame, not placed at the speaker */
+} dialog_options_e;
 typedef enum menu_decimal_sign_flag {
     MENU_DECIMAL_SIGN_PLUS = 0x0400,
     MENU_DECIMAL_SIGN_MINUS = 0x0800,
@@ -1383,7 +1573,7 @@ typedef struct world_text_dialog_record {
     u16 dialog_type;   /* 0x16: DisplayMessage Dialog Type byte */
     u16 box_type;      /* 0x18: dialog_type & 0x70 */
     u16 position;      /* 0x1a */
-    u16 options;       /* 0x1c */
+    u16 options;       /* 0x1c: dialog_type & 0x0c (dialog_options_e) */
     u16 no_box;        /* 0x1e */
     u16 line;          /* 0x20 */
     u16 first_line;    /* 0x22 */

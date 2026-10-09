@@ -30,9 +30,9 @@ void bunit_menu_update_node_cursor(s16 mode) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         g_bunit_help_cursor_initialized = 1;
         g_bunit_help_node_index = 0;
-        if (g_bunit_help_screen_id == 0x20000) {
+        if (g_bunit_help_screen_id == MENU_GRID_HELP_BANNER_TOP) {
             g_bunit_help_nodes = g_bunit_help_nodes_banner_top;
-        } else if (g_bunit_help_screen_id == 0x20001) {
+        } else if (g_bunit_help_screen_id == MENU_GRID_HELP_BANNER_BOTTOM) {
             g_bunit_help_nodes = g_bunit_help_nodes_banner_bottom;
         } else {
             g_bunit_help_nodes = g_bunit_help_nodes_unit_browse;
@@ -44,7 +44,7 @@ void bunit_menu_update_node_cursor(s16 mode) {
         node_index = g_bunit_help_node_index;
         if (flags & PSX_PAD_CROSS) {
             g_bunit_text_selection_id = g_bunit_help_screen_id;
-            g_bunit_help_screen_id = 0;
+            g_bunit_help_screen_id = MENU_GRID_HELP_NONE;
             g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
             g_bunit_help_cursor_initialized = 0;
         } else if (flags & PSX_PAD_CIRCLE) {

@@ -33,7 +33,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     rect.w = area->w / 4;
     rect.h = area->h;
     changed = 0;
-    if (g_battle_menu_input_disabled == 0
+    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER
         && ((*input2 & PSX_PAD_SQUARE) || g_battle_threads[g_battle_current_thread_id].task_words[4] != 0)) {
         if ((*input & PSX_PAD_UP) && *row_offset != 0) {
             offset = *row_offset - layout->row_count;

@@ -16,7 +16,9 @@ void world_menu_confirm_move_command_thread(void) {
         world_thread_exit_current();
     }
     menu_id = g_world_menu_current_id;
-    if (menu_id == 0xE || menu_id == 0x14 || menu_id == 0x21 || menu_id == 0x2F || menu_id == 0x31 || menu_id == 0x33) {
+    if (menu_id == BATTLE_MENU_ID_TURN_MOVED || menu_id == BATTLE_MENU_ID_TURN_MOVED_ACTED || menu_id == 0x21
+        || menu_id == BATTLE_MENU_ID_RIDER_TURN_MOVED || menu_id == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED
+        || menu_id == 0x33) {
         world_sound_set_effect_to_invalid();
         world_thread_exit_current();
     }

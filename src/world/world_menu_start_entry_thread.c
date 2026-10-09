@@ -16,24 +16,24 @@ void world_menu_start_entry_thread(void) {
     while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         world_thread_yield();
     }
-    if (g_world_menu_input_disabled == 0) {
+    if (g_world_menu_input_disabled == MENU_INPUT_PLAYER) {
         if (world_script_check_tutorial_event_slot() != 0) {
-            g_world_menu_input_disabled = 2;
+            g_world_menu_input_disabled = MENU_INPUT_TUTORIAL;
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             world_script_start_current_event_thread();
             world_thread_wait_frames(0x1E);
         }
-        if (g_world_menu_input_disabled != 0) {
+        if (g_world_menu_input_disabled != MENU_INPUT_PLAYER) {
             world_thread_wait_frames(2);
         }
     } else {
         world_thread_wait_frames(2);
     }
     world_script_pulse_tutorial_wait_value(0xFF);
-    if (menu_id == 0x10 || menu_id == 0x12) {
+    if (menu_id == BATTLE_MENU_ID_OTHER_UNIT || menu_id == BATTLE_MENU_ID_OTHER_UNIT_INSPECT) {
         if (world_unit_get_battle_stats_for_stored()->unit_flags & UNIT_FLAG_EGG) {
-            menu_id = 0x36;
+            menu_id = BATTLE_MENU_ID_EGG;
         }
     }
     world_thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[menu_id].thread_entry);

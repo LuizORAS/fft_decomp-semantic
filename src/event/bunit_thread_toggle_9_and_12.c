@@ -5,7 +5,7 @@
  * bunit_panel_toggle_comparison_status_thread / _8. */
 void bunit_thread_toggle_9_and_12(s32 enable) {
     if (enable != 0) {
-        if (g_bunit_status_display_flags & 0x60) {
+        if (g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) {
             return;
         }
         if (battle_thread_is_running(NATIVE_THREAD_SLOT_CHARACTER_STATUS) != 0) {

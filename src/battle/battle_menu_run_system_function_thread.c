@@ -19,7 +19,7 @@ void battle_menu_run_system_function_thread(void) {
         id = g_battle_system_function_table[id].alternate_id;
     }
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-    if (g_battle_menu_input_disabled == 0) {
+    if (g_battle_menu_input_disabled == MENU_INPUT_PLAYER) {
         while (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_EVENT) != 0) {
             if (g_battle_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 battle_thread_exit_current();

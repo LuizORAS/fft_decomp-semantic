@@ -50,7 +50,8 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
         value = -value;
         negative = 1;
     }
-    if (command->opcode == 0x1B || command->opcode == 0x19) {
+    if (command->opcode == MENU_SCRIPT_OP_NUMBER_TINTED
+        || command->opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
         color = &g_world_menu_sprite_color;
     } else {
         color = 0;
@@ -60,9 +61,9 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
     } else {
         clut = g_world_menu_palette_clut;
     }
-    if (value & 0x40000000) {
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
         clut = g_world_menu_disabled_number_clut;
-        value &= 0xBFFFFFFF;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (command->style == 1) {
         glyph.x = 0x78;
@@ -80,7 +81,7 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
         glyph.w = 0xA;
         glyph.h = 0x10;
     }
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         for (value = command->width; value > 0; value--) {
             rect.x = command->x + (value - 1) * command->spacing;
             rect.y = y + 5;
@@ -102,23 +103,23 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
                 minus_rect.y = y + 2;
                 minus_rect.w = 6;
                 minus_rect.h = 0xB;
-                if (command->opcode == 0x1A) {
+                if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
                     minus_rect.x = 0xAE;
                 }
                 world_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, color, g_world_menu_semi_trans,
                     g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
                 negative = 0;
             } else {
-                if (command->opcode == 0x1A) {
+                if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
                     clut = g_world_menu_palette_clut;
                 }
                 if (blanks != 0) {
                     digit = 0;
                     blanks--;
-                    if (command->opcode == 0x19) {
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
                         continue;
                     }
-                    if (command->opcode == 0x1A && i < command->width - 1) {
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS && i < command->width - 1) {
                         clut = g_world_menu_disabled_number_clut;
                     }
                 } else {

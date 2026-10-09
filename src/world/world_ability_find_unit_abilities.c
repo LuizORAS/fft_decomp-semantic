@@ -28,7 +28,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     s32 learned;
     s16 id;
 
-    if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY && kind == 0) {
+    if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY && kind == MENU_ABILITY_CATEGORY_ACTION) {
         return world_ability_list_secondary_skillsets(unit, out);
     }
     skillset = world_job_get_skillset(job);
@@ -37,18 +37,18 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         skillset = (u16)g_world_formation_unit_pointers[unit]->primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
-    if (kind == 0) {
+    if (kind == MENU_ABILITY_CATEGORY_ACTION) {
         lo = 1;
         hi = 0x1A5;
-    } else if (kind == 1) {
+    } else if (kind == MENU_ABILITY_CATEGORY_REACTION) {
         lo = 0x1A6;
         hi = 0x1C5;
-    } else if (kind == 2) {
+    } else if (kind == MENU_ABILITY_CATEGORY_SUPPORT) {
         lo = 0x1C6;
         hi = 0x1E5;
     } else {
         lo = 1;
-        if (kind == 3) {
+        if (kind == MENU_ABILITY_CATEGORY_MOVEMENT) {
             lo = 0x1E6;
         }
         hi = 0x1FD;
@@ -79,9 +79,9 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         if (mode == WORLD_ABILITY_LIST_MODE_VIEW_ALL) {
             if (!learned) {
                 if (!(g_main_ability_data[id].type_flags >> 7)) {
-                    id |= 0x4000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED;
                 } else {
-                    id |= 0x6000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED | ABILITY_LIST_ENTRY_HIDE_DETAILS;
                 }
             }
             out[count] = id;
@@ -97,10 +97,10 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
                     continue;
                 }
                 if (jp < g_main_ability_data[id].jp_cost) {
-                    id |= 0x4000;
+                    id |= ABILITY_LIST_ENTRY_DISABLED;
                 }
             } else {
-                id |= 0x1000;
+                id |= ABILITY_LIST_ENTRY_LEARNED;
             }
             out[count] = id;
             count++;

@@ -118,15 +118,15 @@ s32 world_formation_process_job_change(s32 job) {
         g_world_job_change_skip_requested = 1;
     }
     if (g_world_job_change_frame < 220) {
-        return 1;
+        return WORLD_JOB_CHANGE_ANIM_DISSOLVE;
     }
     if (g_world_job_change_frame < 240) {
-        return 2;
+        return WORLD_JOB_CHANGE_ANIM_CLOSING;
     }
     main_heap_free(g_world_job_change_old_sprite_image);
     main_heap_free(g_world_job_change_new_sprite_image);
     main_heap_free(g_world_job_change_new_sprite_source);
     main_heap_free(g_world_job_change_dissolve_order);
     g_world_job_change_active = 0;
-    return 0;
+    return WORLD_JOB_CHANGE_ANIM_DONE;
 }

@@ -22,9 +22,9 @@ s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
     player_controlled = player_flag != 0;
     if (flag != 0) {
         if (player_controlled != 0) {
-            return 0x11;
+            return BATTLE_MENU_ID_PLAYER_UNIT_INSPECT;
         }
-        return 0x12;
+        return BATTLE_MENU_ID_OTHER_UNIT_INSPECT;
     }
     dont_move = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)];
     can_evade = battle_unit_get_action_restriction(unit);
@@ -32,18 +32,18 @@ s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
     acted = unit->action_taken | can_evade;
     if (unit->has_turn != 0) {
         if (moved == 0 && acted == 0) {
-            return 0;
+            return BATTLE_MENU_ID_TURN;
         }
         if (moved != 0 && acted == 0) {
-            return 0xE;
+            return BATTLE_MENU_ID_TURN_MOVED;
         }
         if (moved == 0 && acted != 0) {
-            return 0x13;
+            return BATTLE_MENU_ID_TURN_ACTED;
         }
-        return 0x14;
+        return BATTLE_MENU_ID_TURN_MOVED_ACTED;
     }
     if (player_controlled != 0) {
-        return 0xF;
+        return BATTLE_MENU_ID_PLAYER_UNIT;
     }
-    return 0x10;
+    return BATTLE_MENU_ID_OTHER_UNIT;
 }

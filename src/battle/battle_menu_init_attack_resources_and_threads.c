@@ -17,14 +17,14 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     battle_unit_reset_animation_states();
     battle_menu_reset_unit_records();
     /* The target loads the entry mode unsigned (lhu). */
-    if (*(u16*)&g_battle_script_attack_entry_mode == 2) {
-        g_battle_script_attack_entry_mode = 3;
+    if (*(u16*)&g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
     } else {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
         battle_thread_call_on_main_stack(0x990, 0x20000, g_main_heap_companion_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();
-    if (*(u16*)&g_battle_script_attack_entry_mode != 3) {
+    if (*(u16*)&g_battle_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {
         attack_gfx_build_formation_sprites();
         attack_gfx_load_portraits();
     }

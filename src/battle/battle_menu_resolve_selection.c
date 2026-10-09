@@ -29,7 +29,7 @@ s32 battle_menu_resolve_selection(void) {
         for (i = 0; i < 31; i++) {
             if (menu == g_battle_menu_id_records[i].menu_id) {
                 if (command != 0xFF) {
-                    if (menu == 0x69) {
+                    if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_battle_dead_unit_action;
                         g_battle_menu_selected_action.item_id = g_battle_dead_unit_result;
                         option = 0xFFFE;

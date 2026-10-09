@@ -12,7 +12,7 @@ void world_shop_run_rename_unit_confirm_step(void) {
     g_world_menu_description_text_id = 0;
     if (g_world_shop_rename_message_wait != 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
-            g_world_shop_menu_step = 0x19;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
             g_world_shop_rename_message_wait = 0;
         }
     } else if (world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_shop_rename_confirm_menu) == 0) {
@@ -24,13 +24,13 @@ void world_shop_run_rename_unit_confirm_step(void) {
             g_world_shop_rename_message_wait = 1;
         } else if (choice == 1 || choice == -1) {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xf827, 0);
-            g_world_shop_menu_step = 0x14;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
             main_party_remove_unit(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot);
             g_world_shop_hire_menu_initialized = 0;
         } else {
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
             g_world_shop_rename_confirm_menu.selected_index = 0;
-            g_world_shop_menu_step = 0x17;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_NAME_ENTRY;
         }
     }
     world_shop_run_obtain_gil_menu();

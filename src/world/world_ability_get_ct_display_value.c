@@ -9,13 +9,13 @@ s32 world_ability_get_ct_display_value(s32 index) {
     s32 entry = g_world_ability_entries[index];
 
     if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
-        index = 0x20000000;
+        index = MENU_NUMBER_VALUE_DASHES;
     } else {
         index = g_world_selected_ability_secondary_data[0xc];
         index = (100 / index) + ((100 % index) != 0);
     }
     if (entry >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) {
-        index |= 0x40000000;
+        index |= MENU_NUMBER_VALUE_DISABLED;
     }
     return index;
 }

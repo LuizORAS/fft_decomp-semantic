@@ -6,7 +6,7 @@
  * g_world_change_banner_panel_thread_params.style records the normalized enable state. */
 void world_menu_toggle_stat_preview_panel_thread(s32 enable) {
     if (enable != 0) {
-        if (!(g_world_status_display_thread_params.flags & 0x60)
+        if (!(g_world_status_display_thread_params.flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))
             && world_thread_is_running(NATIVE_THREAD_SLOT_CHARACTER_STATUS) == 0) {
             world_thread_start(NATIVE_THREAD_SLOT_CHARACTER_STATUS, world_menu_equipment_panel_thread);
             world_thread_set_parameters(

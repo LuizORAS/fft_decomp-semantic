@@ -228,10 +228,10 @@ void world_menu_unit_status_banner_thread(void) {
             status->portrait.b0 = 0x80;
         }
         g_world_gfx_draw_area_y = ((u16)g_world_frame_arg != 0xF0) ? 0xF0 : 0;
-        if ((display->flags & 0x20) && (shake == 0)) {
+        if ((display->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
-        if (display->flags & 0x40) {
+        if (display->flags & MENU_STATUS_PANEL_SLIDE_UP) {
             if (shake == 0) {
                 shake = 0xB;
             }
@@ -244,7 +244,7 @@ void world_menu_unit_status_banner_thread(void) {
                 }
                 if (shake >= 7) {
                     shake = 0;
-                    display->flags = display->flags & 0x80;
+                    display->flags = display->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
                 display->shake_y.word = g_world_panel_slide_up_y[shake];
@@ -253,7 +253,7 @@ void world_menu_unit_status_banner_thread(void) {
                 }
                 if (shake >= 0x11) {
                     shake = 0;
-                    display->flags = display->flags & 0x80;
+                    display->flags = display->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             }
         }
@@ -276,7 +276,7 @@ void world_menu_unit_status_banner_thread(void) {
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;
-            suppress = display->flags & 0x80;
+            suppress = display->flags & MENU_STATUS_PANEL_HIDDEN;
         }
         if (display->work != 0) {
             if (anim_state == 0) {
@@ -416,7 +416,7 @@ void world_menu_unit_status_banner_thread(void) {
                 LoadImage(&rects[5], (u32*)(render_b + 0xA0));
             }
         }
-        if (!(display->flags & 0x80)) {
+        if (!(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
             world_gfx_draw_or_append_gpu_primitive(&summary->draw_offset_b);
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[0]);
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[1]);

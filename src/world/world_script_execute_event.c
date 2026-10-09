@@ -63,7 +63,7 @@ void world_script_execute_event(void) {
     if (world_script_check_tutorial_event_slot() != 0) {
         world_gfx_ramp_screen_overlay_intensity_to_zero();
     }
-    if (g_world_menu_input_disabled == 0) {
+    if (g_world_menu_input_disabled == MENU_INPUT_PLAYER) {
         for (work_index = 2; work_index < 0xE; work_index++) {
             world_thread_wait_until_inactive(work_index);
         }
@@ -275,7 +275,7 @@ restart_event:
                 world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
-            if (g_world_menu_input_disabled == 0) {
+            if (g_world_menu_input_disabled == MENU_INPUT_PLAYER) {
                 for (work_index = 2; work_index < 0xE; work_index++) {
                     world_thread_wait_until_inactive(work_index);
                 }
@@ -288,7 +288,7 @@ restart_event:
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
             event_flags = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_world_menu_input_disabled == 0 && event_flags == 0 && (operand_1 - 0x190) >= 0x1AU
+            if (g_world_menu_input_disabled == MENU_INPUT_PLAYER && event_flags == 0 && (operand_1 - 0x190) >= 0x1AU
                 && operand_1 != 0) {
                 g_world_script_acting_unit_id = 0xFF;
                 world_script_run_scenario_conditions();

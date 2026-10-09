@@ -18,10 +18,11 @@ void world_formation_build_job_wheel_availability(void) {
     for (i = 0; i < g_world_job_wheel_job_count; i++) {
         unit = g_world_formation_selected_unit_index;
         entry = g_world_job_wheel_jobs[i];
-        id = entry & 0x3FF;
-        if (id == g_world_formation_unit_pointers[unit]->job_id || !(entry & WORLD_JOB_LIST_ENTRY_FLAGGED)) {
-            g_world_job_wheel_mastered_jobs[i]
-                = world_ability_find_unit_abilities(unit, id, 0xF, 0, WORLD_ABILITY_LIST_MODE_COUNT_UNLEARNED) == 0;
+        id = entry & WORLD_JOB_LIST_ENTRY_ID_MASK;
+        if (id == g_world_formation_unit_pointers[unit]->job_id || !(entry & WORLD_JOB_LIST_ENTRY_UNAVAILABLE)) {
+            g_world_job_wheel_mastered_jobs[i] = world_ability_find_unit_abilities(unit, id, MENU_ABILITY_CATEGORY_ALL,
+                                                     0, WORLD_ABILITY_LIST_MODE_COUNT_UNLEARNED)
+                == 0;
         } else {
             g_world_job_wheel_mastered_jobs[i] = 0;
         }
@@ -32,7 +33,7 @@ void world_formation_build_job_wheel_availability(void) {
     g_world_job_wheel_cursor_index = 0;
     world_formation_build_job_wheel_job_name();
     if (g_world_job_wheel_job_count < 2) {
-        g_world_formation_current_menu = 3;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL;
         return;
     }
     g_world_job_wheel_open_frame = 0x14;

@@ -6,7 +6,7 @@ s32 bunit_ability_get_ct_display_value(s32 index) {
     s32 result;
 
     ability = g_bunit_ability_entries[index];
-    result = 0x20000000;
+    result = MENU_NUMBER_VALUE_DASHES;
 
     if ((ability & ABILITY_LIST_ENTRY_HIDE_DETAILS) == 0) {
         s32 quotient;
@@ -22,7 +22,7 @@ s32 bunit_ability_get_ct_display_value(s32 index) {
         s32 ability_type = (s16)ability >> ABILITY_LIST_ENTRY_DISABLED_SHIFT;
 
         if (ability_type != 0) {
-            result |= 0x40000000;
+            result |= MENU_NUMBER_VALUE_DISABLED;
         }
     }
     return result;

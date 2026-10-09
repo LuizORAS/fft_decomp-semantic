@@ -47,7 +47,7 @@ s32 world_ability_run_view_list(void) {
         g_world_view_job_name_list[0] = g_world_learn_selected_job;
         world_text_render_id_list_to_image_rows(
             g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES], (s16*)g_world_view_job_name_list, &rect, 0);
-        g_world_ability_category = world_menu_update_wrapped_horizontal_selection(4, 8, 0);
+        g_world_ability_category = world_menu_update_wrapped_horizontal_selection(4, WORLD_MENU_CURSOR_ABILITY_TAB, 0);
         world_ability_find_unit_abilities(g_world_formation_selected_unit_index, g_world_learn_selected_job,
             g_world_ability_category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_VIEW_ALL);
         world_menu_init_scrollable_list_core(
@@ -63,16 +63,16 @@ s32 world_ability_run_view_list(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
         g_world_ability_view_list_initialized = 0;
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
-        return 0;
+        return MENU_JOB_LIST_STEP_JOBS;
     }
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         g_world_ability_view_list_initialized = 0;
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-        return -1;
+        return MENU_JOB_LIST_STEP_CLOSE;
     }
     {
         category = world_menu_update_horizontal_selection_and_mark_change(
-            4, 8, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+            4, WORLD_MENU_CURSOR_ABILITY_TAB, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (category != g_world_ability_category) {
             world_gfx_set_sprite_slot(g_world_ability_category + 10, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, g_world_ability_entries);
@@ -92,6 +92,6 @@ s32 world_ability_run_view_list(void) {
         rect.w = 0x50;
         rect.h = 0x10;
         world_gfx_enqueue_textured_quad(&rect, 0, 0xc8, 0, 0, g_world_menu_window_tpage, g_world_menu_window_clut, 0xb);
-        return 1;
+        return MENU_JOB_LIST_STEP_ABILITIES;
     }
 }

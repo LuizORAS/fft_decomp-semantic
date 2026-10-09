@@ -14,6 +14,6 @@ void world_shop_run_rename_unit_entry_step(void) {
         g_world_text_substitution_values[0] = g_world_shop_service_fee;
         world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF82A, 0);
-        g_world_shop_menu_step = 0x18;
+        g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_FEE_CONFIRM;
     }
 }

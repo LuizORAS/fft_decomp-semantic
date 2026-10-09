@@ -34,12 +34,12 @@ void world_shop_run_fitting_room_equip_menu(void) {
             g_world_shop_fitting_item_list_close = 1;
         } else {
             g_world_shop_fitting_equip_menu_initialized = 0;
-            g_world_shop_menu_step = 6;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         }
     } else if (g_world_shop_fitting_room_item_list_open == 0) {
         prev = g_world_shop_fitting_equip_slot;
         g_world_shop_fitting_equip_slot = world_menu_update_vertical_selection_and_mark_change(
-            5, 2, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
+            5, WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (prev != g_world_shop_fitting_equip_slot) {
             g_world_menu_cursor_position = 0;
         }
@@ -62,7 +62,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
             g_world_shop_cost_window_visible = 0;
             g_world_change_banner_panel_thread_params.style = 1;
             world_shop_build_item_list(g_world_formation_selected_unit_index, g_world_shop_id,
-                g_world_shop_fitting_equip_slot, g_world_menu_entry_ids, 1);
+                g_world_shop_fitting_equip_slot, g_world_menu_entry_ids, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);
             slot = 0;
             if (g_world_shop_fitting_equip_slot != 0) {
                 slot = g_world_shop_fitting_equip_slot - 1;
@@ -80,7 +80,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
     } else {
         item = g_world_menu_entry_ids[g_world_menu_cursor_position];
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
-            if (g_world_menu_option_count == 0 || (item & 0x4000)) {
+            if (g_world_menu_option_count == 0 || (item & WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE)) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             } else {
                 equip = item;
@@ -92,7 +92,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
                     world_shop_return_unit_equip_to_fitting_room(
                         g_world_formation_selected_unit_index, g_world_shop_fitting_equip_slot);
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
-                        ->equipment[g_world_shop_fitting_equip_slot] = item | 0x8000;
+                        ->equipment[g_world_shop_fitting_equip_slot] = item | WORLD_EQUIPMENT_SHOP_ITEM;
                     world_shop_add_fitting_room_cost(world_item_get_price(equip));
                     if (result != 1) {
                         world_shop_return_unit_equip_to_fitting_room(

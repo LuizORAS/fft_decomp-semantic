@@ -66,10 +66,10 @@ void world_shop_update_unit_selection(void) {
             if (g_world_formation_unit_banner_enabled != 0) {
                 if (g_world_formation_scroll_enabled != 0) {
                     flags = &g_world_status_display_thread_params.flags;
-                    *flags |= 0x20;
+                    *flags |= MENU_STATUS_PANEL_SLIDE_DOWN;
                 } else {
                     flags = &g_world_status_display_thread_params.flags;
-                    *flags |= 0x40;
+                    *flags |= MENU_STATUS_PANEL_SLIDE_UP;
                 }
             } else if (g_world_formation_scroll_enabled != 0) {
                 g_world_status_display_thread_params.y = 0x90;

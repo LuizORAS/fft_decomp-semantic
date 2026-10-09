@@ -82,9 +82,9 @@ u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
     } else {
         clut = g_jobstts_gfx_background_clut_id;
     }
-    if (value & 0x40000000) {
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
         clut = g_jobstts_text_metric_3;
-        value &= ~0x40000000;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
 
     glyph.u = 0x78;
@@ -92,7 +92,7 @@ u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
     glyph.w = 6;
     glyph.h = 0xB;
 
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         value = data[4];
         while (value > 0) {
             cell = value - 1;

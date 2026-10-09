@@ -84,19 +84,19 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     }
 
     g_world_formation_menu_new_buttons &= g_world_formation_menu_entry_mask;
-    if (g_world_formation_open_request_state != 0) {
+    if (g_world_formation_open_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_tutorial_categories_request_state != 0) {
+    if (g_world_tutorial_categories_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
     if (g_world_debug_variable_list_request_state != 0) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_card_menu_request_state != 0) {
+    if (g_world_card_menu_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_map_root_request_state != 0) {
+    if (g_world_map_root_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
     if (g_world_fixed_number_panel_request_state != 0) {

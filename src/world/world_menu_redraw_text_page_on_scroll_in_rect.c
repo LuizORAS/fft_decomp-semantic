@@ -27,7 +27,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     rect.w = area->w / 4;
     rect.h = area->h;
     changed = 0;
-    if (g_world_menu_input_disabled != 0) {
+    if (g_world_menu_input_disabled != MENU_INPUT_PLAYER) {
         return 0;
     }
     if (!(*input1 & PSX_PAD_SQUARE) && g_world_threads[g_world_thread_current_id].task_words[4] == 0) {

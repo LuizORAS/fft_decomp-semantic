@@ -59,13 +59,13 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
             ot_index++;
         }
         job = index;
-        world_formation_get_generic_human_graphic_entry(g_world_job_wheel_jobs[job] & 0x3FF,
+        world_formation_get_generic_human_graphic_entry(g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_ID_MASK,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_FEMALE,
             &sprite.source);
         sprite.x = g_world_job_wheel_center_x + ((scaled_x * rcos(theta)) >> 12) - 8;
         sprite.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
         rgb = 0;
-        if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_FLAGGED) {
+        if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_UNAVAILABLE) {
             rgb = g_world_formation_dimmed_sprite_color;
         }
         if (g_world_job_wheel_mastered_jobs[job] != 0) {

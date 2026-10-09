@@ -10,7 +10,8 @@ void world_menu_toggle_change_banner_panel_thread(s32 enable) {
 
     if (state != 0) {
         state = 1;
-        if (!(g_world_status_display_thread_params.flags & 0x60)) {
+        if (!(g_world_status_display_thread_params.flags
+                & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))) {
             if (world_thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0) {
                 world_thread_start(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, world_menu_equipment_panel_thread);
                 world_thread_set_parameters(

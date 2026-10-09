@@ -74,7 +74,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         }
         world_formation_dismiss_unit(g_world_formation_selected_unit_index);
         g_world_menu_sound_muted = 0;
-        g_world_formation_current_menu = 0;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
         return;
     }
 
@@ -86,7 +86,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             g_world_dismiss_unit_prompt_running = 1;
         } else {
             g_world_formation_dismiss_step = world_formation_can_dismiss_unit(sprite);
-            world_gfx_bind_data_pointer(4);
+            world_gfx_bind_data_pointer(WORLD_TEXT_DATA_DISMISS_UNIT_REPLIES);
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;
             }
@@ -145,7 +145,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         if (running != 0) {
             return;
         }
-        g_world_formation_current_menu = 0;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
         return;
     }
 
@@ -181,7 +181,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         }
         if (g_world_menu_selection_results[10] != 0) {
             g_world_menu_sound_muted = 0;
-            g_world_formation_current_menu = 0;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
             return;
         }
         g_world_formation_dismiss_anim_timer = (g_world_formation_selected_unit_index << 8) + 1;
@@ -191,5 +191,5 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         return;
     }
     g_world_menu_sound_muted = 0;
-    g_world_formation_current_menu = 0;
+    g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
 }

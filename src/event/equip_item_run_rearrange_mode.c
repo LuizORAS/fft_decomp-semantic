@@ -30,7 +30,7 @@ s32 equip_item_run_rearrange_mode(void) {
     if (g_equip_input_primary_repeat & PSX_PAD_CROSS) {
         g_equip_rearrange_active = 0;
         g_equip_sound_queued_effect_id = MAIN_SFX_CANCEL;
-        return 0;
+        return MENU_ITEM_LIST_STATE_BROWSE;
     }
     value = g_equip_input_primary_repeat;
     if (value & PSX_PAD_CIRCLE) {
@@ -40,7 +40,7 @@ s32 equip_item_run_rearrange_mode(void) {
         if (cursor == picked) {
             g_equip_rearrange_active = 0;
             g_equip_item_action_menu.selected_index = 0;
-            return 2;
+            return MENU_ITEM_LIST_STATE_ACTION;
         }
         id = g_equip_item_list_entries[picked];
         value = id;
@@ -54,7 +54,7 @@ s32 equip_item_run_rearrange_mode(void) {
             value, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_item_numeric_panel_redraw = 1;
         g_equip_rearrange_active = 0;
-        return 0;
+        return MENU_ITEM_LIST_STATE_BROWSE;
     }
     scroll_offset = g_equip_menu_scroll_base_index;
     row = (s16)g_equip_rearrange_picked_cursor - scroll_offset;
@@ -87,5 +87,5 @@ s32 equip_item_run_rearrange_mode(void) {
             (s16)value, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_item_numeric_panel_redraw = 1;
     }
-    return 1;
+    return MENU_ITEM_LIST_STATE_REARRANGE;
 }

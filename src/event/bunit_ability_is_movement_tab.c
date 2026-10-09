@@ -3,5 +3,5 @@
 
 /* Movement abilities occupy category three. */
 s32 bunit_ability_is_movement_tab(s32 unused_row) {
-    return g_bunit_ability_category == 3;
+    return g_bunit_ability_category == MENU_ABILITY_CATEGORY_MOVEMENT;
 }
