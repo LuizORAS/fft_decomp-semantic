@@ -282,6 +282,12 @@ written that way.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
   known meaning.
+
+## Duplicated code
+
+Twins stay separate functions because each lives in its own module or
+translation unit. Share their types and constants through headers.
+
 - EFFECT: 32 groups of byte-identical routines across 110 native files. E005's
   first routine appears in 17 overlays, and E450/E480 are identical.
   E336/E461, E230/E481 and E015/E047 differ only in immediates.
