@@ -40,13 +40,15 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     start_z = unit->screen.vy;
 
     while (index < *path) {
-        /* Holds the masked path code in $v1 as the target does; otherwise $v0/$v1 swap. */
-        register u8 compare_code __asm__("$3");
+        u8 quadrant;
+        u8 step_quadrant;
 
         current = &path[index + 1];
-        compare_code = *current;
-        compare_code &= 0xc0;
-        if (compare_code != (*step & 0xc0)) {
+        quadrant = *current;
+        quadrant &= 0xc0;
+        step_quadrant = *step;
+        step_quadrant &= 0xc0;
+        if (quadrant != step_quadrant) {
             break;
         }
         switch (*current >> 6) {

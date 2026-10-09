@@ -121,6 +121,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   in a register: `battle_effect_init_data` tests `result` (`$a0`) for a load
   state outside 0-3, which nothing sets; `battle_camera_get_input_direction`
   tests `input` (`$a1`) when `mode` or the controller mode is outside 0-2;
+  `main_status_set_action_state` leaves `status` unset for an action state
+  other than 0 and 5-8 (its `switch` has no default; no caller passes one);
+  `battle_map_dispatch_gns_resource` returns a local no path assigns (`$s8`);
   `bunit_unit_get_current_stat`, `bunit_unit_get_max_stat` and
   `world_get_formation_unit_stat_by_mode` return `value` (`$a1`) for a stat
   mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the
@@ -145,6 +148,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   minimum-width ladder, so the value is always placed as one digit.
 - `etc_graphic_build_game_over_polygons`: `texture_mode` is the constant 1,
   so the 4-bit CLUT arm never runs.
+- `main_unit_apply_level_growth` calls `rand()` and discards the result; the
+  call only advances the generator.
+- `battle_gfx_load_misc_unit_into_evtchr_slot` searches
+  `g_battle_gfx_vram_slots[0..1]` for a free load marker and decompresses into
+  that slot's image data, but writes the owner, marker and state of the
+  caller's slot.
 - `require_party_find_join_candidates` searches the formation sprite groups
   for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
   result.

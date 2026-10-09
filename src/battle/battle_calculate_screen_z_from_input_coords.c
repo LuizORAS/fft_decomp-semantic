@@ -9,11 +9,10 @@ s32 battle_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* unit, c
     battle_unit_height_data_t height;
     map_tile_t* tile;
     s32 flags;
-    s32 screen_z;
+    s16 screen_z;
     s32 sprite;
     s32 animation;
-    s32 raised;
-    s32 adjusted;
+    s16 raised;
 
     if (unit->current_unit_id_plus_one != 0) {
         battle_calculate_unit_height_data(&height, unit->current_unit_id_plus_one - 1);
@@ -42,16 +41,13 @@ s32 battle_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* unit, c
             } else if (sprite == BATTLE_SPRITESHEET_ID_TREASURE || sprite == BATTLE_SPRITESHEET_ID_CRYSTAL) {
                 screen_z -= (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
             } else {
-                goto subtract_offset; /* no depth adjustment: shared default tail */
+                screen_z -= unit->depth_height_offset;
             }
-            return (s16)screen_z;
+        } else {
+            screen_z -= unit->depth_height_offset;
         }
+    } else {
+        screen_z -= unit->depth_height_offset;
     }
-
-subtract_offset:
-    adjusted = screen_z - unit->depth_height_offset;
-    /* Keeps the target's subtract into a scratch register and copy to screen_z. */
-    __asm__("" : "=r"(adjusted) : "0"(adjusted));
-    screen_z = adjusted;
-    return (s16)screen_z;
+    return screen_z;
 }

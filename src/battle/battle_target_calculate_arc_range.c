@@ -13,7 +13,6 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
     s32 x;
     s32 y;
     s32 dy;
-    s32 dx;
     s32 dist;
     s32 level;
     s32 index;
@@ -27,16 +26,13 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
             dy = y - uy;
         } else {
             dy = uy - y;
-            /* Zero-instruction use of dy: without it ux and dy swap $t3/$t4. */
-            __asm__("" : : "r"(dy));
         }
         for (x = 0; x < g_map_max_x; x++) {
             if (ux < x) {
-                dx = x - ux;
+                dist = x - ux + dy;
             } else {
-                dx = ux - x;
+                dist = ux - x + dy;
             }
-            dist = dx + dy;
             if (dist >= 3) {
                 for (level = 0; level < 2; level++) {
                     index = (level << 8) + y * g_map_max_x + x;

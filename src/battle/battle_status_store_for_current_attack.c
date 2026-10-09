@@ -16,8 +16,7 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
     s32 i;
     s32 j;
     s32 byte;
-    s32 mask;
-    s32 bit;
+    u8 mask;
     s32 blocked;
     u8 previous;
 
@@ -26,14 +25,11 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
     for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
         byte = i / 8;
-        /* The helper's u8 cast adds a mask instruction for a dynamic ID. */
-        bit = 0x80 >> (i & 7);
-        /* Keeps the srav ahead of the infliction load, not in its delay slot. */
-        __asm__("" : : "r"(bit));
-        if (!(g_battle_action_target_data->status_infliction[byte] & bit)) {
+        /* Signed shift (srav); BATTLE_STATUS_BYTE_MASK shifts unsigned. */
+        mask = 0x80 >> (i & 7);
+        if (!(g_battle_action_target_data->status_infliction[byte] & mask)) {
             continue;
         }
-        mask = bit;
         blocked = 0;
         for (j = 0; j < BATTLE_STATUS_BYTE_COUNT; j++) {
             if (g_battle_action_target->inflicted_status[j] & g_main_status_effect_data[i].cant_stack[j]) {

@@ -11,16 +11,16 @@
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
     s32 unit_index;
     battle_stats_t* unit;
+    /* Retail reads depth and half height as two bit-fields of byte 3: it
+     * loads the byte once for each and compares the half height signed.
+     * `volatile` reproduces the second load while map_tile_t keeps one u8. */
     volatile map_tile_t* tile;
     u8 mount_info;
     s32 tile_half_height;
-    s32 unit_filters;
-    /* Keep the pre-loop filter test in its incoming argument register. */
-    register s32 dry_filters __asm__("$7");
-    register s32 dry_mask __asm__("$2");
+    /* The unit loop tests a byte copy of the filters. */
+    u8 unit_filters;
 
     unit_filters = filters;
-    dry_filters = filters;
 
     if (x < 0 || x >= g_map_max_x || y < 0 || y >= g_map_max_y || level >= 2) {
         return -2;
@@ -30,12 +30,10 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
     if (tile->flags_06.value & MAP_TILE_COLLISION_MASK) {
         return -2;
     }
-    dry_mask = dry_filters & BATTLE_UNIT_TILE_FILTER_DRY_LOW_SLOPE;
-    if (dry_mask) {
+    if (filters & BATTLE_UNIT_TILE_FILTER_DRY_LOW_SLOPE) {
         if (tile->depth_half_height & MAP_TILE_DEPTH_MASK) {
             return -2;
         }
-        /* The target reloads this byte after checking its high depth bits. */
         tile_half_height = tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;
         if (tile_half_height >= 3) {
             return -2;

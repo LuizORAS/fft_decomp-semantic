@@ -13,8 +13,6 @@ typedef struct battle_map_weather_bits {
 
 #define WEATHER ((battle_map_weather_bits_t*)&g_battle_map_weather_flags)
 
-/* Callee-side view, as declared by battle_map_append_mesh_geometry.c. */
-
 /* Lighting resource (GNS resource 0x32): the light colour matrix, the light
  * direction matrix, then the ambient colour and the background gradient's top
  * and bottom colours. The colours come first: 0x00 is passed as the colour
@@ -39,10 +37,9 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     battle_map_texture_animation_t* animation;
     battle_map_light_resource_t* light;
     u16* polygon_flags;
-    /* One pointer shared by the light and camera cases; being referenced in
-     * several blocks puts it in global allocation (a block-local copy of
-     * data + offset gives `data` a $v1 preference that later steals $v1 from
-     * the case 0x2c loop). */
+    /* Halfword cursor of the light, camera and weather-modifier cases: each
+     * sets it to the start of the resource and then steps over the leading
+     * halfwords. */
     s16* vector;
     u32* resource_offset;
     battle_map_state_record_t* cursor;
@@ -277,9 +274,8 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_light_rotation.vx = 0;
         g_battle_map_light_rotation.vy = 0;
         g_battle_map_light_rotation.vz = 0;
-        vector = light->direction[0];
-        /* Keeps the direction pointer in its own register; CSE otherwise folds each load into data. */
-        __asm__("" : "=r"(vector) : "0"(vector));
+        vector = light->colour[0];
+        vector += 9;
         direction.m[0][0] = vector[0];
         direction.m[0][1] = vector[1];
         direction.m[0][2] = vector[2];
@@ -345,9 +341,8 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         }
         break;
     case 0x83:
-        vector = (s16*)(data + 0xc);
-        /* Keeps data + 0xc in its own register; CSE otherwise folds 0xc(data). */
-        __asm__("" : "=r"(vector) : "0"(vector));
+        vector = (s16*)data;
+        vector += 6;
         g_battle_camera_integer_coords.vx = -vector[0];
         g_battle_camera_integer_coords.vy = vector[1];
         g_battle_camera_integer_coords.vz = -vector[2];
@@ -355,9 +350,8 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             (battle_camera_rotation_t*)&g_battle_map_camera_rotation);
         break;
     case 0x84:
-        vector = (s16*)(data + 0xc);
-        /* Keeps data + 0xc in its own register; CSE otherwise folds 0xc(data). */
-        __asm__("" : "=r"(vector) : "0"(vector));
+        vector = (s16*)data;
+        vector += 6;
         g_battle_map_camera_rotation.vx = vector[0];
         g_battle_map_camera_rotation.vy = vector[1];
         g_battle_map_camera_rotation.vz = vector[2];
@@ -381,7 +375,9 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         WEATHER->snow = 1;
         break;
     case GNS_RESOURCE_SET_WEATHER_MODIFIER:
-        WEATHER->modifier = ((s16*)data)[6];
+        vector = (s16*)data;
+        vector += 6;
+        WEATHER->modifier = vector[0];
         break;
     }
     return result;

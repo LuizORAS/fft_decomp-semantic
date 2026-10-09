@@ -14,8 +14,6 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     battle_ai_ability_entry_t* entry;
     s32 flags;
     s32 status_byte;
-    /* Pin: unpinned, GCC builds the result in $v1 and copies it to $v0 at the returns (4 bytes larger). */
-    register s32 result __asm__("$2");
 
     if (g_battle_ai_data_base.decision_state != 0) {
         /* Resume: the target jumps into the middle of the ability loop. */
@@ -88,8 +86,8 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     }
     if (g_battle_ai_status_candidate_count == 0)
         return 0;
-    result = 1;
-    if (g_battle_ai_status_insufficient_mp != 0 && ai->ability_targets_enemies_or_mp == 0)
-        result = g_battle_ai_status_sufficient_mp != 0;
-    return result;
+    if (g_battle_ai_status_insufficient_mp != 0 && ai->ability_targets_enemies_or_mp == 0
+        && g_battle_ai_status_sufficient_mp == 0)
+        return 0;
+    return 1;
 }
