@@ -1,9 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The retail routine preserves the ambient a1 value on the state-1 path. */
-void battle_camera_toggle_tilt(s32 unused_0, s32 sound_arg) {
+/* Toggle the camera tilt and play its sound. The sound call passes a second
+ * argument its one-parameter callee ignores; `sound_arg` is unset when the
+ * target is 1, so that argument is then whatever the caller left in $a1. */
+void battle_camera_toggle_tilt(void) {
     s32 target;
+    s32 sound_arg;
 
     target = g_battle_map_tilt_target;
     if (target == 1) {
@@ -23,6 +26,5 @@ void battle_camera_toggle_tilt(s32 unused_0, s32 sound_arg) {
         }
     }
     g_battle_camera_tilt_increment = 1;
-    /* The target passes a second argument the one-parameter callee ignores. */
     ((void (*)(s32, s32))main_sound_play_sfx)(0x31, sound_arg);
 }

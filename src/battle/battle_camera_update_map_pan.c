@@ -6,7 +6,7 @@ void battle_camera_update_map_pan(void) {
 
     if (g_battle_state_game_flow_running != 0) {
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        switch (((s32 (*)(s32))battle_camera_get_input_direction)(0)) {
+        switch (battle_camera_get_input_direction(0)) {
         case 0x800:
             coord = &g_battle_camera_current_real_coords.vz;
             *coord += 0x4000;

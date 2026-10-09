@@ -6,11 +6,12 @@
  * steps) for the d-pad state, or -1 when none applies or a 0x9F0 button bit
  * is pressed.
  *
- * `mode` (0-2) selects the input source. The target reads `input` from $a1
- * without setting it when `mode` or the controller mode is out of range;
- * callers pass only `mode`. */
-s32 battle_camera_get_input_direction(s32 mode, u32 input) {
+ * `mode` (0-2) selects the input source. `input` stays unset when `mode` or
+ * the controller mode is out of range: the direction tests then read whatever
+ * the caller left in $a1. */
+s32 battle_camera_get_input_direction(s32 mode) {
     s32 direction;
+    u32 input;
     u32 previous;
     u32 pressed;
     u32 divisor;

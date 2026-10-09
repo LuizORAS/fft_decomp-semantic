@@ -2081,12 +2081,12 @@ extern SVECTOR g_battle_camera_render_state;
 extern s32 g_battle_camera_speed_curve;
 void battle_camera_convert_screen_coords_by_rotation(const u16* input, s16* output, s32 offset);
 void battle_camera_convert_screen_coords_modify_by_1(const s16* screen, s16* destination);
-void battle_camera_toggle_tilt(s32 unused_0, s32 sound_arg);
+void battle_camera_toggle_tilt(void);
 s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void battle_camera_step_focus_toward_cursor_tile(s16 height);
 void battle_camera_execute_angle_command(s32 selector, s32 frame_high, s32 duration, SVECTOR* position);
 void battle_camera_execute_position_command(s32 selector, s32 frame_high, s32 duration, VECTOR* target);
-s32 battle_camera_get_input_direction(s32 mode, u32 input);
+s32 battle_camera_get_input_direction(s32 mode);
 void battle_camera_update_effect_rotation_and_zoom(void);
 
 /* Some routines address these components as separate linker symbols. */
@@ -3628,7 +3628,7 @@ s32 battle_effect_end_secondary_on_current_unit(void);
 void battle_effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 total, s32 current, VECTOR* dst);
 s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
-s32 battle_effect_init_data(s32 result);
+s32 battle_effect_init_data(void);
 void battle_effect_init_parameter_set(effect_list_node_t* state, s32 frame_group, s32 animation_index);
 void battle_effect_init_trap_animation(s32 group, u16 palette_id, battle_effect_slot_t* slot);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);

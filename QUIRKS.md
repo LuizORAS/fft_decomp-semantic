@@ -117,6 +117,20 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `effect_eNNN_update_wave_mesh_state` copies (E033, E035, E073, E079, E080,
   E230, E453, E456); and the direction-times-spread products over `scale` in
   `battle_effect_spawn_particle_motion`.
+- Locals read before any assignment, so the value is whatever the caller left
+  in a register: `battle_effect_init_data` tests `result` (`$a0`) for a load
+  state outside 0-3, which nothing sets; `battle_camera_get_input_direction`
+  tests `input` (`$a1`) when `mode` or the controller mode is outside 0-2;
+  `battle_camera_toggle_tilt` passes `sound_arg` (`$a1`) as a second argument
+  its one-parameter callee ignores, unset when the tilt target is 1;
+  `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
+  0; `world_formation_run_set_ability_menu` indexes the entry ids with
+  `cursor` when the list is empty; `world_menu_build_available_item_list`
+  uses `selected` when no entry matches the current item.
+- `main_heap_free`: the clearing loop stops at the first page byte that differs
+  from the allocation id, not at the end of the 64-entry
+  `g_main_heap_game_allocator_table`; an allocation that reaches the last page
+  reads on into `g_main_gfx_draw_envs` and clears its bytes while they match.
 
 ## Calls that disagree with the callee
 
@@ -148,6 +162,13 @@ without changing the bytes.
   halfword at address `0x10`.
 - `src/world/world_menu_animate_window_quad_crop.c` passes an uninitialized
   source (a stale `$s5`) to `world_menu_zoom_cursor_frame`, which never reads it.
+- `equip_menu_update_horizontal_selection_and_mark_change` and its vertical
+  twin call the three-parameter `equip_menu_update_wrapped_*_selection` with
+  two arguments; the callee's `input_mask` is the caller's own, still in `$a2`.
+- `battle_map_init_units_sprites_event_and_music` and
+  `battle_map_step_init_sequence` call `main_sound_stop_sfx` without its sound
+  id: step 0 passes `map_id`, still in `$a0`; step 11 passes whatever
+  `main_sound_unload_current_scenario_music` left there.
 - `src/event/equip_cmd_run_stream.c` calls each `g_equip_cmd_handlers` entry
   without an argument; `$a0` still holds the stream.
 - `src/event/equip_entrypoint.c` calls `main_unit_refresh_stats_and_statuses`

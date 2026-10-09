@@ -7,7 +7,8 @@ s32 equip_menu_update_horizontal_selection_and_mark_change(
     s16 previous_selection = g_equip_menu_selection_values[index];
     s16 selection;
 
-    /* The target leaves a2 (input_mask) unset for this three-argument callee. */
+    /* Called with two arguments: the callee's input_mask is this function's
+     * own, still in $a2. */
     selection = ((s16 (*)(s32, s32))equip_menu_update_wrapped_horizontal_selection)(entry_count & 0xFFFF, index);
     if (previous_selection != selection) {
         g_equip_sound_queued_effect_id = sound_id;

@@ -12,7 +12,8 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
 
     switch (step) {
     case 0:
-        /* Called without its sound id argument. */
+        /* Called with no argument: the callee receives map_id, still in $a0
+         * (passing it explicitly changes the register allocation). */
         ((void (*)(void))main_sound_stop_sfx)();
         battle_camera_init_defaults();
         battle_map_init_palette_state();
@@ -98,7 +99,8 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         if (g_main_system_frontend_world_result == 1
             || battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
             main_sound_unload_current_scenario_music();
-            /* Called without its sound id argument. */
+            /* Called with no argument: the sound id is whatever
+             * main_sound_unload_current_scenario_music left in $a0. */
             ((void (*)(void))main_sound_stop_sfx)();
             main_sound_set_current_music_track(g_battle_random_battle_music_tracks[rand() / 0x2000]);
         }

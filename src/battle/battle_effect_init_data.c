@@ -8,10 +8,11 @@
  * (60 frames when a secondary effect is active), finalizes the secondary
  * effect and fades the music when the effect header flag 0x10 is set, and
  * state 3 waits for the secondary effect phase to end. Returns nonzero while
- * work remains. The unused parameter is the result register: unhandled states
- * return whatever the caller left in $a0.
+ * work remains. A load state outside 0-3 leaves `result` unset: the test then
+ * reads whatever the caller left in $a0.
  */
-s32 battle_effect_init_data(s32 result) {
+s32 battle_effect_init_data(void) {
+    s32 result;
     s32 lba;
     s32 byte_length;
     u8* destination;
