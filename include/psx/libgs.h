@@ -176,7 +176,7 @@ extern MATRIX g_psyq_gs_light_ws_matrix;
 extern s32 D_801CD7DC;
 extern s32 D_801CD854;
 
-u32 psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, s32 z, s32 len);
+u32* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, u8 len);
 void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dith, u16 varmmode);
 void psyq_gs_init_gte(void);
 void psyq_gs_reset_screen_state(u16 width, u16 height);

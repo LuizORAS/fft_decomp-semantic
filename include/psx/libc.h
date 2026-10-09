@@ -6,7 +6,7 @@
 extern void srand(unsigned int);
 extern int rand(void);
 extern int sprintf(char* destination, const char* format, ...);
-void printf(const char* fmt, ...);
+int printf(const char* fmt, ...);
 extern char* strcat(char* destination, const char* source);
 extern char* strcpy(char* destination, const char* source);
 extern int strlen(const char* source);

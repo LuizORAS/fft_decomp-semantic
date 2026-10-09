@@ -1,92 +1,35 @@
 #include "psx/libgpu.h"
 
 /* LIBGPU, retail 0x80025c44-0x80025e5c. Selects fill or tile clearing and restores drawing state. */
-int _clr(void* rectangle, u32 color) {
-    RECT* rect = rectangle;
-    u32 rgb = color;
-    int dimension;
-    int value;
-    /* Bindings preserve the clear-packet masks, coordinates and linked restore pointer. */
-    register int maximum __asm__("$4");
-    u16* limit;
-    register u32 fill_color __asm__("$3");
-    register u32 mask __asm__("$4");
-    u32 area_start;
-    u32 offset;
-    u32 area_end;
-    register u32* restore __asm__("$6");
-    u32 terminator;
-    register u32 coordinate __asm__("$2");
-    dimension = rect->w;
-    if (dimension >= 0) {
-        limit = &g_psyq_gpu_vram_width;
-        __asm__("" : "=r"(limit) : "0"(limit)); /* Retail materializes the signed clamp's unsigned field address. */
-        value = *limit;
-        __asm__("" : "=r"(value) : "0"(value));
-        value = (s16)value;
-        maximum = value - 1;
-        if (maximum < dimension)
-            dimension = maximum;
-        value = dimension;
-    } else
-        value = 0;
-    rect->w = value;
-    dimension = rect->h;
-    if (dimension >= 0) {
-        limit = &g_psyq_gpu_vram_height;
-        __asm__("" : "=r"(limit) : "0"(limit));
-        value = *limit;
-        __asm__("" : "=r"(value) : "0"(value));
-        value = (s16)value;
-        maximum = value - 1;
-        if (maximum < dimension)
-            dimension = maximum;
-    } else
-        dimension = 0;
-    rect->h = dimension;
+int _clr(RECT* rect, u32 color) {
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width - 1);
+    limitRange(rect->h, 0, g_psyq_gpu_environment.vram_height - 1);
     if ((rect->x & 63) || (rect->w & 63)) {
-        mask = PSYQ_GPU_DMA_ADDRESS_MASK;
-        area_end = (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_BOTTOM_RIGHT) | PSYQ_GPU_PARAMETER_MASK);
-        terminator = 0x03ffffff;
-        restore = &g_psyq_gpu_clear_restore_tag;
-        coordinate = (u32)restore & mask;
-        coordinate |= 0x07000000;
-        area_start = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_TOP_LEFT);
-        offset = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_OFFSET);
-        __asm__(""
-            : "=r"(coordinate)
-            : "0"(coordinate), "r"(area_start),
-            "r"(offset)); /* Preserve the two saved command constants before the tag store. */
-        g_psyq_gpu_clear_packet_tag = coordinate;
-        g_psyq_gpu_clear_packet_word_1 = area_start;
-        g_psyq_gpu_clear_packet_word_2 = area_end;
-        g_psyq_gpu_clear_packet_word_3 = offset;
-        coordinate = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
-        g_psyq_gpu_clear_packet_word_4 = coordinate;
-        mask = rgb & mask;
-        g_psyq_gpu_clear_packet_word_5 = mask | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TILE);
-        coordinate = ((u32*)rect)[0];
-        g_psyq_gpu_clear_packet_word_6 = coordinate;
-        coordinate = ((u32*)rect)[1];
-        *restore = terminator;
-        g_psyq_gpu_clear_packet_word_7 = coordinate;
-        g_psyq_gpu_clear_restore_area_start = _param(PSYQ_GPU_INFO_DRAW_AREA_TOP_LEFT) | area_start;
-        g_psyq_gpu_clear_restore_area_end = _param(PSYQ_GPU_INFO_DRAW_AREA_BOTTOM_RIGHT)
+        /* A tile under a full draw area and zero offset, then a second packet that restores the three settings. */
+        g_psyq_gpu_clear_packet[0] = ((u32)g_psyq_gpu_clear_restore & PSYQ_GPU_DMA_ADDRESS_MASK) | 0x07000000;
+        g_psyq_gpu_clear_packet[1] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_TOP_LEFT);
+        g_psyq_gpu_clear_packet[2]
+            = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_BOTTOM_RIGHT) | PSYQ_GPU_PARAMETER_MASK;
+        g_psyq_gpu_clear_packet[3] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_OFFSET);
+        g_psyq_gpu_clear_packet[4] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
+        g_psyq_gpu_clear_packet[5] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TILE) | (color & PSYQ_GPU_RGB_MASK);
+        g_psyq_gpu_clear_packet[6] = ((u32*)rect)[0];
+        g_psyq_gpu_clear_packet[7] = ((u32*)rect)[1];
+        g_psyq_gpu_clear_restore[0] = 0x03ffffff;
+        g_psyq_gpu_clear_restore[1]
+            = _param(PSYQ_GPU_INFO_DRAW_AREA_TOP_LEFT) | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_TOP_LEFT);
+        g_psyq_gpu_clear_restore[2] = _param(PSYQ_GPU_INFO_DRAW_AREA_BOTTOM_RIGHT)
             | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_BOTTOM_RIGHT);
-        g_psyq_gpu_clear_restore_offset = _param(PSYQ_GPU_INFO_DRAW_OFFSET) | offset;
+        g_psyq_gpu_clear_restore[3]
+            = _param(PSYQ_GPU_INFO_DRAW_OFFSET) | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_OFFSET);
     } else {
-        coordinate = 0x04ffffff;
-        g_psyq_gpu_clear_packet_tag = coordinate;
-        fill_color = PSYQ_GPU_RGB_MASK;
-        coordinate = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
-        g_psyq_gpu_clear_packet_word_1 = coordinate;
-        fill_color = rgb & fill_color;
-        g_psyq_gpu_clear_packet_word_2 = fill_color | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_BLOCK_FILL);
-        coordinate = ((u32*)rect)[0];
-        g_psyq_gpu_clear_packet_word_3 = coordinate;
-        coordinate = ((u32*)rect)[1];
-        g_psyq_gpu_clear_packet_word_4 = coordinate;
+        g_psyq_gpu_clear_packet[0] = 0x04ffffff;
+        g_psyq_gpu_clear_packet[1] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
+        g_psyq_gpu_clear_packet[2] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_BLOCK_FILL) | (color & PSYQ_GPU_RGB_MASK);
+        g_psyq_gpu_clear_packet[3] = ((u32*)rect)[0];
+        g_psyq_gpu_clear_packet[4] = ((u32*)rect)[1];
     }
-    _cwc(&g_psyq_gpu_clear_packet_tag);
+    _cwc(g_psyq_gpu_clear_packet);
     return 0;
 }

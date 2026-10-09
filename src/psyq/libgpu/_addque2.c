@@ -3,67 +3,32 @@
 
 /* LIBGPU, retail 0x80026478-0x8002675c. Immediate or copied/deferred GPU queue operation. */
 int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 argument) {
-    extern volatile int g_psyq_gpu_queue_head; /* Interrupt-visible head; retail performs consecutive distinct loads. */
-    int mask;
-    int* completion_pending;
-    int index;
-    u32* words;
-    psyq_gpu_operation_snapshot_t* last;
-    int restore_mask;
-    /* The ready mask and copied-packet base retain the retail wait/copy registers. */
-    register u32 ready __asm__("$4");
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    int i;
     set_alarm();
     while (((g_psyq_gpu_queue_head + 1) & 63) == g_psyq_gpu_queue_tail) {
         if (get_alarm())
             return -1;
         _exeque();
     }
-    mask = SetIntrMask(0);
-    completion_pending = &g_psyq_gpu_completion_pending;
-    __asm__(""
-        : "=r"(completion_pending)
-        : "0"(completion_pending)); /* Retail materializes the completion_pending flag's address. */
-    *completion_pending = 1;
-    g_psyq_gpu_enqueue_interrupt_mask = mask;
-    ready = PSYQ_GPU_STATUS_READY_COMMAND;
-    if (!g_psyq_gpu_queue_enabled
+    g_psyq_gpu_enqueue_interrupt_mask = SetIntrMask(0);
+    g_psyq_gpu_environment.completion_pending = 1;
+    if (!g_psyq_gpu_environment.queue_enabled
         || (g_psyq_gpu_queue_head == g_psyq_gpu_queue_tail && !(*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)
-            && !g_psyq_gpu_draw_sync_callback)) {
-        u32* status = g_psyq_gpu_gp1_port;
-        u32 sample;
-        do {
-            sample = *status;
-            sample &= ready;
-        } while (!sample);
+            && !g_psyq_gpu_environment.draw_sync_callback)) {
+        while (!(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND))
+            ;
         operation(source, argument);
-        restore_mask = g_psyq_gpu_enqueue_interrupt_mask;
-        __asm__(""
-            : "=r"(restore_mask)
-            : "0"(restore_mask)
-            : "$2"); /* Retail reads the restore mask before materializing the snapshot pointer. */
-        last = (psyq_gpu_operation_snapshot_t*)&g_psyq_gpu_last_operation;
-        __asm__("" : "=r"(last) : "0"(last)); /* Retail materializes the saved-operation pointer. */
-        last->operation = operation;
-        g_psyq_gpu_last_source = source;
-        g_psyq_gpu_last_argument = argument;
-        SetIntrMask(restore_mask);
+        g_psyq_gpu_last_operation.operation = operation;
+        g_psyq_gpu_last_operation.source = source;
+        g_psyq_gpu_last_operation.argument = argument;
+        SetIntrMask(g_psyq_gpu_enqueue_interrupt_mask);
         return 0;
     }
     DMACallback(PSYQ_GPU_DMA_GPU_CHANNEL, _exeque);
-    index = 0;
     if (copy_size) {
-        register u32* payload __asm__("$8") = g_psyq_gpu_operation_queue[0].packet_words;
-        psyq_gpu_queue_packet_view_t* packets;
-        words = source;
-        __asm__(""
-            : "=r"(words)
-            : "0"(words), "r"(payload)); /* Retail prepares the payload base before copying the source pointer. */
-        /* A view beginning at the packet member preserves the retail base and 96-byte stride. */
-        packets = (psyq_gpu_queue_packet_view_t*)payload;
-        while (index < copy_size / 4) {
-            packets[g_psyq_gpu_queue_head].packet_words[index++] = *words++;
-            __asm__ volatile("" ::: "memory"); /* Retail stores each copied word before recomputing its loop bound. */
-        }
+        for (i = 0; i < copy_size / 4; i++)
+            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words[i] = ((u32*)source)[i];
         g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].source
             = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words;
     } else
