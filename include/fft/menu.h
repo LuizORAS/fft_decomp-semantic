@@ -937,16 +937,15 @@ typedef enum menu_panel_fade_mode {
     MENU_PANEL_FADE_OUT = 2,  /* intensity falls by 8 a frame; at zero the mode returns to NONE */
 } menu_panel_fade_mode_e;
 
-/* Second argument of *_gfx_set_draw_mode_for_texture_page: one of five fixed
- * 4-bit texture pages, named by the VRAM origin passed to GetTPage. Any value
- * above 3 selects the last page; GetTPage keeps only the 256-row page bits of
- * y, so that page starts at row 256. */
+/* Second argument of *_gfx_set_draw_mode_for_texture_page: which of the menu
+ * code's five 4-bit texture pages a draw mode selects, named by what the game
+ * keeps there. Any value above 3 selects the last one. */
 typedef enum menu_texture_page {
-    MENU_TEXTURE_PAGE_960_256 = 0,
-    MENU_TEXTURE_PAGE_448_0 = 1,
-    MENU_TEXTURE_PAGE_384_0 = 2,
-    MENU_TEXTURE_PAGE_832_256 = 3,
-    MENU_TEXTURE_PAGE_896_288 = 4,
+    MENU_TEXTURE_PAGE_FRAME = 0,            /* VRAM (960, 256): FRAME.BIN, the window frames and UI sprites */
+    MENU_TEXTURE_PAGE_ALLOCATED_IMAGES = 1, /* VRAM (448, 0): the grid *_gfx_alloc_tpage7_vram hands out */
+    MENU_TEXTURE_PAGE_TEXT_IMAGES = 2,      /* VRAM (384, 0): rendered message and list text */
+    MENU_TEXTURE_PAGE_UNIT_SPRITES = 3,     /* VRAM (832, 256): the first unit spritesheet column; no caller */
+    MENU_TEXTURE_PAGE_ITEM_ICONS = 4,       /* VRAM (896, 256): ITEM.BIN; the code passes y = 288 */
 } menu_texture_page_e;
 
 /* Last argument of *_menu_build_and_upload_window_frame_image. The UPLOAD

@@ -50,8 +50,8 @@ void equip_editor_run_numeric_thread(void) {
         upload_c = &g_equip_editor_numeric_entries_f;
         entries = g_equip_editor_numeric_descriptor_b;
     }
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
     SetDrawMode(&buffer->draw_modes[2], 0, 0, GetTPage(0, 2, 0x140, 0), &g_equip_gfx_draw_area_template);
     battle_menu_init_numeric_display_frame_primitives(
         &g_equip_editor_numeric_table.texture_rect, &buffer->numeric_frame);

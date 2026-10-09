@@ -43,9 +43,9 @@ void bunit_menu_run_numeric_editor_thread(void) {
         upload_c = &g_bunit_editor_numeric_entries_f;
         entries = g_bunit_editor_numeric_descriptor_b;
     }
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_448_0);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(
         &g_bunit_editor_numeric_table.texture_rect, &buffer->numeric_frame);
     bunit_gfx_init_scaled_draw_area_packets(&buffer->portrait);

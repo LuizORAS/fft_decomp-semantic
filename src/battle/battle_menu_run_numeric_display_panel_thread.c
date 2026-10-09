@@ -22,8 +22,8 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     record = g_battle_menu_numeric_display_panel_records;
     records = record;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
-    battle_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_384_0);
+    battle_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     battle_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = battle_menu_alloc_memory(0x918);
     battle_clear_menu_render_buffer(buffer, 0x918);

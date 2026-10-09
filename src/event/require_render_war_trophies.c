@@ -43,7 +43,7 @@ void require_render_war_trophies(void) {
         ClearImage(&g_require_reward_war_trophy_clear_rect, 0, 0, 0);
         battle_thread_yield();
         buffer = g_require_reward_war_trophy_primitives;
-        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_448_0);
+        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
         for (i = 0; i < 16; i++) {
             battle_gfx_init_default_poly_ft4(&buffer->quads[i]);
         }

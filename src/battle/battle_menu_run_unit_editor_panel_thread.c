@@ -44,9 +44,9 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_battle_menu_hovered_unit_stats_display.y = 0x1A;
     g_battle_unit_summary_panel_rect.y = 0x1A;
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_896_288);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_ITEM_ICONS);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
     frame_record->tiles[0].r0 = 0x30;

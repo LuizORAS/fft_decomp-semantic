@@ -74,8 +74,8 @@ void option_build_options_menu(void) {
     clear.w = window.rect.w / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
-    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&page->text_mode, MENU_TEXTURE_PAGE_448_0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&page->text_mode, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     texture_window.x = 0;
     texture_window.y = 0;
     texture_window.w = 0x100;

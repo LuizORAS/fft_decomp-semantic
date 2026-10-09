@@ -60,7 +60,7 @@ void option_build_at_list(void) {
     window.y_screen_offset = 0xC;
     window.rect.w = entry->window_width - 0x12;
     window.rect.h = entry->window_height - 0x1A;
-    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
+    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
     texture_window.x = 0;
     texture_window.y = (u8)entry->vram_y;
     texture_window.w = 0x100;

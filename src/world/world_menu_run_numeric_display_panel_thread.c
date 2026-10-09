@@ -16,8 +16,8 @@ void world_menu_run_numeric_display_panel_thread(void) {
     record = g_world_numeric_display_panel_records;
     records = record;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
-    world_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_960_256);
-    world_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_384_0);
+    world_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_FRAME);
+    world_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = world_menu_alloc_ui_buffer(0x918);
     world_clear_menu_render_buffer(buffer, 0x918);

@@ -44,9 +44,9 @@ void world_menu_run_numeric_editor_thread(void) {
         upload_c = g_world_editor_numeric_entries_f;
         entries = g_world_editor_numeric_descriptor_b;
     }
-    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
-    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
-    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_448_0);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_editor_numeric_table[0], &buffer->numeric_frame);
     world_gfx_init_scaled_draw_area_packets_3(&buffer->portrait);
     i = 0;

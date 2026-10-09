@@ -88,8 +88,8 @@ void world_menu_display_hovered_unit_stats(
     }
     page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode]];
     world_menu_init_numeric_display_frame_primitives(frame_rect, &page->palette);
-    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, MENU_TEXTURE_PAGE_448_0);
-    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_960_256);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_FRAME);
     world_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
         world_gfx_init_default_poly_ft4(&page->quads[frame]);

@@ -78,8 +78,8 @@ void require_render_unit_status_panel_thread(void) {
     }
 
     battle_menu_init_numeric_display_frame_primitives(&g_require_gfx_portrait_origin, &editor->numeric_frame);
-    battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_a, MENU_TEXTURE_PAGE_448_0);
-    battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, MENU_TEXTURE_PAGE_960_256);
+    battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
+    battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
@@ -104,8 +104,8 @@ void require_render_unit_status_panel_thread(void) {
             &g_require_gfx_portrait_origin, &g_require_panel_editor_label_cells[frame]);
     }
     battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
-    battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_960_256);
-    battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_448_0);
+    battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(&g_require_panel_frame_rect, &panel->numeric_frame);
     name_sprite = &panel->sprites[0];
     battle_menu_init_sprite_array(name_sprite, 7, 0x7C3C);
