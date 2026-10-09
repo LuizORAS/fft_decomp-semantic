@@ -21,18 +21,17 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = world_menu_alloc_ui_buffer(0x918);
     world_clear_menu_render_buffer(buffer, 0x918);
-    g_world_menu_text_state.stride = 0x14;
+    g_world_menu_text_state.pen.stride = 0x14;
+    world_menu_set_text_origin(0, 0);
+    world_menu_draw_numeric_display_entries(buffer, g_world_numeric_display_entries, &g_world_menu_text_state.pen, 3);
+    g_world_menu_text_state.pen.stride = 0x40;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        (s32)buffer, g_world_numeric_display_entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
-    g_world_menu_text_state.stride = 0x40;
+        buffer + 0x168, &g_world_numeric_display_entries[3], &g_world_menu_text_state.pen, 4);
+    g_world_menu_text_state.pen.stride = 0x64;
     world_menu_set_text_origin(0, 0);
-    world_menu_draw_numeric_display_entries((s32)(buffer + 0x168), &g_world_numeric_display_entries[3],
-        (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
-    g_world_menu_text_state.stride = 0x64;
-    world_menu_set_text_origin(0, 0);
-    world_menu_draw_numeric_display_entries((s32)(buffer + 0x468), &g_world_numeric_display_entries[7],
-        (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+    world_menu_draw_numeric_display_entries(
+        buffer + 0x468, &g_world_numeric_display_entries[7], &g_world_menu_text_state.pen, 8);
     LoadImage(&g_world_numeric_display_text_rect_a, (u32*)buffer);
     LoadImage(&g_world_numeric_display_text_rect_b, (u32*)(buffer + 0x168));
     LoadImage(&g_world_numeric_display_text_rect_c, (u32*)(buffer + 0x468));
@@ -40,9 +39,8 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         world_menu_init_sprite(&record->sprites[i]);
-        world_gfx_init_image_loading((POLY_FT4*)&record->sprites[i], &g_world_gfx_menu_image_source,
-            (const world_image_location_t*)&g_world_numeric_display_frame_rect,
-            &g_world_numeric_display_image_params[i]);
+        world_gfx_init_image_loading(&record->sprites[i], &g_world_gfx_menu_image_source,
+            &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
     }
     world_script_copy_bytes(&record[1], record, 0x1AC);
     record[0].palette = &g_world_numeric_display_palettes[0].primitives;
@@ -83,7 +81,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
         world_gfx_draw_or_append_gpu_primitive(&record->mode1);
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)record->palette);
+        world_menu_submit_numeric_display_frame_primitives(record->palette);
         world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
     world_thread_yield();

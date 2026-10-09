@@ -13,7 +13,7 @@ void battle_effect_resolve_target_render_coords(
 
     if (target_index == -1) {
         if (coord_data->targets[16].target_type == 0) {
-            *out = *(SVECTOR*)battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[16].id.misc_id);
+            *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[16].id.misc_id);
             if (add_depth != 0) {
                 s32 height;
                 tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[16].id.misc_id);
@@ -35,7 +35,7 @@ void battle_effect_resolve_target_render_coords(
         }
     } else {
         if (coord_data->targets[target_index].target_type == 0) {
-            *out = *(SVECTOR*)battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[target_index].id.misc_id);
+            *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[target_index].id.misc_id);
             if (add_depth != 0) {
                 s32 height;
                 tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].id.misc_id);

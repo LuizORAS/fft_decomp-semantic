@@ -174,7 +174,7 @@ s32 world_formation_run_set_ability_menu(void) {
         g_world_set_ability_show_stat_preview = 0;
         g_world_status_display_thread_params.redraw_request = 1;
         world_gfx_set_sprite_slot(g_world_set_ability_slot + 4, g_world_menu_cursor_position,
-            g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
+            g_world_menu_scroll_offset, g_world_menu_entry_ids);
         world_thread_resume(0xF);
         g_world_set_ability_list_close_pending = 0;
     }

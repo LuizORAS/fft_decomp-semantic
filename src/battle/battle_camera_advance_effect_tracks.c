@@ -18,17 +18,17 @@ void battle_camera_advance_effect_tracks(s16 frame) {
         k = index & 0xffff;
         switch (index / 0x10000) {
         case 0:
-            battle_effect_copy_svector((u16*)g_battle_effect_timeline->main.position[k], (u16*)&position);
+            battle_effect_copy_svector(g_battle_effect_timeline->main.position[k], &position);
             battle_camera_execute_angle_command((s16)g_battle_effect_timeline->main.selector[k], keyframe / 0x10000,
                 (keyframe & 0xffff) - frame, &position);
             break;
         case 1:
-            battle_effect_copy_svector((u16*)g_battle_effect_timeline->position[k], (u16*)&position);
+            battle_effect_copy_svector(g_battle_effect_timeline->position[k], &position);
             battle_camera_execute_angle_command(
                 (s16)g_battle_effect_timeline->selector[k], keyframe / 0x10000, (keyframe & 0xffff) - frame, &position);
             break;
         case 2:
-            battle_effect_copy_svector((u16*)g_battle_effect_timeline->cleanup.position[k], (u16*)&position);
+            battle_effect_copy_svector(g_battle_effect_timeline->cleanup.position[k], &position);
             battle_camera_execute_angle_command((s16)g_battle_effect_timeline->cleanup.selector[k], keyframe / 0x10000,
                 (keyframe & 0xffff) - frame, &position);
             break;

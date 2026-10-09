@@ -44,8 +44,8 @@ void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_
         || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         selection = level->selection ^ 1;
         level->selection = selection;
-        g_wldcore_window_records[level->cursor_window].y
-            = g_wldcore_window_render_records[level->render_index].base_y - -(selection * 0x10 + 0xE);
+        g_wldcore_window_records[level->cursor_window].position.y
+            = g_wldcore_window_render_records[level->render_index].base.y - -(selection * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
         return;
     }

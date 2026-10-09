@@ -5,15 +5,13 @@
  *
  * The cursor keeps its row on the page; a move that changes the first visible
  * option plays the cursor sound. */
-void world_menu_scroll_list_page(s32 dir, u8* menu) {
-    world_menu_list_record_t* list;
+void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list) {
     s32 old;
     s16 delta;
     s32 unused[2]; /* 8 frame bytes no instruction uses */
 
     old = g_world_menu_scroll_offset;
     delta = g_world_menu_cursor_position - g_world_menu_scroll_offset;
-    list = (world_menu_list_record_t*)menu;
     if (dir == -1) {
         g_world_menu_scroll_offset -= list->visible_rows;
         if (g_world_menu_scroll_offset < 0) {

@@ -14,19 +14,19 @@ void wldcore_window_build_render_record_image(
     s32 transformed[2];
 
     g_wldcore_window_render_records[index].flags &= ~0x1C;
-    g_wldcore_window_render_records[index].base_x = (s16)bounds.position.x - 0x80;
-    g_wldcore_window_render_records[index].base_y = (s16)bounds.position.y - 0x78;
+    g_wldcore_window_render_records[index].base.x = (s16)bounds.position.x - 0x80;
+    g_wldcore_window_render_records[index].base.y = (s16)bounds.position.y - 0x78;
     g_wldcore_window_render_records[index].coordinate_mode = coordinate_mode;
     /* Struct view of clut_x/clut_y: as plain s32 stores they could alias the
      * stacked image argument, whose load the target schedules after them. */
-    clut = (wldcore_point32_t*)&g_wldcore_window_render_records[index].clut_x;
+    clut = &g_wldcore_window_render_records[index].clut;
     clut->y = 0x1E1;
     clut->x = 0;
     g_wldcore_window_render_records[index].bounds = bounds;
     wldcore_window_transform_point_for_mode(coordinate_mode, bounds, transformed);
     g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed[0], transformed[1]) & 0xFFFF;
     /* One byte pointer for red/green/blue; three field stores change the bytes. */
-    color = &g_wldcore_window_render_records[index].red;
+    color = &g_wldcore_window_render_records[index].color.r;
     color[0] = 0x80;
     color[1] = 0x80;
     color[2] = 0x80;

@@ -11,7 +11,7 @@ void battle_camera_store_state_to_script_variables(void) {
     VECTOR* zoom;
     VECTOR* coords;
 
-    rotation = (SVECTOR*)battle_camera_get_rotation();
+    rotation = battle_camera_get_rotation();
     g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = rotation->vx;
     g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] = rotation->vy;
     g_battle_camera_published_rotation_ptr = rotation;

@@ -5,7 +5,7 @@ void battle_unit_set_animation_for_item_abilities(battle_unit_misc_data_t* unit,
     s32 dx;
     s32 dy;
 
-    battle_gfx_store_item_display_data((battle_gfx_render_unit_t*)unit, unit->used_item_or_weapon_id);
+    battle_gfx_store_item_display_data(unit, unit->used_item_or_weapon_id);
     if (target != 0) {
         dx = target->map_x - unit->map_x;
         dy = target->map_y - unit->map_y;

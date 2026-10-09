@@ -77,7 +77,7 @@ extern u16 g_world_map_reload_state;
 extern map_selected_tile_t g_world_map_selected_tile_data;
 extern s16 g_world_map_destruction_wait_state;
 extern u16 g_world_map_refresh_pending;
-extern u8 g_world_tile_info_image_location[];
+extern RECT g_world_tile_info_image_location;
 extern world_gfx_image_load_parameters_t g_world_tile_info_image_params[2];
 extern u16 g_world_map_darkness_wait_frames[];
 extern s16 g_world_map_root_request_state;
@@ -364,16 +364,6 @@ extern world_status_thread_t g_world_status_display_thread_params;
 extern world_status_thread_t g_world_preview_stats_thread_params;
 
 /* status panel */
-/* Status panel sprite view used by the *_panel_set_primitive_colors helpers:
- * a 0x10-byte head followed by 0x14-byte SPRT packets, so sprites[n + 1] is
- * battle_menu_status_panel_buffer_t.sprites[n]. */
-typedef struct battle_menu_status_panel_primitives {
-    u8 header[0x10];
-    SPRT sprites[25]; /* 0x010 */
-} battle_menu_status_panel_primitives_t;
-typedef char battle_menu_status_panel_primitives_size_must_be_0x204
-    [(sizeof(battle_menu_status_panel_primitives_t) == 0x204) ? 1 : -1];
-
 extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
 void world_menu_run_battle_help(void);
 
@@ -406,12 +396,12 @@ void world_bit_cursor_set_primary(u8* ptr);
 void world_bit_cursor_set_secondary(u8* ptr);
 void world_bits_write_primary(u8 bit);
 void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
-void world_menu_copy_bytes_to_halfwords(s16* destination, const u8* source, s32 count);
+void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 count);
 s32 world_mul_div_64(s32 a, s32 b, s32 c);
 void world_game_reset(void);
 void world_noop_800e2390(void);
 void world_noop_800e90ec(POLY_FT4* unused_primitive, const world_image_location_t* unused_base_load,
-    const world_image_location_t* unused_base_screen, const world_gfx_image_load_parameters_t* unused_parameters);
+    const RECT* unused_base_screen, const world_gfx_image_load_parameters_t* unused_parameters);
 void world_noop_800ef9d4(void);
 void world_noop_800f079c(void);
 void world_noop_800f1388(void);
@@ -529,13 +519,6 @@ typedef struct world_ability_menu_layout {
 } world_ability_menu_layout_t;
 typedef char world_ability_menu_layout_size_must_be_0x2c[sizeof(world_ability_menu_layout_t) == 0x2c ? 1 : -1];
 
-/* Partial menu position: 0x8011bc4c updates the y halfword at +2 and passes
- * the record to the numeric renderer at 0x801282dc. */
-typedef struct world_menu_point {
-    s16 x;
-    s16 y;
-} world_menu_point_t;
-
 extern s16 g_world_ability_category;
 extern s32 g_world_ability_selected_skill_ct;
 extern s32 g_world_ability_selected_type;
@@ -558,14 +541,14 @@ extern u8 g_world_ability_submenu_running;
 extern u8 g_world_ability_menu_unit_index;
 extern s8 g_world_remove_ability_unit_index;
 extern u16 g_world_remove_ability_cursor_anim;
-extern world_menu_point_t g_world_remove_ability_cursor_point;
-extern world_menu_point_t g_world_clear_abilities_cursor_point;
+extern point16_t g_world_remove_ability_cursor_point;
+extern point16_t g_world_clear_abilities_cursor_point;
 extern u8 g_world_set_ability_window_script[];
 extern s8 g_world_set_ability_slot;               /* ability slot under the cursor: 0..4 */
 extern s8 g_world_set_ability_list_close_pending; /* close the ability list this frame */
 extern s8 g_world_set_ability_show_stat_preview;  /* show the stat preview window */
 extern u16 g_world_set_ability_cursor_anim;
-extern world_menu_point_t g_world_set_ability_cursor_point;
+extern point16_t g_world_set_ability_cursor_point;
 extern u8 g_world_ability_list_script[];
 extern s32 g_world_selected_ability;
 extern world_menu_list_page_t g_world_ability_list_pages[][2];
@@ -636,9 +619,9 @@ extern s8 g_world_equip_item_slot;
 extern s8 g_world_equip_item_list_refresh;
 extern s8 g_world_equip_item_preview_active;
 extern u16 g_world_equip_item_cursor_anim;
-extern world_menu_point_t g_world_equip_item_cursor_point;
+extern point16_t g_world_equip_item_cursor_point;
 extern u16 g_world_remove_all_equipment_ids[5];
-extern world_menu_point_t g_world_remove_all_equipment_cursor_point;
+extern point16_t g_world_remove_all_equipment_cursor_point;
 extern s8 g_world_equip_item_list_open;
 extern s16 g_world_equip_item_previewed_cursor;
 extern s8 g_world_remove_all_equipment_prompt_active;
@@ -646,7 +629,7 @@ extern volatile u16 g_world_remove_all_equipment_blink_counter;
 
 /* editor */
 
-extern u8 g_world_editor_numeric_geometry[];
+extern world_image_location_t g_world_editor_numeric_geometry[];
 extern RECT g_world_editor_numeric_table[2];
 extern RECT g_world_editor_numeric_entries_a[];
 extern RECT g_world_editor_numeric_entries_b[];
@@ -708,28 +691,6 @@ typedef struct world_gfx_tim_pair_record {
 } world_gfx_tim_pair_record_t;
 typedef char world_tim_pair_record_tims_offset_must_be_0x1e00
     [((unsigned long)&((world_gfx_tim_pair_record_t*)0)->tim_pointers == 0x1e00) ? 1 : -1];
-
-/* Provisional 0x28-byte WORLD sprite record: a common 8-byte head followed by
- * two 16-byte halves that carry the left/right texture edges.  Adjusted by
- * the clip helpers at 0x8010cbdc / 0x8010cc40; field roles are inferred. */
-typedef struct world_gfx_sprite_half {
-    u16 x;          /* 0x00 */
-    u16 y;          /* 0x02 */
-    u8 u0;          /* 0x04 */
-    u8 v0;          /* 0x05 */
-    u16 clut;       /* 0x06 */
-    u16 width;      /* 0x08 */
-    u16 height;     /* 0x0a */
-    u8 u1;          /* 0x0c */
-    u8 v1;          /* 0x0d */
-    u16 _unused_0e; /* 0x0e */
-} world_gfx_sprite_half_t;
-
-typedef struct world_gfx_sprite_record {
-    u8 _unused_00[8];
-    world_gfx_sprite_half_t halves[2]; /* 0x08, 0x18 */
-} world_gfx_sprite_record_t;
-typedef char world_sprite_record_size_must_be_0x28[(sizeof(world_gfx_sprite_record_t) == 0x28) ? 1 : -1];
 
 /* Provisional: the WORLD GPU packet buffer pointed to by 0x801cd528.  Only the
  * ordering table base and the DR_MODE pool used by 0x8012d340 are named; the
@@ -812,16 +773,6 @@ typedef struct world_gfx_sprite_slot {
     s16 y;    /* 0x02 */
     s16 tile; /* 0x04; low 10 bits are the tile id */
 } world_gfx_sprite_slot_t;
-
-/* Primitive group submitted by world_menu_submit_numeric_display_frame_primitives: twelve GPU
- * primitives bracketed by a header and footer packet plus a trailing word.
- * Hoisted from the defining translation unit. */
-typedef struct world_primitive_group {
-    /* 0x00 */ s32 header[3];
-    /* 0x0C */ s32 footer[3];
-    /* 0x18 */ s32 prims[12][4];
-    /* 0xD8 */ s32 tail;
-} world_primitive_group_t;
 
 extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
@@ -942,11 +893,11 @@ extern u16 g_world_gfx_gradient_quad_count;
 extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
-void world_menu_display_text_string(s32 image, s32 origin, s32 text);
-void world_display_menu_number_entry(s32 value, u8 digit_count, s32 image, u16* origin);
+void world_menu_display_text_string(u8* image, world_glyph_blit_t* origin, u8* text);
+void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, world_glyph_blit_t* origin);
 
 void world_gfx_build_scaled_draw_area_packets(
-    void* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread);
+    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread);
 
 void world_gfx_add_draw_area_primitive(RECT* rect, s32 otag_index);
 void world_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 ot_index);
@@ -963,7 +914,8 @@ void world_gfx_enqueue_gouraud_textured_quad(
     world_gfx_textured_rect_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_tile(RECT* box, u8* rgb, s32 semi_trans, s32 ot_index);
 u8* world_gfx_bind_data_pointer(u32 index);
-void world_gfx_build_scaled_draw_area_pair_swapped(void* packets, void* geometry, s32 step, s32 flag);
+void world_gfx_build_scaled_draw_area_pair_swapped(
+    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag);
 void world_menu_clear_selection_record(s32 index);
 void world_gfx_clear_sprite_slots(void);
 void world_gfx_clear_tpage7_vram_allocation_grid(void);
@@ -972,13 +924,13 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void);
  * world_gfx_clip_portrait_poly_from_right/right are named for the way they move the
  * quad: _right shifts x right and trims the trailing texture edge (debugchr's
  * clip_portrait_poly_from_left), _left is debugchr's clip_..._from_right. */
-void world_gfx_clip_portrait_poly_from_right(world_gfx_sprite_record_t* record, s32 delta);
-void world_gfx_clip_portrait_poly_from_left(world_gfx_sprite_record_t* record, s32 delta);
+void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta);
+void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta);
 void world_menu_copy_billboard_data_in(const void* source_a, const void* source_b, const void* source_c);
 void world_menu_copy_billboard_data_out(void* dest0, void* dest1, void* dest2, void* dest3);
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
-void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, u16* x);
+void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyph_blit_t* pen);
 
 void world_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
@@ -991,23 +943,23 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-void world_gfx_init_image_loading(POLY_FT4* primitive, const world_image_location_t* base_load,
-    const world_image_location_t* base_screen, const world_gfx_image_load_parameters_t* parameters);
+void world_gfx_init_image_loading(void* prim, const void* load_origin, const void* screen_origin,
+    const world_gfx_image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_menu_lerp_rect_to_poly_ft4_b(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 u32* world_shop_load_background_tim(s32 index);
 void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
-void world_gfx_init_scaled_draw_area_packets(void* record);
-void world_gfx_init_scaled_draw_area_packets_3(void* record);
+void world_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
+void world_gfx_init_scaled_draw_area_packets_3(world_gfx_scaled_draw_area_pair_t* pair);
 void world_gfx_set_blit_dest_position(s32 x, s32 y);
 void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
-void world_gfx_set_primitive_brightness(u8* primitive, s32 brightness);
-void world_gfx_set_sprite_slot(s32 slot_index, s32 x, s32 y, u16* tile_table);
-void world_menu_submit_numeric_display_frame_primitives(world_primitive_group_t* group);
+void world_gfx_set_primitive_brightness(void* primitive, s32 brightness);
+void world_gfx_set_sprite_slot(s32 slot_index, s32 x, s32 y, s16* tile_table);
+void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame);
 
 void world_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, void* color, s32 semi_trans, s32 texture_page, s32 clut, s32 priority);
@@ -1017,10 +969,10 @@ s32 world_gfx_get_fade_state(void);
 void world_gfx_get_sprite_slot(s32 slot_index, s16* x, s16* y, s16* tile_table);
 s32 world_gfx_get_vsync_mode_or_one(void);
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
-void world_gfx_load_image_and_wait(RECT* rect, u32* data);
+void world_gfx_load_image_and_wait(RECT* rect, void* data);
 void world_script_load_tutorial_files(s32 index, world_gfx_tim_pair_record_t* record);
 void world_gfx_load_wldface_to_frame_buffer(void);
-void world_gfx_store_image_and_wait(RECT* rect, u32* dest);
+void world_gfx_store_image_and_wait(RECT* rect, void* dest);
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag);
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 a, s16 b, s16 c, s16 d);
@@ -1057,7 +1009,7 @@ extern world_gfx_textured_rect_source_t g_world_job_wheel_portrait_quad;
 extern world_gfx_textured_rect_source_t g_world_job_wheel_new_portrait_quad;
 extern u8 g_world_job_wheel_script[];
 extern u8 g_world_job_wheel_job_selected;
-extern world_menu_point_t g_world_job_wheel_unit_sprite_position;
+extern point16_t g_world_job_wheel_unit_sprite_position;
 extern u8 g_world_job_wheel_center_x;
 extern u8 g_world_job_wheel_center_y;
 extern u8 g_world_job_wheel_animation_counter;
@@ -1124,7 +1076,7 @@ s32 world_job_is_locked_for_all_units(s16 job_id);
 /* panel */
 
 extern s16 g_world_panel_slide_up_y[];
-extern u8 g_world_panel_item_icon_texture[];
+extern world_image_location_t g_world_panel_item_icon_texture[];
 extern s16 g_world_panel_slide_down_y[];
 
 /* tutorial */
@@ -1207,24 +1159,6 @@ typedef struct world_formation_graphic_entry {
 } world_formation_graphic_entry_t;
 typedef char world_formation_graphic_entry_size_must_be_0xc[(sizeof(world_formation_graphic_entry_t) == 0xc) ? 1 : -1];
 
-/* Provisional: texture page location (0x80173e4c) and screen point
- * (0x80173d7c) passed to world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
-typedef struct world_formation_texture_page_location {
-    s16 x; /* 0x00 */
-    u16 y; /* 0x02: only bits 8-11 reach GetTPage */
-} world_formation_texture_page_location_t;
-
-typedef struct world_formation_screen_point {
-    u16 x; /* 0x00 */
-    u16 y; /* 0x02 */
-} world_formation_screen_point_t;
-
-/* 12-bit fixed-point scale pair. */
-typedef struct world_formation_fixed_scale {
-    s16 x; /* 0x00 */
-    s16 y; /* 0x02 */
-} world_formation_fixed_scale_t;
-
 typedef enum world_monster_breed_rarity {
     WORLD_MONSTER_BREED_RARITY_NONE = 0,
     WORLD_MONSTER_BREED_RARITY_COMMON = 1,
@@ -1242,13 +1176,6 @@ typedef struct world_zodiac_date_limit {
     u8 zodiac;
 } world_zodiac_date_limit_t;
 typedef char world_zodiac_date_limit_size_must_be_3[(sizeof(world_zodiac_date_limit_t) == 3) ? 1 : -1];
-
-/* Provisional: cursor trail position history at 0x801c8344, reset by
- * world_formation_reset_slots_and_frame_tpages; entry 7 is the newest. */
-typedef struct world_cursor_trail_point {
-    s16 x; /* 0x00; -1 when unused */
-    s16 y; /* 0x02 */
-} world_cursor_trail_point_t;
 
 enum {
     WORLD_ZODIAC_DATE_LIMIT_COUNT = 13,
@@ -1350,7 +1277,7 @@ extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
 extern s32 g_world_formation_current_menu;
 extern s32 g_world_formation_display_mode;
-extern world_menu_point_t g_world_formation_cursor_position;
+extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
 extern world_menu_input_state_t g_world_formation_menu_input_state;
@@ -1377,12 +1304,12 @@ extern const u8 g_world_month_lengths[WORLD_MONTH_LENGTH_TABLE_COUNT];
 extern const world_zodiac_date_limit_t g_world_zodiac_date_limits[WORLD_ZODIAC_DATE_LIMIT_COUNT];
 extern s32 g_world_formation_screen_active;
 extern s16 g_world_formation_open_request_state;
-extern world_formation_texture_page_location_t g_world_formation_view_texture_page;
+extern world_image_location_t g_world_formation_view_texture_page;
 extern u32 g_world_formation_menu_entry_mask;
 extern s32 g_world_formation_name_string_revision;
 extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
-extern world_formation_fixed_scale_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
-extern u8 g_world_formation_view_graphic_count;                                /* formation graphic entry count */
+extern point16_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
+extern u8 g_world_formation_view_graphic_count;            /* formation graphic entry count */
 extern zodiac_draw_context_t g_world_formation_view;
 
 /* Portrait code per sprite set: low byte is the portrait index. */
@@ -1393,8 +1320,8 @@ extern u8 g_world_monster_formation_sprite_table[];
 extern u8 g_world_formation_menu_text_table[];
 extern u32 g_world_formation_menu_palettes[];
 extern u8 g_world_formation_saved_sprite_color[4];
-extern s8 g_world_formation_dimmed_sprite_color[];
-extern s8 g_world_formation_normal_sprite_color[];
+extern u8 g_world_formation_dimmed_sprite_color[];
+extern u8 g_world_formation_normal_sprite_color[];
 extern u8 g_world_formation_unit_cycle_mode;
 extern u8 g_world_formation_cursor_ot_override;
 extern u8 g_world_formation_main_menu_initialized;
@@ -1446,7 +1373,7 @@ extern u8 g_world_formation_grid_transition_frame;
 extern u8 g_world_formation_grid_return_frame;
 extern u8 g_world_formation_grid_return_done;
 extern u8 g_world_formation_portrait_slide_frame;
-extern s8 g_world_formation_away_unit_color[];
+extern u8 g_world_formation_away_unit_color[];
 extern world_menu_entry_t g_world_formation_triangle_menu;
 extern u8 g_world_formation_dismiss_prompt[];
 extern s16 g_world_formation_dismiss_prompt_text_id;
@@ -1457,8 +1384,11 @@ extern world_menu_entry_t g_world_formation_dismiss_final_confirm_menu;
 extern u8 g_world_formation_dismiss_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
 extern u8 g_world_formation_view_quads[2][0x4b0];
-extern world_menu_point_t g_world_formation_cursor_target;
-extern world_cursor_trail_point_t g_world_formation_cursor_trail[8];
+extern point16_t g_world_formation_cursor_target;
+/* Cursor trail position history at 0x801c8344, reset by
+ * world_formation_reset_slots_and_frame_tpages; entry 7 is the newest and x is
+ * -1 in an unused entry. */
+extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
 extern u8* g_world_formation_dismiss_menu_data;
 extern s16 g_world_formation_record_order[];
@@ -1475,7 +1405,7 @@ extern u8 g_world_formation_unit_count;
 extern world_formation_unit_t* g_world_formation_unit_pointers[];
 void world_formation_run_screen(s32 tutorial, s32 unused);
 s32 world_formation_can_scroll_slots_back(void);
-void world_formation_draw_unit_slots(world_menu_point_t* positions, s32 shade);
+void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
 
 void world_formation_draw_graphics_below_sprite(
     s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority);
@@ -1485,9 +1415,8 @@ s32 world_formation_run_item_submenu_step(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_formation_texture_page_location_t* page,
-    world_formation_screen_point_t* position, main_zodiac_sprite_frame_t* rect, world_formation_fixed_scale_t* scale,
-    main_zodiac_draw_offset_t* origin);
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
+    main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
 s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(
@@ -1509,12 +1438,12 @@ void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y, s32 unused_1);
 void world_formation_draw_cursor_trail(s16* cursor);
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y);
-void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, s32 rgb, s32 ot_index);
+void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, const u8* rgb, s32 ot_index);
 
 void world_formation_draw_egg_sprite(
-    world_oriented_quad_t* pos, s32 palette, s32 rgb, s32 hatch_countdown, s32 ot_index);
+    world_oriented_quad_t* pos, s32 palette, const u8* rgb, s32 hatch_countdown, s32 ot_index);
 
-void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s8* rgb, s32 ot_index);
+void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s32 ot_index);
 s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s32 item_id);
 s32 world_formation_find_index_by_roster_slot(s32 roster_slot);
 s32 world_formation_generate_unit(s32 unit_type);
@@ -1863,7 +1792,7 @@ void world_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* dest);
 u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 
 void world_text_render_decimal_entry_list(
-    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
 void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
@@ -1873,14 +1802,14 @@ void world_text_render_encoded_ids_to_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette);
 
 void world_text_render_signed_decimal_entries(
-    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 s32 world_text_resolve_format_string_id(s32 event_code, s32 value);
 u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
 u8* world_text_find_entry(s32 combined_text_index);
-void world_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled);
+void world_text_determine_spell_quote(struct battle_ai_command_action* action, s32 unit_id, s32 enabled);
 void world_text_build_unit_name_list(void);
 void world_text_generate_formation_unit_name_string(void);
 const u8* world_text_skip_to_entry(const u8* text, s32 entry_index);
@@ -1928,17 +1857,24 @@ typedef struct world_menu_thread_data {
     s16 selection; /* 0x74 */
 } world_menu_thread_data_t;
 
-/* Variable-length list-layout command in a WORLD menu script. */
+/* Variable-length list command (0x10) in a WORLD menu script: the layout
+ * world_menu_load_scrollable_list_layout reads and the placement
+ * world_menu_script_draw_scrollable_list draws with. */
 typedef struct world_menu_list_record {
-    u8 type;   /* 0x00: 0x10 = list layout, 0x1c = end of stream */
-    u8 length; /* 0x01: byte length of this record */
-    u8 _unused_02[2];
-    u8 x;            /* 0x04 */
-    u8 row_height;   /* 0x05 */
-    u8 visible_rows; /* 0x06 */
-    u8 _unused_07[2];
-    u8 width_a; /* 0x09 */
-    u8 width_b; /* 0x0a */
+    u8 type;            /* 0x00: 0x10 = list layout, 0x1c = end of stream */
+    u8 length;          /* 0x01: byte length of this record */
+    u8 show_cursor;     /* 0x02 */
+    u8 _unused_03;      /* 0x03 */
+    u8 skip_count;      /* 0x04: row records that follow (g_world_menu_list_row_record_count) */
+    u8 row_height;      /* 0x05 */
+    u8 visible_rows;    /* 0x06 */
+    u8 x;               /* 0x07 */
+    u8 y;               /* 0x08 */
+    u8 width_a;         /* 0x09 */
+    u8 width_b;         /* 0x0a */
+    u8 cursor_x_offset; /* 0x0b */
+    u8 arrow_up_y;      /* 0x0c */
+    u8 arrow_down_y;    /* 0x0d */
 } world_menu_list_record_t;
 
 typedef char world_menu_line_f2_size_must_be_16[(sizeof(LINE_F2) == 16) ? 1 : -1];
@@ -2133,7 +2069,7 @@ extern u16 g_world_menu_hovered_stats_frame_count;
 extern world_menu_quad_piece_t g_world_menu_quad_pieces[]; /* quad piece table */
 extern u8 g_world_menu_quad_group_starts[];                /* first piece index per group; [n + 1] ends group n */
 extern world_menu_quad_colors_t g_world_menu_quad_colors;  /* vertex colours */
-extern world_menu_quad_origin_t g_world_menu_quad_origin;  /* screen origin */
+extern point16_t g_world_menu_quad_origin;                 /* screen origin */
 extern RECT g_world_menu_sprite_page_texture_windows[5];
 extern world_gfx_image_load_parameters_t g_world_menu_sprite_page_image_params[30];
 extern RECT g_world_menu_hovered_unit_stats_display;
@@ -2155,7 +2091,7 @@ extern s32 g_world_menu_building_thread_started;
 extern u8 g_world_menu_cleared_entry_indices[11];
 extern s16 g_world_menu_row_type_confirm_actions[][2]; /* per row type: [1] == 1 lists by id */
 extern u8 g_world_menu_action_slot_default_messages[];
-extern RECT g_world_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
+extern world_glyph_blit_t g_world_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
 
 /* Tail glyph source and destination records for world_menu_build_window_image. */
 extern world_glyph_blit_t g_world_menu_window_sprite_source;
@@ -2324,7 +2260,7 @@ void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, REC
 void world_menu_build_ability_list(s32 mode);
 void world_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
 void world_menu_build_idle_action_stub(s32 unused_menu_id);
-void world_menu_build_sprite_page(s32 page_index, void* base_screen);
+void world_menu_build_sprite_page(s32 page_index, RECT* base_screen);
 void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit);
 void world_menu_release_current_thread_slot(void);
 
@@ -2334,7 +2270,7 @@ s32 world_menu_dispatch_system_function(
 void world_menu_draw_active_window_frames(void);
 
 void world_menu_draw_numeric_display_entries(
-    s32 buffer, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
+    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
 void world_menu_draw_pressable_button(s32 index, s32 x, s32 y, s32 pressed, s32 disabled, s32 sound_effect_id);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
@@ -2344,7 +2280,7 @@ s32 world_menu_get_party_unit_name_id(void);
 u8* world_menu_get_script(s32 index);
 s32 world_menu_get_value_1(s32 unused_row);
 s32 world_menu_get_value_2(s32 unused_row);
-void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, world_texture_prim_t* slot, s32 icon_index);
+void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* prim, s32 icon_index);
 s32 world_menu_is_busy(s32 unused);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
 u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
@@ -2364,9 +2300,9 @@ void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
 u8* world_menu_script_draw_sprite(u8* cmd);
 world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command);
-void world_menu_scroll_list_page(s32 dir, u8* menu);
+void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
-void world_menu_select_sprite_clut(world_texture_prim_t* slot);
+void world_menu_select_sprite_clut(void* prim);
 void world_menu_add_gradient_line_primitive(s16* endpoints, u8* rgb, s32 semi_trans, s32 ot_index);
 void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);
@@ -2386,7 +2322,7 @@ void world_menu_cancel_thread_group(world_menu_entry_t* context);
 void world_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* bounds, s32* cursor);
 void world_menu_check_action_restrictions(void);
 s32 world_menu_check_thread_completion(s32* input);
-void world_menu_confirm_action_silently(s32 parameter);
+void world_menu_confirm_action_silently(world_menu_entry_t* entry);
 void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index);
 void world_menu_clear_cursor_positions(void);
 void world_menu_clear_entry_selections(void);
@@ -2394,12 +2330,12 @@ void world_menu_clear_transition_active_flag(void);
 void world_menu_clear_window_buffer_pointers(void);
 
 void world_menu_configure_status_panel_primitive_colors(
-    battle_menu_status_panel_primitives_t* primitives, const world_status_thread_t* state);
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* origin, u8* text);
 void world_menu_display_triangle_selection(void);
-void world_menu_draw_animated_cursor(world_menu_point_t* position, u16* state, s32 mode);
-void world_menu_draw_animated_vertical_cursor(world_menu_point_t* position, u16* state, s32 mode);
+void world_menu_draw_animated_cursor(point16_t* position, u16* state, s32 mode);
+void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s32 mode);
 void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode);
 void world_menu_draw_text_columns_2(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_draw_thread_status_indicators(void);
@@ -2422,7 +2358,7 @@ void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, ba
 void world_menu_init_quad_from_record(u16* source, u16* record, POLY_FT4* poly);
 void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
-CVECTOR* world_menu_get_sprite_color(void);
+u8* world_menu_get_sprite_color(void);
 s32 world_menu_handle_remove_all_equipment(void);
 void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command_t* command);
 s32 world_menu_has_items(s32 mode);
@@ -2434,7 +2370,7 @@ void world_menu_init_palette_and_text(s32 unused);
 void world_menu_init_primitive_colors_palette_bank_0(world_menu_palette_primitives_t*);
 void world_menu_init_primitive_colors_palette_bank_1(world_menu_palette_primitives_t*);
 void world_gfx_init_default_poly_ft4(POLY_FT4* poly);
-void world_gfx_init_scaled_draw_area_packets_4(world_gfx_texture_window_record_t* record);
+void world_gfx_init_scaled_draw_area_packets_4(world_gfx_scaled_draw_area_pair_t* pair);
 void world_menu_init_scrollable_list(const s16* values, s32 value, s32 selected, u8* text_table);
 void world_menu_init_scrollable_list_core(const s16* values, s32 selected_index, u8* text_table);
 void world_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
@@ -2536,8 +2472,8 @@ s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8*
 void world_menu_window_frame_thread(void);
 void world_menu_set_slot_4_cursor_index(s32 index);
 s32 world_menu_get_thread_activity(void);
-void world_menu_display_text_entry_mode_1(s32 p1, s32 p2, s32 p3);
-void world_menu_display_text_entry(s32 text_id, void* image, void* origin);
+void world_menu_display_text_entry_mode_1(s32 text_id, void* image, world_glyph_blit_t* origin);
+void world_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t* origin);
 void world_menu_init_sprite(SPRT* sprite);
 void world_menu_set_text_origin(s32 x, s32 y);
 
@@ -2600,7 +2536,7 @@ extern world_draw_number_command_t g_world_card_slot_number_command;
 extern world_draw_number_command_t g_world_card_playtime_hours_command;
 extern world_draw_number_command_t g_world_card_playtime_minutes_command;
 extern world_draw_number_command_t g_world_card_playtime_seconds_command;
-extern world_menu_point_t g_world_card_slot_cursor_point;
+extern point16_t g_world_card_slot_cursor_point;
 extern u16 g_world_card_slot_cursor_anim;
 extern u8 g_world_card_slot_list_input_ready;
 extern u8 g_world_card_overwrite_prompt_running;
@@ -2711,7 +2647,7 @@ extern world_menu_number_range_t g_world_item_action_quantity_range;
 extern s16 g_world_item_action_option_states[3];
 extern world_menu_entry_t g_world_item_action_menu;
 extern u16 g_world_remove_item_cursor_anim;
-extern world_menu_point_t g_world_remove_item_cursor_point;
+extern point16_t g_world_remove_item_cursor_point;
 extern world_menu_entry_t g_world_item_quantity_change_menu;
 extern world_menu_entry_t g_world_item_unequip_all_menu;
 extern u8 g_world_item_list_window_script[];
@@ -2741,8 +2677,7 @@ extern u16 g_world_item_saved_selected_unit_index;
 extern u8 g_world_item_menu_category;
 void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 s32 world_count_item_equipped_by_party(s32 item_id);
-s32 world_item_build_category_list(
-    s32 unit_id, s32 sort_mode, s32 category, world_item_list_entry_t* entries, s32 mode);
+s32 world_item_build_category_list(s32 unit_id, s32 sort_mode, s32 category, s16* entries, s32 mode);
 void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id);
 void world_item_build_status_list_polygons(s16 item_id);
 world_item_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
@@ -2759,12 +2694,12 @@ s32 world_item_adjust_inventory_count(s32 item_id, s32 delta);
 void world_item_combine_stat_details(world_item_stat_detail_t* output, world_item_stat_detail_t* before,
     world_item_stat_detail_t* after, s32 multiplier);
 
-s32 world_unit_is_two_handing_weapon(struct weapon_pair* slots, s32 two_hands_support);
+s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 s32 world_item_count_owned_and_equipped(s32 item_id);
 s32 world_item_count_selected_equipped_by_party(s32 unused_row);
 s32 world_item_count_selected_owned_and_equipped(s32 unused_row);
 void world_item_draw_weapon_hand_icons(s16 weapon_id);
-s32 world_item_sort_list_by_category_order(s32 list_index, world_item_list_entry_t* entries);
+s32 world_item_sort_list_by_category_order(s32 list_index, s16* entries);
 void world_item_store_category_list(s32 list_index, s16* sorted_ids);
 s32 world_item_get_equip_candidate_brightness(s32 unit_index);
 s32 world_item_get_equip_candidate_marker(s32 unit_index);
@@ -2791,7 +2726,7 @@ s32 world_item_run_rearrange_mode(void);
 s8 world_item_run_sort_order_menu(void);
 world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32 item_id);
 s32 world_item_show_units_equipping_selected(void);
-void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list);
+void world_item_sort_id_list(s32 mode, s16* list);
 void world_item_sum_equipment_stat_details(struct world_item_stat_detail* total, u16* equipment);
 
 /* shop */
@@ -2844,11 +2779,11 @@ extern s8 g_world_shop_fitting_equip_menu_initialized;
 extern s8 g_world_shop_fitting_equip_slot;
 extern s8 g_world_shop_fitting_item_list_close;
 extern u16 g_world_shop_fitting_slot_cursor_anim;
-extern world_menu_point_t g_world_shop_fitting_slot_cursor_point;
+extern point16_t g_world_shop_fitting_slot_cursor_point;
 extern u8 g_world_shop_fitting_cost_menu_script[];
 extern s8 g_world_shop_equip_slot_preview_initialized;
 extern u16 g_world_shop_equip_slot_cursor_anim;
-extern world_menu_point_t g_world_shop_equip_slot_cursor_point;
+extern point16_t g_world_shop_equip_slot_cursor_point;
 extern world_menu_entry_t g_world_shop_checkout_confirm_menu;
 extern world_menu_entry_t g_world_shop_checkout_short_gil_menu;
 extern u8 g_world_shop_checkout_prompt_initialized;
@@ -2860,7 +2795,7 @@ extern s8 g_world_shop_best_fit_menu_open;
 extern world_menu_entry_t g_world_shop_sell_equipped_menu;
 extern u8 g_world_shop_sell_equipped_menu_open;
 extern u16 g_world_shop_sell_equipped_cursor_anim;
-extern world_menu_point_t g_world_shop_sell_equipped_cursor_point;
+extern point16_t g_world_shop_sell_equipped_cursor_point;
 extern u8 g_world_shop_sell_subflow_initialized;
 extern u8 g_world_shop_fur_opened; /* fur shop opened */
 extern s16 g_world_shop_sale_confirm_menu_script[];
@@ -2929,7 +2864,7 @@ s32 world_shop_add_fitting_room_cost(s32 delta);
 s32 world_shop_adjust_poached_item_quantity(s32 item_id, s32 delta);
 void world_shop_apply_fitting_room_items_to_all_units(void);
 void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_id, s16* out);
-s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_item_list_entry_t* entries, s32 mode);
+s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entries, s32 mode);
 void world_shop_buy_from_fitting_room(void);
 void world_shop_finalize_unit_equips_from_fitting_room(s16 formation_index, s16 equipment_index);
 s32 world_shop_fitting_room_get_unit_marker(s32 unused_unit_index);

@@ -149,11 +149,10 @@ s8 world_item_run_action_menu(void) {
         }
         g_world_item_category_input_lock = 1;
         world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position, g_world_menu_scroll_offset,
-            (u16*)g_world_menu_entry_ids);
+            g_world_menu_entry_ids);
         g_world_item_menu_category = result;
         world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_item_menu_category + 1),
-            (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
-            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+            (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7), g_world_menu_entry_ids, 0);
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(
             g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);

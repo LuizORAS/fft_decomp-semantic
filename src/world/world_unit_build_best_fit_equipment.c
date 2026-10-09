@@ -57,8 +57,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
 
     for (slot = 0; slot < 5; slot++) {
         category = g_world_best_fit_slot_categories[slot];
-        count = world_item_build_category_list(
-            unit_index, 7, (s8)g_world_best_fit_slot_categories[slot], (world_item_list_entry_t*)list, 3);
+        count = world_item_build_category_list(unit_index, 7, (s8)g_world_best_fit_slot_categories[slot], list, 3);
         length = count;
         if (category == 5) {
             if (held_weapon < ITEM_ID_THROWABLE_FIRST)
@@ -66,7 +65,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
             if (held_off_hand < ITEM_ID_THROWABLE_FIRST)
                 list[length++] = held_off_hand;
             list[length] = -1;
-            world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+            world_item_sort_id_list(7, list);
             if (world_ability_has_two_hands(unit_index)) {
                 for (i = 0; list[i] != -1; i++) {
                     s16 item_id = list[i];
@@ -114,12 +113,12 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
                 if (held_off_hand >= ITEM_ID_THROWABLE_FIRST)
                     list[length++] = held_off_hand;
                 list[length] = -1;
-                world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+                world_item_sort_id_list(7, list);
             }
         } else {
             list[length++] = g_world_formation_unit_pointers[unit_index]->equipment[slot];
             list[length] = -1;
-            world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+            world_item_sort_id_list(7, list);
         }
         if (list[0] <= ITEM_ID_NOTHING)
             equipment[slot] = ITEM_ID_NOTHING;

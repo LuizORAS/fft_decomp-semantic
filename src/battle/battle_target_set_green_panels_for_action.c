@@ -32,7 +32,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     u8 aoe;
     u8 vertical;
 
-    main_util_copy_action_data((const u8*)action, (u8*)&action_copy);
+    main_util_copy_action_data(action, &action_copy);
     ability = &g_main_ability_range_data[(s16)action_copy.ability_id];
     flags_1 = ability->flags_1;
     flags_2 = ability->flags_2;

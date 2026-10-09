@@ -2,8 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, s32 rgb, s32 ot_index) {
-    world_gfx_enqueue_oriented_textured_quad(pos, (const u8*)rgb, 0, 0, ot_index);
+void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, const u8* rgb, s32 ot_index) {
+    world_gfx_enqueue_oriented_textured_quad(pos, rgb, 0, 0, ot_index);
     if (pos->uw >= 0x19) {
         g_world_formation_shadow_egg_sprites[0].x = pos->x + 0xC;
         g_world_formation_shadow_egg_sprites[0].y = pos->y + 0x23;

@@ -44,7 +44,7 @@ status_action:
         || ((ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
             && (ai->acting_unit_decision->flags & BATTLE_AI_DECISION_FOCUS_TARGET))) {
         battle_ai_transfer_halfword_values(
-            (u16*)&ai->saved_acting_unit_decision, (u16*)ai->acting_unit_decision, sizeof(battle_ai_unit_decision_t));
+            &ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(battle_ai_unit_decision_t));
     /* Resume after the save; restore the decision only when this pass ends. */
     fallback_action:
         if (battle_ai_select_retreat_action() == -1) {
@@ -52,7 +52,7 @@ status_action:
             return -1;
         }
         battle_ai_transfer_halfword_values(
-            (u16*)ai->acting_unit_decision, (u16*)&ai->saved_acting_unit_decision, sizeof(battle_ai_unit_decision_t));
+            ai->acting_unit_decision, &ai->saved_acting_unit_decision, sizeof(battle_ai_unit_decision_t));
         return 0;
     }
 native_action:

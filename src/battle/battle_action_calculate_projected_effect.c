@@ -14,7 +14,7 @@ s32 battle_action_calculate_projected_effect(
     s32 saved_action_context;
 
     main_util_copy_action_data(&attacker->action_actor_id, g_battle_action_saved_command);
-    main_util_copy_action_data((u8*)command, &attacker->action_actor_id);
+    main_util_copy_action_data(command, &attacker->action_actor_id);
     battle_action_init_current_ability_strike_data(attacker);
     saved_action_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;

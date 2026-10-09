@@ -10,6 +10,5 @@ void world_menu_init_quad_from_record(u16* out, u16* record, POLY_FT4* primitive
     out[3] = record[3];
     world_menu_init_sprite((SPRT*)primitive);
     primitive->clut = 0x7C3C;
-    world_gfx_init_image_loading(primitive, (const world_image_location_t*)record,
-        (const world_image_location_t*)(record + 4), (const world_gfx_image_load_parameters_t*)(record + 8));
+    world_gfx_init_image_loading(primitive, record, record + 4, (const world_gfx_image_load_parameters_t*)(record + 8));
 }

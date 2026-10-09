@@ -140,7 +140,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     y = 0x24 + g_world_formation_scroll_position + g_world_formation_scroll_velocity;
     world_menu_set_draw_priority(8);
     i = 0;
-    color = (u8*)world_menu_get_sprite_color();
+    color = world_menu_get_sprite_color();
     g_world_formation_saved_sprite_color[0] = color[0];
     g_world_formation_saved_sprite_color[1] = color[1];
     g_world_formation_saved_sprite_color[2] = color[2];
@@ -154,7 +154,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             }
         }
         world_menu_set_sprite_color(
-            value ? (u8*)g_world_formation_dimmed_sprite_color : (u8*)g_world_formation_normal_sprite_color);
+            value ? g_world_formation_dimmed_sprite_color : g_world_formation_normal_sprite_color);
         for (col = 0; col < 4; col++, i++) {
             if (i >= g_world_formation_unit_count) {
                 break;
@@ -200,9 +200,9 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
                 world_formation_draw_egg_sprite(
-                    (world_oriented_quad_t*)&pos, unit->egg_color, (s32)rgb, unit->birthday & 0xf, 6);
+                    (world_oriented_quad_t*)&pos, unit->egg_color, rgb, unit->birthday & 0xf, 6);
             } else {
-                world_formation_draw_unit_sprite(i, (world_menu_point_t*)&pos, (s8*)rgb, 6);
+                world_formation_draw_unit_sprite(i, (point16_t*)&pos, rgb, 6);
             }
             g_world_formation_unit_dot_sprite.x = pos.x;
             g_world_formation_unit_dot_sprite.y = pos.y;

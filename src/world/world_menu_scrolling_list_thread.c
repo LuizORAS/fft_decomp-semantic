@@ -105,8 +105,8 @@ void world_menu_scrolling_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((POLY_FT4*)&page->frame, (const world_image_location_t*)entry,
-        (const world_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading(
+        &page->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -198,55 +198,52 @@ void world_menu_scrolling_list_thread(void) {
                 row_buffer_live = 1;
                 buffer = world_menu_alloc_ui_buffer(window.rect.w * 8);
                 world_clear_menu_render_buffer(buffer, window.rect.w * 8);
-                g_world_menu_text_state.stride = window.rect.w;
+                g_world_menu_text_state.pen.stride = window.rect.w;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->columns.x[column], 0);
                     if (layout->columns.mode[column] != 2) {
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                     }
-                    g_world_menu_text_state.color = 0;
+                    g_world_menu_text_state.pen.color = 0;
                     if (g_world_menu_text_color == 4) {
-                        g_world_menu_text_state.color = 0x44444444;
+                        g_world_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->columns.mode[column] == 0) {
                         world_menu_display_text_entry(
-                            layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
+                            layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                         if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
+                            && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
-                            world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.origin_x);
+                            world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
                         }
                     } else if (layout->columns.mode[column] == 1) {
-                        world_display_menu_number_entry(layout->columns.text_ids[column][index], 2, (s32)buffer,
-                            (u16*)&g_world_menu_text_state.origin_x);
+                        world_display_menu_number_entry(
+                            layout->columns.text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
                             && (u16)layout->columns.text_ids[column][index] < 2
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0xFF
-                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index]
-                                    == 0)) {
-                            g_world_menu_text_state.origin_y += 2;
-                            world_menu_draw_stacked_glyph_pair(
-                                buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                            && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                                || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                            g_world_menu_text_state.pen.rect.y += 2;
+                            world_menu_draw_stacked_glyph_pair(buffer, &g_world_menu_text_state.pen);
                         } else {
                             value = (u16)layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
                                     g_world_menu_text_color = 0;
-                                    g_world_menu_text_state.origin_x += 3;
-                                    world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.origin_x);
+                                    g_world_menu_text_state.pen.rect.x += 3;
+                                    world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.pen);
                                 } else {
-                                    world_draw_menu_number_glyphs(
-                                        (s16)value, 2, buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                                    world_draw_menu_number_glyphs((s16)value, 2, buffer, &g_world_menu_text_state.pen);
                                 }
                             }
                         }
                     }
                 }
                 g_world_menu_text_color = 0;
-                g_world_menu_text_state.color = 0;
+                g_world_menu_text_state.pen.color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;
                 clear.x = image_rect.x;
@@ -324,8 +321,8 @@ void world_menu_scrolling_list_thread(void) {
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
         if (i * g_world_event_speed < 12) {
-            world_gfx_init_image_loading((POLY_FT4*)page, (const world_image_location_t*)entry,
-                (const world_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+            world_gfx_init_image_loading(
+                page, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
         if (layout->columns.mode[1] == 0 && toggle == 1) {

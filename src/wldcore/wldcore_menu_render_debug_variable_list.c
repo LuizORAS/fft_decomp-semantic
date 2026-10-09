@@ -30,7 +30,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     /* Direct record indexing moves the symbol load after the index scaling
      * and breaks the exact match. Retain the target's biased base and stride. */
-    records = (wldcore_point32_t*)&g_wldcore_window_render_records[0].base_x;
+    records = &g_wldcore_window_render_records[0].base;
     base = (wldcore_point32_t*)((u8*)records + index * sizeof(wldcore_window_render_record_t));
     base->x = -((s16)bounds.dimensions.x / 2);
     base->y = -88;

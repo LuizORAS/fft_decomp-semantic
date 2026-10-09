@@ -51,22 +51,22 @@ void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset) {
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].list_window.selected_entry = selected_entry;
     g_wldcore_menu_stack_records_next[record_index].list_window.mode = 0;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_x
+              .base.x
         + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_y
+              .base.y
         - -(g_wldcore_menu_stack_records_next[record_index].list_window.selected_entry * 0x10) + 0xE;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_x
+              .base.x
         + 3;
     g_wldcore_menu_stack_depth = record_index + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_y
+              .base.y
         - 2;
     g_wldcore_menu_stack_records_next[record_index].list_window.content_render = 0x18;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES;

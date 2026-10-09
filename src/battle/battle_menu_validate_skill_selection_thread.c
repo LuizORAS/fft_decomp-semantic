@@ -12,14 +12,14 @@ void battle_menu_validate_skill_selection_thread(void) {
     s32 message;
     s32 blocked;
     battle_stats_t* unit;
-    world_ability_skill_use_tables_t* skill_tables;
+    world_ability_list_t* skill_tables;
 
     skill = g_battle_menu_thread_menu_data[3].selected_index;
     parameter = (void*)battle_thread_get_current_parameter_1();
-    skill_tables = (world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr;
+    skill_tables = &g_battle_ai_workspace_ptr->ability_list;
     ct = skill_tables->skill_ct[skill];
     entry = g_battle_ability_menu_layout.text_colors[0][skill];
-    mp_cost = skill_tables->mp_cost[skill];
+    mp_cost = skill_tables->mp_costs[skill];
     if (ct == 0xFF) {
         ct = 0;
     }

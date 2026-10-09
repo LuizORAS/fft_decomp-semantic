@@ -33,7 +33,7 @@ extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
  * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1.
  */
 u8* world_name_run_entry_screen(u8* list, u32* image) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     world_name_entry_screen_packets_t packets;
     DRAWENV env;
     u32* otag;

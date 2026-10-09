@@ -63,7 +63,7 @@ void wldcore_map_color_and_draw_dots(void) {
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;
-        g_wldcore_window_render_object_queue[queue_index] = (u32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
+        g_wldcore_window_render_object_queue[queue_index] = (s32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
         g_wldcore_window_render_object_count = queue_index + 1;
     }
     g_wldcore_map_dot_count = 0x2b;

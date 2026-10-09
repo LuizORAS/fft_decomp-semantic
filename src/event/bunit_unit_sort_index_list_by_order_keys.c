@@ -23,11 +23,9 @@ void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode) {
         for (j = 0; j < count; j++) {
             k = 0;
             do {
-                rec = (bunit_unit_halfwords_t*)&(
-                    (bunit_unit_data_t*)g_bunit_unit_records)[g_bunit_shown_unit_indices[j]];
+                rec = (bunit_unit_halfwords_t*)&g_bunit_unit_records[g_bunit_shown_unit_indices[j]];
                 lhs = rec->fields[g_bunit_unit_sort_field_indices[g_main_item_type_order_tables.order_0[k]]];
-                rec = (bunit_unit_halfwords_t*)&(
-                    (bunit_unit_data_t*)g_bunit_unit_records)[g_bunit_shown_unit_indices[j + 1]];
+                rec = (bunit_unit_halfwords_t*)&g_bunit_unit_records[g_bunit_shown_unit_indices[j + 1]];
                 rhs = rec->fields[g_bunit_unit_sort_field_indices[g_main_item_type_order_tables.order_0[k]]];
                 diff = rhs - lhs;
                 k++;
@@ -44,6 +42,6 @@ void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode) {
         }
     }
     for (j = 0; j < g_bunit_unit_count; j++) {
-        g_bunit_unit_data[j] = &((bunit_unit_data_t*)g_bunit_unit_records)[g_bunit_shown_unit_indices[j]];
+        g_bunit_unit_data[j] = &g_bunit_unit_records[g_bunit_shown_unit_indices[j]];
     }
 }

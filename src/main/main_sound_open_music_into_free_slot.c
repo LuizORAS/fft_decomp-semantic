@@ -9,7 +9,7 @@ int main_sound_open_music_into_free_slot(int scenario) {
             smd = main_file_get_smd(
                 g_main_sound_scenario_smd_files[scenario].sector, g_main_sound_scenario_smd_files[scenario].size);
             g_main_sound_music.slots.smd[i + 1] = smd;
-            g_main_sound_music.slots.handles[i + 1] = (int)SuzukiPutPlaySMD(smd);
+            g_main_sound_music.slots.handles.music[i + 1] = SuzukiPutPlaySMD(smd);
             return i + 1;
         }
     }

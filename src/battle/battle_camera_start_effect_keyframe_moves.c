@@ -15,7 +15,7 @@ void battle_camera_start_effect_keyframe_moves(s16 frame) {
 
     if (g_battle_effect_camera_rotation_mode == 0
         && battle_effect_find_next_keyframe(frame, 1, &index, &keyframe) != 0) {
-        battle_effect_copy_svector((u16*)g_battle_effect_timeline->position[index], (u16*)&position);
+        battle_effect_copy_svector(g_battle_effect_timeline->position[index], &position);
         battle_camera_execute_angle_command(
             (s16)g_battle_effect_timeline->selector[index], keyframe / 0x10000, (keyframe & 0xFFFF) - frame, &position);
     }

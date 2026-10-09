@@ -3,7 +3,7 @@
 
 /* Render gauge values with sign colors, drawing a zero value as a placeholder. */
 void debugchr_text_render_decimal_entry_list(
-    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
+    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, out->color = 0) {
@@ -25,6 +25,6 @@ void debugchr_text_render_decimal_entry_list(
             flags &= MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK;
             flags |= MENU_DECIMAL_ZERO_PLACEHOLDER_FLAGS;
         }
-        debugchr_text_render_decimal_value(amount, flags, (void*)pixels, out);
+        debugchr_text_render_decimal_value(amount, flags, pixels, out);
     }
 }

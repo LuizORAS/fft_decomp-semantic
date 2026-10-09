@@ -41,7 +41,7 @@ void wldcore_proposition_push_detail_level(s32 value) {
     bounds.dimensions.y = 0x80;
     bounds.position.x = 0;
     wldcore_window_init_render_record_image(index, bounds, 0, value + 0x8800, g_wldcore_window_image_buffer);
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 9;
     depth = g_wldcore_menu_stack_depth;
     base->x = -0x7A;

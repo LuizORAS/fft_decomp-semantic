@@ -1,10 +1,10 @@
 #include "fft/event_bunit.h"
 
-void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 text_table) {
+void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table) {
     s32 first;
 
-    g_bunit_menu_list_entries = (u16*)entries;
-    g_bunit_menu_list_text_table = (u16*)text_table;
+    g_bunit_menu_list_entries = entries;
+    g_bunit_menu_list_text_table = text_table;
     if (entries != 0) {
         first = entries[0];
         g_bunit_menu_list_entry_count = 0;

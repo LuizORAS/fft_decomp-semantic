@@ -1,16 +1,17 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Shifts both sprite halves right by `delta` and pulls the trailing texture
- * edge back (u1, or v1 when the half is not mirrored). */
-void world_gfx_clip_portrait_poly_from_left(world_gfx_sprite_record_t* record, s32 delta) {
-    record->halves[0].x += delta;
-    record->halves[1].x += delta;
-    if (record->halves[0].u0 != record->halves[0].u1) {
-        record->halves[0].u1 -= delta;
-        record->halves[1].u1 -= delta;
+/* Shifts the quad's left edge right by `delta` and pulls the trailing texture
+ * edge back (u1/u3, or v1/v3 when the portrait is not mirrored). The screen
+ * coordinates are updated as unsigned halfwords. */
+void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta) {
+    *(u16*)&poly->x0 += delta;
+    *(u16*)&poly->x2 += delta;
+    if (poly->u0 != poly->u1) {
+        poly->u1 -= delta;
+        poly->u3 -= delta;
     } else {
-        record->halves[0].v1 -= delta;
-        record->halves[1].v1 -= delta;
+        poly->v1 -= delta;
+        poly->v3 -= delta;
     }
 }

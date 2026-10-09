@@ -36,7 +36,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         } else {
             g_battle_ai_data_base.water_penalty = 1;
         }
-        battle_ai_clear_words((s32*)((battle_ai_walkable_view_t*)ai)->walkable_tiles, 0x48);
+        battle_ai_clear_words(((battle_ai_walkable_view_t*)ai)->walkable_tiles, 0x48);
         for (level = 0; level < 2; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {

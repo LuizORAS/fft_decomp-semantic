@@ -16,7 +16,7 @@
  */
 s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id) {
     s32 unused[4];
-    battle_effect_arc_t arc;
+    SVECTOR arc;
     VECTOR second_step;
     VECTOR first_step;
     SVECTOR second_position;
@@ -49,8 +49,7 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
         query.target.height = 0;
     }
     battle_effect_list_valid_unit_targeting_data(source_id, -1, &obstacles);
-    battle_unit_get_tile_center_and_height_by_battle_id(
-        source_id, (battle_screen_coords_t*)&g_battle_effect_trajectory_origin);
+    battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= query.source.height;
     if (target_id == -1) {
         tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
@@ -59,14 +58,13 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
         g_battle_effect_trajectory_destination.vy
             = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
     } else {
-        battle_unit_get_tile_center_and_height_by_battle_id(
-            target_id, (battle_screen_coords_t*)&g_battle_effect_trajectory_destination);
+        battle_unit_get_tile_center_and_height_by_battle_id(target_id, &g_battle_effect_trajectory_destination);
     }
     query.delta.x = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
     query.delta.z = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
     query.delta.y = g_battle_effect_trajectory_origin.vy - g_battle_effect_trajectory_destination.vy;
     query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
-    arc.yaw = ratan2(-query.delta.z, query.delta.x);
+    arc.vy = ratan2(-query.delta.z, query.delta.x);
     if (battle_effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) == 0) {
         arc_b = ONE;
         arc_a = ONE;

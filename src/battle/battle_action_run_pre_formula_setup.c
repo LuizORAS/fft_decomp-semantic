@@ -30,7 +30,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     u8 id;
     u16 ability_id;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     g_battle_action_current_ability.target_id = target_id;
     g_battle_action_target = &g_battle_unit_stats[target_id];
     g_battle_action_target_data = &g_battle_unit_stats[target_id].action;

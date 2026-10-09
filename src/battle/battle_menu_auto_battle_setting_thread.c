@@ -47,8 +47,7 @@ void battle_menu_auto_battle_setting_thread(void) {
         cursor = 4;
     }
     previous = cursor;
-    battle_menu_build_window_sprites(
-        (battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)param, &records[0]);
+    battle_menu_build_window_sprites(&rect, param, &records[0]);
     battle_copy_bytes(&records[1], &records[0], 0x7C);
     fresh = 0;
     i = 0;
@@ -96,9 +95,9 @@ void battle_menu_auto_battle_setting_thread(void) {
             }
             for (j = 0; j < 5; j++) {
                 g_battle_menu_text_palette_offset = colour[j];
-                g_menu_text_state.stride = param->inner_width;
+                g_menu_text_state.pen.stride = param->inner_width;
                 battle_menu_set_text_origin(8, j * 16 + 9);
-                battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.origin_x);
+                battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.pen);
             }
             LoadImage(&rect, buffer);
             fresh = 1;

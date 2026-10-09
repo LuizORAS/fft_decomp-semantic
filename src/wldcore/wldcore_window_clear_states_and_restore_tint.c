@@ -9,7 +9,7 @@ void wldcore_window_clear_states_and_restore_tint(wldcore_window_tint_request_t*
     g_wldcore_window_records[param->window_a].palette = g_wldcore_window_render_records[param->render_a].palette
         = g_wldcore_window_render_records[param->render_b].palette = g_wldcore_window_records[param->window_b].palette
         = 0;
-    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->red;
+    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
     colors[param->render_color].red = 0x80;
     colors[param->render_color].green = 0x80;
     colors[param->render_color].blue = 0x80;

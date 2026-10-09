@@ -232,13 +232,13 @@ scroll:
         amount.x = g_wldcore_map_cursor_scroll_x.output;
         amount.y = g_wldcore_map_cursor_scroll_y.output;
         if (!(g_wldcore_map_zoom_motion.flags & 2)) {
-            target.x = g_wldcore_window_records[level->window_index].x + amount.x;
-            target.y = g_wldcore_window_records[level->window_index].y + amount.y;
+            target.x = g_wldcore_window_records[level->window_index].position.x + amount.x;
+            target.y = g_wldcore_window_records[level->window_index].position.y + amount.y;
             level->snap_hit = wldcore_map_get_dot_snap_step(target, &step_x, &step_y);
             amount.x += step_x;
             amount.y += step_y;
-            target.x = g_wldcore_window_records[level->window_index].x + amount.x;
-            target.y = g_wldcore_window_records[level->window_index].y + amount.y;
+            target.x = g_wldcore_window_records[level->window_index].position.x + amount.x;
+            target.y = g_wldcore_window_records[level->window_index].position.y + amount.y;
             saved = g_wldcore_map_projection_view.origin;
             if ((amount.x < 0 && target.x < -0x40) || (amount.x > 0 && target.x >= 0x49)) {
                 wldcore_map_apply_clamped_horizontal_scroll(&amount.x, &g_wldcore_map_projection_view.origin.vx);
@@ -253,19 +253,19 @@ scroll:
                 g_wldcore_map_projection_state.flags |= 1;
             }
         }
-        g_wldcore_window_records[level->window_index].x += amount.x;
-        g_wldcore_window_records[level->window_index].y += amount.y;
-        if (g_wldcore_window_records[level->window_index].x < -0x70) {
-            g_wldcore_window_records[level->window_index].x = -0x70;
+        g_wldcore_window_records[level->window_index].position.x += amount.x;
+        g_wldcore_window_records[level->window_index].position.y += amount.y;
+        if (g_wldcore_window_records[level->window_index].position.x < -0x70) {
+            g_wldcore_window_records[level->window_index].position.x = -0x70;
         }
-        if (g_wldcore_window_records[level->window_index].x >= 0x79) {
-            g_wldcore_window_records[level->window_index].x = 0x78;
+        if (g_wldcore_window_records[level->window_index].position.x >= 0x79) {
+            g_wldcore_window_records[level->window_index].position.x = 0x78;
         }
-        if (g_wldcore_window_records[level->window_index].y < -0x68) {
-            g_wldcore_window_records[level->window_index].y = -0x68;
+        if (g_wldcore_window_records[level->window_index].position.y < -0x68) {
+            g_wldcore_window_records[level->window_index].position.y = -0x68;
         }
-        if (g_wldcore_window_records[level->window_index].y >= 0x69) {
-            g_wldcore_window_records[level->window_index].y = 0x68;
+        if (g_wldcore_window_records[level->window_index].position.y >= 0x69) {
+            g_wldcore_window_records[level->window_index].position.y = 0x68;
         }
     } else {
         held = g_wldcore_current_button_input;

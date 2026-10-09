@@ -61,7 +61,7 @@ s32 battle_ai_score_reachable_tiles(void) {
                             level_address += (u32)&ai->tile_priority - (u32)ai;
                             row_address = y * 32 + level_address;
                             tile_address = x * 2 + row_address;
-                            *(u16*)tile_address = -ai->current_action.priority;
+                            *(u16*)tile_address = -ai->current_action.rank.priority;
                         }
                     }
                 }

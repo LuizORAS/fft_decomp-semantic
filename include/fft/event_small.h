@@ -5,7 +5,7 @@
 
 #include "fft/battle.h"
 
-extern const u8 g_small_text_name_data[];
+extern u8 g_small_text_name_data[];
 void small_text_init_battle_pointers(void);
 
 #endif

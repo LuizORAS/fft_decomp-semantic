@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Attach the current window record to the caller's list and reset its colour. */
-s32 wldcore_window_append_record_and_reset_color(u32** queue, s32* count) {
+s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count) {
     wldcore_window_entry_36_rgb_t* color;
 
     queue[*count] = &g_wldcore_window_records[g_wldcore_window_record_count].flags;

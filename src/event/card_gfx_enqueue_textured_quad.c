@@ -15,10 +15,8 @@ void card_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, texture_page, 
 /* clang-format on */
 {
     POLY_FT4* poly;
-    u16 index = g_card_gfx_poly_ft4_count;
 
-    g_card_gfx_poly_ft4_count = index + 1;
-    poly = &g_card_gfx_context->polygons[index];
+    poly = &g_card_gfx_context->polygons[g_card_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);
@@ -60,8 +58,5 @@ void card_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, texture_page, 
     poly->clut = clut;
     poly->tpage = texture_page;
 
-    {
-        card_graphics_context_t* context = g_card_gfx_context;
-        addPrim(&context->otag[otag_index], poly);
-    }
+    addPrim(&g_card_gfx_context->otag[otag_index], poly);
 }

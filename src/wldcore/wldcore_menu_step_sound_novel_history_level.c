@@ -1,17 +1,6 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Provisional: the text box handed to world_menu_display_text_entry_mode_1 (0x800fe7a4); the s32
- * pixel width at +0x08 is the destination render record's width. The 16-byte
- * size follows the target frame (box at sp+0x10, point at sp+0x20). */
-typedef struct wldcore_history_text_origin {
-    s16 x;
-    s16 y;
-    u8 _unused_04[4];
-    s32 width;
-    s32 _unused_0c;
-} wldcore_history_text_origin_t;
-
 /* Handler of the history-text level (type 0x17).
  *
  * Phase 1 steps the picture render record (g_wldcore_active_saved_record.picture_render_index) and g_wldcore_hud_color
@@ -29,7 +18,7 @@ typedef struct wldcore_history_text_origin {
  * read into `x`/`y` so the s32 point is loaded with `lw`; `unused` preserves
  * the 0x58-byte frame. */
 void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_history_level_t* level) {
-    wldcore_history_text_origin_t box;
+    world_glyph_blit_t box;
     wldcore_point32_t point;
     u8 unused[0x20];
     u32* image;
@@ -49,9 +38,9 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         case 1:
             shade = 0x80 - level->step * 8;
             index1 = &g_wldcore_active_saved_record.picture_render_index;
-            g_wldcore_window_render_records[*index1].red = shade;
-            g_wldcore_window_render_records[*index1].green = shade;
-            g_wldcore_window_render_records[*index1].blue = shade;
+            g_wldcore_window_render_records[*index1].color.r = shade;
+            g_wldcore_window_render_records[*index1].color.g = shade;
+            g_wldcore_window_render_records[*index1].color.b = shade;
             g_wldcore_hud_color.r = shade;
             g_wldcore_hud_color.g = shade;
             g_wldcore_hud_color.b = shade;
@@ -69,9 +58,9 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         case 2:
             index2 = &g_wldcore_active_saved_record.picture_render_index;
             shade = level->step * 0x10 + 0x40;
-            g_wldcore_window_render_records[*index2].red = shade;
-            g_wldcore_window_render_records[*index2].green = shade;
-            g_wldcore_window_render_records[*index2].blue = shade;
+            g_wldcore_window_render_records[*index2].color.r = shade;
+            g_wldcore_window_render_records[*index2].color.g = shade;
+            g_wldcore_window_render_records[*index2].color.b = shade;
             g_wldcore_hud_color.r = shade;
             g_wldcore_hud_color.g = shade;
             g_wldcore_hud_color.b = shade;
@@ -103,10 +92,10 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 }
                 x = point.x;
                 y = point.y;
-                box.x = x;
-                box.y = y;
-                box.width = (s16)g_wldcore_window_render_records[level->render_index].bounds.dimensions.x;
-                world_menu_display_text_entry_mode_1(text_id, (s32)g_wldcore_window_image_buffer, (s32)&box);
+                box.rect.x = x;
+                box.rect.y = y;
+                box.stride = (s16)g_wldcore_window_render_records[level->render_index].bounds.dimensions.x;
+                world_menu_display_text_entry_mode_1(text_id, g_wldcore_window_image_buffer, &box);
                 wldcore_window_load_image_record_to_vram(level->render_index, g_wldcore_window_image_buffer);
                 world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
                 world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);

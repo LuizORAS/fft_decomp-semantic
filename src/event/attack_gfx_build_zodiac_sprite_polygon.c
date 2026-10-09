@@ -3,9 +3,9 @@
 /* Build a centered sprite-cell quad using rounded 4.12 fixed-point geometry.
  *
  * This variant selects 8-bit texture mode and adds the PSX screen center to
- * the draw offset (battle_menu_status_panel_scaled_sprite_t.offset[4..5]). */
-void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, attack_gfx_point_t* scale, const s16* offset) {
+ * the draw offset. */
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture_page, const RECT* position,
+    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
     s32 rx;
     s32 ry;
     s32 rw;
@@ -63,12 +63,12 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, attack_gfx_texture_p
     x1 = w + 0x100;
     y1 = h + 0x78;
 
-    poly->x0 = position->x + ox + offset[4] + 0x100;
-    poly->y0 = position->y + oy + offset[5] + 0x78;
-    poly->x1 = position->x + ox + offset[4] + x1;
-    poly->y1 = position->y + oy + offset[5] + 0x78;
-    poly->x2 = position->x + ox + offset[4] + 0x100;
-    poly->y2 = position->y + oy + offset[5] + y1;
-    poly->x3 = position->x + ox + offset[4] + x1;
-    poly->y3 = position->y + oy + offset[5] + y1;
+    poly->x0 = position->x + ox + offset->x + 0x100;
+    poly->y0 = position->y + oy + offset->y + 0x78;
+    poly->x1 = position->x + ox + offset->x + x1;
+    poly->y1 = position->y + oy + offset->y + 0x78;
+    poly->x2 = position->x + ox + offset->x + 0x100;
+    poly->y2 = position->y + oy + offset->y + y1;
+    poly->x3 = position->x + ox + offset->x + x1;
+    poly->y3 = position->y + oy + offset->y + y1;
 }

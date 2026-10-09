@@ -17,7 +17,7 @@ void equip_menu_icon_strip_thread(void) {
     input = 0;
     state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     record = &records[0];
-    battle_menu_build_window_sprites((battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)state, record);
+    battle_menu_build_window_sprites(&rect, state, record);
     battle_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 1;
     for (i = 0;; i++) {
@@ -25,8 +25,8 @@ void equip_menu_icon_strip_thread(void) {
             fresh = 1;
             buffer = battle_menu_build_and_upload_window_frame_image(state->inner_width, state->inner_height, &rect, 1);
             battle_menu_set_text_origin(8, 9);
-            g_menu_text_state.stride = state->inner_width;
-            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.origin_x);
+            g_menu_text_state.pen.stride = state->inner_width;
+            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
         battle_thread_yield();

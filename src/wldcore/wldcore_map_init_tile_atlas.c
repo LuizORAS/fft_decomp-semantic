@@ -110,7 +110,7 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_map_window_index = map_window_index;
     g_wldcore_window_records[map_window_index].sequence = 5;
     g_wldcore_window_records[map_window_index].priority = 13;
-    wpos = &g_wldcore_window_records[map_window_index].x;
+    wpos = &g_wldcore_window_records[map_window_index].position.x;
     rec = &g_wldcore_window_records[map_window_index];
     wpos[0] = 0;
     wpos[1] = 8;
@@ -122,7 +122,7 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_menu_stack_types[0] = menu_window_index;
     g_wldcore_window_records[menu_window_index].sequence = 6;
     g_wldcore_window_records[menu_window_index].priority = 13;
-    wpos2 = &g_wldcore_window_records[menu_window_index].x;
+    wpos2 = &g_wldcore_window_records[menu_window_index].position.x;
     rec2 = &g_wldcore_window_records[menu_window_index];
     wpos2[0] = -4;
     wpos2[1] = 8;

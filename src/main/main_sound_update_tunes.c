@@ -19,7 +19,7 @@ s32 main_sound_update_tunes(void) {
         }
         tune_index = g_main_sound_music.slots.tune & 0x3f;
         g_main_sound_music.slots.tune &= 0x7f;
-        tune_handles = (suzuki_music_t**)&g_main_sound_music.slots.handles[2];
+        tune_handles = &g_main_sound_music.slots.handles.music[2];
         handle = &tune_handles[tune_index];
         if (*handle == 0) {
             *handle = SuzukiPutPlaySMD(g_main_sound_music.slots.smd[2 + tune_index]);
@@ -32,7 +32,7 @@ s32 main_sound_update_tunes(void) {
         suzuki_music_t** handle;
 
         tune_index = tune & 0x3f;
-        tune_handles = (suzuki_music_t**)&g_main_sound_music.slots.handles[2];
+        tune_handles = &g_main_sound_music.slots.handles.music[2];
         handle = &tune_handles[tune_index];
         if (SuzukiGetMusicPlaying(*handle) != 0) {
             return 0;

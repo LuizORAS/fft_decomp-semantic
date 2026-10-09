@@ -28,10 +28,10 @@ void wldcore_map_step_projection_motion_then_pop_level(wldcore_map_pop_level_ent
     }
     level = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_depth = level - 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[level - 2].window_index].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[level - 2].window_index].position.x
         = g_wldcore_map_dot_screen_x[entry->record_index].value;
     g_main_system_flags &= ~0x2000;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[level - 2].window_index].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[level - 2].window_index].position.y
         = g_wldcore_map_dot_screen_x[entry->record_index].y - 4;
     wldcore_menu_dispatch_resume_handler();
 }

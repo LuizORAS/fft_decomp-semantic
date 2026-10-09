@@ -46,8 +46,7 @@ evaluate_with_charge:
         ai->charging_state = 1;
         return -1;
     }
-    battle_ai_transfer_halfword_values(
-        (u16*)&ai->selected_action, (u16*)&ai->current_action, sizeof(battle_ai_action_data_t));
+    battle_ai_transfer_halfword_values(&ai->selected_action, &ai->current_action, sizeof(battle_ai_action_data_t));
     ai->saved_ability_ct = ai->acting_unit->charged_ability_ct;
     ai->saved_current_status = ai->acting_unit->status_sets.current[0];
     ai->saved_inflicted_status = ai->acting_unit->inflicted_status[0];
@@ -61,8 +60,7 @@ evaluate_without_charge:
         ai->acting_unit->charged_ability_ct = ai->saved_ability_ct;
         ai->acting_unit->status_sets.current[0] = ai->saved_current_status;
         ai->acting_unit->inflicted_status[0] = ai->saved_inflicted_status;
-        return battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->selected_action.rank_byte,
-                   (battle_ai_action_rank_t*)&ai->current_action.rank_byte)
+        return battle_ai_compare_target_priority_and_hit_rate(&ai->selected_action.rank, &ai->current_action.rank)
             == BATTLE_AI_RANK_ABOVE;
     }
     ai->charging_state = 2;

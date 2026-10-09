@@ -20,12 +20,12 @@ void world_menu_draw_active_window_frames(void) {
             continue;
         }
         window = buffer;
-        world_gfx_set_primitive_brightness((u8*)&window->sprites[0], g_world_menu_color_red);
-        world_gfx_set_primitive_brightness((u8*)&window->sprites[1], g_world_menu_color_red);
-        world_gfx_set_primitive_brightness((u8*)&window->sprites[2], g_world_menu_color_red);
-        world_gfx_set_primitive_brightness((u8*)&window->sprites[3], g_world_menu_color_red);
-        world_gfx_set_primitive_brightness((u8*)&window->quads[0], g_world_menu_color_red);
-        world_gfx_set_primitive_brightness((u8*)&window->quads[1], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->sprites[0], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->sprites[1], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->sprites[2], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->sprites[3], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->quads[0], g_world_menu_color_red);
+        world_gfx_set_primitive_brightness(&window->quads[1], g_world_menu_color_red);
         if (window->is_message_box != 0) {
             if (g_world_thread_task_active != 0) {
                 window->quads[0].clut = 0x7D3C;

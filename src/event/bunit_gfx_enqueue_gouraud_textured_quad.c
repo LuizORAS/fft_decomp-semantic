@@ -4,10 +4,8 @@
 void bunit_gfx_enqueue_gouraud_textured_quad(
     const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
     POLY_GT4* poly;
-    u16 index = g_bunit_gfx_poly_gt4_count;
 
-    g_bunit_gfx_poly_gt4_count = index + 1;
-    poly = &g_bunit_gfx_context->gouraud_textured_quads[index];
+    poly = &g_bunit_gfx_context->gouraud_textured_quads[g_bunit_gfx_poly_gt4_count++];
 
     SetSemiTrans(poly, semitrans);
 
@@ -45,8 +43,5 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->clut = rect->clut;
     poly->tpage = rect->tpage;
 
-    {
-        bunit_gfx_context_t* context = g_bunit_gfx_context;
-        addPrim(&context->otag[otag_index], poly);
-    }
+    addPrim(&g_bunit_gfx_context->otag[otag_index], poly);
 }

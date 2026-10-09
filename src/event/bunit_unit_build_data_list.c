@@ -10,18 +10,11 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
     s32 i;
     s32 shown;
     s32 total;
-    s32 record_offset;
-    s32 count_offset;
-    s32 unused[2]; /* unreferenced local retained by the original frame layout */
-    s16* shown_index;
 
     shown = 0;
     total = 0;
-    i = 0;
-    shown_index = g_bunit_shown_unit_indices;
-    record_offset = 0;
     /* Keep status-byte reads separate; GCC otherwise merges the two tests into one halfword load. */
-    do {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_get_stats_from_battle_id(i);
         if ((unit != 0) && (unit->entd_slot != BATTLE_ENTD_SLOT_NONE)) {
             if (unit->unit_flags & UNIT_FLAG_EGG) {
@@ -29,25 +22,15 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
             } else if (!(*&unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
                 && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
                 total++;
-                bunit_unit_build_data_from_battle_stats(
-                    unit, (bunit_unit_data_t*)(g_bunit_unit_records + record_offset), shown);
-                *shown_index = shown;
-                shown_index++;
-                record_offset += sizeof(bunit_unit_data_t);
+                bunit_unit_build_data_from_battle_stats(unit, &g_bunit_unit_records[shown], shown);
+                g_bunit_shown_unit_indices[shown] = shown;
                 shown++;
             }
         }
-        i++;
-    } while (i < BATTLE_UNIT_SLOT_COUNT);
+    }
 
-    i = 0;
-    if (shown > 0) {
-        count_offset = 0;
-        do {
-            ((bunit_unit_data_t*)(g_bunit_unit_records + count_offset))->unit_count = total;
-            i++;
-            count_offset += sizeof(bunit_unit_data_t);
-        } while (i < shown);
+    for (i = 0; i < shown; i++) {
+        g_bunit_unit_records[i].unit_count = total;
     }
     g_bunit_unit_count = shown;
     bunit_unit_sort_index_list_by_order_keys(sort_mode);

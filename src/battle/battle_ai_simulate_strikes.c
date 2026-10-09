@@ -60,12 +60,12 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES) && ai->unit_decisions[target_id].enemy_flag != 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag == 0)) {
-                    ai->current_action.priority += positive;
+                    ai->current_action.rank.priority += positive;
                 } else if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES)
                                && ai->unit_decisions[target_id].enemy_flag == 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag != 0)) {
-                    ai->current_action.priority -= negative;
+                    ai->current_action.rank.priority -= negative;
                 }
                 ai->hit_counter++;
                 ai->total_hit_percent += result->attack_accuracy;

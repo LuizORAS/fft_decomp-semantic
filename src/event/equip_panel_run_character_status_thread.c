@@ -10,8 +10,7 @@ void equip_panel_run_character_status_thread(void) {
     world_status_thread_t* thread;
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_buffer_t* base;
-    battle_menu_status_panel_slot_state_t* state;
-    u8* cursor; /* Keep the screen base in a register; a SPRT* adds 0x1a0 before the loop. */
+    world_item_stat_detail_t* state;
     s32 frame;
     s32 mode;
     s32 i;
@@ -25,7 +24,7 @@ void equip_panel_run_character_status_thread(void) {
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_equip_panel_frames_a;
     base = g_equip_panel_frames_a;
-    state = (battle_menu_status_panel_slot_state_t*)g_equip_unit_editor_stats;
+    state = &g_equip_unit_editor_stats;
     rect = FRAME_RECT;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
     equip_gfx_init_menu_tile_and_line_primitives(screen);
@@ -59,24 +58,20 @@ void equip_panel_run_character_status_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    (const battle_image_location_t*)g_equip_panel_origin_offsets,
-                    &g_equip_panel_label_layouts_mode0[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
+                    g_equip_panel_origin_offsets, &g_equip_panel_label_layouts_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    (const battle_image_location_t*)g_equip_panel_origin_offsets,
-                    &g_equip_panel_label_layouts_mode1[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
+                    g_equip_panel_origin_offsets, &g_equip_panel_label_layouts_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    (const battle_image_location_t*)g_equip_panel_origin_offsets,
-                    &g_equip_panel_label_layouts_mode2[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
+                    g_equip_panel_origin_offsets, &g_equip_panel_label_layouts_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    (const battle_image_location_t*)g_equip_panel_origin_offsets,
-                    &g_equip_panel_label_layouts_mode3[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
+                    g_equip_panel_origin_offsets, &g_equip_panel_label_layouts_mode3[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -89,18 +84,18 @@ void equip_panel_run_character_status_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_equip_panel_text_image_a, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
                     battle_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
-                        g_equip_panel_text_image_a, &g_menu_text_state.origin_x);
+                        g_equip_panel_text_image_a, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_equip_panel_text_upload_rect_a, (u32*)g_equip_panel_text_image_a);
             battle_clear_menu_render_buffer(g_equip_panel_text_image_b, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -108,40 +103,39 @@ void equip_panel_run_character_status_thread(void) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_menu_text_state.origin_y += 0x10;
+                    g_menu_text_state.pen.rect.y += 0x10;
                 } else {
-                    battle_menu_display_text_entry(mode, g_equip_panel_text_image_b, &g_menu_text_state.origin_x);
-                    g_menu_text_state.origin_y += 0x10;
+                    battle_menu_display_text_entry(mode, g_equip_panel_text_image_b, &g_menu_text_state.pen);
+                    g_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
                     battle_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
-                        g_equip_panel_text_image_b, &g_menu_text_state.origin_x);
+                        g_equip_panel_text_image_b, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_equip_panel_text_upload_rect_b, (u32*)g_equip_panel_text_image_b);
             thread->redraw_request = 0;
         }
-        i = 0;
-        cursor = (u8*)screen;
-        for (; i < 5; i++) {
-            battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i], g_equip_panel_item_icon_texture,
-                (const battle_image_location_t*)FRAME_RECT, &g_equip_panel_item_icon_layouts[i]);
+        for (i = 0; i < 5; i++) {
+            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_equip_panel_item_icon_texture, FRAME_RECT,
+                &g_equip_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
-                ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
+                /* The target indexes the five icon sprites from their own base (i * 0x14 + 0x1a8), as a
+                 * separate array after the 19 label sprites would. */
+                (screen->sprites + i)[19].x0 = -0x200;
             }
-            cursor += sizeof(SPRT);
         }
         scale = g_main_gfx_screen_polarity * 0xf0;
         mask = scale ^ 0xf0;
         mask = -(mask != 0);
         g_equip_gfx_draw_offset_y = mask & 0xf0;
         equip_gfx_build_scaled_draw_area_packets(
-            &screen->portrait, &g_equip_character_status_draw_area_rect, frame, scale, (const s16*)thread);
+            &screen->portrait, &g_equip_character_status_draw_area_rect, frame, scale, thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
@@ -149,7 +143,7 @@ void equip_panel_run_character_status_thread(void) {
         screen->draw_offsets[1].y = g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
         equip_panel_set_primitive_colors(screen, thread);
-        equip_menu_select_primitive_color_palette(&screen->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }

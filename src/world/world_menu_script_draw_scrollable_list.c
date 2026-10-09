@@ -3,30 +3,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Menu-script list record (command 0x10). */
-typedef struct world_menu_list_draw_record {
-    u8 type;            /* 0x00 */
-    u8 length;          /* 0x01 */
-    u8 show_cursor;     /* 0x02 */
-    u8 _unused_03;      /* 0x03 */
-    u8 skip_count;      /* 0x04 */
-    u8 _unused_05[2];   /* 0x05 */
-    u8 x;               /* 0x07 */
-    u8 y;               /* 0x08 */
-    u8 _unused_09[2];   /* 0x09 */
-    u8 cursor_x_offset; /* 0x0b */
-    u8 arrow_up_y;      /* 0x0c */
-    u8 arrow_down_y;    /* 0x0d */
-} world_menu_list_draw_record_t;
-
 typedef struct world_chained_record world_chained_record_t;
 
 extern world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
 
-u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record) {
+u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     RECT rect;
     s32 unused[4];
-    world_menu_point_t point;
+    point16_t point;
     u16 priority;
     s32 speed;
     s32 i;
@@ -34,26 +18,26 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
     s32 rows;
     s32 index;
     u16 old_cursor;
-    world_menu_list_draw_record_t* base;
+    world_menu_list_record_t* base;
 
     priority = g_world_menu_draw_priority;
     if (g_world_menu_option_count <= 0) {
         for (j = record->skip_count; j != -1; j--) {
-            record = (world_menu_list_draw_record_t*)world_skip_chained_records((world_chained_record_t*)record);
+            record = (world_menu_list_record_t*)world_skip_chained_records((world_chained_record_t*)record);
         }
         return (u8*)record;
     }
     speed = world_gfx_get_vsync_mode_or_one();
     g_world_menu_use_scroll_position = 1;
     if (*(s8*)&g_world_menu_list_layout_pending != 0) {
-        world_menu_load_scrollable_list_layout((world_menu_list_record_t*)record);
+        world_menu_load_scrollable_list_layout(record);
     }
     old_cursor = g_world_menu_cursor_position;
     if (*(s8*)&g_world_menu_list_scroll_direction == 0) {
         i = world_input_read_menu_scroll_repeat();
         if (i != 0) {
             if (i != 2) {
-                world_menu_scroll_list_page(i, (u8*)record);
+                world_menu_scroll_list_page(i, record);
             }
         } else if ((g_world_menu_display_script_input & 0x10000000)
             || (g_world_menu_display_script_input & PSX_PAD_UP)) {
@@ -195,7 +179,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
             = record->y + (g_world_menu_cursor_position - g_world_menu_scroll_offset) * (s16)g_world_menu_row_height;
         world_menu_draw_animated_cursor(&point, &g_world_menu_list_cursor_anim, g_world_menu_use_alternate_palette);
     }
-    record = (world_menu_list_draw_record_t*)((u8*)record + record->length);
+    record = (world_menu_list_record_t*)((u8*)record + record->length);
     g_world_menu_scroll_row_offset = 0;
     rows = g_world_menu_list_visible_rows + 1;
     if (g_world_menu_scroll_pixel_offset == 0) {
@@ -208,7 +192,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
         }
         record = base;
         for (j = 0; j < g_world_menu_list_row_record_count; j++) {
-            record = (world_menu_list_draw_record_t*)g_world_menu_script_handlers[record->type]((u8*)record);
+            record = (world_menu_list_record_t*)g_world_menu_script_handlers[record->type]((u8*)record);
         }
     }
     g_world_menu_use_scroll_position = 0;

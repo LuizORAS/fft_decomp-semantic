@@ -49,14 +49,14 @@ void world_run_option_choice_menu(void) {
     height = g_world_option_menu_entry_counts[kind] * 16 + 16;
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
     world_thread_wait_frames(1);
-    g_world_menu_text_state.stride = width;
+    g_world_menu_text_state.pen.stride = width;
     for (i = 0; i < g_world_option_menu_entry_counts[kind]; i++) {
         world_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_world_game_option_values[kind]) {
             g_world_menu_text_color = 8;
         }
         world_menu_display_text_entry(
-            i + g_world_option_menu_first_text_ids[kind], buffer, &g_world_menu_text_state.origin_x);
+            i + g_world_option_menu_first_text_ids[kind], buffer, &g_world_menu_text_state.pen);
         g_world_menu_text_color = 0;
     }
     /* Dead store: allocation device, see the file header. */

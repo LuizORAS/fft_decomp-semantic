@@ -35,8 +35,8 @@ extern battle_menu_preview_label_panel_t g_battle_menu_projected_label_panels[2]
  * with the panel state's 2 still in $v0. An explicit `return 2;` adds a second
  * constant load, so they use a bare `return;`. The caller discards the result.
  */
-s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_image_location_t* base_load,
-    const battle_image_location_t* base_screen, world_gfx_image_load_parameters_t* params) {
+s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
+    const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
     battle_menu_preview_value_panel_t* panel;
     battle_menu_preview_label_panel_t* label;
     const battle_action_display_image_rect_t* rect;

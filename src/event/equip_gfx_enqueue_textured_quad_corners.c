@@ -6,10 +6,8 @@ void equip_gfx_enqueue_textured_quad_corners(
     s32 quad_semitrans = semitrans;
     s32 quad_otag = otag_index;
     POLY_FT4* poly;
-    u16 index = g_equip_gfx_poly_ft4_count;
 
-    g_equip_gfx_poly_ft4_count = index + 1;
-    poly = &g_equip_gfx_context->textured_quads[index];
+    poly = &g_equip_gfx_context->textured_quads[g_equip_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);
@@ -41,8 +39,5 @@ void equip_gfx_enqueue_textured_quad_corners(
     poly->clut = descriptor->clut;
     poly->tpage = descriptor->tpage;
 
-    {
-        equip_gfx_context_t* context = g_equip_gfx_context;
-        addPrim(&context->otag[quad_otag], poly);
-    }
+    addPrim(&g_equip_gfx_context->otag[quad_otag], poly);
 }

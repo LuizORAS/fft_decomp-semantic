@@ -61,7 +61,8 @@ void battle_menu_select_unit_action_slots_thread(void) {
             }
             i += 2;
         } else {
-            text = ((u16*)g_battle_ai_workspace_ptr)[g_battle_menu_thread_menu_data[3].selected_index] - 0x7000;
+            text = g_battle_ai_workspace_ptr->ability_list.ids[g_battle_menu_thread_menu_data[3].selected_index]
+                - 0x7000;
             if (i == 2) {
                 g_battle_menu_selected_action.calculator_type = text;
             }

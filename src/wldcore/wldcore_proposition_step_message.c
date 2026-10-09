@@ -7,7 +7,7 @@
  * Return 1 and clear the caller's phase after a new button-0x20 press
  * with the menu event flag set. Initial setup and continued waiting return 0.
  */
-s32 wldcore_proposition_step_message(wldcore_proposition_message_state_t* state, s32 message) {
+s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message) {
     if (state->phase == 0) {
         s32* party_index;
         state->phase = 1;

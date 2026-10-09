@@ -43,7 +43,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
         return;
     }
     if (unit->position_copies_active != 0) {
-        battle_gfx_shift_and_fill_position_copies((battle_gfx_render_unit_t*)unit);
+        battle_gfx_shift_and_fill_position_copies(unit);
     }
     direction = (g_battle_camera_render_state.vy + (s16)unit->facing) & 0xfff;
     quadrant = direction / 1024;

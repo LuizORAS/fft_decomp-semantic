@@ -20,7 +20,7 @@ void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t*
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;
     point.x = 8;

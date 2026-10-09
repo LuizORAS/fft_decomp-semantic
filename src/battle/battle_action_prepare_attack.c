@@ -21,7 +21,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
     u16 multiplier;
     u8 support;
 
-    main_util_copy_action_data((u8*)source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
@@ -44,7 +44,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if (g_main_item_primary_data[item & 0xff].type != ITEM_TYPE_CONSUMABLE) {
             return -1;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         ability = item + 0x80;
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
@@ -65,7 +65,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if (ability == ABILITY_ID_JUMP_FIRST) {
             return -1;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
             battle_action_decrement_player_item_quantity(unit, item, 1);
@@ -85,7 +85,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
             return -1;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0 && (phase & 1)) {
             unit->action_taken = 1;
         }
@@ -105,14 +105,14 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         }
         break;
     case ACTION_MENU_TYPE_ATTACK:
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0 && (phase & 1)) {
             unit->action_taken = 1;
         }
         dest->ability_id = 0;
         return 1;
     case ACTION_MENU_TYPE_JUMP:
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0) {
             ct = 50 / unit->attributes[UNIT_ATTRIBUTE_SPEED];
             if (ct == 0) {
@@ -134,7 +134,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if ((u16)(ability - ABILITY_ID_CHARGE_FIRST) >= 8) {
             return -1;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         ct = g_main_charge_ability_data[ability - ABILITY_ID_CHARGE_FIRST].ct;
         do {
             skip = 1;
@@ -159,7 +159,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
             return -1;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         entry = &g_main_ability_range_data[ability];
         ct = entry->ct & 0x7f;
         persevere = entry->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE;

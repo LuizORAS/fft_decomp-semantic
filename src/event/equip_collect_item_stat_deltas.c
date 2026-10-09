@@ -14,7 +14,7 @@ void equip_collect_item_stat_deltas(
     s32 lo;
     s32 hi;
 
-    equip_item_clear_stat_sums((s16*)summary, (s16*)detail);
+    equip_item_clear_stat_sums(summary, detail);
     item_id = raw_item & EQUIP_ITEM_ID_MASK;
     if (item_id > 0) {
         attribute = g_main_item_primary_data[item_id].attributes;

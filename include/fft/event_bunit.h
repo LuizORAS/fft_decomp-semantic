@@ -10,10 +10,10 @@ extern s16 g_bunit_ability_category;
 extern u8* g_bunit_ability_selected_data_1;
 extern u8* g_bunit_ability_selected_specific;
 extern s32 g_bunit_ability_type;
-extern s32 g_bunit_ability_list_menu_script;
+extern u8 g_bunit_ability_list_menu_script[];
 extern s8 g_bunit_ability_list_confirm_prompt_state;
 extern s16 g_bunit_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
-extern u16 g_bunit_ability_list_job_name_row[];
+extern s16 g_bunit_ability_list_job_name_row[];
 extern u8 g_bunit_ability_list_ready;
 s32 bunit_ability_get_ct_display_value(s32 index);
 s32 bunit_ability_get_jp_cost_display_value(s32 index);
@@ -75,7 +75,7 @@ extern s32 g_bunit_comparison_display_offset_y;
 /* Copy of the selected unit's 0x40 bytes from +0x30; only the leading
  * slot-state fields are read. */
 extern battle_menu_status_panel_slot_state_t g_bunit_editor_unit_fields;
-extern battle_image_location_t g_bunit_editor_numeric_geometry[];
+extern world_image_location_t g_bunit_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_geometry_t g_bunit_editor_numeric_table;
 extern RECT g_bunit_editor_numeric_entries_a;
 extern RECT g_bunit_editor_numeric_entries_b;
@@ -83,9 +83,9 @@ extern RECT g_bunit_editor_numeric_entries_c;
 extern RECT g_bunit_editor_numeric_entries_d;
 extern RECT g_bunit_editor_numeric_entries_e;
 extern RECT g_bunit_editor_numeric_entries_f;
-extern u8 g_bunit_editor_numeric_texture[];
-extern u8 g_bunit_editor_numeric_descriptor_a[];
-extern u8 g_bunit_editor_numeric_descriptor_b[];
+extern world_gfx_image_load_parameters_t g_bunit_editor_numeric_texture[];
+extern menu_number_entry_t g_bunit_editor_numeric_descriptor_a[];
+extern menu_number_entry_t g_bunit_editor_numeric_descriptor_b[];
 extern battle_menu_status_panel_numeric_buffer_t g_bunit_editor_numeric_state_a[2];
 extern battle_menu_status_panel_numeric_buffer_t g_bunit_editor_numeric_state_b[2];
 extern u8 g_bunit_editor_numeric_text_a[];
@@ -126,7 +126,7 @@ extern s8 g_bunit_job_menu_phase;
 extern u32 g_bunit_job_next_level_jp_requirement;
 extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
-extern s32 g_bunit_job_list_menu_script;
+extern u8 g_bunit_job_list_menu_script[];
 s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2);
 s32 bunit_job_calculate_current_jp(s32 index);
 s32 bunit_job_calculate_current_level(s32 index);
@@ -188,19 +188,19 @@ extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_text_reorder_list_buffer[];
 void bunit_menu_run_numeric_editor_thread(void);
 
-void bunit_text_render_decimal_entry_list(s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
+void bunit_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
-void bunit_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
+void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
 
 s32 bunit_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
 void bunit_text_render_signed_decimal_entries(
-    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
+    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
 void bunit_text_set_palette_and_metrics(s32 mode);
 void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s32 separate);
-void bunit_text_render_id_rows_to_vram(s32 text_table, u16* text_ids, RECT* destination, s32 flags);
+void bunit_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 
 void bunit_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
@@ -218,17 +218,12 @@ void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_thread_toggle_9_and_12(s32 enable);
 
 /* cursor */
-/* Rhombus-cursor trail, oldest point first; x == -1 marks an empty slot
- * (bunit_gfx_init_rhombus_cursor_tpages clears all eight). */
-typedef struct bunit_cursor_trail_point {
-    s16 x;
-    s16 y;
-} bunit_cursor_trail_point_t;
-
 /* Oriented-quad descriptors for the two cursor halves. */
 extern world_oriented_quad_t g_bunit_cursor_shadow_sprite;
 extern world_oriented_quad_t g_bunit_cursor_sprite;
-extern bunit_cursor_trail_point_t g_bunit_cursor_trail_points[8];
+/* Rhombus-cursor trail, oldest point first; x == -1 marks an empty slot
+ * (bunit_gfx_init_rhombus_cursor_tpages clears all eight). */
+extern point16_t g_bunit_cursor_trail_points[8];
 extern u8 g_bunit_cursor_trail_brightness[];
 
 /* gfx */
@@ -256,17 +251,17 @@ typedef struct bunit_gfx_context {
     POLY_G4* gouraud_quads;               /* 0x1c */
     POLY_GT4* gouraud_textured_quads;     /* 0x20 */
     LINE_F2* flat_lines;                  /* 0x24 */
-    u8 (*flat_lines_3)[0x18];             /* 0x28: LINE_F3 */
-    u8 (*flat_lines_4)[0x1c];             /* 0x2c: LINE_F4 */
+    LINE_F3* flat_lines_3;                /* 0x28 */
+    LINE_F4* flat_lines_4;                /* 0x2c */
     LINE_G2* gouraud_lines;               /* 0x30 */
-    u8 (*gouraud_lines_3)[0x20];          /* 0x34: LINE_G3 */
-    u8 (*gouraud_lines_4)[0x28];          /* 0x38: LINE_G4 */
+    LINE_G3* gouraud_lines_3;             /* 0x34 */
+    LINE_G4* gouraud_lines_4;             /* 0x38 */
     TILE* tiles;                          /* 0x3c */
     u8 (*tiles_1)[0xc];                   /* 0x40: TILE_1 */
     u8 (*tiles_8)[0xc];                   /* 0x44: TILE_8 */
     u8 (*tiles_16)[0xc];                  /* 0x48: TILE_16 */
     SPRT* sprites;                        /* 0x4c */
-    u8 (*sprites_8)[0x10];                /* 0x50: SPRT_8 */
+    SPRT_8* sprites_8;                    /* 0x50 */
     u8 (*sprites_16)[0x10];               /* 0x54: SPRT_16 */
     DR_MOVE* draw_moves;                  /* 0x58 */
     DR_AREA* draw_areas;                  /* 0x5c */
@@ -303,7 +298,7 @@ extern u16 g_bunit_gfx_otag_count;
 extern s16 g_bunit_gfx_otag_index;
 extern u16 g_bunit_gfx_poly_ft4_count;
 extern u16 g_bunit_gfx_poly_gt4_count;
-extern battle_menu_panel_frame_geometry_t g_bunit_gfx_portrait_origin;
+extern RECT g_bunit_gfx_portrait_origin;
 extern u8 g_bunit_gfx_portrait_transition_offsets[];
 extern s16 g_bunit_gfx_semitrans_enabled;
 extern u16 g_bunit_gfx_texture_page;
@@ -346,8 +341,8 @@ extern s8 g_bunit_gfx_transition_frame;
 extern u8 g_bunit_sprite_cell_sizes[][2];
 void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
 
-void bunit_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index, s32 lower_half, const s16* offset);
+void bunit_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
+    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
 
 void bunit_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
@@ -382,7 +377,7 @@ void bunit_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
 
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction);
+    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
 
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
@@ -394,19 +389,18 @@ u8* bunit_gfx_get_draw_color(void);
 void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
-    u8 (*flat_lines_3)[0x18], u8 (*flat_lines_4)[0x1c], LINE_G2* gouraud_lines, u8 (*gouraud_lines_3)[0x20],
-    u8 (*gouraud_lines_4)[0x28], TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc],
-    SPRT* sprites, u8 (*sprites_8)[0x10], u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas,
-    DR_MODE* draw_modes);
-void bunit_gfx_init_scaled_draw_area_packets(u8* primitive);
+    LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,
+    LINE_G4* gouraud_lines_4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
+    SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
+void bunit_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 void bunit_gfx_init_vram_and_start_fade(void);
-void bunit_gfx_load_image_and_wait(RECT* rect, u32* data);
+void bunit_gfx_load_image_and_wait(RECT* rect, void* data);
 void bunit_gfx_set_draw_color(const u8* color);
 void bunit_gfx_set_otag_index(s16 value);
-void bunit_gfx_store_image_and_wait(RECT* rect, u32* data);
+void bunit_gfx_store_image_and_wait(RECT* rect, void* data);
 void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag);
 s32 bunit_gfx_update_decreasing_fade(void);
-void bunit_gfx_update_rhombus_cursor_trail(bunit_cursor_trail_point_t* target);
+void bunit_gfx_update_rhombus_cursor_trail(point16_t* target);
 
 /* input */
 extern u8 g_bunit_input_activation_timer;
@@ -495,13 +489,13 @@ extern u32 g_bunit_menu_input_active_mask;
 extern u16 g_bunit_menu_input_mask;
 extern u32 g_bunit_menu_input_repeat_mask;
 extern u16 g_bunit_menu_list_cursor_anim_state[];
-extern u16* g_bunit_menu_list_entries;
+extern s16* g_bunit_menu_list_entries;
 extern u16 g_bunit_menu_list_entry_count;
 extern u16 g_bunit_menu_list_row_height;
-extern u16 g_bunit_menu_list_scroll_entry_ids[];
+extern s16 g_bunit_menu_list_scroll_entry_ids[];
 extern u16 g_bunit_menu_list_scroll_progress;
 extern s16 g_bunit_menu_list_selected_index;
-extern u16* g_bunit_menu_list_text_table;
+extern u8* g_bunit_menu_list_text_table;
 extern s16 g_bunit_menu_window_right_x;
 world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_number_command_t* command);
 void bunit_menu_clear_selection_record(s32 index);
@@ -519,14 +513,14 @@ void bunit_menu_run_reorder_list(void);
 void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, u8* script);
 void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
-void bunit_menu_dispatch_with_override(s32 menu_id, s32 state, s32 override);
+void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id);
-void bunit_menu_init_scrollable_list(s32 entries, s32 selected_index, s32 scroll_base_index, s32 text_table);
-void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 text_table);
+void bunit_menu_init_scrollable_list(s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table);
+void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table);
 void bunit_menu_init_unit_list(s32 unused_selected_index);
 s32 bunit_menu_is_active_or_transitioning(void);
 s32 bunit_menu_run_unit_list_frame(void);
-void bunit_menu_set_selection_record(s32 index, s32 field0, s32 field2, u16* lookup_table);
+void bunit_menu_set_selection_record(s32 index, s32 field0, s32 field2, s16* lookup_table);
 s32 bunit_menu_set_selection_value(u8 index, s16 value);
 void bunit_menu_update_and_draw_animated_cursor(u16* pos, u16* state, s32 mode);
 void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode);
@@ -646,6 +640,7 @@ typedef char
 extern s16 g_bunit_unit_count;
 extern s16 g_bunit_unit_current_stat_value;
 extern bunit_unit_data_t* g_bunit_unit_data[];
+extern bunit_unit_data_t g_bunit_unit_records[];
 extern u8 g_bunit_unit_list_count;
 extern u8 g_bunit_unit_list_index_map[];
 extern s8 g_bunit_unit_list_page_offset;
@@ -660,7 +655,6 @@ extern u8 g_bunit_unit_grid_selected_cell;
 extern u8 g_bunit_unit_list_initialized;
 extern u8 g_bunit_unit_list_triangle_menu_open;
 extern s8 g_bunit_unit_reorderable_count;
-extern u8 g_bunit_unit_records[];
 extern s8 g_bunit_unit_dot_glow_direction;
 extern u8 g_bunit_unit_dot_glow_timer;
 extern world_oriented_quad_t g_bunit_unit_dot_sprite;
@@ -668,7 +662,7 @@ extern world_draw_number_command_t g_bunit_unit_grid_brave_number;
 extern world_draw_number_command_t g_bunit_unit_grid_brave_number_wide;
 extern u16 g_bunit_unit_grid_ct_gauge_clut;
 extern u8 g_bunit_unit_grid_ct_gauge_colors[];
-extern bunit_cursor_trail_point_t g_bunit_unit_grid_cursor_target;
+extern point16_t g_bunit_unit_grid_cursor_target;
 extern u8 g_bunit_unit_grid_dimmed_color[];
 extern world_draw_number_command_t g_bunit_unit_grid_experience_number;
 extern world_draw_number_command_t g_bunit_unit_grid_faith_number;
@@ -705,7 +699,7 @@ s32 bunit_unit_get_brave(s32 unit_id);
 s32 bunit_unit_get_faith(s32 unit_id);
 s32 bunit_unit_get_max_stat(s32 unit_index);
 void bunit_render_unit_status_panel_thread(void);
-void bunit_unit_copy_reorder_list_to_orders(s32 unused, const u8* entries);
+void bunit_unit_copy_reorder_list_to_orders(s32 unused, const s16* entries);
 s32 bunit_unit_is_two_handing_weapon(s16* slots, s32 allow_secondary);
 
 /* panel */
@@ -719,29 +713,29 @@ extern u8 g_bunit_panel_comparison_name_image[];
 extern u8 g_bunit_panel_comparison_number_image[];
 extern menu_number_entry_t g_bunit_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_bunit_panel_comparison_packets[2];
-extern u8 g_bunit_panel_comparison_portrait_image[];
+extern u16 g_bunit_panel_comparison_portrait_image[];
 extern RECT g_bunit_panel_comparison_portrait_rect;
-extern u8 g_bunit_panel_editor_label_cells[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_editor_label_cells[];
 extern u16 g_bunit_panel_editor_label_cluts[][2];
-extern u8 g_bunit_panel_editor_mode_cell[];
-extern u8 g_bunit_panel_editor_mode_cells[];
-extern u8 g_bunit_panel_editor_value_cells[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_editor_mode_cell[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_editor_mode_cells[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_editor_value_cells[];
 extern u16 g_bunit_panel_editor_value_cluts[][2];
-extern battle_menu_panel_frame_geometry_t g_bunit_panel_frame_rect;
+extern RECT g_bunit_panel_frame_rect;
 extern CVECTOR g_bunit_panel_gauge_bar_colors[];
-extern battle_image_location_t g_bunit_panel_item_icon_texture[];
-extern u8 g_bunit_panel_portrait_cell[];
+extern world_image_location_t g_bunit_panel_item_icon_texture[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_portrait_cell[];
 extern battle_menu_status_panel_editor_packet_t g_bunit_panel_selected_editor_packets[2];
 extern u8 g_bunit_panel_selected_large_number_image[];
 extern u8 g_bunit_panel_selected_name_image[];
 extern u8 g_bunit_panel_selected_number_image[];
 extern menu_number_entry_t g_bunit_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_bunit_panel_selected_packets[2];
-extern u8 g_bunit_panel_selected_portrait_image[];
+extern u16 g_bunit_panel_selected_portrait_image[];
 extern RECT g_bunit_panel_selected_portrait_rect;
 extern s16 g_bunit_panel_slide_down_y[];
 extern s16 g_bunit_panel_slide_up_y[];
-extern u8 g_bunit_panel_sprite_cells[];
+extern world_gfx_image_load_parameters_t g_bunit_panel_sprite_cells[];
 
 void bunit_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);

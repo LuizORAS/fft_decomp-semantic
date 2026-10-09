@@ -25,7 +25,7 @@
  *     computes `ori s0,s2,0x4000` with distinct source and destination; the
  *     compound form makes the destination self-referencing (`ori s0,s0`).
  */
-s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_item_list_entry_t* entries, s32 mode) {
+s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entries, s32 mode) {
     s32 count;
     s32 item_id;
     register s32 entry __asm__("$16");
@@ -95,7 +95,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_ite
                     entry = item_id | 0x4000;
                 }
             }
-            entries[count].value = entry;
+            entries[count] = entry;
             count++;
         }
     } else {
@@ -117,12 +117,12 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, world_ite
                     entry = item_id | 0x4000;
                 }
             }
-            entries[count].value = entry;
+            entries[count] = entry;
             count++;
         }
     }
 
-    entries[count].value = -1;
+    entries[count] = -1;
     world_item_sort_id_list(6, entries);
     return count;
 }

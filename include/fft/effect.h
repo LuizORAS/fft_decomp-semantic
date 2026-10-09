@@ -147,12 +147,6 @@ extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIB
 /* polar mesh */
 /* Shared records of the 6,012-byte polar quad mesh renderer that 23 EFFECT
  * overlays compile from one source (for example E461 at 0x801c44a0). */
-/* One vertex of the scratch polar grid, relative to the mesh centre. */
-typedef struct effect_polar_mesh_point {
-    s16 x;
-    s16 y;
-} effect_polar_mesh_point_t;
-
 /* Scratchpad (0x1f800000) layout used while one polar mesh is rebuilt.
  * points[ring][0..3] sweep one quadrant in 0x100 steps; points[ring][4] is
  * points[ring][0] rotated by 0x400, closing the quadrant. The renderer never
@@ -182,14 +176,14 @@ typedef struct effect_polar_mesh_scratch {
     u8 _unused_0ac[0x08];
     s32 acceleration[2]; /* 0xb4 */
     u8 _unused_0bc[0x1c];
-    s32 radius;                             /* 0xd8: 20.12 fixed */
-    s32 radius_step;                        /* 0xdc */
-    s32 radius_step_delta;                  /* 0xe0 */
-    s32 angle;                              /* 0xe4 */
-    s32 angle_step;                         /* 0xe8 */
-    s32 angle_step_delta;                   /* 0xec */
-    s32 ot_depth;                           /* 0xf0: clamped to 4..0x17f */
-    effect_polar_mesh_point_t points[6][5]; /* 0xf4 */
+    s32 radius;             /* 0xd8: 20.12 fixed */
+    s32 radius_step;        /* 0xdc */
+    s32 radius_step_delta;  /* 0xe0 */
+    s32 angle;              /* 0xe4 */
+    s32 angle_step;         /* 0xe8 */
+    s32 angle_step_delta;   /* 0xec */
+    s32 ot_depth;           /* 0xf0: clamped to 4..0x17f */
+    point16_t points[6][5]; /* 0xf4 */
 } effect_polar_mesh_scratch_t;
 
 /* Scratchpad (0x1f800000) layout of the unit-anchored variant (the 6,492-byte
@@ -225,18 +219,18 @@ typedef struct effect_anchored_polar_mesh_scratch {
     u8 _unused_0b8[0x18];
     s32 target_index; /* 0xd0 */
     u8 _unused_0d4[0x14];
-    s32 radius;                             /* 0xe8 */
-    s32 radius_step;                        /* 0xec */
-    s32 radius_step_delta;                  /* 0xf0 */
-    s32 angle;                              /* 0xf4 */
-    s32 angle_step;                         /* 0xf8 */
-    s32 angle_step_delta;                   /* 0xfc */
-    s32 ot_depth;                           /* 0x100 */
-    SVECTOR position;                       /* 0x104 */
-    s16* unit_coords;                       /* 0x10c */
-    s32 screen[3];                          /* 0x110 */
-    long flag;                              /* 0x11c */
-    effect_polar_mesh_point_t points[6][5]; /* 0x120 */
+    s32 radius;             /* 0xe8 */
+    s32 radius_step;        /* 0xec */
+    s32 radius_step_delta;  /* 0xf0 */
+    s32 angle;              /* 0xf4 */
+    s32 angle_step;         /* 0xf8 */
+    s32 angle_step_delta;   /* 0xfc */
+    s32 ot_depth;           /* 0x100 */
+    SVECTOR position;       /* 0x104 */
+    s16* unit_coords;       /* 0x10c */
+    s32 screen[3];          /* 0x110 */
+    long flag;              /* 0x11c */
+    point16_t points[6][5]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
 
 /* Work block: two POLY_GT4 buffers of four quadrants of 5x4 quads. */
@@ -568,12 +562,6 @@ extern u32 g_effect_tentacle_mesh_brightness_table[][9];
 /* Shared records of the 2,924-byte 8x8 wave-distorted quad mesh renderer that
  * eight EFFECT overlays compile from one source (for example E033 at
  * 0x801c3c7c). */
-/* One lattice point of the scratchpad wave grid. */
-typedef struct effect_wave_mesh_point {
-    s16 x;
-    s16 y;
-} effect_wave_mesh_point_t;
-
 /* Work block of the 8x8 wave mesh, allocated in phase 1. The four wave phases
  * are 4096-per-turn angles; the geometry entry's spawn spread (x, y) and
  * wave_phase_speed curves advance them once per update. */
@@ -600,7 +588,7 @@ typedef char assert_effect_wave_mesh_work_size[sizeof(effect_wave_mesh_work_t) =
 
 /* Scratchpad (0x1f800000) layout while the mesh is rebuilt. */
 typedef struct effect_wave_mesh_scratch {
-    effect_wave_mesh_point_t points[9][9]; /* 0x000: wave-displaced lattice */
+    point16_t points[9][9]; /* 0x000: wave-displaced lattice */
 } effect_wave_mesh_scratch_t;
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects

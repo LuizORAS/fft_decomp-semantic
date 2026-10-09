@@ -30,11 +30,11 @@ s32 jobstts_menu_update_job_list(void) {
             jobstts_job_calculate_next_level_jp_requirement(g_jobstts_menu_list_selected_index);
         }
         jobstts_menu_set_selection_record(
-            4, g_jobstts_menu_list_selected_index, g_jobstts_menu_scroll_base_index, (const u16*)g_jobstts_job_ids);
+            4, g_jobstts_menu_list_selected_index, g_jobstts_menu_scroll_base_index, g_jobstts_job_ids);
         g_jobstts_job_list_menu_initialized = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return 1;
     }
-    jobstts_cmd_run_stream_with_mode(g_jobstts_job_list_render_commands, (void*)input, g_battle_menu_input_lock_mode);
+    jobstts_cmd_run_stream_with_mode(g_jobstts_job_list_render_commands, input, g_battle_menu_input_lock_mode);
     return 0;
 }

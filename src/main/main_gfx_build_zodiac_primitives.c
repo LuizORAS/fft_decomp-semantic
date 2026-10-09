@@ -5,7 +5,7 @@ void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* 
     s32 i;
     s32 x;
     s32 y;
-    main_zodiac_scale_t scale;
+    point16_t scale;
 
     for (i = 0; i < g_main_gfx_zodiac_sprite_count; i++) {
         SetPolyFT4(poly);

@@ -1,7 +1,7 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
-void require_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position) {
+void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position) {
     s32 saved_color;
     s32 plus;
     s32 digits;

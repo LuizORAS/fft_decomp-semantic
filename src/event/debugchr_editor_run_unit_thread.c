@@ -6,7 +6,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     s32 frame;
     s32 one;
     u8* animation;
-    u8* render_buffers;
+    POLY_FT4* render_buffers;
     s16* selected_unit;
     u8* animation_second;
     u8* animation_third;

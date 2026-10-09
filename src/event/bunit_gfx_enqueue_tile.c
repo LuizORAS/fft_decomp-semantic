@@ -13,8 +13,5 @@ void bunit_gfx_enqueue_tile(RECT* rect, u8* color, u8 semi, s32 idx) {
     tile->y0 = rect->y;
     tile->w = rect->w;
     tile->h = rect->h;
-    {
-        bunit_gfx_context_t* ctx = g_bunit_gfx_context;
-        addPrim(&ctx->otag[idx], tile);
-    }
+    addPrim(&g_bunit_gfx_context->otag[idx], tile);
 }

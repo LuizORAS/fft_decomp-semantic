@@ -35,7 +35,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
     s32 unused[4];
     VECTOR out;
     LINE_G2* line;
-    battle_screen_coords_t* screen;
+    SVECTOR* screen;
     battle_effect_slot_t* slot;
     u32* ot;
     s16* offsets;
@@ -101,9 +101,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             + 8;
         g_battle_effect_trap_particle_configs[12].position[1] = g_battle_effect_trap_particle_configs[13].position[1]
             = -i;
-        in.vx = screen->x;
-        in.vz = screen->y;
-        in.vy = screen->z - i;
+        in.vx = screen->vx;
+        in.vz = screen->vz;
+        in.vy = screen->vy - i;
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
         RotTrans(&in, &out, &out.pad);

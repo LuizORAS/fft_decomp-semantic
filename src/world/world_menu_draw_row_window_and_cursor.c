@@ -24,7 +24,7 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     rect[0] = x;
     rect[1] = width - (row == 0);
     world_gfx_enqueue_oriented_textured_quad(
-        (const world_oriented_quad_t*)rect, (const u8*)world_menu_get_sprite_color(), 0, 0, 0x2C);
+        (const world_oriented_quad_t*)rect, world_menu_get_sprite_color(), 0, 0, 0x2C);
     cursor = &g_world_item_category_tab_cursor_sprite;
     cursor_x = x + 9;
     if (row == 3) {

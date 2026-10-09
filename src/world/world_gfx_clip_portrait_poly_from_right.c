@@ -1,17 +1,18 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Trims `delta` texels from the leading edge of both sprite halves: the
- * texture origin advances (u, or v when the half is not mirrored) and the
- * width shrinks to match. */
-void world_gfx_clip_portrait_poly_from_right(world_gfx_sprite_record_t* record, s32 delta) {
-    if (record->halves[0].u0 != record->halves[0].u1) {
-        record->halves[0].u0 += delta;
-        record->halves[1].u0 += delta;
+/* Trims `delta` texels from the quad's leading edge: the texture origin
+ * advances (u0/u2, or v0/v2 when the portrait is not mirrored) and the right
+ * edge moves in to match. The screen coordinates are updated as unsigned
+ * halfwords. */
+void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta) {
+    if (poly->u0 != poly->u1) {
+        poly->u0 += delta;
+        poly->u2 += delta;
     } else {
-        record->halves[0].v0 += delta;
-        record->halves[1].v0 += delta;
+        poly->v0 += delta;
+        poly->v2 += delta;
     }
-    record->halves[0].width -= delta;
-    record->halves[1].width -= delta;
+    *(u16*)&poly->x1 -= delta;
+    *(u16*)&poly->x3 -= delta;
 }

@@ -35,8 +35,8 @@ void battle_script_face_unit(const u8* parameters, s32 second_only) {
                 if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
                         != 0
                     && misc_id != unit_id) {
-                    battle_unit_copy_misc_screen_coords(misc_id, (u16*)position);
-                    battle_unit_copy_misc_screen_coords(unit_id, (u16*)target);
+                    battle_unit_copy_misc_screen_coords(misc_id, position);
+                    battle_unit_copy_misc_screen_coords(unit_id, target);
                     dx = target[0] - position[0];
                     dy = target[2] - position[2];
                     facing = -ratan2(dy, dx);

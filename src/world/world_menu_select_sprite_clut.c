@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_menu_select_sprite_clut(world_texture_prim_t* slot) {
+void world_menu_select_sprite_clut(void* prim) {
+    world_texture_prim_t* slot = prim;
     s32 icon;
 
     if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {

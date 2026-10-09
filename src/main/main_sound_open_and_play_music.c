@@ -8,7 +8,7 @@ s32 main_sound_open_and_play_music(s32 file_index, s32 slot) {
         smd = main_file_get_smd(
             g_main_sound_scenario_smd_files[file_index].sector, g_main_sound_scenario_smd_files[file_index].size);
         g_main_sound_music.slots.smd[slot] = smd;
-        g_main_sound_music.slots.handles[slot] = (s32)SuzukiPutPlaySMD(smd);
+        g_main_sound_music.slots.handles.music[slot] = SuzukiPutPlaySMD(smd);
         return slot;
     }
     return 0;

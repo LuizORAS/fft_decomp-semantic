@@ -31,7 +31,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 half_height;
     u8 color;
 
-    prim = (POLY_FT4*)g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
+    prim = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
     if (g_battle_menu_status_screen_selected != 1) {

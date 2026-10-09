@@ -158,7 +158,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
         bunit_menu_draw_pressable_button(5, 0xC2, (s16)top, input & PSX_PAD_R2,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
-        bunit_menu_dispatch_with_override((s32)menu, 0, 0);
+        bunit_menu_dispatch_with_override(menu, 0, 0);
         bunit_gfx_enqueue_textured_quad_list(
             quads, 0, 0, g_bunit_menu_icon_texture_page, g_bunit_text_clut_2_mode0, 0xB, 8);
         mode = g_bunit_unit_stat_mode;

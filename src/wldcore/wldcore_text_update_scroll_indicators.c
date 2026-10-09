@@ -16,9 +16,9 @@ void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* sta
         return;
     }
 
-    top = g_wldcore_window_records[state->right_window_index].y;
-    bottom = g_wldcore_window_records[state->middle_window_index].y;
-    g_wldcore_window_records[state->lower_window_index].y
+    top = g_wldcore_window_records[state->right_window_index].position.y;
+    bottom = g_wldcore_window_records[state->middle_window_index].position.y;
+    g_wldcore_window_records[state->lower_window_index].position.y
         = bottom + (top - bottom - 0x12) * state->scroll_row / state->page_start_row + 0x12;
     g_wldcore_window_records[state->lower_window_index].flags &= ~0x10;
     if (state->scroll_row != 0) {

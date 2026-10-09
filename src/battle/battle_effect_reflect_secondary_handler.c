@@ -27,13 +27,13 @@ s32 battle_effect_reflect_secondary_handler(void) {
     s32 unused[2];
     VECTOR delta;
     VECTOR position;
-    battle_effect_rotation_vector_t angles;
+    SVECTOR angles;
     VECTOR scale;
-    battle_effect_rotation_vector_t spin;
+    SVECTOR spin;
     RECT rect;
     battle_effect_reflect_work_t* work;
-    battle_screen_coords_t* caster;
-    battle_screen_coords_t* target;
+    SVECTOR* caster;
+    SVECTOR* target;
     u8* rgb;
     u8* red;
     u8* green;
@@ -97,26 +97,26 @@ s32 battle_effect_reflect_secondary_handler(void) {
         caster
             = battle_unit_get_screen_data_ptr_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1]);
         target = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id);
-        delta.vx = caster->x - target->x;
-        delta.vy = caster->z - target->z;
-        delta.vz = caster->y - target->y;
-        position.vx = target->x;
-        position.vz = target->y;
-        position.vy = target->z
+        delta.vx = caster->vx - target->vx;
+        delta.vy = caster->vy - target->vy;
+        delta.vz = caster->vz - target->vz;
+        position.vx = target->vx;
+        position.vz = target->vz;
+        position.vy = target->vy
             - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(
                   g_battle_effect_current_secondary->target.fields.target_id)
                 / 2;
-        angles.y = ratan2(-delta.vz, delta.vx);
-        angles.z = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-        angles.x = 0;
+        angles.vy = ratan2(-delta.vz, delta.vx);
+        angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
+        angles.vx = 0;
         scale.vz = 0x140;
         scale.vy = 0x140;
         scale.vx = 0x140;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
-        spin.z = 0;
-        spin.x = 0;
+        spin.vz = 0;
+        spin.vx = 0;
         spin_timer = g_battle_effect_current_secondary->timer;
-        spin.z = spin_timer << 7;
+        spin.vz = spin_timer << 7;
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         effect = g_battle_effect_current_secondary;
         effect->timer++;

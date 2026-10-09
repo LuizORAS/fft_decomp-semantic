@@ -11,7 +11,6 @@ void require_panel_run_character_status_thread(void) {
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_buffer_t* base;
     battle_menu_status_panel_slot_state_t* state;
-    u8* cursor;
     s32 frame;
     s32 mode;
     s32 i;
@@ -59,19 +58,19 @@ void require_panel_run_character_status_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_require_editor_numeric_geometry,
+                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
                     g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_require_editor_numeric_geometry,
+                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
                     g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_require_editor_numeric_geometry,
+                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
                     g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_require_editor_numeric_geometry,
+                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
                     g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode3[i]);
             }
         }
@@ -85,18 +84,18 @@ void require_panel_run_character_status_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_require_panel_text_image_a, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
                     battle_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
-                        g_require_panel_text_image_a, &g_menu_text_state.origin_x);
+                        g_require_panel_text_image_a, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_require_panel_text_upload_rect_a, (u32*)g_require_panel_text_image_a);
             battle_clear_menu_render_buffer(g_require_panel_text_image_b, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -104,40 +103,39 @@ void require_panel_run_character_status_thread(void) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_menu_text_state.origin_y += 0x10;
+                    g_menu_text_state.pen.rect.y += 0x10;
                 } else {
-                    battle_menu_display_text_entry(mode, g_require_panel_text_image_b, &g_menu_text_state.origin_x);
-                    g_menu_text_state.origin_y += 0x10;
+                    battle_menu_display_text_entry(mode, g_require_panel_text_image_b, &g_menu_text_state.pen);
+                    g_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
                     battle_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
-                        g_require_panel_text_image_b, &g_menu_text_state.origin_x);
+                        g_require_panel_text_image_b, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_require_panel_text_upload_rect_b, (u32*)g_require_panel_text_image_b);
             thread->redraw_request = 0;
         }
-        i = 0;
-        cursor = (u8*)screen;
-        for (; i < 5; i++) {
-            battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i], g_require_panel_item_icon_texture,
-                (const battle_image_location_t*)FRAME_RECT, &g_require_panel_item_icon_layouts[i]);
+        for (i = 0; i < 5; i++) {
+            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_require_panel_item_icon_texture, FRAME_RECT,
+                &g_require_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
-                ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
+                /* The target indexes the five icon sprites from their own base (i * 0x14 + 0x1a8), as a
+                 * separate array after the 19 label sprites would. */
+                (screen->sprites + i)[19].x0 = -0x200;
             }
-            cursor += sizeof(SPRT);
         }
         scale = g_main_gfx_screen_polarity * 0xf0;
         mask = scale ^ 0xf0;
         mask = -(mask != 0);
         g_require_gfx_draw_offset_y = mask & 0xf0;
         require_gfx_build_scaled_draw_area_packets(
-            &screen->portrait, &g_require_character_status_draw_area_rect, frame, scale, (const s16*)thread);
+            &screen->portrait, &g_require_character_status_draw_area_rect, frame, scale, thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_require_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);

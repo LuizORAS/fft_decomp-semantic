@@ -6,21 +6,21 @@
  * not usable, shows the matching message before ending the thread. */
 void world_menu_validate_skill_selection_thread(void) {
     s32 skill;
-    void* parameter;
+    world_menu_entry_t* parameter;
     s32 ct;
     s32 entry;
     s32 mp_cost;
     s32 message;
     s32 blocked;
     battle_stats_t* unit;
-    world_ability_skill_use_tables_t* skill_tables;
+    world_ability_list_t* skill_tables;
 
     skill = g_world_menu_thread_menu_data[3].selected_index;
     parameter = world_thread_get_current_parameter_1();
-    skill_tables = (world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr;
+    skill_tables = &g_battle_ai_workspace_ptr->ability_list;
     ct = skill_tables->skill_ct[skill];
     entry = g_world_ability_menu_layout.row_actions[skill];
-    mp_cost = skill_tables->mp_cost[skill];
+    mp_cost = skill_tables->mp_costs[skill];
     if (ct == 0xFF) {
         ct = 0;
     }
@@ -74,6 +74,6 @@ void world_menu_validate_skill_selection_thread(void) {
     } else {
         world_sound_set_effect_to_confirm_checked();
     }
-    world_menu_confirm_action_silently((s32)parameter);
+    world_menu_confirm_action_silently(parameter);
     world_thread_exit_current();
 }

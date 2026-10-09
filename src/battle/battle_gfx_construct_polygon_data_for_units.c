@@ -68,13 +68,13 @@ typedef struct battle_gfx_part_prim {
  * give `ot` the allocation priority that places it in $s5 ahead of `display`. */
 /* clang-format off */
 void battle_gfx_construct_polygon_data_for_units(display, end, start, position, angle, mode, scale, ot)
-    battle_gfx_sprite_display_t* display;
+    battle_gfx_sprite_display_data_t* display;
     s32 end;
     s32 start;
-    s16* position;
+    SVECTOR* position;
     s16 angle;
     u16 mode;
-    s16* scale;
+    SVECTOR* scale;
     u32* ot;
 /* clang-format on */
 {
@@ -89,14 +89,14 @@ void battle_gfx_construct_polygon_data_for_units(display, end, start, position, 
     s16 cosine;
     s16 sine;
 
-    cosine = rcos(angle + display->angle);
-    g_battle_gfx_numeric_display_matrix.m[0][0] = ((cosine * scale[0]) >> 12) * display->scale_x >> 12;
-    g_battle_gfx_numeric_display_matrix.m[1][1] = ((cosine * scale[1]) >> 12) * display->scale_y >> 12;
-    sine = rsin(angle + display->angle);
-    g_battle_gfx_numeric_display_matrix.m[0][1] = ((-sine * scale[1]) >> 12) * display->scale_y >> 12;
-    g_battle_gfx_numeric_display_matrix.m[1][0] = ((sine * scale[0]) >> 12) * display->scale_x >> 12;
-    g_battle_gfx_numeric_display_matrix.t[0] = position[0];
-    g_battle_gfx_numeric_display_matrix.t[1] = position[1];
+    cosine = rcos(angle + display->rotation);
+    g_battle_gfx_numeric_display_matrix.m[0][0] = ((cosine * scale->vx) >> 12) * display->scale_x >> 12;
+    g_battle_gfx_numeric_display_matrix.m[1][1] = ((cosine * scale->vy) >> 12) * display->scale_y >> 12;
+    sine = rsin(angle + display->rotation);
+    g_battle_gfx_numeric_display_matrix.m[0][1] = ((-sine * scale->vy) >> 12) * display->scale_y >> 12;
+    g_battle_gfx_numeric_display_matrix.m[1][0] = ((sine * scale->vx) >> 12) * display->scale_x >> 12;
+    g_battle_gfx_numeric_display_matrix.t[0] = position->vx;
+    g_battle_gfx_numeric_display_matrix.t[1] = position->vy;
     SetRotMatrix(&g_battle_gfx_numeric_display_matrix);
     SetTransMatrix(&g_battle_gfx_numeric_display_matrix);
     for (i = start; i < end; i++) {
@@ -104,7 +104,7 @@ void battle_gfx_construct_polygon_data_for_units(display, end, start, position, 
         flags = part->flags;
         index = battle_gfx_increment_counter();
         flags ^= mode;
-        prim = (battle_gfx_part_prim_t*)((POLY_FT4*)g_battle_gfx_sprite_prim_pool + index);
+        prim = (battle_gfx_part_prim_t*)(g_battle_gfx_sprite_prim_pool + index);
         prim->length = 9;
         prim->code = 0x2c;
         if (mode & 2) {
@@ -143,8 +143,8 @@ void battle_gfx_construct_polygon_data_for_units(display, end, start, position, 
         gte_stsxy3_split(&prim->xy0, &prim->xy1, &prim->xy2);
         gte_ldv0(&g_battle_gte_rtps_vxy0);
         gte_rtps();
-        prim->rg = display->rg;
-        prim->b = display->b;
+        prim->rg = *(u16*)&display->red;
+        prim->b = display->blue;
         gte_stsxy(&prim->xy3);
         prim->u0 = prim->u2 = part->u;
         prim->u1 = prim->u3 = prim->u0 + part->width;

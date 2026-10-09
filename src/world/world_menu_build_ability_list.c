@@ -27,79 +27,72 @@ void world_menu_build_ability_list(s32 mode) {
     s32 row_mode;
     s32 row_flags;
 
-    g_world_ability_menu_layout.ids = ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids;
-    g_world_ability_menu_layout.values = ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values;
-    g_world_ability_menu_layout.extras = ((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras;
+    g_world_ability_menu_layout.ids = g_battle_ai_workspace_ptr->ability_list.ids;
+    g_world_ability_menu_layout.values = g_battle_ai_workspace_ptr->ability_list.values;
+    g_world_ability_menu_layout.extras = g_battle_ai_workspace_ptr->ability_list.extras;
     unit_index = g_world_active_unit_data.battle_id;
     unit = world_unit_get_battle_stats_for_stored();
     type = g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index];
     skillset = g_world_action_menu_skillsets[g_world_menu_thread_menu_data[4].selected_index];
     g_world_menu_preview_action.skillset = skillset;
     for (i = 0; i < 0x50; i++) {
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[i] = 0xFFFF;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[i] = 0xFF;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct[i] = 1;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[i] = 0;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras[i] = 0xFFFF;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[i] = 0;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns[i] = 1;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] = 0xFF;
+        g_battle_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;
+        g_battle_ai_workspace_ptr->ability_list.mp_costs[i] = 0xFF;
+        g_battle_ai_workspace_ptr->ability_list.ct[i] = 1;
+        g_battle_ai_workspace_ptr->ability_list.values[i] = 0;
+        g_battle_ai_workspace_ptr->ability_list.extras[i] = 0xFFFF;
+        g_battle_ai_workspace_ptr->ability_list.flags[i] = 0;
+        g_battle_ai_workspace_ptr->ability_list.turns[i] = 1;
+        g_battle_ai_workspace_ptr->ability_list.skill_ct[i] = 0xFF;
         g_world_menu_ability_display_flags[i] = 0;
     }
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns[0x50] = 0xFF;
-    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[0x50] = 0xFF;
+    g_battle_ai_workspace_ptr->ability_list.mp_costs[0x50] = 0xFF;
+    g_battle_ai_workspace_ptr->ability_list.ct[0x50] = 0xFF;
+    g_battle_ai_workspace_ptr->ability_list.flags[0x50] = 0xFF;
+    g_battle_ai_workspace_ptr->ability_list.turns[0x50] = 0xFF;
+    g_battle_ai_workspace_ptr->ability_list.skill_ct[0x50] = 0xFF;
 
     if (type == ACTION_MENU_TYPE_DEFAULT) {
         battle_menu_get_unit_skillset_ability_data(unit_index, skillset,
-            (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct, 0,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns);
-        world_script_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ct, 0x50);
+            (s16*)g_battle_ai_workspace_ptr->ability_list.ids, g_battle_ai_workspace_ptr->ability_list.mp_costs,
+            g_battle_ai_workspace_ptr->ability_list.ct, 0, g_battle_ai_workspace_ptr->ability_list.flags,
+            g_battle_ai_workspace_ptr->ability_list.turns);
+        world_script_copy_bytes(
+            g_battle_ai_workspace_ptr->ability_list.skill_ct, g_battle_ai_workspace_ptr->ability_list.ct, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
         battle_menu_display_item_inventory_ability(
-            unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
+            unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.mp_costs);
     }
     if (type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        battle_menu_load_throw_abilities(
-            unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
+        battle_menu_load_throw_abilities(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.mp_costs);
     }
     if (type == ACTION_MENU_TYPE_ARITHMETICKS) {
         if (mode == 2) {
             battle_menu_load_math_skill_attributes(
-                unit_index, skillset, (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
+                unit_index, skillset, (s16*)g_battle_ai_workspace_ptr->ability_list.ids);
         }
         if (mode == 1) {
             battle_menu_load_math_skill_multiples(
-                unit_index, skillset, (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
+                unit_index, skillset, (s16*)g_battle_ai_workspace_ptr->ability_list.ids);
         }
         if (mode == 0) {
             battle_menu_collect_calculator_abilities(
-                unit_index, skillset, (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
+                unit_index, skillset, (s16*)g_battle_ai_workspace_ptr->ability_list.ids);
         }
     }
     if (type == ACTION_MENU_TYPE_MONSTER) {
         battle_menu_collect_monster_skill_abilities(unit_index, skillset,
-            (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids, 0,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags);
+            (s16*)g_battle_ai_workspace_ptr->ability_list.ids, 0, g_battle_ai_workspace_ptr->ability_list.flags);
     }
     if (type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        battle_menu_load_draw_out_abilities(
-            unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
+        battle_menu_load_draw_out_abilities(unit_index, skillset, g_battle_ai_workspace_ptr->ability_list.mp_costs);
     }
     if (type == ACTION_MENU_TYPE_CHARGE) {
-        battle_menu_load_charge_skillset(unit_index, skillset,
-            (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns);
-        world_script_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, 0x50);
+        battle_menu_load_charge_skillset(unit_index, skillset, (s16*)g_battle_ai_workspace_ptr->ability_list.ids,
+            g_battle_ai_workspace_ptr->ability_list.mp_costs, g_battle_ai_workspace_ptr->ability_list.turns);
+        world_script_copy_bytes(
+            g_battle_ai_workspace_ptr->ability_list.skill_ct, g_battle_ai_workspace_ptr->ability_list.mp_costs, 0x50);
     }
     window_x = 0xAC;
     if (type != ACTION_MENU_TYPE_ARITHMETICKS) {
@@ -112,16 +105,15 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.extras_x = 0x7E;
     g_world_ability_menu_layout.ids_mode = 0;
     if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
-        count
-            = world_menu_copy_ff_terminated_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-                ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
-        world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
+        count = world_menu_copy_ff_terminated_bytes_to_halfwords(
+            g_battle_ai_workspace_ptr->ability_list.ids, g_battle_ai_workspace_ptr->ability_list.mp_costs);
+        world_menu_copy_bytes_to_halfwords(
+            g_battle_ai_workspace_ptr->ability_list.extras, g_battle_ai_workspace_ptr->ability_list.turns, count);
         found = 0;
         for (i = 0; i < count; i++) {
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[i]
-                = g_main_item_quantities[((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[i]];
-            if (((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[i] == 0) {
+            g_battle_ai_workspace_ptr->ability_list.values[i]
+                = g_main_item_quantities[g_battle_ai_workspace_ptr->ability_list.ids[i]];
+            if (g_battle_ai_workspace_ptr->ability_list.values[i] == 0) {
                 g_world_menu_ability_display_flags[i] = 4;
             } else {
                 found = 1;
@@ -132,8 +124,8 @@ void world_menu_build_ability_list(s32 mode) {
             window_x -= 4;
         } else {
             g_world_ability_menu_layout.extras_mode = 2;
-            world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
+            world_menu_copy_bytes_to_halfwords(
+                g_battle_ai_workspace_ptr->ability_list.values, g_battle_ai_workspace_ptr->ability_list.turns, count);
             window_x = 0x94;
             row_mode = 8;
         }
@@ -147,13 +139,13 @@ void world_menu_build_ability_list(s32 mode) {
     } else {
         found = 0;
         for (count = 0; count < 0x40; count++) {
-            if (((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[count] == 0xFFFF) {
+            if (g_battle_ai_workspace_ptr->ability_list.ids[count] == 0xFFFF) {
                 break;
             }
         }
         if (type == ACTION_MENU_TYPE_DEFAULT) {
             for (i = 0; i < count; i++) {
-                if (((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[i] != 0) {
+                if (g_battle_ai_workspace_ptr->ability_list.mp_costs[i] != 0) {
                     found = 1;
                     break;
                 }
@@ -167,17 +159,16 @@ void world_menu_build_ability_list(s32 mode) {
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
                 world_menu_copy_ff_terminated_bytes_to_halfwords(
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
+                    g_battle_ai_workspace_ptr->ability_list.values, g_battle_ai_workspace_ptr->ability_list.mp_costs);
                 window_x -= 8;
-                world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
+                world_menu_copy_bytes_to_halfwords(g_battle_ai_workspace_ptr->ability_list.extras,
+                    g_battle_ai_workspace_ptr->ability_list.turns, count);
                 row_mode = 6;
                 g_world_ability_menu_layout.values_x -= 8;
                 g_world_ability_menu_layout.extras_x -= 8;
             } else {
-                world_menu_copy_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->turns, count);
+                world_menu_copy_bytes_to_halfwords(g_battle_ai_workspace_ptr->ability_list.values,
+                    g_battle_ai_workspace_ptr->ability_list.turns, count);
                 window_x = 0x94;
                 row_mode = 5;
                 g_world_ability_menu_layout.extras_mode = 2;
@@ -195,16 +186,16 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_menu_thread_menu_data[3].header_id = row_mode;
     g_world_menu_thread_menu_data[3].select_text_table = columns;
     for (i = 0; i < count; i++) {
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[i] |= row_flags;
+        g_battle_ai_workspace_ptr->ability_list.ids[i] |= row_flags;
         if (type == ACTION_MENU_TYPE_DEFAULT) {
-            if (unit->mp - ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs[i] < 0
-                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] != 0) {
+            if (unit->mp - g_battle_ai_workspace_ptr->ability_list.mp_costs[i] < 0
+                && g_battle_ai_workspace_ptr->ability_list.skill_ct[i] != 0) {
                 g_world_menu_ability_display_flags[i] = 8;
             }
         }
         if (type == ACTION_MENU_TYPE_DEFAULT || type == ACTION_MENU_TYPE_MONSTER) {
-            if ((((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags[i] & 2)
-                && ((world_ability_list_t*)g_battle_ai_workspace_ptr)->skill_ct[i] != 0
+            if ((g_battle_ai_workspace_ptr->ability_list.flags[i] & 2)
+                && g_battle_ai_workspace_ptr->ability_list.skill_ct[i] != 0
                 && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
                 g_world_menu_ability_display_flags[i] = 8;
             }
@@ -213,9 +204,9 @@ void world_menu_build_ability_list(s32 mode) {
     if (count == 0) {
         count = 1;
         g_world_menu_thread_menu_data[3].header_id = 0;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids[0] = TEXT_ID_ABILITY_NAME_BASE;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values[0] = 0;
-        ((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras[0] = 0;
+        g_battle_ai_workspace_ptr->ability_list.ids[0] = TEXT_ID_ABILITY_NAME_BASE;
+        g_battle_ai_workspace_ptr->ability_list.values[0] = 0;
+        g_battle_ai_workspace_ptr->ability_list.extras[0] = 0;
         g_world_menu_ability_display_flags[0] = 4;
     }
     g_world_menu_thread_menu_data[3].window_y = 0x30;

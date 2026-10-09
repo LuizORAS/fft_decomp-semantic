@@ -19,7 +19,7 @@ typedef struct world_formation_unit_sprite {
  * get a palette 9/11 backdrop first and the sprite is drawn with its shadow.
  * Compiled at -O1; the (s16) casts keep the centring offset from being
  * reassociated onto pos. */
-void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s8* rgb, s32 ot_index) {
+void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s32 ot_index) {
     world_formation_unit_sprite_t sprite;
     s32 scale;
     s32 w;
@@ -35,7 +35,7 @@ void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s
         sprite.y = pos->y - (s16)(h / 2 - 0x18);
         sprite.w = w;
         sprite.h = h;
-        world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)&sprite, (const u8*)rgb, 0, 0, ot_index);
+        world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)&sprite, rgb, 0, 0, ot_index);
         return;
     }
     sprite.x = pos->x - (s16)((s16)sprite.source.w / 2 - 0x1F);
@@ -44,14 +44,14 @@ void world_formation_draw_unit_sprite(s16 unit_index, world_menu_point_t* pos, s
     sprite.h = sprite.source.h;
     if (g_world_formation_unit_pointers[unit_index]->proposition_status != 0) {
         if (unit_index == g_world_formation_selected_unit_index) {
-            backdrop_rgb = (u8*)g_world_formation_normal_sprite_color;
+            backdrop_rgb = g_world_formation_normal_sprite_color;
         } else {
-            backdrop_rgb = (u8*)world_menu_get_sprite_color();
+            backdrop_rgb = world_menu_get_sprite_color();
         }
         world_formation_draw_graphics_below_sprite(unit_index,
             g_world_formation_unit_pointers[unit_index]->proposition_status == 1 ? 9 : 0xB, pos->x, pos->y,
             backdrop_rgb, 0, 1, ot_index + 2);
         rgb = g_world_formation_away_unit_color;
     }
-    world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, (s32)rgb, ot_index);
+    world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, rgb, ot_index);
 }

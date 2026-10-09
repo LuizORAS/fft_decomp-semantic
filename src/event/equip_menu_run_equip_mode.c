@@ -127,7 +127,7 @@ s32 equip_menu_run_equip_mode(void) {
         g_equip_unit_status_panel_redraw = 1;
         battle_thread_resume(5);
         equip_menu_set_selection_record(g_equip_equip_item_slot != 0 ? g_equip_equip_item_slot - 1 : 0,
-            g_equip_menu_selected_list_index, g_equip_menu_scroll_base_index, (u16*)g_equip_item_list_entries);
+            g_equip_menu_selected_list_index, g_equip_menu_scroll_base_index, g_equip_item_list_entries);
         g_equip_equip_item_list_refresh = 0;
     }
     equip_panel_toggle_item_numeric_thread(g_equip_equip_item_preview_active);

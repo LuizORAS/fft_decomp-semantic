@@ -7,8 +7,6 @@
 #include "psx/types.h"
 
 extern world_panel_record_t g_battle_menu_numeric_display_panel_records[2];
-struct menu_number_position;
-
 /* Thread task 0x23: renders three text images into VRAM, builds two
  * alternating 18-sprite panel records with line boxes, then redraws the panel
  * every frame (highlighted palette while thread 6 runs) until the thread's
@@ -26,23 +24,21 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode0, 0);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode1, 2);
-    battle_gfx_init_scaled_draw_area_packets((u8*)&record->draw_areas);
+    battle_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = battle_menu_alloc_memory(0x918);
     battle_clear_menu_render_buffer(buffer, 0x918);
-    g_menu_text_state.stride = 0x14;
+    g_menu_text_state.pen.stride = 0x14;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)buffer, (struct menu_number_entry*)g_battle_numeric_display_entries,
-        (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
-    g_menu_text_state.stride = 0x40;
+    battle_menu_draw_numeric_display_entries(
+        buffer, (struct menu_number_entry*)g_battle_numeric_display_entries, &g_menu_text_state.pen, 3);
+    g_menu_text_state.pen.stride = 0x40;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)(buffer + 0x168),
-        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x24),
-        (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
-    g_menu_text_state.stride = 0x64;
+    battle_menu_draw_numeric_display_entries(buffer + 0x168,
+        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x24), &g_menu_text_state.pen, 4);
+    g_menu_text_state.pen.stride = 0x64;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries((s32)(buffer + 0x468),
-        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x54),
-        (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
+    battle_menu_draw_numeric_display_entries(buffer + 0x468,
+        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x54), &g_menu_text_state.pen, 8);
     LoadImage(&g_battle_numeric_display_text_rect_a, (u32*)buffer);
     LoadImage(&g_battle_numeric_display_text_rect_b, (u32*)(buffer + 0x168));
     LoadImage(&g_battle_numeric_display_text_rect_c, (u32*)(buffer + 0x468));
@@ -50,9 +46,8 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&record->sprites[i]);
-        battle_gfx_init_image_loading((POLY_FT4*)&record->sprites[i], &g_battle_menu_texture_location,
-            (const battle_image_location_t*)&g_battle_numeric_display_frame_rect,
-            &g_battle_numeric_display_image_params[i]);
+        battle_gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
+            &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
     battle_copy_bytes(&record[1], record, sizeof(*record));
     record[0].palette = &g_battle_numeric_display_palettes[0].primitives;

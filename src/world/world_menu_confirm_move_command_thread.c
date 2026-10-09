@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void world_menu_confirm_move_command_thread(void) {
-    s32 entry = world_thread_get_current_parameter_1();
+    world_menu_entry_t* entry = world_thread_get_current_parameter_1();
     s32 menu_id;
     s16* result = &g_world_menu_confirm_stored_unit_row_actions;
 

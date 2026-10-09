@@ -10,7 +10,7 @@
  * evade, 5 owned plus equipped count; keys other than 0 sort descending.
  * The magic-evade key reads 0 for the left weapon but the weapon's evade for
  * the right one; the target has this asymmetry. */
-void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
+void world_item_sort_id_list(s32 mode, s16* list) {
     s8 counts[0x100];
     s32 count;
     s32 i;
@@ -27,11 +27,11 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
     s32 diff;
 
     count = 0;
-    while (list[count].value != -1) {
-        id = list[count].value & 0x3ff;
+    while (list[count] != -1) {
+        id = list[count] & 0x3ff;
         if (id == 0 || id >= 0xfe) {
             j = count;
-            while ((list[j].value = list[j + 1].value) != -1) {
+            while ((list[j] = list[j + 1]) != -1) {
                 j++;
             }
         } else {
@@ -53,8 +53,8 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
     for (; passes > 0; passes--) {
         for (j = 0; j < passes; j++) {
             k = 0;
-            item_a = list[j].value & 0x3ff;
-            item_b = list[j + 1].value & 0x3ff;
+            item_a = list[j] & 0x3ff;
+            item_b = list[j + 1] & 0x3ff;
             criterion = criteria[k];
             while (criterion >= 0) {
                 if (criterion == 0) {
@@ -153,9 +153,9 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
                 diff = -diff;
             }
             if (diff >= 0) {
-                diff = list[j].value;
-                list[j].value = list[j + 1].value;
-                list[j + 1].value = diff;
+                diff = list[j];
+                list[j] = list[j + 1];
+                list[j + 1] = diff;
             }
         }
     }

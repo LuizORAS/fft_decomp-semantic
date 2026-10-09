@@ -32,14 +32,14 @@ void wldcore_menu_push_variable_list_level(void) {
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_list);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].variable_list.cursor = 0;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].variable_list.window_index].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].variable_list.window_index].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].variable_list.render_index]
-              .base_x
+              .base.x
         + 8;
     g_wldcore_menu_stack_depth = record_index + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].variable_list.window_index].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].variable_list.window_index].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].variable_list.render_index]
-              .base_y
+              .base.y
         - -(g_wldcore_menu_stack_records_next[record_index].variable_list.cursor * 0x10 + 0xC);
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_VARIABLE_LIST;
 }

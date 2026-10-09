@@ -23,7 +23,7 @@ void battle_ai_simulate_movement_and_pickup(void) {
             && !(ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL))
             && ai->autobattle_setting != BATTLE_AI_AUTOBATTLE_RETREAT) {
-            ai->current_action.priority += 2;
+            ai->current_action.rank.priority += 2;
         }
         ai->acting_unit->movement_taken = 1;
     }

@@ -16,5 +16,5 @@ void battle_gfx_init_render_state(void) {
     D_800b6290 = 0;
     D_800b628c = 0;
     /* The in-use word just past the last g_battle_unit_misc_data record. */
-    g_battle_gfx_sprite_prim_pool = &g_battle_unit_misc_slot_flags[16].in_use;
+    g_battle_gfx_sprite_prim_pool = (POLY_FT4*)&g_battle_unit_misc_slot_flags[16].in_use;
 }

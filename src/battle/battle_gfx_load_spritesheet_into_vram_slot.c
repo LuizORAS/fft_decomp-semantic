@@ -22,7 +22,7 @@ void battle_gfx_load_spritesheet_into_vram_slot(
     RECT rect;
     RECT unused_rect2;
 
-    palette = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].palettes[0];
+    palette = (u8*)g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].palettes[0];
     image = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].compressed_attack_image;
     if (data != 0) {
         for (i = 0; i < 0x200; i++) {

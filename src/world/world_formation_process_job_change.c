@@ -45,7 +45,7 @@ s32 world_formation_process_job_change(s32 job) {
         g_world_job_change_skip_requested = 0;
         world_input_clear_state();
         g_world_job_change_old_sprite_image = main_heap_alloc(0x1e0);
-        world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, (u32*)g_world_job_change_old_sprite_image);
+        world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
         g_world_job_change_new_sprite_image = main_heap_alloc(0x1e0);
         memset(g_world_job_change_new_sprite_image, 0, 0x1e0);
         world_formation_change_unit_job(0x14, job, 0);
@@ -60,7 +60,7 @@ s32 world_formation_process_job_change(s32 job) {
         rect.w = (s16)scratch.entry.w >> 2;
         rect.h = scratch.entry.h;
         g_world_job_wheel_new_portrait_quad.clut = scratch.entry.clut;
-        world_gfx_store_image_and_wait(&rect, (u32*)g_world_job_change_new_sprite_source);
+        world_gfx_store_image_and_wait(&rect, g_world_job_change_new_sprite_source);
         g_world_job_change_dissolve_order = main_heap_alloc(0x3c0);
         for (i = 479; i >= 0; i--) {
             g_world_job_change_dissolve_order[i] = i;

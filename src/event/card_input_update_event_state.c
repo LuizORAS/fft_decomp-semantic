@@ -15,7 +15,7 @@ void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_battle_gfx_current_otag_entry = (u32*)state;
+    g_battle_gfx_current_otag_entry = state;
     g_card_input_controller = battle_script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;

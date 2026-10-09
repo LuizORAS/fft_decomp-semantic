@@ -14,10 +14,8 @@ void bunit_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, texture_page,
 /* clang-format on */
 {
     POLY_FT4* poly;
-    u16 index = g_bunit_gfx_poly_ft4_count;
 
-    g_bunit_gfx_poly_ft4_count = index + 1;
-    poly = &g_bunit_gfx_context->textured_quads[index];
+    poly = &g_bunit_gfx_context->textured_quads[g_bunit_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);
@@ -59,8 +57,5 @@ void bunit_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, texture_page,
     poly->clut = clut;
     poly->tpage = texture_page;
 
-    {
-        bunit_gfx_context_t* context = g_bunit_gfx_context;
-        addPrim(&context->otag[otag_index], poly);
-    }
+    addPrim(&g_bunit_gfx_context->otag[otag_index], poly);
 }

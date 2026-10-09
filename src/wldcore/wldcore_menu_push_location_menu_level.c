@@ -88,7 +88,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         origin.x = image.cx;
         origin.y = image.cy;
         wldcore_window_init_vram_render_record(index, bounds, origin, 4);
-        base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+        base = &g_wldcore_window_render_records[index].base;
         g_wldcore_window_render_records[index].priority = 0xB;
         base->x = -0x40;
         base->y = -0x4C;
@@ -101,7 +101,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         g_wldcore_window_records[index].priority = 0xB;
         records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
-        position = (wldcore_window_xy_t*)&records->x;
+        position = (wldcore_window_xy_t*)&records->position.x;
         position[index].x = -8;
         position[index].y = 0x10;
         color[index].red = 0;
@@ -151,17 +151,17 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
 
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .location_list.cursor_window]
-            .x = -4;
+            .position.x = -4;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .location_list.cursor_window]
-            .y = 0;
+            .position.y = 0;
     } else {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .location_list.cursor_window]
-            .x = -4;
+            .position.x = -4;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .location_list.cursor_window]
-            .y = g_wldcore_window_render_records[index].base_y - 8;
+            .position.y = g_wldcore_window_render_records[index].base.y - 8;
     }
 
     depth = g_wldcore_menu_stack_depth;

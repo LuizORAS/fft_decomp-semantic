@@ -19,7 +19,7 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_battle_gfx_current_otag_entry = (u32*)state;
+    g_battle_gfx_current_otag_entry = state;
     g_bunit_frame_arg = frame_arg;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     g_battle_menu_hide_numeric_values = 0;

@@ -3,28 +3,28 @@
 #include "psx/types.h"
 
 void require_menu_text_entry_wait_thread(void) {
-    u8* state;
-    u8* parameters;
-    u32* input;
-    u16 thread_id;
-    u16 parameter_0;
-    u16 parameter_1;
-    u16 parameter_2;
+    world_menu_entry_t* obj;
+    world_menu_text_binding_t* task;
+    u32* ctl;
+    u16 id;
+    u16 arg;
+    u16 header_id;
+    u16 text_id;
 
-    state = ((u8**)g_battle_threads)[g_battle_current_thread_id << 8];
-    (*(void (**)(void))(*(u8**)(state + 0x30)))();
-    input = battle_script_get_controller_input_pointer(0);
-    parameter_1 = *(u16*)(state + 0x1c);
-    parameters = *(u8**)(state + 0x30);
-    parameter_0 = *(u16*)(state + 0x2c);
-    g_require_input_controller = input;
-    thread_id = *(u16*)(parameters + 6);
-    parameter_2 = *(u16*)(parameters + 4);
-    *input = PSX_PAD_CIRCLE;
-    battle_menu_handle_action(state, 0);
-    battle_thread_start(thread_id, battle_text_character_handling_thread);
-    battle_thread_set_parameters_4(thread_id, parameter_0, parameter_1, parameter_2, parameter_2);
+    obj = (world_menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    obj->text_binding->prepare();
+    ctl = battle_script_get_controller_input_pointer(0);
+    text_id = obj->text_id;
+    task = obj->text_binding;
+    header_id = obj->header_id;
+    g_require_input_controller = ctl;
+    id = task->text_thread_id;
+    arg = task->speaker_id;
+    *ctl = PSX_PAD_CIRCLE;
+    battle_menu_handle_action(obj, 0);
+    battle_thread_start(id, battle_text_character_handling_thread);
+    battle_thread_set_parameters_4(id, header_id, text_id, arg, arg);
     battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
-    battle_thread_wait_until_inactive(thread_id);
+    battle_thread_wait_until_inactive(id);
     battle_thread_exit_current();
 }

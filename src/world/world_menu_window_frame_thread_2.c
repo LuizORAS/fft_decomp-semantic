@@ -119,14 +119,14 @@ void world_menu_window_frame_thread_2(void) {
     prim->sprites[8].w = border_thin;
     prim->sprites[8].h = border_wide;
 
-    world_gfx_init_scaled_draw_area_packets(&prim->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(world_panel_frame_t));
 
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
-        world_gfx_build_scaled_draw_area_pair_swapped(&prim->cursor_mode, menu, frame, g_active_graphics_buffer_index);
+        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_active_graphics_buffer_index);
         texture_u = 0x7d3c;
         if (world_thread_get_current_parameter_2() == 0 && g_world_thread_task_active == 0) {
             texture_u = 0x7c3c;
@@ -134,7 +134,7 @@ void world_menu_window_frame_thread_2(void) {
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->cursor);
+        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
         world_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
             world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
@@ -144,7 +144,7 @@ void world_menu_window_frame_thread_2(void) {
             world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
         world_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->cursor_mode);
+        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
         world_thread_yield();
     }

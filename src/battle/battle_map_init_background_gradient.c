@@ -5,8 +5,7 @@
 void battle_map_init_background_gradient(void) {
     map_background_gradient_colors_t* colors;
 
-    colors = (map_background_gradient_colors_t*)battle_map_light_state_command(
-        MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT, (u8*)colors);
+    colors = battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT, colors);
     g_battle_map_background_gradient_transition.colors[0] = colors->first;
     g_battle_map_background_gradient_transition.colors[1] = colors->second;
     g_battle_map_background_gradient_transition.channels[0].red = colors->first.red << 16;

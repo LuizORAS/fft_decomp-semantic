@@ -7,7 +7,7 @@
  * coordinates are finalized. The four-column layout uses signed coordinates.
  */
 void world_formation_init_selection_cursor(s16 formation_index) {
-    world_menu_point_t* cursor;
+    point16_t* cursor;
     s32 count;
     s16 x;
 

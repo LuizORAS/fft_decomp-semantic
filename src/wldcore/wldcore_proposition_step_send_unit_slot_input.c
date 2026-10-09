@@ -64,7 +64,8 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
         return;
     }
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
-    g_wldcore_window_records[level->cursor_window].x = g_wldcore_window_render_records[level->layout_render].base_x + 6;
-    g_wldcore_window_records[level->cursor_window].y
-        = g_wldcore_window_render_records[level->layout_render].base_y + level->slot * 16 + 12;
+    g_wldcore_window_records[level->cursor_window].position.x
+        = g_wldcore_window_render_records[level->layout_render].base.x + 6;
+    g_wldcore_window_records[level->cursor_window].position.y
+        = g_wldcore_window_render_records[level->layout_render].base.y + level->slot * 16 + 12;
 }

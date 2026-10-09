@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
-int main_boot_draw_sceap_logo(void* otag, u32* image) {
+int main_boot_draw_sceap_logo(void* otag, void* image) {
     RECT destination;
     int elapsed;
 

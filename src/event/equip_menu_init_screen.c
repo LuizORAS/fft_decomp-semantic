@@ -22,12 +22,12 @@ void equip_menu_init_screen(s32 battle_id) {
     g_equip_gfx_line_g2_capacity = 0;
     g_equip_gfx_line_g3_capacity = 0;
     g_equip_gfx_line_g4_capacity = 0;
-    g_equip_gfx_tile_16_capacity = 0;
-    g_equip_gfx_tile_8_capacity = 0;
     g_equip_gfx_tile_1_capacity = 0;
+    g_equip_gfx_tile_8_capacity = 0;
+    g_equip_gfx_tile_16_capacity = 0;
     g_equip_gfx_sprite_capacity = 0;
-    g_equip_gfx_sprite_16_capacity = 0;
     g_equip_gfx_sprite_8_capacity = 0;
+    g_equip_gfx_sprite_16_capacity = 0;
     equip_gfx_init_contexts(g_equip_gfx_contexts, g_equip_gfx_otag_buffer, 0, 0, 0, g_equip_gfx_poly_ft4_buffer, 0, 0,
         0, 0, g_equip_gfx_line_f2_buffer, 0, 0, 0, 0, 0, g_equip_gfx_tile_buffer, 0, 0, 0, 0, 0, 0,
         g_equip_gfx_draw_move_buffer, g_equip_gfx_draw_area_buffer, g_equip_gfx_draw_mode_buffer);

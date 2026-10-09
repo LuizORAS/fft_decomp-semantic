@@ -142,10 +142,10 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         level->mode = 2;
         level->slot = 0;
         g_wldcore_window_records[level->cursor_window].flags &= ~0x10;
-        g_wldcore_window_records[level->cursor_window].x
-            = g_wldcore_window_render_records[level->layout_render].base_x + 6;
-        g_wldcore_window_records[level->cursor_window].y
-            = g_wldcore_window_render_records[level->layout_render].base_y + level->slot * 16 + 0xC;
+        g_wldcore_window_records[level->cursor_window].position.x
+            = g_wldcore_window_render_records[level->layout_render].base.x + 6;
+        g_wldcore_window_records[level->cursor_window].position.y
+            = g_wldcore_window_render_records[level->layout_render].base.y + level->slot * 16 + 0xC;
         return;
     }
     g_wldcore_proposition_send_units[g_wldcore_proposition_send_unit_count] = value;

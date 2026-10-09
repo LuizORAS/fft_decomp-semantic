@@ -92,7 +92,8 @@ cursor_down:
         level->cursor++;
     }
 move_cursor:
-    g_wldcore_window_records[level->window_index].x = g_wldcore_window_render_records[level->render_index].base_x + 8;
-    g_wldcore_window_records[level->window_index].y
-        = g_wldcore_window_render_records[level->render_index].base_y - -(level->cursor * 0x10 + 0xC);
+    g_wldcore_window_records[level->window_index].position.x
+        = g_wldcore_window_render_records[level->render_index].base.x + 8;
+    g_wldcore_window_records[level->window_index].position.y
+        = g_wldcore_window_render_records[level->render_index].base.y - -(level->cursor * 0x10 + 0xC);
 }

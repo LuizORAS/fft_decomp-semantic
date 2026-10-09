@@ -70,7 +70,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
-        page = (world_menu_list_page_t*)((u8*)g_battle_ai_workspace_ptr + 0x388);
+        page = g_battle_ai_workspace_ptr->list_pages;
         base = page;
     }
     toggle = 0;
@@ -99,8 +99,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         base[i].icons.icons[0] = &icons0[i];
         base[i].icons.icons[1] = &icons1[i];
         base[i].icons.icons[2] = &icons2[i];
-        battle_menu_build_window_sprites(
-            (battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry, &base[i].icons);
+        battle_menu_build_window_sprites(&image_rect, entry, &base[i].icons);
     }
     SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_battle_menu_disabled_texture_window);
     SetDrawMode(
@@ -124,8 +123,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((POLY_FT4*)&page->frame, (const battle_image_location_t*)entry,
-        (const battle_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading(&page->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -244,55 +243,52 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 row_buffer_live = 1;
                 buffer = battle_menu_alloc_memory(window.rect.w * 8);
                 battle_clear_menu_render_buffer(buffer, window.rect.w * 8);
-                g_menu_text_state.stride = window.rect.w;
+                g_menu_text_state.pen.stride = window.rect.w;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + scroll_delta;
                     battle_menu_set_text_origin(layout->columns.x[column], 0);
                     if (layout->columns.mode[column] != 2) {
                         g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
                     }
-                    g_menu_text_state.color = 0;
+                    g_menu_text_state.pen.color = 0;
                     if (g_battle_menu_text_palette_offset == 4) {
-                        g_menu_text_state.color = 0x44444444;
+                        g_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->columns.mode[column] == 0) {
                         battle_menu_display_text_entry(
-                            layout->columns.text_ids[column][index], buffer, &g_menu_text_state.origin_x);
+                            layout->columns.text_ids[column][index], buffer, &g_menu_text_state.pen);
                         g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
+                            && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             battle_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
-                            battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
+                            battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                         }
                     } else if (layout->columns.mode[column] == 1) {
                         battle_display_menu_number_entry(
-                            layout->columns.text_ids[column][index], 2, (s32)buffer, (u16*)&g_menu_text_state.origin_x);
+                            layout->columns.text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
                     } else if (layout->columns.mode[column] == 3) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
                             && (u16)layout->columns.text_ids[column][index] < 2
-                            && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index] == 0xFF
-                                || ((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->skill_ct[index]
-                                    == 0)) {
-                            g_menu_text_state.origin_y += 2;
-                            battle_menu_draw_stacked_glyph_pair(
-                                buffer, (world_glyph_blit_t*)&g_menu_text_state.origin_x);
+                            && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                                || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                            g_menu_text_state.pen.rect.y += 2;
+                            battle_menu_draw_stacked_glyph_pair(buffer, &g_menu_text_state.pen);
                         } else {
                             value = (u16)layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
                                     g_battle_menu_text_palette_offset = 0;
-                                    g_menu_text_state.origin_x += 3;
-                                    battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.origin_x);
+                                    g_menu_text_state.pen.rect.x += 3;
+                                    battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.pen);
                                 } else {
-                                    battle_draw_menu_number_glyphs(
-                                        (s16)value, 2, buffer, (battle_rect_t*)&g_menu_text_state.origin_x);
+                                    battle_draw_menu_number_glyphs((s16)value, 2, buffer, &g_menu_text_state.pen);
                                 }
                             }
                         }
                     }
                 }
                 g_battle_menu_text_palette_offset = 0;
-                g_menu_text_state.color = 0;
+                g_menu_text_state.pen.color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;
                 clear.x = image_rect.x;
@@ -394,8 +390,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         }
         frame->v0 = (ring * 16 + scroll_accum - 2) & 0x7F;
         if (i * g_battle_event_speed < 12) {
-            battle_gfx_init_image_loading((POLY_FT4*)page, (const battle_image_location_t*)entry,
-                (const battle_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+            battle_gfx_init_image_loading(page, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
+                (const world_gfx_image_load_parameters_t*)&window);
             battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
         }
         if (layout->columns.mode[1] == 0 && toggle == 1) {

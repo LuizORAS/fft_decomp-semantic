@@ -38,7 +38,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     world_thread_suspend(0xE);
 
     windows = g_wldcore_window_records;
-    positions = (wldcore_window_xy_t*)&windows->x;
+    positions = (wldcore_window_xy_t*)&windows->position.x;
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.upper_window = index;
@@ -68,19 +68,19 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     bounds.position.x = 0;
     bounds.position.y = 0;
     wldcore_window_build_render_record_image(index, bounds, 1, g_wldcore_window_image_buffer);
-    position = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    position = &g_wldcore_window_render_records[index].base;
     newest = &g_wldcore_active_saved_record.text_history_3;
     g_wldcore_window_render_records[index].priority = g_wldcore_menu_ordering_table_offset;
     position->x = -0x80;
     position->y = -0x64;
-    g_wldcore_window_render_records[index].clut_x = 0x3C0;
-    g_wldcore_window_render_records[index].clut_y = 0x1F2;
+    g_wldcore_window_render_records[index].clut.x = 0x3C0;
+    g_wldcore_window_render_records[index].clut.y = 0x1F2;
     wldcore_window_draw_centered_text(index, *newest + 0x8800);
 
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.first_window]
         .palette = 0xA;
-    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->red;
+    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
     colors[g_wldcore_active_saved_record.picture_render_index].red = 0x80;
     colors[g_wldcore_active_saved_record.picture_render_index].green = 0x80;
     colors[g_wldcore_active_saved_record.picture_render_index].blue = 0x80;

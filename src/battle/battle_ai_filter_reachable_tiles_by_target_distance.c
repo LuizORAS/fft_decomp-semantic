@@ -32,8 +32,8 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
         }
     }
     if (found == 0) {
-        battle_ai_transfer_halfword_values((u16*)ai->reachable_tiles[ai->movement_scenario],
-            (u16*)ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
+        battle_ai_transfer_halfword_values(
+            ai->reachable_tiles[ai->movement_scenario], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
         return 0;
     }
     return 1;

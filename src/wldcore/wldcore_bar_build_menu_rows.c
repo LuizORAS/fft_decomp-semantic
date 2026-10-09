@@ -55,7 +55,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;
     point.x = 8;
@@ -72,9 +72,9 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry = cursor->selected_index;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.mode = 0;
     render = &g_wldcore_window_render_records[index];
-    g_wldcore_window_records[level->main_window].x = g_wldcore_window_render_records[index].base_x + 6;
-    g_wldcore_window_records[level->main_window].y
-        = g_wldcore_window_render_records[index].base_y + cursor->selected_index * 0x10 + 0xE;
-    g_wldcore_window_records[level->side_window].x = render->base_x + 3;
-    g_wldcore_window_records[level->side_window].y = g_wldcore_window_render_records[index].base_y - 2;
+    g_wldcore_window_records[level->main_window].position.x = g_wldcore_window_render_records[index].base.x + 6;
+    g_wldcore_window_records[level->main_window].position.y
+        = g_wldcore_window_render_records[index].base.y + cursor->selected_index * 0x10 + 0xE;
+    g_wldcore_window_records[level->side_window].position.x = render->base.x + 3;
+    g_wldcore_window_records[level->side_window].position.y = g_wldcore_window_render_records[index].base.y - 2;
 }

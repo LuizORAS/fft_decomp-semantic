@@ -5,8 +5,7 @@
  * terrain depth, movement behavior and sprite-specific adjustments.
  * A unit-height record marked unavailable falls back to terrain projection.
  */
-s32 battle_gfx_calculate_screen_z_from_input_coords(
-    battle_unit_misc_data_t* unit, const battle_screen_coords_t* coords) {
+s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* unit, const SVECTOR* coords) {
     battle_unit_height_data_t height;
     map_tile_t* tile;
     s32 flags;
@@ -18,15 +17,15 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(
     if (unit->standing_on_unit_id_plus_one != 0) {
         battle_unit_calculate_height_data(&height, unit->standing_on_unit_id_plus_one - 1);
         if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
-            screen_z = battle_map_calculate_slope_height(&coords->x, (u8)coords->z);
+            screen_z = battle_map_calculate_slope_height(&coords->vx, (u8)coords->vy);
         } else {
             screen_z = -height.total_height / 2 * 12;
         }
     } else {
-        screen_z = battle_map_calculate_slope_height(&coords->x, (u8)coords->z);
+        screen_z = battle_map_calculate_slope_height(&coords->vx, (u8)coords->vy);
     }
     if (unit->battle_data != 0) {
-        tile = battle_map_get_tile_data_pointer(coords->x / 28, coords->y / 28, coords->z);
+        tile = battle_map_get_tile_data_pointer(coords->vx / 28, coords->vz / 28, coords->vy);
         if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             flags = battle_move_get_effective_flags(unit->battle_data);
             sprite = unit->spritesheet_id;

@@ -16,15 +16,15 @@ void main_sound_open_generic_sfx(void) {
     SuzukiSPUInitialiser(0);
     main_heap_clear_smd_allocator_table();
     main_sound_load_waveset(
-        main_file_load_to_address(WAVESET_WD_SECTOR, WAVESET_WD_SIZE, (void*)g_main_heap_low_overlay_load_address));
+        main_file_load_to_address(WAVESET_WD_SECTOR, WAVESET_WD_SIZE, g_main_heap_low_overlay_load_address));
     SuzukiAppendVFXSMD(main_file_load_to_address(SYSTEM_SED_SECTOR, SYSTEM_SED_SIZE, g_main_sound_system_sed_data));
     SuzukiAppendVFXSMD(main_file_load_to_address(ENV_SED_SECTOR, ENV_SED_SIZE, g_main_sound_env_sed_data));
 
     g_main_sound_music.state.forced_music = 0;
     g_main_sound_music.slots.tune = 0;
-    g_main_sound_music.slots.handles[0] = 0;
+    g_main_sound_music.slots.handles.loading_slot = 0;
     for (i = 6; i >= 0; i--) {
-        g_main_sound_music.slots.handles[i + 1] = 0;
+        g_main_sound_music.slots.handles.music[i + 1] = 0;
     }
 
     g_main_sound_weather_sfx_id = 0;

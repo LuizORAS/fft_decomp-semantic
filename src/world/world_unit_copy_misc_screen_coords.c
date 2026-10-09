@@ -2,11 +2,11 @@
 #include "fft/world.h"
 
 void world_unit_copy_misc_screen_coords(s32 misc_id, s16* out) {
-    battle_screen_coords_t* screen_data = battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
+    SVECTOR* screen_data = battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
 
-    if (screen_data != (battle_screen_coords_t*)-1) {
-        out[0] = screen_data->x;
-        out[1] = screen_data->z;
-        out[2] = screen_data->y;
+    if (screen_data != (SVECTOR*)-1) {
+        out[0] = screen_data->vx;
+        out[1] = screen_data->vy;
+        out[2] = screen_data->vz;
     }
 }

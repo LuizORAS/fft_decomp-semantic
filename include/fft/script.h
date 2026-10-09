@@ -3,6 +3,7 @@
 
 /* Event-script bytecode and variables shared by the BATTLE and WORLD interpreters. */
 
+#include "fft/menu.h"
 #include "fft/unit.h"
 #include "psx/types.h"
 
@@ -270,13 +271,17 @@ typedef struct battle_script_jump_instruction {
     u8 param1;
 } battle_script_jump_instruction_t;
 
-/* Provisional event work block at *g_battle_ai_workspace_ptr; only the staged-status
- * snapshot at 0x5f0 is known. */
+/* Provisional work block at *g_battle_ai_workspace_ptr: the menus build their
+ * ability list and the outermost scrolling list's packet pages in it, events
+ * keep the staged-status snapshot at 0x5f0. */
 typedef struct world_event_work {
-    u8 _unused_000[0x5F0];
+    world_ability_list_t ability_list;    /* 0x000 */
+    u8 _padding_386[2];                   /* alignment */
+    world_menu_list_page_t list_pages[2]; /* 0x388 */
     unit_status_staging_t status_staging; /* 0x5f0 */
 } world_event_work_t;
-typedef char world_event_work_size_must_be_0x9e2[(sizeof(world_event_work_t) == 0x9E2) ? 1 : -1];
+typedef char world_event_work_status_staging_offset_must_be_0x5f0
+    [((unsigned long)&((world_event_work_t*)0)->status_staging == 0x5F0) ? 1 : -1];
 
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.

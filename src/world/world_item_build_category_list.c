@@ -15,7 +15,7 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
     s16 unit_id;
     u16 sort_mode;
     s8 category;
-    world_item_list_entry_t* entries;
+    s16* entries;
     u8 mode;
 /* clang-format on */
 {
@@ -82,10 +82,10 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
                 entry |= 0x4000;
             }
         }
-        entries[count].value = entry;
+        entries[count] = entry;
         count++;
     }
-    entries[count].value = -1;
+    entries[count] = -1;
     list_index = 100;
     if (category == 0) {
         list_index = 0;

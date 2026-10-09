@@ -28,10 +28,10 @@ void world_menu_formation_icon_list_thread(void) {
     SetShadeTex(&record->sprites[3], 0);
     world_script_copy_bytes(&records[1], record, 0x7C);
     buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
-    g_world_menu_text_state.stride = param->inner_width;
+    g_world_menu_text_state.pen.stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     g_world_menu_text_color = 0;
-    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
+    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         world_thread_yield();

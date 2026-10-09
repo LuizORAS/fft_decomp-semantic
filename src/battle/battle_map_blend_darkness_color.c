@@ -134,6 +134,6 @@ void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 
         current.red = channels->red / 0x10000;
         current.green = channels->green / 0x10000;
         current.blue = channels->blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, (u8*)&current);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &current);
     }
 }

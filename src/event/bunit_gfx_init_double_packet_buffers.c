@@ -39,10 +39,9 @@ extern u16 g_bunit_gfx_draw_mode_capacity;
 void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
-    u8 (*flat_lines_3)[0x18], u8 (*flat_lines_4)[0x1c], LINE_G2* gouraud_lines, u8 (*gouraud_lines_3)[0x20],
-    u8 (*gouraud_lines_4)[0x28], TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc],
-    SPRT* sprites, u8 (*sprites_8)[0x10], u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas,
-    DR_MODE* draw_modes) {
+    LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,
+    LINE_G4* gouraud_lines_4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
+    SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes) {
     s32 i;
 
     g_bunit_gfx_context_base = buffers;

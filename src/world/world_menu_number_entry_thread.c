@@ -33,9 +33,9 @@ void world_menu_number_entry_thread(void) {
     s32* stride;
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    /* A register copy of the address: the target forms origin_x as
-     * &g_world_menu_text_state.stride - 8 instead of folding the constant. */
-    stride = &g_world_menu_text_state.stride;
+    /* A register copy of the address: the target forms the pen address as
+     * &g_world_menu_text_state.pen.stride - 8 instead of folding the constant. */
+    stride = &g_world_menu_text_state.pen.stride;
     thread = &g_world_threads[g_world_thread_current_id];
     /* Read as a plain word rather than thread->function_parameter_1: GCC 2.6.3
      * lets a struct-member load pass the g_world_menu_list_controller_input store above, but the
@@ -81,7 +81,7 @@ void world_menu_number_entry_thread(void) {
     *stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-    world_gfx_draw_signed_number(value, digits, buffer, (u16*)(stride - 2));
+    world_gfx_draw_signed_number(value, digits, buffer, (world_glyph_blit_t*)(stride - 2));
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
@@ -134,14 +134,14 @@ void world_menu_number_entry_thread(void) {
             buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
             *stride = param->inner_width;
             world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-            world_gfx_draw_signed_number(value, digits, buffer, (u16*)(stride - 2));
+            world_gfx_draw_signed_number(value, digits, buffer, (world_glyph_blit_t*)(stride - 2));
             LoadImage(&rect, buffer);
         }
         cursor_quad = &cursor_quads[i & 1];
         shadow_quad = &shadow_quads[i & 1];
         world_menu_update_entry_cursor_quads(param, cursor_quad, shadow_quad, i, digit);
-        world_menu_select_sprite_clut((world_texture_prim_t*)cursor_quad);
-        world_menu_select_sprite_clut((world_texture_prim_t*)shadow_quad);
+        world_menu_select_sprite_clut(cursor_quad);
+        world_menu_select_sprite_clut(shadow_quad);
         if (world_thread_is_previous_running() == 0) {
             cursor_quad->clut = 0x7D7C;
             shadow_quad->clut = 0x7DBC;

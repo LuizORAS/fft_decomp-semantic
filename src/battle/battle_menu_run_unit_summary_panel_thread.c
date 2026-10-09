@@ -20,7 +20,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     u8* buffer;
     u8* digits;
     s32* stride;
-    battle_rect_t* origin;
+    world_glyph_blit_t* origin;
     SPRT* sprite;
     s32 speed;
     s32 slide;
@@ -45,13 +45,11 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[2], 0x10, 0xA, &frames[0].sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &frames[0].sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading((POLY_FT4*)&frames[0].sprites[frame], &g_battle_menu_texture_location,
-            (const battle_image_location_t*)&g_battle_unit_summary_panel_rect,
-            &g_battle_unit_summary_sprite_image_params[frame]);
+        battle_gfx_init_image_loading(&frames[0].sprites[frame], &g_battle_menu_texture_location,
+            &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_sprite_image_params[frame]);
     }
     battle_gfx_init_image_loading(&frames[0].portrait, &g_battle_menu_texture_location,
-        (const battle_image_location_t*)&g_battle_unit_summary_panel_rect,
-        &g_battle_unit_summary_portrait_image_params);
+        &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_portrait_image_params);
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;
     } else {
@@ -61,10 +59,10 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     SetSemiTrans(&frames[0].portrait, 1);
     buffer = battle_menu_alloc_buffer(0x580);
     battle_clear_menu_render_buffer(buffer, 0x580);
-    stride = &g_menu_text_state.stride;
+    stride = &g_menu_text_state.pen.stride;
     *stride = 0x58;
     battle_menu_set_text_origin(0, 0);
-    origin = (battle_rect_t*)(stride - 2);
+    origin = (world_glyph_blit_t*)(stride - 2);
     battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_unit_name);
     battle_menu_set_text_origin(0, 0x10);
     battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_job_name);

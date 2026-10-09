@@ -5,7 +5,7 @@
  * timings and packed game options. */
 void main_save_init_state_and_options(void) {
     int remaining = 0xff;
-    u32* word = (u32*)&g_main_script_variables[0xff];
+    s32* word = &g_main_script_variables[0xff];
     u32 value;
 
     do {

@@ -1,14 +1,14 @@
-/* The typed views are casts at the use sites because copying them into
- * locals reorders the prologue's saved-register moves. One `scaled` local is
- * shared across both /200 divisions, as the target puts both results in $t3. */
+/* One `scaled` local is shared across both /200 divisions, as the target puts
+ * both results in $t3. */
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Callers pass different thread records; only the halfwords at offsets 0 and
- * 4 are read here. Keeping the views at each use preserves register moves. */
+ * 4 are read here. Copying the view into a local reorders the prologue's
+ * saved-register moves. */
 void world_gfx_build_scaled_draw_area_packets(
-    void* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread) {
+    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 buffer, s32 frame_offset, void* thread) {
     s32 percent;
     s32 w;
     s32 h;
@@ -21,30 +21,24 @@ void world_gfx_build_scaled_draw_area_packets(
         buffer = 11;
     }
     percent = g_world_gfx_panel_draw_area_scale_percent[buffer];
-    world_script_copy_bytes(&((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0], geometry, 8);
-    w = ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].w;
-    h = ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].h;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].x -= 0x80;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].x += ((const RECT*)thread)->x;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].y += ((const RECT*)thread)->w;
+    world_script_copy_bytes(&packets->rects[0], geometry, 8);
+    w = packets->rects[0].w;
+    h = packets->rects[0].h;
+    packets->rects[0].x -= 0x80;
+    packets->rects[0].x += ((const RECT*)thread)->x;
+    packets->rects[0].y += ((const RECT*)thread)->w;
     scaled = (w * percent) / 200;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].x
-        = w / 2 + ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].x - scaled;
+    packets->rects[0].x = w / 2 + packets->rects[0].x - scaled;
     scaled = (h * percent) / 200;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].y
-        = h / 2 + ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].y - scaled;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].w
-        = (((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].w * percent) / 100;
-    ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].h
-        = (((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].h * percent) / 100;
+    packets->rects[0].y = h / 2 + packets->rects[0].y - scaled;
+    packets->rects[0].w = (packets->rects[0].w * percent) / 100;
+    packets->rects[0].h = (packets->rects[0].h * percent) / 100;
     if (frame_offset != 0) {
-        ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[1].y = 0;
+        packets->rects[1].y = 0;
     } else {
-        ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[1].y = 0xF0;
-        ((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0].y += 0xF0;
+        packets->rects[1].y = 0xF0;
+        packets->rects[0].y += 0xF0;
     }
-    SetDrawArea(&((world_gfx_scaled_draw_area_pair_t*)packets)->areas[0],
-        &((world_gfx_scaled_draw_area_pair_t*)packets)->rects[0]);
-    SetDrawArea(&((world_gfx_scaled_draw_area_pair_t*)packets)->areas[1],
-        &((world_gfx_scaled_draw_area_pair_t*)packets)->rects[1]);
+    SetDrawArea(&packets->areas[0], &packets->rects[0]);
+    SetDrawArea(&packets->areas[1], &packets->rects[1]);
 }

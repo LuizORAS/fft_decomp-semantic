@@ -18,8 +18,8 @@
  * with lhu, so pick the variant whose loads match the target.
  *
  * Battle real positions are VECTORs (vx = x, vy = height, vz = map depth) and
- * screen positions are battle_screen_coords_t in X, Z, Y order; keep those in
- * their named types rather than vec3s16_t/vec3u16_t. */
+ * screen positions and rotations are SVECTORs in the same order; keep those
+ * in the SDK types rather than vec3s16_t/vec3u16_t. */
 /* Signed 16-bit x/y pair: screen offsets, sprite positions and per-axis
  * factors that are not GTE output. */
 typedef struct point16 {
@@ -112,17 +112,6 @@ typedef struct world_glyph_blit {
                  * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
 } world_glyph_blit_t;
 typedef char world_glyph_blit_size_must_be_0x10[sizeof(world_glyph_blit_t) == 0x10 ? 1 : -1];
-
-/* View written by world_gfx_init_scaled_draw_area_packets{,_2,_3} and
- * world_gfx_init_scaled_draw_area_packets_4: the cursor mode/sprite/window tail of
- * world_panel_frame_t. Callers also pass other records with the same offsets
- * (e.g. world_gfx_scaled_draw_area_pair_t, whose rects[0].w and rects[1] land
- * on sprite.w and texture_window). */
-typedef struct world_gfx_texture_window_record {
-    DR_MODE mode;        /* 0x00 */
-    SPRT sprite;         /* 0x0c: sprite.w (0x1c) is cleared */
-    RECT texture_window; /* 0x20: h cleared, then the 8-byte template copied in */
-} world_gfx_texture_window_record_t;
 
 /* Texture primitive placed by world_gfx_alloc_tpage7_vram and
  * battle_gfx_alloc_tpage7_vram: a SPRT

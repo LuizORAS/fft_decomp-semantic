@@ -66,8 +66,7 @@ void option_build_options_menu(void) {
     window.y_screen_offset = 0xA;
     window.rect.w = entry->window_width - 0x20;
     window.rect.h = entry->window_height - 0xE;
-    battle_menu_build_window_sprites(
-        (battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry, &page->icons);
+    battle_menu_build_window_sprites(&image_rect, entry, &page->icons);
     buffer = battle_menu_alloc_memory(0x1E0);
     g_option_menu_pages[0].icons.base.sprites[3].y0 -= 2;
     clear.x = entry->vram_x;
@@ -105,8 +104,8 @@ void option_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
-    battle_gfx_init_image_loading((POLY_FT4*)&base->frame, (const battle_image_location_t*)entry,
-        (const battle_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading(&base->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;
@@ -128,20 +127,20 @@ void option_build_options_menu(void) {
     battle_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
     option_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
-    image_rect.w = g_menu_text_state.stride >> 2;
+    image_rect.w = g_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
     battle_thread_wait_frames(1);
-    battle_gfx_init_scaled_draw_area_packets((u8*)&page->title_area);
-    battle_gfx_init_scaled_draw_area_packets((u8*)&page->value_area);
+    battle_gfx_init_scaled_draw_area_packets(&page->title_area);
+    battle_gfx_init_scaled_draw_area_packets(&page->value_area);
     battle_menu_init_semitransparent_sprt(&base->title);
     battle_text_configure_sprite_vram(&g_option_menu_title_image_rect, entry->inner_width, 0x2C, &base->title, 0);
     image
         = battle_menu_build_and_upload_window_frame_image(entry->inner_width, 0x2C, &g_option_menu_title_image_rect, 3);
     base->title.x0 = entry->window_x;
     base->title.y0 = entry->window_y + entry->window_height + 1;
-    g_menu_text_state.stride = entry->inner_width;
+    g_menu_text_state.pen.stride = entry->inner_width;
     battle_menu_set_text_origin(0x18, 0xE);
-    battle_menu_display_text_entry(0x502B, image, &g_menu_text_state.origin_x);
+    battle_menu_display_text_entry(0x502B, image, &g_menu_text_state.pen);
     LoadImage(&g_option_menu_title_image_rect, (u32*)image);
     battle_thread_wait_frames(1);
     battle_menu_free_memory(image);
@@ -160,9 +159,9 @@ void option_build_options_menu(void) {
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
     battle_clear_menu_render_buffer(buffer, 0x1E0);
-    g_menu_text_state.stride = 0x3C;
+    g_menu_text_state.pen.stride = 0x3C;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.origin_x);
+    battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.pen);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
     battle_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
     for (;;) {
@@ -202,7 +201,7 @@ void option_build_options_menu(void) {
                 image = g_option_menu_render_buffer;
                 image_rect.h = 0x10;
                 battle_clear_menu_render_buffer(image, entry->inner_width * 8);
-                g_menu_text_state.stride = entry->inner_width;
+                g_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 2; column++) {
                     if (layout->text_ids[column] != (s16*)-1) {
                         index = cursor + row_offset + delta;
@@ -210,10 +209,10 @@ void option_build_options_menu(void) {
                         g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                         if (layout->mode[column] == 0) {
                             battle_menu_display_text_entry(
-                                layout->text_ids[column][index], image, &g_menu_text_state.origin_x);
+                                layout->text_ids[column][index], image, &g_menu_text_state.pen);
                         } else {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)image, (u16*)&g_menu_text_state.origin_x);
+                                layout->text_ids[column][index], 2, (s32)image, &g_menu_text_state.pen);
                         }
                     }
                 }
@@ -235,10 +234,10 @@ void option_build_options_menu(void) {
         if (g_battle_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
             battle_clear_menu_render_buffer(buffer, 0x1E0);
-            g_menu_text_state.stride = 0x3C;
+            g_menu_text_state.pen.stride = 0x3C;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(g_option_value_text_id_bases[index] + g_option_current_values[index], buffer,
-                &g_menu_text_state.origin_x);
+            battle_menu_display_text_entry(
+                g_option_value_text_id_bases[index] + g_option_current_values[index], buffer, &g_menu_text_state.pen);
             LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
         }
         battle_thread_yield();

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-s32 world_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support) {
+s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support) {
     s32 result;
     s32 item_id;
     s16 w0;
@@ -9,14 +9,14 @@ s32 world_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support
     u8 flags;
 
     result = 0;
-    w0 = slots->slot_a;
+    w0 = equipment[0];
     item_id = ITEM_ID_NOTHING;
     if (w0 != ITEM_ID_NOTHING) {
-        if (slots->slot_b == ITEM_ID_NOTHING) {
+        if (equipment[1] == ITEM_ID_NOTHING) {
             item_id = w0 & WORLD_ITEM_ID_MASK;
         }
     } else {
-        w1 = slots->slot_b;
+        w1 = equipment[1];
         if (w1 != ITEM_ID_NOTHING) {
             item_id = w1 & WORLD_ITEM_ID_MASK;
         }

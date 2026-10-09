@@ -9,7 +9,7 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     if (unit->job_id == JOB_ID_MIME) {
         return;
     }
-    main_util_copy_action_data(&unit->action_actor_id, (u8*)&g_battle_action_current_attacker.action);
+    main_util_copy_action_data(&unit->action_actor_id, &g_battle_action_current_attacker.action);
     if (unit->action_target_kind == BATTLE_ACTION_TARGET_UNIT) {
         target = &g_battle_unit_stats[unit->action_target_id];
         x = target->x;

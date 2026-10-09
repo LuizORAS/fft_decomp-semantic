@@ -8,7 +8,7 @@
  * while the backdrop shade fades. Returns the frame counter, which wraps to
  * 0 and clears g_world_formation_scroll_enabled when the transition ends. Compiled at -O1. */
 s32 world_formation_step_grid_transition(s32 mode) {
-    world_menu_point_t positions[20];
+    point16_t positions[20];
     u8 frame;
     s32 spread;
     s32 shade;

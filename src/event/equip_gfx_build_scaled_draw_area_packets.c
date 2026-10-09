@@ -2,8 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void equip_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packet, const void* source, s32 scale_index, s32 lower_half, const s16* offset) {
+void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
+    s32 scale_index, s32 lower_half, const world_status_thread_t* thread) {
     s32 percent;
     s32 w;
     s32 h;
@@ -20,8 +20,8 @@ void equip_gfx_build_scaled_draw_area_packets(
     w = packet->rects[0].w;
     h = packet->rects[0].h;
     packet->rects[0].x -= 0x80;
-    packet->rects[0].x += offset[0];
-    packet->rects[0].y += offset[2];
+    packet->rects[0].x += thread->x;
+    packet->rects[0].y += thread->y;
     scaled = (w * percent) / 200;
     packet->rects[0].x = w / 2 + packet->rects[0].x - scaled;
     scaled = (h * percent) / 200;

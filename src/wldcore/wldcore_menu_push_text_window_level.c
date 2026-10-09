@@ -72,7 +72,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     wldcore_text_init_scrollable_window(window);
 
     index = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.window_index;
-    positions = (wldcore_point32_t*)&records[0].x;
+    positions = &records[0].position;
     /* This byte-view stride retains the target addiu of &records[0].x;
      * &records[index].x removes it and breaks the exact match. */
     position = (wldcore_point32_t*)((u8*)positions + index * sizeof(wldcore_window_record_t));

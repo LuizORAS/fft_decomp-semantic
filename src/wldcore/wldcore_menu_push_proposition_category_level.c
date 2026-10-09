@@ -57,7 +57,7 @@ void wldcore_menu_push_proposition_category_level(void) {
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;
     point.x = 8;
@@ -83,11 +83,11 @@ void wldcore_menu_push_proposition_category_level(void) {
     }
     value = g_wldcore_proposition_category_saved_cursor[0];
     g_wldcore_menu_stack_records_next[depth].list_window.selected_entry = value;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].x
-        = g_wldcore_window_render_records[index].base_x + 6;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 6;
     g_wldcore_menu_stack_depth = depth + 1;
     value = g_wldcore_menu_stack_records_next[depth].list_window.main_window;
-    g_wldcore_window_records[value].y = g_wldcore_window_render_records[index].base_y
+    g_wldcore_window_records[value].position.y = g_wldcore_window_render_records[index].base.y
         - -(g_wldcore_proposition_category_saved_cursor[0] * 0x10) + 0xE;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_CATEGORY;
 }

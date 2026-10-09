@@ -11,7 +11,7 @@ extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
  * key prompts each frame, and returns the entered g_world_name_entry_text name once the
  * state reaches 0xFF (NULL until then). */
 u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     s32 busy;
 
     if (g_world_name_entry_started == 0) {

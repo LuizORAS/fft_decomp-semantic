@@ -19,23 +19,23 @@ void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode
     palette = misc->stored_palette;
     switch (sheet) {
     case BATTLE_SPRITESHEET_ID_CRYSTAL:
-        battle_gfx_modify_vram_palette(mode, (u16*)g_battle_gfx_crystal_palettes[palette], section_id, unit_misc_id,
-            preset, red, green, blue, final_value);
+        battle_gfx_modify_vram_palette(mode, g_battle_gfx_crystal_palettes[palette], section_id, unit_misc_id, preset,
+            red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_CHICKEN:
-        battle_gfx_modify_vram_palette(mode, (u16*)g_battle_gfx_chicken_palettes[palette], section_id, unit_misc_id,
-            preset, red, green, blue, final_value);
+        battle_gfx_modify_vram_palette(mode, g_battle_gfx_chicken_palettes[palette], section_id, unit_misc_id, preset,
+            red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_FROG:
-        battle_gfx_modify_vram_palette(mode, (u16*)g_battle_gfx_frog_palettes[palette], section_id, unit_misc_id,
-            preset, red, green, blue, final_value);
+        battle_gfx_modify_vram_palette(
+            mode, g_battle_gfx_frog_palettes[palette], section_id, unit_misc_id, preset, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_TREASURE:
-        battle_gfx_modify_vram_palette(mode, (u16*)g_battle_gfx_treasure_palettes[palette], section_id, unit_misc_id,
-            preset, red, green, blue, final_value);
+        battle_gfx_modify_vram_palette(mode, g_battle_gfx_treasure_palettes[palette], section_id, unit_misc_id, preset,
+            red, green, blue, final_value);
         break;
     default:
-        battle_gfx_modify_vram_palette(mode, (u16*)g_battle_gfx_spritesheet_slots[slot].palettes[palette], section_id,
+        battle_gfx_modify_vram_palette(mode, g_battle_gfx_spritesheet_slots[slot].palettes[palette], section_id,
             unit_misc_id, preset, red, green, blue, final_value);
         break;
     }

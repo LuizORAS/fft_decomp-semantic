@@ -18,8 +18,8 @@ extern s16 g_option_dead_unit_secondary_result;
 extern const u16 g_option_gfx_draw_area_scale_percent[12];
 extern RECT g_option_gfx_draw_area_template;
 
-void option_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packet, const void* source, s32 scale_index, s32 lower_half, const s16* offset);
+void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
+    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
 
 void option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 

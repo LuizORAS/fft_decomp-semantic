@@ -59,7 +59,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
         s32* tp = g_require_reward_war_trophy_entry_types;
         do {
             if (*tp == 0) {
-                item_id = *(u8*)vp;
+                item_id = (u8)*vp;
                 quantity = main_item_get_total_equipment_quantity(item_id, 1);
                 if (quantity == 99) {
                     item = main_item_get_data_pointer(*vp);

@@ -16,9 +16,9 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
     SVECTOR rotation;
     VECTOR delta;
     VECTOR position;
-    battle_effect_rotation_vector_t angles;
+    SVECTOR angles;
     VECTOR scale;
-    battle_effect_rotation_vector_t spin;
+    SVECTOR spin;
     battle_effect_arrow_buffer_t* work;
     s32 phase;
     s32 velocity;
@@ -79,9 +79,9 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
             g_battle_effect_arrow_arc_height, g_battle_effect_arrow_arc_distance);
         next = -battle_effect_calculate_arc_trajectory_term(g_battle_effect_arrow_arc_height,
             g_battle_effect_arrow_arc_distance + g_battle_effect_arrow_arc_distance_step);
-        angles.x = 0;
-        angles.y = g_battle_effect_arrow_arc_yaw;
-        angles.z = ratan2(next - previous, g_battle_effect_arrow_arc_distance_step * 2) + 0x400;
+        angles.vx = 0;
+        angles.vy = g_battle_effect_arrow_arc_yaw;
+        angles.vz = ratan2(next - previous, g_battle_effect_arrow_arc_distance_step * 2) + 0x400;
         SetRotMatrix(&g_battle_effect_projectile_matrix);
         SetTransMatrix(&g_battle_effect_projectile_matrix);
         rotation.vy = term >> 12;
@@ -101,9 +101,9 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         scale.vy = 0x40;
         scale.vx = 0x40;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
-        spin.z = 0;
-        spin.y = 0;
-        spin.x = 0;
+        spin.vz = 0;
+        spin.vy = 0;
+        spin.vx = 0;
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         if (g_battle_effect_projectile_step_count == 2 && g_battle_effect_trajectory_hit_unit_id != -1
             && g_battle_effect_current_secondary->target_count != 0) {

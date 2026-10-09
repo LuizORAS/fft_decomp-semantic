@@ -29,7 +29,8 @@ s32 battle_effect_splash_secondary_handler(void) {
             g_battle_effect_current_secondary->target.fields.target_id);
         g_battle_effect_trap_particle_configs[7].position[1]
             = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12)
-            - battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id)->z;
+            - battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id)
+                  ->vy;
         battle_effect_start_group(7, 11);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:

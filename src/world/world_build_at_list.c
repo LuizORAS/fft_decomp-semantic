@@ -89,8 +89,8 @@ void world_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((POLY_FT4*)&page->frame, (const world_image_location_t*)entry,
-        (const world_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading(
+        &page->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -113,7 +113,7 @@ void world_build_at_list(void) {
     cursor = entry->selected_index - row_offset;
     world_menu_draw_text_columns_2(entry, &row_offset, buffer);
     ring = 0;
-    image_rect.w = g_world_menu_text_state.stride >> 2;
+    image_rect.w = g_world_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
     clear.h = 2;
     clear.x = image_rect.x;
@@ -183,7 +183,7 @@ void world_build_at_list(void) {
                 image_rect.h = 0x10;
                 buffer = g_world_menu_text_page_image;
                 world_clear_menu_render_buffer(buffer, 0x800);
-                g_world_menu_text_state.stride = entry->inner_width;
+                g_world_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->x[column], 0);
@@ -191,20 +191,20 @@ void world_build_at_list(void) {
                         g_world_menu_text_color = layout->text_colors[column][index];
                     }
                     if (g_world_menu_text_color == 4) {
-                        g_world_menu_text_state.color = 0x44444444;
+                        g_world_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->mode[column] == 0) {
                         world_menu_display_text_entry(
-                            layout->text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
+                            layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                     } else if (layout->mode[column] == 1) {
                         world_display_menu_number_entry(
-                            layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_world_menu_text_state.origin_x);
+                            layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     } else if (layout->mode[column] == 3) {
-                        world_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer,
-                            (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                        world_draw_menu_number_glyphs(
+                            layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     }
                 }
-                g_world_menu_text_state.color = 0;
+                g_world_menu_text_state.pen.color = 0;
                 g_world_menu_text_color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;

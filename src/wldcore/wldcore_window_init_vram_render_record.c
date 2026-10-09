@@ -7,10 +7,10 @@
 void wldcore_window_init_vram_render_record(
     s32 index, wldcore_window_render_bounds16_t bounds, wldcore_point32_t clut, s32 flags) {
     wldcore_window_render_bounds16_t* record_bounds;
-    wldcore_window_entry_52_rgb_t* rgb;
+    CVECTOR* rgb;
 
     g_wldcore_window_render_records[index].flags = (g_wldcore_window_render_records[index].flags & ~0x18) | flags;
-    *(wldcore_point32_t*)&g_wldcore_window_render_records[index].clut_x = clut;
+    g_wldcore_window_render_records[index].clut = clut;
     g_wldcore_window_render_records[index].tpage
         = GetTPage(0, 0, (s16)bounds.position.x, (s16)bounds.position.y) & 0xFFFF;
     record_bounds = &g_wldcore_window_render_records[index].bounds;
@@ -18,9 +18,9 @@ void wldcore_window_init_vram_render_record(
     record_bounds->position.y = (u8)bounds.position.y;
     record_bounds->dimensions.x = (s16)bounds.dimensions.x * 2;
     record_bounds->dimensions.y = bounds.dimensions.y;
-    rgb = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records[index].red;
-    rgb->red = 0x80;
-    rgb->green = 0x80;
-    rgb->blue = 0x80;
+    rgb = &g_wldcore_window_render_records[index].color;
+    rgb->r = 0x80;
+    rgb->g = 0x80;
+    rgb->b = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
 }

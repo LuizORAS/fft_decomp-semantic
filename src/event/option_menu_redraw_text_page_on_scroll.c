@@ -54,7 +54,7 @@ void* option_menu_redraw_text_page_on_scroll(
     }
 
     battle_clear_menu_render_buffer(g_option_menu_render_buffer, (menu->inner_width * menu->inner_height) / 2);
-    option_menu_draw_text_columns(menu, first_row, (void*)g_option_menu_render_buffer);
+    option_menu_draw_text_columns(menu, first_row, g_option_menu_render_buffer);
     *render_pending = 0;
     LoadImage(&source, (u32*)g_option_menu_render_buffer);
     battle_copy_bytes(&clear_strip, &source, sizeof(RECT));

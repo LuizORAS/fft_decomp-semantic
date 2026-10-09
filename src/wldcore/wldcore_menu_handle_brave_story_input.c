@@ -158,10 +158,10 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
 
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
-            g_wldcore_window_records[level->main_window].y -= 0x10;
+            g_wldcore_window_records[level->main_window].position.y -= 0x10;
             level->selected_entry = level->selected_entry - 1;
         } else {
-            g_wldcore_window_records[level->main_window].y -= (level->entry_count - 1) * -16;
+            g_wldcore_window_records[level->main_window].position.y -= (level->entry_count - 1) * -16;
             level->selected_entry = level->entry_count - 1;
         }
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
@@ -169,10 +169,10 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
 
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
-            g_wldcore_window_records[level->main_window].y += 0x10;
+            g_wldcore_window_records[level->main_window].position.y += 0x10;
             level->selected_entry = level->selected_entry + 1;
         } else {
-            g_wldcore_window_records[level->main_window].y -= (level->entry_count - 1) * 16;
+            g_wldcore_window_records[level->main_window].position.y -= (level->entry_count - 1) * 16;
             level->selected_entry = 0;
         }
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);

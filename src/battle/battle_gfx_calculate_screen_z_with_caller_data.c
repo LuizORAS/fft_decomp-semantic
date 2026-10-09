@@ -1,7 +1,6 @@
 #include "fft/battle.h"
 
-s32 battle_gfx_calculate_screen_z_with_caller_data(
-    battle_unit_misc_data_t* unit, const battle_screen_coords_t* coords) {
+s32 battle_gfx_calculate_screen_z_with_caller_data(battle_unit_misc_data_t* unit, const SVECTOR* coords) {
     battle_unit_misc_data_t* mount;
     s32 adjusted_screen_z;
     s32 screen_z;

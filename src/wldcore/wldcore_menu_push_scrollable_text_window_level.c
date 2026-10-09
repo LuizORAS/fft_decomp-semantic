@@ -51,9 +51,9 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
 
         g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags |= 0x10;
         depth = g_wldcore_menu_stack_depth;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].x
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].position.x
             = g_wldcore_scrollable_text_window.base.x + 3;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].y
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].position.y
             = g_wldcore_scrollable_text_window.base.y - 2;
         g_main_system_flags |= 0x08002000;
         g_wldcore_menu_stack_depth = depth + 1;

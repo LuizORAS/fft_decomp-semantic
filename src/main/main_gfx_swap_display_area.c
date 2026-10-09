@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
-int main_gfx_swap_display_area(u32 otag) {
+int main_gfx_swap_display_area(u32* otag) {
     /* Matching constraint: the retail function reserves one unused RECT. */
     RECT matching_stack_space;
     int elapsed;

@@ -65,17 +65,13 @@ void world_menu_ability_panel_thread(void) {
         screen = &base[frame & 1];
         if (state->generic_monster == 0) {
             for (i = 0; i < 19; i++) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_0[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
         } else {
             for (i = 0; i < 19; i++) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_1[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -91,7 +87,7 @@ void world_menu_ability_panel_thread(void) {
            explicit one lengthens i's live range enough to lose it $s1. */
         if (frame == 0 || thread->redraw_request == 1) {
             world_clear_menu_render_buffer(text, 0xc80);
-            g_world_menu_text_state.stride = 0x50;
+            g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 id = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -99,18 +95,18 @@ void world_menu_ability_panel_thread(void) {
                     id = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_world_menu_text_state.origin_y += 0x10;
+                    g_world_menu_text_state.pen.rect.y += 0x10;
                 } else {
-                    world_menu_display_text_entry(id, text, &g_world_menu_text_state.origin_x);
-                    g_world_menu_text_state.origin_y += 0x10;
+                    world_menu_display_text_entry(id, text, &g_world_menu_text_state.pen);
+                    g_world_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if ((u16)state->ability_ids[i] != BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                     world_menu_display_text_entry(
-                        state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE, text, &g_world_menu_text_state.origin_x);
+                        state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE, text, &g_world_menu_text_state.pen);
                 }
-                g_world_menu_text_state.origin_y += 0x10;
+                g_world_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(upload, (u32*)text);
             thread->redraw_request = 0;
@@ -128,7 +124,7 @@ void world_menu_ability_panel_thread(void) {
         offset[1] = thread->y;
         world_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_world_ability_panel_draw_area, frame, (u16)g_world_frame_arg, offset);
-        world_menu_configure_status_panel_primitive_colors((battle_menu_status_panel_primitives_t*)screen, thread);
+        world_menu_configure_status_panel_primitive_colors(screen, thread);
         world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         world_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
@@ -143,7 +139,7 @@ void world_menu_ability_panel_thread(void) {
         for (i = 4; i < 8; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->numeric_frame);
+        world_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         world_thread_yield();

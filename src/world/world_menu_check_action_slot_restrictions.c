@@ -24,7 +24,7 @@
 void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit) {
     s32 mode;
     s32 message;
-    void* parameter;
+    world_menu_entry_t* parameter;
     battle_stats_t* unit;
 
     g_world_active_menu = menu;
@@ -70,7 +70,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
             [g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index]][0];
         if (mode < 0) {
             g_world_menu_action_slot_row_actions = mode;
-            world_menu_confirm_action_silently((s32)parameter);
+            world_menu_confirm_action_silently(parameter);
             world_thread_exit_current();
         }
     }

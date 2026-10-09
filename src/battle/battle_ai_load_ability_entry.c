@@ -13,8 +13,8 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     ability_secondary_data_t* secondary;
     s32 value;
 
-    battle_ai_clear_words((s32*)&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
-    battle_ai_clear_words((s32*)&ai->current_action.calculator_type, 4);
+    battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
+    battle_ai_clear_words(&ai->current_action.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
     ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->id.packed_id & 0x3ff;
     unit_id = (s16)entry->id.packed_id >> 10;
@@ -110,7 +110,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     }
     }
     battle_ai_transfer_halfword_values(
-        (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
+        &ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
     if ((u32)(menu - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2)
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
     ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;

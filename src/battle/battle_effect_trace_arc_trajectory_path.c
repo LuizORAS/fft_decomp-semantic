@@ -17,7 +17,7 @@
  * zero-step loop without ever writing it.
  */
 s32 battle_effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc, void* obstacles) {
+    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, void* obstacles) {
     SVECTOR rotation;
     SVECTOR step;
     VECTOR position;
@@ -33,12 +33,12 @@ s32 battle_effect_trace_arc_trajectory_path(
     s32 i;
 
     angle = ratan2(*height, ONE);
-    arc->pitch = angle;
+    arc->vz = angle;
     g_battle_effect_arctan_angle_mod = angle;
     progress = 0;
     /* The definition returns void; this site consumes the returned impulse. */
     velocity = battle_effect_calculate_launch_velocity() >> 8;
-    advance = (rcos(arc->pitch) * velocity) >> 4;
+    advance = (rcos(arc->vz) * velocity) >> 4;
     if (advance != 0) {
         steps = ((advance + *distance) - 1) / advance;
     } else {
@@ -48,7 +48,7 @@ s32 battle_effect_trace_arc_trajectory_path(
 
     rotation.vz = 0;
     rotation.vx = 0;
-    rotation.vy = arc->yaw;
+    rotation.vy = arc->vy;
     RotMatrix(&rotation, &matrix);
     position.vx = matrix.t[0] = origin->vx;
     i = 0;

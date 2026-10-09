@@ -69,10 +69,9 @@ void option_build_at_list(void) {
         g_option_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_option_at_list_pages[i].icons.icons[1] = &icons1[i];
         g_option_at_list_pages[i].icons.icons[2] = &icons2[i];
-        battle_menu_build_window_sprites((battle_menu_window_header_t*)&image_rect, (battle_menu_window_spec_t*)entry,
-            &g_option_at_list_pages[i].icons);
+        battle_menu_build_window_sprites(&image_rect, entry, &g_option_at_list_pages[i].icons);
     }
-    battle_gfx_init_scaled_draw_area_packets((u8*)&page->draw_areas);
+    battle_gfx_init_scaled_draw_area_packets(&page->draw_areas);
     SetDrawMode(
         &page->text_mode, 1, 0, GetTPage(0, 0, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
@@ -94,8 +93,8 @@ void option_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((POLY_FT4*)&page->frame, (const battle_image_location_t*)entry,
-        (const battle_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading(&page->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -116,7 +115,7 @@ void option_build_at_list(void) {
     battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
     option_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
-    image_rect.w = g_menu_text_state.stride >> 2;
+    image_rect.w = g_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
     clear.h = 2;
     clear.x = image_rect.x;
@@ -185,7 +184,7 @@ void option_build_at_list(void) {
                     image_rect.h = 0x10;
                     buffer = g_option_menu_render_buffer;
                     battle_clear_menu_render_buffer(buffer, 0x800);
-                    g_menu_text_state.stride = entry->inner_width;
+                    g_menu_text_state.pen.stride = entry->inner_width;
                     for (column = 0; column < 3; column++) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
@@ -193,20 +192,20 @@ void option_build_at_list(void) {
                             g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                         }
                         if (g_battle_menu_text_palette_offset == 4) {
-                            g_menu_text_state.color = 0x44444444;
+                            g_menu_text_state.pen.color = 0x44444444;
                         }
                         if (layout->mode[column] == 0) {
                             battle_menu_display_text_entry(
-                                layout->text_ids[column][index], buffer, &g_menu_text_state.origin_x);
+                                layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                         } else if (layout->mode[column] == 1) {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_menu_text_state.origin_x);
+                                layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
                         } else if (layout->mode[column] == 3) {
-                            battle_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer,
-                                (battle_rect_t*)&g_menu_text_state.origin_x);
+                            battle_draw_menu_number_glyphs(
+                                layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                         }
                     }
-                    g_menu_text_state.color = 0;
+                    g_menu_text_state.pen.color = 0;
                     g_battle_menu_text_palette_offset = 0;
                     LoadImage(&image_rect, (u32*)buffer);
                     clear.h = 2;

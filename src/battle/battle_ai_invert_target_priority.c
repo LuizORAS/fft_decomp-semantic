@@ -25,10 +25,10 @@ void battle_ai_invert_target_priority(void) {
 
     ai = &g_battle_ai_data_base;
     scenario = g_battle_ai_data_base.movement_scenario;
-    g_battle_ai_data_base.inverted_priority_action.rank_byte = 0;
-    g_battle_ai_data_base.inverted_priority_action.base_hit_percent = BATTLE_AI_BASE_HIT_PERCENT;
+    g_battle_ai_data_base.inverted_priority_action.rank.rank_byte = 0;
+    g_battle_ai_data_base.inverted_priority_action.rank.base_hit_percent = BATTLE_AI_BASE_HIT_PERCENT;
     coords = &ai->candidate_coords[scenario];
     level_row = (u8*)ai + coords->bytes.elevation * BATTLE_AI_TILE_LEVEL_BYTE_STRIDE + BATTLE_AI_TILE_PRIORITY_OFFSET;
     row = coords->bytes.y * BATTLE_AI_TILE_ROW_BYTE_STRIDE + (u32)level_row;
-    g_battle_ai_data_base.inverted_priority_action.priority = -*(u16*)(coords->bytes.x * 2 + row);
+    g_battle_ai_data_base.inverted_priority_action.rank.priority = -*(u16*)(coords->bytes.x * 2 + row);
 }

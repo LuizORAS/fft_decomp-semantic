@@ -46,7 +46,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         clut_position.y = image.cy;
         wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
         g_wldcore_window_render_records[render].priority = 0xA;
-        base = (wldcore_point32_t*)&g_wldcore_window_render_records[render].base_x;
+        base = &g_wldcore_window_render_records[render].base;
         base->x = -0x74;
         base->y = -0x22;
         g_wldcore_window_render_records[render].flags = (g_wldcore_window_render_records[render].flags & ~0x10) | 0x100;

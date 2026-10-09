@@ -36,7 +36,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     s32 distance;
     s32 result;
 
-    main_util_copy_action_data((u8*)source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     unit_id = action.unit_id;
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;

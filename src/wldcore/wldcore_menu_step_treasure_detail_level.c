@@ -54,7 +54,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
         g_wldcore_window_render_records[render].priority = 0xA;
         g_wldcore_window_render_records[render].flags &= ~0x110;
-        base = (wldcore_point32_t*)&g_wldcore_window_render_records[render].base_x;
+        base = &g_wldcore_window_render_records[render].base;
         base->x = -0x3E - image.pw;
         base->y = 0x10 - (image.ph >> 1);
         wldcore_gfx_step_dissolve_image_upload(&image, 0);

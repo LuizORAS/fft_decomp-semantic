@@ -11,8 +11,6 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     u8 changed;
     s32 message_idle;
     battle_stats_t* stats;
-    s16* saved;
-    u8* equipment;
 
     if (g_equip_menu_screen_state == 0) {
         equip_menu_init_screen(unit);
@@ -49,15 +47,10 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     if (g_equip_menu_screen_state != 0xFF) {
         return result;
     }
-    i = 0;
-    saved = g_equip_unit_initial_equipment;
-    equipment = (u8*)g_equip_unit_data[0];
-    for (; i < 5; i++) {
-        if (*(u16*)(equipment + 0x54) != *saved) {
+    for (i = 0; i < 5; i++) {
+        if (g_equip_unit_data[0]->equipment[i] != g_equip_unit_initial_equipment[i]) {
             break;
         }
-        saved++;
-        equipment += 2;
     }
     stats = battle_unit_get_stats_from_battle_id(unit);
     if (stats->max_hp < stats->hp) {

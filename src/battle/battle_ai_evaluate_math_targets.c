@@ -51,7 +51,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);
             } while ((s32)special < (s32)&special_abilities.ability_ids[10]);
             battle_ai_transfer_halfword_values(
-                (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ai->math_ability_id].ai_flags.halfwords, 4);
+                &ai->considered_ability.ai_flags, g_main_ability_data[ai->math_ability_id].ai_flags.halfwords, 4);
             battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
                 g_main_status_infliction_data[g_main_ability_range_data[ai->math_ability_id].status_infliction_id]
                     .statuses,

@@ -1,17 +1,9 @@
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
 
-/* The record types mirror the field widths and offsets used by the
- * instruction-identical ATTACK implementation and REQUIRE target listing;
- * they live in fft/event_require.h so the callers share one spelling. */
-typedef char require_texture_page_position_size_must_be_4[sizeof(require_gfx_texture_page_position_t) == 4 ? 1 : -1];
-typedef char require_point_size_must_be_4[sizeof(require_gfx_point_t) == 4 ? 1 : -1];
-typedef char require_sprite_rect_size_must_be_0x0c[sizeof(main_zodiac_sprite_frame_t) == 0x0c ? 1 : -1];
-
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
-void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, require_gfx_texture_page_position_t* texture_page,
-    require_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, require_gfx_point_t* scale,
-    POLY_FT4* base) {
+void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
+    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;
@@ -41,12 +33,12 @@ void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, require_gfx_textur
     poly->v2 = sprite_rect->v + sprite_rect->height;
     poly->u3 = sprite_rect->u + sprite_rect->width;
     poly->v3 = sprite_rect->v + sprite_rect->height;
-    poly->x0 = position->x + dx + base->x0;
-    poly->y0 = position->y + dy + base->y0;
-    poly->x1 = position->x + dx + base->x0 + w;
-    poly->y1 = position->y + dy + base->y0;
-    poly->x2 = position->x + dx + base->x0;
-    poly->y2 = position->y + dy + base->y0 + h;
-    poly->x3 = position->x + dx + base->x0 + w;
-    poly->y3 = position->y + dy + base->y0 + h;
+    poly->x0 = position->x + dx + base->x;
+    poly->y0 = position->y + dy + base->y;
+    poly->x1 = position->x + dx + base->x + w;
+    poly->y1 = position->y + dy + base->y;
+    poly->x2 = position->x + dx + base->x;
+    poly->y2 = position->y + dy + base->y + h;
+    poly->x3 = position->x + dx + base->x + w;
+    poly->y3 = position->y + dy + base->y + h;
 }

@@ -8,7 +8,7 @@ void world_menu_draw_text_columns_2(world_menu_entry_t* entry, s32* row_offset, 
     s32 index;
 
     for (row = 0; row < layout->row_count; row++) {
-        g_world_menu_text_state.stride = entry->inner_width;
+        g_world_menu_text_state.pen.stride = entry->inner_width;
         for (column = 0; column < 3; column++) {
             index = row + *row_offset;
             if (layout->mode[column] == 2) {
@@ -21,22 +21,20 @@ void world_menu_draw_text_columns_2(world_menu_entry_t* entry, s32* row_offset, 
             if (layout->mode[column] != 2) {
                 g_world_menu_text_color = layout->text_colors[column][index];
             }
-            g_world_menu_text_state.color = 0;
+            g_world_menu_text_state.pen.color = 0;
             if (g_world_menu_text_color == 4) {
-                g_world_menu_text_state.color = 0x44444444;
+                g_world_menu_text_state.pen.color = 0x44444444;
             }
             if (layout->mode[column] == 0) {
-                world_menu_display_text_entry(
-                    layout->text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
+                world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == 1) {
                 world_display_menu_number_entry(
-                    layout->text_ids[column][index], 2, (s32)buffer, &g_world_menu_text_state.origin_x);
+                    layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == 3) {
-                world_draw_menu_number_glyphs(
-                    layout->text_ids[column][index], 2, buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                world_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             }
             g_world_menu_text_color = 0;
-            g_world_menu_text_state.color = 0;
+            g_world_menu_text_state.pen.color = 0;
         }
     }
 }

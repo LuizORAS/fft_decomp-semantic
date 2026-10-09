@@ -5,7 +5,7 @@
  *
  * Match each item by its low byte while preserving the full input halfword.
  */
-s32 world_item_sort_list_by_category_order(s32 list_index, world_item_list_entry_t* entries) {
+s32 world_item_sort_list_by_category_order(s32 list_index, s16* entries) {
     s16 filtered[140];
     u8* list;
     s32 count;
@@ -20,9 +20,9 @@ s32 world_item_sort_list_by_category_order(s32 list_index, world_item_list_entry
     }
     retained = 0;
     for (i = 0; i < count; i++) {
-        for (j = 0; entries[j].value != -1; j++) {
-            if (list[i] == entries[j].bytes.item_id) {
-                filtered[retained] = entries[j].value;
+        for (j = 0; entries[j] != -1; j++) {
+            if (list[i] == ((world_item_list_entry_t*)entries)[j].bytes.item_id) {
+                filtered[retained] = entries[j];
                 retained++;
                 break;
             }

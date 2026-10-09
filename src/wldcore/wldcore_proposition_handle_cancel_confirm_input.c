@@ -49,8 +49,8 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
         || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         choice = level->choice ^ 1;
         level->choice = choice;
-        g_wldcore_window_records[level->window].y
-            = g_wldcore_window_render_records[level->render_index].base_y - -(choice * 0x10 + 0xE);
+        g_wldcore_window_records[level->window].position.y
+            = g_wldcore_window_render_records[level->render_index].base.y - -(choice * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE)) {

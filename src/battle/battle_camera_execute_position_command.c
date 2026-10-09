@@ -12,7 +12,7 @@
 void battle_camera_execute_position_command(s32 flags, s32 target, s32 duration, VECTOR* offset) {
     VECTOR sum;
     VECTOR* coords;
-    battle_screen_coords_t* screen;
+    SVECTOR* screen;
     s32 i;
 
     switch (flags & 0x1e0) {
@@ -78,9 +78,9 @@ void battle_camera_execute_position_command(s32 flags, s32 target, s32 duration,
         for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
             if (g_battle_effect_coord_data.targets[i].target_type == 0) {
                 screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
-                sum.vx += screen->x;
-                sum.vy += screen->z;
-                sum.vz += screen->y;
+                sum.vx += screen->vx;
+                sum.vy += screen->vy;
+                sum.vz += screen->vz;
             }
         }
         sum.vx /= i;

@@ -44,7 +44,7 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     state->render_record_index = render_index;
     g_wldcore_window_render_records[render_index].flags |= 0x100;
     g_wldcore_window_render_records[state->render_record_index].priority = state->priority;
-    *(wldcore_point32_t*)&g_wldcore_window_render_records[state->render_record_index].base_x = state->base;
+    g_wldcore_window_render_records[state->render_record_index].base = state->base;
 
     padded_width = (state->text_width + 0x18) & 0xfffc;
     window_x = state->base.x + padded_width;
@@ -54,17 +54,17 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     } else {
         window_x -= 12;
     }
-    g_wldcore_window_records[state->left_window_index].x = window_x - 14;
-    g_wldcore_window_records[state->left_window_index].y = window_y - 22;
+    g_wldcore_window_records[state->left_window_index].position.x = window_x - 14;
+    g_wldcore_window_records[state->left_window_index].position.y = window_y - 22;
     lower_y = window_y - 26;
-    g_wldcore_window_records[state->middle_window_index].x = window_x;
+    g_wldcore_window_records[state->middle_window_index].position.x = window_x;
     do {
-        g_wldcore_window_records[state->middle_window_index].y = state->base.y + 8;
+        g_wldcore_window_records[state->middle_window_index].position.y = state->base.y + 8;
     } while (0);
-    g_wldcore_window_records[state->right_window_index].x = window_x;
-    g_wldcore_window_records[state->right_window_index].y = lower_y;
-    g_wldcore_window_records[state->lower_window_index].x = window_x;
-    g_wldcore_window_records[state->lower_window_index].y = lower_y;
+    g_wldcore_window_records[state->right_window_index].position.x = window_x;
+    g_wldcore_window_records[state->right_window_index].position.y = lower_y;
+    g_wldcore_window_records[state->lower_window_index].position.x = window_x;
+    g_wldcore_window_records[state->lower_window_index].position.y = lower_y;
 
     world_text_measure(&text_metrics[0], &text_metrics[1], world_text_find_entry(state->text_id));
     rows = text_metrics[1];

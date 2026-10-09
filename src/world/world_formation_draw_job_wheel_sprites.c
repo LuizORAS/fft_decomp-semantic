@@ -32,7 +32,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     s32 scaled_y;
     s32 theta;
     s16 job;
-    s8* rgb;
+    u8* rgb;
     s16 next;
 
     if (g_world_job_wheel_job_count < 2) {
@@ -71,7 +71,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
         if (g_world_job_wheel_mastered_jobs[job] != 0) {
             world_menu_select_stat_gauge_level(sprite.x, sprite.y, ot_index, g_world_job_wheel_animation_counter);
         }
-        world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, (s32)rgb, ot_index);
+        world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, rgb, ot_index);
         if (job == 0) {
             next = g_world_job_wheel_job_count - 1;
         } else {

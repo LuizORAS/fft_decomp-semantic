@@ -38,8 +38,8 @@ void battle_menu_selected_tile_info_display_thread(void) {
     battle_menu_init_sprite_array(page->sprites, 2, 0x7CBC);
     page->sprites[1].clut = 0x7D7C;
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_image_loading((POLY_FT4*)&page->sprites[i], &g_battle_menu_texture_location,
-            (const battle_image_location_t*)g_battle_tile_info_image_location, &g_battle_tile_info_image_params[i]);
+        battle_gfx_init_image_loading(&page->sprites[i], &g_battle_menu_texture_location,
+            &g_battle_tile_info_image_location, &g_battle_tile_info_image_params[i]);
     }
     battle_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
     battle_copy_bytes(
@@ -67,11 +67,11 @@ void battle_menu_selected_tile_info_display_thread(void) {
         }
         if (g_battle_map_selected_tile_data.depth != 0) {
             battle_clear_menu_render_buffer(buffer, 0x100);
-            stride = &g_menu_text_state.stride;
+            stride = &g_menu_text_state.pen.stride;
             *stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);
             battle_draw_menu_number_glyphs(
-                g_battle_map_selected_tile_data.depth, 1, buffer, (battle_rect_t*)((s16*)stride - 4));
+                g_battle_map_selected_tile_data.depth, 1, buffer, (world_glyph_blit_t*)((s16*)stride - 4));
             if (*(u16*)&g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;

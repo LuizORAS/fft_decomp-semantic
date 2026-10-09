@@ -1,13 +1,13 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Records the slot that was just opened (handles[0], 0x8004d970). The
+/* Records the slot that was just opened (handles.loading_slot, 0x8004d970). The
  * do/while(0) wrapper is load-bearing: the retail allocation (slot in s2,
  * the slot pointer in s3) needs this use of `slot` weighted as loop-nested,
  * which is what a statement macro of this shape produces. */
 #define set_opened_music_slot(slot)                                                                                    \
     do {                                                                                                               \
-        g_main_sound_music.slots.handles[0] = slot;                                                                    \
+        g_main_sound_music.slots.handles.loading_slot = slot;                                                          \
     } while (0)
 
 /* Loads scenario music file `scenario` into music slot `slot` (1-based) if

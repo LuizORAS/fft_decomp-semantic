@@ -77,7 +77,7 @@ void world_shop_run_equip_candidate_step(void) {
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_unit_pointers[20]->equipment);
                 g_world_item_preview_stat_detail.two_hands
-                    = world_unit_is_two_handing_weapon((struct weapon_pair*)g_world_item_preview_stat_detail.equipment,
+                    = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.equipment,
                         world_ability_has_two_hands(g_world_formation_selected_unit_index));
                 g_world_shop_equip_candidate_preview_visible = 1;
                 g_world_item_preview_stat_detail.equipment[slot] = g_world_shop_equip_candidate_item | 0x8000;

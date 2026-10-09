@@ -1,7 +1,7 @@
 #include "fft/event_attack.h"
 
 void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction) {
+    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction) {
     RECT second_rect;
     RECT first_rect;
     s32 i;
@@ -11,14 +11,14 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {
-        poly[i].x0 = g_attack_gfx_portrait_origin.coordinates[0] + 2;
-        poly[i].y0 = g_attack_gfx_portrait_origin.coordinates[1] + 2;
-        poly[i].x1 = g_attack_gfx_portrait_origin.coordinates[0] + 0x21;
-        poly[i].y1 = g_attack_gfx_portrait_origin.coordinates[1] + 2;
-        poly[i].x2 = g_attack_gfx_portrait_origin.coordinates[0] + 2;
-        poly[i].y2 = g_attack_gfx_portrait_origin.coordinates[1] + 0x32;
-        poly[i].x3 = g_attack_gfx_portrait_origin.coordinates[0] + 0x21;
-        poly[i].y3 = g_attack_gfx_portrait_origin.coordinates[1] + 0x32;
+        poly[i].x0 = g_attack_gfx_portrait_origin.x + 2;
+        poly[i].y0 = g_attack_gfx_portrait_origin.y + 2;
+        poly[i].x1 = g_attack_gfx_portrait_origin.x + 0x21;
+        poly[i].y1 = g_attack_gfx_portrait_origin.y + 2;
+        poly[i].x2 = g_attack_gfx_portrait_origin.x + 2;
+        poly[i].y2 = g_attack_gfx_portrait_origin.y + 0x32;
+        poly[i].x3 = g_attack_gfx_portrait_origin.x + 0x21;
+        poly[i].y3 = g_attack_gfx_portrait_origin.y + 0x32;
     }
 
     if (*transition == 0) {
@@ -37,18 +37,18 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         attack_gfx_build_portrait_poly_ft4(*first_portrait, poly);
         attack_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)image);
-        StoreImage(&second_rect, (u32*)(image + 0x20));
+        StoreImage(&second_rect, (u32*)(image + 16));
         *transition += g_battle_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
-                ((u16*)image)[i] |= 0x8000;
+                image[i] |= 0x8000;
             }
             for (i = 0; i < 0x10; i++) {
-                ((u16*)image)[i + 16] |= 0x8000;
+                image[i + 16] |= 0x8000;
             }
             LoadImage(&first_rect, (u32*)image);
-            LoadImage(&second_rect, (u32*)(image + 0x20));
+            LoadImage(&second_rect, (u32*)(image + 16));
         }
 
         i = *transition - 4;

@@ -3,8 +3,8 @@
 
 /* Draw the formation units and the backdrop or egg decoration for each
  * visible slot. */
-void world_formation_draw_unit_slots(world_menu_point_t* positions, s32 shade) {
-    s8 sprite_rgb[3];
+void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
+    u8 sprite_rgb[3];
     u8 backdrop_rgb[3];
     s32 i;
     s32 ot_index;

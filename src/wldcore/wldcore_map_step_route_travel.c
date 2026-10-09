@@ -85,10 +85,10 @@ void wldcore_map_step_route_travel(void) {
                 .flags ^= 0x10;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .x = g_wldcore_location_view.point.x;
+                .position.x = g_wldcore_location_view.point.x;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .y = g_wldcore_location_view.point.y - 4;
+                .position.y = g_wldcore_location_view.point.y - 4;
             g_main_system_flags &= ~0x2000;
             g_wldcore_location_entry_state.arrival_location = g_wldcore_location_view.location_id + 1;
             wldcore_wait_for_file_load();

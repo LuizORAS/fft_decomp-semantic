@@ -15,7 +15,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
     u8 flags;
     u16 ability_id;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     mode = 0;
     if (action.unit_id >= 21) {
         return -1;

@@ -10,8 +10,5 @@ void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx) {
 
     p = &g_bunit_gfx_context->draw_areas[g_bunit_gfx_draw_area_count++];
     SetDrawArea(p, rect);
-    {
-        bunit_gfx_context_t* db = g_bunit_gfx_context;
-        addPrim(&db->otag[idx], p);
-    }
+    addPrim(&g_bunit_gfx_context->otag[idx], p);
 }

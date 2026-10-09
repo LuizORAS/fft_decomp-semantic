@@ -25,7 +25,7 @@ s32 equip_menu_update_equipment(void) {
         g_equip_unit_banner_enabled = 0;
         g_equip_item_numeric_panel_params = 0;
         g_equip_item_numeric_panel_y = -0x49;
-        equip_gfx_load_image_and_wait(&g_equip_status_label_image_rect, (u32*)g_equip_status_label_image);
+        equip_gfx_load_image_and_wait(&g_equip_status_label_image_rect, g_equip_status_label_image);
     }
     if (g_equip_menu_substate == -1) {
         equip_panel_toggle_item_numeric_thread(0);
@@ -61,7 +61,7 @@ s32 equip_menu_update_equipment(void) {
     if (g_battle_menu_input_lock_mode != 0 || battle_thread_is_running(2) != 0) {
         override = 1;
     }
-    equip_menu_dispatch_with_override((s32)g_equip_equipment_render_commands, input, override);
+    equip_menu_dispatch_with_override(g_equip_equipment_render_commands, input, override);
     equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_battle_menu_input_lock_mode);
     if (g_equip_menu_list_entry_count != 0) {
         item_id = g_equip_item_list_entries[g_equip_menu_selected_list_index];
@@ -69,7 +69,7 @@ s32 equip_menu_update_equipment(void) {
             equip_menu_draw_weapon_hand_icons(item_id);
         }
         if ((u16)(g_equip_item_list_entries[g_equip_menu_selected_list_index] - 0x90) < 0x40) {
-            equip_menu_dispatch_with_override((s32)g_equip_armor_bonus_render_commands, 0, 0);
+            equip_menu_dispatch_with_override(g_equip_armor_bonus_render_commands, 0, 0);
         }
         equip_menu_draw_item_status_list(g_equip_item_list_entries[g_equip_menu_selected_list_index]);
     }

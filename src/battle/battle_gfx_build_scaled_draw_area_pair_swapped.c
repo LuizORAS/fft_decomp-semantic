@@ -2,16 +2,13 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Callers pass unrelated pointer types. Keeping the packet view at each use
- * avoids the extra copies that a typed local adds to the target code. */
-#define PAIR ((world_gfx_scaled_draw_area_pair_t*)packets)
-
 /*
  * Build a double-buffered draw-area pair whose rectangle is cropped to a
  * percentage of `geometry` about its centre. Sources at x < 0x80 are moved
  * to the right-hand page (x + 0x80, y + 0x78); others are moved left.
  */
-void battle_gfx_build_scaled_draw_area_pair_swapped(void* packets, void* geometry, s32 step, s32 flag) {
+void battle_gfx_build_scaled_draw_area_pair_swapped(
+    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag) {
     s32 percent;
     u16 width;
     u16 height;
@@ -24,27 +21,27 @@ void battle_gfx_build_scaled_draw_area_pair_swapped(void* packets, void* geometr
         step = 11;
     }
     percent = g_battle_menu_zoom_percentages[step];
-    battle_copy_bytes(&PAIR->rects[0], geometry, 8);
-    if (PAIR->rects[0].x < 0x80) {
-        PAIR->rects[0].x += 0x80;
-        PAIR->rects[0].y += 0x78;
+    battle_copy_bytes(&packets->rects[0], geometry, 8);
+    if (packets->rects[0].x < 0x80) {
+        packets->rects[0].x += 0x80;
+        packets->rects[0].y += 0x78;
     } else {
-        PAIR->rects[0].x -= 0x80;
+        packets->rects[0].x -= 0x80;
     }
-    width = PAIR->rects[0].w;
-    height = PAIR->rects[0].h;
+    width = packets->rects[0].w;
+    height = packets->rects[0].h;
     offset = ((s16)width * percent) / 200;
-    PAIR->rects[0].x = (s16)width / 2 + PAIR->rects[0].x - offset;
+    packets->rects[0].x = (s16)width / 2 + packets->rects[0].x - offset;
     offset = ((s16)height * percent) / 200;
-    PAIR->rects[0].y = (s16)height / 2 + PAIR->rects[0].y - offset;
-    PAIR->rects[0].w = (PAIR->rects[0].w * percent) / 100;
-    PAIR->rects[0].h = (PAIR->rects[0].h * percent) / 100;
+    packets->rects[0].y = (s16)height / 2 + packets->rects[0].y - offset;
+    packets->rects[0].w = (packets->rects[0].w * percent) / 100;
+    packets->rects[0].h = (packets->rects[0].h * percent) / 100;
     if (flag != 0) {
-        PAIR->rects[1].y = 0;
+        packets->rects[1].y = 0;
     } else {
-        PAIR->rects[1].y = 0xF0;
-        PAIR->rects[0].y += 0xF0;
+        packets->rects[1].y = 0xF0;
+        packets->rects[0].y += 0xF0;
     }
-    SetDrawArea(&PAIR->areas[0], &PAIR->rects[0]);
-    SetDrawArea(&PAIR->areas[1], &PAIR->rects[1]);
+    SetDrawArea(&packets->areas[0], &packets->rects[0]);
+    SetDrawArea(&packets->areas[1], &packets->rects[1]);
 }

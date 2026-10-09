@@ -29,7 +29,7 @@ s32 battle_ai_choose_status_action(void) {
             ai->action_selection_phase = 0;
             return -1;
         }
-        battle_ai_clear_words((s32*)ai->tile_target_distance, sizeof(ai->tile_target_distance));
+        battle_ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
         battle_ai_select_destination(255, BATTLE_AI_DESTINATION_DISTANCE_FIRST);
         coords = ai->candidate_coords[0];
         ai->selected_action.act_before_move = 0;

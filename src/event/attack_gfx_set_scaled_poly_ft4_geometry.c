@@ -1,8 +1,9 @@
 #include "fft/event_attack.h"
+#include "psx/libgpu.h"
 
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
-void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, attack_gfx_texture_page_position_t* texture_page,
-    attack_gfx_point_t* position, main_zodiac_sprite_frame_t* sprite_rect, attack_gfx_point_t* scale, POLY_FT4* base) {
+void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
+    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;
@@ -23,7 +24,7 @@ void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, attack_gfx_texture_
         h = -h;
     }
 
-    poly->tpage = GetTPage(0, 0, texture_page->x, texture_page->y & 0xF00);
+    poly->tpage = GetTPage(0, 0, texture_page->x, texture_page->y & 0xf00);
     poly->u0 = sprite_rect->u;
     poly->v0 = sprite_rect->v;
     poly->u1 = sprite_rect->u + sprite_rect->width;
@@ -32,12 +33,12 @@ void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, attack_gfx_texture_
     poly->v2 = sprite_rect->v + sprite_rect->height;
     poly->u3 = sprite_rect->u + sprite_rect->width;
     poly->v3 = sprite_rect->v + sprite_rect->height;
-    poly->x0 = position->x + dx + base->x0;
-    poly->y0 = position->y + dy + base->y0;
-    poly->x1 = position->x + dx + base->x0 + w;
-    poly->y1 = position->y + dy + base->y0;
-    poly->x2 = position->x + dx + base->x0;
-    poly->y2 = position->y + dy + base->y0 + h;
-    poly->x3 = position->x + dx + base->x0 + w;
-    poly->y3 = position->y + dy + base->y0 + h;
+    poly->x0 = position->x + dx + base->x;
+    poly->y0 = position->y + dy + base->y;
+    poly->x1 = position->x + dx + base->x + w;
+    poly->y1 = position->y + dy + base->y;
+    poly->x2 = position->x + dx + base->x;
+    poly->y2 = position->y + dy + base->y + h;
+    poly->x3 = position->x + dx + base->x + w;
+    poly->y3 = position->y + dy + base->y + h;
 }

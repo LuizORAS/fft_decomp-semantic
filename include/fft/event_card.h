@@ -71,16 +71,6 @@ s32 card_file_count_free_blocks(const card_directory_entry_t* entries, s32 entry
 s32 card_file_enumerate_saves(card_directory_entry_t* entries, s32 all_files);
 
 /* gfx */
-/* The primitive-pool prefix of card_graphics_context_t that
- * card_gfx_init_primitive_lists resets: the polygon and tile pointers sit at
- * the same 0x10/0x3c offsets in both views. */
-typedef struct card_primitive_lists {
-    u8 _unused_00[0x10];
-    POLY_FT4* polygons;
-    u8 _unused_14[0x28];
-    TILE* tiles;
-} card_primitive_lists_t;
-
 /*
  * CARD.OUT's double-buffered graphics context. g_card_gfx_context_base
  * (0x801d92a8) points at the two-element array and g_card_gfx_context
@@ -136,7 +126,7 @@ extern u8 g_card_gfx_scaled_sprite_count;
 /* Double-buffered ZODIAC sprite chains (0x4b0 bytes each). */
 extern POLY_FT4 g_card_gfx_scaled_sprite_primitive_buffers[2][30];
 extern point16_t g_card_gfx_scaled_sprite_scale[];
-extern point16_t g_card_gfx_scaled_sprite_texture_page;
+extern world_image_location_t g_card_gfx_scaled_sprite_texture_page;
 extern main_zodiac_sprite_frame_t g_card_gfx_scaled_sprite_uv_rects[];
 extern u16 g_card_gfx_texture_page;
 extern u16 g_card_gfx_tile_count;
@@ -149,7 +139,7 @@ extern u16 g_card_gfx_poly_ft4_capacity;
 extern u16 g_card_gfx_poly_ft4_count;
 extern u32* g_card_gfx_render_otag;
 extern u16 g_card_gfx_tile_capacity;
-void card_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly);
+void card_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void card_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
@@ -159,13 +149,14 @@ s32 card_gfx_get_fade_state(void);
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index);
 void card_gfx_set_otag_index(s32 value);
 
-void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const s16* offset);
+void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
+    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
+    const main_zodiac_draw_offset_t* offset);
 
 void card_gfx_set_render_otag(u32* otag);
 void card_gfx_start_decreasing_fade(void);
 void card_gfx_start_increasing_fade(void);
-void card_gfx_store_image_and_wait(RECT* rect, u32* data);
+void card_gfx_store_image_and_wait(RECT* rect, void* data);
 void card_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag);
 s32 card_gfx_update_decreasing_fade(void);
 s32 card_gfx_update_increasing_fade(void);
@@ -180,8 +171,8 @@ void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 u
     s32 unused_12, s32 unused_13, s32 unused_14, s32 unused_15, TILE* tiles, s32 unused_17, s32 unused_18,
     s32 unused_19, s32 unused_20, s32 unused_21, s32 unused_22, s32 unused_23, s32 unused_24);
 
-void card_gfx_init_primitive_lists(card_primitive_lists_t* lists);
-void card_gfx_load_image_and_wait(RECT* rect, u32* data);
+void card_gfx_init_primitive_lists(card_graphics_context_t* lists);
+void card_gfx_load_image_and_wait(RECT* rect, void* data);
 
 /* input */
 extern void* g_card_input_controller;
@@ -198,6 +189,7 @@ extern u32 g_card_input_secondary_repeat_counter;
 extern u32 g_card_previous_input;
 extern u8 g_card_input_activation_timer;
 
+extern zodiac_draw_context_t g_card_input_display_state;
 extern u32 g_card_input_primary_repeat;
 void card_input_clear_state(void);
 void card_input_update_controller(void);
@@ -276,7 +268,7 @@ extern s16 g_card_save_slot_row_y;
  * 0, tests it, and assigns g_card_save_no_data_prompt_descriptor into it. */
 extern world_menu_entry_t* g_card_save_slot_scan_prompt_descriptor;
 extern u8 g_card_save_slot_selection_thread_state;
-extern const u16 g_card_save_slot_text_row_ids[];
+extern s16 g_card_save_slot_text_row_ids[];
 extern u8 g_card_save_title_template[0x16];
 extern u8 g_card_save_write_failed;
 extern u8 g_card_save_write_phase;
@@ -347,13 +339,13 @@ extern u16 g_card_text_clut_3_mode1;
 extern u16 g_card_text_clut_0_mode1;
 extern u16 g_card_text_clut_0_mode0;
 
-void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds, s32 glyph_spacing,
-    s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_glyphs, s32 terminator, s32 unused_style);
+void card_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
+    u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 
 s32 card_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void card_text_render_id_rows_to_vram(void* glyph_data, const u16* text_ids, const RECT* destination, s32 flags);
+void card_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 void card_text_set_palette_and_metrics(s32 mode);
 const u8* card_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 

@@ -1,8 +1,13 @@
-#include "psx/types.h"
+#include "psx/libgpu.h"
 
-void equip_gfx_set_clut_rect_from_id(s16* rect, u32 clut_id) {
-    rect[0] = (clut_id & 0x3F) << 4;
-    rect[1] = (clut_id & 0xFFFF) >> 6;
-    rect[2] = 0x10;
-    rect[3] = 1;
+void equip_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id) {
+    s16 x;
+
+    x = (clut_id & 0x3f) << 4;
+    clut_id &= 0xffff;
+    clut_id = (u32)clut_id >> 6;
+    rect->x = x;
+    rect->w = 0x10;
+    rect->y = clut_id;
+    rect->h = 1;
 }

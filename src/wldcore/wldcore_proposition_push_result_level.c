@@ -87,7 +87,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x2A;
     if (world_thread_is_running(0xE) == 0) {

@@ -76,7 +76,7 @@ void battle_map_update_animations(void) {
         gradient.second.red = channels[1].red / 0x10000;
         gradient.second.green = channels[1].green / 0x10000;
         gradient.second.blue = channels[1].blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, (u8*)&gradient);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, &gradient);
         if (g_battle_map_background_gradient_transition.period >= 4) {
             if (++g_battle_map_background_gradient_transition.tick >= g_battle_map_background_gradient_transition.period
                 >> 2) {
@@ -129,7 +129,7 @@ void battle_map_update_animations(void) {
         gradient.first.red = red_level / 0x10000;
         gradient.first.green = g_battle_map_ambient_light_transition.channels.green / 0x10000;
         gradient.first.blue = g_battle_map_ambient_light_transition.channels.blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR, (u8*)&gradient);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR, &gradient);
         if (g_battle_map_ambient_light_transition.period >= 4) {
             if (++g_battle_map_ambient_light_transition.tick >= g_battle_map_ambient_light_transition.period >> 2) {
                 g_battle_map_ambient_light_transition.tick = 0;
@@ -176,7 +176,7 @@ void battle_map_update_animations(void) {
         gradient.first.red = red_level / 0x10000;
         gradient.first.green = g_battle_map_darkness_transition.channels.green / 0x10000;
         gradient.first.blue = g_battle_map_darkness_transition.channels.blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, (u8*)&gradient);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &gradient);
         if (g_battle_map_darkness_transition.period >= 4) {
             if (++g_battle_map_darkness_transition.tick >= g_battle_map_darkness_transition.period >> 2) {
                 g_battle_map_darkness_transition.tick = 0;

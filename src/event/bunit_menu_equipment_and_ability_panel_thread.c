@@ -12,7 +12,6 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     battle_menu_status_panel_buffer_t* screen;
     battle_menu_status_panel_buffer_t* base;
     battle_menu_status_panel_slot_state_t* state;
-    u8* cursor; /* Keep the screen base in a register; a SPRT* adds 0x1a0 before the loop. */
     s32 frame;
     s32 mode;
     s32 i;
@@ -25,7 +24,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     state = &g_bunit_editor_unit_fields;
     battle_menu_init_numeric_display_frame_primitives(&g_bunit_character_status_frame_rect, &screen->numeric_frame);
     bunit_gfx_init_menu_tile_and_line_primitives(screen);
-    bunit_gfx_init_scaled_draw_area_packets((u8*)&screen->portrait);
+    bunit_gfx_init_scaled_draw_area_packets(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += g_bunit_character_status_frame_rect.x;
         screen->tiles[i].y0 += g_bunit_character_status_frame_rect.y;
@@ -52,24 +51,20 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    (const battle_image_location_t*)&g_bunit_character_status_sprite_origin,
-                    &g_bunit_character_status_layout_mode0[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
+                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    (const battle_image_location_t*)&g_bunit_character_status_sprite_origin,
-                    &g_bunit_character_status_layout_mode1[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
+                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    (const battle_image_location_t*)&g_bunit_character_status_sprite_origin,
-                    &g_bunit_character_status_layout_mode2[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
+                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    (const battle_image_location_t*)&g_bunit_character_status_sprite_origin,
-                    &g_bunit_character_status_layout_mode3[i]);
+                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
+                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode3[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -82,19 +77,19 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_bunit_character_status_equipment_text_image, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
                     battle_menu_display_text_entry((s16)state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
-                        g_bunit_character_status_equipment_text_image, &g_menu_text_state.origin_x);
+                        g_bunit_character_status_equipment_text_image, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(
                 &g_bunit_character_status_equipment_text_rect, (u32*)g_bunit_character_status_equipment_text_image);
             battle_clear_menu_render_buffer(g_bunit_character_status_ability_text_image, 0xc80);
-            g_menu_text_state.stride = 0x50;
+            g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -102,39 +97,37 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_menu_text_state.origin_y += 0x10;
+                    g_menu_text_state.pen.rect.y += 0x10;
                 } else {
                     battle_menu_display_text_entry(
-                        mode, g_bunit_character_status_ability_text_image, &g_menu_text_state.origin_x);
-                    g_menu_text_state.origin_y += 0x10;
+                        mode, g_bunit_character_status_ability_text_image, &g_menu_text_state.pen);
+                    g_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
                     battle_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
-                        g_bunit_character_status_ability_text_image, &g_menu_text_state.origin_x);
+                        g_bunit_character_status_ability_text_image, &g_menu_text_state.pen);
                 }
-                g_menu_text_state.origin_y += 0x10;
+                g_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_bunit_character_status_ability_text_rect, (u32*)g_bunit_character_status_ability_text_image);
             thread->redraw_request = 0;
         }
-        i = 0;
-        cursor = (u8*)screen;
-        for (; i < 5; i++) {
-            battle_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i], g_bunit_panel_item_icon_texture,
-                (const battle_image_location_t*)&g_bunit_character_status_frame_rect,
-                &g_bunit_character_status_item_icon_layout[i]);
+        for (i = 0; i < 5; i++) {
+            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_bunit_panel_item_icon_texture,
+                &g_bunit_character_status_frame_rect, &g_bunit_character_status_item_icon_layout[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)state->equipment[i]);
             } else {
-                ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;
+                /* The target indexes the five icon sprites from their own base (i * 0x14 + 0x1a8), as a
+                 * separate array after the 19 label sprites would. */
+                (screen->sprites + i)[19].x0 = -0x200;
             }
-            cursor += sizeof(SPRT);
         }
         g_bunit_gfx_draw_offset_y = (u16)g_bunit_frame_arg != 0xf0 ? 0xf0 : 0;
-        bunit_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_bunit_character_status_draw_area_rect, frame,
-            (u16)g_bunit_frame_arg, (const s16*)thread);
+        bunit_gfx_build_scaled_draw_area_packets(
+            &screen->portrait, &g_bunit_character_status_draw_area_rect, frame, (u16)g_bunit_frame_arg, thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_bunit_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);

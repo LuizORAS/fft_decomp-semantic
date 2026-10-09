@@ -17,7 +17,7 @@ s32 bunit_menu_run_job_list(void) {
         g_bunit_menu_row_callbacks[13] = bunit_job_calculate_current_mastered;
         bunit_menu_get_selection_record(9, &out_a, &out_b, g_bunit_job_ids);
         bunit_menu_init_scrollable_list(
-            (s32)g_bunit_job_ids, out_a, out_b, (s32)g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
+            g_bunit_job_ids, out_a, out_b, g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
         g_bunit_job_list_initialized = 1;
     }
 
@@ -37,12 +37,12 @@ s32 bunit_menu_run_job_list(void) {
         bunit_job_calculate_current_total_jp(g_bunit_menu_list_selected_index);
         bunit_job_calculate_next_level_jp_requirement(g_bunit_menu_list_selected_index);
         bunit_menu_set_selection_record(
-            9, g_bunit_menu_list_selected_index, g_bunit_menu_scroll_base_index, (u16*)g_bunit_job_ids);
+            9, g_bunit_menu_list_selected_index, g_bunit_menu_scroll_base_index, g_bunit_job_ids);
         g_bunit_job_list_initialized = 0;
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return 1;
     }
     bunit_menu_dispatch_with_override(
-        (s32)&g_bunit_job_list_menu_script, g_bunit_menu_input_active_mask, g_battle_menu_input_lock_mode);
+        g_bunit_job_list_menu_script, g_bunit_menu_input_active_mask, g_battle_menu_input_lock_mode);
     return 0;
 }

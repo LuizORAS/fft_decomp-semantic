@@ -282,12 +282,13 @@ s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
 
 /* gfx */
-/* Two unsigned coordinates passed together in one argument register. */
-typedef struct wldcore_xy16 {
-    u16 x;
-    u16 y;
-} wldcore_xy16_t;
-typedef char wldcore_xy16_size_must_be_4[sizeof(wldcore_xy16_t) == 4 ? 1 : -1];
+/* Image position and size of a render record: the texture rectangle of a
+ * sprite display object, and the same shape again as the frame descriptor
+ * wldcore_gfx_calculate_scaled_rectangle fills in. */
+typedef struct wldcore_window_render_bounds16 {
+    upoint16_t position;
+    upoint16_t dimensions;
+} wldcore_window_render_bounds16_t;
 
 /* The three parallel arrays share one object, which is why the target builds
  * all three walk pointers from a single symbol address. */
@@ -304,58 +305,12 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
  * is what wldcore_init_core indexes these globals with. */
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
-/* The 8-byte texture rectangle of a display object, and the same shape again
- * as the frame descriptor 0x8006b678 fills in. */
-typedef struct wldcore_display_rect {
-    u16 u; /* 0x00 */
-    u16 v; /* 0x02 */
-    u16 w; /* 0x04 */
-    u16 h; /* 0x06 */
-} wldcore_display_rect_t;
-
-/* Display-object queue entry dispatched by wldcore_dispatch_display_object_list.
- * The leading flags word selects the handler; the remaining fields are the
- * view of the sprite handler wldcore_gfx_draw_display_object_sprite. */
-typedef struct wldcore_display_object {
-    s32 flags;                   /* 0x00 */
-    s32 tpage;                   /* 0x04 */
-    u16 priority;                /* 0x08 */
-    u16 _unused_0a;              /* 0x0A */
-    u8 _unused_0c[4];            /* 0x0C */
-    s32 anim_counter;            /* 0x10 */
-    s32 palette;                 /* 0x14; CLUT row offset: nonzero gives sprite cx = cx + (palette - 1) << 4 */
-    s32 x;                       /* 0x18 */
-    s32 y;                       /* 0x1C */
-    s32 cx;                      /* 0x20 */
-    s32 cy;                      /* 0x24 */
-    wldcore_display_rect_t rect; /* 0x28 */
-    CVECTOR color;               /* 0x30 */
-} wldcore_display_object_t;
-typedef char wldcore_display_object_size_must_be_0x34[sizeof(wldcore_display_object_t) == 0x34 ? 1 : -1];
-
-/* Animated display object drawn by wldcore_gfx_draw_animated_display_object
- * (0x8006aed0), which reads priority as a halfword. */
-typedef struct wldcore_anim_object {
-    s32 flags;        /* 0x00 */
-    s32 sequence;     /* 0x04; row of the sequence table at g_wldcore_anim_sequence_table */
-    u16 priority;     /* 0x08 */
-    u16 _padding_0a;  /* 0x0A; aligns frame_index */
-    s32 frame_index;  /* 0x0C */
-    s32 anim_counter; /* 0x10 */
-    s32 palette;      /* 0x14 */
-    s32 x;            /* 0x18 */
-    s32 y;            /* 0x1C */
-    CVECTOR color;    /* 0x20 */
-} wldcore_anim_object_t;
-typedef char wldcore_anim_object_size_must_be_0x24[sizeof(wldcore_anim_object_t) == 0x24 ? 1 : -1];
-
-/* Three packed colour bytes with no fourth byte (CVECTOR is 4). */
-typedef struct rgb8 {
-    u8 r;
-    u8 g;
-    u8 b;
-} rgb8_t;
-typedef char assert_rgb8_size[sizeof(rgb8_t) == 3 ? 1 : -1];
+/* The display-object queues hold a pointer to each object's leading flags
+ * word, which selects the handler in wldcore_dispatch_display_object_list:
+ * bit 0 an animated object (wldcore_window_record_t), bit 1 a sprite
+ * (wldcore_window_render_record_t). */
+struct wldcore_window_record;
+struct wldcore_window_render_record;
 
 extern u32 g_wldcore_gfx_aux_ot_tags[2][4];
 extern GsOT g_wldcore_gfx_aux_ordering_tables[2];
@@ -395,12 +350,12 @@ void wldcore_gfx_draw_world_frame_with_map(void);
 s32 wldcore_fade_step_screen(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
 void wldcore_gfx_draw_projected_map_tiles(GsOT* ot);
-void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsOT* ot);
+void wldcore_gfx_draw_animated_display_object(struct wldcore_window_record* object, GsOT* ot);
 void wldcore_gfx_draw_context_value_display(GsOT* ot);
-void wldcore_gfx_draw_display_object_sprite(wldcore_display_object_t* object, GsOT* ot);
+void wldcore_gfx_draw_display_object_sprite(struct wldcore_window_render_record* object, GsOT* ot);
 void wldcore_gfx_draw_calendar_date(GsOT* ot);
 void wldcore_clear_screen_and_set_map_clip_rect(s32 mode);
-void wldcore_dispatch_display_object_list(GsOT* ot, wldcore_display_object_t** list, s32 count);
+void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count);
 void wldcore_fade_draw_screen_overlays(void);
 void wldcore_fade_start_screen(s32 command, s32 operand);
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch);
@@ -414,7 +369,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
 void wldcore_gfx_draw_cursor_sprite_and_underline(GsOT* ot, GsSPRITE* sprite, GsLINE* line);
 
 void wldcore_gfx_calculate_scaled_rectangle(
-    s32 scale_mode, const wldcore_display_rect_t* source, wldcore_display_rect_t* rectangle);
+    s32 scale_mode, const wldcore_window_render_bounds16_t* source, wldcore_window_render_bounds16_t* rectangle);
 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
@@ -595,11 +550,6 @@ typedef struct wldcore_text_list_panel {
     s32 text_ids[1]; /* 0x34; row_count entries, relative to text 0xb8d9 */
 } wldcore_text_list_panel_t;
 
-typedef struct wldcore_window_render_bounds16 {
-    wldcore_xy16_t position;
-    wldcore_xy16_t dimensions;
-} wldcore_window_render_bounds16_t;
-
 /* State for a paged text window and its four decorative window records. */
 typedef struct wldcore_text_scrollable_window {
     s32 image_x; /* 0x00; text image position.x for wldcore_window_build_render_record_image; cleared by the setups */
@@ -650,13 +600,6 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
 /* proposition */
-/* Caller-owned message state prefix at 0x800794d0. Only the phase word at
- * +0x04 is established; this is not the full allocation's size. */
-typedef struct wldcore_proposition_message_state {
-    u8 _unused_00[4];
-    s32 phase;
-} wldcore_proposition_message_state_t;
-
 /* Only the nine-byte message-adjustment prefix used from proposition record 2
  * is established. Other proposition records may extend this layout. */
 typedef struct wldcore_proposition_data {
@@ -776,7 +719,7 @@ s32 wldcore_proposition_count_completed(s32 location);
 wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 proposition_index);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
-s32 wldcore_proposition_step_message(wldcore_proposition_message_state_t* state, s32 message);
+s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
 void wldcore_proposition_submit_marker_request(GsOT* ot);
 void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index);
 void wldcore_proposition_push_cancel_confirm_level(s32 value);
@@ -786,7 +729,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void);
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level);
 void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* level);
 void wldcore_proposition_push_send_unit_level(void);
-s32 wldcore_proposition_step_participant_message(wldcore_proposition_message_state_t* state, s32 message, s32 speaker);
+s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_level_t* state, s32 message, s32 speaker);
 void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
@@ -915,7 +858,7 @@ typedef struct wldcore_map_dot {
     s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
     s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sprite changes */
     s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
-    /* 0x24; CLUT row offset read as wldcore_anim_object_t.palette (0 keeps the
+    /* 0x24; CLUT row offset read as wldcore_window_record_t.palette (0 keeps the
      * sprite's own CLUT). The player's marker (0x8009f278) takes 0, 2 or 3 from
      * EVENT_SCRIPT_VAR_TOWN_BACKGROUND, Ramza's chapter palette. */
     s32 palette;
@@ -1106,11 +1049,11 @@ typedef char wldcore_menu_cursor_state_size_must_be_8[sizeof(wldcore_menu_cursor
 /* 36-byte window records at 0x800bb504: animated display objects. The pool
  * init 0x8006ad28 sets flags = 1, so the display-object dispatcher 0x8006ae20
  * hands them to wldcore_gfx_draw_animated_display_object (0x8006aed0), which
- * reads them as wldcore_anim_object_t. 0x8009036c initialises a record
+ * reads the priority as a halfword. 0x8009036c initialises a record
  * (flags |= 0x810, sequence/priority from arguments, frame_index and
  * anim_counter cleared); 0x80090a28 toggles flag 0x10 by record index. */
 typedef struct wldcore_window_record {
-    u32 flags;        /* 0x00 */
+    s32 flags;        /* 0x00 */
     s32 sequence;     /* 0x04; row of g_wldcore_anim_sequence_table; second argument of 0x8009036c */
     s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of 0x8009036c */
     s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
@@ -1118,9 +1061,8 @@ typedef struct wldcore_window_record {
     /* 0x14; CLUT row offset: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
      * window-state routines at 0x80076744/0x8007688c store 0, 6 or 10. */
     s32 palette;
-    s32 x;
-    s32 y;
-    s32 color; /* 0x20; rgb tint word, 0x80 grey from the pool init and the append routines */
+    wldcore_point32_t position; /* 0x18 */
+    CVECTOR color;              /* 0x20; rgb tint, 0x80 grey from the pool init and the append routines */
 } wldcore_window_record_t;
 typedef char wldcore_window_record_size_must_be_0x24[sizeof(wldcore_window_record_t) == 0x24 ? 1 : -1];
 
@@ -1525,8 +1467,7 @@ typedef struct wldcore_window_owner {
 
 /* Verified fields of the 52-byte render records at 0x800bbc70. The pool init
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
- * sprites through wldcore_gfx_draw_display_object_sprite
- * (wldcore_display_object_t). */
+ * sprites through wldcore_gfx_draw_display_object_sprite. */
 typedef struct wldcore_window_render_record {
     s32 flags;
     s32 tpage;
@@ -1536,16 +1477,11 @@ typedef struct wldcore_window_render_record {
     /* 0x14; CLUT row offset: nonzero gives cx = clut_x + (palette - 1) << 4. The window-state
      * routines at 0x80076744/0x8007688c clear it or set it to 2. */
     s32 palette;
-    s32 base_x;
-    s32 base_y;
-    s32 clut_x; /* 0x20; 0x3c0 from the pool init */
-    s32 clut_y; /* 0x24; 0x1f0 from the pool init */
+    wldcore_point32_t base; /* 0x18 */
+    wldcore_point32_t clut; /* 0x20; (0x3c0, 0x1f0) from the pool init */
     /* 0x28; image position and size, copied and passed by value as one struct; the width is read signed */
     wldcore_window_render_bounds16_t bounds;
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 _padding_33; /* tail padding to 4-byte alignment */
+    CVECTOR color; /* 0x30 */
 } wldcore_window_render_record_t;
 typedef char wldcore_render_record_size_must_be_0x34[sizeof(wldcore_window_render_record_t) == 0x34 ? 1 : -1];
 
@@ -1594,7 +1530,7 @@ extern wldcore_menu_stack_record_t g_wldcore_menu_stack_records_next[];
 extern s32 g_wldcore_menu_stack_types[];
 extern s32 g_wldcore_menu_stack_types_next[];
 extern s32 g_wldcore_window_aux_render_object_count;
-extern u32* g_wldcore_window_aux_render_object_queue[];
+extern s32* g_wldcore_window_aux_render_object_queue[];
 
 /* Shared panel renderer state at 0x800bb31c, filled by
  * wldcore_window_init_panel_render_state and
@@ -1612,7 +1548,7 @@ extern s32 g_wldcore_window_render_object_count;
 /* Display-object queues drawn by 0x8006ae20 each frame: every entry points at
  * the leading flags word of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
-extern u32* g_wldcore_window_render_object_queue[];
+extern s32* g_wldcore_window_render_object_queue[];
 extern wldcore_window_render_record_t g_wldcore_window_render_records[];
 extern s32 g_wldcore_window_render_record_count;
 extern wldcore_window_xy_t g_wldcore_window_record_positions[];
@@ -1646,8 +1582,8 @@ void wldcore_menu_run_world_frame(GsOT* context);
 void wldcore_menu_show_next_sequence_message(wldcore_menu_countdown_t* countdown);
 
 /* Both return the appended record's index. */
-s32 wldcore_window_append_record_and_reset_color(u32** queue, s32* count);
-s32 wldcore_window_append_render_record_and_reset_color(u32** queue, s32* count);
+s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
+s32 wldcore_window_append_render_record_and_reset_color(s32** queue, s32* count);
 void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
 
 void wldcore_window_build_render_record_image(
@@ -1723,23 +1659,6 @@ void wldcore_menu_push_countdown_level(void);
 void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
 
 /* other */
-/* Provisional: 0x28-byte request block handed to 0x8006aed0. Its builders
- * store 0x08 as one word, so they keep this view and pass it as a
- * wldcore_anim_object_t; the leading words follow that layout. */
-typedef struct wldcore_anim_draw_request {
-    s32 flags;        /* 0x00; 1, the animated-object flag */
-    s32 sequence;     /* 0x04; e.g. month + 0x1f for the calendar */
-    s32 priority;     /* 0x08; 4 */
-    s32 frame_index;  /* 0x0c; cleared before every draw */
-    s32 anim_counter; /* 0x10; cleared before every draw */
-    s32 palette;      /* 0x14 */
-    s32 x;            /* 0x18; screen x, stepped per glyph */
-    s32 y;            /* 0x1c */
-    CVECTOR color;
-    u8 _unused_24[4];
-} wldcore_anim_draw_request_t;
-typedef char wldcore_anim_draw_request_size_must_be_0x28[sizeof(wldcore_anim_draw_request_t) == 0x28 ? 1 : -1];
-
 extern u32 g_wldcore_current_button_input;
 extern u32 g_wldcore_new_button_presses;
 extern u32 g_wldcore_polled_button_input;

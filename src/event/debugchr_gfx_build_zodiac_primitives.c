@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* DEBUGCHR copy of main_gfx_build_zodiac_primitives. */
-void debugchr_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly) {
+void debugchr_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly) {
     s32 i;
     s32 x;
     s32 y;
@@ -11,15 +11,15 @@ void debugchr_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite
     for (i = 0; i < g_debugchr_gfx_scaled_sprite_count; i++) {
         SetPolyFT4(poly);
         poly->clut = GetClut(0, 0x1fd);
-        poly->r0 = sprite->intensity;
-        poly->g0 = sprite->intensity;
-        poly->b0 = sprite->intensity;
+        poly->r0 = context->brightness;
+        poly->g0 = context->brightness;
+        poly->b0 = context->brightness;
         SetSemiTrans(poly, 1);
         SetShadeTex(poly, 0);
         x = g_debugchr_gfx_scaled_sprite_scale[i].x;
-        x *= sprite->scale_x;
+        x *= context->scale_x;
         y = g_debugchr_gfx_scaled_sprite_scale[i].y;
-        y *= sprite->scale_y;
+        y *= context->scale_y;
         if (x % ONE >= 0x800) {
             x += 1;
         }
@@ -31,9 +31,9 @@ void debugchr_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite
         scale.x = x;
         scale.y = y;
         debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_debugchr_gfx_scaled_sprite_texture_page,
-            &g_debugchr_gfx_draw_area_template, &g_debugchr_gfx_scaled_sprite_uv_rects[i], &scale, sprite->offset);
-        if (sprite->link_primitive != 0) {
-            addPrim(sprite->ordering_tag, poly);
+            &g_debugchr_gfx_draw_area_template, &g_debugchr_gfx_scaled_sprite_uv_rects[i], &scale, &context->offset);
+        if (context->link_primitives != 0) {
+            addPrim(context->ot, poly);
             poly++;
         }
     }
@@ -53,5 +53,5 @@ void debugchr_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite
     poly->y2 = 0xff;
     poly->x3 = 0xff;
     poly->y3 = 0xff;
-    addPrim(sprite->ordering_tag, poly);
+    addPrim(context->ot, poly);
 }

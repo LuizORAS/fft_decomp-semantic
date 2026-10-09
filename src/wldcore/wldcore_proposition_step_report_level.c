@@ -42,27 +42,25 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
 
     switch (level->state) {
     case 0:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x36) == 0) {
+        if (wldcore_proposition_step_message(level, 0x36) == 0) {
             return;
         }
         level->state++;
         return;
     case 1:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x3C) == 0) {
+        if (wldcore_proposition_step_message(level, 0x3C) == 0) {
             return;
         }
         level->state++;
         return;
     case 2:
-        if (wldcore_proposition_step_participant_message(
-                (wldcore_proposition_message_state_t*)level, g_wldcore_job_selection.result * 6, -1)
-            == 0) {
+        if (wldcore_proposition_step_participant_message(level, g_wldcore_job_selection.result * 6, -1) == 0) {
             return;
         }
         level->state++;
         return;
     case 3:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x42) == 0) {
+        if (wldcore_proposition_step_message(level, 0x42) == 0) {
             return;
         }
         if (g_wldcore_job_selection.result == 2) {
@@ -81,51 +79,51 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         level->state = 7;
         return;
     case 4:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x48) == 0) {
+        if (wldcore_proposition_step_message(level, 0x48) == 0) {
             return;
         }
         level->state++;
         return;
     case 5:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x4E) == 0) {
+        if (wldcore_proposition_step_message(level, 0x4E) == 0) {
             return;
         }
         level->state++;
         return;
     case 6:
-        if (wldcore_proposition_step_participant_message((wldcore_proposition_message_state_t*)level,
-                g_wldcore_job_selection.result * 6 + 0x12, g_wldcore_job_selection.preferred_unit)
+        if (wldcore_proposition_step_participant_message(
+                level, g_wldcore_job_selection.result * 6 + 0x12, g_wldcore_job_selection.preferred_unit)
             == 0) {
             return;
         }
         level->state = 0xB;
         return;
     case 7:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x54) == 0) {
+        if (wldcore_proposition_step_message(level, 0x54) == 0) {
             return;
         }
         level->state++;
         return;
     case 8:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x5A) == 0) {
+        if (wldcore_proposition_step_message(level, 0x5A) == 0) {
             return;
         }
         level->state = 0xB;
         return;
     case 9:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x60) == 0) {
+        if (wldcore_proposition_step_message(level, 0x60) == 0) {
             return;
         }
         level->state++;
         return;
     case 10:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x66) == 0) {
+        if (wldcore_proposition_step_message(level, 0x66) == 0) {
             return;
         }
         level->state = 0x10;
         return;
     case 11:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x6C) == 0) {
+        if (wldcore_proposition_step_message(level, 0x6C) == 0) {
             return;
         }
         if (g_wldcore_job_selection.result == 0) {
@@ -135,7 +133,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         level->state = 0xF;
         return;
     case 12:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x72) == 0) {
+        if (wldcore_proposition_step_message(level, 0x72) == 0) {
             return;
         }
         level->state++;
@@ -154,7 +152,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 g_world_text_substitution_values[1] = participant + TEXT_ID_UNIT_NAME_BASE;
             }
         }
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x78) == 0) {
+        if (wldcore_proposition_step_message(level, 0x78) == 0) {
             return;
         }
         level->state++;
@@ -183,7 +181,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= 0x100;
                 {
-                    wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;
+                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw - 4;
                     base->y = -(image.ph >> 1) + 0x1A;
                 }
@@ -197,7 +195,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
-                    wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;
+                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -0x46;
                     base->y = -0x2A;
                 }
@@ -221,7 +219,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= 0x100;
                 {
-                    wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;
+                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw;
                     base->y = -(image.ph >> 1);
                 }
@@ -235,36 +233,32 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
-                    wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;
+                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -0x41;
                     base->y = -0x2C;
                 }
                 wldcore_sound_play_effect(0x85);
             }
         }
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x7E) == 0) {
+        if (wldcore_proposition_step_message(level, 0x7E) == 0) {
             return;
         }
         level->state = 0x10;
         return;
     case 15:
-        if (wldcore_proposition_step_message((wldcore_proposition_message_state_t*)level, 0x84) == 0) {
+        if (wldcore_proposition_step_message(level, 0x84) == 0) {
             return;
         }
         level->state++;
         return;
     case 16:
-        if (wldcore_proposition_step_message(
-                (wldcore_proposition_message_state_t*)level, g_wldcore_job_selection.result * 6 + 0x8A)
-            == 0) {
+        if (wldcore_proposition_step_message(level, g_wldcore_job_selection.result * 6 + 0x8A) == 0) {
             return;
         }
         level->state++;
         return;
     case 17:
-        if (wldcore_proposition_step_participant_message(
-                (wldcore_proposition_message_state_t*)level, g_wldcore_job_selection.result * 6 + 0x24, -1)
-            == 0) {
+        if (wldcore_proposition_step_participant_message(level, g_wldcore_job_selection.result * 6 + 0x24, -1) == 0) {
             return;
         }
         (*(s32*)level)++;

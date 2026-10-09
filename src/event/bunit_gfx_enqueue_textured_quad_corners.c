@@ -32,8 +32,5 @@ void bunit_gfx_enqueue_textured_quad_corners(world_gfx_textured_quad_source_t* s
     poly->v3 = src->v3;
     poly->clut = src->clut;
     poly->tpage = src->tpage;
-    {
-        bunit_gfx_context_t* ctx = g_bunit_gfx_context;
-        addPrim(&ctx->otag[idx], poly);
-    }
+    addPrim(&g_bunit_gfx_context->otag[idx], poly);
 }

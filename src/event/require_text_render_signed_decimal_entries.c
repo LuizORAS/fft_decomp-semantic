@@ -3,7 +3,7 @@
 
 /* Render signed gauge values with their positive, negative, or zero color. */
 void require_text_render_signed_decimal_entries(
-    s32 pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count) {
+    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count) {
     s32 i;
 
     for (i = 0; i < count;) {
@@ -26,7 +26,7 @@ void require_text_render_signed_decimal_entries(
         flags = entries->format;
         entries++;
         i++;
-        require_text_render_decimal_value(value, flags, (void*)pixels, output);
+        require_text_render_decimal_value(value, flags, pixels, output);
         output->color = 0;
     }
 }

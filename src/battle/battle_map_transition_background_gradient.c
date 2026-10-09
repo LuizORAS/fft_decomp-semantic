@@ -51,6 +51,6 @@ void battle_map_transition_background_gradient(s32 frame_duration, const map_bac
         current.second.red = base[1].red / 0x10000;
         current.second.green = base[1].green / 0x10000;
         current.second.blue = base[1].blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, (u8*)&current);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, &current);
     }
 }

@@ -38,7 +38,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         if (item == -1) {
             animation = BATTLE_UNIT_ANIMATION_RAISE_HANDS;
         } else {
-            battle_gfx_store_item_display_data((battle_gfx_render_unit_t*)source, item);
+            battle_gfx_store_item_display_data(source, item);
             animation = BATTLE_UNIT_ANIMATION_HOLD_ITEM;
         }
         battle_unit_store_animation_facing_movement_data(animation, (s16)source->facing, source);
@@ -95,7 +95,7 @@ s32 battle_move_start_next_post_movement_step(void) {
     if (g_battle_move_find_result & 4) {
         g_battle_move_find_display_item
             = *(battle_move_found_item_t*)battle_map_determine_rare_common_item(casting->battle_data);
-        battle_gfx_store_item_display_data((battle_gfx_render_unit_t*)source, g_battle_move_find_display_item.item_id);
+        battle_gfx_store_item_display_data(source, g_battle_move_find_display_item.item_id);
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_FOUND_ITEM, (s16)source->facing, source);
         if (!(source->team_flags & BATTLE_TEAM_MASK)) {
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM,

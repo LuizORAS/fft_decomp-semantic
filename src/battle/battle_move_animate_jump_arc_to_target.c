@@ -12,8 +12,8 @@
 /* The target coordinates occupy a 16-byte frame slot, like the unreferenced
  * slot below the velocity copy in battle_move_animate_jump_start. */
 typedef struct battle_move_jump_target {
-    battle_screen_coords_t coords;
-    u8 _unused_06[10];
+    SVECTOR coords;
+    u8 _unused_08[8];
 } battle_move_jump_target_t;
 
 void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
@@ -29,18 +29,17 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
         if (unit->battle_data != 0) {
             if (unit->target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
-                target.coords.x = other->screen.vx;
-                target.coords.z
+                target.coords.vx = other->screen.vx;
+                target.coords.vy
                     = other->screen.vy - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
-                target.coords.y = other->screen.vz;
+                target.coords.vz = other->screen.vz;
             } else {
-                target.coords.x = unit->battle_data->action_target_x * 28 + 14;
-                target.coords.y = unit->battle_data->action_target_y * 28 + 14;
-                target.coords.z
-                    = battle_map_calculate_slope_height(&target.coords.x, unit->battle_data->action_target_elevation);
+                target.coords.vx = unit->battle_data->action_target_x * 28 + 14;
+                target.coords.vz = unit->battle_data->action_target_y * 28 + 14;
+                target.coords.vy
+                    = battle_map_calculate_slope_height(&target.coords.vx, unit->battle_data->action_target_elevation);
             }
-            timer = battle_move_calculate_jump_arc_velocity(
-                (const battle_screen_coords_t*)&unit->screen, &target.coords, &velocity);
+            timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target.coords, &velocity);
             unit->distortion_phase++;
         } else {
             unit->distortion_animation_id = 0;

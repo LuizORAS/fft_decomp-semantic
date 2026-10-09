@@ -75,18 +75,18 @@ void require_render_war_trophies(void) {
                 image = battle_menu_build_and_upload_window_frame_image(
                     0x50, 0x10, &g_require_reward_war_trophy_image_rect, 1);
                 battle_clear_menu_render_buffer(image, 0x280);
-                g_menu_text_state.stride = 0x50;
+                g_menu_text_state.pen.stride = 0x50;
                 timer = 0;
                 if (g_require_reward_war_trophy_entry_types[last] == 0) {
                     battle_menu_set_text_origin(0, 0);
                     battle_menu_display_text_entry(
                         g_require_reward_war_trophy_entry_values[last] + TEXT_ID_ITEM_NAME_BASE, image,
-                        &g_menu_text_state.origin_x);
+                        &g_menu_text_state.pen);
                 } else {
                     battle_menu_set_text_origin(0, 0);
                     battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],
                         battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
-                        (battle_rect_t*)&g_menu_text_state.origin_x);
+                        &g_menu_text_state.pen);
                 }
                 if (g_require_reward_war_trophy_entry_count < 5) {
                     g_require_reward_war_trophy_image_rect.x = 0x60;

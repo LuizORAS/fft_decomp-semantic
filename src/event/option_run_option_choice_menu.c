@@ -41,13 +41,13 @@ void option_run_option_choice_menu(void) {
     height = g_option_choice_counts[kind] * 16 + 16;
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
     battle_thread_wait_frames(1);
-    g_menu_text_state.stride = width;
+    g_menu_text_state.pen.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
         battle_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_option_current_values[kind]) {
             g_battle_menu_text_palette_offset = 8;
         }
-        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_menu_text_state.origin_x);
+        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_menu_text_state.pen);
         g_battle_menu_text_palette_offset = 0;
     }
     /* Dead store: allocation device, see the file header. */
@@ -64,8 +64,7 @@ void option_run_option_choice_menu(void) {
         param->vram_x = 0x1AE;
     }
     param->text_image.width -= 4;
-    battle_menu_build_window_sprites(
-        (battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)param, &g_option_picker_icon_records[0]);
+    battle_menu_build_window_sprites(&rect, param, &g_option_picker_icon_records[0]);
     battle_copy_bytes(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
     LoadImage(&rect, buffer);
     battle_menu_free_memory(buffer);

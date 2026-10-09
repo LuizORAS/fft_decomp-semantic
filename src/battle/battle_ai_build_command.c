@@ -31,7 +31,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             goto choose;
         }
     }
-    if (ai->selected_action.rank_byte == 0xff && ai->acting_unit->movement_taken == ai->movement_taken
+    if (ai->selected_action.rank.rank_byte == 0xff && ai->acting_unit->movement_taken == ai->movement_taken
         && ai->acting_unit->action_taken == ai->action_taken) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
         return 0;
@@ -50,7 +50,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     battle_ai_init_acting_unit_data();
     if (ai->acting_unit->charged_ability_ct == 0xff)
         ai->acting_unit_decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
-    if (!ai->selected_action.rank_byte || ai->acting_unit->action_taken) {
+    if (!ai->selected_action.rank.rank_byte || ai->acting_unit->action_taken) {
         battle_ai_store_considered_action_data();
     refresh:
         if (battle_ai_refresh_unit_decision_flags() == -1) {
@@ -75,7 +75,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             return -1;
         }
         ai->resume_pending = 0;
-        ai->selected_action.rank_byte = 0xff;
+        ai->selected_action.rank.rank_byte = 0xff;
         if (ai->selected_action.reflected_action)
             ai->acting_unit_decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
         battle_ai_restore_considered_action_data();
@@ -94,7 +94,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
     } else {
         command->kind = BATTLE_AI_COMMAND_ACT;
-        battle_ai_transfer_halfword_values(command->data.halfwords, (u16*)&ai->selected_action.unit_id, 20);
+        battle_ai_transfer_halfword_values(command->data.halfwords, &ai->selected_action.unit_id, 20);
     }
 preserve:
     moved = ai->acting_unit->movement_taken;
@@ -104,7 +104,7 @@ preserve:
     battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
     history = &g_battle_ai_command_history[0];
     last_command = history + 1;
-    battle_ai_transfer_halfword_values((u16*)history, (u16*)last_command, 24);
-    battle_ai_transfer_halfword_values((u16*)last_command, (u16*)command, 24);
+    battle_ai_transfer_halfword_values(history, last_command, 24);
+    battle_ai_transfer_halfword_values(last_command, command, 24);
     return 0;
 }

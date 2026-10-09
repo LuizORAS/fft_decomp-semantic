@@ -22,9 +22,9 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
     s32 unused[2];
     VECTOR delta;
     VECTOR position;
-    battle_effect_rotation_vector_t angles;
+    SVECTOR angles;
     VECTOR scale;
-    battle_effect_rotation_vector_t spin;
+    SVECTOR spin;
     SPRT sprite;
     battle_effect_arrow_buffer_t* arrow;
     battle_effect_projectile_g3x12_work_t* work12;
@@ -117,9 +117,9 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
         delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
-        angles.y = ratan2(-delta.vz, delta.vx);
-        angles.z = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-        angles.x = 0;
+        angles.vy = ratan2(-delta.vz, delta.vx);
+        angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
+        angles.vx = 0;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
         i = parameter & 0xff;
         if (parameter != -1) {
@@ -127,16 +127,16 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 scale.vz = 0x40;
                 scale.vy = 0x40;
                 scale.vx = 0x40;
-                spin.z = 0;
-                spin.y = 0;
-                spin.x = 0;
+                spin.vz = 0;
+                spin.vy = 0;
+                spin.vx = 0;
             } else if (i == 1) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
-                spin.x = 0;
-                spin.y = g_battle_effect_projectile_spin_passes * 256;
-                spin.z = g_battle_effect_projectile_spin_passes * 128;
+                spin.vx = 0;
+                spin.vy = g_battle_effect_projectile_spin_passes * 256;
+                spin.vz = g_battle_effect_projectile_spin_passes * 128;
             }
             battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         } else {
@@ -145,9 +145,9 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
-                spin.y = 0;
-                spin.x = 0;
-                spin.z = -(g_battle_effect_projectile_spin_passes * 256);
+                spin.vy = 0;
+                spin.vx = 0;
+                spin.vz = -(g_battle_effect_projectile_spin_passes * 256);
                 battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, 3);
             } else {
                 battle_effect_draw_item_drop_sprite(&position, item, 0);

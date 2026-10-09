@@ -7,7 +7,7 @@
  * channels and tinted in place by 0x80069718. sequence is written after that
  * call because the target reloads 0x800d0bb4 there. */
 void wldcore_proposition_submit_marker_request(GsOT* ot) {
-    wldcore_anim_draw_request_t request;
+    wldcore_window_record_t request;
     CVECTOR color;
     s32 index;
     s32 shade;
@@ -21,8 +21,8 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
 
     index = g_wldcore_proposition_selected_entry - 1;
     request.flags = 1;
-    request.x = g_wldcore_map_dot_screen_x[index].value;
-    request.y = g_wldcore_map_dot_screen_y[index].value;
+    request.position.x = g_wldcore_map_dot_screen_x[index].value;
+    request.position.y = g_wldcore_map_dot_screen_y[index].value;
     shade = g_wldcore_location_marker_shade;
     request.priority = 4;
     request.palette = 0;
@@ -36,5 +36,5 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
     request.color.g = color.g;
     request.color.b = color.b;
     request.sequence = g_wldcore_proposition_selected_entry + 0x36;
-    wldcore_gfx_draw_animated_display_object((wldcore_anim_object_t*)&request, ot);
+    wldcore_gfx_draw_animated_display_object(&request, ot);
 }

@@ -16,7 +16,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
 
     /* Held from entry: with every saved register taken, reload rematerialises
      * the constant beside its one use, which is the target's la placement. */
-    render_pos = (wldcore_point32_t*)&g_wldcore_window_render_records[0].base_x;
+    render_pos = &g_wldcore_window_render_records[0].base;
     g_wldcore_saved_context_value_display_position = g_wldcore_context_value_display_position;
     g_main_system_flags |= 0x800;
     wldcore_gfx_clear_vram_and_scratch(1);
@@ -34,7 +34,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
     g_wldcore_window_records[index].flags |= 0x10;
-    pos1 = (wldcore_point32_t*)&g_wldcore_window_records[index].x;
+    pos1 = &g_wldcore_window_records[index].position;
     pos1->x = -0x7A;
     pos1->y = 0x60;
     g_wldcore_window_records[index].palette = 0xA;
@@ -48,7 +48,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     window2 = &g_wldcore_window_records[index];
     window2->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    pos2 = (wldcore_point32_t*)&g_wldcore_window_records[index].x;
+    pos2 = &g_wldcore_window_records[index].position;
     pos2->x = 0x42;
     pos2->y = 0x60;
     g_wldcore_window_records[index].palette = 0xA;
@@ -78,7 +78,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     window4 = &g_wldcore_window_records[index];
     window4->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    pos4 = (wldcore_point32_t*)&g_wldcore_window_records[index].x;
+    pos4 = &g_wldcore_window_records[index].position;
     pos4->x = 0x54;
     pos4->y = 0x58;
     g_wldcore_window_records[index].palette = 0;

@@ -6,8 +6,6 @@
  * (g_equip_editor_numeric_state_a for thread 12, g_equip_editor_numeric_state_b otherwise); the thread parameter
  * block is world_status_thread_t. */
 
-struct menu_number_position;
-
 /* Thread task 0x3b: numeric editor panel.
  *
  * Twin of attack_editor_run_numeric_thread / bunit_menu_run_numeric_editor_thread
@@ -22,7 +20,7 @@ void equip_editor_run_numeric_thread(void) {
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
-    u8* entries;
+    menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
@@ -56,14 +54,14 @@ void equip_editor_run_numeric_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], 2);
     SetDrawMode(&buffer->draw_modes[2], 0, 0, GetTPage(0, 2, 0x140, 0), &g_equip_gfx_draw_area_template);
     battle_menu_init_numeric_display_frame_primitives(
-        &g_equip_editor_numeric_table.source.texture_rect, &buffer->numeric_frame);
+        &g_equip_editor_numeric_table.texture_rect, &buffer->numeric_frame);
     equip_gfx_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
-    descriptor = (const world_gfx_image_load_parameters_t*)g_equip_editor_numeric_texture;
+    descriptor = g_equip_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
         battle_gfx_init_image_loading(&buffer->sprites[i], g_equip_editor_numeric_geometry,
-            &g_equip_editor_numeric_table.source.texture_origin, descriptor);
+            &g_equip_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
     if (g_battle_current_thread_id != 12) {
@@ -78,34 +76,26 @@ void equip_editor_run_numeric_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             battle_clear_menu_render_buffer(text_pixels, 0x918);
-            g_menu_text_state.stride = 0x14;
+            g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                equip_text_render_signed_decimal_entries(
-                    text_pixels, (menu_number_entry_t*)entries, (world_glyph_blit_t*)&g_menu_text_state.origin_x, 3);
+                equip_text_render_signed_decimal_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
+                battle_menu_draw_numeric_display_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
             }
-            g_menu_text_state.stride = 0x40;
+            g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x168, (menu_number_entry_t*)(entries + 0x24),
-                    (world_glyph_blit_t*)&g_menu_text_state.origin_x, 4);
+                equip_text_render_signed_decimal_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
-                    (struct menu_number_entry*)(entries + 0x24),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
+                battle_menu_draw_numeric_display_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
             }
-            g_menu_text_state.stride = 0x64;
+            g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x468, (menu_number_entry_t*)(entries + 0x54),
-                    (world_glyph_blit_t*)&g_menu_text_state.origin_x, 8);
+                equip_text_render_signed_decimal_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
-                    (struct menu_number_entry*)(entries + 0x54),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
+                battle_menu_draw_numeric_display_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
@@ -115,7 +105,7 @@ void equip_editor_run_numeric_thread(void) {
         use_offset = field_y != 0xF0;
         g_equip_gfx_draw_offset_y = -use_offset & 0xF0;
         equip_gfx_build_scaled_draw_area_packets(
-            &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, (s16*)thread);
+            &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, thread);
         buffer->draw_offsets[0].x = thread->x - 0x80;
         buffer->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
@@ -139,7 +129,7 @@ void equip_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        equip_menu_select_primitive_color_palette(&buffer->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }

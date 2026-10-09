@@ -41,7 +41,7 @@ s32 world_menu_run_learn_job_list(void) {
             world_job_calculate_current_total_jp(g_world_menu_cursor_position);
             world_job_calculate_next_level_jp_requirement(g_world_menu_cursor_position);
             world_gfx_set_sprite_slot(
-                9, g_world_menu_cursor_position, g_world_menu_scroll_offset, (u16*)g_world_menu_learn_unlocked_jobs);
+                9, g_world_menu_cursor_position, g_world_menu_scroll_offset, g_world_menu_learn_unlocked_jobs);
             g_world_learn_job_list_initialized = 0;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             return 1;

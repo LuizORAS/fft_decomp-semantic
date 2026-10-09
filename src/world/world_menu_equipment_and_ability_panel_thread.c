@@ -56,28 +56,20 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_0[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
             if (mode == 1) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_1[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
             if (mode == 2) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_2[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_2[i]);
             }
             if (mode == 3) {
-                world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[i],
-                    (const world_image_location_t*)g_world_editor_numeric_geometry,
-                    (const world_image_location_t*)&g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_3[i]);
+                world_gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_3[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -90,18 +82,18 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             world_clear_menu_render_buffer(g_world_change_banner_text_image, 0xc80);
-            g_world_menu_text_state.stride = 0x50;
+            g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
                     world_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
-                        g_world_change_banner_text_image, &g_world_menu_text_state.origin_x);
+                        g_world_change_banner_text_image, &g_world_menu_text_state.pen);
                 }
-                g_world_menu_text_state.origin_y += 0x10;
+                g_world_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_world_equipment_panel_item_text_rect, (u32*)g_world_change_banner_text_image);
             world_clear_menu_render_buffer(g_world_stat_preview_text_image, 0xc80);
-            g_world_menu_text_state.stride = 0x50;
+            g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -109,19 +101,18 @@ void world_menu_equipment_and_ability_panel_thread(void) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_world_menu_text_state.origin_y += 0x10;
+                    g_world_menu_text_state.pen.rect.y += 0x10;
                 } else {
-                    world_menu_display_text_entry(
-                        mode, g_world_stat_preview_text_image, &g_world_menu_text_state.origin_x);
-                    g_world_menu_text_state.origin_y += 0x10;
+                    world_menu_display_text_entry(mode, g_world_stat_preview_text_image, &g_world_menu_text_state.pen);
+                    g_world_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
                     world_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
-                        g_world_stat_preview_text_image, &g_world_menu_text_state.origin_x);
+                        g_world_stat_preview_text_image, &g_world_menu_text_state.pen);
                 }
-                g_world_menu_text_state.origin_y += 0x10;
+                g_world_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_world_equipment_panel_ability_text_rect, (u32*)g_world_stat_preview_text_image);
             thread->redraw_request = 0;
@@ -129,10 +120,8 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         i = 0;
         cursor = (u8*)screen;
         for (; i < 5; i++) {
-            world_gfx_init_image_loading((POLY_FT4*)&screen->sprites[19 + i],
-                (const world_image_location_t*)g_world_panel_item_icon_texture,
-                (const world_image_location_t*)&g_world_equipment_ability_panel_origin,
-                &g_world_equipment_panel_icon_params[i]);
+            world_gfx_init_image_loading(&screen->sprites[19 + i], g_world_panel_item_icon_texture,
+                &g_world_equipment_ability_panel_origin, &g_world_equipment_panel_icon_params[i]);
             if ((state->equipment[i] & 0xff) != 0xff) {
                 world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
@@ -149,7 +138,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_world_gfx_draw_area_y;
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
-        world_menu_configure_status_panel_primitive_colors((battle_menu_status_panel_primitives_t*)screen, thread);
+        world_menu_configure_status_panel_primitive_colors(screen, thread);
         world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
@@ -174,7 +163,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         for (i = 0; i < 8; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&screen->numeric_frame);
+        world_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&screen->portrait);

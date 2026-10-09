@@ -23,7 +23,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     s32 value;
     s32 page_x;
     urect16_t* bounds;
-    rgb8_t* color;
+    CVECTOR* color;
     wldcore_point32_t* base;
 
     switch (level->phase) {
@@ -64,8 +64,8 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         if (value != 0xFF) {
             world_gfx_set_portrait_poly_texture(&portrait, value);
             page_x = 0x280;
-            g_wldcore_window_render_records[render_index].clut_x = ((value / 40) << 6) + ((value % 4) * 0x10 + page_x);
-            g_wldcore_window_render_records[render_index].clut_y = ((value % 40) / 4) + 0x1F0;
+            g_wldcore_window_render_records[render_index].clut.x = ((value / 40) << 6) + ((value % 4) * 0x10 + page_x);
+            g_wldcore_window_render_records[render_index].clut.y = ((value % 40) / 4) + 0x1F0;
             g_wldcore_window_render_records[render_index].tpage = portrait.tpage;
             /* The rectangle at +0x28 and the colour triple at +0x30 are written
              * through their own addresses; the rectangle and the base point are
@@ -75,12 +75,12 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             bounds->y = portrait.v0;
             bounds->w = portrait.u1 - portrait.u0;
             bounds->h = portrait.v2 - portrait.v0;
-            color = (rgb8_t*)&g_wldcore_window_render_records[render_index].red;
+            color = &g_wldcore_window_render_records[render_index].color;
             color->r = 0x80;
             color->g = 0x80;
             color->b = 0x80;
             g_wldcore_window_render_records[render_index].anim_counter = 0;
-            base = (wldcore_point32_t*)&g_wldcore_window_render_records[render_index].base_x;
+            base = &g_wldcore_window_render_records[render_index].base;
             base->x = -0x72;
             base->y = -0x22;
             g_wldcore_window_render_records[render_index].priority = 9;

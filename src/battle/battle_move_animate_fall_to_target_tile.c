@@ -9,14 +9,13 @@
 /* The target sets $a1 to the coordinate buffer before this call too, so the
  * original declared both screen-z helpers with the same two arguments. */
 #define screen_z_from_misc_screen_data                                                                                 \
-    ((s32 (*)(                                                                                                         \
-        battle_unit_misc_data_t*, const battle_screen_coords_t*))battle_gfx_calculate_screen_z_from_misc_screen_data)
+    ((s32 (*)(battle_unit_misc_data_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_misc_screen_data)
 
 void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
-    battle_screen_coords_t coords;
+    SVECTOR coords;
     /* Unreferenced 8-byte frame slot above `coords`; it puts `velocity` at
      * sp+0x20, matching the sibling distortion handlers. */
-    battle_screen_coords_t unused_18;
+    SVECTOR unused_18;
     VECTOR velocity;
     battle_unit_misc_data_t* other;
     battle_stats_t* stats;
@@ -44,24 +43,24 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
              * (0x01c), not real.vz (0x020); the height branch below overwrites
              * it, so this looks like an original bug. */
             unit->real.vy = y << 12;
-            main_util_set_svector((SVECTOR*)&coords, unit->map_x * 28 + 14, unit->map_z, unit->map_y * 28 + 14);
-            coords.z = screen_z_from_misc_screen_data(unit, &coords);
+            main_util_set_svector(&coords, unit->map_x * 28 + 14, unit->map_z, unit->map_y * 28 + 14);
+            coords.vy = screen_z_from_misc_screen_data(unit, &coords);
         } else {
             if (unit->target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
-                main_util_set_svector((SVECTOR*)&coords, other->map_x * 28 + 14, other->map_z, other->map_y * 28 + 14);
+                main_util_set_svector(&coords, other->map_x * 28 + 14, other->map_z, other->map_y * 28 + 14);
             } else {
                 stats = unit->battle_data;
-                main_util_set_svector((SVECTOR*)&coords, stats->action_target_x * 28 + 14,
-                    stats->action_target_elevation, stats->action_target_y * 28 + 14);
+                main_util_set_svector(&coords, stats->action_target_x * 28 + 14, stats->action_target_elevation,
+                    stats->action_target_y * 28 + 14);
             }
-            coords.z = battle_gfx_calculate_screen_z_with_caller_data(unit, &coords);
+            coords.vy = battle_gfx_calculate_screen_z_with_caller_data(unit, &coords);
         }
-        if (unit->screen.vy < coords.z) {
+        if (unit->screen.vy < coords.vy) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_battle_move_jump_gravity;
         } else {
-            unit->real.vy = coords.z << 12;
+            unit->real.vy = coords.vy << 12;
             unit->position_copies_active = 0;
             unit->distortion_animation_id = 0;
         }

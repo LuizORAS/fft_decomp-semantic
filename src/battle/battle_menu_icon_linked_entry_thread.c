@@ -26,8 +26,7 @@ void battle_menu_icon_linked_entry_thread(void) {
 
     param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text((struct battle_text_message_window_layout*)param, &width, &height, &pad, 0);
-    battle_menu_build_window_sprites(
-        (battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)param, &records[0]);
+    battle_menu_build_window_sprites(&rect, param, &records[0]);
     battle_copy_bytes(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
@@ -39,9 +38,9 @@ void battle_menu_icon_linked_entry_thread(void) {
             g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[parent], 0, 0);
     }
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
-    g_menu_text_state.stride = width;
+    g_menu_text_state.pen.stride = width;
     battle_menu_set_text_origin(8, 9);
-    battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.origin_x);
+    battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         battle_thread_yield();

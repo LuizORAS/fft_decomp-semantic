@@ -9,16 +9,6 @@
 #include "psx/types.h"
 
 /* ability */
-/* Provisional: per-skill byte tables reached through g_battle_ai_workspace_ptr and indexed
- * by the skill selected in menu entry 3 (world_menu_validate_skill_selection_thread, 0x800f474c). Only the three
- * columns that function reads are named; the table extents are unknown. */
-typedef struct world_ability_skill_use_tables {
-    u8 _unused_000[0x1ec];
-    u8 mp_cost[0x290 - 0x1ec]; /* 0x1ec; compared against the unit's MP */
-    u8 flags[0x334 - 0x290];   /* 0x290; bit 1: blocked by a status */
-    u8 skill_ct[1];            /* 0x334; CT, 0xff means none */
-} world_ability_skill_use_tables_t;
-
 /* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct world_ability_list {
@@ -585,12 +575,6 @@ typedef struct world_menu_quad_colors {
     CVECTOR vertex[4]; /* 0x04; one colour per POLY_GT4 corner */
 } world_menu_quad_colors_t;
 
-/* Provisional: screen origin added to every quad piece (0x80155808). */
-typedef struct world_menu_quad_origin {
-    s16 x; /* 0x00 */
-    s16 y; /* 0x02 */
-} world_menu_quad_origin_t;
-
 /* Provisional: one 5-byte row of a WORLD menu text entry as rewritten by
  * world_menu_build_skillset_entries (0x800f3d44): the style byte at +1 is
  * 4 for a greyed row, the byte at +3 is the row separator (0xfa) or the
@@ -700,17 +684,16 @@ typedef struct world_panel_record {
  * between them. Members come from the panels' own accesses plus two helpers:
  * *_menu_init_sprite_array (0x8012e2b8) is handed the nine SPRT packets, and
  * world_gfx_init_scaled_draw_area_packets / battle_gfx_init_scaled_draw_area_packets
- * (0x80138adc) writes +0x1c and the 8-byte window at +0x20 of the cursor
- * record, which lands on the cursor sprite's w and the RECT that follows it.
+ * (0x80138adc) clears rects[0].w and installs rects[1] of the draw-area pair.
  * The block is zero-filled in the overlay image, so none of it is initialized
  * data. */
 typedef struct world_panel_frame {
     DR_MODE modes[7];                  /* 0x000: one per texture window */
     SPRT sprites[9];                   /* 0x054: 5 border spans then 4 corners */
     world_texture_prim_t texture_prim; /* 0x108: tpage-7 VRAM allocation record */
-    DR_MODE cursor_mode;               /* 0x130 */
-    SPRT cursor;                       /* 0x13c */
-    RECT cursor_texture_window;        /* 0x150 */
+    /* 0x130; world_gfx_init_scaled_draw_area_packets,
+     * battle_gfx_init_scaled_draw_area_packets */
+    world_gfx_scaled_draw_area_pair_t draw_areas;
 } world_panel_frame_t;
 typedef char world_panel_frame_size_must_be_0x158[sizeof(world_panel_frame_t) == 0x158 ? 1 : -1];
 
@@ -1005,16 +988,14 @@ typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 1
 
 /* The menu text state block at BATTLE 0x80165f9c (g_menu_text_state) and
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
- * then the pen the glyph renderers receive as &origin_x (laid out as
- * world_glyph_blit_t: position, an unused size, stride and fill colour). */
+ * then the pen the glyph renderers receive. */
 typedef struct menu_text_state {
     s32* script_variables; /* 0x00; also bound as g_world_script_variables / g_battle_script_variables */
-    s16 origin_x;          /* 0x04: battle_menu_set_text_origin */
-    s16 origin_y;          /* 0x06 */
-    s32 _unused_08;        /* 0x08 */
-    s32 stride;            /* 0x0c: rect width * 4 (the inner window width) */
-    s32 color;             /* 0x10: glyph blit fill; 0x44444444 while text colour 4 is drawn
-                              (*_menu_draw_text_columns) */
+    /* 0x04: rect.x/rect.y are the text origin (battle_menu_set_text_origin) and
+     * the rect's size is not used; stride (0x0c) is the rect width * 4
+     * (the inner window width); color (0x10) is the glyph blit fill,
+     * 0x44444444 while text colour 4 is drawn (*_menu_draw_text_columns). */
+    world_glyph_blit_t pen;
 } menu_text_state_t;
 
 /* options */
@@ -1333,16 +1314,14 @@ typedef char battle_text_glyph_state_size_must_be_0x10[(sizeof(battle_text_glyph
 /* Provisional 0x2d0-byte double-buffered frame of the unit editor panel
  * (WORLD 0x801a3494, BATTLE 0x801730f8). The first 0x2a4 bytes are laid out
  * as battle_menu_status_panel_buffer_t (draw modes, sprites, tiles and lines),
- * and the trailing cursor mode/sprite/window follow world_panel_frame_t. */
+ * and the trailing draw-area pair follows world_panel_frame_t. */
 typedef struct world_unit_editor_frame {
-    DR_MODE draw_modes[3];                    /* 0x000: image pages 0, 2 and 4 */
-    SPRT sprites[24];                         /* 0x024: 19 panel sprites, then 5 item icons */
-    TILE tiles[2];                            /* 0x204 */
-    LINE_F2 lines[8];                         /* 0x224 */
-    world_menu_palette_primitives_t* palette; /* 0x2a4 */
-    DR_MODE cursor_mode;                      /* 0x2a8 */
-    SPRT cursor;                              /* 0x2b4 */
-    RECT cursor_texture_window;               /* 0x2c8 */
+    DR_MODE draw_modes[3];                        /* 0x000: image pages 0, 2 and 4 */
+    SPRT sprites[24];                             /* 0x024: 19 panel sprites, then 5 item icons */
+    TILE tiles[2];                                /* 0x204 */
+    LINE_F2 lines[8];                             /* 0x224 */
+    world_menu_palette_primitives_t* palette;     /* 0x2a4 */
+    world_gfx_scaled_draw_area_pair_t draw_areas; /* 0x2a8 */
 } world_unit_editor_frame_t;
 typedef char world_unit_editor_frame_size_must_be_0x2d0[sizeof(world_unit_editor_frame_t) == 0x2d0 ? 1 : -1];
 

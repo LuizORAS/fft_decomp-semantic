@@ -24,8 +24,8 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     u16 previous_selected;
     s32 row_count;
     u16 speed;
-    u16* row_ids;
-    u16 text_id;
+    s16* row_ids;
+    s16 text_id;
     s32 input;
     s32 top;
     s32 offset;
@@ -71,7 +71,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                             rect.w = g_bunit_menu_list_vram_width;
                             rect.h = ROW_HEIGHT;
                             *row_ids = text_id;
-                            bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, row_ids, &rect, 0);
+                            bunit_text_render_id_rows_to_vram(g_bunit_menu_list_text_table, row_ids, &rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
@@ -83,7 +83,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                     if (g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1 < ENTRY_COUNT - 1) {
                         g_bunit_menu_list_scroll_direction = 1;
                         if (g_bunit_menu_list_text_table != 0) {
-                            u16* entry_ids;
+                            s16* entry_ids;
 
                             j = g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1;
                             entry_ids = &g_bunit_menu_list_scroll_entry_ids[0];
@@ -92,7 +92,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                             rect.y = g_bunit_menu_list_visible_rows * ROW_HEIGHT + 0x30;
                             rect.w = g_bunit_menu_list_vram_width;
                             rect.h = ROW_HEIGHT;
-                            bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, entry_ids, &rect, 0);
+                            bunit_text_render_id_rows_to_vram(g_bunit_menu_list_text_table, entry_ids, &rect, 0);
                         }
                     }
                 } else if (g_bunit_menu_list_selected_index < ENTRY_COUNT - 1 && (input & PSX_PAD_DOWN)) {

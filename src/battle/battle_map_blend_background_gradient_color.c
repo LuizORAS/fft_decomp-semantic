@@ -142,6 +142,6 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
         current.second.red = channels[1].red / 0x10000;
         current.second.green = channels[1].green / 0x10000;
         current.second.blue = channels[1].blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, (u8*)&current);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, &current);
     }
 }

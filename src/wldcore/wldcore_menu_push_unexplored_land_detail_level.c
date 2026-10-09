@@ -41,7 +41,7 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
     g_wldcore_window_render_records[index].flags |= 0x10;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x74;
     base->y = -0x22;
     wldcore_read_nine_bit_record(g_main_land_discovery_date_bits, value, date);

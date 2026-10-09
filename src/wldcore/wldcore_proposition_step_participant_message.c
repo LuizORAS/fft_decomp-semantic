@@ -10,7 +10,7 @@
  * single participant has nobody else to speak and returns 1 at once. Returns 1
  * once the message has been acknowledged and the phase reset, 0 while running.
  */
-s32 wldcore_proposition_step_participant_message(wldcore_proposition_message_state_t* state, s32 message, s32 speaker) {
+s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_level_t* state, s32 message, s32 speaker) {
     switch (state->phase) {
     case 0:
         if (speaker == -1) {

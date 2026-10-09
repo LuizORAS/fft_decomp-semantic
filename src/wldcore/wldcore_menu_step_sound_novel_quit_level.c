@@ -126,9 +126,9 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         value = level->choice ^ 1;
         level->choice = value;
         record = &g_wldcore_window_records[level->cursor_window];
-        base = g_wldcore_window_render_records[level->render_index].base_y;
+        base = g_wldcore_window_render_records[level->render_index].base.y;
         offset = value * 0x10 + 0xE;
-        record->y = base + offset;
+        record->position.y = base + offset;
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {

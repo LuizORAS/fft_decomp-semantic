@@ -15,7 +15,7 @@ s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action) {
     ai = &g_battle_ai_data_base;
     g_battle_ai_data_base.hit_counter = 0xFF;
     if (action->unit_id == g_battle_ai_data_base.acting_unit_id) {
-        base_hit = g_battle_ai_data_base.current_action.base_hit_percent;
+        base_hit = g_battle_ai_data_base.current_action.rank.base_hit_percent;
         g_battle_ai_data_base.ability_processing_done = 1;
         if (base_hit == 0xFF) {
             g_battle_ai_data_base.hit_counter = 0;
@@ -29,7 +29,7 @@ s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action) {
         if (ai->valuable_target_hit == 0 || cnt == 0) {
             return 0;
         }
-        ai->current_action.base_hit_percent = ai->total_hit_percent / cnt;
+        ai->current_action.rank.base_hit_percent = ai->total_hit_percent / cnt;
     }
     return 1;
 }

@@ -50,7 +50,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     bounds.position.y = 0;
     wldcore_window_init_render_record_image(index, bounds, 0, 0xB805, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
-    position = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    position = &g_wldcore_window_render_records[index].base;
     position->x = 0x48;
     position->y = 0x20;
 
@@ -87,22 +87,22 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     wldcore_window_load_image_record_to_vram(index, &g_wldcore_window_image_buffer[0x200]);
     g_wldcore_window_render_records[index].priority = 8;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x28;
 
     depth = g_wldcore_menu_stack_depth;
     index = g_wldcore_menu_stack_records_next[depth].variable_detail.render_index;
     g_wldcore_menu_stack_records_next[depth].variable_detail._unknown_08 = 0;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].variable_detail.value].x
-        = g_wldcore_window_render_records[index].base_x + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].variable_detail.value].y
-        = g_wldcore_window_render_records[index].base_y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].variable_detail.value].position.x
+        = g_wldcore_window_render_records[index].base.x + 6;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].variable_detail.value].position.y
+        = g_wldcore_window_render_records[index].base.y
         - -(g_wldcore_menu_stack_records_next[depth].variable_detail._unknown_08 * 0x10 + 0xE);
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].x
-        = g_wldcore_window_render_records[index].base_x + 3;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 3;
     g_wldcore_menu_stack_depth = depth + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM;
 }

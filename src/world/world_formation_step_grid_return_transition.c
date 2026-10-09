@@ -10,8 +10,8 @@
  * original 16-byte gap below positions. Compiled at -O1.
  */
 s32 world_formation_step_grid_return_transition(s32 mode) {
-    world_menu_point_t unused[4];
-    world_menu_point_t positions[20];
+    point16_t unused[4];
+    point16_t positions[20];
     u8 frame;
     s32 spread;
     s32 shade;

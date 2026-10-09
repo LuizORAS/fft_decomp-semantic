@@ -79,9 +79,9 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
         }
     }
 
-    if (ai->ranked_actions[0].base_hit_percent != 0) {
+    if (ai->ranked_actions[0].rank.base_hit_percent != 0) {
         battle_ai_transfer_halfword_values(
-            (u16*)&ai->selected_action, (u16*)&ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
+            &ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
         return 2;
     }
     if (g_battle_ai_status_candidate_count == 0)

@@ -12,7 +12,7 @@ typedef struct world_menu_grid_cell {
     u8 next_down;
     u8 next_right;
     u8 next_left;
-    world_menu_point_t cursor;
+    point16_t cursor;
     s16 vertical;
 } world_menu_grid_cell_t;
 
@@ -33,7 +33,7 @@ extern world_menu_grid_cell_t* g_world_active_grid_menu_cells; /* active grid */
  * cells 18-27. The description-thread call only latches such ids, so its
  * record argument is never dereferenced. */
 void world_menu_update_grid_cursor(s16 alternate) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     s32 busy;
     s32 cell;
     s32 text_id;

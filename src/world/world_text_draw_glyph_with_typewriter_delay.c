@@ -130,13 +130,13 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         }
 
         if (request->glyph != TEXT_SPACE) {
-            g_world_text_typewriter_state.origin_x = phase;
-            g_world_text_typewriter_state.origin_y = 0;
-            g_world_text_typewriter_state.stride = pitch;
+            g_world_text_typewriter_state.pen.rect.x = phase;
+            g_world_text_typewriter_state.pen.rect.y = 0;
+            g_world_text_typewriter_state.pen.stride = pitch;
             world_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
                 world_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
             world_text_blit_font_glyph_to_4bpp(request->glyph * 0x23 + g_world_text_glyph_bitmap_data, image,
-                (world_glyph_blit_t*)&g_world_text_typewriter_state.origin_x, request->palette);
+                &g_world_text_typewriter_state.pen, request->palette);
             g_world_text_typewriter_vram_rect.x
                 = (pen_x >> 2) + (s16)(world_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_world_text_typewriter_vram_rect.y = pen_y;

@@ -66,7 +66,8 @@ void world_menu_select_unit_action_slots_thread(void) {
             i += 2;
         } else {
             /* The workspace cell is void*; this menu reads it as a u16 text-id list. */
-            text = ((u16*)g_battle_ai_workspace_ptr)[g_world_menu_thread_menu_data[3].selected_index] - 0x7000;
+            text
+                = g_battle_ai_workspace_ptr->ability_list.ids[g_world_menu_thread_menu_data[3].selected_index] - 0x7000;
             if (i == 2) {
                 g_world_menu_preview_action.calculator_type = text;
             }

@@ -3,8 +3,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const s16* offset) {
+void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
+    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
+    const main_zodiac_draw_offset_t* offset) {
     s32 xoff = uv_rect->offset_x * scale->x;
     s32 yoff = uv_rect->offset_y * scale->y;
     s32 width = uv_rect->width * scale->x;
@@ -48,12 +49,12 @@ void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_
     poly->v2 = uv_rect->v + uv_rect->height;
     poly->u3 = uv_rect->u + uv_rect->width;
     poly->v3 = uv_rect->v + uv_rect->height;
-    poly->x0 = position->x + xoff + offset[4];
-    poly->y0 = position->y + yoff + offset[5];
-    poly->x1 = position->x + xoff + offset[4] + width;
-    poly->y1 = position->y + yoff + offset[5];
-    poly->x2 = position->x + xoff + offset[4];
-    poly->y2 = position->y + yoff + offset[5] + height;
-    poly->x3 = position->x + xoff + offset[4] + width;
-    poly->y3 = position->y + yoff + offset[5] + height;
+    poly->x0 = position->x + xoff + offset->x;
+    poly->y0 = position->y + yoff + offset->y;
+    poly->x1 = position->x + xoff + offset->x + width;
+    poly->y1 = position->y + yoff + offset->y;
+    poly->x2 = position->x + xoff + offset->x;
+    poly->y2 = position->y + yoff + offset->y + height;
+    poly->x3 = position->x + xoff + offset->x + width;
+    poly->y3 = position->y + yoff + offset->y + height;
 }

@@ -56,8 +56,8 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
 #define SCRATCH ((VECTOR*)0x1f800000)
 #define PT(k)   (*(VECTOR*)((s32)scratch + (command.vertices[k] << 4)))
 
-void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, VECTOR* position,
-    battle_effect_rotation_vector_t* angles, VECTOR* scale, s32 parameter) {
+void battle_effect_draw_projectile_model(
+    SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter) {
     battle_effect_decoded_t command;
     s32 unused[2];
     MATRIX matrix;
@@ -77,7 +77,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
 
     /* Psy-Q RotMatrix returns MATRIX*; the project-wide void declaration
      * changes this call's schedule. */
-    ((MATRIX * (*)(SVECTOR*, MATRIX*)) RotMatrix)((SVECTOR*)spin, &matrix);
+    ((MATRIX * (*)(SVECTOR*, MATRIX*)) RotMatrix)(spin, &matrix);
     matrix.t[2] = 0;
     matrix.t[1] = 0;
     matrix.t[0] = 0;
@@ -93,7 +93,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    RotMatrix((SVECTOR*)angles, &matrix);
+    RotMatrix(angles, &matrix);
     ScaleMatrixL(&matrix, scale);
     matrix.t[0] = position->vx;
     matrix.t[1] = position->vy;

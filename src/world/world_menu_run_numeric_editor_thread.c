@@ -53,9 +53,8 @@ void world_menu_run_numeric_editor_thread(void) {
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        world_gfx_init_image_loading((POLY_FT4*)&buffer->sprites[i],
-            (const world_image_location_t*)g_world_editor_numeric_geometry,
-            (const world_image_location_t*)&g_world_editor_numeric_table[0], descriptor);
+        world_gfx_init_image_loading(
+            &buffer->sprites[i], g_world_editor_numeric_geometry, &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
     }
     if (g_world_thread_current_id != 12) {
@@ -70,32 +69,30 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             world_clear_menu_render_buffer(text_pixels, 0x918);
-            g_world_menu_text_state.stride = 0x14;
+            g_world_menu_text_state.pen.stride = 0x14;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
-                world_text_render_signed_decimal_entries(
-                    (s32)text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+                world_text_render_signed_decimal_entries(text_pixels, entries, &g_world_menu_text_state.pen, 3);
             } else {
-                world_menu_draw_numeric_display_entries(
-                    (s32)text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+                world_menu_draw_numeric_display_entries(text_pixels, entries, &g_world_menu_text_state.pen, 3);
             }
-            g_world_menu_text_state.stride = 0x40;
+            g_world_menu_text_state.pen.stride = 0x40;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
                 world_text_render_signed_decimal_entries(
-                    (s32)(text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+                    text_pixels + 0x168, entries + 3, &g_world_menu_text_state.pen, 4);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+                    text_pixels + 0x168, entries + 3, &g_world_menu_text_state.pen, 4);
             }
-            g_world_menu_text_state.stride = 0x64;
+            g_world_menu_text_state.pen.stride = 0x64;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != 12) {
                 world_text_render_signed_decimal_entries(
-                    (s32)(text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+                    text_pixels + 0x468, entries + 7, &g_world_menu_text_state.pen, 8);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (s32)(text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+                    text_pixels + 0x468, entries + 7, &g_world_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
@@ -147,7 +144,7 @@ void world_menu_run_numeric_editor_thread(void) {
         } else {
             world_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);
         }
-        world_menu_submit_numeric_display_frame_primitives((world_primitive_group_t*)&buffer->numeric_frame);
+        world_menu_submit_numeric_display_frame_primitives(&buffer->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[0]);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->portrait);

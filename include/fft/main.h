@@ -755,9 +755,12 @@ typedef struct main_sound_music_state {
  * 0x8004d994 + 4t from a 0x8004d96c base; 0x80043a90 reads smd at
  * 0x8004d98c + 4*track and the handle 0x1c bytes below it. */
 typedef struct main_sound_music_slots {
-    s32 tune;                    /* 0x00 0x8004d96c pending tune (id | 0x80) or playing tune id */
-    s32 handles[7];              /* 0x04 0x8004d970 Suzuki music handles; [0] is the last opened slot */
-    suzuki_smd_header_t* smd[8]; /* 0x20 0x8004d98c loaded SMD data per slot */
+    s32 tune; /* 0x00 0x8004d96c pending tune (id | 0x80) or playing tune id */
+    union {
+        s32 loading_slot;         /* the word of slot 0: the slot whose SMD load is in flight */
+        suzuki_music_t* music[7]; /* the music record SuzukiPutPlaySMD returned, by slot */
+    } handles;                    /* 0x04 0x8004d970 */
+    suzuki_smd_header_t* smd[8];  /* 0x20 0x8004d98c loaded SMD data per slot */
 } main_sound_music_slots_t;
 
 /* The music state and slot table are one object: main_sound_open_generic_sfx
@@ -879,7 +882,7 @@ void main_sound_set_sfx_echo(int sound_id, int echo);
 void main_sound_stop_weather_sfx_music(void);
 void main_sound_pause_tracked_sfx(void);
 s32 main_sound_get_current_scenario_music(void);
-s32 main_sound_get_music_handle(s32 slot);
+suzuki_music_t* main_sound_get_music_handle(s32 slot);
 
 /* Verified SCUS scenario-music and tune wrappers. Include this header in
  * their definitions as well as callers so ABI declarations cannot drift. */
@@ -1194,7 +1197,7 @@ void main_system_handle_draw_sync_callback(void);
 void main_system_handle_vsync_callback(void);
 void main_boot_build_and_draw_sceap_logo(void);
 void main_boot_build_and_draw_squaresoft_logo(void);
-int main_boot_draw_sceap_logo(void* otag, u32* image);
+int main_boot_draw_sceap_logo(void* otag, void* image);
 int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
 void main_boot_fade_out_squaresoft_logo(void);
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
@@ -1213,7 +1216,7 @@ void main_util_clear_byte_data(void* destination, s32 count);
  * both routines do nothing for a nonpositive signed byte count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void* game_malloc(s32 byte_length);
-void main_util_copy_action_data(const u8* source, u8* destination);
+void main_util_copy_action_data(const void* source, void* destination);
 void main_heap_clear_smd_allocator_table(void);
 void main_noop_80014544(void);
 void main_system_enable_root_counter_2_evcb(void);
@@ -1336,16 +1339,6 @@ void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd
 
 /* zodiac */
 /* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */
-typedef struct main_zodiac_texture_position {
-    s16 x;
-    u16 y; /* Bits 8..11 select the texture-page row. */
-} main_zodiac_texture_position_t;
-
-typedef struct main_zodiac_screen_position {
-    u16 x;
-    u16 y;
-} main_zodiac_screen_position_t;
-
 typedef struct main_zodiac_sprite_frame {
     u8 u;
     u8 _unused_01;
@@ -1356,11 +1349,6 @@ typedef struct main_zodiac_sprite_frame {
     s16 offset_x;
     s16 offset_y;
 } main_zodiac_sprite_frame_t;
-
-typedef struct main_zodiac_scale {
-    s16 x;
-    s16 y;
-} main_zodiac_scale_t;
 
 typedef struct main_zodiac_draw_offset {
     u8 _unused_00[8];
@@ -1394,11 +1382,11 @@ extern u32 g_main_gfx_now_loading_otags[2][2];
  * walks the same table as a [7][sizeof(POLY_FT4)] byte array. */
 extern POLY_FT4 g_main_gfx_now_loading_primitives[2][7];
 extern u32 g_main_gfx_now_loading_visible;
-extern main_zodiac_screen_position_t g_main_gfx_zodiac_screen_position;
+extern upoint16_t g_main_gfx_zodiac_screen_position;
 extern u8 g_main_gfx_zodiac_sprite_count;
 extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
-extern main_zodiac_scale_t g_main_gfx_zodiac_sprite_scales[];
-extern main_zodiac_texture_position_t g_main_gfx_zodiac_texture_position;
+extern point16_t g_main_gfx_zodiac_sprite_scales[];
+extern world_image_location_t g_main_gfx_zodiac_texture_position;
 extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 extern s32 g_main_gfx_loading_display_frame_counter;
@@ -1412,16 +1400,15 @@ void main_gfx_load_frame_bin_into_vram(void);
 void main_gfx_load_zodiac_frame(void);
 void main_gfx_reset_display(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_gfx_swap_and_clear_otag(void);
-int main_gfx_swap_display_area(u32 otag);
+int main_gfx_swap_display_area(u32* otag);
 void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_gfx_build_now_loading_center(u32 visible);
 void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
 
-void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
-    main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,
-    main_zodiac_draw_offset_t* offset);
+void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture, upoint16_t* base,
+    main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
 
 /* other */
 extern volatile u8 g_fntload_clut_y_offset_immediate;

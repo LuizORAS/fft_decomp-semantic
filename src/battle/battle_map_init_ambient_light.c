@@ -4,7 +4,7 @@
 void battle_map_init_ambient_light(void) {
     map_color_t* color;
 
-    color = (map_color_t*)battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_AMBIENT_COLOR, (u8*)color);
+    color = battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_AMBIENT_COLOR, color);
     g_battle_map_ambient_light_color = *color;
     g_battle_map_ambient_light_transition.channels.red = color->red << 16;
     g_battle_map_ambient_light_transition.channels.green = color->green << 16;

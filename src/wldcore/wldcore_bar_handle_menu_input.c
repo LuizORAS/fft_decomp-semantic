@@ -103,18 +103,18 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
 
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
-            g_wldcore_window_records[level->main_window].y -= 0x10;
+            g_wldcore_window_records[level->main_window].position.y -= 0x10;
             level->selected_entry--;
         } else {
-            g_wldcore_window_records[level->main_window].y += (level->entry_count - 1) * 0x10;
+            g_wldcore_window_records[level->main_window].position.y += (level->entry_count - 1) * 0x10;
             level->selected_entry = level->entry_count - 1;
         }
     } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
-            g_wldcore_window_records[level->main_window].y += 0x10;
+            g_wldcore_window_records[level->main_window].position.y += 0x10;
             level->selected_entry++;
         } else {
-            g_wldcore_window_records[level->main_window].y -= (level->entry_count - 1) * 0x10;
+            g_wldcore_window_records[level->main_window].position.y -= (level->entry_count - 1) * 0x10;
             level->selected_entry = 0;
         }
     } else {

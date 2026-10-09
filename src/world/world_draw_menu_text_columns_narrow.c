@@ -7,7 +7,7 @@ void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_off
     s32 row;
     s32 column;
     s32 index;
-    s32* stride_cell = &g_world_menu_text_state.stride;
+    s32* stride_cell = &g_world_menu_text_state.pen.stride;
 
     for (row = 0; row < layout->row_count; row++) {
         *stride_cell = entry->inner_width - 8;
@@ -23,22 +23,20 @@ void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_off
             if (layout->mode[column] != 2) {
                 g_world_menu_text_color = layout->text_colors[column][index];
             }
-            g_world_menu_text_state.color = 0;
+            g_world_menu_text_state.pen.color = 0;
             if (g_world_menu_text_color == 4) {
-                g_world_menu_text_state.color = 0x44444444;
+                g_world_menu_text_state.pen.color = 0x44444444;
             }
             if (layout->mode[column] == 0) {
-                world_menu_display_text_entry(
-                    layout->text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
+                world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == 1) {
                 world_display_menu_number_entry(
-                    layout->text_ids[column][index], 2, (s32)buffer, &g_world_menu_text_state.origin_x);
+                    layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == 3) {
-                world_draw_menu_number_glyphs(
-                    layout->text_ids[column][index], 2, buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                world_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             }
             g_world_menu_text_color = 0;
-            g_world_menu_text_state.color = 0;
+            g_world_menu_text_state.pen.color = 0;
         }
     }
 }

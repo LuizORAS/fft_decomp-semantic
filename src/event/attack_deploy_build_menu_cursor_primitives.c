@@ -6,7 +6,6 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
     s32 i;
     s32 palette;
     POLY_FT4* ptr;
-    u8* p2;
 
     battle_gfx_set_draw_mode_for_texture_page(&render_buffer->menu_draw_mode, 0);
 
@@ -17,31 +16,21 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
         SetSemiTrans(ptr, 0);
         SetShadeTex(ptr, 1);
         /* The draw area's x/y serve as the screen base point. */
-        battle_gfx_init_image_loading(ptr, g_attack_deploy_texture_location,
-            (const battle_image_location_t*)&g_attack_gfx_draw_area_template,
-            g_attack_deploy_menu_cursor_cells + (i * 0xC));
+        battle_gfx_init_image_loading(ptr, g_attack_deploy_texture_location, &g_attack_gfx_draw_area_template,
+            &g_attack_deploy_menu_cursor_cells[i]);
         i += 1;
     } while (i < 4);
 
     if (mode != 1) {
         palette = 0x7D7C;
-        i = 3;
-        /* The 0x78 cursor base yields the target's large store displacement. */
-        p2 = (u8*)render_buffer + 0x78;
-        do {
-            *(s16*)(p2 + 0x892) = palette;
-            i -= 1;
-            p2 -= sizeof(POLY_FT4);
-        } while (i >= 0);
+        for (i = 3; i >= 0; i--) {
+            render_buffer->menu_cursor[i].clut = palette;
+        }
     } else {
         palette = 0x7DFC;
-        i = 3;
-        p2 = (u8*)render_buffer + 0x78;
-        do {
-            *(s16*)(p2 + 0x892) = palette;
-            i -= 1;
-            p2 -= sizeof(POLY_FT4);
-        } while (i >= 0);
+        for (i = 3; i >= 0; i--) {
+            render_buffer->menu_cursor[i].clut = palette;
+        }
     }
 
     battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_draw_mode);

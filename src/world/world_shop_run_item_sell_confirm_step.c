@@ -37,8 +37,7 @@ void world_shop_run_item_sell_confirm_step(void) {
             } else {
                 message = 7;
             }
-            world_item_build_category_list(
-                0, next_category, message, (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+            world_item_build_category_list(0, next_category, message, g_world_menu_entry_ids, 0);
             world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
                 g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], g_world_shop_sell_list_menu_script);
             world_menu_set_window_scale_step(10);

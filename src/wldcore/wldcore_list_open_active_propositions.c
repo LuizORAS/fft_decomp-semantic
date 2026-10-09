@@ -93,7 +93,7 @@ void wldcore_list_open_active_propositions(void) {
     wldcore_window_build_render_record_image(index, bounds, 2, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x60;
     base->y = -0x28;
 
@@ -147,22 +147,22 @@ void wldcore_list_open_active_propositions(void) {
     }
     temp = g_wldcore_active_propositions_saved_cursor[0];
     g_wldcore_menu_stack_records_next[depth].proposition_list.cursor = temp;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.cursor_window].x
-        = g_wldcore_window_render_records[index].base_x + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.cursor_window].y
-        = g_wldcore_window_render_records[index].base_y - g_wldcore_active_propositions_saved_cursor[0] * -0x10 + 0xE;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.title_window].x
-        = g_wldcore_window_render_records[index].base_x + 3;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.title_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.count_window].x
-        = g_wldcore_window_render_records[index].base_x + 0x94;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.count_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.days_window].x
-        = g_wldcore_window_render_records[index].base_x + 0xB2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.cursor_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 6;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.cursor_window].position.y
+        = g_wldcore_window_render_records[index].base.y - g_wldcore_active_propositions_saved_cursor[0] * -0x10 + 0xE;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.title_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 3;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.title_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.count_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 0x94;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.count_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.days_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 0xB2;
     g_wldcore_menu_stack_depth = depth + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.days_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].proposition_list.days_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_ACTIVE_PROPOSITIONS;
 }

@@ -10,7 +10,7 @@
  * quads per cursor layer, faded by g_bunit_cursor_trail_brightness except for the newest point.
  * abs() matters: GCC expands it to the single-insn abssi2, which keeps each
  * loop body one basic block as in the target. */
-void bunit_gfx_update_rhombus_cursor_trail(bunit_cursor_trail_point_t* target) {
+void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
     u8 rgb[3];
     s32 i;
     s32 last;

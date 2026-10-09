@@ -68,7 +68,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
     }
     level->cursor_row ^= 1;
     toggle = level->cursor_row;
-    g_wldcore_window_records[level->cursor_window].y
-        = g_wldcore_window_render_records[level->option_render].base_y + 0x3c + toggle * 0x10;
+    g_wldcore_window_records[level->cursor_window].position.y
+        = g_wldcore_window_render_records[level->option_render].base.y + 0x3c + toggle * 0x10;
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
 }

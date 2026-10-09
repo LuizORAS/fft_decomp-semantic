@@ -23,7 +23,7 @@ void world_menu_load_scrollable_list_layout(world_menu_list_record_t* record) {
         }
         record = (world_menu_list_record_t*)((u8*)record + record->length);
     }
-    g_world_menu_list_row_record_count = record->x;
+    g_world_menu_list_row_record_count = record->skip_count;
     g_world_menu_row_height = record->row_height;
     g_world_menu_list_visible_rows = record->visible_rows;
     g_world_menu_list_glyph_width = record->width_a;

@@ -4,7 +4,7 @@
 /* Applies the auto-battle choice of the menu selection (3 or 4) to the stored unit and confirms the
  * thread's menu entry without a sound. */
 void world_menu_confirm_auto_battle_selection_thread(void) {
-    s32 entry = world_thread_get_current_parameter_1();
+    world_menu_entry_t* entry = world_thread_get_current_parameter_1();
     battle_stats_t* unit = world_unit_get_battle_stats_for_stored();
     world_menu_thread_data_t* menu = (world_menu_thread_data_t*)g_world_menu_thread_menu_data;
 

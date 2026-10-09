@@ -127,11 +127,11 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     case BATTLE_NUMERIC_DISPLAY_GAINED_JP:
         break;
     }
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_0, display_0->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_0, main_gfx_get_otag() + 1);
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_1, display_1->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_1, main_gfx_get_otag() + 1);
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_2, display_2->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_2, main_gfx_get_otag() + 1);
+    battle_gfx_construct_polygon_data_for_units(
+        display_0, display_0->part_count, 0, &position, 0, 0, &zoom_0, main_gfx_get_otag() + 1);
+    battle_gfx_construct_polygon_data_for_units(
+        display_1, display_1->part_count, 0, &position, 0, 0, &zoom_1, main_gfx_get_otag() + 1);
+    battle_gfx_construct_polygon_data_for_units(
+        display_2, display_2->part_count, 0, &position, 0, 0, &zoom_2, main_gfx_get_otag() + 1);
     display->progress += g_main_system_animation_speed;
 }

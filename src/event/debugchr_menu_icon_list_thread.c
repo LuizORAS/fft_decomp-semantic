@@ -23,7 +23,7 @@ void debugchr_menu_icon_list_thread(void) {
     if (cursor == -1) {
         cursor = 0;
     }
-    battle_menu_build_window_sprites((battle_menu_window_header_t*)&rect, (battle_menu_window_spec_t*)state, record);
+    battle_menu_build_window_sprites(&rect, state, record);
     battle_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 0;
     redraw = (s16*)state->text_binding;
@@ -33,10 +33,10 @@ void debugchr_menu_icon_list_thread(void) {
             *redraw = 0;
             buffer = battle_menu_build_and_upload_window_frame_image(state->inner_width, state->inner_height, &rect, 1);
             fresh = 1;
-            g_menu_text_state.stride = state->inner_width;
+            g_menu_text_state.pen.stride = state->inner_width;
             battle_menu_set_text_origin(8, 9);
             g_battle_menu_text_palette_offset = 0;
-            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.origin_x);
+            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
         record = &records[i & 1];

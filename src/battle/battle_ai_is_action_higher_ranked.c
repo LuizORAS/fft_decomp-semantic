@@ -13,8 +13,7 @@ s32 battle_ai_is_action_higher_ranked(battle_ai_action_data_t* first, battle_ai_
     s32 proximity_b;
     s32 value;
 
-    comparison = battle_ai_compare_target_priority_and_hit_rate(
-        (battle_ai_action_rank_t*)&first->rank_byte, (battle_ai_action_rank_t*)&second->rank_byte);
+    comparison = battle_ai_compare_target_priority_and_hit_rate(&first->rank, &second->rank);
     value = 1;
     if (comparison == BATTLE_AI_RANK_ABOVE)
         return value;

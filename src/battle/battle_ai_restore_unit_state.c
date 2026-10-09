@@ -45,7 +45,7 @@ void battle_ai_restore_unit_state(s32 mode) {
             battle_ai_transfer_byte_values(&unit->has_turn, &snapshot->has_turn, 3);
             unit->mount_info = snapshot->mount_info;
             battle_ai_transfer_byte_values(&unit->auto_battle_setting, &snapshot->auto_battle_setting, 8);
-            battle_ai_transfer_halfword_values((u16*)&unit->action_actor_id, (u16*)ai->unit_action_records[id], 20);
+            battle_ai_transfer_halfword_values(&unit->action_actor_id, ai->unit_action_records[id], 20);
         }
     }
     if (mode == 0) {

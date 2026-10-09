@@ -15,7 +15,7 @@
  * after the call. Testing depth & MAP_TILE_HALF_HEIGHT_MASK directly (rather
  * than masking depth in place) keeps the height load ahead of the depth load.
  */
-s32 battle_target_calculate_cursor_tile_polygon(battle_screen_coords_t* coords, u8 layer, SVECTOR* quad) {
+s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* quad) {
     map_tile_t* tile;
     s32 split;
     s32 rise;
@@ -24,18 +24,18 @@ s32 battle_target_calculate_cursor_tile_polygon(battle_screen_coords_t* coords, 
     u8 slope;
 
     split = 0;
-    tile = battle_map_get_tile_data_pointer((coords->x / 28), (coords->y / 28), layer);
+    tile = battle_map_get_tile_data_pointer((coords->vx / 28), (coords->vz / 28), layer);
     height = tile->height;
     depth = tile->depth_half_height.value;
     slope = tile->slope_type;
-    quad[0].vx = coords->x - 14;
-    quad[0].vz = coords->y + 14;
-    quad[1].vx = coords->x + 14;
-    quad[1].vz = coords->y + 14;
-    quad[2].vx = coords->x - 14;
-    quad[2].vz = coords->y - 14;
-    quad[3].vx = coords->x + 14;
-    quad[3].vz = coords->y - 14;
+    quad[0].vx = coords->vx - 14;
+    quad[0].vz = coords->vz + 14;
+    quad[1].vx = coords->vx + 14;
+    quad[1].vz = coords->vz + 14;
+    quad[2].vx = coords->vx - 14;
+    quad[2].vz = coords->vz - 14;
+    quad[3].vx = coords->vx + 14;
+    quad[3].vz = coords->vz - 14;
     quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = -((height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 12);
     if ((depth & MAP_TILE_HALF_HEIGHT_MASK) != 0) {
         rise = (depth & MAP_TILE_HALF_HEIGHT_MASK) * 6;

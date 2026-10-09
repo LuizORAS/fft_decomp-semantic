@@ -28,7 +28,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
     urect16_t marker;
     u8 unused_40[8];
     u8* start;
-    u16* ids;
+    s16* ids;
     u16 previous;
     s32 input;
     u8 speed;
@@ -47,7 +47,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
     if (g_jobstts_menu_list_entry_count <= 0) {
         count = command[4] + 1;
         while (--count != -1) {
-            command = (u8*)jobstts_cmd_skip_group(command);
+            command = jobstts_cmd_skip_group(command);
         }
         return command;
     }
@@ -69,7 +69,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                     if (g_jobstts_menu_scroll_base_index > 0) {
                         g_jobstts_menu_list_scroll_direction = -1;
                         if (g_jobstts_menu_list_text_table != 0) {
-                            s32 id;
+                            s16 id;
                             s32 height;
 
                             height = g_jobstts_menu_list_row_height;
@@ -81,7 +81,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                             rect.unsigned_rect.h = height;
                             *ids = id;
                             jobstts_text_render_id_rows_to_vram(
-                                (s32)g_jobstts_menu_list_text_table, (s16*)ids, &rect.signed_rect, 0);
+                                g_jobstts_menu_list_text_table, ids, &rect.signed_rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
@@ -94,7 +94,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                         < g_jobstts_menu_list_entry_count - 1) {
                         g_jobstts_menu_list_scroll_direction = 1;
                         if (g_jobstts_menu_list_text_table != 0) {
-                            u16* entry_ids;
+                            s16* entry_ids;
 
                             j = g_jobstts_menu_scroll_base_index + g_jobstts_menu_list_visible_rows - 1;
                             entry_ids = &g_jobstts_menu_list_scroll_entry_ids;
@@ -105,7 +105,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                             rect.unsigned_rect.w = g_jobstts_menu_list_vram_width;
                             rect.unsigned_rect.h = g_jobstts_menu_list_row_height;
                             jobstts_text_render_id_rows_to_vram(
-                                (s32)g_jobstts_menu_list_text_table, (s16*)entry_ids, &rect.signed_rect, 0);
+                                g_jobstts_menu_list_text_table, entry_ids, &rect.signed_rect, 0);
                         }
                     }
                 } else if ((g_jobstts_menu_list_selected_index < (g_jobstts_menu_list_entry_count - 1))

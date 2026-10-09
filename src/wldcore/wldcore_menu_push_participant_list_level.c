@@ -33,13 +33,13 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
     g_world_text_substitution_values[0] = g_main_active_propositions[proposition].proposition_id | 0xD000;
     world_thread_set_parameters(0xE, 0x19, 0xB849, 0);
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.render_index]
-              .base_x
+              .base.x
         + 0x38;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.render_index]
-              .base_y
+              .base.y
         - -(g_wldcore_menu_cursor_states[15].selected_index * 16)
         - -(g_wldcore_menu_stack_records_next[depth].window_pair_render.panel_rows * 16 + 0xE);
     g_wldcore_menu_stack_records_next[depth].list_window.entry_count

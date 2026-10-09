@@ -54,7 +54,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
         return;
     }
     if (unit->item_display_active) {
-        battle_gfx_init_item_get_rendering((battle_gfx_render_unit_t*)unit);
+        battle_gfx_init_item_get_rendering(unit);
     }
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
         if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
@@ -66,13 +66,12 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                         continue;
                     }
                     display = unit->sprite_blocks[entry - 1].display;
-                    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display,
-                        display->part_count, 0, (s16*)&position, angle, flags, (s16*)&zoom,
-                        main_gfx_get_otag() + unit->otag_depth_index);
+                    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
+                        flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 } else {
                     display = unit->sprite_display_section;
-                    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, 3, 0,
-                        (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    battle_gfx_construct_polygon_data_for_units(
+                        display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                     rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
                     if (rider != 0 && rider->draw_enabled != 0) {
                         rider_position.vx = rider->camera_relative_x;
@@ -86,20 +85,19 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                                     continue;
                                 }
                                 rider_display = rider->sprite_blocks[entry - 1].display;
-                                battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)rider_display,
-                                    rider_display->part_count, 0, (s16*)&rider_position, angle, rider_flags,
-                                    (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                                battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
+                                    &rider_position, angle, rider_flags, &zoom,
+                                    main_gfx_get_otag() + unit->otag_depth_index);
                             } else {
                                 rider_display = rider->sprite_display_section;
-                                battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)rider_display,
-                                    rider_display->part_count, 0, (s16*)&rider_position, angle, rider_flags,
-                                    (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                                battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
+                                    &rider_position, angle, rider_flags, &zoom,
+                                    main_gfx_get_otag() + unit->otag_depth_index);
                             }
                         }
                     }
-                    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display,
-                        display->part_count, 3, (s16*)&position, angle, flags, (s16*)&zoom,
-                        main_gfx_get_otag() + unit->otag_depth_index);
+                    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 3, &position, angle,
+                        flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 }
             }
             if (unit->shadow_graphic_trigger) {
@@ -114,13 +112,12 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     continue;
                 }
                 display = unit->sprite_blocks[entry - 1].display;
-                battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, display->part_count,
-                    0, (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle, flags,
+                    &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             } else {
                 display = unit->sprite_display_section;
-                battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, display->part_count,
-                    0, (s16*)&position, angle, (s16)(flags ^ unit->animation_flags), (s16*)&zoom,
-                    main_gfx_get_otag() + unit->otag_depth_index);
+                battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
+                    (s16)(flags ^ unit->animation_flags), &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             }
         }
         if (unit->shadow_graphic_trigger) {

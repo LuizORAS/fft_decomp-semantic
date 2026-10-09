@@ -1,9 +1,8 @@
 #include "fft/main.h"
 #include "psx/libgte.h"
 
-void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
-    main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,
-    main_zodiac_draw_offset_t* offset) {
+void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture, upoint16_t* base,
+    main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset) {
     s32 x = frame->offset_x * scale->x;
     s32 y = frame->offset_y * scale->y;
     s32 width = frame->width * scale->x;

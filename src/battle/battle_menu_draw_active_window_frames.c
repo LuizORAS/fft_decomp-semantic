@@ -29,12 +29,12 @@ void battle_menu_draw_active_window_frames(void) {
             continue;
         }
         window = buffer;
-        battle_gfx_set_primitive_brightness((u8*)&window->sprites[0], window->r);
-        battle_gfx_set_primitive_brightness((u8*)&window->sprites[1], window->r);
-        battle_gfx_set_primitive_brightness((u8*)&window->sprites[2], window->r);
-        battle_gfx_set_primitive_brightness((u8*)&window->sprites[3], window->r);
-        battle_gfx_set_primitive_brightness((u8*)&window->quads[0], window->r);
-        battle_gfx_set_primitive_brightness((u8*)&window->quads[1], window->r);
+        battle_gfx_set_primitive_brightness(&window->sprites[0], window->r);
+        battle_gfx_set_primitive_brightness(&window->sprites[1], window->r);
+        battle_gfx_set_primitive_brightness(&window->sprites[2], window->r);
+        battle_gfx_set_primitive_brightness(&window->sprites[3], window->r);
+        battle_gfx_set_primitive_brightness(&window->quads[0], window->r);
+        battle_gfx_set_primitive_brightness(&window->quads[1], window->r);
         offset = window->quads[0].x1 - window->quads[0].x0;
         if (offset / 8 * 8 == offset - 4) {
             offset -= 15;

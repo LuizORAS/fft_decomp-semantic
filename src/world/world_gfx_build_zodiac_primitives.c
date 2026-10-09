@@ -9,7 +9,7 @@
  * into the ordering table and the quads only when the view asks for it.
  */
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly) {
-    world_formation_screen_point_t position;
+    upoint16_t position;
     s32 i;
     s32 x;
     s32 y;
@@ -37,8 +37,8 @@ void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* po
         position.x = x;
         position.y = y;
         world_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_world_formation_view_texture_page,
-            (world_formation_screen_point_t*)&g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i],
-            &position, &view->offset);
+            (upoint16_t*)&g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i], &position,
+            &view->offset);
         if (view->link_primitives != 0) {
             addPrim(view->ot, poly);
             poly++;

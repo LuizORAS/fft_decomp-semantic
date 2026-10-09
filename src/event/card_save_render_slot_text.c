@@ -20,5 +20,5 @@ void card_save_render_slot_text(s32 slot) {
         rect.w = 0x32;
         rect.h = 0x20;
     }
-    card_text_render_id_rows_to_vram(&g_card_save_slot_descriptions[slot], g_card_save_slot_text_row_ids, &rect, 0);
+    card_text_render_id_rows_to_vram(g_card_save_slot_descriptions[slot].data, g_card_save_slot_text_row_ids, &rect, 0);
 }

@@ -19,7 +19,7 @@ void wldcore_menu_push_root_level(void) {
 
     /* Taken from the record array: naming g_wldcore_window_record_positions here changes the
      * target's address form. */
-    xy = (wldcore_window_xy_t*)&g_wldcore_window_records[0].x;
+    xy = (wldcore_window_xy_t*)&g_wldcore_window_records[0].position.x;
     records = g_wldcore_window_records;
 
     depth = g_wldcore_menu_stack_depth;

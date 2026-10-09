@@ -34,7 +34,7 @@ s32 battle_ai_build_movement_scenarios(void) {
         && (decision->main_target_id == g_battle_ai_data_base.acting_unit_id
             || ((ai->unit_decisions[decision->main_target_id].targeting_flags_2 >> 4)
                 & (BATTLE_AI_TARGET_UNTARGETABLE >> 4)))) {
-        battle_ai_clear_words((s32*)ai->tile_target_distance, sizeof(ai->tile_target_distance));
+        battle_ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
     } else {
     fill_target_distance:
         if (battle_ai_fill_target_distance_grid(&decision->target) == -1) {

@@ -53,7 +53,7 @@ void bunit_menu_run_reorder_list(void) {
         opts[11] = -1;
         bunit_text_concatenate_entries(g_bunit_text_menu_section, g_bunit_text_reorder_list_buffer, opts, 1);
         g_bunit_menu_reorder_list_redraw_request = 1;
-        bunit_unit_copy_reorder_list_to_orders(1, (u8*)g_bunit_menu_reorder_list_entries);
+        bunit_unit_copy_reorder_list_to_orders(1, g_bunit_menu_reorder_list_entries);
         bunit_unit_sort_index_list_by_order_keys(1);
         bunit_unit_build_reorderable_index_list();
         bunit_unit_build_list_index_map();

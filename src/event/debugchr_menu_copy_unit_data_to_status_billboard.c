@@ -8,15 +8,13 @@
  * same layout. Reusing `unit` for the loop's stats and lookup pointers ranks
  * it ahead of `i` for $s0, and reading MP directly rather than through `value`
  * gives CT $v1 and the callback address $v0 in the call block. */
-void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, u8* buffer) {
-    battle_unit_status_record_t* output;
+void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output) {
     s32 resolved_id;
     s32 count;
     s32 i;
     s32 unit_id;
     u16 value;
 
-    output = (battle_unit_status_record_t*)buffer;
     output->level = unit->level;
     output->team_kind = 0;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK)

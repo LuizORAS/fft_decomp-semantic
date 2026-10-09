@@ -1,6 +1,6 @@
 #include "psx/types.h"
 
-const u8* jobstts_cmd_skip_group(const u8* data) {
+u8* jobstts_cmd_skip_group(u8* data) {
     s32 count;
 
     if (data[0] == 1) {

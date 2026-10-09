@@ -29,8 +29,8 @@ void wldcore_window_init_record_pools(void) {
         window_color[i].blue = 0x80;
     }
 
-    render_geometry = (wldcore_render_geometry_init_t*)&g_wldcore_window_render_records->clut_x;
-    render_color = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->red;
+    render_geometry = (wldcore_render_geometry_init_t*)&g_wldcore_window_render_records->clut.x;
+    render_color = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
     for (i = 0; i < 0x20; i++) {
         g_wldcore_window_render_records[i].flags = 2;
         g_wldcore_window_render_records[i].priority = 1;

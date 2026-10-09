@@ -44,8 +44,8 @@ s32 battle_ai_simulate_action_and_score(void) {
         unit_index >= 0; unit_index--, clear_cursor = (battle_ai_data_t*)((u8*)clear_cursor - 1)) {
         clear_cursor->unit_acts_before_me[0] = 0;
     }
-    ai->current_action.priority = 0;
-    ai->current_action.base_hit_percent = 0xff;
+    ai->current_action.rank.priority = 0;
+    ai->current_action.rank.base_hit_percent = 0xff;
     if (ai->current_action.act_before_move) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
@@ -73,11 +73,11 @@ s32 battle_ai_simulate_action_and_score(void) {
     }
     if (ai->current_action.skillset == SKILLSET_ID_DEFEND) {
         battle_status_inflict_defending_to_battle_id(ai->acting_unit_id);
-        ai->current_action.base_hit_percent = 100;
+        ai->current_action.rank.base_hit_percent = 100;
         ai->acting_unit->action_taken = 1;
     }
     if (ai->current_action.skillset == 0)
-        ai->current_action.base_hit_percent = 100;
+        ai->current_action.rank.base_hit_percent = 100;
     battle_action_end_turn(ai->acting_unit_id);
     ai->saved_between_turn_state = g_battle_between_turn_state;
     ai->saved_between_turn_resume_state = g_battle_between_turn_resume_state;
@@ -248,12 +248,12 @@ score_state:
             }
             if (ai->unit_decisions[unit_index].enemy_flag)
                 score = -score;
-            ai->current_action.priority += score;
+            ai->current_action.rank.priority += score;
         }
         if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_WEAPON_INVENTORY
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_SHURIKEN
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_BALL)
-            ai->current_action.base_hit_percent >>= 1;
+            ai->current_action.rank.base_hit_percent >>= 1;
         battle_ai_restore_unit_state(0);
         ai->resume_pending = 0;
         return 1;

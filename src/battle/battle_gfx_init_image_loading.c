@@ -3,8 +3,9 @@
 #include "psx/types.h"
 
 /* Battle twin of world_gfx_init_image_loading: fill a textured quad from load and screen placement parameters. */
-void battle_gfx_init_image_loading(POLY_FT4* primitive, const battle_image_location_t* base_load,
-    const battle_image_location_t* base_screen, const world_gfx_image_load_parameters_t* parameters) {
+void battle_gfx_init_image_loading(void* prim, const world_image_location_t* base_load, const RECT* base_screen,
+    const world_gfx_image_load_parameters_t* parameters) {
+    POLY_FT4* primitive = prim;
     int texture_column;
 
     if ((primitive->code & 0x7c) == 0x64) {

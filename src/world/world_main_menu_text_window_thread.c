@@ -97,13 +97,13 @@ void world_main_menu_text_window_thread(void) {
         phase = i & 0x1F;
         if (phase == 0) {
             buffer = world_menu_build_and_upload_window_frame_image(entry->width, entry->height, &rect, 1);
-            g_world_menu_text_state.stride = entry->width;
+            g_world_menu_text_state.pen.stride = entry->width;
             world_menu_set_text_origin(10, 8);
             g_world_menu_text_color = 0;
             world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
             g_world_text_substitution_values[0] = entry->text_values[0];
             g_world_text_substitution_values[1] = entry->text_values[1];
-            world_menu_display_text_entry(entry->text_id, buffer, &g_world_menu_text_state.origin_x);
+            world_menu_display_text_entry(entry->text_id, buffer, &g_world_menu_text_state.pen);
             world_script_copy_bytes(g_world_text_substitution_values, g_world_text_substitution_values_backup, 0x80);
             LoadImage(&rect, buffer);
         }

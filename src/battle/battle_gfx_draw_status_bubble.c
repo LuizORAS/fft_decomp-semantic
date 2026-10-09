@@ -93,6 +93,5 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
     display = unit->status_bubble_display;
     otag = main_gfx_get_otag();
     depth = transformed.vz / 4;
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, display->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom, otag + depth);
+    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, 0, 0, &zoom, otag + depth);
 }

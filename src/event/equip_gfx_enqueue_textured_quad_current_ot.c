@@ -14,10 +14,8 @@ void equip_gfx_enqueue_textured_quad_current_ot(rect, u, v, color, semitrans, te
 /* clang-format on */
 {
     POLY_FT4* poly;
-    u16 index = g_equip_gfx_poly_ft4_count;
 
-    g_equip_gfx_poly_ft4_count = index + 1;
-    poly = &g_equip_gfx_context->textured_quads[index];
+    poly = &g_equip_gfx_context->textured_quads[g_equip_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);

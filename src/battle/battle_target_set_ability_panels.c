@@ -33,7 +33,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
     s32 x;
     u8 y;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     unit = &g_battle_unit_stats[action.unit_id];
     ability = &g_main_ability_range_data[(s16)action.ability_id];
     range = ability->range;

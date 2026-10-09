@@ -65,8 +65,7 @@ void require_render_display_condition_special_cases_thread(void) {
         poly->x3 = QUAD.x + 0x100 + QUAD.width;
         poly->y3 = QUAD.y + 0x78 + QUAD.height;
     }
-    battle_copy_bytes(
-        (POLY_GT4*)g_require_gfx_poly_gt4_banks + 40, g_require_gfx_poly_gt4_banks, 40 * sizeof(POLY_GT4));
+    battle_copy_bytes(g_require_gfx_poly_gt4_banks[1], g_require_gfx_poly_gt4_banks, 40 * sizeof(POLY_GT4));
 
     buffer = 0;
     scale = 0x30;
@@ -81,7 +80,7 @@ void require_render_display_condition_special_cases_thread(void) {
         }
         buffer ^= 1;
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
-            POLY_GT4* polys = (POLY_GT4*)g_require_gfx_poly_gt4_banks + 32 + buffer * 40;
+            POLY_GT4* polys = &g_require_gfx_poly_gt4_banks[buffer][32];
             u8* parameters = &table[parameter_index];
             const u8* vertex_colors = VERTEX_COLORS;
 
@@ -109,7 +108,7 @@ void require_render_display_condition_special_cases_thread(void) {
         }
         buffer ^= 1;
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
-            POLY_GT4* polys = (POLY_GT4*)g_require_gfx_poly_gt4_banks + 32 + buffer * 40;
+            POLY_GT4* polys = &g_require_gfx_poly_gt4_banks[buffer][32];
             u8* parameters = &table[parameter_index];
             const u8* vertex_colors = VERTEX_COLORS;
 
@@ -135,7 +134,7 @@ fade_out:
         }
         buffer ^= 1;
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
-            POLY_GT4* polys = (POLY_GT4*)g_require_gfx_poly_gt4_banks + 32 + buffer * 40;
+            POLY_GT4* polys = &g_require_gfx_poly_gt4_banks[buffer][32];
             u8* parameters = &table[parameter_index];
             const u8* vertex_colors = VERTEX_COLORS;
 

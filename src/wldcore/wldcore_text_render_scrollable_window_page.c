@@ -31,14 +31,14 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
         top = state->extra_base.y - offset;
         limit = state->base.y + 8;
         if (top >= limit) {
-            g_wldcore_window_render_records[state->extra_render_index].base_y = top;
+            g_wldcore_window_render_records[state->extra_render_index].base.y = top;
             g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
                 = state->extra_bounds.position.y;
             g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
                 = state->extra_bounds.dimensions.y;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
         } else if (top + (s16)state->extra_bounds.dimensions.y >= limit) {
-            g_wldcore_window_render_records[state->extra_render_index].base_y = limit;
+            g_wldcore_window_render_records[state->extra_render_index].base.y = limit;
             g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
                 = state->extra_bounds.position.y + offset;
             g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
@@ -52,5 +52,5 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
     point.y = 8;
     wldcore_menu_display_text_entry(state->render_record_index, state->text_id, point, g_wldcore_window_image_buffer);
     wldcore_window_load_image_record_to_vram(state->render_record_index, g_wldcore_window_image_buffer);
-    *(wldcore_point32_t*)&g_wldcore_window_render_records[state->render_record_index].base_x = state->base;
+    g_wldcore_window_render_records[state->render_record_index].base = state->base;
 }
