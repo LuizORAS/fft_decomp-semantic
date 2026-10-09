@@ -333,11 +333,11 @@ extern u8 g_attack_panel_comparison_portrait_image[];
 extern RECT g_attack_panel_comparison_portrait_rect;
 extern s16 g_attack_panel_comparison_unit_data[];
 extern u8 g_attack_panel_editor_label_cells[];
-extern u16 g_attack_panel_editor_label_cluts[];
+extern u16 g_attack_panel_editor_label_cluts[][2];
 extern u8 g_attack_panel_editor_mode_cell[];
 extern u8 g_attack_panel_editor_mode_cells[];
 extern u8 g_attack_panel_editor_value_cells[];
-extern u16 g_attack_panel_editor_value_cluts[];
+extern u16 g_attack_panel_editor_value_cluts[][2];
 extern battle_menu_panel_frame_geometry_t g_attack_panel_frame_rect;
 extern CVECTOR g_attack_panel_gauge_bar_colors[];
 extern u8 g_attack_panel_portrait_cell[];
@@ -372,10 +372,9 @@ void attack_panel_run_character_status_thread(void);
 extern s32 g_attack_numeric_editor_redraw_request;
 
 /* Entries [1] and [2] of the unit-name text file's section-offset table (0x801cd2b0, s32[32], ending at
- * g_attack_text_data). They stay separate volatile symbols: as elements of the table GCC addresses them from the
- * g_attack_text_data base, and volatile keeps their loads in target order in attack_deploy_find_fieldable_units. */
-extern volatile s32 g_attack_text_section_offset_1;
-extern volatile s32 g_attack_text_section_offset_2;
+ * g_attack_text_data). */
+extern s32 g_attack_text_section_offset_1;
+extern s32 g_attack_text_section_offset_2;
 extern u8 g_attack_text_data[];
 extern u8 g_attack_numeric_editor_thread_params[];
 extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;

@@ -8,10 +8,6 @@
  * g_equip_selected_unit_stat_summary / g_equip_panel_comparison_billboard, and the per-thread display record.
  * g_equip_panel_gauge_bar_colors holds the four Gouraud vertex colours of each bar. */
 
-/* The bar loop advances its destination by one POLY_G4 per iteration instead of
-   indexing bars[i], so every store keeps the target's positive 0x1E4-0x202
-   displacement from an unmoved base; see the note at the loop. */
-
 struct world_menu_palette_primitives;
 struct menu_number_entry;
 struct menu_number_position;
@@ -23,9 +19,6 @@ struct menu_number_position;
  * numeric block is drawn as five separate entries (two through
  * equip_text_render_decimal_entry_list), as in world_menu_unit_status_banner_thread; the
  * zodiac/g_debugchr_editor_active branch of the DEBUGCHR version is absent.
- *
- * The register pins and empty asm barriers are inherited from the DEBUGCHR
- * twin and emit no instructions; see the notes at each use.
  */
 void equip_render_unit_status_panel_thread(void) {
     RECT rects[6];
@@ -50,18 +43,9 @@ void equip_render_unit_status_panel_thread(void) {
     s32 suppress;                                              /* spD0 */
 
     s32 thread_id;
-    s32 done;
     u8* threads;
     s32 frame;
-    u8* walk;
-    u8* walk2;
-    u8* walk3;
     s32 i;
-    s32 off;
-    s32 off1;
-    s32 off2;
-    s32 off3;
-    s32 off4;
     s32 panel_x;
     s32 panel_shake_y;
     s32 editor_x;
@@ -128,25 +112,15 @@ void equip_render_unit_status_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, 0);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
-    frame = 0;
-    off1 = 0x24C;
-    do {
-        battle_gfx_init_default_poly_ft4((u8*)editor + off1);
-        frame += 1;
-        off1 += 0x28;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_default_poly_ft4(&editor->portrait[frame]);
+    }
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
-    frame = 0;
-    walk = g_equip_panel_editor_value_cells;
-    off2 = 0x104;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)editor + off2, g_equip_editor_numeric_geometry, &g_equip_gfx_portrait_origin.location, walk);
-        walk += 0xC;
-        frame += 1;
-        off2 += 0x14;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_image_loading(&editor->value_sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_gfx_portrait_origin.location, &g_equip_panel_editor_value_cells[frame * 0xC]);
+    }
     if (state->mode >= 4) {
         state->mode = 0;
     }
@@ -155,16 +129,10 @@ void equip_render_unit_status_panel_thread(void) {
     } else {
         battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
     }
-    frame = 0;
-    walk2 = g_equip_panel_editor_label_cells;
-    off3 = 0x154;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)editor + off3, g_equip_editor_numeric_geometry, &g_equip_gfx_portrait_origin.location, walk2);
-        walk2 += 0xC;
-        frame += 1;
-        off3 += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&editor->label_sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_gfx_portrait_origin.location, &g_equip_panel_editor_label_cells[frame * 0xC]);
+    }
     battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, 0);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, 1);
@@ -176,16 +144,10 @@ void equip_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &panel->sprites[1], 0);
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
-    frame = 0;
-    walk3 = g_equip_panel_sprite_cells;
-    off4 = 0xEC;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)panel + off4, g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect.location, walk3);
-        walk3 += 0xC;
-        frame += 1;
-        off4 += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&panel->sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_panel_frame_rect.location, &g_equip_panel_sprite_cells[frame * 0xC]);
+    }
     battle_gfx_init_image_loading(&panel->portrait, g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect.location,
         g_equip_panel_portrait_cell);
     if (state->mode == 1) {
@@ -199,7 +161,7 @@ void equip_render_unit_status_panel_thread(void) {
     anim_state = 0;
     prev_unit = state->unit;
     cur_unit = state->unit;
-    do {
+    for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
@@ -225,41 +187,11 @@ void equip_render_unit_status_panel_thread(void) {
         if (thread->highlight != 0) {
             highlight = 1;
         }
-        i = 0;
-        {
-            u16* clut_table;
-            battle_menu_status_panel_editor_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            clut_table = g_equip_panel_editor_value_cluts;
-            dst = editor;
-            do {
-                /* Launder: keeps clut_offset loop-variant so loop.c walks the table, not table + offset.
-                   dst advances one SPRT per pass and the read stays integer-plus-pointer, which is
-                   how the target addresses both. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->value_sprites[0].clut = *(u16*)(clut_offset + (u32)clut_table);
-                clut_table += 2;
-                i += 1;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 4);
+        for (i = 0; i < 4; i++) {
+            editor->value_sprites[i].clut = g_equip_panel_editor_value_cluts[i][highlight];
         }
-        i = 0;
-        {
-            u16* clut_table;
-            battle_menu_status_panel_editor_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            clut_table = g_equip_panel_editor_label_cluts;
-            dst = editor;
-            do {
-                /* Launder: as in the loop above. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->label_sprites[0].clut = *(u16*)(clut_offset + (u32)clut_table);
-                clut_table += 2;
-                i += 1;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 7);
+        for (i = 0; i < 7; i++) {
+            editor->label_sprites[i].clut = g_equip_panel_editor_label_cluts[i][highlight];
         }
         i = 0;
         do {
@@ -381,15 +313,13 @@ void equip_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                /* Volatile read of the named field: the request word is
-                   fetched again rather than reused from the test above. */
-                portrait_arg = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
+                portrait_arg = thread->work;
                 cur_unit = state->unit;
             } else {
-                portrait_arg = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
+                portrait_arg = thread->work;
                 cur_unit = state->unit;
             }
         }
@@ -402,106 +332,73 @@ void equip_render_unit_status_panel_thread(void) {
             (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
-            u16* row_y;
-            s32 row_offset;
-            s32 prim_offset;
             battle_menu_status_panel_bar_t* bar;
-            volatile battle_menu_status_panel_editor_packet_t* dst;
+
             color = g_equip_panel_gauge_bar_colors;
-            i = 0;
-            /* The bar rows read the origin y with lhu; an s16 walk changes the loads. */
-            row_y = (u16*)&g_equip_gfx_portrait_origin.coordinates[1];
-            row_offset = 0x18;
-            dst = editor;
-            prim_offset = 0x1E0;
-            bar = &state->bars[0];
-            /* dst walks one POLY_G4 per iteration and every store names bars[0]
-               rather than bars[i]: loop.c forms no induction variables from
-               volatile MEMs, so the base stays put and the displacements stay
-               the positive 0x1E4-0x202 the target uses. prim_offset advances the same
-               way for the SetPolyG4 argument. The volatile qualifier is also
-               what keeps the stores in source order. */
-            do {
-                s32 limit;
-                s32 py0, py1, py2, py3;
-                /* Pins: unpinned, these three rotate one register up and add a copy before the x2 store. */
-                register s32 x3_read __asm__("$3");
-                register s32 x2_read __asm__("$2");
-                register s32 x0 __asm__("$4");
-                s32 width;
-                SetPolyG4((u8*)editor + prim_offset);
-                limit = bar->limit;
-                {
-                    /* Pin: loads the origin into $v0 and biases it into x0 in the delay slot. */
-                    register s32 origin_x __asm__("$2");
-                    origin_x = g_equip_gfx_portrait_origin.coordinates[0];
-                    x0 = origin_x + 0x2F;
-                }
-                if (limit == 0) {
-                    width = 4;
+            bar = state->bars;
+            for (i = 0; i < 3; i++) {
+                s32 x0;
+                s32 w;
+                s32 y;
+
+                SetPolyG4(&editor->bars[i]);
+                x0 = g_equip_gfx_portrait_origin.coordinates[0] + 0x2F;
+                if (bar->limit == 0) {
+                    w = 4;
                 } else {
-                    width = (bar->value << 5) / limit;
+                    w = (bar->value << 5) / bar->limit;
                 }
-                if (width == 0) {
+                if (w == 0) {
                     x0 = 0;
                 }
-                dst->bars[0].x0 = x0;
-                py0 = *row_y;
-                dst->bars[0].x1 = x0 + width;
-                dst->bars[0].y0 = py0 + row_offset;
-                py1 = *row_y;
-                dst->bars[0].x2 = x0;
-                dst->bars[0].y1 = py1 + row_offset;
-                py2 = *row_y;
-                dst->bars[0].x3 = x0 + width;
-                x3_read = (u16)dst->bars[0].x3;
-                dst->bars[0].y2 = py2 + row_offset + 3;
-                py3 = *row_y;
-                x2_read = (u16)dst->bars[0].x2;
-                dst->bars[0].x3 = x3_read - 3;
-                dst->bars[0].x2 = x2_read - 3;
-                dst->bars[0].y3 = py3 + row_offset + 3;
+                editor->bars[i].x0 = x0;
+                y = i * 0xB + 0x18;
+                editor->bars[i].y0 = g_equip_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x1 = x0 + w;
+                editor->bars[i].y1 = g_equip_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x2 = x0;
+                editor->bars[i].y2 = g_equip_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x3 = x0 + w;
+                editor->bars[i].y3 = g_equip_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x2 -= 3;
+                editor->bars[i].x3 -= 3;
                 if (highlight != 0) {
-                    dst->bars[0].r0 = color->r >> 1;
-                    dst->bars[0].g0 = color->g >> 1;
-                    dst->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r >> 1;
+                    editor->bars[i].g0 = color->g >> 1;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r >> 1;
-                    dst->bars[0].g1 = color->g >> 1;
-                    dst->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r >> 1;
+                    editor->bars[i].g1 = color->g >> 1;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r >> 1;
-                    dst->bars[0].g2 = color->g >> 1;
-                    dst->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r >> 1;
+                    editor->bars[i].g2 = color->g >> 1;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r >> 1;
-                    dst->bars[0].g3 = color->g >> 1;
-                    dst->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r >> 1;
+                    editor->bars[i].g3 = color->g >> 1;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 } else {
-                    dst->bars[0].r0 = color->r;
-                    dst->bars[0].g0 = color->g;
-                    dst->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r;
+                    editor->bars[i].g0 = color->g;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r;
-                    dst->bars[0].g1 = color->g;
-                    dst->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r;
+                    editor->bars[i].g1 = color->g;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r;
-                    dst->bars[0].g2 = color->g;
-                    dst->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r;
+                    editor->bars[i].g2 = color->g;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r;
-                    dst->bars[0].g3 = color->g;
-                    dst->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r;
+                    editor->bars[i].g3 = color->g;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 }
                 bar++;
-                row_offset += 0xB;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(POLY_G4));
-                i += 1;
-                prim_offset += 0x24;
-            } while (i < 3);
+            }
         }
         panel->sprites[6].u0 = (s16)(unit_data[4] % 7) * 0x18;
         icon_index = unit_data[4];
@@ -578,22 +475,14 @@ void equip_render_unit_status_panel_thread(void) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_a);
-            i = 0;
-            off = 0x1E0;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + off);
-                i += 1;
-                off += 0x24;
-            } while (i < 3);
+            for (i = 0; i < 3; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->bars[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[2]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[3]);
-            i = 0;
-            off = 0x154;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + off);
-                i += 1;
-                off += 0x14;
-            } while (i < 7);
+            for (i = 0; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->label_sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_b);
             if (suppress == 0) {
                 if (anim_state >= 5) {
@@ -609,31 +498,23 @@ void equip_render_unit_status_panel_thread(void) {
             portrait_poly = (u8*)&panel->portrait;
             SetSemiTrans(portrait_poly, 1);
             battle_gfx_draw_or_append_gpu_primitive(portrait_poly);
-            i = 3;
-            off = 0x128;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + off);
-                i -= 1;
-                off -= 0x14;
-            } while (i >= 0);
+            for (i = 3; i >= 0; i--) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_b);
-            i = 4;
-            off = 0x13C;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + off);
-                i += 1;
-                off += 0x14;
-            } while (i < 7);
+            for (i = 4; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_a);
             battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
         }
         battle_thread_yield();
-        done = battle_thread_get_current_parameter_3();
-        /* Barrier: keeps reorg from moving `frame += 1` into the call's delay slot. */
-        __asm__ __volatile__("");
-        frame += 1;
-    } while (done == 0);
+        if (battle_thread_get_current_parameter_3() != 0) {
+            break;
+        }
+        frame++;
+    }
     battle_thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);

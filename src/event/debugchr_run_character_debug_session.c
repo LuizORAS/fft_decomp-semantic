@@ -117,14 +117,11 @@ void debugchr_run_character_debug_session(void) {
     g_debugchr_editor_selected_unit_slot = 0;
     if (g_debugchr_editor_display_mode != 0) {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+        g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+        g_debugchr_editor_fields[15].destination[0] = 0xE;
     }
-    g_debugchr_editor_fields[15].destination[0] = 0xE;
-    /* Same ordering constraint as debugchr_editor_run_unit_thread: without
-     * the barrier GCC sinks this byte store past the thread-record address
-     * setup. */
-    __asm__ volatile("" : : : "memory");
     g_debugchr_status_display_thread_params.counter = 0;
     g_debugchr_numeric_editor_thread_params.counter = 0;
     g_debugchr_character_status_frame_config.counter = 0;

@@ -7,20 +7,11 @@
  * `frame & 1` picks one, and the copy stride fixes each packet's size. The
  * packet, state and thread layouts are the shared fft/menu.h records,
  * proven by this function's own accesses and the primitive strides it walks.
- * Three accesses are left in raw form because a struct
- * or pointer spelling breaks the match; each says so at its use.
- *
- * Register pins and empty asm constraints are compiler constraints that emit no
- * instructions; each is explained where it appears.
  */
 #include "fft/event_debugchr.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-/* The bar loop advances its destination by one POLY_G4 per iteration instead of
-   indexing bars[i], so every store keeps the target's positive 0x1E4-0x202
-   displacement from an unmoved base; see the note at the loop. */
 
 struct world_menu_palette_primitives;
 struct menu_number_entry;
@@ -52,18 +43,9 @@ void debugchr_render_unit_status_panel_thread(void) {
     s32 hide_portrait;                                        /* spD0 */
 
     s32 thread_id;
-    s32 done;
     u8* threads;
     s32 frame;
-    u8* value_geometry;
-    u8* label_geometry;
-    u8* panel_geometry;
     s32 i;
-    s32 prim_offset;
-    s32 portrait_offset;
-    s32 value_sprite_offset;
-    s32 label_sprite_offset;
-    s32 panel_sprite_offset;
     s32 panel_x;
     s32 panel_shake_y;
     s32 editor_x;
@@ -128,25 +110,15 @@ void debugchr_render_unit_status_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, 0);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
-    frame = 0;
-    portrait_offset = 0x24C;
-    do {
-        battle_gfx_init_default_poly_ft4((u8*)editor + portrait_offset);
-        frame += 1;
-        portrait_offset += 0x28;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_default_poly_ft4(&editor->portrait[frame]);
+    }
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
-    frame = 0;
-    value_geometry = g_debugchr_panel_editor_value_cells;
-    value_sprite_offset = 0x104;
-    do {
-        battle_gfx_init_image_loading((u8*)editor + value_sprite_offset, g_debugchr_editor_numeric_geometry,
-            &g_debugchr_gfx_portrait_origin.location, value_geometry);
-        value_geometry += 0xC;
-        frame += 1;
-        value_sprite_offset += 0x14;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_image_loading(&editor->value_sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_gfx_portrait_origin.location, &g_debugchr_panel_editor_value_cells[frame * 0xC]);
+    }
     if (state->mode >= 4) {
         state->mode = 0;
     }
@@ -156,16 +128,10 @@ void debugchr_render_unit_status_panel_thread(void) {
     } else {
         battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
     }
-    frame = 0;
-    label_geometry = g_debugchr_panel_editor_label_cells;
-    label_sprite_offset = 0x154;
-    do {
-        battle_gfx_init_image_loading((u8*)editor + label_sprite_offset, g_debugchr_editor_numeric_geometry,
-            &g_debugchr_gfx_portrait_origin.location, label_geometry);
-        label_geometry += 0xC;
-        frame += 1;
-        label_sprite_offset += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&editor->label_sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_gfx_portrait_origin.location, &g_debugchr_panel_editor_label_cells[frame * 0xC]);
+    }
     battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, 0);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, 1);
@@ -177,16 +143,10 @@ void debugchr_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &panel->sprites[1], 0);
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
-    frame = 0;
-    panel_geometry = g_debugchr_panel_sprite_cells;
-    panel_sprite_offset = 0xEC;
-    do {
-        battle_gfx_init_image_loading((u8*)panel + panel_sprite_offset, g_debugchr_editor_numeric_geometry,
-            &g_debugchr_panel_frame_rect.location, panel_geometry);
-        panel_geometry += 0xC;
-        frame += 1;
-        panel_sprite_offset += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&panel->sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_panel_frame_rect.location, &g_debugchr_panel_sprite_cells[frame * 0xC]);
+    }
     battle_gfx_init_image_loading(&panel->portrait, g_debugchr_editor_numeric_geometry,
         &g_debugchr_panel_frame_rect.location, g_debugchr_panel_portrait_cell);
     if (state->mode == 1) {
@@ -200,7 +160,7 @@ void debugchr_render_unit_status_panel_thread(void) {
     anim_state = 0;
     prev_unit = state->unit;
     cur_unit = state->unit;
-    do {
+    for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
@@ -227,46 +187,11 @@ void debugchr_render_unit_status_panel_thread(void) {
         if (thread->highlight != 0) {
             highlight = 1;
         }
-        i = 0;
-        {
-            u16* cluts;
-            battle_menu_status_panel_editor_packet_t* packet;
-            s32 clut_column;
-            clut_column = highlight * 2;
-            cluts = g_debugchr_panel_editor_value_cluts;
-            packet = editor;
-            do {
-                /* A loop-local set of the byte offset stops loop.c from making
-                   it an induction variable, so the table read stays a register
-                   add rather than a second advancing pointer. The destination
-                   advances one SPRT per iteration instead of indexing
-                   value_sprites[i], which is how the target biases it.
-                   The table read keeps integer-plus-pointer form: the
-                   equivalent `(u8*)cluts + clut_column` changes the emitted address
-                   arithmetic. */
-                __asm__("" : "=r"(clut_column) : "0"(clut_column));
-                packet->value_sprites[0].clut = *(u16*)(clut_column + (u32)cluts);
-                cluts += 2;
-                i += 1;
-                packet = (battle_menu_status_panel_editor_packet_t*)((u8*)packet + sizeof(SPRT));
-            } while (i < 4);
+        for (i = 0; i < 4; i++) {
+            editor->value_sprites[i].clut = g_debugchr_panel_editor_value_cluts[i][highlight];
         }
-        i = 0;
-        {
-            u16* cluts;
-            battle_menu_status_panel_editor_packet_t* packet;
-            s32 clut_column;
-            clut_column = highlight * 2;
-            cluts = g_debugchr_panel_editor_label_cluts;
-            packet = editor;
-            do {
-                /* Same invariant-motion block as the loop above. */
-                __asm__("" : "=r"(clut_column) : "0"(clut_column));
-                packet->label_sprites[0].clut = *(u16*)(clut_column + (u32)cluts);
-                cluts += 2;
-                i += 1;
-                packet = (battle_menu_status_panel_editor_packet_t*)((u8*)packet + sizeof(SPRT));
-            } while (i < 7);
+        for (i = 0; i < 7; i++) {
+            editor->label_sprites[i].clut = g_debugchr_panel_editor_label_cluts[i][highlight];
         }
         i = 0;
         do {
@@ -388,15 +313,13 @@ void debugchr_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                /* Volatile read of the named field: the request word is
-                   fetched again rather than reused from the test above. */
-                portrait_request = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
+                portrait_request = thread->work;
                 cur_unit = state->unit;
             } else {
-                portrait_request = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
+                portrait_request = thread->work;
                 cur_unit = state->unit;
             }
         }
@@ -409,113 +332,73 @@ void debugchr_render_unit_status_panel_thread(void) {
             (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
-            u16* bar_origin_y;
-            s32 bar_y;
-            s32 bar_offset;
             battle_menu_status_panel_bar_t* bar;
-            volatile battle_menu_status_panel_editor_packet_t* packet;
+
             color = g_debugchr_panel_gauge_bar_colors;
-            i = 0;
-            /* The bar rows read the origin y with lhu; an s16 walk changes the loads. */
-            bar_origin_y = (u16*)&g_debugchr_gfx_portrait_origin.coordinates[1];
-            bar_y = 0x18;
-            packet = editor;
-            bar_offset = 0x1E0;
-            bar = &state->bars[0];
-            /* packet walks one POLY_G4 per iteration and every store names bars[0]
-               rather than bars[i]: loop.c forms no induction variables from
-               volatile MEMs, so the base stays put and the displacements stay
-               the positive 0x1E4-0x202 the target uses. bar_offset advances the same
-               way for the SetPolyG4 argument. The volatile qualifier is also
-               what keeps the stores in source order. */
-            do {
-                s32 limit;
-                s32 py0, py1, py2, py3;
-                /* Reload spills this loop's primitive offset and row pointer
-                   around SetPolyG4 and reuses $4-$6 for them. Left to the
-                   allocator the three temporaries below rotate one register up,
-                   which also costs a redundant copy before the x2 store.
-                   Pinning them fixes the rotation; none is live across a call,
-                   and $2/$3/$4 stay ordinary scratch elsewhere. */
-                register s32 x3_read __asm__("$3");
-                register s32 x2_read __asm__("$2");
-                register s32 x0 __asm__("$4");
-                s32 width;
-                SetPolyG4((u8*)editor + bar_offset);
-                limit = bar->limit;
-                {
-                    /* With x0 pinned the load would target $4 directly; the
-                       target loads the portrait origin into $2 first and only biases it
-                       in the branch delay slot. */
-                    register s32 origin_x __asm__("$2");
-                    origin_x = g_debugchr_gfx_portrait_origin.coordinates[0];
-                    x0 = origin_x + 0x2F;
-                }
-                if (limit == 0) {
-                    width = 4;
+            bar = state->bars;
+            for (i = 0; i < 3; i++) {
+                s32 x0;
+                s32 w;
+                s32 y;
+
+                SetPolyG4(&editor->bars[i]);
+                x0 = g_debugchr_gfx_portrait_origin.coordinates[0] + 0x2F;
+                if (bar->limit == 0) {
+                    w = 4;
                 } else {
-                    width = (bar->value << 5) / limit;
+                    w = (bar->value << 5) / bar->limit;
                 }
-                if (width == 0) {
+                if (w == 0) {
                     x0 = 0;
                 }
-                packet->bars[0].x0 = x0;
-                py0 = *bar_origin_y;
-                packet->bars[0].x1 = x0 + width;
-                packet->bars[0].y0 = py0 + bar_y;
-                py1 = *bar_origin_y;
-                packet->bars[0].x2 = x0;
-                packet->bars[0].y1 = py1 + bar_y;
-                py2 = *bar_origin_y;
-                packet->bars[0].x3 = x0 + width;
-                x3_read = (u16)packet->bars[0].x3;
-                packet->bars[0].y2 = py2 + bar_y + 3;
-                py3 = *bar_origin_y;
-                x2_read = (u16)packet->bars[0].x2;
-                packet->bars[0].x3 = x3_read - 3;
-                packet->bars[0].x2 = x2_read - 3;
-                packet->bars[0].y3 = py3 + bar_y + 3;
+                editor->bars[i].x0 = x0;
+                y = i * 0xB + 0x18;
+                editor->bars[i].y0 = g_debugchr_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x1 = x0 + w;
+                editor->bars[i].y1 = g_debugchr_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x2 = x0;
+                editor->bars[i].y2 = g_debugchr_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x3 = x0 + w;
+                editor->bars[i].y3 = g_debugchr_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x2 -= 3;
+                editor->bars[i].x3 -= 3;
                 if (highlight != 0) {
-                    packet->bars[0].r0 = color->r >> 1;
-                    packet->bars[0].g0 = color->g >> 1;
-                    packet->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r >> 1;
+                    editor->bars[i].g0 = color->g >> 1;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    packet->bars[0].r1 = color->r >> 1;
-                    packet->bars[0].g1 = color->g >> 1;
-                    packet->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r >> 1;
+                    editor->bars[i].g1 = color->g >> 1;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    packet->bars[0].r2 = color->r >> 1;
-                    packet->bars[0].g2 = color->g >> 1;
-                    packet->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r >> 1;
+                    editor->bars[i].g2 = color->g >> 1;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    packet->bars[0].r3 = color->r >> 1;
-                    packet->bars[0].g3 = color->g >> 1;
-                    packet->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r >> 1;
+                    editor->bars[i].g3 = color->g >> 1;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 } else {
-                    packet->bars[0].r0 = color->r;
-                    packet->bars[0].g0 = color->g;
-                    packet->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r;
+                    editor->bars[i].g0 = color->g;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    packet->bars[0].r1 = color->r;
-                    packet->bars[0].g1 = color->g;
-                    packet->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r;
+                    editor->bars[i].g1 = color->g;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    packet->bars[0].r2 = color->r;
-                    packet->bars[0].g2 = color->g;
-                    packet->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r;
+                    editor->bars[i].g2 = color->g;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    packet->bars[0].r3 = color->r;
-                    packet->bars[0].g3 = color->g;
-                    packet->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r;
+                    editor->bars[i].g3 = color->g;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 }
                 bar++;
-                bar_y += 0xB;
-                packet = (battle_menu_status_panel_editor_packet_t*)((u8*)packet + sizeof(POLY_G4));
-                i += 1;
-                bar_offset += 0x24;
-            } while (i < 3);
+            }
         }
         panel->sprites[6].u0 = (s16)(unit_info[4] % 7) * 0x18;
         portrait_cell = unit_info[4];
@@ -581,22 +464,14 @@ void debugchr_render_unit_status_panel_thread(void) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_a);
-            i = 0;
-            prim_offset = 0x1E0;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + prim_offset);
-                i += 1;
-                prim_offset += 0x24;
-            } while (i < 3);
+            for (i = 0; i < 3; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->bars[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[2]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[3]);
-            i = 0;
-            prim_offset = 0x154;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + prim_offset);
-                i += 1;
-                prim_offset += 0x14;
-            } while (i < 7);
+            for (i = 0; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->label_sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_b);
             if (hide_portrait == 0) {
                 if (anim_state >= 5) {
@@ -612,34 +487,23 @@ void debugchr_render_unit_status_panel_thread(void) {
             panel_portrait = (u8*)&panel->portrait;
             SetSemiTrans(panel_portrait, 1);
             battle_gfx_draw_or_append_gpu_primitive(panel_portrait);
-            i = 3;
-            prim_offset = 0x128;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + prim_offset);
-                i -= 1;
-                prim_offset -= 0x14;
-            } while (i >= 0);
+            for (i = 3; i >= 0; i--) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_b);
-            i = 4;
-            prim_offset = 0x13C;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + prim_offset);
-                i += 1;
-                prim_offset += 0x14;
-            } while (i < 7);
+            for (i = 4; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_a);
             battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
         }
         battle_thread_yield();
-        done = battle_thread_get_current_parameter_3();
-        /* reorg.c fills call delay slots before branch delay slots and will
-           take the frame increment for the call above. Blocking that leaves it
-           adjacent to the loop-back branch, which is where the target keeps it;
-           the loop then re-enters at the parity computation. */
-        __asm__ __volatile__("");
-        frame += 1;
-    } while (done == 0);
+        if (battle_thread_get_current_parameter_3() != 0) {
+            break;
+        }
+        frame++;
+    }
     battle_thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);

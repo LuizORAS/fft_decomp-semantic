@@ -47,7 +47,7 @@ extern RECT g_etc_graphic_game_over_palette_rect;
 extern etc_graphic_t g_etc_graphics[13];
 
 void etc_graphic_build_chapter_polygons(
-    s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, volatile s32 primitives, s32 color);
+    s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, POLY_GT4* primitives, s32 color);
 
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color);

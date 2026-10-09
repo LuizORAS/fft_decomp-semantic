@@ -1,11 +1,6 @@
 /* REQUIRE twin of debugchr_render_unit_status_panel_thread: the same doubled
  * 0x30C editor / 0x1D8 panel packets (fft/menu.h), without the shake
  * offsets, the bar division and the zodiac branch.
- *
- * Compiler constraints (no instructions emitted): the two empty asm operands
- * in the clut loops keep the table offset out of loop.c's induction variables
- * (as in the twin), and the bar loop pins the two volatile read-backs to $2/$3,
- * which the allocator otherwise rotates by one register.
  */
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
@@ -40,15 +35,7 @@ void require_render_unit_status_panel_thread(void) {
 
     s32 thread_id;
     u8* threads;
-    u8* walk;
-    u8* walk2;
-    u8* walk3;
     s32 i;
-    s32 off;
-    s32 off1;
-    s32 off2;
-    s32 off3;
-    s32 off4;
     s32* window_width;
     s32 panel_x;
     s32 editor_x;
@@ -103,25 +90,15 @@ void require_render_unit_status_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, 0);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
-    frame = 0;
-    off1 = 0x24C;
-    do {
-        battle_gfx_init_default_poly_ft4((POLY_FT4*)((u8*)editor + off1));
-        frame += 1;
-        off1 += 0x28;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_default_poly_ft4((POLY_FT4*)(&editor->portrait[frame]));
+    }
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
-    frame = 0;
-    walk = g_require_panel_editor_value_cells;
-    off2 = 0x104;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)editor + off2, g_require_editor_numeric_geometry, &g_require_gfx_portrait_origin.location, walk);
-        walk += 0xC;
-        frame += 1;
-        off2 += 0x14;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        battle_gfx_init_image_loading(&editor->value_sprites[frame], g_require_editor_numeric_geometry,
+            &g_require_gfx_portrait_origin.location, &g_require_panel_editor_value_cells[frame * 0xC]);
+    }
     if (state->team_state >= 4) {
         state->team_state = 0;
     }
@@ -131,16 +108,10 @@ void require_render_unit_status_panel_thread(void) {
     } else {
         battle_copy_bytes(g_require_panel_editor_mode_cell, g_require_panel_editor_mode_cells, 0xC);
     }
-    frame = 0;
-    walk2 = g_require_panel_editor_label_cells;
-    off3 = 0x154;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)editor + off3, g_require_editor_numeric_geometry, &g_require_gfx_portrait_origin.location, walk2);
-        walk2 += 0xC;
-        frame += 1;
-        off3 += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&editor->label_sprites[frame], g_require_editor_numeric_geometry,
+            &g_require_gfx_portrait_origin.location, &g_require_panel_editor_label_cells[frame * 0xC]);
+    }
     battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, 0);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, 1);
@@ -152,16 +123,10 @@ void require_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &panel->sprites[1], 0);
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
-    frame = 0;
-    walk3 = g_require_panel_sprite_cells;
-    off4 = 0xEC;
-    do {
-        battle_gfx_init_image_loading(
-            (u8*)panel + off4, g_require_editor_numeric_geometry, &g_require_panel_frame_rect.location, walk3);
-        walk3 += 0xC;
-        frame += 1;
-        off4 += 0x14;
-    } while (frame < 7);
+    for (frame = 0; frame < 7; frame++) {
+        battle_gfx_init_image_loading(&panel->sprites[frame], g_require_editor_numeric_geometry,
+            &g_require_panel_frame_rect.location, &g_require_panel_sprite_cells[frame * 0xC]);
+    }
     battle_gfx_init_image_loading(&panel->portrait, g_require_editor_numeric_geometry,
         &g_require_panel_frame_rect.location, g_require_panel_portrait_cell);
     if (state->team_state == 1) {
@@ -202,40 +167,11 @@ void require_render_unit_status_panel_thread(void) {
         if (thread->highlight != 0) {
             highlight = 1;
         }
-        i = 0;
-        {
-            u16* clut_table;
-            battle_menu_status_panel_editor_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            clut_table = g_require_panel_editor_value_cluts;
-            dst = editor;
-            do {
-                /* Keeps the offset loop-variant; otherwise loop.c folds it into
-                   the table pointer and the read loses its separate addu. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->value_sprites[0].clut = *(u16*)(clut_offset + (u32)clut_table);
-                clut_table += 2;
-                i += 1;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 4);
+        for (i = 0; i < 4; i++) {
+            editor->value_sprites[i].clut = g_require_panel_editor_value_cluts[i][highlight];
         }
-        i = 0;
-        {
-            u16* clut_table;
-            battle_menu_status_panel_editor_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            clut_table = g_require_panel_editor_label_cluts;
-            dst = editor;
-            do {
-                /* Same loop-variant offset as the loop above. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->label_sprites[0].clut = *(u16*)(clut_offset + (u32)clut_table);
-                clut_table += 2;
-                i += 1;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 7);
+        for (i = 0; i < 7; i++) {
+            editor->label_sprites[i].clut = g_require_panel_editor_label_cluts[i][highlight];
         }
         i = 0;
         do {
@@ -322,13 +258,13 @@ void require_render_unit_status_panel_thread(void) {
         }
         if (thread->work != 0) {
             if (anim_state == 0) {
-                portrait_arg = *(volatile s32*)&thread->work;
                 prev_unit = cur_unit;
+                portrait_arg = thread->work;
                 cur_unit = state->unit_index;
             } else {
-                portrait_arg = *(volatile s32*)&thread->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
+                portrait_arg = thread->work;
                 cur_unit = state->unit_index;
             }
         }
@@ -341,83 +277,64 @@ void require_render_unit_status_panel_thread(void) {
             (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
-            s16* origin_xy;
-            s32 row_offset;
-            s32 prim_offset;
-            volatile battle_menu_status_panel_editor_packet_t* dst;
+
             color = g_require_panel_gauge_bar_colors;
-            i = 0;
-            origin_xy = g_require_gfx_portrait_origin.coordinates;
-            row_offset = 0x18;
-            dst = editor;
-            prim_offset = 0x1E0;
-            do {
+            for (i = 0; i < 3; i++) {
                 s32 x0;
                 s32 x1;
-                s32 py0, py1, py2;
-                s32 py3;
-                register s32 x2_read __asm__("$2");
-                register s32 x3_read __asm__("$3");
-                SetPolyG4((u8*)editor + prim_offset);
-                x1 = origin_xy[0];
+                s32 y;
+
+                SetPolyG4(&editor->bars[i]);
+                x1 = g_require_gfx_portrait_origin.coordinates[0];
                 x0 = x1 + 0x2F;
-                dst->bars[0].x0 = x0;
-                py0 = (u16)origin_xy[1];
                 x1 += 0x4F;
-                dst->bars[0].x1 = x1;
-                dst->bars[0].y0 = py0 + row_offset;
-                py1 = (u16)origin_xy[1];
-                dst->bars[0].x2 = x0;
-                dst->bars[0].y1 = py1 + row_offset;
-                py2 = (u16)origin_xy[1];
-                dst->bars[0].x3 = x1;
-                x3_read = (u16)dst->bars[0].x3;
-                dst->bars[0].y2 = py2 + row_offset + 3;
-                py3 = (u16)origin_xy[1];
-                x2_read = (u16)dst->bars[0].x2;
-                dst->bars[0].x3 = x3_read - 3;
-                dst->bars[0].x2 = x2_read - 3;
-                dst->bars[0].y3 = py3 + row_offset + 3;
+                editor->bars[i].x0 = x0;
+                y = i * 0xB + 0x18;
+                editor->bars[i].y0 = g_require_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x1 = x1;
+                editor->bars[i].y1 = g_require_gfx_portrait_origin.coordinates[1] + y;
+                editor->bars[i].x2 = x0;
+                editor->bars[i].y2 = g_require_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x3 = x1;
+                editor->bars[i].y3 = g_require_gfx_portrait_origin.coordinates[1] + y + 3;
+                editor->bars[i].x2 -= 3;
+                editor->bars[i].x3 -= 3;
                 if (highlight != 0) {
-                    dst->bars[0].r0 = color->r >> 1;
-                    dst->bars[0].g0 = color->g >> 1;
-                    dst->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r >> 1;
+                    editor->bars[i].g0 = color->g >> 1;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r >> 1;
-                    dst->bars[0].g1 = color->g >> 1;
-                    dst->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r >> 1;
+                    editor->bars[i].g1 = color->g >> 1;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r >> 1;
-                    dst->bars[0].g2 = color->g >> 1;
-                    dst->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r >> 1;
+                    editor->bars[i].g2 = color->g >> 1;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r >> 1;
-                    dst->bars[0].g3 = color->g >> 1;
-                    dst->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r >> 1;
+                    editor->bars[i].g3 = color->g >> 1;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 } else {
-                    dst->bars[0].r0 = color->r;
-                    dst->bars[0].g0 = color->g;
-                    dst->bars[0].b0 = color->b;
+                    editor->bars[i].r0 = color->r;
+                    editor->bars[i].g0 = color->g;
+                    editor->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r;
-                    dst->bars[0].g1 = color->g;
-                    dst->bars[0].b1 = color->b;
+                    editor->bars[i].r1 = color->r;
+                    editor->bars[i].g1 = color->g;
+                    editor->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r;
-                    dst->bars[0].g2 = color->g;
-                    dst->bars[0].b2 = color->b;
+                    editor->bars[i].r2 = color->r;
+                    editor->bars[i].g2 = color->g;
+                    editor->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r;
-                    dst->bars[0].g3 = color->g;
-                    dst->bars[0].b3 = color->b;
+                    editor->bars[i].r3 = color->r;
+                    editor->bars[i].g3 = color->g;
+                    editor->bars[i].b3 = color->b;
                     color++;
                 }
-                row_offset += 0xB;
-                dst = (battle_menu_status_panel_editor_packet_t*)((u8*)dst + sizeof(POLY_G4));
-                i += 1;
-                prim_offset += 0x24;
-            } while (i < 3);
+            }
         }
         panel->sprites[6].u0 = (s16)(unit_data[4] % 7) * 0x18;
         icon_index = unit_data[4];
@@ -473,22 +390,14 @@ void require_render_unit_status_panel_thread(void) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_a);
-            i = 0;
-            off = 0x1E0;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + off);
-                i += 1;
-                off += 0x24;
-            } while (i < 3);
+            for (i = 0; i < 3; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->bars[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[2]);
             battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[3]);
-            i = 0;
-            off = 0x154;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)editor + off);
-                i += 1;
-                off += 0x14;
-            } while (i < 7);
+            for (i = 0; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&editor->label_sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_b);
             if (suppress == 0) {
                 if (anim_state >= 5) {
@@ -504,21 +413,13 @@ void require_render_unit_status_panel_thread(void) {
             portrait_poly = (u8*)&panel->portrait;
             SetSemiTrans(portrait_poly, 1);
             battle_gfx_draw_or_append_gpu_primitive(portrait_poly);
-            i = 3;
-            off = 0x128;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + off);
-                i -= 1;
-                off -= 0x14;
-            } while (i >= 0);
+            for (i = 3; i >= 0; i--) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_b);
-            i = 4;
-            off = 0x13C;
-            do {
-                battle_gfx_draw_or_append_gpu_primitive((u8*)panel + off);
-                i += 1;
-                off += 0x14;
-            } while (i < 7);
+            for (i = 4; i < 7; i++) {
+                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+            }
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_a);
             battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);

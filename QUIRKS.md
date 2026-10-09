@@ -128,9 +128,20 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
   `cursor` when the list is empty; `world_menu_build_available_item_list`
-  uses `selected` when no entry matches the current item.
+  uses `selected` when no entry matches the current item;
+  `helpmenu_run_battle_help_menu` and `world_run_battle_help_menu` read
+  `node`, `x` and `y` in the cursor loop when the text thread is already
+  running on the first frame, and `navigation` when the unit view mode is
+  not 1-4.
 - `world_card_read_file_chunked` sets `result` to -1 when the last read was
   short and then returns `total`; the test has no effect.
+- `require_party_find_join_candidates` searches the formation sprite groups
+  for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
+  result.
+- `helpmenu_run_battle_help_menu` and `world_run_battle_help_menu`: the
+  `mode == 2` arm cannot run (the first arm takes modes 1 and 2); request
+  kinds 4, 0x11, 0x12 and 0x17 call the close routine for an empty id and
+  then start the text thread anyway, relying on close not returning.
 - `main_heap_free`: the clearing loop stops at the first page byte that differs
   from the allocation id, not at the end of the 64-entry
   `g_main_heap_game_allocator_table`; an allocation that reaches the last page
