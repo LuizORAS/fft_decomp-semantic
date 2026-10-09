@@ -52,24 +52,24 @@ s32 battle_ai_choose_wait_facing(void) {
         ai->targetability.live.unit_targetable[target_id] = 1;
     }
     tried_any_enemy = 0;
-/* A goto retry: written as a loop, GCC hoists its invariants. */
-find_target:
-    acting_unit_id = ai->acting_unit_id;
-    target_id = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_IMMINENT_ENEMY);
-    if (acting_unit_id == target_id) {
-        target_id = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_ENEMY);
-        tried_any_enemy = 1;
+    for (;;) {
+        acting_unit_id = ai->acting_unit_id;
+        target_id = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_IMMINENT_ENEMY);
+        if (acting_unit_id == target_id) {
+            target_id = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_ENEMY);
+            tried_any_enemy = 1;
+        }
+        battle_ai_transfer_unit_coordinates(target_id, &work.target_coords);
+        direction = battle_ai_find_direction_of_target((s8*)&work.target_coords, (s8*)&ai->acting_unit_coords);
+        if (work.viable_directions[direction] != 0)
+            return direction;
+        if (tried_any_enemy == 0) {
+            ai->targetability.live.unit_targetable[target_id] = 0;
+            continue;
+        }
+        facing = ai->acting_unit->position.bits.facing;
+        if (work.viable_directions[facing] == 0)
+            return fallback_direction;
+        return facing;
     }
-    battle_ai_transfer_unit_coordinates(target_id, &work.target_coords);
-    direction = battle_ai_find_direction_of_target((s8*)&work.target_coords, (s8*)&ai->acting_unit_coords);
-    if (work.viable_directions[direction] != 0)
-        return direction;
-    if (tried_any_enemy == 0) {
-        ai->targetability.live.unit_targetable[target_id] = 0;
-        goto find_target;
-    }
-    facing = ai->acting_unit->position.bits.facing;
-    if (work.viable_directions[facing] == 0)
-        return fallback_direction;
-    return facing;
 }

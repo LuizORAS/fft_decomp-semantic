@@ -62,9 +62,8 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     s32 frame;
     s32 duration;
 
-    /* The exits funnel into the shared snap-hit tail at `finish`, and the
-     * zoom-animation arm jumps into the redraw request inside the wide-view
-     * scroll block (`raise`); in the target's block order these need gotos. */
+    /* The exits funnel into the shared snap-hit tail at `finish`; in the
+     * target's block order these need gotos. */
     if (g_wldcore_location_entry_state.flags & 1) {
         g_main_system_flags |= 2;
         goto finish;
@@ -181,7 +180,9 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 g_main_system_flags &= ~0x30;
             }
         }
-        goto raise;
+        g_main_system_flags |= 2;
+        g_wldcore_map_projection_state.flags |= 1;
+        goto finish;
     }
 
     if (g_wldcore_map_zoom_motion.flags & 2) {
@@ -287,7 +288,6 @@ scroll:
             wldcore_map_apply_clamped_scroll(&amount, (wldcore_point32_t*)&g_wldcore_map_projection_view.origin);
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
-            raise:
                 g_main_system_flags |= 2;
                 g_wldcore_map_projection_state.flags |= 1;
             }

@@ -9,13 +9,13 @@
  * wldcore_menu_render_debug_variable_list and clamps the cursor; a plain cursor move only repositions
  * the cursor window.
  *
- * The gotos are the target's layout: every scroll path joins one shared
- * store/redraw/clamp tail and every cursor path one move_cursor tail, which
- * rereads the cursor from memory. Structured arms with duplicated tails do
- * not cross-jump back into that shape. */
+ * Every scroll arm falls into the one redraw, which clamps the cursor and
+ * joins the cursor move. The cursor-down arm sits between the redraw and the
+ * move in the target, so it and the move are reached by goto: a redraw
+ * repeated in each arm is not merged back (its clamp store is cross-jumped
+ * into the cursor-down arm first). */
 void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_level_t* level) {
     s32 variable;
-    s32 value;
     s32 dead[2];
 
     if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
@@ -46,46 +46,39 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
             } else {
                 level->first_variable -= 0x64;
             }
-            goto redraw;
-        }
-        if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
+        } else if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
             if (level->first_variable == 0) {
-                value = 0x3fc;
+                level->first_variable = 0x3fc;
             } else {
-                value = level->first_variable - 0xa;
+                level->first_variable -= 0xa;
             }
-            goto set_first;
-        }
-        if (level->cursor == 0) {
-            level->cursor = level->row_count - 1;
         } else {
-            level->cursor--;
+            if (level->cursor == 0) {
+                level->cursor = level->row_count - 1;
+            } else {
+                level->cursor--;
+            }
+            goto move_cursor;
         }
-        goto move_cursor;
-    }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) == 0) {
+    } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+        if (g_wldcore_current_button_input & PSX_PAD_TRIANGLE) {
+            if (level->first_variable + 0x64 < 0x3fd) {
+                level->first_variable += 0x64;
+            } else {
+                level->first_variable = 0x3fc;
+            }
+        } else if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
+            if (level->first_variable == 0x3fc) {
+                level->first_variable = 0;
+            } else {
+                level->first_variable += 0xa;
+            }
+        } else {
+            goto cursor_down;
+        }
+    } else {
         return;
     }
-    if (g_wldcore_current_button_input & PSX_PAD_TRIANGLE) {
-        if (level->first_variable + 0x64 < 0x3fd) {
-            level->first_variable += 0x64;
-            goto redraw;
-        }
-        value = 0x3fc;
-        goto set_first;
-    }
-    if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
-        if (level->first_variable == 0x3fc) {
-            level->first_variable = 0;
-            goto redraw;
-        }
-        value = level->first_variable + 0xa;
-        goto set_first;
-    }
-    goto cursor_down;
-set_first:
-    level->first_variable = value;
-redraw:
     wldcore_menu_render_debug_variable_list(level);
     if (level->cursor < level->row_count) {
         return;
