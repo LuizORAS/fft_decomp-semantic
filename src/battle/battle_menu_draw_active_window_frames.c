@@ -7,9 +7,8 @@
  * BATTLE twin of world_menu_draw_active_window_frames: it scales the frame
  * primitives by the window's own brightness, positions the scroll icons and
  * builds the portrait quad from portrait_code (or the unit portrait when -1).
- * As in the WORLD twin, the empty volatile barrier keeps the icon_sprites[1].y0
- * reload ahead of the packet-buffer-index address chain, where gcc otherwise
- * front-loads the longer chain. */
+ * span starts as the lower icon's y and is narrowed in place to the scroll
+ * thumb offset; a single-assignment temporary would load that y last. */
 void battle_menu_draw_active_window_frames(void) {
     menu_window_buffer_t* window;
     menu_window_buffer_t* buffer;
@@ -19,7 +18,6 @@ void battle_menu_draw_active_window_frames(void) {
     s32 top;
     s32 span;
     s32 flags;
-    s32 bottom;
     s32 u;
 
     for (i = 4; i >= 0; i -= 2) {
@@ -57,10 +55,10 @@ void battle_menu_draw_active_window_frames(void) {
                 window->icon_sprites[1].y0 += 4;
             }
         }
-        bottom = window->icon_sprites[1].y0;
-        __asm__ volatile("");
+        span = window->icon_sprites[1].y0;
         top = window->icon_sprites[0].y0 + window->icon_sprites[0].h;
-        span = (bottom - top - 4)
+        span -= top;
+        span = (span - 4)
             * ((menu_window_buffer_t*)g_battle_menu_buffer_slots[i + g_battle_menu_packet_buffer_index])
                   ->scroll_position
             / ((menu_window_buffer_t*)g_battle_menu_buffer_slots[i + g_battle_menu_packet_buffer_index])->scroll_range;

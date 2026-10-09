@@ -1,6 +1,3 @@
-/* The mounted-pair tail first uses $v1 for the partner ID, then reuses it for
- * the partner pointer.  Scoped bindings reproduce that short-lived allocation
- * without emitting instructions. */
 #include "fft/battle.h"
 #include "psx/types.h"
 
@@ -11,12 +8,11 @@
  * the destination tile is blocked or untargetable, 0 otherwise. */
 s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) {
     battle_stats_t* unit;
-    register battle_stats_t* partner __asm__("$3");
+    battle_stats_t* partner;
     s32 occupant;
-    s32 rider;
+    u8 rider;
     s32 has_rider;
     u8 mount_info;
-    s32 rider_link;
     u8 tile_flags;
 
     has_rider = 0;
@@ -39,15 +35,13 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
     if (!(mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
         unit->mount_info = 0;
         if (mount_info != 0) {
-            g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK].mount_info = 0;
+            partner = &g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
+            partner->mount_info = 0;
         }
     }
     if (has_rider != 0) {
-        /* The intermediate keeps the add in SImode; assigning the sum directly
-         * narrows it to `addiu -0x80`, which the target does not use. */
-        rider_link = rider + BATTLE_MOUNT_INFO_FLAG_RIDER;
-        unit->mount_info = rider_link;
-        g_battle_unit_stats[(u8)rider].mount_info = unit_id + BATTLE_MOUNT_INFO_FLAG_MOUNT;
+        unit->mount_info = rider + BATTLE_MOUNT_INFO_FLAG_RIDER;
+        g_battle_unit_stats[rider].mount_info = unit_id + BATTLE_MOUNT_INFO_FLAG_MOUNT;
     }
 
     unit->position.bits.y = y;
@@ -56,13 +50,7 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
     unit->position.bits.facing = facing;
 
     if (mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
-        register s32 partner_index __asm__("$3");
-
-        partner_index = mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
-        /* Keeps the masked index in $v1; without it the index scaling runs
-           with v0 and v1 swapped. */
-        __asm__("" : "=r"(partner_index) : "0"(partner_index));
-        partner = &g_battle_unit_stats[partner_index];
+        partner = &g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
         partner->position.bits.y = y;
         partner->x = x;
         partner->position.bits.higher_elevation = level;

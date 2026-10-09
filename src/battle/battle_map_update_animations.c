@@ -24,7 +24,6 @@ void battle_map_update_animations(void) {
     s16 blue;
     u16 saved_packed;
     u16 saved_modified;
-    u8* repeat;
     map_color_transition_t* transition;
     s32 step;
 
@@ -64,7 +63,6 @@ void battle_map_update_animations(void) {
 
     if (g_map_background_gradient_transition.active != 0) {
         map_color_transition_channels_t* channels;
-        map_gradient_transition_t* gradient_transition;
 
         channels = g_map_background_gradient_transition.channels;
         for (i = 0; i < 2; i++) {
@@ -79,39 +77,36 @@ void battle_map_update_animations(void) {
         gradient.second.green = channels[1].green / 0x10000;
         gradient.second.blue = channels[1].blue / 0x10000;
         battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, (u8*)&gradient);
-        repeat = &g_map_background_gradient_transition.period;
-        /* Barrier: hides the constant so period and the byte after it are read through s0. */
-        __asm__("" : "=r"(repeat) : "0"(repeat));
-        gradient_transition = &g_map_background_gradient_transition;
-        if (repeat[0] >= 4) {
-            if (++gradient_transition->tick >= repeat[0] >> 2) {
-                gradient_transition->tick = 0;
-                if (++gradient_transition->phase >= 0x20) {
-                    if (repeat[1] == 1) {
-                        battle_map_blend_background_gradient_color(8, repeat[0], 0, 0, 0);
-                        repeat[1] = 2;
-                    } else if (repeat[1] == 2) {
-                        battle_map_blend_background_gradient_color(9, repeat[0], gradient_transition->repeat_rgb[0],
-                            gradient_transition->repeat_rgb[1], gradient_transition->repeat_rgb[2]);
-                        repeat[1] = 1;
+        if (g_map_background_gradient_transition.period >= 4) {
+            if (++g_map_background_gradient_transition.tick >= g_map_background_gradient_transition.period >> 2) {
+                g_map_background_gradient_transition.tick = 0;
+                if (++g_map_background_gradient_transition.phase >= 0x20) {
+                    if (g_map_background_gradient_transition.repeat == 1) {
+                        battle_map_blend_background_gradient_color(
+                            8, g_map_background_gradient_transition.period, 0, 0, 0);
+                        g_map_background_gradient_transition.repeat = 2;
+                    } else if (g_map_background_gradient_transition.repeat == 2) {
+                        battle_map_blend_background_gradient_color(9, g_map_background_gradient_transition.period,
+                            g_map_background_gradient_transition.repeat_rgb[0],
+                            g_map_background_gradient_transition.repeat_rgb[1],
+                            g_map_background_gradient_transition.repeat_rgb[2]);
+                        g_map_background_gradient_transition.repeat = 1;
                     } else {
-                        goto deactivate;
+                        g_map_background_gradient_transition.active = 0;
                     }
                 }
             }
-        } else if (++gradient_transition->phase >= repeat[0] * 8) {
-            if (repeat[1] == 1) {
-                battle_map_blend_background_gradient_color(8, repeat[0], 0, 0, 0);
-                repeat[1] = 2;
-            } else if (repeat[1] == 2) {
-                battle_map_blend_background_gradient_color(9, repeat[0], gradient_transition->repeat_rgb[0],
-                    gradient_transition->repeat_rgb[1], gradient_transition->repeat_rgb[2]);
-                repeat[1] = 1;
+        } else if (++g_map_background_gradient_transition.phase >= g_map_background_gradient_transition.period * 8) {
+            if (g_map_background_gradient_transition.repeat == 1) {
+                battle_map_blend_background_gradient_color(8, g_map_background_gradient_transition.period, 0, 0, 0);
+                g_map_background_gradient_transition.repeat = 2;
+            } else if (g_map_background_gradient_transition.repeat == 2) {
+                battle_map_blend_background_gradient_color(9, g_map_background_gradient_transition.period,
+                    g_map_background_gradient_transition.repeat_rgb[0],
+                    g_map_background_gradient_transition.repeat_rgb[1],
+                    g_map_background_gradient_transition.repeat_rgb[2]);
+                g_map_background_gradient_transition.repeat = 1;
             } else {
-            /* Shared with the first arm so this store starts a fresh CSE
-             * block and stays absolute instead of reusing
-             * gradient_transition. */
-            deactivate:
                 g_map_background_gradient_transition.active = 0;
             }
         }

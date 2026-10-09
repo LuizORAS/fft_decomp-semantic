@@ -11,7 +11,6 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
     /* Pin: unpinned, GCC swaps unit ($s4) and unit_id ($s5) throughout. */
     register battle_stats_t* unit __asm__("$20");
     s32 i;
-    s32 status_id;
     s32 byte_index;
     s32 mask;
     u8 exit_mode;
@@ -38,18 +37,15 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         unit->team_flags = g_battle_unit_status_staging_data->team_flags[unit_id];
         unit->death_counter = g_battle_unit_status_staging_data->death_counter[unit_id];
         g_battle_thread_call_target = (void (*)(void))battle_status_queue_misc_graphics_flag_change;
-        i = 0;
-        status_id = BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_UNNAMED_00);
-        for (; i < BATTLE_STATUS_COUNT; i++) {
+        for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
             byte_index = i / 8;
             mask = 0x80 >> (i % 8);
             if (g_battle_unit_status_staging_data->added[unit_id][byte_index] & mask) {
-                battle_thread_call_on_main_stack(status_id, 0, unit_id);
+                battle_thread_call_on_main_stack(BATTLE_STATUS_HANDLER_INDEX(i), 0, unit_id);
             }
             if (g_battle_unit_status_staging_data->removed[unit_id][byte_index] & mask) {
-                battle_thread_call_on_main_stack(status_id, 1, unit_id);
+                battle_thread_call_on_main_stack(BATTLE_STATUS_HANDLER_INDEX(i), 1, unit_id);
             }
-            status_id++;
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {

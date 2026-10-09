@@ -15,10 +15,8 @@ enum {
  * accumulated edge-to-edge delta to the velocity solver.  The 0x80069744 twin
  * does the same for the final step, where it reads the tile directly.
  *
- * The case-3 form first preserves the prior y coordinate in `next`, then reuses
- * y for the path byte before forming the new coordinate. This is equivalent to
- * the direct expression and gives GCC the target's two-load lifetime, without
- * a separate `li v0,1`.
+ * The step code is copied to a halfword before the switch: read through the
+ * byte again, cse reuses the direction test's load and the reload is lost.
  */
 void battle_move_set_velocity_for_contiguous_clamped_steps(
     battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
@@ -33,7 +31,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
     s32 end_x;
     s32 end_y;
     s32 end_z;
-    s32 next;
+    s16 code;
 
     battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     x = unit->map_x;
@@ -45,39 +43,28 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
 
     while (index < *path) {
         current = &path[index + 1];
-        {
-            /* Pin: the direction mask takes $v1 (unpinned it swaps with the step mask's $v0). */
-            register u8 current_for_direction __asm__("$3");
-
-            current_for_direction = *current;
-            current_for_direction &= 0xc0;
-            if (current_for_direction != (*step & 0xc0)) {
-                break;
-            }
+        if ((*current & 0xc0) != (*step & 0xc0)) {
+            break;
         }
-        switch (*current >> 6) {
+        code = *current;
+        switch (code >> 6) {
         case 0:
-            next = x + 1;
-            x = next + (*current & 3);
+            x += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case 1:
-            next = x - 1;
-            x = next - (*current & 3);
+            x -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case 2:
-            next = y - 1;
-            y = next - (*current & 3);
+            y -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
             break;
         case 3:
-            next = y + 1;
-            y = *current;
-            y = next + (y & 3);
+            y += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
             break;

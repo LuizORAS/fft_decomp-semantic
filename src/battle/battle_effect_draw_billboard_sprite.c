@@ -3,6 +3,13 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Primitive tag helpers (clean-room equivalents of the libgpu macros). */
+#define setlen(p, l)         (((P_TAG*)(p))->len = (u8)(l))
+#define setcode(p, c)        (((P_TAG*)(p))->code = (u8)(c))
+#define getcode(p)           (((P_TAG*)(p))->code)
+#define setPolyFT4(p)        (setlen(p, 9), setcode(p, 0x2c))
+#define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
+
 /* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
  * (0x801b7694): the leading halfword is the offset of the per-frame offset
  * array, and each of those offsets reaches a frame record from the same base. */
@@ -21,9 +28,6 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     battle_effect_quad_prim_t* prim;
     battle_effect_sprite_frame_t* frame;
     u16 offset;
-    u32 color;
-    /* Reusing v1 preserves the packed-color store before the opcode load. */
-    register s32 code __asm__("$3");
     s32 depth;
     s32 sine;
     s32 cosine;
@@ -63,18 +67,10 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     offset = *(u16*)&SPRITE_TABLE[slot->color.field.frame * 2
         + ((battle_effect_sprite_table_header_t*)SPRITE_TABLE)->offsets_offset];
     prim = &slot->quads[g_battle_effect_buffer_index];
-    color = slot->color.packed;
-    prim->length = 9;
-    prim->color.packed = color;
-    code = 0x2c;
-    prim->color.field.cd = code;
+    prim->color.packed = slot->color.packed;
+    setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
-    if (frame->flags & 0x200) {
-        prim->color.field.cd = 0x2e;
-    }
-    /* Keeps the &prim->xy0 setup ($a3) after this branch; otherwise GCC hoists
-     * it into the branch delay slot. */
-    __asm__("" : : : "$7");
+    setSemiTrans(prim, frame->flags & 0x200);
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
     ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];

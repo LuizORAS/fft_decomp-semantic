@@ -27,14 +27,12 @@ void battle_target_build_directional_attack_panels(const void* source, u8 mode) 
     s32 i;
 
     main_util_copy_action_data(source, &action);
-    /* Barrier: without it `mode` and `target_x` swap $s2/$s3. */
-    __asm__ volatile("");
-    target_x = action.target_x;
-    target_y = action.target_y;
     g_battle_sort_targets_nearest_first = 1;
     unit = &g_battle_unit_stats[action.actor_id];
     x = unit->x;
     y = unit->position.bits.y;
+    target_x = action.target_x;
+    target_y = action.target_y;
     if (x < target_x) {
         battle_target_calculate_linear_attack_tiles(0, x, y);
         if (mode == 3) {

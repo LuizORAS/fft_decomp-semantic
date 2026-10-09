@@ -3507,8 +3507,9 @@ void battle_effect_free_state_record(s16);
 
 /* The last argument is an optional transform: the EFFECT overlay's particle
  * handlers pass a 0x58-byte record built on their stack, the battle script
- * opcode passes none. The emitter index arrives as a full word. */
-void battle_effect_spawn_emitter_particles(
+ * opcode passes none. The emitter index arrives as a full word. The function
+ * is declared with an int result it never sets and no caller reads. */
+s32 battle_effect_spawn_emitter_particles(
     s16 effect_index, s32 frame, s32 emitter_index, effect_work_record_t* transform);
 
 void battle_effect_build_secondary_init_from_action(
@@ -5901,7 +5902,7 @@ void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra
 void battle_move_advance_display_unit_step(battle_unit_misc_data_t* unit);
 void battle_move_apply_selected_candidate(battle_move_spread_state_t* state);
 void battle_move_calculate_spread(void);
-u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, s32 exit_height);
+u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
 s32 battle_move_check_spreading_tile_coordinates(void);
 void battle_move_clear_reachable_flags_under_dead_or_jumping_units(void);

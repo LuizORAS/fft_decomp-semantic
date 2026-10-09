@@ -218,6 +218,8 @@ written that way.
 - `world_gfx_bind_data_pointer` has no return statement;
   `world_card_build_save_slot_description` uses the address its last store
   left in `$v0`.
+- `battle_effect_spawn_emitter_particles` has an `s32` result it never sets
+  and no caller reads.
 - `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current` fall
   off their end after `battle_thread_exit_current()`, like the WORLD twins.
 - `battle_ai_calculate_clockticks_until_death_counter_expires` is defined

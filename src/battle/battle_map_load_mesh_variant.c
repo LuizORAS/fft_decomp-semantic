@@ -1,89 +1,47 @@
 #include "fft/battle.h"
 
-typedef struct battle_map_packed_gns_record {
-    u8 bytes[0x14];
-} battle_map_packed_gns_record_t;
-
 enum {
     MAP_MESH_LOAD_IDLE = 0,
     MAP_MESH_LOAD_WAITING = 0x8d,
 };
 
-extern battle_map_packed_gns_record_t g_battle_map_selected_mesh_record;
+/* g_battle_map_gns_records viewed with the loader's halfword-aligned type,
+ * which copies whole records with lwl/lwr pairs. */
+extern gns_record_view_t g_battle_map_gns_records_view[150];
+extern gns_record_view_t g_battle_map_selected_mesh_record;
 
-/* Target 0x800f4acc selects the last primary-mesh record, then substitutes
- * an alternate whose layout/weather/time comparison matches. It copies the
- * selected 20-byte record verbatim, then passes its file-row tail at +0x06
- * to load into a temporary 0x20000-byte buffer. Its loader's fourth
- * argument is 0x30; that argument is forwarded as display suppression, not
- * used to index a resource slot by battle_map_start_file_load. */
+/* Selects the last primary-mesh record, then substitutes an alternate whose
+ * layout/weather/time comparison matches, and loads the selected record's
+ * file into a temporary 0x20000-byte buffer. The loader's fourth argument,
+ * 0x30, is forwarded as display suppression; battle_map_start_file_load does
+ * not use it to index a resource slot. */
 s32 battle_map_load_mesh_variant(s32 mesh_slot) {
+    s32 i;
+    s16 state;
+
     switch (g_battle_map_mesh_load_state) {
     case MAP_MESH_LOAD_IDLE:
-        if (g_battle_map_first_gns_resource_type < 0x80) {
-            {
-                u8* record_data;
-                u8* resource_type;
-                battle_map_packed_gns_record_t* record;
-                battle_map_packed_gns_record_t* selected_record;
-                /* Pin: unpinned, GCC hoists the 0x2e compare constant into
-                 * $t0 instead of $t1 (register swap only, same size). */
-                register s32 primary_resource_type asm("$9");
-
-                selected_record = &g_battle_map_selected_mesh_record;
-                primary_resource_type = GNS_RESOURCE_MESH_PRIMARY;
-                /* One byte base feeds both cursors; separate typed bases do not match. */
-                record_data = (u8*)&g_battle_map_gns_records[0];
-                resource_type = record_data + 5;
-                record = (battle_map_packed_gns_record_t*)record_data;
-                do {
-                    if (*resource_type == primary_resource_type) {
-                        *selected_record = *record;
-                    }
-                    resource_type += sizeof(battle_map_packed_gns_record_t);
-                    record++;
-                } while (*resource_type < 0x80);
-            }
-
-            if (g_battle_map_first_gns_resource_type < 0x80) {
-                u8* resource_type;
-                s32 record_offset;
-                s32 map_state;
-                s32 map_state_and_weather;
-
-                /* The target re-derives each field from the table base plus a
-                 * byte offset; a typed record cursor or index does not match. */
-                resource_type = &g_battle_map_gns_records[0].resource_type;
-                record_offset = 0;
-                do {
-                    if (*resource_type == GNS_RESOURCE_MESH_ALTERNATE) {
-                        map_state
-                            = battle_script_get_variable(*(s16*)((u8*)&g_battle_map_gns_records[0] + record_offset))
-                            & 0xfff;
-                        map_state_and_weather
-                            = map_state | ((battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12);
-                        if ((battle_map_is_gns_record_matching_state(
-                                 *((u8*)&g_battle_map_gns_records[0] + record_offset + 4),
-                                 *(s16*)((u8*)&g_battle_map_gns_records[0] + record_offset + 2),
-                                 map_state_and_weather
-                                     | ((battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15))
-                                << 16)
-                            != 0) {
-                            g_battle_map_selected_mesh_record
-                                = *(battle_map_packed_gns_record_t*)((u8*)&g_battle_map_gns_records[0] + record_offset);
-                        }
-                    }
-                    resource_type += sizeof(battle_map_packed_gns_record_t);
-                    record_offset += sizeof(battle_map_packed_gns_record_t);
-                } while (*resource_type < 0x80);
+        for (i = 0; g_battle_map_gns_records_view[i].resource_type < 0x80; i++) {
+            if (g_battle_map_gns_records_view[i].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
+                g_battle_map_selected_mesh_record = g_battle_map_gns_records_view[i];
             }
         }
-
+        for (i = 0; g_battle_map_gns_records_view[i].resource_type < 0x80; i++) {
+            if (g_battle_map_gns_records_view[i].resource_type == GNS_RESOURCE_MESH_ALTERNATE) {
+                state = battle_script_get_variable(g_battle_map_gns_records_view[i].script_variable_id) & 0xfff;
+                state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
+                state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
+                if ((s16)battle_map_is_gns_record_matching_state(g_battle_map_gns_records_view[i].map_state_comparison,
+                        g_battle_map_gns_records_view[i].map_state, state)) {
+                    g_battle_map_selected_mesh_record = g_battle_map_gns_records_view[i];
+                }
+            }
+        }
         g_battle_map_mesh_load_buffer = game_malloc(0x20000);
         if (g_battle_map_mesh_load_buffer == 0) {
             main_system_handle_malloc_exception(2, 0x3c9);
         }
-        battle_map_start_file_load(g_battle_map_file_table, &g_battle_map_selected_mesh_record.bytes[6],
+        battle_map_start_file_load(g_battle_map_file_table, g_battle_map_selected_mesh_record.load_info,
             (s32)g_battle_map_mesh_load_buffer, 0x30);
         g_battle_map_mesh_load_state = MAP_MESH_LOAD_WAITING;
         break;

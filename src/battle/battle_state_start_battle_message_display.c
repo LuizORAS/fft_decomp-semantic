@@ -10,6 +10,7 @@
 void battle_state_start_battle_message_display(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
+    battle_ability_animation_data_t* animation;
     s32 message;
     s32 i;
 
@@ -37,13 +38,14 @@ void battle_state_start_battle_message_display(void) {
         target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
         if (target != 0 && target->battle_data != 0 && target->battle_data->action.hit != 0) {
             battle_text_set_message_duration_frames(0x3c);
-            message = g_battle_ability_animation_data[unit->sp2_ability_id].text_display;
+            /* Taking the row first keeps this loop above loop.c's size limit
+             * for hoisting the constant 6 into a saved register. */
+            animation = &g_battle_ability_animation_data[unit->sp2_ability_id];
+            message = animation->text_display;
             if (message == 0) {
                 break;
             }
             if (message == 6) {
-                /* Clobbers $v0 so the constant 6 is reloaded, not kept in $s4 across the call. */
-                __asm__ volatile("" : : : "$2");
                 main_sound_play_tune(2);
             }
             break;
