@@ -9,12 +9,11 @@
  * highlighted CLUT, 0x20000000 draws dashes, and a negative value gets a minus
  * glyph ahead of the first cell.
  *
- * Register allocation hinges on GCC 2.6.3 allocno priorities: the dash loop
- * is a goto loop (no loop notes, so its uses of `y` and `color` weigh 1),
- * `negative` is an s8 (the promoted subreg gives the target's `move v0,s7`
- * copy before the test) and is cleared after the minus-glyph call, and the
- * if/else spellings of `color` and `value` set the live lengths that put
- * `color` in s6 ahead of `negative` in s7. */
+ * Register allocation hinges on GCC 2.6.3 allocno priorities: `negative` is
+ * an s8 (the promoted subreg gives the target's `move v0,s7` copy before the
+ * test) and is cleared after the minus-glyph call, and the if/else spellings
+ * of `color` and `value` set the live lengths that put `color` in s6 ahead of
+ * `negative` in s7. */
 bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_number_command_t* command) {
     s8 text[16];
     RECT rect;

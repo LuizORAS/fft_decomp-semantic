@@ -415,7 +415,7 @@ extern u16 g_bunit_gfx_tile_count;
 /* Base of the two frame buffers; g_bunit_gfx_context alternates between them. */
 extern bunit_gfx_context_t* g_bunit_gfx_context_base;
 extern u16 g_bunit_gfx_background_clut;
-extern u16 g_bunit_gfx_background_tile_layout[];
+extern u16 g_bunit_gfx_background_tile_layout[2][8]; /* per row parity: four (x, u) column pairs */
 extern u16 g_bunit_gfx_clut_id;
 extern s16 g_bunit_gfx_line_f2_count;
 extern s16 g_bunit_gfx_line_f3_count;

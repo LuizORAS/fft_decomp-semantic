@@ -111,17 +111,14 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
             g_world_menu_scroll_pixel_offset = 0;
             g_world_menu_list_scroll_direction = 0;
             g_world_menu_scroll_offset = --g_world_menu_cursor_position;
-            /* Both text-table checks skip straight to the arrows, past the
-               table test below (the target does not re-test it). */
-            if (g_world_menu_list_text_table == 0) {
-                goto arrows;
-            }
-            for (i = 0; i < g_world_menu_list_visible_rows; i++) {
-                rect.x = 0x240;
-                rect.y = (i - 1) * (s16)g_world_menu_row_height + 0x130;
-                rect.w = g_world_menu_list_image_width;
-                rect.h = g_world_menu_row_height;
-                world_gfx_enqueue_draw_move(&rect, 0x240, (s16)g_world_menu_row_height * i + 0x130, priority - 1);
+            if (g_world_menu_list_text_table != 0) {
+                for (i = 0; i < g_world_menu_list_visible_rows; i++) {
+                    rect.x = 0x240;
+                    rect.y = (i - 1) * (s16)g_world_menu_row_height + 0x130;
+                    rect.w = g_world_menu_list_image_width;
+                    rect.h = g_world_menu_row_height;
+                    world_gfx_enqueue_draw_move(&rect, 0x240, (s16)g_world_menu_row_height * i + 0x130, priority - 1);
+                }
             }
         }
     } else if (*(s8*)&g_world_menu_list_scroll_direction > 0) {
@@ -136,14 +133,13 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
             g_world_menu_list_scroll_direction = 0;
             g_world_menu_scroll_offset++;
             g_world_menu_cursor_position++;
-            if (g_world_menu_list_text_table == 0) {
-                goto arrows;
+            if (g_world_menu_list_text_table != 0) {
+                rect.x = 0x240;
+                rect.y = g_world_menu_row_height + 0x130;
+                rect.w = g_world_menu_list_image_width;
+                rect.h = (s16)g_world_menu_row_height * g_world_menu_list_visible_rows;
+                world_gfx_enqueue_draw_move(&rect, 0x240, 0x130, priority - 1);
             }
-            rect.x = 0x240;
-            rect.y = g_world_menu_row_height + 0x130;
-            rect.w = g_world_menu_list_image_width;
-            rect.h = (s16)g_world_menu_row_height * g_world_menu_list_visible_rows;
-            world_gfx_enqueue_draw_move(&rect, 0x240, 0x130, priority - 1);
         }
     }
     if (g_world_menu_list_text_table != 0) {
@@ -164,7 +160,6 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
                 g_world_menu_window_clut, g_world_menu_draw_priority);
         }
     }
-arrows:
     if (g_world_menu_use_alternate_palette == 0) {
         if (g_world_menu_scroll_offset != 0) {
             rect.x = g_world_menu_window_right_x;

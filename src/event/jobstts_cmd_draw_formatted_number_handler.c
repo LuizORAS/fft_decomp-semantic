@@ -45,9 +45,7 @@ typedef struct jobstts_number_glyph {
  *
  * The dash loop reuses `value` as its counter, which is what keeps the
  * target's `move a2, s0`: a global allocno's copy is not coalesced, and a2 is
- * the register `value` already occupies at the 0x20000000 test. The loop has
- * to be a structured `while` so loop.c's duplicate_loop_exit_test clones the
- * top test - a hand-duplicated `goto` is cross-jumped back into one test. */
+ * the register `value` already occupies at the 0x20000000 test. */
 u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
     s8 text[16];
     jobstts_number_glyph_t glyph;

@@ -20,10 +20,11 @@
    Matching notes: should_restore also serves as the loop's constant 1 (the
    target keeps 1 in that variable's register and materialises it before the
    pointer copies); the portrait pointers are assigned inside the loop so
-   loop.c hoists them after the thread constants; the empty do-while gives
-   the goto loop the loop note reorg needs to fill its delay slot from the
-   target without letting loop.c hoist the 0x14 bound; the formation search
-   is a goto loop so the 3 bound stays in place. */
+   loop.c hoists them after the thread constants; the R1 search loop holds
+   its whole switch-unit block (a loop that large keeps the 0x14 bound
+   inside it), while the L1 search stays a do-while (with both blocks inside
+   their loops should_restore outranks selected_battle_unit for s4); the
+   formation search is a goto loop so the 3 bound stays in place. */
 s32 require_select_party_unit_to_remove(void) {
     s32 party_index;
     u8* text;
@@ -147,22 +148,23 @@ s32 require_select_party_unit_to_remove(void) {
             }
             if (*g_require_input_controller & PSX_PAD_R1) {
                 g_require_panel_status_animation[1] = 7;
-                do {
-                } while (0); /* loop note only; see function comment */
-            next_party:
-                selected_party_index++;
-                if (selected_party_index == 0x14)
-                    selected_party_index = 0;
-                if (g_require_party_removable_flags[selected_party_index] == 0)
-                    goto next_party;
-                g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
-                g_require_status_display_redraw_request = should_restore;
-                g_require_numeric_editor_redraw_request = should_restore;
-                g_require_character_status_redraw_request = should_restore;
-                require_editor_load_party_unit(1, selected_party_index);
-                REQUIRE_MOVE_PARTY_PORTRAIT(selected_party_index, portrait_rect, portrait_destination, palette_rect);
-                battle_menu_copy_billboard_data_in(
-                    g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
+                for (;;) {
+                    selected_party_index++;
+                    if (selected_party_index == 0x14)
+                        selected_party_index = 0;
+                    if (g_require_party_removable_flags[selected_party_index] != 0) {
+                        g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+                        g_require_status_display_redraw_request = should_restore;
+                        g_require_numeric_editor_redraw_request = should_restore;
+                        g_require_character_status_redraw_request = should_restore;
+                        require_editor_load_party_unit(1, selected_party_index);
+                        REQUIRE_MOVE_PARTY_PORTRAIT(
+                            selected_party_index, portrait_rect, portrait_destination, palette_rect);
+                        battle_menu_copy_billboard_data_in(g_require_panel_active_unit_banner,
+                            g_require_active_unit_data, g_require_panel_billboard_data);
+                        break;
+                    }
+                }
             } else if (*g_require_input_controller & PSX_PAD_L1) {
                 g_require_panel_status_animation[0] = 7;
                 do {

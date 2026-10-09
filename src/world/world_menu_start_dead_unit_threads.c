@@ -120,7 +120,6 @@ void world_menu_start_dead_unit_threads(void) {
 
     for (;;) {
         if (context->kind == 3) {
-        restart_move_menu:
             g_world_dead_unit_move_result = 0xff;
             world_thread_start(g_world_thread_current_id - 1, world_menu_run_icon_selection_loop);
             world_thread_set_parameters(g_world_thread_current_id - 1,
@@ -160,8 +159,7 @@ void world_menu_start_dead_unit_threads(void) {
             }
             if (g_world_dead_unit_menu_result == 1 || (g_world_dead_unit_menu_result & 0xff) == 0xff) {
                 if (context->kind == 3) {
-                    /* Re-enters the move menu without re-testing the kind. */
-                    goto restart_move_menu;
+                    continue;
                 }
             }
         }

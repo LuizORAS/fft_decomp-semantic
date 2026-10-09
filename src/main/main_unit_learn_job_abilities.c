@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
+/* One job's row of battle_stats_t.learned_abilities. Indexing the rows
+ * through this view keeps the row address (unit + job * 3 + 0x99) one
+ * loop-invariant value, as in the target; a flat learned_abilities[job * 3 +
+ * i / 8] adds the two indexes first. */
+typedef struct unit_learned_ability_row {
+    u8 bits[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
+} unit_learned_ability_row_t;
+
 /* Learns abilities for one job of a unit.
  * job_id 0x4a (Squire) stands for the unit's base job.  With an ENTD primary
  * skillset of 0 every ability of the unit's own job is learned; otherwise
@@ -16,8 +24,6 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     s32 i;
     s32 ability_id;
     s32 scratch;
-    u16* job_jp;
-    u8* learned_bits;
     ability_data_t* ability;
     u8 character;
     s32 unit_flags;
@@ -57,40 +63,25 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     } else {
         skillset = g_main_job_data_pointer[job_id].skillset;
     }
-    i = 0;
-    /* Views of job_points[job_index] and learned_abilities[job_index * 3]. The
-     * target adds the scaled index before the unit base and folds 0xdc into
-     * each JP load/store. Direct member indexing changes register allocation
-     * (588 vs 584 bytes); member-base local pointers grow the frame and emit
-     * 604 bytes. Keep these address expressions for the exact target. */
-    job_jp = (u16*)(job_index * 2 + (u32)unit);
-    learned_bits = (u8*)(job_index * 3 + (u32)unit + 0x99);
-    learned = 0;
-    /* A goto loop: as a do/while, GCC's loop pass hoists the 0x80 bit-mask
-     * constant into a saved register, which the target does not. */
-loop: {
-    ability_id = (u16)main_ability_get_id_from_skillset(skillset, i);
-    if (ability_id != 0) {
-        ability = &g_main_ability_data[ability_id];
-        scratch = ability->learn_rate;
-        if (auto_learn != 0) {
-            learned = 1;
-        } else if (main_util_roll_pass_fail(100, scratch) == 0) {
-            u16 cost = ability->jp_cost;
-            if (job_jp[0xdc / 2] >= cost) {
-                job_jp[0xdc / 2] = job_jp[0xdc / 2] - cost;
-                learned_bits[i / 8] = learned_bits[i / 8] | (0x80 >> (i % 8));
+    for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
+        learned = 0;
+        ability_id = (u16)main_ability_get_id_from_skillset(skillset, i);
+        if (ability_id != 0) {
+            ability = &g_main_ability_data[ability_id];
+            scratch = ability->learn_rate;
+            if (auto_learn != 0) {
                 learned = 1;
+            } else if (main_util_roll_pass_fail(100, scratch) == 0) {
+                u16 cost = ability->jp_cost;
+                if (unit->job_points[job_index] >= cost) {
+                    unit->job_points[job_index] -= cost;
+                    ((unit_learned_ability_row_t*)unit->learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
+                    learned = 1;
+                }
+            }
+            if (learned != 0) {
+                ((unit_learned_ability_row_t*)unit->learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
             }
         }
-        if (learned != 0) {
-            learned_bits[i / 8] = learned_bits[i / 8] | (0x80 >> (i % 8));
-        }
     }
-    learned = 0;
-    i++;
-    if (i < SKILLSET_ABILITY_LIST_COUNT) {
-        goto loop;
-    }
-}
 }
