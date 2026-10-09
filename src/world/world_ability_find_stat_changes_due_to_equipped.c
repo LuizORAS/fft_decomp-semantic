@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 void world_ability_find_stat_changes_due_to_equipped(
-    world_item_stat_detail_t* stat_diff, s16 old_ability, s16 new_ability) {
+    world_item_stat_detail_t* stat_diff, s32 old_ability, s32 new_ability) {
     world_item_stat_summary_t summary;
     world_item_stat_detail_t old_stats;
     world_item_stat_detail_t new_stats;

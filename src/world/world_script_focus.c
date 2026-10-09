@@ -54,14 +54,11 @@ void world_script_focus(u8* parameters) {
     }
     for (i = 0; i < 3; i++) {
         coords[0][i] = (coords[0][i] + coords[1][i]) * 2;
-        /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-        ((void (*)(u8*, s16))world_script_store_halfword)(parameters, coords[0][i]);
+        world_script_store_halfword(parameters, coords[0][i]);
         parameters += 2;
     }
     if (keep_angle == 0) {
         parameters += 2;
-        /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-        ((void (*)(u8*, s16))world_script_store_halfword)(
-            parameters, world_camera_pick_nearest_unblocked_yaw(first, second));
+        world_script_store_halfword(parameters, world_camera_pick_nearest_unblocked_yaw(first, second));
     }
 }

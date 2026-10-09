@@ -22,8 +22,7 @@ void world_script_apply_relative_camera(u8* source, const s32* deltas) {
         } else {
             value = delta + world_script_load_halfword(source);
         }
-        /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-        ((void (*)(u8*, s16))world_script_store_halfword)(destination, value);
+        world_script_store_halfword(destination, value);
         source += 2;
         destination += 2;
         deltas++;

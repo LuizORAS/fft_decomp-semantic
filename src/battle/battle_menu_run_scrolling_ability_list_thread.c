@@ -275,8 +275,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         g_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
                             && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
-                            /* The target passes x and y as full words; the s16 prototype narrows them. */
-                            ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->columns.x[column] + 0x50, 0);
+                            battle_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
                         }
                     } else if (layout->columns.mode[column] == 1) {

@@ -22,23 +22,23 @@ s32 world_ability_run_learn_list(void) {
     s16 index;
 
     if (*(s8*)&g_world_learn_ability_list_open == 0) {
-        g_world_menu_script_callbacks[0] = (s32 (*)(s32))world_job_get_cached_level;
-        g_world_menu_script_callbacks[1] = (s32 (*)(s32))world_job_get_cached_total_jp;
-        g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_job_get_cached_level_jp_requirement;
-        g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_job_get_selected_unit_job_points_entry;
+        g_world_menu_script_callbacks[0] = world_job_get_cached_level;
+        g_world_menu_script_callbacks[1] = world_job_get_cached_total_jp;
+        g_world_menu_script_callbacks[2] = world_job_get_cached_level_jp_requirement;
+        g_world_menu_script_callbacks[3] = world_job_get_selected_unit_job_points_entry;
         g_world_menu_script_callbacks[4] = world_ability_cache_entry_pointers;
-        g_world_menu_script_callbacks[5] = (s32 (*)(s32))world_job_get_cached_skillset_empty_flag;
+        g_world_menu_script_callbacks[5] = world_job_get_cached_skillset_empty_flag;
         g_world_menu_script_callbacks[6] = world_menu_is_learn_ability_learned;
         g_world_menu_script_callbacks[7] = world_ability_get_mp_cost_display_value;
         g_world_menu_script_callbacks[8] = world_ability_get_ct_display_value;
         g_world_menu_script_callbacks[9] = world_ability_get_jp_cost_display_value;
-        g_world_menu_script_callbacks[10] = (s32 (*)(s32))world_ability_is_category_movement;
-        g_world_menu_script_callbacks[11] = (s32 (*)(s32))world_ability_is_category_support;
-        g_world_menu_script_callbacks[12] = (s32 (*)(s32))world_ability_is_category_reaction;
-        g_world_menu_script_callbacks[13] = (s32 (*)(s32))world_ability_is_category_action;
+        g_world_menu_script_callbacks[10] = world_ability_is_category_movement;
+        g_world_menu_script_callbacks[11] = world_ability_is_category_support;
+        g_world_menu_script_callbacks[12] = world_ability_is_category_reaction;
+        g_world_menu_script_callbacks[13] = world_ability_is_category_action;
         g_world_menu_script_callbacks[14] = world_ability_is_non_action_unlearned;
         g_world_learn_confirm_prompt_state = 0;
-        g_world_menu_script_callbacks[15] = (s32 (*)(s32))world_ability_is_selected_action_type;
+        g_world_menu_script_callbacks[15] = world_ability_is_selected_action_type;
         world_gfx_clear_sprite_slot(10);
         world_gfx_clear_sprite_slot(11);
         world_gfx_clear_sprite_slot(12);

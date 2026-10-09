@@ -17,8 +17,7 @@ void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, vo
             if ((layout->text_ids[column][index] & 0x7FF) == 0x7FF) {
                 continue;
             }
-            /* The target passes both coordinates without the s16 sign extension. */
-            ((void (*)(s32, s32))world_menu_set_text_origin)(layout->x[column], row * 0x10);
+            world_menu_set_text_origin(layout->x[column], row * 0x10);
             if (layout->mode[column] != 2) {
                 g_world_menu_text_color = layout->text_colors[column][index];
             }

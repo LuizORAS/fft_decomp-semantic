@@ -4,7 +4,7 @@
 /* L1 + R1 + Select + Start restarts the game. */
 #define TUTORIAL_RESET_BUTTONS 0x90C
 
-s32 world_input_read_tutorial_or_controller(void) {
+s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     u32 input;
 
     if (g_world_script_tutorial_id != 0) {

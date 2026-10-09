@@ -23,8 +23,7 @@ void option_menu_render_entries(option_menu_entry_t* entry, s32* row_offset, voi
             if ((layout->text_ids[column][index] & 0x7FF) == 0x7FF) {
                 continue;
             }
-            /* The target passes both coordinates without the s16 sign extension. */
-            ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column], row * 0x10);
+            battle_menu_set_text_origin(layout->x[column], row * 0x10);
             if (layout->mode[column] != 2) {
                 g_menu_text_palette_offset = layout->text_colors[column][index];
             }

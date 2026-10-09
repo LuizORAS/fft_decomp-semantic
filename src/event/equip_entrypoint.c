@@ -66,8 +66,6 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     if (stats->max_mp < stats->mp) {
         stats->mp = stats->max_mp;
     }
-    /* The target loads no argument for this one-argument callee: $a0 still
-     * holds stats from the lookup above. */
-    ((void (*)(void))main_unit_refresh_stats_and_statuses)();
+    main_unit_refresh_stats_and_statuses(stats);
     return i < 5;
 }

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Returns the owned-and-equipped count for the selected item. */
-s32 world_item_count_selected_owned_and_equipped(void) {
+s32 world_item_count_selected_owned_and_equipped(s32 unused_row) {
     s32 result;
 
     if (g_world_menu_option_count != 0) {

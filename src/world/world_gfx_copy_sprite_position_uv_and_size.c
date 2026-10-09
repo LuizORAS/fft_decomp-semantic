@@ -1,25 +1,16 @@
+#include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-typedef struct world_gfx_sprite_copy_source {
-    u16 vram_x; /* 0x00: menu record text-image VRAM x; (vram_x & 0x3f) * 4 is SPRT.u0 */
-    u8 vram_y;  /* 0x02: low byte of the menu record's VRAM y, copied to SPRT.v0 */
-    u8 _unused_03;
-    u8 _unused_04[4];
-    u16 x; /* 0x08 */
-    u16 y; /* 0x0A */
-    u8 _unused_0c[8];
-    u16 width;  /* 0x14 */
-    u16 height; /* 0x16 */
-} world_gfx_sprite_copy_source_t;
-
-/* The destination is an SPRT packet: bytes +0x0c/+0x0d are its u/v
- * coordinates. */
-void world_gfx_copy_sprite_position_uv_and_size(world_gfx_sprite_copy_source_t* source, SPRT* sprite) {
-    sprite->x0 = source->x;
-    sprite->y0 = source->y;
-    sprite->u0 = (source->vram_x & 0x3F) * 4;
-    sprite->v0 = source->vram_y;
-    sprite->w = source->width;
-    sprite->h = source->height;
+/* Place a cursor sprite over the icon strip: position from the icon origin,
+ * texture origin from the text image's VRAM position ((x & 0x3f) * 4 and the
+ * low byte of y), size from the text sprite placement. */
+void world_gfx_copy_sprite_position_uv_and_size(
+    const world_menu_icon_thread_param_t* param, SPRT* sprite, s32 unused_frame) {
+    sprite->x0 = param->icon_x;
+    sprite->y0 = param->flags;
+    sprite->u0 = (param->x & 0x3F) * 4;
+    sprite->v0 = param->y;
+    sprite->w = param->text_image.width;
+    sprite->h = param->text_image.height;
 }

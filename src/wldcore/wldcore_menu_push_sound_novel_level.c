@@ -62,7 +62,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     bounds.dimensions.y = 8;
     origin.x = 0x20;
     origin.y = 0x1E8;
-    wldcore_window_init_vram_render_record(index, bounds.position, bounds.dimensions, origin, 0);
+    wldcore_window_init_vram_render_record(index, bounds, origin, 0);
     pos3 = (wldcore_point32_t*)((s32)render_pos + index * sizeof(wldcore_window_render_record_t));
     pos3->x = 0x34;
     pos3->y = 0x55;

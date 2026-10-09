@@ -67,8 +67,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     bounds.dimensions.y = 0xB0;
     bounds.position.x = 0;
     bounds.position.y = 0;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 1, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, 1, g_wldcore_window_image_buffer);
     position = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
     newest = &g_wldcore_active_saved_record.text_history_3;
     g_wldcore_window_render_records[index].priority = g_wldcore_menu_ordering_table_offset;

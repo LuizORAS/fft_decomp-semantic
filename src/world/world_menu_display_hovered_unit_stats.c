@@ -3,11 +3,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* world_gfx_init_image_loading's signature; the WORLD build stubs the BATTLE
- * mode-1 loader (battle_menu_display_projected_action_effect) with world_noop_800e90ec. */
-typedef void (*world_unit_status_loader_t)(POLY_FT4* primitive, const world_image_location_t* base_load,
-    const world_image_location_t* base_screen, const world_gfx_image_load_parameters_t* parameters);
-
 /* &g_world_menu_sprite_page_image_params[5]; spelled as an element (params[frame + 5]
  * or (&params[5])[frame]) GCC shares the params base and the code changes. */
 extern world_gfx_image_load_parameters_t g_world_menu_sprite_page_image_params_from_5[];
@@ -112,7 +107,7 @@ void world_menu_display_hovered_unit_stats(
                 &page->quads[frame], &g_world_gfx_menu_image_source, (const world_image_location_t*)frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
-        ((world_unit_status_loader_t)world_noop_800e90ec)(
+        world_noop_800e90ec(
             &page->quads[frame], &g_world_gfx_menu_image_source, (const world_image_location_t*)frame_rect, params);
     } else if (mode == 2) {
         for (frame = 0; frame < 2; frame++, params++) {

@@ -6,7 +6,7 @@
  * Apply the horizontal-pad direction to one of the menu selection values,
  * wrapping it within [0, entry_count).
  */
-s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, u16 input_mask) {
+s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask) {
     s16* selection;
     s16 left_value;
     s16 right_value;

@@ -43,6 +43,5 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     if (position_sum == 0) {
         position_sum = 1;
     }
-    /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-    ((void (*)(u8*, s16))world_script_store_halfword)(parameters + 14, position_sum);
+    world_script_store_halfword(parameters + 14, position_sum);
 }

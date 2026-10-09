@@ -10,7 +10,7 @@
  * world_menu_input_state_t, but a struct global makes GCC keep a base
  * register for the field accesses, so they are separate scalars here.
  */
-void world_script_update_event_frame_input(u32* otag, u32 input, s16 frame_arg) {
+void world_script_update_event_frame_input(u32* otag, u32 input, s32 frame_arg) {
     u32 filtered_input;
     s32 initial_delay;
     s32 repeat_delay;

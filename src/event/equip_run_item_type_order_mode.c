@@ -21,7 +21,7 @@ s32 equip_run_item_type_order_mode(void) {
         for (i = 0; (names[i] = g_equip_item_type_order[i]) != -1; i++) {
             names[i] += 3;
         }
-        equip_text_concatenate_ids((s32)g_equip_text_data, g_equip_item_type_order_names, names, 1);
+        equip_text_concatenate_ids(g_equip_text_data, g_equip_item_type_order_names, names, 1);
         g_equip_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         g_equip_type_order_ready = 1;
     }
@@ -54,7 +54,7 @@ s32 equip_run_item_type_order_mode(void) {
         for (i = 0; (names[i] = g_equip_item_type_order[i]) != -1; i++) {
             names[i] += 3;
         }
-        equip_text_concatenate_ids((s32)g_equip_text_data, g_equip_item_type_order_names, names, 1);
+        equip_text_concatenate_ids(g_equip_text_data, g_equip_item_type_order_names, names, 1);
         category = g_equip_selected_slot;
         g_equip_menu_text_redraw_flag = 1;
         /* The target passes sort_mode without the definition's u16 narrowing. */

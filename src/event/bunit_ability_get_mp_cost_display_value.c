@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-u32 bunit_ability_get_mp_cost_display_value(s32 index) {
+s32 bunit_ability_get_mp_cost_display_value(s32 index) {
     s32 entry = g_bunit_ability_entries[index];
     s32 result;
 

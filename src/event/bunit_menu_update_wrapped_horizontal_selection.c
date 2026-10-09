@@ -7,7 +7,7 @@
  * wrapping it within [0, entry_count). The empty constraints emit no code;
  * they preserve the retail compiler's address-formation and load schedule.
  */
-s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, u16 input_mask) {
+s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask) {
     s16* selection;
     s16 left_value;
     s16 right_value;

@@ -118,7 +118,8 @@ s32 world_menu_run_remove_ability(void) {
         if (slot == 4) {
             movement_ability = g_world_remove_ability_slots[4];
             if ((u32)(movement_ability - ABILITY_ID_MOVEMENT_MOVE_PLUS_1) < 6) {
-                world_ability_find_stat_changes_due_to_equipped(&g_world_item_preview_stat_detail, movement_ability, 0);
+                world_ability_find_stat_changes_due_to_equipped(
+                    &g_world_item_preview_stat_detail, (s16)movement_ability, 0);
                 g_world_preview_stats_thread_params.redraw_request = 1;
                 preview = 1;
             }

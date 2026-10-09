@@ -41,7 +41,7 @@ extern u16 g_bunit_gfx_draw_mode_capacity;
 
 typedef struct bunit_gfx_frame_buffer bunit_gfx_frame_buffer_t;
 
-s32 bunit_entrypoint(void) {
+s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     POLY_FT4 textured_quads[1000];
     POLY_G4 gouraud_quads[60];
     POLY_GT4 gouraud_textured_quads[120];
@@ -85,8 +85,7 @@ s32 bunit_entrypoint(void) {
         gouraud_textured_quads, 0, 0, 0, 0, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     running = 1;
     bunit_gfx_init_vram_and_start_fade();
-    /* The target passes the selected index to this argument-less callee. */
-    ((void (*)(s32))bunit_menu_init_unit_list)(g_bunit_unit_selected_index);
+    bunit_menu_init_unit_list(g_bunit_unit_selected_index);
     do {
         bunit_gfx_submit_frame_and_swap_buffers(0, 0);
         previous_mode = g_event_mode;
@@ -120,8 +119,7 @@ s32 bunit_entrypoint(void) {
         bunit_menu_update_unit_browser();
         g_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
         battle_menu_draw_active_window_frames();
-        /* The target zero-extends the y word; the definition's s16 parameter would sign-extend it. */
-        ((void (*)(void*, u32, u16))bunit_input_update_event_state)(
+        bunit_input_update_event_state(
             g_bunit_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_bunit_gfx_drawenv_y);
         sound_request = g_sound_effect_id_to_play;
         if (sound_request == MAIN_SFX_CURSOR_MOVE || sound_request == MAIN_SFX_CANCEL) {

@@ -47,7 +47,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 6:
-        battle_gfx_clear_four_state_words();
+        battle_gfx_clear_four_state_words(map_id);
         step++;
         break;
     case 7:
@@ -59,8 +59,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 8:
-        /* The target passes a second argument (0) the one-parameter callee ignores. */
-        ((void (*)(s32*, s32))battle_unit_build_deployed_units_data)(g_main_deployed_unit_map_coordinates, 0);
+        battle_unit_build_deployed_units_data((battle_deployed_coords_t*)g_main_deployed_unit_map_coordinates, 0);
         step++;
         break;
     case 9:

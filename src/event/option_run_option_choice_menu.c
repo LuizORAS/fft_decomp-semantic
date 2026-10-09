@@ -43,8 +43,7 @@ void option_run_option_choice_menu(void) {
     battle_thread_wait_frames(1);
     g_menu_text_state.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
-        /* The target passes both coordinates without the s16 sign extension. */
-        ((void (*)(s32, s32))battle_menu_set_text_origin)(8, i * 16 + 8);
+        battle_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_option_current_values[kind]) {
             g_menu_text_palette_offset = 8;
         }

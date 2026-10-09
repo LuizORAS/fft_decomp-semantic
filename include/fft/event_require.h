@@ -355,7 +355,7 @@ extern s32 g_require_status_display_thread_params;
 s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void);
 void require_apply_post_battle_unit_changes(void);
 void require_input_wait_frames_or_skip(s32 frames);
-void require_noop_801c43e0(void);
+void require_noop_801c43e0(s32 unused_battle_index, s32 unused_unit_id, s32 unused_character_identity);
 void require_overlay_open_jobstts(void);
 void require_render_gil_reward_ticker(void);
 void require_render_war_trophies(void);

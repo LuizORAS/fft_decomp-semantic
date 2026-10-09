@@ -11,8 +11,7 @@ s32 world_unit_can_equip_item_id(s16 unit_index, s32 item_id) {
         return -1;
     }
     world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit_index]->equippable_item_types);
-    /* The target uses v0 without the u8 return's mask. */
-    world_bit_cursor_read_primary(((s32 (*)(s32))world_item_get_type)(id));
+    world_bit_cursor_read_primary(world_item_get_type(id));
     if (world_bit_cursor_read_primary(1) == 0) {
         result = -1;
     } else {

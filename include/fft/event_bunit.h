@@ -16,16 +16,16 @@ extern s16 g_bunit_ability_entries[]; /* Packed ability IDs/flags; -1 terminates
 extern u16 g_bunit_ability_list_job_name_row[];
 extern u8 g_bunit_ability_list_ready;
 s32 bunit_ability_get_ct_display_value(s32 index);
-u32 bunit_ability_get_jp_cost_display_value(s32 index);
-u32 bunit_ability_get_mp_cost_display_value(s32 index);
-s32 bunit_ability_is_action(void);
-s32 bunit_ability_is_action_tab(void);
+s32 bunit_ability_get_jp_cost_display_value(s32 index);
+s32 bunit_ability_get_mp_cost_display_value(s32 index);
+s32 bunit_ability_is_action(s32 unused_row);
+s32 bunit_ability_is_action_tab(s32 unused_row);
 s32 bunit_ability_is_learned(s32 index);
-s32 bunit_ability_is_movement_tab(void);
+s32 bunit_ability_is_movement_tab(s32 unused_row);
 s32 bunit_ability_is_non_action_learned(s32 index);
 s32 bunit_ability_is_non_action_unlearned(s32 index);
-s32 bunit_ability_is_reaction_tab(void);
-s32 bunit_ability_is_support_tab(void);
+s32 bunit_ability_is_reaction_tab(s32 unused_row);
+s32 bunit_ability_is_support_tab(s32 unused_row);
 s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
 s32 bunit_run_ability_list_menu(void);
 
@@ -127,22 +127,22 @@ extern u32 g_bunit_job_next_level_jp_requirement;
 extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
 extern s32 g_bunit_job_list_menu_script;
-s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids);
-u32 bunit_job_calculate_current_jp(s32 index);
+s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2);
+s32 bunit_job_calculate_current_jp(s32 index);
 s32 bunit_job_calculate_current_level(s32 index);
 s32 bunit_job_calculate_current_mastered(s32 index);
-u32 bunit_job_calculate_current_total_jp(s32 index);
-u32 bunit_job_calculate_next_level_jp_requirement(s32 index);
+s32 bunit_job_calculate_current_total_jp(s32 index);
+s32 bunit_job_calculate_next_level_jp_requirement(s32 index);
 s32 bunit_job_get_base(s16 unit_id);
-u32 bunit_job_get_current_jp(void);
-s32 bunit_job_get_current_level(void);
-u32 bunit_job_get_current_total_jp(void);
+s32 bunit_job_get_current_jp(s32 unused_row);
+s32 bunit_job_get_current_level(s32 unused_row);
+s32 bunit_job_get_current_total_jp(s32 unused_row);
 s32 bunit_job_get_generic_index(s32 job_id);
-u32 bunit_job_get_next_level_jp_requirement(void);
-s32 bunit_job_is_current_mastered(void);
+s32 bunit_job_get_next_level_jp_requirement(s32 unused_row);
+s32 bunit_job_is_current_mastered(s32 unused_row);
 s32 bunit_job_is_special_monster(s32 job_id);
 s32 bunit_job_find_first_for_skillset(s32 skillset_id);
-u8 bunit_job_get_skillset(s32 job_id);
+s32 bunit_job_get_skillset(s32 job_id);
 
 /* status */
 extern u8 g_bunit_status_banner_enabled;
@@ -226,13 +226,13 @@ void bunit_text_render_signed_decimal_entries(s32 pixels, battle_menu_status_pan
     battle_menu_status_panel_text_position_t* out, s32 count);
 
 void bunit_text_set_palette_and_metrics(s32 mode);
-void bunit_text_concatenate_ids(s32 text_table, u8* out, s16* list, s32 separate);
+void bunit_text_concatenate_ids(const u8* text_table, u8* out, s16* list, s32 separate);
 void bunit_text_render_id_rows_to_vram(s32 text_table, u16* text_ids, RECT* destination, s32 flags);
 
 void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 
-const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count);
+const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2);
 void bunit_text_start_selection_thread(s32 thread_data);
 
 /* thread */
@@ -524,7 +524,7 @@ s32 bunit_input_get_lock_timer(void);
 bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(void);
 void bunit_input_update_controller(void);
 s32 bunit_input_read_pad1_unless_locked(void);
-void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg);
+void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg);
 void bunit_input_update_lock_timer(void);
 
 /* menu */
@@ -532,10 +532,8 @@ void bunit_input_update_lock_timer(void);
  * Row-value getters for the BUNIT menu command stream: a 16-entry table at
  * 0x801ecb70 indexed by a command byte.
  *
- * Different menus install different signatures here --
- * bunit_run_ability_list_menu stores predicates, bunit_menu_init_unit_list
- * stores two-argument stat getters, and the row-sprite handler expects a
- * pointer return -- so callers cast to the signature they actually invoke.
+ * Every getter takes the row. The row-sprite handler expects a pointer
+ * return, so it casts the slot it invokes.
  */
 typedef s32 (*bunit_menu_row_callback_t)(s32 row);
 
@@ -632,9 +630,9 @@ void bunit_menu_set_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
 void bunit_menu_dispatch_with_override(s32 menu_id, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id);
-void bunit_menu_init_scrollable_list(s32 entries, s32 selected_index, s16 scroll_base_index, s32 text_table);
+void bunit_menu_init_scrollable_list(s32 entries, s32 selected_index, s32 scroll_base_index, s32 text_table);
 void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, s32 text_table);
-void bunit_menu_init_unit_list(void);
+void bunit_menu_init_unit_list(s32 unused_selected_index);
 s32 bunit_menu_is_active_or_transitioning(void);
 s32 bunit_menu_run_unit_list_frame(void);
 void bunit_menu_set_selection_record(s32 index, s32 field0, s32 field2, u16* lookup_table);
@@ -654,7 +652,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     u16 stat_mode, u16 buttons, s16 locked);
 
 void bunit_menu_update_unit_list_scroll(s8* step, s8* offset);
-s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, u16 input_mask);
+s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* unit */
 typedef enum bunit_unit_stat {
@@ -809,12 +807,12 @@ s32 bunit_unit_build_reorderable_index_list(void);
 void bunit_unit_copy_orders_to_reorder_list(s32 unused, s16* entries);
 void bunit_unit_copy_selected_data(void);
 s32 bunit_unit_find_index_by_roster_id(s16 roster_id);
-s16 bunit_unit_get_current_stat(s32 unit_index, s32 fallback);
+s32 bunit_unit_get_current_stat(s32 unit_index);
 s32 bunit_unit_get_level(s32 unit_id);
 s32 bunit_unit_get_experience(s32 unit_id);
 s32 bunit_unit_get_brave(s32 unit_id);
 s32 bunit_unit_get_faith(s32 unit_id);
-s16 bunit_unit_get_max_stat(s32 unit_index, s32 fallback);
+s32 bunit_unit_get_max_stat(s32 unit_index);
 void bunit_render_unit_status_panel_thread(void);
 void bunit_unit_copy_reorder_list_to_orders(s32 unused, const u8* entries);
 s32 bunit_unit_is_two_handing_weapon(s16* slots, s32 allow_secondary);
@@ -872,6 +870,6 @@ extern u8 g_bunit_saved_status_banner_enabled;
 extern s16 g_bunit_frame_arg;
 extern s16 g_bunit_shown_unit_indices[];
 extern u8 g_bunit_sound_queued_effect_id;
-s32 bunit_entrypoint(void);
+s32 bunit_entrypoint(s32 unused_unit, void* unused_otag);
 
 #endif

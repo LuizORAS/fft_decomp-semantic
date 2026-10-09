@@ -13,9 +13,8 @@
  * through after writing the terminator, and no caller reads the result.
  * An explicit return at the tail introduces an extra constant load.
  *
- * `world_gfx_bind_data_pointer` is declared void but leaves the bound table in
- * $v0, which the target passes straight on as the text table; the
- * function-pointer cast reproduces that without lying about the callee. */
+ * `world_gfx_bind_data_pointer` has no return statement; the job-name table
+ * passed on below is the address its store left in $v0. */
 s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
     s32 index;
     u8* source;
@@ -33,8 +32,7 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         }
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0x58;
-        source = world_text_find_entry_by_index(
-            ((u8 * (*)(u32)) world_gfx_bind_data_pointer)(1), g_world_load_work_buffer->job_id, 1);
+        source = world_text_find_entry_by_index(world_gfx_bind_data_pointer(1), g_world_load_work_buffer->job_id, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }

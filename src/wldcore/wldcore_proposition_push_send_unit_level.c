@@ -75,8 +75,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     bounds.position.y = 0;
     bounds.dimensions.x = 0x6C;
     bounds.dimensions.y = 0x40;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
         wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
@@ -127,8 +126,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     bounds.position.y = 0x40;
     bounds.dimensions.x = 0x30;
     bounds.dimensions.y = 0x3B;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
         wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
@@ -155,8 +153,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     bounds.position.y = 0x40;
     bounds.dimensions.x = 0x30;
     bounds.dimensions.y = 0x3B;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= 0x10;
     {

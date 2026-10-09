@@ -222,8 +222,7 @@ void option_build_at_list(void) {
             redraw_pending = 0;
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
-            redraw_pending = (s32)((void* (*)(world_menu_entry_t*, s32*, s32*, s32*))option_menu_update_scroll)(
-                entry, &row_offset, &ring, &cursor);
+            redraw_pending = (s32)option_menu_update_scroll((option_menu_entry_t*)entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         entry->selected_index = cursor + row_offset;

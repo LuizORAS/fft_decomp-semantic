@@ -1,34 +1,16 @@
+#include "fft/battle.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
-typedef struct battle_menu_cursor_source {
-    u16 texture_flags;
-    u8 texture_v;
-    u8 _unused_03[5];
-    u16 x;
-    u16 y;
-    u8 _unused_0c[8];
-    u16 width;
-    u16 height;
-} battle_menu_cursor_source_t;
-
-typedef struct battle_menu_cursor_frame {
-    u8 _unused_00[8];
-    u16 x;
-    u16 y;
-    u8 texture_u;
-    u8 texture_v;
-    u8 _unused_0e[2];
-    u16 width;
-    u16 height;
-} battle_menu_cursor_frame_t;
-
-/* Copy the position and texture rectangle used by a menu cursor frame. */
-void battle_menu_copy_cursor_frame_data(
-    const battle_menu_cursor_source_t* source, battle_menu_cursor_frame_t* destination, s32 frame_index) {
-    destination->x = source->x;
-    destination->y = source->y;
-    destination->texture_u = (*(const volatile u16*)&source->texture_flags & 0x3f) << 2;
-    destination->texture_v = source->texture_v;
-    destination->width = source->width;
-    destination->height = source->height;
+/* Place a cursor sprite over the icon strip: position from the icon origin,
+ * texture origin from the text image's VRAM position ((x & 0x3f) * 4 and the
+ * low byte of y), size from the text sprite placement.
+ * WORLD twin: world_gfx_copy_sprite_position_uv_and_size. */
+void battle_menu_copy_cursor_frame_data(const world_menu_icon_thread_param_t* param, SPRT* sprite, s32 unused_frame) {
+    sprite->x0 = param->icon_x;
+    sprite->y0 = param->flags;
+    sprite->u0 = (param->x & 0x3F) * 4;
+    sprite->v0 = param->y;
+    sprite->w = param->text_image.width;
+    sprite->h = param->text_image.height;
 }

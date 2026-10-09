@@ -5,11 +5,12 @@
  *
  * Variant of battle_move_start_unit_step_and_dismount_rider without the rider dismount: the step byte's top
  * two bits pick the direction, which sets the facing and edge offset; its low
- * two bits extend the destination tile coordinate. An out-of-range direction
- * keeps the caller's facing, and game state 0x2d leaves the facing unchanged. */
-void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, s16 facing) {
+ * two bits extend the destination tile coordinate. The switch has no default, so `facing` is unset
+ * for a direction outside 0-3 (none exists), and game state 0x2d leaves the unit's facing unchanged. */
+void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to) {
     u8* step;
     s32 step_count;
+    s16 facing;
 
     step_count = unit->current_edge_height;
     step = &unit->movement_value;

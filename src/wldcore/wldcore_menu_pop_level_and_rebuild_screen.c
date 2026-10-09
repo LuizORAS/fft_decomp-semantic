@@ -8,7 +8,7 @@
  * The local pointer to g_wldcore_map_projection_state.marker.kind reproduces the target's
  * saved-register base: read directly, the global is re-materialised at each of
  * the two uses. */
-void wldcore_menu_pop_level_and_rebuild_screen(void) {
+void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t* unused_level) {
     s32* selected = &g_wldcore_map_projection_state.marker.kind;
     s32 i;
 

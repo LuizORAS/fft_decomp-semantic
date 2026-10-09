@@ -1375,7 +1375,7 @@ extern s32 g_frame_pacing_suppressed;
 extern s32 g_frame_pacing_timer;
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
-void battle_noop_8018ef2c(void);
+void battle_noop_8018ef2c(battle_stats_t* unused_unit, s32 unused_facing);
 void battle_state_enter_open_sp2_files(void);
 void battle_bin_entrypoint(void);
 s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
@@ -1384,7 +1384,7 @@ void battle_noop_80143bd0(void);
 void battle_state_enter_pre_attack_animation(void);
 void* game_realloc(void*, u32);
 void battle_noop_80079298(void);
-void battle_noop_8007aecc(void);
+void battle_noop_8007aecc(void* unused_sprite_display_section);
 void battle_noop_8013ccec(void);
 void battle_noop_8013da70(void);
 void battle_noop_8014a82c(void);
@@ -3519,7 +3519,7 @@ void battle_effect_call_build_secondary_init(battle_unit_misc_data_t* unit);
 void battle_effect_init_altima_teleport_data(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);
 
-s32 battle_effect_init_ninja_ball_secondary(s32 elements, battle_effect_secondary_init_t* source);
+s32 battle_effect_init_ninja_ball_secondary(s32 elements, battle_effect_secondary_init_t* source, s32 unused_is_bow);
 void battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
@@ -3528,7 +3528,7 @@ s32 battle_effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
 s32 battle_effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
 void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
 void battle_effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
-s32 battle_effect_init_resource_sections(battle_effect_resource_t* resource);
+s32 battle_effect_init_resource_sections(battle_effect_resource_t* resource, s32 unused_1);
 s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, battle_effect_motion_t* motion);
 void battle_effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
 
@@ -3650,7 +3650,7 @@ void battle_effect_submit_sprite_to_ordering_table(
 
 /* Steps the projectile along its trajectory, testing each obstacle. */
 s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles);
-void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown);
+void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
 void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
 void battle_effect_interpolate_svector_cos(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
@@ -4119,7 +4119,7 @@ s32 battle_unit_disable_remove(s32 misc_id);
 void battle_unit_init_for_store_anim_facing_move(s32 misc_id, s32 value);
 void battle_unit_project_misc_to_screen(u32 misc_id, s16* screen_coordinates);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
-s32 battle_unit_set_target_anim_by_misc_id(u16 misc_id);
+s32 battle_unit_set_target_anim_by_misc_id(s32 misc_id);
 void battle_unit_set_facing_update_suppression(u32 misc_id);
 s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id);
 s32 battle_unit_get_battle_index_by_misc_id(u32 misc_id);
@@ -4168,7 +4168,7 @@ void battle_unit_update_and_animate_units(void);
 void battle_unit_update_anim_display_for_all_targets(battle_unit_misc_data_t* unit);
 void battle_unit_update_attacker_earned_experience(s32 outcome);
 void battle_unit_update_display(battle_unit_misc_data_t* unit);
-void battle_unit_update_display_by_misc_id(u16 misc_id);
+void battle_unit_update_display_by_misc_id(s32 misc_id);
 s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit);
 void battle_unit_update_float_and_jump_height(battle_unit_misc_data_t* unit);
 void battle_unit_update_graphics_by_misc_id_wrapper(u32 misc_id);
@@ -4194,7 +4194,7 @@ s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_add_signed_byte_to_height(battle_unit_misc_data_t* unit, s32 delta);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
-s32 battle_unit_build_deployed_units_data(s32 a0);
+s32 battle_unit_build_deployed_units_data(battle_deployed_coords_t* formation, s32 unused_1);
 s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
@@ -4225,7 +4225,7 @@ s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const battle_screen_coo
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
 void battle_unit_init_coordinates(struct battle_unit_misc_data* unit);
 void battle_unit_init_coordinates_animation_facing(battle_unit_misc_data_t* unit);
-void battle_unit_init_deployed_units_data_for_debug_red_team(s32 value);
+void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* formation, s32 unused_1);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data);
@@ -4616,7 +4616,7 @@ void battle_gfx_shift_and_fill_display_svectors(battle_gfx_render_unit_t* unit);
 void battle_gfx_store_item_display_data(battle_gfx_render_unit_t* unit, u32 item_id);
 void battle_gfx_unpack_unit_shp_data(battle_gfx_unit_shp_frame_tables_t* dst, u8* src);
 void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s32 tile_effect_level, s32 final_value);
-s32 battle_gfx_prepare_post_action_display_by_misc_id(u16 misc_id);
+s32 battle_gfx_prepare_post_action_display_by_misc_id(s32 misc_id);
 s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit_misc_data* unit);
 s32 battle_gfx_calculate_screen_z_from_misc_move_data(struct battle_unit_misc_data* unit);
 
@@ -4638,7 +4638,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_dat
 void battle_gfx_check_tile_status_palette_mod(
     struct battle_unit_misc_data* unit, s32 tile_effect_level, s32 final_value);
 
-void battle_gfx_clear_four_state_words(void);
+void battle_gfx_clear_four_state_words(s32 unused_map_id);
 s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
 void battle_gfx_clear_tpage7_vram_allocation_grid(void);
 void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
@@ -4664,7 +4664,8 @@ void battle_gfx_init_position_vector_copies(struct battle_unit_misc_data* unit);
 void battle_gfx_init_render_frame(void);
 void battle_gfx_init_render_state(void);
 void battle_gfx_load_casting_unit_graphics(void);
-void battle_gfx_load_spritesheet_into_vram_slot(u8* data, u32 index, s32 unused, struct battle_unit_misc_data* unit);
+void battle_gfx_load_spritesheet_into_vram_slot(
+    u8* data, u32 index, s32 unused, struct battle_unit_misc_data* unit, s16 unused_palette);
 s32 battle_gfx_load_unit_graphics_by_battle_id(s32, s32);
 void battle_gfx_modify_palette_based_on_team(struct battle_unit_misc_data* unit, s32 amount);
 u32 battle_gfx_read_compressed_nibble(void);
@@ -4689,8 +4690,12 @@ s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
 void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
 void battle_gfx_extract_deployed_unit_palettes(void);
 void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
-u8* battle_gfx_get_body_part_seq_data(void);
-u8* battle_gfx_get_body_part_sprite_data(void);
+struct battle_gfx_shp_frame_table;
+struct battle_gfx_packed_offset_table;
+void battle_gfx_copy_shp_data_to_ram(struct battle_gfx_shp_frame_table* dst, u8* src);
+void battle_gfx_resolve_packed_offset_table(u8** entries, struct battle_gfx_packed_offset_table* record);
+u8* battle_gfx_get_body_part_seq_data(u32 unused_spritesheet_id);
+u8* battle_gfx_get_body_part_sprite_data(u32 unused_spritesheet_id);
 u8* battle_gfx_get_spritesheet_seq_data(u32 spritesheet_id);
 u8* battle_gfx_get_spritesheet_shp_data(u32 spritesheet_id);
 u32 battle_gfx_get_unit_spritesheet_height_by_misc_id(u32 misc_id);
@@ -5479,7 +5484,7 @@ void battle_action_run_main_reaction_and_flag_job_level_change(battle_stats_t* u
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
 void battle_action_set_casting_unit_id_ff_and_init(void);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
-s32 battle_action_sort_at_list(s32 unit_id, s32 mode, u16 sort_key, battle_at_entry_t* list);
+s32 battle_action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* list);
 void battle_action_store_ability_data(u8* src);
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 void battle_formula_apply_poach_and_train(void);
@@ -5925,9 +5930,10 @@ battle_walk_path_t* battle_move_calculate_walkto_pathing(
  * definition indexes them as a word array. */
 void battle_move_interpolate_partial(s32* velocity_words, s32 scale);
 u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit);
-void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, s16 facing);
+void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-void battle_move_start_unit_step_at_climb_speed(battle_unit_misc_data_t* unit, const map_tile_t* from);
+void battle_move_start_unit_step_at_climb_speed(
+    battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 s32 battle_move_is_unit_moving_by_misc_id(u32 misc_id);
 s32 battle_move_propagate_destination(s32 candidate, s32 extra_span);
 void battle_move_return_to_previous_map_square(battle_unit_misc_data_t* unit);
@@ -5978,7 +5984,8 @@ void battle_move_start_unit_climb_jump_step(
 void battle_move_start_float_climb_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
 
-void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit);
+void battle_move_start_unit_jump_step(
+    battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to);
 void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile, s32 destination_tile);
 void battle_move_transfer_target_coordinates(battle_unit_misc_data_t* src, battle_unit_misc_data_t* dst);
 void battle_move_update_knockback_step(battle_unit_misc_data_t* unit);
@@ -6716,6 +6723,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
 void battle_map_extract_palette_colors(const u16* palette, s32 mesh_index, s32 palette_row_index);
 s32 battle_map_get_effective_weather(void);
 map_tile_t* battle_map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
+s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_id(u32 misc_id);
 void battle_map_init_palette_state(void);
 s32 battle_map_load_data_stage_0x75(void);
@@ -6740,14 +6748,14 @@ void battle_map_wait_for_refresh(void);
 void battle_map_modify_palette(
     s32 command, s32 amount, s32 palette_index, s32 color_index, s32 all_colors, u16 red, u16 green, u16 blue);
 
-s32 battle_map_calculate_slope_height(const s16* screen_coordinates, u8 map_z);
+s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
 s32 battle_map_load_data(s32 map_id, s32 kind);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_update_palette_colors_inner(s32 mode, s32 palette_group, s32 palette_index, const u16* colors);
 void* battle_map_determine_rare_common_item(battle_stats_t* unit);
-battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 layer);
+battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, s32 y, s32 layer);
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
 void battle_map_update_animations(void);
 void battle_map_update_lighting(void);
@@ -7526,7 +7534,7 @@ s32 battle_menu_load_charge_skillset(s32 unit_id, s32 skillset, s16* abilities, 
 s32 battle_menu_load_draw_out_abilities(s32 unit_id, s32 skillset, u8* out_item_ids);
 s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_ids);
 s32 battle_menu_load_math_skill_multiples(s32 unit_id, s32 skillset, s16* out_ability_ids);
-void battle_menu_load_palette_and_text_pointers(void);
+void battle_menu_load_palette_and_text_pointers(s32 unused_0);
 s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu);
 s32 battle_menu_load_throw_abilities(s32 unit_id, s32 skillset, u8* out_item_ids);
 void battle_menu_open_help(void);
@@ -7540,6 +7548,7 @@ void battle_menu_store_auto_battle_main_target_id(s32 target_id, s32 battle_id);
 void battle_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* display);
 void battle_menu_widen_bytes_to_halfwords(s16* dst, u8* src, s32 count);
 void battle_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
+void battle_menu_copy_cursor_frame_data(const world_menu_icon_thread_param_t* param, SPRT* sprite, s32 unused_frame);
 void battle_set_menu_sprite_clut_variant_1(SPRT* sprite);
 void battle_menu_open_illegal_move_help(void);
 s32 battle_menu_draw_selection_data(u32* otag, s32 controller_input);
@@ -7562,11 +7571,11 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area);
 
 void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
-void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect);
+void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void battle_menu_free_memory(void* buffer);
 void battle_menu_display_text_entry(s32 text_id, void* image, void* origin);
 void battle_menu_handle_action(void* menu, s32 selected_option);
-void battle_menu_set_text_origin(s16 x, s16 y);
+void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
 void battle_menu_store_unit_names_and_event_block_data(s32 event_id, s32 unit_a, s32 unit_b);
 
@@ -7795,7 +7804,7 @@ s32 battle_poll_companion_executable_request(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_prepare_terrain_poison(battle_stats_t* unit);
-s32 battle_return_one(void);
+s32 battle_return_one(s32 unused_misc_id);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
 s32 battle_spread_targeting_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);

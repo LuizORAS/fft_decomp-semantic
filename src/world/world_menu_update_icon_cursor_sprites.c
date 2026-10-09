@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-extern void world_gfx_copy_sprite_position_uv_and_size();
-
 /*
  * Position the icon-list cursor sprites and animate the highlighted icon.
  *

@@ -18,12 +18,7 @@ void card_save_run_menu(s32 unused) {
     g_card_gfx_otag_length = 0x40;
     g_card_gfx_poly_ft4_capacity = 0x258;
     g_card_gfx_tile_capacity = 10;
-    /* The definition takes 17 parameters; this call site passes 25. The extra
-     * eight trailing words are not read by the routine, so card.h declares the
-     * definition's prototype and the call keeps its original 25-argument codegen
-     * through the function-pointer cast. */
-    ((void (*)(void*, void*, s32, s32, s32, void*, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, void*, s32, s32,
-        s32, s32, s32, s32, s32, s32))card_gfx_init_contexts)(context_storage, otag_storage, 0, 0, 0,
+    card_gfx_init_contexts((card_graphics_context_t*)context_storage, otag_storage, 0, 0, 0,
         g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
     card_save_init_menu_graphics();
     music_slot = main_sound_open_music_into_free_slot(0x29);

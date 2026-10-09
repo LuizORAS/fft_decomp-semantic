@@ -26,8 +26,7 @@ void battle_formula_apply_elemental(void) {
     /* Float (status 3 bit 0x40) nullifies earth (element bit 0x08). */
     if ((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
         && (element & BATTLE_ELEMENT_EARTH)) {
-        /* The target loads mount_info into a0 although the callee takes none. */
-        ((void (*)(s32))battle_formula_nullify_action)(mount_info);
+        battle_formula_nullify_action();
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE;
     }
     battle_formula_modify_damage_for_element(element);

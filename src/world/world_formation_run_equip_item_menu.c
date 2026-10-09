@@ -72,7 +72,7 @@ s32 world_formation_run_equip_item_menu(void) {
             world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
             g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;
             g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-            g_world_menu_aux_callback = (s32 (*)(void))world_item_build_type_icon_source;
+            g_world_menu_aux_callback = (s32 (*)(s32))world_item_build_type_icon_source;
             g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             g_world_equip_item_previewed_cursor = -1;

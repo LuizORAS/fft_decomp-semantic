@@ -67,8 +67,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_unit_view_battle_id);
                     if (before != after) {
                         world_thread_set_parameters(8, 0, 0, 1);
-                        /* The target passes a0 to this argument-less stub. */
-                        ((void (*)(s32))world_menu_build_idle_action_stub)(after);
+                        world_menu_build_idle_action_stub(after);
                     }
                 } else {
                     colour[0] = 4;
@@ -93,8 +92,7 @@ void world_menu_auto_battle_setting_thread(void) {
             for (j = 0; j < 5; j++) {
                 g_world_menu_text_color = colour[j];
                 g_world_menu_text_state.stride = param->width;
-                /* The target passes both coordinates without the s16 sign extension. */
-                ((void (*)(s32, s32))world_menu_set_text_origin)(8, j * 16 + 9);
+                world_menu_set_text_origin(8, j * 16 + 9);
                 world_menu_display_text_entry(j + 0x5009, buffer, &g_world_menu_text_state.origin_x);
             }
             LoadImage(&rect, buffer);

@@ -198,7 +198,8 @@ void card_gfx_enqueue_translucent_tile(const RECT* rect, const u8* color, s32 se
 
 void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 unused_2, s32 unused_3, s32 unused_4,
     POLY_FT4* polygons, s32 unused_6, s32 unused_7, s32 unused_8, s32 unused_9, s32 unused_10, s32 unused_11,
-    s32 unused_12, s32 unused_13, s32 unused_14, s32 unused_15, TILE* tiles);
+    s32 unused_12, s32 unused_13, s32 unused_14, s32 unused_15, TILE* tiles, s32 unused_17, s32 unused_18,
+    s32 unused_19, s32 unused_20, s32 unused_21, s32 unused_22, s32 unused_23, s32 unused_24);
 
 void card_gfx_init_primitive_lists(card_primitive_lists_t* lists);
 void card_gfx_load_image_and_wait(RECT* rect, u32* data);
@@ -449,7 +450,7 @@ s32 card_text_render_glyph_to_4bpp_image(
 
 void card_text_render_id_rows_to_vram(void* glyph_data, const u16* text_ids, const RECT* destination, s32 flags);
 void card_text_set_palette_and_metrics(s32 mode);
-const u8* card_text_skip_encoded_segments(const u8* data, s16 count);
+const u8* card_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2);
 
 /* thread */
 extern s32 g_card_thread_active_key;

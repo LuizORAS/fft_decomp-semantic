@@ -9,7 +9,7 @@ void bunit_cmd_run_stream(u8* data, s32 flags) {
     g_bunit_gfx_otag_index_locked = 0;
     if (data[0] != 0x1C) {
         do {
-            data = ((u8 * (*)(void)) g_bunit_cmd_handlers[data[0]])();
+            data = g_bunit_cmd_handlers[data[0]](data);
         } while (data[0] != 0x1C);
     }
 }

@@ -37,8 +37,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     call_index = index;
     /* Keeps the bounds stores in target order, ahead of the image-buffer address setup. */
     __asm__ volatile("" : : "r"(count), "m"(bounds), "r"(call_index) : "memory");
-    wldcore_window_build_render_record_image(
-        call_index, bounds.position, bounds.dimensions, zero, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(call_index, bounds, zero, g_wldcore_window_image_buffer);
     /* Direct record indexing moves the symbol load after the index scaling
      * and breaks the exact match. Retain the target's biased base and stride. */
     records = (wldcore_point32_t*)&g_wldcore_window_render_records[0].base_x;

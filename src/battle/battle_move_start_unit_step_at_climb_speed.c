@@ -9,7 +9,8 @@
  * destination tile coordinate. A carried rider (mount state MOUNT) takes
  * animation 0x32 with the mount's facing. The interpolation scale is
  * step_speed, the 0x2000 climb scale, rather than the walk speed. */
-void battle_move_start_unit_step_at_climb_speed(battle_unit_misc_data_t* unit, const map_tile_t* from) {
+void battle_move_start_unit_step_at_climb_speed(
+    battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to) {
     u8* step;
     s32 step_count;
     battle_unit_misc_data_t* rider;

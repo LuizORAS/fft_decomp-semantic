@@ -5,7 +5,7 @@
 /* option_scroll_layout_t lives in fft/event_option.h. */
 
 /* Apply scroll input, rebuild the menu image, and upload the changed region. */
-void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending) {
+void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor) {
     RECT source;
     RECT clear_strip;
     option_scroll_layout_t* layout;

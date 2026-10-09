@@ -55,9 +55,7 @@ void world_main_menu_text_window_thread(void) {
     record = records;
     world_gfx_set_draw_mode_from_rect(&record->mode_a, (u16*)entry);
     world_gfx_set_image_draw_mode(&record->mode_b, 0);
-    /* The target also passes a2 = 0 to this two-argument callee. */
-    ((void (*)(world_menu_text_window_entry_t*, SPRT*, s32))world_menu_build_layout_sprites)(
-        entry, &record->sprite_b, 0);
+    world_menu_build_layout_sprites((world_menu_sprite_layout_t*)entry, &record->sprite_b, 0);
     world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
     g_world_text_substitution_values[0] = entry->text_values[0];
     g_world_text_substitution_values[1] = entry->text_values[1];

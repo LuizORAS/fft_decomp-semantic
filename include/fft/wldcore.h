@@ -909,7 +909,7 @@ void wldcore_list_open_propositions(void);
 void wldcore_list_open_rumors(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
 void wldcore_list_open_formation_tutorials(void);
-void wldcore_list_tutorial_mask_1_clear_result(void);
+void wldcore_list_tutorial_mask_1_clear_result(wldcore_menu_panel_level_t* unused_level);
 void wldcore_list_open_story_events(void);
 void wldcore_list_open_unexplored_lands(void);
 void wldcore_list_open_treasures(void);
@@ -1565,10 +1565,8 @@ typedef struct wldcore_window_render_record {
     s32 base_y;
     s32 clut_x; /* 0x20; 0x3c0 from the pool init */
     s32 clut_y; /* 0x24; 0x1f0 from the pool init */
-    u16 x;
-    u16 y;
-    s16 width;
-    u16 height;
+    /* 0x28; image position and size, copied and passed by value as one struct; the width is read signed */
+    wldcore_window_render_bounds16_t bounds;
     u8 red;
     u8 green;
     u8 blue;
@@ -1686,8 +1684,9 @@ extern struct world_menu_number_range g_wldcore_window_panel_number_state;
 extern wldcore_window_entry_36_rgb_t g_wldcore_window_record_colors[];
 extern s32 g_wldcore_menu_root_window_index;
 void wldcore_window_init_record_pools(void);
-void wldcore_window_build_yes_no_panel(wldcore_point32_t origin, s32 unused_2, s32 unused_3, s32 x2, s32 y2);
+void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);
 void wldcore_menu_push_location_menu_level(s32 menu);
+void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t* unused_level);
 void wldcore_menu_push_event_transition_level(s32 mode);
 void wldcore_draw_close_indicator_if_pending(GsOT* ot);
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore);
@@ -1709,7 +1708,7 @@ s32 wldcore_window_append_render_record_and_reset_color(u32** queue, s32* count)
 void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
 
 void wldcore_window_build_render_record_image(
-    s32 index, wldcore_xy16_t position, wldcore_xy16_t dimensions, s32 coordinate_mode, u32* image);
+    s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, u32* image);
 
 void wldcore_window_draw_centered_text(s32 window_index, s32 text_id);
 void wldcore_window_draw_indexed_text(wldcore_window_text_table_t* table, s32 index);
@@ -1724,10 +1723,10 @@ void wldcore_window_init_panel_render_state(
 void wldcore_window_init_record(s32 index, s32 priority, s32 sequence);
 
 void wldcore_window_init_render_record_image(
-    s32 index, wldcore_xy16_t position, wldcore_xy16_t dimensions, s32 coordinate_mode, s32 text_id, u32* image);
+    s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, s32 text_id, u32* image);
 
 void wldcore_window_init_vram_render_record(
-    s32 index, wldcore_xy16_t position, wldcore_xy16_t dimensions, wldcore_point32_t clut, s32 flags);
+    s32 index, wldcore_window_render_bounds16_t bounds, wldcore_point32_t clut, s32 flags);
 
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
 void wldcore_window_publish_slot_b806(wldcore_menu_list_window_level_t* level);

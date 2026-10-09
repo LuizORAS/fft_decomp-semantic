@@ -27,7 +27,7 @@ extern world_formation_background_tile_t g_world_formation_background_tiles[2][4
  * optimizer never treats a hard register as invariant, while a pseudo lets it
  * hoist that product and the shade-row addresses.
  */
-void world_formation_draw_background_tiles(s32 y) {
+void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
     world_formation_background_draw_state_t st;
     s32 row;
     s32 col;

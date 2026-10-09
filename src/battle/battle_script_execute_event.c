@@ -20,9 +20,7 @@ typedef struct battle_script_jump_instruction battle_script_jump_instruction_t;
 
 /* Declared locally: other reconstructions bind these under different
  * provisional signatures, or the symbol is still unresolved. */
-s32 battle_map_set_tile_data_value();
 void battle_script_jump_event_instruction(battle_script_jump_instruction_t* instr);
-s32 battle_script_run_scenario_conditions();
 
 void battle_script_execute_event(void) {
     s32 added_unit_state;

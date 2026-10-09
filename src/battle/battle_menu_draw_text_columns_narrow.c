@@ -27,8 +27,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
             if (layout->mode[column] == 2) {
                 continue;
             }
-            /* The target passes x and y as full words; the s16 prototype narrows them. */
-            ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column], row * 0x10);
+            battle_menu_set_text_origin(layout->x[column], row * 0x10);
             if (layout->mode[column] != 2) {
                 g_menu_text_palette_offset = layout->text_colors[column][index];
             }
@@ -42,7 +41,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
                     g_menu_text_palette_offset = layout->text_colors[column][index];
                     /* Full-word x and y, as above. */
-                    ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column] + 0x50, row * 0x10);
+                    battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
                 }
             } else if (layout->mode[column] == 1) {

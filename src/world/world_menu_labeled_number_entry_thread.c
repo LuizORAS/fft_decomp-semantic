@@ -89,12 +89,9 @@ void world_menu_labeled_number_entry_thread(void) {
     world_text_measure_pixels(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
     world_menu_set_text_origin(8, 9);
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
-    /* The target passes both coordinates without the s16 sign extension. */
-    ((void (*)(s32, s32))world_menu_set_text_origin)((u16)label_size[0] + 8, 9);
-    ((void (*)(s32, s32))world_menu_set_text_origin)(param->width - digits * 6 - 0x10, 9);
-    /* The target passes digits without the definition's u8 narrowing. */
-    ((void (*)(s32, s32, void*, u16*))world_gfx_draw_signed_number)(
-        value, digits, buffer, (u16*)&g_world_menu_text_state.origin_x);
+    world_menu_set_text_origin((u16)label_size[0] + 8, 9);
+    world_menu_set_text_origin(param->width - digits * 6 - 0x10, 9);
+    world_gfx_draw_signed_number(value, digits, buffer, (u16*)&g_world_menu_text_state.origin_x);
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
@@ -150,12 +147,9 @@ void world_menu_labeled_number_entry_thread(void) {
             world_text_measure(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
             world_menu_set_text_origin(8, 9);
             world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
-            /* The target passes both coordinates without the s16 sign extension. */
-            ((void (*)(s32, s32))world_menu_set_text_origin)((u16)label_size[0] * 6 + 8, 9);
-            ((void (*)(s32, s32))world_menu_set_text_origin)(param->width - digits * 6 - 0x10, 9);
-            /* The target passes digits without the definition's u8 narrowing. */
-            ((void (*)(s32, s32, void*, u16*))world_gfx_draw_signed_number)(
-                value, digits, buffer, (u16*)&g_world_menu_text_state.origin_x);
+            world_menu_set_text_origin((u16)label_size[0] * 6 + 8, 9);
+            world_menu_set_text_origin(param->width - digits * 6 - 0x10, 9);
+            world_gfx_draw_signed_number(value, digits, buffer, (u16*)&g_world_menu_text_state.origin_x);
             LoadImage(&rect, buffer);
         }
         cursor_quad = &cursor_quads[i & 1];

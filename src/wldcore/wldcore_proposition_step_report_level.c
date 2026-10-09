@@ -178,7 +178,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.dimensions.y = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds.position, bounds.dimensions, clut, 4);
+                wldcore_window_init_vram_render_record(record, bounds, clut, 4);
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= 0x100;
                 {
@@ -193,8 +193,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.position.y = 0x70;
                 bounds.dimensions.x = 0x8C;
                 bounds.dimensions.y = 0x8C;
-                wldcore_window_init_render_record_image(
-                    record, bounds.position, bounds.dimensions, 0, 0, g_wldcore_window_image_buffer);
+                wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
                     wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;
@@ -217,7 +216,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.dimensions.y = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds.position, bounds.dimensions, clut, 4);
+                wldcore_window_init_vram_render_record(record, bounds, clut, 4);
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= 0x100;
                 {
@@ -232,8 +231,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.position.y = 0x80;
                 bounds.dimensions.x = 0x88;
                 bounds.dimensions.y = 0x5A;
-                wldcore_window_init_render_record_image(
-                    record, bounds.position, bounds.dimensions, 0, 0, g_wldcore_window_image_buffer);
+                wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
                     wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[record].base_x;

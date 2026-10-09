@@ -44,7 +44,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         bounds.dimensions.y = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds.position, bounds.dimensions, clut_position, 4);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
         g_wldcore_window_render_records[render].priority = 0xA;
         base = (wldcore_point32_t*)&g_wldcore_window_render_records[render].base_x;
         base->x = -0x74;
@@ -53,7 +53,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         g_wldcore_scrollable_text_window.extra_render_index = render;
         *(wldcore_point32_t*)&g_wldcore_scrollable_text_window.extra_base_x = *base;
         *(wldcore_window_render_bounds16_t*)&g_wldcore_scrollable_text_window.extra_x
-            = *(wldcore_window_render_bounds16_t*)&g_wldcore_window_render_records[render].x;
+            = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
     case 3:

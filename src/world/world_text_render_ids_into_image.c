@@ -12,7 +12,7 @@
  * `colors` and `colors2` are distinct copies of &ids[k]: one shared local
  * changes the register assignment. */
 void world_text_render_ids_into_image(
-    u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph) {
+    u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette) {
     world_text_glyph_target_t target;
     s32 line;
     s32 i;

@@ -9,8 +9,7 @@ void battle_menu_build_main(void) {
     unit_id = g_battle_active_turn_unit.battle_id;
     record = &g_battle_menu_unit_selection_records[unit_id];
     g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_2 = 1; /* redraw */
-    /* The target passes two arguments to the argument-less loop. */
-    ((void (*)(s32, s32))battle_menu_run_icon_selection_loop)(1, unit_id);
+    battle_menu_run_icon_selection_loop();
     record->bytes[0] = parameter->selected_index;
     battle_thread_exit_current();
 }

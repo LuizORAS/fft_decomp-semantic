@@ -56,9 +56,8 @@ void world_shop_run_equip_slot_preview_step(void) {
     cursor_y = &g_world_shop_equip_slot_cursor_point.y;
     *cursor_y = (u8)slot * 16 + 0x90;
     world_menu_set_draw_priority(0x3D);
-    /* The target passes an argument to the void world_thread_is_task_active. */
-    world_menu_draw_animated_cursor(&g_world_shop_equip_slot_cursor_point, &g_world_shop_equip_slot_cursor_anim,
-        ((s32 (*)(s32))world_thread_is_task_active)(0));
+    world_menu_draw_animated_cursor(
+        &g_world_shop_equip_slot_cursor_point, &g_world_shop_equip_slot_cursor_anim, world_thread_is_task_active(0));
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         g_main_item_item_flags
             = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot];

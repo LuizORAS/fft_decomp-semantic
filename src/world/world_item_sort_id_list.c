@@ -65,8 +65,7 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
                 } else if (criterion == 1) {
                     key_a = g_main_item_primary_data[item_a].price;
                 } else if (criterion == 2) {
-                    /* No u8 mask on the result: called as returning int. */
-                    key_a = ((s32 (*)(s32))world_item_get_ranking_value)(item_a);
+                    key_a = world_item_get_ranking_value(item_a);
                 } else if (criterion == 3) {
                     if (item_a < 0x7a) {
                         key_a = g_main_item_weapon_data[g_main_item_primary_data[item_a].secondary_data_id].evade;
@@ -101,8 +100,7 @@ void world_item_sort_id_list(s32 mode, world_item_list_entry_t* list) {
                 } else if (criterion == 1) {
                     key_b = g_main_item_primary_data[item_b].price;
                 } else if (criterion == 2) {
-                    /* No u8 mask on the result: called as returning int. */
-                    key_b = ((s32 (*)(s32))world_item_get_ranking_value)(item_b);
+                    key_b = world_item_get_ranking_value(item_b);
                 } else if (criterion == 3) {
                     if (item_b < 0x7a) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;

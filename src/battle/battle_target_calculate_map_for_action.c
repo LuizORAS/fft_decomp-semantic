@@ -35,13 +35,9 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
         || (u32)(menu_type - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2
         || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-        /* The target loads the same four arguments for both targeting calls;
-         * the weapon validator reads only the action. */
-        result = ((s32 (*)(battle_ai_command_action_t*, u8*, u8, u8))battle_target_validate_weapon_target)(
-            action, flags_3, menu_type, flags_1);
+        result = battle_target_validate_weapon_target(action);
     } else {
-        result = ((s32 (*)(battle_ai_command_action_t*, u8*, u8, u8))battle_target_calculate_for_menu_types)(
-            action, flags_3, menu_type, flags_1);
+        result = battle_target_calculate_for_menu_types((const u8*)action);
         if (result != -1 && (flags_2 & ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE)
             && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
             battle_target_select_random_tile_for_random_fire_abilities();

@@ -17,8 +17,7 @@ void world_shop_run_fur_menu_step(void) {
         g_world_shop_fur_access_granted = 0;
         g_world_shop_fur_waiting_message = 0;
         for (i = 0; i < g_world_formation_unit_count; i++) {
-            /* The target passes i without the definition's s16 narrowing. */
-            if (((s32 (*)(s32))world_ability_has_secret_hunt)(i) != 0) {
+            if (world_ability_has_secret_hunt(i) != 0) {
                 g_world_shop_fur_has_secret_hunt = 1;
             }
         }

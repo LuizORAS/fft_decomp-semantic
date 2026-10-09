@@ -21,7 +21,7 @@
  * used only by the formulas stay expressions: that split reproduces the
  * target's register allocation.
  */
-s32 battle_map_calculate_slope_height(const s16* coords, u8 map_z) {
+s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     s16 tile_pos[2];
     map_tile_t* tile;
     s32 half;
@@ -32,7 +32,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, u8 map_z) {
 
     tile_pos[0] = coords[0] / 28;
     tile_pos[1] = coords[2] / 28;
-    tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], map_z);
+    tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], (u8)map_z);
     base = -(tile->height * 12);
     half = tile->depth_half_height & 0x1f;
     result = base;

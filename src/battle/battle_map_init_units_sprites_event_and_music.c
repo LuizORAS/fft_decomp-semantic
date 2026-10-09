@@ -45,8 +45,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
     case 5:
         if (battle_unit_poll_and_load_entd_units() == 0) {
             if (g_battle_unit_graphics_load_complete != 0) {
-                /* The definition takes no arguments; this caller passes the map id. */
-                ((void (*)(s32))battle_gfx_clear_four_state_words)(map_id);
+                battle_gfx_clear_four_state_words(map_id);
                 step = 7;
             } else {
                 step++;
@@ -57,8 +56,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
     case 6:
         if (battle_gfx_step_load_unit_shp_seq_data() == 8) {
             g_battle_unit_graphics_load_complete = 1;
-            /* The definition takes no arguments; this caller passes the map id. */
-            ((void (*)(s32))battle_gfx_clear_four_state_words)(map_id);
+            battle_gfx_clear_four_state_words(map_id);
             step++;
         }
         break;

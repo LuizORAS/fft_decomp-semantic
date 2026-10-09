@@ -1,11 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The target masks each AT key itself (andi 0xff00 / 0xffff) and passes it as
- * a full word; calling through the u16 prototype makes GCC emit its own
- * widening and a different sequence. */
-#define SORT_AT_LIST ((s32 (*)(s32, s32, s32, battle_at_entry_t*))battle_action_sort_at_list)
-
 /* Rebuilds the 40-entry AT list: charged and performing actions first, then
  * each unit's next turns simulated tick by tick under Stop/Sleep, Slow and
  * Haste. Returns -1 when no entry was added.
@@ -78,7 +73,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
             if (value != 0 || unit->has_turn == 0 || mode != 3) {
                 tick += phase_tick;
             }
-            placed += SORT_AT_LIST(slot, 1, (tick << 8) & 0xff00, list);
+            placed += battle_action_sort_at_list(slot, 1, (tick << 8) & 0xff00, list);
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                 main_unit_copy_last_ability_ct(unit);
@@ -89,7 +84,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
                         break;
                     }
                     key <<= 8;
-                    placed += SORT_AT_LIST(slot, 1, key & 0xff00, list);
+                    placed += battle_action_sort_at_list(slot, 1, key & 0xff00, list);
                 }
             }
         }
@@ -157,7 +152,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
             remainder = ct;
             remainder %= 100;
             ct = remainder;
-            added = SORT_AT_LIST(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
+            added = battle_action_sort_at_list(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
             if (added == 0) {
                 break;
             }

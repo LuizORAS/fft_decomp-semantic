@@ -215,8 +215,7 @@ void world_menu_scrolling_list_thread(void) {
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                         if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0
                             && (((world_ability_skill_use_tables_t*)g_battle_ai_workspace_ptr)->flags[index] & 1)) {
-                            /* The target passes both coordinates without the s16 sign extension. */
-                            ((void (*)(s32, s32))world_menu_set_text_origin)(layout->columns.x[column] + 0x50, 0);
+                            world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.origin_x);
                         }
                     } else if (layout->columns.mode[column] == 1) {

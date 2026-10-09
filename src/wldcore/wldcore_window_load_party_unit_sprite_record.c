@@ -14,7 +14,7 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     g_wldcore_window_render_records[index].clut_x = (code / 40 << 6) + 0x280 + cell % 4 * 16;
     g_wldcore_window_render_records[index].clut_y = cell % 40 / 4 + 0x1F0;
     g_wldcore_window_render_records[index].tpage = poly.tpage;
-    bounds = (wldcore_window_render_bounds16_t*)&g_wldcore_window_render_records[index].x;
+    bounds = &g_wldcore_window_render_records[index].bounds;
     bounds->position.x = poly.u0;
     bounds->position.y = poly.v0;
     bounds->dimensions.x = poly.u1 - poly.u0;

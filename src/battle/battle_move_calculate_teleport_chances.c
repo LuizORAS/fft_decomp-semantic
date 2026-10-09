@@ -14,8 +14,7 @@ s32 battle_move_calculate_teleport_chances(void) {
         dy = -dy;
     if (dx < 0)
         dx = -dx;
-    /* The target passes ctx as a third argument the two-parameter callee ignores. */
-    return ((s32 (*)(s32, s32, void*))main_util_roll_pass_fail)(0x64, ((dy + dx) - ctx->move) * 10, ctx);
+    return main_util_roll_pass_fail(0x64, ((dy + dx) - ctx->move) * 10);
 }
 
 /* padding */

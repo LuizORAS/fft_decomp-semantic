@@ -466,10 +466,10 @@ s32 equip_menu_run_equip_mode(void);
 s32 equip_menu_run_remove_mode(void);
 s32 equip_menu_run_slot_item_browser(void);
 void equip_menu_draw_item_status_list(s16 item_id);
-s32 equip_menu_get_preview_hp_bonus(void);
-s32 equip_menu_get_preview_hp_bonus_display(void);
-s32 equip_menu_get_preview_mp_bonus(void);
-s32 equip_menu_get_preview_mp_bonus_display(void);
+s32 equip_menu_get_preview_hp_bonus(s32 unused_row);
+s32 equip_menu_get_preview_hp_bonus_display(s32 unused_row);
+s32 equip_menu_get_preview_mp_bonus(s32 unused_row);
+s32 equip_menu_get_preview_mp_bonus_display(s32 unused_row);
 
 s32 equip_menu_update_horizontal_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id);
@@ -477,8 +477,8 @@ s32 equip_menu_update_horizontal_selection_and_mark_change(
 s32 equip_menu_update_vertical_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id);
 
-s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, u16 input_mask);
-s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, u16 input_mask);
+s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
+s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* panel */
 extern u8 g_equip_panel_selected_unit_data[];
@@ -635,7 +635,7 @@ s32 equip_text_render_glyph_to_4bpp_image(
 
 void equip_text_set_palette_and_metrics(s32 compact);
 void equip_text_start_help_thread(s32 text_id);
-void equip_text_concatenate_ids(s32 text_table, u8* dst, s16* list, s32 separate);
+void equip_text_concatenate_ids(const u8* text_table, u8* dst, s16* list, s32 separate);
 
 void equip_text_render_encoded_ids_to_image(void* image, const battle_menu_text_image_bounds_t* bounds,
     s32 glyph_spacing, s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_entries, s32 fill_glyph_id,
@@ -647,7 +647,7 @@ void equip_text_render_signed_decimal_entries(
     void* pixels, equip_stat_entry_t* entry, equip_stat_out_t* out, s32 count);
 
 void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
-const u8* equip_text_skip_encoded_segments(const u8* data, s16 count);
+const u8* equip_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2);
 
 /* thread */
 extern u8 g_equip_thread_idle_stop_pending;
@@ -760,6 +760,7 @@ s32 equip_unit_has_two_hands(s16 unit_index);
 s32 equip_unit_has_two_swords(s16 unit_index);
 void equip_unit_load_data_from_battle_stats(s32 battle_id);
 void equip_unit_load_selected_data(void);
+void equip_unit_copy_data_to_compare_slot(s32 unused_selected_index, s32 unused_1);
 s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
 equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit_index, s16 slot, s32 item_id);
 void equip_unit_build_data_from_battle_stats(struct battle_stats* stats, equip_unit_data_t* unit);

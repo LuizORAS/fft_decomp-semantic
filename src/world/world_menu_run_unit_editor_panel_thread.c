@@ -264,7 +264,6 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_thread_contexts[10].task_id = 0x10;
     g_world_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();
-    /* The target passes a0 to this argument-less stub. */
-    ((void (*)(s32))world_menu_build_idle_action_stub)(g_world_menu_current_id);
+    world_menu_build_idle_action_stub(g_world_menu_current_id);
     world_thread_exit_current();
 }

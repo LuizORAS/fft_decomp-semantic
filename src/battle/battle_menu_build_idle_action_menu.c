@@ -36,9 +36,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
                 i += 1;
                 entry += 1;
             } while (i < IDLE_ACTION_MENU_ENTRY_COUNT);
-            /* The target passes three extra arguments the one-parameter callee ignores. */
-            ((void (*)(s32, world_menu_entry_t*, s32, u8*))battle_menu_restore_selection_for_selected_unit)(
-                menu_id, entry, i, label_table);
+            battle_menu_restore_selection_for_selected_unit(menu_id);
             /* Entry 8's selected_index. A typed member store moves into the following jal
              * delay slot; this raw access preserves the target's store ordering. */
             *(s16*)((u8*)g_battle_menu_thread_menu_data + 0x218) = 0;

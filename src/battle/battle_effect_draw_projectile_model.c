@@ -120,8 +120,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    /* The target passes a second argument the one-parameter callee ignores. */
-    command_count = ((s32 (*)(battle_effect_resource_t*, s32))battle_effect_init_resource_sections)(model, 0);
+    command_count = battle_effect_init_resource_sections(model, 0);
     gt3_index = 0;
     g4_index = 0;
     g3_index = 0;

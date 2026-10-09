@@ -51,7 +51,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         bounds.dimensions.y = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds.position, bounds.dimensions, clut_position, 4);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, 4);
         g_wldcore_window_render_records[render].priority = 0xA;
         g_wldcore_window_render_records[render].flags &= ~0x110;
         base = (wldcore_point32_t*)&g_wldcore_window_render_records[render].base_x;
@@ -60,8 +60,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         wldcore_gfx_step_dissolve_image_upload(&image, 0);
         g_wldcore_scroll_text_extra_render_index = render;
         g_wldcore_scroll_text_extra_position = *base;
-        g_wldcore_scroll_text_extra_rect
-            = *(wldcore_window_render_bounds16_t*)&g_wldcore_window_render_records[render].x;
+        g_wldcore_scroll_text_extra_rect = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
     case 3:

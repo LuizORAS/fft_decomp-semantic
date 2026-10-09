@@ -29,8 +29,8 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
     width = (state->text_width + 0x18) & 0xFFFC;
     bounds.dimensions.x = width;
     bounds.dimensions.y = state->rows_per_page * 16 + 16;
-    wldcore_window_build_render_record_image(state->render_record_index, bounds.position, bounds.dimensions,
-        state->image_coordinate_mode, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(
+        state->render_record_index, bounds, state->image_coordinate_mode, g_wldcore_window_image_buffer);
     for (i = 0; i < 2; i++) {
         if (state->text_substitutions[i] != -1) {
             ((volatile s32*)g_world_text_substitution_values)[i] = state->text_substitutions[i];
@@ -42,13 +42,14 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
         limit = state->base.y + 8;
         if (top >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base_y = top;
-            g_wldcore_window_render_records[state->extra_render_index].y = state->extra_y;
-            g_wldcore_window_render_records[state->extra_render_index].height = state->extra_height;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y = state->extra_y;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y = state->extra_height;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
         } else if (top + state->extra_height >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base_y = limit;
-            g_wldcore_window_render_records[state->extra_render_index].y = state->extra_y + offset;
-            g_wldcore_window_render_records[state->extra_render_index].height = state->extra_height - offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y = state->extra_y + offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
+                = state->extra_height - offset;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
         } else {
             g_wldcore_window_render_records[state->extra_render_index].flags |= 0x10;

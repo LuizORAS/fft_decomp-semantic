@@ -26,10 +26,7 @@ s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, 
     bunit_unit_data_t* unit_data;
     s16 scratch[4];
 
-    /* Accepted spelling: bunit_job_get_skillset returns u8. The target keeps the
-     * whole return word, so the call site casts to the wider signature rather than
-     * re-masking. */
-    skillset = ((s32 (*)(s32))bunit_job_get_skillset)(job_id);
+    skillset = bunit_job_get_skillset(job_id);
     generic_index = bunit_job_get_generic_index(job_id);
     if (bunit_job_find_first_for_skillset(skillset) == -1) {
         skillset = g_bunit_unit_data[unit_index]->abilities[0];

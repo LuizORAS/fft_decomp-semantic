@@ -4,9 +4,6 @@
  * record and one render record, laid out by 0x8006ed30 and then positioned
  * from the render record's origin.
  *
- * The target passes a third argument to
- * wldcore_window_append_render_record_and_reset_color, which the callee
- * ignores; the cast reproduces that call without widening the prototype.
  * Both appended indices share one local, which is what holds them in $a2.
  * The window position is written after 0x8006ed30 returns, from the render
  * record origin the callee filled in, so the level fields are read back out
@@ -25,8 +22,8 @@ void wldcore_menu_push_variable_list_level(void) {
     g_wldcore_window_records[index].priority = 3;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    index = ((s32 (*)(u32**, s32*, s32))wldcore_window_append_render_record_and_reset_color)(
-        g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count, index);
+    index = wldcore_window_append_render_record_and_reset_color(
+        g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_list.render_index = index;
     g_wldcore_window_render_records[index].flags |= 0x100;
     g_wldcore_window_render_records[index].priority = 3;

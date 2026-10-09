@@ -20,8 +20,7 @@ void world_menu_run_unit_debug_editor_thread(void) {
         g_world_menu_overlay_state = 0;
         g_world_menu_sound_muted = 0;
         g_world_menu_new_button_input = 0;
-        /* The target passes a0 to this argument-less stub. */
-        ((void (*)(s32))world_menu_build_idle_action_stub)(g_world_menu_current_id);
+        world_menu_build_idle_action_stub(g_world_menu_current_id);
         world_unit_start_view_thread(3, *unit_index, *unit_index);
         world_menu_clear_transition_active_flag();
         battle_menu_leave_status_screen_selection();

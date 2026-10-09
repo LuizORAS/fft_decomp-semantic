@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The target passes the misc unit id in $a3 although the three-parameter
- * callee never reads it. */
-typedef void (*battle_gfx_tint_4_fn)(battle_unit_misc_data_t*, s32, s32, s32);
-
 /* Tint a unit's palette for its first palette-affecting status.
  *
  * Unless the unit already has a palette modifier, tints its CLUT for the
@@ -39,11 +35,9 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
             && (u8)(misc->spritesheet_id - BATTLE_SPRITESHEET_ID_SKELETON) >= 2) {
             battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, 4, 0, 5, final_value);
         } else {
-            ((battle_gfx_tint_4_fn)battle_gfx_tint_unit_palette_for_weather_and_tile)(
-                misc, tile_effect_level, final_value, unit_id);
+            battle_gfx_tint_unit_palette_for_weather_and_tile(misc, tile_effect_level, final_value);
         }
         return;
     }
-    ((battle_gfx_tint_4_fn)battle_gfx_tint_unit_palette_for_weather_and_tile)(
-        misc, tile_effect_level, final_value, unit_id);
+    battle_gfx_tint_unit_palette_for_weather_and_tile(misc, tile_effect_level, final_value);
 }

@@ -93,7 +93,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 point.y = 8;
                 for (;;) {
                     render_index = level->render_index;
-                    if (i >= g_wldcore_window_render_records[render_index].width
+                    if (i >= (s16)g_wldcore_window_render_records[render_index].bounds.dimensions.x
                             * g_wldcore_window_render_record_heights[render_index].value / 8) {
                         break;
                     }
@@ -105,7 +105,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 y = point.y;
                 box.x = x;
                 box.y = y;
-                box.width = g_wldcore_window_render_records[level->render_index].width;
+                box.width = (s16)g_wldcore_window_render_records[level->render_index].bounds.dimensions.x;
                 world_menu_display_text_entry_mode_1(text_id, (s32)g_wldcore_window_image_buffer, (s32)&box);
                 wldcore_window_load_image_record_to_vram(level->render_index, g_wldcore_window_image_buffer);
                 world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);

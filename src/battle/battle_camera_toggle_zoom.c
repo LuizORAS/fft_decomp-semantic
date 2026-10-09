@@ -19,8 +19,7 @@ void battle_camera_toggle_zoom(void) {
         g_battle_map_zoom_target = zoomed_in;
         g_battle_camera_zoom_action = 2;
     play:
-        /* The target passes a second argument the one-parameter callee ignores. */
-        ((void (*)(s32, s32))main_sound_play_sfx)(sound_id, zoomed_in);
+        main_sound_play_sfx(sound_id);
     }
     g_battle_camera_zoom_increment = 4;
 }

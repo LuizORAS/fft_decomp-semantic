@@ -27,7 +27,7 @@ typedef struct world_formation_slot_sprite {
  * assignment. The two unused locals reproduce the target's frame layout.
  */
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
-    s16 locked, s32 (*get_mode)(), s32 (*get_shade)()) {
+    s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
     world_gfx_sprite_desc_t unused_desc;
     world_formation_slot_sprite_t pos;
     u8 unused_rgb[3];
@@ -180,7 +180,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 } else {
                     mode = g_world_formation_stat_display_mode;
                 }
-                world_formation_draw_graphics_below_sprite(i, mode, pos.x, pos.y, color, (s32 (*)(s16))get_shade, 0, 8);
+                world_formation_draw_graphics_below_sprite(i, mode, pos.x, pos.y, color, get_shade, 0, 8);
             }
             value = 0x50;
             if (g_world_formation_unit_pointers[i]->proposition_status == 0) {
@@ -237,8 +237,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     if (row >= -2 && row <= 2) {
         g_world_formation_cursor_position.y = g_world_formation_cursor_target.y - 1;
     }
-    /* The target passes a second argument the one-parameter callee ignores. */
-    ((void (*)())world_formation_draw_background_tiles)(
+    world_formation_draw_background_tiles(
         g_world_formation_scroll_position + g_world_formation_scroll_velocity, background_y);
     return 1;
 }

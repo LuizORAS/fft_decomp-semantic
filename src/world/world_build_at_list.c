@@ -220,8 +220,7 @@ void world_build_at_list(void) {
             redraw_pending = 0;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {
-            redraw_pending = (s32)((u8 * (*)(world_menu_entry_t*, s32*, s32*, s32*))
-                    world_menu_redraw_text_page_on_scroll)(entry, &row_offset, &ring, &cursor);
+            redraw_pending = (s32)world_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         entry->selected_index = cursor + row_offset;

@@ -8,7 +8,7 @@
  * 3 steel needle) unless the trap is disabled. The final flag
  * update must go through a pointer to keep the target's register address.
  */
-battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 layer) {
+battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, s32 y, s32 layer) {
     map_move_find_item_entry_t* tile;
     s32 unit;
     s32 i;
@@ -19,7 +19,7 @@ battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 lay
     trap = BATTLE_TRAP_ID_NONE;
     g_battle_move_find_result_flags = 0;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        unit = battle_unit_find_at_tile(x, y, layer, BATTLE_UNIT_TILE_FILTER_TRANSPARENT);
+        unit = battle_unit_find_at_tile((u8)x, (u8)y, (u8)layer, BATTLE_UNIT_TILE_FILTER_TRANSPARENT);
         if (unit >= 0) {
             break;
         }
@@ -31,7 +31,7 @@ battle_move_find_result_data_t* battle_map_set_item_trap_data(u8 x, u8 y, u8 lay
     for (i = 0; i < 4; i++) {
         tile = &g_battle_current_map_move_find_item_data.entries[i];
         position = tile->position;
-        if ((position >> 4) == x && (position & 0xF) == y && (tile->flags >> 7) == layer) {
+        if ((position >> 4) == (u8)x && (position & 0xF) == (u8)y && (tile->flags >> 7) == (u8)layer) {
             break;
         }
     }

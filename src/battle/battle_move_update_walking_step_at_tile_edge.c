@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_move_start_unit_step / _at_climb_speed and battle_move_start_unit_jump_step
- * are declared in fft/battle.h with fewer (or differently typed) parameters
- * than this call site passes.  The target hands all three the unit plus both
- * tile pointers, so the calls go through a cast. */
-#define START_STEP(f) ((void (*)(battle_unit_misc_data_t*, const map_tile_t*, const map_tile_t*))(f))
-
 /* Per-frame movement step for a unit walking between two tiles.
  *
  * Once the unit reaches the exit edge of the tile it occupies, the step is
@@ -77,13 +71,12 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             battle_unit_dismount_rider_and_update_display(unit);
             switch ((g_battle_move_step_value >> 3) & 1) {
             case 0:
-                START_STEP(battle_move_start_unit_step)
-                (unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+                battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->centre_tile_offset = 6;
                 return;
             case 1:
-                START_STEP(battle_move_start_unit_step_at_climb_speed)
-                (unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+                battle_move_start_unit_step_at_climb_speed(
+                    unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->centre_tile_offset = 0xe;
                 return;
             }
@@ -102,8 +95,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
         unit->current_unit_id_plus_one = 0;
     } else {
         unit->step_speed = 0x2000;
-        START_STEP(battle_move_start_unit_jump_step)
-        (unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+        battle_move_start_unit_jump_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
         unit->current_unit_id_plus_one = 0;
     }
 }

@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-extern void battle_menu_copy_cursor_frame_data();
-
 /* Position the icon-list cursor sprites and animate the highlighted icon.
  *
  * The current thread's words 0x50/0x54 hold the highlight timer and phase:

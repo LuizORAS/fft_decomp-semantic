@@ -15,8 +15,6 @@ extern world_card_prompt_thread_data_t g_world_card_overwrite_confirm_prompt;
 extern world_card_prompt_thread_data_t g_world_card_load_confirm_prompt;
 extern world_card_prompt_thread_data_t* g_world_card_confirm_prompt;
 
-extern world_draw_number_command_t* world_menu_script_draw_formatted_number();
-
 /*
  * Memory-card slot list: in menu step 3 handle slot selection input, then
  * draw the visible slot rows, the row cursor and the scroll arrows.

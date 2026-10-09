@@ -30,8 +30,7 @@ void world_card_run_slot_select_step(void) {
                 g_card_save_last_written_slot = 0xff;
             }
             g_card_save_selected_slot = *selected;
-            /* The target passes slot without the definition's u8 narrowing. */
-            ((void (*)(s32))world_card_set_selected_slot)(slot);
+            world_card_set_selected_slot(slot);
             g_world_card_menu_step = 2;
         }
     }

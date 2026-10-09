@@ -270,8 +270,7 @@ void world_build_options_menu(void) {
             break;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {
-            ((u8 * (*)(world_menu_entry_t*, s32*, s32*, s32*)) world_menu_redraw_text_page_on_scroll)(
-                entry, &row_offset, &ring, &cursor);
+            world_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         world_menu_select_icon_cluts(&page->icons.base);

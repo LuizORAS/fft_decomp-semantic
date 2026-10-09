@@ -6,7 +6,7 @@
 /* Scrolls a three-column text page by a row window on L1/R1 (or on the
  * running thread's redraw request), redraws the page into g_world_menu_text_page_image and
  * uploads it. Returns the image buffer when the page was redrawn. */
-u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw) {
+u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     u32* input;
     u32* input2;

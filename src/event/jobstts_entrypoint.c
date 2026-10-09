@@ -4,7 +4,7 @@
 
 /* Per-frame JOBSTTS entry: initialize on first call, run the active page,
  * and return the ordering table to draw (0 once the screen closes). */
-s32 jobstts_entrypoint(s32 unit) {
+s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
     s32 result;
 
     if (g_jobstts_initialized == 0) {
@@ -40,8 +40,7 @@ s32 jobstts_entrypoint(s32 unit) {
         jobstts_menu_clear_selection_records();
         g_jobstts_initialized = 1;
     }
-    /* The target passes a second argument the callee does not take. */
-    ((void (*)(s32, s32))jobstts_gfx_swap_context_and_clear_otag)(0, -1);
+    jobstts_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_jobstts_gfx_context->otag;
     g_jobstts_previous_event_mode = g_event_mode;
     jobstts_input_update_with_message_state();

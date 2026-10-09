@@ -97,8 +97,7 @@ void battle_menu_auto_battle_setting_thread(void) {
             for (j = 0; j < 5; j++) {
                 g_menu_text_palette_offset = colour[j];
                 g_menu_text_state.stride = param->width;
-                /* The target passes x and y as full words; the s16 prototype narrows them. */
-                ((void (*)(s32, s32))battle_menu_set_text_origin)(8, j * 16 + 9);
+                battle_menu_set_text_origin(8, j * 16 + 9);
                 battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.origin_x);
             }
             LoadImage(&rect, buffer);

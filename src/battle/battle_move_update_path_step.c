@@ -137,15 +137,10 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
                 switch ((g_battle_move_step_value >> 2) & 1) {
                 case 0:
                     unit->step_speed = 0x2000;
-                    /* The target passes the destination tile where the callee declares facing. */
-                    ((void (*)(
-                        battle_unit_misc_data_t*, const map_tile_t*, const map_tile_t*))battle_move_start_unit_step)(
-                        unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+                    battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                     break;
                 case 1:
-                    /* The target also passes the destination tile to this two-parameter callee. */
-                    ((void (*)(battle_unit_misc_data_t*, const map_tile_t*,
-                        const map_tile_t*))battle_move_start_unit_step_at_climb_speed)(
+                    battle_move_start_unit_step_at_climb_speed(
                         unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                     break;
                 }

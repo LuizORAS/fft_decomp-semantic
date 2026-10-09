@@ -63,25 +63,21 @@ void world_menu_build_ability_list(s32 mode) {
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_23e, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_display_item_inventory_ability)(
+        battle_menu_display_item_inventory_ability(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_load_throw_abilities)(
+        battle_menu_load_throw_abilities(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_ARITHMETICKS) {
         if (mode == 2) {
-            /* The definition types the id buffer parameter as s32. */
-            ((void (*)(s32, s32, u16*))battle_menu_load_math_skill_attributes)(
-                unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
+            battle_menu_load_math_skill_attributes(
+                unit_index, skillset, (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
         }
         if (mode == 1) {
-            /* The definition types the id buffer parameter as s32. */
-            ((void (*)(s32, s32, u16*))battle_menu_load_math_skill_multiples)(
-                unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
+            battle_menu_load_math_skill_multiples(
+                unit_index, skillset, (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids);
         }
         if (mode == 0) {
             battle_menu_collect_calculator_abilities(
@@ -94,14 +90,12 @@ void world_menu_build_ability_list(s32 mode) {
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->flags);
     }
     if (type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        /* The target also passes mp_costs in a2 to this two-argument loader. */
-        ((void (*)(s32, s32, u8*))battle_menu_load_draw_out_abilities)(
+        battle_menu_load_draw_out_abilities(
             unit_index, skillset, ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
     }
     if (type == ACTION_MENU_TYPE_CHARGE) {
-        /* The definition types the three output buffer parameters as s32. */
-        ((void (*)(s32, s32, u16*, u8*, u8*))battle_menu_load_charge_skillset)(unit_index, skillset,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
+        battle_menu_load_charge_skillset(unit_index, skillset,
+            (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2);
         world_script_copy_bytes(((world_ability_list_t*)g_battle_ai_workspace_ptr)->enabled,
@@ -118,10 +112,8 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.extras_x = 0x7E;
     g_world_ability_menu_layout.ids_mode = 0;
     if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
-        /* The target also passes 0 in a2 to this two-argument copy. */
-        count = ((s32 (*)(void*, void*, s32))world_menu_widen_bytes_to_halfwords)(
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, 0);
+        count = world_menu_widen_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
         world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
         found = 0;
@@ -173,10 +165,8 @@ void world_menu_build_ability_list(s32 mode) {
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
-                /* The target also passes the row count in a2 to this two-argument copy. */
-                ((s32 (*)(void*, void*, s32))world_menu_widen_bytes_to_halfwords)(
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, count);
+                world_menu_widen_bytes_to_halfwords(((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
                 window_x -= 8;
                 world_copy_bytes_to_s16_array((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);

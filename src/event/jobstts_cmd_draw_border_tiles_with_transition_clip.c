@@ -16,8 +16,7 @@ u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command) {
         rect.h = (command[6] * scale) / 100;
         rect.x = 0;
         rect.y = (command[4] + (command[6] >> 1)) - (rect.h >> 1);
-        /* The target passes a third argument the callee does not take. */
-        ((void (*)(RECT*, s16, s16))jobstts_gfx_enqueue_draw_area)(&rect, g_jobstts_gfx_otag_index, rect.y);
+        jobstts_gfx_enqueue_draw_area(&rect, g_jobstts_gfx_otag_index);
         g_jobstts_gfx_otag_index_locked = 1;
         g_jobstts_gfx_otag_index = g_jobstts_gfx_otag_index + 1;
     } else {

@@ -51,8 +51,7 @@ void world_run_option_choice_menu(void) {
     world_thread_wait_frames(1);
     g_world_menu_text_state.stride = width;
     for (i = 0; i < g_world_option_menu_entry_counts[kind]; i++) {
-        /* The target passes both coordinates without the s16 sign extension. */
-        ((void (*)(s32, s32))world_menu_set_text_origin)(8, i * 16 + 8);
+        world_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_world_game_option_values[kind]) {
             g_world_menu_text_color = 8;
         }

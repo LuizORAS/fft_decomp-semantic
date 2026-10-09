@@ -13,7 +13,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_gfx_load_spritesheet_into_vram_slot(u8* data, u32 index, s32 unused, battle_unit_misc_data_t* unit) {
+void battle_gfx_load_spritesheet_into_vram_slot(
+    u8* data, u32 index, s32 unused, battle_unit_misc_data_t* unit, s16 unused_palette) {
     u8* palette;
     u8* image;
     s32 i;

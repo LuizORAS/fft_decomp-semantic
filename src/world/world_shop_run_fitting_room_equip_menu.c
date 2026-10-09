@@ -70,7 +70,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
             world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
             g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;
             g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-            g_world_menu_aux_callback = (s32 (*)(void))world_item_build_type_icon_source;
+            g_world_menu_aux_callback = (s32 (*)(s32))world_item_build_type_icon_source;
             g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
             g_world_menu_script_callbacks[4] = world_menu_get_item_price_display_value;
             world_script_set_vsync_mode_and_event_speed(2);

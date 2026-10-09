@@ -40,8 +40,7 @@ void wldcore_list_build_proposition_detail_panel_image(
     bounds.position.y = 0x60;
     bounds.dimensions.x = 0xF4;
     bounds.dimensions.y = (g_main_active_propositions[proposition].participant_count + rows) * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, coordinate_mode, g_wldcore_proposition_detail_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, coordinate_mode, g_wldcore_proposition_detail_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;
     wldcore_menu_display_text_entry(index, 0xB821, point, g_wldcore_proposition_detail_image_buffer);

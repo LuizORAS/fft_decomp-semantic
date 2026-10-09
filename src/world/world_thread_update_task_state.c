@@ -7,8 +7,7 @@ void world_thread_update_task_state(void) {
     u8 value;
 
     world_script_update_tutorial_controller_input();
-    /* The definition's s8 return conversion would change this call's codegen. */
-    step = ((s32 (*)(void))world_menu_get_window_scale_step)();
+    step = world_menu_get_window_scale_step();
     if (step >= 1 && step <= 3) {
         world_input_clear_state();
     } else {

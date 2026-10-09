@@ -2,8 +2,7 @@
 #include "psx/types.h"
 
 s32 world_input_filter_menu(void) {
-    /* The target passes a0 = 0 to this argument-less reader. */
-    s32 input = ((s32 (*)(s32))world_input_read_tutorial_or_controller)(0);
+    s32 input = world_input_read_tutorial_or_controller(0);
 
     if (g_world_item_category_input_lock != 0 || g_world_unit_status_banner_active != 0
         || world_input_get_lockout_timer() != 0) {

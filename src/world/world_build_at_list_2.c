@@ -227,8 +227,7 @@ void world_build_at_list_2(void) {
             redraw_pending = 0;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {
-            buffer = ((u8 * (*)(world_menu_entry_t*, s32*, s32*, s32*)) world_menu_redraw_text_page_on_scroll_2)(
-                entry, &row_offset, &ring, &cursor);
+            buffer = world_menu_redraw_text_page_on_scroll_2(entry, &row_offset, &ring, &cursor);
             redraw_pending = (s32)buffer;
             ClearImage(&clear, 0, 0, 0);
         }

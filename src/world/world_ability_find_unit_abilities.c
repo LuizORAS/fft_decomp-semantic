@@ -32,8 +32,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         return world_get_known_skillsets(unit, out);
     }
     skillset = world_job_get_skillset(job);
-    /* The definition's u16 parameter and s16 return conversions would change this call's codegen. */
-    generic = ((s16 (*)(s32))world_job_get_generic_index)(job);
+    generic = world_job_get_generic_index(job);
     if (world_job_find_by_skillset(skillset) == -1) {
         skillset = (u16)g_world_formation_unit_pointers[unit]->primary_skillset;
     }

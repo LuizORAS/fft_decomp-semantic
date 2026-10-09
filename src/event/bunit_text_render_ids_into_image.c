@@ -39,7 +39,7 @@ void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t
                 position.x += bunit_text_render_glyph_to_4bpp_image(glyph, image, &position, (*colors2 >> 14) | style);
             }
         } else {
-            text = ((const u8* (*)(u8*, s32, s32))bunit_text_skip_encoded_segments)(font, ids[k] & 0xFFF, 2);
+            text = bunit_text_skip_encoded_segments(font, ids[k] & 0xFFF, 2);
             code = *text++;
             if (code < 0xFE) {
                 colors = &ids[k];

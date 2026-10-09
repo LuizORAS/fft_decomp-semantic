@@ -88,8 +88,7 @@ s32 world_formation_run_item_submenu_step(void) {
     }
     world_menu_draw_pressable_button(2, 0xB8, 0x3C, g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, 1);
     busy = 0;
-    /* The target passes a0 = 0 to the argument-less world_thread_is_task_active. */
-    if (((s32 (*)(s32))world_thread_is_task_active)(0) != 0 || world_thread_is_running(5) != 0) {
+    if (world_thread_is_task_active(0) != 0 || world_thread_is_running(5) != 0) {
         busy = 1;
     }
     world_menu_run_script_with_palette_mode(g_world_item_list_window_script, input, busy);

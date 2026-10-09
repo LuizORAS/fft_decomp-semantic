@@ -1,7 +1,7 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
-const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators) {
+const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators, s32 unused_2) {
     while (terminators != 0) {
         u8 character = *text++;
 

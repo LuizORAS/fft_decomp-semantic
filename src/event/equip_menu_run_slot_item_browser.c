@@ -30,10 +30,10 @@ s32 equip_menu_run_slot_item_browser(void) {
         g_equip_menu_list_row_callbacks[1] = equip_item_get_total_with_equip_flag;
         g_equip_menu_list_row_callbacks[2] = (equip_row_callback_t)equip_item_build_row_icon_rect;
         g_equip_menu_list_row_callbacks[3] = (equip_row_callback_t)equip_item_build_row_graphic_descriptor;
-        g_equip_menu_list_row_callbacks[4] = (equip_row_callback_t)equip_menu_get_preview_hp_bonus_display;
-        g_equip_menu_list_row_callbacks[5] = (equip_row_callback_t)equip_menu_get_preview_mp_bonus_display;
-        g_equip_menu_list_row_callbacks[6] = (equip_row_callback_t)equip_menu_get_preview_hp_bonus;
-        g_equip_menu_list_row_callbacks[7] = (equip_row_callback_t)equip_menu_get_preview_mp_bonus;
+        g_equip_menu_list_row_callbacks[4] = equip_menu_get_preview_hp_bonus_display;
+        g_equip_menu_list_row_callbacks[5] = equip_menu_get_preview_mp_bonus_display;
+        g_equip_menu_list_row_callbacks[6] = equip_menu_get_preview_hp_bonus;
+        g_equip_menu_list_row_callbacks[7] = equip_menu_get_preview_mp_bonus;
     }
     equip_panel_toggle_item_numeric_thread(1);
     g_equip_text_help_message_id = g_equip_menu_list_entry_count != 0

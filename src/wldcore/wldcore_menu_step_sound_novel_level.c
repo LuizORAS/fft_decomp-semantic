@@ -84,7 +84,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_window_render_records[level->render_index].flags &= ~0x10;
             g_wldcore_window_records[level->overlay_window].flags &= ~0x10;
             width = 0x100 - g_wldcore_active_saved_record.brightness;
-            g_wldcore_window_render_records[level->render_index].width = width / 4;
+            g_wldcore_window_render_records[level->render_index].bounds.dimensions.x = width / 4;
             level->fade_timer--;
         } else {
             g_wldcore_window_render_records[level->render_index].flags |= 0x10;

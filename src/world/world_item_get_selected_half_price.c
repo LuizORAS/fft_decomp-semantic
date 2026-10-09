@@ -1,6 +1,6 @@
 #include "fft/world.h"
 
-s32 world_item_get_selected_half_price(void) {
+s32 world_item_get_selected_half_price(s32 unused_row) {
     s32 result;
 
     if (g_world_menu_option_count == 0) {

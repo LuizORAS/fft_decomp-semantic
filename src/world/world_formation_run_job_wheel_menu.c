@@ -19,8 +19,8 @@ void world_formation_run_job_wheel_menu(void) {
         world_menu_stop_unit_status_banner_thread(9);
         world_menu_stop_unit_status_banner_thread(0xC);
         world_menu_init_scrollable_list_core(0, 0, 0);
-        g_world_menu_script_callbacks[0] = (s32 (*)(s32))world_formation_get_job_wheel_cursor_job_level;
-        g_world_menu_script_callbacks[1] = (s32 (*)(s32))world_formation_is_job_wheel_selection_available;
+        g_world_menu_script_callbacks[0] = world_formation_get_job_wheel_cursor_job_level;
+        g_world_menu_script_callbacks[1] = world_formation_is_job_wheel_selection_available;
         g_world_job_wheel_job_selected = 0;
         g_world_job_change_confirmed = 0;
         g_world_job_wheel_initialized = 1;
@@ -28,8 +28,7 @@ void world_formation_run_job_wheel_menu(void) {
     }
     i = g_world_formation_current_menu;
     if (i == 0xE) {
-        /* The target uses v0 without the u8 return's mask. */
-        if (((s32 (*)(s32))world_formation_step_grid_transition)(2) == 0) {
+        if (world_formation_step_grid_transition(2) == 0) {
             world_formation_update_job_wheel_state();
             world_formation_build_job_wheel_job_name();
             g_world_formation_current_menu = 0x15;
@@ -184,9 +183,8 @@ void world_formation_run_job_wheel_menu(void) {
                             g_world_formation_current_menu = 0x18;
                         } else if ((job & 0x3FF)
                             != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id) {
-                            /* The definition's s16 conversions would change this call's codegen. */
                             world_text_show_message_and_play_sound(
-                                ((s32 (*)(s32))world_job_get_text_index)(job & 0x3FF) + 0xE800, 0x30);
+                                world_job_get_text_index(job & 0x3FF) + 0xE800, 0x30);
                             g_world_status_display_thread_params.style = 1;
                         } else {
                             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
@@ -194,8 +192,7 @@ void world_formation_run_job_wheel_menu(void) {
                     }
                     if (g_world_input_secondary_repeat & PSX_PAD_SELECT) {
                         if (g_world_job_wheel_job_count >= 2) {
-                            /* The definition's s16 conversions would change this call's codegen. */
-                            i = ((s32 (*)(s32))world_job_get_text_index)(job & 0x3FF);
+                            i = world_job_get_text_index(job & 0x3FF);
                             if (i >= 0) {
                                 world_text_show_message_and_play_sound(i + 0xE800, 0x12);
                                 g_world_status_display_thread_params.style = 1;

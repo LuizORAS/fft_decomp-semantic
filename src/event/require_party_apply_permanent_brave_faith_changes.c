@@ -13,8 +13,7 @@ void require_party_apply_permanent_brave_faith_changes(void) {
     g_battle_text_section_pointers[2] = g_require_text_data + g_require_text_section_offsets[2];
     g_battle_text_section_pointers[3] = g_require_text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[6] = g_require_text_data + g_require_text_section_offsets[4];
-    /* The target also passes the text data pointer in a1 to this one-argument callee. */
-    main_thread = ((s32 (*)())battle_thread_resolve_id)(0x10, g_require_text_data);
+    main_thread = battle_thread_resolve_id(0x10);
     battle_thread_start(main_thread, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(main_thread, 5, 0, 0);
     require_gfx_fade_rgb_31_frames(0xd, 0xd, 2);

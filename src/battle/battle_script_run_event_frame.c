@@ -117,9 +117,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     g_battle_field_object_use_request = 0;
 
     if (g_companion_overlay_state == 3) {
-        /* The target also passes a1 = 0 to the one-argument entry point. */
-        g_battle_companion_overlay_primitives
-            = ((s32 (*)(s32, s32))jobstts_entrypoint)(g_battle_active_turn_unit.battle_id, 0);
+        g_battle_companion_overlay_primitives = jobstts_entrypoint(g_battle_active_turn_unit.battle_id, 0);
         if (g_battle_companion_overlay_primitives != 0) {
             AddPrims(g_current_otag_entry, (void*)g_battle_companion_overlay_primitives,
                 (void*)(g_battle_companion_overlay_primitives + 0xFC));
@@ -169,8 +167,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         g_companion_overlay_state = 0;
     } else if (g_companion_overlay_state == 2) {
         battle_script_set_event_speed(1);
-        /* The target passes a0 = a1 = 0 to the argument-less entry point. */
-        i = ((s32 (*)(s32, s32))bunit_entrypoint)(0, 0);
+        i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
         g_battle_active_turn_unit.battle_id = i;
         g_companion_overlay_state = 0;

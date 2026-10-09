@@ -112,10 +112,9 @@ void battle_menu_build_ability_list(s32 mode) {
     g_battle_ability_menu_layout.x[2] = 0x7E;
     g_battle_ability_menu_layout.mode[0] = 0;
     if (g_battle_menu_action_type_modes[type][1] == 1) { /* lists by id */
-        /* The target passes a third argument the two-parameter callee ignores. */
-        count = ((s32 (*)(void*, u8*, s32))battle_menu_copy_ff_terminated_bytes_to_halfwords)(
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
-            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, 0);
+        count = battle_menu_copy_ff_terminated_bytes_to_halfwords(
+            (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->ids,
+            ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
         battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
             ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);
         found = 0;
@@ -167,10 +166,9 @@ void battle_menu_build_ability_list(s32 mode) {
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
-                /* The target passes a third argument the callee ignores. */
-                ((s32 (*)(void*, u8*, s32))battle_menu_copy_ff_terminated_bytes_to_halfwords)(
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
-                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs, count);
+                battle_menu_copy_ff_terminated_bytes_to_halfwords(
+                    (s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->values,
+                    ((world_ability_list_t*)g_battle_ai_workspace_ptr)->mp_costs);
                 window_x -= 8;
                 battle_menu_widen_bytes_to_halfwords((s16*)((world_ability_list_t*)g_battle_ai_workspace_ptr)->extras,
                     ((world_ability_list_t*)g_battle_ai_workspace_ptr)->bytes_2e2, count);

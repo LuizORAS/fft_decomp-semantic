@@ -8,7 +8,8 @@
  * jump (length 2+) uses animation 0x1e with a per-direction facing, while a
  * short hop dismounts any rider and toggles movement bit 27 to alternate the
  * 0x30/0x31 hop animation. */
-void battle_move_start_unit_jump_step(battle_unit_misc_data_t* unit) {
+void battle_move_start_unit_jump_step(
+    battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to) {
     u16 facings[4] = { 0xC00, 0x400, 0, 0x800 };
     u8 jump_offsets[4] = { 0x15, 0x1D, 0x11, 0x19 };
     u8 hop_offsets[4] = { 0x16, 0x1E, 0x12, 0x1A };

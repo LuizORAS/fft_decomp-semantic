@@ -7,7 +7,7 @@
  * menu selection values, wrapping it within [0, entry_count). Same body as
  * equip_menu_update_wrapped_horizontal_selection with the other pair of buttons.
  */
-s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, u16 input_mask) {
+s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask) {
     s16* selection;
     s16 up_value;
     s16 down_value;

@@ -1,8 +1,5 @@
 #include "fft/battle.h"
 
-void battle_gfx_copy_shp_data_to_ram();
-void battle_gfx_resolve_packed_offset_table();
-
 /* Advances the unit SHP/SEQ loader by one step and returns the file kind index.
  *
  * g_battle_gfx_state_words[0] selects the file kind (sprite SHP/SEQ, WEP SHP/SEQ, EFF SHP/SEQ,
@@ -155,20 +152,24 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
                 g_battle_gfx_spritesheet_alt_data + g_battle_gfx_state_words[2] * 0x408, g_battle_gfx_state_words[3]);
             break;
         case 2:
-            battle_gfx_copy_shp_data_to_ram(
-                g_battle_gfx_spritesheet_shp_data + g_battle_gfx_state_words[2] * 0xc40, g_battle_gfx_state_words[3]);
+            battle_gfx_copy_shp_data_to_ram((struct battle_gfx_shp_frame_table*)(g_battle_gfx_spritesheet_shp_data
+                                                + g_battle_gfx_state_words[2] * 0xc40),
+                (u8*)g_battle_gfx_state_words[3]);
             break;
         case 3:
             battle_gfx_resolve_packed_offset_table(
-                g_battle_gfx_spritesheet_seq_data + g_battle_gfx_state_words[2] * 0xc40, g_battle_gfx_state_words[3]);
+                (u8**)(g_battle_gfx_spritesheet_seq_data + g_battle_gfx_state_words[2] * 0xc40),
+                (struct battle_gfx_packed_offset_table*)g_battle_gfx_state_words[3]);
             break;
         case 4:
-            battle_gfx_copy_shp_data_to_ram(
-                g_battle_gfx_body_part_sprite_data + g_battle_gfx_state_words[2] * 0xc40, g_battle_gfx_state_words[3]);
+            battle_gfx_copy_shp_data_to_ram((struct battle_gfx_shp_frame_table*)(g_battle_gfx_body_part_sprite_data
+                                                + g_battle_gfx_state_words[2] * 0xc40),
+                (u8*)g_battle_gfx_state_words[3]);
             break;
         case 5:
             battle_gfx_resolve_packed_offset_table(
-                g_battle_gfx_body_part_seq_data + g_battle_gfx_state_words[2] * 0xc40, g_battle_gfx_state_words[3]);
+                (u8**)(g_battle_gfx_body_part_seq_data + g_battle_gfx_state_words[2] * 0xc40),
+                (struct battle_gfx_packed_offset_table*)g_battle_gfx_state_words[3]);
             break;
         case 6:
             battle_gfx_load_wep_spr_data((u8*)g_battle_gfx_state_words[3]);

@@ -11,7 +11,6 @@ void battle_formula_calculate_critical_hit(void) {
         xa = (s16*)&g_current_ability.xa;
         base_xa = *xa;
         *xa = base_xa + (rnd * base_xa) / 32768;
-        /* The target leaves `xa` in $a0 for the argument-less callee. */
-        ((void (*)(s16*))battle_formula_calculate_knockback)(xa);
+        battle_formula_calculate_knockback();
     }
 }

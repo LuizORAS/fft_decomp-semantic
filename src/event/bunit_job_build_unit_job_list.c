@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids) {
+s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2) {
     s32 saved_unit_id = unit_id;
     u32 unit_index = (u8)saved_unit_id;
     bunit_unit_data_t** unit_table = g_bunit_unit_data;

@@ -1,8 +1,9 @@
 #include "fft/event_bunit.h"
 
-s16 bunit_unit_get_current_stat(s32 unit_index, s32 value) {
+s32 bunit_unit_get_current_stat(s32 unit_index) {
     bunit_unit_stat_e mode;
     bunit_unit_data_t* entry;
+    s32 value;
 
     mode = g_bunit_unit_stat_mode;
     if (mode == BUNIT_UNIT_STAT_HP) {
@@ -16,5 +17,5 @@ s16 bunit_unit_get_current_stat(s32 unit_index, s32 value) {
         value = entry->current_ct;
     }
     g_bunit_unit_current_stat_value = value;
-    return value;
+    return (s16)value;
 }

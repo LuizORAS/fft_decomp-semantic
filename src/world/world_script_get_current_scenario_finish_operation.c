@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Return the active scenario's event-finish operations, or 0 outside a scenario. */
-u16 world_script_get_current_scenario_finish_operation(void) {
+s32 world_script_get_current_scenario_finish_operation(void) {
     u16 result;
 
     if (g_world_menu_scenario_event_started != 0) {

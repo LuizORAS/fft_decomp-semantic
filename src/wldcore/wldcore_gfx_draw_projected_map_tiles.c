@@ -105,7 +105,7 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
             poly.v0 = store_tmp;
             poly.u3 = edge_u;
             poly.u1 = edge_u;
-            world_gs_sortpoly(poly_a0, ot_a1, 2, v1);
+            world_gs_sortpoly(poly_a0, ot_a1, 2);
         }
     }
 }

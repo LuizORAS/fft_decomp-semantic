@@ -16,6 +16,6 @@ void wldcore_menu_display_text_entry(s32 index, s32 text_id, wldcore_point32_t p
 
     origin.x = x;
     origin.y = y;
-    origin.value = g_wldcore_window_render_records[index].width;
+    origin.value = (s16)g_wldcore_window_render_records[index].bounds.dimensions.x;
     world_menu_display_text_entry(text_id, buffer, &origin);
 }

@@ -198,9 +198,7 @@ s32 require_select_party_unit_to_remove(void) {
         party_unit = main_party_get_data_pointer(selected_party_index);
         formation_index = 0;
         if (party_unit->sprite_set & 0x80) {
-            /* The target also passes a1 = 0 to this one-argument callee. */
-            message_id = ((party_unit->sprite_set - 0x80) * 8)
-                + (((s32 (*)(s32, s32))battle_script_get_variable)(0x21, 0) & 7) + 0x1800;
+            message_id = ((party_unit->sprite_set - 0x80) * 8) + (battle_script_get_variable(0x21) & 7) + 0x1800;
         } else {
             s32 sprite_column;
             u8* sprite_group;

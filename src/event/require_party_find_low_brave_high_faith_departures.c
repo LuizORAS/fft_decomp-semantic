@@ -77,9 +77,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
                     BATTLE_INDEX(count) = battle_index;
                     MESSAGE_ID(count) = ((generic_sprite - 0x80) << 2) + (battle_index & 3) + 0x1000;
                 }
-                /* The target passes three arguments the callee does not take. */
-                ((void (*)(s32, s32, s32))require_noop_801c43e0)(
-                    battle_index, found_unit->unit_id, found_unit->character_identity);
+                require_noop_801c43e0(battle_index, found_unit->unit_id, found_unit->character_identity);
                 departure_count++;
             } else if (faith >= 0x5f) {
                 s32 formation_index = 0;

@@ -20,9 +20,7 @@ void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
         }
         if (unit->numeric_display_active == 0) {
             unit->numeric_display_progress = 0;
-            /* The target passes two extra arguments the one-parameter callee ignores. */
-            ((s32 (*)(battle_unit_misc_data_t*, battle_gfx_sprite_display_data_t*,
-                battle_unit_misc_data_t*))battle_gfx_build_next_special_action_result_display)(unit, display_0, unit);
+            battle_gfx_build_next_special_action_result_display(unit);
         }
     }
 }

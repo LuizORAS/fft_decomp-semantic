@@ -16,8 +16,7 @@ s32 world_input_read_menu_scroll_repeat(void) {
     u16 counter;
 
     if (g_world_menu_prompt_active == 0 && g_world_thread_task_active == 0 && g_world_script_tutorial_id == 0) {
-        /* The target passes a0 = 0 to this argument-less reader. */
-        value = ((s32 (*)(s32))world_input_read_tutorial_or_controller)(0);
+        value = world_input_read_tutorial_or_controller(0);
         if ((value & PSX_PAD_UP) && (value & PSX_PAD_SQUARE)) {
             g_world_menu_scroll_hold_counter++;
             result = -1;

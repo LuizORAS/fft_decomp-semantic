@@ -90,8 +90,7 @@ void wldcore_list_open_active_propositions(void) {
     bounds.position.x = 0;
     bounds.dimensions.x = 0xD8;
     bounds.dimensions.y = LEVEL.entry_count * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 2, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, 2, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     g_wldcore_window_render_records[index].flags |= 0x100;
     base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;

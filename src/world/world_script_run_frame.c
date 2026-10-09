@@ -46,7 +46,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
             }
         }
         if (i == 17) {
-            op = ((s32 (*)(void))world_script_get_current_scenario_finish_operation)();
+            op = world_script_get_current_scenario_finish_operation();
             if (op != 0) {
                 if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
                     g_world_event_finish_check_pending = 0;
@@ -112,8 +112,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_field_object_use_request = 0;
 
     if (g_world_companion_overlay_state == 3) {
-        /* The target also passes a1 = 0 to the one-argument entry point. */
-        g_world_companion_overlay_prims = ((s32 (*)(s32, s32))jobstts_entrypoint)(g_world_unit_view_battle_id, 0);
+        g_world_companion_overlay_prims = jobstts_entrypoint(g_world_unit_view_battle_id, 0);
         if (g_world_companion_overlay_prims != 0) {
             AddPrims(g_world_gfx_active_otag_entries, (void*)g_world_companion_overlay_prims,
                 (void*)(g_world_companion_overlay_prims + 0xFC));
@@ -164,8 +163,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_companion_overlay_state = 0;
     } else if (g_world_companion_overlay_state == 2) {
         world_script_set_event_speed(1);
-        /* The target passes a0 = a1 = 0 to the argument-less entry point. */
-        i = ((s32 (*)(s32, s32))bunit_entrypoint)(0, 0);
+        i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
         g_world_unit_view_battle_id = i;
         g_world_companion_overlay_state = 0;

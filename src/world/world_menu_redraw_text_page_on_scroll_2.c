@@ -7,7 +7,8 @@
  * running thread's redraw request), redraws the page into a freshly
  * allocated image buffer and uploads it. Returns that buffer when the page
  * was redrawn; the caller frees it. */
-u8* world_menu_redraw_text_page_on_scroll_2(world_menu_entry_t* entry, s32* row_offset, s32* redraw) {
+u8* world_menu_redraw_text_page_on_scroll_2(
+    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     u32* input0;
     u32* input1;

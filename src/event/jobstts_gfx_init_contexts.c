@@ -51,7 +51,6 @@ void jobstts_gfx_init_contexts(jobstts_gfx_context_t* base, u32* otag, POLY_F3* 
         jobstts_gfx_init_primitive_buffers(context);
     }
 
-    /* The target passes a second argument the callee does not take. */
-    ((void (*)(s32, s32))jobstts_gfx_swap_context_and_clear_otag)(0, -1);
-    ((void (*)(s32, s32))jobstts_gfx_swap_context_and_clear_otag)(0, -1);
+    jobstts_gfx_swap_context_and_clear_otag(0, -1);
+    jobstts_gfx_swap_context_and_clear_otag(0, -1);
 }

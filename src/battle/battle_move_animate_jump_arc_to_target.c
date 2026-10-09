@@ -36,9 +36,8 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
             } else {
                 target.coords.x = unit->battle_data->action_target_x * 28 + 14;
                 target.coords.y = unit->battle_data->action_target_y * 28 + 14;
-                /* The target loads the elevation as an s16 halfword; the u8 prototype would load a byte. */
-                target.coords.z = ((s16 (*)(battle_screen_coords_t*, s16))battle_map_calculate_slope_height)(
-                    &target.coords, unit->battle_data->action_target_elevation);
+                target.coords.z
+                    = battle_map_calculate_slope_height(&target.coords.x, unit->battle_data->action_target_elevation);
             }
             timer = battle_move_calculate_jump_arc_velocity(
                 (const battle_screen_coords_t*)&unit->screen, &target.coords, &velocity);

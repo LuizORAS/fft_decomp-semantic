@@ -47,7 +47,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.dimensions.y = image.ph;
     clut.x = image.cx;
     clut.y = image.cy;
-    wldcore_window_init_vram_render_record(index, bounds.position, bounds.dimensions, clut, 4);
+    wldcore_window_init_vram_render_record(index, bounds, clut, 4);
     g_wldcore_window_render_records[index].priority = 0xA;
     wldcore_gfx_step_dissolve_image_upload(&image, 0);
 
@@ -59,8 +59,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.dimensions.x = 0x7C;
     bounds.dimensions.y = 0x80;
     g_world_text_substitution_values[0] = mode + 0xE000;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 1, 0xB84C, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 1, 0xB84C, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     base1 = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
     base1->x = -0x70;
@@ -85,8 +84,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.position.y = 0x70;
     bounds.dimensions.x = 0x70;
     bounds.dimensions.y = 0x70;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 1, 0xB84B, g_wldcore_window_image_buffer + 0x400);
+    wldcore_window_init_render_record_image(index, bounds, 1, 0xB84B, g_wldcore_window_image_buffer + 0x400);
     g_wldcore_window_render_records[index].priority = 0xA;
     base4 = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
     base4->x = 8;

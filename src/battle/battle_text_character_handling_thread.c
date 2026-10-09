@@ -341,8 +341,7 @@ void battle_text_character_handling_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         battle_menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
     } else {
-        /* The target passes a third argument the two-parameter callee ignores. */
-        ((void (*)(menu_window_buffer_t*, RECT*, RECT*))battle_menu_animate_window_quad_crop)(win, &from, &to);
+        battle_menu_animate_window_quad_crop(win, &from, &to);
     }
     window_u = win->quads[0].u0;
     rec.x = window_u + 8;

@@ -161,7 +161,7 @@ void option_menu_render_entries(option_menu_entry_t* entry, s32* row_offset, voi
 void option_menu_start_at_list_thread(void);
 void option_menu_start_dead_unit_threads(void);
 void option_menu_run_dead_unit_panel_a(void);
-void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending);
+void* option_menu_update_scroll(option_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
 
 /* text */
 /* The two glyph blit descriptors at 0x801c9ce4 and 0x801c9cf4, filled by

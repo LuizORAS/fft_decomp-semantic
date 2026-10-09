@@ -18,12 +18,12 @@ s32 battle_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* unit, c
     if (unit->current_unit_id_plus_one != 0) {
         battle_calculate_unit_height_data(&height, unit->current_unit_id_plus_one - 1);
         if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
-            screen_z = battle_map_calculate_slope_height(&coords->x, coords->z);
+            screen_z = battle_map_calculate_slope_height(&coords->x, (u8)coords->z);
         } else {
             screen_z = -height.total_height / 2 * 12;
         }
     } else {
-        screen_z = battle_map_calculate_slope_height(&coords->x, coords->z);
+        screen_z = battle_map_calculate_slope_height(&coords->x, (u8)coords->z);
     }
     if (unit->battle_data != 0) {
         tile = battle_map_get_tile_data_pointer(coords->x / 28, coords->y / 28, coords->z);

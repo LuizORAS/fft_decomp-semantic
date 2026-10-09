@@ -23,8 +23,7 @@ void world_script_update_tutorial_controller_input(void) {
     initial_delay = g_main_input_repeat_initial_delay / speed;
     repeat_period = g_main_input_repeat_period / speed;
     secondary_repeat_period = g_main_input_secondary_repeat_period / speed + 2;
-    /* The target passes a dead 0 in $a0, as for world_input_read_controller. */
-    current_input = ((s32 (*)(s32))world_input_read_tutorial_or_controller)(0);
+    current_input = world_input_read_tutorial_or_controller(0);
     if (current_input & PSX_PAD_TRIANGLE) {
         if (g_world_input_triangle_latched != 0) {
             world_input_clear_state();

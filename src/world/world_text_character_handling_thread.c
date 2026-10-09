@@ -415,8 +415,7 @@ void world_text_character_handling_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         world_menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
     } else {
-        /* The target also passes &to in a2 to this two-argument callee. */
-        ((void (*)(menu_window_buffer_t*, RECT*, RECT*))world_menu_animate_window_quad_crop)(win, &from, &to);
+        world_menu_animate_window_quad_crop(win, &from, &to);
     }
     base = win->quads[0].u0;
     rec.x = base + 8;

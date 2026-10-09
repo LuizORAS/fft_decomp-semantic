@@ -10,9 +10,7 @@ void equip_cmd_run_stream(u8* stream, s32 input) {
     g_equip_gfx_zoom_draw_area_active = 0;
     if (stream[0] != 0x19) {
         do {
-            /* The target calls through without arguments: $a0 still holds the
-             * stream. */
-            stream = ((u8 * (*)(void)) g_equip_cmd_handlers[stream[0]])();
+            stream = g_equip_cmd_handlers[stream[0]](stream);
         } while (stream[0] != 0x19);
     }
 }

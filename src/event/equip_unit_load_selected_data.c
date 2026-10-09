@@ -1,8 +1,6 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Unprototyped view: the void definition is called here with (index, 1) in a0/a1. */
-extern void equip_unit_copy_data_to_compare_slot();
 void equip_unit_load_selected_data(void) {
     u8 unused[0x80];
     equip_unit_data_t* unit;

@@ -11,7 +11,7 @@ struct battle_event_input_state;
  * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls bunit_menu_draw_thread_status_indicators after the
  * yield. Needs the _divcheck profile for the three repeat-period divisions.
  */
-void bunit_input_update_event_state(void* state, u32 input, s16 frame_arg) {
+void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg) {
     u32 filtered_input;
     s32 initial_delay;
     s32 repeat_delay;

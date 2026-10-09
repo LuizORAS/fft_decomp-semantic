@@ -121,8 +121,10 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   in a register: `battle_effect_init_data` tests `result` (`$a0`) for a load
   state outside 0-3, which nothing sets; `battle_camera_get_input_direction`
   tests `input` (`$a1`) when `mode` or the controller mode is outside 0-2;
-  `battle_camera_toggle_tilt` passes `sound_arg` (`$a1`) as a second argument
-  its one-parameter callee ignores, unset when the tilt target is 1;
+  `bunit_unit_get_current_stat`, `bunit_unit_get_max_stat` and
+  `world_get_formation_unit_stat_by_mode` return `value` (`$a1`) for a stat
+  mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the
+  destination tile its callers pass) unset for a direction outside 0-3;
   `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
   `cursor` when the list is empty; `world_menu_build_available_item_list`
@@ -134,22 +136,17 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 
 ## Calls that disagree with the callee
 
-Some calls need an erased signature or a function-pointer cast to preserve
-their register values. Others can declare ignored parameters and call directly
-without changing the bytes.
+Where callers pass arguments a callee never reads, the callee declares them as
+`unused_` parameters and the calls are plain. The calls below cannot be
+written that way.
 
 - `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
 - `g_battle_thread_call_target` is the main-stack dispatch slot for callees
   with different signatures; assignments erase their function types.
 - `battle_target_set_panels_for_action` reads `$v0` after a void-returning
   panel builder; the value is the callee's leftover register contents.
-- `src/event/equip_unit_load_selected_data.c` passes two arguments to
-  `equip_unit_copy_data_to_compare_slot`, which takes none.
 - `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
   `world_text_count_decimal_digits` (see above).
-- `src/world/world_text_render_id_list_to_image_rows.c` passes a ninth stack
-  argument that `world_text_render_ids_into_image` never reads. The BUNIT twin
-  instead declares it as `unused_flags` in `include/fft/event_bunit.h`; unify the two.
 - `src/battle/battle_move_animate_fall_to_target_tile.c` passes a coordinate
   buffer to the one-argument
   `battle_gfx_calculate_screen_z_from_misc_screen_data`, as it does to
@@ -162,22 +159,13 @@ without changing the bytes.
   halfword at address `0x10`.
 - `src/world/world_menu_animate_window_quad_crop.c` passes an uninitialized
   source (a stale `$s5`) to `world_menu_zoom_cursor_frame`, which never reads it.
-- `equip_menu_update_horizontal_selection_and_mark_change` and its vertical
-  twin call the three-parameter `equip_menu_update_wrapped_*_selection` with
-  two arguments; the callee's `input_mask` is the caller's own, still in `$a2`.
 - `battle_map_init_units_sprites_event_and_music` and
   `battle_map_step_init_sequence` call `main_sound_stop_sfx` without its sound
   id: step 0 passes `map_id`, still in `$a0`; step 11 passes whatever
   `main_sound_unload_current_scenario_music` left there.
-- `src/event/equip_cmd_run_stream.c` calls each `g_equip_cmd_handlers` entry
-  without an argument; `$a0` still holds the stream.
-- `src/event/equip_entrypoint.c` calls `main_unit_refresh_stats_and_statuses`
-  without an argument; `$a0` still holds the unit's stats.
 - `g_equip_menu_list_row_callbacks` holds `s32 (*)(s32)` entries, but slots 2
   and 3 are `equip_item_build_row_icon_rect` and
   `equip_item_build_row_graphic_descriptor`, which return record pointers.
-- `src/event/bunit_cmd_run_stream.c` calls each `g_bunit_cmd_handlers` entry
-  without an argument; `$a0` still holds the stream.
 - `battle_unit_get_screen_data_ptr_by_misc_id` returns NULL for a missing
   unit, but its callers test for -1 and read through it. A teleport-out with
   removal (Wiegraf at the Fovoham windmill) fades the unit out while the
@@ -207,13 +195,26 @@ without changing the bytes.
   for the acting unit reads `acting_unit`, which is NULL during the AI
   workspace setup at battle start (`acting_unit_id` is 0), so slot 0's Jump
   divides kernel-RAM bytes.
-- `src/event/bunit_text_concatenate_ids.c` passes the text section's address as
-  an `s32` (and a third argument) to `bunit_text_skip_encoded_segments`;
-  `equip_text_concatenate_ids.c` does the same to its EQUIP twin.
 - `jobstts_cmd_run_stream_with_mode` takes the input word through its `void*`
   second parameter.
-- `src/wldcore/wldcore_bar_handle_menu_input.c` passes the Bar's level record to `wldcore_menu_pop_level_and_rebuild_screen`, which takes no arguments.
-- `wldcore_window_build_yes_no_panel` takes its origin record by value; `wldcore_proposition_handle_accept_input` and `wldcore_list_handle_completed_propositions_input` call it through a six-word cast with x and y in `$a0`/`$a1`.
+- `src/event/bunit_entrypoint.c` passes a second argument, 0, to the
+  one-parameter `bunit_gfx_draw_falloff_shaded_rows`; its other caller passes
+  one.
+- `battle_menu_init_system_function` returns `$v0` as the void
+  `battle_text_determine_spell_quote` left it.
+- `world_gfx_bind_data_pointer` has no return statement;
+  `world_card_build_save_slot_description` uses the address its last store
+  left in `$v0`.
+- `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current` fall
+  off their end after `battle_thread_exit_current()`, like the WORLD twins.
+- `battle_ai_calculate_clockticks_until_death_counter_expires` is defined
+  with three parameters and both callers pass one; the other two are scratch
+  it assigns before reading.
+- `battle_map_calculate_slope_height` masks its level to a byte; two callers
+  pass the 16-bit `action_target_elevation` unmasked.
+- WLDCORE passes its 8-byte records by value:
+  `wldcore_window_render_bounds16_t` to the three render-record builders and
+  `wldcore_point32_t` to `wldcore_window_build_yes_no_panel`.
 
 ## Declaration leads
 

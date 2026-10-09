@@ -9,13 +9,13 @@
  * The command selects its value source, width, spacing, palette, and one of
  * three glyph layouts. High value bits request a disabled palette or dashes.
  */
-world_draw_number_command_t* world_menu_script_draw_formatted_number(
-    world_draw_number_command_t* command, s32 context) {
+world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command) {
+    s32 row_step;
     s8 text[16];
     RECT rect;
     RECT glyph;
     RECT minus_rect;
-    s32 (*getter)(s32, s32);
+    s32 (*getter)(s32);
     s32 row;
     s32 scroll_index;
     u16 raw_step;
@@ -34,7 +34,7 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(
     s32 x;
     s32 negative_state;
 
-    getter = (s32 (*)(s32, s32))g_world_menu_script_callbacks[command->getter];
+    getter = g_world_menu_script_callbacks[command->getter];
     if (g_world_menu_use_scroll_position == 0) {
         row = command->value;
         y = command->y;
@@ -43,19 +43,19 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(
         scroll_index = g_world_menu_scroll_row_offset;
         row += scroll_index;
         raw_step = g_world_menu_row_height;
-        /* Loads the halfword apart from the shifted context; otherwise the
-         * getter pointer leaves $a2. */
+        /* Loads the halfword apart from the shift; otherwise the getter
+         * pointer leaves $a2. */
         __asm__("" : "=r"(raw_step) : "0"(raw_step));
-        context = raw_step << 16;
-        y = (context >> 16) * scroll_index + command->y - g_world_menu_scroll_pixel_offset;
+        row_step = raw_step << 16;
+        y = (row_step >> 16) * scroll_index + command->y - g_world_menu_scroll_pixel_offset;
         if (g_world_menu_scroll_pixel_offset < 0) {
             row--;
-            y -= context >> 16;
+            y -= row_step >> 16;
         }
     }
     negative = 0;
     if (getter != 0) {
-        value = getter(row, context);
+        value = getter(row);
     } else {
         value = row;
     }

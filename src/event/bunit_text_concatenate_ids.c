@@ -3,14 +3,14 @@
 
 /* Concatenate the text for each entry of a -1 terminated id list into `out`,
  * optionally separating entries with 0xF8, and terminate with 0xFE. */
-void bunit_text_concatenate_ids(s32 text_table, u8* out, s16* list, s32 separate) {
+void bunit_text_concatenate_ids(const u8* text_table, u8* out, s16* list, s32 separate) {
     s16* ids;
-    u8* src;
+    const u8* src;
 
     if (*list != -1) {
         ids = list;
         do {
-            src = ((u8 * (*)(s32, s32, s32)) bunit_text_skip_encoded_segments)(text_table, *ids & 0x7FF, 1);
+            src = bunit_text_skip_encoded_segments(text_table, *ids & 0x7FF, 1);
             while (*src != 0xFE) {
                 *out = *src;
                 src++;

@@ -95,8 +95,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                         : g_world_input_secondary_repeat_latched,
                     world_map_is_busy(), 0, 0);
             } else {
-                /* The target also passes a1 = 0 to this one-argument callee. */
-                ((void (*)(s32, s32))world_formation_draw_background_tiles)(
+                world_formation_draw_background_tiles(
                     g_world_formation_scroll_position + g_world_formation_scroll_velocity, 0);
             }
             i = 0;

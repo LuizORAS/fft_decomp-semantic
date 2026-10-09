@@ -166,8 +166,7 @@ void world_text_message_box_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         world_menu_animate_window_quads_to_rects(win, &from, &to);
     } else {
-        /* The target also passes &to in a2 to this two-argument callee. */
-        ((void (*)(menu_window_buffer_t*, RECT*, RECT*))world_menu_animate_window_quad_crop_full)(win, &from, &to);
+        world_menu_animate_window_quad_crop_full(win, &from, &to);
     }
     x = win->quads[0].u0 + 8;
     y = win->quads[0].v0 + 8;

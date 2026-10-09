@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count) {
+const u8* bunit_text_skip_encoded_segments(const u8* data, s16 count, s32 unused_2) {
     if (count != 0) {
         do {
             u32 raw = *data++;

@@ -17,10 +17,6 @@
  * inner-call trampoline intentionally forwards varying argument counts through
  * its () ABI. */
 
-/* Declared locally: other reconstructions bind these under different
- * provisional signatures, or the symbol is still unresolved. */
-s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
-
 void world_script_execute_event(void) {
     s32 unit_lookup_status;
     s32 ghost_misc_id;

@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-u32 bunit_job_calculate_next_level_jp_requirement(s32 index) {
+s32 bunit_job_calculate_next_level_jp_requirement(s32 index) {
     s32 level;
 
     bunit_job_get_generic_index(g_bunit_job_ids[index]);

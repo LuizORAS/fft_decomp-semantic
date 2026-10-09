@@ -8,8 +8,8 @@ struct battle_screen_coords;
  *
  * The target materialises the destination base with lui/addiu for the first
  * store only and reaches the other two through the symbol. */
-void world_copy_misc_unit_screen_coords(void) {
-    vec3u16_t* source = ((vec3u16_t * (*)(void)) battle_unit_get_screen_data_ptr_by_misc_id)();
+void world_copy_misc_unit_screen_coords(u32 misc_id) {
+    vec3u16_t* source = (vec3u16_t*)battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
     /* Unpinned, the base and the copied halfword swap $v0 and $v1. */
     register vec3u16_t* destination __asm__("$2");
 

@@ -61,9 +61,7 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
             unit->movement_value = g_battle_move_step_value = unit->movement_path[offset];
             battle_move_set_unit_step_slope_scales(unit);
             unit->step_speed = 0x2000;
-            /* The target passes the destination tile where the callee declares facing. */
-            ((void (*)(battle_unit_misc_data_t*, const map_tile_t*, const map_tile_t*))battle_move_start_unit_step)(
-                unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+            battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
         } else {
             battle_unit_store_coordinate_mount_animation_data(unit);
         }

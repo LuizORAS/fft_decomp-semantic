@@ -2,22 +2,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Handle input for the job-report confirmation level.
- *
- * The target keeps text ID 0xb81a and 0 in $a2/$a3 across the consecutive
- * world_thread_set_parameters and wldcore_window_build_yes_no_panel calls. The first callee only
- * reads those argument registers, so explicit register variables preserve the
- * observed calling sequence without emitting assembly. The two pending-result
- * calls also pass the values pointer even though the callee ignores it, so
- * they use a cast while retaining the callee's verified void prototype. */
+/* Handle input for the job-report confirmation level. */
 void wldcore_list_handle_completed_propositions_input(s32* values) {
     s32 buttons;
     s32 depth;
     s32 index;
     s16* selection;
     s32 value;
-    register s32 text_id __asm__("$6");
-    register s32 zero __asm__("$7");
+    wldcore_point32_t origin;
 
     if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
@@ -50,12 +42,10 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         wldcore_return_from_job_determinations(value);
         wldcore_list_store_cursor_state(4);
         g_world_text_substitution_values[0] = g_wldcore_list_entry_values[*selection];
-        text_id = 0xB81A;
-        zero = 0;
-        world_thread_set_parameters(0xE, 0x19, text_id, zero);
-        /* The origin is passed by value in a0/a1. */
-        ((void (*)(s32, s32, s32, s32, s32, s32))wldcore_window_build_yes_no_panel)(
-            0x48, 0x20, text_id, zero, 0x48, 0x20);
+        world_thread_set_parameters(0xE, 0x19, 0xB81A, 0);
+        origin.x = 0x48;
+        origin.y = 0x20;
+        wldcore_window_build_yes_no_panel(origin);
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE;
         g_wldcore_menu_stack_depth = depth + 1;

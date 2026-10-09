@@ -151,9 +151,7 @@ s32 world_formation_run_set_ability_menu(void) {
                              ->ability_slots[g_world_set_ability_slot]
                        - ABILITY_ID_MOVEMENT_MOVE_PLUS_1)
                     < 6) {
-                /* The target passes both ability ids without the definition's s16 narrowing. */
-                ((void (*)(world_item_stat_detail_t*, s32, s32))world_ability_find_stat_changes_due_to_equipped)(
-                    &g_world_item_preview_stat_detail,
+                world_ability_find_stat_changes_due_to_equipped(&g_world_item_preview_stat_detail,
                     ((world_formation_unit_ability_slots_t*)
                             g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
                         ->ability_slots[g_world_set_ability_slot],
@@ -164,9 +162,8 @@ s32 world_formation_run_set_ability_menu(void) {
                 g_world_set_ability_show_stat_preview = 0;
             }
         }
-        /* The target passes a0 = 0 to the argument-less world_thread_is_task_active. */
-        world_menu_run_script_with_palette_mode(g_world_set_ability_window_script, g_world_input_primary_repeat,
-            ((s32 (*)(s32))world_thread_is_task_active)(0));
+        world_menu_run_script_with_palette_mode(
+            g_world_set_ability_window_script, g_world_input_primary_repeat, world_thread_is_task_active(0));
     }
     if (g_world_set_ability_list_close_pending != 0) {
         world_menu_set_window_scale_step(0);
@@ -185,8 +182,7 @@ s32 world_formation_run_set_ability_menu(void) {
     world_menu_toggle_preview_stats_window(g_world_set_ability_show_stat_preview);
     g_world_set_ability_cursor_point.y = g_world_set_ability_slot * 16 + 0x90;
     world_menu_set_draw_priority(0x28);
-    /* The target passes a0 = 0 to the argument-less world_thread_is_task_active. */
-    if (((s32 (*)(s32))world_thread_is_task_active)(0) != 0 || g_world_set_ability_list_open != 0) {
+    if (world_thread_is_task_active(0) != 0 || g_world_set_ability_list_open != 0) {
         busy = 1;
     }
     world_menu_draw_animated_cursor(&g_world_set_ability_cursor_point, &g_world_set_ability_cursor_anim, busy);

@@ -35,8 +35,7 @@ void world_menu_run_skillset_thread(void) {
     row = g_world_menu_unit_selection_rows[g_world_unit_view_battle_id].bytes;
     g_world_menu_thread_menu_data[4].selected_index = row[2];
     g_world_menu_restore_depth = 1;
-    /* The target also passes the menu data in a1 to this one-argument callee. */
-    ((void (*)(s32, world_menu_entry_t*))world_script_pulse_tutorial_wait_value)(0xFC, g_world_menu_thread_menu_data);
+    world_script_pulse_tutorial_wait_value(0xFC);
     world_menu_run_icon_selection_loop();
     row[2] = g_world_menu_thread_menu_data[4].selected_index;
     world_thread_exit_current();

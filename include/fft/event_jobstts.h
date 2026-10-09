@@ -34,16 +34,16 @@ s32 jobstts_ability_build_list(
     s16 unit_index, s16 job_id, jobstts_ability_category_e ability_category, s16* list, s32 unlearned_only);
 
 s32 jobstts_ability_get_ct_display_value(s32 index);
-u32 jobstts_ability_get_jp_cost_display_value(s32 index);
-u32 jobstts_ability_get_mp_cost_display_value(s32 index);
-s32 jobstts_ability_is_action(void);
-s32 jobstts_ability_is_action_tab(void);
+s32 jobstts_ability_get_jp_cost_display_value(s32 index);
+s32 jobstts_ability_get_mp_cost_display_value(s32 index);
+s32 jobstts_ability_is_action(s32 unused_row);
+s32 jobstts_ability_is_action_tab(s32 unused_row);
 s32 jobstts_ability_is_learned(s32 index);
-s32 jobstts_ability_is_movement_tab(void);
+s32 jobstts_ability_is_movement_tab(s32 unused_row);
 s32 jobstts_ability_is_non_action_learned(s32 index);
 s32 jobstts_ability_is_non_action_unlearned(s32 index);
-s32 jobstts_ability_is_reaction_tab(void);
-s32 jobstts_ability_is_support_tab(void);
+s32 jobstts_ability_is_reaction_tab(s32 unused_row);
+s32 jobstts_ability_is_support_tab(s32 unused_row);
 s32 jobstts_update_ability_list_menu(void);
 
 /* bits */
@@ -185,7 +185,7 @@ void jobstts_gfx_init_primitive_buffers(jobstts_gfx_context_t* context);
 void jobstts_gfx_load_image_and_wait(RECT* rect, u32* data);
 void jobstts_gfx_set_transition_frame(s32 frame);
 void jobstts_gfx_store_image_and_wait(RECT* rect, u32* data);
-void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag);
+void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
 /* input */
@@ -219,20 +219,20 @@ extern u8 g_jobstts_job_list_render_commands[];
 extern u32 g_jobstts_job_next_level_jp_requirement;
 extern u16 g_jobstts_job_selected_id;
 s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused);
-u32 jobstts_job_calculate_current_jp(s32 index);
+s32 jobstts_job_calculate_current_jp(s32 index);
 s32 jobstts_job_calculate_current_level(s32 index);
 s32 jobstts_job_calculate_current_mastered(s32 index);
-u32 jobstts_job_calculate_current_total_jp(s32 index);
+s32 jobstts_job_calculate_current_total_jp(s32 index);
 s32 jobstts_job_calculate_next_level_jp_requirement(s32 index);
 s32 jobstts_job_find_first_for_skillset(s32 skillset_id);
 s32 jobstts_job_get_base(s16 unit_id);
-u32 jobstts_job_get_current_jp(void);
-s32 jobstts_job_get_current_level(void);
-u32 jobstts_job_get_current_total_jp(void);
+s32 jobstts_job_get_current_jp(s32 unused_row);
+s32 jobstts_job_get_current_level(s32 unused_row);
+s32 jobstts_job_get_current_total_jp(s32 unused_row);
 s32 jobstts_job_get_generic_index(s32 job_id);
-u32 jobstts_job_get_next_level_jp_requirement(void);
+s32 jobstts_job_get_next_level_jp_requirement(s32 unused_row);
 s32 jobstts_job_get_skillset(s32 job_id);
-s32 jobstts_job_is_current_mastered(void);
+s32 jobstts_job_is_current_mastered(s32 unused_row);
 s32 jobstts_job_is_special_monster(s32 job_id);
 
 /* menu */
@@ -323,7 +323,7 @@ s32 jobstts_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style);
 
 void jobstts_text_set_palette_and_metrics(s32 mode);
-const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators);
+const u8* jobstts_text_skip_encoded_segments(const u8* text, s16 terminators, s32 unused_2);
 void jobstts_text_start_help_thread(s32 thread_data);
 
 /* unit */
@@ -358,6 +358,6 @@ extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;
 u8* jobstts_create_border_tiles(u8* command);
-s32 jobstts_entrypoint(s32 unit);
+s32 jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif

@@ -48,8 +48,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     bounds.dimensions.x = 0x28;
     bounds.dimensions.y = 0x30;
     bounds.position.y = 0;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0xB805, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, 0xB805, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     position = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
     position->x = 0x48;
@@ -68,8 +67,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     g_world_text_substitution_values[1] = g_wldcore_proposition_dispatch_days;
     g_world_text_substitution_values[0] = g_wldcore_proposition_dispatch_days;
     g_world_text_substitution_values[2] = g_wldcore_map_projection_state.marker.kind + 0x9000;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, &g_wldcore_window_image_buffer[0x200]);
+    wldcore_window_build_render_record_image(index, bounds, 0, &g_wldcore_window_image_buffer[0x200]);
     point.x = 8;
     point.y = size[1] * 0x10 + 8;
     wldcore_menu_display_text_entry(index, 0xB821, point, &g_wldcore_window_image_buffer[0x200]);

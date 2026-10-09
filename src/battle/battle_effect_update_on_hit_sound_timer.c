@@ -7,7 +7,7 @@
  * Sound ids are relative to g_battle_effect_sound_data_base, the effect sound
  * section's id set by battle_effect_load_sound_section.
  */
-void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown) {
+void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
     s16 index = *entry_index;
     s32 effect_kind;
     s32 sound_index;

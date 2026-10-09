@@ -5,9 +5,8 @@
  *
  * The origin arrives by value: the target spills a0/a1 to their home slots at
  * entry and copies both words into base_x/base_y together. The frame reserves
- * 40 bytes of locals the body never reads, and the last four arguments are
- * unused. */
-void wldcore_window_build_yes_no_panel(wldcore_point32_t origin, s32 unused_2, s32 unused_3, s32 x2, s32 y2) {
+ * 40 bytes of locals the body never reads. */
+void wldcore_window_build_yes_no_panel(wldcore_point32_t origin) {
     wldcore_window_render_bounds16_t bounds;
     s32 dead_locals[10];
     s32 index;
@@ -36,8 +35,7 @@ void wldcore_window_build_yes_no_panel(wldcore_point32_t origin, s32 unused_2, s
     bounds.dimensions.x = 0x28;
     bounds.dimensions.y = 0x30;
     bounds.position.y = 0;
-    wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0xB805, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, 0xB805, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     *(wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x = origin;
 

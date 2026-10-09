@@ -87,7 +87,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         bounds.dimensions.y = image.ph;
         origin.x = image.cx;
         origin.y = image.cy;
-        wldcore_window_init_vram_render_record(index, bounds.position, bounds.dimensions, origin, 4);
+        wldcore_window_init_vram_render_record(index, bounds, origin, 4);
         base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
         g_wldcore_window_render_records[index].priority = 0xB;
         base->x = -0x40;

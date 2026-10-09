@@ -56,8 +56,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     bounds.dimensions.x = 0xF4;
     rows = text_rows + 2;
     bounds.dimensions.y = (count + rows) * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;
     wldcore_menu_display_text_entry(index, 0xB830, point, g_wldcore_window_image_buffer);
