@@ -11,7 +11,6 @@ void card_save_update_slot_write(s32 slot) {
     s32 header_result;
     s32 unused_18;
     s32 descriptor;
-    s32 unused_20;
     s32 unused_24;
     s32 unused_28;
     s32 unused_2c;

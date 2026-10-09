@@ -6,7 +6,6 @@ void card_save_update_slot_playtime(s32 slot) {
     s32 unused_04;
     s32 unused_08;
     s32 elapsed_seconds;
-    s32 unused_10;
     s32 unused_14;
 
     if (g_card_save_slot_file_states[slot] != 0) {

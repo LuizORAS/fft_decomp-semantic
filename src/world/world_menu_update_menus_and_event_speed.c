@@ -10,7 +10,6 @@
 s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     s32 i;
     s16 value;
-    s16* unused;
     s32 result;
 
     g_battle_ai_workspace_ptr = g_battle_ai_workspace;

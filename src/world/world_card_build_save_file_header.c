@@ -12,7 +12,6 @@ void world_card_build_save_file_header(s32 slot, s32 level, card_save_header_t* 
     s32 digit;
     s32 divisor;
     s32 pos;
-    s32 unused;
     card_save_icon_t* records;
     card_save_icon_t* record;
 

@@ -3,7 +3,6 @@
 void battle_action_confirm(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
-    s32 mode;
 
     battle_state_stop_game_flow();
     g_battle_game_state = BATTLE_GAME_STATE_CONFIRM_ACTION;

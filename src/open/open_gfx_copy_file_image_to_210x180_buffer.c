@@ -20,7 +20,6 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
     s32 source_offset;
     s32 destination_index;
     s32 source_index;
-    s32 destination_offset;
     u16* pixels;
     u16 value;
     open_gfx_image_file_t* file_image;

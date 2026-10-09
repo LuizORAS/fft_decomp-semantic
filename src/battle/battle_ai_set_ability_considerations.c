@@ -49,7 +49,6 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     s32 random_use;
     s32 range;
     u16 flags;
-    s32 j;
 
     enemy_harmful = 0;
     enemy_magical = 0;

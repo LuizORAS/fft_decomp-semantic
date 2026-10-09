@@ -26,7 +26,6 @@ void battle_handle_menu_cancel_input(void* menu) {
     s32 idx;
     s32 j;
     s16* pending;
-    s32* unused_ptr;
     s16* cur;
     s32 thread;
     char unused[8];

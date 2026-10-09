@@ -5,7 +5,6 @@
  * before stopping it; returns 0 once the banner has closed. */
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames) {
     s8 current;
-    s32 unused;
 
     if (g_world_unit_status_banner_state == 0) {
         g_world_unit_status_banner_state = frames;

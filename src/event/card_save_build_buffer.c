@@ -18,7 +18,6 @@ void card_save_build_buffer(s32 slot) {
     s32 unused_28;
     u8* block;
     u8 parity;
-    s32 unused_34;
     s32 unused_38[0x40];
     s32 unused_138;
     party_data_t* unit;

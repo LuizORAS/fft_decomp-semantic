@@ -17,7 +17,6 @@ void wldcore_list_open_rumors(void) {
     s32 count;
     s32 i;
     s32 record_index;
-    s32 unused; /* reproduces the target's 0x48-byte frame */
 
     count = 0;
     i = 0;

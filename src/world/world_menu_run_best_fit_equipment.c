@@ -10,7 +10,6 @@ s32 world_menu_run_best_fit_equipment(void) {
     s32 unused[16];
     s32 i;
     s16* choice;
-    world_formation_unit_t* unit;
 
     if (g_world_item_best_remove_initialized == 0) {
         g_world_best_fit_confirm_menu.cursor = 0;

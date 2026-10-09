@@ -16,7 +16,6 @@ void card_save_update_slot_scan(void) {
     s32 unused_20;
     s32 unused_24;
     s32 descriptor;
-    s32 unused_2c;
     s32 unused_30;
     s32 unused_34;
     RECT rect;

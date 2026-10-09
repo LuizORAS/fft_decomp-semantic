@@ -11,7 +11,6 @@ void world_menu_build_submenu_text_id_page(void) {
     s32 count;
     s32 i;
     u8* src;
-    s32 unused;
 
     selection = g_world_menu_thread_menu_data[9].selected_index;
     count = g_world_menu_submenu_page_counts[selection];

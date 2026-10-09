@@ -30,7 +30,6 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
     battle_target_panel_t* upper_panels;
     s32 count;
     s32 i;
-    s32 index;
     u8 jump_vertical;
     s32 other_height;
     s32 jump_index;

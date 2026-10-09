@@ -21,7 +21,6 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     s32 i;
     u8* text;
     party_data_t* party;
-    party_data_t* party_base;
     battle_stats_t* other;
     u8* name_bytes;
 

@@ -9,7 +9,6 @@ void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index) {
     s32 prim_index;
     s32 x;
     s32 y;
-    POLY_FT4* prim;
 
     if (g_open_script_state.dispatch.flags & 1) {
         if (g_open_script_state.opntex.fade_intensity != 0) {

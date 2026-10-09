@@ -17,7 +17,6 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     s32 current_bit;
     s32 misc_unit_id;
     s32 saved_bit;
-    s32 enabled;
     u8 formation_index;
     job_data_t* job;
 
