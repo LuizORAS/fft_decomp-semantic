@@ -19,7 +19,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
      * the constant beside its one use, which is the target's la placement. */
     render_pos = &g_wldcore_window_render_records[0].base;
     g_wldcore_saved_context_value_display_position = g_wldcore_context_value_display_position;
-    g_main_system_flags |= 0x800;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     wldcore_gfx_clear_vram_and_scratch(1);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.message = argument;
 

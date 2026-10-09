@@ -47,7 +47,7 @@ void world_menu_unit_status_banner_thread(void) {
     threads = (u8*)g_world_threads;
     g_world_input_frame_controller_input = (u32*)(cur + 4);
     display = *(battle_menu_status_panel_display_thread_t**)((thread_id * NATIVE_THREAD_STRIDE) + (u32)threads);
-    if (thread_id == 8) {
+    if (thread_id == NATIVE_THREAD_SLOT_UNIT_STATUS) {
         status = (battle_menu_status_panel_packet_t*)g_world_selected_unit_status_packets;
         summary = (battle_menu_status_panel_editor_packet_t*)g_world_selected_unit_summary_packets;
         render_a = g_world_selected_unit_stat_text_image;
@@ -77,8 +77,8 @@ void world_menu_unit_status_banner_thread(void) {
     shake = 0;
 
     world_menu_init_numeric_display_frame_primitives(&g_world_gfx_portrait_origin, &summary->numeric_frame);
-    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_a, 1);
-    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_b, 0);
+    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_a, MENU_TEXTURE_PAGE_448_0);
+    world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_b, MENU_TEXTURE_PAGE_960_256);
     world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
     world_menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
@@ -105,8 +105,8 @@ void world_menu_unit_status_banner_thread(void) {
             &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[frame]);
     }
     world_script_copy_bytes(summary + 1, summary, sizeof(battle_menu_status_panel_editor_packet_t));
-    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, 0);
-    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, 1);
+    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_960_256);
+    world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_448_0);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
     cur = (u8*)&status->sprites[0];
     world_menu_init_sprite_array((SPRT*)cur, 7, 0x7C3C);

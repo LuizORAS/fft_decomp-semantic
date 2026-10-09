@@ -8,15 +8,15 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     s32 cleared;
     s32 location;
 
-    if (g_main_system_flags & 0x4000000) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_SCREEN_CLEARED) {
         level->pending = 1;
     }
-    if (g_main_system_flags & 8) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_FADING) {
         if (level->pending != 0) {
             level->pending = 0;
             wldcore_gfx_toggle_captured_world_frame(0);
             level->delay = 3;
-            g_main_system_flags |= 0x8000008;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_FADING | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
         }
         g_wldcore_menu_result = -1;
         return;
@@ -35,15 +35,15 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     wldcore_init_input_repeat_state();
     flags = g_main_system_flags;
     wldcore_gfx_toggle_captured_world_frame(0);
-    cleared = g_main_system_flags & ~0x8000000;
+    cleared = g_main_system_flags & ~MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
     g_main_system_flags = cleared;
     g_wldcore_menu_stack_depth -= 1;
-    if (flags & 0x100) {
-        g_main_system_flags = cleared ^ 2;
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_BRAVE_STORY) {
+        g_main_system_flags = cleared ^ MAIN_SYSTEM_FLAG_DRAW_MAP;
         wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_BRAVE_STORY, 0, 0);
         return;
     }
-    if (flags & 0x4000) {
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_DESTINATION) {
         location = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
         wldcore_init_core();
         wldcore_menu_dispatch_resume_handler();
@@ -52,28 +52,28 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
         }
         return;
     }
-    if (flags & 0x100000) {
-        g_main_system_flags = cleared ^ 2;
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_TUTORIAL) {
+        g_main_system_flags = cleared ^ MAIN_SYSTEM_FLAG_DRAW_MAP;
         wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES, 0, 1);
         return;
     }
-    if (flags & 0x800000) {
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_VARIABLE_LIST) {
         wldcore_menu_push_variable_list_level();
         return;
     }
-    if (flags & 0x1000000) {
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL) {
         wldcore_menu_push_fixed_number_panel_level();
         return;
     }
-    if (flags & 0x10000) {
-        g_main_system_flags = cleared & 0xFFBFFFFE;
+    if (flags & MAIN_SYSTEM_FLAG_RESTART) {
+        g_main_system_flags = cleared & ~(MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_UNLOCK_ALL);
         if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
             || world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
-            g_main_system_flags |= 0x10000;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_RESTART;
         } else {
-            g_main_system_flags &= 0xFFFEFFFF;
+            g_main_system_flags &= ~MAIN_SYSTEM_FLAG_RESTART;
         }
-        g_main_system_flags |= 0x200;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE;
         return;
     }
     wldcore_menu_dispatch_resume_handler();

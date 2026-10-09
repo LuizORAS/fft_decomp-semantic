@@ -31,7 +31,7 @@ void battle_move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
         timer = speed / g_battle_move_jump_gravity;
         velocity.vy = -speed;
         battle_gfx_init_position_vector_copies(unit);
-        battle_sound_play_movement_sfx(unit, 0x27);
+        battle_sound_play_movement_sfx(unit, MAIN_SFX_JUMP);
         unit->distortion_phase++;
     case 1:
         if (timer > 0) {

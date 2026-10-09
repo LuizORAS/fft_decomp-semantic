@@ -56,7 +56,7 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
             = g_wldcore_scrollable_text_window.base.x + 3;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].position.y
             = g_wldcore_scrollable_text_window.base.y - 2;
-        g_main_system_flags |= 0x08002000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
         g_wldcore_menu_stack_depth = depth + 1;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

@@ -56,7 +56,7 @@ void world_menu_display_hovered_unit_stats(
     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_world_menu_hovered_stats_frame_count++;
     }
-    if (mode == 2) {
+    if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         text_id = unit->reaction_ability;
         if (text_id >= ABILITY_ID_COUNT) {
             text_id = 0;
@@ -88,8 +88,8 @@ void world_menu_display_hovered_unit_stats(
     }
     page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode]];
     world_menu_init_numeric_display_frame_primitives(frame_rect, &page->palette);
-    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, 1);
-    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, 0);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, MENU_TEXTURE_PAGE_448_0);
+    world_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_960_256);
     world_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
         world_gfx_init_default_poly_ft4(&page->quads[frame]);
@@ -98,14 +98,14 @@ void world_menu_display_hovered_unit_stats(
     world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, &page->quads[0], 2);
     world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
-    if (mode == 1) {
+    if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
         world_gfx_init_image_loading(&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
             world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
         world_noop_800e90ec(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
-    } else if (mode == 2) {
+    } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
             world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
@@ -130,7 +130,9 @@ void world_menu_display_hovered_unit_stats(
         for (i = 0; i < g_world_event_speed; i++) {
             if (world_thread_get_current_parameter_3() != 0) {
                 /* Both exits leave the speed and frame loops for the exit tail. */
-                if (mode == 0 && g_world_thread_contexts[12].task_id == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
+                if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
+                    && g_world_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
+                        == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
                     goto exit;
                 }
                 slide += 0x1E;
@@ -190,13 +192,13 @@ void world_menu_display_hovered_unit_stats(
                 world_gfx_init_image_loading(&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
             }
         }
-        if (mode != 1) {
+        if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {
             for (i = 0; i < 4; i++) {
                 page->quads[i].clut = g_world_unit_status_quad_clut_pairs[i][running & 1];
             }
         }
         poly = page->bars;
-        if (mode == 2) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
             page->quads[1].clut = 0x7C3C;
             page->quads[2].clut = 0x7D7C;
         }
@@ -206,7 +208,7 @@ void world_menu_display_hovered_unit_stats(
             SetPolyG4(poly);
             extent_h = 0xC2;
             extent_w = frame_rect->x + 0x2F;
-            if (mode == 2 || mode == 3) {
+            if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 extent_w -= 0x6E;
                 extent_h -= 0x10;
             }
@@ -293,11 +295,11 @@ void world_menu_display_hovered_unit_stats(
             i = g_world_menu_hide_numeric_values;
             g_world_menu_text_state.pen.stride = 0x60;
             g_world_menu_hide_numeric_values = 0;
-            if (mode == 0 || mode == 3) {
+            if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, &g_world_menu_text_state.pen, 2);
                 g_world_menu_hide_numeric_values = i;
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 8, &g_world_menu_text_state.pen, 2);
-            } else if (mode == 1) {
+            } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, &g_world_menu_text_state.pen, 2);
                 g_world_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
@@ -309,7 +311,7 @@ void world_menu_display_hovered_unit_stats(
         }
         offs = &offsets[frame & 1];
         y = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
-        if (mode == 2 || mode == 3) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
             offs->a.x = slide - 0x80;
         } else {
             offs->a.x = -0x80 - slide;
@@ -333,11 +335,11 @@ void world_menu_display_hovered_unit_stats(
             poly--;
         }
         world_gfx_draw_or_append_gpu_primitive(&page->quads[2]);
-        if (mode == 1) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
             page->quads[4].clut = 0x7D7C;
             world_gfx_draw_or_append_gpu_primitive(&page->quads[4]);
         }
-        if (mode != 2) {
+        if (mode != UNIT_STATS_PANEL_ATTACK_TARGET) {
             world_gfx_draw_or_append_gpu_primitive(&page->quads[3]);
         } else if (text_id != 0) {
             world_menu_build_sprite_page(frame, frame_rect);

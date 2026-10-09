@@ -33,7 +33,7 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
     }
     if (level->mode == WLDCORE_ACCEPT_CONFIRM_MODE_NO_UNIT_MESSAGE) {
         if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
-            world_thread_set_parameters(0xE, 0x19, 0xB8E0, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB8E0, 0);
             level->mode = WLDCORE_ACCEPT_CONFIRM_MODE_CLOSE_MESSAGE;
         }
         return;
@@ -75,12 +75,12 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
         }
     }
     if (available == 0) {
-        world_thread_set_parameters(0xE, 0x19, 0xB822, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB822, 0);
         level->mode = WLDCORE_ACCEPT_CONFIRM_MODE_NO_UNIT_MESSAGE;
         goto fail;
     }
     if (world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < g_wldcore_proposition_gil_amount) {
-        world_thread_set_parameters(0xE, 0x19, 0xB811, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB811, 0);
         level->mode = WLDCORE_ACCEPT_CONFIRM_MODE_CLOSE_MESSAGE;
     fail:
         wldcore_sound_play_effect(MAIN_SFX_INVALID);

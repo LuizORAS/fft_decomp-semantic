@@ -1032,6 +1032,8 @@ extern u32 g_battle_script_event_initial_repeat_counter;
 extern u32 g_battle_script_event_previous_input;
 extern u32 g_battle_script_event_repeat_counter;
 extern u32 g_battle_script_event_secondary_repeat_counter;
+/* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
+ * (event_script_variable_id_e) is its word index. */
 extern s32* g_battle_script_variables;
 extern u16 g_battle_scenario_music_1_id;
 extern u16 g_battle_scenario_music_2_id;
@@ -2220,7 +2222,7 @@ extern s32 g_battle_sound_secondary_weather_sfx_id;
 extern s32 g_battle_sound_suppressed;
 extern s32 g_battle_sound_tertiary_weather_sfx_id;
 extern u8 g_battle_sound_weather_sfx_enabled;
-extern s32 g_battle_sound_pending_sfx_id;
+extern s32 g_battle_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern u8 g_battle_sound_weapon_miss_sfx_ids[];
 extern u8 g_battle_sound_weapon_hit_sfx_ids[];
 extern u8 g_battle_sound_shield_deflect_sfx_ids[];
@@ -4048,6 +4050,16 @@ typedef enum battle_mount_info_flags {
     BATTLE_MOUNT_INFO_FLAG_RIDER = 0x80,
     BATTLE_MOUNT_INFO_ROLE_MASK = 0xc0,
 } battle_mount_info_flags_e;
+
+/* Result of battle_unit_get_action_restriction. */
+typedef enum battle_unit_action_restriction {
+    BATTLE_UNIT_ACTION_RESTRICTION_NONE = 0,
+    /* Don't Act status or BATTLE_MOUNT_INFO_FLAG_MOUNT. */
+    BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT = 1,
+    /* Tile depth 2 or more, unless the unit has Float, Chicken or Frog status,
+     * a water movement ability or BATTLE_MOUNT_INFO_FLAG_RIDER. */
+    BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER = 2,
+} battle_unit_action_restriction_e;
 
 /* Lifecycle states stored in Battle Stats 0x183. */
 typedef enum battle_unit_existence_state {
@@ -7499,8 +7511,9 @@ extern u16 g_battle_text_message_duration_frames;
 extern u8* g_battle_text_pointer_backup[32];
 extern s32 g_battle_text_pointer_backup_active;
 
-/* BATTLE text IDs use their upper five bits to select one of these sections.
- * Overlay loaders replace individual entries as their text becomes active. */
+/* BATTLE text IDs use their upper five bits to select one of these sections
+ * (text_section_e). Overlay loaders replace individual entries as their text
+ * becomes active. */
 extern u8* g_battle_text_section_pointers[32];
 
 /* Glyph pixel widths, 0xD0 entries per 0xDx prefix page. */

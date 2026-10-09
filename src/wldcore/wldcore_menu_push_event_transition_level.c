@@ -11,14 +11,17 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
 
     wldcore_file_seek_to_battle_bin();
     if (mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
-        g_main_system_flags |= 0x08000000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x20);
     } else {
         rect.x = 0x100;
         rect.y = 0;
         rect.w = 0x80;
         rect.h = 0x100;
-        g_main_system_flags |= 0x3A32;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP | MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS
+            | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES | MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE
+            | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
+            | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         g_wldcore_map_projection_state.marker.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         MoveImage(&rect, 0x200, 0x100);
         DrawSync(0);

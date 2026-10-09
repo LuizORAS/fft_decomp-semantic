@@ -23,7 +23,7 @@ void world_menu_run_ability(void) {
             g_world_formation_scroll_enabled = 0;
             g_world_formation_unit_browse_enabled = 0;
             g_world_ability_menu_saved_browse_enabled = saved;
-            world_menu_stop_unit_status_banner_thread(9);
+            world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
             g_world_ability_menu_initialized = 1;
             g_world_ability_menu_slots_changed = 0;
         }
@@ -69,7 +69,7 @@ void world_menu_run_ability(void) {
         g_world_menu_text_redraw_request = 1;
     }
     if (g_world_formation_current_menu == 2) {
-        running = world_menu_run_thread(15, &g_world_ability_menu);
+        running = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_ability_menu);
         g_world_ability_menu_initialized = running;
         g_world_formation_unit_cycle_mode = 2;
         if (running == 0) {
@@ -92,11 +92,11 @@ void world_menu_run_ability(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_formation_current_menu = *selection + 10;
                 if (g_world_formation_current_menu != 12) {
-                    world_thread_start(14, world_thread_idle_wait_forever_b);
+                    world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_thread_idle_wait_forever_b);
                     world_menu_set_cursor_position(4, 0);
                     world_menu_set_cursor_position(5, 0);
                 } else {
-                    world_menu_stop_thread(15);
+                    world_menu_stop_thread(WORLD_THREAD_SLOT_UPPER_MENU);
                 }
             } else {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
@@ -106,7 +106,7 @@ void world_menu_run_ability(void) {
     } else {
         if (g_world_ability_submenu_running == 0) {
             g_world_formation_current_menu = 2;
-            world_thread_suspend(14);
+            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
             value = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
             world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(value);

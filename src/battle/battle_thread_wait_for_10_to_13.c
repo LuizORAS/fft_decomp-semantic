@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 void battle_thread_wait_for_10_to_13(void) {
-    battle_thread_wait_until_inactive(0xD);
-    battle_thread_wait_until_inactive(0xC);
-    battle_thread_wait_until_inactive(0xB);
-    battle_thread_wait_until_inactive(0xA);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
 }

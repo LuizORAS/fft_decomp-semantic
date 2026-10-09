@@ -32,7 +32,11 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_random_battle_squad_id = 0;
     g_wldcore_random_battle_entd_id = 0;
     g_wldcore_menu_result = 0;
-    g_main_system_flags = (g_main_system_flags & 0x206d0000) | 1;
+    g_main_system_flags
+        = (g_main_system_flags
+              & (MAIN_SYSTEM_FLAG_RESTART | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY | MAIN_SYSTEM_FLAG_TITLE_TUTORIAL
+                  | MAIN_SYSTEM_FLAG_TUTORIAL_EVENT | MAIN_SYSTEM_FLAG_UNLOCK_ALL | MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY))
+        | MAIN_SYSTEM_FLAG_RUNNING;
     /* The three pointers are republished from a table adjacent to g_wldcore_rumor_location_masks;
      * 0x80096a54/58/5c carry no catalog name, so they are reached as indices
      * off the catalogued neighbour rather than given invented spellings. */
@@ -73,7 +77,7 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_location_marker_shade = 0x80;
     g_wldcore_proposition_selected_entry = 0;
 
-    if (!(g_main_system_flags & 0x200000)) {
+    if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT)) {
         main_sound_unload_scenario_music_and_tunes();
     }
 
@@ -90,9 +94,9 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_sound_novel_countdown_frames = 0;
     g_wldcore_location_entry_state.flags = 0;
 
-    if (g_main_system_flags & 0x400000) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNLOCK_ALL) {
         for (i = 0; i < 0x40; i++)
-            world_script_set_variable(0x3c0 + i, 1);
+            world_script_set_variable(EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST + i, 1);
         for (i = 0; i < 0x40; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_RUMOR_FIRST + i, 1);
         for (i = 0; i < 0x30; i++)

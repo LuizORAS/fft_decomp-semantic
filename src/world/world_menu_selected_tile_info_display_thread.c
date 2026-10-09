@@ -17,8 +17,8 @@ void world_menu_selected_tile_info_display_thread(void) {
 
     g_world_menu_hide_numeric_values = 0;
     page = &world_D_80173CBC[0];
-    world_gfx_set_draw_mode_for_texture_page(&page->modes[0], 1);
-    world_gfx_set_draw_mode_for_texture_page(&page->modes[1], 0);
+    world_gfx_set_draw_mode_for_texture_page(&page->modes[0], MENU_TEXTURE_PAGE_448_0);
+    world_gfx_set_draw_mode_for_texture_page(&page->modes[1], MENU_TEXTURE_PAGE_960_256);
     for (i = 0; i < 5; i++) {
         quad = &page->quads[i];
         SetPolyGT4(quad);

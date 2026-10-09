@@ -25,7 +25,8 @@ void battle_menu_run_icon_selection_loop(void) {
     }
     battle_menu_build_window_sprites(&rect, param, record);
     battle_copy_bytes(&records[1], record, 0x7C);
-    buffer = battle_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+    buffer = battle_menu_build_and_upload_window_frame_image(
+        param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = param->inner_width;
     battle_menu_set_text_origin(8, 9);
     g_battle_menu_text_palette_offset = 0;

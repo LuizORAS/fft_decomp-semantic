@@ -35,7 +35,7 @@ void wldcore_list_open_active_propositions(void) {
     s32 temp;
     s32 dead_locals[20];
 
-    world_thread_set_parameters(0xE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB848, 0);
 
     if (g_wldcore_window_render_records[PARENT.title_window].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
         g_wldcore_window_records[PARENT.cursor_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;

@@ -38,16 +38,19 @@ void require_apply_post_battle_unit_changes(void) {
         battle_thread_exit_current();
     }
     g_battle_post_battle_unit_changes_active = 1;
-    battle_thread_suspend(1);
-    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[1], 0x400);
+    battle_thread_suspend(NATIVE_THREAD_SLOT_EVENT);
+    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
-    g_battle_text_section_pointers[1] = text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[2] = text_data + g_require_text_section_offsets[2];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS]
+        = text_data + g_require_text_section_offsets[1];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES]
+        = text_data + g_require_text_section_offsets[2];
     saved_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
     g_battle_menu_thread_menu_data = (world_menu_entry_t*)menu_base;
-    g_battle_text_section_pointers[3] = text_data + g_require_text_section_offsets[3];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES]
+        = text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
     affected_index = 0;
@@ -88,12 +91,14 @@ void require_apply_post_battle_unit_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                battle_thread_start(8, require_render_unit_status_panel_thread);
-                battle_thread_set_parameters(8, (s32)&g_require_status_display_thread_params, 0, 0);
-                battle_thread_start(12, require_editor_run_numeric_thread);
-                battle_thread_set_parameters(12, (s32)&g_require_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(9, require_panel_run_character_status_thread);
-                battle_thread_set_parameters(9, (s32)transition_c_ptr, 0, 0);
+                battle_thread_start(NATIVE_THREAD_SLOT_UNIT_STATUS, require_render_unit_status_panel_thread);
+                battle_thread_set_parameters(
+                    NATIVE_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
+                battle_thread_start(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
+                battle_thread_set_parameters(
+                    NATIVE_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
+                battle_thread_start(NATIVE_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
+                battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
             } else {
                 u16 index_value;
 
@@ -151,7 +156,7 @@ void require_apply_post_battle_unit_changes(void) {
                             break;
                         }
                         if (input & PSX_PAD_SELECT) {
-                            thread_id = battle_thread_resolve_id(16);
+                            thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                             battle_thread_start(thread_id, require_overlay_run_helpmenu);
                             battle_thread_wait_until_inactive(thread_id);
                         }
@@ -175,14 +180,14 @@ void require_apply_post_battle_unit_changes(void) {
                         g_require_message_menu_result = 0;
                     } else {
                         g_require_menu_selection_result = 0xff;
-                        battle_thread_start(7, require_menu_icon_strip_thread);
-                        battle_thread_set_parameters(7, (s32)(menu_fields - 4), 0, 0);
+                        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, require_menu_icon_strip_thread);
+                        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, (s32)(menu_fields - 4), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {
-                            battle_thread_start(5, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(5, (s32)(menu_fields + 0x1dc), 0, 0);
+                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x1dc), 0, 0);
                         } else {
-                            battle_thread_start(5, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(5, (s32)(menu_fields + 0x38), 0, 0);
+                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x38), 0, 0);
                         }
                     }
 
@@ -248,16 +253,16 @@ void require_apply_post_battle_unit_changes(void) {
                 }
             } while (g_require_party_removal_result != 0);
             if (require_party_sell_equipment_over_limit(*selected_unit_index_ptr) != 0) {
-                battle_thread_start(5, battle_menu_icon_linked_entry_thread);
-                battle_thread_set_parameters(5, (s32)&g_require_party_removal_menus[5], 0, 0);
-                battle_thread_wait_until_inactive(5);
+                battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
+                battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
+                battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             }
             battle_thread_wait_frames(20);
-            battle_thread_start(5, require_render_display_condition_special_cases_thread);
-            battle_thread_set_parameters(5, 10, 0, 0);
+            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_render_display_condition_special_cases_thread);
+            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
             require_input_wait_frames_or_skip(60);
-            battle_thread_set_parameters(5, 0, 0, 2);
-            battle_thread_wait_until_inactive(5);
+            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 0, 0, 2);
+            battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             require_panel_set_transition_value(0);
 
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
@@ -288,16 +293,16 @@ void require_apply_post_battle_unit_changes(void) {
         transition += 0x20;
         battle_thread_yield();
     } while (transition < 0x101);
-    battle_thread_set_parameters(8, 0, 0, 1);
-    battle_thread_set_parameters(12, 0, 0, 1);
-    battle_thread_set_parameters(9, 0, 0, 1);
-    battle_thread_wait_until_inactive(8);
-    battle_thread_wait_until_inactive(12);
-    battle_thread_wait_until_inactive(9);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_STATUS);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_battle_threads[1], g_require_saved_thread_block, 0x400);
+    battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
-    battle_thread_resume(1);
+    battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
     battle_thread_yield();
     battle_thread_exit_current();
 }

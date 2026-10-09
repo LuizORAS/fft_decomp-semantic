@@ -329,6 +329,49 @@ typedef enum event_rotate_unit_facing {
     EVENT_ROTATE_UNIT_FACING_RESTORE = 0x14,
 } event_rotate_unit_facing_e;
 
+/* First halfword of a scenario condition record, as
+ * *_script_check_scenario_condition tests it. The record's next halfwords are
+ * called id and value below; the two tile conditions also read a y and an
+ * elevation. Other types fail. */
+typedef enum event_scenario_condition {
+    EVENT_SCENARIO_CONDITION_VARIABLE_EQUAL = 1,    /* script variable id == value */
+    EVENT_SCENARIO_CONDITION_VARIABLE_AT_LEAST = 2, /* script variable id >= value */
+    EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST = 3,  /* script variable id <= value */
+    EVENT_SCENARIO_CONDITION_UNIT_PRESENT = 4,      /* the unit with unit id `id` exists */
+    EVENT_SCENARIO_CONDITION_UNIT_HP_AT_LEAST = 5,
+    EVENT_SCENARIO_CONDITION_UNIT_HP_AT_MOST = 6,
+    EVENT_SCENARIO_CONDITION_UNIT_HP_PERCENT_AT_LEAST = 7, /* hp * 100 / (max_hp + 1) >= value */
+    EVENT_SCENARIO_CONDITION_UNIT_HP_PERCENT_AT_MOST = 8,
+    EVENT_SCENARIO_CONDITION_UNIT_MP_AT_LEAST = 9,
+    EVENT_SCENARIO_CONDITION_UNIT_MP_AT_MOST = 10,
+    /* The unit the check was started for has unit id `id`, or is a deployed
+     * unit with that character identity. */
+    EVENT_SCENARIO_CONDITION_ACTING_UNIT = 11,
+    EVENT_SCENARIO_CONDITION_ITEM_EQUIPPED = 13, /* a unit with unit id 1, 2 or 3 has item `id` equipped */
+    EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_LEAST = 14,
+    EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_MOST = 15,
+    EVENT_SCENARIO_CONDITION_DATE_ON_OR_BEFORE = 16,   /* month id, day value */
+    EVENT_SCENARIO_CONDITION_DATE_ON_OR_AFTER = 17,    /* month id, day value */
+    EVENT_SCENARIO_CONDITION_CASUALTIES_AT_LEAST = 18, /* compares with id, not value */
+    EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST = 19,  /* compares with id, not value */
+    EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED = 22,    /* battle_action_check_battle_outcome() returns 0 */
+    EVENT_SCENARIO_CONDITION_UNIT_AT_TILE = 24,        /* unit id stands on x value, the y and the elevation */
+    /* Stores id as the current event; the result is always RUN_EVENT. */
+    EVENT_SCENARIO_CONDITION_RUN_EVENT = 25,
+    /* A unit with sprite palette id stands on that tile. */
+    EVENT_SCENARIO_CONDITION_PALETTE_UNIT_AT_TILE = 37,
+} event_scenario_condition_e;
+
+/* Result of *_script_check_scenario_condition for one condition record.
+ * *_script_run_scenario_conditions walks a chain of records while they pass,
+ * drops the chain at the first failure and reports an event to run when it
+ * reaches the record (type 25) that stores the event id. */
+typedef enum event_scenario_condition_result {
+    EVENT_SCENARIO_CONDITION_RESULT_FAIL = 0,
+    EVENT_SCENARIO_CONDITION_RESULT_PASS = 1,
+    EVENT_SCENARIO_CONDITION_RESULT_RUN_EVENT = 2,
+} event_scenario_condition_result_e;
+
 /* Stat selected by EVENT_OPCODE_CHANGE_STATS; other values change nothing. */
 typedef enum event_change_stats {
     EVENT_CHANGE_STATS_HP = 0x00,
@@ -396,7 +439,14 @@ typedef char world_event_work_status_staging_offset_must_be_0x5f0
 typedef enum event_script_variable_id {
     /* Result word tested by the conditional-jump opcodes. */
     EVENT_SCRIPT_VAR_COMPARISON_RESULT = 0x00,
+    /* The comparison opcodes compare word 0 with this word and leave the
+     * truth value in word 0. */
+    EVENT_SCRIPT_VAR_COMPARISON_OPERAND = 0x01,
+    /* Also where TEXT_STORE_VARIABLE writes until TEXT_SET_VARIABLE_BASE
+     * names another variable. */
     EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION = 0x18,
+    /* A whole-word store is also copied to text substitution value 0. */
+    EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE = 0x19,
     /* Words 0x1a-0x20 mirror the live camera: the store and load routines copy
      * X -> vx, Z (height) -> vy, Y (map depth) -> vz, tilt, yaw, roll and zoom.
      * The camera opcodes take X, Z, Y and tilt (0x1a-0x1d) as one block. */
@@ -429,6 +479,10 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT = 0x34,
     EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID = 0x35,
     EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID = 0x36,
+    /* The deployment screen reads squad n's id from PRIMARY_SQUAD_ID + n and
+     * keeps four squad lists; ATTACK clears these two. */
+    EVENT_SCRIPT_VAR_DEPLOYMENT_THIRD_SQUAD_ID = 0x37,
+    EVENT_SCRIPT_VAR_DEPLOYMENT_FOURTH_SQUAD_ID = 0x38,
     /* ATTACK stores the selected squad's unit limit here; SMALL clears it
      * during overlay setup. */
     EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT = 0x39,
@@ -479,6 +533,10 @@ typedef enum event_script_variable_id {
     /* Special misc-unit count (capped at 4) that selects the Deep Dungeon
      * map state; a change reloads the map. */
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT = 0x70,
+    /* ATTACK zeroes these 32 variables each time it loads a scenario, and
+     * the interpreters never refuse a write to them. */
+    EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST = 0x70,
+    EVENT_SCRIPT_VAR_SCENARIO_LOCAL_END = 0x90,
     EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED = 0x90,
     EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED = 0x91,
     EVENT_SCRIPT_VAR_FACTS_ENABLED = 0x92,
@@ -500,6 +558,9 @@ typedef enum event_script_variable_id {
      * uses it while applying permanent Brave and Faith changes. */
     EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE = 0x1fe,
     EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD = 0x1ff,
+    /* One flag per entry of the 24-entry Brave Story list that
+     * EVENT_SCRIPT_VAR_FACTS_ENABLED gates. */
+    EVENT_SCRIPT_VAR_FACT_FIRST = 0x1a4,
     /* First variable of the world-map ranges WLDCORE indexes: one flag per
      * Brave Story event, location dot, route, alternate dot colour, rumour,
      * treasure and unexplored land, then one nibble of state bits per proposition. */
@@ -507,10 +568,27 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST = 0x200,
     EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST = 0x22c,
     EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST = 0x267,
+    /* A set flag removes one entry from a location's choice menu; a table
+     * maps each choice to its flag. */
+    EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST = 0x292,
     EVENT_SCRIPT_VAR_RUMOR_FIRST = 0x2d1,
     EVENT_SCRIPT_VAR_TREASURE_FIRST = 0x321,
     EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST = 0x350,
     EVENT_SCRIPT_VAR_PROPOSITION_FIRST = 0x360,
+    /* One nibble per Brave Story person: zero keeps the person off the list,
+     * any other value picks the profile shown. The interpreters stop writing
+     * a profile that has reached 12. */
+    EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST = 0x3c0,
 } event_script_variable_id_e;
+
+/* Ordinary variables are whole words; the remaining script-variable domains
+ * are packed as 32 one-bit values or eight four-bit values per word. */
+enum {
+    EVENT_SCRIPT_VAR_PACKED_BIT_FIRST = 0x80,
+    EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST = 0x360,
+    EVENT_SCRIPT_VAR_END = 0x400,
+    EVENT_SCRIPT_PACKED_BIT_WORD_FIRST = 0x80,
+    EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
+};
 
 #endif

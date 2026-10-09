@@ -5,8 +5,8 @@
  * thread 5 is running; used to gate input processing. */
 s32 bunit_menu_is_active_or_transitioning(void) {
     s32 result = 0;
-    if (battle_thread_is_running(0xF) || g_battle_menu_input_lock_mode != 0
-        || (result = 0, battle_thread_is_running(5))) {
+    if (battle_thread_is_running(BUNIT_THREAD_SLOT_REORDER_MENU) || g_battle_menu_input_lock_mode != 0
+        || (result = 0, battle_thread_is_running(BUNIT_THREAD_SLOT_MENU))) {
         result = 1;
     }
     return result;

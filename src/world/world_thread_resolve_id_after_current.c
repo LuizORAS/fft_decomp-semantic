@@ -3,7 +3,7 @@
 s32 world_thread_resolve_id_after_current(s32 thread_id) {
     s32 index;
 
-    if (thread_id < 16) {
+    if (thread_id < NATIVE_THREAD_SLOT_COUNT) {
         return thread_id;
     }
 

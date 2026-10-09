@@ -10,7 +10,8 @@
 void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
     s32 depth;
 
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_list_propositions_close_level(level);
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS);
@@ -25,13 +26,13 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
     if (level->result == 2) {
         if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             level->result = 1;
-            g_main_system_flags |= 4;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         }
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) && g_main_file_still_loading == 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = 0;
-        world_thread_set_parameters(0xC, 0, 0, 1);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
         wldcore_list_propositions_clear_result(level);
         wldcore_menu_push_message_level(0x105F, 1);
@@ -39,11 +40,11 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         && g_main_file_still_loading == 0) {
         if (g_main_save_proposition_count >= 8) {
             wldcore_sound_play_effect(MAIN_SFX_INVALID);
-            world_thread_set_parameters(0xE, 0x19, 0xB80E, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80E, 0);
             return;
         }
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        world_thread_set_parameters(0xC, 0, 0, 1);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         if (world_script_get_variable(
                 (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF)
                 + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
@@ -56,11 +57,11 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2]
                                                 .window_pair_render.render_index]
                 .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            world_thread_set_parameters(0xE, 0x19, 0xB85C, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB85C, 0);
             level->result = 2;
             return;
         }
         level->result = 1;
-        g_main_system_flags |= 4;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     }
 }

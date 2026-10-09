@@ -20,7 +20,7 @@ void world_shop_run_fitting_room_step(void) {
         world_shop_add_fitting_room_cost(-world_shop_add_fitting_room_cost(0));
         g_world_shop_fitting_room_unit_chosen = 0;
         g_world_shop_cost_window_visible = 0;
-        world_thread_set_parameters(2, 0x19, -1, 0);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_fitting_room_initialized = 1;
         return;
     }
@@ -54,7 +54,7 @@ void world_shop_run_fitting_room_step(void) {
     } else {
         g_world_shop_background_visible = 1;
         g_world_menu_description_text_id = 0;
-        if (world_menu_run_thread(6, g_world_shop_fitting_room_menu_thread_data) == 0) {
+        if (world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_shop_fitting_room_menu_thread_data) == 0) {
             if (g_world_menu_selection_results[1] == 0) {
                 g_world_shop_menu_step = 7;
             } else if (g_world_menu_selection_results[1] == 1) {

@@ -12,7 +12,7 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
     s32 index;
     s32 shade;
 
-    if (g_main_system_flags & 0x2000) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER) {
         return;
     }
     if (g_wldcore_proposition_selected_entry == 0) {

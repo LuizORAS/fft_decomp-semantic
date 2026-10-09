@@ -20,14 +20,14 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     if (opcode != EVENT_OPCODE_ZERO_VARIABLE) {
         if (!(opcode & 1)) {
             operand = source;
-        } else if (source == 0x21) {
+        } else if (source == EVENT_SCRIPT_VAR_RANDOM_VALUE) {
             operand = battle_script_get_rand16();
         } else {
             source_word = battle_script_get_variable_word_pointer_from_id(source);
             source_bit = battle_script_get_variable_bit_position(source);
             if (source_bit >= 0) {
                 mask = 1;
-                if (source >= 0x360) {
+                if (source >= EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {
                     mask = 0xf;
                 }
                 operand = ((mask << source_bit) & *source_word) >> source_bit;
@@ -41,7 +41,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     destination_bit = battle_script_get_variable_bit_position(destination_id);
     if (destination_bit >= 0) {
         mask = 1;
-        if (destination_id >= EVENT_SCRIPT_VAR_PROPOSITION_FIRST) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {
             mask = 0xf;
         }
         shifted_mask = mask << destination_bit;
@@ -73,7 +73,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     /* Guard recursive getter calls: replay mode and saturated high variables
      * can suppress writes, but the nested getter must still read its operand. */
     if (g_battle_script_variable_write_guard == 0) {
-        if (destination_id >= 0x3c0) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST) {
             g_battle_script_variable_write_guard = 1;
             write_allowed = (u32)battle_script_get_variable(destination_id) < 12;
             g_battle_script_variable_write_guard = 0;
@@ -85,7 +85,8 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
             g_battle_script_variable_write_guard = 1;
             replay_mode = battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS);
             g_battle_script_variable_write_guard = 0;
-            if (replay_mode != 0 && (destination_id - 0x70) >= 0x20U && (destination_id - 0x1fc) >= 4U
+            if (replay_mode != 0 && (destination_id - EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST) >= 0x20U
+                && (destination_id - EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) >= 4U
                 && destination_id != EVENT_SCRIPT_VAR_TEXT_STORE_INDEX && (destination_id - 0x32) >= 8U
                 && destination_id >= 0x2c && destination_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
                 && (destination_id - 0x56) >= 5U && destination_id != EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) {
@@ -95,7 +96,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     }
     if (destination_bit >= 0) {
         mask = 1;
-        if (destination_id >= EVENT_SCRIPT_VAR_PROPOSITION_FIRST) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {
             mask = 0xf;
         }
         value &= mask;
@@ -104,7 +105,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
         return;
     }
     *destination_word = value;
-    if (destination_id == 0x19) {
+    if (destination_id == EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE) {
         g_battle_text_substitution_values[0] = value;
     }
 }

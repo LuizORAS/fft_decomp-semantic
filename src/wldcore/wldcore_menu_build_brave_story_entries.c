@@ -17,7 +17,7 @@ void wldcore_menu_build_brave_story_entries(void) {
     if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
         count = 0;
         for (i = 0; i < 0x18; i++) {
-            if (world_script_get_variable(i + 0x1A4) != 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
                 count++;
             }
         }

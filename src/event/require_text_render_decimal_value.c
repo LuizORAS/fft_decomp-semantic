@@ -10,16 +10,16 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_g
 
     saved_color = position->color;
     position->color = 0;
-    if ((flags & 0x0200) && value == 100) {
+    if ((flags & MENU_DECIMAL_WIDEN_FOR_100) && value == 100) {
         flags = (flags & 0xff00) + 3;
     }
-    if (flags & 0x8000) {
+    if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
         g_require_text_decimal_glyph.source_x = 0xb4;
         blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_require_text_decimal_glyph, position);
         position->rect.x += 7;
     }
-    if (flags & 0x0100) {
+    if (flags & MENU_DECIMAL_DOTS_PREFIX) {
         g_require_text_decimal_glyph.source_x = 0x78;
         g_require_text_decimal_glyph.source_y = 0x1a;
         g_require_text_decimal_glyph.height = 4;
@@ -53,7 +53,7 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_g
         position->rect.x += 5;
     }
     digits = flags & MENU_DECIMAL_FIELD_WIDTH_MASK;
-    if (flags & 0x2000) {
+    if (flags & MENU_DECIMAL_THREE_COLUMN_FIELD) {
         digits = 3;
     }
     if (plus) {
@@ -78,7 +78,7 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_g
         blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_require_text_decimal_glyph, position);
         position->rect.x -= 5;
         value /= 10;
-        if (!(flags & 0x4000) && value == 0) {
+        if (!(flags & MENU_DECIMAL_LEADING_ZEROS) && value == 0) {
             break;
         }
     }

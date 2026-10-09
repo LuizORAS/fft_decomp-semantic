@@ -28,9 +28,9 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
     g_world_menu_overlay_state = 1;
-    g_world_menu_panel_fade_mode = 2;
-    world_thread_set_parameters(0xA, 0, 0, 1);
-    world_thread_set_parameters(8, 0, 0, 1);
+    g_world_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     world_menu_record_selection_for_selected_unit();
     world_menu_set_transition_active_flag();
     do {
@@ -43,9 +43,9 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_world_menu_hovered_unit_stats_display.y = 0x1A;
     g_world_unit_summary_panel_rect.y = 0x1A;
-    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], 0);
-    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], 2);
-    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], 4);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_896_288);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
     frame_record->tiles[0].r0 = 0x30;
@@ -169,8 +169,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     records[1].palette = &g_world_unit_editor_palette;
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[1].palette);
-    world_thread_start(0xA, world_menu_run_numeric_display_panel_thread);
-    world_thread_set_parameters(0xA, 0, 0, 0);
+    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_run_numeric_display_panel_thread);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     world_thread_yield();
 
     frame = 0;
@@ -207,7 +207,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         }
         if (world_menu_is_input_allowed() != 0) {
             if (g_world_menu_new_button_input & PSX_PAD_CROSS) {
-                world_thread_set_parameters(0xA, 0, 0, 1);
+                world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
             if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
@@ -248,15 +248,15 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     g_world_menu_hovered_unit_stats_display.y = 0xAA;
     g_world_unit_summary_panel_rect.y = 0xAA;
-    g_world_menu_panel_fade_mode = 1;
+    g_world_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_world_unit_status_bounce_step = 6;
     world_sound_set_effect_to_cancel();
     do {
         world_thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
-    world_thread_start(0xA, world_menu_selected_tile_info_display_thread);
-    world_thread_set_parameters(0xA, 0, 0, 0);
-    g_world_thread_contexts[10].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
+    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
+    g_world_thread_contexts[NATIVE_THREAD_SLOT_TILE_INFO_PANEL].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
     g_world_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();
     world_menu_build_idle_action_stub(g_world_menu_current_id);

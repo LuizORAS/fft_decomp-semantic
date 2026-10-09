@@ -38,12 +38,12 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     equip_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
     g_equip_menu_screen_state_handlers[g_equip_menu_screen_state]();
     if (g_equip_sound_suppress_queued != 0) {
-        g_equip_sound_queued_effect_id = 0;
+        g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
     }
-    if (g_equip_sound_queued_effect_id != 0) {
+    if (g_equip_sound_queued_effect_id != MAIN_SFX_NONE) {
         g_battle_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
     }
-    g_equip_sound_queued_effect_id = 0;
+    g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
     if (g_equip_menu_screen_state != EQUIP_SCREEN_STATE_CLOSED) {
         return result;
     }

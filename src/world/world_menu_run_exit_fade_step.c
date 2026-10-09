@@ -18,7 +18,7 @@ void world_menu_run_exit_fade_step(void) {
     } else if (g_world_input_newly_pressed & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
         world_gfx_start_increasing_fade();
         main_sound_set_current_music_target(0, 0xF0);
-        world_thread_set_parameters(2, 0x19, -1, 0);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_exit_fade_started = 1;
     }
     world_shop_run_obtain_gil_menu();

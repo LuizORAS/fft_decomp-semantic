@@ -7,7 +7,7 @@ void world_menu_run_jobstts_thread(void) {
     if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
         world_thread_exit_current();
     }
-    if (world_thread_is_running_80100164(1) != 0) {
+    if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_EVENT) != 0) {
         world_thread_exit_current();
     }
     world_menu_set_transition_active_flag();

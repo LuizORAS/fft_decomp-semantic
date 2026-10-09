@@ -15,7 +15,7 @@ void battle_unit_mount_onto_pending_mount(battle_unit_misc_data_t* unit) {
         other = battle_unit_get_misc_data_by_battle_id(unit->pending_mount & 0x7f);
         if (other != 0) {
             battle_unit_mount_rider_onto_unit(unit, other);
-            battle_sound_play_movement_sfx(unit, 0x29);
+            battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_DEFAULT);
         }
         return;
     }

@@ -215,6 +215,13 @@ const u8* bunit_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2
 void bunit_text_start_selection_thread(s32 thread_data);
 
 /* thread */
+/* Slots of the unit list screen's own menus; native_thread_slot_e has the
+ * shared ones. */
+typedef enum bunit_thread_slot {
+    BUNIT_THREAD_SLOT_MENU = 5,          /* the unit list's triangle menu */
+    BUNIT_THREAD_SLOT_REORDER_MENU = 15, /* the reorder list */
+} bunit_thread_slot_e;
+
 extern battle_menu_status_panel_indicator_prims_t g_bunit_thread_indicator_packets[2][2];
 extern u8 g_bunit_thread_status_snapshot[16];
 s32 bunit_thread_is_running(s32 thread_id);
@@ -765,7 +772,7 @@ extern u8 g_bunit_saved_unit_browse_enabled;
 extern u8 g_bunit_saved_status_banner_enabled;
 extern s16 g_bunit_frame_arg;
 extern s16 g_bunit_shown_unit_indices[];
-extern u8 g_bunit_sound_queued_effect_id;
+extern u8 g_bunit_sound_queued_effect_id; /* main_sfx_e */
 s32 bunit_entrypoint(s32 unused_unit, void* unused_otag);
 
 #endif

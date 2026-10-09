@@ -10,7 +10,7 @@ void wldcore_reset_game_if_special_keycode_is_pressed(void) {
     input = PadRead(0);
     g_wldcore_polled_button_input = input;
 
-    if (g_main_system_flags & 0x4) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) {
         g_wldcore_new_button_presses = 0;
         g_wldcore_current_button_input = 0;
     } else {

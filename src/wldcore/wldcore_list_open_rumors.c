@@ -38,8 +38,8 @@ void wldcore_list_open_rumors(void) {
         }
     }
     if (count != 0) {
-        g_main_system_flags |= 0x800;
-        world_thread_set_parameters(0xE, 0x19, 0xB808, 0);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB808, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
         if (count < 8) {
             i = count;
@@ -51,8 +51,8 @@ void wldcore_list_open_rumors(void) {
         dimensions.y = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS, count, i);
-        wldcore_window_start_panel_render_thread(
-            0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+        wldcore_window_start_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL,
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     } else {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair_render.first_window]
@@ -70,7 +70,7 @@ void wldcore_list_open_rumors(void) {
             .frame_index = g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                                         .window_pair_render.first_window]
                                .anim_counter = 0;
-        world_thread_set_parameters(0xE, 0x19, 0xB80A, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB80A, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_pair_render.panel_rows = 1;
         return;
     }

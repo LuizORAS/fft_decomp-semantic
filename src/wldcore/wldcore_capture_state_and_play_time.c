@@ -22,7 +22,7 @@ void wldcore_capture_state_and_play_time(void) {
     hours = g_main_system_play_time_hours;
     minutes = g_main_system_play_time_minutes;
     seconds = g_main_system_play_time_seconds;
-    g_main_system_flags = flags | 0x800;
+    g_main_system_flags = flags | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_displayed_numeric_value = hours;
     g_wldcore_displayed_numeric_value_secondary = minutes;
     g_wldcore_displayed_numeric_value_tertiary = seconds;

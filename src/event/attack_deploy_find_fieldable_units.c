@@ -9,7 +9,7 @@ void attack_deploy_find_fieldable_units(void) {
     u8* name_cursor;
     party_data_t* party_unit;
 
-    name_cursor = g_battle_text_section_pointers[11];
+    name_cursor = g_battle_text_section_pointers[TEXT_SECTION_PARTY_UNIT_NAMES];
     g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES]
         = g_attack_text_data + g_attack_text_section_offset_1;
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_attack_text_data + g_attack_text_section_offset_2;

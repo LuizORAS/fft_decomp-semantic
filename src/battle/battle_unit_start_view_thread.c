@@ -15,8 +15,8 @@ void battle_unit_start_view_thread(s32 event_id, s32 unit_a, s32 unit_b) {
         g_battle_preview_target_unit_id = unit_b;
         g_battle_menu_status_billboard.unit_index = unit_b;
     }
-    if (battle_thread_is_running_8014cc94(2) == 0) {
-        battle_thread_start(2, (s32)battle_unit_view_supervisor_thread);
+    if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_UNIT_VIEW) == 0) {
+        battle_thread_start(NATIVE_THREAD_SLOT_UNIT_VIEW, (s32)battle_unit_view_supervisor_thread);
     }
-    battle_thread_set_parameters(2, event_id, 0, 0);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, event_id, 0, 0);
 }

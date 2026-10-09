@@ -13,10 +13,10 @@ void world_shop_handle_item_sell_menu(void) {
     s8 result;
 
     if (g_world_shop_fur_purchase_list_initialized == 0) {
-        if (world_thread_is_running(2) == 0) {
-            world_thread_start(2, world_text_message_box_thread);
+        if (world_thread_is_running(NATIVE_THREAD_SLOT_MESSAGE) == 0) {
+            world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         }
-        world_thread_set_parameters(2, 0x19, 0xF832, 0);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF832, 0);
         g_world_shop_fur_purchase_list_initialized = 1;
         world_shop_build_item_list(-1, g_world_shop_id,
             g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : 7, g_world_menu_entry_ids, 0);
@@ -35,8 +35,8 @@ void world_shop_handle_item_sell_menu(void) {
     }
     world_script_set_vsync_mode_and_event_speed(2);
     if (g_world_shop_fur_equip_check_pending != 0) {
-        world_thread_set_parameters(2, 0x19, -1, 0);
-        result = world_thread_is_running(2);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        result = world_thread_is_running(NATIVE_THREAD_SLOT_MESSAGE);
         g_world_shop_fur_equip_check_pending = result;
         if (result == 0) {
             world_gfx_set_sprite_slot(g_world_shop_item_category, g_world_menu_cursor_position,
@@ -50,7 +50,7 @@ void world_shop_handle_item_sell_menu(void) {
         if (input & PSX_PAD_CROSS) {
             g_world_shop_fur_purchase_list_initialized = 0;
             g_world_shop_menu_step = 0xE;
-            world_thread_set_parameters(2, 0x19, 0xF830, 0);
+            world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF830, 0);
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         } else if ((input & PSX_PAD_TRIANGLE) && g_world_menu_option_count != 0 && g_world_shop_item_category != 4) {
             g_world_shop_fur_equip_check_pending = 1;

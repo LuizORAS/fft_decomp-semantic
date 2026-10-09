@@ -12,11 +12,11 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point
     g_open_music_test_list_state.hidden_rows = limit - extent->y;
     g_open_music_test_list_state.x[1] = 4;
     g_open_music_test_list_state.x[0] = 4;
-    g_open_music_test_list_state.mode[1] = 2;
-    g_open_music_test_list_state.mode[2] = 2;
+    g_open_music_test_list_state.mode[1] = MENU_TEXT_COLUMN_HIDDEN;
+    g_open_music_test_list_state.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     g_open_music_test_list_state.text_ids[0] = g_open_music_test_list_entries;
     g_open_music_test_list_state.text_colors[0] = g_open_music_test_list_entry_flags;
-    g_open_music_test_list_state.mode[0] = 0;
+    g_open_music_test_list_state.mode[0] = MENU_TEXT_COLUMN_TEXT;
     g_open_music_test_list_params.vram_x = 0x200;
     g_open_music_test_list_params.vram_y = 0x100;
     g_open_music_test_list_params.inner_width = width;

@@ -11,12 +11,13 @@ s32 world_menu_check_thread_completion(s32* input) {
     world_menu_entry_t* parameter;
     s32 i;
 
-    if (g_world_thread_contexts[1].is_running == 0 && world_menu_is_input_allowed() != 0 && (*input & PSX_PAD_SELECT)) {
+    if (g_world_thread_contexts[NATIVE_THREAD_SLOT_MENU_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0
+        && (*input & PSX_PAD_SELECT)) {
         parameter = world_thread_get_current_parameter_1();
         if (parameter->select_text_table != 0) {
             if (g_world_thread_change_cooldown == 0) {
-                world_thread_start(1, world_menu_announce_entry_value_thread);
-                world_thread_set_parameters(1, (s32)parameter, 0, 0);
+                world_thread_start(NATIVE_THREAD_SLOT_MENU_TEXT, world_menu_announce_entry_value_thread);
+                world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_TEXT, (s32)parameter, 0, 0);
                 g_world_thread_task_active = 1;
             }
             *input = 0;

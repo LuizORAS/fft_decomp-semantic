@@ -23,15 +23,15 @@ void debugchr_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (debugchr_thread_is_running(8) != 0) {
-        if (g_battle_threads[8].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[8].function_parameter_1;
+    if (debugchr_thread_is_running(NATIVE_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            thread = (native_thread_t*)g_battle_threads[NATIVE_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (thread->function_parameter_1 == 0) * 8;
         }
     }
-    if (debugchr_thread_is_running(7) != 0) {
-        if (g_battle_threads[7].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[7].function_parameter_1;
+    if (debugchr_thread_is_running(NATIVE_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            descriptor = (native_thread_t*)g_battle_threads[NATIVE_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->function_parameter_1 == 0) {
                 active = 7;
                 thread = descriptor;
@@ -40,20 +40,20 @@ void debugchr_menu_draw_thread_status_indicators(void) {
     }
     if (active != 0) {
         if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
-            g_debugchr_menu_indicator_state[0] = 2;
-            g_debugchr_menu_indicator_state[1] = 1;
+            g_debugchr_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
+            g_debugchr_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_IN;
             goto draw_panels;
         } else if ((thread->function_parameter_2 == 0) && !(thread->function_parameter_3 & 0x80)) {
-            g_debugchr_menu_indicator_state[0] = 1;
-            g_debugchr_menu_indicator_state[1] = 2;
+            g_debugchr_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_IN;
+            g_debugchr_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
             goto draw_panels;
         }
     }
-    if (g_debugchr_menu_indicator_state[0] == 1) {
-        g_debugchr_menu_indicator_state[0] = 2;
+    if (g_debugchr_menu_indicator_state[0] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_debugchr_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
     }
-    if (g_debugchr_menu_indicator_state[1] == 1) {
-        g_debugchr_menu_indicator_state[1] = 2;
+    if (g_debugchr_menu_indicator_state[1] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_debugchr_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
     }
 draw_panels:
     for (i = 0; i < 2; i++) {
@@ -102,21 +102,21 @@ draw_panels:
             prims->bottom[j].x0 = 0x80;
             prims->bottom[j].y0 = y + j;
         }
-        if (g_debugchr_menu_indicator_state[i] == 0) {
+        if (g_debugchr_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
             prims->frame.r0 = 0;
             prims->frame.g0 = 0;
             prims->frame.b0 = 0;
         } else {
-            if (g_debugchr_menu_indicator_state[i] == 1) {
+            if (g_debugchr_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_debugchr_menu_indicator_brightness[i] < 0x78) {
                     g_debugchr_menu_indicator_brightness[i] += 0xc;
                 }
             }
-            if (g_debugchr_menu_indicator_state[i] == 2) {
+            if (g_debugchr_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_OUT) {
                 if (g_debugchr_menu_indicator_brightness[i] != 0) {
                     g_debugchr_menu_indicator_brightness[i] -= 0xc;
                 } else {
-                    g_debugchr_menu_indicator_state[i] = 0;
+                    g_debugchr_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
             prims->frame.r0 = g_debugchr_menu_indicator_brightness[i];

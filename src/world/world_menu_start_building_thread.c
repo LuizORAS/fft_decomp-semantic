@@ -3,7 +3,8 @@
 #include "psx/types.h"
 
 void world_menu_start_building_thread(void) {
-    if (world_thread_is_running_80100164(8) || world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_BUILDING)) {
+    if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU)
+        || world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_BUILDING)) {
         if (g_world_menu_current_id != BATTLE_MENU_ID_MINI_MENU) {
             g_world_menu_building_thread_started = 1;
         }

@@ -16,8 +16,8 @@ s32 world_script_get_variable(s32 variable_id) {
         wth <<= 12;
         world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER_AND_TIME, tod | wth);
     }
-    world_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, 0, 0, 0);
-    world_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, 0, variable_id, 0);
+    world_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, 0, 0);
+    world_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, variable_id, 0);
     {
         s32 val = *g_world_script_variables;
 

@@ -61,7 +61,7 @@ void wldcore_map_step_route_travel(void) {
                     g_wldcore_location_entry_state.route_path.routes[g_wldcore_location_entry_state.route_index - 1]
                         & 0xFF)
                 != 0) {
-                g_main_system_flags |= 0x8000;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_RANDOM_BATTLE;
                 g_wldcore_next_map_id[0] = g_wldcore_random_battle_map_id;
                 world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, g_wldcore_random_battle_entd_id);
                 world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
@@ -76,7 +76,7 @@ void wldcore_map_step_route_travel(void) {
                     .location_transition.location_id = g_wldcore_location_view.location_id;
                 return;
             }
-            wldcore_sound_play_effect(0x43);
+            wldcore_sound_play_effect(MAIN_SFX_WORLD_MAP_ARRIVE);
             if (g_wldcore_location_entry_state.route_index < g_wldcore_location_entry_state.best_path_length) {
                 g_wldcore_location_entry_state.flags &= ~WLDCORE_ROUTE_TRAVEL_REVERSED;
                 g_wldcore_location_entry_state.segment_count = wldcore_location_begin_route_segment(
@@ -95,7 +95,7 @@ void wldcore_map_step_route_travel(void) {
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
                 .position.y = g_wldcore_location_view.point.y - 4;
-            g_main_system_flags &= ~0x2000;
+            g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
             g_wldcore_location_entry_state.arrival_location = g_wldcore_location_view.location_id + 1;
             wldcore_wait_for_file_load();
             g_wldcore_location_view.angle = 0;

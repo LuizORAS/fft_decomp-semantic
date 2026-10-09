@@ -19,9 +19,9 @@ void wldcore_window_init_panel_render_state(
     visible_rows = dimensions->y;
     g_wldcore_window_panel_label_state.hidden_rows = extent - visible_rows;
     g_wldcore_window_panel_label_state.x[0] = g_wldcore_window_panel_label_state.x[1] = 4;
-    g_wldcore_window_panel_label_state.mode[0] = 0;
-    g_wldcore_window_panel_label_state.mode[1] = 2;
-    g_wldcore_window_panel_label_state.mode[2] = 2;
+    g_wldcore_window_panel_label_state.mode[0] = MENU_TEXT_COLUMN_TEXT;
+    g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_HIDDEN;
+    g_wldcore_window_panel_label_state.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     g_wldcore_window_panel_label_state.text_ids[0] = g_wldcore_list_entry_values;
     g_wldcore_window_panel_label_state.text_colors[0] = g_wldcore_list_row_flags;
     text_width = (width + 0x18) & 0xFFFC;

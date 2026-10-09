@@ -299,6 +299,7 @@ typedef struct wldcore_state_record {
     u8 is_town; /* 0x03; 1 offers the fixed town entries 0xb85d-0xb85f in the location menu */
 } wldcore_state_record_t;
 
+/* g_main_system_flags as wldcore_process_frame_gate last saw it (main_system_flags_e). */
 extern u32 g_wldcore_previous_system_flags;
 
 /* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
@@ -545,6 +546,7 @@ extern s16 g_wldcore_saved_record_index;
 /* Saved copy of g_wldcore_context_value_display_position. */
 extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
 extern wldcore_saved_record_t g_wldcore_active_saved_record;
+/* g_main_system_flags as saved by wldcore_gfx_toggle_captured_world_frame (main_system_flags_e). */
 extern u32 g_wldcore_saved_system_flags;
 void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
 void wldcore_reset_selected_saved_record(s32 unused);

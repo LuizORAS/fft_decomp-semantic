@@ -12,16 +12,16 @@ void battle_menu_update_panel_fade(void) {
     s32 i;
     s32 intensity;
 
-    if (g_battle_menu_panel_fade_mode != 0) {
+    if (g_battle_menu_panel_fade_mode != MENU_PANEL_FADE_NONE) {
         frame = &g_battle_menu_panel_fade_frames[g_battle_menu_packet_buffer_index];
-        if (g_battle_menu_panel_fade_mode == 1 && g_battle_menu_panel_fade_intensity < 80) {
+        if (g_battle_menu_panel_fade_mode == MENU_PANEL_FADE_IN && g_battle_menu_panel_fade_intensity < 80) {
             g_battle_menu_panel_fade_intensity += 8;
         }
-        if (g_battle_menu_panel_fade_mode == 2) {
+        if (g_battle_menu_panel_fade_mode == MENU_PANEL_FADE_OUT) {
             if (g_battle_menu_panel_fade_intensity != 0) {
                 g_battle_menu_panel_fade_intensity -= 8;
             } else {
-                g_battle_menu_panel_fade_mode = 0;
+                g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_NONE;
             }
         }
         frame->center.r0 = ((world_fade_intensity_t*)&g_battle_menu_panel_fade_intensity)->bytes[0];

@@ -407,6 +407,7 @@ void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
 /* script */
 extern u16 g_main_scenario_event_finish_operations[];
+/* The script variable words: whole-word variables first (event_script_variable_id_e), then the packed flags. */
 extern s32 g_main_script_variables[0x100];
 extern u8* g_main_heap_companion_overlay_load_address;
 extern u16 g_main_scenario_condition_offsets[];
@@ -931,11 +932,18 @@ typedef struct main_sound_music {
 
 /* Sound-effect ids passed to main_sound_play_sfx and the module queues that
  * feed it (wldcore_sound_play_effect, world_sound_dispatch_effect and the
- * g_*_sound_*effect_id globals); every path reaches main_sound_play_sfx, so
- * this is one id space. 1/2/3/5 are the Confirm, Cancel, Cursor Move and
- * Invalid sounds; the rest are named from their users. Other ids (camera
- * rotation, landing, weather, ...) stay literal until named. */
+ * g_*_sound_*effect_id globals); every path reaches main_sound_start_sfx with
+ * resource id 0 (SYSTEM.SED) in the high halfword, so this is one id space.
+ * 1/2/3/5 are the Confirm, Cancel, Cursor Move and Invalid sounds; the rest
+ * are named from their users. Ids with 0x10000 set select ENV.SED (weather
+ * and scripted background sounds) and are not part of this enum. The event
+ * frames store -1 in the pending globals for "no request"; the dispatchers
+ * turn a negative id into MAIN_SFX_NONE. */
 typedef enum main_sfx {
+    /* Nothing queued. SYSTEM.SED entry 0 has no streams, so playing it stops
+     * the channel pair main_sound_play_sfx uses;
+     * wldcore_menu_step_map_path_level plays it when the path animation ends. */
+    MAIN_SFX_NONE = 0,
     MAIN_SFX_CONFIRM = 1,
     MAIN_SFX_CANCEL = 2,
     MAIN_SFX_CURSOR_MOVE = 3,
@@ -943,6 +951,7 @@ typedef enum main_sfx {
     MAIN_SFX_INVALID = 5,
     MAIN_SFX_PAGE_SWITCH = 6, /* L1/R1 unit and page switches */
     MAIN_SFX_UNEQUIP = 7,     /* remove equipment/abilities */
+    MAIN_SFX_RED_ORBS = 8,    /* battle_effect_red_orbs_secondary_handler starts */
     MAIN_SFX_DISMISS = 9,     /* dismiss unit */
     MAIN_SFX_EQUIP = 0xa,     /* equip, set ability, best fit */
     MAIN_SFX_CAMERA_ROTATE_LEFT = 0xb,
@@ -953,18 +962,74 @@ typedef enum main_sfx {
      * follows the zoom-target comment in battle_camera_toggle_zoom. The
      * ATTACK deploy screen also plays 0x11 when a placed unit is moved. */
     MAIN_SFX_CAMERA_ZOOM_IN = 0xe,
+    /* L1/R1 on the world map (wldcore_menu_step_map_cursor_level): 0x10 when
+     * the toggle sets the zoomed-out bit of g_wldcore_map_zoom_motion, 0xf
+     * when it clears it. */
+    MAIN_SFX_WORLD_MAP_ZOOM_IN = 0xf,
+    MAIN_SFX_WORLD_MAP_ZOOM_OUT = 0x10,
     MAIN_SFX_CAMERA_ZOOM_OUT = 0x11,
     MAIN_SFX_WINDOW_OPEN = 0x12, /* help, message or text window opens */
-    MAIN_SFX_TEXT_PAGE = 0x2d,   /* dialogue/scroll window advances a page */
-    MAIN_SFX_CARD_ERROR = 0x30,  /* memory-card load, save or scan failure */
+    /* Started by the spell-charge and summon-charge secondary effects, which
+     * stop them with main_sound_stop_sfx_channels when they finish. */
+    MAIN_SFX_SPELL_CHARGE = 0x1f,
+    MAIN_SFX_SUMMON_CHARGE = 0x21,
+    MAIN_SFX_VENOM_TRAP = 0x22, /* battle_effect_venom_trap_secondary_handler starts */
+    /* battle_sound_play_landing_sfx_by_surface_type: water surfaces play
+     * 0x23, grassland, thicket and rug 0x28, wooden floor, tree and box 0x3a,
+     * every other surface 0x29. A step that ends on another unit also plays
+     * 0x28, and mounting a unit named by battle id plays 0x29. */
+    MAIN_SFX_LAND_WATER = 0x23,
+    MAIN_SFX_JUMP = 0x27, /* a jump rise starts; the fall that ends a mount ride starts */
+    MAIN_SFX_LAND_SOFT = 0x28,
+    MAIN_SFX_LAND_DEFAULT = 0x29,
+    MAIN_SFX_TEXT_PAGE = 0x2d, /* dialogue/scroll window advances a page */
+    /* An error message opens: a memory-card load, save or scan failure, or a
+     * refused equip, dismissal, job change or ability.
+     * battle_sound_select_weapon_hit plays it for an attack stopped by an
+     * accessory or class evade, a forced failure, a blade grasp or a catch. */
+    MAIN_SFX_ERROR_MESSAGE = 0x30,
     MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_LAND_WOOD = 0x3a,
+    /* Circle on a name-entry character key, or on an occupied tile of the
+     * ATTACK deploy screen. */
+    MAIN_SFX_SELECT = 0x3c,
+    MAIN_SFX_EVENT_REVIVE = 0x41,     /* the event script's revive status change (*_script_inflict_status_thread) */
+    MAIN_SFX_WORLD_MAP_ARRIVE = 0x43, /* a route leg ends at a location with no event or encounter */
+    /* Dead status added outside an event
+     * (battle_unit_update_animation_for_status_changes), chosen by the unit's
+     * male, female or monster flag; the male sound is 0x9a. */
+    MAIN_SFX_DEATH_FEMALE = 0x45,
+    MAIN_SFX_DEATH_MONSTER = 0x46,
+    /* Proposition result (g_wldcore_job_selection.result): 0 plays the
+     * 0x4d/0x4e pair through main_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
+     * 2 plays 0x51. */
+    MAIN_SFX_PROPOSITION_SUCCESS_A = 0x4d,
+    MAIN_SFX_PROPOSITION_SUCCESS_B = 0x4e,
+    MAIN_SFX_PROPOSITION_PARTIAL_A = 0x4f,
+    MAIN_SFX_PROPOSITION_PARTIAL_B = 0x50,
+    MAIN_SFX_PROPOSITION_FAILURE = 0x51,
     MAIN_SFX_TELEPORT_OUT = 0x6a,
     MAIN_SFX_TELEPORT_IN = 0x6b,
+    /* Animation step 4 of the world event-transition indicator
+     * (wldcore_menu_step_event_transition_level): 0x6c in mode 0, which a
+     * random encounter pushes, 0x6d in the other spinning modes. */
+    MAIN_SFX_EVENT_TRANSITION_MODE_0 = 0x6c,
+    MAIN_SFX_EVENT_TRANSITION_MODE_1 = 0x6d,
     MAIN_SFX_STATUS_MENU_REQUEST
-    = 0x71,                           /* Triangle queues the status menu on another unit's turn; again when it opens */
-    MAIN_SFX_TEXT_GLYPH = 0x73,       /* typewriter tick after a dialogue glyph */
+    = 0x71,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
+    MAIN_SFX_CRITICAL_HIT = 0x72, /* a weapon hit whose action is critical (battle_sound_select_weapon_hit) */
+    MAIN_SFX_TEXT_GLYPH = 0x73,   /* typewriter tick after a dialogue glyph */
+    /* World map: 0x76 when a path animation starts, drawing or erasing; 0x77
+     * when a hidden location is made visible. */
+    MAIN_SFX_WORLD_MAP_PATH = 0x76,
+    MAIN_SFX_WORLD_MAP_LOCATION_APPEAR = 0x77,
+    /* A save or load finished, Start pressed in the opening's new-game
+     * transition or to end deployment, a crystal or treasure picked up, or a
+     * proposition report showing its reward picture. */
+    MAIN_SFX_COMPLETE = 0x85,
     MAIN_SFX_SHOP_TRANSACTION = 0x97, /* shop buy/sell confirmed */
     MAIN_SFX_ABILITY_LEARNED = 0x98,  /* an ability bought in the learn list */
+    MAIN_SFX_DEATH_MALE = 0x9a,
 } main_sfx_e;
 
 /* Sector/size pairs for scenario and permanently loaded music SMD files. */
@@ -1298,6 +1363,72 @@ void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
 s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action);
 
 /* system */
+/* Bits of g_main_system_flags, the control word of the WLDCORE world-map
+ * loop: frame state, what the frame leaves out, requests left by WORLD and
+ * OPENING, and the reason the loop ends. */
+typedef enum main_system_flags {
+    /* wldcore_entrypoint runs frames while set; wldcore_init_world_map_state sets it, a level clears it to leave. */
+    MAIN_SYSTEM_FLAG_RUNNING = 0x00000001,
+    /* Draw this frame with the 3D map; wldcore_gfx_draw_world_frame_with_map clears it after drawing. */
+    MAIN_SYSTEM_FLAG_DRAW_MAP = 0x00000002,
+    /* A level waits for a thread or a fade: wldcore_reset_game_if_special_keycode_is_pressed publishes no pad input. */
+    MAIN_SYSTEM_FLAG_INPUT_BLOCKED = 0x00000004,
+    /* Set by wldcore_fade_start_screen, cleared by wldcore_fade_step_screen one step before the fade ends. */
+    MAIN_SYSTEM_FLAG_FADING = 0x00000008,
+    /* wldcore_map_project_and_cull_dots hides every map dot. */
+    MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS = 0x00000010,
+    /* wldcore_map_draw_visible_routes draws no route. */
+    MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES = 0x00000020,
+    /* wldcore_entrypoint masks the display for the frame. */
+    MAIN_SYSTEM_FLAG_DISPLAY_OFF = 0x00000040,
+    /* wldcore_menu_run_world_frame returns without running the menu frame; no code sets it. */
+    MAIN_SYSTEM_FLAG_SKIP_MENU_FRAME = 0x00000080,
+    /* Set by world_formation_update_world_map_root_request: the return level opens the Brave Story screen. */
+    MAIN_SYSTEM_FLAG_REQUEST_BRAVE_STORY = 0x00000100,
+    /* wldcore_gfx_draw_world_frame does not load the scratch image into the display buffer. */
+    MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE = 0x00000200,
+    /* wldcore_dispatch_display_object_list draws nothing and wldcore_map_pulse_dot_colors returns. */
+    MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS = 0x00000400,
+    /* wldcore_gfx_draw_context_value_display draws nothing. */
+    MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE = 0x00000800,
+    /* wldcore_gfx_draw_calendar_date draws nothing. */
+    MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE = 0x00001000,
+    /* wldcore_proposition_submit_marker_request draws no marker; set while a level moves or covers the map view. */
+    MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER = 0x00002000,
+    /* WORLD's menu chose a map (script variable CURRENT_MAP): the return level restarts the core and travels there. */
+    MAIN_SYSTEM_FLAG_REQUEST_DESTINATION = 0x00004000,
+    /* wldcore_map_step_route_travel rolled an encounter: wldcore_entrypoint returns 1. */
+    MAIN_SYSTEM_FLAG_RANDOM_BATTLE = 0x00008000,
+    /* Set after the card menu returns 1: wldcore_entrypoint restarts its loop instead of returning. */
+    MAIN_SYSTEM_FLAG_RESTART = 0x00010000,
+    /* The unit-panel threads (8, 9 and 12) run: the menu frame draws their windows, not the formation menu. */
+    MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS = 0x00020000,
+    /* A story event replays: wldcore_entrypoint returns 2 and the next entry reopens the story-event list. */
+    MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY = 0x00040000,
+    /* Set by open_title_update_menu: the world entry opens the tutorial menu, which leaves through RETURN_TO_TITLE. */
+    MAIN_SYSTEM_FLAG_TITLE_TUTORIAL = 0x00080000,
+    /* Set by world_formation_update_tutorial_categories_request: the return level opens the tutorial menu. */
+    MAIN_SYSTEM_FLAG_REQUEST_TUTORIAL = 0x00100000,
+    /* A tutorial event plays: wldcore_entrypoint returns 2 with the music kept; the next entry reopens its list. */
+    MAIN_SYSTEM_FLAG_TUTORIAL_EVENT = 0x00200000,
+    /* wldcore_init_world_map_state sets the rumor, path, location and story-event variables; no code sets it. */
+    MAIN_SYSTEM_FLAG_UNLOCK_ALL = 0x00400000,
+    /* Set by world_formation_update_debug_variable_list_request: the return level opens the variable list. */
+    MAIN_SYSTEM_FLAG_REQUEST_VARIABLE_LIST = 0x00800000,
+    /* Set by world_formation_update_fixed_number_panel_request: the return level opens the fixed number panel. */
+    MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL = 0x01000000,
+    /* The location menu chose a deep-dungeon battle: wldcore_entrypoint returns 4. */
+    MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE = 0x02000000,
+    /* Set by wldcore_clear_screen_and_set_map_clip_rect; the return level then recaptures the world frame. */
+    MAIN_SYSTEM_FLAG_SCREEN_CLEARED = 0x04000000,
+    /* Map dots stop pulsing and wldcore_gfx_draw_animated_display_object stops advancing frames. */
+    MAIN_SYSTEM_FLAG_FREEZE_ANIMATION = 0x08000000,
+    /* wldcore_entrypoint returns 5: main_system_run_game_loop goes back to OPENING. */
+    MAIN_SYSTEM_FLAG_RETURN_TO_TITLE = 0x10000000,
+    /* The world entry opens the Brave Story screen, which leaves through RETURN_TO_TITLE; no code sets it. */
+    MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY = 0x20000000,
+} main_system_flags_e;
+
 /* 64 allocation tags, one per 0x800-byte block in the game arena. */
 extern u8 g_main_heap_game_allocator_table[64];
 extern u8 g_main_heap_smd_allocator_table[16];
@@ -1337,6 +1468,7 @@ extern s32 g_main_system_play_time_frames;
 extern s32 g_main_system_play_time_hours;
 extern s32 g_main_system_play_time_minutes;
 extern s32 g_main_system_play_time_seconds;
+/* main_system_flags_e bits; cleared by main_save_init_data_tables. */
 extern u32 g_main_system_flags;
 extern s32 g_main_system_session_frames;
 

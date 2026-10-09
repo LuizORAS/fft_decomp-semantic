@@ -65,7 +65,7 @@ s8 world_item_run_action_menu(void) {
         g_world_menu_text_redraw_request = 1;
         g_world_item_action_menu_initialized = 1;
     }
-    result = world_menu_run_thread(6, &g_world_item_action_menu);
+    result = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, &g_world_item_action_menu);
     if (result == 0) {
         g_world_item_action_menu_initialized = 0;
         if (g_world_menu_selection_results[3] == -1) {
@@ -81,7 +81,7 @@ s8 world_item_run_action_menu(void) {
     if (selected != -1) {
         if (selected == 0) {
             g_world_preview_stats_thread_params.style = 1;
-            if (world_thread_is_running(5) != 0) {
+            if (world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) != 0) {
                 return 2;
             }
             if (g_world_menu_selection_results[5] == 0) {
@@ -115,9 +115,9 @@ s8 world_item_run_action_menu(void) {
                 } else if (g_world_menu_selection_results[5] == 1) {
                     g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 }
-                g_world_item_action_menu_initialized = g_world_menu_sound_effect_id != 0 ? 100 : 1;
+                g_world_item_action_menu_initialized = g_world_menu_sound_effect_id != MAIN_SFX_NONE ? 100 : 1;
             }
-            if (world_thread_is_running(5) != 0) {
+            if (world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) != 0) {
                 return 2;
             }
             if (g_world_menu_selection_results[5] == 0) {
@@ -140,10 +140,11 @@ s8 world_item_run_action_menu(void) {
             return 2;
         }
     } else {
-        if (world_thread_is_running(5) != 0) {
+        if (world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD) != 0) {
             return 2;
         }
-        result = world_menu_update_horizontal_selection_and_mark_change(5, 7, g_world_input_primary_repeat, 6);
+        result = world_menu_update_horizontal_selection_and_mark_change(
+            5, 7, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (result == g_world_item_menu_category) {
             return 2;
         }

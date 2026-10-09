@@ -16,7 +16,7 @@ void wldcore_window_end_tint_transition(wldcore_window_tint_request_t* request) 
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                             .list_window.content_render]
             .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_main_system_flags &= ~0x800;
+        g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                             .list_window.content_render]
             .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;

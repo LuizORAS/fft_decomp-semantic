@@ -14,14 +14,14 @@ void world_menu_run_equip_thread(void) {
 
     world_menu_set_transition_active_flag();
     saved = g_world_unit_view_mode;
-    world_unit_start_view_thread(0, 0xFF, 0xFF);
+    world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_world_menu_overlay_state = 1;
     world_thread_wait_for_10_to_13();
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
     world_menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);
-    world_thread_suspend(8);
-    world_thread_suspend(7);
+    world_thread_suspend(NATIVE_THREAD_SLOT_MENU);
+    world_thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
     g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_world_menu_new_button_input = 0;
@@ -32,8 +32,8 @@ void world_menu_run_equip_thread(void) {
     g_world_menu_sound_muted = 1;
     g_world_menu_new_button_input |= PSX_PAD_CIRCLE;
     if (g_world_companion_overlay_prims == 0) {
-        world_thread_resume(8);
-        world_thread_resume(7);
+        world_thread_resume(NATIVE_THREAD_SLOT_MENU);
+        world_thread_resume(NATIVE_THREAD_SLOT_MENU_CHILD);
     }
     for (i = 9; i < 15; i++) {
         world_thread_set_parameters(i, 0, 0, 1);

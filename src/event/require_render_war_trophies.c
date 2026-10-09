@@ -34,7 +34,7 @@ void require_render_war_trophies(void) {
         battle_thread_exit_current();
     }
     prims = g_require_reward_war_trophy_primitives;
-    thread = battle_thread_resolve_id(0x10);
+    thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     last = 0;
     battle_thread_start(thread, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread, 4, 0, 0);
@@ -43,7 +43,7 @@ void require_render_war_trophies(void) {
         ClearImage(&g_require_reward_war_trophy_clear_rect, 0, 0, 0);
         battle_thread_yield();
         buffer = g_require_reward_war_trophy_primitives;
-        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, 1);
+        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_448_0);
         for (i = 0; i < 16; i++) {
             battle_gfx_init_default_poly_ft4(&buffer->quads[i]);
         }
@@ -73,7 +73,7 @@ void require_render_war_trophies(void) {
                     break;
                 }
                 image = battle_menu_build_and_upload_window_frame_image(
-                    0x50, 0x10, &g_require_reward_war_trophy_image_rect, 1);
+                    0x50, 0x10, &g_require_reward_war_trophy_image_rect, MENU_WINDOW_FRAME_BUILD);
                 battle_clear_menu_render_buffer(image, 0x280);
                 g_menu_text_state.pen.stride = 0x50;
                 timer = 0;

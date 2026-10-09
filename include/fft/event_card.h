@@ -363,7 +363,7 @@ s32 card_thread_start_managed(s32 thread_id, world_menu_entry_t* descriptor);
 void card_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* descriptor);
 
 /* other */
-extern u8 g_card_sound_queued_effect_id;
+extern u8 g_card_sound_queued_effect_id; /* main_sfx_e */
 extern s8 g_card_free_block_count;
 
 /* unnamed */

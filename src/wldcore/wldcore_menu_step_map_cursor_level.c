@@ -65,23 +65,23 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     /* The exits funnel into the shared snap-hit tail at `finish`; in the
      * target's block order these need gotos. */
     if (g_wldcore_location_entry_state.flags & WLDCORE_ROUTE_TRAVEL_ACTIVE) {
-        g_main_system_flags |= 2;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
         goto finish;
     }
 
-    if (level->wide_view == 0 && !(g_wldcore_previous_system_flags & 2)) {
+    if (level->wide_view == 0 && !(g_wldcore_previous_system_flags & MAIN_SYSTEM_FLAG_DRAW_MAP)) {
         if (level->pending_mode != 0) {
             flags = g_main_system_flags;
-            if (flags & 8) {
+            if (flags & MAIN_SYSTEM_FLAG_FADING) {
                 return;
             }
-            g_main_system_flags = flags ^ 4;
+            g_main_system_flags = flags ^ MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             if (level->pending_mode == 3) {
-                g_main_system_flags = flags ^ 5;
+                g_main_system_flags = flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_INPUT_BLOCKED);
             }
             level->pending_mode = 0;
         }
-        if (g_main_system_flags & 8) {
+        if (g_main_system_flags & MAIN_SYSTEM_FLAG_FADING) {
             /* Skips the zoom handling and the wide-view toggle below. */
             goto scroll;
         }
@@ -144,9 +144,9 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             }
             level->snap_hit = 0;
             if (g_wldcore_map_zoom_motion.flags & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT) {
-                wldcore_sound_play_effect(0x10);
+                wldcore_sound_play_effect(MAIN_SFX_WORLD_MAP_ZOOM_OUT);
             } else {
-                wldcore_sound_play_effect(0xF);
+                wldcore_sound_play_effect(MAIN_SFX_WORLD_MAP_ZOOM_IN);
             }
             goto finish;
         }
@@ -161,7 +161,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 = g_wldcore_map_zoom_motion.origin.vy + ((8 - g_wldcore_map_zoom_motion.origin.vy) * frame) / duration;
             g_wldcore_map_projection_view.scale.vx = g_wldcore_map_projection_view.scale.vy = ONE - step_x;
             g_wldcore_map_zoom_motion.distance = frame + 1;
-            g_main_system_flags |= 0x30;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES;
             if (frame + 1 == duration) {
                 g_wldcore_map_projection_view.scale.vy = 0x800;
                 g_wldcore_map_projection_view.scale.vx = 0x800;
@@ -180,10 +180,10 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 g_wldcore_map_projection_view.scale.vx = ONE;
                 g_wldcore_map_projection_view.origin = g_wldcore_map_zoom_motion.origin;
                 g_wldcore_map_zoom_motion.flags ^= WLDCORE_PROJECTION_MOTION_ACTIVE;
-                g_main_system_flags &= ~0x30;
+                g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES);
             }
         }
-        g_main_system_flags |= 2;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
         g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
         goto finish;
     }
@@ -252,7 +252,7 @@ scroll:
             }
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
-                g_main_system_flags |= 2;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
                 g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
             }
         }
@@ -291,7 +291,7 @@ scroll:
             wldcore_map_apply_clamped_scroll(&amount, (wldcore_point32_t*)&g_wldcore_map_projection_view.origin);
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
-                g_main_system_flags |= 2;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
                 g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
             }
         }

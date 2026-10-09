@@ -43,7 +43,7 @@ s32 world_item_run_category_menu(void) {
         g_world_item_category_menu_initialized = 0;
         return -1;
     }
-    selected = world_menu_update_horizontal_selection_and_mark_change(5, 7, input, 6);
+    selected = world_menu_update_horizontal_selection_and_mark_change(5, 7, input, MAIN_SFX_PAGE_SWITCH);
     if (selected != g_world_item_menu_category) {
         world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position, g_world_menu_scroll_offset,
             g_world_menu_entry_ids);

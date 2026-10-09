@@ -16,8 +16,8 @@ void world_formation_run_job_wheel_menu(void) {
         world_gfx_bind_data_pointer(5);
         g_world_job_wheel_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(9);
-        world_menu_stop_unit_status_banner_thread(0xC);
+        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
         world_menu_init_scrollable_list_core(0, 0, 0);
         g_world_menu_script_callbacks[0] = world_formation_get_job_wheel_cursor_job_level;
         g_world_menu_script_callbacks[1] = world_formation_is_job_wheel_selection_available;
@@ -185,7 +185,7 @@ void world_formation_run_job_wheel_menu(void) {
                         } else if ((job & 0x3FF)
                             != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id) {
                             world_text_show_message_and_play_sound(
-                                world_job_get_text_index(job & 0x3FF) + 0xE800, 0x30);
+                                world_job_get_text_index(job & 0x3FF) + 0xE800, MAIN_SFX_ERROR_MESSAGE);
                             g_world_status_display_thread_params.style = 1;
                         } else {
                             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;

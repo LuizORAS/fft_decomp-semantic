@@ -20,8 +20,8 @@ s32 battle_script_get_variable(s32 variable_id) {
         weather <<= 12;
         battle_script_set_variable(EVENT_SCRIPT_VAR_WEATHER_AND_TIME, time_of_day | weather);
     }
-    battle_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, 0, 0, 0);
-    battle_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, 0, variable_id, 0);
+    battle_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, 0, 0);
+    battle_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, variable_id, 0);
     {
         s32 value = *g_battle_script_variables;
 

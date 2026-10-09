@@ -97,11 +97,11 @@ void battle_menu_build_ability_list(s32 mode) {
         mode = 0;
     }
 
-    g_battle_ability_menu_layout.mode[1] = 3;
-    g_battle_ability_menu_layout.mode[2] = 3;
+    g_battle_ability_menu_layout.mode[1] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
+    g_battle_ability_menu_layout.mode[2] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
     g_battle_ability_menu_layout.x[1] = 0x6A;
     g_battle_ability_menu_layout.x[2] = 0x7E;
-    g_battle_ability_menu_layout.mode[0] = 0;
+    g_battle_ability_menu_layout.mode[0] = MENU_TEXT_COLUMN_TEXT;
     if (g_battle_menu_action_type_modes[type][1] == 1) { /* lists by id */
         count = battle_menu_copy_ff_terminated_bytes_to_halfwords(
             g_battle_ai_workspace_ptr->ability_list.ids, g_battle_ai_workspace_ptr->ability_list.mp_costs);
@@ -121,7 +121,7 @@ void battle_menu_build_ability_list(s32 mode) {
         if (found != 0) {
             window_x -= 4;
         } else {
-            g_battle_ability_menu_layout.mode[2] = 2;
+            g_battle_ability_menu_layout.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
             battle_menu_copy_bytes_to_halfwords(
                 g_battle_ai_workspace_ptr->ability_list.values, g_battle_ai_workspace_ptr->ability_list.turns, count);
             window_x = 0x94;
@@ -151,8 +151,8 @@ void battle_menu_build_ability_list(s32 mode) {
         }
         if (type == ACTION_MENU_TYPE_ARITHMETICKS && mode > 0) {
             window_x = 0x88;
-            g_battle_ability_menu_layout.mode[1] = 2;
-            g_battle_ability_menu_layout.mode[2] = 2;
+            g_battle_ability_menu_layout.mode[1] = MENU_TEXT_COLUMN_HIDDEN;
+            g_battle_ability_menu_layout.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
@@ -169,7 +169,7 @@ void battle_menu_build_ability_list(s32 mode) {
                     g_battle_ai_workspace_ptr->ability_list.turns, count);
                 window_x = 0x94;
                 row_mode = 5;
-                g_battle_ability_menu_layout.mode[2] = 2;
+                g_battle_ability_menu_layout.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
                 g_battle_ability_menu_layout.x[1] -= 4;
                 g_battle_ability_menu_layout.x[2] -= 4;
             }

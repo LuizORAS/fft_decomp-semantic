@@ -7,7 +7,7 @@ void battle_action_execute_ability(void) {
     battle_unit_misc_data_t* unit;
     s32 result;
 
-    battle_unit_start_view_thread(0, 0, 0);
+    battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0, 0);
     unit = battle_unit_get_source_misc_data();
     battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
     unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;

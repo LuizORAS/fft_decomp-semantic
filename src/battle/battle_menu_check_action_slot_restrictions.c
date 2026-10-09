@@ -34,7 +34,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
     message = 0;
     unit = battle_unit_get_attacker_data_pointer();
     if (check_unit != 0) {
-        if (battle_unit_get_action_restriction(unit) == 2) {
+        if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
             message = 0x1003;
             mode = 2;
         } else {

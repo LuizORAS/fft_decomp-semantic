@@ -30,7 +30,8 @@ void battle_formula_store_physical_evade_values(void) {
 
     weapon_guard = 0;
     if ((g_battle_action_target->reaction_abilities[3] & BATTLE_REACTION_SET_4_WEAPON_GUARD) != 0) {
-        weapon_guard = battle_unit_get_action_restriction(g_battle_action_target) == 0;
+        weapon_guard
+            = battle_unit_get_action_restriction(g_battle_action_target) == BATTLE_UNIT_ACTION_RESTRICTION_NONE;
     }
     g_battle_action_current_ability.base_hit = 100;
     g_battle_action_current_ability.accessory_evade = 0;

@@ -44,7 +44,7 @@ void wldcore_menu_push_focus_location_level(s32 dot_index) {
     wldcore_map_start_projection_motion_if_outside_bounds(
         (wldcore_point32_t*)&render->screen_x, &g_wldcore_map_dots[dot_index].position.vx);
     if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
-        g_main_system_flags |= 0x2000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }

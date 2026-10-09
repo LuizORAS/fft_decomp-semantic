@@ -24,7 +24,8 @@ void debugchr_menu_icon_strip_thread(void) {
     for (;;) {
         if (frame == (frame / 7) * 7) {
             redraw = 1;
-            render = battle_menu_build_and_upload_window_frame_image(state->inner_width, state->inner_height, &rect, 1);
+            render = battle_menu_build_and_upload_window_frame_image(
+                state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             battle_menu_set_text_origin(8, 9);
             *display_x = state->inner_width;
             battle_menu_display_text_entry(state->text_id, render, (world_glyph_blit_t*)(display_x - 2));

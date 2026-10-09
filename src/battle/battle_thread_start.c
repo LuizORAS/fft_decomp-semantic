@@ -10,7 +10,7 @@ void battle_thread_start(s32 thread_id, void (*function)(void)) {
     thread->frame_pointer = thread->stack_top;
     thread->code_pointer = function;
     thread->is_running = 1;
-    thread->task_id = 0;
+    thread->task_id = NATIVE_THREAD_TASK_NONE;
     thread->function_parameter_4 = 0;
     thread->task_words[0] = 0;
     thread->task_words[1] = 0;

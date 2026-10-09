@@ -45,14 +45,22 @@ void helpmenu_menu_run_require_help(void) {
         shadow_poly->clut = 0x7DBC;
     }
     battle_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
-    g_battle_text_section_pointers[1] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[1];
-    g_battle_text_section_pointers[2] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[2];
-    g_battle_text_section_pointers[11] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[11];
-    g_battle_text_section_pointers[12] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[12];
-    g_battle_text_section_pointers[13] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[13];
-    g_battle_text_section_pointers[15] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[15];
-    g_battle_text_section_pointers[19] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[19];
-    g_battle_text_section_pointers[20] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[20];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_UNIT_STATUS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_UNIT_STATUS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_MENU_COMMANDS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_MENU_COMMANDS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_TERRAIN]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_TERRAIN];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_JOBS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_JOBS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_ITEMS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ITEMS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_ABILITIES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ABILITIES];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_SKILLSETS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_SKILLSETS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_STATUSES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_STATUSES];
     self = &g_battle_threads[g_battle_current_thread_id];
     battle_menu_copy_billboard_data_out(
         g_helpmenu_active_banner, g_helpmenu_active_unit_data, &g_helpmenu_billboard, g_helpmenu_menu_cursor_tile);
@@ -67,7 +75,7 @@ void helpmenu_menu_run_require_help(void) {
     g_helpmenu_require_navigation[0].destination[3] = 0;
     g_helpmenu_require_navigation[3].destination[0] = 0;
     navigation = g_helpmenu_require_navigation;
-    text_thread_id = battle_thread_resolve_id(0x10);
+    text_thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     text_thread = &g_battle_threads[text_thread_id];
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {

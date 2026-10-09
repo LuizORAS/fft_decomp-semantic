@@ -20,7 +20,7 @@ void wldcore_menu_push_brave_story_level(void) {
     s32 temp;
     u8 unused[0x30];
 
-    g_main_system_flags = g_main_system_flags & ~0x800;
+    g_main_system_flags = g_main_system_flags & ~MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

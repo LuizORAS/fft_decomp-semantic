@@ -33,7 +33,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
         g_option_menu_at_list_flags[index] = 0;
     }
 
-    g_battle_text_section_pointers[31] = g_option_menu_at_list_text;
+    g_battle_text_section_pointers[TEXT_SECTION_AT_LIST] = g_option_menu_at_list_text;
     entry_count = 0;
     has_special_entry = 0;
     text = g_option_menu_at_list_text;

@@ -27,7 +27,7 @@ typedef struct native_thread {
     u32* frame_pointer;           /* 0x40 */
     void (*code_pointer)(void);   /* 0x44 */
     s32 is_running;               /* 0x48 */
-    s32 task_id;                  /* 0x4c */
+    s32 task_id;                  /* 0x4c: native_thread_task_e */
     s32 task_words[7];            /* 0x50: per-task words, see above */
     u8 _unused_06c[0x3f0 - 0x6c]; /* 0x6c: the thread's stack */
     u32 stack_top[4];             /* 0x3f0: initial SP/FP; the stack grows down from here */
@@ -45,12 +45,50 @@ enum {
     NATIVE_THREAD_LAST_WORD_OFFSET = 0x3ffc,
 };
 
-/* Thread slots the BATTLE and WORLD menu code starts by fixed number. Other
- * code also borrows these slots for its own threads. */
+/* Slot numbers of the cooperative threads: the index into g_battle_threads /
+ * g_world_threads and the first argument of the thread calls. Slot 0 is the
+ * program's main loop. No slot belongs to one thread for good: every screen
+ * runs its own threads in fixed slots, and a menu thread starts its child
+ * menu one slot below itself, so several names share a value and each names
+ * the thread a call site means. This enum holds the uses BATTLE, WORLD and
+ * their overlays have in common; world.h and the overlay headers name the
+ * slots their own screens reuse (world_thread_slot_e, attack_thread_slot_e,
+ * bunit_thread_slot_e, equip_thread_slot_e, require_thread_slot_e). */
 typedef enum native_thread_slot {
-    NATIVE_THREAD_SLOT_MENU_BUILDING = 3,   /* help menu and menu entry build threads */
-    NATIVE_THREAD_SLOT_SYSTEM_FUNCTION = 4, /* the system function thread, which starts slot 8 */
-    NATIVE_THREAD_SLOT_MINI_MENU = 8,       /* the opened menu's thread, the mini menu among them */
+    NATIVE_THREAD_SLOT_MAIN = 0,
+    /* The battle and world programs (twin code). */
+    NATIVE_THREAD_SLOT_EVENT = 1,           /* the event script: battle_script_run_next_event and its twin */
+    NATIVE_THREAD_SLOT_UNIT_VIEW = 2,       /* the unit view supervisor that starts the four panels below */
+    NATIVE_THREAD_SLOT_MENU_BUILDING = 3,   /* the menu entry starter and the help menu thread */
+    NATIVE_THREAD_SLOT_SYSTEM_FUNCTION = 4, /* the system function thread and the spell quote it dispatches */
+    NATIVE_THREAD_SLOT_MENU_GRANDCHILD = 6, /* the action slot list under the skillset list */
+    NATIVE_THREAD_SLOT_DEPLOYMENT = 6,      /* attack_deploy_run_screen or the map-data-load-complete thread */
+    NATIVE_THREAD_SLOT_MENU_CHILD = 7,      /* the skillset list under the action menu */
+    NATIVE_THREAD_SLOT_MENU = 8,            /* the open entry of the menu table: action menu, mini menu, a
+                                             * system function's menu, the spell quote text */
+    NATIVE_THREAD_SLOT_MINI_MENU = 8,       /* the same slot where the mini menu is started */
+    /* The unit view's panel slots, named for the thread each usually runs. */
+    NATIVE_THREAD_SLOT_TILE_INFO_PANEL = 10,    /* tile info or numeric display */
+    NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL = 11, /* unit summary */
+    NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS = 12,   /* right unit stats or attack caster stats */
+    NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS = 13, /* hovered unit stats or attack target stats */
+    NATIVE_THREAD_SLOT_FADE_OUT = 13,           /* the fade-out thread that follows the unit list overlay */
+    /* The AT list of the dead-unit menu, once the panels have stopped. */
+    NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD = 9, /* a wait-forever thread while the AT list's own child runs */
+    NATIVE_THREAD_SLOT_AT_LIST_MENU = 10,
+    /* Menu screens: formation and unit list, shop, deployment, post-battle, save, debug, bar. */
+    NATIVE_THREAD_SLOT_MENU_TEXT = 1,         /* help, description and message text of a screen */
+    NATIVE_THREAD_SLOT_MESSAGE = 2,           /* a message box or text window */
+    NATIVE_THREAD_SLOT_CARD_GRAPHIC = 2,      /* the memory card screen's zooming backdrop */
+    NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD = 5, /* the child of the menu in slot 6 */
+    NATIVE_THREAD_SLOT_SCREEN_MENU = 6,       /* the menu or notice a WORLD screen or the save screen runs */
+    NATIVE_THREAD_SLOT_COMPARISON_STATUS = 7, /* the second (comparison) unit status banner */
+    NATIVE_THREAD_SLOT_UNIT_STATUS = 8,       /* the unit status banner */
+    NATIVE_THREAD_SLOT_CHARACTER_STATUS = 9,  /* the character status or equipment-and-ability panel */
+    NATIVE_THREAD_SLOT_NUMERIC_EDITOR = 12,   /* the numeric editor (stats) panel */
+    /* Passed to the resolve_id functions, which return a slot below 16
+     * unchanged and otherwise the first idle slot. */
+    NATIVE_THREAD_SLOT_FIRST_IDLE = 16,
 } native_thread_slot_e;
 
 /* task_id values shared by the BATTLE and WORLD schedulers. Each named id is
@@ -60,6 +98,9 @@ typedef enum native_thread_slot {
  * sets 2 to wait until another thread stores 1 to resume it, and stops when
  * another thread stores 3. Ids without a known setter stay literal. */
 typedef enum native_thread_task {
+    /* No task: *_thread_start and *_thread_exit_current store it, and
+     * world_menu_start_thread_group stores it into thread 12 when the location changes. */
+    NATIVE_THREAD_TASK_NONE = 0,
     NATIVE_THREAD_TASK_RESUME = 1,
     NATIVE_THREAD_TASK_WAIT_FOR_RESUME = 2,
     NATIVE_THREAD_TASK_STOP_REQUEST = 3,
@@ -78,6 +119,10 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_ATTACK_CASTER_STATS = 0x13,
     NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL = 0x14,
     NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL = 0x15,
+    /* g_world_menu_thread_groups gives its three text windows the ids 0x20,
+     * 0x21 and 0x22 (threads 9, 10 and 11); the window thread slides only the
+     * second one with the main scroll. */
+    NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW = 0x21,
     NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL = 0x23,
     NATIVE_THREAD_TASK_MESSAGE_BOX = 0x26,
     NATIVE_THREAD_TASK_MENU_WINDOW_BUILD = 0x31,

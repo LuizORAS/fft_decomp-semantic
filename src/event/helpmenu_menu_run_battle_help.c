@@ -56,14 +56,22 @@ void helpmenu_menu_run_battle_help(void) {
     unit_data = g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;
     cursor_tile = g_helpmenu_menu_cursor_tile;
-    g_battle_text_section_pointers[1] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[1];
-    g_battle_text_section_pointers[2] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[2];
-    g_battle_text_section_pointers[11] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[11];
-    g_battle_text_section_pointers[12] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[12];
-    g_battle_text_section_pointers[13] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[13];
-    g_battle_text_section_pointers[15] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[15];
-    g_battle_text_section_pointers[19] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[19];
-    g_battle_text_section_pointers[20] = g_helpmenu_text_data + g_helpmenu_text_section_offsets[20];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_UNIT_STATUS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_UNIT_STATUS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_MENU_COMMANDS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_MENU_COMMANDS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_TERRAIN]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_TERRAIN];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_JOBS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_JOBS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_ITEMS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ITEMS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_ABILITIES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_ABILITIES];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_SKILLSETS]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_SKILLSETS];
+    g_battle_text_section_pointers[TEXT_SECTION_HELP_STATUSES]
+        = g_helpmenu_text_data + g_helpmenu_text_section_offsets[TEXT_SECTION_HELP_STATUSES];
     self_thread = &g_battle_threads[g_battle_current_thread_id];
     battle_menu_copy_billboard_data_out(banner, unit_data, billboard, cursor_tile);
     if ((g_helpmenu_selected_unit_panel_mode != 0) || (g_battle_post_battle_unit_changes_active != 0)) {
@@ -225,23 +233,23 @@ void helpmenu_menu_run_battle_help(void) {
         text_thread_id -= 1;
     } else {
         help_mode = g_battle_unit_view_mode;
-        if (help_mode == 1 || help_mode == 2) {
+        if (help_mode == UNIT_VIEW_MODE_TILE_INFO || help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-            battle_thread_start(2, battle_text_character_handling_thread);
-            battle_thread_set_parameters(2, 0x3B, g_helpmenu_menu_cursor_tile[0] + 0x5800, 0);
-            g_battle_threads[2].task_words[3] = -0x20;
-            battle_thread_wait_until_inactive(2);
+            battle_thread_start(NATIVE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
+            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile[0] + 0x5800, 0);
+            g_battle_threads[NATIVE_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
+            battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;
             battle_thread_wait_frames(1);
             helpmenu_menu_close();
-        } else if (help_mode == 2) {
+        } else if (help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             /* Unreachable: the arm above already takes modes 1 and 2. */
             navigation = g_helpmenu_view_mode_2_navigation;
             text_thread_id = 2;
-        } else if (help_mode == 3) {
+        } else if (help_mode == UNIT_VIEW_MODE_UNIT_SUMMARY) {
             navigation = g_helpmenu_view_mode_3_navigation;
             text_thread_id = 2;
-        } else if (help_mode == 4) {
+        } else if (help_mode == UNIT_VIEW_MODE_RIGHT_UNIT) {
             navigation = g_helpmenu_view_mode_4_navigation;
             text_thread_id = 2;
         }

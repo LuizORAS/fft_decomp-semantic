@@ -19,7 +19,7 @@ void world_card_update_slot_scan(void) {
     RECT rect;
 
     if (g_world_card_error_message_closing != 0) {
-        if (world_thread_is_running(6) == 0) {
+        if (world_thread_is_running(NATIVE_THREAD_SLOT_SCREEN_MENU) == 0) {
             g_world_card_slot_scan_active = 0;
             g_world_card_menu_step = 0;
             g_world_card_error_message_closing = 0;
@@ -30,7 +30,7 @@ void world_card_update_slot_scan(void) {
     if (g_world_card_format_delay_counter != 0) {
         g_world_card_format_delay_counter++;
         if (g_world_card_format_delay_counter == 3) {
-            world_menu_stop_thread_and_wait(6);
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
             g_world_card_slot_scan_active = 0;
             g_world_card_format_delay_counter = 0;
             world_card_format_selected_slot();
@@ -71,7 +71,7 @@ void world_card_update_slot_scan(void) {
                 ClearImage(&rect, 0, 0, 0);
             }
             if (g_world_card_scan_start_frame == 1) {
-                world_menu_start_or_poll_thread(6, g_world_card_checking_message);
+                world_menu_start_or_poll_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_card_checking_message);
             }
             g_world_card_scan_start_frame++;
             return;
@@ -97,8 +97,8 @@ void world_card_update_slot_scan(void) {
             g_world_card_free_block_count
                 = world_card_count_free_blocks((DIRENTRY*)g_world_card_directory_buffer, g_world_card_save_file_count);
         } else {
-            world_menu_stop_thread_and_wait(6);
-            g_world_menu_sound_effect_id = MAIN_SFX_CARD_ERROR;
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
+            g_world_menu_sound_effect_id = MAIN_SFX_ERROR_MESSAGE;
         }
 
         for (result = 0; result < 15; result++) {
@@ -116,8 +116,8 @@ void world_card_update_slot_scan(void) {
 
     if (g_world_card_probe_result == CARD_IO_RESULT_NEW_CARD) {
         if (world_card_check_selected() > CARD_IO_RESULT_COMPLETE) {
-            world_menu_stop_thread_and_wait(6);
-            world_menu_stop_thread_and_wait(5);
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU_CHILD);
             g_world_card_slot_scan_active = 0;
         } else if (g_world_card_scan_prompt_active == 0) {
             if (g_world_menu_selection_results[5] == 0) {
@@ -127,9 +127,10 @@ void world_card_update_slot_scan(void) {
             }
             g_world_card_slot_scan_active = 0;
         } else {
-            g_world_card_scan_prompt_active = world_menu_run_thread(6, g_world_card_format_prompt);
+            g_world_card_scan_prompt_active
+                = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_card_format_prompt);
             if (g_world_card_scan_prompt_active == 0 && g_world_menu_selection_results[5] == 0) {
-                world_menu_start_or_poll_thread(6, g_world_card_formatting_message);
+                world_menu_start_or_poll_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_card_formatting_message);
             }
         }
         return;
@@ -137,14 +138,14 @@ void world_card_update_slot_scan(void) {
 
     if (g_world_card_probe_result == CARD_IO_RESULT_ERROR || g_world_card_probe_result == CARD_IO_RESULT_TIMEOUT) {
         result = world_card_check_selected();
-        world_menu_start_or_poll_thread(6, g_world_card_access_error_message);
+        world_menu_start_or_poll_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_card_access_error_message);
         if ((g_world_input_primary_repeat & PSX_PAD_CROSS) != 0
             || (g_world_input_primary_repeat & PSX_PAD_CIRCLE) != 0) {
-            world_menu_stop_thread(6);
+            world_menu_stop_thread(NATIVE_THREAD_SLOT_SCREEN_MENU);
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
             g_world_card_error_message_closing = 1;
         } else if (result == CARD_IO_RESULT_NEW_CARD || result == CARD_IO_RESULT_COMPLETE) {
-            world_menu_stop_thread_and_wait(6);
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
             g_world_card_slot_scan_active = 0;
         }
         return;
@@ -171,7 +172,7 @@ void world_card_update_slot_scan(void) {
                     = world_card_open_file_with_retries(g_world_card_save_file_names[g_world_card_slot_scan_index], 1);
                 if (descriptor == -2) {
                     g_world_card_slot_scan_active = 0;
-                    world_menu_stop_thread_and_wait(6);
+                    world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
                     return;
                 }
                 if (descriptor != -1) {
@@ -189,7 +190,7 @@ void world_card_update_slot_scan(void) {
                     }
                     if (status == -1) {
                         g_world_card_slot_scan_active = 0;
-                        world_menu_stop_thread_and_wait(6);
+                        world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
                         return;
                     }
                 } else if (descriptor == -1) {
@@ -219,7 +220,7 @@ void world_card_update_slot_scan(void) {
             g_world_card_slot_scan_index++;
         } else {
             g_main_card_save_last_used_slot = 0;
-            world_menu_stop_thread_and_wait(6);
+            world_menu_stop_thread_and_wait(NATIVE_THREAD_SLOT_SCREEN_MENU);
             g_world_card_menu_step = 1;
             g_world_card_slot_scan_active = 0;
         }

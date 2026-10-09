@@ -68,11 +68,12 @@ s32 world_ability_run_learn_list(void) {
         if ((g_world_input_primary_repeat & PSX_PAD_CIRCLE) && g_world_menu_option_count != 0) {
             index = g_world_menu_cursor_position;
             if (g_world_ability_entries[index] >> 14) {
-                world_text_show_message_and_play_sound(0xc009, 0x30);
+                world_text_show_message_and_play_sound(0xc009, MAIN_SFX_ERROR_MESSAGE);
             } else if (world_menu_is_learn_ability_learned(index) != 0) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             } else {
-                g_world_learn_confirm_prompt_state = world_menu_run_thread(6, g_world_learn_confirm_menu);
+                g_world_learn_confirm_prompt_state
+                    = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_learn_confirm_menu);
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_learn_confirm_submenu.selected_index = 0;
                 g_world_menu_sound_muted = 1;
@@ -83,7 +84,8 @@ s32 world_ability_run_learn_list(void) {
             g_world_formation_cursor_ot_override = 0;
             return 0;
         }
-        category = world_menu_update_horizontal_selection_and_mark_change(4, 8, g_world_input_newly_pressed, 6);
+        category = world_menu_update_horizontal_selection_and_mark_change(
+            4, 8, g_world_input_newly_pressed, MAIN_SFX_PAGE_SWITCH);
         if (category != g_world_ability_category) {
             world_gfx_set_sprite_slot(g_world_ability_category + 10, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, g_world_ability_entries);
@@ -97,7 +99,8 @@ s32 world_ability_run_learn_list(void) {
             world_menu_set_window_scale_step(10);
         }
     } else {
-        g_world_learn_confirm_prompt_state = world_menu_run_thread(6, g_world_learn_confirm_menu);
+        g_world_learn_confirm_prompt_state
+            = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_learn_confirm_menu);
         if (g_world_learn_confirm_prompt_state == 0) {
             if (g_world_menu_selection_results[5] == 0) {
                 world_ability_learn(g_world_formation_selected_unit_index, g_world_learn_selected_job,

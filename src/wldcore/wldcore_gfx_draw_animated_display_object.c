@@ -79,7 +79,8 @@ void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, G
     sprite.r = color.r;
     sprite.g = color.g;
     sprite.b = color.b;
-    if ((object->flags & WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED) || !(g_main_system_flags & 0x08000000)) {
+    if ((object->flags & WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED)
+        || !(g_main_system_flags & MAIN_SYSTEM_FLAG_FREEZE_ANIMATION)) {
         object->anim_counter = object->anim_counter + 1;
     }
     /* A goto loop: as a for/while loop, GCC's loop pass hoists the 0xffff

@@ -157,9 +157,9 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                 world_menu_stop_unit_status_banner_thread(i);
             }
         }
-        if (world_thread_is_running(16) != 0) {
+        if (world_thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {
             buttons = 1;
-            world_text_resume_printing(16);
+            world_text_resume_printing(WORLD_THREAD_SLOT_TUTORIAL_TEXT);
         }
         world_script_update_event_frame_input(g_world_gfx_active_packet_buffer->otag, 0, 0);
     } while (buttons != 0);

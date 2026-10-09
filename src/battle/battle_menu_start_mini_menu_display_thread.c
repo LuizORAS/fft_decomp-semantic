@@ -4,7 +4,7 @@ void battle_menu_start_mini_menu_display_thread(void) {
     if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MINI_MENU) != 0) {
         return;
     }
-    if (battle_thread_is_running_8014cc94(7) != 0) {
+    if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_CHILD) != 0) {
         return;
     }
     if (g_battle_menu_suspend_state != 0) {

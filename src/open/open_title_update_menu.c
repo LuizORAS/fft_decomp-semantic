@@ -161,7 +161,7 @@ void open_title_update_menu(open_title_controller_t* state) {
             g_open_gfx_next_render_record_36 -= 6;
             g_open_gfx_render_record_pointer_count -= 6;
             g_open_current_controller_index--;
-            g_main_system_flags |= 0x80000;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_TITLE_TUTORIAL;
             g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
             return;
         }

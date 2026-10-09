@@ -81,7 +81,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     if (*(s8*)&g_world_dismiss_unit_prompt_running == 0) {
         sprite = g_world_formation_selected_unit_index;
         if (g_world_formation_unit_pointers[sprite]->proposition_status != 0) {
-            world_text_show_message_and_play_sound(0xC012, 0x30);
+            world_text_show_message_and_play_sound(0xC012, MAIN_SFX_ERROR_MESSAGE);
             g_world_formation_dismiss_step = 2;
             g_world_dismiss_unit_prompt_running = 1;
         } else {
@@ -140,7 +140,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     }
 
     if (g_world_formation_dismiss_step == 2) {
-        running = world_thread_is_running(1);
+        running = world_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT);
         g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
@@ -149,7 +149,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         return;
     }
 
-    running = world_menu_run_thread(6, g_world_formation_dismiss_menu_data);
+    running = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, g_world_formation_dismiss_menu_data);
     step = g_world_formation_dismiss_step;
     g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {
@@ -170,7 +170,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                  * branch sense and orders the two `li`s the other way, which
                  * also costs the store's register. */
                 step = 1;
-                if (g_world_menu_sound_effect_id != 0) {
+                if (g_world_menu_sound_effect_id != MAIN_SFX_NONE) {
                     step = 0x64;
                 }
                 g_world_formation_dismiss_step = step;

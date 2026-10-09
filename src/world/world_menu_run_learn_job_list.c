@@ -46,7 +46,7 @@ s32 world_menu_run_learn_job_list(void) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             return 1;
         }
-        world_text_show_message_and_play_sound(0xC007, 0x30);
+        world_text_show_message_and_play_sound(0xC007, MAIN_SFX_ERROR_MESSAGE);
     }
     world_menu_run_script_with_palette_mode(
         g_world_learn_job_list_script, g_world_input_primary_repeat, g_world_thread_task_active);

@@ -8,7 +8,7 @@ void world_menu_start_entry_thread(void) {
     s32 menu_id = (s32)world_thread_get_current_parameter_1();
     s32 count;
 
-    world_thread_wait_until_inactive(8);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     if (*(u16*)&g_world_menu_overlay_state != 0) {
         world_thread_exit_current();
     }
@@ -36,21 +36,22 @@ void world_menu_start_entry_thread(void) {
             menu_id = 0x36;
         }
     }
-    world_thread_start(8, g_world_menu_thread_menu_data[menu_id].thread_entry);
-    world_thread_set_parameters(8, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
+    world_thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[menu_id].thread_entry);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
     count = g_world_menu_restore_depth;
     g_world_menu_new_button_input = 0;
     if (g_world_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
         g_world_text_overlay_active = 1;
         world_thread_wait_frames(2);
         if (count > 0) {
-            world_thread_start(7, world_menu_run_skillset_thread);
-            world_thread_set_parameters(7, (s32)&g_world_menu_thread_menu_data[4], 0, 0);
+            world_thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
+            world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[4], 0, 0);
         }
         world_thread_wait_frames(2);
         if (count >= 2) {
-            world_thread_start(6, world_menu_select_unit_action_slots_thread);
-            world_thread_set_parameters(6, (s32)&g_world_menu_thread_menu_data[3], 0, 0);
+            world_thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, world_menu_select_unit_action_slots_thread);
+            world_thread_set_parameters(
+                NATIVE_THREAD_SLOT_MENU_GRANDCHILD, (s32)&g_world_menu_thread_menu_data[3], 0, 0);
         }
         world_thread_wait_frames(2);
         g_world_menu_restore_pending = 0;

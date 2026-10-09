@@ -415,7 +415,7 @@ typedef struct unit_status_staging {
     u8 death_counter[BATTLE_UNIT_SLOT_COUNT];                        /* 0x372 */
     u8 team_flags[BATTLE_UNIT_SLOT_COUNT];                           /* 0x387 */
     u8 state[BATTLE_UNIT_SLOT_COUNT];                                /* 0x39c; 0 not staged, 1 saved, 2 restored */
-    u8 inflict_status_mode[BATTLE_UNIT_SLOT_COUNT];                  /* 0x3b1 */
+    u8 inflict_status_mode[BATTLE_UNIT_SLOT_COUNT];                  /* 0x3b1; unit_inflict_status_mode_e */
     u16 hp[BATTLE_UNIT_SLOT_COUNT];                                  /* 0x3c6 */
     u16 jump_float_flags;                                            /* 0x3f0; status-specific follow-up flags */
 } unit_status_staging_t;
@@ -427,6 +427,16 @@ typedef enum unit_status_staging_state {
     UNIT_STATUS_STAGING_SAVED = 1,
     UNIT_STATUS_STAGING_RESTORED = 2, /* blocks a second restore */
 } unit_status_staging_state_e;
+
+/* unit_status_staging_t.inflict_status_mode of one unit: the change the
+ * InflictStatus event thread stages and *_unit_apply_staged_status_data
+ * applies. */
+typedef enum unit_inflict_status_mode {
+    UNIT_INFLICT_STATUS_MODE_NONE = 0,
+    UNIT_INFLICT_STATUS_MODE_REVIVE = 1, /* 1 HP, Critical added, Dead removed */
+    UNIT_INFLICT_STATUS_MODE_CRYSTAL = 2,
+    UNIT_INFLICT_STATUS_MODE_POISON = 3,
+} unit_inflict_status_mode_e;
 
 /* unit */
 /* Five 24-bit raw values serialized in HP, MP, Speed, PA, MA order. */
@@ -803,12 +813,19 @@ typedef struct world_unit_command_action {
     s16 ability_id; /* 0x02 */
 } world_unit_command_action_t;
 
+/* world_unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
+typedef enum unit_rotate_mode {
+    UNIT_ROTATE_MODE_SHORTEST = 0,  /* the direction with fewer steps */
+    UNIT_ROTATE_MODE_INCREMENT = 1, /* facing + 1 each step */
+    UNIT_ROTATE_MODE_DECREMENT = 2, /* facing - 1 each step */
+} unit_rotate_mode_e;
+
 /* Per-unit facing/animation state written by world_script_unit_animation_rotate_event_instruction and
  * advanced every frame by world_unit_update_facing_and_pending_animations.
  * Seven bytes per unit, 21 units. */
 typedef struct world_unit_animation_state {
     u8 target_facing;
-    u8 rotate_mode;     /* 0 = shortest way, 1 = increment, 2 = decrement */
+    u8 rotate_mode;     /* unit_rotate_mode_e */
     u8 frames_per_step; /* facing steps once step_counter reaches this */
     u8 step_counter;
     u8 rotating;       /* nonzero while stepping toward target_facing */

@@ -48,7 +48,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         menu += 0x37;
     }
     wldcore_wait_for_file_load();
-    flags = g_main_system_flags | 0x2000;
+    flags = g_main_system_flags | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
     level = &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list;
     level->extra_render = -1;
     level->label_window = -1;
@@ -168,7 +168,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_stack_records_next[depth].location_list.delay = 8;
-    g_main_system_flags |= 0x08000000;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_LOCATION_MENU;
     g_wldcore_menu_stack_depth = depth + 1;
 }

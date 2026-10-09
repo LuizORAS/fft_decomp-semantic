@@ -36,9 +36,10 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_participant_list_le
     if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xE) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
         g_wldcore_menu_stack_depth--;
-        g_main_system_flags ^= 4;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_menu_push_participant_detail_level(level->proposition, level->cursor);
         return;
     }
@@ -58,8 +59,8 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_participant_list_le
         g_wldcore_participant_list_saved_cursor = level->cursor;
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count -= 2;
-        world_thread_set_parameters(0xE, 0, -1, 0);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {

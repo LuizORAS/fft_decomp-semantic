@@ -33,7 +33,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     s32 depth;
 
     wldcore_clear_screen_and_set_map_clip_rect(1);
-    g_main_system_flags |= 0x3800;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
+        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
     wldcore_fade_start_screen(0, 0x10);
     switch (screen) {
     case WLDCORE_MENU_LEVEL_BRAVE_STORY:
@@ -50,7 +51,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
             for (i = 0; i < 0x18; i++) {
-                if (world_script_get_variable(i + 0x1A4) != 0) {
+                if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
                     count++;
                 }
             }
@@ -61,7 +62,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
             g_wldcore_brave_story_saved_cursor[0] = 0;
         }
         wldcore_menu_push_brave_story_level();
-        g_main_system_flags |= 0x800;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
         wldcore_window_close_parent_list_all_windows();
         wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
         wldcore_wait_for_file_load();
@@ -107,8 +108,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         clear--;
     }
     world_menu_set_brightness(0, 0, 0);
-    world_thread_start(4, world_formation_view_zoom_thread);
-    world_thread_set_parameters(4, 0, 0, 0);
+    world_thread_start(WORLD_THREAD_SLOT_WLDCORE_TRANSITION, world_formation_view_zoom_thread);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_TRANSITION, 0, 0, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.delay = 0x14;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.phase = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCREEN_TRANSITION;

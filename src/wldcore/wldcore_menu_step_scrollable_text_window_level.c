@@ -16,7 +16,7 @@ void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t*
     s32 depth;
 
     if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);
             g_wldcore_window_records[level->window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[*index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -27,7 +27,7 @@ void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t*
         g_wldcore_window_render_object_count--;
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_menu_stack_depth = depth - 1;
-        g_main_system_flags &= 0xF7FFDFFF;
+        g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION);
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_index].flags
             &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         wldcore_menu_dispatch_resume_handler();

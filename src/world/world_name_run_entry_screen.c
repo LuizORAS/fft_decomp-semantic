@@ -70,8 +70,8 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         packets.draw_modes);
     g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
     world_formation_init_menu_display();
-    world_thread_start(2, world_text_message_box_thread);
-    world_thread_set_parameters(2, 0x21, 0xC015, 0);
+    world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
     world_menu_open_scrollable_list(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);
@@ -158,19 +158,19 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
             g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
         }
         if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {
-            g_world_sound_effect_id_to_play = 0;
+            g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
         }
         value = g_world_sound_effect_id_to_play;
-        if (value == 0) {
+        if (value == MAIN_SFX_NONE) {
             value = g_world_menu_sound_effect_id;
         }
         if (value == MAIN_SFX_TEXT_GLYPH) {
             main_sound_play_sfx_find_channel(MAIN_SFX_TEXT_GLYPH);
-        } else if (value != 0) {
+        } else if (value != MAIN_SFX_NONE) {
             main_sound_play_sfx(value);
         }
-        g_world_menu_sound_effect_id = 0;
-        g_world_sound_effect_id_to_play = 0;
+        g_world_menu_sound_effect_id = MAIN_SFX_NONE;
+        g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
     }
     world_script_set_vsync_mode_and_event_speed(2);
     world_formation_reset_menu_context();

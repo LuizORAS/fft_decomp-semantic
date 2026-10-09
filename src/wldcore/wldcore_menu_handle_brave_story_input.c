@@ -37,28 +37,31 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     }
 
     flags = g_main_system_flags;
-    if (flags & 4) {
-        if (level->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP && !(flags & 8)) {
+    if (flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) {
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP && !(flags & MAIN_SYSTEM_FLAG_FADING)) {
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT;
-            g_main_system_flags = flags | 0x800;
+            g_main_system_flags = flags | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
             wldcore_gfx_clear_vram_and_scratch(1);
         }
         if (level->mode != WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT) {
             return;
         }
-        if (world_thread_is_running(0xE) != 0) {
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
             return;
         }
-        if ((g_main_system_flags & 0x20000000) && g_wldcore_audio_queue.count != 0) {
+        if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) && g_wldcore_audio_queue.count != 0) {
             return;
         }
-        g_main_system_flags ^= 4;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_window_set_render_objects_visible(1);
         g_wldcore_menu_stack_depth--;
-        g_main_system_flags &= ~0x3800;
+        g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
+            | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER);
         wldcore_menu_dispatch_publish_handler();
-        if (g_main_system_flags & 0x20000000) {
-            g_main_system_flags = (g_main_system_flags ^ 0x20000001) | 0x10000000;
+        if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
+            g_main_system_flags
+                = (g_main_system_flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY))
+                | MAIN_SYSTEM_FLAG_RETURN_TO_TITLE;
             return;
         }
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
@@ -71,10 +74,10 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             return;
         }
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
-        world_thread_set_parameters(0xE, 0, -1, 0);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        if (g_main_system_flags & 0x20000000) {
+        if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
         } else {
@@ -91,7 +94,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        world_thread_set_parameters(0xE, 0x19, 0xB84A, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB84A, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 4;
         g_wldcore_window_render_record_count -= 2;
@@ -146,7 +149,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_list_open_treasures();
             return;
         case WLDCORE_BRAVE_STORY_ROW_LEAVE:
-            world_thread_set_parameters(0xE, 0x19, 0xB84A, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB84A, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 4;
             g_wldcore_window_render_record_count -= 2;

@@ -16,7 +16,8 @@ void wldcore_map_project_and_cull_dots(void) {
         RotTrans(&g_wldcore_map_dots[i].position, &position, &flag);
         g_wldcore_map_dots[i].screen_x = position.vx;
         g_wldcore_map_dots[i].screen_y = position.vy;
-        if ((u32)(position.vx + 128) >= 257 || (u32)(position.vy + 116) >= 237 || (g_main_system_flags & 0x10)
+        if ((u32)(position.vx + 128) >= 257 || (u32)(position.vy + 116) >= 237
+            || (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS)
             || world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             g_wldcore_map_dots[i].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         } else {

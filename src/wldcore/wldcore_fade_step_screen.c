@@ -16,7 +16,7 @@ s32 wldcore_fade_step_screen(void) {
                 & ~(WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_REDRAW_MAP | WLDCORE_SCREEN_FADE_BOX_VISIBLE);
         } else {
             if (g_wldcore_screen_fade_state.elapsed + 1 == g_wldcore_screen_fade_state.duration) {
-                g_main_system_flags &= ~8;
+                g_main_system_flags &= ~MAIN_SYSTEM_FLAG_FADING;
                 wldcore_sound_wait_for_queue_drain();
             }
             if (g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_OUT) {
@@ -57,7 +57,7 @@ s32 wldcore_fade_step_screen(void) {
             g_wldcore_screen_fade_state.boxes[0].g = box_level;
             g_wldcore_screen_fade_state.boxes[0].b = box_level;
             if (g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_REDRAW_MAP) {
-                g_main_system_flags |= 2;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
             }
             return 1;
         }

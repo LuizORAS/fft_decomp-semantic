@@ -38,7 +38,7 @@ void world_unit_update_facing_and_pending_animations(void) {
                 continue;
             }
             state->step_counter = 0;
-            if (state->rotate_mode == 0) {
+            if (state->rotate_mode == UNIT_ROTATE_MODE_SHORTEST) {
                 moving = state->target_facing - current + 0x10;
                 facing = current - state->target_facing + 0x10;
                 moving &= 0xF;
@@ -49,9 +49,9 @@ void world_unit_update_facing_and_pending_animations(void) {
                     next = current + 1;
                 }
                 facing = next & 0xF;
-            } else if (state->rotate_mode == 1) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_INCREMENT) {
                 facing = (current + 1) & 0xF;
-            } else if (state->rotate_mode == 2) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_DECREMENT) {
                 facing = (current + 0xF) & 0xF;
             }
             world_unit_set_facing(i, facing);

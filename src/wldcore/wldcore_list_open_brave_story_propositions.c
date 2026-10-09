@@ -14,7 +14,7 @@ void wldcore_list_open_brave_story_propositions(void) {
     s32 i;
     s32 record_index;
 
-    world_thread_set_parameters(0xE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB848, 0);
     count = 0;
     i = 0;
     flags = g_wldcore_list_row_flags;
@@ -40,12 +40,12 @@ void wldcore_list_open_brave_story_propositions(void) {
     dimensions.y = i;
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS, count, i);
-    wldcore_window_start_panel_render_thread(
-        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+    wldcore_window_start_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL,
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 8;
     record_index = g_wldcore_menu_stack_depth;
-    g_main_system_flags |= 0x800;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index - 1].list_window.content_render]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_BRAVE_STORY_PROPOSITIONS;

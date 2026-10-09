@@ -37,7 +37,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     u16 raw;
     s32 count_tmp;
 
-    if (g_main_system_flags & 0x20) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES) {
         return;
     }
 

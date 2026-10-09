@@ -9,7 +9,7 @@ void battle_script_route_event_input(void) {
         return;
     }
     thread = g_battle_current_thread_id;
-    if (thread == 0) {
+    if (thread == NATIVE_THREAD_SLOT_MAIN) {
         return;
     }
     if (g_battle_script_event_input == 0) {

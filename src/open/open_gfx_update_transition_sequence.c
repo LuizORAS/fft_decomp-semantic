@@ -11,7 +11,7 @@ s32 open_gfx_update_transition_sequence(void) {
     open_gfx_step_image_crossfade();
     if (!(g_open_gfx_transition.flags & OPEN_GFX_TRANSITION_SKIP)) {
         if (g_open_input_new_button_presses & PSX_PAD_START) {
-            main_sound_play_sfx(0x85);
+            main_sound_play_sfx(MAIN_SFX_COMPLETE);
             g_open_gfx_transition.flags |= OPEN_GFX_TRANSITION_SKIP;
         }
         flags = g_open_gfx_transition.flags;

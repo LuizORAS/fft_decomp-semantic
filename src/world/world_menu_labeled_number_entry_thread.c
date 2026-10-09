@@ -70,7 +70,8 @@ void world_menu_labeled_number_entry_thread(void) {
         shadow_quads[i].v3 = 0x10;
     }
     digit = 0;
-    buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+    buffer = world_menu_build_and_upload_window_frame_image(
+        param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = param->inner_width;
     world_text_measure_pixels(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
     world_menu_set_text_origin(8, 9);
@@ -128,7 +129,8 @@ void world_menu_labeled_number_entry_thread(void) {
             }
         }
         if (redraw == 1) {
-            buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(
+                param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             g_world_menu_text_state.pen.stride = param->inner_width;
             world_text_measure(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
             world_menu_set_text_origin(8, 9);

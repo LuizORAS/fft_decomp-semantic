@@ -11,7 +11,7 @@ void attack_text_init_battle_pointers(s32* offsets) {
     data = (u8*)&offsets[32];
     table = g_battle_text_section_pointers;
     do {
-        if (i != 0) {
+        if (i != TEXT_SECTION_EVENT_MESSAGES) {
             *table = data + *offsets;
         }
         offsets++;

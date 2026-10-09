@@ -12,7 +12,7 @@ void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 val
     g_wldcore_active_menu_value = value;
     origin.x = 0x20;
     origin.y = 0x20;
-    wldcore_window_init_number_panel_render_thread(0xC, 0x270F0000, 0, &origin);
+    wldcore_window_init_number_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL, 0x270F0000, 0, &origin);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].panel.result = 0;
     g_wldcore_menu_stack_records_next[record_index].panel.variable_id = variable_id;

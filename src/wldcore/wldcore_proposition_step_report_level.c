@@ -200,7 +200,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                     base->x = -0x46;
                     base->y = -0x2A;
                 }
-                wldcore_sound_play_effect(0x85);
+                wldcore_sound_play_effect(MAIN_SFX_COMPLETE);
             }
             if (*picture == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
                 record = wldcore_window_append_render_record_and_reset_color(
@@ -238,7 +238,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                     base->x = -0x41;
                     base->y = -0x2C;
                 }
-                wldcore_sound_play_effect(0x85);
+                wldcore_sound_play_effect(MAIN_SFX_COMPLETE);
             }
         }
         if (wldcore_proposition_step_message(level, 0x7E) == 0) {
@@ -271,12 +271,12 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;
         }
-        world_thread_set_parameters(0xE, 0, -1, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
         return;
     case -1:
     case 18:
     case 99:
-        if (world_thread_is_running(0xE) != 0) {
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
             return;
         }
         level->state++;

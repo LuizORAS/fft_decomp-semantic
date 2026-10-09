@@ -72,9 +72,11 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         }
         break;
     default:
-        if ((g_main_system_flags & 0xC) == 4 && world_thread_is_running(0xE) == 0) {
+        if ((g_main_system_flags & (MAIN_SYSTEM_FLAG_INPUT_BLOCKED | MAIN_SYSTEM_FLAG_FADING))
+                == MAIN_SYSTEM_FLAG_INPUT_BLOCKED
+            && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
             slot = level->_unknown_08;
-            g_main_system_flags ^= 4;
+            g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_window_record_count -= 4;
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 6;
@@ -115,8 +117,8 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
                 if (entry - 1 >= 5 || g_main_saved_records[entry - 1].section == 0) {
                     wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
-                g_main_system_flags |= 4;
-                world_thread_set_parameters(0xE, 0, -1, 0);
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
+                world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
                 wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             }
         }

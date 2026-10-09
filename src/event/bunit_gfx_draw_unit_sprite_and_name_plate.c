@@ -59,9 +59,9 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
         value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
         dx = cells[i].dx;
-        orientation = 0;
+        orientation = TEXTURE_UV_FLIP_NONE;
         if (value >= 2) {
-            orientation = 1;
+            orientation = TEXTURE_UV_FLIP_X;
             dx = -dx - quad.w;
         }
         /* The (s16) keeps the 0x1C offset on dx instead of letting fold
@@ -88,7 +88,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     g_bunit_unit_shadow_sprite.x = x + 0x12;
     g_bunit_unit_shadow_sprite.y = y + base_y - 4;
     g_bunit_unit_shadow_sprite.tpage = GetTPage(0, 2, 0x3C0, 0x100);
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, 0, 1, 5);
+    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
     g_bunit_unit_dot_sprite.x = x;
     g_bunit_unit_dot_sprite.y = y;
     if (g_bunit_unit_data[unit]->team_kind == 1) {
@@ -110,5 +110,5 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         rgb[1] += pulse;
         rgb[2] += pulse;
     }
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, 0, 1, 8);
+    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
 }

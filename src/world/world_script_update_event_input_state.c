@@ -13,7 +13,7 @@ void world_script_update_event_input_state(void) {
     u32 previous_input;
     u32 counter;
 
-    if (g_world_thread_current_id != 0x10) {
+    if (g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {
         return;
     }
     input = world_input_get_tutorial_buttons();

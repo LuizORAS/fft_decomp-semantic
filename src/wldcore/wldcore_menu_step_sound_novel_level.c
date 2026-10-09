@@ -18,22 +18,22 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
     s32 window;
     u16 shade;
 
-    if ((g_main_system_flags & 4) && !(g_main_system_flags & 8)) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && !(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
         switch (level->phase) {
         case WLDCORE_SOUND_NOVEL_PHASE_OPEN_HISTORY:
             if (level->countdown == 0) {
-                g_main_system_flags ^= 4;
+                g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 wldcore_menu_push_sound_novel_history_level();
                 return;
             }
             level->countdown--;
             return;
         case WLDCORE_SOUND_NOVEL_PHASE_END:
-            if (world_thread_is_running(0xE) != 0) {
+            if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
                 return;
             }
             g_wldcore_menu_result = 0;
-            g_main_system_flags ^= 4;
+            g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             wldcore_capture_state_and_play_time();
             fade = &g_wldcore_screen_fade_state;
             g_wldcore_screen_fade_state.priorities[0] = 0xF;
@@ -124,7 +124,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 level->fade_timer = 0;
                 g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
                 g_wldcore_window_records[level->overlay_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-                g_main_system_flags |= 4;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 level->phase = WLDCORE_SOUND_NOVEL_PHASE_OPEN_HISTORY;
                 level->countdown = 8;
             }
@@ -133,13 +133,13 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 = 0xA;
         }
     } else {
-        if (world_thread_is_running(0xE) != 0) {
-            world_thread_set_task_id_to_three(0xE);
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+            world_thread_set_task_id_to_three(WORLD_THREAD_SLOT_WLDCORE_MESSAGE);
         }
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);
         main_sound_stop_weather_sfx_music();
         level->phase = WLDCORE_SOUND_NOVEL_PHASE_END;
-        g_main_system_flags |= 4;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         if (!(*state_flags & WLDCORE_OPCODE_STATE_WHITE_OVERLAY)) {
             wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
         }

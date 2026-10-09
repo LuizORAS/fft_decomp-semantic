@@ -10,6 +10,6 @@ void battle_menu_refresh_right_unit_stats_display(void) {
     if (g_battle_menu_status_billboard.list_index < 0) {
         *display_mode = 0x0c00;
     }
-    battle_menu_display_hovered_unit_stats(&g_battle_menu_right_unit_stats_display, 3,
+    battle_menu_display_hovered_unit_stats(&g_battle_menu_right_unit_stats_display, UNIT_STATS_PANEL_RIGHT_UNIT,
         (menu_number_entry_t*)((u8*)display_mode - 0x50), &g_battle_menu_status_billboard);
 }

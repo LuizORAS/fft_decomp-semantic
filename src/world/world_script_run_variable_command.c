@@ -73,7 +73,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
     /* Guard recursive getter calls: replay mode and saturated high variables
      * can suppress writes, but the nested getter must still read its operand. */
     if (g_world_event_variable_write_guard == 0) {
-        if (destination_id >= 0x3c0) {
+        if (destination_id >= EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST) {
             g_world_event_variable_write_guard = 1;
             write_allowed = (u32)world_script_get_variable(destination_id) < 12;
             g_world_event_variable_write_guard = 0;
@@ -85,10 +85,11 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
             g_world_event_variable_write_guard = 1;
             replay_mode = world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS);
             g_world_event_variable_write_guard = 0;
-            if (replay_mode != 0 && (destination_id - 0x70) >= 0x20U
-                && (destination_id - EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) >= 4U && destination_id != 0x66
-                && (destination_id - 0x32) >= 8U && destination_id >= 0x2c && destination_id != 0x30
-                && (destination_id - 0x56) >= 5U && destination_id != 0x53) {
+            if (replay_mode != 0 && (destination_id - EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST) >= 0x20U
+                && (destination_id - EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) >= 4U
+                && destination_id != EVENT_SCRIPT_VAR_TEXT_STORE_INDEX && (destination_id - 0x32) >= 8U
+                && destination_id >= 0x2c && destination_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
+                && (destination_id - 0x56) >= 5U && destination_id != EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) {
                 return;
             }
         }
@@ -104,7 +105,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
         return;
     }
     *destination_word = value;
-    if (destination_id == 0x19) {
+    if (destination_id == EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE) {
         g_world_text_substitution_values[0] = value;
     }
 }

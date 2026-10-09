@@ -29,9 +29,9 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
     g_battle_menu_suspend_state = 1;
-    g_battle_menu_panel_fade_mode = 2;
-    battle_thread_set_parameters(0xA, 0, 0, 1);
-    battle_thread_set_parameters(8, 0, 0, 1);
+    g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     battle_menu_record_selection_for_selected_unit();
     battle_menu_set_option_menu_open();
     do {
@@ -44,9 +44,9 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_battle_menu_hovered_unit_stats_display.y = 0x1A;
     g_battle_unit_summary_panel_rect.y = 0x1A;
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], 0);
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], 2);
-    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], 4);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
+    battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_896_288);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
     frame_record->tiles[0].r0 = 0x30;
@@ -171,8 +171,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     records[1].palette = &g_battle_unit_editor_palette;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[0].palette);
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[1].palette);
-    battle_thread_start(0xA, battle_menu_run_numeric_display_panel_thread);
-    battle_thread_set_parameters(0xA, 0, 0, 0);
+    battle_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, battle_menu_run_numeric_display_panel_thread);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     battle_thread_yield();
 
     frame = 0;
@@ -209,7 +209,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         }
         if (battle_menu_can_accept_input() != 0) {
             if (g_battle_script_event_input & PSX_PAD_CROSS) {
-                battle_thread_set_parameters(0xA, 0, 0, 1);
+                battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
             if ((g_battle_script_event_input & PSX_PAD_CIRCLE)
@@ -250,15 +250,15 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     }
     g_battle_menu_hovered_unit_stats_display.y = 0xAA;
     g_battle_unit_summary_panel_rect.y = 0xAA;
-    g_battle_menu_panel_fade_mode = 1;
+    g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_battle_unit_status_bounce_step = 6;
     battle_sound_set_effect_to_cancel();
     do {
         battle_thread_yield();
     } while (g_battle_unit_status_bounce_step != 0);
-    battle_thread_start(0xA, battle_menu_selected_tile_info_display_thread);
-    battle_thread_set_parameters(0xA, 0, 0, 0);
-    g_battle_thread_contexts[10].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
+    battle_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, battle_menu_selected_tile_info_display_thread);
+    battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
+    g_battle_thread_contexts[NATIVE_THREAD_SLOT_TILE_INFO_PANEL].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
     g_battle_menu_suspend_state = 0;
     battle_menu_leave_status_screen_selection();
     battle_menu_build_idle_action_menu(g_battle_menu_current_id);

@@ -61,7 +61,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             battle_unit_store_animation_facing(0x20, (s16)unit->facing, unit);
         }
         if (g_battle_move_step_value.bits.mount) {
-            battle_sound_play_movement_sfx(unit, 0x28);
+            battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
             return;
         }
         battle_sound_play_landing_sfx_by_surface_type(unit);
@@ -75,7 +75,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         battle_unit_store_animation_facing(0x20, (s16)unit->facing, unit);
     }
     if (g_battle_move_step_value.bits.mount) {
-        battle_sound_play_movement_sfx(unit, 0x28);
+        battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
         return;
     }
     battle_sound_play_landing_sfx_by_surface_type(unit);

@@ -45,7 +45,7 @@ void require_render_gil_reward_ticker(void) {
         battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS)
             + g_require_reward_war_trophy_search_result.level_sum_money);
     money = g_require_reward_war_trophy_search_result.level_sum_money;
-    thread_id = battle_thread_resolve_id(0x10);
+    thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_id, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread_id, 2, 0, 0);
     g_require_input_controller = battle_script_get_controller_input_pointer(0);
@@ -263,7 +263,7 @@ finished:
     }
     battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_sign_polys[bank]);
 skipped:
-    g_battle_sound_pending_sfx_id = 0;
+    g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
     i++;
     tick = 0;
     for (;;) {

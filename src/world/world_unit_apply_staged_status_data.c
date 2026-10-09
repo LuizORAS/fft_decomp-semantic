@@ -59,14 +59,14 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             g_world_unit_status_staging_data->jump_float_flags |= 2;
         }
         inflict_status_mode = g_world_unit_status_staging_data->inflict_status_mode[unit_id];
-        if (inflict_status_mode != 0) {
-            if (inflict_status_mode == 3) {
+        if (inflict_status_mode != UNIT_INFLICT_STATUS_MODE_NONE) {
+            if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_POISON) {
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
-            } else if (inflict_status_mode == 2) {
+            } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_CRYSTAL) {
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
-            } else if (inflict_status_mode == 1) {
+            } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_REVIVE) {
                 unit->hp = 1;
                 unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);

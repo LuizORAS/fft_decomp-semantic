@@ -17,7 +17,7 @@ void world_formation_update_open_request(void) {
         return;
     }
     if (state == 2) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_formation_open_request_state = state + 1;
         }
         return;
@@ -52,7 +52,7 @@ void world_formation_update_open_request(void) {
         return;
     }
     if (state == 9) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_formation_open_request_state = 0;
         }
     }

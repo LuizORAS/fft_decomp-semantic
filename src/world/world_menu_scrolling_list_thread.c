@@ -120,7 +120,8 @@ void world_menu_scrolling_list_thread(void) {
     page->arrow_marks[1].v0 = 0xC;
     page->arrow_marks[1].x0 = page->arrows[1].x0;
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
-    world_menu_build_and_upload_window_frame_image(entry->inner_width, entry->inner_height, &image_rect, 2);
+    world_menu_build_and_upload_window_frame_image(
+        entry->inner_width, entry->inner_height, &image_rect, MENU_WINDOW_FRAME_ALTERNATE_UPLOAD);
     buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, window.rect.w * window.rect.h / 2);
     row_offset = layout->row_offset;
@@ -154,7 +155,7 @@ void world_menu_scrolling_list_thread(void) {
         frame = &page->frame;
         SetSemiTrans(&frame, 1);
         if (delta == 0 && world_menu_is_input_allowed() != 0 && i != 0) {
-            if (layout->columns.mode[0] == 0 && layout->columns.mode[1] == 0) {
+            if (layout->columns.mode[0] == MENU_TEXT_COLUMN_TEXT && layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT) {
                 if (g_world_menu_new_button_input & (PSX_PAD_RIGHT | PSX_PAD_LEFT)) {
                     toggle ^= 1;
                 }
@@ -202,14 +203,14 @@ void world_menu_scrolling_list_thread(void) {
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->columns.x[column], 0);
-                    if (layout->columns.mode[column] != 2) {
+                    if (layout->columns.mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                     }
                     g_world_menu_text_state.pen.color = 0;
                     if (g_world_menu_text_color == 4) {
                         g_world_menu_text_state.pen.color = 0x44444444;
                     }
-                    if (layout->columns.mode[column] == 0) {
+                    if (layout->columns.mode[column] == MENU_TEXT_COLUMN_TEXT) {
                         world_menu_display_text_entry(
                             layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
@@ -218,11 +219,11 @@ void world_menu_scrolling_list_thread(void) {
                             world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
                         }
-                    } else if (layout->columns.mode[column] == 1) {
+                    } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                         world_display_menu_number_entry(
                             layout->columns.text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
-                    } else if (layout->columns.mode[column] == 3) {
-                        if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
+                    } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
+                        if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
                             && (u16)layout->columns.text_ids[column][index] < 2
                             && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
                                 || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
@@ -325,7 +326,7 @@ void world_menu_scrolling_list_thread(void) {
                 page, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
-        if (layout->columns.mode[1] == 0 && toggle == 1) {
+        if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
             page->icons.base.sprites[1].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
             page->icons.base.sprites[2].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
         }

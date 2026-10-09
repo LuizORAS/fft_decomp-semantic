@@ -41,14 +41,14 @@ void option_entrypoint(s32 menu_type) {
     }
 
     if (menu_type != 2) {
-        battle_thread_set_parameters(10, 0, 0, 1);
-        battle_thread_set_parameters(11, 0, 0, 1);
-        battle_thread_set_parameters(12, 0, 0, 1);
-        battle_thread_set_parameters(13, 0, 0, 1);
-        battle_thread_wait_until_inactive(10);
-        battle_thread_wait_until_inactive(11);
-        battle_thread_wait_until_inactive(12);
-        battle_thread_wait_until_inactive(13);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
+        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
+        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
     }
 
     g_option_menu_open = 0;

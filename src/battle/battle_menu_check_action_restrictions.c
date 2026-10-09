@@ -21,14 +21,14 @@ void battle_menu_check_action_restrictions(void) {
     menu = g_battle_menu_current_id;
     if ((u32)(menu - 0x13) < 2 || (u32)(menu - 0x30) < 2) {
         result = battle_unit_get_action_restriction(unit);
-        if (result == 0) {
+        if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
             battle_sound_set_effect_to_invalid();
             battle_thread_exit_current();
         }
-        if (result == 1) {
+        if (result == BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT) {
             message = 0x1002;
         }
-        if (result == 2) {
+        if (result == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
             message = 0x1003;
         }
     } else {

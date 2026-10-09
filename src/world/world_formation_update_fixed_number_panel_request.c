@@ -12,6 +12,6 @@ void world_formation_update_fixed_number_panel_request(void) {
         world_text_relocate_pointer_table(g_world_menu_text_file_buffer);
         world_menu_set_brightness(0x80, 0x80, 0x80);
         g_world_fixed_number_panel_request_state = 0;
-        g_main_system_flags |= 0x01000000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL;
     }
 }

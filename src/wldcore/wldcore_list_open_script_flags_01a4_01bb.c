@@ -19,7 +19,7 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < 24; i++) {
-        if (world_script_get_variable(i + 0x1A4) != 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
             *values = i - 0x6800;
             *flags = 0;
             flags++;
@@ -38,13 +38,13 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     dimensions.y = i;
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB, count, i);
-    wldcore_window_start_panel_render_thread(
-        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
-    g_main_system_flags |= 0x800;
+    wldcore_window_start_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL,
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.content_render]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    world_thread_set_parameters(0xE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB848, 0);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_result = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;

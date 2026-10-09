@@ -6,12 +6,12 @@ void wldcore_menu_run_world_frame(GsOT* context) {
     u32* sprite_entries;
     u32* menu_entries;
 
-    if (g_main_system_flags & 0x80) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_SKIP_MENU_FRAME) {
         return;
     }
     world_formation_set_ordering_table_pointer(context->org + 15);
     world_formation_set_menu_entry_mask(~g_wldcore_menu_result);
-    if (g_main_system_flags & 0x20000) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {
         otag_entries = context->org;
         g_world_gfx_active_otag_entries = otag_entries + g_wldcore_menu_ordering_table_offset;
         world_menu_draw_active_window_frames();

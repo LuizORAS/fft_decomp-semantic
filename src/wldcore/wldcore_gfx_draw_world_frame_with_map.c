@@ -37,5 +37,5 @@ void wldcore_gfx_draw_world_frame_with_map(void) {
     GsSortClear(0, 0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsDrawOt(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    g_main_system_flags &= ~2;
+    g_main_system_flags &= ~MAIN_SYSTEM_FLAG_DRAW_MAP;
 }

@@ -14,7 +14,7 @@ void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t*
 
     wldcore_window_set_render_objects_visible(1);
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth - 1;
-    g_main_system_flags &= ~0x3000;
+    g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER);
     wldcore_menu_dispatch_publish_handler();
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count
         = wldcore_map_build_location_menu_entries(

@@ -65,11 +65,11 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         return;
     }
     flags = g_main_system_flags;
-    if (flags & 8) {
+    if (flags & MAIN_SYSTEM_FLAG_FADING) {
         return;
     }
 
-    if (flags & 4) {
+    if (flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) {
         if (level->fade_in < 0xFF) {
             level->fade_in += 8;
             if (level->fade_in >= 0x100) {
@@ -83,7 +83,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
             g_wldcore_screen_fade_state.boxes[0].b = fade;
             return;
         }
-        if (world_thread_is_running(0xE) != 0) {
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
             return;
         }
         g_wldcore_screen_brightness_rgb[0] = 0;
@@ -94,7 +94,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         *(s16*)&g_wldcore_sound_novel_text_history_0 = -1;
         g_wldcore_menu_result = 0;
         g_wldcore_sound_novel_countdown_frames = 0;
-        g_main_system_flags ^= 4;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_sound_novel_text_history_3 = g_wldcore_sound_novel_text_history_2;
         g_wldcore_sound_novel_text_history_2 = g_wldcore_sound_novel_text_history_1;
         g_wldcore_sound_novel_text_history_1 = first;
@@ -137,12 +137,12 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
         if (level->choice == 0) {
-            g_main_system_flags |= 4;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count -= 3;
-            if (world_thread_is_running(0xE) != 0) {
-                world_thread_set_task_id_to_three(0xE);
+            if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) != 0) {
+                world_thread_set_task_id_to_three(WORLD_THREAD_SLOT_WLDCORE_MESSAGE);
             }
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);
             main_sound_stop_weather_sfx_music();

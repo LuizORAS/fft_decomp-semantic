@@ -110,6 +110,19 @@ typedef enum attack_deployment_orientation {
     ATTACK_DEPLOYMENT_ORIENTATION_ROTATE_270 = 3,
 } attack_deployment_orientation_e;
 
+/* Slots of the deployment screen's own threads; native_thread_slot_e has the
+ * shared ones (unit status 8, character status 9, numeric editor 12). */
+typedef enum attack_thread_slot {
+    ATTACK_THREAD_SLOT_CONFIRM_MENU_CHILD = 3, /* the child of the confirm menu */
+    ATTACK_THREAD_SLOT_SELECT_MENU = 3,        /* attack_deploy_run_select_menu */
+    ATTACK_THREAD_SLOT_CONFIRM_MENU = 4,       /* the menu that sets g_attack_deploy_confirm_result */
+    ATTACK_THREAD_SLOT_ROSTER_STEP = 4,        /* attack_deploy_select_next/previous_roster_unit */
+    ATTACK_THREAD_SLOT_DETAIL_MARKER = 13,     /* a wait-forever thread while the unit detail panels are open */
+    ATTACK_THREAD_SLOT_NOTICE = 13,            /* the notice shown for an invalid deployment input */
+    ATTACK_THREAD_SLOT_SCREEN_GRAPHICS = 14,   /* attack_deploy_update_screen_graphics, then the map title */
+    ATTACK_THREAD_SLOT_DEPLOY_RENDER = 15,     /* attack_deploy_run_render_thread */
+} attack_thread_slot_e;
+
 enum {
     ATTACK_DEPLOYMENT_ORIENTATION_MASK = 0x0f,
 };
@@ -215,10 +228,11 @@ extern RECT g_attack_deploy_arrow_clut_rect;
 extern world_image_location_t g_attack_deploy_texture_location[];
 extern world_gfx_image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
 extern help_navigation_record_t g_attack_deploy_select_menu_nodes[];
-extern u8* g_attack_deploy_unit_text_section; /* g_attack_scenario_table string arena, installed as text section 26 */
+/* g_attack_scenario_table string arena, installed as TEXT_SECTION_DEPLOYMENT_UNIT_HELP */
+extern u8* g_attack_deploy_unit_text_section;
 
-extern u8*
-    g_attack_deploy_help_text_section; /* g_attack_event_condition_blocks help text, installed as text section 27 */
+/* g_attack_event_condition_blocks help text, installed as TEXT_SECTION_OVERLAY_SCREEN */
+extern u8* g_attack_deploy_help_text_section;
 
 extern u32 g_attack_deploy_arrow_clut_data[];
 extern s16 g_attack_deploy_confirm_result;

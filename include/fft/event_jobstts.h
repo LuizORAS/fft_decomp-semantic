@@ -352,7 +352,7 @@ enum {
     JOBSTTS_LIST_COMMAND_VISIBLE_ROWS_INDEX = 6,
 };
 
-extern u8 g_jobstts_sound_queued_effect_id;
+extern u8 g_jobstts_sound_queued_effect_id; /* main_sfx_e */
 extern s8 g_jobstts_active_page;
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];

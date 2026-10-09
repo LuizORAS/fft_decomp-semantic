@@ -19,20 +19,25 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     if (g_wldcore_window_render_records[level->frame_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
-    if (g_main_system_flags & 4) {
-        if (level->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP && !(g_main_system_flags & 8)) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) {
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP && !(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT;
             wldcore_gfx_clear_vram_and_scratch(1);
         }
-        if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT && world_thread_is_running(0xE) == 0) {
-            if ((g_main_system_flags & 0x80000) == 0 || g_wldcore_audio_queue.count == 0) {
-                g_main_system_flags ^= 4;
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT
+            && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+            if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) == 0 || g_wldcore_audio_queue.count == 0) {
+                g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 wldcore_window_set_render_objects_visible(1);
                 g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth - 1;
-                g_main_system_flags = g_main_system_flags & ~0x3800;
+                g_main_system_flags = g_main_system_flags
+                    & ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
+                        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER);
                 wldcore_menu_dispatch_publish_handler();
-                if (g_main_system_flags & 0x80000) {
-                    g_main_system_flags = (g_main_system_flags ^ 0x80001) | 0x10000000;
+                if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) {
+                    g_main_system_flags
+                        = (g_main_system_flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_TITLE_TUTORIAL))
+                        | MAIN_SYSTEM_FLAG_RETURN_TO_TITLE;
                     return;
                 }
                 wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
@@ -44,10 +49,10 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE) {
         if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
-            world_thread_set_parameters(0xE, 0, -1, 0);
-            g_main_system_flags = g_main_system_flags | 4;
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
+            g_main_system_flags = g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-            if (g_main_system_flags & 0x80000) {
+            if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) {
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
             } else {
@@ -63,7 +68,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB8DE, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 1;
@@ -97,7 +102,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             wldcore_list_open_tutorial_topics();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE:
-            world_thread_set_parameters(0xE, 0x19, 0xB8DE, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB8DE, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;

@@ -24,7 +24,8 @@ u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
     g_equip_gfx_blank_cell_rect.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_equip_gfx_blank_cell_rect.x = x;
-        equip_gfx_enqueue_oriented_textured_quad(&g_equip_gfx_blank_cell_rect, 0, 0, 0, g_equip_gfx_sprite_ot_index);
+        equip_gfx_enqueue_oriented_textured_quad(
+            &g_equip_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_equip_gfx_sprite_ot_index);
         x += 8;
     }
     rect.x = x;

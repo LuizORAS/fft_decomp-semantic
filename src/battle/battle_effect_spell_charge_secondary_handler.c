@@ -111,7 +111,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         state->done = 0;
         state->x = out.vx;
         state->y = out.vy;
-        SuzukiPlaySoundFindChannel(0x1f);
+        SuzukiPlaySoundFindChannel(MAIN_SFX_SPELL_CHARGE);
         result = 1;
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
@@ -257,7 +257,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         if (g_battle_effect_current_secondary->phase == BATTLE_SECONDARY_EFFECT_EXECUTING || state->count.all != 0) {
             result = 1;
         } else {
-            main_sound_stop_sfx_channels(0x1f);
+            main_sound_stop_sfx_channels(MAIN_SFX_SPELL_CHARGE);
             result = 0;
         }
         break;

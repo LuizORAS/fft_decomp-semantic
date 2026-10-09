@@ -26,8 +26,8 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
     s32 angle;
 
     if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
-        if (!(g_main_system_flags & 8)) {
-            g_main_system_flags = g_main_system_flags ^ 1;
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
+            g_main_system_flags = g_main_system_flags ^ MAIN_SYSTEM_FLAG_RUNNING;
         }
         return;
     }
@@ -54,7 +54,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
             rect.y = 0x100;
             rect.w = 0x80;
             rect.h = 0x100;
-            g_main_system_flags = g_main_system_flags ^ 1;
+            g_main_system_flags = g_main_system_flags ^ MAIN_SYSTEM_FLAG_RUNNING;
             MoveImage(&rect, 0x100, 0);
             DrawSync(0);
         }
@@ -101,7 +101,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
             g_wldcore_menu_indicator_sprite.r = shade;
             if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_SPIN) {
                 if (level->anim_step == 4) {
-                    wldcore_sound_play_effect(0x6C);
+                    wldcore_sound_play_effect(MAIN_SFX_EVENT_TRANSITION_MODE_0);
                 }
                 if (level->anim_step >= 0x20) {
                     level->phase = WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT;
@@ -112,7 +112,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
                 }
             } else {
                 if (level->anim_step == 4) {
-                    wldcore_sound_play_effect(0x6D);
+                    wldcore_sound_play_effect(MAIN_SFX_EVENT_TRANSITION_MODE_1);
                 }
                 if (level->anim_step >= 0x20) {
                     level->phase = WLDCORE_EVENT_TRANSITION_PHASE_DONE;

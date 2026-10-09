@@ -34,7 +34,7 @@ world_draw_number_command_t* world_menu_script_draw_plain_number(world_draw_numb
     while (blanks != -1) {
         g_world_menu_number_blank_sprite.x = x;
         world_gfx_enqueue_oriented_textured_quad(
-            &g_world_menu_number_blank_sprite, 0, 0, 0, g_world_menu_draw_priority);
+            &g_world_menu_number_blank_sprite, 0, TEXTURE_UV_FLIP_NONE, 0, g_world_menu_draw_priority);
         blanks -= 1;
         x += 8;
     }

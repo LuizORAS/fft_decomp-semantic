@@ -29,8 +29,8 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         level->dissolve_step++;
         return;
     }
-    if ((g_main_system_flags & 4) && !(g_main_system_flags & 8)) {
-        g_main_system_flags ^= 4;
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && !(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_window_record_count--;
         g_wldcore_window_render_record_count -= 3;
         g_wldcore_window_render_object_count -= 4;
@@ -47,8 +47,8 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         g_wldcore_window_render_record_count -= 3;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
-        world_thread_start(0xe, world_text_message_box_thread);
-        world_thread_set_parameters(0xe, 0x19, 0xb848, 0);
+        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xb848, 0);
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_menu_push_treasure_detail_level(level->mode);
         return;
@@ -58,7 +58,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         g_wldcore_window_records[level->cursor_window].frame_index
             = g_wldcore_window_records[level->cursor_window].anim_counter = 0;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        g_main_system_flags |= 4;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         return;
     }

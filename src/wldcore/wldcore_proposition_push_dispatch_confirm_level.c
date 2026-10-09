@@ -23,7 +23,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     s32 row;
     s32 line;
 
-    world_thread_set_parameters(0xE, 0x19, 0xB814, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB814, 0);
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

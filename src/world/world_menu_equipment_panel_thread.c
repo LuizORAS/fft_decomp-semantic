@@ -30,7 +30,7 @@ void world_menu_equipment_panel_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
     thread = *(world_status_thread_t**)((g_world_thread_current_id * NATIVE_THREAD_STRIDE) + (s32)g_world_threads);
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
-    if (g_world_thread_current_id == 10) {
+    if (g_world_thread_current_id == WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) {
         text = g_world_change_banner_text_image;
         screen = g_world_change_banner_panel_frames;
         state = &g_world_selected_unit_stat_detail;

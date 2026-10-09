@@ -500,6 +500,14 @@ typedef struct world_menu_entry {
 } world_menu_entry_t;
 typedef char world_menu_entry_size_must_be_0x3c[(sizeof(world_menu_entry_t) == 0x3c) ? 1 : -1];
 
+/* world_menu_text_layout_t.mode[]: what a column of the layout draws. */
+typedef enum menu_text_column_mode {
+    MENU_TEXT_COLUMN_TEXT = 0,          /* text ids, drawn by *_menu_display_text_entry */
+    MENU_TEXT_COLUMN_NUMBER = 1,        /* two-digit numbers, drawn by *_display_menu_number_entry */
+    MENU_TEXT_COLUMN_HIDDEN = 2,        /* the column is skipped */
+    MENU_TEXT_COLUMN_NUMBER_GLYPHS = 3, /* two-digit numbers, drawn by *_draw_menu_number_glyphs */
+} menu_text_column_mode_e;
+
 /* Provisional: three-column menu text layout walked by world_menu_draw_text_columns (0x80109374) /
  * world_menu_draw_text_columns_2 (reached through world_menu_entry_t::text_binding when
  * that record is a layout rather than a binding). Column i uses x[i],
@@ -510,7 +518,7 @@ typedef struct world_menu_text_layout {
     s16 hidden_rows;     /* 0x02: rows beyond the visible page (count - visible, 0 when
                             all fit); row_offset is clamped to it */
     s16 x[3];            /* 0x04 */
-    s16 mode[3];         /* 0x0a */
+    s16 mode[3];         /* 0x0a: menu_text_column_mode_e */
     s16* text_ids[3];    /* 0x10 */
     s16* text_colors[3]; /* 0x1c */
 } world_menu_text_layout_t;
@@ -653,26 +661,26 @@ typedef char world_menu_quad_page_size_must_be_0x144[sizeof(world_menu_quad_page
  *             0x40 = the entry is the acting/queued unit (bracketed name);
  *             0x80 = turn value biased by 0x100. */
 typedef struct world_at_descriptor {
-    u8 flags;
+    u8 flags; /* world_at_descriptor_flags_e */
     u8 turn_value;
     u8 _unused_02;
     u8 _unused_03;
 } world_at_descriptor_t;
 
-/* world_at_descriptor_t.flags. */
-enum {
+/* world_at_descriptor_t.flags */
+typedef enum world_at_descriptor_flags {
     WORLD_AT_UNIT_ID_MASK = 0x1f,
-    WORLD_AT_END_OF_LIST = 0x1f,
+    WORLD_AT_END_OF_LIST = 0x1f, /* unit id field of the entry that ends the list */
     WORLD_AT_SHOW_WAIT_LABEL = 0x20,
     WORLD_AT_ACTING_UNIT = 0x40,
     WORLD_AT_TURN_VALUE_HIGH_BIT = 0x80,
-};
+} world_at_descriptor_flags_e;
 
 /* Provisional: the AT-list work area the *_menu_build_ability_preview_at_list
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
  * parallel halfword columns become the layout's text_ids/text_colors tables,
- * `text` is published through g_world_text_section_pointers[31] (BATTLE:
- * g_battle_text_section_pointers[31]), and `request` is the block handed to
+ * `text` is published through g_world_text_section_pointers[TEXT_SECTION_AT_LIST] (BATTLE:
+ * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]), and `request` is the block handed to
  * the main-stack preview call, whose descriptor array follows it. */
 typedef struct world_menu_at_list_work {
     s16 primary_values[40];                /* 0x000: turn-value column */
@@ -912,6 +920,45 @@ typedef enum battle_companion_overlay_state {
     BATTLE_COMPANION_OVERLAY_STATE_EQUIP = 4,     /* equip_entrypoint */
     BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
 } battle_companion_overlay_state_e;
+
+/* g_*_menu_indicator_state[]: state of each of the two translucent panels
+ * *_menu_draw_thread_status_indicators draws behind the unit status banners. */
+typedef enum menu_indicator_state {
+    MENU_INDICATOR_STATE_HIDDEN = 0,     /* not drawn */
+    MENU_INDICATOR_STATE_FADING_IN = 1,  /* brightness rises by 0xc a frame up to 0x78 and holds */
+    MENU_INDICATOR_STATE_FADING_OUT = 2, /* brightness falls by 0xc a frame; at zero the state returns to HIDDEN */
+} menu_indicator_state_e;
+
+/* g_*_menu_panel_fade_mode: what *_menu_update_panel_fade does to the panel's
+ * dimming tiles. */
+typedef enum menu_panel_fade_mode {
+    MENU_PANEL_FADE_NONE = 0, /* not drawn */
+    MENU_PANEL_FADE_IN = 1,   /* intensity rises by 8 a frame up to 80 and holds */
+    MENU_PANEL_FADE_OUT = 2,  /* intensity falls by 8 a frame; at zero the mode returns to NONE */
+} menu_panel_fade_mode_e;
+
+/* Second argument of *_gfx_set_draw_mode_for_texture_page: one of five fixed
+ * 4-bit texture pages, named by the VRAM origin passed to GetTPage. Any value
+ * above 3 selects the last page; GetTPage keeps only the 256-row page bits of
+ * y, so that page starts at row 256. */
+typedef enum menu_texture_page {
+    MENU_TEXTURE_PAGE_960_256 = 0,
+    MENU_TEXTURE_PAGE_448_0 = 1,
+    MENU_TEXTURE_PAGE_384_0 = 2,
+    MENU_TEXTURE_PAGE_832_256 = 3,
+    MENU_TEXTURE_PAGE_896_288 = 4,
+} menu_texture_page_e;
+
+/* Last argument of *_menu_build_and_upload_window_frame_image. The UPLOAD
+ * modes load the image into VRAM and free the buffer; the BUILD modes return
+ * the buffer for the caller to draw into and upload. The ALTERNATE modes use
+ * the frame pattern with sixteen-row top and bottom borders. */
+typedef enum menu_window_frame_mode {
+    MENU_WINDOW_FRAME_UPLOAD = 0,
+    MENU_WINDOW_FRAME_BUILD = 1,
+    MENU_WINDOW_FRAME_ALTERNATE_UPLOAD = 2,
+    MENU_WINDOW_FRAME_ALTERNATE_BUILD = 3,
+} menu_window_frame_mode_e;
 
 /* One 17-byte per-unit menu record, one per battle-unit slot (WORLD keeps its
  * 21 rows at 0x8013a750).
@@ -1207,6 +1254,15 @@ typedef enum menu_decimal_sign_flag {
     MENU_DECIMAL_SIGN_MINUS = 0x0800,
 } menu_decimal_sign_flag_e;
 
+/* The other format flags *_text_render_decimal_value tests. */
+typedef enum menu_decimal_format_flag {
+    MENU_DECIMAL_DOTS_PREFIX = 0x0100,        /* a two-row dotted glyph before the number */
+    MENU_DECIMAL_WIDEN_FOR_100 = 0x0200,      /* a value of 100 is drawn with three digits */
+    MENU_DECIMAL_THREE_COLUMN_FIELD = 0x2000, /* right-aligned in three digit columns */
+    MENU_DECIMAL_LEADING_ZEROS = 0x4000,      /* every digit of the count is drawn */
+    MENU_DECIMAL_SLASH_PREFIX = 0x8000,       /* a "/" glyph before the number */
+} menu_decimal_format_flag_e;
+
 enum {
     MENU_DECIMAL_FIELD_WIDTH_MASK = 0x000f,
     MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK = 0xfff0,
@@ -1254,6 +1310,35 @@ typedef enum text_section {
     TEXT_SECTION_UNIT_MESSAGE = 21,   /* SPELL.MES while the spell quote thread runs */
     TEXT_SECTION_SKILLSET_NAMES = 22, /* TEXT_ID_SKILLSET_NAME_SOURCE_BASE */
     TEXT_SECTION_OVERLAY_SCREEN = 27, /* each overlay screen binds its own text here */
+    /* A screen rebinds a slot to its own text while it is up, so the names
+     * below share numbers with each other and with the sections above: each
+     * says what one binder puts there. */
+    TEXT_SECTION_PARTY_UNIT_NAMES = 11,     /* names by party slot, which ATTACK writes for the deployment screen */
+    TEXT_SECTION_TUTORIAL_MESSAGES = 23,    /* WORLD: the running tutorial's message file */
+    TEXT_SECTION_FORMATION_MESSAGES = 24,   /* WORLD formation and name-entry messages; CARD binds its own copy */
+    TEXT_SECTION_COMPOSED_TEXT = 25,        /* a buffer the screen fills: a sort or reorder list, the entered name */
+    TEXT_SECTION_DEPLOYMENT_UNIT_HELP = 26, /* ATTACK: eleven help strings per party slot */
+    TEXT_SECTION_NAME_ENTRY_KEYS = 28,      /* WORLD name entry: the key rows */
+    TEXT_SECTION_DISMISS_UNIT_REPLIES = 29, /* WORLD formation: what a dismissed unit says */
+    TEXT_SECTION_JOB_DESCRIPTIONS = 29,     /* WORLD formation: the job wheel's descriptions */
+    TEXT_SECTION_SHOP_MENU_LABELS = 30,     /* WORLD shops */
+    TEXT_SECTION_AT_LIST = 31,              /* the AT list's text, built when the list opens */
+    TEXT_SECTION_SHOP_DIALOGUE = 31,        /* WORLD shops: the shopkeeper's lines */
+    /* The help text file, which HELPMENU and WORLD's help menu bind section
+     * by section while a help window is open. */
+    TEXT_SECTION_HELP_UNIT_STATUS = 1,   /* the fields of the unit status panels */
+    TEXT_SECTION_HELP_MENU_COMMANDS = 2, /* the rows of each command menu */
+    TEXT_SECTION_HELP_TERRAIN = 11,      /* by the cursor tile's surface type */
+    TEXT_SECTION_HELP_JOBS = 12,         /* by job id */
+    TEXT_SECTION_HELP_ITEMS = 13,        /* by item id */
+    TEXT_SECTION_HELP_ABILITIES = 15,    /* by ability id */
+    TEXT_SECTION_HELP_SKILLSETS = 19,    /* by skillset id */
+    TEXT_SECTION_HELP_STATUSES = 20,     /* by status id */
+    /* REQUIRE's text, which its post-battle routines bind over the resident
+     * sections; it binds its job names as TEXT_SECTION_JOB_NAMES. */
+    TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS = 1,   /* a unit's Brave is low or its Faith high */
+    TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES = 2, /* the unit leaves the party for it */
+    TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES = 3,   /* what a unit turned away or dismissed says */
 } text_section_e;
 
 /* Substitution opcodes shared by battle messages and WORLD event text. */
@@ -1392,6 +1477,27 @@ typedef struct world_unit_summary_frame {
     s16 offset_b[2];                          /* 0xc4 */
     POLY_FT4 portrait;                        /* 0xc8 */
 } world_unit_summary_frame_t;
+
+/* First argument of *_unit_start_view_thread and value of g_*_unit_view_mode:
+ * the row of g_*_unit_view_thread_sets the supervisor keeps running. Each
+ * mode from 1 up runs the selected-tile info panel plus the panels named. */
+typedef enum unit_view_mode {
+    UNIT_VIEW_MODE_NONE = 0,           /* no panel */
+    UNIT_VIEW_MODE_TILE_INFO = 1,      /* the tile info panel alone */
+    UNIT_VIEW_MODE_HOVERED_UNIT = 2,   /* hovered-unit stats */
+    UNIT_VIEW_MODE_UNIT_SUMMARY = 3,   /* unit summary panel and hovered-unit stats */
+    UNIT_VIEW_MODE_RIGHT_UNIT = 4,     /* right-side unit stats */
+    UNIT_VIEW_MODE_ATTACK_PREVIEW = 5, /* attack caster and attack target stats */
+} unit_view_mode_e;
+
+/* Second argument of *_menu_display_hovered_unit_stats: which of the four
+ * unit stats panels the thread draws; each value has one caller. */
+typedef enum unit_stats_panel {
+    UNIT_STATS_PANEL_HOVERED_UNIT = 0,  /* *_menu_refresh_hovered_unit_stats_display */
+    UNIT_STATS_PANEL_ATTACK_CASTER = 1, /* *_menu_preview_attack_caster_stats */
+    UNIT_STATS_PANEL_ATTACK_TARGET = 2, /* *_menu_preview_attack_target_stats; shows the reaction ability name */
+    UNIT_STATS_PANEL_RIGHT_UNIT = 3,    /* *_menu_refresh_right_unit_stats_display */
+} unit_stats_panel_e;
 
 /* Provisional: 0x30-byte unit-view thread set at 0x801564d0, indexed by the
  * view mode. Each of the four slots names a thread entry (or -1), the

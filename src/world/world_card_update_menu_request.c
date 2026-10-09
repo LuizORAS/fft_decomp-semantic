@@ -18,7 +18,7 @@ void world_card_update_menu_request(void) {
         return;
     }
     if (state == 2) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_card_menu_request_state = state + 1;
         }
         return;
@@ -33,7 +33,7 @@ void world_card_update_menu_request(void) {
         world_formation_save_and_set_system_flags();
         if (result == 1) {
             g_world_card_menu_request_state = 0;
-            g_main_system_flags |= 0x10000;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_RESTART;
             return;
         }
         world_menu_start_thread_group(g_world_menu_thread_group_parameter, g_world_menu_location_id,
@@ -58,7 +58,7 @@ void world_card_update_menu_request(void) {
         return;
     }
     if (state == 9) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_card_menu_request_state = 0;
         }
     }

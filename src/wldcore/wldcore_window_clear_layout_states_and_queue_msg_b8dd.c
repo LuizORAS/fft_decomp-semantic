@@ -26,5 +26,5 @@ void wldcore_window_clear_layout_states_and_queue_msg_b8dd(s32* param) {
     slot = param[0];
     g_wldcore_window_records[slot].anim_counter = 0;
     g_wldcore_window_records[slot].frame_index = 0;
-    world_thread_set_parameters(14, 0x19, 0xB8DD, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB8DD, 0);
 }

@@ -594,6 +594,19 @@ void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 
 /* thread */
+/* Slots of the equip screen's own threads. The WORLD formation screen runs
+ * the same threads in other slots (world_thread_slot_e and
+ * native_thread_slot_e); here BATTLE's suspended menu threads stay in 7 and 8. */
+typedef enum equip_thread_slot {
+    EQUIP_THREAD_SLOT_POPUP_MENU = 3,         /* the item action and type order menus */
+    EQUIP_THREAD_SLOT_COMMAND_MENU_CHILD = 4, /* a wait-forever thread while a command's mode runs */
+    EQUIP_THREAD_SLOT_COMMAND_MENU = 5,       /* equip_menu_icon_list_thread */
+    EQUIP_THREAD_SLOT_EQUIPMENT_LIST = 10,    /* equip_panel_run_equipment_list_thread */
+    EQUIP_THREAD_SLOT_ITEM_NUMERIC = 11,      /* the numeric editor thread of the item panel */
+    EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_render_unit_status_panel_thread */
+    EQUIP_THREAD_SLOT_COMPARISON_STATUS = 14, /* the second banner slot the indicator draw watches */
+} equip_thread_slot_e;
+
 extern u8 g_equip_thread_idle_stop_pending;
 extern s32 g_equip_thread_state;
 extern battle_menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
@@ -694,7 +707,7 @@ void equip_render_unit_status_panel_thread(void);
 s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support);
 
 /* other */
-extern u8 g_equip_sound_queued_effect_id;
+extern u8 g_equip_sound_queued_effect_id; /* main_sfx_e */
 extern u8 g_equip_sound_suppress_queued;
 
 /* RECT[1] (right panel) of g_equip_panel_origin_offsets. Kept as its own symbol: spelling it as an element lets GCC

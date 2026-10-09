@@ -36,8 +36,8 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     unit = battle_unit_get_attacker_data_pointer();
     g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
     sprite = frames[0].sprites;
-    battle_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_0, 0);
-    battle_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_1, 1);
+    battle_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_0, MENU_TEXTURE_PAGE_960_256);
+    battle_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_1, MENU_TEXTURE_PAGE_448_0);
     battle_menu_init_sprite_array(sprite, 7, 0x7C3C);
     battle_gfx_init_default_poly_ft4(&frames[0].portrait);
     battle_text_configure_sprite_vram(&rects[0], 0x58, 0x20, &frames[0].sprites[0], 0);

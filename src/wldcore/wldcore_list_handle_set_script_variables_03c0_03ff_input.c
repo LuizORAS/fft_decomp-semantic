@@ -6,10 +6,11 @@
  * restores the parent list window's content render record (flag 0x100); a
  * confirmed entry's value is passed to 0x8008389c. */
 void wldcore_list_handle_set_script_variables_03c0_03ff_input(wldcore_menu_panel_level_t* level) {
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_result = 0;
         g_wldcore_menu_ordering_table_offset = 1;
-        g_main_system_flags ^= 4;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF);
@@ -27,15 +28,15 @@ void wldcore_list_handle_set_script_variables_03c0_03ff_input(wldcore_menu_panel
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = 0;
-        world_thread_set_parameters(0xC, 0, 0, 1);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
         wldcore_list_script_variables_clear_result(level);
         wldcore_menu_push_message_level(0x1056, 1);
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
-        world_thread_set_parameters(0xC, 0, 0, 1);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     }
 }

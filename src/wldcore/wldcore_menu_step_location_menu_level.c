@@ -46,25 +46,28 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     }
     if (level->delay != 0) {
         if (level->delay == 8) {
-            world_thread_start(0xC, world_build_at_list_2);
-            world_thread_set_parameters(0xC, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+            world_thread_start(WORLD_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+            world_thread_set_parameters(
+                WORLD_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         }
         level->delay--;
         return;
     }
-    if (g_main_system_flags & 8) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_FADING) {
         return;
     }
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WORLD_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_gfx_toggle_captured_world_frame(0);
-        g_main_system_flags = (g_main_system_flags | 4) & 0xF7FFFFFD;
+        g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+            & ~(MAIN_SYSTEM_FLAG_DRAW_MAP | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION);
         if (level->slots.result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU);
             selected = &g_wldcore_window_panel_render_state.selected_index;
             values = g_wldcore_list_entry_values;
             value = values[*selected];
             if ((value & 0xF800) == 0xB800) {
-                g_main_system_flags ^= 4;
+                g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 value &= 0x7FF;
                 switch (value) {
                 case 0x5D:
@@ -102,7 +105,8 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);
                         world_script_set_variable(
                             EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT, (rand() * g_wldcore_script_state.args[2]) >> 15);
-                        g_main_system_flags = (g_main_system_flags | 0x2000000) ^ 1;
+                        g_main_system_flags
+                            = (g_main_system_flags | MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE) ^ MAIN_SYSTEM_FLAG_RUNNING;
                     } else {
                         wldcore_fade_start_screen(0, 0x10);
                         wldcore_sound_enqueue_music_start(0x11B);
@@ -111,12 +115,12 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                 }
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
-            g_main_system_flags ^= 1;
+            g_main_system_flags ^= MAIN_SYSTEM_FLAG_RUNNING;
             value = values[*selected] & 0x7FF;
             g_wldcore_next_map_id[0] = value + 1;
             return;
         }
-        g_main_system_flags = (g_main_system_flags | 2) & ~4;
+        g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_DRAW_MAP) & ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU);
         wldcore_menu_close_level_and_release_records(&level->slots, 1);
         return;
@@ -126,8 +130,8 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         if ((value & 0xF800) == 0xB800) {
             wldcore_sound_play_effect(MAIN_SFX_CANCEL);
             level->slots.result = 0;
-            world_thread_set_parameters(0xC, 0, 0, 1);
-            g_main_system_flags |= 4;
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         }
     } else if (g_wldcore_new_button_presses & PSX_PAD_SELECT) {
         wldcore_window_set_render_state_2_from_arg_0x10((s32*)level);
@@ -149,7 +153,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->slots.result = 1;
-        world_thread_set_parameters(0xC, 0, 0, 1);
-        g_main_system_flags |= 4;
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     }
 }

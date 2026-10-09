@@ -14,11 +14,11 @@ void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
         world_text_save_section_pointers();
         world_text_relocate_pointer_table(g_open_text_section_offsets);
     }
-    world_thread_start(2, world_text_character_handling_thread);
-    if (g_main_system_flags & 0x20000) {
-        world_thread_set_parameters(2, 0x3B, text, 0);
+    world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x3B, text, 0);
     } else {
-        world_thread_set_parameters(2, 0x33, text, 0);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x33, text, 0);
     }
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.saved_menu_result = g_wldcore_menu_result;
     g_wldcore_menu_result = -1;

@@ -21,7 +21,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot) {
     GsLINE line;
     CVECTOR color;
 
-    if (g_main_system_flags & 0x800) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE) {
         return;
     }
 

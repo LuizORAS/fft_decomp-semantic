@@ -66,7 +66,7 @@ void world_build_at_list_2(void) {
     window.y_screen_offset = 0xC;
     window.rect.w = entry->window_width - 0x12;
     window.rect.h = entry->window_height - 0x1A;
-    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
+    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
     texture_window.x = 0;
     texture_window.y = (u8)entry->vram_y;
     texture_window.w = 0x100;
@@ -117,8 +117,8 @@ void world_build_at_list_2(void) {
     buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
-    world_thread_start(0xF, world_menu_window_frame_thread_2);
-    world_thread_set_parameters(0xF, (s32)&entry->window_x, 0, 0);
+    world_thread_start(WORLD_THREAD_SLOT_WINDOW_FRAME, world_menu_window_frame_thread_2);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;
     world_menu_draw_text_columns(entry, &row_offset, buffer);
@@ -146,9 +146,9 @@ void world_build_at_list_2(void) {
         page = &g_world_text_list_pages[i & 1];
         frame = &page->frame;
         if (world_thread_is_previous_running() != 0 && g_world_thread_task_active == 0) {
-            world_thread_set_parameters(0xF, (s32)&entry->window_x, 1, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 1, 0);
         } else {
-            world_thread_set_parameters(0xF, (s32)&entry->window_x, 0, 0);
+            world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0 && i != 0) {
             if ((*input0 & PSX_PAD_UP) && !(*input1 & PSX_PAD_SQUARE)) {
@@ -193,19 +193,19 @@ void world_build_at_list_2(void) {
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->x[column], 0);
-                    if (layout->mode[column] != 2) {
+                    if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                         g_world_menu_text_color = layout->text_colors[column][index];
                     }
                     if (g_world_menu_text_color == 4) {
                         g_world_menu_text_state.pen.color = 0x44444444;
                     }
-                    if (layout->mode[column] == 0) {
+                    if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                         world_menu_display_text_entry(
                             layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
-                    } else if (layout->mode[column] == 1) {
+                    } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                         world_display_menu_number_entry(
                             layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
-                    } else if (layout->mode[column] == 3) {
+                    } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                         world_draw_menu_number_glyphs(
                             layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     }
@@ -300,7 +300,7 @@ void world_build_at_list_2(void) {
         page->icons.base.sprites[2].y0 += 4;
         world_menu_submit_icon_primitives(&page->icons.base);
     }
-    world_thread_set_parameters(0xF, 0, 0, 1);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WINDOW_FRAME, 0, 0, 1);
     entry->select_text_table = row_offset;
     if (accum & 0xF) {
         world_menu_free_memory(buffer);

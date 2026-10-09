@@ -26,7 +26,7 @@ void bunit_menu_run_reorder_list(void) {
         g_bunit_menu_reorder_list_initialized = 1;
     }
 
-    if (bunit_menu_run_descriptor_thread(0xF, g_bunit_menu_reorder_list_desc) == 0) {
+    if (bunit_menu_run_descriptor_thread(BUNIT_THREAD_SLOT_REORDER_MENU, g_bunit_menu_reorder_list_desc) == 0) {
         g_bunit_menu_reorder_list_initialized = 0;
         g_bunit_menu_current_menu = BUNIT_MENU_UNIT_LIST;
     }

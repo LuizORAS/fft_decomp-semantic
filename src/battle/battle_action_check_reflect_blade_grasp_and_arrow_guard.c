@@ -26,7 +26,7 @@ void battle_action_check_reflect_blade_grasp_and_arrow_guard(void) {
     if (battle_action_can_unit_react(g_battle_action_target) != 0) {
         return;
     }
-    if (battle_unit_get_action_restriction(g_battle_action_target) != 0) {
+    if (battle_unit_get_action_restriction(g_battle_action_target) != BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
         return;
     }
     reaction_flags = g_battle_action_target->reaction_abilities[3];

@@ -77,7 +77,8 @@ void world_menu_number_entry_thread(void) {
         shadow_quads[j].v3 = 0x10;
     }
     digit = 0;
-    buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+    buffer = world_menu_build_and_upload_window_frame_image(
+        param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     *stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
@@ -131,7 +132,8 @@ void world_menu_number_entry_thread(void) {
             }
         }
         if (redraw == 1) {
-            buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(
+                param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             *stride = param->inner_width;
             world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
             world_gfx_draw_signed_number(value, digits, buffer, (world_glyph_blit_t*)(stride - 2));

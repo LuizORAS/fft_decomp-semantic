@@ -34,20 +34,20 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         } else {
             g_wldcore_job_selection.speaker_party_index = speaker;
         }
-        world_thread_set_parameters(14, 0, -1, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 1:
-        if (world_thread_is_running(14))
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE))
             return 0;
         state->phase++;
         break;
     case 2:
-        world_thread_start(14, world_text_message_box_thread);
+        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
         g_world_text_substitution_values[0] = g_wldcore_job_selection.speaker_party_index + TEXT_ID_UNIT_NAME_BASE;
         world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
             world_get_party_unit_formation_sprite(g_wldcore_job_selection.speaker_party_index));
-        world_thread_set_parameters(14, 0x19,
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, g_wldcore_job_selection.speaker_party_index) + 0x8800, 0);
         state->phase++;
         break;
@@ -59,11 +59,11 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 4:
-        world_thread_set_parameters(14, 0, -1, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 5:
-        if (world_thread_is_running(14))
+        if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE))
             return 0;
         state->phase = 0;
         return 1;

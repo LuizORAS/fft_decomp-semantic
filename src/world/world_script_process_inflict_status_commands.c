@@ -26,7 +26,7 @@ void world_script_process_inflict_status_commands(void) {
                             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
                         || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
                             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
-                        thread_id = world_thread_resolve_id(0x10);
+                        thread_id = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                         world_thread_start(thread_id, world_script_inflict_status_thread);
                         world_thread_set_parameters(
                             thread_id, (s32)(g_world_event_script + instruction_offset + 1), 0, 0);

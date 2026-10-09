@@ -76,7 +76,7 @@ void attack_deploy_run_select_menu(void) {
     }
     selected = 0;
     nodes = g_attack_deploy_select_menu_nodes;
-    g_battle_text_section_pointers[26] = g_attack_deploy_unit_text_section;
+    g_battle_text_section_pointers[TEXT_SECTION_DEPLOYMENT_UNIT_HELP] = g_attack_deploy_unit_text_section;
     g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_attack_deploy_help_text_section;
     parent_id = g_battle_current_thread_id - 1;
     input = battle_script_get_controller_input_pointer(0);

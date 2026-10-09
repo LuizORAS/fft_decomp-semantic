@@ -21,7 +21,7 @@ void wldcore_list_open_propositions(void) {
     s16* row_flags;
     s32 active_row_flag;
 
-    world_thread_set_parameters(0xE, 0x19, 0xB81B, 0);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, 0xB81B, 0);
     count = 0;
     loaded_count = g_main_save_proposition_count;
     if ((i = 0, loaded_count) > 0) {
@@ -54,7 +54,7 @@ void wldcore_list_open_propositions(void) {
     dimensions.y = i;
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS, g_main_save_proposition_count, i);
-    wldcore_window_start_panel_render_thread(0xC,
+    wldcore_window_start_panel_render_thread(WORLD_THREAD_SLOT_WINDOW_PANEL,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
         &origin);
     previous = g_wldcore_menu_stack_depth - 1;

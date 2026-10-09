@@ -18,7 +18,7 @@ void world_map_confirm_destination(void) {
         value = g_world_menu_location_list_text_ids[selection] + 0x7000;
         pending[1] = value;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, value);
-        g_main_system_flags |= 0x4000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
         world_thread_set_parameters(g_world_thread_current_id + 1, 0, 0, 1);
         world_thread_set_parameters(g_world_thread_current_id + 2, 0, 0, 1);
     } else {

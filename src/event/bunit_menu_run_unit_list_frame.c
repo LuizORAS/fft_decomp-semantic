@@ -28,13 +28,13 @@ s32 bunit_menu_run_unit_list_frame(void) {
         }
         if (bunit_gfx_update_increasing_fade() == 0) {
             g_bunit_unit_list_initialized = 0;
-            bunit_thread_request_stop(5);
+            bunit_thread_request_stop(BUNIT_THREAD_SLOT_MENU);
             return 0;
         }
         if (g_bunit_unit_list_triangle_menu_open != 0) {
             g_bunit_text_selection_id = g_bunit_unit_list_triangle_menu.selected_index != 0 ? 0x1001 : 0x1000;
             if ((g_bunit_unit_list_triangle_menu_open
-                    = bunit_menu_run_descriptor_thread(5, &g_bunit_unit_list_triangle_menu))
+                    = bunit_menu_run_descriptor_thread(BUNIT_THREAD_SLOT_MENU, &g_bunit_unit_list_triangle_menu))
                 == 0) {
                 if (g_bunit_menu_primary_result == 0) {
                     mode_b3 = g_bunit_status_banner_enabled;

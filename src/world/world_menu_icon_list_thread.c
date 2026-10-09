@@ -32,7 +32,8 @@ void world_menu_icon_list_thread(void) {
     for (i = 0;; i++) {
         if (*redraw == 1) {
             *redraw = 0;
-            buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(
+                param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             fresh = 1;
             g_world_menu_text_state.pen.stride = param->inner_width;
             world_menu_set_text_origin(8, 9);

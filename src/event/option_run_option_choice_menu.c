@@ -39,7 +39,7 @@ void option_run_option_choice_menu(void) {
         width += 2;
     }
     height = g_option_choice_counts[kind] * 16 + 16;
-    buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
+    buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     battle_thread_wait_frames(1);
     g_menu_text_state.pen.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {

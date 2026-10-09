@@ -85,7 +85,7 @@ void world_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffe
     menu->lines[7].y0 = 1;
     menu->lines[7].x1 = 0x8D;
     menu->lines[7].y1 = 0x5A;
-    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[0], 0);
-    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[1], 2);
-    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[2], 4);
+    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[0], MENU_TEXTURE_PAGE_960_256);
+    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[1], MENU_TEXTURE_PAGE_384_0);
+    world_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[2], MENU_TEXTURE_PAGE_896_288);
 }

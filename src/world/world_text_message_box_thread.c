@@ -64,7 +64,7 @@ void world_text_message_box_thread(void) {
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MESSAGE_BOX);
     value_index = 0;
-    script_variable_base = 0x18;
+    script_variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     g_world_menu_event_state_flag = 0;
     param = (s32)world_thread_get_current_parameter_1();
     rec.box_type = param & 0x70;
@@ -120,7 +120,7 @@ void world_text_message_box_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
     } else {
-        world_menu_build_and_upload_window_frame_image(rec.width, rec.height, &rec.rect, 0);
+        world_menu_build_and_upload_window_frame_image(rec.width, rec.height, &rec.rect, MENU_WINDOW_FRAME_UPLOAD);
     }
     if (g_world_formation_screen_active != 0) {
         x -= 0x100;
@@ -204,7 +204,8 @@ void world_text_message_box_thread(void) {
                 world_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
             } else {
-                world_menu_build_and_upload_window_frame_image(rec.width, rec.height, &rec.rect, 0);
+                world_menu_build_and_upload_window_frame_image(
+                    rec.width, rec.height, &rec.rect, MENU_WINDOW_FRAME_UPLOAD);
             }
             delay = 1;
             saved = (u8*)-1;
@@ -322,7 +323,8 @@ void world_text_message_box_thread(void) {
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 } else {
-                    world_menu_build_and_upload_window_frame_image(rec.width, rec.height, &rec.rect, 0);
+                    world_menu_build_and_upload_window_frame_image(
+                        rec.width, rec.height, &rec.rect, MENU_WINDOW_FRAME_UPLOAD);
                 }
                 cursor_y = y - 0x10;
                 world_thread_yield();

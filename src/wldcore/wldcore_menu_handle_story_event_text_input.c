@@ -13,12 +13,13 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
         != 0) {
         return;
     }
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xE) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
         flags = g_main_system_flags;
-        if ((flags & 8) == 0) {
+        if ((flags & MAIN_SYSTEM_FLAG_FADING) == 0) {
             value = *selection;
             g_main_saved_list_cursor_state = g_wldcore_story_events_cursor_state;
-            g_main_system_flags = (flags ^ 1) | 0x40000;
+            g_main_system_flags = (flags ^ MAIN_SYSTEM_FLAG_RUNNING) | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY;
             g_main_replay_story_event_index = value;
             g_main_saved_weather_variable = world_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
             return;
@@ -27,9 +28,9 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
     if ((g_wldcore_new_button_presses & PSX_PAD_TRIANGLE) != 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[*selection]);
-        g_main_system_flags |= 4;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        world_thread_set_parameters(0xE, 0, -1, 0);
+        world_thread_set_parameters(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0, -1, 0);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         return;

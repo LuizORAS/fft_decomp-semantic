@@ -11,7 +11,7 @@ void world_thread_update_task_state_2(void) {
     if (step >= 1 && step <= 3) {
         world_input_clear_state();
     } else {
-        running = world_thread_is_running(1);
+        running = world_thread_is_running(NATIVE_THREAD_SLOT_MENU_TEXT);
         if (running != 0 || g_world_grid_menu_id != 0) {
             world_input_clear_state();
             if (running != 0 && g_world_thread_task_active != 0) {

@@ -24,7 +24,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
     result = battle_unit_get_action_restriction(unit);
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
-        result = 1;
+        result = BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT;
     if (result)
         return result + 6;
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]

@@ -7,7 +7,7 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     s32 first;
     s32 second;
 
-    if (g_main_system_flags & 0x1000) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE) {
         return;
     }
 

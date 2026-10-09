@@ -82,7 +82,7 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_FACE_UNIT) {
             world_script_face_unit(script + 1, 1);
         } else if (script[0] == EVENT_OPCODE_SPRITE_MOVE || script[0] == EVENT_OPCODE_SPRITE_MOVE_BETA) {
-            thread_id = world_thread_resolve_id_after_current(0x10);
+            thread_id = world_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (script[0] == EVENT_OPCODE_SPRITE_MOVE) {
                 world_thread_start(thread_id, world_script_sprite_move);
             } else {

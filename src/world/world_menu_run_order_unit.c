@@ -16,13 +16,13 @@ void world_menu_run_order_unit(void) {
         g_world_formation_unit_banner_enabled = 0;
         g_world_order_unit_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(9);
-        world_menu_stop_unit_status_banner_thread(12);
+        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_stop_unit_status_banner_thread(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
         g_world_menu_order_unit_cursor = 0;
         g_world_menu_order_unit_open = 1;
     }
 
-    if (world_menu_run_thread(15, g_world_order_unit_menu) == 0) {
+    if (world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_order_unit_menu) == 0) {
         g_world_menu_order_unit_open = 0;
         g_world_formation_current_menu = 0;
         g_world_formation_unit_browse_enabled = g_world_order_unit_saved_browse_enabled;

@@ -8,15 +8,15 @@ void bunit_thread_toggle_9_and_12(s32 enable) {
         if (g_bunit_status_display_flags & 0x60) {
             return;
         }
-        if (battle_thread_is_running(9) != 0) {
+        if (battle_thread_is_running(NATIVE_THREAD_SLOT_CHARACTER_STATUS) != 0) {
             return;
         }
-        battle_thread_start(9, bunit_menu_equipment_and_ability_panel_thread);
-        battle_thread_set_parameters(9, &g_bunit_character_status_frame_config, 0, 0);
-        battle_thread_start(0xC, bunit_menu_run_numeric_editor_thread);
-        battle_thread_set_parameters(0xC, &g_bunit_numeric_editor_thread_params, 0, 0);
+        battle_thread_start(NATIVE_THREAD_SLOT_CHARACTER_STATUS, bunit_menu_equipment_and_ability_panel_thread);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_CHARACTER_STATUS, &g_bunit_character_status_frame_config, 0, 0);
+        battle_thread_start(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, bunit_menu_run_numeric_editor_thread);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_NUMERIC_EDITOR, &g_bunit_numeric_editor_thread_params, 0, 0);
     } else {
-        bunit_thread_request_stop(9);
-        bunit_thread_request_stop(0xC);
+        bunit_thread_request_stop(NATIVE_THREAD_SLOT_CHARACTER_STATUS);
+        bunit_thread_request_stop(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
     }
 }

@@ -164,17 +164,6 @@ typedef struct world_event_music_switch {
     s16 fade;
 } world_event_music_switch_t;
 
-/* WORLD stores ordinary variables as whole words, then packs the remaining
- * script-variable domains as 32 one-bit values or eight four-bit values per
- * word. */
-enum {
-    EVENT_SCRIPT_VAR_PACKED_BIT_FIRST = 0x80,
-    EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST = 0x360,
-    EVENT_SCRIPT_VAR_END = 0x400,
-    EVENT_SCRIPT_PACKED_BIT_WORD_FIRST = 0x80,
-    EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
-};
-
 extern u32 g_world_event_current_input;
 extern u32 g_world_event_initial_repeat_counter;
 extern u32 g_world_event_previous_input;
@@ -189,6 +178,8 @@ extern u8 g_world_script_tutorial_id;
 extern u16 g_world_script_tutorial_shift_command_bit;
 extern s16 g_world_script_tutorial_wait_time_remaining;
 extern s16 g_world_script_tutorial_wait_timer;
+/* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
+ * (event_script_variable_id_e) is its word index. */
 extern s32* g_world_script_variables;
 extern char g_world_script_pause_message[];
 extern u16 g_world_script_attack_entry_mode;
@@ -328,7 +319,7 @@ void world_script_waitwalk_event_instruction(s32 unit_id);
 
 /* sound */
 extern s16 g_world_sound_current_music_track_index;
-extern s32 g_world_sound_effect_id_to_play;
+extern s32 g_world_sound_effect_id_to_play; /* main_sfx_e; -1 while the event frame has no request */
 extern s16 g_world_sound_music_switch_request;
 extern s16 g_world_sound_music_track_1_id;
 extern s16 g_world_sound_music_track_2_id;
@@ -418,6 +409,22 @@ void world_noop_800e7808(s32 unused_unit_id);
 void world_noop_800fd074(const u8* unused_parameters);
 
 /* thread */
+
+/* Slots that the WORLD, WLDCORE and OPENING screens use for threads of their
+ * own; native_thread_slot_e has the uses shared with BATTLE. */
+typedef enum world_thread_slot {
+    WORLD_THREAD_SLOT_MENU_GROUP = 2,           /* world_menu_thread_group_supervisor_thread */
+    WORLD_THREAD_SLOT_WLDCORE_TRANSITION = 4,   /* the zoom thread of a WLDCORE screen transition */
+    WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL = 10, /* the equipment (change banner) or the ability panel */
+    WORLD_THREAD_SLOT_PREVIEW_STATS = 11,       /* the numeric editor thread of the preview stats window */
+    WORLD_THREAD_SLOT_WINDOW_PANEL = 12,        /* a WLDCORE list or number panel, the OPENING music test list */
+    WORLD_THREAD_SLOT_UPPER_MENU_CHILD = 14,    /* the child of the menu in slot 15, or a wait-forever thread
+                                                 * standing in for it */
+    WORLD_THREAD_SLOT_WLDCORE_MESSAGE = 14,     /* the WLDCORE message box and script text */
+    WORLD_THREAD_SLOT_UPPER_MENU = 15,          /* a second menu beside the one in slot 6 */
+    WORLD_THREAD_SLOT_WINDOW_FRAME = 15,        /* the window frame thread of world_build_at_list */
+    WORLD_THREAD_SLOT_TUTORIAL_TEXT = 16,       /* tutorial script text: the slot past the sixteen reset ones */
+} world_thread_slot_e;
 
 extern u16 g_world_thread_change_cooldown;
 
@@ -1315,6 +1322,7 @@ extern world_menu_input_state_t g_world_formation_menu_input_state;
 /* First-word alias retained for the target's separate absolute store. */
 extern s32 g_world_formation_menu_new_buttons;
 extern void* g_world_formation_ordering_table;
+/* g_main_system_flags as saved by world_formation_save_and_set_system_flags (main_system_flags_e). */
 extern u32 g_world_formation_saved_system_flags;
 
 /* Majority spelling: five readers sign-extend as u8. Two files
@@ -1806,8 +1814,8 @@ extern s32 g_world_text_thread_active_text;
 extern u8 g_world_text_row_image_buffer[];
 extern u8* g_world_text_glyph_bitmap_data;
 
-/* Text section base per text-id section (id >> 11 & 0x1f); several
- * elements also carry their own names below. */
+/* Text section base per text-id section (id >> 11 & 0x1f, text_section_e);
+ * several elements also carry their own names below. */
 extern u8* g_world_text_section_pointers[TEXT_SECTION_COUNT];
 void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, world_glyph_blit_t* origin, s32 arg3);
@@ -2034,7 +2042,7 @@ extern u8* g_world_menu_scripts[];
 extern s16 g_world_menu_scroll_offset;
 extern s16 g_world_menu_scroll_pixel_offset;
 extern s32 g_world_menu_scroll_row_offset;
-extern u8 g_world_menu_sound_effect_id;
+extern u8 g_world_menu_sound_effect_id; /* main_sfx_e */
 extern s32 g_world_menu_sound_muted;
 extern CVECTOR g_world_menu_sprite_color;
 extern world_menu_entry_t g_world_menu_system_entries[];

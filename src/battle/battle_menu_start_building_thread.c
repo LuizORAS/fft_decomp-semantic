@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void battle_menu_start_building_thread(void) {
-    if (battle_thread_is_running_8014cc94(8) != 0
+    if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU) != 0
         || battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
         if (g_battle_menu_current_id != BATTLE_MENU_ID_MINI_MENU) {
             g_battle_menu_building_thread_started = 1;

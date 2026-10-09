@@ -109,14 +109,14 @@ void world_menu_start_dead_unit_threads(void) {
         world_thread_exit_current();
     }
 
-    world_thread_set_parameters(10, 0, 0, 1);
-    world_thread_set_parameters(11, 0, 0, 1);
-    world_thread_set_parameters(12, 0, 0, 1);
-    world_thread_set_parameters(13, 0, 0, 1);
-    world_thread_wait_until_inactive(10);
-    world_thread_wait_until_inactive(11);
-    world_thread_wait_until_inactive(12);
-    world_thread_wait_until_inactive(13);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
 
     for (;;) {
         if (context->result == 3) {
@@ -131,15 +131,15 @@ void world_menu_start_dead_unit_threads(void) {
         if ((context->result == 3 && g_world_dead_unit_move_result == 0) || context->result == 1) {
             world_thread_start(g_world_thread_current_id - 2, world_build_at_list);
             world_thread_set_parameters(g_world_thread_current_id - 2, (s32)g_world_menu_thread_menu_data, 0, 0);
-            world_thread_start(10, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(
-                10, (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->at_list_menu, 0, 0);
+            world_thread_start(NATIVE_THREAD_SLOT_AT_LIST_MENU, world_menu_icon_linked_entry_thread);
+            world_thread_set_parameters(NATIVE_THREAD_SLOT_AT_LIST_MENU,
+                (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 world_thread_yield();
                 if (world_thread_is_running_80100164(g_world_thread_current_id - 3) != 0) {
-                    world_thread_start(9, world_thread_yield_forever);
+                    world_thread_start(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD, world_thread_yield_forever);
                 } else {
-                    world_thread_suspend(9);
+                    world_thread_suspend(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }
                 if (world_thread_is_running_80100164(g_world_thread_current_id - 1) == 0) {
                     break;
@@ -151,8 +151,8 @@ void world_menu_start_dead_unit_threads(void) {
             }
 
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
-            world_thread_set_parameters(10, 0, 0, 1);
-            world_thread_suspend(9);
+            world_thread_set_parameters(NATIVE_THREAD_SLOT_AT_LIST_MENU, 0, 0, 1);
+            world_thread_suspend(NATIVE_THREAD_SLOT_AT_LIST_MENU_CHILD);
             if (g_world_dead_unit_menu_result == 0) {
                 g_world_dead_unit_action = 1;
                 break;

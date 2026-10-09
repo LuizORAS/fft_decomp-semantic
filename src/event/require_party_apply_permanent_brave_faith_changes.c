@@ -9,16 +9,19 @@ void require_party_apply_permanent_brave_faith_changes(void) {
         battle_thread_exit_current();
     if (require_apply_permanent_brave_faith_changes_and_collect_warnings() == 0)
         battle_thread_exit_current();
-    g_battle_text_section_pointers[1] = g_require_text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[2] = g_require_text_data + g_require_text_section_offsets[2];
-    g_battle_text_section_pointers[3] = g_require_text_data + g_require_text_section_offsets[3];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_WARNINGS]
+        = g_require_text_data + g_require_text_section_offsets[1];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_BRAVE_FAITH_DEPARTURES]
+        = g_require_text_data + g_require_text_section_offsets[2];
+    g_battle_text_section_pointers[TEXT_SECTION_REQUIRE_DISMISS_UNIT_REPLIES]
+        = g_require_text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
-    main_thread = battle_thread_resolve_id(0x10);
+    main_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(main_thread, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(main_thread, 5, 0, 0);
     require_gfx_fade_rgb_31_frames(0xd, 0xd, 2);
     for (i = 0; i < g_require_party_affected_unit_count; i++) {
-        s32 unit_thread = battle_thread_resolve_id(0x10);
+        s32 unit_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
         g_battle_text_substitution_values[0] = g_require_party_affected_battle_unit_indices[i];
         battle_thread_start(unit_thread, battle_text_character_handling_thread);
         battle_thread_set_parameters(unit_thread, 0x1b, g_require_party_affected_unit_message_ids[i],

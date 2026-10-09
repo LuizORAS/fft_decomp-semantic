@@ -38,7 +38,9 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     written = 0;
     for (i = 0; i < available; i++) {
         entry = g_wldcore_script_state.choice_vars[i];
-        if (world_script_get_variable(g_wldcore_choice_hidden_variable_offsets[entry] + 0x292) == 0) {
+        if (world_script_get_variable(
+                g_wldcore_choice_hidden_variable_offsets[entry] + EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST)
+            == 0) {
             out[written++] = entry + 0xa7ff;
             if (written == 5) {
                 break;

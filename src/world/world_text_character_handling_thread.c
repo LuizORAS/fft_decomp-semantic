@@ -11,7 +11,8 @@
 /* Aborts (here and below) leave the nested text loops for the shared
    window close-and-release tail at `end`. */
 #define CHECK_ABORT()                                                                                                  \
-    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST && g_world_thread_current_id != 0x10) {  \
+    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST                                          \
+        && g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                             \
         goto end;                                                                                                      \
     }
 
@@ -75,7 +76,7 @@ void world_text_character_handling_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
     world_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
-    variable_id = 0x18;
+    variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     thread = (native_thread_t*)((g_world_thread_current_id << 10) + (s32)g_world_threads);
     param = (s32)world_thread_get_current_parameter_1();
     rec.dialog_type = param;
@@ -856,7 +857,7 @@ end:
             && g_world_formation_screen_active == 0)) {
         world_text_restore_section_pointers();
     }
-    if (g_world_thread_current_id != 1 || rec.options != 0xC) {
+    if (g_world_thread_current_id != NATIVE_THREAD_SLOT_MENU_TEXT || rec.options != 0xC) {
         world_thread_exit_current();
     }
 }

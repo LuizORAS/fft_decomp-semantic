@@ -24,15 +24,15 @@ void equip_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (equip_thread_is_running(13) != 0) {
-        if (g_battle_threads[13].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[13].function_parameter_1;
+    if (equip_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            thread = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (-(thread->function_parameter_1 == 0)) & 13;
         }
     }
-    if (equip_thread_is_running(14) != 0) {
-        if (g_battle_threads[14].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[14].function_parameter_1;
+    if (equip_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+        if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            descriptor = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->function_parameter_1 == 0) {
                 active = 14;
                 thread = descriptor;
@@ -43,20 +43,20 @@ void equip_menu_draw_thread_status_indicators(void) {
      * state[1] store between them and the fall-through path. */
     if (active != 0) {
         if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
-            g_equip_menu_indicator_state[0] = 2;
-            g_equip_menu_indicator_state[1] = 1;
+            g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
+            g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_IN;
             goto draw_panels;
         } else if ((thread->function_parameter_2 == 0) && !(thread->function_parameter_3 & 0x80)) {
-            g_equip_menu_indicator_state[0] = 1;
-            g_equip_menu_indicator_state[1] = 2;
+            g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_IN;
+            g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
             goto draw_panels;
         }
     }
-    if (g_equip_menu_indicator_state[0] == 1) {
-        g_equip_menu_indicator_state[0] = 2;
+    if (g_equip_menu_indicator_state[0] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
     }
-    if (g_equip_menu_indicator_state[1] == 1) {
-        g_equip_menu_indicator_state[1] = 2;
+    if (g_equip_menu_indicator_state[1] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
     }
 draw_panels:
     for (i = 0; i < 2; i++) {
@@ -105,21 +105,21 @@ draw_panels:
             prims->bottom[j].x0 = 0x80;
             prims->bottom[j].y0 = y + j;
         }
-        if (g_equip_menu_indicator_state[i] == 0) {
+        if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
             prims->frame.r0 = 0;
             prims->frame.g0 = 0;
             prims->frame.b0 = 0;
         } else {
-            if (g_equip_menu_indicator_state[i] == 1) {
+            if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_equip_menu_indicator_brightness[i] < 0x78) {
                     g_equip_menu_indicator_brightness[i] += 0xc;
                 }
             }
-            if (g_equip_menu_indicator_state[i] == 2) {
+            if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_OUT) {
                 if (g_equip_menu_indicator_brightness[i] != 0) {
                     g_equip_menu_indicator_brightness[i] -= 0xc;
                 } else {
-                    g_equip_menu_indicator_state[i] = 0;
+                    g_equip_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
             prims->frame.r0 = g_equip_menu_indicator_brightness[i];

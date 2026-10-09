@@ -23,7 +23,7 @@ void wldcore_gfx_draw_world_frame(void) {
     wldcore_reset_game_if_special_keycode_is_pressed();
     VSync(0);
     GsSwapDispBuff();
-    if (!(g_main_system_flags & 0x200)) {
+    if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE)) {
         wldcore_gfx_set_display_rect(g_active_graphics_buffer_index == 0, &rect.x);
         LoadImage(&rect, (u32*)g_wldcore_scratch_buffer);
     }

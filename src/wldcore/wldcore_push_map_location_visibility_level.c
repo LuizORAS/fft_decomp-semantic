@@ -19,7 +19,7 @@ void wldcore_push_map_location_visibility_level(s32 dot_index, s32 was_set) {
     g_wldcore_menu_stack_records_next[depth].visibility.was_set = was_set;
     g_wldcore_menu_stack_records_next[depth].visibility.delay = 0x10;
     g_wldcore_menu_stack_records_next[depth].visibility.pending_sound = 1;
-    g_main_system_flags |= 0x2000;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
     window_index = g_wldcore_menu_stack_records_next[depth - 1].window_index;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY;
     g_wldcore_window_records[window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

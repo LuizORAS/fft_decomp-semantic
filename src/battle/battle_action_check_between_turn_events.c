@@ -35,7 +35,7 @@ void battle_action_check_between_turn_events(void) {
             battle_unit_update_display_by_misc_id(unit->unit_id);
         }
         if (battle_state_try_enter_scenario_event(unit) == 0) {
-            battle_unit_start_view_thread(1, 0xff, 0xff);
+            battle_unit_start_view_thread(UNIT_VIEW_MODE_TILE_INFO, 0xff, 0xff);
             g_battle_game_state = BATTLE_GAME_STATE_CHANGE_TURN;
             battle_ai_init_selected_action();
             g_battle_menu_status_enabled = 1;

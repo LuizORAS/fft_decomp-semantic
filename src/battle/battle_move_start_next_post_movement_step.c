@@ -74,7 +74,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         battle_gfx_configure_misc_unit_palette_modulation_1f(target->unit_id);
         target->depth_height_offset
             = 0x24 - (battle_gfx_calculate_screen_z_from_misc_screen_data(source) - target->screen.vy);
-        main_sound_play_sfx_find_channel(0x85);
+        main_sound_play_sfx_find_channel(MAIN_SFX_COMPLETE);
         return 1;
     }
     if (g_battle_move_find_result & 2) {

@@ -8,7 +8,7 @@ void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count) {
     s32* object;
     s32 i;
 
-    if (g_main_system_flags & 0x400) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
         return;
     }
     for (i = 0; i < count; i++) {

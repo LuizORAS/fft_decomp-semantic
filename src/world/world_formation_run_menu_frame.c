@@ -146,7 +146,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     }
     if (g_world_menu_pending_selection[0] == 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_world_menu_pending_selection[1]);
-        g_main_system_flags |= 0x4000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
     }
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;

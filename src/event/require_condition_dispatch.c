@@ -11,7 +11,7 @@ void require_condition_dispatch(void) {
     parameter = battle_thread_get_current_parameter_2();
     if (condition >= EVENT_DISPLAY_CONDITION_GENERAL_FIRST)
         require_render_display_condition_general_cases(parameter);
-    thread = battle_thread_resolve_id(0x10);
+    thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
 
     if (condition == EVENT_DISPLAY_CONDITION_SPECIAL_CASES) {
         battle_thread_start(thread, require_render_display_condition_special_cases_thread);

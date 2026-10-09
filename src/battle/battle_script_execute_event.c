@@ -490,7 +490,8 @@ restart_script:
                 g_battle_thread_call_target = (void (*)(void))battle_effect_try_init_data;
             } while (battle_thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
-            battle_thread_start(battle_thread_resolve_id(0x10U), &battle_script_play_effect_thread);
+            battle_thread_start(
+                battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE), &battle_script_play_effect_thread);
         }
         /* ---- Camera ---- */
         else if (opcode == EVENT_OPCODE_FOCUS) {
@@ -503,11 +504,11 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
             battle_script_apply_relative_camera(parameters, &g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_X]);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_camera_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_CAMERA_FUSION_START) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, battle_camera_fusion_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             instruction_offset
@@ -556,7 +557,7 @@ restart_script:
         }
         /* ---- Blocks, earthquakes, darkness, and screen color ---- */
         else if (opcode == EVENT_OPCODE_BLOCK_START) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, battle_script_block_start_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             instruction_offset = battle_script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_BLOCK_END);
@@ -571,19 +572,19 @@ restart_script:
             g_battle_text_speaker_swap_unit_b
                 = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_script_map_darkness);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_COLOR_SCREEN) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_script_color_screen_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_EARTHQUAKE_START) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_script_earthquake_start);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if ((opcode == EVENT_OPCODE_SPRITE_MOVE) || (opcode == EVENT_OPCODE_SPRITE_MOVE_BETA)) {
-            operand_1 = battle_thread_resolve_id_after_current(0x10);
+            operand_1 = battle_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (opcode == EVENT_OPCODE_SPRITE_MOVE) {
                 battle_thread_start(operand_1, &battle_script_sprite_move);
             } else {
@@ -595,7 +596,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             battle_script_waitspritemove_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_map_light_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         }
@@ -639,7 +640,7 @@ restart_script:
             battle_script_set_event_speed(operand_1);
         } else if (opcode == EVENT_OPCODE_DARK_SCREEN) {
             g_battle_menu_hide_numeric_values = 0;
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_menu_open_require);
             battle_thread_set_parameters(operand_1, 0, (s32)parameters, 0);
         } else if (opcode == EVENT_OPCODE_REMOVE_DARK_SCREEN) {
@@ -648,7 +649,7 @@ restart_script:
                 g_battle_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_DARK_SCREEN;
             }
         } else if (opcode == EVENT_OPCODE_DISPLAY_CONDITIONS) {
-            operand_3 = battle_thread_resolve_id(0x10U);
+            operand_3 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if ((operand_3 == 4) && (operand_1 == EVENT_DISPLAY_CONDITION_APPLY_POST_BATTLE_UNIT_CHANGES)) {
                 battle_thread_wait_until_inactive(2);
                 operand_3 = 2;
@@ -658,7 +659,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_SHOW_GRAPHIC) {
             /* Use: the extra operand_2 reference keeps operand_2/operand_3 in $s5/$s6, not swapped. */
             __asm__("" : : "r"(operand_2));
-            operand_3 = battle_thread_resolve_id(0x10U);
+            operand_3 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_3, &battle_script_show_graphic);
             battle_thread_set_parameters(operand_3, operand_1, 0, 0);
         }
@@ -666,11 +667,11 @@ restart_script:
         else if (opcode == EVENT_OPCODE_SOUND_EFFECT) {
             g_battle_sound_pending_sfx_id = first_halfword;
         } else if (opcode == EVENT_OPCODE_BG_SOUND) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_sound_bg_thread);
             battle_thread_set_parameters(operand_1, (s32)parameters, 0, 0);
         } else if (opcode == EVENT_OPCODE_EDIT_BG_SOUND) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_sound_edit_bg_thread);
             battle_thread_set_parameters(operand_1, (s32)parameters, 0, 0);
         } else if (opcode == EVENT_OPCODE_SWITCH_TRACK) {
@@ -690,7 +691,7 @@ restart_script:
         }
         /* ---- EVTCHR and reserved VRAM slots ---- */
         else if (opcode == EVENT_OPCODE_LOAD_EVTCHR) {
-            operand_2 = battle_thread_resolve_id(0x10U);
+            operand_2 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_2, battle_gfx_load_evtchr_thread);
             battle_thread_set_parameters(operand_2, operand_1,
                 battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 2), 0);
@@ -810,7 +811,7 @@ restart_script:
                 battle_thread_yield();
             } while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ADD_UNIT) != 0);
         } else if (opcode == EVENT_OPCODE_ADD_UNIT_START) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, battle_script_add_unit_start_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             instruction_offset
@@ -922,7 +923,7 @@ restart_script:
         }
         /* ---- Map title, dates, teleports, and status ---- */
         else if (opcode == EVENT_OPCODE_SHOW_MAP_TITLE) {
-            operand_4 = battle_thread_resolve_id(0x10U);
+            operand_4 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_ATTACK);
             attack_map_load_title_graphic();
             battle_thread_start(operand_4, attack_map_show_title);
@@ -937,7 +938,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_TELEPORT_IN) {
             battle_script_teleportin_event_instruction(first_halfword, 1);
         } else if (opcode == EVENT_OPCODE_INFLICT_STATUS) {
-            operand_1 = battle_thread_resolve_id(0x10U);
+            operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_script_inflict_status_thread);
             battle_thread_set_parameters(operand_1, (s32)parameters, 0, 0);
         } else if (opcode == EVENT_OPCODE_UNKNOWN_95) {

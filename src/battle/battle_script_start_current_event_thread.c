@@ -14,6 +14,6 @@ void battle_script_start_current_event_thread(void) {
         g_battle_camera_position_locked = 0;
         g_battle_camera_speed_curve = 0;
         battle_gfx_start_screen_color_modulation_fade(2, 0, 0, 0, 2);
-        battle_thread_start(1, battle_script_run_next_event);
+        battle_thread_start(NATIVE_THREAD_SLOT_EVENT, battle_script_run_next_event);
     }
 }

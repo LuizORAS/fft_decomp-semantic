@@ -12,7 +12,7 @@ void wldcore_clear_screen_and_set_map_clip_rect(s32 mode) {
     rect.y = 0;
     rect.w = 256;
     rect.h = 480;
-    g_main_system_flags |= 0x4000000;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_SCREEN_CLEARED;
     ClearImage(&rect, 0, 0, 0);
     DrawSync(0);
     if (mode == 0) {

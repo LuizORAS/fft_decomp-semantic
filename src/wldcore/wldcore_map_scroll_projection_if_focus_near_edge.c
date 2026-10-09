@@ -19,6 +19,6 @@ void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta) 
         wldcore_map_apply_clamped_vertical_scroll(delta, (wldcore_point32_t*)&g_wldcore_map_projection_origin);
     }
     if (saved.vx != g_wldcore_map_projection_origin.vx || saved.vy != g_wldcore_map_projection_origin.vy) {
-        g_main_system_flags |= 2;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
     }
 }

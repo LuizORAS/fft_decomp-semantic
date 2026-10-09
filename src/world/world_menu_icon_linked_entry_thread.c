@@ -30,7 +30,7 @@ void world_menu_icon_linked_entry_thread(void) {
         world_thread_start(g_world_thread_current_id - 1, g_world_menu_thread_menu_data[parent].thread_entry);
         world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[parent], 0, 0);
     }
-    buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
+    buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = width;
     world_menu_set_text_origin(8, 9);
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);

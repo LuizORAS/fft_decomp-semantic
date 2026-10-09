@@ -60,7 +60,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         g_battle_effect_current_secondary->timer = 0;
         g_battle_effect_current_secondary->finish_timer = 0;
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        SuzukiPlaySoundFindChannel(0x21);
+        SuzukiPlaySoundFindChannel(MAIN_SFX_SUMMON_CHARGE);
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
@@ -136,7 +136,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                     g_battle_effect_current_secondary->slot_ids[i] = 0;
                 }
             }
-            main_sound_stop_sfx_channels(0x21);
+            main_sound_stop_sfx_channels(MAIN_SFX_SUMMON_CHARGE);
             result = 0;
         } else {
             result = 1;

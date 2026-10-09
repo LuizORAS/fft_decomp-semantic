@@ -9,7 +9,7 @@ void battle_menu_fade_out_thread(void) {
     g_battle_menu_transition_state = 4;
     do {
         battle_thread_yield();
-    } while (battle_thread_is_running_8014cc94(6));
+    } while (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_GRANDCHILD));
 
     g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_BUNIT;
     g_battle_menu_help_open = 0;
@@ -31,6 +31,6 @@ void battle_menu_fade_out_thread(void) {
     g_battle_menu_suspend_state = 0;
     g_battle_screen_fade = 0;
     g_battle_menu_transition_state = 0;
-    battle_unit_start_view_thread(2, g_battle_active_turn_unit.battle_id, 0xff);
+    battle_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_battle_active_turn_unit.battle_id, 0xff);
     battle_thread_exit_current();
 }

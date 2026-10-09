@@ -23,7 +23,8 @@ void world_menu_run_icon_selection_loop(void) {
     }
     world_menu_build_icon_record(&rect, param, record);
     world_script_copy_bytes(&records[1], record, 0x7C);
-    buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+    buffer = world_menu_build_and_upload_window_frame_image(
+        param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     g_world_menu_text_color = 0;

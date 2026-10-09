@@ -17,7 +17,7 @@ void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit
     case MAP_SURFACE_GRASSLAND:
     case MAP_SURFACE_THICKET:
     case MAP_SURFACE_RUG:
-        sfx = 0x28;
+        sfx = MAIN_SFX_LAND_SOFT;
         break;
     case MAP_SURFACE_SWAMP:
     case MAP_SURFACE_MARSH:
@@ -27,15 +27,15 @@ void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit
     case MAP_SURFACE_LAKE:
     case MAP_SURFACE_SEA:
     case MAP_SURFACE_WATERFALL:
-        sfx = 0x23;
+        sfx = MAIN_SFX_LAND_WATER;
         break;
     case MAP_SURFACE_WOODEN_FLOOR:
     case MAP_SURFACE_TREE:
     case MAP_SURFACE_BOX:
-        sfx = 0x3A;
+        sfx = MAIN_SFX_LAND_WOOD;
         break;
     default:
-        sfx = 0x29;
+        sfx = MAIN_SFX_LAND_DEFAULT;
         break;
     }
     main_sound_play_sfx_find_channel(sfx);

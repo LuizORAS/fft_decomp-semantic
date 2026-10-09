@@ -16,7 +16,7 @@ void world_formation_update_world_map_root_request(void) {
         return;
     }
     if (state == 2) {
-        if (!(g_main_system_flags & 8)) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_map_root_request_state = state + 1;
         }
         return;
@@ -24,6 +24,6 @@ void world_formation_update_world_map_root_request(void) {
     if (state == 3) {
         world_formation_reset_menu_context();
         g_world_map_root_request_state = 0;
-        g_main_system_flags |= 0x100;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_BRAVE_STORY;
     }
 }

@@ -81,8 +81,8 @@ void world_build_options_menu(void) {
     clear.w = window.rect.w / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
-    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
-    world_gfx_set_draw_mode_for_texture_page(&page->text_mode, 1);
+    world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
+    world_gfx_set_draw_mode_for_texture_page(&page->text_mode, MENU_TEXTURE_PAGE_448_0);
     texture_window.x = 0;
     texture_window.y = 0;
     texture_window.w = 0x100;
@@ -141,8 +141,8 @@ void world_build_options_menu(void) {
     world_gfx_init_scaled_draw_area_packets(&page->value_area);
     world_menu_init_sprite(&base->title);
     world_text_configure_sprite_vram(&g_world_options_menu_title_rect, entry->inner_width, 0x2C, &base->title, 0);
-    image
-        = world_menu_build_and_upload_window_frame_image(entry->inner_width, 0x2C, &g_world_options_menu_title_rect, 3);
+    image = world_menu_build_and_upload_window_frame_image(
+        entry->inner_width, 0x2C, &g_world_options_menu_title_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window_x;
     base->title.y0 = entry->window_y + entry->window_height + 1;
     g_world_menu_text_state.pen.stride = entry->inner_width;
@@ -214,7 +214,7 @@ void world_build_options_menu(void) {
                         index = cursor + row_offset + delta;
                         world_menu_set_text_origin(layout->x[column], 0);
                         g_world_menu_text_color = layout->text_colors[column][index];
-                        if (layout->mode[column] == 0) {
+                        if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             world_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_world_menu_text_state.pen);
                         } else {

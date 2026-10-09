@@ -12,6 +12,6 @@ void world_thread_reset_scheduler(void) {
         i--;
         word--;
     } while (i >= 0);
-    g_world_thread_current_id = 0;
+    g_world_thread_current_id = NATIVE_THREAD_SLOT_MAIN;
     g_world_threads->is_running = 1;
 }

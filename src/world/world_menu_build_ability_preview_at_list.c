@@ -100,7 +100,7 @@ void world_menu_build_ability_preview_at_list(void) {
         work->secondary_colors[index] = 0;
     }
     published = work->text;
-    g_world_text_section_pointers[31] = published;
+    g_world_text_section_pointers[TEXT_SECTION_AT_LIST] = published;
     count = 0;
     bracketed = 0;
     /* The target publishes the buffer from a temporary and copies it into the
@@ -177,9 +177,9 @@ void world_menu_build_ability_preview_at_list(void) {
     }
     work->primary_colors[turn] = 4;
     work->secondary_colors[turn] = 4;
-    g_world_menu_at_list_layout.columns.mode[0] = 3;
-    g_world_menu_at_list_layout.columns.mode[1] = 0;
-    g_world_menu_at_list_layout.columns.mode[2] = 0;
+    g_world_menu_at_list_layout.columns.mode[0] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
+    g_world_menu_at_list_layout.columns.mode[1] = MENU_TEXT_COLUMN_TEXT;
+    g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_TEXT;
     if (bracketed != 0) {
         LAYOUT(entry)->columns.row_count = 6;
         entry->window_x = 0x8c;
@@ -194,7 +194,7 @@ void world_menu_build_ability_preview_at_list(void) {
         entry->window_width = 0x84;
         entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
-        g_world_menu_at_list_layout.columns.mode[2] = 2;
+        g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     }
     if (count < 6) {
         entry->window_y = (6 - count) * 8 + 0x20;

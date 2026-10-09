@@ -60,7 +60,7 @@ void option_build_at_list(void) {
     window.y_screen_offset = 0xC;
     window.rect.w = entry->window_width - 0x12;
     window.rect.h = entry->window_height - 0x1A;
-    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
     texture_window.x = 0;
     texture_window.y = (u8)entry->vram_y;
     texture_window.w = 0x100;
@@ -188,19 +188,19 @@ void option_build_at_list(void) {
                     for (column = 0; column < 3; column++) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
-                        if (layout->mode[column] != 2) {
+                        if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                             g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                         }
                         if (g_battle_menu_text_palette_offset == 4) {
                             g_menu_text_state.pen.color = 0x44444444;
                         }
-                        if (layout->mode[column] == 0) {
+                        if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
-                        } else if (layout->mode[column] == 1) {
+                        } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                             battle_display_menu_number_entry(
                                 layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
-                        } else if (layout->mode[column] == 3) {
+                        } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                             battle_draw_menu_number_glyphs(
                                 layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                         }

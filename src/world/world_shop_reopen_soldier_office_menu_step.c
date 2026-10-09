@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void world_shop_reopen_soldier_office_menu_step(void) {
-    world_thread_set_parameters(2, 0x19, 0xf821, 0);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xf821, 0);
     g_world_shop_menu_step = 20;
     g_world_shop_hire_menu_initialized = 0;
     world_shop_run_obtain_gil_menu();

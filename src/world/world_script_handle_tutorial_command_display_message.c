@@ -9,8 +9,8 @@
  * 2.6.3's fold re-associates `hi + (lo + 0xB800)` into `(hi + 0xB800) + lo`,
  * and the target adds the bias to the low byte first. */
 void world_script_handle_tutorial_command_display_message(void) {
-    world_thread_start(0x10, world_text_character_handling_thread);
-    world_thread_set_parameters(0x10, 0x99,
+    world_thread_start(WORLD_THREAD_SLOT_TUTORIAL_TEXT, world_text_character_handling_thread);
+    world_thread_set_parameters(WORLD_THREAD_SLOT_TUTORIAL_TEXT, 0x99,
         (s32)((u8*)(g_world_script_tutorial_command_ptr[2] * 0x100)
             + (g_world_script_tutorial_command_ptr[1] + 0xB800)),
         0);

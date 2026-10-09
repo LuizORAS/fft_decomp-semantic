@@ -51,7 +51,8 @@ void world_menu_auto_battle_setting_thread(void) {
     for (;; i++) {
         record = &records[i & 1];
         if (i == 0 || (g_world_menu_new_button_input & PSX_PAD_CIRCLE)) {
-            buffer = world_menu_build_and_upload_window_frame_image(param->inner_width, param->inner_height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(
+                param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             if (((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_previous_running() == 0)
                 || i == 0) {
                 selected = cursor;
@@ -66,7 +67,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     colour[4] = 4;
                     after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
                     if (before != after) {
-                        world_thread_set_parameters(8, 0, 0, 1);
+                        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
                         world_menu_build_idle_action_stub(after);
                     }
                 } else {

@@ -37,7 +37,7 @@ void battle_menu_icon_linked_entry_thread(void) {
         battle_thread_set_parameters(
             g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[parent], 0, 0);
     }
-    buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, 1);
+    buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = width;
     battle_menu_set_text_origin(8, 9);
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);

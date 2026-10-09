@@ -90,8 +90,8 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x2A;
-    if (world_thread_is_running(0xE) == 0) {
-        world_thread_start(0xE, world_text_message_box_thread);
+    if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
     }
     party = &g_wldcore_job_selection.excluded_party_index;
     g_world_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
@@ -100,22 +100,23 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     if (g_wldcore_job_selection.gate != 0) {
         message = 0xA2;
     }
-    if (world_thread_is_running(0xE) == 0) {
-        world_thread_start(0xE, world_text_message_box_thread);
+    if (world_thread_is_running(WORLD_THREAD_SLOT_WLDCORE_MESSAGE) == 0) {
+        world_thread_start(WORLD_THREAD_SLOT_WLDCORE_MESSAGE, world_text_message_box_thread);
     }
-    world_thread_set_parameters(0xE, 0x19, wldcore_proposition_adjust_message_index(message, *party) + 0x8800, 0);
+    world_thread_set_parameters(
+        WORLD_THREAD_SLOT_WLDCORE_MESSAGE, 0x19, wldcore_proposition_adjust_message_index(message, *party) + 0x8800, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.proposition = proposition;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;
     switch (g_wldcore_job_selection.result) {
     case WLDCORE_PROPOSITION_RESULT_SUCCESS:
-        main_sound_play_2_sfx(0x4D, 0x4E);
+        main_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0x78;
         break;
     case WLDCORE_PROPOSITION_RESULT_FAILURE:
-        main_sound_play_2_sfx(0x4F, 0x50);
+        main_sound_play_2_sfx(MAIN_SFX_PROPOSITION_PARTIAL_A, MAIN_SFX_PROPOSITION_PARTIAL_B);
         break;
     case WLDCORE_PROPOSITION_RESULT_BAD_FAILURE:
-        wldcore_sound_play_effect(0x51);
+        wldcore_sound_play_effect(MAIN_SFX_PROPOSITION_FAILURE);
         break;
     }
     depth = g_wldcore_menu_stack_depth;

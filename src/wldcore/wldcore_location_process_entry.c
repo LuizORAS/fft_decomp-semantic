@@ -22,7 +22,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         g_wldcore_next_map_id[0] = 0;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
         wldcore_menu_push_event_transition_level(g_wldcore_script_state.args[1]);
-        g_main_system_flags |= 0x2000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         return 0;
     } else {
         if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
@@ -56,7 +56,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
                 |= WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION | WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
         }
         g_wldcore_location_view.picture_id = wldcore_proposition_load_picture(to_location);
-        g_main_system_flags |= 0x2000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         return 1;
     }
 }

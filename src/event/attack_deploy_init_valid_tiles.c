@@ -9,6 +9,6 @@ void attack_deploy_init_valid_tiles(void) {
     g_attack_deploy_grid_slide_y = 0;
     g_attack_deploy_arrow_position_mode = 0;
     attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
-    battle_thread_start(15, attack_deploy_run_render_thread);
-    battle_thread_set_parameters(15, 0, 0, 0);
+    battle_thread_start(ATTACK_THREAD_SLOT_DEPLOY_RENDER, attack_deploy_run_render_thread);
+    battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 0);
 }

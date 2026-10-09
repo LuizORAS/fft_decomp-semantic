@@ -277,6 +277,14 @@ void require_text_show_battle_congratulations(void);
 void require_text_build_battle_nicknames(void);
 
 /* thread */
+/* Slots of the post-battle screens' own threads; native_thread_slot_e has
+ * the shared ones. */
+typedef enum require_thread_slot {
+    REQUIRE_THREAD_SLOT_MENU = 5,        /* selection menus, prompts and the special-case display */
+    REQUIRE_THREAD_SLOT_MESSAGE = 7,     /* the icon strip, message text or menu shown with them */
+    REQUIRE_THREAD_SLOT_TRANSITION = 10, /* require_gfx_run_suspended_thread_transition */
+} require_thread_slot_e;
+
 extern battle_menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
 extern s32 g_require_thread_suspended_id;
 void require_thread_exit_current(void);

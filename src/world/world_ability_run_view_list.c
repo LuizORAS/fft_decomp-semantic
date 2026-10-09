@@ -71,7 +71,8 @@ s32 world_ability_run_view_list(void) {
         return -1;
     }
     {
-        category = world_menu_update_horizontal_selection_and_mark_change(4, 8, g_world_input_secondary_repeat, 6);
+        category = world_menu_update_horizontal_selection_and_mark_change(
+            4, 8, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (category != g_world_ability_category) {
             world_gfx_set_sprite_slot(g_world_ability_category + 10, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, g_world_ability_entries);

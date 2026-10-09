@@ -38,7 +38,7 @@ void world_script_rotate_unit(const u8* parameters) {
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     state = &g_world_unit_animation_states[unit_id];
                     if (state->initial_facing != 0xFF) {
-                        state->rotate_mode = 0;
+                        state->rotate_mode = UNIT_ROTATE_MODE_SHORTEST;
                         state->target_facing = state->initial_facing;
                         state->frames_per_step = g_world_rotation_speed_frames[parameters[4]];
                         state->step_counter = 0;

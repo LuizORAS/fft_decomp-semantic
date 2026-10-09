@@ -54,7 +54,7 @@ void world_main_menu_text_window_thread(void) {
     entry = world_thread_get_current_parameter_1();
     record = records;
     world_gfx_set_draw_mode_from_rect(&record->mode_a, (u16*)entry);
-    world_gfx_set_draw_mode_for_texture_page(&record->mode_b, 0);
+    world_gfx_set_draw_mode_for_texture_page(&record->mode_b, MENU_TEXTURE_PAGE_960_256);
     world_menu_build_layout_sprites((world_menu_sprite_layout_t*)entry, &record->sprite_b, 0);
     world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
     g_world_text_substitution_values[0] = entry->text_values[0];
@@ -96,7 +96,8 @@ void world_main_menu_text_window_thread(void) {
         record = &records[i & 1];
         phase = i & 0x1F;
         if (phase == 0) {
-            buffer = world_menu_build_and_upload_window_frame_image(entry->width, entry->height, &rect, 1);
+            buffer = world_menu_build_and_upload_window_frame_image(
+                entry->width, entry->height, &rect, MENU_WINDOW_FRAME_BUILD);
             g_world_menu_text_state.pen.stride = entry->width;
             world_menu_set_text_origin(10, 8);
             g_world_menu_text_color = 0;
@@ -121,7 +122,7 @@ void world_main_menu_text_window_thread(void) {
             record->sprite_a.clut = 0x7C3C;
             record->sprite_b.clut = 0x7CBC;
         }
-        if (g_world_threads[g_world_thread_current_id].task_id == 0x21) {
+        if (g_world_threads[g_world_thread_current_id].task_id == NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW) {
             if (g_world_menu_main_scroll_threshold > 0x28 && target == 0) {
                 if (g_world_menu_main_scroll_direction > 0) {
                     if (entry->x >= -0x3F) {

@@ -198,6 +198,27 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - CARD save menu state 9 is compared and never stored. EQUIP refuses command
   row 1, so its screen state 3 is never entered. `g_etc_graphics` entries 0, 5
   and 6 all name CHAPTER1.BIN.
+- `world_script_reset_event_variables_thread` does `g_main_system_flags += 3`
+  on a bit-flag word. System flag bits 0x80, 0x400000 and 0x20000000 are
+  tested and never set.
+- `world_thread_resolve_id` searches slots 1-16 where BATTLE searches 1-15;
+  WORLD's slot 16 (tutorial text) lies beyond the sixteen the reset clears.
+- `card_save_run_menu` and `world_card_run_menu_screen` end with
+  `set_parameters(2, 0, -1, 0)`: the backdrop thread exits only when its
+  third parameter is set, so that call does not stop it. CARD also tests and
+  stops slot 14 and suspends slot 15, which nothing in the overlay starts.
+- `wldcore_menu_step_map_path_level` plays sound id 0 when the path
+  animation ends; that entry has no streams, so it only stops the channel
+  pair.
+- The `*_text_render_decimal_value` copies read the digit count as the low
+  nibble for alignment and as the low byte for the digit loop.
+- Scenario conditions 18 and 19 (casualties) compare with the record's `id`
+  halfword, not `value` as the war-funds pair does.
+- ATTACK fills deployment squad ids 0x35/0x36 and clears 0x37/0x38, although
+  the deployment screen handles four squads.
+- Words 0xab-0xff of the script variable block are reachable by no variable
+  id, yet word 0xff gates the BATTLE call in
+  `main_overlay_call_battle_return_zero`.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.

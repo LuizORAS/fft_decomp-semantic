@@ -26,8 +26,8 @@ s32 battle_script_run_scenario_conditions(void) {
             result = battle_script_check_scenario_condition(
                 condition[0], condition[1], condition[2], condition[3], condition[4]);
             condition += g_battle_script_condition_param_lengths[condition[0]] + 1;
-        } while (result == 1);
-        if (result == 2) {
+        } while (result == EVENT_SCENARIO_CONDITION_RESULT_PASS);
+        if (result == EVENT_SCENARIO_CONDITION_RESULT_RUN_EVENT) {
             return 1;
         }
     }

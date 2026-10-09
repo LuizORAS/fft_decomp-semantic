@@ -25,8 +25,8 @@ void battle_menu_selected_tile_info_display_thread(void) {
 
     g_battle_menu_hide_numeric_values = 0;
     page = &g_battle_menu_height_display_pages[0];
-    battle_gfx_set_draw_mode_for_texture_page(&page->modes[0], 1);
-    battle_gfx_set_draw_mode_for_texture_page(&page->modes[1], 0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->modes[0], MENU_TEXTURE_PAGE_448_0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->modes[1], MENU_TEXTURE_PAGE_960_256);
     for (i = 0; i < 5; i++) {
         quad = &page->quads[i];
         SetPolyGT4(quad);

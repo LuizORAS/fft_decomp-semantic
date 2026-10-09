@@ -23,18 +23,18 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
         g_menu_text_state.pen.stride = entry->inner_width - 8;
         for (column = 0; column < 3; column++) {
             index = row + *row_offset;
-            if (layout->mode[column] == 2) {
+            if (layout->mode[column] == MENU_TEXT_COLUMN_HIDDEN) {
                 continue;
             }
             battle_menu_set_text_origin(layout->x[column], row * 0x10);
-            if (layout->mode[column] != 2) {
+            if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                 g_battle_menu_text_palette_offset = layout->text_colors[column][index];
             }
             g_menu_text_state.pen.color = 0;
             if (g_battle_menu_text_palette_offset == 4) {
                 g_menu_text_state.pen.color = 0x44444444;
             }
-            if (layout->mode[column] == 0) {
+            if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                 if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
                     && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
@@ -43,11 +43,12 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                 }
-            } else if (layout->mode[column] == 1) {
+            } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                 battle_display_menu_number_entry(
                     layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
-            } else if (layout->mode[column] == 3) {
-                if ((column == 2 || (column == 1 && layout->mode[2] == 2)) && (u16)layout->text_ids[column][index] < 2
+            } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
+                if ((column == 2 || (column == 1 && layout->mode[2] == MENU_TEXT_COLUMN_HIDDEN))
+                    && (u16)layout->text_ids[column][index] < 2
                     && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
                         || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
                     g_menu_text_state.pen.rect.y += 2;

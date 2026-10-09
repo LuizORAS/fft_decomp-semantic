@@ -46,7 +46,7 @@ s32 world_formation_run_set_ability_menu(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         if (g_world_set_ability_list_open == 0) {
-            world_thread_resume(0xF);
+            world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
             g_world_set_ability_initialized = 0;
             world_menu_reset_selection_results();
             return 0;
@@ -98,13 +98,13 @@ s32 world_formation_run_set_ability_menu(void) {
             world_script_set_vsync_mode_and_event_speed(2);
             g_world_formation_unit_cycle_mode = 1;
             g_world_set_ability_list_open = 1;
-            world_thread_suspend(0xF);
+            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
             g_world_ability_panel_thread_params.style = 1;
             g_world_set_ability_cursor = 0xFF;
             world_gfx_get_sprite_slot(g_world_set_ability_slot + 4, &x, &y, g_world_menu_entry_ids);
-            value = 0xE;
+            value = TEXT_SECTION_ABILITY_NAMES;
             if (g_world_set_ability_slot == 1) {
-                value = 0x16;
+                value = TEXT_SECTION_SKILLSET_NAMES;
             }
             world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_section_pointers[value]);
         }
@@ -120,7 +120,7 @@ s32 world_formation_run_set_ability_menu(void) {
             if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
                 selected = ((u16*)g_world_menu_entry_ids)[cursor];
                 if (selected & 0x4000) {
-                    world_text_show_message_and_play_sound(0xD81D, 0x30);
+                    world_text_show_message_and_play_sound(0xD81D, MAIN_SFX_ERROR_MESSAGE);
                 } else {
                     value = world_ability_is_equip_support_change(g_world_formation_selected_unit_index, selected);
                     world_formation_set_unit_ability_slot(g_world_formation_selected_unit_index,
@@ -140,7 +140,7 @@ s32 world_formation_run_set_ability_menu(void) {
             g_world_menu_description_text_id = -1;
             if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
                 if (g_world_set_ability_slot != 1) {
-                    world_text_show_message_and_play_sound(0xC006, 0x30);
+                    world_text_show_message_and_play_sound(0xC006, MAIN_SFX_ERROR_MESSAGE);
                 } else {
                     g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
                 }
@@ -178,7 +178,7 @@ s32 world_formation_run_set_ability_menu(void) {
         g_world_status_display_thread_params.redraw_request = 1;
         world_gfx_set_sprite_slot(g_world_set_ability_slot + 4, g_world_menu_cursor_position,
             g_world_menu_scroll_offset, g_world_menu_entry_ids);
-        world_thread_resume(0xF);
+        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_set_ability_list_close_pending = 0;
     }
     busy = 0;

@@ -31,7 +31,8 @@ void bunit_menu_icon_list_thread(void) {
     for (i = 0;; i++) {
         if (*redraw == 1) {
             *redraw = 0;
-            buffer = battle_menu_build_and_upload_window_frame_image(state->inner_width, state->inner_height, &rect, 1);
+            buffer = battle_menu_build_and_upload_window_frame_image(
+                state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             fresh = 1;
             g_menu_text_state.pen.stride = state->inner_width;
             battle_menu_set_text_origin(8, 9);

@@ -16,10 +16,10 @@ s32 equip_menu_update_equipment(void) {
     if (g_equip_menu_ready == 0) {
         g_equip_menu_ready = 1;
         g_equip_selected_slot = equip_menu_set_selection_value_2(2, 0);
-        battle_thread_suspend(5);
-        equip_thread_request_stop(0xD);
-        equip_thread_request_stop(0xC);
-        equip_thread_request_stop(0xA);
+        battle_thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
+        equip_thread_request_stop(EQUIP_THREAD_SLOT_UNIT_STATUS);
+        equip_thread_request_stop(NATIVE_THREAD_SLOT_NUMERIC_EDITOR);
+        equip_thread_request_stop(EQUIP_THREAD_SLOT_EQUIPMENT_LIST);
         equip_menu_init_scrollable_list_core(0, 0, 0);
         g_equip_menu_substate = 0;
         g_equip_unit_banner_enabled = 0;
@@ -34,7 +34,7 @@ s32 equip_menu_update_equipment(void) {
         equip_panel_toggle_unit_status_thread(1);
         g_equip_menu_ready = 0;
         g_equip_unit_banner_enabled = 1;
-        battle_thread_resume(5);
+        battle_thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
         g_equip_item_numeric_panel_params = 2;
         g_equip_item_numeric_panel_y = 2;
         g_equip_sound_queued_effect_id = MAIN_SFX_CANCEL;

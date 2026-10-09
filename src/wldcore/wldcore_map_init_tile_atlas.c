@@ -74,7 +74,7 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_map_projection_rotation.vz = 0;
 
     descriptor = g_wldcore_map_tile_descriptors;
-    if (!(g_main_system_flags & 0x10000)) {
+    if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_RESTART)) {
         y = -192;
         k = 0;
         i = 0;

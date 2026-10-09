@@ -71,7 +71,7 @@ void battle_text_character_handling_thread(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
     battle_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
-    variable_base = 0x18;
+    variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     thread = &g_battle_threads[g_battle_current_thread_id];
     param = battle_thread_get_current_parameter_1();
     rec.dialog_type = param;

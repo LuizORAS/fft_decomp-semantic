@@ -18,14 +18,14 @@ void option_menu_at_list_select_unit_thread(void) {
 
     g_option_menu_transition_finished = 0;
     g_option_menu_transition_timer = 0;
-    battle_unit_start_view_thread(0, 0xff, 0xff);
+    battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xff, 0xff);
 
-    battle_thread_wait_until_inactive(13);
-    battle_thread_wait_until_inactive(12);
-    battle_thread_wait_until_inactive(11);
-    battle_thread_wait_until_inactive(10);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
 
-    g_battle_text_section_pointers[31] = g_option_menu_at_list_text;
+    g_battle_text_section_pointers[TEXT_SECTION_AT_LIST] = g_option_menu_at_list_text;
     battle_thread_resume(g_battle_current_thread_id + 1);
     battle_thread_resume(g_battle_current_thread_id + 2);
     battle_thread_resume(g_battle_current_thread_id + 3);

@@ -17,5 +17,5 @@ void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
         g_wldcore_window_records[param[0]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[param[1]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    world_thread_resume(0xe);
+    world_thread_resume(WORLD_THREAD_SLOT_WLDCORE_MESSAGE);
 }

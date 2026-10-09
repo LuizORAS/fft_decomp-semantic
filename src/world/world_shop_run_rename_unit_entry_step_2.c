@@ -15,8 +15,8 @@ void world_shop_run_rename_unit_entry_step_2(void) {
     if (g_world_shop_entered_unit_name != 0) {
         g_world_shop_menu_step = 0x19;
         world_formation_set_unit_name(g_world_formation_selected_unit_index, g_world_shop_entered_unit_name);
-        world_thread_start(2, world_text_message_box_thread);
-        world_thread_set_parameters(2, 0x19, 0xF821, 0);
+        world_thread_start(NATIVE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
         g_world_shop_background_visible = 1;
         g_world_shop_rename_entry_2_initialized = 0;
     }

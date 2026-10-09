@@ -18,7 +18,8 @@ void world_card_run_slot_select_step(void) {
         g_world_card_slot_select_menu.selection = g_card_save_selected_slot;
         return;
     }
-    g_world_card_slot_select_running = world_menu_run_thread(6, &g_world_card_slot_select_menu);
+    g_world_card_slot_select_running
+        = world_menu_run_thread(NATIVE_THREAD_SLOT_SCREEN_MENU, &g_world_card_slot_select_menu);
     if (g_world_card_slot_select_running == 0) {
         selected = &g_world_menu_selection_results[5];
         slot = *selected;

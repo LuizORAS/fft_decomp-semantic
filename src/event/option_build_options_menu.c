@@ -74,8 +74,8 @@ void option_build_options_menu(void) {
     clear.w = window.rect.w / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
-    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, 0);
-    battle_gfx_set_draw_mode_for_texture_page(&page->text_mode, 1);
+    battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_960_256);
+    battle_gfx_set_draw_mode_for_texture_page(&page->text_mode, MENU_TEXTURE_PAGE_448_0);
     texture_window.x = 0;
     texture_window.y = 0;
     texture_window.w = 0x100;
@@ -134,8 +134,8 @@ void option_build_options_menu(void) {
     battle_gfx_init_scaled_draw_area_packets(&page->value_area);
     battle_menu_init_semitransparent_sprt(&base->title);
     battle_text_configure_sprite_vram(&g_option_menu_title_image_rect, entry->inner_width, 0x2C, &base->title, 0);
-    image
-        = battle_menu_build_and_upload_window_frame_image(entry->inner_width, 0x2C, &g_option_menu_title_image_rect, 3);
+    image = battle_menu_build_and_upload_window_frame_image(
+        entry->inner_width, 0x2C, &g_option_menu_title_image_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window_x;
     base->title.y0 = entry->window_y + entry->window_height + 1;
     g_menu_text_state.pen.stride = entry->inner_width;
@@ -207,7 +207,7 @@ void option_build_options_menu(void) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
                         g_battle_menu_text_palette_offset = layout->text_colors[column][index];
-                        if (layout->mode[column] == 0) {
+                        if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_menu_text_state.pen);
                         } else {

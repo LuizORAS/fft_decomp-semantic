@@ -41,7 +41,8 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
         if (i != g_battle_acting_unit_id) {
             unit = &g_battle_unit_stats[i];
             action = &unit->action_actor_id;
-            if (battle_unit_get_action_restriction(unit) == 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
+            if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_NONE
+                && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                 can_react = battle_action_can_unit_react(unit);
                 ability = unit->action.reaction_id;
                 if (((can_react == 0 && g_battle_action_state != BATTLE_ACTION_STATE_AI_SIMULATION)

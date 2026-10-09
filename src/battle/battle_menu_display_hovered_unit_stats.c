@@ -61,7 +61,7 @@ void battle_menu_display_hovered_unit_stats(
     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count++;
     }
-    if (mode == 2) {
+    if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         text_id = unit->reaction_ability;
         if (text_id >= ABILITY_ID_COUNT) {
             text_id = 0;
@@ -93,8 +93,8 @@ void battle_menu_display_hovered_unit_stats(
     }
     page = &g_battle_unit_status_panel_pages[g_battle_unit_status_first_page_by_mode[mode]];
     battle_menu_init_numeric_display_frame_primitives(frame_rect, &page->palette);
-    battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, 1);
-    battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, 0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, MENU_TEXTURE_PAGE_448_0);
+    battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_960_256);
     battle_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
         battle_gfx_init_default_poly_ft4(&page->quads[frame]);
@@ -103,7 +103,7 @@ void battle_menu_display_hovered_unit_stats(
     battle_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (SPRT*)&page->quads[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (SPRT*)&page->quads[1], 2);
     params = g_battle_unit_status_quad_image_params_by_mode[mode];
-    if (mode == 1) {
+    if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
         battle_gfx_init_image_loading(&page->quads[4], &g_battle_menu_texture_location, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
             battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
@@ -111,7 +111,7 @@ void battle_menu_display_hovered_unit_stats(
         }
         battle_menu_display_projected_action_effect(
             &page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
-    } else if (mode == 2) {
+    } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
             battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
         }
@@ -135,7 +135,9 @@ void battle_menu_display_hovered_unit_stats(
         }
         for (i = 0; i < g_battle_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
-                if (mode == 0 && g_battle_thread_contexts[12].task_id == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
+                if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
+                    && g_battle_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
+                        == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
                     /* Both exits leave the step loop and the frame loop. */
                     goto exit;
                 }
@@ -195,13 +197,13 @@ void battle_menu_display_hovered_unit_stats(
                 battle_gfx_init_image_loading(&page->sprites[i], &g_battle_menu_texture_location, frame_rect, params);
             }
         }
-        if (mode != 1) {
+        if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {
             for (i = 0; i < 4; i++) {
                 page->quads[i].clut = g_battle_unit_status_quad_clut_pairs[i][running & 1];
             }
         }
         poly = page->bars;
-        if (mode == 2) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
             page->quads[1].clut = 0x7C3C;
             page->quads[2].clut = 0x7D7C;
         }
@@ -211,7 +213,7 @@ void battle_menu_display_hovered_unit_stats(
             SetPolyG4(poly);
             extent_h = 0xC2;
             extent_w = frame_rect->x + 0x2F;
-            if (mode == 2 || mode == 3) {
+            if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 extent_w -= 0x6E;
                 extent_h -= 0x10;
             }
@@ -299,13 +301,13 @@ void battle_menu_display_hovered_unit_stats(
             i = g_battle_menu_hide_numeric_values;
             *inner_width = 0x60;
             g_battle_menu_hide_numeric_values = 0;
-            if (mode == 0 || mode == 3) {
+            if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 battle_menu_draw_numeric_display_entries(
                     buffer + 0x400, entries + 6, (world_glyph_blit_t*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
                 battle_menu_draw_numeric_display_entries(
                     buffer + 0x400, entries + 8, (world_glyph_blit_t*)(inner_width - 2), 2);
-            } else if (mode == 1) {
+            } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
                 battle_menu_draw_numeric_display_entries(
                     buffer + 0x400, entries + 6, (world_glyph_blit_t*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
@@ -318,7 +320,7 @@ void battle_menu_display_hovered_unit_stats(
         }
         offs = &offsets[frame & 1];
         base_y = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
-        if (mode == 2 || mode == 3) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
             offs->a.x = slide - 0x80;
         } else {
             offs->a.x = -0x80 - slide;
@@ -342,11 +344,11 @@ void battle_menu_display_hovered_unit_stats(
             poly--;
         }
         battle_gfx_draw_or_append_gpu_primitive(&page->quads[2]);
-        if (mode == 1) {
+        if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
             page->quads[4].clut = 0x7D7C;
             battle_gfx_draw_or_append_gpu_primitive(&page->quads[4]);
         }
-        if (mode != 2) {
+        if (mode != UNIT_STATS_PANEL_ATTACK_TARGET) {
             battle_gfx_draw_or_append_gpu_primitive(&page->quads[3]);
         } else if (text_id != 0) {
             battle_menu_build_sprite_page(frame, frame_rect);

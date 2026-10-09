@@ -17,19 +17,19 @@ u8* world_gfx_bind_data_pointer(u32 index) {
         g_world_text_section_pointers[TEXT_SECTION_ABILITY_NAMES] = g_world_text_ability_names_data;
         break;
     case 3:
-        g_world_text_section_pointers[24] = g_world_text_formation_messages_data;
+        g_world_text_section_pointers[TEXT_SECTION_FORMATION_MESSAGES] = g_world_text_formation_messages_data;
         break;
     case 4:
-        g_world_text_section_pointers[29] = g_world_text_dismiss_unit_replies_data;
+        g_world_text_section_pointers[TEXT_SECTION_DISMISS_UNIT_REPLIES] = g_world_text_dismiss_unit_replies_data;
         break;
     case 5:
-        g_world_text_section_pointers[29] = g_world_text_job_descriptions_data;
+        g_world_text_section_pointers[TEXT_SECTION_JOB_DESCRIPTIONS] = g_world_text_job_descriptions_data;
         break;
     case 7:
         g_world_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_text_name_entry_keyboard_data;
         break;
     case 8:
-        g_world_text_section_pointers[31] = g_world_text_shop_dialogue_data;
+        g_world_text_section_pointers[TEXT_SECTION_SHOP_DIALOGUE] = g_world_text_shop_dialogue_data;
         break;
     }
 }

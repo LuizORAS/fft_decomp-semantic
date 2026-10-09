@@ -87,7 +87,7 @@ s32 attack_load_scenario_conditionals(void) {
         return;
     }
     g_battle_scenario_event_active = 0;
-    for (i = 0x70; i < 0x90; i++) {
+    for (i = EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST; i < EVENT_SCRIPT_VAR_SCENARIO_LOCAL_END; i++) {
         battle_script_set_variable(i, 0);
     }
     battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 1);
@@ -204,8 +204,8 @@ s32 attack_load_scenario_conditionals(void) {
     }
     battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, squads[0]);
     battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, squads[1]);
-    battle_script_set_variable(0x37, 0);
-    battle_script_set_variable(0x38, 0);
+    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_THIRD_SQUAD_ID, 0);
+    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_FOURTH_SQUAD_ID, 0);
     battle_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, ramza);
     return 0;
 }

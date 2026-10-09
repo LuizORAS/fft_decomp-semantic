@@ -23,5 +23,5 @@ void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots
     if (restore != 0) {
         wldcore_menu_dispatch_resume_handler();
     }
-    g_main_system_flags &= ~0x2000;
+    g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
 }

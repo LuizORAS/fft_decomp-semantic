@@ -65,9 +65,9 @@ s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
         g_jobstts_initialized = 0;
     }
-    if (g_jobstts_sound_queued_effect_id != 0) {
+    if (g_jobstts_sound_queued_effect_id != MAIN_SFX_NONE) {
         main_sound_play_sfx(g_jobstts_sound_queued_effect_id);
-        g_jobstts_sound_queued_effect_id = 0;
+        g_jobstts_sound_queued_effect_id = MAIN_SFX_NONE;
     }
     return result;
 }
