@@ -3,9 +3,9 @@
 struct battle_script_jump_instruction;
 extern void battle_script_jump_event_instruction(struct battle_script_jump_instruction* parameters);
 
-/* BATTLE twin of world_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions up to
- * BLOCK_END on its own thread, dispatching the unit-movement, animation and
- * wait opcodes that may appear inside a block, then exits. */
+/* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
+ * up to BLOCK_END on its own thread, dispatching the unit-movement, animation and wait opcodes that may appear inside a
+ * block, then exits. */
 void battle_script_block_start_thread(void) {
     /* Preserve the target's unused 40-byte stack area. */
     s32 unused[10];

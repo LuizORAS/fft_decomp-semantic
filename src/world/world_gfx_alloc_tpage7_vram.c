@@ -8,7 +8,7 @@
  * cells are all unclaimed is marked 0xff, the primitive UVs/CLUT (and TPage
  * for POLY_FT4) are pointed at it, and rect is rewritten to the 4bpp VRAM
  * area at x 0x1c0 before image (unless -1) is uploaded. A full grid stops
- * this thread. Counterpart of world_gfx_free_texture_grid_rect. */
+ * this thread. Counterpart of world_gfx_free_tpage7_vram. */
 void world_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* image) {
     s16 width;
     s16 height;

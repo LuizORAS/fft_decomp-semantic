@@ -5,7 +5,7 @@
 
 /* Narrow the halfword list `source` into the signed-byte record selected by
  * `index`, storing the -1 terminator as well. Inverse of
- * world_menu_widen_byte_record_to_halfwords. */
+ * world_menu_load_sort_key_list. */
 void world_menu_store_sort_key_list(s32 index, s16* source) {
     s8* out;
     s32 terminator;

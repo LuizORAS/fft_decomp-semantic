@@ -1,7 +1,8 @@
 #include "psx/types.h"
 
-/* Target 0x801085a0; byte-identical twin of world_menu_fill_pattern_row. Copies a 16-bit pattern row: the two leading
- * and two trailing entries verbatim, then the four interior entries repeated every fourth slot across the row. */
+/* Target 0x801085a0; byte-identical twin of world_menu_build_window_image_row. Copies a 16-bit pattern row: the two
+ * leading and two trailing entries verbatim, then the four interior entries repeated every fourth slot across the row.
+ */
 void world_menu_build_window_image_row_2(u16* source, u16* dest, s32 count, s32 offset) {
     s32 i;
     u16* slot;

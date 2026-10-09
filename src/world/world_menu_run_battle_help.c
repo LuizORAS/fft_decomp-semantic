@@ -1,5 +1,5 @@
 /* WORLD copy of the EVENT HELPMENU battle help menu
- * (helpmenu_run_battle_help_menu), identical apart from addresses.
+ * (helpmenu_menu_run_battle_help), identical apart from addresses.
  */
 #include "fft/world.h"
 #include "psx/libgpu.h"

@@ -1,7 +1,7 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
-/* DEBUGCHR copy of main_gfx_build_zodiac_bin. */
+/* DEBUGCHR copy of main_gfx_build_zodiac_primitives. */
 void debugchr_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly) {
     s32 i;
     s32 x;

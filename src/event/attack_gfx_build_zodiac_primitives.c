@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* ATTACK copy of main_gfx_build_zodiac_bin. */
+/* ATTACK copy of main_gfx_build_zodiac_primitives. */
 void attack_gfx_build_zodiac_primitives(battle_menu_status_panel_scaled_sprite_t* sprite, POLY_FT4* poly) {
     s32 i;
     s32 x;
