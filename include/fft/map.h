@@ -144,8 +144,7 @@ typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
  * world_map_store_selected_tile_data and saved whole by
  * world_gfx_copy_screen_setup_out.
  * _unknown_02/_unknown_04 are the two bytes of the per-surface-type main table
- * D_8005E950 ("movement cost/geomancy/movement support tables" in
- * scus_94221_datatables.txt); their meaning is unproven. */
+ * D_8005E950; their meaning is unproven. */
 typedef struct map_selected_tile {
     s16 surface_type;   /* 0x00 */
     s16 _unknown_02;    /* 0x02 */

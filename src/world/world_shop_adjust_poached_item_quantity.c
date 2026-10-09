@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
-/* scus_94221_datatables.txt: Fur Shop poached-item quantities.
- * Keep the target's ten-bit index mask and saturating byte range. */
+/* Adjust a Fur Shop poached-item quantity, with the target's ten-bit index
+ * mask and saturating byte range. */
 s32 world_shop_adjust_poached_item_quantity(s32 index, s32 delta) {
     s32 slot = index & WORLD_ITEM_ID_MASK;
     s32 value = g_main_item_poached_quantities[slot] + delta;

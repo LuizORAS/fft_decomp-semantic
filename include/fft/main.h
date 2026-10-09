@@ -249,7 +249,7 @@ typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_opcode_inst
  * filters completed records by that byte. */
 typedef struct wldcore_proposition_progress {
     u8 flags;
-    u8 proposition_id; /* 0x01; text 0xd000 | id names it (scus_94221_datatables.txt 80057eec "Prop ID") */
+    u8 proposition_id; /* 0x01; text 0xd000 | id names it */
     u8 elapsed_days;
     u8 assigned_days;
     u8 location;
