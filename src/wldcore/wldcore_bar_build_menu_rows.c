@@ -9,10 +9,8 @@
  * (-0x78, -0x28); the remembered row g_wldcore_bar_menu_saved_cursor (cursor state 1) is reset if
  * out of range and both windows are placed on it.
  *
- * `unused` reproduces the target's 0x78-byte frame. The volatile entry_count
- * store stops reorg filling the third test's delay slot from past the join,
- * the single `render` access raises `index` above `level` in allocation
- * priority, and `- n * -0x10` keeps base_y as the first addu operand. */
+ * `unused` reproduces the target's 0x78-byte frame. The single `render`
+ * access raises `index` above `level` in allocation priority. */
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     s32 index;
     wldcore_point32_t point;
@@ -45,7 +43,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     }
     if (g_main_save_proposition_count != wldcore_proposition_count_completed(-1)) {
         level->entries[level->entry_count] = 3;
-        *(volatile s32*)&level->entry_count = level->entry_count + 1;
+        level->entry_count++;
     }
     level->entries[level->entry_count] = 4;
     level->entry_count++;
@@ -76,7 +74,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     render = &g_wldcore_window_render_records[index];
     g_wldcore_window_records[level->main_window].x = g_wldcore_window_render_records[index].base_x + 6;
     g_wldcore_window_records[level->main_window].y
-        = g_wldcore_window_render_records[index].base_y - cursor->selected_index * -0x10 + 0xE;
+        = g_wldcore_window_render_records[index].base_y + cursor->selected_index * 0x10 + 0xE;
     g_wldcore_window_records[level->side_window].x = render->base_x + 3;
     g_wldcore_window_records[level->side_window].y = g_wldcore_window_render_records[index].base_y - 2;
 }

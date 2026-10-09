@@ -27,7 +27,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
         }
         return;
     }
-    if ((g_main_system_flags_alias & 0xC) == 4) {
+    if ((g_main_system_flags & 4) && !(g_main_system_flags & 8)) {
         if (state != 0) {
             g_main_system_flags |= 0x40;
             world_thread_set_parameters(0xE, 0, -1, 0);

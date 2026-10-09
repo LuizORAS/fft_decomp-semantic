@@ -1084,11 +1084,6 @@ extern s32 g_main_system_session_frames;
  * and changes the target instruction order. */
 extern u32 g_main_game_options_raw;
 
-/* Same address as g_main_system_flags (0x8004d950). The target re-reads the
- * flags in both arms after the (flags & 0xc) == 4 test; reading the test
- * through this second link name keeps GCC from reusing the tested load, where
- * a volatile declaration also reschedules the argument setup. */
-extern s32 g_main_system_flags_alias;
 extern s32 g_main_boot_startup2_has_run;
 extern u32 g_main_boot_squaresoft_logo_image_words[];
 extern u8* g_main_heap_high_overlay_load_address;

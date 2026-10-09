@@ -271,7 +271,7 @@ typedef struct open_birthday_confirmation_state {
 typedef char
     open_birthday_confirmation_state_size_must_be_0x64[(sizeof(open_birthday_confirmation_state_t) == 0x64) ? 1 : -1];
 
-extern const u8 g_open_birthday_month_lengths[12];
+extern u8 g_open_birthday_month_lengths[12];
 extern u8 g_open_birthday_title_image[];
 extern u8 g_open_birthday_window_image[];
 
@@ -281,7 +281,7 @@ extern u8 g_open_birthday_window_image[];
  * day after storing through its month pointer. */
 extern u8 g_open_birthday_zodiac_months[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
-void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* state);
+void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
 s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day);
 void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
@@ -575,13 +575,13 @@ void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
-void open_gfx_hide_four_render_records(const open_birthday_render_record_indices_t* group);
+void open_gfx_hide_four_render_records(open_birthday_render_record_indices_t* group);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
 void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
-void open_gfx_show_four_render_records(const open_birthday_render_record_indices_t* group);
+void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);
 void open_gfx_step_image_crossfade(void);

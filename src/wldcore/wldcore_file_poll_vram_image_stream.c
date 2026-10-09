@@ -5,11 +5,8 @@
 
 /* Streams CD-resident image chunks to VRAM through a retrying state machine.
  *
- * The named sector pointer, negative-offset subtraction, and in-place width
- * multiplication preserve the target's commutative operand ordering. The
- * volatile word reads prevent GCC from narrowing loads that feed s16 RECT
- * fields. The switch jump table occupies 0x80067000-0x80067020, at the start
- * of WLDCORE.BIN. */
+ * The switch jump table occupies 0x80067000-0x80067020, at the start of
+ * WLDCORE.BIN. */
 void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     RECT rect;
     u8 mode[8];
@@ -17,7 +14,6 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     s32 word;
     s32 n;
     s32 status;
-    u8* sector_buffer;
 
     switch (stream->state) {
     case 0:
@@ -63,9 +59,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     case 6:
         status = CdReady(1, 0);
         if (status == CdlDataReady) {
-            sector_buffer = stream->destination;
-            sector_buffer += (stream->sector_index & 1) * 2048;
-            CdGetSector(sector_buffer, 0x200);
+            CdGetSector(stream->destination + (stream->sector_index & 1) * 2048, 0x200);
             stream->wait_frames = 0;
             stream->state++;
             break;
@@ -91,22 +85,14 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         rect_count = *(s32*)(stream->destination + (stream->sector_index & 1) * 2048);
         word++;
         for (n = 0; n < rect_count; n++) {
-            rect.x = *(volatile s32*)(stream->destination + word * 4);
+            rect.x = *(s32*)(stream->destination + word * 4);
             rect.y = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
             word++;
-            rect.w = *(volatile s32*)(stream->destination + word * 4);
+            rect.w = *(s32*)(stream->destination + word * 4);
             rect.h = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
             word++;
-            LoadImage(&rect, (u32*)(stream->destination - -(word * 4)));
-            {
-                s32 width;
-                s32 height;
-
-                width = rect.w;
-                height = rect.h;
-                width *= height;
-                word += width / 2;
-            }
+            LoadImage(&rect, (u32*)(stream->destination + word * 4));
+            word += rect.w * rect.h / 2;
         }
         stream->sector_index++;
         if (stream->sector_index < stream->sector_count) {

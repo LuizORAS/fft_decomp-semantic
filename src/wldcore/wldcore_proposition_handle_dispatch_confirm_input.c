@@ -9,9 +9,6 @@
 void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel_level_t* level) {
     s32 row;
     s32 i;
-    u16* id;
-    u16* id2;
-    s32 value;
 
     if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
         return;
@@ -42,30 +39,27 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
         if (level->row == 1) {
             goto block_tail;
         }
-        id = &g_wldcore_selected_proposition_row[0].fields.id;
         world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
             world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) - g_wldcore_proposition_gil_amount);
         g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-        world_script_set_variable(*id + 0x35F, world_script_get_variable(*id + 0x35F) | 8);
+        world_script_set_variable(g_wldcore_selected_proposition_row[0].fields.id + 0x35F,
+            world_script_get_variable(g_wldcore_selected_proposition_row[0].fields.id + 0x35F) | 8);
         g_main_active_propositions[g_main_save_proposition_count].flags = 1;
-        g_main_active_propositions[g_main_save_proposition_count].proposition_id = *id - 1;
+        g_main_active_propositions[g_main_save_proposition_count].proposition_id
+            = g_wldcore_selected_proposition_row[0].fields.id - 1;
         g_main_active_propositions[g_main_save_proposition_count].elapsed_days = 0;
-        value = g_wldcore_proposition_dispatch_days;
-        g_main_active_propositions[g_main_save_proposition_count].assigned_days = value;
-        value = g_wldcore_map_projection_state.marker.kind;
-        g_main_active_propositions[g_main_save_proposition_count].location = value;
-        value = g_wldcore_proposition_send_unit_count;
-        g_main_active_propositions[g_main_save_proposition_count].participant_count = value;
+        g_main_active_propositions[g_main_save_proposition_count].assigned_days = g_wldcore_proposition_dispatch_days;
+        g_main_active_propositions[g_main_save_proposition_count].location = g_wldcore_map_projection_state.marker.kind;
+        g_main_active_propositions[g_main_save_proposition_count].participant_count
+            = g_wldcore_proposition_send_unit_count;
         for (i = 0; i < g_wldcore_proposition_send_unit_count; i++) {
-            s32 member;
-
             wldcore_get_party_data_pointer(g_wldcore_proposition_send_units[i])->proposition_status = 1;
-            g_main_active_propositions[g_main_save_proposition_count].participant_indices[i] = member
+            g_main_active_propositions[g_main_save_proposition_count].participant_indices[i]
                 = g_wldcore_proposition_send_units[i];
         }
         g_main_save_proposition_count++;
-        id2 = &g_wldcore_selected_proposition_row[0].fields.id;
-        world_script_set_variable(*id2 + 0x35F, world_script_get_variable(*id2 + 0x35F) | 2);
+        world_script_set_variable(g_wldcore_selected_proposition_row[0].fields.id + 0x35F,
+            world_script_get_variable(g_wldcore_selected_proposition_row[0].fields.id + 0x35F) | 2);
         goto block_tail;
     }
 }

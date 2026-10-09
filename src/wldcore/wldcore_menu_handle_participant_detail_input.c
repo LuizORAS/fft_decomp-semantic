@@ -7,7 +7,6 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
     u32 buttons;
     s32 count;
     s32 direction;
-    s32 window;
     s32 participant;
 
     if ((g_main_system_flags & 4) && world_thread_is_running(8) == 0) {
@@ -54,9 +53,8 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
     if (wldcore_input_check_repeating_directional(PSX_PAD_R1) != 0
         && g_wldcore_window_records[level->left_window].sequence != 0x67) {
         g_wldcore_window_records[level->right_window].sequence = 0x69;
-        window = level->right_window;
-        g_wldcore_window_records[window].anim_counter = 0;
-        g_wldcore_window_records[window].frame_index = 0;
+        g_wldcore_window_records[level->right_window].frame_index
+            = g_wldcore_window_records[level->right_window].anim_counter = 0;
         count = g_main_active_propositions[level->proposition].participant_count;
         if (count == 1) {
             /* Shared tail: both single-participant cases branch to the closing
@@ -77,14 +75,13 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
             return;
         }
         g_wldcore_window_records[level->left_window].sequence = 0x67;
-        window = level->left_window;
-        g_wldcore_window_records[window].anim_counter = 0;
-        g_wldcore_window_records[window].frame_index = 0;
+        g_wldcore_window_records[level->left_window].frame_index
+            = g_wldcore_window_records[level->left_window].anim_counter = 0;
         if (g_main_active_propositions[level->proposition].participant_count == 1) {
             goto done;
         }
         if (level->participant != 0) {
-            level->participant = level->participant - 1;
+            level->participant--;
         } else {
             level->participant = g_main_active_propositions[level->proposition].participant_count - 1;
         }

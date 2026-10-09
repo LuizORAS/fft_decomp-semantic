@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/libc.h"
 
 /* Runs the world-script interpreter until the active record yields. Each turn
  * refreshes the pending script sounds from script variables 0x5c-0x5e, then:
@@ -44,7 +45,8 @@ s32 wldcore_script_run_until_yield(void) {
             g_wldcore_active_saved_record.state_flags |= 4;
             g_wldcore_active_saved_record.script_words = &((u32*)g_main_save_slot_buffer)[offset >> 2];
             if (g_wldcore_saved_record_index < 5) {
-                g_main_saved_records[g_wldcore_saved_record_index] = g_wldcore_active_saved_record;
+                memcpy(&g_main_saved_records[g_wldcore_saved_record_index], &g_wldcore_active_saved_record,
+                    sizeof(wldcore_saved_record_t));
             }
         }
 

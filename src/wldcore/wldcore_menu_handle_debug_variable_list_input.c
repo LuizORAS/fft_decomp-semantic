@@ -16,7 +16,6 @@
 void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_level_t* level) {
     s32 variable;
     s32 value;
-    s32 window;
     s32 dead[2];
 
     if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
@@ -26,9 +25,8 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         g_wldcore_window_records[level->window_index].palette = 0xA;
         g_wldcore_window_render_records[level->render_index].palette = 2;
         g_wldcore_window_records[level->window_index].sequence = 1;
-        window = level->window_index;
-        g_wldcore_window_records[window].frame_index = 0;
-        g_wldcore_window_records[window].anim_counter = 0;
+        g_wldcore_window_records[level->window_index].anim_counter
+            = g_wldcore_window_records[level->window_index].frame_index = 0;
         variable = level->first_variable + level->cursor;
         wldcore_menu_push_number_panel_level_with_argument(variable, world_script_get_variable(variable));
         return;
@@ -46,7 +44,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
             if (level->first_variable < 0x64) {
                 level->first_variable = 0;
             } else {
-                level->first_variable = level->first_variable - 0x64;
+                level->first_variable -= 0x64;
             }
             goto redraw;
         }
@@ -61,7 +59,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         if (level->cursor == 0) {
             level->cursor = level->row_count - 1;
         } else {
-            level->cursor = level->cursor - 1;
+            level->cursor--;
         }
         goto move_cursor;
     }
@@ -70,7 +68,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
     }
     if (g_wldcore_current_button_input & PSX_PAD_TRIANGLE) {
         if (level->first_variable + 0x64 < 0x3fd) {
-            level->first_variable = level->first_variable + 0x64;
+            level->first_variable += 0x64;
             goto redraw;
         }
         value = 0x3fc;
@@ -98,7 +96,7 @@ cursor_down:
     if (level->cursor == level->row_count - 1) {
         level->cursor = 0;
     } else {
-        level->cursor = level->cursor + 1;
+        level->cursor++;
     }
 move_cursor:
     g_wldcore_window_records[level->window_index].x = g_wldcore_window_render_records[level->render_index].base_x + 8;

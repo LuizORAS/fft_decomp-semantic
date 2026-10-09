@@ -156,9 +156,9 @@ function carries its own `profile` only where it differs:
   (`gcc-2.7.2_O2_aspsx-2.21_divcheck`): a separate `mfhi` in constant
   divisions, no delay-slot fill from past an if-body join, `lui/addiu/addu`
   for an indexed global, and the zero/overflow `break` checks around each
-  division. The few functions there that still carry a GCC 2.6.3 profile
-  match only with it as written; a natural spelling under the module profile
-  is still owed.
+  division. No function there needs another profile. A load through a
+  `const` pointee is never reloaded after a store under this compiler, so a
+  parameter or table retail reloads is not `const`.
 - `-O1` and `-O0`: parts of WORLD and the CARD screen.
 - ASPSX 2.21 and `_divcheck`: a few functions in BATTLE, WORLD and MAIN.
 - `gcc-2.6.3_O2_G8_aspsx-2.34`: the four Suzuki CPU heap routines require

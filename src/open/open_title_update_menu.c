@@ -116,7 +116,7 @@ void open_title_update_menu(open_title_controller_t* state) {
 
     if (state->state == 2) {
         state->state = 0;
-        open_gfx_show_four_render_records((const open_birthday_render_record_indices_t*)state);
+        open_gfx_show_four_render_records((open_birthday_render_record_indices_t*)state);
         open_menu_push_sound_type_controller();
         return;
     }

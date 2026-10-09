@@ -6,11 +6,12 @@
  * level's two windows and its render record with flag 0x10. wldcore_menu_wait_tutorial_topic_text_then_pop_level
  * steps the window and pops the level, restoring all three.
  *
- * The coordinate mode is constant here, yet retail still switched on it to
- * choose the text image row (0x60 for mode 0, 0x70 for mode 1, as the sibling
- * setups store). The compiler drops the dead case only after its first CSE
- * pass, which is why the stores after image_y address their fields from the
- * text_id base register.
+ * The coordinate mode is a constant local, yet retail still switched on it to
+ * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
+ * The compiler folds the switch in its first CSE pass, after the stores were
+ * split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when
+ * the live case is the last one.
  *
  * The menu-stack type store comes last so the
  * compiler scales depth by four late and in place, forcing the copy into v0
@@ -21,12 +22,13 @@ void wldcore_menu_push_tutorial_topic_text_level(s32 topic) {
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = topic;
     g_wldcore_scrollable_text_window.text_id = topic + 0x8800;
-    g_wldcore_scrollable_text_window.image_x = 0;
     switch (coordinate_mode) {
     case 0:
+        g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_y = 0x60;
         break;
     case 1:
+        g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_y = 0x70;
         break;
     }

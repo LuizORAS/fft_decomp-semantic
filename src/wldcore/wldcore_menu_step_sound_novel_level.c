@@ -4,10 +4,7 @@
 /*
  * Per-frame handler for a WLDCORE brightness/fade menu level.
  *
- * The system-flag test reads g_main_system_flags_alias, a second link name for
- * g_main_system_flags: the target re-loads the word for the `^= 4` in phase 2
- * instead of reusing the tested value, as in wldcore_menu_step_sound_novel_resume_level. The unused array
- * reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
+ * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
  * word load (`lw`) of the u16 g_wldcore_active_saved_record.state_flags in the target, so it
  * reads the flags through an s32 cast; the u16 declaration gives `lhu`.
  */
@@ -21,7 +18,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
     s32 window;
     u16 shade;
 
-    if ((g_main_system_flags_alias & 0xC) == 4) {
+    if ((g_main_system_flags & 4) && !(g_main_system_flags & 8)) {
         switch (level->phase) {
         case 2:
             if (level->countdown == 0) {

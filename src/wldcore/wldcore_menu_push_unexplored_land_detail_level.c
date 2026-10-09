@@ -11,11 +11,12 @@
  * and its frame render record with flag 0x10 and starts WORLD thread 14 on
  * text 0xb849 with substitution value 0xd800 + land.
  *
- * The coordinate mode is constant here, yet retail still switched on it to
- * choose the text image row (0x60 for mode 0, 0x70 for mode 1, as the sibling
- * setups store). The compiler drops the dead case only after its first CSE
- * pass, which is why the stores after image_y address their fields from the
- * text_id base register.
+ * The coordinate mode is a constant local, yet retail still switched on it to
+ * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
+ * The compiler folds the switch in its first CSE pass, after the stores were
+ * split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when
+ * the live case is the last one.
  *
  * The render record's position is written through a pointer to its base_x: the
  * target reaches base_x/base_y at 0 and 4 off one register holding
@@ -45,12 +46,13 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     base->y = -0x22;
     wldcore_read_nine_bit_record(g_main_land_discovery_date_bits, value, date);
     g_wldcore_scrollable_text_window.text_id = value + 0x8800;
-    g_wldcore_scrollable_text_window.image_x = 0;
     switch (coordinate_mode) {
     case 0:
+        g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_y = 0x60;
         break;
     case 1:
+        g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_y = 0x70;
         break;
     }

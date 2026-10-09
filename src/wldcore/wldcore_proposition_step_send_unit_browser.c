@@ -20,7 +20,6 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     u32 buttons;
     s32 selected;
     s32 direction;
-    s32 window;
     s16* menu_selected_index;
 
     if (level->mode == 3) {
@@ -65,9 +64,8 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         if (wldcore_input_check_repeating_directional(PSX_PAD_R1) != 0
             && g_wldcore_window_records[level->left_arrow].sequence != 0x67) {
             g_wldcore_window_records[level->right_arrow].sequence = 0x69;
-            window = level->right_arrow;
-            g_wldcore_window_records[window].anim_counter = 0;
-            g_wldcore_window_records[window].frame_index = 0;
+            g_wldcore_window_records[level->right_arrow].frame_index
+                = g_wldcore_window_records[level->right_arrow].anim_counter = 0;
             if (level->unit_count == 1) {
                 /* Shared tail: duplicating the sound call per arm is only
                  * partly cross-jumped and leaves an extra copy. */
@@ -86,14 +84,13 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
                 return;
             }
             g_wldcore_window_records[level->left_arrow].sequence = 0x67;
-            window = level->left_arrow;
-            g_wldcore_window_records[window].anim_counter = 0;
-            g_wldcore_window_records[window].frame_index = 0;
+            g_wldcore_window_records[level->left_arrow].frame_index
+                = g_wldcore_window_records[level->left_arrow].anim_counter = 0;
             if (level->unit_count == 1) {
                 goto done;
             }
             if (level->slot != 0) {
-                level->slot = level->slot - 1;
+                level->slot--;
             } else {
                 level->slot = level->unit_count - 1;
             }

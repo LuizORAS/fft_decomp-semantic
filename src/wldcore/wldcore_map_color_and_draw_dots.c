@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 typedef union wldcore_map_dot_source_word {
-    volatile s32 w;
+    s32 w;
     u8 b[4];
 } wldcore_map_dot_source_word_t;
 
@@ -12,18 +12,6 @@ typedef struct wldcore_map_dot_source {
 } wldcore_map_dot_source_t;
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
-
-/* Flags-only view of g_wldcore_map_dots (0x800d3ca8). The hidden-flag update is a
- * volatile access in the target: reorg does not pull the loop-tail `dot++`
- * into the preceding branch delay slot across it, which the target leaves as
- * a nop. */
-typedef struct wldcore_map_dot_hidden_view {
-    u8 _unused_00[0x10];
-    volatile s32 flags;
-    u8 _unused_14[0x20];
-} wldcore_map_dot_hidden_view_t;
-
-extern wldcore_map_dot_hidden_view_t g_wldcore_map_dots_view[];
 
 void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_source_t* src;
@@ -71,7 +59,7 @@ void wldcore_map_color_and_draw_dots(void) {
         dot->anim_counter = 0;
         g_wldcore_map_dots[i].frame_index = 0;
         if (world_script_get_variable(i + 0x200) == 0) {
-            g_wldcore_map_dots_view[i].flags |= 0x10;
+            g_wldcore_map_dots[i].flags |= 0x10;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;

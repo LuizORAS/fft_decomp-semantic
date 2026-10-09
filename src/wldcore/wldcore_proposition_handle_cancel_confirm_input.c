@@ -21,11 +21,7 @@ typedef struct wldcore_menu_proposition_confirm_level {
  * accepts the proposition and starts WORLD thread 14 with text 0xb81e or
  * closes the level, and Cross closes it. */
 void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_confirm_level_t* level) {
-    s32 render_index;
-    s32 window;
     s32 choice;
-    s32 row_y;
-    s32 y;
 
     if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
         return;
@@ -51,13 +47,10 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
         || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
-        choice = level->choice;
-        choice = choice ^ 1;
-        window = level->window;
-        render_index = level->render_index;
+        choice = level->choice ^ 1;
         level->choice = choice;
-        g_wldcore_window_records[window].y
-            = (y = g_wldcore_window_render_records[render_index].base_y) + (row_y = choice * 16 + 14);
+        g_wldcore_window_records[level->window].y
+            = g_wldcore_window_render_records[level->render_index].base_y - -(choice * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE)) {
