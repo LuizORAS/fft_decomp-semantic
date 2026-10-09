@@ -106,7 +106,7 @@ void battle_camera_fusion_thread(void) {
         track = tracks;
         for (key_index = 0; key_index < 3; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
-            if (*(u16*)&g_battle_camera_position_locked == 0) {
+            if (g_battle_camera_position_locked == 0) {
                 g_battle_script_variables[g_battle_camera_script_variable_indices[key_index]]
                     = battle_camera_step_track(track, key_index);
             }

@@ -20,7 +20,7 @@ s32 world_formation_run_equip_item_menu(void) {
     s16* cursor_y;
 
     /* The target tests the init flag with lb; the header types it u8. */
-    if (*(s8*)&g_world_equip_menu_initialized == 0) {
+    if (g_world_equip_menu_initialized == 0) {
         g_world_equip_menu_initialized = 1;
         g_world_equip_item_previewed_cursor = -1;
         g_world_equip_item_list_open = 0;

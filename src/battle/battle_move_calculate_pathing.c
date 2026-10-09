@@ -109,9 +109,9 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         }
         for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
             state->level_offset = state->tile_level * 256;
-            for (state->tile_y = 0; (s16)state->tile_y < config->map_max_y; state->tile_y++) {
-                state->row_offset = state->level_offset + (s16)state->tile_y * config->map_max_x;
-                for (state->tile_x = 0; (s16)state->tile_x < config->map_max_x; state->tile_x++) {
+            for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
+                state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
+                for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
                     state->tile_index = state->row_offset + state->tile_x;
                     state->current_tile = &g_battle_map_tile_data[state->tile_index];
                     state->current_panel = &g_battle_target_panels[state->tile_index];
@@ -123,9 +123,9 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         state->frontier_max_remaining_range = 0;
         for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
             state->level_offset = state->tile_level * 256;
-            for (state->tile_y = 0; (s16)state->tile_y < config->map_max_y; state->tile_y++) {
-                state->row_offset = state->level_offset + (s16)state->tile_y * config->map_max_x;
-                for (state->tile_x = 0; (s16)state->tile_x < config->map_max_x; state->tile_x++) {
+            for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
+                state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
+                for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
                     state->tile_index = state->row_offset + state->tile_x;
                     state->current_tile = &g_battle_map_tile_data[state->tile_index];
                     state->current_panel = &g_battle_target_panels[state->tile_index];
@@ -182,15 +182,14 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
     state->inner_count = 2;
     while (state->candidate_remaining_range.value != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
-        state->tile_index = state->tile_level * 256 + (s16)state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length++;
         g_battle_move_pathing_scratch = state->current_panel->remaining_range;
         state->current_panel->mark = state->path_length;
         state->candidate_remaining_range.value = g_battle_move_pathing_scratch;
-        if ((s16)state->tile_x == config->x && (s16)state->tile_y == config->y
-            && state->tile_level == config->high_elevation) {
+        if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
         battle_move_spread_to_neighbors();

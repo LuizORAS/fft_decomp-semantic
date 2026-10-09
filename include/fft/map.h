@@ -189,7 +189,7 @@ typedef struct map_selected_tile {
     s16 surface_type;   /* 0x00 */
     s16 _unknown_02;    /* 0x02 */
     s16 _unknown_04;    /* 0x04 */
-    u16 display_height; /* 0x06: half height + height * 2 + depth * 2 */
+    s16 display_height; /* 0x06: half height + height * 2 + depth * 2 */
     s16 depth;          /* 0x08 */
 } map_selected_tile_t;
 

@@ -16,7 +16,7 @@ s8 world_item_run_sort_order_menu(void) {
     s32 index;
     s32 selected;
 
-    if (*(s8*)&g_world_item_sort_order_initialized == 0) {
+    if (g_world_item_sort_order_initialized == 0) {
         g_world_item_category_icon_strip_a.selected_index = 0;
         g_world_item_category_icon_strip_b.selected_index = 0;
         world_menu_load_sort_key_list(g_world_item_menu_category + 1, g_world_item_category_strip_text_ids);

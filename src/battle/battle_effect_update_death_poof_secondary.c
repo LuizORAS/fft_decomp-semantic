@@ -41,7 +41,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
     result = passthrough;
     state = &g_battle_effect_death_poof_states[effect->own_slot_id];
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING: {
         state->count = 0;
         for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {

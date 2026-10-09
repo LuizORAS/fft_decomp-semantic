@@ -78,7 +78,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         return;
     }
 
-    if (*(s8*)&g_world_dismiss_unit_prompt_running == 0) {
+    if (g_world_dismiss_unit_prompt_running == 0) {
         sprite = g_world_formation_selected_unit_index;
         if (g_world_formation_unit_pointers[sprite]->proposition_status != 0) {
             world_text_show_message_and_play_sound(0xC012, MAIN_SFX_ERROR_MESSAGE);
@@ -176,7 +176,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 g_world_formation_dismiss_step = step;
             }
         }
-        if (*(s8*)&g_world_dismiss_unit_prompt_running != 0) {
+        if (g_world_dismiss_unit_prompt_running != 0) {
             return;
         }
         if (g_world_menu_selection_results[10] != 0) {

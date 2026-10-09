@@ -5,7 +5,7 @@
  * Only the low 10 bits select the inventory slot; callers explicitly
  * sign-extend flagged 16-bit entries where the target uses `lh`.
  */
-s32 world_item_adjust_inventory_count(s32 item_id, s32 delta) {
+s32 world_item_adjust_inventory_count(s16 item_id, s32 delta) {
     s32 idx;
     s32 quantity;
 

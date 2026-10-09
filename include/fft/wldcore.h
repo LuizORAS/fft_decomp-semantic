@@ -233,7 +233,7 @@ extern wldcore_audio_queue_t g_wldcore_audio_queue;
 /* Unsigned views of g_wldcore_active_saved_record.text_history_0..3 for the
  * two history shifters, which load them with lhu; the record keeps s16 for
  * the -1 stores of wldcore_reset_saved_record_fields. */
-extern u16 g_wldcore_sound_novel_text_history_0;
+extern s16 g_wldcore_sound_novel_text_history_0;
 extern u16 g_wldcore_sound_novel_text_history_1;
 extern u16 g_wldcore_sound_novel_text_history_2;
 extern u16 g_wldcore_sound_novel_text_history_3;
@@ -270,7 +270,7 @@ typedef struct wldcore_slideshow {
     s16 page_count;      /* 0x04 */
     s16 page_index;      /* 0x06 */
     s16 page_frames[16]; /* 0x08; frames each page stays up */
-    u16 frame_timer;     /* 0x28 */
+    s16 frame_timer;     /* 0x28 */
     s16 point_count;     /* 0x2a */
     s16 coords[1];       /* 0x2c; packed (x, y) pairs */
 } wldcore_slideshow_t;
@@ -536,7 +536,7 @@ extern wldcore_state_record_t* g_wldcore_location_records;
 extern s32 g_wldcore_location_marker_shade;
 extern wldcore_location_view_t g_wldcore_location_view;
 extern u32* g_wldcore_location_frame_tim;
-s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, s32 value, s32 step);
+s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 value, s32 step);
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
 s32 wldcore_location_process_entry(s32 from_location, s32 to_location);
 

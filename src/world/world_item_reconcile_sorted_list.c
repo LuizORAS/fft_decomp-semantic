@@ -10,13 +10,13 @@ void world_item_reconcile_sorted_list(s32 list_index) {
     s32 category;
 
     for (item_id = 1; item_id < 254; item_id++) {
-        type = world_item_get_menu_category((s16)item_id);
+        type = world_item_get_menu_category(item_id);
         category = 0;
         if (type != ITEM_MENU_CATEGORY_WEAPON) {
             category = type - 1;
         }
         if (list_index == category) {
-            if (world_item_count_owned_and_equipped((s16)item_id)) {
+            if (world_item_count_owned_and_equipped(item_id)) {
                 if (!world_item_is_in_category_list(item_id, list_index)) {
                     world_item_prepend_to_category_list(item_id, list_index);
                 }

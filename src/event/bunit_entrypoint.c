@@ -141,5 +141,5 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     bunit_panel_toggle_unit_status_thread(0);
     while (DrawSync(1) != 0) { }
     VSync(0);
-    return (s8)g_bunit_selected_battle_id;
+    return g_bunit_selected_battle_id;
 }

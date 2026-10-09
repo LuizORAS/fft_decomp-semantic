@@ -18,7 +18,7 @@ void battle_formula_apply_poach_and_train(void) {
         return;
     }
     target = g_battle_action_target;
-    remaining = target->hp - (s16)action->hp_damage + (s16)action->hp_healing;
+    remaining = target->hp - action->hp_damage + action->hp_healing;
     if (target->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
         return;
     }

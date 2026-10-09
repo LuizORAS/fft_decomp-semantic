@@ -56,7 +56,7 @@ void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
                 st.rgb[3] = st.rgb[4] = st.rgb[5] = st.shades[draw_row][col + 1];
                 st.rgb[6] = st.rgb[7] = st.rgb[8] = st.shades[draw_row + 1][col];
                 st.rgb[9] = st.rgb[10] = st.rgb[11] = st.shades[draw_row + 1][col + 1];
-                world_gfx_enqueue_gouraud_textured_quad(&st.rect, st.rgb, 0, (s16)st.rect.u == 0x58);
+                world_gfx_enqueue_gouraud_textured_quad(&st.rect, st.rgb, 0, st.rect.u == 0x58);
             }
         }
         st.rect.y += 0x20;

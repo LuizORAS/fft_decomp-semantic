@@ -9,7 +9,7 @@ typedef struct equip_number_glyph {
     RECT rect;
     s16 u;
     s16 v;
-    u16 w;
+    s16 w;
     u16 h;
     RECT minus_rect;
 } equip_number_glyph_t;
@@ -122,15 +122,15 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
                 pos += 1;
             }
             if (data[2] < 2) {
-                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + ((s16)glyph.w * digit), glyph.v, 0,
+                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
                     g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             } else {
                 if (digit < 8) {
                     glyph.v = 0;
-                    glyph.u = (s16)glyph.w * digit + 0x20;
+                    glyph.u = glyph.w * digit + 0x20;
                 } else {
                     glyph.v = 0x10;
-                    glyph.u = (s16)glyph.w * (digit - 8) + 0x20;
+                    glyph.u = glyph.w * (digit - 8) + 0x20;
                 }
                 equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
                     g_equip_text_digit_texture_page, g_equip_text_metric_0, g_equip_gfx_sprite_ot_index);

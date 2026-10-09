@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Volatile view: the target re-reads the transfer flag on every poll. */
-extern volatile u16 g_main_sound_driver_flags;
+extern volatile s16 g_main_sound_driver_flags;
 
 s16 main_sound_wait_for_spu_transfer(s32 flags) {
     if (flags & 0x10) {

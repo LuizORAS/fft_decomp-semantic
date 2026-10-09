@@ -35,14 +35,14 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
     for (; item < 0xFE; item++) {
         entry = item;
         if (mode == ITEM_LIST_MODE_EQUIPPABLE_IN_INVENTORY) {
-            result = world_item_adjust_inventory_count((s16)item, 0);
+            result = world_item_adjust_inventory_count(item, 0);
         } else {
-            result = world_item_count_owned_and_equipped((s16)item);
+            result = world_item_count_owned_and_equipped(item);
         }
         if (result == 0) {
             continue;
         }
-        type = world_item_get_menu_category((s16)entry);
+        type = world_item_get_menu_category(entry);
         result = 0;
         if (category < 2) {
             result = type < 2;
@@ -75,7 +75,7 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
             continue;
         }
         if (mode != ITEM_LIST_MODE_ALL) {
-            result = world_unit_can_equip_item_id(unit_id, (s16)entry);
+            result = world_unit_can_equip_item_id(unit_id, entry);
             if (mode >= 2 && result == -1) {
                 continue;
             }

@@ -12,7 +12,7 @@
  * sound type 1, reverb mode 4, CD mixing and the default volumes. */
 void SuzukiSPUInitialiser(s32 flags) {
     /* Bit 15 (initialised) is tested as a sign, on an `lh` load. */
-    if ((s16)g_main_sound_driver_flags < 0) {
+    if (g_main_sound_driver_flags < 0) {
         return;
     }
     g_main_sound_driver_flags = flags | MAIN_SOUND_DRIVER_INITIALISED;

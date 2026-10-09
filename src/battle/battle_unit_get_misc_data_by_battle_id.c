@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-battle_unit_misc_data_t* battle_unit_get_misc_data_by_battle_id(u32 battle_id) {
+battle_unit_misc_data_t* battle_unit_get_misc_data_by_battle_id(u16 battle_id) {
     battle_unit_misc_data_t* unit;
 
     unit = g_battle_unit_misc_list_head;

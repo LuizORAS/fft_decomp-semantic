@@ -52,7 +52,7 @@ s32 bunit_run_ability_list_menu(void) {
             g_bunit_ability_entries, 0, g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_bunit_ability_list_ready = 1;
     }
-    if (*(s16*)&g_bunit_menu_list_entry_count == 0
+    if (g_bunit_menu_list_entry_count == 0
         || ((entry = g_bunit_ability_entries[g_bunit_menu_list_selected_index]) & ABILITY_LIST_ENTRY_HIDE_DETAILS)) {
         g_bunit_text_selection_id = -1;
     } else {

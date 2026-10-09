@@ -4,7 +4,7 @@
 /* Awards proposition JP to a roster unit's current generic job (special jobs
  * use slot 0), recomputes the job level nibble and the unlocked-job bitset.
  * Returns -1 when the unit or JP amount is invalid. */
-s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
+s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 slot;
     party_data_t* party;
     u8 job;
@@ -17,7 +17,7 @@ s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
     if (jp < 0) {
         return -1;
     }
-    if ((u32)party_index >= 20) {
+    if (party_index >= 20) {
         return -1;
     }
     party = main_party_get_data_pointer(party_index);

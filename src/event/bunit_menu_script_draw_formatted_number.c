@@ -41,10 +41,10 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
         y = command->y;
     } else {
         row = g_bunit_menu_scroll_base_index + g_bunit_menu_cursor_row;
-        y = (s16)g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + command->y - g_bunit_menu_scroll_pixel_offset;
+        y = g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + command->y - g_bunit_menu_scroll_pixel_offset;
         if (g_bunit_menu_scroll_pixel_offset < 0) {
             row--;
-            y -= (s16)g_bunit_menu_list_row_height;
+            y -= g_bunit_menu_list_row_height;
         }
     }
     if (getter != 0) {

@@ -233,7 +233,7 @@ extern u32 g_main_file_still_loading;
 
 /* File-header wrapper at 0x80011bd0 forwards build's result. */
 s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
-s32 main_file_call_build_header(s32 sector, s32 size, void* destination);
+s32 main_file_call_build_header(s32 sector, u32 size, void* destination);
 int main_file_is_still_loading(void);
 void main_file_reset_cd_subsystems(void);
 void main_file_handle_cd_read_callback(u8 event, u8* result);
@@ -246,7 +246,7 @@ int main_file_build_header(
 void* main_file_load_checked_to_heap(int sector, int size);
 void* main_file_load_checked_to_address(int sector, int size, void* destination);
 void* main_file_get_smd(int sector, int size);
-void* main_file_load_to_heap(s32 sector, s32 size);
+void* main_file_load_to_heap(s32 sector, u32 size);
 void* main_file_load_to_address(int sector, u32 size, void* destination);
 void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
 void main_file_poll_load(main_file_load_descriptor_t* state);
@@ -308,7 +308,7 @@ extern job_data_t g_main_job_data[];
 extern const u16 g_main_job_level_jp_requirements[8];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
-s32 main_job_add_proposition_jp(s32 party_index, s32 jp);
+s32 main_job_add_proposition_jp(u32 party_index, s32 jp);
 u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
 job_data_t* main_job_get_data_pointer(s32 job_id);
@@ -369,9 +369,9 @@ typedef struct wldcore_saved_record {
     s16 text_history_1;       /* 0x22 */
     s16 text_history_2;       /* 0x24 */
     s16 text_history_3;       /* 0x26 */
-    u16 value_display_mode;   /* 0x28 */
+    s16 value_display_mode;   /* 0x28 */
     u16 music_selection;      /* 0x2a */
-    u16 sound_mode;           /* 0x2c */
+    s16 sound_mode;           /* 0x2c */
     s16 picture_x;            /* 0x2e */
     s16 picture_y;            /* 0x30 */
     s16 sound_id;             /* 0x32 */
@@ -616,7 +616,7 @@ typedef struct suzuki_music_channel {
     u16 sustain_level;         /* 0x6c */
     u8 _unused_06e[6];         /* 0x6e; SpuVoiceAttr adsr1, adsr2 */
     s16 rest_length;           /* 0x74; Rest or Fermata hold length, counted down per tick */
-    u8 length_adjust;          /* 0x76; signed note-length adjust: opcode 0xAD adds to or clears it */
+    s8 length_adjust;          /* 0x76; signed note-length adjust: opcode 0xAD adds to or clears it */
     u8 _padding_077;           /* 0x77; aligns note_ticks */
     u16 note_ticks;            /* 0x78; ticks left in the note; 0 sets active bit 0x400 */
     u16 gate_time;             /* 0x7a; key-on time in sixteenths of the length (0xA9); initialised to 0xf */
@@ -1089,7 +1089,7 @@ extern u16 g_main_sound_voice_update_requests;      /* suzuki_voice_mask_request
 extern suzuki_music_t* g_main_sound_active_music_list; /* 0x80032a50 */
 
 /* Driver status (main_sound_driver_flag_e). */
-extern u16 g_main_sound_driver_flags;
+extern s16 g_main_sound_driver_flags;
 extern s32 g_main_root_counter_2_event;        /* 0x80032a5c; OpenEvent handle of main_sound_root_counter_2_handler */
 extern suzuki_music_t* g_main_sound_sfx_music; /* 0x80032a60; eight channels on SPU voices 16-23 */
 extern SpuReverbAttr g_main_sound_reverb_attr; /* 0x80037008 */
@@ -1239,7 +1239,7 @@ void main_smd_seed_random(s32 value);
 s32 main_smd_random(void);
 
 /* Reprograms an SMD channel with an instrument of its waveset. */
-void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel);
+void main_smd_set_instrument(s16 instrument, suzuki_music_channel_t* channel);
 void main_smd_set_voice_update_flags_all_channels(u16 mask, suzuki_music_t* music);
 void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask);
 
@@ -1612,7 +1612,7 @@ s32 main_unit_calculate_random_equipment(
     battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
 
 u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
-s32 main_unit_calculate_zodiac_symbol(u32 birthday);
+s32 main_unit_calculate_zodiac_symbol(u16 birthday);
 s32 main_unit_check_level_up(battle_stats_t* unit);
 void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);

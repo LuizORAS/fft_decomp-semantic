@@ -94,7 +94,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
             LoadImage(upload_c, (u32*)(text_pixels + 0x468));
         }
-        field_y = (u16)g_bunit_frame_arg;
+        field_y = g_bunit_frame_arg;
         use_offset = field_y != 0xF0;
         g_bunit_gfx_draw_offset_y = -use_offset & 0xF0;
         bunit_gfx_build_scaled_draw_area_packets(

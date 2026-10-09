@@ -31,7 +31,7 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
                 target.coords.vx = other->screen.vx;
                 target.coords.vy
-                    = other->screen.vy - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
+                    = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
                 target.coords.vz = other->screen.vz;
             } else {
                 target.coords.vx = unit->battle_data->action_target_x * 28 + 14;

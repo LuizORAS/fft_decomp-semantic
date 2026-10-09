@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* `rect` carries the two rect as (x0, y0, x1, y1). */
-void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index) {
+void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index) {
     LINE_F2* line;
 
     line = &g_equip_gfx_context->lines[g_equip_gfx_line_f2_count++];

@@ -132,7 +132,7 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                 } else {
                     channel->flags &= ~SUZUKI_CHANNEL_NOTE_FOLLOWS;
                 }
-                length = (s8)channel->length_adjust + channel->rest_length;
+                length = channel->length_adjust + channel->rest_length;
                 if (length <= 0) {
                     channel->length_adjust += channel->rest_length;
                     length += channel->rest_length;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void world_unit_start_view_thread(s32 index, s32 unit_a, s32 unit_b) {
-    if (*(u16*)&g_world_menu_overlay_state != 1) {
+    if (g_world_menu_overlay_state != 1) {
         world_text_build_unit_name_list();
         g_world_menu_panel_fade_mode = g_world_unit_view_panel_fade_modes[index];
         if (unit_a != 0xFF) {

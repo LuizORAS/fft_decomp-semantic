@@ -14,7 +14,7 @@ typedef struct jobstts_number_glyph {
     urect16_t rect;
     s16 u;
     s16 v;
-    u16 w;
+    s16 w;
     u16 h;
     u16 _unused_10[8];
 } jobstts_number_glyph_t;
@@ -125,7 +125,7 @@ u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
             glyph.rect.y = y;
             glyph.rect.h = glyph.h;
             glyph.rect.x = cell_x;
-            jobstts_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + ((s16)glyph.w * digit), glyph.v, 0,
+            jobstts_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
                 g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, g_jobstts_gfx_otag_index);
             i += 1;
         } while (i < data[4]);

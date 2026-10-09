@@ -29,11 +29,11 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     }
     speed = world_gfx_get_vsync_mode_or_one();
     g_world_menu_use_scroll_position = 1;
-    if (*(s8*)&g_world_menu_list_layout_pending != 0) {
+    if (g_world_menu_list_layout_pending != 0) {
         world_menu_load_scrollable_list_layout(record);
     }
     old_cursor = g_world_menu_cursor_position;
-    if (*(s8*)&g_world_menu_list_scroll_direction == 0) {
+    if (g_world_menu_list_scroll_direction == 0) {
         i = world_input_read_menu_scroll_repeat();
         if (i != 0) {
             if (i != 2) {
@@ -44,7 +44,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
             index = g_world_menu_scroll_offset;
             if (index == g_world_menu_cursor_position) {
                 if (index > 0) {
-                    *(s8*)&g_world_menu_list_scroll_direction = -1;
+                    g_world_menu_list_scroll_direction = -1;
                     if (g_world_menu_list_text_table != 0) {
                         g_world_menu_list_row_text_ids[0] = g_world_menu_list_entry_ids[index - 1];
                         rect.x = 0x240;
@@ -84,7 +84,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
             g_world_menu_scroll_repeat_timer = 0;
         }
     }
-    if (*(s8*)&g_world_menu_list_scroll_direction < 0) {
+    if (g_world_menu_list_scroll_direction < 0) {
         if (g_world_menu_scroll_repeat_timer >= g_main_menu_scroll_accel_delay) {
             g_world_menu_scroll_pixel_offset -= g_main_menu_scroll_fast_step * (u8)speed;
         } else {
@@ -105,7 +105,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
                 }
             }
         }
-    } else if (*(s8*)&g_world_menu_list_scroll_direction > 0) {
+    } else if (g_world_menu_list_scroll_direction > 0) {
         if (g_world_menu_scroll_repeat_timer >= g_main_menu_scroll_accel_delay) {
             g_world_menu_scroll_pixel_offset += g_main_menu_scroll_fast_step * (u8)speed;
         } else {

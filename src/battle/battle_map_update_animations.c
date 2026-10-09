@@ -239,11 +239,11 @@ void battle_map_update_animations(void) {
                         for (j = 0; j < 16; j++) {
                             if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                                 red = component[j].red_5bit
-                                    + (s8)g_battle_map_palette_blend_steps_32[component[j].red_delta_biased][step];
+                                    + g_battle_map_palette_blend_steps_32[component[j].red_delta_biased][step];
                                 green = component[j].green_5bit
-                                    + (s8)g_battle_map_palette_blend_steps_32[component[j].green_delta_biased][step];
+                                    + g_battle_map_palette_blend_steps_32[component[j].green_delta_biased][step];
                                 blue = component[j].blue_5bit
-                                    + (s8)g_battle_map_palette_blend_steps_32[component[j].blue_delta_biased][step];
+                                    + g_battle_map_palette_blend_steps_32[component[j].blue_delta_biased][step];
                                 if ((red | green | blue) == 0) {
                                     blue = 1;
                                 }
@@ -279,11 +279,11 @@ void battle_map_update_animations(void) {
                     for (j = 0; j < 16; j++) {
                         if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                             red = component[j].red_5bit
-                                + (s8)g_battle_map_palette_blend_steps_8[component[j].red_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_8[component[j].red_delta_biased][step];
                             green = component[j].green_5bit
-                                + (s8)g_battle_map_palette_blend_steps_8[component[j].green_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_8[component[j].green_delta_biased][step];
                             blue = component[j].blue_5bit
-                                + (s8)g_battle_map_palette_blend_steps_8[component[j].blue_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_8[component[j].blue_delta_biased][step];
                             if ((red | green | blue) == 0) {
                                 blue = 1;
                             }
@@ -325,11 +325,11 @@ void battle_map_update_animations(void) {
                     for (j = 0; j < 256; j++) {
                         if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                             red = component[j].red_5bit
-                                + (s8)g_battle_map_palette_blend_steps_32[component[j].red_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_32[component[j].red_delta_biased][step];
                             green = component[j].green_5bit
-                                + (s8)g_battle_map_palette_blend_steps_32[component[j].green_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_32[component[j].green_delta_biased][step];
                             blue = component[j].blue_5bit
-                                + (s8)g_battle_map_palette_blend_steps_32[component[j].blue_delta_biased][step];
+                                + g_battle_map_palette_blend_steps_32[component[j].blue_delta_biased][step];
                             if ((red | green | blue) == 0) {
                                 blue = 1;
                             }
@@ -367,11 +367,11 @@ void battle_map_update_animations(void) {
                 for (j = 0; j < 256; j++) {
                     if (component[j].red_5bit + component[j].green_5bit + component[j].blue_5bit != 0) {
                         red = component[j].red_5bit
-                            + (s8)g_battle_map_palette_blend_steps_8[component[j].red_delta_biased][step];
+                            + g_battle_map_palette_blend_steps_8[component[j].red_delta_biased][step];
                         green = component[j].green_5bit
-                            + (s8)g_battle_map_palette_blend_steps_8[component[j].green_delta_biased][step];
+                            + g_battle_map_palette_blend_steps_8[component[j].green_delta_biased][step];
                         blue = component[j].blue_5bit
-                            + (s8)g_battle_map_palette_blend_steps_8[component[j].blue_delta_biased][step];
+                            + g_battle_map_palette_blend_steps_8[component[j].blue_delta_biased][step];
                         if ((red | green | blue) == 0) {
                             blue = 1;
                         }

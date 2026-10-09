@@ -139,7 +139,7 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         display->selector &= ~BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL;
     }
     display->active = 1;
-    if ((u16)display->progress >= 22) {
+    if (display->progress >= 22) {
         display->progress = 21;
     }
 

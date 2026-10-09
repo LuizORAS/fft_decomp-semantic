@@ -32,10 +32,10 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     count = 0;
     for (; item_id < 0xFE; item_id++) {
         entry = item_id;
-        if (equip_item_get_total_count((s16)item_id) == 0) {
+        if (equip_item_get_total_count(item_id) == 0) {
             continue;
         }
-        item_category = equip_item_get_menu_category((s16)item_id);
+        item_category = equip_item_get_menu_category(item_id);
         matches = 0;
         if (category < 2) {
             matches = item_category < 2;
@@ -68,7 +68,7 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
             continue;
         }
         if (equip_filter != ITEM_LIST_MODE_ALL) {
-            matches = equip_unit_can_equip_item_id(unit_index, (s16)entry);
+            matches = equip_unit_can_equip_item_id(unit_index, entry);
             if (equip_filter == ITEM_LIST_MODE_EQUIPPABLE && matches == -1) {
                 continue;
             }

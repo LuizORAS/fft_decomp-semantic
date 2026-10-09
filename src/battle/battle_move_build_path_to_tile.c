@@ -104,7 +104,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     while (state->candidate_remaining_range.value != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
-        state->tile_index = state->tile_level * 256 + (s16)state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length = pass;
@@ -127,8 +127,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             state->current_panel->mark = pass;
         }
         state->candidate_remaining_range.value = value;
-        if ((s16)state->tile_x == config->x && (s16)state->tile_y == config->y
-            && state->tile_level == config->high_elevation) {
+        if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
         battle_move_spread_to_neighbors();

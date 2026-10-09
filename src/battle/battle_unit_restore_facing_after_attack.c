@@ -15,7 +15,7 @@ void battle_unit_restore_facing_after_attack(battle_unit_misc_data_t* unit) {
                 battle_unit_set_tile_position(
                     unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, rot / 1024);
                 /* Stored as a signed halfword (li -1, not ori 0xffff). */
-                *(s16*)&unit->attack_facing = -1;
+                unit->attack_facing = -1;
                 if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
                     mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
                     mount->facing = unit->facing;
@@ -24,7 +24,7 @@ void battle_unit_restore_facing_after_attack(battle_unit_misc_data_t* unit) {
                 }
             }
         } else {
-            *(s16*)&unit->attack_facing = -1;
+            unit->attack_facing = -1;
         }
     }
 }

@@ -1,6 +1,6 @@
 #include "fft/world.h"
 
-s32 world_unit_can_equip_item_id(s16 unit_index, s32 item_id) {
+s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id) {
     s32 id = item_id & WORLD_ITEM_ID_MASK;
     s32 result;
 

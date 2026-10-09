@@ -84,7 +84,7 @@ void battle_camera_thread(void) {
             if (target[j] == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
-            if (*(u16*)&g_battle_camera_position_locked != 0 && j < 3) {
+            if (g_battle_camera_position_locked != 0 && j < 3) {
                 continue;
             }
             if (j < 3) {
@@ -156,7 +156,7 @@ void battle_camera_thread(void) {
         battle_thread_yield();
     }
 
-    if (*(u16*)&g_battle_camera_position_locked == 0) {
+    if (g_battle_camera_position_locked == 0) {
         for (i = 0; i < 3; i++) {
             if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 g_battle_script_variables[g_battle_camera_script_variable_indices[i]] = target[i] << 10;

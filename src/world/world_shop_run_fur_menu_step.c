@@ -23,7 +23,7 @@ void world_shop_run_fur_menu_step(void) {
         }
         if (g_world_shop_fur_has_secret_hunt != 0) {
             for (i = 1; i < 0x100; i++) {
-                if (world_shop_adjust_poached_item_quantity((s16)i, 0) != 0) {
+                if (world_shop_adjust_poached_item_quantity(i, 0) != 0) {
                     g_world_shop_fur_has_poached_stock = 1;
                 }
             }

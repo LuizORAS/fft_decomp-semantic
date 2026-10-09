@@ -14,7 +14,7 @@
  * renderers: the target keeps each group in one register (`k`: the row
  * height step, colour curves and brightness; `n`: the lattice row, brightness
  * row and quad depth). */
-s32 effect_e317_update_tube_mesh_state(s32 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e317_update_tube_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
     SVECTOR vertex;
     SVECTOR unused_18[2]; /* frame padding the target reserves but never touches */
     VECTOR origin;
@@ -63,7 +63,6 @@ s32 effect_e317_update_tube_mesh_state(s32 record_index, s32 byte_offset, s32 ge
     u32 shade_b;
     map_tile_t* tile;
 
-    record_index = (s16)record_index;
     record = &g_effect_state_records[record_index];
     entry = &g_effect_geometry_table->entries[geometry_index].ring_mesh;
     placement = entry->placement_flags;

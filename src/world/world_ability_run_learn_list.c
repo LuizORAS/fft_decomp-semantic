@@ -21,7 +21,7 @@ s32 world_ability_run_learn_list(void) {
     s32 mode;
     s16 index;
 
-    if (*(s8*)&g_world_learn_ability_list_open == 0) {
+    if (g_world_learn_ability_list_open == 0) {
         g_world_menu_script_callbacks[0] = world_job_get_cached_level;
         g_world_menu_script_callbacks[1] = world_job_get_cached_total_jp;
         g_world_menu_script_callbacks[2] = world_job_get_cached_level_jp_requirement;

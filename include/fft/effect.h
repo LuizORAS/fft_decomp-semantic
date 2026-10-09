@@ -447,7 +447,7 @@ typedef struct effect_summon_mesh_work {
     s32 buffer;             /* 0x0000: 0 or 1, flipped after each update */
     POLY_GT4 quads[2][128]; /* 0x0004: row * 16 + column */
     s16 spin;               /* 0x3404: lattice rotation, wrapped to 0xfff */
-    u16 v_scroll;           /* 0x3406: 8.8 fixed, wrapped to v_span */
+    s16 v_scroll;           /* 0x3406: 8.8 fixed, wrapped to v_span */
     s32 radius_offset;      /* 0x3408: 24.8 fixed, added to the radius */
     s32 radius_speed;       /* 0x340c */
     u8 _unused_3410[0x08];

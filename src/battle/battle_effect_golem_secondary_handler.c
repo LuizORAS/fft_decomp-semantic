@@ -10,7 +10,7 @@ s32 battle_effect_golem_secondary_handler(void) {
 
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         result = 1;
         effect->active_count = 0;

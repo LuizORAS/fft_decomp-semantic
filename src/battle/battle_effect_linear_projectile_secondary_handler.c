@@ -38,7 +38,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
     s32 kind;
     POLY_FT4* dst;
 
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
@@ -170,7 +170,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[0]);
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
-            if (*(u16*)&g_battle_effect_current_secondary->target.fields.target_type == 0
+            if (g_battle_effect_current_secondary->target.fields.target_type == 0
                 && g_battle_effect_current_secondary->target.fields.result_animation != 3
                 && g_battle_effect_current_secondary->target.fields.result_animation != 4) {
                 battle_effect_play();

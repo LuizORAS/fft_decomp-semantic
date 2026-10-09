@@ -17,7 +17,7 @@
  * base address of &screen[2] is CSE'd into the later &screen[0] operand. The
  * colour stores are chained so that loop.c keeps the blue product in the
  * inner loop, as in the target. */
-s32 effect_e041_update_ring_stack_mesh_state(s32 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e041_update_ring_stack_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
     SVECTOR vertex;
     SVECTOR unused_18[3]; /* frame padding the target reserves but never touches */
     VECTOR growth;
@@ -65,7 +65,6 @@ s32 effect_e041_update_ring_stack_mesh_state(s32 record_index, s32 byte_offset, 
     u32 red;
     map_tile_t* tile;
 
-    record_index = (s16)record_index;
     record = &g_effect_state_records[record_index];
     entry = &g_effect_geometry_table->entries[geometry_index].ring_mesh;
     placement = entry->placement_flags;

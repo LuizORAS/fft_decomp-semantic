@@ -9,9 +9,9 @@ u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
     if (g_bunit_menu_scroll_list_active == 0) {
         index = cmd[4];
     } else {
-        index = (s16)g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + cmd[4] - g_bunit_menu_scroll_pixel_offset;
+        index = g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + cmd[4] - g_bunit_menu_scroll_pixel_offset;
         if (g_bunit_menu_scroll_pixel_offset < 0) {
-            index -= (s16)g_bunit_menu_list_row_height;
+            index -= g_bunit_menu_list_row_height;
         }
     }
 

@@ -133,8 +133,8 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
     if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
         && g_bunit_help_screen_id == MENU_GRID_HELP_NONE && bunit_gfx_get_fade_state() == 0) {
         g_bunit_unit_grid_selected_cell = bunit_menu_update_wrapped_grid_selection(
-            4, 5, (u8)g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, (s16)input);
-        g_bunit_unit_selected_index = (u8)g_bunit_unit_reorderable_indices[g_bunit_unit_grid_selected_cell];
+            4, 5, g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, (s16)input);
+        g_bunit_unit_selected_index = g_bunit_unit_reorderable_indices[g_bunit_unit_grid_selected_cell];
     }
     bunit_menu_update_unit_list_scroll(&g_bunit_unit_list_scroll_step, &g_bunit_unit_list_page_offset);
     if (g_bunit_unit_browse_enabled != 0) {
@@ -164,10 +164,10 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             menu = g_bunit_unit_grid_stat_bar_script_bottom;
             quads = g_bunit_unit_grid_label_tiles_bottom;
         }
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, (s16)top, input & PSX_PAD_L2,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, top, input & PSX_PAD_L2,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
-        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R2, 0xC2, (s16)top, input & PSX_PAD_R2,
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R2, 0xC2, top, input & PSX_PAD_R2,
             bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
             MAIN_SFX_PAGE_SWITCH);
         bunit_menu_dispatch_with_override(menu, 0, 0);
@@ -209,7 +209,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
         }
         bunit_gfx_set_draw_color(top ? g_bunit_unit_grid_dimmed_color : g_bunit_unit_grid_normal_color);
         for (col = 0; col < 4; col++, unit++) {
-            if (unit >= (u8)g_bunit_unit_reorderable_count)
+            if (unit >= g_bunit_unit_reorderable_count)
                 break;
             cell.x = col * 62 + 6;
             cell.y = y;
@@ -220,7 +220,7 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
             if (y < -0x3C || y >= 0xF0)
                 continue;
             cell_y = cell.y;
-            unit_index = (u8)g_bunit_unit_reorderable_indices[unit];
+            unit_index = g_bunit_unit_reorderable_indices[unit];
             top = cell_y + 40;
             if (g_bunit_unit_browse_enabled == 0 && top < 240) {
                 if (g_bunit_unit_stat_mode < 3) {
@@ -354,12 +354,11 @@ s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_pan
                         bunit_menu_script_draw_formatted_number(&g_bunit_unit_grid_faith_number);
                 }
             }
-            bunit_gfx_draw_unit_sprite_and_name_plate((u8)g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
-            if (g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->mount_info
-                & BATTLE_MOUNT_INFO_FLAG_RIDER) {
+            bunit_gfx_draw_unit_sprite_and_name_plate(g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
+            if (g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
                 bunit_gfx_draw_unit_sprite_and_name_plate(
                     bunit_unit_find_index_by_battle_id(
-                        (s16)(g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->mount_info
+                        (s16)(g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info
                             - BATTLE_MOUNT_INFO_FLAG_RIDER)),
                     cell.x, cell.y);
             }

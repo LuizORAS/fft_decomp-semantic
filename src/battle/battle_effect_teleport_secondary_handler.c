@@ -14,7 +14,7 @@ s32 battle_effect_teleport_secondary_handler(void) {
     s16 finish_timer;
 
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         result = 1;
         g_battle_effect_current_secondary->active_count = 0;

@@ -125,9 +125,9 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
                 (screen->sprites + i)[19].x0 = -0x200;
             }
         }
-        g_bunit_gfx_draw_offset_y = (u16)g_bunit_frame_arg != 0xf0 ? 0xf0 : 0;
+        g_bunit_gfx_draw_offset_y = g_bunit_frame_arg != 0xf0 ? 0xf0 : 0;
         bunit_gfx_build_scaled_draw_area_packets(
-            &screen->portrait, &g_bunit_character_status_draw_area_rect, frame, (u16)g_bunit_frame_arg, thread);
+            &screen->portrait, &g_bunit_character_status_draw_area_rect, frame, g_bunit_frame_arg, thread);
         screen->draw_offsets[0].x = thread->x - 0x80;
         screen->draw_offsets[0].y = thread->y + g_bunit_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);

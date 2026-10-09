@@ -227,7 +227,7 @@ void world_menu_unit_status_banner_thread(void) {
             status->portrait.g0 = 0x80;
             status->portrait.b0 = 0x80;
         }
-        g_world_gfx_draw_area_y = ((u16)g_world_frame_arg != 0xF0) ? 0xF0 : 0;
+        g_world_gfx_draw_area_y = (g_world_frame_arg != 0xF0) ? 0xF0 : 0;
         if ((display->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
@@ -258,7 +258,7 @@ void world_menu_unit_status_banner_thread(void) {
             }
         }
         draw_x = display->x;
-        draw_y = (u16)g_world_gfx_draw_area_y;
+        draw_y = g_world_gfx_draw_area_y;
         status->draw_offset_a.x = draw_x - 0x80;
         status->draw_offset_a.y = display->shake_y.low + draw_y;
         SetDrawOffset(&status->draw_offset_a, &status->draw_offset_a.x);
@@ -266,7 +266,7 @@ void world_menu_unit_status_banner_thread(void) {
         status->draw_offset_b.y = g_world_gfx_draw_area_y;
         SetDrawOffset(&status->draw_offset_b, &status->draw_offset_b.x);
         draw_x = display->x;
-        draw_y = (u16)g_world_gfx_draw_area_y;
+        draw_y = g_world_gfx_draw_area_y;
         summary->draw_offset_a.x = draw_x - 0x80;
         summary->draw_offset_a.y = display->shake_y.low + draw_y;
         SetDrawOffset(&summary->draw_offset_a, &summary->draw_offset_a.x);

@@ -36,7 +36,7 @@ typedef struct wldcore_route_point {
  * word through `word` keeps the target's whole-word lw (a direct narrowing
  * store is expanded as lhu), and the `flags` local gives its `or` operand
  * order. */
-s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, s32 route, s32 step) {
+s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 route, s32 step) {
     s32 unused[8];
     wldcore_route_record_t* record;
     s32 index;
@@ -48,7 +48,7 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     record = (wldcore_route_record_t*)g_wldcore_map_route_tables;
     state->route_id = route & 0xff;
     flags = state->flags;
-    state->flags = flags | (((u32)route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
+    state->flags = flags | ((route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
     record = ((wldcore_route_record_t**)record)[state->route_id];
     if (state->flags & WLDCORE_ROUTE_TRAVEL_REVERSED) {
         state->leg_end_location = record->start_location;

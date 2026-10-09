@@ -60,10 +60,10 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
 
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.charge;
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         index = g_battle_effect_secondary_animations[effect->animation_id].parameter;
-        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball((u16)effect->parameter);
+        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball(effect->parameter);
         g_battle_effect_secondary_state.charge.speed = g_battle_effect_charge_line_params[index].speed;
         g_battle_effect_secondary_state.charge.spread_range = g_battle_effect_charge_line_params[index].spread_range;
         g_battle_effect_secondary_state.charge.spread_offset = g_battle_effect_charge_line_params[index].spread_offset;
@@ -71,7 +71,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         g_battle_effect_secondary_state.charge.radius = g_battle_effect_charge_line_params[index].radius;
         g_battle_effect_secondary_state.charge.spawn_interval
             = g_battle_effect_charge_line_params[index].spawn_interval;
-        g_battle_effect_secondary_state.charge.colour = (u16)g_battle_effect_current_secondary->parameter;
+        g_battle_effect_secondary_state.charge.colour = g_battle_effect_current_secondary->parameter;
         g_battle_effect_secondary_state.charge.max_trails = g_battle_effect_charge_line_params[index].max_trails;
         g_battle_effect_secondary_state.charge.fade_row = g_battle_effect_charge_line_params[index].fade_row;
         SetDrawMode(&state->mode[0], 1, 1, 0x20, 0);

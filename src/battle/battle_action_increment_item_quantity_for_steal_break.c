@@ -3,7 +3,7 @@
 
 /* Add a stolen or broken-off item to the player inventory while executing,
  * or its price / 4 in gil once the stock is already at 99. */
-s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, s32 item) {
+s32 battle_action_increment_item_quantity_for_steal_break(battle_stats_t* unit, u8 item) {
     s32 item_id;
 
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {

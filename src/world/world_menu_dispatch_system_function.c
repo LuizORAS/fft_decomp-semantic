@@ -187,8 +187,8 @@ s32 world_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         world_text_set_message_duration_frames(0x3C);
         if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {
-            g_world_text_substitution_values[1] = (s16)unit->calculator_multiplier_ability + TEXT_ID_ABILITY_NAME_BASE;
-            g_world_text_substitution_values[0] = (s16)unit->calculator_type_ability + TEXT_ID_ABILITY_NAME_BASE;
+            g_world_text_substitution_values[1] = unit->calculator_multiplier_ability + TEXT_ID_ABILITY_NAME_BASE;
+            g_world_text_substitution_values[0] = unit->calculator_type_ability + TEXT_ID_ABILITY_NAME_BASE;
             g_world_text_substitution_values[2] = unit->last_ability_id + TEXT_ID_ABILITY_NAME_BASE;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {

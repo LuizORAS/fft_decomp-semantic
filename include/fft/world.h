@@ -14,7 +14,7 @@ struct battle_ai_command_action;
 
 extern s32 g_world_camera_speed_curve;
 extern u16 g_world_camera_script_variable_indices[7];
-extern s16 g_world_camera_position_locked;
+extern u16 g_world_camera_position_locked;
 extern u16 g_world_camera_shake_z_offset;
 extern s32 g_world_camera_yaw_band;
 extern s32 g_world_camera_yaw_unwrap_request;
@@ -641,7 +641,7 @@ extern world_gfx_image_load_parameters_t g_world_equipment_panel_sprite_params_2
 extern world_gfx_image_load_parameters_t g_world_equipment_panel_sprite_params_3[19];
 extern world_gfx_image_load_parameters_t g_world_equipment_panel_icon_params[5];
 extern world_status_thread_t g_world_equipment_ability_panel_thread_params;
-extern u8 g_world_equip_menu_initialized;
+extern s8 g_world_equip_menu_initialized;
 extern u8 g_world_equip_item_menu_script[];
 extern s8 g_world_equip_item_slot;
 extern s8 g_world_equip_item_list_refresh;
@@ -874,7 +874,7 @@ extern s32 g_world_script_tutorial_script_files[];  /* LBA/size pairs */
 extern s32 g_world_gfx_free_rect_texels[4];
 extern s32 g_world_gfx_free_rect_grid_cells[4];
 extern RECT g_world_gfx_draw_area_template;
-extern s16 g_world_gfx_draw_area_y;
+extern u16 g_world_gfx_draw_area_y;
 extern u8 g_world_change_banner_text_image[];
 
 /* Fade tile colour: the only byte-packed triple in WORLD bss; the fade
@@ -1056,9 +1056,9 @@ extern s32 g_world_job_cached_total_jp;
 extern s16 g_world_job_wheel_job_count;
 extern u16 g_world_job_wheel_name_text;
 extern s8 g_world_learn_menu_initialized;
-extern u8 g_world_job_wheel_initialized;
+extern s8 g_world_job_wheel_initialized;
 extern s8 g_world_learn_job_list_initialized;
-extern u8 g_world_learn_ability_list_open;
+extern s8 g_world_learn_ability_list_open;
 extern s8 g_world_view_abilities_initialized;
 extern s16 g_world_job_wheel_unit_index;
 
@@ -1117,7 +1117,7 @@ extern s8 g_world_learn_menu_step; /* menu_job_list_step_e */
 extern u8 g_world_learn_confirm_prompt_state;
 extern s8 g_world_view_abilities_step; /* menu_job_list_step_e */
 extern u8 g_world_view_abilities_confirm_prompt_state;
-extern u16 g_world_learn_selected_job;
+extern s16 g_world_learn_selected_job;
 extern s16 g_world_learn_selected_job_index;
 /* An entry of the job list world_job_build_unit_list writes. */
 enum {
@@ -1137,7 +1137,7 @@ s32 world_job_find_first_for_skillset(s32 skillset);
 /* Job id -> generic job index 0..0x13, else 0. */
 s32 world_job_get_generic_index(s32 job_id);
 s32 world_job_get_skillset(s32 job_id);
-s32 world_job_get_text_index(s32 job_id);
+s32 world_job_get_text_index(s16 job_id);
 s32 world_job_is_special_monster(s32 job_id);
 
 /* Menu script callbacks: only ever address-taken and cast to
@@ -1228,10 +1228,10 @@ void world_input_update_menu_state(void);
  * The builder replaces clut after copying a table entry. tpage selects the
  * VRAM x base: 0x100 for 0x64, else 0x140. */
 typedef struct world_formation_graphic_entry {
-    u16 x;     /* 0x00 */
+    s16 x;     /* 0x00 */
     u16 y;     /* 0x02 */
-    u16 w;     /* 0x04 */
-    u16 h;     /* 0x06 */
+    s16 w;     /* 0x04 */
+    s16 h;     /* 0x06 */
     u16 clut;  /* 0x08 */
     s16 tpage; /* 0x0a: GetTPage(0, 3, 0x100 or 0x140, 0), 0x64 or 0x65 */
 } world_formation_graphic_entry_t;
@@ -1320,10 +1320,10 @@ typedef struct world_formation_unit {
     s16 magical_shield_evade;    /* 0x050 */
     s16 magical_accessory_evade; /* 0x052 */
     u16 equipment[5];            /* 0x054; right hand, left hand, head, body, accessory */
-    s16 primary_skillset;        /* 0x05e */
-    s16 secondary_skillset;      /* 0x060 */
+    u16 primary_skillset;        /* 0x05e */
+    u16 secondary_skillset;      /* 0x060 */
     s16 reaction_ability;        /* 0x062 */
-    s16 support_ability;         /* 0x064 */
+    u16 support_ability;         /* 0x064 */
     s16 movement_ability;        /* 0x066 */
     u8 _unused_068[8];           /* 0x068; spare tail of the stat-detail block */
     u8 gender_flags;             /* 0x070; unit_flags_e (fft/unit.h) */
@@ -1440,7 +1440,7 @@ extern u8 g_world_formation_dimmed_sprite_color[];
 extern u8 g_world_formation_normal_sprite_color[];
 extern u8 g_world_formation_unit_cycle_mode;
 extern u8 g_world_formation_cursor_ot_override;
-extern u8 g_world_formation_main_menu_initialized;
+extern s8 g_world_formation_main_menu_initialized;
 extern u8 g_world_formation_saved_banner_enabled;
 extern u8 g_world_formation_screen_running;
 extern u32 g_world_formation_status_label_image[];
@@ -1486,7 +1486,7 @@ extern world_menu_window_command_t g_world_formation_stat_bar_window_bottom;
 
 /* Three consecutive sprite records at 0x8018c704 / 0x8018c718 / 0x8018c72c. */
 extern world_oriented_quad_t g_world_formation_shadow_egg_sprites[3];
-extern u8 g_world_formation_gauge_bar_offsets[4];
+extern s8 g_world_formation_gauge_bar_offsets[4];
 extern u8 g_world_formation_hp_gauge_colors[12];
 extern u8 g_world_formation_mp_gauge_colors[12];
 extern u8 g_world_formation_ct_gauge_colors[12];
@@ -1565,13 +1565,13 @@ void world_formation_build_unit_record(
 
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);
-s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s32 item_id);
+s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id);
 s32 world_formation_can_scroll_slots(s32 scroll_position);
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment);
 void world_formation_clear_stat_preview(world_item_stat_summary_t* summary, world_item_stat_detail_t* detail);
-void world_formation_copy_unit_to_temp(s32 index, s32 unused_slot);
+void world_formation_copy_unit_to_temp(s16 index, s32 unused_slot);
 s32 world_formation_cursor_distance_falloff(s32 x, s32 y, s32 base, s32 floor);
-void world_formation_cycle_selected_unit(s32 pad_buttons);
+void world_formation_cycle_selected_unit(s16 pad_buttons);
 void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y, s32 unused_1);
 void world_formation_draw_cursor_trail(s16* cursor);
@@ -1582,9 +1582,9 @@ void world_formation_draw_egg_sprite(
     world_oriented_quad_t* pos, s32 palette, const u8* rgb, s32 hatch_countdown, s32 ot_index);
 
 void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s32 ot_index);
-s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s32 item_id);
-s32 world_formation_find_index_by_roster_slot(s32 roster_slot);
-s32 world_formation_generate_unit(s32 unit_type);
+s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s16 item_id);
+s32 world_formation_find_index_by_roster_slot(s16 roster_slot);
+s32 world_formation_generate_unit(s16 unit_type);
 
 void world_formation_get_generic_human_graphic_entry(
     s32 job_id, s16 is_female, world_formation_graphic_entry_t* destination);
@@ -1632,7 +1632,7 @@ void world_formation_set_display_mode(s32 mode);
 void world_formation_set_menu_entry_mask(u32 mask);
 void world_formation_set_ordering_table_pointer(void* ordering_table);
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment);
-void world_formation_set_unit_name(s32 formation_index, const u8* name);
+void world_formation_set_unit_name(s16 formation_index, const u8* name);
 void world_formation_stage_selected_unit(void);
 void world_formation_start_job_wheel_close(void);
 s32 world_formation_step_grid_return_transition(s32 mode);
@@ -1775,7 +1775,7 @@ s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);
 void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
 void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
-s32 world_unit_can_equip_item_id(s16 unit_index, s32 item_id);
+s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
 void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
@@ -1830,7 +1830,7 @@ typedef enum world_text_section {
  * 0x80129e4c.  x is a 4bpp pixel column (bit 0 selects the odd nibble),
  * y a row, and stride the destination row pitch in halfwords. */
 typedef struct world_text_glyph_target {
-    u16 x;      /* 0x00 */
+    s16 x;      /* 0x00 */
     s16 y;      /* 0x02 */
     s16 stride; /* 0x04: halfwords per row */
 } world_text_glyph_target_t;
@@ -1864,8 +1864,8 @@ extern char g_world_text_reading_character_message[];        /* "reading charact
 extern u8 g_world_text_glyph_bitmaps[];
 extern s32 g_world_text_glyph_first_row;
 extern s32 g_world_text_glyph_row_limit;
-extern s16 g_world_text_speaker_swap_unit_a;
-extern s16 g_world_text_speaker_swap_unit_b;
+extern u16 g_world_text_speaker_swap_unit_a;
+extern u16 g_world_text_speaker_swap_unit_b;
 extern s32 g_world_text_glyphs_per_wait;      /* frames a glyph stays up before the typewriter advances */
 extern u8 g_world_text_slot_source_columns[]; /* per-slot source column, stride 1 */
 extern u8 g_world_text_slot_row_pitches[];    /* per-slot source row pitch in bytes, stride 1 */
@@ -2209,7 +2209,7 @@ extern RECT g_world_menu_portrait_pixel_rect;
 extern RECT g_world_menu_portrait_palette_rect;
 extern s32 g_world_menu_scrolling_list_depth;
 extern s32 g_world_menu_hide_numeric_values;
-extern s16 g_world_menu_overlay_state;
+extern u16 g_world_menu_overlay_state;
 extern u16 g_world_menu_transition_finished;
 extern u16 g_world_menu_input_block_frames;
 extern s32 g_world_menu_slot_owner_thread_ids[];
@@ -2325,8 +2325,8 @@ extern u8 g_world_menu_script_sprite_command[];
 extern world_menu_window_command_t g_world_menu_window_interior_command;
 extern s16 g_world_menu_window_scale_table[];
 extern world_oriented_quad_t g_world_menu_number_blank_sprite;
-extern u8 g_world_menu_cursor_bob_thresholds[];
-extern u8 g_world_menu_cursor_bob_active_thresholds[];
+extern s8 g_world_menu_cursor_bob_thresholds[];
+extern s8 g_world_menu_cursor_bob_active_thresholds[];
 extern s16 g_world_menu_list_row_text_ids[];
 extern u16 g_world_menu_list_cursor_anim;
 extern u16 g_world_menu_scroll_hold_counter;
@@ -2363,13 +2363,13 @@ extern s16 g_world_menu_list_visible_rows;
 extern s16 g_world_menu_list_row_record_count;
 extern s16 g_world_menu_semi_trans;
 extern s16 g_world_menu_window_right_x;
-extern u8 g_world_menu_list_layout_pending;
+extern s8 g_world_menu_list_layout_pending;
 extern const s16* g_world_menu_list_entry_ids;
 extern u8* g_world_menu_list_text_table;
 extern u16 g_world_menu_list_image_width;
 extern u8 g_world_menu_list_glyph_width;
 extern u8 g_world_menu_list_text_columns;
-extern u8 g_world_menu_list_scroll_direction;
+extern s8 g_world_menu_list_scroll_direction;
 extern RECT g_world_menu_window_rect;
 extern u8 g_world_grid_menu_selected_cell; /* selected cell */
 extern world_menu_panel_buffer_t g_world_menu_panel_buffer;
@@ -2524,7 +2524,7 @@ s32 world_menu_get_learn_job_jp(s32 index);
 s32 world_job_calculate_current_level(s32 index);
 s32 world_menu_get_window_scale_step(void);
 void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, battle_unit_status_record_t* output);
-void world_menu_init_quad_from_record(u16* source, u16* record, POLY_FT4* poly);
+void world_menu_init_quad_from_record(u16* source, s16* record, POLY_FT4* poly);
 void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
 u8* world_menu_get_sprite_color(void);
@@ -2741,7 +2741,7 @@ extern s16 g_world_card_mode_select_enabled;
 extern s16 g_world_card_active_slot;
 extern s16 g_world_card_list_first_visible_row;
 extern u8* g_world_card_directory_buffer;
-extern u8 g_world_card_selectable_slot_count;
+extern s8 g_world_card_selectable_slot_count;
 extern u8 g_world_card_save_slot_descriptions[][0x8C];
 s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic);
 s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size);
@@ -2810,11 +2810,11 @@ extern s16 g_world_item_icon_clut_base_y; /* item icon CLUT base y */
  * signed; the initialiser only stores 0/1/2 and cannot distinguish. */
 extern s8 g_world_item_menu_initialized;
 extern s8 g_world_item_best_remove_initialized;
-extern u8 g_world_item_submenu_initialized;
-extern u8 g_world_item_category_menu_initialized;
+extern s8 g_world_item_submenu_initialized;
+extern s8 g_world_item_category_menu_initialized;
 extern s8 g_world_item_rearrange_initialized;
-extern u8 g_world_item_action_menu_initialized;
-extern u8 g_world_item_sort_order_initialized;
+extern s8 g_world_item_action_menu_initialized;
+extern s8 g_world_item_sort_order_initialized;
 extern s8 g_world_item_equipping_units_initialized;
 extern world_menu_entry_t g_world_item_icon_menu;
 extern u8 g_world_item_menu_unit_index;
@@ -2847,9 +2847,9 @@ extern u8 g_world_item_menu_saved_browse_enabled;
 extern s8 g_world_remove_item_previewed_slot;
 extern world_menu_halfword_view_t g_world_remove_item_equipment[5];
 extern s8 g_world_item_category_previewed_cursor;
-extern u16 g_world_item_rearrange_picked_cursor;   /* cursor position of the picked-up item */
+extern s16 g_world_item_rearrange_picked_cursor;   /* cursor position of the picked-up item */
 extern u16 g_world_item_rearrange_picked_scroll;   /* scroll offset when picked up */
-extern u16 g_world_item_rearrange_preview_cursor;  /* last previewed cursor position */
+extern s16 g_world_item_rearrange_preview_cursor;  /* last previewed cursor position */
 extern u8 g_world_item_rearrange_anim_frame;       /* animation frame counter */
 extern s16 g_world_item_category_strip_text_ids[]; /* option text ids of the active strip, -1 terminated */
 extern world_menu_entry_t* g_world_item_category_icon_strip;
@@ -2869,13 +2869,13 @@ void world_item_calculate_swap_stat_delta(
     world_item_stat_detail_t* output, world_item_stat_summary_t* delta, s16 item_before, s16 item_after, s32 slot);
 
 void world_item_cash_out_excess_inventory(void);
-s32 world_item_adjust_inventory_count(s32 item_id, s32 delta);
+s32 world_item_adjust_inventory_count(s16 item_id, s32 delta);
 
 void world_item_combine_stat_details(world_item_stat_detail_t* output, world_item_stat_detail_t* before,
     world_item_stat_detail_t* after, s32 multiplier);
 
 s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
-s32 world_item_count_owned_and_equipped(s32 item_id);
+s32 world_item_count_owned_and_equipped(s16 item_id);
 s32 world_item_count_selected_equipped_by_party(s32 unused_row);
 s32 world_item_count_selected_owned_and_equipped(s32 unused_row);
 void world_item_draw_weapon_hand_icons(s16 weapon_id);
@@ -2885,17 +2885,17 @@ s32 world_item_get_equip_candidate_brightness(s32 unit_index);
 s32 world_item_get_equip_candidate_marker(s32 unit_index);
 
 /* WORLD menu helpers. Half-price is clamped to one; stock to a byte. */
-s32 world_item_get_half_price(s32 item_id);
-s32 world_item_get_price(s32 item_id);
+s32 world_item_get_half_price(s16 item_id);
+s32 world_item_get_price(s16 item_id);
 s32 world_item_get_ranking_value(s32 item_id);
 s32 world_item_get_selected_half_price(s32 unused_row);
 s32 world_item_get_type(s32 item_id);
 void world_item_get_type_icon_rect(s32 type, world_item_icon_source_t* out);
-item_menu_category_e world_item_get_menu_category(s32 item_id);
+item_menu_category_e world_item_get_menu_category(s16 item_id);
 s32 world_item_is_in_category_list(s32 item_id, s32 list_index);
 
 void world_item_populate_stat_preview(
-    s32 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
+    s16 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
 
 void world_item_prepend_to_category_list(s32 item_id, s32 list_index);
 void world_item_reconcile_sorted_list(s32 list_index);
@@ -3109,7 +3109,7 @@ void world_shop_run_item_sell_list_step(void);
 void world_shop_run_item_sell_confirm_step(void);
 s32 world_shop_rename_unit_get_unit_marker(s32 unused_unit_index);
 s32 world_shop_add_fitting_room_cost(s32 delta);
-s32 world_shop_adjust_poached_item_quantity(s32 item_id, s32 delta);
+s32 world_shop_adjust_poached_item_quantity(s16 item_id, s32 delta);
 void world_shop_apply_fitting_room_items_to_all_units(void);
 void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_id, s16* out);
 s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entries, s32 mode);
@@ -3149,7 +3149,7 @@ void world_shop_run_screen(s32 shop_type);
 /* other */
 extern s16 g_world_field_object_use_request;
 extern u16 g_world_field_object_wait_status;
-extern s16 g_world_frame_arg;
+extern u16 g_world_frame_arg;
 extern s32 g_world_frame_counter;
 extern s8 g_world_cursor_bob_thresholds[];        /* (threshold, value) pairs, 0-terminated; entry 0 is the modulus */
 extern s8 g_world_cursor_bob_active_thresholds[]; /* (threshold, value) pairs, 0-terminated */
@@ -3160,7 +3160,7 @@ extern u8 g_world_location_names_resident[];
 extern s16 g_world_debug_variable_list_request_state;
 extern world_menu_quad_page_t world_D_80173CBC[2];
 extern s32 g_world_preview_stats_window_active;
-extern u8 g_world_dismiss_unit_prompt_running;
+extern s8 g_world_dismiss_unit_prompt_running;
 extern world_menu_entry_t g_world_best_fit_confirm_menu;
 extern u8 g_world_order_unit_menu[];
 extern s8* g_world_sort_key_lists[];

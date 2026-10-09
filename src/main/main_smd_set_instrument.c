@@ -8,13 +8,13 @@
  * flagged 0x8000. The entry index is the instrument number sign-extended
  * from 16 bits, and the loop address is start + loop_offset without the
  * waveset's SPU base that start_address gets. */
-void main_smd_set_instrument(s32 instrument, suzuki_music_channel_t* channel) {
+void main_smd_set_instrument(s16 instrument, suzuki_music_channel_t* channel) {
     suzuki_instrument_t* entry;
     suzuki_waveset_t* waveset;
 
     channel->instrument = instrument;
     waveset = channel->waveset;
-    entry = &waveset->instruments[(s16)instrument];
+    entry = &waveset->instruments[instrument];
     channel->start_address = entry->start + waveset->spu_address;
     channel->loop_address = entry->loop_offset + entry->start;
     channel->attack_mode = entry->attack_mode;

@@ -17,7 +17,7 @@ s32 battle_effect_equip_break_secondary_handler(void) {
     group = BATTLE_EFFECT_PARTICLE_GROUP_EQUIP_BREAK;
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         result = 1;
         effect->active_count = 0;

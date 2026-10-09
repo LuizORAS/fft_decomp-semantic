@@ -17,7 +17,7 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
     row = 0;
     if ((target->x & 1) == 0) {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + ((s16)target->x >> 1);
+            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
             for (col = 0; col < 5; col++) {
                 pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
@@ -34,7 +34,7 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
         }
     } else {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + ((s16)target->x >> 1);
+            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
             pixel = world_bits_read_primary(2);
             if (pixel != 0) {
                 pixel += palette * 4;

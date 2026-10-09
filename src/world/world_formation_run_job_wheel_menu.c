@@ -11,7 +11,7 @@ void world_formation_run_job_wheel_menu(void) {
     u16 job;
     s32 angle;
 
-    if (*(s8*)&g_world_job_wheel_initialized == 0) {
+    if (g_world_job_wheel_initialized == 0) {
         g_world_job_wheel_spin_progress = 0;
         world_gfx_bind_data_pointer(WORLD_TEXT_DATA_JOB_DESCRIPTIONS);
         g_world_job_wheel_saved_browse_enabled = g_world_formation_unit_browse_enabled;
@@ -135,7 +135,7 @@ void world_formation_run_job_wheel_menu(void) {
             world_formation_update_job_wheel_state();
         }
         if (g_world_formation_unit_banner_enabled == 0) {
-            world_formation_cycle_selected_unit((s16)g_world_input_secondary_repeat);
+            world_formation_cycle_selected_unit(g_world_input_secondary_repeat);
         }
         world_formation_draw_unit_sprite(
             g_world_formation_selected_unit_index, &g_world_job_wheel_unit_sprite_position, 0, 0x32);

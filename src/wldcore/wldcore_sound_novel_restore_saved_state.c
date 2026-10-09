@@ -75,7 +75,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
             .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     if (*state_flags & WLDCORE_OPCODE_STATE_VALUE_DISPLAY) {
-        g_wldcore_opcode_state.instruction.word = (s16)g_wldcore_active_saved_record.value_display_mode << 8;
+        g_wldcore_opcode_state.instruction.word = g_wldcore_active_saved_record.value_display_mode << 8;
         wldcore_opcode_start_pending_value_transition();
     }
     tint = g_wldcore_active_saved_record.brightness;

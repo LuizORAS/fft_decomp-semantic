@@ -9,7 +9,7 @@
  */
 #include "fft/battle.h"
 
-s32 battle_effect_allocate_secondary_slot(void) {
+u8 battle_effect_allocate_secondary_slot(void) {
     s32 id;
     s32 slot;
     s32 i;

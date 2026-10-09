@@ -46,13 +46,13 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
         }
         dir = y * map_width + x;
         panel = &g_battle_target_panel_data[dir];
-        if ((u8)panel->a != 0) {
+        if (panel->a != 0) {
             panel->b = 1;
         }
         dir += 0x100;
         panel = &g_battle_target_panel_data[dir];
         y += dy;
-        if ((u8)panel->a != 0) {
+        if (panel->a != 0) {
             panel->b = 1;
         }
         i += 1;

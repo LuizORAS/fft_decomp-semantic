@@ -15,7 +15,7 @@ s32 equip_text_render_glyph_to_4bpp_image(
     equip_bits_init_primary_reader(glyph_bitmap + glyph_id * 35);
     for (row = 0; row < 14; row++) {
         stride = position->row_stride * 2;
-        dst = image + stride * (position->y + row) + ((s16)position->x >> 1);
+        dst = image + stride * (position->y + row) + (position->x >> 1);
         for (col = 0; col < 5; col++) {
             pixel = equip_bits_read_primary(2);
             if (pixel != 0) {

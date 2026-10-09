@@ -25,7 +25,7 @@ void battle_ai_take_next_movement_origin(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
                         s32 priority_scale = 65536;
-                        key = (s16)ai->tile_priority[level][y][x];
+                        key = ai->tile_priority[level][y][x];
                         key *= priority_scale;
                         key += ai->tile_foe_proximity[level][y][x];
                         if (best_key >= key) {

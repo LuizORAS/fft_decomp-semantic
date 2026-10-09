@@ -20,7 +20,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     u32 row;
     u32 mask;
 
-    y_offset = (u16)unit->special_graphic_y_offset;
+    y_offset = unit->special_graphic_y_offset;
     /* The selector returns a raw SHP pointer or the -1 sentinel. */
     battle_gfx_select_unit_shp_frame(unit, sprite, frame, animation, &frame_table, (s32*)&frame_data);
     if ((s32)frame_data == -1) {

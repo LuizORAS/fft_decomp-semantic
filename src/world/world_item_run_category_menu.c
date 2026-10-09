@@ -11,7 +11,7 @@ s32 world_item_run_category_menu(void) {
     s32 selected;
     s32 description;
 
-    if (*(s8*)&g_world_item_category_menu_initialized == 0) {
+    if (g_world_item_category_menu_initialized == 0) {
         g_world_item_category_menu_initialized = 1;
         world_script_set_vsync_mode_and_event_speed(2);
         g_world_item_category_previewed_cursor = -1;
@@ -85,7 +85,7 @@ s32 world_item_run_category_menu(void) {
         }
         g_world_item_category_previewed_cursor = g_world_menu_cursor_position;
         world_item_populate_stat_preview(
-            (s16)selected, &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
+            selected, &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
         g_world_status_display_thread_params.redraw_request = 1;
         g_world_preview_stats_thread_params.redraw_request = 1;
     }

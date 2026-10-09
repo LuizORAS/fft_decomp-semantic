@@ -11,7 +11,7 @@
  * The s16 id and its new_item copy reproduce the target's two callee-saved
  * copies of the masked id; an s32 id folds them into one register.
  */
-s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s32 item_id) {
+s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id) {
     s32 result;
     s16 id;
     s16 new_item;

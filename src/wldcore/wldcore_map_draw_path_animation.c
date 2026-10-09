@@ -41,7 +41,7 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     }
     for (i = 0; i < g_wldcore_map_path_animation.page_index + 1; i++) {
         if (i == g_wldcore_map_path_animation.page_index) {
-            frames = (s16)g_wldcore_map_path_animation.frame_timer;
+            frames = g_wldcore_map_path_animation.frame_timer;
         } else {
             frames = g_wldcore_map_path_animation.page_frames[i];
         }

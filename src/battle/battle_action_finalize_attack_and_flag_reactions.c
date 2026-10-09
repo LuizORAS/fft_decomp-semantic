@@ -41,9 +41,9 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         g_battle_action_target->ability_outcome = BATTLE_ABILITY_OUTCOME_TARGETED;
     }
     battle_action_dispatch_target_reaction_ability();
-    if ((s16)g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
+    if (g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
         battle_action_increment_item_quantity_for_steal_break(
-            g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
+            g_battle_action_target, g_battle_action_target_data->last_received_attack);
     }
     if (g_battle_action_target_data->hit == 0) {
         return 0;
@@ -52,7 +52,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         u16* golem;
 
         golem = &g_battle_team_golem[(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> 4];
-        hp = *golem - (s16)g_battle_action_target_data->hp_damage;
+        hp = *golem - g_battle_action_target_data->hp_damage;
         if (hp < 0) {
             hp = 0;
         }
@@ -66,7 +66,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     battle_action_check_mp_switch_distribute_and_damage_split_usability();
     old_hp = g_battle_action_target->hp;
-    hp = old_hp - (s16)g_battle_action_target_data->hp_damage + (s16)g_battle_action_target_data->hp_healing;
+    hp = old_hp - g_battle_action_target_data->hp_damage + g_battle_action_target_data->hp_healing;
     if (hp < 0) {
         hp = 0;
     }
@@ -74,7 +74,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         hp = g_battle_action_target->max_hp;
     }
     old_mp = g_battle_action_target->mp;
-    mp = old_mp - (s16)g_battle_action_target_data->mp_damage + (s16)g_battle_action_target_data->mp_healing;
+    mp = old_mp - g_battle_action_target_data->mp_damage + g_battle_action_target_data->mp_healing;
     if (mp < 0) {
         mp = 0;
     }
@@ -102,7 +102,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     outcome |= battle_action_remove_broken_or_stolen_equipment();
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN) {
         battle_action_increment_item_quantity_for_steal_break(
-            g_battle_action_target, (u8)g_battle_action_target->used_item_or_equipment);
+            g_battle_action_target, g_battle_action_target->used_item_or_equipment);
     }
     if (g_battle_action_target_data->gil_change != 0 || g_battle_action_target_data->exp_change != 0) {
         outcome |= 1;

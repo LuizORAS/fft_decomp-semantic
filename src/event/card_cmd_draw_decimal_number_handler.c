@@ -9,7 +9,7 @@ typedef struct card_number_glyph {
     RECT rect;
     s16 u;
     s16 v;
-    u16 w;
+    s16 w;
     u16 h;
     RECT _unused_10;
 } card_number_glyph_t;
@@ -52,7 +52,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
             pos += 1;
         }
         if (command[2] < 2) {
-            card_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + ((s16)glyph.w * digit), glyph.v, color,
+            card_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, color,
                 g_card_gfx_draw_semitrans, g_card_text_digit_texture_page, clut, g_card_text_otag_index);
         }
     }

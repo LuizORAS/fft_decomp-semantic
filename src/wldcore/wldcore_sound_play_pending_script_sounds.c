@@ -13,7 +13,7 @@ void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id
     if ((sound_id | weather_sound_id | track) == 0) {
         return;
     }
-    switch ((s16)g_wldcore_active_saved_record.sound_mode) {
+    switch (g_wldcore_active_saved_record.sound_mode) {
     case 0:
         if (sound_id != MAIN_SFX_NONE) {
             wldcore_sound_play_effect(sound_id);

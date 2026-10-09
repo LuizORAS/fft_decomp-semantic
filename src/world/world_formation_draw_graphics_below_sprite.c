@@ -85,15 +85,15 @@ void world_formation_draw_graphics_below_sprite(
             rect.w = 0x25;
             rect.h = 3;
             world_gfx_enqueue_textured_quad(&rect, 0xD8, 0xCA, color, 0, g_world_menu_icon_tpage, clut, priority - 1);
-            xy[0] = (s8)g_world_formation_gauge_bar_offsets[0] + x;
-            xy[1] = (s8)g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[0] = g_world_formation_gauge_bar_offsets[0] + x;
+            xy[1] = g_world_formation_gauge_bar_offsets[1] + top + 8;
             xy[6] = xy[2] = 0x20;
             xy[2] += xy[0];
-            xy[3] = (s8)g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[4] = (s8)g_world_formation_gauge_bar_offsets[2] + x;
-            xy[5] = (s8)g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[3] = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[4] = g_world_formation_gauge_bar_offsets[2] + x;
+            xy[5] = g_world_formation_gauge_bar_offsets[3] + top + 8;
             xy[6] += xy[4];
-            xy[7] = (s8)g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[7] = g_world_formation_gauge_bar_offsets[3] + top + 8;
             world_gfx_enqueue_gouraud_quad(xy, rgb, 0, priority);
         } else if (g_world_formation_stat_display_mode == WORLD_FORMATION_READOUT_LEVEL_EXP) {
             s32 y40;

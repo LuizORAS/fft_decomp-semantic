@@ -50,7 +50,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
 
         page = &g_battle_menu_height_display_pages[frame & 1];
         /* The target loads the display height signed (lh). */
-        i = battle_menu_build_quad_pieces((s16)g_battle_map_selected_tile_data.display_height, page->quads) - 1;
+        i = battle_menu_build_quad_pieces(g_battle_map_selected_tile_data.display_height, page->quads) - 1;
         battle_thread_yield();
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;
@@ -72,7 +72,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             battle_menu_set_text_origin(0x10, 0);
             battle_draw_menu_number_glyphs(
                 g_battle_map_selected_tile_data.depth, 1, buffer, (world_glyph_blit_t*)((s16*)stride - 4));
-            if (*(u16*)&g_battle_menu_height_display_suppressed == 0) {
+            if (g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;
                 battle_gfx_draw_or_append_gpu_primitive(&page->sprites[0]);

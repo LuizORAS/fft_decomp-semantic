@@ -148,10 +148,10 @@ s32 effect_e259_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         u_span = entry->u_span;
         v_span = entry->v_span;
         work->v_scroll += entry->v_scroll_speed;
-        if ((s16)work->v_scroll > (v_span << 8)) {
+        if (work->v_scroll > (v_span << 8)) {
             work->v_scroll -= v_span << 8;
         }
-        if ((s16)work->v_scroll < 0) {
+        if (work->v_scroll < 0) {
             work->v_scroll += v_span << 8;
         }
 
@@ -275,7 +275,7 @@ s32 effect_e259_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
             quad->y1 = other->y0;
         }
 
-        i = (s16)work->v_scroll >> 8;
+        i = work->v_scroll >> 8;
         for (j = 0; j < 128; j++) {
             quad = &work->quads[work->buffer][j];
             quad->u0 = quad->u2 = u;

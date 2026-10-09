@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-s32 battle_move_validate_float_fly(battle_unit_misc_data_t* unit) {
+u8 battle_move_validate_float_fly(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
     s32 status;
     u32 flags;

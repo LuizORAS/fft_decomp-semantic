@@ -3,7 +3,7 @@
 
 /* Returns the Elemental (Geomancy) ability for the surface under the unit when
  * the unit knows and can use it, otherwise 0. */
-s32 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
+u16 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
     battle_stats_t* unit;
     s16 abilities[0x14];
     u8 mp_costs[0x18];

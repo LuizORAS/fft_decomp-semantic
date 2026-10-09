@@ -45,7 +45,7 @@ void bunit_menu_draw_scrollable_list(u8* script) {
         g_bunit_menu_scroll_base_index = entry_count - visible_rows;
     }
 
-    if (g_bunit_menu_list_selected_index >= (s16)g_bunit_menu_list_entry_count) {
+    if (g_bunit_menu_list_selected_index >= g_bunit_menu_list_entry_count) {
         g_bunit_menu_list_selected_index = g_bunit_menu_list_entry_count - 1;
     }
 

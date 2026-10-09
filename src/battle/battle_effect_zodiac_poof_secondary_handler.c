@@ -28,7 +28,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.zodiac_poof;
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         state->count = 0;
         for (spawned = 0; spawned < BATTLE_EFFECT_TRAP3_SLOT_COUNT; spawned++) {
@@ -40,7 +40,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        animation = g_battle_effect_zodiac_poof_animations[(u16)effect->parameter];
+        animation = g_battle_effect_zodiac_poof_animations[effect->parameter];
         if (effect->timer
                 >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame
             && effect->timer

@@ -10,6 +10,6 @@ u8* equip_cmd_draw_line_f2_handler(u8* stream) {
     endpoints.y = stream[3];
     endpoints.w = stream[4];
     endpoints.h = stream[5];
-    equip_gfx_enqueue_line_f2(&endpoints, stream + 6, (u8)g_equip_gfx_semitransparency, g_equip_gfx_sprite_ot_index);
+    equip_gfx_enqueue_line_f2(&endpoints, stream + 6, g_equip_gfx_semitransparency, g_equip_gfx_sprite_ot_index);
     return stream + stream[1];
 }

@@ -39,7 +39,7 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
         }
         return result;
     case ACTION_MENU_TYPE_ELEMENTS:
-        return (u16)battle_menu_load_elemental_abilities(unit_id, skillset);
+        return battle_menu_load_elemental_abilities(unit_id, skillset);
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         return battle_menu_collect_draw_out_katanas(unit_id, skillset, items);
     case ACTION_MENU_TYPE_CHARGE:

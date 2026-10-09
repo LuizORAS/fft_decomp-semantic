@@ -9,7 +9,7 @@ void world_formation_process_frame(void) {
 
     input = g_world_input_primary_repeat;
     if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID) {
-        if (*(s8*)&g_world_formation_main_menu_initialized == 0) {
+        if (g_world_formation_main_menu_initialized == 0) {
             g_world_formation_unit_banner_enabled = g_world_formation_saved_banner_enabled;
             g_world_formation_dismiss_anim_timer = 0;
             g_world_formation_unit_count = world_formation_build_record_list(

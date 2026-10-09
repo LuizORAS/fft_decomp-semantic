@@ -29,8 +29,8 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
     world_formation_build_unit_graphic_entry(unit_index, &sprite.source, 0);
     if (g_world_formation_dismiss_anim_timer != 0 && (g_world_formation_dismiss_anim_timer >> 8) == unit_index) {
         scale = (g_world_formation_dismiss_anim_timer & 0xFF) + 1;
-        w = (s16)sprite.source.w / scale;
-        h = (s16)sprite.source.h / scale;
+        w = sprite.source.w / scale;
+        h = sprite.source.h / scale;
         sprite.x = pos->x - (s16)(w / 2 - 0x1C);
         sprite.y = pos->y - (s16)(h / 2 - 0x18);
         sprite.w = w;
@@ -39,8 +39,8 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
             (const world_oriented_quad_t*)&sprite, rgb, TEXTURE_UV_FLIP_NONE, 0, ot_index);
         return;
     }
-    sprite.x = pos->x - (s16)((s16)sprite.source.w / 2 - 0x1F);
-    sprite.y = pos->y - (s16)((s16)sprite.source.h / 2 - 0x18);
+    sprite.x = pos->x - (s16)(sprite.source.w / 2 - 0x1F);
+    sprite.y = pos->y - (s16)(sprite.source.h / 2 - 0x18);
     sprite.w = sprite.source.w;
     sprite.h = sprite.source.h;
     if (g_world_formation_unit_pointers[unit_index]->proposition_status != 0) {

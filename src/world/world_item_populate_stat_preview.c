@@ -8,7 +8,7 @@
  * Invalid item IDs leave the cleared preview unchanged.
  */
 void world_item_populate_stat_preview(
-    s32 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot) {
+    s16 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot) {
     s32 attribute;
     s32 secondary;
     u8 power;

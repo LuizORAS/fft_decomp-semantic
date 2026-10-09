@@ -35,14 +35,14 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     node->frame_timer -= 2;
     if (node->frame_timer <= 0) {
         for (;;) {
-            op = node->sequence_data[(u16)node->sequence_offset];
+            op = node->sequence_data[node->sequence_offset];
             if (!(op & EFFECT_SEQUENCE_OP_FLAG)) {
-                if ((u8)node->sprite_frame_index != op) {
+                if (node->sprite_frame_index != op) {
                     node->sprite_frame_index = op;
                     node->kind |= EFFECT_LIST_NODE_FRAME_CHANGED;
                 }
-                node->frame_timer = node->sequence_data[(u16)node->sequence_offset + 1];
-                node->depth_mode = node->sequence_data[(u16)node->sequence_offset + 2];
+                node->frame_timer = node->sequence_data[node->sequence_offset + 1];
+                node->depth_mode = node->sequence_data[node->sequence_offset + 2];
                 if (node->frame_timer != 0) {
                     node->sequence_offset += 3;
                 }
@@ -53,26 +53,26 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                 node->sequence_offset = 0;
                 break;
             case EFFECT_SEQUENCE_OP_SET_OFFSET:
-                node->sprite_offset_x = node->sequence_data[(u16)node->sequence_offset + 1]
-                    + (node->sequence_data[(u16)node->sequence_offset + 2] << 8);
-                node->sprite_offset_y = node->sequence_data[(u16)node->sequence_offset + 3]
-                    + (node->sequence_data[(u16)node->sequence_offset + 4] << 8);
+                node->sprite_offset_x = node->sequence_data[node->sequence_offset + 1]
+                    + (node->sequence_data[node->sequence_offset + 2] << 8);
+                node->sprite_offset_y = node->sequence_data[node->sequence_offset + 3]
+                    + (node->sequence_data[node->sequence_offset + 4] << 8);
                 node->sequence_offset += 5;
                 break;
             case EFFECT_SEQUENCE_OP_ADD_OFFSET:
-                node->sprite_offset_x += (s8)node->sequence_data[(u16)node->sequence_offset + 1];
-                node->sprite_offset_y += (s8)node->sequence_data[(u16)node->sequence_offset + 2];
+                node->sprite_offset_x += (s8)node->sequence_data[node->sequence_offset + 1];
+                node->sprite_offset_y += (s8)node->sequence_data[node->sequence_offset + 2];
                 node->sequence_offset += 3;
                 break;
             }
         }
     }
     if (node->kind & EFFECT_LIST_NODE_FRAME_CHANGED) {
-        frame = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
-                                                    + ((u8)node->sprite_frame_index * 2
-                                                        + *(s16*)(g_battle_effect_frame_data
-                                                            + (u8)node->frame_group_index)))
-            + g_battle_effect_frame_data);
+        frame
+            = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
+                                                  + (node->sprite_frame_index * 2
+                                                      + *(s16*)(g_battle_effect_frame_data + node->frame_group_index)))
+                + g_battle_effect_frame_data);
         count = frame->count;
         if (block->color.field.sprite_count != count) {
             battle_effect_free_sprite_block(block);

@@ -14,7 +14,7 @@ extern world_menu_button_piece_t g_bunit_slot_sprite_entries[];
  * active the sprite is drawn one pixel lower with CLUT g_bunit_menu_button_clut. abs()
  * matters: GCC expands it to the single-insn abssi2, which keeps the entry
  * loop body one basic block as in the target. */
-void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id) {
+void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id) {
     /* The target frame reserves 0x20 bytes for the descriptor; the tail is
      * never accessed. */
     struct {

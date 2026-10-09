@@ -9,7 +9,7 @@ s32 battle_effect_null_secondary_handler(void) {
     s32 result;
 
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         result = 1;

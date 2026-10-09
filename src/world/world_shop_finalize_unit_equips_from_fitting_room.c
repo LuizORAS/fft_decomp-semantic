@@ -20,7 +20,7 @@ void world_shop_finalize_unit_equips_from_fitting_room(s16 formation_index, s16 
         }
         if (reserved_item != ITEM_ID_NOTHING
             && world_formation_can_equip_item_in_slot(
-                   g_world_formation_selected_unit_index, equipment_index, (s16)reserved_item)
+                   g_world_formation_selected_unit_index, equipment_index, reserved_item)
                 == 1) {
             g_world_formation_unit_pointers[unit_index]->equipment[equipment_index] = reserved_item;
             g_world_shop_fitting_room_items[unit_index][equipment_index] = ITEM_ID_NOTHING;

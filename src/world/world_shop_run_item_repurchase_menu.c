@@ -15,13 +15,13 @@ s32 world_shop_run_item_repurchase_menu(void) {
         g_world_shop_repurchase_confirm_shown = 0;
         g_world_shop_repurchase_item = g_world_menu_entry_ids[g_world_menu_cursor_position];
         g_world_menu_prompt_active = 1;
-        owned = world_item_count_owned_and_equipped((s16)g_world_shop_repurchase_item);
+        owned = world_item_count_owned_and_equipped(g_world_shop_repurchase_item);
         if (owned >= 99) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF834, 0);
             return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
         count = world_shop_obtain_gil(0);
-        price = world_item_get_price((s16)g_world_shop_repurchase_item) >> 1;
+        price = world_item_get_price(g_world_shop_repurchase_item) >> 1;
         count /= price;
         g_world_shop_repurchase_price = price;
         room = 99 - owned;
@@ -33,7 +33,7 @@ s32 world_shop_run_item_repurchase_menu(void) {
             return WORLD_SHOP_QUANTITY_CANNOT_AFFORD;
         }
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF835, 0);
-        stock = world_shop_adjust_poached_item_quantity((s16)g_world_shop_repurchase_item, 0);
+        stock = world_shop_adjust_poached_item_quantity(g_world_shop_repurchase_item, 0);
         if (count >= stock) {
             count = stock;
         }

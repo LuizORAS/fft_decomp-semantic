@@ -217,12 +217,12 @@ void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
-void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
+void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
 
-void equip_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
+void equip_gfx_enqueue_tile(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index);
 
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
@@ -316,8 +316,8 @@ void equip_item_calculate_swap_stat_delta(
 void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
 s32 equip_item_get_available_count(s32 item_entry);
 s32 equip_menu_get_entry_item_equipped_count(s32 row);
-item_menu_category_e equip_item_get_menu_category(s32 item_id);
-s32 equip_item_get_total_count(s32 item_id);
+item_menu_category_e equip_item_get_menu_category(s16 item_id);
+s32 equip_item_get_total_count(s16 item_id);
 s32 equip_menu_get_entry_item_count(s32 row);
 s32 equip_item_get_type(s32 item_id);
 void equip_item_get_type_icon_rect(s32 item_type, world_item_icon_source_t* output);
@@ -428,8 +428,8 @@ s32 equip_item_run_rearrange_mode(void);
 void equip_menu_icon_list_thread(void);
 void equip_menu_scroll_list_by_page(s32 direction, const u8* menu);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
-s32 equip_menu_set_selection_value(s32 index, s32 value);
-s32 equip_menu_set_selection_value_2(s32 index, s32 value);
+s32 equip_menu_set_selection_value(u8 index, s16 value);
+s32 equip_menu_set_selection_value_2(u8 index, s16 value);
 void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* state, s32 mode);
 s32 equip_menu_update_clear_all_equipment_prompt(void);
 s32 equip_menu_update_equipment(void);
@@ -510,9 +510,9 @@ void equip_panel_run_equipment_list_thread(void);
 /* rearrange */
 extern s8 g_equip_rearrange_active;
 extern u8 g_equip_rearrange_anim_frame;
-extern u16 g_equip_rearrange_picked_cursor;
+extern s16 g_equip_rearrange_picked_cursor;
 extern u16 g_equip_rearrange_picked_scroll;
-extern u16 g_equip_rearrange_preview_cursor;
+extern s16 g_equip_rearrange_preview_cursor;
 
 /* slot */
 typedef enum equip_slot {
@@ -629,12 +629,12 @@ typedef struct equip_unit_data {
     s16 unit_count;              /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
     s16 experience;              /* 0x08; capped at 99 */
     s16 unit_index;              /* 0x0a; battle_stats_t.entd_slot */
-    u16 hp;                      /* 0x0c; capped at 999 */
+    s16 hp;                      /* 0x0c; capped at 999 */
     s16 _unused_0e;              /* 0x0e; HP gauge bonus slot */
-    u16 max_hp;                  /* 0x10; capped at 999 */
-    u16 mp;                      /* 0x12; capped at 999 */
+    s16 max_hp;                  /* 0x10; capped at 999 */
+    s16 mp;                      /* 0x12; capped at 999 */
     s16 _unused_14;              /* 0x14 */
-    u16 max_mp;                  /* 0x16; capped at 999 */
+    s16 max_mp;                  /* 0x16; capped at 999 */
     s16 ct;                      /* 0x18; 100 while the unit has its turn */
     s16 _unused_1a;              /* 0x1a */
     s16 max_ct;                  /* 0x1c; always 100 */
@@ -692,7 +692,7 @@ extern struct world_item_stat_summary g_equip_selected_unit_stat_summary;
 void equip_item_calculate_equipment_swap_stat_delta(
     struct world_item_stat_detail* detail_total, struct world_item_stat_summary* acc, u16* froms, u16* tos);
 
-s32 equip_unit_can_equip_item_id(s16 unit_index, s32 item_entry);
+s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 s32 equip_unit_has_two_hands(s16 unit_index);
 s32 equip_unit_has_two_swords(s16 unit_index);
 void equip_unit_load_data_from_battle_stats(s32 battle_id);
@@ -731,7 +731,7 @@ extern world_menu_entry_t g_equip_type_order_menu_other_slots;
 extern s8 g_equip_type_order_ready;
 
 void equip_collect_item_stat_deltas(
-    s32 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
+    s16 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
 
 s32 equip_entrypoint(s32 unit, void* otag);
 

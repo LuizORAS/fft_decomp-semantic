@@ -35,7 +35,7 @@ s32 world_menu_run_learn_job_list(void) {
         if (world_job_calculate_current_mastered(g_world_menu_cursor_position) == 0
             || g_world_formation_current_menu == WORLD_FORMATION_MENU_VIEW_ABILITIES) {
             g_world_learn_selected_job = g_world_menu_learn_unlocked_jobs[g_world_menu_cursor_position];
-            g_world_learn_selected_job_index = world_job_get_generic_index((s16)g_world_learn_selected_job);
+            g_world_learn_selected_job_index = world_job_get_generic_index(g_world_learn_selected_job);
             world_job_calculate_current_level(g_world_menu_cursor_position);
             world_menu_get_learn_job_jp(g_world_menu_cursor_position);
             world_job_calculate_current_total_jp(g_world_menu_cursor_position);

@@ -127,8 +127,8 @@ void world_card_update_and_draw_slot_list(s32 input) {
             i = g_world_card_slot_cursor_row;
             if (input & PSX_PAD_DOWN) {
                 g_world_card_slot_cursor_row = i + 1;
-                if (g_world_card_slot_cursor_row >= (s8)g_world_card_selectable_slot_count) {
-                    g_world_card_slot_cursor_row = (s8)g_world_card_selectable_slot_count - 1;
+                if (g_world_card_slot_cursor_row >= g_world_card_selectable_slot_count) {
+                    g_world_card_slot_cursor_row = g_world_card_selectable_slot_count - 1;
                 }
             } else if ((input & PSX_PAD_UP) && i != 0) {
                 g_world_card_slot_cursor_row = i - 1;
@@ -250,7 +250,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
         rect.h = 0x10;
         world_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, 0, g_world_menu_icon_tpage, g_world_menu_clut_front, 15);
     }
-    if ((s8)g_world_card_selectable_slot_count - g_world_card_list_first_visible_row >= 5) {
+    if (g_world_card_selectable_slot_count - g_world_card_list_first_visible_row >= 5) {
         rect.x = 0xe3;
         rect.y = 0xba;
         rect.w = 8;

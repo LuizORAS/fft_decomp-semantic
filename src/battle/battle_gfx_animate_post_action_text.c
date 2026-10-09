@@ -77,7 +77,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
                 break;
             }
         }
-    } else if (progress >= 50 && (u16)unit->numeric_display_progress < 50) {
+    } else if (progress >= 50 && unit->numeric_display_progress < 50) {
         if (battle_gfx_build_next_action_result_display(unit) != 0) {
             return;
         }

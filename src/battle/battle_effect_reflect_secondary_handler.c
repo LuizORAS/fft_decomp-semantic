@@ -48,11 +48,11 @@ s32 battle_effect_reflect_secondary_handler(void) {
     s32 j;
     s32 result;
 
-    span = (u16)g_battle_effect_current_secondary->parameter;
+    span = g_battle_effect_current_secondary->parameter;
     if (span < 0x1a) {
         span = 0x1a;
     }
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         if (g_battle_effect_current_secondary->allocation != 0) {
             main_heap_free(g_battle_effect_current_secondary->allocation);

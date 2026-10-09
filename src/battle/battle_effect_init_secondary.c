@@ -5,7 +5,7 @@
 s32 battle_effect_init_secondary(s32 animation_id, s32 sprite_palette, battle_effect_secondary_init_t* source) {
     s32 target_id;
 
-    target_id = (u8)battle_effect_allocate_secondary_slot();
+    target_id = battle_effect_allocate_secondary_slot();
     g_battle_effect_secondary_data[target_id].animation_id = animation_id;
     g_battle_effect_secondary_data[target_id].timer = 0;
     g_battle_effect_secondary_data[target_id].parameter = sprite_palette;

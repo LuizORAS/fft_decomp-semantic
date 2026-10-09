@@ -115,7 +115,7 @@ s32 battle_effect_spawn_emitter_particles(
     CURVE_FACTOR(entry->curve_indices[1] >> 20 & 0xf);
     count = battle_effect_lerp_linear(entry->particle_count_start, entry->particle_count_end, factor);
     for (i = 0; i < count; i++) {
-        particle = (effect_particle_physics_view_t*)battle_effect_alloc_work_record(effect_index, (s16)(kind & 0xf000));
+        particle = (effect_particle_physics_view_t*)battle_effect_alloc_work_record(effect_index, (kind & 0xf000));
         particle->kind_flags = kind;
         particle->child_spawn_flags = flags;
         particle->animation_frame = 0;
@@ -352,7 +352,7 @@ s32 battle_effect_spawn_emitter_particles(
     inertia_max = battle_effect_lerp_linear(
         entry->motion.emitter.inertia_start[1], entry->motion.emitter.inertia_end[1], factor);
     CURVE_FACTOR(entry->curve_indices[0] >> 20 & 0xf);
-    battle_effect_lerp_linear((s16)entry->texture_page_flags, entry->lerp_end_4c, factor);
+    battle_effect_lerp_linear(entry->texture_page_flags, entry->lerp_end_4c, factor);
     battle_effect_lerp_linear(entry->brightness_row, entry->lerp_end_4e, factor);
     CURVE_FACTOR(entry->curve_indices[0] >> 24 & 0xf);
     weight_min = battle_effect_lerp_linear(entry->ot_depth, entry->weight_end[0], factor);

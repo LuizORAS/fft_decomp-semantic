@@ -138,10 +138,10 @@ void battle_text_character_handling_thread(void) {
         rec.tail_offset = 0;
         rec.x = g_battle_scratch_coords[0] - center - 4;
         if (rec.position == 0) {
-            if (battle_thread_get_current_parameter_3() == (u16)g_battle_text_speaker_swap_unit_a) {
-                value = (u16)g_battle_text_speaker_swap_unit_b;
-            } else if (battle_thread_get_current_parameter_3() == (u16)g_battle_text_speaker_swap_unit_b) {
-                value = (u16)g_battle_text_speaker_swap_unit_a;
+            if (battle_thread_get_current_parameter_3() == g_battle_text_speaker_swap_unit_a) {
+                value = g_battle_text_speaker_swap_unit_b;
+            } else if (battle_thread_get_current_parameter_3() == g_battle_text_speaker_swap_unit_b) {
+                value = g_battle_text_speaker_swap_unit_a;
             }
             battle_unit_project_misc_to_screen(battle_script_get_misc_id(value), &g_battle_camera_script_rotation.vx);
             if (g_battle_scratch_coords[1] < 0 || g_battle_camera_script_rotation.vy < g_battle_scratch_coords[1]) {

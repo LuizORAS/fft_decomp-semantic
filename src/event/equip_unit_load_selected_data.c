@@ -6,12 +6,12 @@ void equip_unit_load_selected_data(void) {
     equip_unit_data_t* unit;
 
     unit = g_equip_unit_data[g_equip_unit_selected_index];
-    if (*(s16*)&unit->max_hp < *(s16*)&unit->hp) {
+    if (unit->max_hp < unit->hp) {
         unit->hp = unit->max_hp;
     }
 
     unit = g_equip_unit_data[g_equip_unit_selected_index];
-    if (*(s16*)&unit->max_mp < *(s16*)&unit->mp) {
+    if (unit->max_mp < unit->mp) {
         unit->mp = unit->max_mp;
     }
 

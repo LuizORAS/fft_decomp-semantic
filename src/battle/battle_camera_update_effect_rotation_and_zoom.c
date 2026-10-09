@@ -12,7 +12,7 @@ void battle_camera_update_effect_rotation_and_zoom(void) {
     SVECTOR rotation;
     SVECTOR rotation_delta;
 
-    switch ((u32)g_battle_effect_camera_rotation_mode) {
+    switch (g_battle_effect_camera_rotation_mode) {
     case BATTLE_EFFECT_CAMERA_MODE_IDLE:
         break;
     case BATTLE_EFFECT_CAMERA_MODE_SNAP:
@@ -154,7 +154,7 @@ void battle_camera_update_effect_rotation_and_zoom(void) {
         break;
     }
 
-    switch ((u32)g_battle_effect_camera_position_mode) {
+    switch (g_battle_effect_camera_position_mode) {
     case BATTLE_EFFECT_CAMERA_MODE_IDLE:
         break;
     case BATTLE_EFFECT_CAMERA_MODE_SNAP:
@@ -292,7 +292,7 @@ void battle_camera_update_effect_rotation_and_zoom(void) {
         break;
     }
 
-    switch ((u32)g_battle_effect_camera_zoom_mode) {
+    switch (g_battle_effect_camera_zoom_mode) {
     case BATTLE_EFFECT_CAMERA_MODE_IDLE:
         break;
     case BATTLE_EFFECT_CAMERA_MODE_SNAP:

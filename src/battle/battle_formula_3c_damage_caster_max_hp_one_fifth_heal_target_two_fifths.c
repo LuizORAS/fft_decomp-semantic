@@ -16,7 +16,7 @@ void battle_formula_3c_damage_caster_max_hp_one_fifth_heal_target_two_fifths(voi
     action = g_battle_action_attacker_data;
     action->hit = 1;
     target = g_battle_action_target_data;
-    dealt = (s16)g_battle_action_attacker_data->hp_damage;
+    dealt = g_battle_action_attacker_data->hp_damage;
     target->attack_type = BATTLE_ACTION_TYPE_HP_HEALING;
     target->hp_healing = dealt * 2;
 }

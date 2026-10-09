@@ -21,7 +21,7 @@ void battle_move_encode_path_steps(void) {
 
     state->source_unit_record_index = 0;
     for (step = 0; step < state->path_length - 1; step++) {
-        state->tile_index = state->tile_level * 256 + (s16)state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         path_index = step + 1;
@@ -50,9 +50,9 @@ void battle_move_encode_path_steps(void) {
                 state->work_y = record->y;
                 state->work_level = record->higher_elevation;
             }
-            if (state->work_x == (s16)state->tile_x) {
+            if (state->work_x == state->tile_x) {
                 dir = 0xc0;
-                if (state->work_y > (s16)state->tile_y) {
+                if (state->work_y > state->tile_y) {
                     state->source_side_shift = 6;
                     state->destination_side_shift = 4;
                     state->step_distance = state->work_y - state->tile_y;
@@ -64,7 +64,7 @@ void battle_move_encode_path_steps(void) {
                 }
             } else {
                 dir = 0;
-                if ((s16)state->tile_x < state->work_x) {
+                if (state->tile_x < state->work_x) {
                     state->source_side_shift = 0;
                     state->destination_side_shift = 2;
                     state->step_distance = state->work_x - state->tile_x;

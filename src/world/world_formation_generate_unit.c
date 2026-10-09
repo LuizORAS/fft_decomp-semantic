@@ -7,7 +7,7 @@
  * the new unit's secondary skillset and reaction, support, and movement slots.
  * Return -1 if generation fails; otherwise rebuild the formation workspace.
  */
-s32 world_formation_generate_unit(s32 unit_type) {
+s32 world_formation_generate_unit(s16 unit_type) {
     u8** name_buffer = &g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     u8* saved_names;
     s32 roster_slot;
@@ -15,7 +15,7 @@ s32 world_formation_generate_unit(s32 unit_type) {
 
     saved_names = *name_buffer;
     *name_buffer = g_world_text_section_pointers[TEXT_SECTION_UNIT_NAMES];
-    roster_slot = main_party_generate_unit((s16)unit_type);
+    roster_slot = main_party_generate_unit(unit_type);
     *name_buffer = saved_names;
     if (roster_slot < 0) {
         return -1;

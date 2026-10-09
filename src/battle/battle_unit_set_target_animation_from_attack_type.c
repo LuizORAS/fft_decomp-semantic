@@ -23,7 +23,7 @@ void battle_unit_set_target_animation_from_attack_type(
     if ((target->encoded_animation >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
-    float_fly = (u8)battle_move_validate_float_fly(target);
+    float_fly = battle_move_validate_float_fly(target);
     animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
     if (float_fly < 2) {
         stats = target->battle_data;
@@ -35,10 +35,10 @@ void battle_unit_set_target_animation_from_attack_type(
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
-                attacker_height = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2
+                attacker_height = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2
                     - (u16)attacker->screen.vy;
-                target_height = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2
-                    - (u16)target->screen.vy;
+                target_height
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - (u16)target->screen.vy;
                 delta = (s16)attacker_height - (s16)target_height;
                 if (delta < -0xb) {
                     animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;
@@ -70,9 +70,9 @@ void battle_unit_set_target_animation_from_attack_type(
                 break;
             default:
                 if (action->hit != 0) {
-                    if (((s16)action->hp_damage != 0) || ((s16)action->mp_damage != 0)) {
+                    if ((action->hp_damage != 0) || (action->mp_damage != 0)) {
                         animation = BATTLE_UNIT_ANIMATION_HURT;
-                    } else if (((s16)action->hp_healing != 0) || ((s16)action->mp_healing != 0)) {
+                    } else if ((action->hp_healing != 0) || (action->mp_healing != 0)) {
                         animation = BATTLE_UNIT_ANIMATION_RAISE_HANDS;
                     }
                 }

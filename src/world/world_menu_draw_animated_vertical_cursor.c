@@ -45,10 +45,10 @@ void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s
     }
     state_mode = alternate;
     if (state_mode != 0) {
-        for (index = 0; (s8)g_world_menu_cursor_bob_active_thresholds[index] < frame; index += 2) { }
+        for (index = 0; g_world_menu_cursor_bob_active_thresholds[index] < frame; index += 2) { }
         bob = g_world_menu_cursor_bob_active_thresholds[index + 1];
     } else {
-        for (index = 0; (s8)g_world_menu_cursor_bob_thresholds[index] < frame; index += 2) { }
+        for (index = 0; g_world_menu_cursor_bob_thresholds[index] < frame; index += 2) { }
         bob = g_world_menu_cursor_bob_thresholds[index + 1];
     }
     y_offset = bob;

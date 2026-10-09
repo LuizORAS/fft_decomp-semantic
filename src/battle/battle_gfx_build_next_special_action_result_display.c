@@ -24,7 +24,7 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         unit->numeric_display_active = 1;
         unit->numeric_display_value = unit->action_rewards.earned_experience;
         unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
-        if ((u16)unit->numeric_display_progress >= 22) {
+        if (unit->numeric_display_progress >= 22) {
             unit->numeric_display_progress = 21;
         }
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP) != 0) {
@@ -32,7 +32,7 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         unit->numeric_display_active = 1;
         unit->numeric_display_value = unit->action_rewards.earned_jp;
         unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
-        if ((u16)unit->numeric_display_progress >= 22) {
+        if (unit->numeric_display_progress >= 22) {
             unit->numeric_display_progress = 21;
         }
     } else {
@@ -55,7 +55,7 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
             current = unit->action_display_flags.word;
             unit->action_display_flags.word = current & clear;
         }
-        if ((u16)unit->numeric_display_progress >= 22) {
+        if (unit->numeric_display_progress >= 22) {
             unit->numeric_display_progress = 21;
         }
     }

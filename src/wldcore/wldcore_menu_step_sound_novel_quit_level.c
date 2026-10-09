@@ -91,7 +91,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         g_wldcore_screen_brightness_rgb[2] = 0;
         g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_OUT;
         first = g_wldcore_sound_novel_text_history_0;
-        *(s16*)&g_wldcore_sound_novel_text_history_0 = -1;
+        g_wldcore_sound_novel_text_history_0 = -1;
         g_wldcore_menu_result = 0;
         g_wldcore_sound_novel_countdown_frames = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;

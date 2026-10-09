@@ -7,7 +7,7 @@
  * ID; preserving that gate is required for the target control flow.
  */
 void equip_collect_item_stat_deltas(
-    s32 raw_item, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 alternate) {
+    s16 raw_item, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 alternate) {
     s32 item_id;
     s32 attribute;
     s32 secondary;

@@ -48,7 +48,7 @@ s32 world_menu_run_best_fit_equipment(void) {
         if (*choice == 0) {
             for (i = 0; i < 5; i++) {
                 world_item_adjust_inventory_count(
-                    (s16)g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i], 1);
+                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i], 1);
             }
             for (i = 0; i < 5; i++) {
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]

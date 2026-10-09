@@ -29,7 +29,7 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit
         return;
     }
     if (unit->movement.word & BATTLE_MOTION_FLAG_FLOAT) {
-        if ((s16)unit->depth_height_offset < 12) {
+        if (unit->depth_height_offset < 12) {
             unit->depth_height_offset += g_main_system_animation_speed;
         } else if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
             phase = unit->float_bob_phase += g_main_system_animation_speed;
@@ -38,9 +38,9 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit
             unit->float_bob_offset = 0;
         }
     } else if (g_battle_game_state != BATTLE_GAME_STATE_CRYSTAL_LEARN) {
-        if ((s16)unit->depth_height_offset != 0) {
+        if (unit->depth_height_offset != 0) {
             unit->depth_height_offset -= g_main_system_animation_speed;
-            if ((s16)unit->depth_height_offset < 0) {
+            if (unit->depth_height_offset < 0) {
                 unit->depth_height_offset = 0;
             }
             screen_z = ((battle_screen_z_halfword_fn_t)battle_gfx_calculate_screen_z_from_misc_screen_data)(unit);

@@ -6,7 +6,7 @@
 s32 battle_effect_init_fall_dust_secondary(battle_effect_secondary_init_t* source, VECTOR* position) {
     s32 target_id;
 
-    target_id = (u8)battle_effect_allocate_secondary_slot();
+    target_id = battle_effect_allocate_secondary_slot();
     g_battle_effect_secondary_data[target_id].timer = 0;
     g_battle_effect_secondary_data[target_id].animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_FALL_DUST;
     g_battle_effect_secondary_data[target_id].function_id

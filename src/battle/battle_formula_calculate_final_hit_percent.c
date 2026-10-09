@@ -31,7 +31,7 @@ void battle_formula_calculate_final_hit_percent(void) {
         g_battle_action_target_data->attack_accuracy
             = ((hit - accessory) * 100 / hit * ((hit - right) * 100 / hit) * ((hit - left) * 100 / hit)
                   * ((hit - evade) * 100 / hit) / 1000000)
-            * (s16)g_battle_action_target_data->attack_accuracy / 100;
+            * g_battle_action_target_data->attack_accuracy / 100;
     }
     if (battle_formula_calculate_attack_evaded(g_battle_action_current_ability.accessory_evade, hit,
             BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE, g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY])

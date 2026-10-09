@@ -113,9 +113,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     angle.vx = values->angle[0];
     angle.vy = values->angle[1];
     angle.vz = values->angle[2];
-    half_spread.vx = (s16)values->angle_spread[0] / 2;
-    half_spread.vy = (s16)values->angle_spread[1] / 2;
-    half_spread.vz = (s16)values->angle_spread[2] / 2;
+    half_spread.vx = values->angle_spread[0] / 2;
+    half_spread.vy = values->angle_spread[1] / 2;
+    half_spread.vz = values->angle_spread[2] / 2;
     switch (values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
     case EFFECT_EMITTER_VELOCITY_TOWARD_TARGET:

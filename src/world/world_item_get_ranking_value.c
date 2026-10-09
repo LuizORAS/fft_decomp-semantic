@@ -5,7 +5,7 @@ s32 world_item_get_ranking_value(s32 item_id) {
     s32 type;
     s32 idx;
 
-    type = world_item_get_menu_category((s16)item_id);
+    type = world_item_get_menu_category(item_id);
     if ((item_id != ITEM_ID_NOTHING) && (type == ITEM_MENU_CATEGORY_WEAPON)) {
         return g_main_item_weapon_data[g_main_item_primary_data[item_id].secondary_data_id].power;
     }

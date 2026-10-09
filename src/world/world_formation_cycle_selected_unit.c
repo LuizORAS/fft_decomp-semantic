@@ -6,7 +6,7 @@
  * wrapping at either end and skipping over egg units. Plays menu sound 6 on
  * either move.
  */
-void world_formation_cycle_selected_unit(s32 pad_buttons) {
+void world_formation_cycle_selected_unit(s16 pad_buttons) {
     u16 index;
     s32 prev;
 

@@ -46,8 +46,8 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
         }
         /* The target loads the attacker's screen_z zero-extended (lhu). */
         attacker_centre
-            = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
-        target_centre = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+            = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
+        target_centre = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
         difference = attacker_centre - target_centre;
         if (difference < -11) {
             battle_unit_store_animation_facing_movement_data(

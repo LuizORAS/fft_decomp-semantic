@@ -199,10 +199,10 @@ void world_text_character_handling_thread(void) {
         rec.tail_offset = 0;
         rec.x = g_world_text_speaker_screen_coords[0] - center - 4;
         if (rec.position == 0) {
-            if (world_thread_get_current_parameter_3() == (u16)g_world_text_speaker_swap_unit_a) {
-                value = (u16)g_world_text_speaker_swap_unit_b;
-            } else if (world_thread_get_current_parameter_3() == (u16)g_world_text_speaker_swap_unit_b) {
-                value = (u16)g_world_text_speaker_swap_unit_a;
+            if (world_thread_get_current_parameter_3() == g_world_text_speaker_swap_unit_a) {
+                value = g_world_text_speaker_swap_unit_b;
+            } else if (world_thread_get_current_parameter_3() == g_world_text_speaker_swap_unit_b) {
+                value = g_world_text_speaker_swap_unit_a;
             }
             world_unit_project_misc_to_screen(world_script_get_misc_id(value), g_world_text_partner_screen_coords);
             if (g_world_text_speaker_screen_coords[1] < 0

@@ -74,7 +74,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         shop_mask = 0x8000 >> shop_id;
         for (; item_id < 0xfe; item_id++) {
             __asm__("" : "=r"(primary_category) : "0"(primary_category));
-            item_category = world_item_get_menu_category((s16)item_id);
+            item_category = world_item_get_menu_category(item_id);
             entry = item_id;
             if (primary_category != item_category && secondary_category != item_category) {
                 continue;
@@ -87,7 +87,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
                 continue;
             }
             if (mode != ITEM_LIST_MODE_ALL) {
-                can_equip = world_unit_can_equip_item_id(unit_id, (s16)item_id);
+                can_equip = world_unit_can_equip_item_id(unit_id, item_id);
                 if (mode == ITEM_LIST_MODE_EQUIPPABLE && can_equip == -1) {
                     continue;
                 }
@@ -100,16 +100,16 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         }
     } else {
         for (item_id = 0; item_id < 0xfe; item_id++) {
-            item_category = world_item_get_menu_category((s16)item_id);
+            item_category = world_item_get_menu_category(item_id);
             entry = item_id;
             if (primary_category != item_category && secondary_category != item_category) {
                 continue;
             }
-            if (world_shop_adjust_poached_item_quantity((s16)item_id, 0) == 0) {
+            if (world_shop_adjust_poached_item_quantity(item_id, 0) == 0) {
                 continue;
             }
             if (mode != ITEM_LIST_MODE_ALL) {
-                can_equip = world_unit_can_equip_item_id(unit_id, (s16)item_id);
+                can_equip = world_unit_can_equip_item_id(unit_id, item_id);
                 if (mode == ITEM_LIST_MODE_EQUIPPABLE && can_equip == -1) {
                     continue;
                 }

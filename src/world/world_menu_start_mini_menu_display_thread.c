@@ -10,7 +10,7 @@ void world_menu_start_mini_menu_display_thread(void) {
     if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_CHILD) != 0) {
         return;
     }
-    if (*(u16*)&g_world_menu_overlay_state != 0) {
+    if (g_world_menu_overlay_state != 0) {
         return;
     }
     g_world_menu_current_id = BATTLE_MENU_ID_MINI_MENU;

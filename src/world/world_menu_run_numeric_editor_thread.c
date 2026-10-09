@@ -98,7 +98,7 @@ void world_menu_run_numeric_editor_thread(void) {
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
             LoadImage(upload_c, (u32*)(text_pixels + 0x468));
         }
-        field_y = (u16)g_world_frame_arg;
+        field_y = g_world_frame_arg;
         use_offset = field_y != 0xF0;
         g_world_gfx_draw_area_y = -use_offset & 0xF0;
         world_gfx_build_scaled_draw_area_packets(

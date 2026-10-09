@@ -41,7 +41,7 @@ void world_menu_selected_tile_info_display_thread(void) {
         s16* value = &tile->depth;
 
         page = &world_D_80173CBC[frame & 1];
-        i = world_menu_build_quad_pieces((s16)tile->display_height, page->quads) - 1;
+        i = world_menu_build_quad_pieces(tile->display_height, page->quads) - 1;
         world_thread_yield();
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;

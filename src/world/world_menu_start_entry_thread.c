@@ -9,7 +9,7 @@ void world_menu_start_entry_thread(void) {
     s32 count;
 
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-    if (*(u16*)&g_world_menu_overlay_state != 0) {
+    if (g_world_menu_overlay_state != 0) {
         world_thread_exit_current();
     }
     world_camera_wait_until_idle();

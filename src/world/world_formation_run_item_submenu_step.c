@@ -33,7 +33,7 @@ s32 world_formation_run_item_submenu_step(void) {
     s32 busy;
     s32 unused[6]; /* never referenced; reproduces the 0x48 frame */
 
-    if (*(s8*)&g_world_item_submenu_initialized == 0) {
+    if (g_world_item_submenu_initialized == 0) {
         g_world_item_submenu_initialized = 1;
         g_world_item_menu_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);

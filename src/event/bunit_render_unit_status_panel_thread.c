@@ -233,7 +233,7 @@ void bunit_render_unit_status_panel_thread(void) {
             panel->portrait.g0 = 0x80;
             panel->portrait.b0 = 0x80;
         }
-        g_bunit_gfx_draw_offset_y = (u16)g_bunit_frame_arg != 0xF0 ? 0xF0 : 0;
+        g_bunit_gfx_draw_offset_y = g_bunit_frame_arg != 0xF0 ? 0xF0 : 0;
         if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
@@ -264,22 +264,22 @@ void bunit_render_unit_status_panel_thread(void) {
             }
         }
         px1 = thread->x;
-        dx1 = (u16)g_bunit_gfx_draw_offset_y;
+        dx1 = g_bunit_gfx_draw_offset_y;
         panel->draw_offset_a.x = px1 - 0x80;
         pya = thread->shake_y.low;
         panel->draw_offset_a.y = pya + dx1;
         SetDrawOffset(&panel->draw_offset_a, &panel->draw_offset_a.x);
-        dx2 = (u16)g_bunit_gfx_draw_offset_y;
+        dx2 = g_bunit_gfx_draw_offset_y;
         panel->draw_offset_b.x = -0x80;
         panel->draw_offset_b.y = dx2;
         SetDrawOffset(&panel->draw_offset_b, &panel->draw_offset_b.x);
         px2 = thread->x;
-        dx3 = (u16)g_bunit_gfx_draw_offset_y;
+        dx3 = g_bunit_gfx_draw_offset_y;
         editor->draw_offset_a.x = px2 - 0x80;
         pyb = thread->shake_y.low;
         editor->draw_offset_a.y = pyb + dx3;
         SetDrawOffset(&editor->draw_offset_a, &editor->draw_offset_a.x);
-        dx4 = (u16)g_bunit_gfx_draw_offset_y;
+        dx4 = g_bunit_gfx_draw_offset_y;
         editor->draw_offset_b.x = -0x80;
         editor->draw_offset_b.y = dx4;
         SetDrawOffset(&editor->draw_offset_b, &editor->draw_offset_b.x);

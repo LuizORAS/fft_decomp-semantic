@@ -7,7 +7,7 @@ s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot) {
     u8* image_data;
     RECT rect;
 
-    unit = battle_unit_get_misc_data_by_misc_id((u16)misc_id);
+    unit = battle_unit_get_misc_data_by_misc_id(misc_id);
     if (g_battle_gfx_vram_slots[slot].owner == 0xfe) {
         for (i = 0; i < 2; i++) {
             if (g_battle_gfx_vram_slots[i].evtchr_load_marker == 0) {

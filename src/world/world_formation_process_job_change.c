@@ -52,12 +52,12 @@ s32 world_formation_process_job_change(s32 job) {
         world_formation_build_unit_graphic_entry(0x14, &scratch.entry, 0);
         g_world_job_change_new_sprite_source = main_heap_alloc(0x1e0);
         if (scratch.entry.tpage == 100) {
-            rect.x = ((s16)scratch.entry.x >> 2) + 0x100;
+            rect.x = (scratch.entry.x >> 2) + 0x100;
         } else {
-            rect.x = ((s16)scratch.entry.x >> 2) + 0x140;
+            rect.x = (scratch.entry.x >> 2) + 0x140;
         }
         rect.y = scratch.entry.y;
-        rect.w = (s16)scratch.entry.w >> 2;
+        rect.w = scratch.entry.w >> 2;
         rect.h = scratch.entry.h;
         g_world_job_wheel_new_portrait_quad.clut = scratch.entry.clut;
         world_gfx_store_image_and_wait(&rect, g_world_job_change_new_sprite_source);

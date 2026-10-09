@@ -11,7 +11,7 @@ void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
         if (first != -1) {
             do {
                 g_bunit_menu_list_entry_count = g_bunit_menu_list_entry_count + 1;
-            } while (entries[(s16)g_bunit_menu_list_entry_count] != -1);
+            } while (entries[g_bunit_menu_list_entry_count] != -1);
         }
     }
     g_bunit_menu_list_selected_index = selected_index;

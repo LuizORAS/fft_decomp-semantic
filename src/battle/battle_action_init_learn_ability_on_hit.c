@@ -27,7 +27,7 @@ void battle_action_init_learn_ability_on_hit(void) {
         g_battle_action_learn_on_hit_unit_id
             = battle_ability_find_learn_on_hit_unit(unit->battle_data->misc_unit_id, &ability_id);
         if (g_battle_action_learn_on_hit_unit_id != -1) {
-            learner = battle_unit_get_misc_data_by_battle_id((u16)g_battle_action_learn_on_hit_unit_id);
+            learner = battle_unit_get_misc_data_by_battle_id(g_battle_action_learn_on_hit_unit_id);
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_LEARNED, ability_id,
                 unit->battle_data->misc_unit_id, 0,
                 learner->battle_data->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);

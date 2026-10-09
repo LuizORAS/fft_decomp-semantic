@@ -56,7 +56,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
                     g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                     g_world_shop_sell_equipped_prompt_active = 1;
                     g_world_shop_sell_equipped_menu.selected_index = 0;
-                    g_world_text_substitution_values[0] = world_item_get_half_price((s16)item);
+                    g_world_text_substitution_values[0] = world_item_get_half_price(item);
                     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf810, 0);
                 }
             } else if (input & PSX_PAD_CROSS) {

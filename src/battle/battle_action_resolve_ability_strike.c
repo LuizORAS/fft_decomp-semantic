@@ -95,7 +95,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         g_battle_action_current_ability.can_earn_exp_jp = 1;
     }
     work->can_earn_experience = 0;
-    battle_action_finalize_draw_out_katana_result(attacker, work, (u8)count);
+    battle_action_finalize_draw_out_katana_result(attacker, work, count);
     work->actor_id = misc_unit_id;
     work->used_weapon_id = g_battle_action_current_ability.weapon_id;
     work->reaction_occurred = 0;

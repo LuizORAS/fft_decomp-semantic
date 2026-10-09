@@ -65,7 +65,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     spectators = 0;
     for (i = 0; i < 0x10; i++) {
         if (i != unit->unit_id) {
-            spectator = battle_unit_get_misc_data_by_misc_id((u16)i);
+            spectator = battle_unit_get_misc_data_by_misc_id(i);
             if (spectator != 0) {
                 stats = spectator->battle_data;
                 if (stats != 0) {

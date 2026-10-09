@@ -9,7 +9,7 @@ void battle_unit_save_facing_before_attack(battle_unit_misc_data_t* unit) {
     char unused[16];
 
     if (unit != 0) {
-        if (*(s16*)&unit->attack_facing == -1) {
+        if (unit->attack_facing == -1) {
             facing = unit->facing;
             unit->attack_facing = facing;
         }

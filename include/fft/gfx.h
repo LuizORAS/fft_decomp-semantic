@@ -184,7 +184,7 @@ typedef char world_item_icon_source_size_must_be_12[sizeof(world_item_icon_sourc
 typedef struct world_gfx_textured_rect_source {
     s16 x, y;  /* 0x00 */
     s16 w, h;  /* 0x04 */
-    u16 u;     /* 0x08 */
+    s16 u;     /* 0x08 */
     u16 v;     /* 0x0a */
     u16 clut;  /* 0x0c */
     u16 tpage; /* 0x0e */

@@ -20,7 +20,7 @@ void battle_action_check_reflect_blade_grasp_and_arrow_guard(void) {
         battle_action_check_reflect_reaction();
     }
     /* reaction_id is loaded signed (lh) here. */
-    if (*(s16*)&g_battle_action_target_data->reaction_id != 0) {
+    if (g_battle_action_target_data->reaction_id != 0) {
         return;
     }
     if (battle_action_can_unit_react(g_battle_action_target) != 0) {

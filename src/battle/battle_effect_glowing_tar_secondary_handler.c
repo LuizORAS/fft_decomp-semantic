@@ -29,7 +29,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
 
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         if (effect->target.fields.result_animation == BATTLE_EFFECT_HIT_NO_EFFECT) {
             return 0;
