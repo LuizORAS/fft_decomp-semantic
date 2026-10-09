@@ -16,7 +16,7 @@ u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
     s32 j;
 
     count = g_equip_menu_list_row_callbacks[command[3]](command[9]);
-    count = sprintf((char*)buf, g_equip_text_decimal_format, count);
+    count = sprintf(buf, g_equip_text_decimal_format, count);
     blanks = command[4] - count;
     x = command[7];
     y = command[8];

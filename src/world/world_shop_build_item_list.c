@@ -75,11 +75,10 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
             __asm__("" : "=r"(primary_category) : "0"(primary_category));
             item_category = world_item_get_menu_category((s16)item_id);
             entry = item_id;
-            if ((u16)primary_category != (u16)item_category && secondary_category != item_category) {
+            if (primary_category != item_category && secondary_category != item_category) {
                 continue;
             }
-            if (!((g_world_shop_item_availability[item_id].low
-                      | ((u16)g_world_shop_item_availability[item_id].high << 8))
+            if (!((g_world_shop_item_availability[item_id].low | (g_world_shop_item_availability[item_id].high << 8))
                     & shop_mask)) {
                 continue;
             }
@@ -102,7 +101,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         for (item_id = 0; item_id < 0xfe; item_id++) {
             item_category = world_item_get_menu_category((s16)item_id);
             entry = item_id;
-            if ((u16)primary_category != (u16)item_category && secondary_category != item_category) {
+            if (primary_category != item_category && secondary_category != item_category) {
                 continue;
             }
             if (world_shop_adjust_poached_item_quantity((s16)item_id, 0) == 0) {

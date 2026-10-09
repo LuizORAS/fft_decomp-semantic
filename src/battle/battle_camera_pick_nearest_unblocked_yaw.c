@@ -69,5 +69,5 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
         }
         bit <<= 1;
     }
-    return (u16)g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
+    return g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
 }

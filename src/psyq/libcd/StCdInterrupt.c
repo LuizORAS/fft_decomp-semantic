@@ -29,7 +29,7 @@ void StCdInterrupt(void) {
         return;
     }
     g_psyq_cd_stream_current_header = &g_psyq_cd_stream_ring[g_psyq_cd_stream_write_index];
-    if (*(volatile u16*)&g_psyq_cd_stream_current_header->status) {
+    if (*&g_psyq_cd_stream_current_header->status) {
         if (g_psyq_cd_stream_emulation_base)
             g_psyq_cd_stream_emulation_sector_index++;
         g_psyq_cd_stream_diagnostic_code = 4;
@@ -65,7 +65,7 @@ void StCdInterrupt(void) {
         if (required_frame) {
             /* The original comparison reads the low halfword of the frame word. */
             if (required_frame != *(u16*)&g_psyq_cd_stream_current_header->frame_count) {
-                *(volatile s16*)&g_psyq_cd_stream_current_header->status = StFREE;
+                *(s16*)&g_psyq_cd_stream_current_header->status = StFREE;
                 if (g_psyq_cd_stream_emulation_base)
                     g_psyq_cd_stream_emulation_sector_index++;
                 return;
@@ -91,23 +91,23 @@ void StCdInterrupt(void) {
         init_ring_status(
             g_psyq_cd_stream_frame_start_index, g_psyq_cd_stream_write_index - g_psyq_cd_stream_frame_start_index);
         g_psyq_cd_stream_write_index = g_psyq_cd_stream_frame_start_index;
-        *(volatile s16*)&g_psyq_cd_stream_current_header->status = StFREE;
+        *(s16*)&g_psyq_cd_stream_current_header->status = StFREE;
         if (g_psyq_cd_stream_emulation_base)
             g_psyq_cd_stream_emulation_sector_index++;
         g_psyq_cd_stream_diagnostic_code = 6;
         return;
     }
     if (g_psyq_cd_stream_current_header->sector_index == 0) {
-        u16 frame = *(u16*)&g_psyq_cd_stream_current_header->frame_count;
+        u16 frame = g_psyq_cd_stream_current_header->frame_count;
         g_psyq_cd_stream_expected_sector_index = 0;
         g_psyq_cd_stream_frame_count = frame;
-        if (g_psyq_cd_stream_end_frame && (u32)g_psyq_cd_stream_frame_count >= (u32)g_psyq_cd_stream_end_frame) {
+        if (g_psyq_cd_stream_end_frame && g_psyq_cd_stream_frame_count >= (u32)g_psyq_cd_stream_end_frame) {
             g_psyq_cd_stream_frame_count = 0;
             g_psyq_cd_stream_expected_sector_index = 0;
             init_ring_status(
                 g_psyq_cd_stream_frame_start_index, g_psyq_cd_stream_write_index - g_psyq_cd_stream_frame_start_index);
             g_psyq_cd_stream_write_index = g_psyq_cd_stream_frame_start_index;
-            *(volatile s16*)&g_psyq_cd_stream_current_header->status = StFREE;
+            *(s16*)&g_psyq_cd_stream_current_header->status = StFREE;
             g_psyq_cd_stream_start_mask = 1;
             if (g_psyq_cd_stream_end_callback)
                 g_psyq_cd_stream_end_callback();
@@ -116,10 +116,10 @@ void StCdInterrupt(void) {
             g_psyq_cd_stream_diagnostic_code = 7;
             return;
         }
-        if ((u32)(g_psyq_cd_stream_ring_sectors - g_psyq_cd_stream_write_index - 1)
+        if ((g_psyq_cd_stream_ring_sectors - g_psyq_cd_stream_write_index - 1)
             < g_psyq_cd_stream_current_header->sector_count) {
             if (!g_psyq_cd_stream_end_frame) {
-                *(volatile s16*)&g_psyq_cd_stream_current_header->status = StREWIND;
+                *(s16*)&g_psyq_cd_stream_current_header->status = StREWIND;
                 g_psyq_cd_stream_start_mask = 1;
                 if (g_psyq_cd_stream_end_callback)
                     g_psyq_cd_stream_end_callback();
@@ -130,13 +130,13 @@ void StCdInterrupt(void) {
             }
             /* The signed lvalue retains the original LH rather than LHU. */
             if (*(s16*)&g_psyq_cd_stream_ring[0].status) {
-                *(volatile s16*)&g_psyq_cd_stream_current_header->status = StFREE;
+                *(s16*)&g_psyq_cd_stream_current_header->status = StFREE;
                 if (g_psyq_cd_stream_emulation_base)
                     g_psyq_cd_stream_emulation_sector_index++;
                 g_psyq_cd_stream_diagnostic_code = 9;
                 return;
             }
-            *(volatile s16*)&g_psyq_cd_stream_current_header->status = StREWIND;
+            *(s16*)&g_psyq_cd_stream_current_header->status = StREWIND;
             {
                 u32* destination = (u32*)g_psyq_cd_stream_ring;
                 u32* source = (u32*)g_psyq_cd_stream_current_header;
@@ -186,7 +186,7 @@ void StCdInterrupt(void) {
         }
     }
     *g_psyq_cd_stream_common_delay_register = 0x1325;
-    *(volatile s16*)&g_psyq_cd_stream_current_header->status = StBUSY;
+    g_psyq_cd_stream_current_header->status = StBUSY;
     g_psyq_cd_stream_write_index++;
     if (g_psyq_cd_stream_emulation_base && g_psyq_cd_stream_frame_dma_pending)
         data_ready_callback();

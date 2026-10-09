@@ -12,7 +12,7 @@ void world_menu_at_list_select_unit_thread(void) {
     world_thread_suspend(g_world_thread_current_id + 2);
     world_thread_suspend(g_world_thread_current_id + 3);
     world_thread_suspend(g_world_thread_current_id + 4);
-    while (g_world_menu_transition_timeout = (u16)g_world_menu_at_list_state.selected_index + 100,
+    while (g_world_menu_transition_timeout = g_world_menu_at_list_state.selected_index + 100,
         g_world_menu_transition_finished == 0) {
         world_thread_yield();
     }

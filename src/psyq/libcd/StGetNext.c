@@ -5,12 +5,12 @@ s32 StGetNext(void** frame_data, void** header) {
     if (*(volatile u16*)&record->status == StREWIND) {
         g_psyq_cd_stream_read_index = 0;
         if (g_psyq_cd_stream_end_frame)
-            *(volatile u16*)&record->status = StFREE;
+            record->status = StFREE;
         record = &g_psyq_cd_stream_ring[g_psyq_cd_stream_read_index];
     }
     if (*(volatile u16*)&record->status != StCOMPLETE)
         return 1;
-    *(volatile u16*)&record->status = StLOCK;
+    *&record->status = StLOCK;
     *frame_data = (u8*)(g_psyq_cd_stream_ring + g_psyq_cd_stream_ring_sectors)
         + g_psyq_cd_stream_read_index * PSYQ_CD_STREAM_PAYLOAD_BYTES;
     *header = (void*)record;

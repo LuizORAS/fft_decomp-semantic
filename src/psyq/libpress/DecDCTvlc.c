@@ -41,7 +41,6 @@ void DecDCTvlc(void* frame_data, void* decode_buffer) {
     register s32 other_zero __asm__("$0");
     limit = &g_psyq_press_vlc_limit_halfwords;
     primary = g_psyq_press_ac_primary_table;
-    __asm__ volatile("" : "=r"(primary) : "0"(primary) : "memory");
     secondary = g_psyq_press_ac_secondary_table;
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (input != 0)

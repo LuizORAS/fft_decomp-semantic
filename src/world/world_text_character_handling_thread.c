@@ -63,7 +63,6 @@ void world_text_character_handling_thread(void) {
     u16 started;
     u16 choice;
     s32* substitution;
-    u32* divisor;
     s32 portrait_id;
     s32 base;
     s32 half_w;

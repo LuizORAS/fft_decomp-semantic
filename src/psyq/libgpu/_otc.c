@@ -9,7 +9,7 @@ int _otc(u32* ot, int count) {
     position = (u32*)((u32)position + final_offset);
     *g_psyq_gpu_otc_dma_madr = (u32)position;
     *g_psyq_gpu_otc_dma_bcr = count;
-    *g_psyq_gpu_otc_dma_chcr = (PSYQ_GPU_DMA_BUSY | PSYQ_GPU_DMA_TRIGGER | PSYQ_GPU_DMA_ADDRESS_DECREMENT);
+    *g_psyq_gpu_otc_dma_chcr = PSYQ_GPU_DMA_BUSY | PSYQ_GPU_DMA_TRIGGER | PSYQ_GPU_DMA_ADDRESS_DECREMENT;
     set_alarm();
     while (*g_psyq_gpu_otc_dma_chcr & PSYQ_GPU_DMA_BUSY) {
         if (get_alarm())

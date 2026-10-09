@@ -615,10 +615,10 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_STORE_MODIFIED_MAP_PALETTE) {
             battle_map_store_modified_palette_colors(0, 0, 1);
         } else if (opcode == EVENT_OPCODE_SET_TILE_CAMERA_BLOCK) {
-            battle_map_set_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], (u8)(parameters)[1],
-                (u8)(parameters)[2], (u8)(parameters)[3]);
+            battle_map_set_tile_data_value(
+                MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], parameters[1], parameters[2], parameters[3]);
         } else if (opcode == EVENT_OPCODE_SET_TILE_HEIGHT) {
-            tile = battle_map_get_tile_data_pointer(parameters[0], (u8)(parameters)[1], (u8)(parameters)[2]);
+            tile = battle_map_get_tile_data_pointer(parameters[0], parameters[1], parameters[2]);
             if ((((map_tile_t*)tile)->surface.bits.type - MAP_SURFACE_GRASSLAND) >= 2U) {
                 ((map_tile_t*)tile)->surface.value
                     = (((map_tile_t*)tile)->surface.value & ~MAP_SURFACE_MASK) | MAP_SURFACE_STONE_FLOOR;

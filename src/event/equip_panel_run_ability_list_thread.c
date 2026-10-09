@@ -10,9 +10,6 @@
  * frame pair, other threads draw g_equip_item_preview_stat_detail into the second. */
 void equip_panel_run_ability_list_thread(void) {
     world_status_thread_t offset;
-    /* Never referenced: the target frame has these 4 bytes between the
-       offset record and the spill slots of u/base/upload. */
-    s32 unused;
     s32 u;
     battle_menu_status_panel_buffer_t* base;
     RECT* upload;

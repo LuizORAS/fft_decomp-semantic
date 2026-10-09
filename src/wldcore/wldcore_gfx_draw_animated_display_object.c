@@ -62,10 +62,7 @@ void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, G
     s32 cx_base;
     s32 cy;
     s32 palette;
-    s32 ox;
-    s32 oy;
     s32 px;
-    s32 py;
 
     sequence = g_wldcore_anim_sequence_table[object->sequence];
     sprite.my = 0;

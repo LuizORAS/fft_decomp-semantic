@@ -21,7 +21,7 @@ s32 SpuMalloc(s32 size) {
         _spu_gcSPU();
         for (; i < _spu_AllocBlockNum; i++) {
             if ((_spu_memList[i].address & PSYQ_SPU_HEAP_TAIL)
-                || ((_spu_memList[i].address & PSYQ_SPU_HEAP_FREE) && _spu_memList[i].size >= (u32)size)) {
+                || ((_spu_memList[i].address & PSYQ_SPU_HEAP_FREE) && _spu_memList[i].size >= size)) {
                 found = i;
                 break;
             }
@@ -30,7 +30,7 @@ s32 SpuMalloc(s32 size) {
     if (found != -1) {
         if (_spu_memList[found].address & PSYQ_SPU_HEAP_TAIL) {
             if (found < _spu_AllocBlockNum) {
-                if (_spu_memList[found].size - reserved >= (u32)size) {
+                if (_spu_memList[found].size - reserved >= size) {
                     _spu_AllocLastNum = found + 1;
                     _spu_memList[_spu_AllocLastNum].address
                         = ((_spu_memList[found].address & PSYQ_SPU_HEAP_ADDRESS_MASK) + size) | PSYQ_SPU_HEAP_TAIL;
@@ -43,7 +43,7 @@ s32 SpuMalloc(s32 size) {
             }
         } else {
             free_size = _spu_memList[found].size;
-            if ((u32)size < free_size) {
+            if (size < free_size) {
                 if (_spu_AllocLastNum < _spu_AllocBlockNum) {
                     u32 address;
                     u32 last_address;

@@ -33,7 +33,7 @@ void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     PSYQ_CPU_TRAP_ADDI(difference, even_leading, -24);
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
-        normalized = (u32)value << difference;
+        normalized = value << difference;
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -41,7 +41,7 @@ void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     difference = zero + 24;
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_SUB(difference, difference, even_leading);
-    normalized = (s32)value >> difference;
+    normalized = value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
     normalized <<= 1;

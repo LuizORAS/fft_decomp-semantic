@@ -12,7 +12,7 @@ int get_alarm(void) {
             g_psyq_gpu_last_operation.source, g_psyq_gpu_last_operation.argument);
         g_psyq_gpu_reset_interrupt_mask = SetIntrMask(0);
         g_psyq_gpu_queue_head = g_psyq_gpu_queue_tail = 0;
-        *g_psyq_gpu_dma_chcr = (PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE);
+        *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;
         *g_psyq_gpu_dma_dpcr |= PSYQ_GPU_DMA_GPU_ENABLE;
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_ACK_IRQ);
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_RESET_BUFFER);

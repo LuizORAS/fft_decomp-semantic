@@ -3,7 +3,7 @@
 
 /* Retail keeps the argument cursor in memory (as sprintf does): the SDK's va_arg reaches it through its address. */
 typedef char* va_list;
-#define va_start(ap, last) ((ap) = (char*)&(last) + sizeof(last))
+#define va_start(ap, last) (ap = (char*)&(last) + sizeof(last))
 #define va_arg(ap, type)   (*(char**)&(ap) += sizeof(type), *(type*)((ap) - sizeof(type)))
 
 /* first is either a window handle or, when it is not a valid handle, the format string itself. */

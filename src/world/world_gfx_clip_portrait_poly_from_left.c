@@ -5,8 +5,8 @@
  * edge back (u1/u3, or v1/v3 when the portrait is not mirrored). The screen
  * coordinates are updated as unsigned halfwords. */
 void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta) {
-    *(u16*)&poly->x0 += delta;
-    *(u16*)&poly->x2 += delta;
+    poly->x0 += delta;
+    poly->x2 += delta;
     if (poly->u0 != poly->u1) {
         poly->u1 -= delta;
         poly->u3 -= delta;

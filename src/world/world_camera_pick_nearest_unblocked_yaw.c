@@ -74,5 +74,5 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
         }
         bit <<= 1;
     }
-    return (u16)g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
+    return g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
 }

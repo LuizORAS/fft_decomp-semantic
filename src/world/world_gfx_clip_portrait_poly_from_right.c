@@ -13,6 +13,6 @@ void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta) {
         poly->v0 += delta;
         poly->v2 += delta;
     }
-    *(u16*)&poly->x1 -= delta;
-    *(u16*)&poly->x3 -= delta;
+    poly->x1 -= delta;
+    poly->x3 -= delta;
 }

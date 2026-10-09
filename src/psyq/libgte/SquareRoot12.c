@@ -32,7 +32,7 @@ s32 SquareRoot12(s32 value) {
     PSYQ_CPU_TRAP_ADDI(difference, even_leading, -24);
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
-        normalized = (u32)value << difference;
+        normalized = value << difference;
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -40,7 +40,7 @@ s32 SquareRoot12(s32 value) {
     difference = zero + 24;
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_SUB(difference, difference, even_leading);
-    normalized = (s32)value >> difference;
+    normalized = value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
     normalized <<= 1;
@@ -51,7 +51,7 @@ normalized_ready:
     PSYQ_CPU_LOAD_WAIT();
     if (exponent < 0)
         goto negative_exponent;
-    psyq_cpu_return_value = (u32)factor << exponent;
+    psyq_cpu_return_value = factor << exponent;
     __asm__ volatile("" : : "r"(psyq_cpu_return_value)); /* Retain the positive-result JR NOP. */
     goto* psyq_cpu_return_address;
 negative_exponent:

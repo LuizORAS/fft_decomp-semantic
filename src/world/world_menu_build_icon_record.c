@@ -86,5 +86,5 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     }
     /* Taking the draw_mode field adds an instruction; the record starts with that packet. */
     world_gfx_set_draw_mode_from_rect((DR_MODE*)record, (u16*)param);
-    SetDrawMode(&record->base.draw_mode, 0, 0, (u16)GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
+    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
 }

@@ -31,7 +31,7 @@ void equip_menu_update_screen_state(void) {
             equip_menu_reset_selection_indices();
         } else if (mode != -1) {
             battle_thread_start(4, equip_thread_wait_forever);
-            g_equip_menu_screen_state = (u8)*value_ptr + 2;
+            g_equip_menu_screen_state = *value_ptr + 2;
             equip_menu_set_selection_value(0, 0);
             equip_menu_set_selection_value(1, 0);
             equip_menu_set_selection_value(2, 0);

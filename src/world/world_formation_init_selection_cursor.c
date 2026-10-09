@@ -36,8 +36,8 @@ void world_formation_init_selection_cursor(s16 formation_index) {
     cursor = &g_world_formation_cursor_position;
     cursor->x = x * 62 + 34;
     /* x is reused for the scroll offset, read as a byte and then sign-extended. */
-    x = (u8)g_world_formation_scroll_position;
-    cursor->y = (s8)x + (formation_index >> 2) * 60 + 61;
+    x = g_world_formation_scroll_position;
+    cursor->y = x + (formation_index >> 2) * 60 + 61;
     g_world_formation_selection_cursor_ready = 1;
     world_formation_reset_slots_and_frame_tpages();
 }

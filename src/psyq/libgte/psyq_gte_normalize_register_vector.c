@@ -30,7 +30,7 @@ void psyq_gte_normalize_register_vector(void) {
     PSYQ_CPU_TRAP_ADDI(difference, leading, -24);
     exponent >>= 1;
     if (difference >= 0) {
-        normalized = (u32)sum << difference;
+        normalized = sum << difference;
         if (zero == 0)
             goto normalized_ready;
     }

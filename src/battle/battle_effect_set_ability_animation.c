@@ -22,11 +22,11 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
             else if (ball == 8)
                 g_battle_ability_effect_id = 0x14;
         } else {
-            g_battle_ability_effect_id = (u16)g_battle_effect_ability_ids[ability];
+            g_battle_ability_effect_id = g_battle_effect_ability_ids[ability];
         }
     } else {
         /* Ids from 0x200 up continue the table after the action abilities. */
-        g_battle_ability_effect_id = (u16)g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
+        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
     }
 
     if (g_battle_ability_effect_id >= 0) {

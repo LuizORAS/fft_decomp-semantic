@@ -19,5 +19,4 @@ wait_clear:
     PSYQ_CPU_LOAD_WAIT();
     goto*(void*)psyq_card_interrupt_result;
 interrupt_not_pending:
-    goto* psyq_card_return_address;
 }

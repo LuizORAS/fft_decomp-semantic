@@ -244,7 +244,7 @@ editor:
                 g_debugchr_editor_field_edit_active = 1;
             }
         }
-        if ((g_debugchr_editor_field_edit_active != 0) && ((u32)(row - 9) < 5U)
+        if ((g_debugchr_editor_field_edit_active != 0) && ((row - 9) < 5U)
             && (*g_debugchr_input_controller & PSX_PAD_TRIANGLE)) {
             *g_debugchr_editor_current_field->value = 0;
             debugchr_editor_apply_values_to_battle_unit(g_debugchr_editor_selected_unit_slot);
@@ -302,7 +302,7 @@ editor:
                     for (i = 0; i < steps; i++) {
                         hi_limit = &g_debugchr_editor_template[row].hi;
                         span = row - 9;
-                        clearable = (u32)span < 5U;
+                        clearable = span < 5U;
                         /* The target hoists this clear-to-zero range test into
                          * the preheader and never reads the result; the empty
                          * "r" operand keeps the use alive without emitting an
@@ -343,7 +343,7 @@ editor:
                     for (i = 0; i < steps; i++) {
                         lo_limit = &g_debugchr_editor_template[row].lo;
                         span = row - 9;
-                        clearable = (u32)span < 5U;
+                        clearable = span < 5U;
                         /* The target hoists this clear-to-zero range test into
                          * the preheader and never reads the result; the empty
                          * "r" operand keeps the use alive without emitting an
