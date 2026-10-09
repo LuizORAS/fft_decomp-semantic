@@ -1,8 +1,18 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-void equip_gfx_enqueue_textured_quad_current_ot(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut) {
+/* clang-format off */
+void equip_gfx_enqueue_textured_quad_current_ot(rect, u, v, color, semitrans, texture_page, clut, unused_priority)
+    const RECT* rect;
+    s32 u;
+    s32 v;
+    const u8* color;
+    s32 semitrans;
+    u16 texture_page;
+    u16 clut;
+    s32 unused_priority;
+/* clang-format on */
+{
     POLY_FT4* poly;
     u16 index = g_equip_gfx_poly_ft4_count;
 

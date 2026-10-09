@@ -16,8 +16,18 @@
  * The packed-color reads repeat `color_index * 16 + i` (no index local) and
  * the gray cases use case-local temporaries: both keep the target's loop
  * strength reduction and local register allocation. */
-void battle_map_modify_palette(
-    s32 command, s32 amount, s32 palette_index, s32 color_index, s32 all_colors, u16 red, u16 green, u16 blue) {
+/* clang-format off */
+void battle_map_modify_palette(command, amount, palette_index, color_index, all_colors, red, green, blue)
+    s32 command;
+    s32 amount;
+    s32 palette_index;
+    s32 color_index;
+    s32 all_colors;
+    u16 red;
+    u16 green;
+    u16 blue;
+/* clang-format on */
+{
     s32 i;
     s16 out_red;
     s16 out_green;

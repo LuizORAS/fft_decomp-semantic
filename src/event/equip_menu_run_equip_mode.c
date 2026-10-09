@@ -59,9 +59,7 @@ s32 equip_menu_run_equip_mode(void) {
             } else {
                 slot = selected_slot;
             }
-            /* The target passes sort_mode without the definition's u16 narrowing. */
-            ((s32 (*)(s16, s32, s8, s16*, u8))equip_item_build_filtered_list)(
-                unit, slot, g_equip_equip_item_slot, g_equip_item_list_entries, 1);
+            equip_item_build_filtered_list(unit, slot, g_equip_equip_item_slot, g_equip_item_list_entries, 1);
             g_equip_equip_item_list_open = 1;
             g_equip_equipment_panel_style = 1;
             battle_thread_suspend(5);

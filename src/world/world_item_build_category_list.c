@@ -10,7 +10,15 @@
  * Unequippable is not On. Categories 0-4 and 7 with sort modes 1-5 go
  * through world_item_filter_sorted_entries, which returns the new count.
  */
-s32 world_item_build_category_list(s16 unit_id, u16 sort_mode, s8 category, world_item_list_entry_t* entries, u8 mode) {
+/* clang-format off */
+s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
+    s16 unit_id;
+    u16 sort_mode;
+    s8 category;
+    world_item_list_entry_t* entries;
+    u8 mode;
+/* clang-format on */
+{
     s32 count;
     s32 item;
     s32 entry;

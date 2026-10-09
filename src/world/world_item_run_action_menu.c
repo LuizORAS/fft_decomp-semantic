@@ -161,9 +161,9 @@ s8 world_item_run_action_menu(void) {
              * after this store, with the 4 materialised first. */
             __asm__ volatile("" : : "r"(four) : "memory");
             category = g_world_item_menu_category;
-            /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-            ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-                category + 1, g_world_item_menu_category != four ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+            world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
+                g_world_item_menu_category != four ? (s8)(category + 1) : 7,
+                (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         }
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);

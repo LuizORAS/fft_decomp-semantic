@@ -226,7 +226,23 @@ When a cleanup changes the bytes, look here first.
   get `lh` from a `u16` (or `lhu` from an `s16`), cast the lvalue
   (`*(s16*)&g`), not the value.
 - A narrow prototype adds `andi` or `sll`/`sra` at callers; widening removes
-  them. Function-pointer casts emit nothing.
+  them. Retail callers usually pass full words and the callee narrows: declare
+  the parameter `s32` and narrow at its uses (`(u8)x`, or one narrow local).
+  Where the callee loads a narrow stack parameter (`lhu 0x10(sp)`), no
+  prototype-style definition matches: write an old-style definition
+  (`void f(a, b) u16 a; u8* b; {`) with an all-wide prototype in the header.
+  `make check-config` compares the two by promoted types. Keep its head under
+  `clang-format off`, one parameter declaration per line.
+- Callers and callees agree in the source. An argument every caller passes and
+  the callee never reads is an `unused_` parameter; a parameter no caller
+  passes is a local. A function-pointer cast at a call site is the last
+  resort: try the plain call first (an "extra argument" is often only a
+  register the cast forced), and state the retail fact in one line if the
+  cast stays.
+- A register read before any write is a local the source never assigned on
+  that path: a `switch` without `default`, an early exit, a call with too few
+  arguments. Declare it and leave it unset (`T x;`), with a `QUIRKS.md` line,
+  rather than pinning a register or adding an `"=r"` barrier.
 - A fresh `lui` for each neighbouring global means separate symbols. A struct
   view gives GCC one base register and reshapes the body; keep the aliases.
 - Raw offset versus field access changes scheduling (`MEM_IN_STRUCT_P`):
@@ -271,7 +287,9 @@ Useful work, each step verified with `make validate`:
   members from what the code does with them, and examine `_unused_` members
   (they may still be touched by whole-struct copies or another view).
 - Remove register pins, asm barriers, casts and raw offsets where a natural
-  spelling matches (about 180 files still pin a register).
+  spelling matches. Most pins stand for something the source said another
+  way: an unset local, one variable where the code has two (or two where it
+  has one), a narrower local, an unused parameter, another statement order.
 - Replace `goto` (about 300 remain) with the loops, `if`/`else` and `switch`
   the compiler actually produced.
 - Fold adjacent globals the code proves are one record; keep separate

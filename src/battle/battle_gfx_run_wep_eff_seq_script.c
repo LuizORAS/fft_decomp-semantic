@@ -239,10 +239,7 @@ void battle_gfx_run_wep_eff_seq_script(
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8 + graphic_v;
                     mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
-                    /* The callee takes narrow parameters; this caller passes
-                     * sign-extended coordinates and full-width values. */
-                    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s32, s32, s32, s32, s32, s32,
-                        s32))battle_gfx_store_sprite_display_data)(
+                    battle_gfx_store_sprite_display_data(
                         display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
                 }
                 break;
@@ -267,9 +264,7 @@ void battle_gfx_run_wep_eff_seq_script(
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8;
                     mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
-                    /* Same int-argument view as the call above. */
-                    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s32, s32, s32, s32, s32, s32,
-                        s32))battle_gfx_store_sprite_display_data)(
+                    battle_gfx_store_sprite_display_data(
                         display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
                 }
                 break;

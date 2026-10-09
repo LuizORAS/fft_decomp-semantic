@@ -53,12 +53,8 @@ s32 world_formation_run_equip_item_menu(void) {
     if (g_world_equip_item_list_open == 0) {
         g_world_equip_item_slot = world_menu_step_cursor_with_sound(5, 2, g_world_input_secondary_repeat, 6);
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
-            /* Called with an s16 second parameter: the target passes the
-               slot + 1 unmasked, and the separate s8 conversion of the third
-               argument is what gives the two sra of one sll. */
-            ((s32 (*)(s16, s16, s8, world_item_list_entry_t*, u8))world_item_build_category_list)(
-                g_world_formation_selected_unit_index, g_world_equip_item_slot + 1, g_world_equip_item_slot,
-                (world_item_list_entry_t*)g_world_menu_entry_ids, 1);
+            world_item_build_category_list(g_world_formation_selected_unit_index, (s16)(g_world_equip_item_slot + 1),
+                g_world_equip_item_slot, (world_item_list_entry_t*)g_world_menu_entry_ids, 1);
             world_script_set_vsync_mode_and_event_speed(2);
             g_world_formation_unit_cycle_mode = 1;
             g_world_equip_item_list_open = 1;

@@ -30,13 +30,6 @@ extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
 
 extern battle_map_mesh_part_view_t g_battle_map_mesh_parts_view[9];
 
-/* The -0x20 colour deltas are passed as sign-extended words (0xffffffe0 in
- * the argument registers and stack slots); the u16 prototype would
- * zero-extend them, so this caller uses an all-s32 view.
- * The definition itself only matches with u16 colour parameters (s16 or s32
- * ones change its code), so the two views stay. */
-#define MODIFY_PALETTE_WORDS ((void (*)(s32, s32, s32, s32, s32, s32, s32, s32))battle_map_modify_palette)
-
 #define GT3(i)       (g_battle_data->gt3[i])
 #define GT4(i)       (g_battle_data->gt4[i])
 #define SAVED_GT3(i) (g_battle_target_tile_color_buffer->gt3[i])
@@ -772,8 +765,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         g_battle_target_tile_mark_modes[0] = 0;
         if ((g_battle_target_tile_mark_modes[1] | g_battle_target_tile_mark_modes[2]) == 0) {
-            MODIFY_PALETTE_WORDS(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
-            MODIFY_PALETTE_WORDS(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
         }
     }
     if (g_battle_target_tile_mark_modes[1] == 3) {
@@ -785,8 +778,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         g_battle_target_tile_mark_modes[1] = 0;
         if ((g_battle_target_tile_mark_modes[0] | g_battle_target_tile_mark_modes[2]) == 0) {
-            MODIFY_PALETTE_WORDS(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
-            MODIFY_PALETTE_WORDS(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
         }
     }
     if (g_battle_target_tile_mark_modes[2] == 8) {
@@ -819,8 +812,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         g_battle_target_tile_mark_modes[2] = 0;
         if ((g_battle_target_tile_mark_modes[0] | g_battle_target_tile_mark_modes[1]) == 0) {
-            MODIFY_PALETTE_WORDS(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
-            MODIFY_PALETTE_WORDS(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(10, 8, 1, 0, 1, -0x20, -0x20, -0x20);
+            battle_map_modify_palette(8, 8, 1, 0, 1, -0x20, -0x20, -0x20);
         }
     }
 }

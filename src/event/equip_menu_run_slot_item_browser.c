@@ -21,9 +21,8 @@ s32 equip_menu_run_slot_item_browser(void) {
         g_equip_slot_item_browser_initialized = 1;
         category = g_equip_selected_slot;
         g_equip_slot_item_browser_previewed_index = -1;
-        /* The target passes sort_mode without the definition's u16 narrowing. */
-        ((s32 (*)(s16, s32, s8, s16*, u8))equip_item_build_filtered_list)(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != 4 ? category + 1 : 7, g_equip_item_list_entries, 0);
+        equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
+            g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);
         g_equip_menu_list_row_callbacks[0] = equip_item_get_available_with_equip_flag;
@@ -52,9 +51,8 @@ s32 equip_menu_run_slot_item_browser(void) {
             g_equip_menu_scroll_base_index, (u16*)g_equip_item_list_entries);
         g_equip_selected_slot = slot;
         category = g_equip_selected_slot;
-        /* The target passes sort_mode without the definition's u16 narrowing. */
-        ((s32 (*)(s16, s32, s8, s16*, u8))equip_item_build_filtered_list)(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != 4 ? category + 1 : 7, g_equip_item_list_entries, 0);
+        equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
+            g_equip_selected_slot != 4 ? (s8)(category + 1) : 7, g_equip_item_list_entries, 0);
         g_equip_slot_item_browser_previewed_index = -1;
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[7]);

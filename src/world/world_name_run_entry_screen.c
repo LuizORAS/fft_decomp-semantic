@@ -141,12 +141,8 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         world_menu_set_draw_priority(0x28);
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_entry_text_cursor_anim, busy);
         world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
-        /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-            0, 0x37, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_L1, busy, 6);
-        /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-            1, 0xB1, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_R1, busy, 6);
+        world_menu_draw_pressable_button(0, 0x37, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_L1, (s16)busy, 6);
+        world_menu_draw_pressable_button(1, 0xB1, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_R1, (s16)busy, 6);
         world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
         world_menu_draw_active_window_frames();

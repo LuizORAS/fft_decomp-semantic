@@ -112,12 +112,8 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                     buttons = g_world_input_secondary_repeat;
                 }
                 world_formation_cycle_selected_unit((s16)buttons);
-                /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-                ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-                    0, 0xC, 0xE, buttons & PSX_PAD_L1, i, 6);
-                /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-                ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-                    1, 0xE0, 0xE, buttons & PSX_PAD_R1, i, 6);
+                world_menu_draw_pressable_button(0, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, 6);
+                world_menu_draw_pressable_button(1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, 6);
             }
             if (g_world_formation_current_menu != 8) {
                 world_formation_update_unit_selection();

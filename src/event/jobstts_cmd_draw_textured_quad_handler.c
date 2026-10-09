@@ -22,9 +22,7 @@ u8* jobstts_cmd_draw_textured_quad_handler(u8* data) {
     if (data[0] == 4) {
         pal = 0;
     }
-    /* Preserve the caller's promoted ABI arguments; the callee truncates its u16 parameters. */
-    ((void (*)(urect16_t*, u8, u8, u8*, s32, s32, s32, s32))jobstts_gfx_enqueue_textured_quad)(&rect, data[7], data[8],
-        pal, g_jobstts_gfx_semitransparency, g_jobstts_gfx_texture_page, g_jobstts_gfx_clut_id,
-        g_jobstts_gfx_otag_index);
+    jobstts_gfx_enqueue_textured_quad(&rect, data[7], data[8], pal, g_jobstts_gfx_semitransparency,
+        g_jobstts_gfx_texture_page, g_jobstts_gfx_clut_id, g_jobstts_gfx_otag_index);
     return data + data[1];
 }

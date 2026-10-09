@@ -86,7 +86,7 @@ s32 world_formation_run_item_submenu_step(void) {
         || world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) == 0) {
         disabled = 1;
     }
-    world_menu_draw_pressable_button(2, 0xB8, 0x3C, g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, 1);
+    world_menu_draw_pressable_button(2, 0xB8, 0x3C, (u16)g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, 1);
     busy = 0;
     if (world_thread_is_task_active(0) != 0 || world_thread_is_running(5) != 0) {
         busy = 1;

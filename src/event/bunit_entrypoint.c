@@ -109,10 +109,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
                 g_bunit_unit_list_page_offset + g_bunit_unit_list_scroll_step, 0);
         } else {
             running = bunit_menu_run_unit_list_frame();
-            /* The target passes the arguments with default promotions, as if
-             * no prototype were in scope (the u16 prototype would zero-extend
-             * the sixth argument), so call through an unprototyped view. */
-            ((void (*)())bunit_menu_update_unit_grid)(1, 1, 1, 1, 0,
+            bunit_menu_update_unit_grid(1, 1, 1, 1, 0,
                 g_bunit_help_screen_id == 0 ? (s16)g_bunit_input_secondary_repeat : 0,
                 (s16)bunit_menu_is_active_or_transitioning());
         }

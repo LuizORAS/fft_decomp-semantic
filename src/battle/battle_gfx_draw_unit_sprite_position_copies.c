@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* flags is passed as a sign-extended word; the u16 mode parameter would
- * zero-extend it, so these calls use a word-mode view. */
-#define CONSTRUCT_POLYGONS_WORD_MODE                                                                                   \
-    ((void (*)(battle_gfx_sprite_display_t*, s32, s32, s16*, s16, s32, s16*,                                           \
-        u32*))battle_gfx_construct_polygon_data_for_units)
-
 /*
  * Draw the unit's sprite once at each of its six display_svectors.
  *
@@ -38,7 +32,7 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
         zoom.vy = g_battle_camera_zoom.vy;
         zoom.vz = g_battle_camera_zoom.vz;
         display = unit->sprite_display_section;
-        CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, display->part_count, 0, (s16*)&position, 0,
-            flags, (s16*)&zoom, main_gfx_get_otag() + depth);
+        battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, display->part_count, 0,
+            (s16*)&position, 0, flags, (s16*)&zoom, main_gfx_get_otag() + depth);
     }
 }

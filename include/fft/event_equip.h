@@ -266,10 +266,10 @@ void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad_current_ot(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut);
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, s32 texture_page, s32 clut, s32 unused_priority);
 
 /* input */
 extern u8 g_equip_input_activation_timer;
@@ -358,7 +358,7 @@ void equip_item_store_category_list(item_menu_category_e category, const s16* so
 void equip_item_store_type_order_list(s32 list_index, const s16* source);
 s32 equip_run_item_type_order_mode(void);
 void equip_item_sort_list_by_criteria(s32 sort_key, s16* list);
-s32 equip_item_build_filtered_list(s16 unit_index, u16 sort_mode, s8 category, s16* list, u8 equip_filter);
+s32 equip_item_build_filtered_list(s32 unit_index, s32 sort_mode, s32 category, s16* list, s32 equip_filter);
 battle_menu_status_panel_graphic_descriptor_t* equip_item_build_row_graphic_descriptor(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);
 

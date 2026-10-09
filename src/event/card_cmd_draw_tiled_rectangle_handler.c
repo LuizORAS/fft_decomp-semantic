@@ -101,9 +101,7 @@ u8* card_cmd_draw_tiled_rectangle_handler(u8* command) {
             rect.y = y;
             rect.w = partial_width;
             rect.h = 16;
-            /* The target passes the clut word without the definition's u16 narrowing. */
-            ((void (*)(const RECT*, s32, s32, const u8*, s32, u16, s32, s32))card_gfx_enqueue_textured_quad)(
-                &rect, 8, 8, 0, semitrans, tpage, loop_clut, otag);
+            card_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans, tpage, loop_clut, otag);
             column = 0;
             if (full_columns > 0) {
                 tile_y = y;
@@ -116,9 +114,7 @@ u8* card_cmd_draw_tiled_rectangle_handler(u8* command) {
                     rect.y = tile_y;
                     rect.w = 16;
                     rect.h = 16;
-                    /* The target passes the clut word without the definition's u16 narrowing. */
-                    ((void (*)(const RECT*, s32, s32, const u8*, s32, u16, s32, s32))card_gfx_enqueue_textured_quad)(
-                        &rect, 8, 8, 0, semitrans2, tpage2, loop_clut, otag2);
+                    card_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans2, tpage2, loop_clut, otag2);
                     x += 16;
                     column++;
                 } while (column < full_columns);
@@ -156,9 +152,7 @@ u8* card_cmd_draw_tiled_rectangle_handler(u8* command) {
                 tile_w = column;
                 rect.h = partial_height;
                 inner_clut = clut;
-                /* The target passes the clut word without the definition's u16 narrowing. */
-                ((void (*)(const RECT*, s32, s32, const u8*, s32, u16, s32, s32))card_gfx_enqueue_textured_quad)(
-                    &rect, 8, 8, 0, semitrans4, tpage4, inner_clut, otag4);
+                card_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans4, tpage4, inner_clut, otag4);
                 inner_clut = column;
                 x += 16;
                 column++;

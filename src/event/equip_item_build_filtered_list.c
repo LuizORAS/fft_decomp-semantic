@@ -8,7 +8,15 @@
  * key below 5 uses the category order list; anything else falls back to
  * equip_item_sort_list_by_criteria. Returns the number of listed items.
  */
-s32 equip_item_build_filtered_list(s16 unit_index, u16 sort_mode, s8 category, s16* list, u8 equip_filter) {
+/* clang-format off */
+s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_filter)
+    s16 unit_index;
+    u16 sort_mode;
+    s8 category;
+    s16* list;
+    u8 equip_filter;
+/* clang-format on */
+{
     s32 count;
     s32 item_id;
     s32 entry;

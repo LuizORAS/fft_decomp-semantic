@@ -46,9 +46,7 @@ void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_
             /* Emits nothing; without it the callee-saved registers shift up
              * by one (s1..s4 become s2..s5). */
             __asm__("" : "=r"(i) : "0"(i));
-            /* This caller passes signed coordinates and full-width arguments. */
-            ((void (*)(battle_gfx_sprite_display_data_t*, s32, s32, s32, s32, s32, s32, s32,
-                s32))battle_gfx_store_sprite_display_data)(
+            battle_gfx_store_sprite_display_data(
                 display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), off);
             i++;
         } while (i < count);

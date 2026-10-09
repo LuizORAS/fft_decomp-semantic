@@ -4630,8 +4630,8 @@ s32 battle_gfx_calculate_screen_z_with_caller_data(
 void battle_gfx_init_render_buffers(void);
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
 
-void battle_gfx_append_unit_graphics_load_descriptor(u8 map_x, u8 map_y, u8 map_level, u16 map_height, s32 portrait_id,
-    u16 palette_id, u16 misc_id, struct battle_stats* g_battle_unit_stats, u32 flags);
+void battle_gfx_append_unit_graphics_load_descriptor(s32 map_x, s32 map_y, s32 map_level, s32 map_height,
+    s32 portrait_id, s32 palette_id, s32 misc_id, battle_stats_t* unit, u32 flags);
 
 s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_data* unit);
 
@@ -4644,7 +4644,7 @@ void battle_gfx_clear_tpage7_vram_allocation_grid(void);
 void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
 
 void battle_gfx_construct_polygon_data_for_units(
-    battle_gfx_sprite_display_t* display, s32 end, s32 start, s16* position, s16 angle, u16 mode, s16* scale, u32* ot);
+    battle_gfx_sprite_display_t* display, s32 end, s32 start, s16* position, s32 angle, s32 mode, s16* scale, u32* ot);
 
 void battle_gfx_decompress_attack_spritesheet(u8* source, u8* destination);
 void battle_gfx_draw_or_append_gpu_primitive(void* primitive);
@@ -4720,8 +4720,8 @@ void battle_gfx_set_primitive_brightness(u8* primitive, s32 brightness);
 void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
 s32 battle_gfx_step_load_unit_shp_seq_data(void);
 
-void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s8 x_shift, s8 y_shift,
-    u16 u, u16 v, u16 width, u16 height, u16 flags);
+void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s32 x_shift,
+    s32 y_shift, s32 u, s32 v, s32 width, s32 height, s32 flags);
 
 s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, u8* file);
 
@@ -6746,7 +6746,7 @@ s32 battle_map_update_deep_dungeon_and_animation(void);
 void battle_map_wait_for_refresh(void);
 
 void battle_map_modify_palette(
-    s32 command, s32 amount, s32 palette_index, s32 color_index, s32 all_colors, u16 red, u16 green, u16 blue);
+    s32 command, s32 amount, s32 palette_index, s32 color_index, s32 all_colors, s32 red, s32 green, s32 blue);
 
 s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);

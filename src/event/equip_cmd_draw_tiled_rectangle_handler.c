@@ -1,11 +1,6 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* The definition narrows clut to u16; this file passes it as a full word, so
- * every call below goes through this word-clut prototype to keep the target's
- * argument setup (a u16 formal truncates at the call). */
-typedef void (*equip_gfx_enqueue_textured_quad_word_clut_t)(const RECT*, s32, s32, const u8*, s32, u16, s32, s32);
-
 /* Draw a rectangle tiled with 16-pixel textured quads.
  *
  * Kind 2 takes the rectangle from the global tiled rect; otherwise command
@@ -106,8 +101,7 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
             rect.y = y;
             rect.w = partial_width;
             rect.h = 16;
-            ((equip_gfx_enqueue_textured_quad_word_clut_t)equip_gfx_enqueue_textured_quad)(
-                &rect, 8, 8, 0, semitrans, tpage, loop_clut, otag);
+            equip_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans, tpage, loop_clut, otag);
             column = 0;
             if (full_columns > 0) {
                 tile_y = y;
@@ -120,8 +114,7 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
                     rect.y = tile_y;
                     rect.w = 16;
                     rect.h = 16;
-                    ((equip_gfx_enqueue_textured_quad_word_clut_t)equip_gfx_enqueue_textured_quad)(
-                        &rect, 8, 8, 0, semitrans2, tpage2, loop_clut, otag2);
+                    equip_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans2, tpage2, loop_clut, otag2);
                     x += 16;
                     column++;
                 } while (column < full_columns);
@@ -159,8 +152,7 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
                 tile_w = column;
                 rect.h = partial_height;
                 inner_clut = clut;
-                ((equip_gfx_enqueue_textured_quad_word_clut_t)equip_gfx_enqueue_textured_quad)(
-                    &rect, 8, 8, 0, semitrans4, tpage4, inner_clut, otag4);
+                equip_gfx_enqueue_textured_quad(&rect, 8, 8, 0, semitrans4, tpage4, inner_clut, otag4);
                 inner_clut = column;
                 x += 16;
                 column++;

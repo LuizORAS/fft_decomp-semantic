@@ -33,8 +33,18 @@
  *   together with the two g_bunit_unit_selected_index tests; the unused
  *   RECTs reproduce the locals area.
  */
-s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 show_stat_panel, s16 allow_stat_cycle,
-    u16 stat_mode, u16 buttons, s16 locked) {
+/* clang-format off */
+s32 bunit_menu_update_unit_grid(allow_banner_toggle, allow_browse, show_stat_panel, allow_stat_cycle, stat_mode,
+    buttons, locked)
+    s16 allow_banner_toggle;
+    s16 allow_browse;
+    s16 show_stat_panel;
+    s16 allow_stat_cycle;
+    u16 stat_mode;
+    u16 buttons;
+    s16 locked;
+/* clang-format on */
+{
     RECT unused[3];
     RECT cell;
     RECT rect;

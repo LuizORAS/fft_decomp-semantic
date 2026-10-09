@@ -2,10 +2,13 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void card_text_render_id_rows_to_vram(glyph_data, text_ids, destination, flags) void* glyph_data;
-const u16* text_ids;
-const RECT* destination;
-s32 flags;
+/* clang-format off */
+void card_text_render_id_rows_to_vram(glyph_data, text_ids, destination, flags)
+    void* glyph_data;
+    const u16* text_ids;
+    const RECT* destination;
+    s32 flags;
+/* clang-format on */
 {
     u8 image[0x800];
     battle_menu_text_image_bounds_t bounds;

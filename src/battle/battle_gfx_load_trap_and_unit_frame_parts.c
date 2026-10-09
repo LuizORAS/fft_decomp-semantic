@@ -1,11 +1,5 @@
 #include "fft/battle.h"
 
-/* s16 view of battle_gfx_store_sprite_display_data: the target sign-extends
- * u, v, width and height, which its u16 prototype would andi 0xffff. */
-#define STORE_PART                                                                                                     \
-    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s16, s16, s16, s16, s16, s16,                                   \
-        s32))battle_gfx_store_sprite_display_data)
-
 /* Build a unit's sprite-part records for one SHP frame, including trap sheets
  * (id >= 0x9b) and Altima's split parts. */
 void battle_gfx_load_trap_and_unit_frame_parts(
@@ -58,8 +52,8 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                 tile = attr & 0x3ff;
                 part_u = (tile & 0x1f) * 8;
                 part_v = y_offset + (tile >> 5) * 8;
-                STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                    (flags & 0x61) | ((attr & 0xc000) >> 13));
+                battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u, part_v,
+                    (s16)(width * 8), (s16)(height * 8), (flags & 0x61) | ((attr & 0xc000) >> 13));
             }
         }
     } else if (frame < (u32)sprite->shp[0]) {
@@ -88,17 +82,17 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         part_v = y_offset + (tile >> 5) * 8;
                         width = g_battle_gfx_part_sizes[size].width;
                         height = g_battle_gfx_part_sizes[size].height;
-                        STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                            (u8)mask | ((attr & 0xc000) >> 13));
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u,
+                            part_v, (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
                     } else {
                         tile_index = attr & 0x3ff;
                         u = (tile_index & 0x1f) * 8;
                         row = tile_index >> 5;
                         part_flags = (u8)mask | ((attr & 0xc000) >> 13);
-                        STORE_PART(display, i, part->x_shift, (s8)part->y_shift + 0x18, u, row * 8 + 0x18, 0x30, 0x18,
-                            part_flags);
-                        STORE_PART(
-                            display, i + 1, part->x_shift, part->y_shift, u, row * 8, 0x30, 0x18, part_flags | 0x80);
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)((s8)part->y_shift + 0x18),
+                            (s16)u, (s16)(row * 8 + 0x18), 0x30, 0x18, part_flags);
+                        battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, (s16)u,
+                            (s16)(row * 8), 0x30, 0x18, part_flags | 0x80);
                         display->part_count++;
                         return;
                     }
@@ -113,8 +107,8 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                     tile = attr & 0x3ff;
                     part_u = (tile & 0x1f) * 8;
                     part_v = y_offset + (tile >> 5) * 8;
-                    STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                        (u8)mask | ((attr & 0xc000) >> 13));
+                    battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u, part_v,
+                        (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
                 }
             } while (++i < count);
         }

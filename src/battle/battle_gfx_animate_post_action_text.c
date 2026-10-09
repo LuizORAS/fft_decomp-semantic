@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The -31 colour deltas are passed as sign-extended words; the u16 prototype
- * would zero-extend them, so this caller uses an all-s32 view.
- * The definition itself only matches with u16 colour parameters (s16 or s32
- * ones change its code), so the two views stay. */
-#define MODIFY_PALETTE_WORDS ((void (*)(s32, s32, s32, s32, s32, s32, s32, s32))battle_map_modify_palette)
-
 /* Per-frame zoom curves for the three numeric display digits, indexed by
  * display progress (0x80067bac..0x80067cb3, six 0x2c-byte records). */
 typedef struct battle_gfx_numeric_scale_table {
@@ -92,7 +86,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
         }
         unit->numeric_displays[0]->spritesheet_id = unit->numeric_displays[1]->spritesheet_id
             = unit->numeric_displays[2]->spritesheet_id = 0x3f;
-        MODIFY_PALETTE_WORDS(4, 2, 7, unit->unit_id, 0, -31, -31, -31);
+        battle_map_modify_palette(4, 2, 7, unit->unit_id, 0, -31, -31, -31);
         battle_gfx_set_sprite_part_flag_bit_0(display_0, 0, 1);
         battle_gfx_set_sprite_part_flag_bit_0(display_1, 0, 1);
         battle_gfx_set_sprite_part_flag_bit_0(display_2, 0, 1);

@@ -172,7 +172,7 @@ extern s16 g_jobstts_gfx_sprite_16_count;
 void jobstts_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 
 void jobstts_gfx_enqueue_textured_quad(
-    urect16_t* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
+    urect16_t* rect, s32 u, s32 v, u8* color, s32 semitrans, s32 tpage, s32 clut, s32 ot_index);
 
 s32 jobstts_gfx_get_transition_frame(void);
 

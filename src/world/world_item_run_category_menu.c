@@ -25,9 +25,9 @@ s32 world_item_run_category_menu(void) {
         world_script_set_vsync_mode_and_event_speed(2);
         category = g_world_item_menu_category;
         g_world_item_category_previewed_cursor = -1;
-        /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-            category + 1, g_world_item_category_view != 4 ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+        world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
+            g_world_item_category_view != 4 ? (s8)(category + 1) : 7, (world_item_list_entry_t*)g_world_menu_entry_ids,
+            0);
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;
@@ -63,9 +63,9 @@ s32 world_item_run_category_menu(void) {
         g_world_item_category_view = selected;
         __asm__ volatile("" : : "r"(four) : "memory");
         category = g_world_item_menu_category;
-        /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-            category + 1, g_world_item_category_view != four ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+        world_item_build_category_list(g_world_formation_selected_unit_index, category + 1,
+            g_world_item_category_view != four ? (s8)(category + 1) : 7,
+            (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         g_world_item_category_previewed_cursor = -1;
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);

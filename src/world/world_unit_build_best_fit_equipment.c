@@ -61,7 +61,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     for (slot = 0; slot < 5; slot++) {
         category = g_world_best_fit_slot_categories[slot];
         count = world_item_build_category_list(
-            unit_index, 7, g_world_best_fit_slot_categories[slot], (world_item_list_entry_t*)list, 3);
+            unit_index, 7, (s8)g_world_best_fit_slot_categories[slot], (world_item_list_entry_t*)list, 3);
         length = count;
         if (category == 5) {
             if (held_weapon < ITEM_ID_THROWABLE_FIRST)

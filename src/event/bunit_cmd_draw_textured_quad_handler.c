@@ -25,11 +25,7 @@ u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
         table = 0;
     }
 
-    /* The local params is an s16[4] and the two page/clut arguments are passed
-     * as full words here; calling through this file's original prototype keeps
-     * the target's argument setup, which the definition's narrow u16 formals
-     * would truncate at the call. */
-    ((void (*)(s16*, s32, s32, u8*, s32, s32, s32, s32))bunit_gfx_enqueue_textured_quad)(params, cmd[7], cmd[8], table,
-        g_bunit_gfx_semitrans_enabled, g_bunit_gfx_texture_page, g_bunit_gfx_clut_id, g_bunit_gfx_otag_index);
+    bunit_gfx_enqueue_textured_quad((const RECT*)params, cmd[7], cmd[8], table, g_bunit_gfx_semitrans_enabled,
+        g_bunit_gfx_texture_page, g_bunit_gfx_clut_id, g_bunit_gfx_otag_index);
     return cmd + cmd[1];
 }

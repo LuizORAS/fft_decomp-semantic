@@ -2960,7 +2960,7 @@ void world_menu_draw_active_window_frames(void);
 void world_menu_draw_numeric_display_entries(
     s32 buffer, world_menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
-void world_menu_draw_pressable_button(s16 index, s32 x, s32 y, s16 pressed, u16 disabled, u16 sound_effect_id);
+void world_menu_draw_pressable_button(s32 index, s32 x, s32 y, s32 pressed, s32 disabled, s32 sound_effect_id);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 s32 world_menu_get_display_value_1(s32 unused_row);
 s32 world_menu_get_display_value_2(s32 unused_row);
@@ -3422,7 +3422,8 @@ extern u8 g_world_item_menu_category;
 extern u8 g_world_item_category_view;
 void world_build_item_icon_sprite(SPRT* sprite, s32 item_id);
 s32 world_count_item_equipped_by_party(s32 item_id);
-s32 world_item_build_category_list(s16 unit_id, u16 sort_mode, s8 category, world_item_list_entry_t* entries, u8 mode);
+s32 world_item_build_category_list(
+    s32 unit_id, s32 sort_mode, s32 category, world_item_list_entry_t* entries, s32 mode);
 void world_item_build_icon_source(world_item_icon_source_t* source, s32 item_id);
 void world_item_build_status_list_polygons(s16 item_id);
 world_item_icon_source_t* world_item_build_type_icon_source(s32 entry_index);

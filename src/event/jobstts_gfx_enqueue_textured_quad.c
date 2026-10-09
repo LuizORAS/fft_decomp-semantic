@@ -1,7 +1,17 @@
 #include "fft/event_jobstts.h"
 
-void jobstts_gfx_enqueue_textured_quad(
-    urect16_t* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
+/* clang-format off */
+void jobstts_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, tpage, clut, ot_index)
+    urect16_t* rect;
+    s32 u;
+    s32 v;
+    u8* color;
+    s32 semitrans;
+    u16 tpage;
+    u16 clut;
+    s32 ot_index;
+/* clang-format on */
+{
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];

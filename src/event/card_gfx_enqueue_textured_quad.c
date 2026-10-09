@@ -2,8 +2,18 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void card_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index) {
+/* clang-format off */
+void card_gfx_enqueue_textured_quad(rect, u, v, color, semitrans, texture_page, clut, otag_index)
+    const RECT* rect;
+    s32 u;
+    s32 v;
+    const u8* color;
+    s32 semitrans;
+    u16 texture_page;
+    u16 clut;
+    s32 otag_index;
+/* clang-format on */
+{
     POLY_FT4* poly;
     u16 index = g_card_gfx_poly_ft4_count;
 

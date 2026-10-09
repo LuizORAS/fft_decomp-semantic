@@ -1,15 +1,9 @@
 #include "fft/event_jobstts.h"
 
-/* The target passes tpage and clut at full ABI width; the callee truncates
- * them, so each call goes through a widened function-pointer type. */
-#define jobstts_gfx_enqueue_textured_quad_wide                                                                         \
-    ((void (*)(urect16_t*, s32, s32, u8*, s32, s32, s32, s32))jobstts_gfx_enqueue_textured_quad)
-
 /* Fill a background rectangle with 16-pixel textured tiles.
  *
  * Command bytes 5 and 6 encode the full-tile counts in their high nibbles and
- * the remaining width and height in their low nibbles. The target passes tpage
- * and clut at full ABI width; the callee truncates them.
+ * the remaining width and height in their low nibbles.
  */
 u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
     urect16_t rect;
@@ -53,7 +47,7 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
             rect.y = tile_y;
             rect.w = partial_width;
             rect.h = 16;
-            jobstts_gfx_enqueue_textured_quad_wide(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
+            jobstts_gfx_enqueue_textured_quad(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
                 g_jobstts_gfx_background_texture_page, row_clut_id, otag_index);
             column = 0;
             if (full_columns != 0) {
@@ -63,7 +57,7 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
                     rect.y = current_row_y;
                     rect.w = 16;
                     rect.h = 16;
-                    jobstts_gfx_enqueue_textured_quad_wide(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
+                    jobstts_gfx_enqueue_textured_quad(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
                         g_jobstts_gfx_background_texture_page, row_clut_id, otag_index);
                     column++;
                 } while (column < full_columns);
@@ -78,14 +72,14 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
         rect.y = origin_y + (row * 16);
         rect.w = partial_width;
         rect.h = partial_height;
-        jobstts_gfx_enqueue_textured_quad_wide(
+        jobstts_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut_id, otag_index);
         for (column = 0; column < full_columns; column++) {
             rect.x = origin_x + partial_width + (column * 16);
             rect.y = origin_y + (row * 16);
             rect.w = 16;
             rect.h = partial_height;
-            jobstts_gfx_enqueue_textured_quad_wide(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
+            jobstts_gfx_enqueue_textured_quad(&rect, 8, 8, 0, g_jobstts_gfx_semitransparency,
                 g_jobstts_gfx_background_texture_page, clut_id, otag_index);
         }
     }

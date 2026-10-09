@@ -114,9 +114,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             row = g_world_formation_current_menu == 0;
         }
         row |= g_world_thread_task_active != 0 || g_world_grid_menu_id != 0;
-        /* Called through an unprototyped view: the target passes pressed and disabled without narrowing them. */
-        ((void (*)())world_menu_draw_pressable_button)(4, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, 6);
-        ((void (*)())world_menu_draw_pressable_button)(5, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, 6);
+        world_menu_draw_pressable_button(4, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, 6);
+        world_menu_draw_pressable_button(5, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, 6);
         world_menu_run_script_with_palette_mode(window, 0, 0);
         world_gfx_add_sprite_cell_quads(cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);
         if (g_world_formation_stat_display_mode < 3) {

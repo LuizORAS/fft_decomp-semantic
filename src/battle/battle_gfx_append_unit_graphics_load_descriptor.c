@@ -1,7 +1,19 @@
 #include "fft/battle.h"
 
-void battle_gfx_append_unit_graphics_load_descriptor(u8 map_x, u8 map_y, u8 map_level, u16 map_height, s32 portrait_id,
-    u16 palette_id, u16 misc_id, battle_stats_t* unit, u32 flags) {
+/* clang-format off */
+void battle_gfx_append_unit_graphics_load_descriptor(map_x, map_y, map_level, map_height, portrait_id, palette_id,
+    misc_id, unit, flags)
+    u8 map_x;
+    u8 map_y;
+    u8 map_level;
+    u16 map_height;
+    s32 portrait_id;
+    u16 palette_id;
+    u16 misc_id;
+    battle_stats_t* unit;
+    u32 flags;
+/* clang-format on */
+{
     volatile s32* load_count = &g_unit_graphics_load_count;
     s32 count;
 

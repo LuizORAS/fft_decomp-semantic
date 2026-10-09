@@ -65,9 +65,9 @@ s8 world_item_run_sort_order_menu(void) {
             g_world_formation_menu_text_table, g_world_formation_menu_text_buffer, text_ids, 1);
         category = g_world_item_menu_category;
         g_world_menu_text_redraw_request = 1;
-        /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-            category + 0x81, g_world_item_category_view != 4 ? (category + 1) : 7, g_world_menu_entry_ids, 0);
+        world_item_build_category_list(g_world_formation_selected_unit_index, category + 0x81,
+            g_world_item_category_view != 4 ? (s8)(category + 1) : 7, (world_item_list_entry_t*)g_world_menu_entry_ids,
+            0);
         world_item_finalize_sorted_list(g_world_item_menu_category, g_world_menu_entry_ids);
         world_menu_init_scrollable_list_core(
             g_world_menu_entry_ids, g_world_menu_cursor_position, g_world_text_item_names);
