@@ -34,6 +34,8 @@ func TestDeclarationSignatureRendering(t *testing.T) {
 		{"func_80012345();", "func_80012345", "s32 @ (...)"},
 		{"extern u32 g_main_game_options_raw __asm__(\"g_main_game_options\");", "g_main_game_options", "u32 @"},
 		{"s32 g_table[] = { 1, 2, 3 };", "g_table", "s32 @ []"},
+		{"void f(a, b, c, d) u16 a; register unsigned char b; u8* c; { u16 a2; a2 = a; }", "f", "void @ (s32, s32, u8 *, s32)"},
+		{"s16 f(unit, weight) battle_stats_t* unit; float weight; { return 0; }", "f", "s16 @ (battle_stats_t *, double)"},
 	} {
 		declarations := scanOne(t, test.source)
 		if len(declarations) != 1 {
