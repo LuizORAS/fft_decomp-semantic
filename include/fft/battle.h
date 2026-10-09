@@ -4589,8 +4589,7 @@ u32 battle_gfx_get_unit_spritesheet_height(battle_unit_misc_data_t* unit);
 void battle_gfx_init_item_get_rendering(battle_gfx_render_unit_t* unit);
 battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 unit_index);
 
-battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(
-    s32 unit_index, s32 display_section, battle_gfx_sprite_display_data_t* default_display);
+battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 unit_index, s32 display_section);
 
 void battle_gfx_init_status_bubble(battle_unit_misc_data_t* unit);
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index);
@@ -6701,8 +6700,8 @@ void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 
 s32 battle_map_calculate_location(battle_stats_t* unit);
 s32 battle_map_calculate_move_find_item_flag(s32 map_id, s32 tile_index, s32 mode);
 s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
-void battle_map_init_ambient_light(s32 unused_0, s32 unused_1, s32 map_id);
-void battle_map_init_background_gradient(s32 unused_0, s32 unused_1, s32 map_id);
+void battle_map_init_ambient_light(void);
+void battle_map_init_background_gradient(void);
 void battle_map_start_darkness_blend(s32 first, s32 second, s16 third, s16 fourth, s16 fifth);
 s32 battle_map_check_deep_dungeon_crystal_and_init_state(void);
 void battle_map_color_field(s32 first, s32 second, s16 red, s16 green, s16 blue);
@@ -6766,7 +6765,7 @@ void battle_map_transition_background_gradient(s32 frame_duration, const map_bac
 void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t* color);
 
 /* Map data, palette and mesh interfaces implemented in the battle overlay. */
-void battle_map_init_darkness(s32 unused_0, s32 unused_1, s32 map_id);
+void battle_map_init_darkness(void);
 s32 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void battle_map_load_palette_data(const u16* palette, s32 mesh_index, s32 palette_row_index, s32 load_all_rows);
 s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 suppress_loading_display);

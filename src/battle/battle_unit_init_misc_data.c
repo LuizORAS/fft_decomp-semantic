@@ -123,12 +123,9 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->numeric_display_active = 0;
     unit->numeric_display_selector = 0;
     unit->numeric_display_progress = 0;
-    unit->numeric_displays[0]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 0);
-    unit->numeric_displays[1]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 1);
-    unit->numeric_displays[2]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 2);
+    unit->numeric_displays[0] = battle_gfx_init_numeric_sprite_display(unit_id, 0);
+    unit->numeric_displays[1] = battle_gfx_init_numeric_sprite_display(unit_id, 1);
+    unit->numeric_displays[2] = battle_gfx_init_numeric_sprite_display(unit_id, 2);
     unit->numeric_displays[0]->scale_x = unit->numeric_displays[0]->scale_y = unit->numeric_displays[1]->scale_x
         = unit->numeric_displays[1]->scale_y = unit->numeric_displays[2]->scale_x = unit->numeric_displays[2]->scale_y
         = ONE;

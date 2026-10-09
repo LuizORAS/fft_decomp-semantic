@@ -1,11 +1,9 @@
 #include "fft/battle.h"
 
-battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(
-    s32 unit_index, s32 display_section, battle_gfx_sprite_display_data_t* default_display) {
+battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 unit_index, s32 display_section) {
     battle_gfx_sprite_display_data_t* display;
     s32 i;
 
-    display = default_display;
     switch (display_section) {
     case 0:
         display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_0[unit_index * 0x440];
