@@ -8,7 +8,7 @@ s32 world_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     s32 facing;
     s32 battle_id;
 
-    if (misc_id == 0xF) {
+    if (misc_id == EVENT_CALL_FUNCTION_WARP_UNIT_4_DISPLAY_TO_UNIT_2_POSITION_AND_FACING) {
         stats = battle_unit_get_stats_from_battle_id(1);
         battle_id = 3;
     } else {

@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_face_unit. FaceUnit and FaceUnit2 event instructions:
+/* Battle twin of world_script_face_unit. FACE_UNIT and FACE_EACH_OTHER event instructions:
  * turn two units toward each other.
  *
  * Parameters: first unit id halfword, second unit id halfword, rotate mode, speed index

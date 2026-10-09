@@ -3,7 +3,8 @@
 
 /* Start event opcode 0x28 movement for one unit.
  *
- * WORLD dispatches this directly; BATTLE uses the main-stack callback bridge. */
+ * Only the block thread calls this, through the main-stack callback bridge:
+ * world_script_execute_event recognizes the opcode and does nothing. */
 void world_script_walkto_event_instruction(const event_walk_to_parameters_t* parameters) {
     s16 coords[3];
     s32 misc_id;

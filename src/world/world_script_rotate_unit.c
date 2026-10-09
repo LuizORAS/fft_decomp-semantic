@@ -29,13 +29,13 @@ void world_script_rotate_unit(const u8* parameters) {
             if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&g_world_unit_face_slot_order[i], &misc_index)
                 != 0) {
                 facing = parameters[2];
-                if ((u32)(facing - 0x11) < 3) {
+                if ((u32)(facing - EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST) < 3) {
                     facing = facing & 0xF;
                     facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
                     facing = facing & 0xF;
-                } else if (facing == 0x10) {
+                } else if (facing == EVENT_ROTATE_UNIT_FACING_CAMERA) {
                     facing = g_world_rotation_speed_frames[4 + ((world_camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;
-                } else if (facing == 0x14) {
+                } else if (facing == EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     state = &g_world_unit_animation_states[unit_id];
                     if (state->initial_facing != 0xFF) {
                         state->rotate_mode = 0;

@@ -105,7 +105,7 @@ restart_event:
         opcode = instruction[0];
         first_halfword = world_script_load_halfword(parameters);
         /* ---- Control: NOPs, conditions, and script variable arithmetic ---- */
-        if (opcode == EVENT_OPCODE_UNKNOWN_C0) {
+        if (opcode == EVENT_OPCODE_CAMERA_DISABLED) {
         } else if (opcode == EVENT_OPCODE_NOP) {
         } else if ((opcode - EVENT_CONDITION_SECOND_GTE_FIRST) < 6U) {
             world_script_run_condition(opcode);
@@ -534,7 +534,7 @@ restart_event:
             } while (main_file_is_still_loading() != 0);
         } else if (opcode == EVENT_OPCODE_ROTATE_UNIT) {
             world_script_rotate_unit(parameters);
-        } else if (opcode == EVENT_OPCODE_FACE_UNIT_2) {
+        } else if (opcode == EVENT_OPCODE_FACE_EACH_OTHER) {
             world_script_face_unit(parameters, 0);
         } else if (opcode == EVENT_OPCODE_FACE_UNIT) {
             world_script_face_unit(parameters, 1);
@@ -642,7 +642,7 @@ restart_event:
             }
         } else if (opcode == EVENT_OPCODE_DISPLAY_CONDITIONS) {
             operand_3 = world_thread_resolve_id(0x10U);
-            if ((operand_3 == 4) && (operand_1 == 7)) {
+            if ((operand_3 == 4) && (operand_1 == EVENT_DISPLAY_CONDITION_APPLY_POST_BATTLE_UNIT_CHANGES)) {
                 world_thread_wait_until_inactive(2);
                 operand_3 = 2;
             }

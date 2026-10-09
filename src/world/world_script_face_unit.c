@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* FaceUnit and FaceUnit2 event instructions: turn two units toward each other.
+/* FACE_UNIT and FACE_EACH_OTHER event instructions: turn two units toward each other.
  *
  * Parameters: first unit id halfword, second unit id halfword, rotate mode, speed index
  * into g_world_rotation_speed_frames, and a delay multiplier. Every misc record of the second unit turns

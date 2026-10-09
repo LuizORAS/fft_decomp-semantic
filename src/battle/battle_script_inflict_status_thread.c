@@ -38,20 +38,20 @@ void battle_script_inflict_status_thread(void) {
             state = 1;
         }
     }
-    if (mode == 2) {
+    if (mode == EVENT_INFLICT_STATUS_POISON) {
         battle_status_inflict_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_POISON), 1, 1);
         g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = 3;
         g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
         battle_thread_call_on_main_stack(misc_id);
         battle_unit_set_animation(misc_id, 0x16);
-    } else if (mode == 1) {
+    } else if (mode == EVENT_INFLICT_STATUS_CRYSTAL) {
         battle_status_inflict_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_DEAD), 0, 1);
         battle_status_inflict_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_CRITICAL), 0, 1);
         battle_status_inflict_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_CRYSTAL), 1, 1);
         g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = 2;
         g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
         battle_thread_call_on_main_stack(misc_id);
-    } else if (mode == 0) {
+    } else if (mode == EVENT_INFLICT_STATUS_REVIVE) {
         if (state == 0) {
             g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = 1;
             battle_status_inflict_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_DEAD), 0, 1);

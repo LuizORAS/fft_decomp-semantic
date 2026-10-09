@@ -32,14 +32,14 @@ void battle_script_execute_event(void) {
     s16 shadow_misc_id;
     s16 evtchr_palette_misc_id;
     s16 thrown_item_misc_id;
-    s16 arrow_source_misc_id;
     s16 arrow_target_misc_id;
+    s16 arrow_shooter_misc_id;
     s32 ghost_misc_id;
     s32 region_misc_id;
     s32 draw_misc_id;
     s32 date_month;
     battle_stats_t* added_unit;
-    s32 arrow_target_battle_id;
+    s32 arrow_shooter_battle_id;
     s32 confirm_buttons;
     s32 instruction_offset;
     s32 added_battle_id;
@@ -112,7 +112,7 @@ restart_script:
         opcode = instruction[0];
         first_halfword = battle_script_load_halfword(parameters);
         /* ---- Control: NOPs, conditions, and script variable arithmetic ---- */
-        if (opcode == EVENT_OPCODE_UNKNOWN_C0) {
+        if (opcode == EVENT_OPCODE_CAMERA_DISABLED) {
         } else if (opcode == EVENT_OPCODE_NOP) {
         } else if ((opcode - EVENT_CONDITION_SECOND_GTE_FIRST) < 6U) {
             battle_script_run_condition(opcode);
@@ -543,7 +543,7 @@ restart_script:
             } while (main_file_is_still_loading() != 0);
         } else if (opcode == EVENT_OPCODE_ROTATE_UNIT) {
             battle_script_rotate_unit(parameters);
-        } else if (opcode == EVENT_OPCODE_FACE_UNIT_2) {
+        } else if (opcode == EVENT_OPCODE_FACE_EACH_OTHER) {
             battle_script_face_unit(parameters, 0);
         } else if (opcode == EVENT_OPCODE_FACE_UNIT) {
             battle_script_face_unit(parameters, 1);
@@ -649,7 +649,7 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_DISPLAY_CONDITIONS) {
             operand_3 = battle_thread_resolve_id(0x10U);
-            if ((operand_3 == 4) && (operand_1 == 7)) {
+            if ((operand_3 == 4) && (operand_1 == EVENT_DISPLAY_CONDITION_APPLY_POST_BATTLE_UNIT_CHANGES)) {
                 battle_thread_wait_until_inactive(2);
                 operand_3 = 2;
             }
@@ -888,15 +888,15 @@ restart_script:
                 battle_gfx_set_thrown_item_palette_by_misc_id(operand_3, thrown_item_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ARROW) {
-            arrow_source_misc_id = battle_script_get_misc_id(first_halfword);
-            if (arrow_source_misc_id != EVENT_MISC_ID_NONE) {
-                operand_1 = battle_unit_get_battle_index_by_misc_id(arrow_source_misc_id);
-                arrow_target_misc_id = battle_script_get_misc_id(
+            arrow_target_misc_id = battle_script_get_misc_id(first_halfword);
+            if (arrow_target_misc_id != EVENT_MISC_ID_NONE) {
+                operand_1 = battle_unit_get_battle_index_by_misc_id(arrow_target_misc_id);
+                arrow_shooter_misc_id = battle_script_get_misc_id(
                     battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3));
-                if (arrow_target_misc_id != EVENT_MISC_ID_NONE) {
-                    arrow_target_battle_id = battle_unit_get_battle_index_by_misc_id(arrow_target_misc_id);
+                if (arrow_shooter_misc_id != EVENT_MISC_ID_NONE) {
+                    arrow_shooter_battle_id = battle_unit_get_battle_index_by_misc_id(arrow_shooter_misc_id);
                     g_battle_thread_call_target = (void (*)(void))battle_effect_set_arrow_trajectory;
-                    battle_thread_call_on_main_stack(arrow_target_battle_id, g_battle_scratch_coords, operand_1);
+                    battle_thread_call_on_main_stack(arrow_shooter_battle_id, g_battle_scratch_coords, operand_1);
                 }
             }
         } else if (opcode == EVENT_OPCODE_MAP_FREEZE) {

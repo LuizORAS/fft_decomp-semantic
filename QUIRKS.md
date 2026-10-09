@@ -164,6 +164,26 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `battle_status_modify_inflictions` masks five status bytes with the 4-byte
   table at 0x8018f60c; the fifth mask is the low byte of
   `g_battle_formula_handlers[0]`.
+- Event script, both interpreters:
+  - Ten instruction values (0x14, 0x20, 0x34-0x36, 0x52, 0x67, 0xe1, 0xe2,
+    0xe4) have operand lengths in the size table and no handler; the
+    scanners step over them and the interpreter ends the script on them. No
+    retail script uses them.
+  - AddGhostUnit with no free misc slot `continue`s without advancing or
+    yielding, so the script thread spins.
+  - BlockStart, AddUnitStart or CameraFusionStart with no matching End gets
+    offset 0 from the finder and the script resumes at byte 1.
+  - FocusSpeed and RelativeCamera patch the next instruction's operands
+    without checking that it is Camera; Focus scans for the next Camera with
+    no End check.
+  - UnitAnimRotate tests the animation id's high byte as its flag, never
+    reads its last operand byte, and has no absent-unit check, so misc id
+    2000 indexes the rotation table.
+  - WaitUnitReady waits on `battle_return_one`, so it never waits.
+  - Effect stores its x and y operands to two globals nothing reads.
+  - In WORLD, WalkTo is an empty arm outside a block, Arrow resolves both
+    units and never sets the trajectory, and ChangeMap calls an empty
+    function where BATTLE resets the camera script transform.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.
