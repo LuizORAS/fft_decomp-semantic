@@ -30,7 +30,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
     s32 can_react;
     u16 ability;
     u16 last_attack;
-    s32 reaction_id;
+    s16 reaction_id;
 
     if (g_battle_acting_unit_id == -1) {
         return -1;
@@ -58,7 +58,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                     *(u16*)(action + 2) = reaction_id;
                     last_attack = unit->action.last_received_attack;
                     unit->action.reaction_id = 0;
-                    switch ((s16)reaction_id) {
+                    switch (reaction_id) {
                     case ABILITY_ID_REACTION_REFLECT:
                         outcome = -(battle_target_apply_reflect(unit) == 0) & 3;
                         break;

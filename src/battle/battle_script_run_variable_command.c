@@ -15,7 +15,7 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
     s32 operand;
     u32 preserve_mask;
     u32 replay_mode;
-    u32 value;
+    s32 value;
 
     if (opcode != EVENT_OPCODE_ZERO_VARIABLE) {
         if (!(opcode & 1)) {
@@ -62,9 +62,9 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
         if (operand == 0) {
             battle_thread_exit_current();
         }
-        value = (s32)value / operand;
+        value = value / operand;
     } else if (opcode < EVENT_OPCODE_AND_IMMEDIATE) {
-        value = (s32)value % operand;
+        value = value % operand;
     } else if (opcode < EVENT_OPCODE_OR_IMMEDIATE) {
         value &= operand;
     } else if (opcode < EVENT_OPCODE_ZERO_VARIABLE) {
