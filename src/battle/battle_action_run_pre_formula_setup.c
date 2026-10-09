@@ -63,7 +63,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_current_ability_view.ability_id = action.ability_id;
     ability_id = action.ability_id;
     g_battle_action_current_ability.two_hands_active = 0;
-    if (g_battle_action_current_ability_view.ability_id >= ABILITY_ID_ITEM_FIRST + 1) {
+    if (g_battle_action_current_ability_view.ability_id > ABILITY_ID_ITEM_FIRST) {
         ability_id = 0;
     }
     weapon = &g_main_item_weapon_data[id];
@@ -103,7 +103,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_MONSTER:
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
-        if ((s16)action.ability_id < ABILITY_ID_ITEM_FIRST + 1) {
+        if ((s16)action.ability_id <= ABILITY_ID_ITEM_FIRST) {
             if ((g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
                 && g_battle_action_current_ability_view.weapon_proc_pending == 0) {

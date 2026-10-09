@@ -41,8 +41,7 @@ void card_save_run_menu(s32 unused) {
                 && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
             ? g_card_input_primary_repeat
             : 0;
-        if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE
-            && g_card_save_menu_state < CARD_SAVE_MENU_WRITING + 1) {
+        if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE && g_card_save_menu_state <= CARD_SAVE_MENU_WRITING) {
             card_save_update_and_draw_slot_list(menu_input);
         }
 

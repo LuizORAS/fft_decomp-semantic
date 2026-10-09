@@ -20,7 +20,7 @@ u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
             keep = filters & SKILLSET_ABILITY_FILTER_ACTION;
         } else if ((u32)(ability_id & 0xFFFF) < ABILITY_ID_SUPPORT_FIRST) {
             keep = filters & SKILLSET_ABILITY_FILTER_REACTION;
-        } else if ((u32)(ability_id & 0xFFFF) < ABILITY_ID_MOVEMENT_FIRST + 1) {
+        } else if ((u32)(ability_id & 0xFFFF) <= ABILITY_ID_MOVEMENT_FIRST) {
             /* One past ABILITY_ID_MOVEMENT_FIRST in the original. */
             keep = filters & SKILLSET_ABILITY_FILTER_SUPPORT;
         } else {

@@ -63,7 +63,7 @@ s32 battle_target_set_jump_ability_panels(const u8* source) {
         action[0], action[1], (s16*)abilities, mp_costs, ability_ct, 0, usable, turns);
     for (i = 0; i < count; i++) {
         ability_id = abilities[i];
-        if (ability_id >= ABILITY_ID_JUMP_FIRST && ability_id <= ABILITY_ID_CHARGE_FIRST - 1) {
+        if (ability_id >= ABILITY_ID_JUMP_FIRST && ability_id < ABILITY_ID_CHARGE_FIRST) {
             jump_index = ability_id - ABILITY_ID_JUMP_FIRST;
             jump = &g_main_jump_ability_data[(u16)jump_index];
             jump_vertical = jump->vertical * 2;

@@ -5,7 +5,7 @@ s32 wldcore_map_job_id_to_category_index(s32 job_id) {
     if (job_id < JOB_ID_SQUIRE) {
         return 22;
     }
-    if (job_id < JOB_ID_MIME + 1) {
+    if (job_id <= JOB_ID_MIME) {
         return job_id - JOB_ID_SQUIRE;
     }
     return 21;

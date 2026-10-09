@@ -103,7 +103,7 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     }
 
     editor[7] = 0;
-    if (unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset <= SKILLSET_ID_END - 1)
+    if (unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset < SKILLSET_ID_END)
         editor[7] = 1;
 
     if (editor[7] != 0) {

@@ -5,14 +5,13 @@
  * flags select the alternate handler, -1 for an ability with no effect entry,
  * and 1 once the action has been finalised.
  *
- * Case 0x18 chains the damage store so the value reaches `healing` through
+ * The Damage Split case chains the damage store so the value reaches `healing` through
  * the target record; storing it there first is what orders the three global
  * pointer loads the way the target emits them. */
 s32 battle_action_perform_reaction_ability(void) {
     s16 ability_id;
     u8 attack_type;
     s32 healing;
-    s32 selector;
     s32 count;
 
     attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
@@ -26,74 +25,73 @@ s32 battle_action_perform_reaction_ability(void) {
         return 0;
     }
     battle_action_clear_data();
-    selector = (u16)g_battle_current_reaction_ability_id;
-    switch ((s16)(selector - ABILITY_ID_REACTION_FIRST)) {
-    case ABILITY_ID_REACTION_PA_SAVE - ABILITY_ID_REACTION_FIRST:
+    switch (g_battle_current_reaction_ability_id) {
+    case ABILITY_ID_REACTION_PA_SAVE:
         g_battle_action_target_data->pa_change = 0x81;
         break;
-    case ABILITY_ID_REACTION_MA_SAVE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_MA_SAVE:
         g_battle_action_target_data->ma_change = 0x81;
         break;
-    case ABILITY_ID_REACTION_SPEED_SAVE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_SPEED_SAVE:
         g_battle_action_target_data->sp_change = 0x81;
         break;
-    case ABILITY_ID_REACTION_SUNKEN_STATE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_SUNKEN_STATE:
         g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
-    case ABILITY_ID_REACTION_CAUTION - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_CAUTION:
         g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
-    case ABILITY_ID_REACTION_DRAGON_SPIRIT - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_DRAGON_SPIRIT:
         g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
-    case ABILITY_ID_REACTION_REGENERATOR - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_REGENERATOR:
         g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REGEN)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REGEN);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
-    case ABILITY_ID_REACTION_BRAVE_UP - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_BRAVE_UP:
         g_battle_action_target_data->brave_change = 0x83;
         break;
-    case ABILITY_ID_REACTION_FAITH_UP - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_FAITH_UP:
         g_battle_action_target_data->faith_change = 0x83;
         break;
-    case ABILITY_ID_REACTION_HP_RESTORE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_HP_RESTORE:
         attack_type = BATTLE_ACTION_TYPE_HP_HEALING;
         g_battle_action_target_data->hp_healing = g_battle_action_target->max_hp - g_battle_action_target->hp;
         break;
-    case ABILITY_ID_REACTION_MP_RESTORE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_MP_RESTORE:
         attack_type = BATTLE_ACTION_TYPE_MP_HEALING;
         g_battle_action_target_data->mp_healing = g_battle_action_target->max_mp - g_battle_action_target->mp;
         break;
-    case ABILITY_ID_REACTION_CRITICAL_QUICK - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_CRITICAL_QUICK:
         g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_QUICK;
         break;
-    case ABILITY_ID_REACTION_MEATBONE_SLASH - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_MEATBONE_SLASH:
         attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
         g_battle_action_target_data->hp_damage = g_battle_action_attacker->max_hp;
         break;
-    case ABILITY_ID_REACTION_ABSORB_USED_MP - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_ABSORB_USED_MP:
         attack_type = BATTLE_ACTION_TYPE_MP_HEALING;
         g_battle_action_target_data->mp_healing = g_battle_action_target_data->last_received_attack;
         break;
-    case ABILITY_ID_REACTION_GILGAME_HEART - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_GILGAME_HEART:
         g_battle_action_target_data->gil_change = g_battle_action_target_data->last_received_attack;
         break;
-    case ABILITY_ID_REACTION_DISTRIBUTE - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_DISTRIBUTE:
         count = g_battle_distribute_target_count;
         if (count != 0) {
             healing = (g_battle_action_attacker->action.last_received_attack + count - 1) / count;
@@ -103,7 +101,7 @@ s32 battle_action_perform_reaction_ability(void) {
         attack_type = BATTLE_ACTION_TYPE_HP_HEALING;
         g_battle_action_target_data->hp_healing = healing;
         break;
-    case ABILITY_ID_REACTION_DAMAGE_SPLIT - ABILITY_ID_REACTION_FIRST:
+    case ABILITY_ID_REACTION_DAMAGE_SPLIT:
         healing = g_battle_action_target_data->hp_damage = g_battle_action_attacker->action.last_received_attack;
         attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
         g_battle_action_attacker_data->hp_healing = healing;
