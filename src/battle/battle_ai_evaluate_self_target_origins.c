@@ -22,7 +22,7 @@ s32 battle_ai_evaluate_self_target_origins(void) {
         = ai->candidate_coords[g_battle_ai_data_base.movement_scenario].word;
     battle_ai_check_unit_for_crystal_or_treasure_status();
     if ((g_battle_ai_data_base.considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
-        && !(g_main_ability_range_data[(s16)g_battle_ai_data_base.considered_ability.ability_id].flags_1
+        && !(g_main_ability_range_data[g_battle_ai_data_base.considered_ability.ability_id].flags_1
             & ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF)) {
         g_battle_ai_data_base.current_action.target_flags_set = 1;
         g_battle_ai_data_base.current_action.targeting_type = 6;

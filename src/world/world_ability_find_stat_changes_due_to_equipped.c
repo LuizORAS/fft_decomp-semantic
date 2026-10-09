@@ -9,6 +9,6 @@ void world_ability_find_stat_changes_due_to_equipped(
     world_formation_clear_stat_preview(&summary, stat_diff);
     world_ability_get_move_and_jump_increase_values(old_ability, &old_stats);
     world_ability_get_move_and_jump_increase_values(new_ability, &new_stats);
-    stat_diff->move_bonus = (u16)new_stats.move_bonus - (u16)old_stats.move_bonus;
-    stat_diff->jump_bonus = (u16)new_stats.jump_bonus - (u16)old_stats.jump_bonus;
+    stat_diff->move_bonus = new_stats.move_bonus - old_stats.move_bonus;
+    stat_diff->jump_bonus = new_stats.jump_bonus - old_stats.jump_bonus;
 }

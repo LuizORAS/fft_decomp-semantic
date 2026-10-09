@@ -12,7 +12,7 @@ void wldcore_opcode_map_check_ramza_faith_at_most(void) {
     ip = *ipp;
     val = g_wldcore_script_state.data[ip];
     *ipp = ip + 1;
-    if (val < (s32)party->faith) {
+    if (val < party->faith) {
         g_wldcore_script_state.flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
     }
 }

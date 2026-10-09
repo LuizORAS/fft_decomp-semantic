@@ -52,7 +52,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         }
         return;
     }
-    if ((u32)(mode - 3) < 2U || mode == 5) {
+    if ((mode - 3) < 2U || mode == 5) {
         wldcore_proposition_step_send_unit_browser(level);
         return;
     }

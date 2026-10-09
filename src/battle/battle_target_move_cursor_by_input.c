@@ -27,7 +27,7 @@ s32 battle_target_move_cursor_by_input(void) {
 
     options = g_main_game_options;
     do {
-        switch ((s32)options.fields.multi_height_cursor_speed) {
+        switch (options.fields.multi_height_cursor_speed) {
         case 0:
             delay = 30;
             break;

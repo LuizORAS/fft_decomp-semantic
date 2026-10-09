@@ -9,7 +9,7 @@ void equip_item_store_category_list(item_menu_category_e category, const s16* so
     count = 0;
     if (*source != -1) {
         do {
-            base[count] = (u8)*source++;
+            base[count] = *source++;
             count++;
         } while (*source != -1);
     }

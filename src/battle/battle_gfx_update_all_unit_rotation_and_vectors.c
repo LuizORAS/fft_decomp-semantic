@@ -24,14 +24,14 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         RotTrans(&screen, &transformed, &unit->status_bubble_gte_flag);
 
         if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
-            unit->item_get_camera_x = (u16)transformed.vx - unit->screen_offset.vx;
+            unit->item_get_camera_x = transformed.vx - unit->screen_offset.vx;
         } else {
-            unit->item_get_camera_x = (u16)transformed.vx + unit->screen_offset.vx;
+            unit->item_get_camera_x = transformed.vx + unit->screen_offset.vx;
         }
         if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) != 0) {
-            unit->item_get_camera_y = (u16)transformed.vy - unit->screen_offset.vy;
+            unit->item_get_camera_y = transformed.vy - unit->screen_offset.vy;
         } else {
-            unit->item_get_camera_y = (u16)transformed.vy + unit->screen_offset.vy;
+            unit->item_get_camera_y = transformed.vy + unit->screen_offset.vy;
         }
 
         tile = battle_map_get_tile_data_pointer(unit->screen.vx / 28, unit->screen.vz / 28, unit->map_z);

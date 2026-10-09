@@ -40,8 +40,8 @@ void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_ima
                 current_text_id = text_id_cursor;
                 do {
                     glyph_index++;
-                    position.x += card_text_render_glyph_to_4bpp_image(packed_terminator >> 16, image, &position,
-                        (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
+                    position.x += card_text_render_glyph_to_4bpp_image(
+                        packed_terminator >> 16, image, &position, (((s32)(((*current_text_id)) << 16)) >> 30) | style);
                 } while (glyph_index < 8);
             } else {
                 const u8* encoded = ((const u8* (*)(const void*, s32, s32))card_text_skip_encoded_segments)(
@@ -64,7 +64,7 @@ void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_ima
                                 code = (code * 0xd0) + (*(encoded++));
                             }
                             position.x += card_text_render_glyph_to_4bpp_image(
-                                code, image, &position, (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
+                                code, image, &position, (((s32)(((*current_text_id)) << 16)) >> 30) | style);
                         } else if (code == TEXT_SPACE) {
                             position.x += 4;
                         } else if (code == TEXT_SET_X_POSITION) {

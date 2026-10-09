@@ -34,64 +34,64 @@ extern require_render_condition_tpage_t g_require_condition_general_tpages[];
 
 #define QUAD(index) (quads + parameters[0])[index]
 
-#define VERTEX_COLORS(index) (&colors[(parameters[0] + (index)) * 0x14])
+#define VERTEX_COLORS(index) (&colors[(parameters[0] + index) * 0x14])
 
 /* Full, unanimated quad: the reveal offset is not yet applied. */
 #define STORE_QUAD_FULL(poly, index)                                                                                   \
-    (poly)->u0 = QUAD(index).u;                                                                                        \
-    (poly)->v0 = QUAD(index).v - 0x80;                                                                                 \
-    (poly)->u1 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v1 = QUAD(index).v - 0x80;                                                                                 \
-    (poly)->u2 = QUAD(index).u;                                                                                        \
-    (poly)->v2 = QUAD(index).v - 0x80 + QUAD(index).height;                                                            \
-    (poly)->u3 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v3 = QUAD(index).v - 0x80 + QUAD(index).height;                                                            \
-    (poly)->x0 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y0 = QUAD(index).y + 0x78;                                                                                 \
-    (poly)->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y1 = QUAD(index).y + 0x78;                                                                                 \
-    (poly)->x2 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                            \
-    (poly)->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y3 = QUAD(index).y + 0x78 + QUAD(index).height
+    poly->u0 = QUAD(index).u;                                                                                          \
+    poly->v0 = QUAD(index).v - 0x80;                                                                                   \
+    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v1 = QUAD(index).v - 0x80;                                                                                   \
+    poly->u2 = QUAD(index).u;                                                                                          \
+    poly->v2 = QUAD(index).v - 0x80 + QUAD(index).height;                                                              \
+    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v3 = QUAD(index).v - 0x80 + QUAD(index).height;                                                              \
+    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y0 = QUAD(index).y + 0x78;                                                                                   \
+    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y1 = QUAD(index).y + 0x78;                                                                                   \
+    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                              \
+    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y3 = QUAD(index).y + 0x78 + QUAD(index).height
 
 /* Reveal: the bottom edge is fixed and the top edge rises by `offset`. */
 #define STORE_QUAD_REVEAL(poly, index, offset)                                                                         \
-    (poly)->u0 = QUAD(index).u;                                                                                        \
-    (poly)->v0 = (QUAD(index).v + (QUAD(index).height - 0x80)) - (offset);                                             \
-    (poly)->u1 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v1 = (QUAD(index).v + (QUAD(index).height - 0x80)) - (offset);                                             \
-    (poly)->u2 = QUAD(index).u;                                                                                        \
-    (poly)->v2 = QUAD(index).v + (QUAD(index).height - 0x80);                                                          \
-    (poly)->u3 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v3 = QUAD(index).v + (QUAD(index).height - 0x80);                                                          \
-    (poly)->x0 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y0 = QUAD(index).y + (QUAD(index).height + 0x78) - (offset);                                               \
-    (poly)->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y1 = QUAD(index).y + (QUAD(index).height + 0x78) - (offset);                                               \
-    (poly)->x2 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                            \
-    (poly)->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y3 = QUAD(index).y + 0x78 + QUAD(index).height
+    poly->u0 = QUAD(index).u;                                                                                          \
+    poly->v0 = (QUAD(index).v + (QUAD(index).height - 0x80)) - offset;                                                 \
+    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v1 = (QUAD(index).v + (QUAD(index).height - 0x80)) - offset;                                                 \
+    poly->u2 = QUAD(index).u;                                                                                          \
+    poly->v2 = QUAD(index).v + (QUAD(index).height - 0x80);                                                            \
+    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v3 = QUAD(index).v + (QUAD(index).height - 0x80);                                                            \
+    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y0 = QUAD(index).y + (QUAD(index).height + 0x78) - offset;                                                   \
+    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y1 = QUAD(index).y + (QUAD(index).height + 0x78) - offset;                                                   \
+    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                              \
+    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y3 = QUAD(index).y + 0x78 + QUAD(index).height
 
 /* Hide: the bottom edge is fixed and the top edge sinks by `offset`. */
 #define STORE_QUAD_HIDE(poly, index, offset)                                                                           \
-    (poly)->u0 = QUAD(index).u;                                                                                        \
-    (poly)->v0 = QUAD(index).v - 0x80 + (offset);                                                                      \
-    (poly)->u1 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v1 = QUAD(index).v - 0x80 + (offset);                                                                      \
-    (poly)->u2 = QUAD(index).u;                                                                                        \
-    (poly)->v2 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - (offset));                                  \
-    (poly)->u3 = QUAD(index).u + QUAD(index).width;                                                                    \
-    (poly)->v3 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - (offset));                                  \
-    (poly)->x0 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y0 = QUAD(index).y + 0x78 + (offset);                                                                      \
-    (poly)->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y1 = QUAD(index).y + 0x78 + (offset);                                                                      \
-    (poly)->x2 = QUAD(index).x + 0x100;                                                                                \
-    (poly)->y2 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - (offset));                                  \
-    (poly)->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                            \
-    (poly)->y3 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - (offset))
+    poly->u0 = QUAD(index).u;                                                                                          \
+    poly->v0 = QUAD(index).v - 0x80 + offset;                                                                          \
+    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v1 = QUAD(index).v - 0x80 + offset;                                                                          \
+    poly->u2 = QUAD(index).u;                                                                                          \
+    poly->v2 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - offset);                                      \
+    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
+    poly->v3 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - offset);                                      \
+    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y0 = QUAD(index).y + 0x78 + offset;                                                                          \
+    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y1 = QUAD(index).y + 0x78 + offset;                                                                          \
+    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
+    poly->y2 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset);                                      \
+    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
+    poly->y3 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset)
 
 void require_render_display_condition_general_cases(s32 hold_frames) {
     require_display_condition_quad_t* quads;

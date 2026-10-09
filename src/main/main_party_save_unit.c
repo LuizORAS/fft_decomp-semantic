@@ -68,7 +68,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     main_util_copy_byte_data(unit->raw_stats, party->raw_stats, 0xf);
     main_util_copy_byte_data(unit->unlocked_jobs, party->unlocked_jobs, 0xa6);
     /* name_id is stored as two byte writes (lbu / lhu+srl), not one sh. */
-    party->name_id[0] = (u8)unit->quote_name_id;
+    party->name_id[0] = unit->quote_name_id;
     party->name_id[1] = unit->quote_name_id >> 8;
     party->proposition_status = 0;
     party->egg_color = 0;

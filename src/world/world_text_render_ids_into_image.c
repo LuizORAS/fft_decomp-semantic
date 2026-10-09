@@ -36,8 +36,7 @@ void world_text_render_ids_into_image(
             i = 0;
             colors2 = &ids[k];
             for (; i < 8; i++) {
-                target.x
-                    += world_text_decode_font_glyph_to_4bpp(glyph, image, &target, ((s16)*colors2 >> 14) | palette);
+                target.x += world_text_decode_font_glyph_to_4bpp(glyph, image, &target, (*colors2 >> 14) | palette);
             }
         } else {
             text = world_text_find_entry_by_index(font, ids[k] & 0xFFF, 2);
@@ -55,8 +54,8 @@ void world_text_render_ids_into_image(
                             code &= 0xF;
                             code = code * 0xD0 + *text++;
                         }
-                        target.x += world_text_decode_font_glyph_to_4bpp(
-                            code, image, &target, ((s16)*colors >> 14) | palette);
+                        target.x
+                            += world_text_decode_font_glyph_to_4bpp(code, image, &target, (*colors >> 14) | palette);
                     } else if (code == TEXT_SPACE) {
                         target.x += 4;
                     } else if (code == TEXT_SET_X_POSITION) {

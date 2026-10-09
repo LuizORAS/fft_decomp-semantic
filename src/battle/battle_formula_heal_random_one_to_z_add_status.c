@@ -11,7 +11,7 @@ void battle_formula_heal_random_one_to_z_add_status(void) {
         g_battle_action_target_data->hp_damage = unit->hp;
     } else {
         g_battle_action_target_data->hp_damage
-            = (s32)(battle_formula_get_random_0_7fff() * g_main_item_secondary_data[g_current_ability.used_item_id].z)
+            = (battle_formula_get_random_0_7fff() * g_main_item_secondary_data[g_current_ability.used_item_id].z)
                 / 32768
             + 1;
     }

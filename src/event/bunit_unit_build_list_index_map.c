@@ -17,7 +17,7 @@ void bunit_unit_build_list_index_map(void) {
             reorderable_index++;
         } else {
             g_bunit_unit_list_index_map[unit_index] = bunit_unit_find_index_by_roster_id(
-                (s16)(unit->formation_order_key - BUNIT_FORMATION_ORDER_KEY_ENCODED_ROSTER_ID));
+                (unit->formation_order_key - BUNIT_FORMATION_ORDER_KEY_ENCODED_ROSTER_ID));
         }
     }
 }

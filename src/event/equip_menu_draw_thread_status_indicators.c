@@ -122,21 +122,21 @@ draw_panels:
                     g_equip_menu_indicator_state[i] = 0;
                 }
             }
-            prims->frame.r0 = (u8)g_equip_menu_indicator_brightness[i];
-            prims->frame.g0 = (u8)g_equip_menu_indicator_brightness[i];
-            prims->frame.b0 = (u8)g_equip_menu_indicator_brightness[i];
+            prims->frame.r0 = g_equip_menu_indicator_brightness[i];
+            prims->frame.g0 = g_equip_menu_indicator_brightness[i];
+            prims->frame.b0 = g_equip_menu_indicator_brightness[i];
             g_equip_menu_indicator_edge_brightness[i] = g_equip_menu_indicator_brightness[i];
             for (j = 0; j < 9; j++) {
                 if (g_equip_menu_indicator_edge_brightness[i] != 0) {
                     g_equip_menu_indicator_edge_brightness[i] -= 0xc;
                 }
                 k = 8 - j;
-                (k + prims->top)->r0 = (u8)g_equip_menu_indicator_edge_brightness[i];
-                (k + prims->top)->g0 = (u8)g_equip_menu_indicator_edge_brightness[i];
-                (k + prims->top)->b0 = (u8)g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].r0 = (u8)g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].g0 = (u8)g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].b0 = (u8)g_equip_menu_indicator_edge_brightness[i];
+                (k + prims->top)->r0 = g_equip_menu_indicator_edge_brightness[i];
+                (k + prims->top)->g0 = g_equip_menu_indicator_edge_brightness[i];
+                (k + prims->top)->b0 = g_equip_menu_indicator_edge_brightness[i];
+                prims->bottom[j].r0 = g_equip_menu_indicator_edge_brightness[i];
+                prims->bottom[j].g0 = g_equip_menu_indicator_edge_brightness[i];
+                prims->bottom[j].b0 = g_equip_menu_indicator_edge_brightness[i];
                 battle_gfx_draw_or_append_gpu_primitive(k + prims->top);
                 battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }

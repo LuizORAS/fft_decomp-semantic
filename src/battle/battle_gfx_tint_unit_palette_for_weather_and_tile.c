@@ -154,24 +154,24 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
 
     switch (unit->spritesheet_id) {
     case BATTLE_SPRITESHEET_ID_CRYSTAL:
-        battle_map_update_palette_from_other((u16*)g_battle_gfx_crystal_palettes[stored_palette], 3, row, 0, (s16)red,
-            (s16)green, (s16)blue, final_value);
+        battle_map_update_palette_from_other(
+            (u16*)g_battle_gfx_crystal_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_CHICKEN:
-        battle_map_update_palette_from_other((u16*)g_battle_gfx_chicken_palettes[stored_palette], 3, row, 0, (s16)red,
-            (s16)green, (s16)blue, final_value);
+        battle_map_update_palette_from_other(
+            (u16*)g_battle_gfx_chicken_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_FROG:
         battle_map_update_palette_from_other(
-            (u16*)g_battle_gfx_frog_palettes[stored_palette], 3, row, 0, (s16)red, (s16)green, (s16)blue, final_value);
+            (u16*)g_battle_gfx_frog_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
         break;
     case BATTLE_SPRITESHEET_ID_TREASURE:
-        battle_map_update_palette_from_other((u16*)g_battle_gfx_treasure_palettes[stored_palette], 3, row, 0, (s16)red,
-            (s16)green, (s16)blue, final_value);
+        battle_map_update_palette_from_other(
+            (u16*)g_battle_gfx_treasure_palettes[stored_palette], 3, row, 0, red, green, blue, final_value);
         break;
     default:
         battle_map_update_palette_from_other((u16*)g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette], 3,
-            row, 0, (s16)red, (s16)green, (s16)blue, final_value);
+            row, 0, red, green, blue, final_value);
         break;
     }
 }

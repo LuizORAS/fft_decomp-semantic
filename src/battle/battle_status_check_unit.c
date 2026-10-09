@@ -22,7 +22,7 @@ s32 battle_status_check_unit(battle_stats_t* unit) {
     if ((status1 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) != 0) {
         return BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD;
     }
-    flags = -(s32)((status5 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)) != 0)
+    flags = -((status5 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)) != 0)
         & (BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_SLEEP);
     if ((status4 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)) != 0) {
         flags |= BATTLE_TURN_STATUS_HASTE;

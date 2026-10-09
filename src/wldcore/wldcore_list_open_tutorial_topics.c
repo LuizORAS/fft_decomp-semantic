@@ -11,9 +11,9 @@
  * the wrapper's loop notes changing how loop.c treats the enclosing loop. */
 #define append_panel_list_entry(count, value)                                                                          \
     do {                                                                                                               \
-        g_wldcore_list_entry_values[count] = (value);                                                                  \
+        g_wldcore_list_entry_values[count] = value;                                                                    \
         g_wldcore_list_row_flags[count] = 0;                                                                           \
-        (count) = (count) + 1;                                                                                         \
+        count = (count) + 1;                                                                                           \
     } while (0)
 
 /* Opens a 41-entry panel list (halfword values 0x8000-0x8028), shows up to

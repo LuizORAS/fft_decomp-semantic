@@ -49,12 +49,12 @@ void battle_camera_update_vector_from_game_state(void) {
         unit = battle_unit_get_source_misc_data();
         height
             = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy / ONE;
-        if ((u16)unit->item_get_camera_x >= 0xB1 && (u16)unit->item_get_camera_x < 0x150
+        if (unit->item_get_camera_x >= 0xB1 && unit->item_get_camera_x < 0x150
             && unit->item_get_camera_y - height >= 0x51 && unit->item_get_camera_y < 0xA0) {
             main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
             return;
         }
-        if ((u16)unit->item_get_camera_x >= 0xA1 && (u16)unit->item_get_camera_x < 0x160
+        if (unit->item_get_camera_x >= 0xA1 && unit->item_get_camera_x < 0x160
             && unit->item_get_camera_y - height >= 0x41 && unit->item_get_camera_y < 0xB0) {
             battle_camera_calculate_acting_unit_vector_normal();
         } else {

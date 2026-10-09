@@ -16,7 +16,7 @@ s32 world_item_change_quantity_on_equip(s32 item_id, s32 delta) {
         if (quantity < 0) {
             quantity = 0;
         }
-        g_main_item_quantities[idx] = (u8)quantity;
+        g_main_item_quantities[idx] = quantity;
     }
     return quantity;
 }

@@ -5,12 +5,12 @@
 
 #define REQUIRE_MOVE_PARTY_PORTRAIT(party_index, portrait_rect, portrait_destination, palette_rect)                    \
     do {                                                                                                               \
-        (portrait_rect)->x = ((party_index) % 7) * 8 + 0x100;                                                          \
-        (portrait_rect)->y = ((party_index) / 7) * 0x30 + 0x28;                                                        \
-        MoveImage((portrait_rect), (portrait_destination)[0], (portrait_destination)[1]);                              \
-        (palette_rect)->x = ((party_index) % 3) * 0x10 + 0x100;                                                        \
-        (palette_rect)->y = (party_index) / 3;                                                                         \
-        MoveImage((palette_rect), g_require_party_palette_destination, g_require_party_palette_destination_y);         \
+        portrait_rect->x = (party_index % 7) * 8 + 0x100;                                                              \
+        portrait_rect->y = (party_index / 7) * 0x30 + 0x28;                                                            \
+        MoveImage(portrait_rect, portrait_destination[0], portrait_destination[1]);                                    \
+        palette_rect->x = (party_index % 3) * 0x10 + 0x100;                                                            \
+        palette_rect->y = party_index / 3;                                                                             \
+        MoveImage(palette_rect, g_require_party_palette_destination, g_require_party_palette_destination_y);           \
     } while (0)
 
 /* Let the player pick a party member to dismiss when the roster is full.
@@ -187,7 +187,7 @@ s32 require_select_party_unit_to_remove(void) {
             battle_stats_t* battle_unit;
 
             for (party_index = 0; party_index < 0x15; party_index++) {
-                battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
+                battle_unit = battle_unit_get_stats_from_battle_id(party_index);
                 selected_battle_unit
                     = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &message_id);
                 if (message_id >= 0 && party_index == message_id
@@ -255,7 +255,7 @@ s32 require_select_party_unit_to_remove(void) {
 
         text = g_battle_text_section_pointers[8];
         for (party_index = 0; party_index < 0x15; party_index++) {
-            selected_battle_unit = (battle_stats_t*)battle_unit_get_stats_from_battle_id(party_index);
+            selected_battle_unit = battle_unit_get_stats_from_battle_id(party_index);
             for (name_character_index = 0; name_character_index < 0x10; name_character_index++) {
                 *text = selected_battle_unit->name[name_character_index];
                 if ((*text & 0xfe) == 0xfe) {

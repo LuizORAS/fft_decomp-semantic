@@ -26,7 +26,7 @@ s32 bunit_panel_build_unit_billboard_list(s32 mode, s32 unit_data, s32 sort_mode
         if ((unit != 0) && (unit->entd_slot != BATTLE_ENTD_SLOT_NONE)) {
             if (unit->unit_flags & UNIT_FLAG_EGG) {
                 total++;
-            } else if (!(*(u8*)&unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+            } else if (!(*&unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
                 && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
                 total++;
                 bunit_panel_copy_unit_data_to_billboard(

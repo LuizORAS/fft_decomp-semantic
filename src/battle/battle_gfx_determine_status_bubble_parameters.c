@@ -4,8 +4,8 @@
 /* The bubble offsets are signed pixel offsets; storing them through a u8
  * field makes GCC materialise positive constants (li 0xba) where the target
  * uses the sign-extended form (li -0x46). */
-#define STATUS_BUBBLE_X(unit) (*(s8*)&(unit)->status_bubble_x)
-#define STATUS_BUBBLE_Y(unit) (*(s8*)&(unit)->status_bubble_y)
+#define STATUS_BUBBLE_X(unit) (*(s8*)&unit->status_bubble_x)
+#define STATUS_BUBBLE_Y(unit) (*(s8*)&unit->status_bubble_y)
 
 /* Advances one unit's status bubble by g_animation_speed frames.
  *

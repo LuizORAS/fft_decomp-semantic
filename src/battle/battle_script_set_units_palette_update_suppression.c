@@ -11,7 +11,7 @@ void battle_script_set_units_palette_update_suppression(s32 event_unit_id, s32 e
     s32 mode;
     s32 i;
 
-    unit_id = (u16)event_unit_id;
+    unit_id = event_unit_id;
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &mode) != 0) {
         i = 0;
         do {

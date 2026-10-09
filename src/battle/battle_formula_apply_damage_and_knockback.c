@@ -12,7 +12,7 @@ void battle_formula_apply_damage_and_knockback(void) {
     action = g_battle_action_target_data;
     action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
     state = g_battle_action_state;
-    action->hp_damage = (s16)damage;
+    action->hp_damage = damage;
     if (state != BATTLE_ACTION_STATE_EXECUTE) {
         return;
     }

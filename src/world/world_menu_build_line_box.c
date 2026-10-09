@@ -39,8 +39,8 @@ void world_menu_build_line_box(RECT* box, world_menu_palette_primitives_t* menu)
         line++;
     }
     SetDrawMode(
-        &menu->draw_mode_menu, 1, 0, (u16)GetTPage(0, 0, 0x3c0, 0x100), &g_world_menu_numeric_display_texture_window);
-    SetDrawMode(&menu->draw_mode, 0, 0, (u16)GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
+        &menu->draw_mode_menu, 1, 0, GetTPage(0, 0, 0x3c0, 0x100), &g_world_menu_numeric_display_texture_window);
+    SetDrawMode(&menu->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
     world_menu_init_sprite(&menu->sprite);
     menu->sprite.x0 = box->x;
     menu->sprite.y0 = box->y;

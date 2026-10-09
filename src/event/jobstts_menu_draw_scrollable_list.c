@@ -53,7 +53,7 @@ void jobstts_menu_draw_scrollable_list(const u8* script) {
         rect.x = 0x100;
         rect.y = 0x30;
         rect.w = g_jobstts_menu_list_vram_width;
-        rect.h = (s32)g_jobstts_menu_list_visible_rows * 16;
+        rect.h = g_jobstts_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_jobstts_menu_list_visible_rows; i++) {
             columns[i] = g_jobstts_menu_list_entries[i + g_jobstts_menu_scroll_base_index];

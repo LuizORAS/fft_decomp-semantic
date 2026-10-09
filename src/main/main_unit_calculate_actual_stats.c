@@ -53,7 +53,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
             value = 1;
         }
         if (is_low) {
-            if (value > (u32)max) {
+            if (value > max) {
                 value = max;
             }
         }

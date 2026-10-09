@@ -23,7 +23,7 @@ void world_gfx_draw_screen_tint_tile(world_screen_tint_prims_t* prims, s32 inten
             abr = 1;
             level = -level;
         }
-        SetDrawMode(&prims->mode, 0, 0, (u16)GetTPage(0, abr, 0x3C0, 0x100), &g_world_gfx_texture_window);
+        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, abr, 0x3C0, 0x100), &g_world_gfx_texture_window);
         prims->tile.r0 = level;
         prims->tile.g0 = level;
         prims->tile.b0 = level;

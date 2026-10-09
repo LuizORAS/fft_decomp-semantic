@@ -86,15 +86,15 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
         prims[prim_index].r0 = intensity;
         prims[prim_index].g0 = intensity;
         prims[prim_index].b0 = intensity;
-        prims[prim_index + 1].r0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].g0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].b0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
+        prims[prim_index + 1].r0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].g0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].b0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
         prims[prim_index].r2 = intensity;
         prims[prim_index].g2 = intensity;
         prims[prim_index].b2 = intensity;
-        prims[prim_index + 1].r2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].g2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].b2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
+        prims[prim_index + 1].r2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].g2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].b2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
 
         clut = GetClut(0, 0x1e3);
         prims[prim_index + 1].clut = clut;

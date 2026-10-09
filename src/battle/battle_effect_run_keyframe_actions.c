@@ -31,7 +31,7 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_ef
     if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_TARGET_ANIMATION) && misc_id != -1) {
         ((s32 (*)(s32))battle_unit_set_target_anim_by_misc_id)(misc_id);
     }
-    animation = (u32)(flags & EFFECT_KEYFRAME_ACTION_ANIMATION_MASK) >> EFFECT_KEYFRAME_ACTION_ANIMATION_SHIFT;
+    animation = (flags & EFFECT_KEYFRAME_ACTION_ANIMATION_MASK) >> EFFECT_KEYFRAME_ACTION_ANIMATION_SHIFT;
     if (animation != 0 && misc_id != -1) {
         battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
     }

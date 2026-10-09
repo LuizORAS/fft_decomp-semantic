@@ -87,7 +87,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         rotation.vy = term >> 12;
         rotation.vz = 0;
         rotation.vx = g_battle_effect_arrow_arc_distance >> 12;
-        RotTrans(&rotation, &delta, (long*)&delta.pad);
+        RotTrans(&rotation, &delta, &delta.pad);
         position.vx = g_battle_effect_trajectory_origin.vx + delta.vx;
         position.vy = g_battle_effect_trajectory_origin.vy + delta.vy;
         position.vz = g_battle_effect_trajectory_origin.vz + delta.vz;
@@ -96,7 +96,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         rotation.vx = g_battle_effect_trajectory_origin.vx + delta.vx;
         rotation.vy = g_battle_effect_trajectory_origin.vy + delta.vy;
         rotation.vz = g_battle_effect_trajectory_origin.vz + delta.vz;
-        RotTrans(&rotation, &delta, (long*)&delta.pad);
+        RotTrans(&rotation, &delta, &delta.pad);
         scale.vz = 0x40;
         scale.vy = 0x40;
         scale.vx = 0x40;

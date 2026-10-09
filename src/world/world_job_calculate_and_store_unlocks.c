@@ -6,7 +6,7 @@
 void world_job_calculate_and_store_unlocks(party_data_t* party, u8 unlocked_jobs[3]) {
     s32 jobs
         = main_job_calculate_unlocked(party->job_levels, party->gender_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE));
-    unlocked_jobs[0] = (s8)(jobs >> 16);
-    unlocked_jobs[1] = (s8)(jobs >> 8);
-    unlocked_jobs[2] = (s8)jobs;
+    unlocked_jobs[0] = jobs >> 16;
+    unlocked_jobs[1] = jobs >> 8;
+    unlocked_jobs[2] = jobs;
 }

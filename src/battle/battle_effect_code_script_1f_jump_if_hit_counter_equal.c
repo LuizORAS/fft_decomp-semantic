@@ -8,7 +8,7 @@ s32 battle_effect_code_script_1f_jump_if_hit_counter_equal(effect_record_t* effe
     s16 pc = effect->pc;
     s32 script = (s32)effect->script;
     u8* instruction = (u8*)(pc + script);
-    if (g_battle_effect_coord_data.hit_counter == ((u32)instruction[1] >> 2)) {
+    if (g_battle_effect_coord_data.hit_counter == (instruction[1] >> 2)) {
         effect->pc = *(u16*)(instruction + 2);
     } else {
         effect->pc = pc + 4;

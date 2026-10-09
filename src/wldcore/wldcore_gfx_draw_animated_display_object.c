@@ -126,7 +126,7 @@ step_frame:
             mode = (object->flags & 0xc0) >> 6;
         } else {
             sprite.attribute |= words[index] & 0x70000000;
-            mode = ((u32)words[index] >> 28) & 3;
+            mode = (words[index] >> 28) & 3;
         }
         part = (wldcore_sprite_part_t*)(index * 4 + (s32)words);
         sprite.attribute |= (part->packed.flags & 0x07000000) >> 2;

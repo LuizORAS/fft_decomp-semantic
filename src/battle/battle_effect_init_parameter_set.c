@@ -15,9 +15,9 @@ void battle_effect_init_parameter_set(effect_list_node_t* state, s32 frame_group
     flags = state->kind | 1;
     offset = entry[0] + (entry[1] << 8);
     state->sequence_offset = 0;
-    state->frame_group_index = (s8)((frame_group & 0xFF) * 2);
+    state->frame_group_index = (frame_group & 0xFF) * 2;
     state->frame_timer = 0;
     state->kind = flags;
     /* Integer addition preserves the original register order. */
-    state->sequence_data = (u8*)((s32)(s16)offset + (s32)parameter_sets);
+    state->sequence_data = (u8*)((s16)offset + (s32)parameter_sets);
 }

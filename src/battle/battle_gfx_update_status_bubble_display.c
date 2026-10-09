@@ -19,7 +19,7 @@ void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     if ((u16)(screen_y + 0x1f) >= 0x12f) {
         return;
     }
-    if ((u32)(unit->otag_depth_index - 1) >= 0x17f) {
+    if ((unit->otag_depth_index - 1) >= 0x17f) {
         return;
     }
     if (unit->sprite_graphic_trigger == 0) {

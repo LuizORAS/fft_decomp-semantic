@@ -7,7 +7,7 @@ void wldcore_opcode_map_check_war_funds_at_least(void) {
     u16 idx = *ip;
     u16 value = g_wldcore_script_state.data[idx];
     *ip = idx + 1;
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < (s32)value) {
+    if (world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < value) {
         g_wldcore_script_state.flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
     }
 }

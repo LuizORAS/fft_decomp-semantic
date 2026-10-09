@@ -95,10 +95,10 @@ void battle_menu_build_ability_preview_at_list(void) {
         g_battle_menu_selected_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        g_battle_menu_selected_action.item_id = (u8)text_id;
+        g_battle_menu_selected_action.item_id = text_id;
     }
     action = &g_battle_menu_selected_action;
-    action->unit_id = (u8)g_battle_active_turn_unit.battle_id;
+    action->unit_id = g_battle_active_turn_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
     g_battle_thread_call_target = (void (*)(void))battle_action_preview_at_list;
     turn = battle_thread_call_on_main_stack(stats, action, &work->request);

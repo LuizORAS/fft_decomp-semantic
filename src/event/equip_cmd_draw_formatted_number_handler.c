@@ -97,7 +97,7 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
         }
         return data + data[1];
     }
-    pad = data[4] - sprintf((char*)text, g_equip_text_decimal_format, value) - negative;
+    pad = data[4] - sprintf(text, g_equip_text_decimal_format, value) - negative;
     pos = 0;
     for (i = 0; i < data[4]; i++) {
         cell_x = data[7] + (i * data[5]);

@@ -84,8 +84,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 if (animation < 500) {
                     seq = (battle_unit_seq_header_t*)unit->seq_data;
                     index = animation * 2 + animation_by_quadrant[quadrant];
-                    if ((u32)index < seq->animation_count) {
-                        if ((u32)index >= seq->first_animation) {
+                    if (index < seq->animation_count) {
+                        if (index >= seq->first_animation) {
                             for (i = 0; i < 2; i++) {
                                 if ((g_battle_gfx_vram_slots[i].owner & 0x1f) == unit->unit_id) {
                                     break;

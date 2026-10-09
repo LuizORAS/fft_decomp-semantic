@@ -51,7 +51,7 @@ void bunit_menu_update_node_cursor(s16 mode) {
             if (g_bunit_help_nodes[node_index].value != 0) {
                 text_id = g_bunit_help_nodes[node_index].value[0];
             }
-            if ((u32)(g_bunit_help_node_index_reload - 0x12) >= 0xAU || text_id != 0) {
+            if ((g_bunit_help_node_index_reload - 0x12) >= 0xAU || text_id != 0) {
                 /* The target zero-extends help_base here (lhu): a -0x6800 base adds 0x9800. */
                 g_bunit_text_selection_id
                     = text_id + (u16)g_bunit_help_nodes_reload[g_bunit_help_node_index_reload_2].help_base;

@@ -119,9 +119,9 @@ draw_panels:
                     g_attack_menu_indicator_state[i] = 0;
                 }
             }
-            prims->frame.r0 = (u8)g_attack_menu_indicator_brightness[i];
-            prims->frame.g0 = (u8)g_attack_menu_indicator_brightness[i];
-            prims->frame.b0 = (u8)g_attack_menu_indicator_brightness[i];
+            prims->frame.r0 = g_attack_menu_indicator_brightness[i];
+            prims->frame.g0 = g_attack_menu_indicator_brightness[i];
+            prims->frame.b0 = g_attack_menu_indicator_brightness[i];
             /* fade_work holds the edge brightness that steps down across the gradient. */
             g_attack_menu_indicator_fade_work[i] = g_attack_menu_indicator_brightness[i];
             for (j = 0; j < 9; j++) {
@@ -129,12 +129,12 @@ draw_panels:
                     g_attack_menu_indicator_fade_work[i] -= 0xc;
                 }
                 k = 8 - j;
-                (k + prims->top)->r0 = (u8)g_attack_menu_indicator_fade_work[i];
-                (k + prims->top)->g0 = (u8)g_attack_menu_indicator_fade_work[i];
-                (k + prims->top)->b0 = (u8)g_attack_menu_indicator_fade_work[i];
-                prims->bottom[j].r0 = (u8)g_attack_menu_indicator_fade_work[i];
-                prims->bottom[j].g0 = (u8)g_attack_menu_indicator_fade_work[i];
-                prims->bottom[j].b0 = (u8)g_attack_menu_indicator_fade_work[i];
+                (k + prims->top)->r0 = g_attack_menu_indicator_fade_work[i];
+                (k + prims->top)->g0 = g_attack_menu_indicator_fade_work[i];
+                (k + prims->top)->b0 = g_attack_menu_indicator_fade_work[i];
+                prims->bottom[j].r0 = g_attack_menu_indicator_fade_work[i];
+                prims->bottom[j].g0 = g_attack_menu_indicator_fade_work[i];
+                prims->bottom[j].b0 = g_attack_menu_indicator_fade_work[i];
                 battle_gfx_draw_or_append_gpu_primitive((k + prims->top));
                 battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }

@@ -6,11 +6,11 @@ void battle_gfx_init_item_get_rendering(battle_gfx_render_unit_t* unit) {
     u32* otag;
 
     if ((unit->sprite_flags & 2) != 0) {
-        position.vx = (s16)unit->item_get_x_offset;
+        position.vx = unit->item_get_x_offset;
     } else {
-        position.vx = -(s16)unit->item_get_x_offset;
+        position.vx = -unit->item_get_x_offset;
     }
-    position.vy = (s16)unit->item_get_y_offset;
+    position.vy = unit->item_get_y_offset;
     position.vx += unit->camera_relative_position.vx;
     position.vy += unit->camera_relative_position.vy;
     save_3_u16(&zoom, ONE, ONE, ONE);

@@ -43,7 +43,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_
                 do {
                     glyph_index++;
                     position.x += jobstts_text_render_glyph_to_4bpp_image(packed_fill_glyph_id >> 16, image, &position,
-                        (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
+                        (((s32)(((*current_text_id)) << 16)) >> 30) | style);
                 } while (glyph_index < 8);
             } else {
                 /* The target passes a third argument the callee does not take. */
@@ -67,7 +67,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_
                                 code = (code * 0xd0) + (*(encoded++));
                             }
                             position.x += jobstts_text_render_glyph_to_4bpp_image(
-                                code, image, &position, (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
+                                code, image, &position, (((s32)(((*current_text_id)) << 16)) >> 30) | style);
                         } else if (code == TEXT_SPACE) {
                             position.x += 4;
                         } else if (code == TEXT_SET_X_POSITION) {

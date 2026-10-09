@@ -82,7 +82,7 @@ void battle_text_character_handling_thread(void) {
     value_index = 0;
     variable_base = 0x18;
     thread = &g_battle_threads[g_battle_current_thread_id];
-    param = (s32)battle_thread_get_current_parameter_1();
+    param = battle_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
         rec.dialog_type = (param & 0x1C) | 0x10;
@@ -765,7 +765,7 @@ void battle_text_character_handling_thread(void) {
                     g_battle_text_typewriter_glyph_character = character;
                     g_battle_text_typewriter_glyph_dialogue_type = rec.dialog_type & 0x70;
                     g_battle_text_typewriter_glyph_palette = rec.color;
-                    battle_text_draw_dialogue_glyph((s16)cursor_x, (s16)cursor_y, color);
+                    battle_text_draw_dialogue_glyph(cursor_x, (s16)cursor_y, color);
                     if (character == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -803,7 +803,7 @@ void battle_text_character_handling_thread(void) {
                 g_battle_text_typewriter_glyph_character = character;
                 g_battle_text_typewriter_glyph_dialogue_type = rec.box_type;
                 g_battle_text_typewriter_glyph_palette = rec.color;
-                battle_text_draw_dialogue_glyph((s16)cursor_x, (s16)cursor_y, color);
+                battle_text_draw_dialogue_glyph(cursor_x, (s16)cursor_y, color);
                 if (character == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

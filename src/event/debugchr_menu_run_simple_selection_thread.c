@@ -32,7 +32,7 @@ void debugchr_menu_run_simple_selection_thread(void) {
             battle_menu_set_text_origin(8, 9);
             *display_x = state->inner_width;
             battle_menu_display_text_entry(state->text_id, render, (u8*)display_x - 8);
-            LoadImage(&local_10.rect, (u32*)render);
+            LoadImage(&local_10.rect, render);
         }
         battle_thread_yield();
         if (redraw == 1) {

@@ -37,14 +37,14 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
         if (channel->active != 0 && channel->voice < 25) {
             note_flags2 = channel->note_flags2;
             if ((note_flags2 & 0x100) != 0) {
-                volume = (s16)(channel->volume >> 16) + channel->volume_modulation;
+                volume = (channel->volume >> 16) + channel->volume_modulation;
                 if (volume > 0x7fff)
                     volume = 0x7fff;
                 if (volume < 0)
                     volume = 0;
                 volume = (channel->velocity * volume) >> 15;
-                volume = ((s16)(music->master_volume.value >> 16) * volume) >> 16;
-                balance = channel->balance + channel->balance_modulation + (s16)(music->balance_shift.value >> 16);
+                volume = ((music->master_volume.value >> 16) * volume) >> 16;
+                balance = channel->balance + channel->balance_modulation + (music->balance_shift.value >> 16);
                 if (balance > 0x7f00)
                     balance = 0x7f00;
                 if (balance < 0)
@@ -69,8 +69,8 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
                 channel->func_flags |= 1;
             }
             if ((note_flags2 & 0x200) != 0) {
-                channel->spu_pitch = main_smd_calculate_pitch((s16)(channel->pitch_slide >> 16)
-                                         + channel->pitch_modulation + (s16)(music->pitch_shift.value >> 16))
+                channel->spu_pitch = main_smd_calculate_pitch((channel->pitch_slide >> 16) + channel->pitch_modulation
+                                         + (music->pitch_shift.value >> 16))
                     & 0x3fff;
                 channel->func_flags |= 4;
             }

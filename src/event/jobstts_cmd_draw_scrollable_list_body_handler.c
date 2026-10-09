@@ -124,11 +124,11 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             g_jobstts_menu_list_scroll_progress += speed;
             g_jobstts_menu_list_scroll_offset_y -= g_main_menu_scroll_slow_step * speed;
         }
-        if ((-(s16)g_jobstts_menu_list_row_height) >= (s16)g_jobstts_menu_list_scroll_offset_y) {
+        if ((-(s16)g_jobstts_menu_list_row_height) >= g_jobstts_menu_list_scroll_offset_y) {
             g_jobstts_menu_list_scroll_offset_y = 0;
             g_jobstts_menu_list_scroll_direction = 0;
             g_jobstts_menu_list_selected_index -= 1;
-            g_jobstts_menu_scroll_base_index = (s16)g_jobstts_menu_list_selected_index;
+            g_jobstts_menu_scroll_base_index = g_jobstts_menu_list_selected_index;
             if (g_jobstts_menu_list_text_table != 0) {
                 for (j = 0; j < g_jobstts_menu_list_visible_rows; j++) {
                     s32 height;
@@ -149,14 +149,14 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             g_jobstts_menu_list_scroll_progress += speed;
             g_jobstts_menu_list_scroll_offset_y += g_main_menu_scroll_slow_step * speed;
         }
-        if ((s16)g_jobstts_menu_list_scroll_offset_y >= (s16)g_jobstts_menu_list_row_height) {
+        if (g_jobstts_menu_list_scroll_offset_y >= (s16)g_jobstts_menu_list_row_height) {
             g_jobstts_menu_list_scroll_offset_y = 0;
             g_jobstts_menu_list_scroll_direction = 0;
             g_jobstts_menu_scroll_base_index++;
             g_jobstts_menu_list_selected_index++;
             if (g_jobstts_menu_list_text_table != 0) {
                 rect.unsigned_rect.x = 0x100;
-                rect.unsigned_rect.y = (s16)g_jobstts_menu_list_row_height + 0x30;
+                rect.unsigned_rect.y = g_jobstts_menu_list_row_height + 0x30;
                 rect.unsigned_rect.w = g_jobstts_menu_list_vram_width;
                 rect.unsigned_rect.h = g_jobstts_menu_list_row_height * (u16)g_jobstts_menu_list_visible_rows;
                 jobstts_gfx_enqueue_draw_move(&rect.signed_rect, 0x100, 0x30, ot_index - 1);
@@ -164,21 +164,21 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
         }
     }
     if (g_jobstts_menu_list_text_table != 0) {
-        if ((s16)g_jobstts_menu_list_scroll_offset_y != 0) {
+        if (g_jobstts_menu_list_scroll_offset_y != 0) {
             rect.unsigned_rect.x = command[7];
             rect.unsigned_rect.y = command[8] - 5;
             rect.unsigned_rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.unsigned_rect.h = (g_jobstts_menu_list_row_height * (u16)g_jobstts_menu_list_visible_rows) + 0xa;
-            jobstts_gfx_enqueue_textured_quad(&rect.unsigned_rect, 0, (s16)g_jobstts_menu_list_scroll_offset_y + 0x2b,
-                0, g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0,
-                (s16)g_jobstts_gfx_otag_index);
+            jobstts_gfx_enqueue_textured_quad(&rect.unsigned_rect, 0, g_jobstts_menu_list_scroll_offset_y + 0x2b, 0,
+                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0,
+                g_jobstts_gfx_otag_index);
         } else {
             rect.unsigned_rect.x = command[7];
             rect.unsigned_rect.y = command[8];
             rect.unsigned_rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.unsigned_rect.h = g_jobstts_menu_list_row_height * (u16)g_jobstts_menu_list_visible_rows;
             jobstts_gfx_enqueue_textured_quad(&rect.unsigned_rect, 0, 0x30, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0, (s16)g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0, g_jobstts_gfx_otag_index);
         }
     }
     if (g_jobstts_text_layout_mode == 0) {
@@ -210,12 +210,12 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.unsigned_rect.y = j;
             jobstts_gfx_enqueue_textured_quad(&rect.unsigned_rect, 0x10, 0x10, 0, g_jobstts_gfx_semitransparency,
                 g_jobstts_menu_cursor_texture_page, g_jobstts_menu_cursor_mode0_foreground_clut,
-                (s16)g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_otag_index);
         }
         if (command[2] != 0) {
             marker.x = command[7] - command[0xb];
             marker.y = command[8]
-                + (((s16)g_jobstts_menu_list_selected_index - g_jobstts_menu_scroll_base_index)
+                + ((g_jobstts_menu_list_selected_index - g_jobstts_menu_scroll_base_index)
                     * (s16)g_jobstts_menu_list_row_height);
             jobstts_menu_update_and_draw_animated_marker(
                 &marker, &g_jobstts_menu_list_cursor_anim_state, g_jobstts_text_layout_mode);
@@ -224,13 +224,13 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
     command += command[1];
     g_jobstts_menu_list_row_index = 0;
     total = g_jobstts_menu_list_visible_rows + 1;
-    if ((s16)g_jobstts_menu_list_scroll_offset_y == 0) {
+    if (g_jobstts_menu_list_scroll_offset_y == 0) {
         total = g_jobstts_menu_list_visible_rows;
     }
     start = command;
     for (i = 0; i < total; i++) {
         if (((g_jobstts_menu_scroll_base_index + i) > (g_jobstts_menu_list_entry_count - 1))
-            && ((s16)g_jobstts_menu_list_scroll_offset_y == 0)) {
+            && (g_jobstts_menu_list_scroll_offset_y == 0)) {
             break;
         }
         command = start;
@@ -240,7 +240,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
         g_jobstts_menu_list_row_index += 1;
     }
     g_jobstts_menu_list_row_rendering = 0;
-    if (previous != (u16)g_jobstts_menu_list_selected_index) {
+    if (previous != g_jobstts_menu_list_selected_index) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     return command;

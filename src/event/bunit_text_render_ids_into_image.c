@@ -36,8 +36,7 @@ void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t
             col = 0;
             colors2 = &ids[k];
             for (; col < 8; col++) {
-                position.x
-                    += bunit_text_render_glyph_to_4bpp_image(glyph, image, &position, ((s16)*colors2 >> 14) | style);
+                position.x += bunit_text_render_glyph_to_4bpp_image(glyph, image, &position, (*colors2 >> 14) | style);
             }
         } else {
             text = ((const u8* (*)(u8*, s32, s32))bunit_text_skip_encoded_segments)(font, ids[k] & 0xFFF, 2);
@@ -55,8 +54,8 @@ void bunit_text_render_ids_into_image(u8* image, battle_menu_text_image_bounds_t
                             code &= 0xF;
                             code = code * 0xD0 + *text++;
                         }
-                        position.x += bunit_text_render_glyph_to_4bpp_image(
-                            code, image, &position, ((s16)*colors >> 14) | style);
+                        position.x
+                            += bunit_text_render_glyph_to_4bpp_image(code, image, &position, (*colors >> 14) | style);
                     } else if (code == TEXT_SPACE) {
                         position.x += 4;
                     } else if (code == TEXT_SET_X_POSITION) {

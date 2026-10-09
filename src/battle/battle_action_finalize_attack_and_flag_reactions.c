@@ -131,7 +131,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         battle_unit_update_attacker_earned_experience(2);
         return -(g_battle_action_target->mount_info >> 7);
     }
-    if (hp <= (u16)(g_battle_action_target->max_hp / 5)) {
+    if (hp <= (g_battle_action_target->max_hp / 5)) {
         g_battle_action_target_data->status_infliction[2] |= STATUS_MASK(CRITICAL);
     } else {
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CRITICAL);

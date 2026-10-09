@@ -19,13 +19,13 @@ void world_menu_switch_item_category(s32 input) {
             cursor_slot, g_world_menu_cursor_position, g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
         g_world_shop_item_category = category;
         if (g_world_shop_menu_step == 1 || g_world_shop_menu_step == 15) {
-            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (s16)(category + 1) : 7,
+            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (category + 1) : 7,
                 (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
             cursor_slot = g_world_shop_item_category;
         } else {
             /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
             ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(
-                -1, g_world_shop_item_category + 1, category != 4 ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+                -1, g_world_shop_item_category + 1, category != 4 ? (category + 1) : 7, g_world_menu_entry_ids, 0);
             cursor_slot = g_world_shop_item_category + 5;
         }
         world_gfx_get_sprite_slot(cursor_slot, &x, &y, g_world_menu_entry_ids);

@@ -18,7 +18,7 @@ s32 bunit_bits_read(s32 bit_count) {
     accumulator = 0;
     if (bit_count != -1) {
         do {
-            if (((s32)*g_bunit_bits_cursor >> g_bunit_bits_index--) & 1) {
+            if ((*g_bunit_bits_cursor >> g_bunit_bits_index--) & 1) {
                 accumulator |= 1 << bit_count;
             }
             bit_count--;

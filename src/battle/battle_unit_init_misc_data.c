@@ -56,7 +56,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->status_flags_1_4 = 0;
     /* The target passes the palette as a fifth argument the definition does not take. */
     ((void (*)(u8*, u32, s32, battle_unit_misc_data_t*, s32))battle_gfx_load_spritesheet_into_vram_slot)(
-        data, slot, unit_id, unit, (s16)palette);
+        data, slot, unit_id, unit, palette);
     tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags_06.bits.shadow_mode, 1);
     battle_map_load_palette_data(g_battle_gfx_shadow_palette, 4, unit_id, 0);

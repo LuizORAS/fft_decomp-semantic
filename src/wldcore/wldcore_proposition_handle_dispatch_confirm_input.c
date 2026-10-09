@@ -48,7 +48,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
         g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
         world_script_set_variable(*id + 0x35F, world_script_get_variable(*id + 0x35F) | 8);
         g_main_active_propositions[g_main_save_proposition_count].flags = 1;
-        g_main_active_propositions[g_main_save_proposition_count].proposition_id = (s16)*id - 1;
+        g_main_active_propositions[g_main_save_proposition_count].proposition_id = *id - 1;
         g_main_active_propositions[g_main_save_proposition_count].elapsed_days = 0;
         value = g_wldcore_proposition_dispatch_days;
         g_main_active_propositions[g_main_save_proposition_count].assigned_days = value;

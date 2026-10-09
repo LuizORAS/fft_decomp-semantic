@@ -16,7 +16,7 @@ void wldcore_opcode_load_text_id(void) {
     s32 flags;
 
     ip = g_wldcore_script_ip;
-    data = (u16*)g_wldcore_script_data_ptr;
+    data = g_wldcore_script_data_ptr;
     value = data[ip];
     flags = g_wldcore_script_flags;
     g_wldcore_script_ip = ip + 1;

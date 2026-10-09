@@ -63,7 +63,7 @@ s32 battle_effect_trace_arc_trajectory_path(
         term = battle_effect_calculate_arc_trajectory_term(*height, progress);
         step.vx = progress >> 12;
         step.vy = -term >> 12;
-        RotTrans(&step, &position, (long*)&position.pad);
+        RotTrans(&step, &position, &position.pad);
         hit = battle_effect_test_position_for_obstacle(
             obstacles, &position, &g_battle_effect_trajectory_hit_unit_id, &g_battle_effect_trajectory_tile);
         if (hit != 0) {

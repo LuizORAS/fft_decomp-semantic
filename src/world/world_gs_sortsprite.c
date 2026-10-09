@@ -15,7 +15,7 @@ typedef struct {
 
 /* The target tests scalex/scaley against the identity ONE/ONE (0x10001000) with a
  * single word load and compare. */
-#define GS_SPRITE_SCALE_WORD(sp) (*(s32*)&(sp)->scalex)
+#define GS_SPRITE_SCALE_WORD(sp) (*(s32*)&sp->scalex)
 
 /*
  * WORLD copy of libgs GsSortSprite.

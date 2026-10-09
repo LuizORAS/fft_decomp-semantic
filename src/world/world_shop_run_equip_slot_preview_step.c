@@ -80,8 +80,8 @@ void world_shop_run_equip_slot_preview_step(void) {
         if ((g_main_item_item_flags >> 15) != 0) {
             world_menu_toggle_preview_stats_window(1);
             world_item_calculate_swap_stat_delta(&g_world_item_preview_stat_detail, &g_world_selected_unit_stat_summary,
-                (s16)g_main_item_item_flags,
-                g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][index], index);
+                g_main_item_item_flags, g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][index],
+                index);
             g_world_preview_stats_thread_params.redraw_request = 1;
         } else {
             world_menu_toggle_preview_stats_window(0);

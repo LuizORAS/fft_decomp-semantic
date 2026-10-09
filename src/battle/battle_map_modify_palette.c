@@ -132,7 +132,7 @@ void battle_map_modify_palette(
                 if (out_blue <= 0) {
                     out_blue = 0;
                 }
-                if ((s16)(out_red | out_green | out_blue) == 0) {
+                if ((out_red | out_green | out_blue) == 0) {
                     out_blue = 1;
                 }
                 if (amount != 0) {
@@ -293,7 +293,7 @@ void battle_map_modify_palette(
                 if (out_blue <= 0) {
                     out_blue = 0;
                 }
-                if ((s16)(out_red | out_green | out_blue) == 0) {
+                if ((out_red | out_green | out_blue) == 0) {
                     out_blue = 1;
                 }
                 if (amount != 0) {

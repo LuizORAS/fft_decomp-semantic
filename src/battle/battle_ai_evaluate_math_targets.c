@@ -33,7 +33,7 @@ s32 battle_ai_evaluate_math_targets(void) {
         for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < 16;
             g_battle_ai_math_ability_index++) {
             /* Math targeting reads only the low byte of each halfword ID. */
-            ai->math_ability_id = (u8)g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
+            ai->math_ability_id = g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
             if (ai->math_ability_id == 0)
                 continue;
             if (!(g_main_ability_range_data[ai->math_ability_id].flags_3

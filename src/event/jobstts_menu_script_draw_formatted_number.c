@@ -110,7 +110,7 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
         return data + data[1];
     }
 
-    pad = data[4] - sprintf((char*)text, g_jobstts_text_decimal_format, value);
+    pad = data[4] - sprintf(text, g_jobstts_text_decimal_format, value);
     pos = 0;
     i = 0;
     if (data[4] != 0) {

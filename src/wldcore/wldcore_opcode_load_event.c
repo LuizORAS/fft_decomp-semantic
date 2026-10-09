@@ -18,7 +18,7 @@ void wldcore_opcode_load_event(void) {
     s32 flags;
 
     ip = g_wldcore_script_ip;
-    data = (u16*)g_wldcore_script_data_ptr;
+    data = g_wldcore_script_data_ptr;
     first_operand = data[ip];
     g_wldcore_script_ip = ip + 1;
     g_wldcore_script_state.args[0] = first_operand;

@@ -16,11 +16,11 @@ u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_
         entry_unit &= 0x1F;
         if (entry_unit == 0x1F)
             return 0xFF;
-        entry_ct = (s32)entries->sort_key;
+        entry_ct = entries->sort_key;
         if (entry_ct >= ct) {
             if (ct != entry_ct)
                 return count & 0xFF;
-            if (unit_index == (s32)entry_unit && is_action != 0)
+            if (unit_index == entry_unit && is_action != 0)
                 return count & 0xFF;
             if ((s32)entry_unit >= unit_index)
                 return count & 0xFF;

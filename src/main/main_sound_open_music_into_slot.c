@@ -7,7 +7,7 @@
  * which is what a statement macro of this shape produces. */
 #define set_opened_music_slot(slot)                                                                                    \
     do {                                                                                                               \
-        g_main_sound_music.slots.handles[0] = (slot);                                                                  \
+        g_main_sound_music.slots.handles[0] = slot;                                                                    \
     } while (0)
 
 /* Loads scenario music file `scenario` into music slot `slot` (1-based) if

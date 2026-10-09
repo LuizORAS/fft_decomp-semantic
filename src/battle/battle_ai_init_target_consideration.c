@@ -47,7 +47,7 @@ void battle_ai_init_target_consideration(void) {
 
     if (ai->acting_unit_team == 0) {
         ai->autobattle_setting = 0;
-        if (((s32)ai->acting_unit->hp << 7) / ai->acting_unit->max_hp < 45) {
+        if ((ai->acting_unit->hp << 7) / ai->acting_unit->max_hp < 45) {
             mode = BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL;
         } else {
             for (target = 0; target < BATTLE_UNIT_SLOT_COUNT; target++)

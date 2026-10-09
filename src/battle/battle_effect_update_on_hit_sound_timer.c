@@ -16,7 +16,7 @@ void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16
         if (*countdown == 0) {
             *entry_index = index + 1;
             *countdown = *(u16*)((index << 1) + (s32)schedule);
-            effect_kind = *(u8*)(schedule + index + 0x12);
+            effect_kind = *(schedule + index + 0x12);
 
             if (effect_kind >= 2) {
                 sound_index = battle_effect_get_on_hit_sound_index(effect_kind - 2);

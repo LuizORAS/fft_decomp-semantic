@@ -79,9 +79,9 @@ void battle_move_encode_path_steps(void) {
             if (!state->destination_unit_record_index && !hit) {
                 tile = &g_battle_map_tile_data[i];
                 state->destination_entry_height
-                    = ((s8)tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->source_side_shift) & 3);
+                    = (tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->source_side_shift) & 3);
                 state->destination_opposite_height
-                    = ((s8)tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->destination_side_shift) & 3);
+                    = (tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->destination_side_shift) & 3);
                 state->destination_side_height_delta
                     = state->destination_entry_height - state->destination_opposite_height;
                 if (config->jump_or_1f < ((s8)tile->depth_half_height & 0x1f)) {

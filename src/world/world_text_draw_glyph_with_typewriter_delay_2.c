@@ -86,7 +86,7 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
     if (phase == 2) {
         for (i = 0; i < 14; i++) {
             g_world_text_message_box_column_scratch[i]
-                = *(src + (s32)(i * g_world_text_message_box_slot_prev_width[slot]) / 2
+                = *(src + (i * g_world_text_message_box_slot_prev_width[slot]) / 2
                     + g_world_text_message_box_slot_carry_offset[slot]);
         }
         for (i = 0; i < 14; i++) {

@@ -24,7 +24,7 @@ s32 battle_state_announce_next_charged_action(void) {
         switch (g_battle_action_phase) {
         case 0:
             result = battle_reaction_prepare_hamedo_for_pending_action(
-                unit->battle_data->misc_unit_id, (u16*)&command.ability_id);
+                unit->battle_data->misc_unit_id, &command.ability_id);
             if (result != -1) {
                 g_battle_game_state = BATTLE_GAME_STATE_ANNOUNCE_ABILITY;
                 actor = battle_unit_get_misc_data_by_battle_id(result & 0xffff);

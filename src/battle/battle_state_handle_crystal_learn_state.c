@@ -66,7 +66,7 @@ void battle_state_handle_crystal_learn_state(void) {
             g_battle_move_find_result &= ~2;
         }
     } else if (g_battle_move_find_result & 4) {
-        if ((source->animation_countdown != 0) && ((u32)(source->encoded_animation >> 1) >= 0xc)) {
+        if ((source->animation_countdown != 0) && ((source->encoded_animation >> 1) >= 0xc)) {
             return;
         }
         source->item_ability_display = 0;

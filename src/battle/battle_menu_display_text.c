@@ -5,7 +5,7 @@
  * BATTLE text measurers. */
 #define TEXT_STATE ((world_text_backreference_state_t*)0x1F800200)
 
-#define TEXT_NEXT(state, cursor) battle_text_find_next_character((state), (cursor))
+#define TEXT_NEXT(state, cursor) battle_text_find_next_character(state, cursor)
 
 /* Renders a text entry's glyphs into a menu image at the pen position.
  *
@@ -121,8 +121,8 @@ void battle_menu_display_text(u32 text_id, s32 image, battle_text_pen_t* origin,
                     if (digit >= 0) {
                         divisor = (u32*)(digit * 4 + (s32)powers);
                         do {
-                            if ((u32)state->value >= *divisor || digit == 0 || started != 0) {
-                                state->command = (u32)state->value / *divisor;
+                            if (state->value >= *divisor || digit == 0 || started != 0) {
+                                state->command = state->value / *divisor;
                                 started = 1;
                                 state->value = state->value - state->command * *divisor;
                                 if (count >= g_menu_text_param_24) {

@@ -24,11 +24,11 @@ void world_formation_save_records_to_party_data(void) {
         party->gender_flags = g_world_formation_unit_pointers[i]->gender_flags;
         party->secondary_skillset = g_world_formation_unit_pointers[i]->secondary_skillset;
         party->reaction_ability[0] = g_world_formation_unit_pointers[i]->reaction_ability;
-        party->reaction_ability[1] = (u16)g_world_formation_unit_pointers[i]->reaction_ability >> 8;
+        party->reaction_ability[1] = g_world_formation_unit_pointers[i]->reaction_ability >> 8;
         party->support_ability[0] = g_world_formation_unit_pointers[i]->support_ability;
-        party->support_ability[1] = (u16)g_world_formation_unit_pointers[i]->support_ability >> 8;
+        party->support_ability[1] = g_world_formation_unit_pointers[i]->support_ability >> 8;
         party->movement_ability[0] = g_world_formation_unit_pointers[i]->movement_ability;
-        party->movement_ability[1] = (u16)g_world_formation_unit_pointers[i]->movement_ability >> 8;
+        party->movement_ability[1] = g_world_formation_unit_pointers[i]->movement_ability >> 8;
         if (g_world_formation_unit_pointers[i]->uses_monster_skillset == 0) {
             item = g_world_formation_unit_pointers[i]->equipment[0];
             party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;

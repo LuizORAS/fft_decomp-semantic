@@ -53,12 +53,12 @@ void attack_gfx_build_scaled_sprite_cell_poly_ft4(POLY_FT4* poly, attack_gfx_tex
     poly->tpage = GetTPage(1, 0, texture_page->x, texture_page->y & 0xF00);
     poly->u0 = sprite_rect->u;
     poly->v0 = sprite_rect->v;
-    poly->u1 = sprite_rect->u + (u8)sprite_rect->width;
+    poly->u1 = sprite_rect->u + sprite_rect->width;
     poly->v1 = sprite_rect->v;
     poly->u2 = sprite_rect->u;
-    poly->v2 = sprite_rect->v + (u8)sprite_rect->height;
-    poly->u3 = sprite_rect->u + (u8)sprite_rect->width;
-    poly->v3 = sprite_rect->v + (u8)sprite_rect->height;
+    poly->v2 = sprite_rect->v + sprite_rect->height;
+    poly->u3 = sprite_rect->u + sprite_rect->width;
+    poly->v3 = sprite_rect->v + sprite_rect->height;
 
     x1 = w + 0x100;
     y1 = h + 0x78;

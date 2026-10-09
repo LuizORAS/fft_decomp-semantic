@@ -6,7 +6,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ABS(x) (x < 0 ? -(x) : x)
 
 /* Target operand meaning "keep the component's current value". */
 #define WORLD_CAMERA_HOLD 10000

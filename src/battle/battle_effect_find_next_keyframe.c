@@ -13,7 +13,7 @@ s32 battle_effect_find_next_keyframe(s16 frame, u32 mask, s32* out_index, s32* o
     s32 i;
 
     data = g_battle_effect_misc_data;
-    if (frame < (s32)data->phase2_delay) {
+    if (frame < data->phase2_delay) {
         i = 0;
         if (data->last_keyframe_index >= 0) {
             do {

@@ -13,7 +13,7 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
 
     if (create_file != 0) {
         if (world_card_open_file_with_retries(
-                filename, ((u32)((const world_card_file_header_t*)source)->allocation_blocks << 16) | 0x200)
+                filename, (((const world_card_file_header_t*)source)->allocation_blocks << 16) | 0x200)
             < 0) {
             return -1;
         }

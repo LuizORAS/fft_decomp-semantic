@@ -69,7 +69,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         }
                         break;
                     case 1:
-                        outcome = (battle_action_store_counter_ability(unit, 0xB, (s16)last_attack, 0) == 0) * 2;
+                        outcome = (battle_action_store_counter_ability(unit, 0xB, last_attack, 0) == 0) * 2;
                         break;
                     case 2:
                         if (battle_action_store_counter_ability(unit, 0xB, 0x93, 1) != 0) {

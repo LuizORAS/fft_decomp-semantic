@@ -25,9 +25,9 @@ world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_windo
         left = g_card_menu_window_rect_source->rect.x - 5;
         top = g_card_menu_window_rect_source->rect.y - 9;
         full_columns = g_card_menu_window_rect_source->rect.w / 16;
-        partial_width = (s16)(g_card_menu_window_rect_source->rect.w % 16);
+        partial_width = g_card_menu_window_rect_source->rect.w % 16;
         full_rows = g_card_menu_window_rect_source->rect.h / 16;
-        partial_height = (s16)(g_card_menu_window_rect_source->rect.h % 16);
+        partial_height = g_card_menu_window_rect_source->rect.h % 16;
     } else {
         u8 width;
         u8 height;

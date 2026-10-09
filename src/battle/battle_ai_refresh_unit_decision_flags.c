@@ -32,12 +32,12 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
             else
                 decision->targeting_flags_2 |= BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE;
         }
-        if (unit->hp < (u32)unit->max_hp / 2)
+        if (unit->hp < unit->max_hp / 2)
             decision->targeting_flags_2 |= BATTLE_AI_TARGET_HP_BELOW_HALF;
         if (decision->mp_ability_mod) {
-            if (unit->mp < (u32)unit->max_mp / 2)
+            if (unit->mp < unit->max_mp / 2)
                 decision->targeting_flags_2 |= BATTLE_AI_TARGET_MP_CONSTRAINED;
-            if (ai->acting_unit_team && unit->mp < (u32)decision->highest_mp_cost)
+            if (ai->acting_unit_team && unit->mp < decision->highest_mp_cost)
                 decision->targeting_flags_2 |= BATTLE_AI_TARGET_MP_CONSTRAINED;
         }
         decision->targeting_flags_2 &= ~BATTLE_AI_TARGET_HP_BELOW_THREE_QUARTERS;

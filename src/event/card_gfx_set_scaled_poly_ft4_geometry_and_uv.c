@@ -42,12 +42,12 @@ void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_
     poly->tpage = GetTPage(1, 0, texture->x, texture->y & 0xf00);
     poly->u0 = uv_rect->u;
     poly->v0 = uv_rect->v;
-    poly->u1 = uv_rect->u + (u8)uv_rect->width;
+    poly->u1 = uv_rect->u + uv_rect->width;
     poly->v1 = uv_rect->v;
     poly->u2 = uv_rect->u;
-    poly->v2 = uv_rect->v + (u8)uv_rect->height;
-    poly->u3 = uv_rect->u + (u8)uv_rect->width;
-    poly->v3 = uv_rect->v + (u8)uv_rect->height;
+    poly->v2 = uv_rect->v + uv_rect->height;
+    poly->u3 = uv_rect->u + uv_rect->width;
+    poly->v3 = uv_rect->v + uv_rect->height;
     poly->x0 = position->x + xoff + offset[4];
     poly->y0 = position->y + yoff + offset[5];
     poly->x1 = position->x + xoff + offset[4] + width;

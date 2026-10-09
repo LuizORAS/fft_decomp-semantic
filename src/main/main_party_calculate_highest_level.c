@@ -19,6 +19,6 @@ u8 main_party_calculate_highest_level(void) {
     if (highest >= 100) {
         highest = 99;
     }
-    g_highest_party_level = (u8)highest;
-    return (u8)highest;
+    g_highest_party_level = highest;
+    return highest;
 }

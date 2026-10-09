@@ -6,7 +6,7 @@ s32 battle_effect_code_script_17_jump_if_work_count_greater(effect_record_t* eff
     s16 pc = effect->pc;
     s16* instruction = (s16*)(pc + (s32)effect->script);
     if (instruction[1] < (s16)effect->work_count) {
-        effect->pc = (s16) * (u16*)(instruction + 2);
+        effect->pc = *(u16*)(instruction + 2);
     } else {
         effect->pc = pc + 6;
     }

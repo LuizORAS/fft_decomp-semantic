@@ -16,7 +16,7 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id) {
         equip_item_adjust_inventory_count(((s16*)g_equip_unit_data[unit_index])[slot + 42], 1);
     }
     if (slot < EQUIP_SLOT_HAND_COUNT && result != EQUIP_SLOT_ITEM_ALLOWED) {
-        s32 other = (slot == EQUIP_SLOT_RIGHT_HAND);
+        s32 other = slot == EQUIP_SLOT_RIGHT_HAND;
         if (unit_index != 1) {
             equip_item_adjust_inventory_count(((s16*)g_equip_unit_data[unit_index])[other + 42], 1);
         }

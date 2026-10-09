@@ -26,7 +26,7 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
 
     if (g_world_threads[8].is_running == 0) {
         entry = (world_menu_window_entry_t*)&g_world_menu_default_entries[index];
-        g_world_menu_thread_menu_data = (world_menu_entry_t*)g_world_menu_default_entries;
+        g_world_menu_thread_menu_data = g_world_menu_default_entries;
         entry->window_x = initial_x;
         entry->window_y = initial_y;
         x = entry->window_x;

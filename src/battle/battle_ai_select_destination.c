@@ -45,7 +45,7 @@ s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e
                             score = *(u16*)(tile_index * sizeof(ai->tile_priority[0][0][0]) + (u32)ai
                                 + ((u32)&ai->tile_priority - (u32)ai));
                             /* Compare the packed priority and proximity as a signed score. */
-                            score = (u32)score << 16;
+                            score = score << 16;
                             score += proximity;
                         }
                         if (order != BATTLE_AI_DESTINATION_PRIORITY_FIRST) {

@@ -20,7 +20,7 @@ void world_gs_swapdispbuff(void) {
         stored = 1;
     }
     g_world_gs_frame_count = stored;
-    g_world_gs_active_buffer = (g_world_gs_active_buffer == 0);
+    g_world_gs_active_buffer = g_world_gs_active_buffer == 0;
     world_gs_setdrawbuffclip();
     world_gs_setdrawbuffoffset();
 }

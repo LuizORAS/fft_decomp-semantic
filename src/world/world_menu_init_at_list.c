@@ -78,7 +78,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         } else {
             bracketed = 1;
             if ((g_world_action_target_list_slots[i].flags & 0x20) != 0) {
-                g_world_menu_at_list_primary_values[count] = (s16)0xB012;
+                g_world_menu_at_list_primary_values[count] = 0xB012;
             } else {
                 s32 value = g_world_action_target_list_slots[i].value;
                 if ((g_world_action_target_list_slots[i].flags & 0x80) != 0) {

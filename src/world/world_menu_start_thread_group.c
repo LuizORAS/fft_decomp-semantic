@@ -13,7 +13,7 @@ void world_menu_start_thread_group(s32 parameter, s32 location_id, s32 window_x,
         g_world_menu_location_id = location_id;
         g_world_menu_location_window_x = window_x;
         g_world_menu_location_window_y = window_y;
-        g_world_menu_default_entries[2].text_id = location_id + (s16)TEXT_ID_SECTION_9000_BASE;
+        g_world_menu_default_entries[2].text_id = location_id + TEXT_ID_SECTION_9000_BASE;
         g_world_menu_default_entries[2].window_x = window_x;
         g_world_menu_default_entries[2].window_y = window_y;
         world_thread_start(2, world_menu_thread_group_supervisor_thread);

@@ -89,7 +89,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                             entry_ids = &g_bunit_menu_list_scroll_entry_ids[0];
                             *entry_ids = g_bunit_menu_list_entries[j + 1];
                             rect.x = 0x100;
-                            rect.y = g_bunit_menu_list_visible_rows * (s16)ROW_HEIGHT + 0x30;
+                            rect.y = g_bunit_menu_list_visible_rows * ROW_HEIGHT + 0x30;
                             rect.w = g_bunit_menu_list_vram_width;
                             rect.h = ROW_HEIGHT;
                             bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, entry_ids, &rect, 0);
@@ -221,7 +221,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         g_bunit_menu_cursor_row += 1;
     }
     g_bunit_menu_scroll_list_active = 0;
-    if (previous_selected != (u16)g_bunit_menu_list_selected_index) {
+    if (previous_selected != g_bunit_menu_list_selected_index) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     return command;

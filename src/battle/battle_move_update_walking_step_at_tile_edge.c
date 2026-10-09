@@ -73,7 +73,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
                 += battle_move_calculate_float_fly_slope(unit, g_battle_move_destination_tile);
         }
 
-        if (g_battle_move_current_edge_height + 1 >= (s32)g_battle_move_destination_edge_height) {
+        if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_unit_dismount_rider_and_update_display(unit);
             switch ((g_battle_move_step_value >> 3) & 1) {
             case 0:
@@ -90,7 +90,7 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             return;
         }
 
-        if (g_battle_move_current_edge_height + 7 >= (s32)g_battle_move_destination_edge_height) {
+        if (g_battle_move_current_edge_height + 7 >= g_battle_move_destination_edge_height) {
             battle_unit_dismount_rider(unit);
             unit->step_speed = 0x2000;
             battle_move_start_unit_climb_hop_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

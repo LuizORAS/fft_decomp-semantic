@@ -15,7 +15,7 @@ void attack_map_load_title_graphic(void) {
     if (adjusted < 0) {
         group_input = title + 2;
     }
-    group_input = (group = group_input >> 2);
+    group_input = group = group_input >> 2;
     group = adjusted - group * 4;
 
     if (adjusted != 0xff) {

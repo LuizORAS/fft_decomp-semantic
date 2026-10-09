@@ -44,7 +44,7 @@ s32 bunit_run_ability_list_menu(void) {
         rect.h = 0x10;
         g_bunit_ability_list_job_name_row[0] = g_bunit_job_selected_id;
         bunit_text_render_id_rows_to_vram(
-            (s32)g_battle_text_section_pointers[6], (u16*)g_bunit_ability_list_job_name_row, &rect, 0);
+            (s32)g_battle_text_section_pointers[6], g_bunit_ability_list_job_name_row, &rect, 0);
         g_bunit_ability_category = bunit_menu_update_wrapped_horizontal_selection(4, 0, 0);
         bunit_create_ability_list(
             g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);

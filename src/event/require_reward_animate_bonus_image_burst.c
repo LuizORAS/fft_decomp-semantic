@@ -104,7 +104,7 @@ void require_reward_animate_bonus_image_burst(void) {
                     &g_require_reward_burst_rotated_offset);
                 dist = abs(g_require_reward_burst_rotated_offset.vx / ONE);
             }
-            dist = (u32)(dist * dist) / (u32)(divisor << 8);
+            dist = (dist * dist) / (u32)(divisor << 8);
             tile->delay = dist;
             tile->angle = 0;
             tile->radius = 0;

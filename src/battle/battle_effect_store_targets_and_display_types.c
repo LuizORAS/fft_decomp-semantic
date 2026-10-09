@@ -104,7 +104,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.math_skill_flag = block->control_value_19f;
     init.used_weapon_id = block->used_weapon_id;
     if (block->last_attack_id == 0 || block->reaction_occurred != 0 || g_battle_action_phase != 1
-        || (u32)(unit->used_item_or_weapon_id - 0x4A) < 2U || (item = unit->used_item_or_weapon_id) == 0x4C) {
+        || (unit->used_item_or_weapon_id - 0x4A) < 2U || (item = unit->used_item_or_weapon_id) == 0x4C) {
         packed = 0;
     } else {
         if (ability == ABILITY_ID_THROW_BALL) {

@@ -90,7 +90,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             if (out_blue <= 0) {
                 out_blue = 0;
             }
-            if ((s16)(out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
+            if ((out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
                 out_blue = 1;
             }
             if (final_value != 0) {
@@ -171,7 +171,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             if (out_blue <= 0) {
                 out_blue = 0;
             }
-            if ((s16)(out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
+            if ((out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
                 out_blue = 1;
             }
             if (final_value != 0) {

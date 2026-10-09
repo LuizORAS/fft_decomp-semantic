@@ -49,7 +49,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->x3 = transformed.vx;
     prim->y3 = transformed.vy;
     prim->code |= 2;
-    tile = battle_map_get_tile_data_pointer((s16)(unit->screen.vx / 28), (s16)(unit->screen.vz / 28), unit->map_z);
+    tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
     if ((tile->depth_half_height & 0xe0) && -(tile->height + (tile->depth_half_height >> 5)) * 12 < unit->screen.vy) {
         unit->shadow_counter += g_animation_speed;
         frame = unit->shadow_counter;
@@ -97,7 +97,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     if (unit->screen.vy >= position.vy) {
         packet = ot;
     } else {
-        tile = battle_map_get_tile_data_pointer((s16)(position.vx / 28), (s16)(position.vz / 28), unit->map_z);
+        tile = battle_map_get_tile_data_pointer((position.vx / 28), (position.vz / 28), unit->map_z);
         position.vy -= (tile->depth_half_height >> 5) * 12;
         if (unit->centre_tile_offset != 0) {
             if (tile->surface.value & 0x40) {

@@ -3,12 +3,12 @@
 /* libgpu-style rectangle setters; the macro argument re-evaluation and the
  * narrowing store into each field are part of the matched expression shapes. */
 #define SET_UVWH(prim, _u0, _v0, _w, _h)                                                                               \
-    ((prim)->u0 = (_u0), (prim)->v0 = (_v0), (prim)->u1 = (_u0) + (_w), (prim)->v1 = (_v0), (prim)->u2 = (_u0),        \
-        (prim)->v2 = (_v0) + (_h), (prim)->u3 = (_u0) + (_w), (prim)->v3 = (_v0) + (_h))
+    (prim->u0 = _u0, prim->v0 = _v0, prim->u1 = (_u0) + _w, prim->v1 = _v0, prim->u2 = _u0, prim->v2 = (_v0) + _h,     \
+        prim->u3 = (_u0) + _w, prim->v3 = (_v0) + _h)
 #define SET_XYWH(prim, _x0, _y0, _w, _h)                                                                               \
-    ((prim)->x0 = (_x0), (prim)->y0 = (_y0), (prim)->x1 = (_x0) + (_w), (prim)->y1 = (_y0), (prim)->x2 = (_x0),        \
-        (prim)->y2 = (_y0) + (_h), (prim)->x3 = (_x0) + (_w), (prim)->y3 = (_y0) + (_h))
-#define SET_RGB(prim, n, value) ((prim)->r##n = (value), (prim)->g##n = (value), (prim)->b##n = (value))
+    (prim->x0 = _x0, prim->y0 = _y0, prim->x1 = (_x0) + _w, prim->y1 = _y0, prim->x2 = _x0, prim->y2 = (_y0) + _h,     \
+        prim->x3 = (_x0) + _w, prim->y3 = (_y0) + _h)
+#define SET_RGB(prim, n, value) (prim->r##n = value, prim->g##n = value, prim->b##n = value)
 
 /*
  * Builds and submits a 2x2 set of shaded POLY_GT4 panel strips at the current

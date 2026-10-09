@@ -40,7 +40,7 @@ s32 battle_menu_resolve_selection(void) {
                 if (command != 0xFF) {
                     if (menu == 0x69) {
                         command = g_dead_unit_action;
-                        g_battle_menu_selected_action.item_id = (u8)g_dead_unit_result;
+                        g_battle_menu_selected_action.item_id = g_dead_unit_result;
                         option = 0xFFFE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_id_records[i].map + option + 1);

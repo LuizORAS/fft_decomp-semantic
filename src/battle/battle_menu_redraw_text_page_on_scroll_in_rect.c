@@ -57,7 +57,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
         }
         if (changed != 0) {
             if (g_battle_menu_scroll_list_depth == 2) {
-                buffer = (u8*)(g_event_overlay_load_address + 0x2000);
+                buffer = g_event_overlay_load_address + 0x2000;
             } else {
                 buffer = battle_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
             }

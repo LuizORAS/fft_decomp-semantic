@@ -108,7 +108,7 @@ void world_formation_process_frame(void) {
                     } else {
                         g_world_formation_triangle_menu.flags = 0x78;
                     }
-                    g_world_formation_triangle_menu.icon_x = ((s16)(g_world_formation_selected_unit_index % 4) < 2
+                    g_world_formation_triangle_menu.icon_x = ((g_world_formation_selected_unit_index % 4) < 2
                                                                  || g_world_formation_unit_browse_enabled != 0)
                         ? 0x12C
                         : 0x8A;

@@ -29,7 +29,7 @@ void etc_graphic_open(s32 graphic_id) {
         g_battle_thread_call_target = (void (*)(void))main_file_is_still_loading;
     } while (battle_thread_call_on_main_stack() != 0);
 
-    if ((u32)g_etc_graphics[graphic_id].texture_mode < 2U) {
+    if (g_etc_graphics[graphic_id].texture_mode < 2U) {
         LoadImage(g_etc_graphics[graphic_id].framebuffer_rect, (u32*)image_buffer);
         if (g_etc_graphics[graphic_id].texture_mode == 1) {
             LoadImage(

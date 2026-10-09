@@ -101,7 +101,7 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
         } else {
             has_special_entry = 1;
             if ((g_option_menu_at_list_descriptors[index].flags & OPTION_AT_SHOW_WAIT_LABEL) != 0) {
-                g_option_menu_at_list_primary_values[entry_count] = (s16)0xb012;
+                g_option_menu_at_list_primary_values[entry_count] = 0xb012;
             } else {
                 s32 value = g_option_menu_at_list_descriptors[index].turn_value;
                 if ((g_option_menu_at_list_descriptors[index].flags & OPTION_AT_TURN_VALUE_HIGH_BIT) != 0) {

@@ -109,8 +109,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
         current = g_battle_effect_current_secondary;
         current->timer = current->timer + 1;
         result = state->finish_timer != 1;
-        if (state->count == 0
-            && (s16)current->timer > (s32)g_battle_effect_groups[BATTLE_EFFECT_TRAP_GROUP].spawn_start_frame) {
+        if (state->count == 0 && current->timer > g_battle_effect_groups[BATTLE_EFFECT_TRAP_GROUP].spawn_start_frame) {
             state->finish_timer = state->finish_timer + 1;
         }
         break;

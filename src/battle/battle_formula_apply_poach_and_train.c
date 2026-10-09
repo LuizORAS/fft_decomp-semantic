@@ -45,7 +45,7 @@ void battle_formula_apply_poach_and_train(void) {
         g_current_ability.post_formula_flag = 6;
         return;
     }
-    if ((remaining > 0) && ((u16)(g_battle_action_target->max_hp / 5) >= remaining)
+    if ((remaining > 0) && ((g_battle_action_target->max_hp / 5) >= remaining)
         && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
         g_battle_action_target_data->status_infliction[1] |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE);
         if (battle_status_modify_inflictions(0) != 0) {

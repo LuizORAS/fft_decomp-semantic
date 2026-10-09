@@ -11,9 +11,9 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
     SVECTOR direction;
     VECTOR rotated;
 
-    ((effect_list_node_t*)work->data)->x = work->position[0] >> 12;
-    ((effect_list_node_t*)work->data)->y = work->position[1] >> 12;
-    ((effect_list_node_t*)work->data)->z = work->position[2] >> 12;
+    work->data->x = work->position[0] >> 12;
+    work->data->y = work->position[1] >> 12;
+    work->data->z = work->position[2] >> 12;
     if (work->kind_flags & EFFECT_WORK_KIND_FLAG_ORIENT_TO_VELOCITY) {
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_effect_particle_heading_matrix);
@@ -22,8 +22,8 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
         direction.vz = work->velocity[2] >> 3;
         /* The flag word lands in the output vector's pad word; the target frame
          * has no separate flag slot. */
-        RotTrans(&direction, &rotated, (long*)&rotated.pad);
-        ((effect_list_node_t*)work->data)->screen_rotation_angle = ratan2(rotated.vy, rotated.vx);
+        RotTrans(&direction, &rotated, &rotated.pad);
+        work->data->screen_rotation_angle = ratan2(rotated.vy, rotated.vx);
     }
     if (work->flags & EFFECT_WORK_FLAG_COLOUR_CURVES) {
         battle_effect_render_particle_sprite(work->data,

@@ -10,7 +10,7 @@ void battle_action_check_blade_grasp_usability(void) {
     attacker = g_battle_action_target;
     target = g_battle_action_target_data;
     /* Halfword store covers attack_accuracy and the pad byte after it. */
-    target->attack_accuracy = (s16)(0x64 - attacker->brave);
+    target->attack_accuracy = 0x64 - attacker->brave;
     if (battle_action_calculate_chance_to_react(attacker) != 0)
         return;
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE)

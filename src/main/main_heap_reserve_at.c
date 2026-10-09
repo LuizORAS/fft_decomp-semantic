@@ -39,7 +39,7 @@ u8* main_heap_reserve_at(void* allocation, u32 size) {
             for (j = 0; j < nblocks; j++) {
                 g_main_heap_game_allocator_table[start + j] = id;
             }
-            return (u8*)((start << 11) + g_main_heap_high_overlay_load_address);
+            return ((start << 11) + g_main_heap_high_overlay_load_address);
         }
     }
     return 0;

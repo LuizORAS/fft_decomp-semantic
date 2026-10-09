@@ -34,7 +34,7 @@ s32 world_menu_update_clear_all_abilities_prompt(void) {
                 changed = 1;
                 world_formation_set_unit_ability_slot(g_world_formation_selected_unit_index, i, 0,
                     world_ability_is_equip_support_change(
-                        g_world_formation_selected_unit_index, (s16)unit->ability_slots[i]));
+                        g_world_formation_selected_unit_index, unit->ability_slots[i]));
             }
         }
         world_formation_stage_selected_unit();

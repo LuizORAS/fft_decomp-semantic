@@ -8,5 +8,5 @@ s16 world_job_get_base(s16 formation_idx) {
     } else if (job >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
         job = JOB_ID_SQUIRE;
     }
-    return (s16)job;
+    return job;
 }

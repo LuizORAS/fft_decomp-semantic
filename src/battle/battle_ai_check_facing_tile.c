@@ -13,7 +13,7 @@ s32 battle_ai_check_facing_tile(battle_ai_coords_t* source, battle_ai_coords_t* 
     s32 y;
     map_tile_t* tile;
 
-    if ((u32)x >= (u32)width) {
+    if (x >= (u32)width) {
         return 1;
     }
     y = target->bytes.y;

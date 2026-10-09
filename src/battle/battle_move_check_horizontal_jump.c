@@ -44,7 +44,7 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
             }
             low = records[state->work_height].standing_height;
             high = low + 3;
-            if (height < (u8)high && (u8)high < height + state->jump_unit_size) {
+            if (height < high && high < height + state->jump_unit_size) {
                 return 1;
             }
             high = records[state->work_height].top_height;
@@ -78,10 +78,10 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
         if (height < (u8)low && (u8)low < height + state->jump_unit_size) {
             return 1;
         }
-        if (height < (u8)high && (u8)high < height + state->jump_unit_size) {
+        if (height < high && high < height + state->jump_unit_size) {
             return 1;
         }
-        if ((u8)low <= height && height + state->jump_unit_size <= (u8)high) {
+        if ((u8)low <= height && height + state->jump_unit_size <= high) {
             return 1;
         }
     }

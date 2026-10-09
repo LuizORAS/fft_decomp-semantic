@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Event instructions are an unaligned byte stream; operands are read bytewise. */
-#define EVENT_BYTE(offset, index) (((u8*)g_battle_event_block + (offset))[index])
+#define EVENT_BYTE(offset, index) (((u8*)g_battle_event_block + offset)[index])
 
 /* Measure the widest text a DisplayMessage window will show.
  *

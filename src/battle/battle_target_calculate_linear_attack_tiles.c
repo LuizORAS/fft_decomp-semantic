@@ -41,7 +41,7 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
         if (y < 0) {
             return;
         }
-        if (y >= (s32)g_battle_map_max_y) {
+        if (y >= g_battle_map_max_y) {
             return;
         }
         dir = y * map_width + x;

@@ -14,8 +14,8 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->x0 = rect->x + 0x80;
     poly->y0 = rect->y;
     {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
+        s32 right_offset = rect->w + 0x80;
+        s32 right_x = rect->x;
         right_x += right_offset;
         poly->x1 = right_x;
     }
@@ -23,8 +23,8 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->x2 = rect->x + 0x80;
     poly->y2 = rect->y + rect->h;
     {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
+        s32 right_offset = rect->w + 0x80;
+        s32 right_x = rect->x;
         right_x += right_offset;
         poly->x3 = right_x;
     }

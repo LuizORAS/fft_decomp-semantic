@@ -78,14 +78,13 @@ s32 equip_menu_run_equip_mode(void) {
         }
     } else {
         g_equip_text_help_message_id = g_equip_menu_list_entry_count != 0
-            ? ((u16)g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF) + 0x6800
+            ? (g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF) + 0x6800
             : -1;
-        item = g_equip_menu_list_entry_count != 0
-            ? (u16)g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF
-            : 0;
+        item = g_equip_menu_list_entry_count != 0 ? g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x3FF
+                                                  : 0;
         if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
             if (g_equip_menu_list_entry_count != 0
-                && ((u16)g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x4000) == 0) {
+                && (g_equip_item_list_entries[g_equip_menu_selected_list_index] & 0x4000) == 0) {
                 item_id = item;
                 if (equip_item_adjust_inventory_count(item_id, 0) == 0) {
                     equip_text_show_message_with_sound(0xD809, 0x30);

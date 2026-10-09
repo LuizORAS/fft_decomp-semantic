@@ -70,24 +70,24 @@ void battle_script_process_pending_requests(void) {
     reload_state = g_battle_map_reload_state;
     if (reload_state == 1) {
         if (battle_map_load_data_stage_0x75() == 0) {
-            g_battle_map_reload_state = (u16)(g_battle_map_reload_state + 1);
+            g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     } else if (reload_state == 2) {
         if (battle_map_load_data_stage_0x76() == 0) {
-            g_battle_map_reload_state = (u16)(g_battle_map_reload_state + 1);
+            g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     }
     append_state = g_battle_map_append_state;
     if ((append_state == 1) && (g_battle_map_destruction_wait_state == 0)) {
         battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x99);
-        g_battle_map_append_state = (u16)(g_battle_map_append_state + 1);
+        g_battle_map_append_state = g_battle_map_append_state + 1;
     } else if ((append_state == 2)
         && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x9C) == 0x9B)) {
-        g_battle_map_append_state = (u16)(g_battle_map_append_state + 1);
+        g_battle_map_append_state = g_battle_map_append_state + 1;
     }
     destruction_state = g_battle_map_destruction_wait_state;
     if (destruction_state == 2) {
-        g_battle_map_destruction_wait_state = (s16)(destruction_state + 1);
+        g_battle_map_destruction_wait_state = destruction_state + 1;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_RELEASE_GNS_HOLD, 1, 1, 1);
     } else if ((destruction_state == 3)
         && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x76) == 0)) {
@@ -101,7 +101,7 @@ void battle_script_process_pending_requests(void) {
         } else {
             g_battle_event_weather_request = weather_id;
             if (g_battle_map_weather_flags & 1) {
-                g_battle_event_weather_request = (s16)(weather_id + 5);
+                g_battle_event_weather_request = weather_id + 5;
             }
             battle_map_set_weather_texture_overlay(
                 g_battle_event_weather_commands[g_battle_event_weather_request].environment_id);
@@ -115,9 +115,9 @@ void battle_script_process_pending_requests(void) {
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {
         if (g_battle_event_effect_target_mode == 2) {
-            battle_effect_start_new(effect_id, 2, (u8*)(u32)g_battle_event_effect_target_misc_id);
+            battle_effect_start_new(effect_id, 2, (u8*)g_battle_event_effect_target_misc_id);
         } else {
-            battle_effect_start_new(effect_id, 0, (u8*)(u32)g_battle_event_effect_target_misc_id);
+            battle_effect_start_new(effect_id, 0, (u8*)g_battle_event_effect_target_misc_id);
         }
     }
     if (g_battle_unit_graphics_load_pending != 0) {
@@ -142,7 +142,7 @@ void battle_script_process_pending_requests(void) {
         }
         unit_vram_copy = g_battle_event_pending_unit_vram_copy;
         if (unit_vram_copy >= 0) {
-            battle_gfx_load_misc_unit_into_evtchr_slot((u32)(unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
+            battle_gfx_load_misc_unit_into_evtchr_slot((unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
         }
         release_slot = g_battle_event_pending_reserved_vram_release_slot;
         if (release_slot >= 0) {
@@ -154,7 +154,7 @@ void battle_script_process_pending_requests(void) {
         }
         if (g_battle_music_switch_request >= 0) {
             main_sound_stop_forced_music();
-            g_battle_current_music_track_index = (u16)(g_battle_current_music_track_index ^ 1);
+            g_battle_current_music_track_index = g_battle_current_music_track_index ^ 1;
             if (g_battle_current_music_track_index == 0) {
                 music_track_id = g_battle_music_track_1_id;
             } else {

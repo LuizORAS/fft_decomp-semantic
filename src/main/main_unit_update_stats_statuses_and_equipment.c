@@ -57,7 +57,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     if (skip_status_check != 0) {
         return;
     }
-    if ((u16)(unit->max_hp / 5) >= unit->hp) {
+    if ((unit->max_hp / 5) >= unit->hp) {
         unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
     } else {

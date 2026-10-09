@@ -61,8 +61,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
                      * with the row and demonstrably breaks the byte-exact
                      * address calculation. Preserve the target's word-row,
                      * unit-base, then field-offset order. */
-                    src = (u8*)((u32)(row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit
-                        + BATTLE_LEARNED_ABILITIES_OFFSET);
+                    src = (u8*)((row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit + BATTLE_LEARNED_ABILITIES_OFFSET);
                     for (k = 0; k < BATTLE_LEARN_ON_HIT_ROW_BYTES; k++) {
                         scratch[k] = src[k];
                     }

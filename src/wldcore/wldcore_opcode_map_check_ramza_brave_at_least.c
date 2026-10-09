@@ -12,7 +12,7 @@ void wldcore_opcode_map_check_ramza_brave_at_least(void) {
     ip = *ipp;
     val = g_wldcore_script_state.data[ip];
     *ipp = ip + 1;
-    if ((s32)party->bravery < val) {
+    if (party->bravery < val) {
         g_wldcore_script_state.flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
     }
 }

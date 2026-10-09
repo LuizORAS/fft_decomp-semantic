@@ -115,7 +115,7 @@ void battle_text_draw_dialogue_glyph(s32 pen_x, s32 pen_y, s32 delay) {
                 if (request->dialogue_type_c == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {
-                    (image + i)[offset / 2] = ((u8*)g_battle_menu_glyph_image
+                    (image + i)[offset / 2] = (g_battle_menu_glyph_image
                         + ((((request->flags_0 + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
                 }
             }

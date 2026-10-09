@@ -47,7 +47,7 @@ s32 battle_effect_splash_secondary_handler(void) {
         finish_timer = effect->finish_timer;
         result = finish_timer != 1;
         effect->timer = effect->timer + 1;
-        if (effect->active_count == 0 && (s16)effect->timer > (s32)g_battle_effect_groups[7].spawn_start_frame) {
+        if (effect->active_count == 0 && effect->timer > g_battle_effect_groups[7].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

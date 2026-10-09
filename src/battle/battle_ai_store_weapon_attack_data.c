@@ -33,7 +33,7 @@ void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_i
         *flags_out |= 1;
         break;
     }
-    out->bytes.weapon_id = (u8)item_id;
+    out->bytes.weapon_id = item_id;
     out->bytes.range = weapon->range;
     out->bytes.element |= weapon->element;
 }

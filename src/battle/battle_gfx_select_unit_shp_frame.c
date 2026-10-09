@@ -15,7 +15,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
     s32 height;
     s32 z;
 
-    tile = battle_map_get_tile_data_pointer((s16)(unit->screen.vx / 28), (s16)(unit->screen.vz / 28), unit->map_z);
+    tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
     if (frame < 0xd2) {
         table = sprite->shp;
         if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {

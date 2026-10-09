@@ -11,7 +11,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
     divisor = 1;
     i = 0;
     sprite->w = 8;
-    y = (s16)sprite->y;
+    y = sprite->y;
     sprite->h = 0x10;
     for (; i < digits - 1; i++) {
         divisor *= 10;

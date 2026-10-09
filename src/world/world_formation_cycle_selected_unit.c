@@ -15,7 +15,7 @@ void world_formation_cycle_selected_unit(s32 pad_buttons) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
         do {
             if (g_world_formation_selected_unit_index == 0) {
-                index = (u16)g_world_formation_unit_count - 1;
+                index = g_world_formation_unit_count - 1;
             } else {
                 prev = (u16)g_world_formation_selected_unit_index;
                 index = prev - 1;

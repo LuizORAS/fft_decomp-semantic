@@ -6,7 +6,7 @@ int main_sound_set_current_music_target(int volume, int time) {
 
     if (music != 0) {
         g_main_sound_music.state.volume = volume;
-        SuzukiCalcMusVolChange(music, (s16)volume, (s16)time);
+        SuzukiCalcMusVolChange(music, volume, time);
         return 1;
     }
     return 0;

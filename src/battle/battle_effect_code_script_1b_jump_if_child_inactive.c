@@ -8,7 +8,7 @@ s32 battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* effect)
     u32 slot;
 
     cur = (u8*)(effect->pc + (s32)effect->script);
-    slot = (u32)cur[1] >> 4;
+    slot = cur[1] >> 4;
     if (effect->phase_ids[slot] == 0) {
         effect->pc = *(u16*)(cur + 2);
     } else {

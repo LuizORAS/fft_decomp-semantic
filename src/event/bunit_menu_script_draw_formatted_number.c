@@ -101,7 +101,7 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
             value = next_remaining;
         }
     } else {
-        blanks = command->width - sprintf((char*)text, g_bunit_text_decimal_format, value) - negative;
+        blanks = command->width - sprintf(text, g_bunit_text_decimal_format, value) - negative;
         text_index = 0;
         for (i = 0; i < command->width; i++) {
             x = command->x + i * command->spacing;

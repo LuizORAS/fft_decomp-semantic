@@ -113,7 +113,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 return;
             }
             if ((g_wldcore_current_button_input & PSX_PAD_SQUARE) && (g_wldcore_active_saved_record.state_flags & 0x40)
-                && (s16)g_wldcore_active_saved_record.text_history_3 != -1) {
+                && g_wldcore_active_saved_record.text_history_3 != -1) {
                 g_wldcore_window_records[level->right_window].sequence = 0x71;
                 window = level->right_window;
                 g_wldcore_window_records[window].anim_counter = 0;

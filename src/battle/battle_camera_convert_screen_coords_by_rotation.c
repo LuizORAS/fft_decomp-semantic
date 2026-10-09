@@ -21,30 +21,30 @@ void battle_camera_convert_screen_coords_by_rotation(const u16* input, s16* outp
 
     switch (yaw) {
     case 0: {
-        s32 far_edge = (s16)((s16)input[0] / 28) * 28 + 0x1c;
+        s32 far_edge = ((s16)input[0] / 28) * 28 + 0x1c;
         output[0] = far_edge - offset;
     }
-        output[2] = (s16)((s16)input[2] / 28) * 28 + offset;
+        output[2] = ((s16)input[2] / 28) * 28 + offset;
         break;
     case 0x400: {
-        s32 far_edge = (s16)((s16)input[0] / 28) * 28 + 0x1c;
+        s32 far_edge = ((s16)input[0] / 28) * 28 + 0x1c;
         output[0] = far_edge - offset;
     }
         {
-            s32 far_edge = (s16)((s16)input[2] / 28) * 28 + 0x1c;
+            s32 far_edge = ((s16)input[2] / 28) * 28 + 0x1c;
             output[2] = far_edge - offset;
         }
         break;
     case 0x800:
-        output[0] = (s16)((s16)input[0] / 28) * 28 + offset;
+        output[0] = ((s16)input[0] / 28) * 28 + offset;
         {
-            s32 far_edge = (s16)((s16)input[2] / 28) * 28 + 0x1c;
+            s32 far_edge = ((s16)input[2] / 28) * 28 + 0x1c;
             output[2] = far_edge - offset;
         }
         break;
     case 0xc00:
-        output[0] = (s16)((s16)input[0] / 28) * 28 + offset;
-        output[2] = (s16)((s16)input[2] / 28) * 28 + offset;
+        output[0] = ((s16)input[0] / 28) * 28 + offset;
+        output[2] = ((s16)input[2] / 28) * 28 + offset;
         break;
     }
 }

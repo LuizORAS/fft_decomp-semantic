@@ -94,7 +94,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         }
         done = state->done;
         result = done != 1;
-        if (state->count == 0 && timer > (s32)g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame) {
+        if (state->count == 0 && timer > g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame) {
             state->done = done + 1;
         }
         break;

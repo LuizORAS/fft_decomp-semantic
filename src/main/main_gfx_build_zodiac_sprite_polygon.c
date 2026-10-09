@@ -49,12 +49,12 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_po
     poly->u0 = frame->u;
     poly->v0 = frame->v;
     /* The target adds only the low byte of the 16-bit width/height here. */
-    poly->u1 = frame->u + (u8)frame->width;
+    poly->u1 = frame->u + frame->width;
     poly->v1 = frame->v;
     poly->u2 = frame->u;
-    poly->v2 = frame->v + (u8)frame->height;
-    poly->u3 = frame->u + (u8)frame->width;
-    poly->v3 = frame->v + (u8)frame->height;
+    poly->v2 = frame->v + frame->height;
+    poly->u3 = frame->u + frame->width;
+    poly->v3 = frame->v + frame->height;
     right = width + 0x100;
     bottom = height + 0x78;
     poly->x0 = base->x + x + offset->x + 0x100;

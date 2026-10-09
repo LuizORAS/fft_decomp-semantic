@@ -14,14 +14,14 @@ void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const debug_chr_t
     if (height < 0)
         height = -height;
     poly->tpage = GetTPage(0, 0, texture->x, texture->y & 0xf00);
-    poly->u0 = (u8)uv_rect[0];
-    poly->v0 = (u8)uv_rect[1];
-    poly->u1 = (u8)uv_rect[0] + (u8)uv_rect[2];
-    poly->v1 = (u8)uv_rect[1];
-    poly->u2 = (u8)uv_rect[0];
-    poly->v2 = (u8)uv_rect[1] + (u8)uv_rect[3];
-    poly->u3 = (u8)uv_rect[0] + (u8)uv_rect[2];
-    poly->v3 = (u8)uv_rect[1] + (u8)uv_rect[3];
+    poly->u0 = uv_rect[0];
+    poly->v0 = uv_rect[1];
+    poly->u1 = uv_rect[0] + uv_rect[2];
+    poly->v1 = uv_rect[1];
+    poly->u2 = uv_rect[0];
+    poly->v2 = uv_rect[1] + uv_rect[3];
+    poly->u3 = uv_rect[0] + uv_rect[2];
+    poly->v3 = uv_rect[1] + uv_rect[3];
     poly->x0 = position[0] + xoff + offset[4];
     poly->y0 = position[1] + yoff + offset[5];
     poly->x1 = position[0] + xoff + offset[4] + width;

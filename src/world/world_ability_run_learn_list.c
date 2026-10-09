@@ -59,13 +59,12 @@ s32 world_ability_run_learn_list(void) {
     if (g_world_menu_option_count == 0) {
         g_world_menu_description_text_id = -1;
     } else {
-        g_world_menu_description_text_id
-            = ((u16)g_world_ability_entries[g_world_menu_cursor_position] & 0x3ff) + 0x7800;
+        g_world_menu_description_text_id = (g_world_ability_entries[g_world_menu_cursor_position] & 0x3ff) + 0x7800;
     }
     if (g_world_learn_confirm_prompt_state == 0) {
         if ((g_world_input_primary_repeat & PSX_PAD_CIRCLE) && g_world_menu_option_count != 0) {
             index = g_world_menu_cursor_position;
-            if ((u16)g_world_ability_entries[index] >> 14) {
+            if (g_world_ability_entries[index] >> 14) {
                 world_text_show_message_and_play_sound(0xc009, 0x30);
             } else if (world_menu_is_learn_ability_learned(index) != 0) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;

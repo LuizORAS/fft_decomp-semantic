@@ -17,7 +17,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     state->work_level = candidate & 1;
     state->destination_unit_record_flag = candidate / 2;
     state->destination_tile = &g_battle_map_tile_data[state->destination_index
-        = state->work_level * 256 + state->work_y * config->map_max_x + (u16)state->work_x];
+        = state->work_level * 256 + state->work_y * config->map_max_x + state->work_x];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
     state->destination_half_height = state->destination_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;

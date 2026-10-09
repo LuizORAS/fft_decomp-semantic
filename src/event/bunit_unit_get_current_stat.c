@@ -16,5 +16,5 @@ s16 bunit_unit_get_current_stat(s32 unit_index, s32 value) {
         value = entry->current_ct;
     }
     g_bunit_unit_current_stat_value = value;
-    return (s16)value;
+    return value;
 }

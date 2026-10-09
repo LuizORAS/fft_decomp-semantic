@@ -796,7 +796,7 @@ void world_text_character_handling_thread(void) {
                     g_world_text_typewriter_glyph_y = cursor_y;
                     g_world_text_typewriter_glyph_bits_per_pixel = rec.dialog_type & 0x70;
                     g_world_text_typewriter_glyph_palette = rec.color;
-                    world_text_draw_glyph_with_typewriter_delay((s16)cursor_x, (s16)cursor_y, color);
+                    world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -834,7 +834,7 @@ void world_text_character_handling_thread(void) {
                 g_world_text_typewriter_glyph_y = cursor_y;
                 g_world_text_typewriter_glyph_bits_per_pixel = rec.box_type;
                 g_world_text_typewriter_glyph_palette = rec.color;
-                world_text_draw_glyph_with_typewriter_delay((s16)cursor_x, (s16)cursor_y, color);
+                world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

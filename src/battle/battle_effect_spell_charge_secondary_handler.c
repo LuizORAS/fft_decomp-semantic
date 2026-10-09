@@ -16,7 +16,7 @@ typedef struct battle_effect_charge_params {
 } battle_effect_charge_params_t;
 
 /* The target compares a line's two endpoints as whole words. */
-#define LINE_G2_XY_WORD(line, n) (*(s32*)&(line)->x##n)
+#define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)
 
 extern battle_effect_charge_params_t g_battle_effect_charge_line_params[];
 
@@ -105,7 +105,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         in.vy = screen->z - i;
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        RotTrans(&in, &out, (long*)&out.pad);
+        RotTrans(&in, &out, &out.pad);
         state->angle = 0;
         state->done = 0;
         state->x = out.vx;

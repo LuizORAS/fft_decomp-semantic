@@ -5,7 +5,7 @@
 /* The status buffer is battle_menu_status_panel_buffer_t and the thread record
  * battle_menu_status_panel_frame_config_t, as in the WORLD twin world_menu_equipment_and_ability_panel_thread. The
  * buffer's +0x3b0 tail is this overlay's scaled draw-area packet pair. */
-#define DRAW_AREA(screen) ((bunit_gfx_scaled_draw_area_pair_t*)&(screen)->portrait)
+#define DRAW_AREA(screen) ((bunit_gfx_scaled_draw_area_pair_t*)&screen->portrait)
 
 /* Thread task 0x3b: the combined status panel for the selected unit. BUNIT
  * twin of WORLD world_menu_equipment_and_ability_panel_thread. */

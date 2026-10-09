@@ -88,7 +88,7 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
         bcopy(g_world_load_work_buffer->item_type_order_1, g_main_item_type_order_1, 8);
     }
 
-    ((s8*)g_main_item_type_order_1)[7] = -1;
+    g_main_item_type_order_1[7] = -1;
     bcopy(g_world_load_work_buffer->item_type_order_2, g_main_item_type_order_2, 7);
     bcopy(g_world_load_work_buffer->item_type_order_3, g_main_item_type_order_3, 5);
     bcopy(g_world_load_work_buffer->item_type_order_4, g_main_item_type_order_4, 5);

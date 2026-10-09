@@ -16,7 +16,7 @@ void* battle_map_determine_rare_common_item(battle_stats_t* unit) {
     u8 item_id;
 
     find_result = ((battle_move_find_result_data_t * (*)(u8, u8, u32)) battle_map_set_item_trap_data)(
-        unit->x, (u8)unit->position.raw, (u32)unit->position.raw >> 15);
+        unit->x, unit->position.raw, unit->position.raw >> 15);
     if (main_util_roll_pass_fail(0x64, 0x64 - unit->brave) == 0) {
         item_id = find_result->rare_item_id;
     } else {

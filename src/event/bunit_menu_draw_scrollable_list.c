@@ -28,7 +28,7 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     g_bunit_menu_list_text_columns = script[10];
     g_bunit_menu_list_vram_width = (g_bunit_menu_list_glyph_width * g_bunit_menu_list_text_columns) >> 2;
 
-    entry_count = (s16)g_bunit_menu_list_entry_count;
+    entry_count = g_bunit_menu_list_entry_count;
     if (g_bunit_menu_list_selected_index >= entry_count) {
         g_bunit_menu_list_selected_index = entry_count - 1;
     }
@@ -46,14 +46,14 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     }
 
     if (g_bunit_menu_list_selected_index >= (s16)g_bunit_menu_list_entry_count) {
-        g_bunit_menu_list_selected_index = (s16)g_bunit_menu_list_entry_count - 1;
+        g_bunit_menu_list_selected_index = g_bunit_menu_list_entry_count - 1;
     }
 
     if (g_bunit_menu_list_text_table != 0) {
         rect.x = 0x100;
         rect.y = 0x30;
         rect.w = g_bunit_menu_list_vram_width;
-        rect.h = (s32)g_bunit_menu_list_visible_rows * 16;
+        rect.h = g_bunit_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_bunit_menu_list_visible_rows; i++) {
             row_ids[i] = g_bunit_menu_list_entries[i + g_bunit_menu_scroll_base_index];

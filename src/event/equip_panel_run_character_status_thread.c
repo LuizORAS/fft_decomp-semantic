@@ -144,7 +144,7 @@ void equip_panel_run_character_status_thread(void) {
         equip_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_equip_character_status_draw_area_rect, frame, scale, (const s16*)thread);
         screen->draw_offsets[0].x = thread->origin_x - 0x80;
-        screen->draw_offsets[0].y = thread->origin_y + (u16)g_equip_gfx_draw_offset_y;
+        screen->draw_offsets[0].y = thread->origin_y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
         screen->draw_offsets[1].x = -0x80;
         screen->draw_offsets[1].y = g_equip_gfx_draw_offset_y;

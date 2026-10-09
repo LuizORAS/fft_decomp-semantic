@@ -17,6 +17,6 @@ s32 battle_effect_end_secondary_on_current_unit(void) {
     *(u16*)((u8*)&g_battle_effect_secondary_data[0].animation_id + record_offset) = SECONDARY_EFFECT_STATE_ENDING;
     function_id = g_battle_effect_ending_secondary_function_id;
     *(s32*)((u8*)&g_battle_effect_secondary_data[0].phase + record_offset) = BATTLE_SECONDARY_EFFECT_INITIALIZING;
-    *((u8*)&g_battle_effect_secondary_data[0].function_id + record_offset) = function_id;
+    *(&g_battle_effect_secondary_data[0].function_id + record_offset) = function_id;
     return target_id;
 }

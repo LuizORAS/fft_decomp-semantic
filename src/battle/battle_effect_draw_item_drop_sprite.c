@@ -35,7 +35,7 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     local.vx = origin->vx;
     local.vy = origin->vy;
     local.vz = origin->vz;
-    RotTrans(&local, &position, (long*)&position.pad);
+    RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
         depth = EFFECT_OT_DEPTH_MIN;

@@ -13,7 +13,7 @@ s32 world_item_get_equip_candidate_marker(s32 unit_index) {
             return 8;
         }
     }
-    result = world_unit_can_equip_item_id((s16)unit_index, g_world_shop_equip_candidate_item);
+    result = world_unit_can_equip_item_id(unit_index, g_world_shop_equip_candidate_item);
     if (result != 1) {
         return 8;
     }

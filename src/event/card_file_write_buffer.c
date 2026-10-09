@@ -8,7 +8,7 @@ s32 card_file_write_buffer(const char* filename, const u8* source, s32 size, s32
     s32 total_written;
 
     if (create_file != 0) {
-        result = card_file_open_selected_with_retries(filename, ((u32)source[3] << 16) | 0x200);
+        result = card_file_open_selected_with_retries(filename, (source[3] << 16) | 0x200);
         if (result <= -1) {
             return -1;
         } else {
@@ -44,7 +44,7 @@ s32 card_file_write_buffer(const char* filename, const u8* source, s32 size, s32
         result = write(g_card_file_open_descriptor, source + total_written, size - total_written);
         if (result != -1) {
             total_written += result;
-            if ((u32)total_written >= (u32)size) {
+            if (total_written >= (u32)size) {
                 break;
             }
         }

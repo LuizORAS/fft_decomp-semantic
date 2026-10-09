@@ -86,7 +86,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
                             entry_ids = &g_equip_menu_list_scroll_entry_ids;
                             *entry_ids = g_equip_menu_list_entries[j + 1];
                             rect.x = 0x100;
-                            rect.y = g_equip_menu_list_visible_rows * (s16)g_equip_menu_list_row_height + 0x30;
+                            rect.y = g_equip_menu_list_visible_rows * g_equip_menu_list_row_height + 0x30;
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
                             equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
@@ -224,7 +224,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
         g_equip_menu_list_row_index += 1;
     }
     g_equip_menu_list_row_mode = 0;
-    if (previous_selected != (u16)g_equip_menu_selected_list_index) {
+    if (previous_selected != g_equip_menu_selected_list_index) {
         g_equip_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     return command;

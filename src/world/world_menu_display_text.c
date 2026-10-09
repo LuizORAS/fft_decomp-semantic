@@ -113,8 +113,8 @@ void world_menu_display_text(s32 text_id, void* pixels, world_text_draw_origin_t
                         started = 0;
                     }
                     for (; i >= 0; i--) {
-                        if ((u32)state->value >= g_world_text_decimal_divisors[i] || i == 0 || started != 0) {
-                            state->command = (u32)state->value / g_world_text_decimal_divisors[i];
+                        if (state->value >= g_world_text_decimal_divisors[i] || i == 0 || started != 0) {
+                            state->command = state->value / g_world_text_decimal_divisors[i];
                             started = 1;
                             state->value = state->value - state->command * g_world_text_decimal_divisors[i];
                             if (line >= g_world_menu_text_param_24) {

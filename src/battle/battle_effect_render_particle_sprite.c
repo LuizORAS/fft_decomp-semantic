@@ -94,7 +94,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         input.vx = node->x + node->sprite_offset_x;
         input.vy = node->y + node->sprite_offset_y;
         input.vz = node->z;
-        RotTrans(&input, &output, (long*)&output.pad);
+        RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {
         case 1:
@@ -143,7 +143,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         input.vx = node->x + node->sprite_offset_x;
         input.vy = node->y + node->sprite_offset_y;
         input.vz = node->z;
-        RotTrans(&input, &output, (long*)&output.pad);
+        RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {
         case 1:

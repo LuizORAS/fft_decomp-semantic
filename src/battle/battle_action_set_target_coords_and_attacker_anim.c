@@ -26,7 +26,7 @@ typedef struct battle_action_misc_data {
 
 /* Blaze Gun, Glacier Gun and Blast Gun (item ids 0x4a..0x4c) play the weapon
  * strike even when an ability is used. */
-#define IS_ELEMENTAL_GUN(id) (((id) == 0x4a || (id) == 0x4b) || (id) == 0x4c)
+#define IS_ELEMENTAL_GUN(id) ((id == 0x4a || id == 0x4b) || id == 0x4c)
 
 /* Finalizes the casting unit's action and picks its attack animation.
  *

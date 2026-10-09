@@ -6,7 +6,7 @@
  * the current frame column. The index is decremented in its own statement: a
  * folded `(nibble) - 1` lets CSE compare the nibble with zero instead of -1. */
 #define CURVE_FACTOR(nibble)                                                                                           \
-    curve = (nibble);                                                                                                  \
+    curve = nibble;                                                                                                    \
     curve--;                                                                                                           \
     if (curve != -1) {                                                                                                 \
         factor = g_effect_palette_table[curve].factor[frame];                                                          \
@@ -128,7 +128,7 @@ void battle_effect_spawn_emitter_particles(
         rotation.vx = spawn.vx;
         rotation.vy = spawn.vy;
         rotation.vz = spawn.vz;
-        RotTrans(&rotation, &spawn, (long*)&out.pad);
+        RotTrans(&rotation, &spawn, &out.pad);
     }
     switch (kind & EFFECT_EMITTER_ORIGIN_MASK) {
     case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -170,7 +170,7 @@ void battle_effect_spawn_emitter_particles(
         rotation.vx = spread.vx;
         rotation.vy = spread.vy;
         rotation.vz = spread.vz;
-        RotTrans(&rotation, &spread, (long*)&out.pad);
+        RotTrans(&rotation, &spread, &out.pad);
     }
     particle = head;
     if (kind & 0x100) {
@@ -192,7 +192,7 @@ void battle_effect_spawn_emitter_particles(
                 rotation.vx = scale;
                 rotation.vz = 0;
                 rotation.vy = 0;
-                RotTrans(&rotation, &out, (long*)&out.pad);
+                RotTrans(&rotation, &out, &out.pad);
                 particle->position[0] = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
                 particle->position[1] = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
                 particle->position[2] = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
@@ -226,9 +226,9 @@ void battle_effect_spawn_emitter_particles(
         angle_spread.vz = battle_effect_lerp_linear(
             entry->motion.emitter.velocity_spread_start[2], entry->motion.emitter.velocity_spread_end[2], factor);
     } else {
-        angle_spread.vx = (s16)entry->motion.emitter.velocity_spread_start[0] / 2;
-        angle_spread.vy = (s16)entry->motion.emitter.velocity_spread_start[1] / 2;
-        angle_spread.vz = (s16)entry->motion.emitter.velocity_spread_start[2] / 2;
+        angle_spread.vx = entry->motion.emitter.velocity_spread_start[0] / 2;
+        angle_spread.vy = entry->motion.emitter.velocity_spread_start[1] / 2;
+        angle_spread.vz = entry->motion.emitter.velocity_spread_start[2] / 2;
     }
     CURVE_FACTOR(entry->curve_indices[0] >> 8 & 0xf);
     battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle.vx);
@@ -245,7 +245,7 @@ void battle_effect_spawn_emitter_particles(
             rotation.vz = 0;
             rotation.vx = 0;
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
-            RotTrans(&rotation, &out, (long*)&out.pad);
+            RotTrans(&rotation, &out, &out.pad);
             particle->velocity[0] = out.vx << 3;
             particle->velocity[1] = out.vy << 3;
             particle->velocity[2] = out.vz << 3;
@@ -262,12 +262,12 @@ void battle_effect_spawn_emitter_particles(
             rotation.vz = 0;
             rotation.vx = 0;
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
-            RotTrans(&rotation, &out, (long*)&out.pad);
+            RotTrans(&rotation, &out, &out.pad);
             SetRotMatrix(&matrix);
             rotation.vx = out.vx;
             rotation.vy = out.vy;
             rotation.vz = out.vz;
-            RotTrans(&rotation, &out, (long*)&out.pad);
+            RotTrans(&rotation, &out, &out.pad);
             particle->velocity[0] = out.vx << 3;
             particle->velocity[1] = out.vy << 3;
             particle->velocity[2] = out.vz << 3;
@@ -306,11 +306,11 @@ void battle_effect_spawn_emitter_particles(
     accel_max.vz = battle_effect_lerp_linear(entry->wave_y_start[5], entry->wave_y_end[5], factor);
     if (rotate) {
         SetRotMatrix(&matrix);
-        RotTrans(&accel_min, &out, (long*)&out.pad);
+        RotTrans(&accel_min, &out, &out.pad);
         accel_min.vx = out.vx;
         accel_min.vy = out.vy;
         accel_min.vz = out.vz;
-        RotTrans(&accel_max, &out, (long*)&out.pad);
+        RotTrans(&accel_max, &out, &out.pad);
         accel_max.vx = out.vx;
         accel_max.vy = out.vy;
         accel_max.vz = out.vz;
@@ -323,11 +323,11 @@ void battle_effect_spawn_emitter_particles(
     drag_min.vz = battle_effect_lerp_linear(entry->wave_x_start[4], entry->wave_x_end[4], factor);
     drag_max.vz = battle_effect_lerp_linear(entry->wave_x_start[5], entry->wave_x_end[5], factor);
     if (rotate) {
-        RotTrans(&drag_min, &out, (long*)&out.pad);
+        RotTrans(&drag_min, &out, &out.pad);
         drag_min.vx = out.vx;
         drag_min.vy = out.vy;
         drag_min.vz = out.vz;
-        RotTrans(&drag_max, &out, (long*)&out.pad);
+        RotTrans(&drag_max, &out, &out.pad);
         drag_max.vx = out.vx;
         drag_max.vy = out.vy;
         drag_max.vz = out.vz;

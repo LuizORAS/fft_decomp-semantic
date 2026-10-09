@@ -31,7 +31,7 @@ void battle_unit_view_supervisor_thread(void) {
     native_thread_t* thread;
 
     for (;;) {
-        mode = (s32)battle_thread_get_current_parameter_1();
+        mode = battle_thread_get_current_parameter_1();
         set = &g_battle_unit_view_thread_sets[mode];
         g_battle_unit_view_mode = mode;
         g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_1 = 0xff;
@@ -78,7 +78,7 @@ void battle_unit_view_supervisor_thread(void) {
                 g_battle_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
             }
         }
-        if ((s32)battle_thread_get_current_parameter_1() == 0xff) {
+        if (battle_thread_get_current_parameter_1() == 0xff) {
             battle_thread_exit_current();
         }
     }

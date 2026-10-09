@@ -25,7 +25,7 @@ s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s32 item_id) {
         world_item_change_quantity_on_equip((s16)g_world_formation_unit_pointers[unit]->equipment[slot], 1);
     }
     if (slot < 2 && status != 1) {
-        other = (slot == 0);
+        other = slot == 0;
         if (unit != 20) {
             world_item_change_quantity_on_equip((s16)g_world_formation_unit_pointers[unit]->equipment[other], 1);
         }

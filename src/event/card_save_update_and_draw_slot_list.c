@@ -113,8 +113,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
         if (index >= CARD_SAVE_SLOT_COUNT) {
             break;
         }
-        g_card_save_slot_row_y
-            = (u16)g_card_save_list_scroll_base_y + (u16)g_card_save_list_scroll_anim_offset + row * 48 + 12;
+        g_card_save_slot_row_y = g_card_save_list_scroll_base_y + g_card_save_list_scroll_anim_offset + row * 48 + 12;
         if (g_card_save_slot_row_y < -48 || g_card_save_slot_row_y >= 241) {
             continue;
         }
@@ -134,7 +133,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
             card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[4], card_gfx_get_draw_color(), 0, 0, 11);
             card_gfx_set_otag_index(11);
             g_card_save_slot_number_commands[0][8] = g_card_save_slot_quads[0].y;
-            g_card_save_slot_number_commands[0][9] = (u8)index + 1;
+            g_card_save_slot_number_commands[0][9] = index + 1;
             card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[0]);
         }
         g_card_save_slot_quads[2].y = g_card_save_slot_quads[0].y;

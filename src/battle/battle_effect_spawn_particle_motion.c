@@ -70,7 +70,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vx = position.vx;
         vector.vy = position.vy;
         vector.vz = position.vz;
-        RotTrans(&vector, &position, (long*)&direction.pad);
+        RotTrans(&vector, &position, &direction.pad);
     }
     switch (values->anchor_flags & EFFECT_EMITTER_ORIGIN_MASK) {
     case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -92,7 +92,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vx = spread.vx;
         vector.vy = spread.vy;
         vector.vz = spread.vz;
-        RotTrans(&vector, &spread, (long*)&direction.pad);
+        RotTrans(&vector, &spread, &direction.pad);
     }
     scale = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
     vector.vx = rand();
@@ -103,7 +103,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     vector.vx = scale;
     vector.vz = 0;
     vector.vy = 0;
-    RotTrans(&vector, &direction, (long*)&direction.pad);
+    RotTrans(&vector, &direction, &direction.pad);
     motion->position[0] = ((direction.vx * spread.vx) / scale + position.vx) << 12;
     motion->position[1] = ((direction.vy * spread.vy) / scale + position.vy) << 12;
     motion->position[2] = ((direction.vz * spread.vz) / scale + position.vz) << 12;
@@ -128,13 +128,13 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vz = 0;
         vector.vx = 0;
         vector.vy = battle_effect_get_random_between((s16)speed_min, (s16)speed_max);
-        RotTrans(&vector, &direction, (long*)&direction.pad);
+        RotTrans(&vector, &direction, &direction.pad);
         if (oriented) {
             vector.vx = direction.vx;
             vector.vy = direction.vy;
             vector.vz = direction.vz;
             SetRotMatrix(&anchor_matrix);
-            RotTrans(&vector, &direction, (long*)&direction.pad);
+            RotTrans(&vector, &direction, &direction.pad);
         }
         motion->velocity[0] = direction.vx << 3;
         motion->velocity[1] = direction.vy << 3;

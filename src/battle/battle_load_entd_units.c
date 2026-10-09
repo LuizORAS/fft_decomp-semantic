@@ -118,7 +118,7 @@ void battle_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         battle_unit_set_enemy_level_data(unit);
 
     append_graphics:
-        battle_gfx_append_unit_graphics_load_descriptor(unit->x, (u8)unit->position.raw, unit->position.raw >> 15,
+        battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.raw, unit->position.raw >> 15,
             (unit->position.raw >> 8) & 0xf, portrait_id, palette_id, unit_id, unit, status);
         if (presence != ENTD_PRESENCE_MASK) {
             enemy_count++;

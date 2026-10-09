@@ -61,7 +61,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     sound = g_wldcore_active_saved_record.sound_id;
     if (sound != 0) {
         if (sound & 0x4000) {
-            wldcore_sound_stop_music_and_play_sound((s16)(sound ^ 0x4000));
+            wldcore_sound_stop_music_and_play_sound((sound ^ 0x4000));
         } else {
             wldcore_sound_stop_weather_sfx_and_send_quad(sound);
         }
