@@ -11,7 +11,6 @@ s32 battle_ai_evaluate_charging_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_action_command_prefix_t* action = (battle_action_command_prefix_t*)&unit->action_actor_id;
     s32 state;
-    s32 suspended_stage;
 
     if (g_battle_ai_data_base.decision_state) {
         /* Resume: re-enter the step that suspended. */
@@ -44,8 +43,8 @@ s32 battle_ai_evaluate_charging_movement(void) {
     }
 evaluate_with_charge:
     if (battle_ai_simulate_action_and_score() == -1) {
-        suspended_stage = 1;
-        goto suspend; /* shared suspend tail; a direct store changes the layout */
+        ai->charging_state = 1;
+        return -1;
     }
     battle_ai_transfer_halfword_values(
         (u16*)&ai->selected_action, (u16*)&ai->current_action, sizeof(battle_ai_action_data_t));
@@ -58,16 +57,14 @@ evaluate_with_charge:
     ai->acting_unit->inflicted_status[0]
         &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
 evaluate_without_charge:
-    if (battle_ai_simulate_action_and_score() == -1) {
-        suspended_stage = 2;
-    suspend:
-        ai->charging_state = suspended_stage;
-        return -1;
+    if (battle_ai_simulate_action_and_score() != -1) {
+        ai->acting_unit->charged_ability_ct = ai->saved_ability_ct;
+        ai->acting_unit->status_sets.current[0] = ai->saved_current_status;
+        ai->acting_unit->inflicted_status[0] = ai->saved_inflicted_status;
+        return battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->selected_action.rank_byte,
+                   (battle_ai_action_rank_t*)&ai->current_action.rank_byte)
+            == BATTLE_AI_RANK_ABOVE;
     }
-    ai->acting_unit->charged_ability_ct = ai->saved_ability_ct;
-    ai->acting_unit->status_sets.current[0] = ai->saved_current_status;
-    ai->acting_unit->inflicted_status[0] = ai->saved_inflicted_status;
-    return battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->selected_action.rank_byte,
-               (battle_ai_action_rank_t*)&ai->current_action.rank_byte)
-        == BATTLE_AI_RANK_ABOVE;
+    ai->charging_state = 2;
+    return -1;
 }

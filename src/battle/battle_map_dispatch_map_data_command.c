@@ -11,7 +11,6 @@
 s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_state, s32 flag) {
     s32 result;
     s16 i;
-    s32 mode;
     battle_map_mesh_instructions_t* entry;
 
     switch (command) {
@@ -24,32 +23,23 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
                 g_battle_map_texture_animations[index].mode = g_battle_map_saved_texture_animation_modes[index];
             }
         }
-        mode = g_battle_map_texture_animations[index].mode;
-        /* Gotos keep the bound tests separate: a combined condition folds
-         * 0x80..0x82 into one unsigned range compare. */
-        if (mode == 0) {
-            goto fail;
+        switch (g_battle_map_texture_animations[index].mode) {
+        case 1 ... 0x1d:
+        case 0x80 ... 0x82:
+            g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].frame_x;
+            g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].frame_y;
+            g_battle_map_texture_animation_moves[index].w = g_battle_map_texture_animations[index].width;
+            g_battle_map_texture_animation_moves[index].h = g_battle_map_texture_animations[index].height;
+            g_battle_map_texture_animation_moves[index].x1 = g_battle_map_texture_animations[index].canvas_x;
+            g_battle_map_texture_animation_moves[index].y1 = g_battle_map_texture_animations[index].canvas_y;
+            g_battle_map_texture_animations[index].active = 1;
+            g_battle_map_texture_animations[index].timer = 0x7e;
+            g_battle_map_texture_animations[index].frame = 0;
+            break;
+        default:
+            main_system_handle_malloc_exception(2, 0x3cd);
+            break;
         }
-        if (mode >= 0x1e) {
-            if (mode >= 0x83) {
-                goto fail;
-            }
-            if (mode < 0x80) {
-                goto fail;
-            }
-        }
-        g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].frame_x;
-        g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].frame_y;
-        g_battle_map_texture_animation_moves[index].w = g_battle_map_texture_animations[index].width;
-        g_battle_map_texture_animation_moves[index].h = g_battle_map_texture_animations[index].height;
-        g_battle_map_texture_animation_moves[index].x1 = g_battle_map_texture_animations[index].canvas_x;
-        g_battle_map_texture_animation_moves[index].y1 = g_battle_map_texture_animations[index].canvas_y;
-        g_battle_map_texture_animations[index].active = 1;
-        g_battle_map_texture_animations[index].timer = 0x7e;
-        g_battle_map_texture_animations[index].frame = 0;
-        break;
-    fail:
-        main_system_handle_malloc_exception(2, 0x3cd);
         break;
     case MAP_DATA_COMMAND_GET_3D_OBJECT_STATE:
         result = g_battle_map_mesh_part_animation_states[index];

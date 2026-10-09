@@ -2,7 +2,7 @@
 
 /*
  * Take a work record from the free chain and attach it to state record
- * record_index; the inverse of battle_effect_free_particle.
+ * record_index; the inverse of battle_effect_free_work_record.
  *
  * Bits 12-15 of kind select the effect list node type allocated as the
  * record's data (0x0000-0x3000 map to list kinds 0, 2, 4 and 6); other kinds

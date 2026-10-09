@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_run_dead_unit_panel_b,
+ * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_window_frame_thread_b,
  * byte-identical apart from addresses). Layout notes below are the OPTION
  * twin's; the WORLD helpers are the same routines.
  */
@@ -29,7 +29,7 @@ void world_menu_window_frame_thread_b(void) {
     /* The two border thicknesses feed both the primitive fields and the
        argument registers throughout, even though the callee at 0x80138adc
        takes only the primitive pointer:
-       world_gfx_reset_record_texture_window reads none of them. */
+       world_gfx_init_scaled_draw_area_packets reads none of them. */
     s32 border_wide;
     s32 border_thin;
     s32 span;

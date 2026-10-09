@@ -9,7 +9,6 @@
  */
 void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) {
     s32 anim;
-    s32 movement_type;
     s32 walk_speed;
     battle_unit_misc_data_t* mount;
 
@@ -17,13 +16,9 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
         battle_unit_store_animation_facing(0x32, *(s16*)&unit->facing, unit);
         return;
     }
-    movement_type = (u8)battle_move_validate_float_fly(unit);
-    /* A combined 0..1 range test folds to one unsigned compare; the target
-     * tests the sign first, so that path jumps into the mounted arm. */
-    if (movement_type < 0) {
-        goto mounted;
-    }
-    if (movement_type < 2) {
+    switch ((u8)battle_move_validate_float_fly(unit)) {
+    case 0:
+    case 1:
         walk_speed = unit->walk_speed.word;
         if (walk_speed >= 0x3000) {
             anim = 0xD;
@@ -39,8 +34,9 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
                 battle_unit_store_animation_facing(0x32, *(s16*)&unit->facing, mount);
             }
         }
-    } else {
-    mounted:
+        break;
+    case 2:
+    default:
         walk_speed = unit->walk_speed.word;
         if (walk_speed >= 0x3000) {
             anim = 0xA;
@@ -50,6 +46,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
                 anim = 0xB;
             }
         }
+        break;
     }
     if (anim != 0) {
         battle_unit_store_animation_facing(anim, *(s16*)&unit->facing, unit);

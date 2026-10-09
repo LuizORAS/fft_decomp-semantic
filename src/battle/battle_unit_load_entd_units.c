@@ -96,28 +96,25 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             continue;
         }
 
-        if (presence != ENTD_PRESENCE_MASK) {
-            if (enemy_count >= enemy_limit) {
-                unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
-                unit->existence = 0xff;
-                if (limit_message_shown != 0) {
-                    continue;
-                }
-                main_system_handle_battle_load_exception(battle_id + 200);
-                limit_message_shown = 1;
-                enemy_count++;
+        if (presence != ENTD_PRESENCE_MASK && enemy_count >= enemy_limit) {
+            unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
+            unit->existence = 0xff;
+            if (limit_message_shown != 0) {
                 continue;
             }
-        } else {
+            main_system_handle_battle_load_exception(battle_id + 200);
+            limit_message_shown = 1;
+            enemy_count++;
+            continue;
+        }
+        if (presence == ENTD_PRESENCE_MASK) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = 0;
             status = 1;
-            goto append_graphics;
+        } else {
+            status = 0;
+            battle_unit_set_enemy_level_data(unit);
         }
-        status = 0;
-        battle_unit_set_enemy_level_data(unit);
-
-    append_graphics:
         battle_gfx_append_unit_graphics_load_descriptor(unit->x, (u8)unit->position.raw, unit->position.raw >> 15,
             (unit->position.raw >> 8) & 0xf, portrait_id, palette_id, unit_id, unit, status);
         if (presence != ENTD_PRESENCE_MASK) {

@@ -124,6 +124,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `main_status_set_action_state` leaves `status` unset for an action state
   other than 0 and 5-8 (its `switch` has no default; no caller passes one);
   `battle_map_dispatch_gns_resource` returns a local no path assigns (`$s8`);
+  `battle_menu_get_cursor_bob_offset` walks an unset `entry` for a mode other
+  than 0 or 1; `battle_effect_summon_charge_secondary_handler` returns
+  `result` (`$a1`) unset when the phase is not 1-3;
   `bunit_unit_get_current_stat`, `bunit_unit_get_max_stat` and
   `world_get_formation_unit_stat_by_mode` return `value` (`$a1`) for a stat
   mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the

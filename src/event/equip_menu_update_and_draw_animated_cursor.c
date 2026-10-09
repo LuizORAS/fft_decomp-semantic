@@ -10,7 +10,7 @@
 /* Advances the animated 16x16 marker at `anchor` and enqueues it with its
  * semi-transparent shadow.
  *
- * Twin of jobstts_menu_update_and_draw_animated_marker, which documents the
+ * Twin of jobstts_menu_update_and_draw_animated_cursor, which documents the
  * `state` packing and the `active_test` copies required for the match.
  */
 void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* state, s32 mode) {

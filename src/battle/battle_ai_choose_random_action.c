@@ -73,23 +73,21 @@ s32 battle_ai_choose_random_action(void) {
                 /* Keep the original count even when a rejected target bit is removed. */
                 index_or_count = battle_ai_calculate_ability_range();
                 if (index_or_count) {
-                    do {
-                        if (!battle_ai_take_random_tile(
-                                ai->targetable_tiles, &ai->considered_unit_coords, index_or_count))
-                            goto next_origin; /* continue the outer origin loop */
+                    while (
+                        battle_ai_take_random_tile(ai->targetable_tiles, &ai->considered_unit_coords, index_or_count)) {
                         ai->current_action.target_x = ai->considered_unit_coords.bytes.x;
                         ai->current_action.target_y = ai->considered_unit_coords.bytes.y;
                         ai->current_action.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
-                        if (ai->current_action.targeting_type != 6)
-                            goto selected;
-                    } while (
-                        (ai->current_action.target_id = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
-                        == BATTLE_UNIT_ID_NONE);
-                    goto selected;
+                        if (ai->current_action.targeting_type == 6
+                            && (ai->current_action.target_id
+                                   = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
+                                == BATTLE_UNIT_ID_NONE)
+                            continue;
+                        goto selected;
+                    }
                 }
-            next_origin:;
             } while (ai->movable_tile_count);
         } while (0);
     }

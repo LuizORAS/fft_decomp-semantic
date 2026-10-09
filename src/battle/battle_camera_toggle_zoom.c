@@ -5,21 +5,14 @@
    "out" (target=4, action=4), playing the corresponding zoom SFX. Any
    other current zoom target is left alone. */
 void battle_camera_toggle_zoom(void) {
-    s32 sound_id;
-    s32 zoomed_in = 1;
-
-    if (g_battle_map_zoom_target == zoomed_in) {
+    if (g_battle_map_zoom_target == 1) {
         g_battle_camera_zoom_action = 4;
         g_battle_map_zoom_target = 4;
-        sound_id = MAIN_SFX_CAMERA_ZOOM_OUT;
-        goto play;
-    }
-    sound_id = MAIN_SFX_CAMERA_ZOOM_IN;
-    if (g_battle_map_zoom_target == 4) {
-        g_battle_map_zoom_target = zoomed_in;
+        main_sound_play_sfx(MAIN_SFX_CAMERA_ZOOM_OUT);
+    } else if (g_battle_map_zoom_target == 4) {
+        g_battle_map_zoom_target = 1;
         g_battle_camera_zoom_action = 2;
-    play:
-        main_sound_play_sfx(sound_id);
+        main_sound_play_sfx(MAIN_SFX_CAMERA_ZOOM_IN);
     }
     g_battle_camera_zoom_increment = 4;
 }

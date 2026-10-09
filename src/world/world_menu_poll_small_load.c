@@ -4,7 +4,7 @@
 
 /* Drive the pending BIN load and, once it completes, run the SMALL.OUT entry.
  *
- * Only request 8 (world_request_bin_file_load_8) places a file at 0x801d7000:
+ * Only request 8 (world_menu_request_open_small) places a file at 0x801d7000:
  * SMALL.OUT, at overlay offset 0x18000. */
 s32 world_menu_poll_small_load(void) {
     if (g_world_bin_load_request == 0) {

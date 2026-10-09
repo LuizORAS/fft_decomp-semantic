@@ -7,18 +7,10 @@
  * phase (0 read, 1 wait, 2 install, 3 finish), the descriptor index and the
  * heap buffer. SHP/SEQ ids below 5, or equal to the one already resident, and
  * an already loaded spritesheet skip the read. Returns 0 once every
- * descriptor is done, otherwise 1 inside a step and 2 after a step boundary.
- *
- * The phase word is read through a pointer in the shared read block: its
- * address register is what the target reuses there, while the other phase
- * accesses rematerialise the address. */
+ * descriptor is done, otherwise 1 inside a step and 2 after a step boundary. */
 s32 battle_gfx_step_queued_unit_graphics_load(void) {
     s32 result;
-    s32* phase;
     s32 id;
-    s32 sector;
-    s32 size;
-    void* data;
 
     result = 1;
     switch (g_battle_gfx_unit_graphics_load_state[1]) {
@@ -39,11 +31,14 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             if (g_battle_gfx_unit_graphics_load_state[3] == 0) {
                 break;
             }
-            data = (void*)g_battle_gfx_unit_graphics_load_state[3];
-            sector = g_battle_gfx_sprite_shp_files[id].sector;
-            size = g_battle_gfx_sprite_shp_files[id].size;
-            phase = &g_battle_gfx_unit_graphics_load_state[1];
-            goto load;
+            if (main_file_call_build_header(g_battle_gfx_sprite_shp_files[id].sector,
+                    g_battle_gfx_sprite_shp_files[id].size, (void*)g_battle_gfx_unit_graphics_load_state[3])
+                == 0) {
+                g_battle_gfx_unit_graphics_load_state[1]++;
+            } else {
+                main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
+            }
+            break;
         case 1:
             id = g_battle_gfx_spritesheet_data
                      [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
@@ -59,11 +54,14 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             if (g_battle_gfx_unit_graphics_load_state[3] == 0) {
                 break;
             }
-            data = (void*)g_battle_gfx_unit_graphics_load_state[3];
-            sector = g_battle_gfx_sprite_seq_files[id].sector;
-            size = g_battle_gfx_sprite_seq_files[id].size;
-            phase = &g_battle_gfx_unit_graphics_load_state[1];
-            goto load;
+            if (main_file_call_build_header(g_battle_gfx_sprite_seq_files[id].sector,
+                    g_battle_gfx_sprite_seq_files[id].size, (void*)g_battle_gfx_unit_graphics_load_state[3])
+                == 0) {
+                g_battle_gfx_unit_graphics_load_state[1]++;
+            } else {
+                main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
+            }
+            break;
         case 2:
             if (g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id >= 0xa0) {
                 g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id = 1;
@@ -76,25 +74,24 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 result = 2;
                 break;
             }
-            data = main_heap_alloc(g_battle_gfx_spritesheet_files
+            g_battle_gfx_unit_graphics_load_state[3] = (s32)main_heap_alloc(g_battle_gfx_spritesheet_files
                     [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
                         .size);
-            g_battle_gfx_unit_graphics_load_state[3] = (s32)data;
-            if (data == 0) {
+            if (g_battle_gfx_unit_graphics_load_state[3] == 0) {
                 break;
             }
-            sector = g_battle_gfx_spritesheet_files
-                         [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                             .sector;
-            size = g_battle_gfx_spritesheet_files
-                       [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                           .size;
-            phase = &g_battle_gfx_unit_graphics_load_state[1];
-        load:
-            if (main_file_call_build_header(sector, size, data) != 0) {
-                main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
+            if (main_file_call_build_header(
+                    g_battle_gfx_spritesheet_files
+                        [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
+                            .sector,
+                    g_battle_gfx_spritesheet_files
+                        [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
+                            .size,
+                    (void*)g_battle_gfx_unit_graphics_load_state[3])
+                == 0) {
+                g_battle_gfx_unit_graphics_load_state[1]++;
             } else {
-                (*phase)++;
+                main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
             }
             break;
         }

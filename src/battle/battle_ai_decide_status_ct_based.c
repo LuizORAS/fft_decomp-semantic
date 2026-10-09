@@ -5,7 +5,7 @@ s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
 
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        goto ret0;
+        return 0;
     }
     if (unit->attributes[UNIT_ATTRIBUTE_SPEED] == 0) {
         return 0;
@@ -28,14 +28,9 @@ s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
     if ((unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) == 0) {
         return 1;
     }
-    if ((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)) == 0) {
+    if ((unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)) == 0
+        || limit < battle_ai_calculate_clockticks_until_unit_acts(unit)) {
         return 0;
     }
-    if (limit >= battle_ai_calculate_clockticks_until_unit_acts(unit)) {
-        goto ret1;
-    }
-ret0:
-    return 0;
-ret1:
     return 1;
 }

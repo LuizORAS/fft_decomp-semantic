@@ -7,7 +7,7 @@
 /* Uploads the party portrait sprite and palette cells from the 0x18ba portrait
  * sheet file to VRAM; slot 20 uses the portrait id in g_main_special_portrait_wldface_id.
  *
- * Port of require_prepare_party_portrait_textures. Here `value` is the party
+ * Port of require_gfx_prepare_party_portrait_textures. Here `value` is the party
  * index passed to main_party_get_data_pointer, so the pixel-row counter is a
  * separate variable `j`. The never-taken `j <= 0` test after the row loop only
  * adds one reference to `j`, raising its global-allocation priority above the

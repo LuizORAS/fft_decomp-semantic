@@ -2,11 +2,11 @@
 
 #include "psx/types.h"
 
-/* g_attack_editor_status_gauges.team_state. Accessed through the struct, GCC keeps its address in
+/* g_attack_panel_selected_billboard.team_state. Accessed through the struct, GCC keeps its address in
  * a register across the three stores (1276 vs 1280 bytes); the target
  * addresses it as a standalone halfword. */
 
-/* ATTACK twin of require_load_party_unit_into_editor. Load a party roster unit into the REQUIRE status/editor display.
+/* ATTACK twin of require_editor_load_party_unit. Load a party roster unit into the REQUIRE status/editor display.
  *
  * Party counterpart of require_editor_load_selected_unit: the unit is
  * rebuilt from the roster into a scratch battle_stats_t, shown at full HP/MP

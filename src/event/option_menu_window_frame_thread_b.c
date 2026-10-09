@@ -1,7 +1,7 @@
 /*
  * OPTION dead-unit panel, variant B.
  *
- * Twin of option_menu_run_dead_unit_panel_a at 0x801c0304; this one allocates and
+ * Twin of option_menu_window_frame_thread at 0x801c0304; this one allocates and
  * frees its own 4bpp scratch image, uses the second texture-window table, and lays the
  * border out with 8-pixel instead of 16-pixel corners.
  */

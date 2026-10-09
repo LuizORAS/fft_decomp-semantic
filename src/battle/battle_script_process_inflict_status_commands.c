@@ -3,7 +3,7 @@
 /* Run staged status commands for units whose Float or Jump state needs a
  * dedicated update thread.
  *
- * BATTLE twin of world_process_inflict_status_commands; the instruction scan
+ * BATTLE twin of world_script_process_inflict_status_commands; the instruction scan
  * and status-byte layout match the WORLD routine. */
 void battle_script_process_inflict_status_commands(void) {
     s32 instruction_offset;

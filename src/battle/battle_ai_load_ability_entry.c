@@ -43,7 +43,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         if (menu == ACTION_MENU_TYPE_JUMP)
             ai->considered_ability.ai_flags.word = (ai->considered_ability.ai_flags.word | 2) & ~1;
-        break;
+        return;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         status_id = g_main_item_secondary_data[ability_id - ABILITY_ID_ITEM_FIRST].status_infliction_id;
         if (unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM)
@@ -53,30 +53,26 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.parameters.bytes.aoe = 0;
         ai->considered_ability.parameters.bytes.item_id
             = g_main_item_ability_item_ids[ability_id - ABILITY_ID_ITEM_FIRST];
-        goto common;
+        break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         ai->considered_ability.parameters.bytes.item_id = ability_id - 0x26;
-        goto common;
-    case ACTION_MENU_TYPE_WEAPON_INVENTORY: {
-        s32 thrown_ability_id;
-        if ((u32)(ability_id - 0x7a) < 3)
-            thrown_ability_id = ABILITY_ID_THROW_SHURIKEN;
-        else if ((u32)(ability_id - 0x7d) < 3)
-            thrown_ability_id = ABILITY_ID_THROW_BALL;
-        else
-            goto ordinary_throw;
-        ai->considered_ability.ability_id = thrown_ability_id;
-        ai->considered_ability.parameters.bytes.item_id = ability_id;
-        ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
-        goto throw_range;
-    ordinary_throw:
-        ai->considered_ability.ability_id = ai->throw_ability_id;
-        ai->considered_ability.parameters.bytes.item_id = ai->throw_weapon_id;
-    throw_range:
+        break;
+    case ACTION_MENU_TYPE_WEAPON_INVENTORY:
+        if ((u32)(ability_id - 0x7a) < 3) {
+            ai->considered_ability.ability_id = ABILITY_ID_THROW_SHURIKEN;
+            ai->considered_ability.parameters.bytes.item_id = ability_id;
+            ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
+        } else if ((u32)(ability_id - 0x7d) < 3) {
+            ai->considered_ability.ability_id = ABILITY_ID_THROW_BALL;
+            ai->considered_ability.parameters.bytes.item_id = ability_id;
+            ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
+        } else {
+            ai->considered_ability.ability_id = ai->throw_ability_id;
+            ai->considered_ability.parameters.bytes.item_id = ai->throw_weapon_id;
+        }
         ai->considered_ability.parameters.bytes.range = unit->move;
         ability_id = ai->considered_ability.ability_id;
-        goto common;
-    }
+        break;
     case ACTION_MENU_TYPE_JUMP:
         if (unit_id == ai->acting_unit_id)
             ai->considered_ability.ct
@@ -118,43 +114,41 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ai_flags.bytes.flags_1 = 0xfc;
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_TARGET_MAP_TILES;
-        break;
+        return;
     }
-    default:
-    common:
-        battle_ai_transfer_halfword_values(
-            (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
-        if ((u32)(menu - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2)
-            ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
-        ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
-        if (ability_id < ABILITY_ID_ITEM_FIRST) {
-            s32 ct;
-            secondary = &g_main_ability_range_data[ability_id];
-            ct = secondary->ct;
-            status_id = secondary->status_infliction_id;
-            ai->considered_ability.ct = ct;
-            ai->considered_ability.element = secondary->element;
-            ai->considered_ability.mp_cost = secondary->mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
-                ai->considered_ability.mp_cost >>= 1;
-            if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
-                ai->considered_ability.parameters.bytes.range
-                    = ai->unit_weapon_data[ai->unit_battle_ids[unit_id]].bytes.range;
-                ai->considered_ability.parameters.bytes.aoe = 0;
-            } else {
-                ai->considered_ability.parameters.bytes.range = secondary->range;
-                ai->considered_ability.parameters.bytes.aoe = secondary->aoe;
-            }
-            if (secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE)
-                goto copy_status;
+    }
+    battle_ai_transfer_halfword_values(
+        (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
+    if ((u32)(menu - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2)
+        ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
+    ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
+    if (ability_id < ABILITY_ID_ITEM_FIRST) {
+        s32 ct;
+        secondary = &g_main_ability_range_data[ability_id];
+        ct = secondary->ct;
+        status_id = secondary->status_infliction_id;
+        ai->considered_ability.ct = ct;
+        ai->considered_ability.element = secondary->element;
+        ai->considered_ability.mp_cost = secondary->mp_cost;
+        if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+            ai->considered_ability.mp_cost >>= 1;
+        if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
+            ai->considered_ability.parameters.bytes.range
+                = ai->unit_weapon_data[ai->unit_battle_ids[unit_id]].bytes.range;
+            ai->considered_ability.parameters.bytes.aoe = 0;
+        } else {
+            ai->considered_ability.parameters.bytes.range = secondary->range;
+            ai->considered_ability.parameters.bytes.aoe = secondary->aoe;
         }
-        /* Preserve the native support-byte masks, including their CT quirk. */
-        if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
-            ai->considered_ability.ct >>= 1;
-        else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_DEFEND)
-            ai->considered_ability.ct = 0;
-    copy_status:
-        battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
-            g_main_status_infliction_data[status_id].statuses, 5);
+        if (secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE)
+            goto copy_status;
     }
+    /* Preserve the native support-byte masks, including their CT quirk. */
+    if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
+        ai->considered_ability.ct >>= 1;
+    else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_DEFEND)
+        ai->considered_ability.ct = 0;
+copy_status:
+    battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
+        g_main_status_infliction_data[status_id].statuses, 5);
 }

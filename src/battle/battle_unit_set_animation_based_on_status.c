@@ -4,7 +4,6 @@
 /*
  * Selects the unit animation from its renderer-side status mirror.
  *
- * The masked float/fly result retains the target's unreachable negative test.
  * Animation indices are spritesheet-local and therefore remain literals.
  */
 void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
@@ -14,12 +13,9 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
 
     float_fly = battle_move_validate_float_fly(unit) & 0xff;
     animation = 0;
-    /* A combined 0..1 range test folds to one unsigned compare; the target
-     * tests the sign first, so that path jumps into the airborne arm. */
-    if (float_fly < 0) {
-        goto airborne;
-    }
-    if (float_fly < 2) {
+    switch (float_fly) {
+    case 0:
+    case 1:
         if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
             animation = 9;
         } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
@@ -116,8 +112,9 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                 }
             }
         }
-    } else {
-    airborne:
+        break;
+    case 2:
+    default:
         if ((unit->status_flags_5_6 & BATTLE_MISC_STATUS_TRANSFORMATION_MASK) != 0) {
             if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
                 animation = 9;
@@ -140,6 +137,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
         } else {
             animation = 9;
         }
+        break;
     }
     if (animation != 0) {
         battle_unit_store_animation_facing(animation, (s16)unit->facing, unit);

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Companion of world_bin_load_file: waits for the loader to go idle, posts
+/* Companion of world_menu_request_open_companion_executable: waits for the loader to go idle, posts
  * `request` through g_world_pending_bin_load_index and blocks until it is consumed. */
 void world_menu_request_open_companion_data_file(s32 request) {
     while (g_world_bin_load_request != 0 || g_world_pending_bin_load_index != 0) {

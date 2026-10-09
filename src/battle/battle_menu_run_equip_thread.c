@@ -7,7 +7,7 @@
  * with state 4 until it finishes, then restarts menu threads 9..14 and
  * captures the cursors of the icon-list threads 8 and 7.
  *
- * BATTLE twin of world_menu_run_companion_overlay_9_10_thread.
+ * BATTLE twin of world_menu_run_equip_thread.
  */
 void battle_menu_run_equip_thread(void) {
     s32 saved;

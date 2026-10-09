@@ -65,20 +65,18 @@ s32 battle_ai_build_movement_scenarios(void) {
     if (g_battle_ai_closest_ability_range >= limit
         || (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION)) {
         g_battle_ai_target_in_range = 1;
-        if (decision->flags & BATTLE_AI_DECISION_STAY_NEAR_COORDINATES) {
-            g_battle_ai_movement_unit_index = battle_ai_find_unit_at_coordinates(&decision->target);
-            if (g_battle_ai_movement_unit_index == ai->acting_unit_id
-                || g_battle_ai_movement_unit_index == BATTLE_UNIT_ID_NONE) {
-                if (ai->reachable_tiles[0][decision->target.bytes.elevation][decision->target.bytes.y]
-                    & (0x8000 >> decision->target.bytes.x)) {
-                    ai->candidate_coords[ai->movement_scenario] = decision->target;
-                    battle_ai_set_candidate_and_actor_reachable_tiles();
-                    g_battle_ai_stay_near_destination_fixed = 1;
-                    goto score_tiles;
-                }
-            }
+        if ((decision->flags & BATTLE_AI_DECISION_STAY_NEAR_COORDINATES)
+            && ((g_battle_ai_movement_unit_index = battle_ai_find_unit_at_coordinates(&decision->target))
+                    == ai->acting_unit_id
+                || g_battle_ai_movement_unit_index == BATTLE_UNIT_ID_NONE)
+            && (ai->reachable_tiles[0][decision->target.bytes.elevation][decision->target.bytes.y]
+                & (0x8000 >> decision->target.bytes.x))) {
+            ai->candidate_coords[ai->movement_scenario] = decision->target;
+            battle_ai_set_candidate_and_actor_reachable_tiles();
+            g_battle_ai_stay_near_destination_fixed = 1;
+        } else {
+            battle_ai_filter_reachable_tiles_by_target_distance(ai->acting_unit_move + g_battle_ai_target_distance);
         }
-        battle_ai_filter_reachable_tiles_by_target_distance(ai->acting_unit_move + g_battle_ai_target_distance);
     } else {
         g_battle_ai_target_in_range = 0;
         battle_ai_filter_reachable_tiles_by_target_distance(limit - 1);
