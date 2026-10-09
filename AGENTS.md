@@ -122,7 +122,8 @@ old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
 `check-config` and `test` in one job and `validate` in four module shards,
-without the BIN. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
+without the BIN; `check-config` fails unless the shards' module lists cover
+every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
 ## target/*.yaml
