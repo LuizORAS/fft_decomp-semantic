@@ -8,22 +8,22 @@
  * loop to the compiler, which doubles its reference counts and changes the
  * register allocation. */
 #define BATTLE_CAMERA_STEP_TOWARD(component, step, limit)                                                              \
-    if ((step) < 0) {                                                                                                  \
-        s32* position = (component);                                                                                   \
+    if (step < 0) {                                                                                                    \
+        s32* position = component;                                                                                     \
         s32 whole = *position / 4096;                                                                                  \
-        s32 bound = (limit);                                                                                           \
+        s32 bound = limit;                                                                                             \
         if (whole > bound) {                                                                                           \
-            *position += (step);                                                                                       \
+            *position += step;                                                                                         \
             if (*position / 4096 < bound) {                                                                            \
                 *position = bound << 12;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     } else {                                                                                                           \
-        s32* position = (component);                                                                                   \
+        s32* position = component;                                                                                     \
         s32 whole = *position / 4096;                                                                                  \
-        s32 bound = (limit);                                                                                           \
+        s32 bound = limit;                                                                                             \
         if (whole < bound) {                                                                                           \
-            *position += (step);                                                                                       \
+            *position += step;                                                                                         \
             if (bound < *position / 4096) {                                                                            \
                 *position = bound << 12;                                                                               \
             }                                                                                                          \

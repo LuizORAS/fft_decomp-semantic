@@ -95,7 +95,7 @@ void helpmenu_menu_run_battle_help(void) {
             scan_thread++;
         }
         if (frame != 9) {
-            if ((s32)g_battle_help_text_id_tables_ptr == missing_value) {
+            if (g_battle_help_text_id_tables_ptr == missing_value) {
                 g_battle_help_text_id_tables_ptr = (s32)g_helpmenu_menu_text_id_tables;
             }
             request_kind = request->kind;
@@ -185,7 +185,7 @@ void helpmenu_menu_run_battle_help(void) {
                         help_id |= 0x9800;
                     } else if (text_base == TEXT_ID_ITEM_NAME_BASE) {
                         help_id &= 0x7FF;
-                        if ((u32)(help_id - 0x26) < 0xAU) {
+                        if ((help_id - 0x26) < 0xAU) {
                             help_id += 0x26;
                             help_id |= 0x7800;
                         } else {

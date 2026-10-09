@@ -21,7 +21,7 @@ void world_menu_confirm_item_repurchase(void) {
         if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {
             world_shop_obtain_gil(-(world_item_get_price(g_world_menu_entry_ids[g_world_menu_cursor_position]) >> 1)
                 * g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
-            world_item_adjust_inventory_count((s16)g_world_menu_entry_ids[g_world_menu_cursor_position],
+            world_item_adjust_inventory_count(g_world_menu_entry_ids[g_world_menu_cursor_position],
                 g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
             world_shop_adjust_poached_item_quantity(g_world_menu_entry_ids[g_world_menu_cursor_position],
                 -g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);

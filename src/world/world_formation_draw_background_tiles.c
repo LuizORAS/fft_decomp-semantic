@@ -52,9 +52,9 @@ void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
     }
     st.rect.clut = g_world_menu_background_clut;
     st.rect.tpage = g_world_menu_icon_tpage;
-    for (; (s16)(u16)st.rect.y < 0xF0; draw_row++) {
+    for (; (s16)st.rect.y < 0xF0; draw_row++) {
         tiles = g_world_formation_background_tiles;
-        if ((s16)(u16)st.rect.y >= -0x20) {
+        if ((s16)st.rect.y >= -0x20) {
             col = 0;
             tile = tiles[draw_row % 2];
             for (; col < 4; col++) {

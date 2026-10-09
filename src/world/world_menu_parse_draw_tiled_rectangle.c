@@ -24,9 +24,9 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
         base_x = g_world_menu_window_rect.x;
         base_y = g_world_menu_window_rect.y;
         full_columns = g_world_menu_window_rect.w / 16;
-        partial_width = (s16)(g_world_menu_window_rect.w % 16);
+        partial_width = g_world_menu_window_rect.w % 16;
         full_rows = g_world_menu_window_rect.h / 16;
-        partial_height = (s16)(g_world_menu_window_rect.h % 16);
+        partial_height = g_world_menu_window_rect.h % 16;
     } else {
         u8 width;
         u8 height;

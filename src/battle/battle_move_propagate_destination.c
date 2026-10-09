@@ -29,7 +29,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
         state->destination_entry_height = records[state->destination_unit_record_index].top_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
-            state->work_x, state->work_y, state->destination_side_shift, (u8)(state->destination_entry_height - 1));
+            state->work_x, state->work_y, state->destination_side_shift, (state->destination_entry_height - 1));
         if (*destination_flags & FRONTIER_FLAG_VALID_DESTINATION)
             battle_move_check_occupied_tile_standing_height(state->destination_unit_record_index, extra_span);
         if (!(*destination_flags & 8))

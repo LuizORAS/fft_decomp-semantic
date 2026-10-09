@@ -34,7 +34,6 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     SVECTOR zero_vector;
     VECTOR unit_scale;
     battle_map_texture_animation_t* source;
-    battle_map_texture_animation_t* animation;
     battle_map_light_resource_t* light;
     u16* polygon_flags;
     /* Halfword cursor of the light, camera and weather-modifier cases: each

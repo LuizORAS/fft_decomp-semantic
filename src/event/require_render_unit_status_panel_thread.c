@@ -91,7 +91,7 @@ void require_render_unit_status_panel_thread(void) {
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
-        battle_gfx_init_default_poly_ft4((POLY_FT4*)(&editor->portrait[frame]));
+        battle_gfx_init_default_poly_ft4((&editor->portrait[frame]));
     }
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
@@ -185,7 +185,7 @@ void require_render_unit_status_panel_thread(void) {
         if (highlight != 0) {
             battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)editor);
             battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)panel);
-            if ((u32)(anim_state - 4) < 6U) {
+            if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
                 editor->portrait[0].b0 = 0x38;
@@ -207,7 +207,7 @@ void require_render_unit_status_panel_thread(void) {
             s32 shade;
             battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)editor);
             battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)panel);
-            if ((u32)(anim_state - 4) >= 6U) {
+            if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
                 editor->portrait[0].b0 = 0x80;
@@ -273,8 +273,8 @@ void require_render_unit_status_panel_thread(void) {
                 anim_state = 2;
             }
         }
-        require_gfx_build_portrait_transition_primitives(portrait_rect, &anim_state, &cur_unit, &prev_unit,
-            (u8*)portrait_image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
+        require_gfx_build_portrait_transition_primitives(
+            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
 
@@ -336,11 +336,11 @@ void require_render_unit_status_panel_thread(void) {
                 }
             }
         }
-        panel->sprites[6].u0 = (s16)(unit_data[4] % 7) * 0x18;
+        panel->sprites[6].u0 = (unit_data[4] % 7) * 0x18;
         icon_index = unit_data[4];
         panel->sprites[6].w = 0x18;
         panel->sprites[6].h = 0x14;
-        panel->sprites[6].v0 = (s16)(icon_index / 7) * 0x14 + 0x2A;
+        panel->sprites[6].v0 = (icon_index / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (thread->work != 0)) {
             if (state->_04 < 0) {
                 numeric_entries[6].format = 0xC00;

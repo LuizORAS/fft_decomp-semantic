@@ -28,7 +28,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (unit->screen.vy < target_z) {
         return;
     }
-    if ((u32)((unit->encoded_animation >> 1) - 0x30) < 2U) {
+    if (((unit->encoded_animation >> 1) - 0x30) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
             /* Keeps the g_battle_move_step_value load below this store. */

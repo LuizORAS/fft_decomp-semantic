@@ -66,7 +66,7 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
         }
 
         mount_info = unit->mount_info;
-        if ((u32)(mount_info & 0xff) >= BATTLE_MOUNT_INFO_FLAG_RIDER) {
+        if ((mount_info & 0xff) >= BATTLE_MOUNT_INFO_FLAG_RIDER) {
             return mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
         }
         return unit_index;

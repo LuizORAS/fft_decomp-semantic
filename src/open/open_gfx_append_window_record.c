@@ -5,7 +5,7 @@
  * the colour's address first (pool + 0x34 + index * 56) and stores at 0/1/2
  * from it, where a plain `.color.r` member store addresses each byte
  * absolutely. */
-#define OPEN_SET_RGB(color, red, green, blue) ((color)->r = (red), (color)->g = (green), (color)->b = (blue))
+#define OPEN_SET_RGB(color, red, green, blue) ((color)->r = red, (color)->g = green, (color)->b = blue)
 
 /* Appends the next free 56-byte render record to `list`, resets it and
  * returns its pool index. */

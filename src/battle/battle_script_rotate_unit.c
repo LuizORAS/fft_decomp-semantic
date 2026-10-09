@@ -18,7 +18,6 @@ void battle_script_rotate_unit(const u8* parameters) {
     s32 i;
     s32 order;
     s32 facing;
-    s32 remaining;
     s32 restore_misc_index;
     world_unit_animation_state_t* state;
 

@@ -48,7 +48,7 @@ void world_shop_run_fitting_room_step(void) {
             g_world_shop_fitting_room_menu_thread_data[1].cursor = 0;
             world_gfx_clear_sprite_slots();
         } else {
-            world_formation_update_and_draw_unit_grid(1, 1, 0, (s16)g_world_input_secondary_repeat,
+            world_formation_update_and_draw_unit_grid(1, 1, 0, g_world_input_secondary_repeat,
                 g_world_thread_task_active, world_shop_fitting_room_get_unit_marker, 0);
         }
     } else {

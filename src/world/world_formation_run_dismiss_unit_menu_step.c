@@ -85,7 +85,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             g_world_formation_dismiss_step = 2;
             g_world_dismiss_unit_prompt_running = 1;
         } else {
-            g_world_formation_dismiss_step = world_formation_can_dismiss_unit((s16)sprite);
+            g_world_formation_dismiss_step = world_formation_can_dismiss_unit(sprite);
             world_gfx_bind_data_pointer(4);
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;

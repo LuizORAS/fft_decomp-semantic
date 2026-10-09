@@ -52,7 +52,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                 tile = attr & 0x3ff;
                 part_u = (tile & 0x1f) * 8;
                 part_v = y_offset + (tile >> 5) * 8;
-                battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u, part_v,
+                battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
                     (s16)(width * 8), (s16)(height * 8), (flags & 0x61) | ((attr & 0xc000) >> 13));
             }
         }
@@ -82,15 +82,15 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         part_v = y_offset + (tile >> 5) * 8;
                         width = g_battle_gfx_part_sizes[size].width;
                         height = g_battle_gfx_part_sizes[size].height;
-                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u,
-                            part_v, (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
+                            (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
                     } else {
                         tile_index = attr & 0x3ff;
                         u = (tile_index & 0x1f) * 8;
                         row = tile_index >> 5;
                         part_flags = (u8)mask | ((attr & 0xc000) >> 13);
-                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)((s8)part->y_shift + 0x18),
-                            (s16)u, (s16)(row * 8 + 0x18), 0x30, 0x18, part_flags);
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, (s16)(part->y_shift + 0x18),
+                            (s16)u, (row * 8 + 0x18), 0x30, 0x18, part_flags);
                         battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, (s16)u,
                             (s16)(row * 8), 0x30, 0x18, part_flags | 0x80);
                         display->part_count++;
@@ -107,7 +107,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                     tile = attr & 0x3ff;
                     part_u = (tile & 0x1f) * 8;
                     part_v = y_offset + (tile >> 5) * 8;
-                    battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, (s16)part_u, part_v,
+                    battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
                         (s16)(width * 8), (s16)(height * 8), (u8)mask | ((attr & 0xc000) >> 13));
                 }
             } while (++i < count);

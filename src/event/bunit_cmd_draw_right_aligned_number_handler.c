@@ -15,7 +15,7 @@ u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
     s32 x;
     s32 y;
 
-    length = sprintf((char*)digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd[3]](cmd[9]));
+    length = sprintf(digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd[3]](cmd[9]));
     x = cmd[7];
     y = cmd[8];
     blanks = cmd[4] - length;

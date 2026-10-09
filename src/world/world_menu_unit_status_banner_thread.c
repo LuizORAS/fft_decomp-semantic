@@ -247,7 +247,7 @@ void world_menu_unit_status_banner_thread(void) {
         if (highlight != 0) {
             world_menu_init_primitive_colors_palette_bank_1(&summary->frame);
             world_menu_init_primitive_colors_palette_bank_1(&status->frame);
-            if ((u32)(anim_state - 4) < 6U) {
+            if ((anim_state - 4) < 6U) {
                 summary->portrait[0].r0 = 0x20;
                 summary->portrait[0].g0 = 0x28;
                 summary->portrait[0].b0 = 0x38;
@@ -269,7 +269,7 @@ void world_menu_unit_status_banner_thread(void) {
             s32 shade;
             world_menu_init_primitive_colors_palette_bank_0(&summary->frame);
             world_menu_init_primitive_colors_palette_bank_0(&status->frame);
-            if ((u32)(anim_state - 4) >= 6U) {
+            if ((anim_state - 4) >= 6U) {
                 summary->portrait[0].r0 = 0x80;
                 summary->portrait[0].g0 = 0x80;
                 summary->portrait[0].b0 = 0x80;
@@ -426,11 +426,11 @@ void world_menu_unit_status_banner_thread(void) {
                 }
             }
         }
-        status->sprites[6].u0 = (s16)(identity->zodiac % 7) * 0x18;
+        status->sprites[6].u0 = (identity->zodiac % 7) * 0x18;
         cell = identity->zodiac;
         status->sprites[6].w = 0x18;
         status->sprites[6].h = 0x14;
-        status->sprites[6].v0 = (s16)(cell / 7) * 0x14 + 0x2A;
+        status->sprites[6].v0 = (cell / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (display->work != 0)) {
             world_menu_copy_billboard_data_in(&g_world_selected_unit_stat_summary, &g_world_selected_unit_identity,
                 &g_world_selected_unit_stat_detail);

@@ -27,7 +27,7 @@ void battle_formula_raise_level_by_one_add_status_on_caster(void) {
     action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP;
     g_battle_action_target = attacker;
     g_battle_action_target_data = attacker_action;
-    attacker_action->hit = (u8)one;
+    attacker_action->hit = one;
     battle_formula_apply_status_to_action();
     g_battle_action_target = saved_unit;
     g_battle_action_target_data = saved_action;

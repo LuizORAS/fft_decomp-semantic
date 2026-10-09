@@ -36,7 +36,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     local.vx = slot->x >> 12;
     local.vy = slot->y >> 12;
     local.vz = slot->z >> 12;
-    RotTrans(&local, &position, (long*)&position.pad);
+    RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
         depth = EFFECT_OT_DEPTH_MIN;

@@ -104,11 +104,11 @@ void helpmenu_menu_run_require_help(void) {
                             battle_thread_start(text_thread_id, battle_text_character_handling_thread);
                             battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
-                    } else if (entry->help_base == 0x7800 && (u32)(*(u16*)entry->value - 1) >= 0x301U) {
+                    } else if (entry->help_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
                         *g_helpmenu_controller_state_ptr = 0;
-                    } else if (entry->help_base == 0x6800 && (u32)(*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->help_base == 0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_helpmenu_controller_state_ptr = 0;
-                    } else if (entry->help_base == -0x6800 && (u32)(*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->help_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_helpmenu_controller_state_ptr = 0;
                     } else {
                         g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;

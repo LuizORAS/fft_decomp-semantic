@@ -41,7 +41,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_side_height_delta = 0;
         state->destination_opposite_height = state->destination_entry_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
-            state->work_x, state->work_y, state->destination_side_shift, (u8)(state->destination_entry_height - 1));
+            state->work_x, state->work_y, state->destination_side_shift, (state->destination_entry_height - 1));
         state->destination_panel_index = state->destination_unit_record_index + 512;
         state->effective_destination_panel = &g_battle_target_panels[state->destination_panel_index];
     } else {

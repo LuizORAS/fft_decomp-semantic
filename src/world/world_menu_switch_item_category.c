@@ -19,7 +19,7 @@ void world_menu_switch_item_category(s32 input) {
             cursor_slot, g_world_menu_cursor_position, g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
         g_world_shop_item_category = category;
         if (g_world_shop_menu_step == 1 || g_world_shop_menu_step == 15) {
-            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (s16)(category + 1) : 7,
+            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (category + 1) : 7,
                 (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
             cursor_slot = g_world_shop_item_category;
         } else {

@@ -22,8 +22,8 @@ void wldcore_window_init_panel_render_state(
     g_wldcore_window_panel_label_state.mode[0] = 0;
     g_wldcore_window_panel_label_state.mode[1] = 2;
     g_wldcore_window_panel_label_state.mode[2] = 2;
-    g_wldcore_window_panel_label_state.text_ids[0] = (s16*)g_wldcore_list_entry_values;
-    g_wldcore_window_panel_label_state.text_colors[0] = (s16*)g_wldcore_list_row_flags;
+    g_wldcore_window_panel_label_state.text_ids[0] = g_wldcore_list_entry_values;
+    g_wldcore_window_panel_label_state.text_colors[0] = g_wldcore_list_row_flags;
     text_width = (width + 0x18) & 0xFFFC;
     g_wldcore_window_panel_render_state.vram_x = 0x200;
     g_wldcore_window_panel_render_state.vram_y = 0x100;

@@ -248,19 +248,19 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         battle_gfx_store_sprite_display_data(display_2, 0, -21, y_shift, 0, 0, 0, 0, 0);
         if ((digits[2] | digits[1]) == 0) {
             battle_gfx_store_sprite_display_data(
-                display_0, 0, -21, y_shift, (s32)(s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+                display_0, 0, -21, y_shift, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
         } else if (digits[2] == 0) {
             battle_gfx_store_sprite_display_data(
-                display_0, 0, -14, y_shift, (s32)(s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+                display_0, 0, -14, y_shift, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
             battle_gfx_store_sprite_display_data(
-                display_1, 0, -21, y_shift, (s32)(s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
+                display_1, 0, -21, y_shift, (s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
         } else {
             battle_gfx_store_sprite_display_data(
-                display_0, 0, -7, y_shift, (s32)(s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+                display_0, 0, -7, y_shift, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
             battle_gfx_store_sprite_display_data(
-                display_1, 0, -14, y_shift, (s32)(s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
+                display_1, 0, -14, y_shift, (s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
             battle_gfx_store_sprite_display_data(
-                display_2, 0, -21, y_shift, (s32)(s16)(0xa8 + digits[2] * 8), 0x30, 8, 16, 0);
+                display_2, 0, -21, y_shift, (s16)(0xa8 + digits[2] * 8), 0x30, 8, 16, 0);
         }
         break;
 
@@ -282,12 +282,12 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         }
         if (digits[1] == 0) {
             battle_gfx_store_sprite_display_data(
-                display_0, 0, -14, y_shift, (s32)(s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+                display_0, 0, -14, y_shift, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
         } else {
             battle_gfx_store_sprite_display_data(
-                display_0, 0, -14, y_shift, (s32)(s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
+                display_0, 0, -14, y_shift, (s16)(0xa8 + digits[0] * 8), 0x30, 8, 16, 0);
             battle_gfx_store_sprite_display_data(
-                display_1, 0, -21, y_shift, (s32)(s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
+                display_1, 0, -21, y_shift, (s16)(0xa8 + digits[1] * 8), 0x30, 8, 16, 0);
         }
 
         switch (display->selector & 0x0e) {

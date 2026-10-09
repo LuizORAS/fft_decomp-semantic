@@ -189,7 +189,7 @@ void bunit_render_unit_status_panel_thread(void) {
         if (highlight != 0) {
             battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)editor);
             battle_menu_init_primitive_colors_palette_bank_1((struct world_menu_palette_primitives*)panel);
-            if ((u32)(anim_state - 4) < 6U) {
+            if ((anim_state - 4) < 6U) {
                 editor->portrait[0].r0 = 0x20;
                 editor->portrait[0].g0 = 0x28;
                 editor->portrait[0].b0 = 0x38;
@@ -211,7 +211,7 @@ void bunit_render_unit_status_panel_thread(void) {
             s32 shade;
             battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)editor);
             battle_menu_init_primitive_colors_palette_bank_0((struct world_menu_palette_primitives*)panel);
-            if ((u32)(anim_state - 4) >= 6U) {
+            if ((anim_state - 4) >= 6U) {
                 editor->portrait[0].r0 = 0x80;
                 editor->portrait[0].g0 = 0x80;
                 editor->portrait[0].b0 = 0x80;
@@ -313,7 +313,7 @@ void bunit_render_unit_status_panel_thread(void) {
             }
         }
         bunit_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, image, (POLY_FT4*)&editor->portrait[0], portrait_arg);
+            transition, &anim_state, &cur_unit, &prev_unit, image, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             battle_menu_status_panel_bar_t* bar;
@@ -384,11 +384,11 @@ void bunit_render_unit_status_panel_thread(void) {
                 bar++;
             }
         }
-        panel->sprites[6].u0 = (s16)(scroll[4] % 7) * 0x18;
+        panel->sprites[6].u0 = (scroll[4] % 7) * 0x18;
         srow = scroll[4];
         panel->sprites[6].w = 0x18;
         panel->sprites[6].h = 0x14;
-        panel->sprites[6].v0 = (s16)(srow / 7) * 0x14 + 0x2A;
+        panel->sprites[6].v0 = (srow / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (thread->work != 0)) {
             if (state->list_index < 0) {
                 env_a[6].format = 0xC00;

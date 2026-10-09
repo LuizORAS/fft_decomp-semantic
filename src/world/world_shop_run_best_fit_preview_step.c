@@ -137,7 +137,7 @@ void world_shop_run_best_fit_preview_step(void) {
                 item = shifted >> 16;
                 current = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i];
                 if (item == 0 || shifted < 0) {
-                    world_shop_return_unit_equip_to_fitting_room(g_world_formation_selected_unit_index, (s16)i);
+                    world_shop_return_unit_equip_to_fitting_room(g_world_formation_selected_unit_index, i);
                     world_shop_add_fitting_room_cost(world_item_get_price(item));
                 } else if ((current >> 15) != 0) {
                     world_shop_add_fitting_room_cost(-world_item_get_price((s16)current));

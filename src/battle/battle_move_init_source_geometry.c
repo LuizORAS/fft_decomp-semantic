@@ -23,7 +23,7 @@ s32 battle_move_init_source_geometry(s32 direction) {
         if (state->source_exit_height < state->work_height)
             return 1;
         state->source_ceiling_height = battle_move_calculate_tile_ceiling((s16)state->tile_x, (s16)state->tile_y,
-            state->source_side_shift, (u8)(records[state->source_unit_record_index].standing_height + 5));
+            state->source_side_shift, (records[state->source_unit_record_index].standing_height + 5));
         state->source_side_height_delta = 0;
     } else if (state->source_unit_record_flag != 0) {
         if (!(frontier[state->tile_index] & 8))
@@ -31,7 +31,7 @@ s32 battle_move_init_source_geometry(s32 direction) {
         state->source_exit_height = records[state->source_unit_record_index].top_height;
         state->source_opposite_height = state->source_exit_height;
         state->source_ceiling_height = battle_move_calculate_tile_ceiling(
-            (s16)state->tile_x, (s16)state->tile_y, state->source_side_shift, (u8)(state->source_exit_height - 1));
+            (s16)state->tile_x, (s16)state->tile_y, state->source_side_shift, (state->source_exit_height - 1));
         state->source_side_height_delta = 0;
     } else {
         state->source_exit_height = state->source_base_height_times_two

@@ -106,11 +106,11 @@ void world_menu_run_require_help(void) {
                             world_thread_start(text_thread_id, world_text_character_handling_thread);
                             world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
-                    } else if (entry->value_base == 0x7800 && (u32)(*(u16*)entry->value - 1) >= 0x301U) {
+                    } else if (entry->value_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
                         *g_world_help_controller_state_ptr = 0;
-                    } else if (entry->value_base == 0x6800 && (u32)(*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->value_base == 0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
-                    } else if (entry->value_base == -0x6800 && (u32)(*(u16*)entry->value - 1) >= 0x101U) {
+                    } else if (entry->value_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
                         g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;

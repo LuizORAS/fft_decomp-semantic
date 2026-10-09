@@ -36,7 +36,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
     glyph.v = 0x10;
     glyph.w = 6;
     glyph.h = 0xB;
-    pad = command[4] - sprintf((char*)text, g_card_text_decimal_format, value);
+    pad = command[4] - sprintf(text, g_card_text_decimal_format, value);
     pos = 0;
     color = g_card_text_color;
     for (i = 0; i < command[4]; i++) {
