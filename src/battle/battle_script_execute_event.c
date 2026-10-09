@@ -27,7 +27,6 @@ void battle_script_execute_event(void) {
     u8* message_cursor;
     u8* effect_cursor;
     s32 finish_operation;
-    u32 copy_value;
     s16 first_halfword;
     s32 remove_unit_misc_id;
     s32 reset_graphic_misc_id;
@@ -36,23 +35,16 @@ void battle_script_execute_event(void) {
     s16 thrown_item_misc_id;
     s16 arrow_source_misc_id;
     s16 arrow_target_misc_id;
-    s16 copied_position;
     s32 ghost_misc_id;
     s32 region_misc_id;
     s32 draw_misc_id;
-    s32 facing_misc_id;
-    s32 sprite_thread_offset;
     s32 date_month;
-    s32 message_thread_offset;
     battle_stats_t* added_unit;
-    s32 existing_message_thread_offset;
     s32 arrow_target_battle_id;
     s32 confirm_buttons;
     s32 instruction_offset;
     s32 added_battle_id;
-    s32 wait_thread_index;
     s32 work_index;
-    s32 finish_task_id;
     event_opcode_e opcode;
     /* Initially four eagerly fetched operand bytes, then per-opcode scratch.
      * They are not four uniformly encoded script arguments. */
@@ -63,15 +55,17 @@ void battle_script_execute_event(void) {
     u8* position_instruction;
     u8* message_instruction;
     s32* script_variables;
-    /* Pin: unpinned, `parameters` and `operand_1` swap $s1/$s2. */
-    register u8* parameters __asm__("$17");
+    u8* parameters;
+    /* One unit pointer, one thread pointer and one index serve every handler;
+     * separate ones per handler change the saved-register allocation. */
+    battle_stats_t* unit;
     u8* ghost_parameters;
     u8* instruction;
     map_tile_t* tile;
     battle_stats_t* copy_destination;
     u8* effect_instruction;
-    native_thread_t* wait_thread;
-    native_thread_t* cancel_thread;
+    native_thread_t* thread;
+    native_thread_t* threads;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_EXECUTE_EVENT);
     if (battle_script_is_tutorial_event_slot() != 0) {
@@ -214,12 +208,11 @@ restart_script:
                 battle_sound_play_music_tracks(0x13, 0);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_8_POSITION_TO_UNIT_9_AND_RELOAD_GRAPHICS) {
-                parameters = (u8*)battle_unit_get_stats_from_battle_id(7);
+                unit = battle_unit_get_stats_from_battle_id(7);
                 copy_destination = battle_unit_get_stats_from_battle_id(8);
-                copy_destination->x = (u8)((battle_stats_t*)parameters)->x;
-                copy_destination->position.bits.y = (u8)((battle_stats_t*)parameters)->position.bits.y;
-                copy_value = ((battle_stats_t*)parameters)->position.raw & 0x8000;
-                copy_destination->position.raw = (copy_destination->position.raw & 0x7FFF) | copy_value;
+                copy_destination->x = (u8)unit->x;
+                copy_destination->position.bits.y = (u8)unit->position.bits.y;
+                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
                 battle_gfx_load_unit_graphics_by_battle_id(8, 1U);
                 g_battle_unit_graphics_load_pending = 1;
                 do {
@@ -234,13 +227,11 @@ restart_script:
                     if (battle_unit_has_misc_id(region_misc_id) != 0) {
                         operand_1 = battle_unit_get_battle_index_by_misc_id(region_misc_id);
                         if (operand_1 != -1U) {
-                            parameters = (u8*)battle_unit_get_stats_from_battle_id(operand_1);
-                            if (((u8)((battle_stats_t*)parameters)->x < 4U)
-                                && ((u8)((battle_stats_t*)parameters)->position.bits.y < 0xBU)) {
+                            unit = battle_unit_get_stats_from_battle_id(operand_1);
+                            if (((u8)unit->x < 4U) && ((u8)unit->position.bits.y < 0xBU)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
-                            if (((u32)(((battle_stats_t*)parameters)->x - 4) < 3U)
-                                && ((u32)(((battle_stats_t*)parameters)->position.bits.y - 2) < 6U)) {
+                            if (((u32)(unit->x - 4) < 3U) && ((u32)(unit->position.bits.y - 2) < 6U)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
                         }
@@ -249,16 +240,12 @@ restart_script:
                 } while (region_misc_id < EVENT_UNIT_SLOT_COUNT);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_2_POSITION_AND_FACING_TO_UNIT_8_AND_RELOAD_GRAPHICS) {
-                parameters = (u8*)battle_unit_get_stats_from_battle_id(1);
+                unit = battle_unit_get_stats_from_battle_id(1);
                 copy_destination = battle_unit_get_stats_from_battle_id(7);
-                copy_value = (u8)((battle_stats_t*)parameters)->x;
-                copy_destination->x = copy_value;
-                copy_destination->position.bits.y = (u8)((battle_stats_t*)parameters)->position.bits.y;
-                copy_value = ((battle_stats_t*)parameters)->position.raw & 0x8000;
-                copied_position = (copy_destination->position.raw & 0x7FFF) | copy_value;
-                copy_destination->position.raw = copied_position;
-                copy_destination->position.raw
-                    = (s16)((copied_position & 0xF0FF) | (((battle_stats_t*)parameters)->position.raw & 0xF00));
+                copy_destination->x = (u8)unit->x;
+                copy_destination->position.bits.y = unit->position.bits.y;
+                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
+                copy_destination->position.bits.facing = unit->position.bits.facing;
                 battle_gfx_load_unit_graphics_by_battle_id(7, 1U);
                 g_battle_unit_graphics_load_pending = 1U;
                 do {
@@ -297,8 +284,8 @@ restart_script:
                 battle_state_start_close_battle(0x20);
             }
             if (g_battle_menu_input_disabled == 0) {
-                for (finish_task_id = 2; finish_task_id < 0xE; finish_task_id++) {
-                    battle_thread_wait_until_inactive(finish_task_id);
+                for (work_index = 2; work_index < 0xE; work_index++) {
+                    battle_thread_wait_until_inactive(work_index);
                 }
             }
             operand_1 = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -315,21 +302,19 @@ restart_script:
                     goto restart_script;
                 }
             }
-            facing_misc_id = 0;
+            work_index = 0;
             battle_unit_snap_all_facings_to_quadrants();
             battle_unit_update_staged_status_data(0, 1);
             do {
-                if (battle_unit_has_misc_id(facing_misc_id) != 0) {
-                    operand_1 = battle_unit_get_battle_index_by_misc_id(facing_misc_id);
+                if (battle_unit_has_misc_id(work_index) != 0) {
+                    operand_1 = battle_unit_get_battle_index_by_misc_id(work_index);
                     if (operand_1 >= 0) {
-                        parameters = (u8*)battle_unit_get_stats_from_battle_id(operand_1);
-                        ((battle_stats_t*)parameters)->position.raw
-                            = (u16)((((battle_stats_t*)parameters)->position.raw & 0xF0FF)
-                                | ((battle_unit_get_facing_quadrant_by_misc_id(facing_misc_id) & 0xF) << 8));
+                        unit = battle_unit_get_stats_from_battle_id(operand_1);
+                        unit->position.bits.facing = battle_unit_get_facing_quadrant_by_misc_id(work_index);
                     }
                 }
-                facing_misc_id += 1;
-            } while (facing_misc_id < EVENT_UNIT_SLOT_COUNT);
+                work_index += 1;
+            } while (work_index < EVENT_UNIT_SLOT_COUNT);
             battle_camera_normalize_yaw_angle();
             battle_camera_init_tilt_and_zoom();
             battle_thread_exit_current();
@@ -364,48 +349,40 @@ restart_script:
         else if (opcode == EVENT_OPCODE_DISPLAY_MESSAGE) {
             operand_1 = battle_thread_resolve_id(operand_1);
             battle_thread_start(operand_1, battle_text_character_handling_thread);
-            message_thread_offset = operand_1 << 0xA;
-            battle_text_build_display_message(instruction_offset, operand_2,
-                &g_battle_thread_contexts[(u32)message_thread_offset >> 10].task_words[6]);
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].function_parameter_1 = (s32)operand_2;
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].function_parameter_2
-                = (s32)(((operand_4 << 8) + operand_3) - 1);
+            battle_text_build_display_message(
+                instruction_offset, operand_2, &g_battle_thread_contexts[operand_1].task_words[6]);
+            g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)operand_2;
+            g_battle_thread_contexts[operand_1].function_parameter_2 = (s32)(((operand_4 << 8) + operand_3) - 1);
             message_instruction = (u8*)g_battle_event_block;
             message_instruction += instruction_offset;
             operand_4 = message_instruction[6];
             operand_3 = message_instruction[5];
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].function_parameter_3
-                = (s32)((operand_4 << 8) + operand_3);
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].function_parameter_4
-                = (s32)message_instruction[7];
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].task_words[2]
+            g_battle_thread_contexts[operand_1].function_parameter_3 = (s32)((operand_4 << 8) + operand_3);
+            g_battle_thread_contexts[operand_1].function_parameter_4 = (s32)message_instruction[7];
+            g_battle_thread_contexts[operand_1].task_words[2]
                 = (s32)battle_script_load_halfword(message_instruction + 8);
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].task_words[3]
+            g_battle_thread_contexts[operand_1].task_words[3]
                 = (s32)battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 0xA);
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].task_words[4]
+            g_battle_thread_contexts[operand_1].task_words[4]
                 = (s32)battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 0xC);
             message_cursor = (u8*)g_battle_event_block;
             message_cursor += instruction_offset;
-            g_battle_thread_contexts[((u32)message_thread_offset >> 10)].task_words[5] = message_cursor[14];
+            g_battle_thread_contexts[operand_1].task_words[5] = message_cursor[14];
             battle_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_battle_menu_window_buffers[work_index].thread_id;
                 if ((g_battle_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (battle_thread_is_running_8014cc94(operand_2) == 1)
-                    && (existing_message_thread_offset = operand_2 << 0xA,
-                        g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].task_id
-                            == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
+                    && (g_battle_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 2);
                     if ((operand_1 & 0xFFFF) != 0xFFFF) {
                         operand_1 -= 1;
                     }
-                    g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].function_parameter_2
-                        = operand_1;
-                    g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].function_parameter_4
+                    g_battle_thread_contexts[operand_2].function_parameter_2 = operand_1;
+                    g_battle_thread_contexts[operand_2].function_parameter_4
                         = (s32)battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 4);
-                    g_battle_thread_contexts[((u32)existing_message_thread_offset >> 10)].task_id
-                        = NATIVE_THREAD_TASK_RESUME;
+                    g_battle_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
                     break;
                 }
             }
@@ -487,10 +464,10 @@ restart_script:
             battle_script_pause_event_instruction();
         } else if (opcode == EVENT_OPCODE_UNKNOWN_26) {
             for (work_index = 1; work_index < 16; work_index++) {
-                cancel_thread = &g_battle_thread_contexts[work_index];
-                if (cancel_thread->is_running != 0 && cancel_thread->task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && cancel_thread->function_parameter_2 == first_halfword) {
-                    cancel_thread->task_id = NATIVE_THREAD_TASK_RESUME;
+                thread = &g_battle_thread_contexts[work_index];
+                if (thread->is_running != 0 && thread->task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                    && thread->function_parameter_2 == first_halfword) {
+                    thread->task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
         } else if (opcode == EVENT_OPCODE_UNKNOWN_37) {
@@ -615,11 +592,9 @@ restart_script:
             } else {
                 battle_thread_start(operand_1, &battle_script_sprite_move_beta);
             }
-            sprite_thread_offset = operand_1 << 0xA;
-            g_battle_thread_contexts[((u32)sprite_thread_offset >> 10)].function_parameter_1 = (s32)parameters;
-            g_battle_thread_contexts[((u32)sprite_thread_offset >> 10)].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_battle_thread_contexts[((u32)sprite_thread_offset >> 10)].task_words[0]
-                = battle_get_misc_id(first_halfword);
+            g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
+            g_battle_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
+            g_battle_thread_contexts[operand_1].task_words[0] = battle_get_misc_id(first_halfword);
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             battle_script_waitspritemove_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
@@ -823,12 +798,12 @@ restart_script:
             /* Direct simulation slot, not the encoded identity used by WarpUnit.
              * Operand byte 1 is unused. The target neither guards slots >=21
              * nor synchronizes the renderer's position here. */
-            parameters = (u8*)battle_unit_get_stats_from_battle_id((s32)operand_1);
+            unit = battle_unit_get_stats_from_battle_id((s32)operand_1);
             position_instruction = instruction_offset + ((u8*)g_battle_event_block);
-            ((battle_stats_t*)parameters)->x = (u8)position_instruction[3];
-            ((battle_stats_t*)parameters)->position.bits.y = (u8)position_instruction[4];
-            ((battle_stats_t*)parameters)->position.bits.higher_elevation = position_instruction[5];
-            ((battle_stats_t*)parameters)->position.bits.facing = position_instruction[6];
+            unit->x = (u8)position_instruction[3];
+            unit->position.bits.y = (u8)position_instruction[4];
+            unit->position.bits.higher_elevation = position_instruction[5];
+            unit->position.bits.facing = position_instruction[6];
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 battle_thread_yield();
@@ -847,26 +822,22 @@ restart_script:
         }
         /* ---- Waits and synchronization ---- */
         else if (opcode == EVENT_OPCODE_WAIT_FOR_INSTRUCTION) {
-            /* Yield until no thread runs the named task. This stays a label
-             * loop: as C loops the scan gains loop notes that change the
-             * operand register allocation (see the WORLD twin). */
+            /* Yield until no thread runs the named task. The outer wait stays
+             * a label loop: as a C loop its notes change the operand register
+             * allocation (see the WORLD twin). */
             operand_3 = (operand_2 << 8) + operand_1;
-            parameters = (u8*)g_battle_thread_contexts;
-        yield_before_task_scan:
-            wait_thread_index = 1;
+            threads = g_battle_thread_contexts;
+        wait_matching_task:
             battle_thread_yield();
-        scan_task_slots:
-            /* Matching: typed indexing reverses the target's addu operands.
-             * Keep the address sum explicit; all record access remains typed. */
-            wait_thread = (native_thread_t*)((u32)(wait_thread_index * sizeof(native_thread_t)) + (u32)parameters);
-            if ((wait_thread->is_running == 0) || (wait_thread->task_id != operand_3)) {
-                wait_thread_index += 1;
-                if (wait_thread_index < 0x10) {
-                    goto scan_task_slots;
+            for (work_index = 1; work_index < 0x10; work_index++) {
+                /* Typed indexing reverses the target addu operands; keep the 32-bit address sum. */
+                thread = (native_thread_t*)((u32)(work_index * sizeof(native_thread_t)) + (u32)threads);
+                if (thread->is_running != 0 && thread->task_id == operand_3) {
+                    break;
                 }
             }
-            if (wait_thread_index != 0x10) {
-                goto yield_before_task_scan;
+            if (work_index != 0x10) {
+                goto wait_matching_task;
             }
         } else if (opcode == EVENT_OPCODE_YIELD) {
             battle_thread_yield();

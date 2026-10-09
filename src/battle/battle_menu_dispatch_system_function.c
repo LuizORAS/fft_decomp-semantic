@@ -12,9 +12,7 @@
  * Returns 1 when a function was started, 0 for an unknown command; handled
  * commands record themselves in g_battle_menu_system_function_command/g_battle_menu_system_function_option.
  *
- * The one-operand keep-alive on unit_id raises its allocation priority so
- * it takes $s6 ahead of action ($s7), as in the target; without it the two
- * callee-saved registers swap. Twin of world_menu_dispatch_system_function.
+ * Twin of world_menu_dispatch_system_function.
  */
 s32 battle_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_ai_command_action_t* action) {
@@ -30,7 +28,6 @@ s32 battle_menu_dispatch_system_function(
     g_battle_menu_current_id = -1;
     g_battle_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
-    __asm__("" : : "r"(unit_id));
     if (command == 8) {
         value = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((u32)(value - 0x19A) < 0x10) {
@@ -267,8 +264,8 @@ s32 battle_menu_dispatch_system_function(
         entry = &g_battle_system_function_table[0x32];
         flags = parameter;
         if ((u32)(option - 0x27) < 7) {
-            g_battle_text_substitution_values[1] = option + 0x506B;
             g_battle_text_substitution_values[0] = unit_id;
+            g_battle_text_substitution_values[1] = option + 0x506B;
             if (option == 0x2D) {
                 flags = 1;
                 if (parameter & 0x80) {

@@ -3,22 +3,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* 0x801cd72a and 0x801cd72c are separately catalogued halfwords inside the
- * menu selection results. The target holds a base register for the first
- * (two `lh 0(s0)` reads) and addresses the second absolutely, which is the
- * pointer-local-plus-absolute split src/world/world_formation_item_menu.c
- * already uses on this same pair. */
-
 /* Fitting-room menu step: on entry clear the trial equipment and its cost;
  * then either browse the formation (confirm opens the fitting menu, cancel
  * returns to shop step 0xC) or run the fitting menu thread and dispatch its
  * selection to the next shop step. */
 void world_shop_run_fitting_room_step(void) {
     s32 busy;
-    s32 chosen;
-    /* Pin: holds the 4 in $v0 ahead of the flag stores; unpinned, GCC loads it after them. */
-    register s32 exit_choice __asm__("$2");
-    s16* selection;
 
     if (g_world_shop_fitting_room_initialized == 0) {
         if (g_world_input_newly_pressed == 0) {
@@ -65,14 +55,13 @@ void world_shop_run_fitting_room_step(void) {
         g_world_shop_background_visible = 1;
         g_world_menu_description_text_id = 0;
         if (world_menu_run_thread(6, g_world_shop_fitting_room_menu_thread_data) == 0) {
-            selection = &g_world_menu_selection_results[1];
-            if (*selection == 0) {
+            if (g_world_menu_selection_results[1] == 0) {
                 g_world_shop_menu_step = 7;
-            } else if (*selection == 1) {
+            } else if (g_world_menu_selection_results[1] == 1) {
                 g_world_shop_menu_step = 8;
-            } else if (*selection == 2) {
+            } else if (g_world_menu_selection_results[1] == 2) {
                 g_world_shop_menu_step = 9;
-            } else if (*selection == 3) {
+            } else if (g_world_menu_selection_results[1] == 3) {
                 if (g_world_menu_selection_results[2] == 0) {
                     g_world_shop_menu_step = 0xA;
                 } else {
@@ -81,12 +70,10 @@ void world_shop_run_fitting_room_step(void) {
             } else {
                 g_world_shop_fitting_room_unit_chosen = 0;
                 world_formation_init_selection_cursor(g_world_formation_selected_unit_index);
-                chosen = *selection;
-                exit_choice = 4;
                 g_world_formation_unit_cycle_mode = 0;
                 g_world_formation_unit_browse_enabled = 0;
                 g_world_shop_cost_window_visible = 0;
-                if (chosen == exit_choice) {
+                if (g_world_menu_selection_results[1] == 4) {
                     g_world_formation_unit_banner_enabled = 0;
                     g_world_shop_menu_step = 0xC;
                 }

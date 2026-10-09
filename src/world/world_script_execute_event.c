@@ -22,12 +22,9 @@ void world_script_execute_event(void) {
     s32 ghost_misc_id;
     s32 region_misc_id;
     s32 zalera_misc_id;
-    s32 facing_misc_id;
     s32 month;
     s32 appearance_battle_id;
-    s32 waiting_thread_index;
     s32 work_index;
-    s32 finishing_thread_index;
 
     s16 first_halfword;
     s32 removed_misc_id;
@@ -50,15 +47,17 @@ void world_script_execute_event(void) {
     void* position_instruction;
     u8* dialogue_instruction;
     s32* event_words;
-    /* Preserve the target callee-saved parameter cursor register. */
-    register u8* parameters __asm__("$17");
+    u8* parameters;
+    /* One unit pointer, one thread pointer and one index serve every handler;
+     * separate ones per handler change the saved-register allocation. */
+    battle_stats_t* unit;
     u8* instruction;
     void* ghost_operands;
     void* tile;
     battle_stats_t* copy_destination;
     u8* focus_instruction;
-    native_thread_t* waiting_thread;
-    native_thread_t* cancel_thread;
+    native_thread_t* thread;
+    native_thread_t* threads;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_EXECUTE_EVENT);
     if (world_script_check_tutorial_event_slot() != 0) {
@@ -201,12 +200,11 @@ restart_event:
                 world_sound_play_music_tracks(0x13, 0);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_8_POSITION_TO_UNIT_9_AND_RELOAD_GRAPHICS) {
-                parameters = battle_unit_get_stats_from_battle_id(7);
+                unit = battle_unit_get_stats_from_battle_id(7);
                 copy_destination = battle_unit_get_stats_from_battle_id(8);
-                copy_destination->x = (u8)((battle_stats_t*)parameters)->x;
-                copy_destination->position.bits.y = ((battle_stats_t*)parameters)->position.bits.y;
-                copy_destination->position.bits.higher_elevation
-                    = ((battle_stats_t*)parameters)->position.bits.higher_elevation;
+                copy_destination->x = (u8)unit->x;
+                copy_destination->position.bits.y = unit->position.bits.y;
+                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
                 battle_gfx_load_unit_graphics_by_battle_id(8, 1);
                 g_world_unit_graphics_load_pending = 1;
                 do {
@@ -221,13 +219,11 @@ restart_event:
                     if (battle_unit_has_misc_id(region_misc_id) != 0) {
                         operand_1 = battle_unit_get_battle_index_by_misc_id(region_misc_id);
                         if (operand_1 != -1U) {
-                            parameters = battle_unit_get_stats_from_battle_id((s32)operand_1);
-                            if (((u8)((battle_stats_t*)parameters)->x < 4U)
-                                && (((battle_stats_t*)parameters)->position.bits.y < 0xBU)) {
+                            unit = battle_unit_get_stats_from_battle_id((s32)operand_1);
+                            if (((u8)unit->x < 4U) && (unit->position.bits.y < 0xBU)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
-                            if (((u32)(((battle_stats_t*)parameters)->x - 4) < 3U)
-                                && ((u32)(((battle_stats_t*)parameters)->position.bits.y - 2) < 6U)) {
+                            if (((u32)(unit->x - 4) < 3U) && ((u32)(unit->position.bits.y - 2) < 6U)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
                         }
@@ -236,13 +232,12 @@ restart_event:
                 } while (region_misc_id < EVENT_UNIT_SLOT_COUNT);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_2_POSITION_AND_FACING_TO_UNIT_8_AND_RELOAD_GRAPHICS) {
-                parameters = battle_unit_get_stats_from_battle_id(1);
+                unit = battle_unit_get_stats_from_battle_id(1);
                 copy_destination = battle_unit_get_stats_from_battle_id(7);
-                copy_destination->x = (u8)((battle_stats_t*)parameters)->x;
-                copy_destination->position.bits.y = ((battle_stats_t*)parameters)->position.bits.y;
-                copy_destination->position.bits.higher_elevation
-                    = ((battle_stats_t*)parameters)->position.bits.higher_elevation;
-                copy_destination->position.bits.facing = ((battle_stats_t*)parameters)->position.bits.facing;
+                copy_destination->x = (u8)unit->x;
+                copy_destination->position.bits.y = unit->position.bits.y;
+                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
+                copy_destination->position.bits.facing = unit->position.bits.facing;
                 battle_gfx_load_unit_graphics_by_battle_id(7, 1);
                 g_world_unit_graphics_load_pending = 1U;
                 do {
@@ -281,8 +276,8 @@ restart_event:
                 battle_state_start_close_battle(0x20);
             }
             if (g_world_menu_input_disabled == 0) {
-                for (finishing_thread_index = 2; finishing_thread_index < 0xE; finishing_thread_index++) {
-                    world_thread_wait_until_inactive(finishing_thread_index);
+                for (work_index = 2; work_index < 0xE; work_index++) {
+                    world_thread_wait_until_inactive(work_index);
                 }
             }
             operand_1 = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -301,20 +296,19 @@ restart_event:
                     goto restart_event;
                 }
             }
-            facing_misc_id = 0;
+            work_index = 0;
             battle_unit_snap_all_facings_to_quadrants();
             world_unit_update_staged_status_data(0, 1);
             do {
-                if (battle_unit_has_misc_id(facing_misc_id) != 0) {
-                    operand_1 = battle_unit_get_battle_index_by_misc_id(facing_misc_id);
+                if (battle_unit_has_misc_id(work_index) != 0) {
+                    operand_1 = battle_unit_get_battle_index_by_misc_id(work_index);
                     if (operand_1 >= 0) {
-                        parameters = battle_unit_get_stats_from_battle_id(operand_1);
-                        ((battle_stats_t*)parameters)->position.bits.facing
-                            = battle_unit_get_facing_quadrant_by_misc_id(facing_misc_id);
+                        unit = battle_unit_get_stats_from_battle_id(operand_1);
+                        unit->position.bits.facing = battle_unit_get_facing_quadrant_by_misc_id(work_index);
                     }
                 }
-                facing_misc_id += 1;
-            } while (facing_misc_id < EVENT_UNIT_SLOT_COUNT);
+                work_index += 1;
+            } while (work_index < EVENT_UNIT_SLOT_COUNT);
             world_camera_init_yaw_angle();
             world_camera_init_tilt_and_zoom();
             world_thread_exit_current();
@@ -462,10 +456,10 @@ restart_event:
             world_script_pause_event_instruction();
         } else if (opcode == EVENT_OPCODE_UNKNOWN_26) {
             for (work_index = 1; work_index < 17; ++work_index) {
-                cancel_thread = &g_world_thread_contexts[work_index];
-                if (cancel_thread->is_running && cancel_thread->task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && cancel_thread->function_parameter_2 == first_halfword) {
-                    cancel_thread->task_id = NATIVE_THREAD_TASK_RESUME;
+                thread = &g_world_thread_contexts[work_index];
+                if (thread->is_running && thread->task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                    && thread->function_parameter_2 == first_halfword) {
+                    thread->task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
         } else if (opcode == EVENT_OPCODE_UNKNOWN_37) {
@@ -795,12 +789,12 @@ restart_event:
             world_script_warp_unit(parameters);
         } else if (opcode == EVENT_OPCODE_UNKNOWN_61) {
         } else if (opcode == EVENT_OPCODE_SET_BATTLE_UNIT_POSITION) {
-            parameters = battle_unit_get_stats_from_battle_id((s32)operand_1);
+            unit = battle_unit_get_stats_from_battle_id((s32)operand_1);
             position_instruction = instruction_offset + ((u32)g_world_event_script);
-            ((battle_stats_t*)parameters)->x = (u8)((u8*)position_instruction)[3];
-            ((battle_stats_t*)parameters)->position.bits.y = (u8)((u8*)position_instruction)[4];
-            ((battle_stats_t*)parameters)->position.bits.higher_elevation = ((u8*)position_instruction)[5];
-            ((battle_stats_t*)parameters)->position.bits.facing = ((u8*)position_instruction)[6];
+            unit->x = (u8)((u8*)position_instruction)[3];
+            unit->position.bits.y = (u8)((u8*)position_instruction)[4];
+            unit->position.bits.higher_elevation = ((u8*)position_instruction)[5];
+            unit->position.bits.facing = ((u8*)position_instruction)[6];
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 world_thread_yield();
@@ -823,23 +817,17 @@ restart_event:
              * a label loop: as a C loop its notes raise operand_3's
              * allocation weight and swap the target's s5/s6. */
             operand_3 = (operand_2 << 8) + operand_1;
-            parameters = (u8*)g_world_thread_contexts;
+            threads = g_world_thread_contexts;
         wait_matching_task:
-            waiting_thread_index = 1;
             world_thread_yield();
-            for (;;) {
+            for (work_index = 1; work_index < 0x11; work_index++) {
                 /* Typed indexing reverses the target addu operands; keep the 32-bit address sum. */
-                waiting_thread
-                    = (native_thread_t*)((u32)(waiting_thread_index * sizeof(native_thread_t)) + (u32)parameters);
-                if ((waiting_thread->is_running == 0) || (waiting_thread->task_id != operand_3)) {
-                    waiting_thread_index += 1;
-                    if (waiting_thread_index < 0x11) {
-                        continue;
-                    }
+                thread = (native_thread_t*)((u32)(work_index * sizeof(native_thread_t)) + (u32)threads);
+                if (thread->is_running != 0 && thread->task_id == operand_3) {
+                    break;
                 }
-                break;
             }
-            if (waiting_thread_index != 0x11) {
+            if (work_index != 0x11) {
                 goto wait_matching_task;
             }
         } else if (opcode == EVENT_OPCODE_YIELD) {

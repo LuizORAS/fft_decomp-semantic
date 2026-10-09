@@ -42,23 +42,10 @@ extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
 void world_formation_run_dismiss_unit_menu_step(void) {
-    world_formation_unit_t** units;
-    /* The target keeps the unit-pointer base in s2 for the dismissal loop and
-     * s0 for the first-entry block. One C variable is one pseudo, so those
-     * are two variables. */
-    world_formation_unit_t** units2;
     world_formation_unit_t* unit;
-    world_formation_dismiss_entry_t* entry;
     world_formation_dismiss_menu_t* menu;
-    s32 offset;
-    /* Pinned: every assignment is an immediate, so the pin is free. It puts
-     * the sentinel in v0, which leaves v1 for the guard load below and is
-     * what the target does (li v0,-1 / lh v1,-0x2894(v1)). */
-    register s32 sentinel __asm__("$2");
+    s32 i;
     s32 value;
-    /* Split from `value`: the target holds the prompt text id in a1 and this
-     * 0/1 flag in v0, so they cannot be one pseudo. */
-    s32 flag;
     s32 sprite;
     s32 flags;
     s32 step;
@@ -75,39 +62,15 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     s8 running;
 
     if (g_world_formation_dismiss_anim_timer != 0) {
-        /* Pre-increment, not a named load plus `+ 1`: the idiom forces the
-         * expander to materialise the incremented value in its own pseudo,
-         * which is what keeps the target's `move v1,v0` at +0x20 alive. With
-         * a named temporary `cse` value-numbers both names into one pseudo
-         * and deletes the copy; a two-variable tie, a self-tie launder or a
-         * keepalive on the load still emits no move. */
-        value = ++g_world_formation_dismiss_anim_timer;
-        if ((value & 0xFF) < 0x11) {
+        g_world_formation_dismiss_anim_timer++;
+        if ((g_world_formation_dismiss_anim_timer & 0xFF) < 0x11) {
             return;
         }
-        /* The sentinel is set twice so loop.c sees it vary and leaves it in
-         * the body, where the target rematerialises it into the `lh` shadow
-         * rather than paying a fourth callee-saved register for the hoist. */
-        sentinel = -1;
-        offset = 0;
-        if (g_world_formation_dismiss_entries[0].sprite_set != sentinel) {
-            units = g_world_formation_unit_pointers;
-            /* Two-variable tie (output `entry`, input the array symbol): keeps
-             * the guard load and this walker from sharing one base register.
-             * Without it cc1 emits `la $4,SYM; lh $2,0($4)` then `move s0,$4`;
-             * the target folds %lo into the guard `lh` and materialises the
-             * address again in s0. */
-            __asm__("" : "=r"(entry) : "0"(g_world_formation_dismiss_entries));
-            do {
-                if (units[g_world_formation_selected_unit_index]->sprite_set == entry->sprite_set) {
-                    /* Read through the separate byte-offset index, not entry (see the table note). */
-                    world_script_set_variable(
-                        *(s16*)((u8*)&g_world_formation_dismiss_entries[0].variable_id + offset), 0xC);
-                }
-                entry++;
-                offset += 4;
-                sentinel = -1;
-            } while (entry->sprite_set != sentinel);
+        for (i = 0; g_world_formation_dismiss_entries[i].sprite_set != -1; i++) {
+            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
+                == g_world_formation_dismiss_entries[i].sprite_set) {
+                world_script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
+            }
         }
         world_formation_dismiss_unit(g_world_formation_selected_unit_index);
         g_world_menu_sound_muted = 0;
@@ -117,19 +80,19 @@ void world_formation_run_dismiss_unit_menu_step(void) {
 
     if (*(s8*)&g_world_dismiss_unit_prompt_running == 0) {
         sprite = g_world_formation_selected_unit_index;
-        units2 = g_world_formation_unit_pointers;
         if (g_world_formation_unit_pointers[sprite]->proposition_status != 0) {
             world_text_show_message_and_play_sound(0xC012, 0x30);
             g_world_formation_dismiss_step = 2;
-            flag = 1;
+            g_world_dismiss_unit_prompt_running = 1;
         } else {
             g_world_formation_dismiss_step = world_formation_can_dismiss_unit((s16)sprite);
             world_gfx_bind_data_pointer(4);
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;
             }
-            g_world_text_substitution_values[0] = units2[g_world_formation_selected_unit_index]->roster_slot;
-            unit = units2[g_world_formation_selected_unit_index];
+            g_world_text_substitution_values[0]
+                = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+            unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
             sprite = unit->sprite_set;
             if (sprite >= 0x4B) {
                 flags = unit->gender_flags;
@@ -171,9 +134,8 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 menu->entry3_selected_index = 0;
                 menu->prompt_text_id = text_id;
             }
-            flag = 1;
+            g_world_dismiss_unit_prompt_running = 1;
         }
-        g_world_dismiss_unit_prompt_running = flag;
         g_world_menu_description_text_id = -1;
     }
 

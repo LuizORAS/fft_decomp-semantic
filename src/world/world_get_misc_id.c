@@ -14,8 +14,7 @@ extern u16 g_world_event_unit_slots_by_encoded_id[];
 s32 world_get_misc_id(s32 unit_id) {
     s32 battle_id;
     s32 unit_state;
-    /* Pinned so cse keeps this copy out of the 0x68/0x69 compares. */
-    register s32 original_unit_id __asm__("$18");
+    s32 original_unit_id;
     s32 misc_id;
     battle_stats_t* unit;
 
@@ -88,22 +87,26 @@ s32 world_get_misc_id(s32 unit_id) {
 
     if ((u32)(unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST) < EVENT_UNIT_SELECTOR_SLOT_COUNT) {
         misc_id = g_world_event_unit_slots_by_encoded_id[unit_id];
-        if (misc_id != EVENT_UNIT_SLOT_EMPTY) {
-            return misc_id;
+        if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
+            world_noop_800e7808(original_unit_id);
+            return EVENT_MISC_ID_NONE;
         }
-    } else {
-        unit = battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &unit_state);
-        if (unit_state >= 0 || unit_state == -2 || world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x194) {
-            for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
-                if (battle_unit_get_stats_from_battle_id(battle_id) == unit)
-                    break;
-            }
-            unit_id = battle_unit_get_misc_id_by_battle_id(battle_id);
-            if (unit_id != -1 && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
-                return unit_id;
-        }
+        return misc_id;
     }
 
-    world_noop_800e7808(original_unit_id);
-    return EVENT_MISC_ID_NONE;
+    unit = battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &unit_state);
+    if (unit_state < 0 && unit_state != -2 && world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x194) {
+        world_noop_800e7808(original_unit_id);
+        return EVENT_MISC_ID_NONE;
+    }
+    for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
+        if (battle_unit_get_stats_from_battle_id(battle_id) == unit)
+            break;
+    }
+    unit_id = battle_unit_get_misc_id_by_battle_id(battle_id);
+    if (unit_id == -1 || (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+        world_noop_800e7808(original_unit_id);
+        return EVENT_MISC_ID_NONE;
+    }
+    return unit_id;
 }

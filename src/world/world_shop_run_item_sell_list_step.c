@@ -6,48 +6,27 @@
  * player already holds items), rebuilds the item list and installs the seven
  * column callbacks, then handles cancel (0x40) and confirm (0x20).
  *
- * As in its structural twin world_shop_run_item_sell_confirm_step, the
- * constant is pinned into $v0 (free on an immediate assignment) so the arm's
- * result inherits that register, and the *addend* rather than the arm's
- * result is laundered so the increment must be recomputed.
+ * The category byte is read twice after the store: `cat` (16 bits wide, so
+ * cse does not forward the stored value) feeds both `+ 1` operands, and a
+ * second read feeds the `!= 4` test.
  */
 void world_shop_run_item_sell_list_step(void) {
     s32 category;
     s32 next_category;
-    s32 message;
+    s16 cat;
 
     if (g_world_shop_sell_list_initialized == 0) {
-        /* The constant wins $v0 and dies at the beq; the arm's result then takes
-         * that register by ordinary allocation, as the target has it. Only the
-         * immediate assignment is pinned, so the pin is free. */
-        register s32 four __asm__("$2");
-
         world_thread_set_parameters(2, 0x19, world_menu_has_items(0) != 0 ? 0xF80C : 0xF80B, 0);
         g_world_shop_item_category = world_menu_set_cursor_position_2(0, 0);
-        /* The target compares against a register (li v0,4 / beq v1,v0) and
-         * materialises it ahead of both loads. */
-        four = 4;
-        category = g_world_shop_item_category;
-        /* The target reloads the category for the == 4 test (lbu a0 then
-         * lbu v1); cse otherwise shares the first read. */
-        __asm__ volatile("" : : : "memory");
-        /* Computed before the test so it lands in the beq delay slot, as the
-         * target has it. */
-        next_category = category + 1;
-        if (g_world_shop_item_category != four) {
-            /* The target recomputes category + 1 here rather than reusing the
-             * value above, into the register the constant just freed. Laundering
-             * the ADDEND (not the result) is what forces the recompute: a self-tie
-             * on the result lets cse substitute the dominator's equal value into
-             * the definition itself, leaving only a copy. */
-            s32 shifted;
-            __asm__("" : "=r"(category) : "0"(category));
-            shifted = category + 1;
-            message = (s8)shifted;
+        cat = g_world_shop_item_category;
+        next_category = cat + 1;
+        if (g_world_shop_item_category != 4) {
+            category = (s8)(cat + 1);
         } else {
-            message = 7;
+            category = 7;
         }
-        world_item_build_category_list(-1, next_category, message, (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+        world_item_build_category_list(
+            -1, next_category, category, (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_menu_init_scrollable_list_core(
             g_world_menu_entry_ids, g_world_menu_cursor_position, g_world_text_item_names);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;

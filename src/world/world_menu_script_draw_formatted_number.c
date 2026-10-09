@@ -10,47 +10,34 @@
  * three glyph layouts. High value bits request a disabled palette or dashes.
  */
 world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command) {
-    s32 row_step;
     s8 text[16];
     RECT rect;
     RECT glyph;
     RECT minus_rect;
     s32 (*getter)(s32);
     s32 row;
-    s32 scroll_index;
-    u16 raw_step;
+    s16 step;
     s32 y;
     s32 value;
     s32 digit;
     s16 blanks;
     s32 text_index;
     s32 i;
-    s32 negative;
+    s8 negative;
     CVECTOR* color;
     u16 clut;
-    /* Pin required: unpinned, the digit count loads into $s0 instead of $a2. */
-    register s32 remaining __asm__("$6");
-    s32 next_remaining;
-    s32 x;
-    s32 negative_state;
 
     getter = g_world_menu_script_callbacks[command->getter];
     if (g_world_menu_use_scroll_position == 0) {
         row = command->value;
         y = command->y;
     } else {
-        row = g_world_menu_scroll_offset;
-        scroll_index = g_world_menu_scroll_row_offset;
-        row += scroll_index;
-        raw_step = g_world_menu_row_height;
-        /* Loads the halfword apart from the shift; otherwise the getter
-         * pointer leaves $a2. */
-        __asm__("" : "=r"(raw_step) : "0"(raw_step));
-        row_step = raw_step << 16;
-        y = (row_step >> 16) * scroll_index + command->y - g_world_menu_scroll_pixel_offset;
+        row = g_world_menu_scroll_offset + g_world_menu_scroll_row_offset;
+        step = g_world_menu_row_height;
+        y = step * g_world_menu_scroll_row_offset + command->y - g_world_menu_scroll_pixel_offset;
         if (g_world_menu_scroll_pixel_offset < 0) {
             row--;
-            y -= row_step >> 16;
+            y -= step;
         }
     }
     negative = 0;
@@ -63,12 +50,10 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
         value = -value;
         negative = 1;
     }
-    {
-        u8 opcode = command->opcode;
-
-        if (opcode == 0x1B || (color = 0, opcode == 0x19)) {
-            color = &g_world_menu_sprite_color;
-        }
+    if (command->opcode == 0x1B || command->opcode == 0x19) {
+        color = &g_world_menu_sprite_color;
+    } else {
+        color = 0;
     }
     if (command->alternate_palette != 0) {
         clut = g_world_menu_alternate_number_clut;
@@ -96,19 +81,13 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
         glyph.h = 0x10;
     }
     if (value & 0x20000000) {
-        remaining = command->width;
-        if (remaining > 0) {
-            do {
-                x = command->x;
-                next_remaining = remaining - 1;
-                rect.x = x + next_remaining * command->spacing;
-                rect.y = y + 5;
-                rect.w = 6;
-                rect.h = 3;
-                world_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_world_menu_semi_trans,
-                    g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
-                remaining = next_remaining;
-            } while (remaining > 0);
+        for (value = command->width; value > 0; value--) {
+            rect.x = command->x + (value - 1) * command->spacing;
+            rect.y = y + 5;
+            rect.w = 6;
+            rect.h = 3;
+            world_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_world_menu_semi_trans,
+                g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
         }
     } else {
         blanks = command->width - sprintf(text, "%d", value) - negative;
@@ -118,10 +97,7 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
             rect.y = y;
             rect.w = glyph.w;
             rect.h = glyph.h;
-            negative_state = negative;
-            /* The target copies the sign state before branching on it. */
-            __asm__("" : "=r"(negative_state) : "0"(negative_state));
-            if (negative_state != 0) {
+            if (negative != 0) {
                 minus_rect.x = rect.x - 6;
                 minus_rect.y = y + 2;
                 minus_rect.w = 6;

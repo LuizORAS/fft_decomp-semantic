@@ -14,13 +14,12 @@
  * g_world_menu_selection_results[5] receives the menu choice (0 save, 1 load, -1 cancel); a zero
  * count (the title's Continue passes 0) skips the menu and loads. Saving when every slot state is -1,
  * or loading when no slot state is 0, shows a notice thread instead of the slot
- * list (the same predicates world_card_count_selectable_save_slots counts). i is pinned to $a0: GCC otherwise swaps it
- * with the flag register.
+ * list (the same predicates world_card_count_selectable_save_slots counts). `i` is reused to hold the
+ * previous save mode.
  */
 void world_card_run_mode_select_step(void) {
-    u8 previous;
     s32 slot;
-    register s32 i __asm__("$4");
+    s32 i;
     s32 all;
 
     if (world_card_check_selected() > CARD_IO_RESULT_COMPLETE) {
@@ -61,9 +60,8 @@ void world_card_run_mode_select_step(void) {
         g_world_card_menu_step = 0;
         return;
     }
-    i = 0;
     if (slot == 0) {
-        for (all = 1; i < 15; i++) {
+        for (i = 0, all = 1; i < 15; i++) {
             if (g_card_save_slot_file_states[i] != -1) {
                 all = 0;
             }
@@ -72,7 +70,7 @@ void world_card_run_mode_select_step(void) {
             g_world_card_pending_message = g_world_card_save_unavailable_message;
         }
     } else {
-        for (all = 1; i < 15; i++) {
+        for (i = 0, all = 1; i < 15; i++) {
             if (g_card_save_slot_file_states[i] == 0) {
                 all = 0;
             }
@@ -82,10 +80,10 @@ void world_card_run_mode_select_step(void) {
         }
     }
     if (g_world_card_pending_message == 0) {
-        previous = g_world_card_save_mode;
+        i = g_world_card_save_mode;
         g_world_card_save_mode = g_world_menu_selection_results[5];
         g_world_card_menu_step = 3;
-        if (previous != g_world_card_save_mode) {
+        if (i != g_world_card_save_mode) {
             g_world_card_list_scroll_y = 0x18;
             g_world_card_list_scroll_velocity = 0;
             g_world_card_list_first_visible_row = 0;

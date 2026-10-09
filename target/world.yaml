@@ -613,7 +613,7 @@ functions:
   - {addr: 0x8011604c, size: 412, name: world_formation_init_selection_cursor, hash: 3146962b4bfecab1, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801161e8, size: 124, name: world_formation_init_cursor_and_scroll_state, hash: 5965d8e8caee29c2, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80116264, size: 2924, name: world_formation_update_and_draw_unit_grid, hash: c1fa22b02874b8cf, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80116dd0, size: 164, name: world_formation_cursor_distance_falloff, hash: bfabc3c8852ab225}
+  - {addr: 0x80116dd0, size: 164, name: world_formation_cursor_distance_falloff, hash: bfabc3c8852ab225, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80116e74, size: 576, name: world_formation_draw_background_tiles, hash: f8ae1a32508cd42e, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801170b4, size: 120, name: world_formation_reset_slots_and_frame_tpages, hash: c235675eb18b05e9, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011712c, size: 1008, name: world_formation_draw_cursor_trail, hash: 25b18e1ffb90921b, profile: gcc-2.6.3_O1_aspsx-2.34}

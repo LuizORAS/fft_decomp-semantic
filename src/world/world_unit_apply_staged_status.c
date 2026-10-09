@@ -9,9 +9,7 @@
  * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
  */
 void world_unit_apply_staged_status(s32 unit_id, s32 misc_id) {
-    /* Keep the target's unit pointer in s4; unconstrained allocation swaps
-     * it with the battle-unit ID in s5 throughout the function. */
-    register battle_stats_t* unit __asm__("$20");
+    battle_stats_t* unit;
     s32 i;
     s32 status_id;
     s32 byte_index;
@@ -78,18 +76,12 @@ void world_unit_apply_staged_status(s32 unit_id, s32 misc_id) {
             g_world_thread_call_target = resolve_unit_status_changes;
             world_thread_call_on_main_stack(unit_id, 1);
         }
-        {
-            u8 charged_ct;
-
-            if (!(unit->status_sets.current[0]
-                    & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
-                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)))) {
-                charged_ct = 0xff;
-            } else {
-                charged_ct = g_world_unit_status_staging_data->charged_ability_ct[unit_id];
-            }
-            unit->charged_ability_ct = charged_ct;
+        if (!(unit->status_sets.current[0]
+                & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)))) {
+            unit->charged_ability_ct = 0xff;
+        } else {
+            unit->charged_ability_ct = g_world_unit_status_staging_data->charged_ability_ct[unit_id];
         }
         g_world_unit_status_staging_data->state[unit_id] = 2;
         g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;

@@ -89,9 +89,7 @@ void world_menu_unit_status_banner_thread(void) {
 
     s32 thread_id;
     u8* threads;
-    const world_gfx_image_load_parameters_t* walk;
     s32 i;
-    s32 offset;
     s32 draw_x;
     s32 draw_y;
     s16 cell;
@@ -146,26 +144,17 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_set_image_draw_mode(&summary->draw_mode_b, 0);
     world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
     world_menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
-    frame = 0;
-    offset = 0x24C;
-    do {
-        world_menu_init_quad((POLY_FT4*)((u8*)summary + offset));
-        frame += 1;
-        offset += 0x28;
-    } while (frame < 4);
+    for (frame = 0; frame < 4; frame++) {
+        world_menu_init_quad(&summary->portrait[frame]);
+    }
     world_menu_init_icon_slot(&rects[0], 0x38, 0x28, (world_texture_prim_t*)&summary->value_sprites[0], 2);
     world_menu_init_icon_slot(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&summary->value_sprites[1], 2);
-    frame = 0;
-    walk = g_world_unit_summary_value_sprite_params;
-    offset = 0x104;
-    do {
-        world_gfx_init_image_loading((POLY_FT4*)((u8*)summary + offset),
+    for (frame = 0; frame < 4; frame++) {
+        world_gfx_init_image_loading((POLY_FT4*)&summary->value_sprites[frame],
             (const world_image_location_t*)g_world_editor_numeric_geometry,
-            (const world_image_location_t*)&g_world_gfx_portrait_origin, walk);
-        walk++;
-        frame += 1;
-        offset += 0x14;
-    } while (frame < 4);
+            (const world_image_location_t*)&g_world_gfx_portrait_origin,
+            &g_world_unit_summary_value_sprite_params[frame]);
+    }
     if (state->mode >= 4) {
         state->mode = 0;
     }
@@ -176,17 +165,12 @@ void world_menu_unit_status_banner_thread(void) {
         world_script_copy_bytes(
             &g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params, 0xC);
     }
-    frame = 0;
-    walk = g_world_unit_summary_label_sprite_params;
-    offset = 0x154;
-    do {
-        world_gfx_init_image_loading((POLY_FT4*)((u8*)summary + offset),
+    for (frame = 0; frame < 7; frame++) {
+        world_gfx_init_image_loading((POLY_FT4*)&summary->label_sprites[frame],
             (const world_image_location_t*)g_world_editor_numeric_geometry,
-            (const world_image_location_t*)&g_world_gfx_portrait_origin, walk);
-        walk++;
-        frame += 1;
-        offset += 0x14;
-    } while (frame < 7);
+            (const world_image_location_t*)&g_world_gfx_portrait_origin,
+            &g_world_unit_summary_label_sprite_params[frame]);
+    }
     world_script_copy_bytes(summary + 1, summary, sizeof(world_formation_summary_packet_t));
     world_gfx_set_image_draw_mode(&status->draw_mode_a, 0);
     world_gfx_set_image_draw_mode(&status->draw_mode_b, 1);
@@ -198,17 +182,12 @@ void world_menu_unit_status_banner_thread(void) {
     world_menu_init_icon_slot(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[1], 0);
     world_menu_init_icon_slot(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[2], 0);
     world_menu_init_icon_slot(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[3], 0);
-    frame = 0;
-    walk = g_world_unit_status_sprite_params;
-    offset = 0xEC;
-    do {
-        world_gfx_init_image_loading((POLY_FT4*)((u8*)status + offset),
+    for (frame = 0; frame < 7; frame++) {
+        world_gfx_init_image_loading((POLY_FT4*)&status->sprites[frame],
             (const world_image_location_t*)g_world_editor_numeric_geometry,
-            (const world_image_location_t*)&g_world_unit_status_panel_origin, walk);
-        walk++;
-        frame += 1;
-        offset += 0x14;
-    } while (frame < 7);
+            (const world_image_location_t*)&g_world_unit_status_panel_origin,
+            &g_world_unit_status_sprite_params[frame]);
+    }
     world_gfx_init_image_loading(&status->portrait, (const world_image_location_t*)g_world_editor_numeric_geometry,
         (const world_image_location_t*)&g_world_unit_status_panel_origin,
         (const world_gfx_image_load_parameters_t*)g_world_unit_status_portrait_params);
@@ -252,53 +231,19 @@ void world_menu_unit_status_banner_thread(void) {
         if (display->highlight != 0) {
             highlight = 1;
         }
-        i = 0;
-        {
-            u16* src;
-            world_formation_summary_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            src = g_world_unit_summary_value_cluts;
-            dst = summary;
-            do {
-                /* Keeps clut_offset + src recomputed each pass; otherwise loop
-                 * strength reduction folds them into one walking pointer. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->value_sprites[0].clut = *(u16*)(clut_offset + (u32)src);
-                src += 2;
-                i += 1;
-                dst = (world_formation_summary_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 4);
+        for (i = 0; i < 4; i++) {
+            summary->value_sprites[i].clut = g_world_unit_summary_value_cluts[i][highlight];
         }
-        i = 0;
-        {
-            u16* src;
-            world_formation_summary_packet_t* dst;
-            s32 clut_offset;
-            clut_offset = highlight * 2;
-            src = g_world_unit_summary_label_cluts;
-            dst = summary;
-            do {
-                /* Keeps clut_offset + src recomputed each pass; otherwise loop
-                 * strength reduction folds them into one walking pointer. */
-                __asm__("" : "=r"(clut_offset) : "0"(clut_offset));
-                dst->label_sprites[0].clut = *(u16*)(clut_offset + (u32)src);
-                src += 2;
-                i += 1;
-                dst = (world_formation_summary_packet_t*)((u8*)dst + sizeof(SPRT));
-            } while (i < 7);
+        for (i = 0; i < 7; i++) {
+            summary->label_sprites[i].clut = g_world_unit_summary_label_cluts[i][highlight];
         }
-        i = 0;
-        offset = 0;
-        do {
+        for (i = 0; i < 7; i++) {
             if (highlight != 0) {
                 status->sprites[i].clut = 0x7D3C;
             } else {
                 status->sprites[i].clut = 0x7C3C;
             }
-            i += 1;
-            offset += 0x14;
-        } while (i < 7);
+        }
         if (highlight != 0) {
             world_menu_init_primitive_colors_palette_bank_1(&summary->frame);
             world_menu_init_primitive_colors_palette_bank_1(&status->frame);
@@ -406,13 +351,13 @@ void world_menu_unit_status_banner_thread(void) {
         }
         if (display->work != 0) {
             if (anim_state == 0) {
-                portrait_arg = *(void* volatile*)&display->work;
                 prev_unit = cur_unit;
+                portrait_arg = display->work;
                 cur_unit = state->unit;
             } else {
-                portrait_arg = *(void* volatile*)&display->work;
                 anim_state = 2;
                 prev_unit = cur_unit;
+                portrait_arg = display->work;
                 cur_unit = state->unit;
             }
         }
@@ -425,87 +370,61 @@ void world_menu_unit_status_banner_thread(void) {
             transition, &anim_state, &cur_unit, &prev_unit, portrait_image, &summary->portrait[0], (s32)portrait_arg);
         {
             CVECTOR* color;
-            u16* bar_origin;
-            s32 row_offset;
-            s32 bar_offset;
-            volatile world_formation_summary_packet_t* dst;
+
             color = g_world_unit_panel_bar_colors;
-            i = 0;
-            bar_origin = (u16*)&g_world_gfx_portrait_origin;
-            row_offset = 0x18;
-            dst = summary;
-            bar_offset = 0x1E0;
-            do {
-                s32 x;
+            for (i = 0; i < 3; i++) {
                 s32 x0;
-                s32 x1;
-                s32 bar_y0, bar_y1, bar_y2, bar_y3;
-                /* Adjusting both reads in place before either store keeps
-                   the target's register rotation. */
-                s32 x3_read;
-                s32 x2_read;
-                SetPolyG4((u8*)summary + bar_offset);
-                x = (s16)bar_origin[0];
-                x0 = x + 0x2F;
-                x1 = x + 0x4F;
-                dst->bars[0].x0 = x0;
-                bar_y0 = bar_origin[1];
-                dst->bars[0].x1 = x1;
-                dst->bars[0].y0 = bar_y0 + row_offset;
-                bar_y1 = bar_origin[1];
-                dst->bars[0].x2 = x0;
-                dst->bars[0].y1 = bar_y1 + row_offset;
-                bar_y2 = bar_origin[1];
-                dst->bars[0].x3 = x1;
-                x3_read = (u16)dst->bars[0].x3;
-                dst->bars[0].y2 = bar_y2 + row_offset + 3;
-                bar_y3 = bar_origin[1];
-                x2_read = (u16)dst->bars[0].x2;
-                x3_read -= 3;
-                x2_read -= 3;
-                dst->bars[0].x3 = x3_read;
-                dst->bars[0].x2 = x2_read;
-                dst->bars[0].y3 = bar_y3 + row_offset + 3;
+                s32 y;
+
+                SetPolyG4(&summary->bars[i]);
+                x0 = g_world_gfx_portrait_origin.x + 0x2F;
+                summary->bars[i].x0 = x0;
+                y = i * 0xB + 0x18;
+                summary->bars[i].y0 = g_world_gfx_portrait_origin.y + y;
+                summary->bars[i].x1 = x0 + 0x20;
+                summary->bars[i].y1 = g_world_gfx_portrait_origin.y + y;
+                summary->bars[i].x2 = x0;
+                summary->bars[i].y2 = g_world_gfx_portrait_origin.y + y + 3;
+                summary->bars[i].x3 = x0 + 0x20;
+                summary->bars[i].y3 = g_world_gfx_portrait_origin.y + y + 3;
+                summary->bars[i].x2 -= 3;
+                summary->bars[i].x3 -= 3;
                 if (highlight != 0) {
-                    dst->bars[0].r0 = color->r >> 1;
-                    dst->bars[0].g0 = color->g >> 1;
-                    dst->bars[0].b0 = color->b;
+                    summary->bars[i].r0 = color->r >> 1;
+                    summary->bars[i].g0 = color->g >> 1;
+                    summary->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r >> 1;
-                    dst->bars[0].g1 = color->g >> 1;
-                    dst->bars[0].b1 = color->b;
+                    summary->bars[i].r1 = color->r >> 1;
+                    summary->bars[i].g1 = color->g >> 1;
+                    summary->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r >> 1;
-                    dst->bars[0].g2 = color->g >> 1;
-                    dst->bars[0].b2 = color->b;
+                    summary->bars[i].r2 = color->r >> 1;
+                    summary->bars[i].g2 = color->g >> 1;
+                    summary->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r >> 1;
-                    dst->bars[0].g3 = color->g >> 1;
-                    dst->bars[0].b3 = color->b;
+                    summary->bars[i].r3 = color->r >> 1;
+                    summary->bars[i].g3 = color->g >> 1;
+                    summary->bars[i].b3 = color->b;
                     color++;
                 } else {
-                    dst->bars[0].r0 = color->r;
-                    dst->bars[0].g0 = color->g;
-                    dst->bars[0].b0 = color->b;
+                    summary->bars[i].r0 = color->r;
+                    summary->bars[i].g0 = color->g;
+                    summary->bars[i].b0 = color->b;
                     color++;
-                    dst->bars[0].r1 = color->r;
-                    dst->bars[0].g1 = color->g;
-                    dst->bars[0].b1 = color->b;
+                    summary->bars[i].r1 = color->r;
+                    summary->bars[i].g1 = color->g;
+                    summary->bars[i].b1 = color->b;
                     color++;
-                    dst->bars[0].r2 = color->r;
-                    dst->bars[0].g2 = color->g;
-                    dst->bars[0].b2 = color->b;
+                    summary->bars[i].r2 = color->r;
+                    summary->bars[i].g2 = color->g;
+                    summary->bars[i].b2 = color->b;
                     color++;
-                    dst->bars[0].r3 = color->r;
-                    dst->bars[0].g3 = color->g;
-                    dst->bars[0].b3 = color->b;
+                    summary->bars[i].r3 = color->r;
+                    summary->bars[i].g3 = color->g;
+                    summary->bars[i].b3 = color->b;
                     color++;
                 }
-                row_offset += 0xB;
-                dst = (world_formation_summary_packet_t*)((u8*)dst + sizeof(POLY_G4));
-                i += 1;
-                bar_offset += 0x24;
-            } while (i < 3);
+            }
         }
         status->sprites[6].u0 = (s16)(identity->zodiac % 7) * 0x18;
         cell = identity->zodiac;
@@ -581,22 +500,14 @@ void world_menu_unit_status_banner_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[0]);
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[1]);
             world_gfx_draw_or_append_gpu_primitive(&summary->draw_mode_a);
-            i = 0;
-            offset = 0x1E0;
-            do {
-                world_gfx_draw_or_append_gpu_primitive((u8*)summary + offset);
-                i += 1;
-                offset += 0x24;
-            } while (i < 3);
+            for (i = 0; i < 3; i++) {
+                world_gfx_draw_or_append_gpu_primitive(&summary->bars[i]);
+            }
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[2]);
             world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[3]);
-            i = 0;
-            offset = 0x154;
-            do {
-                world_gfx_draw_or_append_gpu_primitive((u8*)summary + offset);
-                i += 1;
-                offset += 0x14;
-            } while (i < 7);
+            for (i = 0; i < 7; i++) {
+                world_gfx_draw_or_append_gpu_primitive(&summary->label_sprites[i]);
+            }
             world_gfx_draw_or_append_gpu_primitive(&summary->draw_mode_b);
             if (suppress == 0) {
                 if (anim_state >= 5) {
@@ -612,21 +523,13 @@ void world_menu_unit_status_banner_thread(void) {
             portrait_prim = (u8*)&status->portrait;
             SetSemiTrans(portrait_prim, 1);
             world_gfx_draw_or_append_gpu_primitive(portrait_prim);
-            i = 3;
-            offset = 0x128;
-            do {
-                world_gfx_draw_or_append_gpu_primitive((u8*)status + offset);
-                i -= 1;
-                offset -= 0x14;
-            } while (i >= 0);
+            for (i = 3; i >= 0; i--) {
+                world_gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
+            }
             world_gfx_draw_or_append_gpu_primitive(&status->draw_mode_b);
-            i = 4;
-            offset = 0x13C;
-            do {
-                world_gfx_draw_or_append_gpu_primitive((u8*)status + offset);
-                i += 1;
-                offset += 0x14;
-            } while (i < 7);
+            for (i = 4; i < 7; i++) {
+                world_gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
+            }
             world_gfx_draw_or_append_gpu_primitive(&status->draw_mode_a);
             world_gfx_submit_primitive_group((world_primitive_group_t*)status);
             world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_a);

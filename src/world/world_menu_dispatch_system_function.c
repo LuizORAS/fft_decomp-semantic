@@ -5,9 +5,6 @@
  * WORLD twin of the BATTLE system-function dispatcher battle_menu_dispatch_system_function; see
  * that source for the command map. Callers reach it through
  * world_menu_init_system_function and world_text_determine_spell_quote.
- *
- * The one-operand keep-alive on unit_id gives it $s6 ahead of action ($s7),
- * as in the target.
  */
 s32 world_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_ai_command_action_t* action) {
@@ -23,7 +20,6 @@ s32 world_menu_dispatch_system_function(
     g_world_menu_current_id = -1;
     g_world_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
-    __asm__("" : : "r"(unit_id));
     if (command == 8) {
         value = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((u32)(value - 0x19A) < 0x10) {
@@ -261,8 +257,8 @@ s32 world_menu_dispatch_system_function(
         entry = &g_world_system_function_table[0x32];
         flags = parameter;
         if ((u32)(option - 0x27) < 7) {
-            g_world_text_substitution_values[1] = option + 0x506B;
             g_world_text_substitution_values[0] = unit_id;
+            g_world_text_substitution_values[1] = option + 0x506B;
             if (option == 0x2D) {
                 flags = 1;
                 if (parameter & 0x80) {

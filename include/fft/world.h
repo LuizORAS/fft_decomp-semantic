@@ -2140,8 +2140,8 @@ extern world_gfx_image_load_parameters_t g_world_unit_summary_value_sprite_param
 extern RECT g_world_unit_status_panel_origin;
 extern world_gfx_image_load_parameters_t g_world_unit_status_sprite_params[];
 extern u8 g_world_unit_status_portrait_params[];
-extern u16 g_world_unit_summary_value_cluts[];
-extern u16 g_world_unit_summary_label_cluts[];
+extern u16 g_world_unit_summary_value_cluts[4][2]; /* [row][highlighted] */
+extern u16 g_world_unit_summary_label_cluts[7][2]; /* [row][highlighted] */
 extern u8 g_world_unit_summary_mode_row_params[];
 extern RECT g_world_selected_unit_portrait_rect;
 extern world_status_thread_t g_world_stat_preview_panel_thread_params;

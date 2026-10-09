@@ -4,11 +4,11 @@
 
 /* Shop item-list menu step; sibling of world_shop_handle_item_sell_menu.
  *
- * The target reads g_world_shop_item_category twice after storing it: one
- * `u8 cat` feeding both `+ 1` operands (`addiu a1,a0,1` and `addiu v0,a0,1`)
- * and a second read feeding only the `!= 4` compare. The __asm__ memory
- * clobber below emits no instruction; without it cse reuses the stored return
- * value and drops one of the target's two lui/lbu reloads.
+ * The target reads g_world_shop_item_category twice after storing it: `cat`
+ * feeds both `+ 1` operands (`addiu a1,a0,1` and `addiu v0,a0,1`) and a
+ * second read feeds only the `!= 4` compare. `cat` is 16 bits wide: cse
+ * forwards the stored value into a byte-wide copy, but not into the widening
+ * load.
  *
  * The callback block is written in ascending address order (794 -> 7ac), as
  * the sibling writes it. That makes gcc materialise the two twice-used
@@ -29,16 +29,13 @@ void world_shop_handle_poached_item_sell_menu(void) {
     s32 message;
     s32 category;
     s32 next_category;
-    u8 cat;
+    s16 cat;
 
     if (g_world_shop_fur_sell_list_initialized == 0) {
         message = world_menu_has_items(0) != 0 ? 0xf840 : 0xf845;
 
         world_thread_set_parameters(2, 0x19, message, 0);
         g_world_shop_item_category = world_menu_set_cursor_position_2(0, 0);
-        /* Preserve the two category reloads; cse otherwise reuses the stored
-         * return value and drops the target's lui/lbu pair. */
-        __asm__("" : : : "memory");
         cat = g_world_shop_item_category;
         next_category = cat + 1;
         if (g_world_shop_item_category != 4) {
