@@ -1,15 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 7 never triggers these reactions. */
-#define ABILITY_FORMULA_NO_STAT_SAVE_REACTION 7
-
-/* Dispatch the first active stat-save or resource-restoring reaction. */
+/* Dispatch the first active stat-save or resource-restoring reaction. A weapon
+ * that heals never triggers them. */
 void battle_action_check_stat_save_and_restore_reaction_usability(void) {
     battle_stats_t* target;
     u8 reaction_flags;
 
-    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_NO_STAT_SAVE_REACTION
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL
         || battle_action_is_reaction_blocked(g_battle_action_target) != 0) {
         return;
     }

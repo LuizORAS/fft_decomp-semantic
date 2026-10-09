@@ -26,13 +26,13 @@ s32 battle_ai_propagate_target_movement(
         battle_move_store_unit_movement_to_scratchpad(unit_id);
         config->move = 124;
         for (pass = 15; pass >= 0; pass--)
-            records[pass].unit_id_flags = 0xff;
-        battle_move_set_tile_flags_for_pathfinding(1);
+            records[pass].unit_id_flags = BATTLE_MOVE_RECORD_NONE;
+        battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD);
         index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
         panel = &g_battle_target_panels[index];
         panel->ride_remaining_range = 0;
         panel->remaining_range = 0;
-        frontier[index] &= 0xfe;
+        frontier[index] &= ~FRONTIER_FLAG_QUEUED;
         state->outer_count = 4;
         state->inner_count = 4;
         panel->remaining_range = 0;
@@ -40,7 +40,7 @@ s32 battle_ai_propagate_target_movement(
         index = (target_elevation << 8) + target_y * config->map_max_x + target_x;
         panel = &g_battle_target_panels[index];
         panel->remaining_range = 125;
-        frontier[index] |= 1;
+        frontier[index] |= FRONTIER_FLAG_QUEUED;
         panel->max_height_delta = 0;
         g_battle_ai_propagation_resume_pass = 0;
         config->ai_propagation_mode = 1;
@@ -72,8 +72,8 @@ s32 battle_ai_propagate_target_movement(
                         state->tile_index = state->row_offset + state->tile_x;
                         state->current_tile = &g_battle_map_tile_data[state->tile_index];
                         state->current_panel = &g_battle_target_panels[state->tile_index];
-                        frontier_snapshot[state->tile_index] = frontier[state->tile_index] & 1;
-                        frontier[state->tile_index] &= 0xfe;
+                        frontier_snapshot[state->tile_index] = frontier[state->tile_index] & FRONTIER_FLAG_QUEUED;
+                        frontier[state->tile_index] &= ~FRONTIER_FLAG_QUEUED;
                     }
                 }
             }

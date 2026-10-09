@@ -18,11 +18,11 @@ s32 battle_target_set_panels_for_action(u8* source) {
     main_util_copy_action_data(source, &action);
     mode = 0;
     if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     }
     unit = &g_battle_unit_stats[action.unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {
     case ACTION_MENU_TYPE_DEFAULT:
@@ -46,7 +46,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
         if ((u32)(action.item_id - 0x26) >= 0xa) {
-            return -1;
+            return BATTLE_TARGET_PANELS_INVALID;
         }
         ability_id = action.item_id + 0x26;
         break;
@@ -61,20 +61,20 @@ s32 battle_target_set_panels_for_action(u8* source) {
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     default:
-        return 2;
+        return BATTLE_TARGET_PANELS_NO_TARGETING;
     }
     if (mode == 1) {
         if (ability_id >= 0x170) {
-            return -1;
+            return BATTLE_TARGET_PANELS_INVALID;
         }
         ability = &g_main_ability_range_data[ability_id];
         range = ability->range;
         flags = ability->flags_2;
         if ((ability->flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO) && range == 0
             && !(ability->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-            return 2;
+            return BATTLE_TARGET_PANELS_NO_TARGETING;
         }
         action.ability_id = ability_id;
         result = battle_target_set_ability_panels((const u8*)&action);
@@ -89,5 +89,5 @@ s32 battle_target_set_panels_for_action(u8* source) {
 
         return flag_result != 0;
     }
-    return 3;
+    return BATTLE_TARGET_PANELS_NONE;
 }

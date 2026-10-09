@@ -40,12 +40,12 @@ s32 effect_e004_update_polar_mesh_state(s16 record_index, s32 byte_offset, s32 g
         }
         work = record->work_slots[byte_offset]
             = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), record_index);
-        if (entry->texture_page_flags & 4) {
+        if (entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             scratch->translucent = 0;
         } else {
             scratch->translucent = 1;
         }
-        scratch->tpage = ((entry->texture_page_flags & 3) << 5) | 0x86;
+        scratch->tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (i = 0; i < 80; i++) {
             quad = &work->quads[0][i];
             SetPolyGT4(quad);

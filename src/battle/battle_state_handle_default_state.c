@@ -22,7 +22,7 @@ void battle_state_handle_default_state(void) {
         battle_action_clear_at_list_id();
         battle_state_enter_highlight_units_by_team();
     } else if (input & PSX_PAD_CIRCLE) {
-        battle_target_set_tile_background_color(0, 0);
+        battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 0);
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         if (battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
             != 0) {

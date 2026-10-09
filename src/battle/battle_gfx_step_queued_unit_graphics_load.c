@@ -14,9 +14,9 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
 
     result = 1;
     switch (g_battle_gfx_unit_graphics_load_state[1]) {
-    case 0:
+    case BATTLE_GFX_UNIT_LOAD_PHASE_START_READ:
         switch (g_battle_gfx_unit_graphics_load_state[0]) {
-        case 0:
+        case BATTLE_GFX_QUEUED_LOAD_SHP:
             id = g_battle_gfx_spritesheet_data[g_main_gfx_unit_graphics_load_queue
                                                    .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
                                                    .portrait_id]
@@ -24,7 +24,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             if (id < 5 || id == g_battle_gfx_last_loaded_shp_id) {
                 result = 2;
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
-                g_battle_gfx_unit_graphics_load_state[1] = 3;
+                g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_FINISH;
                 break;
             }
             g_battle_gfx_last_loaded_shp_id = id;
@@ -40,7 +40,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
             }
             break;
-        case 1:
+        case BATTLE_GFX_QUEUED_LOAD_SEQ:
             id = g_battle_gfx_spritesheet_data[g_main_gfx_unit_graphics_load_queue
                                                    .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
                                                    .portrait_id]
@@ -48,7 +48,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             if (id < 5 || id == g_battle_gfx_last_loaded_seq_id) {
                 result = 2;
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
-                g_battle_gfx_unit_graphics_load_state[1] = 3;
+                g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_FINISH;
                 break;
             }
             g_battle_gfx_last_loaded_seq_id = id;
@@ -64,7 +64,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
             }
             break;
-        case 2:
+        case BATTLE_GFX_QUEUED_LOAD_SPR:
             if (g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
                 >= 0xa0) {
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
@@ -75,7 +75,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                         .portrait_id)
                 != 0) {
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
-                g_battle_gfx_unit_graphics_load_state[1] = 2;
+                g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_INSTALL;
                 result = 2;
                 break;
             }
@@ -105,24 +105,24 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             break;
         }
         break;
-    case 1:
+    case BATTLE_GFX_UNIT_LOAD_PHASE_WAIT:
         if (!main_file_is_still_loading()) {
             g_battle_gfx_unit_graphics_load_state[1]++;
         }
         break;
-    case 2:
+    case BATTLE_GFX_UNIT_LOAD_PHASE_INSTALL:
         switch (g_battle_gfx_unit_graphics_load_state[0]) {
-        case 0:
+        case BATTLE_GFX_QUEUED_LOAD_SHP:
             g_battle_gfx_shp_frame_data_cursor = g_battle_gfx_fallback_shp_frame_data;
             battle_gfx_unpack_unit_shp_data(
                 &g_battle_gfx_boss_shp_frame_tables, (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
-        case 1:
+        case BATTLE_GFX_QUEUED_LOAD_SEQ:
             g_battle_gfx_seq_data_cursor = g_battle_gfx_fallback_seq_data;
             battle_gfx_unpack_unit_seq_data(
                 (u32*)g_battle_gfx_boss_seq_tables, (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
-        case 2:
+        case BATTLE_GFX_QUEUED_LOAD_SPR:
             battle_unit_init_misc_data(
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_x,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_y,
@@ -139,18 +139,18 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
         }
         g_battle_gfx_unit_graphics_load_state[1]++;
         break;
-    case 3:
+    case BATTLE_GFX_UNIT_LOAD_PHASE_FINISH:
         if (g_battle_gfx_unit_graphics_load_state[3] != 0) {
             main_heap_call_free((void*)g_battle_gfx_unit_graphics_load_state[3]);
         }
-        g_battle_gfx_unit_graphics_load_state[1] = 0;
+        g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
         switch (g_battle_gfx_unit_graphics_load_state[0]) {
-        case 0:
-        case 1:
+        case BATTLE_GFX_QUEUED_LOAD_SHP:
+        case BATTLE_GFX_QUEUED_LOAD_SEQ:
             g_battle_gfx_unit_graphics_load_state[0]++;
             break;
-        case 2:
-            g_battle_gfx_unit_graphics_load_state[0] = 0;
+        case BATTLE_GFX_QUEUED_LOAD_SPR:
+            g_battle_gfx_unit_graphics_load_state[0] = BATTLE_GFX_QUEUED_LOAD_SHP;
             g_battle_gfx_unit_graphics_load_state[2]++;
             break;
         }

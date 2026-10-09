@@ -18,22 +18,30 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
     unit_id = misc->unit_id;
     if (status & BATTLE_MISC_STATUS_PALETTE_MOD_MASK) {
         if (status & BATTLE_MISC_STATUS_PETRIFY) {
-            battle_gfx_modify_misc_unit_palette(misc, 6, 3, unit_id, 0, 0, 0, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_GREY, MAP_PALETTE_BANK_UNITS, unit_id, 0, 0, 0, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_BLOOD_SUCK) {
-            battle_gfx_modify_misc_unit_palette(misc, 6, 3, unit_id, 0, 3, -1, 8, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_GREY, MAP_PALETTE_BANK_UNITS, unit_id, 0, 3, -1, 8, final_value);
         } else if (status & BATTLE_MISC_STATUS_BERSERK) {
-            battle_gfx_modify_misc_unit_palette(misc, 4, 3, unit_id, 0, 8, 0, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE, MAP_PALETTE_BANK_UNITS, unit_id, 0, 8, 0, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_POISON) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, 0, 8, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, 0, 8, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_REGEN) {
-            battle_gfx_modify_misc_unit_palette(misc, 4, 3, unit_id, 0, 0, 0, 8, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE, MAP_PALETTE_BANK_UNITS, unit_id, 0, 0, 0, 8, final_value);
         } else if (status & BATTLE_MISC_STATUS_OIL) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, -4, -4, -4, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, -4, -4, -4, final_value);
         } else if (status & BATTLE_MISC_STATUS_CURSED) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, -8, -8, -8, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, -8, -8, -8, final_value);
         } else if ((status & BATTLE_MISC_STATUS_UNDEAD)
             && (u8)(misc->spritesheet_id - BATTLE_SPRITESHEET_ID_SKELETON) >= 2) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, 4, 0, 5, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_PALETTE_BANK_UNITS, unit_id, 0, 4, 0, 5, final_value);
         } else {
             battle_gfx_tint_unit_palette_for_weather_and_tile(misc, tile_effect_level, final_value);
         }

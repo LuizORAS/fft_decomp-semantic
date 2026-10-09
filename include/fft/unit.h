@@ -33,6 +33,13 @@ typedef enum battle_support_set_3 {
 } battle_unit_support_set_3_e;
 
 /* action */
+/* battle_action_data_t.ct_change values that are not an amount. Any other value is a gain when
+ * bit 7 is set and a loss otherwise. */
+enum {
+    BATTLE_ACTION_CT_CHANGE_ZERO = 0x7f,  /* CT set to 0 */
+    BATTLE_ACTION_CT_CHANGE_QUICK = 0xff, /* CT filled */
+};
+
 /*
  * Temporary action results, 0x2c bytes at battle_stats_t+0x18c (0x18c..0x1b7).
  * The g_target_current_action / g_attacker_current_action pointers address this
@@ -53,7 +60,7 @@ typedef struct battle_action_data {
     /* Target readers and writers consistently access 0x10-0x11 as one halfword. */
     u16 special_effect;       /* 0x10; battle_action_special_effect_e */
     u8 sp_change;             /* 0x12 */
-    u8 ct_change;             /* 0x13 */
+    u8 ct_change;             /* 0x13; BATTLE_ACTION_CT_CHANGE_* or an amount */
     u8 pa_change;             /* 0x14 */
     u8 ma_change;             /* 0x15 */
     u8 brave_change;          /* 0x16 */
@@ -417,9 +424,15 @@ typedef struct unit_status_staging {
     u8 state[BATTLE_UNIT_SLOT_COUNT];                                /* 0x39c; 0 not staged, 1 saved, 2 restored */
     u8 inflict_status_mode[BATTLE_UNIT_SLOT_COUNT];                  /* 0x3b1; unit_inflict_status_mode_e */
     u16 hp[BATTLE_UNIT_SLOT_COUNT];                                  /* 0x3c6 */
-    u16 jump_float_flags;                                            /* 0x3f0; status-specific follow-up flags */
+    u16 jump_float_flags;                                            /* 0x3f0; UNIT_STATUS_STAGING_*_REMOVED */
 } unit_status_staging_t;
 typedef char unit_status_staging_size_must_be_0x3f2[sizeof(unit_status_staging_t) == 0x3f2 ? 1 : -1];
+
+/* unit_status_staging_t.jump_float_flags: a staged change removes the status from some unit. */
+enum {
+    UNIT_STATUS_STAGING_JUMP_REMOVED = 0x1,
+    UNIT_STATUS_STAGING_FLOAT_REMOVED = 0x2,
+};
 
 /* unit_status_staging_t.state of one unit. */
 typedef enum unit_status_staging_state {
@@ -621,7 +634,7 @@ typedef struct battle_stats {
     u8 misc_unit_id;             /* 0x18a */
     u8 ability_ct;               /* 0x18b */
     battle_action_data_t action; /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;      /* 0x1b8; battle_ai_autobattle_mode_e, 0 = manual */
+    u8 auto_battle_setting;      /* 0x1b8; battle_ai_autobattle_mode_e */
     u8 auto_battle_target;       /* 0x1b9 */
     u8 initial_team_flags;       /* 0x1ba */
     u8 inflicted_status[5];      /* 0x1bb */
@@ -868,9 +881,10 @@ typedef enum battle_formation_index {
     BATTLE_FORMATION_INDEX_NONE = 0xff,
 } battle_formation_index_e;
 
-/* battle_stats_t.auto_battle_setting; 0 is manual control. The BATTLE and
+/* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
  * WORLD auto-battle menus store it and the AI reads it. */
 typedef enum battle_ai_autobattle_mode {
+    BATTLE_AI_AUTOBATTLE_MANUAL = 0x00, /* the player gives the orders */
     BATTLE_AI_AUTOBATTLE_TARGETED = 0x0C,
     BATTLE_AI_AUTOBATTLE_RECOVERY = 0x0E,
     BATTLE_AI_AUTOBATTLE_FADING_LIFE = 0x10,

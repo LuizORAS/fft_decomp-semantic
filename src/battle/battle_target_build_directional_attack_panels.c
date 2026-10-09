@@ -34,31 +34,31 @@ void battle_target_build_directional_attack_panels(const void* source, u8 mode) 
     target_x = action.target_x;
     target_y = action.target_y;
     if (x < target_x) {
-        battle_target_calculate_linear_attack_tiles(0, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(6, x, y);
-            battle_target_calculate_linear_attack_tiles(4, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         }
     }
     if (target_x < x) {
-        battle_target_calculate_linear_attack_tiles(2, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(6, x, y);
-            battle_target_calculate_linear_attack_tiles(4, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         }
     }
     if (y < target_y) {
-        battle_target_calculate_linear_attack_tiles(6, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(0, x, y);
-            battle_target_calculate_linear_attack_tiles(2, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
         }
     }
     if (target_y < y) {
-        battle_target_calculate_linear_attack_tiles(4, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(2, x, y);
-            battle_target_calculate_linear_attack_tiles(0, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
         }
     }
     for (i = 0; i < 0x200; i++) {

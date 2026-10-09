@@ -218,7 +218,7 @@ void battle_gfx_run_wep_eff_seq_script(
             }
             flags = src->flags;
             switch (sprite->graphic_type) {
-            case 1:
+            case BATTLE_SPRITE_GRAPHIC_WEAPON:
                 display->tpage = (flags & 0x60) | 9;
                 display->clut = unit->vram_palette_id + index * 64 + 0x80;
                 for (i = 0; i < parts; i++) {
@@ -243,7 +243,7 @@ void battle_gfx_run_wep_eff_seq_script(
                         display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
                 }
                 break;
-            case 2:
+            case BATTLE_SPRITE_GRAPHIC_EFFECT:
                 display->tpage = (flags & 0x60) | 8;
                 display->clut = unit->vram_palette_id + index * 64 + 0x80;
                 for (i = 0; i < parts; i++) {

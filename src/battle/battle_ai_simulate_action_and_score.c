@@ -49,7 +49,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     if (ai->current_action.act_before_move) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
+            if (battle_action_call_attack_preparation_at_preview((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->resume_pending = 0;
@@ -62,7 +62,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         battle_ai_simulate_movement_and_pickup();
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1
+            if (battle_action_call_attack_preparation_at_preview((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->resume_pending = 0;
@@ -93,7 +93,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         ai->simulated_turn_events++;
         if (ai->simulated_turn_events >= 256)
             break;
-        unit_index = battle_action_run_between_turn_control(0);
+        unit_index = battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RUN);
         status = unit_index & 0xff00;
         unit_index &= 0xff;
         unit = &g_battle_unit_stats[unit_index];

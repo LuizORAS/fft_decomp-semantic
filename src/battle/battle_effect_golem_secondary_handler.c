@@ -19,7 +19,7 @@ s32 battle_effect_golem_secondary_handler(void) {
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        battle_effect_start_group(0x10, 0xD);
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM, 0xD);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
@@ -29,7 +29,7 @@ s32 battle_effect_golem_secondary_handler(void) {
         pos.y = ONE;
         battle_effect_save_gravity();
         battle_effect_set_gravity(&pos);
-        battle_effect_update_active_slots(0x10);
+        battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
         current = g_battle_effect_current_secondary;
@@ -37,7 +37,8 @@ s32 battle_effect_golem_secondary_handler(void) {
         result = finish_timer != 1;
         current->timer = current->timer + 1;
         if (current->active_count == 0
-            && current->timer > g_battle_effect_trap_particle_configs[16].spawn_start_frame) {
+            && current->timer
+                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_GOLEM].spawn_start_frame) {
             current->finish_timer = finish_timer + 1;
         }
         break;

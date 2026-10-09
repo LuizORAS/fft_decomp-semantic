@@ -17,7 +17,7 @@ void battle_target_select_tile(void) {
 
     unit = battle_unit_get_source_misc_data();
     unit->state_frame_counter = 0;
-    if (unit->ability_preview_phase == 2) {
+    if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
         main_util_set_svector(
             (SVECTOR*)&unit->command_state.ai.data.action.target_x, unit->map_x, unit->map_z, unit->map_y);
         unit->command_state.ai.data.action.targeting_type = 5;
@@ -34,9 +34,9 @@ void battle_target_select_tile(void) {
         battle_state_start_game_flow();
         prev = g_battle_controller_input;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
-        g_battle_controller_input = 2;
+        g_battle_controller_input = BATTLE_CURSOR_INPUT_FREE_CURSOR;
         g_battle_controller_input_copy_12 = prev;
-        battle_target_set_tile_background_color(7, 3);
+        battle_target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         battle_target_store_cursor_casting_unit_name_and_data();
         if (g_main_game_options.fields.target_flashing == GAME_OPTION_ON) {
             battle_gfx_tint_all_units_by_team();

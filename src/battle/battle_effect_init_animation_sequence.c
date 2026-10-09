@@ -12,7 +12,7 @@ void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_
 
     sequences = g_battle_effect_animation_sequences;
     entry = (u8*)(((animation_index << 16) >> 15) + (s32)sequences);
-    flags = state->kind | 1;
+    flags = state->kind | EFFECT_LIST_NODE_FRAME_CHANGED;
     offset = entry[0] + (entry[1] << 8);
     state->sequence_offset = 0;
     state->frame_group_index = (frame_group & 0xFF) * 2;

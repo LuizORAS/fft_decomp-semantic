@@ -6,7 +6,7 @@ void battle_action_check_mp_switch_distribute_and_damage_split_usability(void) {
     battle_stats_t* unit;
     u8 flags;
 
-    if (g_battle_action_current_ability.formula == 7)
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL)
         return;
     if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;

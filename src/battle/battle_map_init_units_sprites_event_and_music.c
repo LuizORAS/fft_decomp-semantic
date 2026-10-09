@@ -21,19 +21,19 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
             battle_weather_randomize_from_calendar();
         }
         step++;
-        battle_map_load_palette_data(g_battle_map_weather_particle_palette, 2, 0, 0);
+        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_PALETTE_BANK_SPRITES, 0, 0);
         g_main_gfx_unit_graphics_load_queue.count = 0;
         break;
     case 1:
         step++;
         break;
     case 2:
-        if (battle_map_load_data(map_id, 0x75) != 0) {
+        if (battle_map_load_data(map_id, MAP_LOAD_COMMAND_START) != 0) {
             step++;
         }
         break;
     case 3:
-        if (battle_map_load_data(map_id, 0x76) == 0) {
+        if (battle_map_load_data(map_id, MAP_LOAD_COMMAND_POLL) == 0) {
             step++;
         }
         break;
@@ -111,7 +111,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         battle_map_init_ambient_light();
         battle_map_init_darkness();
         battle_map_update_lighting();
-        battle_action_run_between_turn_control(1);
+        battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RESET);
         battle_ai_init_workspace();
         step++;
         break;

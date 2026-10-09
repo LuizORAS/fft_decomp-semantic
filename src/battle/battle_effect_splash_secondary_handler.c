@@ -27,11 +27,11 @@ s32 battle_effect_splash_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         tile = battle_map_get_tile_data_ptr_from_misc_screen_coords(
             g_battle_effect_current_secondary->target.fields.target_id);
-        g_battle_effect_trap_particle_configs[7].position[1]
+        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].position[1]
             = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12)
             - battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id)
                   ->vy;
-        battle_effect_start_group(7, 11);
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_SPLASH, 11);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
@@ -41,14 +41,16 @@ s32 battle_effect_splash_secondary_handler(void) {
         pos.y = ONE;
         battle_effect_save_gravity();
         battle_effect_set_gravity(&pos);
-        battle_effect_update_active_slots(7);
+        battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_SPLASH);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
         effect = g_battle_effect_current_secondary;
         finish_timer = effect->finish_timer;
         result = finish_timer != 1;
         effect->timer = effect->timer + 1;
-        if (effect->active_count == 0 && effect->timer > g_battle_effect_trap_particle_configs[7].spawn_start_frame) {
+        if (effect->active_count == 0
+            && effect->timer
+                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

@@ -47,7 +47,7 @@ void battle_ai_init_target_consideration(void) {
     }
 
     if (ai->acting_unit_team == 0) {
-        ai->autobattle_setting = 0;
+        ai->autobattle_setting = BATTLE_AI_AUTOBATTLE_MANUAL;
         if ((ai->acting_unit->hp << 7) / ai->acting_unit->max_hp < 45) {
             mode = BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL;
         } else {
@@ -61,7 +61,7 @@ void battle_ai_init_target_consideration(void) {
             if (!(decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE))
                 goto save_fading_life;
         }
-        ai->autobattle_setting = 0;
+        ai->autobattle_setting = BATTLE_AI_AUTOBATTLE_MANUAL;
         for (target = 0; target < BATTLE_UNIT_SLOT_COUNT; target++)
             ai->targetability.live.unit_targetable[target] = 1;
         mode = BATTLE_AI_NEAREST_ELIGIBLE_ENEMY;

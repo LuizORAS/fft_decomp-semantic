@@ -85,7 +85,8 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
             return;
         }
         unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x3f;
-        battle_map_modify_palette(4, 2, 7, unit->unit_id, 0, -31, -31, -31);
+        battle_map_modify_palette(
+            MAP_COLOR_MODE_BASE, 2, MAP_PALETTE_BANK_ACTION_RESULTS, unit->unit_id, 0, -31, -31, -31);
         battle_gfx_set_sprite_part_flag_bit_0(display_0, 0, 1);
         battle_gfx_set_sprite_part_flag_bit_0(display_1, 0, 1);
         battle_gfx_set_sprite_part_flag_bit_0(display_2, 0, 1);

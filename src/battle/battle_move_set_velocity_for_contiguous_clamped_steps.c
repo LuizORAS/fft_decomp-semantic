@@ -48,22 +48,22 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
         }
         code = *current;
         switch (code >> 6) {
-        case 0:
+        case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
-        case 1:
+        case BATTLE_MOVE_STEP_DIRECTION_WEST:
             x -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
-        case 2:
+        case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
             y -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
             break;
-        case 3:
+        case BATTLE_MOVE_STEP_DIRECTION_NORTH:
             y += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;

@@ -59,15 +59,15 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
             g_battle_action_target->transparent_removal_flag = 0;
         }
         if (i == BATTLE_STATUS_ID_INVITE || i == BATTLE_STATUS_ID_CHARM) {
-            previous = (g_battle_action_target->team_flags & 0xcf)
+            previous = (g_battle_action_target->team_flags & ~BATTLE_TEAM_MASK)
                 | (g_battle_action_attacker->team_flags & BATTLE_TEAM_MASK);
             g_battle_action_target->team_flags = previous;
             if (i == BATTLE_STATUS_ID_INVITE) {
-                previous = (g_battle_action_target->initial_team_flags & 0xc7)
+                previous = (g_battle_action_target->initial_team_flags & ~BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)
                     | (g_battle_action_attacker->team_flags & BATTLE_TEAM_MASK);
                 g_battle_action_target_data->reaction_id = 0;
                 g_battle_action_target->initial_team_flags = previous;
-                g_battle_action_target->auto_battle_setting = 0;
+                g_battle_action_target->auto_battle_setting = BATTLE_AI_AUTOBATTLE_MANUAL;
                 g_battle_action_target->auto_battle_target = 0;
             }
         }

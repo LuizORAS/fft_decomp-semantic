@@ -72,12 +72,12 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
             switch (g_battle_move_step_value.bits.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->step_phase = 6;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH;
                 return;
             case 1:
                 battle_move_start_unit_step_at_climb_speed(
                     unit, g_battle_move_current_tile, g_battle_move_destination_tile);
-                unit->step_phase = 0xe;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH;
                 return;
             }
             return;

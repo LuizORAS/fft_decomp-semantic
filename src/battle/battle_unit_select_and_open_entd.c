@@ -14,13 +14,13 @@ s32 battle_unit_select_and_open_entd(void) {
     current_event_id = &g_main_entd_current_event_id;
     *current_event_id = event_id;
 
-    if (selection_mode == 1) {
+    if (selection_mode == BATTLE_ENTD_SELECTION_ENTD_250) {
         *current_event_id = 250;
-    } else if (selection_mode == 2) {
+    } else if (selection_mode == BATTLE_ENTD_SELECTION_RANDOM_75_TO_79) {
         *current_event_id = (rand() * 5) / 0x8000 + 75;
-    } else if (selection_mode == 3) {
+    } else if (selection_mode == BATTLE_ENTD_SELECTION_RANDOM_1_TO_59) {
         *current_event_id = (rand() * 59) / 0x8000 + 1;
-    } else if ((selection_mode == 4) && (g_battle_map_id != 0)) {
+    } else if ((selection_mode == BATTLE_ENTD_SELECTION_MAP_ID) && (g_battle_map_id != 0)) {
         *current_event_id = g_battle_map_id;
     }
 

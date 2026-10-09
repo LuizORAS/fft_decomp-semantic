@@ -8,7 +8,7 @@ void battle_state_handle_pre_attack_animation_state(void) {
     unit = battle_unit_get_source_misc_data();
     if ((unit->animation_countdown == 0 || unit->animation_restart_count != 0 || unit->state_frame_counter >= 0x3d)
         && (g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0
-        && g_battle_camera_rotation_action == 0) {
+        && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
         battle_action_execute_ability();
     }
 }

@@ -7,22 +7,22 @@ s32 battle_effect_update_stage(void) {
 
     id = (s16)g_battle_effect_allocated_record_head;
     switch (g_battle_effect_phase) {
-    case 0:
+    case BATTLE_EFFECT_PHASE_IDLE:
         result = 0;
         break;
-    case 1:
+    case BATTLE_EFFECT_PHASE_REQUESTED:
         result = 1;
         break;
-    case 2:
+    case BATTLE_EFFECT_PHASE_INIT_PALETTE:
         battle_map_freeze();
         battle_menu_suppress_height_display();
         battle_effect_init_palette(g_battle_ability_effect_id);
-        g_battle_effect_phase = 3;
+        g_battle_effect_phase = BATTLE_EFFECT_PHASE_START_SCRIPT;
         D_801BF000 = 0;
         battle_state_reset_frame_pacing_timer();
         result = 1;
         break;
-    case 3:
+    case BATTLE_EFFECT_PHASE_START_SCRIPT:
         battle_heap_init((battle_heap_node_t*)g_battle_effect_palette_ptr,
             g_battle_heap_end_address - (u32)g_battle_effect_palette_ptr);
         battle_effect_reset_subsystems();
@@ -45,11 +45,11 @@ s32 battle_effect_update_stage(void) {
             }
         }
         g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
-        g_battle_effect_phase = 4;
+        g_battle_effect_phase = BATTLE_EFFECT_PHASE_RUNNING;
         battle_map_configure_effect_data_state(MAP_EFFECT_DATA_BEGIN);
         result = 1;
         break;
-    case 4:
+    case BATTLE_EFFECT_PHASE_RUNNING:
         g_battle_effect_otag = main_gfx_get_otag();
         battle_effect_start_render_frame();
         while (id != 0) {
@@ -77,18 +77,18 @@ s32 battle_effect_update_stage(void) {
             battle_map_unfreeze();
             battle_menu_enable_height_display();
             battle_state_clear_frame_pacing();
-            g_battle_effect_phase = 0;
+            g_battle_effect_phase = BATTLE_EFFECT_PHASE_IDLE;
             result = 0;
         }
         break;
-    case 6:
+    case BATTLE_EFFECT_PHASE_RESTART_SCRIPT:
         battle_heap_init((battle_heap_node_t*)g_battle_effect_palette_ptr,
             g_battle_heap_end_address - (u32)g_battle_effect_palette_ptr);
         battle_effect_reset_subsystems();
         battle_effect_reset_frame_data_pointer();
         battle_effect_reset_animation_sequences_pointer();
         g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
-        g_battle_effect_phase = 4;
+        g_battle_effect_phase = BATTLE_EFFECT_PHASE_RUNNING;
         return 1;
     }
     return result;

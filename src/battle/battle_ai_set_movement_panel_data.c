@@ -103,13 +103,17 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     for (i = 0; i < 21; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && i != ai->acting_unit_id
-            && !(*(u16*)&unit->status_sets.current[0] & 0x140)) {
+            && !(*(u16*)&unit->status_sets.current[0]
+                & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL)
+                    | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_TREASURE)))) {
             ai->reachable_tiles[0][unit->position.bits.higher_elevation][unit->position.bits.y] &= ~(0x8000 >> unit->x);
         }
     }
     ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
         |= 0x8000 >> ai->acting_unit_coords.bytes.x;
-    if (*(u32*)&ai->acting_unit->status_sets.current[0] & 0x81000) {
+    if (*(u32*)&ai->acting_unit->status_sets.current[0]
+        & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CONFUSION)
+            | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_BERSERK))) {
         return 0;
     }
     for (i = 0; i < 4; i++) {

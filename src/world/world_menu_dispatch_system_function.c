@@ -43,7 +43,7 @@ s32 world_menu_dispatch_system_function(
                 count = 0;
                 g_world_script_acting_unit_id = unit_id;
                 for (i = 0; i < 3; i++) {
-                    if (battle_unit_find_slot_by_character_identity(i + 1) == -3) {
+                    if (battle_unit_find_slot_by_character_identity(i + 1) == BATTLE_CHARACTER_SLOT_UNAVAILABLE) {
                         count++;
                     }
                 }

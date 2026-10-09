@@ -17,13 +17,13 @@ void battle_action_init_learn_ability_on_hit(void) {
         BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
     battle_text_set_message_duration_frames(0x1E);
     switch (g_battle_action_post_action_display_phase) {
-    case 0:
+    case BATTLE_POST_ACTION_DISPLAY_LEVEL_UP:
         battle_action_report_level_up(unit);
         break;
-    case 1:
+    case BATTLE_POST_ACTION_DISPLAY_JOB_LEVEL_UP:
         battle_action_report_job_level_up(unit);
         break;
-    case 2:
+    case BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT:
         g_battle_action_learn_on_hit_unit_id
             = battle_ability_find_learn_on_hit_unit(unit->battle_data->misc_unit_id, &ability_id);
         if (g_battle_action_learn_on_hit_unit_id != -1) {

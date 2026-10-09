@@ -3,7 +3,7 @@
 /*
  * Secondary effect function 0x15 (Equip Break) in g_battle_effect_secondary_handlers.
  * Same shape as the venom trap
- * handler, but effect group 11 is held in a variable, so its spawn_start_frame lookup
+ * handler, but its particle group is held in a variable, so its spawn_start_frame lookup
  * is an indexed table read. Returns 1 to keep animating.
  */
 s32 battle_effect_equip_break_secondary_handler(void) {
@@ -14,7 +14,7 @@ s32 battle_effect_equip_break_secondary_handler(void) {
     s32 result;
     s16 finish_timer;
 
-    group = 11;
+    group = BATTLE_EFFECT_PARTICLE_GROUP_EQUIP_BREAK;
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch ((u32)effect->phase) {

@@ -34,7 +34,7 @@ void battle_state_handle_close_move_help_state(void) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
                 *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
                 casting->walk_speed.word = 0x2000;
-                battle_target_set_tile_background_color(0, 1);
+                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
                 battle_state_enter_unit_moving_setup();
                 return;
@@ -43,7 +43,7 @@ void battle_state_handle_close_move_help_state(void) {
             return;
         }
         if (buttons & PSX_PAD_CROSS) {
-            battle_target_set_tile_background_color(0, 1);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
             battle_target_move_cursor_to_unit(source);
             battle_menu_open_active_unit_idle_action_menu();
             return;
@@ -62,7 +62,7 @@ void battle_state_handle_close_move_help_state(void) {
     path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id,
         *(s16*)&source->command_state.ai.data.move.x, *(s16*)&source->command_state.ai.data.move.y,
         *(s16*)&source->command_state.ai.data.move.elevation);
-    battle_target_set_tile_background_color(0, 1);
+    battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {
         x = *(s16*)&source->command_state.ai.data.move.x;
         elevation = *(s16*)&source->command_state.ai.data.move.elevation;

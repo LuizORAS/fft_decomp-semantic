@@ -8,8 +8,8 @@ s32 battle_script_add_ghost_unit_event_instruction(
         ret = 0;
     } else {
         g_main_gfx_unit_graphics_load_queue.count = 0;
-        g_battle_gfx_unit_graphics_load_state[0] = 0;
-        g_battle_gfx_unit_graphics_load_state[1] = 0;
+        g_battle_gfx_unit_graphics_load_state[0] = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
+        g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
         g_battle_gfx_unit_graphics_load_state[2] = 0;
         g_battle_gfx_unit_graphics_load_state[3] = 0;
         battle_gfx_append_unit_graphics_load_descriptor(

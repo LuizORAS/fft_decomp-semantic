@@ -58,7 +58,7 @@ charging:
         battle_ai_load_ability_entry(entry);
         /* The aligned skillset/usage pair preserves the target's LHU/SH. */
         if (g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset] == ACTION_MENU_TYPE_CHARGE)
-            entry->skillset_flags.packed &= 0x7fff;
+            entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
     }
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 255)) {
     other_abilities:

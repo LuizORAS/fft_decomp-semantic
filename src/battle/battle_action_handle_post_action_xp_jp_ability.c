@@ -17,7 +17,7 @@ void battle_action_handle_post_action_xp_jp_ability(void) {
         }
     }
     battle_gfx_init_earned_exp_jp_display(unit);
-    g_battle_action_post_action_display_phase = 0;
+    g_battle_action_post_action_display_phase = BATTLE_POST_ACTION_DISPLAY_LEVEL_UP;
     battle_target_move_cursor_to_unit(unit);
     battle_action_init_learn_ability_on_hit();
     g_battle_action_post_action = 0;

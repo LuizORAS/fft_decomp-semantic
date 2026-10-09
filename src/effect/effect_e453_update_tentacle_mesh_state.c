@@ -103,9 +103,9 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         work = record->work_slots[byte_offset]
             = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), record_index);
         texture_page_flags = entry->texture_page_flags;
-        abe = texture_page_flags & 4;
+        abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
-        tpage = ((texture_page_flags & 3) << 5) | 0x86;
+        tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (i = 0; i < 8; i++) {
             for (scratch = 0; scratch < 8; scratch++) {
                 quad = &work->segments[i].quads[0][scratch];
@@ -444,7 +444,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
             emitter.position[0] = seg->points[point_index].x << 12;
             emitter.position[1] = seg->points[point_index].y << 12;
             emitter.position[2] = seg->points[point_index].z << 12;
-            if (flags & 0xC) {
+            if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->child_emitter_mid_life, &emitter);
             }
@@ -563,7 +563,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
             AddPrim(&ot[depth], quad);
 
             if (seg->length + 8 == seg->head) {
-                if (flags & 3) {
+                if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->child_emitter_on_death, &emitter);
                 }

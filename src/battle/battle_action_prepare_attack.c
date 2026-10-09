@@ -23,26 +23,26 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
 
     main_util_copy_action_data(source, &action);
     if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     unit = &g_battle_unit_stats[action.unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     skip = 0;
     if (action.targeting_type == 6) {
         if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         if (g_battle_unit_stats[action.target_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         item = action.item_id;
         if (g_main_item_primary_data[item & 0xff].type != ITEM_TYPE_CONSUMABLE) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         ability = item + 0x80;
@@ -51,7 +51,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             battle_action_decrement_player_item_quantity(unit, item & 0xff, 1);
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
         ability = ABILITY_ID_THROW_FIRST;
         item = action.item_id;
@@ -63,7 +63,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             }
         }
         if (ability == ABILITY_ID_JUMP_FIRST) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         dest->ability_id = ability;
@@ -71,32 +71,32 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             battle_action_decrement_player_item_quantity(unit, item, 1);
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_ARITHMETICKS:
         ability = action.ability_id;
         type = action.calculator_type;
         multiplier = action.calculator_multiplier;
         if ((u16)(type - ABILITY_ID_MATH_FIRST) >= 8) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         if ((u16)(multiplier - ABILITY_ID_MATH_FIRST) >= 8) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         if (phase != 0 && (phase & 1)) {
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_ELEMENTS:
         action.ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         item = action.item_id;
         if ((u32)(item - 0x26) >= 10) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         ability = item + 0x26;
         action.ability_id = ability;
@@ -110,7 +110,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             unit->action_taken = 1;
         }
         dest->ability_id = 0;
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_JUMP:
         main_util_copy_action_data(&action, dest);
         if (phase != 0) {
@@ -128,11 +128,11 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             }
         }
         dest->ability_id = ABILITY_ID_JUMP_FIRST;
-        return 3;
+        return BATTLE_ATTACK_PREPARATION_JUMP;
     case ACTION_MENU_TYPE_CHARGE:
         ability = action.ability_id;
         if ((u16)(ability - ABILITY_ID_CHARGE_FIRST) >= 8) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         ct = g_main_charge_ability_data[ability - ABILITY_ID_CHARGE_FIRST].ct;
@@ -145,19 +145,19 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         persevere = 0;
         break;
     case ACTION_MENU_TYPE_DEFEND:
-        return 0;
+        return BATTLE_ATTACK_PREPARATION_CHARGE;
     case ACTION_MENU_TYPE_CHANGE_EQUIPMENT:
-        return 2;
+        return BATTLE_ATTACK_PREPARATION_CHANGE_EQUIPMENT;
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_MONSTER:
         break;
     default:
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     if (!skip) {
         ability = action.ability_id;
         if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         entry = &g_main_ability_range_data[ability];

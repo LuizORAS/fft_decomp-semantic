@@ -31,7 +31,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
 
     if (g_battle_ability_effect_id >= 0) {
         g_battle_ability_effect_id &= 0x1ff;
-        g_battle_effect_phase = 1;
+        g_battle_effect_phase = BATTLE_EFFECT_PHASE_REQUESTED;
         if (g_battle_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
             g_battle_effect_target_id = battle_effect_init_secondary(
                 g_battle_effect_secondary_by_charge_animation[packed & 0xffff], packed >> 16, source);
@@ -49,8 +49,8 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
     }
 
     if ((u32)(ability - 0x8a) < 8)
-        battle_effect_init_secondary(0x12, 0, source);
+        battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK, 0, source);
     if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST
         || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
-        battle_effect_init_secondary(0x11, 0, source);
+        battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS, 0, source);
 }

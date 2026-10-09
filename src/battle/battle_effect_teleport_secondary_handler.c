@@ -23,7 +23,7 @@ s32 battle_effect_teleport_secondary_handler(void) {
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        battle_effect_start_group(15, 11);
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_TELEPORT, 11);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
@@ -33,14 +33,16 @@ s32 battle_effect_teleport_secondary_handler(void) {
         gravity.y = ONE;
         battle_effect_save_gravity();
         battle_effect_set_gravity(&gravity);
-        battle_effect_update_active_slots(15);
+        battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_TELEPORT);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
         effect = g_battle_effect_current_secondary;
         finish_timer = effect->finish_timer;
         result = finish_timer != 1;
         effect->timer = effect->timer + 1;
-        if (effect->active_count == 0 && effect->timer > g_battle_effect_trap_particle_configs[15].spawn_start_frame) {
+        if (effect->active_count == 0
+            && effect->timer
+                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_TELEPORT].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

@@ -13,10 +13,10 @@ void battle_action_get_next_acting_unit(s32 at_index) {
         if ((id & 0x100) != 0) {
             battle_target_gather_x_y_data_for_attacks(unit);
             battle_target_calculate_for_menu_types(&unit->battle_data->action_actor_id);
-            battle_target_set_tile_background_color(7, 3);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         } else {
             battle_target_move_cursor_to_unit(unit);
-            battle_target_set_tile_background_color(0, 0);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 0);
         }
     }
     battle_target_store_cursor_unit_name_and_data();

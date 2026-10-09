@@ -12,7 +12,7 @@ void battle_action_run_between_turn_events(void) {
     s32 action;
     s32 misc_id;
 
-    action = battle_action_run_between_turn_control(0);
+    action = battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RUN);
     misc_id = action & 0xff;
     g_battle_action_turn_event_type = action & 0xff00;
     if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_NONE) {

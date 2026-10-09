@@ -53,7 +53,7 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
             continue;
         }
         if ((unit_filters & BATTLE_UNIT_TILE_FILTER_MOUNTABLE_CHOCOBO)
-            && battle_unit_get_chocobo_mount_state(unit) == 0) {
+            && battle_unit_get_chocobo_mount_state(unit) == BATTLE_CHOCOBO_MOUNT_NONE) {
             continue;
         }
         if (unit->x != x || unit->position.bits.y != y || unit->position.bits.higher_elevation != level) {

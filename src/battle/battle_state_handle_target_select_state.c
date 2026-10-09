@@ -24,17 +24,17 @@ void battle_state_handle_target_select_state(void) {
         caster = battle_unit_get_casting_misc_data();
         target = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
-        /* 0x0c requires an enemy target, 0x0e an ally. */
+        /* The targeted choice requires an enemy, the recovery choice an ally. */
         if (target == 0) {
             battle_state_enter_target_select_denied();
-        } else if (caster->target_select_command == 0xC) {
+        } else if (caster->target_select_command == BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
             if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_denied();
             } else {
                 battle_state_enter_target_select_confirm();
             }
-        } else if (caster->target_select_command == 0xE) {
+        } else if (caster->target_select_command == BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
             if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_confirm();

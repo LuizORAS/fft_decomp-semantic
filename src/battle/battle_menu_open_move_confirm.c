@@ -11,7 +11,7 @@ void battle_menu_open_move_confirm(void) {
     caster = battle_unit_get_casting_misc_data();
     battle_text_set_message_duration_frames(0x3C);
     if (caster->movement_flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
-        if (caster->last_path_count == 0xFF) {
+        if (caster->last_path_count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
             battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183B, source->battle_data->misc_unit_id, 0, 1);
         } else {

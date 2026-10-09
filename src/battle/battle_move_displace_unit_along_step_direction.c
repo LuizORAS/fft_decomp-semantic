@@ -13,22 +13,22 @@ void battle_move_displace_unit_along_step_direction(battle_unit_misc_data_t* uni
         return;
     }
     switch (g_battle_move_displacement_direction) {
-    case 0:
+    case BATTLE_MOVE_DIRECTION_SOUTH:
         axis = y - delta;
         unit->screen.vz = axis;
         unit->real.vz = axis << 12;
         break;
-    case 2:
+    case BATTLE_MOVE_DIRECTION_NORTH:
         axis = y + delta;
         unit->screen.vz = axis;
         unit->real.vz = axis << 12;
         break;
-    case 1:
+    case BATTLE_MOVE_DIRECTION_EAST:
         axis = x + delta;
         unit->screen.vx = axis;
         unit->real.vx = axis << 12;
         break;
-    case 3:
+    case BATTLE_MOVE_DIRECTION_WEST:
         axis = x - delta;
         unit->screen.vx = axis;
         unit->real.vx = axis << 12;

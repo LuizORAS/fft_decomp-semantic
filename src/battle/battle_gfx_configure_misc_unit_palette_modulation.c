@@ -11,7 +11,7 @@ void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s1
         unit->shadow_graphic_trigger = 0;
         unit->sprite_display_flags.half = (unit->sprite_display_flags.half & 0xff9f)
             | (BATTLE_MISC_DISPLAY_BLEND_ADD | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT);
-        battle_gfx_start_misc_unit_palette_modulation(4, mode, misc_id, red, green, blue);
+        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, mode, misc_id, red, green, blue);
         unit->float_bob_offset = 0;
         unit->depth_height_offset = 0;
     }

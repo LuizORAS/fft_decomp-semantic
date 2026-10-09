@@ -247,6 +247,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   from the allocation id, not at the end of the 64-entry
   `g_main_heap_game_allocator_table`; an allocation that reaches the last page
   reads on into `g_main_gfx_draw_envs` and clears its bytes while they match.
+- `battle_map_load_data`: the four texture quarter files load at
+  `buffer + 0x8000 * (n + 1)`, while `battle_map_dispatch_gns_resource` uploads
+  quarter n from `buffer + 0x8000 * n`; quarter 3 is read past the end of the
+  0x20000-byte buffer.
+- `battle_camera_toggle_tilt`: from tilt target 3 it starts a decrease toward
+  target 4, which `battle_camera_update_tilt` has no branch to finish.
 
 ## Calls that disagree with the callee
 

@@ -362,12 +362,12 @@ s32 effect_e161_update_particle_trails_state(s16 record_index, s32 byte_offset, 
             emitter.position[0] = seg->points[point].x << 12;
             emitter.position[1] = seg->points[point].y << 12;
             emitter.position[2] = seg->points[point].z << 12;
-            if (flags & 0xC) {
+            if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->child_emitter_mid_life, &emitter);
             }
             if (seg->length + 16 == seg->head) {
-                if (flags & 3) {
+                if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->child_emitter_on_death, &emitter);
                 }

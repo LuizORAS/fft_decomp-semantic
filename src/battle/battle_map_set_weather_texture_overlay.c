@@ -12,54 +12,54 @@ void battle_map_set_weather_texture_overlay(s32 command) {
     s8 weather;
 
     switch (command & 0xff) {
-    case 0x8c:
+    case MAP_WEATHER_COMMAND_RESTORE_LIGHTING:
         battle_map_light_state_command(MAP_LIGHT_COMMAND_RESTORE_BACKGROUND_GRADIENT, 0);
         SetColorMatrix(g_battle_map_lightning_state.color_matrices);
         SetBackColor(g_battle_map_back_color_red, g_battle_map_back_color_green, g_battle_map_back_color_blue);
         break;
-    case 0x8b:
+    case MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER:
         weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
-        g_battle_map_lightning_mode = 0;
+        g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
         weather &= 7;
         if (weather < BATTLE_WEATHER_RAIN) {
             battle_sound_stop_weather_sfx();
-            battle_map_set_weather_texture_overlay(0x54);
-            battle_map_set_weather_texture_overlay(0x8c);
+            battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_CLEAR);
+            battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         }
         if (weather == BATTLE_WEATHER_RAIN) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 battle_sound_stop_weather_sfx();
-                battle_map_set_weather_texture_overlay(0x7e);
-                battle_map_set_weather_texture_overlay(0x8c);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_LIGHT_SNOW);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 battle_sound_stop_weather_sfx();
-                battle_map_set_weather_texture_overlay(0x7c);
-                battle_map_set_weather_texture_overlay(0x8c);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_LIGHT_RAIN);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
         }
         if (weather == BATTLE_WEATHER_STORM) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 battle_sound_stop_weather_sfx();
-                battle_map_set_weather_texture_overlay(0x53);
-                battle_map_set_weather_texture_overlay(0x8c);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_SNOW);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 g_battle_sound_primary_weather_sfx_id = 0x10002;
                 if (g_battle_sound_weather_sfx_enabled != 0) {
                     main_sound_play_bg_sfx(0x10002);
                 }
-                battle_map_set_weather_texture_overlay(0x55);
-                battle_map_set_weather_texture_overlay(0x8c);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RAIN);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
         }
         if (weather == BATTLE_WEATHER_STRONG_STORM) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 battle_sound_stop_weather_sfx();
-                battle_map_set_weather_texture_overlay(0x7f);
-                battle_map_set_weather_texture_overlay(0x8c);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_HEAVY_SNOW);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 battle_sound_stop_weather_sfx();
-                battle_map_set_weather_texture_overlay(0x7d);
-                battle_map_set_weather_texture_overlay(0x8a);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_HEAVY_RAIN);
+                battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_LIGHTNING);
                 g_battle_sound_primary_weather_sfx_id = 0x10002;
                 if (g_battle_sound_weather_sfx_enabled != 0) {
                     main_sound_play_bg_sfx(0x10002);
@@ -67,8 +67,8 @@ void battle_map_set_weather_texture_overlay(s32 command) {
             }
         }
         break;
-    case 0x89:
-        g_battle_map_lightning_mode = 2;
+    case MAP_WEATHER_COMMAND_THUNDER:
+        g_battle_map_lightning_mode = MAP_LIGHTNING_ONCE;
         g_battle_map_lightning_state.timer = 0x3c;
         g_battle_sound_primary_weather_sfx_id = 0x10002;
         if (g_battle_sound_weather_sfx_enabled != 0) {
@@ -83,10 +83,10 @@ void battle_map_set_weather_texture_overlay(s32 command) {
         g_battle_map_lightning_state.color_matrices[1].m[2][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[2][1] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[2][2] = 0;
-        battle_map_set_weather_texture_overlay(0x8c);
+        battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         break;
-    case 0x8a:
-        g_battle_map_lightning_mode = 1;
+    case MAP_WEATHER_COMMAND_LIGHTNING:
+        g_battle_map_lightning_mode = MAP_LIGHTNING_RANDOM;
         g_battle_map_lightning_state.timer = 0x3c;
         g_battle_map_lightning_state.color_matrices[1].m[0][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[0][1] = 0;
@@ -97,44 +97,44 @@ void battle_map_set_weather_texture_overlay(s32 command) {
         g_battle_map_lightning_state.color_matrices[1].m[2][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[2][1] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[2][2] = 0;
-        battle_map_set_weather_texture_overlay(0x8c);
+        battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         break;
-    case 0x53:
+    case MAP_WEATHER_COMMAND_SNOW:
         g_battle_map_weather_fall_speed = 1;
         g_battle_map_weather_primary_speed = 4;
-        battle_map_init_weather_particles(0x8f);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_SNOW_PARTICLES);
         break;
-    case 0x7e:
+    case MAP_WEATHER_COMMAND_LIGHT_SNOW:
         g_battle_map_weather_fall_speed = 1;
         g_battle_map_weather_primary_speed = 1;
-        battle_map_init_weather_particles(0x8f);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_SNOW_PARTICLES);
         break;
-    case 0x7f:
+    case MAP_WEATHER_COMMAND_HEAVY_SNOW:
         g_battle_map_weather_fall_speed = 3;
         g_battle_map_weather_primary_speed = 0x10;
-        battle_map_init_weather_particles(0x8f);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_SNOW_PARTICLES);
         break;
-    case 0x55:
+    case MAP_WEATHER_COMMAND_RAIN:
         g_battle_map_weather_fall_speed = 5;
         g_battle_map_weather_primary_speed = 6;
         g_battle_map_rain_secondary_fall_speed = 9;
-        battle_map_init_weather_particles(0x90);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES);
         break;
-    case 0x7c:
+    case MAP_WEATHER_COMMAND_LIGHT_RAIN:
         g_battle_map_weather_fall_speed = 3;
         g_battle_map_weather_primary_speed = 5;
         g_battle_map_rain_secondary_fall_speed = 8;
-        battle_map_init_weather_particles(0x90);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES);
         break;
-    case 0x7d:
+    case MAP_WEATHER_COMMAND_HEAVY_RAIN:
         g_battle_map_weather_fall_speed = 5;
         g_battle_map_weather_primary_speed = 9;
         g_battle_map_rain_secondary_fall_speed = 0x12;
-        battle_map_init_weather_particles(0x90);
+        battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES);
         break;
-    case 0x54:
-        g_battle_map_weather_effect_mode = 0x54;
-        g_battle_map_lightning_mode = 0;
+    case MAP_WEATHER_COMMAND_CLEAR:
+        g_battle_map_weather_effect_mode = MAP_WEATHER_COMMAND_CLEAR;
+        g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
         break;
     }
 }

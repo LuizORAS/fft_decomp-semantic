@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 void battle_camera_call_toggle_tilt(void) {
-    if (g_battle_camera_tilt_action == 0) {
+    if (g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_NONE) {
         if ((g_main_input_pressed_buttons & PSX_PAD_R2) != 0) {
             battle_camera_toggle_tilt();
         }

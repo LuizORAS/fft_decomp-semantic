@@ -24,8 +24,10 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
             == BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
         && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))) {
-        action->status_removal[0] = 0x20;
-        action->status_removal[2] = 0x20;
+        action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
+        action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
         action->attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_STATUS_CHANGE;
         action->hp_healing = unit->max_hp / 10;
         return 2;
@@ -48,7 +50,8 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
             && (roll & 1)) {
-            action->status_removal[0] = 0x20;
+            action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
             action->hp_healing = ((rand() * unit->max_hp) / 0x8000) + 1;
             action->attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_STATUS_CHANGE;
             return 2;
@@ -58,11 +61,13 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
             mask = 0x110;
         }
         if (roll & mask) {
-            action->status_infliction[0] = 0x40;
+            action->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
             action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
             return 1;
         }
-        action->status_infliction[1] = 1;
+        action->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE);
         action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         return 1;
     }
@@ -71,11 +76,13 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
         counter = unit->status_ct[15];
         counter -= 1;
         if (counter == 0) {
-            action->status_removal[4] = 1;
+            action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE);
             action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
             if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))) {
-                action->status_infliction[0] = 0x20;
+                action->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                    = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
                 return 3;
             }
         } else {
@@ -84,7 +91,8 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     }
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING)) {
-        action->status_removal[0] = 2;
+        action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
         action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
     }
     if (unit->brave < 10) {

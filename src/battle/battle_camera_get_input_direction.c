@@ -19,13 +19,13 @@ s32 battle_camera_get_input_direction(s32 mode) {
 
     direction = -1;
     switch (g_battle_controller_input) {
-    case 0:
-    case 1:
+    case BATTLE_CURSOR_INPUT_OPTION_A:
+    case BATTLE_CURSOR_INPUT_OPTION_B:
         switch (mode) {
-        case 0:
+        case BATTLE_CAMERA_INPUT_HELD:
             input = g_main_input_previous_buttons;
             break;
-        case 1:
+        case BATTLE_CAMERA_INPUT_PRESSED:
             input = g_main_input_pressed_buttons;
             switch (g_main_game_options.fields.cursor_repeat_speed) {
             case 0:
@@ -46,17 +46,17 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 input = g_main_input_previous_buttons;
             }
             break;
-        case 2:
+        case BATTLE_CAMERA_INPUT_RELEASED:
             input = g_main_input_released_buttons;
             break;
         }
         break;
-    case 2:
+    case BATTLE_CURSOR_INPUT_FREE_CURSOR:
         switch (mode) {
-        case 0:
+        case BATTLE_CAMERA_INPUT_HELD:
             input = g_main_input_previous_buttons | g_controller_previous_copy_0;
             break;
-        case 1:
+        case BATTLE_CAMERA_INPUT_PRESSED:
             previous = g_main_input_previous_buttons | g_controller_previous_copy_0;
             pressed = g_main_input_pressed_buttons;
             input = 0;
@@ -120,7 +120,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 input = g_main_input_previous_buttons | g_controller_previous_copy_0;
             }
             break;
-        case 2:
+        case BATTLE_CAMERA_INPUT_RELEASED:
             input = g_main_input_released_buttons;
             break;
         }
@@ -128,242 +128,242 @@ s32 battle_camera_get_input_direction(s32 mode) {
     }
 
     switch (g_battle_controller_input) {
-    case 0:
+    case BATTLE_CURSOR_INPUT_OPTION_A:
         switch (g_battle_camera_render_state.vy & 0xC00) {
-        case 0:
+        case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             }
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             }
             break;
-        case 0x800:
+        case BATTLE_FACING_NORTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             }
             break;
-        case 0xC00:
+        case BATTLE_FACING_EAST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             }
             break;
         }
         break;
-    case 1:
+    case BATTLE_CURSOR_INPUT_OPTION_B:
         switch (g_battle_camera_render_state.vy & 0xC00) {
-        case 0:
+        case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             }
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             }
             break;
-        case 0x800:
+        case BATTLE_FACING_NORTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             }
             break;
-        case 0xC00:
+        case BATTLE_FACING_EAST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             }
             break;
         }
         break;
-    case 2:
+    case BATTLE_CURSOR_INPUT_FREE_CURSOR:
         switch (g_battle_camera_render_state.vy & 0xC00) {
-        case 0:
+        case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             }
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             }
             break;
-        case 0x800:
+        case BATTLE_FACING_NORTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if (input & PSX_PAD_UP) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             }
             break;
-        case 0xC00:
+        case BATTLE_FACING_EAST:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
-                direction = 0xC00;
+                direction = BATTLE_FACING_EAST;
             } else if ((input & (PSX_PAD_UP | PSX_PAD_LEFT)) == (PSX_PAD_UP | PSX_PAD_LEFT)) {
-                direction = 0x800;
+                direction = BATTLE_FACING_NORTH;
             } else if ((input & (PSX_PAD_RIGHT | PSX_PAD_DOWN)) == (PSX_PAD_RIGHT | PSX_PAD_DOWN)) {
-                direction = 0;
+                direction = BATTLE_FACING_SOUTH;
             } else if ((input & (PSX_PAD_DOWN | PSX_PAD_LEFT)) == (PSX_PAD_DOWN | PSX_PAD_LEFT)) {
-                direction = 0x400;
+                direction = BATTLE_FACING_WEST;
             } else if (input & PSX_PAD_UP) {
-                direction = 0xA00;
+                direction = BATTLE_FACING_NORTH_EAST;
             } else if (input & PSX_PAD_DOWN) {
-                direction = 0x200;
+                direction = BATTLE_FACING_SOUTH_WEST;
             } else if (input & PSX_PAD_LEFT) {
-                direction = 0x600;
+                direction = BATTLE_FACING_NORTH_WEST;
             } else if (input & PSX_PAD_RIGHT) {
-                direction = 0xE00;
+                direction = BATTLE_FACING_SOUTH_EAST;
             }
             break;
         }

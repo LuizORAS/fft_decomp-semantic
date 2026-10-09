@@ -17,5 +17,5 @@ void battle_effect_init_state_records(void) {
     g_effect_state_records[i].record_index = i;
     g_battle_effect_allocated_record_head = 0;
     g_battle_effect_current_record_index = 0;
-    g_battle_effect_phase = 0;
+    g_battle_effect_phase = BATTLE_EFFECT_PHASE_IDLE;
 }

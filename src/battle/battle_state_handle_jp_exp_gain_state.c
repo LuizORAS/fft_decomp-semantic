@@ -14,7 +14,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
         return;
     }
-    if (g_battle_camera_rotation_action != 0) {
+    if (g_battle_camera_rotation_action != BATTLE_CAMERA_ROTATION_NONE) {
         return;
     }
     if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
@@ -35,8 +35,8 @@ void battle_state_handle_jp_exp_gain_state(void) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_actor_id;
         unit->used_ability_id = unit->battle_data->last_ability_id;
-        if (unit->attack_phase_state == 3) {
-            unit->attack_phase_state = 0;
+        if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
+            unit->attack_phase_state = BATTLE_ATTACK_PREPARATION_CHARGE;
             battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
             battle_action_check_between_turn_events();
             return;

@@ -15,7 +15,7 @@ s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit) {
     if (battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(unit) != 0)
         return -3;
     misc_unit_id = unit->misc_unit_id;
-    battle_action_calculate_at_list(at_list, 1);
+    battle_action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_TURNS_ONLY);
     i = 0;
     entry = at_list;
     do {

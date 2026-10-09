@@ -79,10 +79,11 @@ void battle_script_process_pending_requests(void) {
     }
     append_state = g_battle_map_append_state;
     if ((append_state == 1) && (g_battle_map_destruction_wait_state == 0)) {
-        battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x99);
+        battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_START_HELD);
         g_battle_map_append_state = g_battle_map_append_state + 1;
     } else if ((append_state == 2)
-        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x9C) == 0x9B)) {
+        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_POLL_HELD)
+            == MAP_LOAD_RESULT_HELD)) {
         g_battle_map_append_state = g_battle_map_append_state + 1;
     }
     destruction_state = g_battle_map_destruction_wait_state;
@@ -90,7 +91,8 @@ void battle_script_process_pending_requests(void) {
         g_battle_map_destruction_wait_state = destruction_state + 1;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_RELEASE_GNS_HOLD, 1, 1, 1);
     } else if ((destruction_state == 3)
-        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x76) == 0)) {
+        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_POLL)
+            == 0)) {
         g_battle_map_destruction_wait_state = 0;
     }
     weather_request = g_battle_event_weather_request;
@@ -110,7 +112,7 @@ void battle_script_process_pending_requests(void) {
     time_of_day = g_battle_event_pending_map_state;
     if (time_of_day != -1) {
         battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, time_of_day);
-        battle_map_set_weather_texture_overlay(0x8BU);
+        battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
     }
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {

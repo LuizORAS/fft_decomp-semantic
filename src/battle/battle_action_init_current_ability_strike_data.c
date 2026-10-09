@@ -73,13 +73,14 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
             chance = data->x;
             weapon_kind = data->formula;
         }
-        if (weapon_kind == 0x1e || weapon_kind == 0x1f) {
+        if (weapon_kind == ABILITY_FORMULA_MULTIHIT_TRUTH_MAGIC
+            || weapon_kind == ABILITY_FORMULA_UNFAITH_MAGICAL_DAMAGE) {
             if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
                 g_battle_action_current_ability.strike_count = ((chance * rand()) / 32768) + 1;
                 return;
             }
         }
-        if (weapon_kind == 0x5e) {
+        if (weapon_kind == ABILITY_FORMULA_DAMAGE_MA_PLUS_Y_HALF_TIMES_MA) {
             g_battle_action_current_ability.strike_count = chance + 1;
             return;
         }

@@ -18,32 +18,32 @@ void battle_unit_set_attacker_animation_for_shield_block(
     if (kind >= BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE
         && (kind < BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD || kind == BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD)) {
         switch (attacker->encoded_animation >> 1) {
-        case 0x3D:
-            anim = 0x5E;
+        case BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_HIGH:
+            anim = BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_HIGH;
             break;
-        case 0x3E:
-            anim = 0x5F;
+        case BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LEVEL:
+            anim = BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LEVEL;
             break;
-        case 0x3F:
-            anim = 0x60;
+        case BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LOW:
+            anim = BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LOW;
             break;
-        case 0x40:
-            anim = 0x5B;
+        case BATTLE_UNIT_ANIMATION_SWING_HIGH:
+            anim = BATTLE_UNIT_ANIMATION_SWING_BLOCKED_HIGH;
             break;
-        case 0x41:
-            anim = 0x5C;
+        case BATTLE_UNIT_ANIMATION_SWING_LEVEL:
+            anim = BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LEVEL;
             break;
-        case 0x42:
-            anim = 0x5D;
+        case BATTLE_UNIT_ANIMATION_SWING_LOW:
+            anim = BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LOW;
             break;
-        case 0x4D:
-            anim = 0x61;
+        case BATTLE_UNIT_ANIMATION_THRUST_HIGH:
+            anim = BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_HIGH;
             break;
-        case 0x4E:
-            anim = 0x62;
+        case BATTLE_UNIT_ANIMATION_THRUST_LEVEL:
+            anim = BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LEVEL;
             break;
-        case 0x4F:
-            anim = 0x63;
+        case BATTLE_UNIT_ANIMATION_THRUST_LOW:
+            anim = BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LOW;
             break;
         }
     }

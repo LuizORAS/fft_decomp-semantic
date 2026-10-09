@@ -30,16 +30,16 @@ void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
     direction = battle_move_get_direction(unit);
 
     switch (direction) {
-    case 2:
+    case BATTLE_MOVE_DIRECTION_NORTH:
         *path_word |= 0xc000;
         break;
-    case 0:
+    case BATTLE_MOVE_DIRECTION_SOUTH:
         *path_word = (*path_word & ~0xc000) | 0x8000;
         break;
-    case 3:
+    case BATTLE_MOVE_DIRECTION_WEST:
         *path_word = (*path_word & ~0xc000) | 0x4000;
         break;
-    case 1:
+    case BATTLE_MOVE_DIRECTION_EAST:
         *path_word &= ~0xc000;
         break;
     }

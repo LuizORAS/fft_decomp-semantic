@@ -28,7 +28,7 @@ void battle_effect_build_secondary_init_from_action(
             case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
-                init->target[i].fields.result_animation = 3;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 break;
             case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
             case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
@@ -36,18 +36,18 @@ void battle_effect_build_secondary_init_from_action(
             case BATTLE_ACTION_MISS_TYPE_CANCELLED:
             case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
             case BATTLE_ACTION_MISS_TYPE_CATCH:
-                init->target[i].fields.result_animation = 4;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NO_EFFECT;
                 break;
             case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
-                init->target[i].fields.result_animation = 5;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_GOLEM;
                 break;
             default:
                 if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                    init->target[i].fields.result_animation = 6;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_BREAK;
                 } else if (action->critical != 0) {
-                    init->target[i].fields.result_animation = 1;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else {
-                    init->target[i].fields.result_animation = 0;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
                 break;
             }

@@ -10,7 +10,7 @@ void battle_unit_start_ability_charge_hold_animation(battle_unit_misc_data_t* un
             .charge_animation_set_id][1];
     if (animation != 0) {
         movement_type = battle_move_validate_float_fly(unit);
-        selected_animation = 9;
+        selected_animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
         if (movement_type < 2) {
             selected_animation = animation;
         }

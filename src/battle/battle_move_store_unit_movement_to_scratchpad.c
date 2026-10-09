@@ -57,58 +57,59 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     config->will_sink = 1;
     config->fly_or_teleport = 0;
     config->stepping_stone = unit->position.bits.stepping_stone;
-    if (movement[2] & 0x28) {
+    if (movement[2] & (BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA | BATTLE_MOVEMENT_SET_3_FLOAT)) {
         config->can_pass_lava = 1;
     } else {
         config->can_pass_lava = 0;
     }
     value = unit->status_sets.current[2];
-    if (value & 6) {
+    if (value & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
         movement[1] &= 0xF3;
         movement[2] &= 0xFB;
         config->unit_size = 4;
     } else {
         config->unit_size = 6;
     }
-    if (!(movement[2] & 0x88) && (movement[1] & 0x10)) {
+    if (!(movement[2] & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_FLOAT))
+        && (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER)) {
         config->cannot_stay_on_water = 1;
     }
-    if (movement[2] & 8) {
+    if (movement[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
         config->unit_size += 2;
-        config->movement_set_3 = movement[2] | 0x80;
+        config->movement_set_3 = movement[2] | BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER;
     } else {
         config->movement_set_3 = movement[2];
     }
-    if (value & 0x40) {
-        movement[2] |= 8;
+    if (value & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+        movement[2] |= BATTLE_MOVEMENT_SET_3_FLOAT;
     }
-    if (movement[1] & 0x10) {
+    if (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) {
         movement[2] &= 0xAF;
     }
     weather = battle_move_get_weather_terrain_cost();
-    if (movement[2] & 4) {
+    if (movement[2] & BATTLE_MOVEMENT_SET_3_FLY) {
         config->move_mod = 1;
         config->move_type = BATTLE_MOVEMENT_CLASS_FLY;
         config->fly_or_teleport = 1;
-    } else if (movement[1] & 0xC) {
+    } else if (movement[1] & (BATTLE_MOVEMENT_SET_2_TELEPORT | BATTLE_MOVEMENT_SET_2_TELEPORT_2)) {
         config->move_mod = 1;
         config->movement_set_2 = movement[1];
         config->move_type = BATTLE_MOVEMENT_CLASS_TELEPORT;
         config->fly_or_teleport = 1;
     } else {
-        if (movement[2] & 8) {
+        if (movement[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
             config->move_mod = 2;
             config->move_type = BATTLE_MOVEMENT_CLASS_FLOAT;
-        } else if (movement[2] & 0x20) {
+        } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA) {
             config->move_mod = 5;
             config->move_type = BATTLE_MOVEMENT_CLASS_LAVA;
-        } else if (movement[2] & 0x80) {
+        } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
             config->move_mod = 3;
             config->move_type = BATTLE_MOVEMENT_CLASS_WATER_SURFACE;
-        } else if (movement[2] & 0x40) {
+        } else if (movement[2] & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
             config->move_mod = 3;
             config->move_type = BATTLE_MOVEMENT_CLASS_WATER_DEPTH_ONE;
-        } else if (movement[2] & 0x10) {
+        } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER) {
             config->move_mod = 4;
             config->move_type = BATTLE_MOVEMENT_CLASS_UNDERWATER;
         } else {
@@ -116,20 +117,23 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
             config->move_type = BATTLE_MOVEMENT_CLASS_NORMAL;
         }
     }
-    if (config->movement_set_3 & 0xC0) {
+    if (config->movement_set_3 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)) {
         config->will_sink = 0;
     }
-    if (config->movement_set_3 & 0xD0) {
+    if (config->movement_set_3
+        & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
+            | BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER)) {
         config->will_drown = 0;
     }
-    if (!(movement[2] & 0x8C) && (movement[1] & 0x10)) {
+    if (!(movement[2] & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_FLOAT | BATTLE_MOVEMENT_SET_3_FLY))
+        && (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER)) {
         config->cannot_enter_water = 1;
     }
     config->movement_3 = movement[2];
-    if (movement[1] & 2) {
+    if (movement[1] & BATTLE_MOVEMENT_SET_2_ANY_WEATHER) {
         weather = 1;
     }
-    ignore_terrain = movement[1] & 1;
+    ignore_terrain = movement[1] & BATTLE_MOVEMENT_SET_2_ANY_GROUND;
     i = 0;
     blocked = 0xFF;
     table = g_main_terrain_movement_cost_tables[0];
@@ -153,7 +157,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     config->jump_times_two = (value & 0xFF) * 2;
     config->jump_or_1f = value;
-    if (battle_unit_get_chocobo_mount_state(unit) != 0) {
+    if (battle_unit_get_chocobo_mount_state(unit) != BATTLE_CHOCOBO_MOUNT_NONE) {
         config->mountable_chocobo = 1;
     } else {
         config->mountable_chocobo = 0;
@@ -205,13 +209,13 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
             continue;
         }
         value = i;
-        if (battle_unit_get_chocobo_mount_state(other) != 1
+        if (battle_unit_get_chocobo_mount_state(other) != BATTLE_CHOCOBO_MOUNT_FREE
             && other->mount_info != (config->unit_id | BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
-            value = i | 0x20;
+            value = i | BATTLE_MOVE_RECORD_FLAG_NOT_MOUNTABLE;
         }
         byte = other->team_flags;
         if ((team ^ byte) & BATTLE_TEAM_MASK) {
-            value |= 0x40;
+            value |= BATTLE_MOVE_RECORD_FLAG_OTHER_TEAM;
         }
         current = &record[count];
         current->unit_id_flags = value;
@@ -220,7 +224,8 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         current->higher_elevation = other->position.bits.higher_elevation;
         current->stepping_stone = other->position.bits.stepping_stone;
         value = other->status_sets.current[2];
-        if (value & 6) {
+        if (value
+            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
             current->body_height = 4;
             current->stepping_stone = 0;
         } else {

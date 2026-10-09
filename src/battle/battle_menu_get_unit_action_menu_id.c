@@ -14,7 +14,8 @@ s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
     flag = 0;
     act = battle_unit_find_active_data_pointer();
     if (act != 0) {
-        if ((act->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) == 0 || act->auto_battle_setting != 0) {
+        if ((act->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) == 0
+            || act->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
             flag = 1;
         }
     }

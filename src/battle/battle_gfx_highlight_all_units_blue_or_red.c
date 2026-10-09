@@ -15,16 +15,16 @@ void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
             continue;
         }
         switch (mode) {
-        case 0xC:
+        case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
             if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
                 != (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
-                battle_map_modify_palette(9, 4, 3, i, 0, 0x10, 0, 0);
+                battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_PALETTE_BANK_UNITS, i, 0, 0x10, 0, 0);
             }
             continue;
-        case 0xE:
+        case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
             if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
-                battle_map_modify_palette(9, 4, 3, i, 0, 0, 0, 0x18);
+                battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_PALETTE_BANK_UNITS, i, 0, 0, 0, 0x18);
             }
             continue;
         }

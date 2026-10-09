@@ -24,10 +24,10 @@ s32 battle_action_preview_at_list(battle_stats_t* unit, s32 action, s32 at_list)
     old_action_taken = unit->action_taken;
     old_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    if (battle_action_call_attack_preparation_at_preview((u8*)action) == 1) {
+    if (battle_action_call_attack_preparation_at_preview((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE) {
         unit->charged_ability_ct = 0;
     }
-    turns = battle_action_calculate_at_list((battle_at_entry_t*)at_list, 3);
+    turns = battle_action_calculate_at_list((battle_at_entry_t*)at_list, BATTLE_AT_LIST_MODE_PREVIEW);
     if (turns != -1) {
         turns = battle_action_get_number_of_turns_to_resolve(
                     unit->misc_unit_id, unit->charged_ability_ct, (battle_at_entry_t*)at_list)

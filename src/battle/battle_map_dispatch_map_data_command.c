@@ -18,14 +18,14 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         result = g_battle_map_texture_animations[index].active;
         break;
     case MAP_DATA_COMMAND_START_TEXTURE_ANIMATION:
-        if (g_battle_map_texture_animations[index].mode == 0) {
+        if (g_battle_map_texture_animations[index].mode == MAP_TEXTURE_ANIMATION_MODE_NONE) {
             if (g_battle_map_saved_texture_animation_modes[index] != 0) {
                 g_battle_map_texture_animations[index].mode = g_battle_map_saved_texture_animation_modes[index];
             }
         }
         switch (g_battle_map_texture_animations[index].mode) {
-        case 1 ... 0x1d:
-        case 0x80 ... 0x82:
+        case MAP_TEXTURE_ANIMATION_MODE_UV_LOOP ... MAP_TEXTURE_ANIMATION_MODE_POLYGON_RANGE:
+        case MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK ... MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING:
             g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].frame_x;
             g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].frame_y;
             g_battle_map_texture_animation_moves[index].w = g_battle_map_texture_animations[index].width;
@@ -91,7 +91,7 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
     case MAP_DATA_COMMAND_DISABLE_ALL_TEXTURE_ANIMATIONS:
         for (i = 0; i < 32; i++) {
             g_battle_map_saved_texture_animation_modes[i] = g_battle_map_texture_animations[i].mode;
-            g_battle_map_texture_animations[i].mode = 0;
+            g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         }
         break;
     case MAP_DATA_COMMAND_RESTORE_ALL_TEXTURE_ANIMATIONS:
@@ -102,7 +102,7 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
     case MAP_DATA_COMMAND_DISABLE_TEXTURE_ANIMATION:
         if (index < 32) {
             g_battle_map_saved_texture_animation_modes[index] = g_battle_map_texture_animations[index].mode;
-            g_battle_map_texture_animations[index].mode = 0;
+            g_battle_map_texture_animations[index].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         }
         break;
     case MAP_DATA_COMMAND_RESTORE_TEXTURE_ANIMATION:

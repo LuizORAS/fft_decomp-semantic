@@ -28,7 +28,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (unit->screen.vy < target_z) {
         return;
     }
-    if (((unit->encoded_animation >> 1) - 0x30) < 2U) {
+    if (((unit->encoded_animation >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
             switch (g_battle_move_step_value.bits.climb) {
@@ -58,7 +58,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         unit->state_frame_counter = 2;
         unit->step_phase = g_battle_move_landing_centre_offsets[direction];
         if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-            battle_unit_store_animation_facing(0x20, unit->facing, unit);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
         }
         if (g_battle_move_step_value.bits.mount) {
             battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
@@ -72,7 +72,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     unit->state_frame_counter = 2;
     unit->step_phase = g_battle_move_landing_centre_offsets[direction];
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-        battle_unit_store_animation_facing(0x20, unit->facing, unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
     }
     if (g_battle_move_step_value.bits.mount) {
         battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);

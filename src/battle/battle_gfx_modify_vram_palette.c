@@ -34,13 +34,13 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             color = *source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part = color & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green = green + ((color & 0x3e0) >> 6);
                     out_blue = blue + ((color & 0x7c00) >> 11);
                     break;
-                case 6:
+                case MAP_COLOR_MODE_BASE_GREY:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -49,7 +49,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 7:
+                case MAP_COLOR_MODE_BASE_GREY_HALF:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -58,7 +58,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 4:
+                case MAP_COLOR_MODE_BASE:
                 default:
                     red_part = color & 0x1f;
                     out_red = red + red_part;
@@ -115,13 +115,13 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             color = *source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part = color & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green = green + ((color & 0x3e0) >> 6);
                     out_blue = blue + ((color & 0x7c00) >> 11);
                     break;
-                case 6:
+                case MAP_COLOR_MODE_BASE_GREY:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -130,7 +130,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 7:
+                case MAP_COLOR_MODE_BASE_GREY_HALF:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -139,7 +139,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 4:
+                case MAP_COLOR_MODE_BASE:
                 default:
                     red_part = color & 0x1f;
                     out_red = red + red_part;

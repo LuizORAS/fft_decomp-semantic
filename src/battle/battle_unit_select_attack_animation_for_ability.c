@@ -10,7 +10,7 @@ void battle_unit_select_attack_animation_for_ability(
     if (sequence_id < 8) {
         if (sequence_id >= 5) {
             /* facing is loaded signed (lh) here. */
-            battle_unit_store_animation_facing(0x2c, attacker->facing, attacker);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_BOSS_ABILITY, attacker->facing, attacker);
             return;
         }
     }

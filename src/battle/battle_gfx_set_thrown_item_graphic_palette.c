@@ -23,10 +23,10 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
     row = unit->unit_id;
     /* The header types this as u8[0x200]; the palette rows are 16 colours of
      * two bytes, so the index has to stay in halfwords or the stride halves. */
-    battle_map_load_palette_data(
-        &((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] >> 4) * 16], 5, row, 0);
-    battle_map_load_palette_data(
-        &((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] & 0xF) * 16], 6, row, 0);
+    battle_map_load_palette_data(&((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] >> 4) * 16],
+        MAP_PALETTE_BANK_ITEM_A, row, 0);
+    battle_map_load_palette_data(&((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] & 0xF) * 16],
+        MAP_PALETTE_BANK_ITEM_B, row, 0);
     unit->used_item_or_weapon_id = graphic_id;
     unit->equipped_weapon_type = palette_id;
 }

@@ -35,7 +35,7 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(0, 3);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
             battle_target_set_boxes_red();
             return;
         default:
@@ -51,7 +51,7 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(0, 3);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
             battle_target_set_boxes_red();
             return;
         default:

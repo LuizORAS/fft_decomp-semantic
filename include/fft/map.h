@@ -140,6 +140,24 @@ typedef union map_tile_depth {
     } bits;
 } map_tile_depth_t;
 
+/* map_tile_t.slope_type shapes. The byte holds the height of each side in two bits (east, west,
+ * south and north from bit 0): 0 low, 1 sloping, 2 high. An edge rises towards the side it names;
+ * a low corner has one raised corner and a high corner has one lowered corner opposite the one it names. */
+typedef enum map_slope_type {
+    MAP_SLOPE_LOW_CORNER_SOUTH_EAST = 0x11,
+    MAP_SLOPE_LOW_CORNER_SOUTH_WEST = 0x14,
+    MAP_SLOPE_EDGE_SOUTH = 0x25,
+    MAP_SLOPE_LOW_CORNER_NORTH_EAST = 0x41,
+    MAP_SLOPE_LOW_CORNER_NORTH_WEST = 0x44,
+    MAP_SLOPE_EDGE_EAST = 0x52,
+    MAP_SLOPE_EDGE_WEST = 0x58,
+    MAP_SLOPE_HIGH_CORNER_SOUTH_EAST = 0x66,
+    MAP_SLOPE_HIGH_CORNER_SOUTH_WEST = 0x69,
+    MAP_SLOPE_EDGE_NORTH = 0x85,
+    MAP_SLOPE_HIGH_CORNER_NORTH_EAST = 0x96,
+    MAP_SLOPE_HIGH_CORNER_NORTH_WEST = 0x99,
+} map_slope_type_e;
+
 /* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at
  * BATTLE 0x801451c8 / WORLD 0x800f84f0 modifies bytes 0, 2 and 6.
@@ -152,7 +170,7 @@ typedef struct map_tile {
     u8 _unknown_01;
     u8 height;                                /* 0x02; tile height in whole units */
     map_tile_depth_t depth_half_height;       /* 0x03 */
-    u8 slope_type;                            /* 0x04; two bits per exit side (battle_move_calculate_tile_ceiling) */
+    u8 slope_type;                            /* 0x04; map_slope_type_e: two bits per exit side */
     map_tile_marks_t ceiling_depth_and_marks; /* 0x05; ceiling depth and the transient map marks */
     map_tile_flags_t flags;
     /* 0x07; low nibble blocks camera directions at a flat pitch; high nibble

@@ -18,23 +18,23 @@ void battle_move_start_unit_step_at_climb_speed(
     step_count = unit->current_edge_height;
     step = &unit->current_path_step.value;
     switch (unit->current_path_step.value >> 6) {
-    case 0:
-        unit->step_phase = 0xB;
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_EAST, unit);
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         break;
-    case 1:
-        unit->step_phase = 0xF;
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_WEST, unit);
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         break;
-    case 2:
-        unit->step_phase = 9;
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_SOUTH, unit);
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         break;
-    case 3:
-        unit->step_phase = 0xD;
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_NORTH, unit);
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);
         break;
@@ -42,7 +42,7 @@ void battle_move_start_unit_step_at_climb_speed(
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
         rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
         if (rider != 0) {
-            battle_unit_store_animation_facing(0x32, unit->facing, rider);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, rider);
         }
     }
     battle_move_set_unit_step_delta_center_to_edge(unit, step, from, step_count);

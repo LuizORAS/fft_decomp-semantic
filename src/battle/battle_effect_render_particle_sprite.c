@@ -36,10 +36,10 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     if (node->frame_timer <= 0) {
         for (;;) {
             op = node->sequence_data[(u16)node->sequence_offset];
-            if (!(op & 0x80)) {
+            if (!(op & EFFECT_SEQUENCE_OP_FLAG)) {
                 if ((u8)node->sprite_frame_index != op) {
                     node->sprite_frame_index = op;
-                    node->kind |= 1;
+                    node->kind |= EFFECT_LIST_NODE_FRAME_CHANGED;
                 }
                 node->frame_timer = node->sequence_data[(u16)node->sequence_offset + 1];
                 node->depth_mode = node->sequence_data[(u16)node->sequence_offset + 2];
@@ -48,18 +48,18 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                 }
                 break;
             }
-            switch (op & 0x7f) {
-            case 1:
+            switch (op & EFFECT_SEQUENCE_OP_MASK) {
+            case EFFECT_SEQUENCE_OP_LOOP:
                 node->sequence_offset = 0;
                 break;
-            case 2:
+            case EFFECT_SEQUENCE_OP_SET_OFFSET:
                 node->sprite_offset_x = node->sequence_data[(u16)node->sequence_offset + 1]
                     + (node->sequence_data[(u16)node->sequence_offset + 2] << 8);
                 node->sprite_offset_y = node->sequence_data[(u16)node->sequence_offset + 3]
                     + (node->sequence_data[(u16)node->sequence_offset + 4] << 8);
                 node->sequence_offset += 5;
                 break;
-            case 3:
+            case EFFECT_SEQUENCE_OP_ADD_OFFSET:
                 node->sprite_offset_x += (s8)node->sequence_data[(u16)node->sequence_offset + 1];
                 node->sprite_offset_y += (s8)node->sequence_data[(u16)node->sequence_offset + 2];
                 node->sequence_offset += 3;
@@ -67,7 +67,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             }
         }
     }
-    if (node->kind & 1) {
+    if (node->kind & EFFECT_LIST_NODE_FRAME_CHANGED) {
         frame = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
                                                     + ((u8)node->sprite_frame_index * 2
                                                         + *(s16*)(g_battle_effect_frame_data
@@ -82,13 +82,13 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         for (i = 0; i < count; i++) {
             block->frames[i] = &frame->parts[i];
         }
-        node->kind &= ~1;
+        node->kind &= ~EFFECT_LIST_NODE_FRAME_CHANGED;
     }
     block->color.field.red = red;
     block->color.field.green = green;
     block->color.field.blue = blue;
-    switch (node->kind & 6) {
-    case 0:
+    switch (node->kind & EFFECT_LIST_NODE_PLACEMENT_MASK) {
+    case EFFECT_LIST_NODE_WORLD:
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
         input.vx = node->x + node->sprite_offset_x;
@@ -97,19 +97,19 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {
-        case 1:
+        case EFFECT_SPRITE_DEPTH_NEARER_8:
             depth -= 8;
             break;
-        case 2:
+        case EFFECT_SPRITE_DEPTH_FIXED_8:
             depth = 8;
             break;
-        case 3:
+        case EFFECT_SPRITE_DEPTH_FIXED_FARTHEST:
             depth = 0x17e;
             break;
-        case 4:
+        case EFFECT_SPRITE_DEPTH_FIXED_16:
             depth = 0x10;
             break;
-        case 5:
+        case EFFECT_SPRITE_DEPTH_NEARER_16:
             depth -= 0x10;
             break;
         }
@@ -124,7 +124,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         battle_effect_submit_sprite_to_ordering_table(node->sprite_block, position, node->screen_rotation_angle,
             &g_battle_camera_zoom, g_battle_effect_otag + depth);
         break;
-    case 2:
+    case EFFECT_LIST_NODE_SCREEN_OFFSET:
         position[0] = node->x + node->sprite_offset_x + g_battle_camera_matrix.t[0];
         position[1] = node->y + node->sprite_offset_y + g_battle_camera_matrix.t[1];
         depth = node->z;
@@ -137,7 +137,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         battle_effect_submit_sprite_to_ordering_table(node->sprite_block, position, node->screen_rotation_angle,
             &g_battle_camera_zoom, g_battle_effect_otag + depth);
         break;
-    case 4:
+    case EFFECT_LIST_NODE_WORLD_UNSCALED:
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
         input.vx = node->x + node->sprite_offset_x;
@@ -146,19 +146,19 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {
-        case 1:
+        case EFFECT_SPRITE_DEPTH_NEARER_8:
             depth -= 8;
             break;
-        case 2:
+        case EFFECT_SPRITE_DEPTH_FIXED_8:
             depth = 8;
             break;
-        case 3:
+        case EFFECT_SPRITE_DEPTH_FIXED_FARTHEST:
             depth = 0x17e;
             break;
-        case 4:
+        case EFFECT_SPRITE_DEPTH_FIXED_16:
             depth = 0x10;
             break;
-        case 5:
+        case EFFECT_SPRITE_DEPTH_NEARER_16:
             depth -= 0x10;
             break;
         }
@@ -173,7 +173,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         battle_effect_submit_sprite_to_ordering_table(
             node->sprite_block, position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);
         break;
-    case 6:
+    case EFFECT_LIST_NODE_SCREEN:
         position[0] = node->x + node->sprite_offset_x;
         position[1] = node->y + node->sprite_offset_y;
         depth = node->z;

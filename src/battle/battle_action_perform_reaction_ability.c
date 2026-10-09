@@ -38,25 +38,29 @@ s32 battle_action_perform_reaction_ability(void) {
         g_battle_action_target_data->sp_change = 0x81;
         break;
     case 0x3:
-        g_battle_action_target_data->status_infliction[2] = 0x10;
+        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case 0x4:
-        g_battle_action_target_data->status_infliction[0] = 2;
+        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case 0x5:
-        g_battle_action_target_data->status_infliction[2] = 0x20;
+        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case 0x6:
-        g_battle_action_target_data->status_infliction[3] = 0x40;
+        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REGEN)]
+            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REGEN);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
@@ -76,7 +80,7 @@ s32 battle_action_perform_reaction_ability(void) {
         g_battle_action_target_data->mp_healing = g_battle_action_target->max_mp - g_battle_action_target->mp;
         break;
     case 0xB:
-        g_battle_action_target_data->ct_change = 0xFF;
+        g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_QUICK;
         break;
     case 0xC:
         attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;

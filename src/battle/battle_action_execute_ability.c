@@ -15,11 +15,11 @@ void battle_action_execute_ability(void) {
     result = battle_action_call_attack_preparation_at_preview((u8*)&unit->command_state.ai.data);
     unit->attack_phase_state = result;
     switch (result) {
-    case 0:
+    case BATTLE_ATTACK_PREPARATION_CHARGE:
         battle_unit_start_ability_charge_hold_animation(unit);
         break;
-    case 1:
-    case 3:
+    case BATTLE_ATTACK_PREPARATION_IMMEDIATE:
+    case BATTLE_ATTACK_PREPARATION_JUMP:
         battle_state_stop_game_flow();
         g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
         g_battle_action_post_action = 0;
@@ -28,7 +28,7 @@ void battle_action_execute_ability(void) {
             battle_unit_start_ability_charge_hold_animation(unit);
         }
         return;
-    case 2:
+    case BATTLE_ATTACK_PREPARATION_CHANGE_EQUIPMENT:
     default:
         main_system_handle_pointer_exception(0x13);
         break;

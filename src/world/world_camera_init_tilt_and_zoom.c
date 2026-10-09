@@ -44,6 +44,6 @@ void world_camera_init_tilt_and_zoom(void) {
         g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target;
     }
     g_battle_map_tilt_target = band + 1;
-    g_battle_map_zoom_target = 1;
+    g_battle_map_zoom_target = BATTLE_MAP_ZOOM_IN;
     g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_ZOOM] = ONE;
 }

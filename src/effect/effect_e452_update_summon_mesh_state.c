@@ -73,8 +73,8 @@ s32 effect_e452_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), record_index);
         record->work_slots[byte_offset] = work;
         texture_page_flags = entry->texture_page_flags;
-        tpage = ((texture_page_flags & 3) << 5) | 0x86;
-        abe = texture_page_flags & 4;
+        tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
         for (i = 0; i < 2; i++) {
             for (j = 0; j < 128; j++) {

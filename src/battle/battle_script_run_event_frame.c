@@ -76,7 +76,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
-            g_battle_entd_selection_mode = 4;
+            g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
             return 9;
         }
         g_battle_script_threads_idle = 0;

@@ -10,7 +10,7 @@ s32 battle_action_calculate_at_list_and_get_specific_unit_id(s32 at_index) {
     u32 entry;
     u32 unit_id;
 
-    battle_action_calculate_at_list(at_list, 0);
+    battle_action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_ALL);
     entry = at_list[at_index].unit;
     unit_id = entry & 0x1F;
     if (unit_id == 0x1F) {

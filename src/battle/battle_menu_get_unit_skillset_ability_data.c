@@ -57,7 +57,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     } else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
         charge = 1;
     }
-    battle_action_calculate_at_list(at_list, 0);
+    battle_action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_ALL);
     if (unit->equipped_flags & BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE) {
         materia_blade = 1;
     }

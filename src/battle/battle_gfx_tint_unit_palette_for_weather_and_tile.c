@@ -29,9 +29,11 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     row = unit->unit_id;
 
     if ((u32)(g_battle_gfx_spritesheet_slots[slot].spritesheet_id - 0x60) < 0x3b) {
-        battle_map_load_palette_data(g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8], 0xa, row, 0);
+        battle_map_load_palette_data(
+            g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8], MAP_PALETTE_BANK_UNITS_SECOND, row, 0);
     } else {
-        battle_map_load_palette_data(g_battle_gfx_spritesheet_slots[slot].palettes[8], 0xa, row, 0);
+        battle_map_load_palette_data(
+            g_battle_gfx_spritesheet_slots[slot].palettes[8], MAP_PALETTE_BANK_UNITS_SECOND, row, 0);
     }
 
     blue = 0;

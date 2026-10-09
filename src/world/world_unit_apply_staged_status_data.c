@@ -52,11 +52,11 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         }
         if (g_world_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-            g_world_unit_status_staging_data->jump_float_flags |= 1;
+            g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_JUMP_REMOVED;
         }
         if (g_world_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
-            g_world_unit_status_staging_data->jump_float_flags |= 2;
+            g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
         inflict_status_mode = g_world_unit_status_staging_data->inflict_status_mode[unit_id];
         if (inflict_status_mode != UNIT_INFLICT_STATUS_MODE_NONE) {

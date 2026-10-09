@@ -46,7 +46,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     if (g_battle_unit_stats[unit_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 0;
     }
-    battle_move_set_tile_flags_for_pathfinding(2);
+    battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_KEEP_RANGES);
     g_battle_move_path_height_offsets = 0;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;
@@ -62,7 +62,8 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         }
         config->destination_tile_occupied = 1;
         state->source_unit_record_index = g_battle_target_panels[index].unit_record_index;
-        g_battle_move_destination_unit_record = (records[state->source_unit_record_index].unit_id_flags & 0x1f) + 0x80;
+        g_battle_move_destination_unit_record
+            = (records[state->source_unit_record_index].unit_id_flags & BATTLE_MOVE_RECORD_UNIT_ID_MASK) + 0x80;
         state->outer_count = 0x1c;
     }
     index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
@@ -87,12 +88,12 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             *move_flags |= 2;
         }
         if (battle_move_calculate_teleport_chances() != 0) {
-            g_battle_move_path[0] = 0xfe;
+            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT;
             g_battle_move_path[1] = x;
             g_battle_move_path[2] = y;
             g_battle_move_path[3] = elevation;
         } else {
-            g_battle_move_path[0] = 0xff;
+            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT_FAILED;
         }
         return g_battle_move_path;
     }

@@ -32,7 +32,7 @@ s32 battle_move_start_next_post_movement_step(void) {
     g_battle_game_state = BATTLE_GAME_STATE_CRYSTAL_LEARN;
     g_battle_action_post_action = 0;
     casting->state_frame_counter = 0;
-    if (g_battle_move_find_result & 1) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_CRYSTAL_OR_TREASURE) {
         target = battle_unit_get_crystal_or_treasure_at_map_coords(source->map_x, source->map_y, source->map_z);
         item = battle_menu_get_dead_unit_selection(source->battle_data->misc_unit_id);
         if (item == -1) {
@@ -53,7 +53,7 @@ s32 battle_move_start_next_post_movement_step(void) {
             } else {
                 battle_menu_init_system_function(
                     BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, stats->misc_unit_id, stats->misc_unit_id, 0, 0);
-                battle_unit_learn_from_crystal(source->battle_data, 2);
+                battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
                 battle_action_finalize_attack_and_flag_reactions(source->battle_data->misc_unit_id);
                 battle_gfx_prepare_post_action_display(source);
                 battle_unit_update_display_by_misc_id(source->unit_id);
@@ -68,7 +68,7 @@ s32 battle_move_start_next_post_movement_step(void) {
             }
             if ((*(u16*)&source->battle_data->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)
                 != BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-                battle_unit_learn_from_crystal(source->battle_data, 4);
+                battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_TAKE_TREASURE);
             }
         }
         battle_gfx_configure_misc_unit_palette_modulation_1f(target->unit_id);
@@ -77,22 +77,22 @@ s32 battle_move_start_next_post_movement_step(void) {
         main_sound_play_sfx_find_channel(MAIN_SFX_COMPLETE);
         return 1;
     }
-    if (g_battle_move_find_result & 2) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT) {
         switch (g_battle_action_post_action_display_phase) {
-        case 0:
+        case BATTLE_POST_ACTION_DISPLAY_LEVEL_UP:
             battle_action_init_movement_ability_benefit(casting->battle_data);
             battle_unit_build_gained_exp_jp_level_job_level(casting->battle_data, &casting->action_rewards);
             battle_gfx_prepare_post_action_display(casting);
             battle_gfx_init_earned_exp_jp_display(casting);
             battle_action_report_level_up(casting);
             return 1;
-        case 1:
+        case BATTLE_POST_ACTION_DISPLAY_JOB_LEVEL_UP:
             battle_action_report_job_level_up(casting);
             return 1;
         }
         return 1;
     }
-    if (g_battle_move_find_result & 4) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
         g_battle_move_find_display_item
             = *(battle_move_found_item_t*)battle_map_determine_rare_common_item(casting->battle_data);
         battle_gfx_store_item_display_data(source, g_battle_move_find_display_item.item_id);
@@ -107,7 +107,7 @@ s32 battle_move_start_next_post_movement_step(void) {
             g_battle_move_find_display_item.item_id, source->battle_data->misc_unit_id, 0, 0);
         return 1;
     }
-    if (g_battle_move_find_result & 8) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED) {
         trap = battle_action_apply_tile_trap(casting->battle_data);
         if ((source->pending_attack_result
                 = battle_action_finalize_attack_and_flag_reactions(source->battle_data->misc_unit_id))
@@ -123,20 +123,20 @@ s32 battle_move_start_next_post_movement_step(void) {
         battle_ai_record_considered_coords(casting->map_x, casting->map_z, casting->map_y);
         return 1;
     }
-    if (g_battle_move_find_result & 0x10) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {
         battle_status_remove_charging_ability_ct(casting->battle_data, 1);
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->misc_unit_id, 0, 0);
         return 1;
     }
-    if (g_battle_move_find_result & 0x200) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->misc_unit_id, 0, 0);
         battle_gfx_prepare_post_action_display_by_misc_id(source->unit_id);
         battle_unit_update_display_by_misc_id(source->unit_id);
         return 1;
     }
-    if (g_battle_move_find_result & 0x400) {
+    if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_MOUNT_STATUS_CHANGE) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->misc_unit_id, 0, 0);
         if (source->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {

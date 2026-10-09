@@ -15,19 +15,19 @@ void battle_move_set_unit_step_delta_edge_to_center(
     direction.vy = (step_count - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
         * BATTLE_MOVE_STEP_HEIGHT_SCALE;
     switch (*step >> 6) {
-    case 0:
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         direction.vx = BATTLE_MOVE_STEP_WIDTH;
         direction.vz = 0;
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         direction.vx = -BATTLE_MOVE_STEP_WIDTH;
         direction.vz = 0;
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         direction.vx = 0;
         direction.vz = -BATTLE_MOVE_STEP_WIDTH;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         direction.vx = 0;
         direction.vz = BATTLE_MOVE_STEP_WIDTH;
         break;

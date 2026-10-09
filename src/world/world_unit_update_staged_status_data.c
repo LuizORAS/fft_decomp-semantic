@@ -45,7 +45,7 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
         if (g_world_unit_status_staging_data->jump_float_flags != 0) {
             world_thread_wait_frames(40);
         }
-        if (g_world_unit_status_staging_data->jump_float_flags & 1) {
+        if (g_world_unit_status_staging_data->jump_float_flags & UNIT_STATUS_STAGING_JUMP_REMOVED) {
             world_thread_wait_frames(40);
         }
         if (restore == 0) {

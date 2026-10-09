@@ -21,7 +21,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
     } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_FROG) {
         battle_unit_set_animation_based_on_status(unit);
     }
-    if (unit->statuses_to_add_1_4 & 4) {
+    if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
         if ((u32)(g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id - BATTLE_SEQ_CYOKO) < 2) {
             battle_effect_set_secondary_death_smoke(unit);
         }
@@ -49,29 +49,29 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_LAND, unit->facing, unit);
         }
         if ((u32)(battle_move_validate_float_fly(unit) & 0xff) >= 2) {
-            if (unit->statuses_to_add_1_4 & 4) {
+            if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-                unit->encoded_animation = 0x34;
+                unit->encoded_animation = BATTLE_UNIT_ANIMATION_DEAD << 1;
                 unit->animation_countdown = 0;
-            } else if (unit->statuses_to_remove_1_4 & 4) {
+            } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_FLOAT_IDLE, unit->facing, unit);
-                unit->encoded_animation = 0x12;
+                unit->encoded_animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE << 1;
                 unit->animation_countdown = 0;
             }
         }
     } else if ((u32)(battle_move_validate_float_fly(unit) & 0xff) < 2) {
-        if (unit->statuses_to_add_1_4 & 4) {
+        if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_DEATH, unit->facing, unit);
-        } else if (unit->statuses_to_remove_1_4 & 4) {
+        } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_REVIVE, unit->facing, unit);
         }
-    } else if (unit->statuses_to_add_1_4 & 4) {
+    } else if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-        unit->encoded_animation = 0x34;
+        unit->encoded_animation = BATTLE_UNIT_ANIMATION_DEAD << 1;
         unit->animation_countdown = 0;
-    } else if (unit->statuses_to_remove_1_4 & 4) {
+    } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_FLOAT_IDLE, unit->facing, unit);
-        unit->encoded_animation = 0x12;
+        unit->encoded_animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE << 1;
         unit->animation_countdown = 0;
     }
 }

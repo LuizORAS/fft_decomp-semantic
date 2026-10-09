@@ -18,6 +18,6 @@ void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_dat
         battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
             unit, &unit->movement_path_count, &unit->current_path_step.value);
         battle_move_interpolate_partial(unit, unit->walk_speed.word);
-        unit->step_phase = 0x27;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH;
     }
 }

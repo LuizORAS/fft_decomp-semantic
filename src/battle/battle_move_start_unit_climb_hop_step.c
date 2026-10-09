@@ -34,42 +34,42 @@ void battle_move_start_unit_climb_hop_step(
     unit->velocity.vy = -rise;
     frames = rise / g_battle_move_jump_gravity;
     switch (*step >> 6) {
-    case 0:
-        unit->step_phase = 0x16;
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST;
         unit->facing = BATTLE_FACING_EAST;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
-    case 1:
-        unit->step_phase = 0x1E;
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
         unit->facing = BATTLE_FACING_WEST;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
-    case 2:
-        unit->step_phase = 0x12;
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
         unit->facing = BATTLE_FACING_SOUTH;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = -0xE000 / frames;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         /* Without this reorg moves this case's `li a0,0xe000` into the
          * `beq a1,3` delay slot, where the target keeps a nop; an asm insn
          * stops fill_slots_from_thread's scan (stop_search_p). */
         __asm__ volatile("");
-        unit->step_phase = 0x1A;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
         unit->facing = BATTLE_FACING_NORTH;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = 0xE000 / frames;
         break;
     }
-    animation = 0x30;
+    animation = BATTLE_UNIT_ANIMATION_HOP;
     if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
-        animation = 0x31;
+        animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
     }
     battle_unit_store_animation_facing(animation, unit->facing, unit);
     word = unit->movement.word;

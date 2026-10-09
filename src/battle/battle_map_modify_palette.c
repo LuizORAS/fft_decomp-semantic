@@ -43,17 +43,17 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
         for (i = 0; i < 0x100; i++) {
             if (components[i].red_5bit + components[i].green_5bit + components[i].blue_5bit != 0) {
                 switch (command) {
-                case 0:
+                case MAP_COLOR_MODE_CURRENT:
                     out_red = components[i].red_5bit + red;
                     out_green = components[i].green_5bit + green;
                     out_blue = components[i].blue_5bit + blue;
                     break;
-                case 1:
+                case MAP_COLOR_MODE_CURRENT_HALF:
                     out_red = (components[i].red_5bit >> 1) + red;
                     out_green = (components[i].green_5bit >> 1) + green;
                     out_blue = (components[i].blue_5bit >> 1) + blue;
                     break;
-                case 2: {
+                case MAP_COLOR_MODE_CURRENT_GREY: {
                     s32 gray;
                     gray = (components[i].red_5bit * 2 + components[i].green_5bit * 3 + components[i].blue_5bit) / 6;
                     out_red = red + gray;
@@ -61,7 +61,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 3: {
+                case MAP_COLOR_MODE_CURRENT_GREY_HALF: {
                     s32 gray;
                     gray = (components[i].red_5bit * 2 + components[i].green_5bit * 3 + components[i].blue_5bit) / 12;
                     out_red = red + gray;
@@ -69,15 +69,15 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 4:
-                case 9:
+                case MAP_COLOR_MODE_BASE:
+                case MAP_COLOR_MODE_BASE_REPEAT:
                     out_red = red + (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f);
                     out_green
                         = green + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0) >> 5);
                     out_blue
                         = blue + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 10);
                     break;
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green
@@ -85,7 +85,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue
                         = blue + ((g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 11);
                     break;
-                case 6: {
+                case MAP_COLOR_MODE_BASE_GREY: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
@@ -99,7 +99,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 7: {
+                case MAP_COLOR_MODE_BASE_GREY_HALF: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
@@ -113,14 +113,14 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 8:
+                case MAP_COLOR_MODE_RESTORE:
                     out_red = g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x1f;
                     out_green = (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x3e0) >> 5;
                     out_blue = (g_battle_map_palette_state.banks[palette_index].packed_colors[i] & 0x7c00) >> 10;
                     break;
-                case 10:
+                case MAP_COLOR_MODE_STOP_REPEAT:
                     for (i = 15; i >= 0; i--) {
-                        g_battle_map_palette_state.banks[palette_index].animations[i].repeat = 0;
+                        g_battle_map_palette_state.banks[palette_index].animations[i].repeat = MAP_COLOR_REPEAT_OFF;
                     }
                     return;
                 }
@@ -168,8 +168,8 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                 animation->blend_step = 0;
                 animation->delay_counter = 0;
                 animation->mode = amount;
-                if (command == 9) {
-                    animation->repeat = 1;
+                if (command == MAP_COLOR_MODE_BASE_REPEAT) {
+                    animation->repeat = MAP_COLOR_REPEAT_TINTED;
                     animation->repeat_rgb[0] = red;
                     animation->repeat_rgb[1] = green;
                     animation->repeat_rgb[2] = blue;
@@ -187,17 +187,17 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
             component = &row[i];
             if (component->red_5bit + component->green_5bit + component->blue_5bit != 0) {
                 switch (command) {
-                case 0:
+                case MAP_COLOR_MODE_CURRENT:
                     out_red = component->red_5bit + red;
                     out_green = component->green_5bit + green;
                     out_blue = component->blue_5bit + blue;
                     break;
-                case 1:
+                case MAP_COLOR_MODE_CURRENT_HALF:
                     out_red = (component->red_5bit >> 1) + red;
                     out_green = (component->green_5bit >> 1) + green;
                     out_blue = (component->blue_5bit >> 1) + blue;
                     break;
-                case 2: {
+                case MAP_COLOR_MODE_CURRENT_GREY: {
                     s32 gray;
                     gray = (component->red_5bit * 2 + component->green_5bit * 3 + component->blue_5bit) / 6;
                     out_red = red + gray;
@@ -205,7 +205,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 3: {
+                case MAP_COLOR_MODE_CURRENT_GREY_HALF: {
                     s32 gray;
                     gray = (component->red_5bit * 2 + component->green_5bit * 3 + component->blue_5bit) / 12;
                     out_red = red + gray;
@@ -213,8 +213,8 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 4:
-                case 9:
+                case MAP_COLOR_MODE_BASE:
+                case MAP_COLOR_MODE_BASE_REPEAT:
                     out_red = red
                         + (g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f);
                     out_green = green
@@ -225,7 +225,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                                & 0x7c00)
                             >> 10);
                     break;
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part
                         = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
                     out_red = red + (red_part >> 1);
@@ -237,7 +237,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                                & 0x7c00)
                             >> 11);
                     break;
-                case 6: {
+                case MAP_COLOR_MODE_BASE_GREY: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
@@ -254,7 +254,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 7: {
+                case MAP_COLOR_MODE_BASE_GREY_HALF: {
                     s32 red_bits;
                     u32 green_bits;
                     u32 blue_bits;
@@ -271,7 +271,7 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                     out_blue = blue + gray;
                     break;
                 }
-                case 8:
+                case MAP_COLOR_MODE_RESTORE:
                     out_red
                         = g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x1f;
                     out_green
@@ -281,8 +281,9 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
                         = (g_battle_map_palette_state.banks[palette_index].packed_colors[color_index * 16 + i] & 0x7c00)
                         >> 10;
                     break;
-                case 10:
-                    g_battle_map_palette_state.banks[palette_index].animations[color_index].repeat = 0;
+                case MAP_COLOR_MODE_STOP_REPEAT:
+                    g_battle_map_palette_state.banks[palette_index].animations[color_index].repeat
+                        = MAP_COLOR_REPEAT_OFF;
                     return;
                 }
                 if (out_red >= 0x20) {
@@ -327,8 +328,8 @@ void battle_map_modify_palette(command, amount, palette_index, color_index, all_
             animation->blend_step = 0;
             animation->delay_counter = 0;
             animation->mode = amount;
-            if (command == 9) {
-                animation->repeat = 1;
+            if (command == MAP_COLOR_MODE_BASE_REPEAT) {
+                animation->repeat = MAP_COLOR_REPEAT_TINTED;
                 animation->repeat_rgb[0] = red;
                 animation->repeat_rgb[1] = green;
                 animation->repeat_rgb[2] = blue;

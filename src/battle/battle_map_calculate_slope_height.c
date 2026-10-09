@@ -38,19 +38,19 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     result = base;
     if (half != 0) {
         switch (tile->slope_type) {
-        case 0x52:
+        case MAP_SLOPE_EDGE_EAST:
             result = SLOPE_UP(TILE_OFFSET_X);
             break;
-        case 0x58:
+        case MAP_SLOPE_EDGE_WEST:
             result = SLOPE_DOWN(TILE_OFFSET_X);
             break;
-        case 0x25:
+        case MAP_SLOPE_EDGE_SOUTH:
             result = SLOPE_DOWN(TILE_OFFSET_Z);
             break;
-        case 0x85:
+        case MAP_SLOPE_EDGE_NORTH:
             result = SLOPE_UP(TILE_OFFSET_Z);
             break;
-        case 0x41:
+        case MAP_SLOPE_LOW_CORNER_NORTH_EAST:
             lhs = TILE_OFFSET_X;
             rhs = TILE_OFFSET_Z;
             if (lhs < rhs) {
@@ -59,7 +59,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_UP(rhs);
             }
             break;
-        case 0x11:
+        case MAP_SLOPE_LOW_CORNER_SOUTH_EAST:
             lhs = TILE_OFFSET_X;
             rhs = 28 - TILE_OFFSET_Z;
             if (lhs >= rhs) {
@@ -68,7 +68,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_UP(lhs);
             }
             break;
-        case 0x14:
+        case MAP_SLOPE_LOW_CORNER_SOUTH_WEST:
             lhs = 28 - TILE_OFFSET_X;
             rhs = 28 - TILE_OFFSET_Z;
             if (lhs >= rhs) {
@@ -77,7 +77,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_DOWN(TILE_OFFSET_X);
             }
             break;
-        case 0x44:
+        case MAP_SLOPE_LOW_CORNER_NORTH_WEST:
             lhs = 28 - TILE_OFFSET_X;
             rhs = TILE_OFFSET_Z;
             if (lhs >= rhs) {
@@ -86,7 +86,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_DOWN(TILE_OFFSET_X);
             }
             break;
-        case 0x96:
+        case MAP_SLOPE_HIGH_CORNER_NORTH_EAST:
             lhs = TILE_OFFSET_X;
             rhs = TILE_OFFSET_Z;
             if (lhs >= rhs) {
@@ -95,7 +95,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_UP(rhs);
             }
             break;
-        case 0x66:
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST:
             lhs = TILE_OFFSET_X;
             rhs = 28 - TILE_OFFSET_Z;
             if (lhs >= rhs) {
@@ -104,7 +104,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_DOWN(TILE_OFFSET_Z);
             }
             break;
-        case 0x69:
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST:
             lhs = 28 - TILE_OFFSET_X;
             rhs = 28 - TILE_OFFSET_Z;
             if (lhs < rhs) {
@@ -113,7 +113,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
                 result = SLOPE_DOWN(TILE_OFFSET_X);
             }
             break;
-        case 0x99:
+        case MAP_SLOPE_HIGH_CORNER_NORTH_WEST:
             lhs = 28 - TILE_OFFSET_X;
             rhs = TILE_OFFSET_Z;
             if (lhs >= rhs) {

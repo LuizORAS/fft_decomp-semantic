@@ -41,58 +41,58 @@ s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECT
         rise = (depth & MAP_TILE_HALF_HEIGHT_MASK) * 6;
         quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise;
         switch (slope) {
-        case 0x52: /* edge up to east */
+        case MAP_SLOPE_EDGE_EAST: /* edge up to east */
             quad[0].vy = quad[2].vy = quad[2].vy + rise;
             quad[1].vy = quad[3].vy = quad[3].vy - rise;
             break;
-        case 0x58: /* edge up to west */
+        case MAP_SLOPE_EDGE_WEST: /* edge up to west */
             quad[1].vy = quad[3].vy = quad[3].vy + rise;
             quad[0].vy = quad[2].vy = quad[2].vy - rise;
             break;
-        case 0x25: /* edge up to south */
+        case MAP_SLOPE_EDGE_SOUTH: /* edge up to south */
             quad[0].vy = quad[1].vy = quad[1].vy + rise;
             quad[2].vy = quad[3].vy = quad[3].vy - rise;
             break;
-        case 0x85: /* edge up to north */
+        case MAP_SLOPE_EDGE_NORTH: /* edge up to north */
             quad[2].vy = quad[3].vy = quad[3].vy + rise;
             quad[0].vy = quad[1].vy = quad[1].vy - rise;
             break;
-        case 0x41: /* low corner, north-east up */
+        case MAP_SLOPE_LOW_CORNER_NORTH_EAST: /* low corner, north-east up */
             split = 1;
             quad[0].vy = quad[2].vy = quad[3].vy = quad[3].vy + rise;
             quad[1].vy = quad[1].vy - rise;
             break;
-        case 0x11: /* low corner, south-east up */
+        case MAP_SLOPE_LOW_CORNER_SOUTH_EAST: /* low corner, south-east up */
             split = 2;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[2].vy + rise;
             quad[3].vy = quad[3].vy - rise;
             break;
-        case 0x14: /* low corner, south-west up */
+        case MAP_SLOPE_LOW_CORNER_SOUTH_WEST: /* low corner, south-west up */
             split = 1;
             quad[0].vy = quad[1].vy = quad[3].vy = quad[3].vy + rise;
             quad[2].vy = quad[2].vy - rise;
             break;
-        case 0x44: /* low corner, north-west up */
+        case MAP_SLOPE_LOW_CORNER_NORTH_WEST: /* low corner, north-west up */
             split = 2;
             quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy + rise;
             quad[0].vy = quad[0].vy - rise;
             break;
-        case 0x96: /* high corner, north-east up */
+        case MAP_SLOPE_HIGH_CORNER_NORTH_EAST: /* high corner, north-east up */
             split = 1;
             quad[0].vy = quad[1].vy = quad[3].vy = quad[3].vy - rise;
             quad[2].vy = quad[2].vy + rise;
             break;
-        case 0x66: /* high corner, south-east up */
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST: /* high corner, south-east up */
             split = 2;
             quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise;
             quad[0].vy = quad[0].vy + rise;
             break;
-        case 0x69: /* high corner, south-west up */
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST: /* high corner, south-west up */
             split = 1;
             quad[0].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise;
             quad[1].vy = quad[1].vy + rise;
             break;
-        case 0x99: /* high corner, north-west up */
+        case MAP_SLOPE_HIGH_CORNER_NORTH_WEST: /* high corner, north-west up */
             split = 2;
             quad[0].vy = quad[1].vy = quad[2].vy = quad[2].vy - rise;
             quad[3].vy = quad[3].vy + rise;

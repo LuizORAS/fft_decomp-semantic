@@ -25,7 +25,7 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
             unit->special_graphic_y_offset = 0;
             unit->status_flags_5_6 = BATTLE_MISC_STATUS_TREASURE;
             unit->status_flags_1_4 = 0;
-            battle_unit_store_animation_facing(0x15, unit->facing, unit);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_TREASURE, unit->facing, unit);
         } else if (flags & BATTLE_MISC_STATUS_CHICKEN) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_CHICKEN;
             unit->special_graphic_y_offset = 0;

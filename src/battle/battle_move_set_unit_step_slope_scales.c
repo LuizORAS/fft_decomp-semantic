@@ -9,24 +9,24 @@ void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit) {
         (g_battle_move_destination_tile->flags.value >> MAP_TILE_SHADOW_MODE_SHIFT) & MAP_TILE_SHADOW_MODE_VALUE_MASK,
         1);
     switch (g_battle_move_step_value.bits.direction) {
-    case 0:
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->destination_edge_height = g_battle_move_destination_edge_height
             = (g_battle_move_destination_tile->slope_type & 0xC) >> 2;
         unit->current_edge_height = g_battle_move_current_edge_height = g_battle_move_current_tile->slope_type & 3;
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->destination_edge_height = g_battle_move_destination_edge_height
             = g_battle_move_destination_tile->slope_type & 3;
         unit->current_edge_height = g_battle_move_current_edge_height
             = (g_battle_move_current_tile->slope_type & 0xC) >> 2;
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->destination_edge_height = g_battle_move_destination_edge_height
             = g_battle_move_destination_tile->slope_type >> 6;
         unit->current_edge_height = g_battle_move_current_edge_height
             = (g_battle_move_current_tile->slope_type & 0x30) >> 4;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->destination_edge_height = g_battle_move_destination_edge_height
             = (g_battle_move_destination_tile->slope_type & 0x30) >> 4;
         unit->current_edge_height = g_battle_move_current_edge_height = g_battle_move_current_tile->slope_type >> 6;

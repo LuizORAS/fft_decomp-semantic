@@ -19,8 +19,8 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
     SVECTOR* current;
     s16 delta;
 
-    switch (flags & 0x1e0) {
-    case 0x0:
+    switch (flags & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
+    case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
         if (g_battle_effect_coord_data.targets[target].target_type == 0) {
             battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[target].id.misc_id, &coords.vx);
         } else {
@@ -32,7 +32,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
         }
         break;
-    case 0x40:
+    case BATTLE_EFFECT_CAMERA_SOURCE_GIVEN:
         current = battle_camera_get_rotation();
         delta = angles->vy - current->vy;
         if (delta < -0x800) {
@@ -43,11 +43,11 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
         g_battle_effect_camera_rotation_target.vx = angles->vx;
         g_battle_effect_camera_rotation_target.vy = delta + current->vy;
         g_battle_effect_camera_rotation_target.vz = angles->vz;
-        g_battle_effect_camera_rotation_mode = flags & 0x1e00;
+        g_battle_effect_camera_rotation_mode = flags & BATTLE_EFFECT_CAMERA_MODE_MASK;
         g_battle_effect_camera_rotation_duration = duration;
         g_battle_effect_camera_rotation_frame = 0;
         return;
-    case 0xc0:
+    case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
         rotation = battle_camera_get_rotation();
         g_battle_effect_camera_rotation_target.vx = rotation->vx;
         g_battle_effect_camera_rotation_target.vy = rotation->vy;
@@ -57,7 +57,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
         }
         break;
-    case 0x100:
+    case BATTLE_EFFECT_CAMERA_SOURCE_SAVED:
         g_battle_effect_camera_rotation_target = g_battle_effect_camera_rotation_saved;
         if (angles) {
             battle_effect_add_svectors(
@@ -71,7 +71,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
             g_battle_effect_camera_rotation_target.vy += ONE;
         }
         break;
-    case 0x140:
+    case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
         if (g_battle_effect_coord_data.targets[16].target_type == 0) {
             battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[16].id.misc_id, &coords.vx);
         } else {
@@ -83,7 +83,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
         }
         break;
-    case 0x1c0:
+    case BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE:
         coords = *(SVECTOR*)&g_battle_effect_target_tile.id;
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
@@ -91,7 +91,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
         }
         break;
-    case 0x20:
+    case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT_YAW_ROLL:
         rotation = battle_camera_get_rotation();
         if (angles) {
             g_battle_effect_camera_rotation_target.vx = angles->vx;
@@ -99,7 +99,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
             g_battle_effect_camera_rotation_target.vz = rotation->vz + angles->vz;
         }
         break;
-    case 0x60:
+    case BATTLE_EFFECT_CAMERA_SOURCE_SAVED_PITCH:
         rotation = battle_camera_get_rotation();
         g_battle_effect_camera_rotation_target.vx = g_battle_effect_camera_rotation_saved.vx;
         g_battle_effect_camera_rotation_target.vy = rotation->vy;
@@ -112,7 +112,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
     default:
         return;
     }
-    g_battle_effect_camera_rotation_mode = flags & 0x1e00;
+    g_battle_effect_camera_rotation_mode = flags & BATTLE_EFFECT_CAMERA_MODE_MASK;
     g_battle_effect_camera_rotation_duration = duration;
     g_battle_effect_camera_rotation_frame = 0;
 }

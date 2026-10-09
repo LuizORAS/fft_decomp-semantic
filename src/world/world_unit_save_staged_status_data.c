@@ -64,11 +64,11 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
         }
         if (g_world_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-            g_world_unit_status_staging_data->jump_float_flags |= 1;
+            g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_JUMP_REMOVED;
         }
         if (g_world_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
-            g_world_unit_status_staging_data->jump_float_flags |= 2;
+            g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
         if (stats->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {

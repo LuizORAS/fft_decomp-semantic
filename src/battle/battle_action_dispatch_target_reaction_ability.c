@@ -9,7 +9,7 @@
 void battle_action_dispatch_target_reaction_ability(void) {
     battle_stats_t* unit;
 
-    if (g_battle_action_current_ability.formula == 7)
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL)
         return;
     if (battle_action_is_reaction_blocked(g_battle_action_target) != 0)
         return;

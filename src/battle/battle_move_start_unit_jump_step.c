@@ -11,8 +11,10 @@
 void battle_move_start_unit_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to) {
     u16 facings[4] = { BATTLE_FACING_EAST, BATTLE_FACING_WEST, BATTLE_FACING_SOUTH, BATTLE_FACING_NORTH };
-    u8 jump_offsets[4] = { 0x15, 0x1D, 0x11, 0x19 };
-    u8 hop_offsets[4] = { 0x16, 0x1E, 0x12, 0x1A };
+    u8 jump_offsets[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST,
+        BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH };
+    u8 hop_offsets[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST,
+        BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH };
     u8* step;
     s32 animation;
     u32 word;
@@ -29,31 +31,31 @@ void battle_move_start_unit_jump_step(
     } else {
         unit->step_phase = hop_offsets[(u8)value >> 6];
         battle_unit_dismount_rider(unit);
-        animation = 0x30;
+        animation = BATTLE_UNIT_ANIMATION_HOP;
         if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
-            animation = 0x31;
+            animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
         }
         battle_unit_store_animation_facing(animation, unit->facing, unit);
         word = unit->movement.word;
         unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
     }
     switch (*step >> 6) {
-    case 0:
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
         unit->velocity.vx = 0x3000;
         unit->velocity.vz = 0;
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
         unit->velocity.vx = -0x3000;
         unit->velocity.vz = 0;
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = -0x3000;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = 0x3000;

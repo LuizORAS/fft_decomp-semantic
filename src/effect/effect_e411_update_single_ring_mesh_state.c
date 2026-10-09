@@ -59,8 +59,8 @@ s32 effect_e411_update_single_ring_mesh_state(s32 record_index, s32 byte_offset,
         }
         work = battle_heap_alloc_block(sizeof(effect_single_ring_mesh_work_t), record_index);
         record->work_slots[byte_offset] = work;
-        abe = entry->texture_page_flags & 4;
-        tpage = ((entry->texture_page_flags & 3) << 5) | 0x86;
+        abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
+        tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         translucent = abe == 0;
         for (j = 0; j < 2; j++) {
             for (i = 0; i < RING_MESH_SEGMENTS; i++) {

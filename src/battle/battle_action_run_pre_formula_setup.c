@@ -72,7 +72,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     main_util_copy_byte_data(weapon, &g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
     g_battle_action_current_ability.proc_id = weapon->proc_id;
     g_battle_action_current_ability.charge_power = 0;
-    g_battle_action_current_ability.formula = 1;
+    g_battle_action_current_ability.formula = ABILITY_FORMULA_WEAPON_DAMAGE;
     g_battle_action_current_ability.attacker_faith = g_battle_action_attacker->faith;
     g_battle_action_current_ability.target_faith = g_battle_action_target->faith;
     battle_action_clear_data();
@@ -102,7 +102,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_ARITHMETICKS:
     case ACTION_MENU_TYPE_MONSTER:
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        formula = 1;
+        formula = ABILITY_FORMULA_WEAPON_DAMAGE;
         if ((s16)action.ability_id < 0x171) {
             if ((g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
@@ -124,7 +124,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         }
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        formula = 1;
+        formula = ABILITY_FORMULA_WEAPON_DAMAGE;
         id = action.item_id;
         if (id >= 0xF0) {
             g_battle_action_current_ability_view.weapon_id = id;
@@ -138,10 +138,10 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         }
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
-        formula = 0x63;
+        formula = ABILITY_FORMULA_DAMAGE_SP_TIMES_WP;
         break;
     case ACTION_MENU_TYPE_JUMP:
-        formula = 0x64;
+        formula = ABILITY_FORMULA_DAMAGE_PA_TIMES_WP;
         break;
     case ACTION_MENU_TYPE_CHARGE:
         ability_id = action.ability_id;
@@ -166,16 +166,16 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         }
         break;
     default:
-        formula = 1;
+        formula = ABILITY_FORMULA_WEAPON_DAMAGE;
         break;
     }
     g_battle_action_current_ability_view.weapon_proc_pending = 0;
     g_battle_action_current_ability.knockback_flags = 0;
-    if (formula == 0 || formula >= 0x65) {
-        formula = 1;
+    if (formula == 0 || formula >= ABILITY_FORMULA_COUNT) {
+        formula = ABILITY_FORMULA_WEAPON_DAMAGE;
     }
     id = g_battle_action_current_ability_view.proc_id;
-    if (formula == 3) {
+    if (formula == ABILITY_FORMULA_GUN_DAMAGE) {
         id = 0;
     }
     main_util_copy_byte_data(&g_main_status_infliction_data[id],
@@ -190,7 +190,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     if (formula < 7) {
         battle_formula_apply_poach_and_train();
     }
-    if (formula == 0x64) {
+    if (formula == ABILITY_FORMULA_DAMAGE_PA_TIMES_WP) {
         g_battle_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
     }
     battle_action_finalize_target_current_action();

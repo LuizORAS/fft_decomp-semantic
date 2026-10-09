@@ -26,7 +26,7 @@ s32 battle_effect_venom_trap_secondary_handler(void) {
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        battle_effect_start_group(8, 12);
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP, 12);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
@@ -36,14 +36,16 @@ s32 battle_effect_venom_trap_secondary_handler(void) {
         pos.y = ONE;
         battle_effect_save_gravity();
         battle_effect_set_gravity(&pos);
-        battle_effect_update_active_slots(8);
+        battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
         effect = g_battle_effect_current_secondary;
         finish_timer = effect->finish_timer;
         result = finish_timer != 1;
         effect->timer = effect->timer + 1;
-        if (effect->active_count == 0 && effect->timer > g_battle_effect_trap_particle_configs[8].spawn_start_frame) {
+        if (effect->active_count == 0
+            && effect->timer
+                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

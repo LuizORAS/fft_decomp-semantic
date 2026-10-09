@@ -23,7 +23,7 @@ void battle_move_get_current_and_destination_tiles(
     flags = movement;
     dir = flags >> 6;
     switch (dir) {
-    case 0:
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         layer = flags >> 5;
         layer &= 1;
         x = unit->map_x;
@@ -31,7 +31,7 @@ void battle_move_get_current_and_destination_tiles(
         y = unit->map_y;
         x += flags & 3;
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         layer = flags >> 5;
         layer &= 1;
         x = unit->map_x;
@@ -39,7 +39,7 @@ void battle_move_get_current_and_destination_tiles(
         y = unit->map_y;
         x -= flags & 3;
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         layer = flags >> 5;
         layer &= 1;
         y = unit->map_y;
@@ -47,7 +47,7 @@ void battle_move_get_current_and_destination_tiles(
         x = unit->map_x;
         y -= flags & 3;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         layer = flags >> 5;
         layer &= 1;
         y = unit->map_y;

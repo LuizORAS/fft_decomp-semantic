@@ -24,6 +24,6 @@ void battle_unit_set_animation_for_item_abilities(battle_unit_misc_data_t* unit,
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_HOLD_ITEM, unit->facing, unit);
     } else {
         unit->item_display_active = 0;
-        battle_unit_store_animation_facing_movement_data(0x4C, unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_THROW_ITEM, unit->facing, unit);
     }
 }

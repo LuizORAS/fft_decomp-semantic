@@ -64,33 +64,33 @@ s32 battle_target_move_cursor_by_input(void) {
         g_battle_cursor_previous_z = g_battle_cursor_z;
         g_battle_cursor_previous_y = g_battle_cursor_y;
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        direction = battle_camera_get_input_direction(1);
+        direction = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
         switch (direction) {
-        case 0x800:
+        case BATTLE_FACING_NORTH:
             g_battle_cursor_y++;
             break;
-        case 0:
+        case BATTLE_FACING_SOUTH:
             g_battle_cursor_y--;
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             g_battle_cursor_x--;
             break;
-        case 0xc00:
+        case BATTLE_FACING_EAST:
             g_battle_cursor_x++;
             break;
-        case 0xa00:
+        case BATTLE_FACING_NORTH_EAST:
             g_battle_cursor_y++;
             g_battle_cursor_x++;
             break;
-        case 0x600:
+        case BATTLE_FACING_NORTH_WEST:
             g_battle_cursor_y++;
             g_battle_cursor_x--;
             break;
-        case 0xe00:
+        case BATTLE_FACING_SOUTH_EAST:
             g_battle_cursor_x++;
             g_battle_cursor_y--;
             break;
-        case 0x200:
+        case BATTLE_FACING_SOUTH_WEST:
             g_battle_cursor_y--;
             g_battle_cursor_x--;
             break;
@@ -111,31 +111,31 @@ s32 battle_target_move_cursor_by_input(void) {
         if (lower->flags.bits.blocked) {
             if (upper->flags.bits.blocked) {
                 switch (direction) {
-                case 0x800:
+                case BATTLE_FACING_NORTH:
                     g_battle_cursor_y--;
                     break;
-                case 0:
+                case BATTLE_FACING_SOUTH:
                     g_battle_cursor_y++;
                     break;
-                case 0x400:
+                case BATTLE_FACING_WEST:
                     g_battle_cursor_x++;
                     break;
-                case 0xc00:
+                case BATTLE_FACING_EAST:
                     g_battle_cursor_x--;
                     break;
-                case 0xa00:
+                case BATTLE_FACING_NORTH_EAST:
                     g_battle_cursor_y--;
                     g_battle_cursor_x--;
                     break;
-                case 0x600:
+                case BATTLE_FACING_NORTH_WEST:
                     g_battle_cursor_y--;
                     g_battle_cursor_x++;
                     break;
-                case 0xe00:
+                case BATTLE_FACING_SOUTH_EAST:
                     g_battle_cursor_x--;
                     g_battle_cursor_y++;
                     break;
-                case 0x200:
+                case BATTLE_FACING_SOUTH_WEST:
                     g_battle_cursor_y++;
                     g_battle_cursor_x++;
                     break;

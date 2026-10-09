@@ -35,11 +35,12 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
         index = (layer / 2) * 256 + tile_index;
         tile = &g_battle_map_tile_data[index];
         if (layer & 1) {
-            if ((frontier[index] & 0xc) != 4) {
+            if ((frontier[index] & (FRONTIER_FLAG_UNIT_ON_TILE | FRONTIER_FLAG_STAND_ON_UNIT))
+                != FRONTIER_FLAG_UNIT_ON_TILE) {
                 continue;
             }
             state->work_height = g_battle_target_panels[index].unit_record_index;
-            if (!(records[state->work_height].unit_id_flags & 0x40)) {
+            if (!(records[state->work_height].unit_id_flags & BATTLE_MOVE_RECORD_FLAG_OTHER_TEAM)) {
                 continue;
             }
             low = records[state->work_height].standing_height;
@@ -49,7 +50,7 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
             }
             high = records[state->work_height].top_height;
         } else {
-            if (frontier[index] & 0x80) {
+            if (frontier[index] & FRONTIER_FLAG_BLOCKED) {
                 if (frontier[index] & FRONTIER_FLAG_UNIT_ON_TILE) {
                     return 1;
                 }

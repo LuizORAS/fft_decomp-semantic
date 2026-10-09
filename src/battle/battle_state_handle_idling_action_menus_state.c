@@ -38,7 +38,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         battle_action_clear_at_list_id();
         battle_action_handle_move_command();
         break;
-    case 0x19:
+    case BATTLE_AI_COMMAND_MOVE_SELF:
         g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         battle_action_clear_at_list_id();
         battle_action_handle_move_command();
@@ -75,12 +75,12 @@ void battle_state_handle_idling_action_menus_state(void) {
             result = battle_target_set_panels_for_action((u8*)&misc->command_state.ai.data.action);
             misc->ability_preview_phase = result;
             switch (result) {
-            case 0:
-            case 1:
-            case 3:
+            case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
+            case BATTLE_TARGET_PANELS_TILE_ONLY:
+            case BATTLE_TARGET_PANELS_NONE:
                 battle_state_enter_action_execution_setup();
                 break;
-            case 2:
+            case BATTLE_TARGET_PANELS_NO_TARGETING:
             default:
                 battle_target_select_tile();
                 break;
@@ -91,29 +91,29 @@ void battle_state_handle_idling_action_menus_state(void) {
     case BATTLE_AI_COMMAND_END_TURN:
         battle_action_choose_wait();
         break;
-    case 0xc:
-    case 0xe:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
         misc->target_select_command = command->kind;
         battle_state_enter_target_select_start();
         break;
-    case 0xd:
-    case 0xf:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY:
         misc->target_select_command = command->kind;
         battle_state_enter_target_display_start();
         break;
-    case 0x10:
-    case 0x11:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_FADING_LIFE:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RETREAT:
         battle_menu_set_next_script_action_menus();
         break;
-    case 7:
+    case BATTLE_AI_COMMAND_NO_MENU_RECORD:
         battle_menu_clear_status_menu_state();
         battle_action_check_between_turn_events();
         break;
-    case 0x12:
+    case BATTLE_AI_COMMAND_REFRESH_CONTROL:
         battle_unit_store_entd_flags_without_control_flag(misc);
         break;
-    case 0xfe:
-    case 0xff:
+    case BATTLE_AI_COMMAND_UNRESOLVED_FE:
+    case BATTLE_AI_COMMAND_UNRESOLVED_FF:
         break;
     }
 }

@@ -8,9 +8,9 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
     s16 state;
     u8 diff;
 
-    if (g_battle_map_gns_load_phase == 0) {
+    if (g_battle_map_gns_load_phase == MAP_GNS_LOAD_PHASE_IDLE) {
         switch (command) {
-        case 0x73:
+        case MAP_LOAD_COMMAND_LOAD_GNS:
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
@@ -19,14 +19,14 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 main_system_handle_malloc_exception(2, 0x3c2);
             }
             battle_map_load_gns_and_move_find_items(map_id & 0xffff);
-            g_battle_map_resource_load_state = 0x74;
+            g_battle_map_resource_load_state = MAP_LOAD_STATE_GNS_FILE;
             g_battle_map_loaded_id = map_id;
-            g_battle_map_gns_load_phase = 0xf;
+            g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_START;
             battle_map_reset_mesh_render_state();
             break;
-        case 0x99:
+        case MAP_LOAD_COMMAND_START_HELD:
             g_battle_map_gns_dispatch_held = 1;
-        case 0x75:
+        case MAP_LOAD_COMMAND_START:
             if (main_file_is_still_loading() != 0) {
                 return 0;
             }
@@ -45,31 +45,31 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 if (battle_map_load_gns_and_move_find_items(map_id & 0xffff) != g_battle_map_gns_records) {
                     return 0;
                 }
-                g_battle_map_resource_load_state = 0x74;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_GNS_FILE;
                 g_battle_map_loaded_id = map_id;
-                g_battle_map_gns_load_phase = 0xf;
+                g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_START;
                 battle_map_reset_mesh_render_state();
             } else {
-                g_battle_map_resource_load_state = 0;
-                g_battle_map_gns_load_phase = 0xf;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
+                g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_START;
             }
             break;
-        case 0x74:
-        case 0x9c:
+        case MAP_LOAD_STATE_GNS_FILE:
+        case MAP_LOAD_COMMAND_POLL_HELD:
             break;
         }
     }
 
-    if (g_battle_map_resource_load_state == 0) {
-        if (g_battle_map_gns_load_phase != 1) {
-            if (g_battle_map_gns_load_phase == 0xf) {
+    if (g_battle_map_resource_load_state == MAP_LOAD_STATE_IDLE) {
+        if (g_battle_map_gns_load_phase != MAP_GNS_LOAD_PHASE_RESOURCES) {
+            if (g_battle_map_gns_load_phase == MAP_GNS_LOAD_PHASE_START) {
                 g_battle_map_gns_record_cursor = 0;
-                g_battle_map_gns_load_phase = 1;
+                g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_RESOURCES;
                 {
                     s32 k;
 
-                    for (k = 0; k < 49; k++) {
-                        g_battle_map_pending_gns_records[k].resource_type = 0;
+                    for (k = 0; k < GNS_RESOURCE_END; k++) {
+                        g_battle_map_pending_gns_records[k].resource_type = GNS_RESOURCE_NONE;
                     }
                 }
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
@@ -156,7 +156,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     }
                 }
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
-                    if (g_battle_map_gns_records[r].resource_type != 0
+                    if (g_battle_map_gns_records[r].resource_type != GNS_RESOURCE_NONE
                         && (g_battle_map_gns_records[r].script_variable_id != EVENT_SCRIPT_VAR_WEATHER_AND_TIME
                             || g_battle_map_gns_records[r].map_state != 0)
                         && (g_battle_map_gns_records[r].script_variable_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
@@ -182,7 +182,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                                     = g_battle_map_gns_records[r];
                             } else {
                                 g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
-                                    .resource_type = 0;
+                                    .resource_type = GNS_RESOURCE_NONE;
                             }
                         }
                     }
@@ -190,78 +190,90 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             }
         } else {
             if (main_file_is_still_loading() == 0) {
-                while ((g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type == 0
-                           && (u32)g_battle_map_gns_record_cursor < 49)
+                while (
+                    (g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type == GNS_RESOURCE_NONE
+                        && (u32)g_battle_map_gns_record_cursor < GNS_RESOURCE_END)
                     || (u32)(g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type - 0x12)
                         < 6) {
                     g_battle_map_gns_record_cursor++;
                 }
-                if ((u32)g_battle_map_gns_record_cursor < 49) {
-                    if (g_battle_map_gns_record_cursor == 0x1b) {
+                if ((u32)g_battle_map_gns_record_cursor < GNS_RESOURCE_END) {
+                    if (g_battle_map_gns_record_cursor == GNS_RESOURCE_TEXTURE_ANIMATIONS) {
                         bzero(g_battle_map_data_load_buffer, 0x280);
                     }
                     battle_map_start_file_load(g_battle_map_file_table,
                         g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].load_info,
                         (s32)g_battle_map_data_load_buffer, g_battle_map_gns_record_cursor);
-                    g_battle_map_resource_load_state = 0x78;
-                } else if (g_battle_map_pending_gns_records[18].resource_type != 0) {
+                    g_battle_map_resource_load_state = MAP_LOAD_STATE_RESOURCE_FILE;
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_UNSUPPORTED_12].resource_type
+                    != GNS_RESOURCE_NONE) {
                     main_system_handle_malloc_exception(2, 0x3cb);
-                    g_battle_map_pending_gns_records[18].resource_type = 0;
-                } else if (g_battle_map_pending_gns_records[19].resource_type != 0) {
-                    g_battle_map_pending_gns_records[19].resource_type = 0;
-                    battle_map_start_file_load(g_battle_map_file_table, g_battle_map_pending_gns_records[19].load_info,
-                        (s32)g_battle_map_data_load_buffer + 0x8000, 0x13);
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_UNSUPPORTED_12].resource_type = GNS_RESOURCE_NONE;
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_0].resource_type
+                    != GNS_RESOURCE_NONE) {
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_0].resource_type = GNS_RESOURCE_NONE;
+                    battle_map_start_file_load(g_battle_map_file_table,
+                        g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_0].load_info,
+                        (s32)g_battle_map_data_load_buffer + 0x8000, GNS_RESOURCE_TEXTURE_QUARTER_0);
                     g_battle_map_texture_quarter_0_pending = 1;
                     g_battle_map_texture_pending = 1;
-                } else if (g_battle_map_pending_gns_records[20].resource_type != 0) {
-                    g_battle_map_pending_gns_records[20].resource_type = 0;
-                    battle_map_start_file_load(g_battle_map_file_table, g_battle_map_pending_gns_records[20].load_info,
-                        (s32)g_battle_map_data_load_buffer + 0x10000, 0x14);
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_1].resource_type
+                    != GNS_RESOURCE_NONE) {
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_1].resource_type = GNS_RESOURCE_NONE;
+                    battle_map_start_file_load(g_battle_map_file_table,
+                        g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_1].load_info,
+                        (s32)g_battle_map_data_load_buffer + 0x10000, GNS_RESOURCE_TEXTURE_QUARTER_1);
                     g_battle_map_texture_quarter_1_pending = 1;
                     g_battle_map_texture_pending = 1;
-                } else if (g_battle_map_pending_gns_records[21].resource_type != 0) {
-                    g_battle_map_pending_gns_records[21].resource_type = 0;
-                    battle_map_start_file_load(g_battle_map_file_table, g_battle_map_pending_gns_records[21].load_info,
-                        (s32)g_battle_map_data_load_buffer + 0x18000, 0x15);
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_2].resource_type
+                    != GNS_RESOURCE_NONE) {
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_2].resource_type = GNS_RESOURCE_NONE;
+                    battle_map_start_file_load(g_battle_map_file_table,
+                        g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_2].load_info,
+                        (s32)g_battle_map_data_load_buffer + 0x18000, GNS_RESOURCE_TEXTURE_QUARTER_2);
                     g_battle_map_texture_quarter_2_pending = 1;
                     g_battle_map_texture_pending = 1;
-                } else if (g_battle_map_pending_gns_records[22].resource_type != 0) {
-                    g_battle_map_pending_gns_records[22].resource_type = 0;
-                    battle_map_start_file_load(g_battle_map_file_table, g_battle_map_pending_gns_records[22].load_info,
-                        (s32)g_battle_map_data_load_buffer + 0x20000, 0x16);
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_3].resource_type
+                    != GNS_RESOURCE_NONE) {
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_3].resource_type = GNS_RESOURCE_NONE;
+                    battle_map_start_file_load(g_battle_map_file_table,
+                        g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE_QUARTER_3].load_info,
+                        (s32)g_battle_map_data_load_buffer + 0x20000, GNS_RESOURCE_TEXTURE_QUARTER_3);
                     g_battle_map_texture_quarter_3_pending = 1;
                     g_battle_map_texture_pending = 1;
-                } else if (g_battle_map_pending_gns_records[23].resource_type != 0) {
-                    g_battle_map_pending_gns_records[23].resource_type = 0;
-                    battle_map_start_file_load(g_battle_map_file_table, g_battle_map_pending_gns_records[23].load_info,
-                        (s32)g_battle_map_data_load_buffer, 0x17);
+                } else if (g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE].resource_type != GNS_RESOURCE_NONE) {
+                    g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE].resource_type = GNS_RESOURCE_NONE;
+                    battle_map_start_file_load(g_battle_map_file_table,
+                        g_battle_map_pending_gns_records[GNS_RESOURCE_TEXTURE].load_info,
+                        (s32)g_battle_map_data_load_buffer, GNS_RESOURCE_TEXTURE);
                     g_battle_map_texture_quarter_0_pending = 1;
                     g_battle_map_texture_quarter_1_pending = 1;
                     g_battle_map_texture_quarter_2_pending = 1;
                     g_battle_map_texture_quarter_3_pending = 1;
                     g_battle_map_texture_pending = 1;
-                    g_battle_map_resource_load_state = 0x92;
+                    g_battle_map_resource_load_state = MAP_LOAD_STATE_APPLY_LIGHTING;
                 } else {
                     for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
-                        if (g_battle_map_gns_records[i].resource_type == 0) {
+                        if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_NONE) {
                             break;
                         }
                     }
                     i++;
                     g_battle_map_gns_record_cursor = (s32)&g_battle_map_gns_records[i];
-                    while (((gns_command_record_prefix_t*)g_battle_map_gns_record_cursor)->resource_type != 0) {
+                    while (((gns_command_record_prefix_t*)g_battle_map_gns_record_cursor)->resource_type
+                        != GNS_RESOURCE_NONE) {
                         battle_process_map_gns_record(2, (gns_command_record_prefix_t*)g_battle_map_gns_record_cursor);
                     }
-                    g_battle_map_gns_load_phase = 0;
-                    g_battle_map_resource_load_state = 0x77;
-                    battle_map_set_weather_texture_overlay(0x8b);
+                    g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_IDLE;
+                    g_battle_map_resource_load_state = MAP_LOAD_STATE_DONE;
+                    battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
                     main_heap_free(g_battle_map_data_load_buffer);
                 }
             }
         }
     } else {
         switch (g_battle_map_resource_load_state) {
-        case 0x74:
+        case MAP_LOAD_STATE_GNS_FILE:
             if (main_file_is_still_loading() == 0) {
                 gns_record_view_t* source;
                 gns_record_view_t* destination;
@@ -269,7 +281,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 i = 0;
                 source = g_battle_map_data_load_buffer;
                 destination = g_battle_map_gns_records;
-                g_battle_map_resource_load_state = 0;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
                 do {
                     *destination = *source;
                     destination++;
@@ -278,12 +290,12 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 } while (i < 150);
             }
             break;
-        case 0x78:
+        case MAP_LOAD_STATE_RESOURCE_FILE:
             if (main_file_is_still_loading() == 0) {
                 if (g_battle_map_gns_dispatch_held != 0) {
-                    return 0x9b;
+                    return MAP_LOAD_RESULT_HELD;
                 }
-                g_battle_map_resource_load_state = 0;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
                 battle_map_dispatch_gns_resource(
                     g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type,
                     (u8*)g_battle_map_data_load_buffer);
@@ -292,25 +304,25 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 g_battle_map_gns_record_cursor++;
             }
             break;
-        case 0x92:
+        case MAP_LOAD_STATE_APPLY_LIGHTING:
             if (main_file_is_still_loading() == 0) {
                 if (g_battle_map_lighting_pending != 0) {
-                    battle_map_dispatch_gns_resource(0x32, g_battle_map_pending_lighting_data);
+                    battle_map_dispatch_gns_resource(GNS_RESOURCE_APPLY_LIGHTING, g_battle_map_pending_lighting_data);
                 }
                 g_battle_map_lighting_pending = 0;
-                g_battle_map_resource_load_state = 0x93;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_APPLY_TEXTURE;
             }
             break;
-        case 0x93:
+        case MAP_LOAD_STATE_APPLY_TEXTURE:
             if (g_battle_map_texture_pending != 0) {
                 battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE, (u8*)g_battle_map_data_load_buffer);
             }
             if (g_battle_map_palette_pending != 0) {
-                battle_map_dispatch_gns_resource(0x33, g_battle_map_pending_palette_data);
+                battle_map_dispatch_gns_resource(GNS_RESOURCE_APPLY_PALETTES, g_battle_map_pending_palette_data);
             }
-            g_battle_map_resource_load_state = 0;
+            g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
             break;
-        case 0x79:
+        case MAP_LOAD_STATE_MESH_RECORDS:
             if (g_battle_map_mesh_data_buffer != (s32)g_battle_gfx_current_render_buffer) {
                 g_battle_map_textured_triangle_render_record_count = 0;
                 g_battle_map_textured_quad_render_record_count = 0;
@@ -328,10 +340,10 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     g_battle_map_untextured_quad_render_record_count
                         += g_battle_map_mesh_parts[i].untextured_quad_count;
                 }
-                g_battle_map_resource_load_state = 0x91;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_MESH_RECORDS_SECOND;
             }
             break;
-        case 0x91:
+        case MAP_LOAD_STATE_MESH_RECORDS_SECOND:
             if (g_battle_map_mesh_data_buffer != (s32)g_battle_gfx_current_render_buffer) {
                 g_battle_map_textured_triangle_render_record_count = 0;
                 g_battle_map_textured_quad_render_record_count = 0;
@@ -350,7 +362,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     g_battle_map_untextured_quad_render_record_count
                         += g_battle_map_mesh_parts[i].untextured_quad_count;
                 }
-                g_battle_map_resource_load_state = 0;
+                g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
             }
             break;
         }

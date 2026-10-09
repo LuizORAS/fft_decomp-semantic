@@ -34,60 +34,61 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             frontier[i] = 0;
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
-                *frontier_cell |= 2;
+                *frontier_cell |= FRONTIER_FLAG_LOW_CORNER;
                 if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) >= 3) {
-                    *frontier_cell |= 0x40;
+                    *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             } else {
                 if (((s8)tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) > config->jump_or_1f) {
-                    *frontier_cell |= 0x40;
+                    *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             }
             if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
                 depth = tile->depth_half_height.value >> 5;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
-                    *frontier_cell |= 0x10;
+                    *frontier_cell |= FRONTIER_FLAG_REACHABLE;
                 }
             }
             tile_flags = tile->flags.value;
             if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
-                *frontier_cell |= 0x80;
+                *frontier_cell |= FRONTIER_FLAG_BLOCKED;
             } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
                 && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
-                *frontier_cell |= 0x10;
+                *frontier_cell |= FRONTIER_FLAG_REACHABLE;
             }
         }
     }
-    if (mode != 3) {
+    if (mode != BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY) {
         for (i = 0; i < 16; i++) {
             record = &records[i];
             flags = record->unit_id_flags;
-            if (flags != 0xff) {
+            if (flags != BATTLE_MOVE_RECORD_NONE) {
                 index = (record->higher_elevation << 8) + record->y * config->map_max_x + record->x;
-                if (g_battle_unit_stats[flags & 0x1f].character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
-                    frontier[index] = (frontier[index] | 0x80) & 0xef;
+                if (g_battle_unit_stats[flags & BATTLE_MOVE_RECORD_UNIT_ID_MASK].character_identity
+                    == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
+                    frontier[index] = (frontier[index] | FRONTIER_FLAG_BLOCKED) & ~FRONTIER_FLAG_REACHABLE;
                 }
                 g_battle_target_panels[index].unit_record_index = i;
                 unit_cell = &frontier[index];
-                *unit_cell |= 4;
-                if (!(flags & 0x40)) {
+                *unit_cell |= FRONTIER_FLAG_UNIT_ON_TILE;
+                if (!(flags & BATTLE_MOVE_RECORD_FLAG_OTHER_TEAM)) {
                     if (!config->stepping_stone) {
                         height = record->stepping_stone << 3;
-                        *unit_cell = (*unit_cell & 0xf7) | height;
+                        *unit_cell = (*unit_cell & ~FRONTIER_FLAG_STAND_ON_UNIT) | height;
                     } else {
-                        *unit_cell &= 0xf7;
+                        *unit_cell &= ~FRONTIER_FLAG_STAND_ON_UNIT;
                     }
-                    if (!(flags & 0x20)) {
+                    if (!(flags & BATTLE_MOVE_RECORD_FLAG_NOT_MOUNTABLE)) {
                         frontier[index] |= FRONTIER_FLAG_VALID_DESTINATION;
                     } else {
-                        frontier[index] &= 0xdf;
+                        frontier[index] &= ~FRONTIER_FLAG_VALID_DESTINATION;
                     }
                 } else {
-                    *unit_cell &= 0xcf;
+                    *unit_cell &= ~(FRONTIER_FLAG_REACHABLE | FRONTIER_FLAG_VALID_DESTINATION);
                     if (!config->move_type) {
-                        *unit_cell |= 8;
+                        *unit_cell |= FRONTIER_FLAG_STAND_ON_UNIT;
                     } else {
-                        *unit_cell &= 0xf7;
+                        *unit_cell &= ~FRONTIER_FLAG_STAND_ON_UNIT;
                     }
                 }
             }
@@ -97,7 +98,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         state->reachable_count = 0;
         index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
     }
-    if (mode == 1) {
+    if (mode == BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD) {
         panel = &g_battle_target_panels[index];
         if (frontier[index] & FRONTIER_FLAG_VALID_DESTINATION) {
             state->outer_count = 0x24;
@@ -110,7 +111,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         state->inner_count = 4;
         panel->remaining_range = config->move + 1;
         panel->max_height_delta = 0;
-        frontier[index] |= 1;
+        frontier[index] |= FRONTIER_FLAG_QUEUED;
         state->frontier_max_remaining_range = config->move + 1;
     }
 }

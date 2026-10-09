@@ -15,42 +15,42 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
 
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->current_path_step;
-    if (unit->step_phase != 0) {
+    if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
         speed = unit->walk_speed.word;
         unit->walk_speed.word = (speed > ONE) ? speed / 4 * 3 : ONE;
         switch (unit->step_phase) {
-        case 2:
-        case 4:
-        case 6:
-        case 8:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
             battle_move_update_unit_step_to_destination_tile_center(unit);
             break;
-        case 1:
-        case 3:
-        case 5:
-        case 7:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH:
+        case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST:
             battle_move_update_walking_step_at_tile_edge(unit);
             break;
-        case 0x14:
-        case 0x18:
-        case 0x1C:
-        case 0x20:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_SOUTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_EAST:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_NORTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_WEST:
             battle_move_update_knockback_after_animation(unit);
             break;
-        case 0x12:
-        case 0x16:
-        case 0x1A:
-        case 0x1E:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST:
             battle_move_update_airborne_ascent_phase(unit);
             /* fallthrough */
-        case 0x13:
-        case 0x17:
-        case 0x1B:
-        case 0x1F:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH:
+        case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST:
             battle_move_finish_unit_step_at_tile_edge(unit);
             break;
         }
-        if (unit->step_phase != 0) {
+        if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
             return;
         }
     }

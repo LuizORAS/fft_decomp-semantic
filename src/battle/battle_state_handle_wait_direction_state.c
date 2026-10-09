@@ -33,7 +33,7 @@ void battle_state_handle_wait_direction_state(void) {
             battle_state_enter_after_command();
         }
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        facing = battle_camera_get_input_direction(1);
+        facing = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
         if (facing != -1 && facing != g_battle_state_wait_direction_facing) {
             main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
             g_battle_state_wait_direction_facing = facing;

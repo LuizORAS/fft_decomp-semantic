@@ -49,8 +49,8 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                 }
                 unit->unit_id = identity;
                 if (is_red_team_debug) {
-                    unit->team_flags = 0x18;
-                    unit->initial_team_flags = 0x18;
+                    unit->team_flags = BATTLE_TEAM_RED | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
+                    unit->initial_team_flags = BATTLE_TEAM_RED | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
                     unit->sprite_palette = 1;
                 }
                 if (g_main_unit_deployed_coords[i].facing_elevation_flags & 0x10) {

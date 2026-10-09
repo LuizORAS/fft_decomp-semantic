@@ -22,42 +22,42 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
     channels = g_battle_map_background_gradient_transition.channels;
     for (i = 0; i < 2; i++) {
         switch (mode) {
-        case 0:
+        case MAP_COLOR_MODE_CURRENT:
             target_red = (red << 16) + channels[i].red;
             target_green = (green << 16) + channels[i].green;
             target_blue = (blue << 16) + channels[i].blue;
             break;
-        case 1:
+        case MAP_COLOR_MODE_CURRENT_HALF:
             target_red = channels[i].red / 2 + (red << 16);
             target_green = channels[i].green / 2 + (green << 16);
             target_blue = channels[i].blue / 2 + (blue << 16);
             break;
-        case 2: {
+        case MAP_COLOR_MODE_CURRENT_GREY: {
             s32 grey = (channels[i].red * 2 + channels[i].green * 3 + channels[i].blue) / 6;
             target_red = grey + (red << 16);
             target_green = grey + (green << 16);
             target_blue = grey + (blue << 16);
             break;
         }
-        case 3: {
+        case MAP_COLOR_MODE_CURRENT_GREY_HALF: {
             s32 grey = (channels[i].red * 2 + channels[i].green * 3 + channels[i].blue) / 12;
             target_red = grey + (red << 16);
             target_green = grey + (green << 16);
             target_blue = grey + (blue << 16);
             break;
         }
-        case 4:
-        case 9:
+        case MAP_COLOR_MODE_BASE:
+        case MAP_COLOR_MODE_BASE_REPEAT:
             target_red = (g_battle_map_background_gradient_transition.colors[i].red + red) << 16;
             target_green = (g_battle_map_background_gradient_transition.colors[i].green + green) << 16;
             target_blue = (g_battle_map_background_gradient_transition.colors[i].blue + blue) << 16;
             break;
-        case 5:
+        case MAP_COLOR_MODE_BASE_HALF:
             target_red = (g_battle_map_background_gradient_transition.colors[i].red << 15) + (red << 16);
             target_green = (g_battle_map_background_gradient_transition.colors[i].green << 15) + (green << 16);
             target_blue = (g_battle_map_background_gradient_transition.colors[i].blue << 15) + (blue << 16);
             break;
-        case 6: {
+        case MAP_COLOR_MODE_BASE_GREY: {
             s32 grey;
 
             base_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
@@ -69,7 +69,7 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
             target_blue = grey + (blue << 16);
             break;
         }
-        case 7: {
+        case MAP_COLOR_MODE_BASE_GREY_HALF: {
             s32 grey;
 
             base_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
@@ -81,13 +81,13 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
             target_blue = grey + (blue << 16);
             break;
         }
-        case 8:
+        case MAP_COLOR_MODE_RESTORE:
             target_red = g_battle_map_background_gradient_transition.colors[i].red << 16;
             target_green = g_battle_map_background_gradient_transition.colors[i].green << 16;
             target_blue = g_battle_map_background_gradient_transition.colors[i].blue << 16;
             break;
-        case 10:
-            g_battle_map_background_gradient_transition.repeat = 0;
+        case MAP_COLOR_MODE_STOP_REPEAT:
+            g_battle_map_background_gradient_transition.repeat = MAP_COLOR_REPEAT_OFF;
             return;
         }
 
@@ -128,8 +128,8 @@ void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s3
         g_battle_map_background_gradient_transition.phase = 0;
         g_battle_map_background_gradient_transition.tick = 0;
         g_battle_map_background_gradient_transition.period = frame_duration;
-        if (mode == 9) {
-            g_battle_map_background_gradient_transition.repeat = 1;
+        if (mode == MAP_COLOR_MODE_BASE_REPEAT) {
+            g_battle_map_background_gradient_transition.repeat = MAP_COLOR_REPEAT_TINTED;
             g_battle_map_background_gradient_transition.repeat_rgb[0] = red;
             g_battle_map_background_gradient_transition.repeat_rgb[1] = green;
             g_battle_map_background_gradient_transition.repeat_rgb[2] = blue;

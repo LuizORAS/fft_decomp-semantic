@@ -11,8 +11,9 @@ void battle_effect_init_palette(s16 index) {
     base = g_battle_effect_data_ptrs[index];
     data = (u8*)base + base->palette;
     g_battle_effect_palette_ptr = data;
-    battle_map_load_palette_data((const u16*)data, 0xC, 0, 1);
-    battle_map_load_palette_data((const u16*)(data + EFFECT_FILE_PALETTE_SECOND_BLOCK_OFFSET), 0xD, 0, 1);
+    battle_map_load_palette_data((const u16*)data, MAP_PALETTE_BANK_EFFECT, 0, 1);
+    battle_map_load_palette_data(
+        (const u16*)(data + EFFECT_FILE_PALETTE_SECOND_BLOCK_OFFSET), MAP_PALETTE_BANK_EFFECT_SECOND, 0, 1);
     raw_size = data[EFFECT_FILE_PALETTE_SIZE_OFFSET] + (data[EFFECT_FILE_PALETTE_SIZE_OFFSET + 1] << 8);
     raw_size = (data[EFFECT_FILE_PALETTE_SIZE_OFFSET + 2] << 16) + raw_size;
     height = raw_size;

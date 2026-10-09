@@ -106,9 +106,9 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
         }
         work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), record_index);
         record->work_slots[byte_offset] = work;
-        abe = entry->texture_page_flags & 4;
+        abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
-        tpage = ((entry->texture_page_flags & 3) << 5) | 0x86;
+        tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (k = 0; k < RIBBON_SLOTS; k++) {
             for (i = 0; i < RIBBON_SEGMENTS; i++) {
                 quad = &work->ribbons[k].quads[0][i];
@@ -465,7 +465,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
             parent.position[0] = slot->trail[index].x << 12;
             parent.position[1] = slot->trail[index].y << 12;
             parent.position[2] = slot->trail[index].z << 12;
-            if (flags & 0xc) {
+            if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, slot->age, entry->child_emitter_mid_life, &parent);
             }
@@ -564,7 +564,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
             }
             AddPrim(ot + depth, quad);
             if (slot->lifetime + RIBBON_SEGMENTS == slot->age) {
-                if (flags & 3) {
+                if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, slot->age, entry->child_emitter_on_death, &parent);
                 }

@@ -38,7 +38,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
             return;
         }
         /* fallthrough */
-    case 0x19:
+    case BATTLE_AI_COMMAND_MOVE_SELF:
         g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         battle_action_handle_move_command();
         return;
@@ -90,12 +90,12 @@ void battle_state_handle_menu_to_targeting_state(void) {
             result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action.unit_id);
             unit->ability_preview_phase = result;
             switch (result) {
-            case 0:
-            case 1:
-            case 3:
+            case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
+            case BATTLE_TARGET_PANELS_TILE_ONLY:
+            case BATTLE_TARGET_PANELS_NONE:
                 battle_state_enter_action_execution_setup();
                 return;
-            case 2:
+            case BATTLE_TARGET_PANELS_NO_TARGETING:
             default:
                 battle_target_select_tile();
                 return;

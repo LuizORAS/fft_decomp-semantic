@@ -83,12 +83,12 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
             records[i].unit_id_flags = empty_flags;
         }
         D_8018F7D8 = 0;
-        battle_move_set_tile_flags_for_pathfinding(3);
+        battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY);
         state->outer_count = 4;
         g_battle_target_panels[g_battle_move_pathing_tile_index].remaining_range = config->move + 1;
         g_battle_target_panels[g_battle_move_pathing_tile_index].max_height_delta = 0;
         state->inner_count = 2;
-        frontier[g_battle_move_pathing_tile_index] |= 1;
+        frontier[g_battle_move_pathing_tile_index] |= FRONTIER_FLAG_QUEUED;
         state->frontier_max_remaining_range = config->move + 1;
         g_battle_move_pathing_resume_pass = 0;
     } else {
@@ -115,8 +115,8 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
                     state->tile_index = state->row_offset + state->tile_x;
                     state->current_tile = &g_battle_map_tile_data[state->tile_index];
                     state->current_panel = &g_battle_target_panels[state->tile_index];
-                    frontier_snapshot[state->tile_index] = frontier[state->tile_index] & 1;
-                    frontier[state->tile_index] &= 0xFE;
+                    frontier_snapshot[state->tile_index] = frontier[state->tile_index] & FRONTIER_FLAG_QUEUED;
+                    frontier[state->tile_index] &= ~FRONTIER_FLAG_QUEUED;
                 }
             }
         }

@@ -13,7 +13,7 @@ void battle_camera_advance_effect_tracks(s16 frame) {
     s32 keyframe;
     s32 k;
 
-    if (g_battle_effect_camera_rotation_mode == 0
+    if (g_battle_effect_camera_rotation_mode == BATTLE_EFFECT_CAMERA_MODE_IDLE
         && battle_camera_find_active_keyframe(frame, 1, &index, &keyframe) != 0) {
         k = index & 0xffff;
         switch (index / 0x10000) {
@@ -34,7 +34,7 @@ void battle_camera_advance_effect_tracks(s16 frame) {
             break;
         }
     }
-    if (g_battle_effect_camera_position_mode == 0
+    if (g_battle_effect_camera_position_mode == BATTLE_EFFECT_CAMERA_MODE_IDLE
         && battle_camera_find_active_keyframe(frame, 2, &index, &keyframe) != 0) {
         k = index & 0xffff;
         switch (index / 0x10000) {
@@ -55,7 +55,8 @@ void battle_camera_advance_effect_tracks(s16 frame) {
             break;
         }
     }
-    if (g_battle_effect_camera_zoom_mode == 0 && battle_camera_find_active_keyframe(frame, 4, &index, &keyframe) != 0) {
+    if (g_battle_effect_camera_zoom_mode == BATTLE_EFFECT_CAMERA_MODE_IDLE
+        && battle_camera_find_active_keyframe(frame, 4, &index, &keyframe) != 0) {
         k = index & 0xffff;
         switch (index / 0x10000) {
         case 0:

@@ -34,14 +34,14 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
     u32 key;
 
     placed = 0;
-    phase_tick = g_battle_between_turn_resume_state == 9;
+    phase_tick = g_battle_between_turn_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
     for (slot = 0; slot < 0x28; slot++) {
         list[slot].unit = 0xff;
         list[slot].flags = 0xff;
         list[slot].sort_key = 0xffff;
     }
 
-    if (mode != 2) {
+    if (mode != BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
         unit = battle_unit_find_active_data_pointer();
         if (unit != 0) {
             battle_action_sort_at_list(unit->misc_unit_id, 0, 0, list);
@@ -68,9 +68,9 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
         }
 
         value = unit->charged_ability_ct;
-        if (value != 0xff && mode != 1) {
+        if (value != 0xff && mode != BATTLE_AT_LIST_MODE_TURNS_ONLY) {
             tick = value + wait;
-            if (value != 0 || unit->has_turn == 0 || mode != 3) {
+            if (value != 0 || unit->has_turn == 0 || mode != BATTLE_AT_LIST_MODE_PREVIEW) {
                 tick += phase_tick;
             }
             placed += battle_action_sort_at_list(slot, 1, (tick << 8) & 0xff00, list);
@@ -89,7 +89,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
             }
         }
 
-        if (mode == 2) {
+        if (mode == BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
             continue;
         }
 

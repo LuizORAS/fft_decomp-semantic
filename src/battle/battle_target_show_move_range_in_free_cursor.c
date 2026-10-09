@@ -11,9 +11,9 @@ void battle_target_show_move_range_in_free_cursor(void) {
     misc = battle_unit_get_casting_misc_data();
     stats = misc->battle_data;
     battle_move_set_reachable_tiles(stats->misc_unit_id, misc->map_x, misc->map_y, misc->map_z);
-    battle_target_set_tile_background_color(1, 1);
+    battle_target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_MOVE, 1);
     prev = g_battle_controller_input;
-    g_battle_controller_input = 2;
+    g_battle_controller_input = BATTLE_CURSOR_INPUT_FREE_CURSOR;
     g_battle_controller_input_copy_12 = prev;
     main_sound_play_sfx(MAIN_SFX_CONFIRM);
 }

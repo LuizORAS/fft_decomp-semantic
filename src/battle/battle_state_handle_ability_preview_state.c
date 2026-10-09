@@ -16,13 +16,13 @@ void battle_state_handle_ability_preview_state(void) {
             battle_action_confirm();
         } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             g_battle_controller_input = g_battle_controller_input_copy_12;
-            battle_target_set_tile_background_color(8, 3);
-            if (unit->ability_preview_phase == 2) {
-                battle_target_set_tile_background_color(0, 3);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_HIDE_TARGETS, 3);
+            if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
+                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
                 battle_menu_open_active_unit_idle_action_menu();
             } else {
-                battle_target_set_tile_background_color(0, 3);
+                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
                 battle_target_set_boxes_red();
             }

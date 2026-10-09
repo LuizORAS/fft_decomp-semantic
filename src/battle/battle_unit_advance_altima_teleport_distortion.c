@@ -27,7 +27,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 2:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, -31, -31, -31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, -31, -31, -31);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }
@@ -52,13 +52,13 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 5:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, 31, 31, 31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, 31, 31, 31);
             unit->distortion_phase++;
         }
         break;
     case 6:
         if (unit->distortion_timer >= 0x21) {
-            battle_gfx_start_misc_unit_palette_modulation(8, 2, unit->unit_id, 0, 0, 0);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 2, unit->unit_id, 0, 0, 0);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }

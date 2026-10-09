@@ -6,9 +6,10 @@
  * battle_move_update_knockback_step at 0x8006db10, with the full 0x3c-entry
  * step-phase table instead of the knockback subset.
  *
- * Phase 0x11/0x15/0x19/0x1d ends a mount ride once the attack animation has
- * run out; phases 0x3b and 0x3c close out the path. When no step is active
- * the path byte count selects the ending: 0xfe dismounts, 0xff dismounts and
+ * The jump-start phases dismount any rider once the jump animation has run
+ * out; the two teleport phases play the teleport. When no step is active the
+ * path count selects what follows: BATTLE_MOVE_PATH_TELEPORT starts the
+ * teleport, BATTLE_MOVE_PATH_TELEPORT_FAILED also clears the pending mount and
  * restarts the AI action, 0 or an exhausted path mounts the pending mount,
  * and otherwise the next path byte starts a step (flag 0x80 and 0x40 of
  * movement_flags pick their own starters, and bit 2 of the step byte picks the
@@ -22,10 +23,10 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->current_path_step;
     switch (unit->step_phase) {
-    case 0x11:
-    case 0x15:
-    case 0x19:
-    case 0x1D:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST:
         if (unit->animation_countdown == 0) {
             unit->step_phase++;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
@@ -33,87 +34,87 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             battle_unit_dismount_rider(unit);
         }
         break;
-    case 0x14:
-    case 0x18:
-    case 0x1C:
-    case 0x20:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_WEST:
         battle_move_update_knockback_after_animation(unit);
         break;
-    case 0x12:
-    case 0x16:
-    case 0x1A:
-    case 0x1E:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST:
         battle_move_update_airborne_ascent_phase(unit);
         /* fallthrough */
-    case 0x13:
-    case 0x17:
-    case 0x1B:
-    case 0x1F:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST:
         battle_move_finish_unit_step_at_tile_edge(unit);
         break;
-    case 0x2D:
-    case 0x31:
-    case 0x35:
-    case 0x39:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST:
         battle_move_update_unit_step_to_destination_tile_entry_edge(unit);
         break;
-    case 2:
-    case 4:
-    case 6:
-    case 8:
-    case 0xA:
-    case 0xC:
-    case 0xE:
-    case 0x10:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
         battle_move_update_unit_step_to_destination_tile_center(unit);
         break;
-    case 0x2C:
-    case 0x30:
-    case 0x34:
-    case 0x38:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST:
         battle_move_update_float_step_to_destination_tile_center(unit);
         break;
-    case 0x23:
-    case 0x25:
-    case 0x27:
-    case 0x29:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST:
         battle_move_update_unit_vertical_step_to_destination_tile_center(unit);
         break;
-    case 1:
-    case 3:
-    case 5:
-    case 7:
-    case 9:
-    case 0xB:
-    case 0xD:
-    case 0xF:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST:
         battle_move_update_walking_step_at_tile_edge(unit);
         break;
-    case 0x2B:
-    case 0x2F:
-    case 0x33:
-    case 0x37:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST:
         battle_move_update_float_step_to_current_tile_exit_edge(unit);
         break;
-    case 0x22:
-    case 0x24:
-    case 0x26:
-    case 0x28:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST:
         battle_move_update_unit_step_to_current_tile_exit_edge(unit);
         break;
-    case 0x3B:
+    case BATTLE_MOVE_STEP_PHASE_TELEPORT_START:
         battle_unit_init_coordinates(unit);
         break;
-    case 0x3C:
+    case BATTLE_MOVE_STEP_PHASE_TELEPORT_ANIMATION:
         battle_move_finalize_path_after_animation(unit);
         break;
     }
-    if (unit->step_phase == 0) {
+    if (unit->step_phase == BATTLE_MOVE_STEP_PHASE_NONE) {
         count = unit->movement_path_count;
-        if (count == 0xFE) {
+        if (count == BATTLE_MOVE_PATH_TELEPORT) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_effect_call_build_secondary_init(unit);
-        } else if (count == 0xFF) {
+        } else if (count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_effect_call_build_secondary_init(unit);
             unit->pending_mount = 0;

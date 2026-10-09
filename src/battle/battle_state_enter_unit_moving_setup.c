@@ -12,7 +12,7 @@ void battle_state_enter_unit_moving_setup(void) {
     src = battle_unit_get_source_misc_data();
     cast = battle_unit_get_casting_misc_data();
 
-    if (cast->pending_mount & 0x80) {
+    if (cast->pending_mount & BATTLE_PENDING_MOUNT_SET) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 1, src->battle_data->misc_unit_id, 0,
             src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         return;

@@ -22,12 +22,12 @@ void battle_state_enter_target_select_denied(void) {
         return;
     }
     kind = unit->target_select_command;
-    if (kind == 0xC) {
+    if (kind == BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->battle_data->misc_unit_id, 0, 1);
         return;
     }
-    if (kind == 0xE) {
+    if (kind == BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->battle_data->misc_unit_id, 0, 1);
     }

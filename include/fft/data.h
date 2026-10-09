@@ -210,6 +210,22 @@ typedef enum ability_data_flags {
     ABILITY_DATA_FLAG_SPELL_QUOTE = 0x40,
 } ability_data_flags_e;
 
+/* Formula ids of abilities, weapons and items: the index of the BATTLE handler that resolves the
+ * action (g_battle_formula_handlers). Only the ids the code tests by number are named, after
+ * their handlers. */
+typedef enum ability_formula {
+    ABILITY_FORMULA_WEAPON_DAMAGE = 0x01, /* also stands in for 0 and for ids past the table */
+    ABILITY_FORMULA_GUN_DAMAGE = 0x03,
+    ABILITY_FORMULA_WEAPON_ABSORB_HP = 0x06,
+    ABILITY_FORMULA_WEAPON_HEAL = 0x07,
+    ABILITY_FORMULA_MULTIHIT_TRUTH_MAGIC = 0x1e,
+    ABILITY_FORMULA_UNFAITH_MAGICAL_DAMAGE = 0x1f,
+    ABILITY_FORMULA_DAMAGE_MA_PLUS_Y_HALF_TIMES_MA = 0x5e,
+    ABILITY_FORMULA_DAMAGE_SP_TIMES_WP = 0x63, /* thrown weapons */
+    ABILITY_FORMULA_DAMAGE_PA_TIMES_WP = 0x64, /* Jump */
+    ABILITY_FORMULA_COUNT = 0x65,
+} ability_formula_e;
+
 /* Default-ability secondary records at 0x8005fbf0.
  * The 14-byte stride/range are used by main_ability_get_range; BATTLE
  * 0x8018b738 reads flags_1, 0x8019e6b8 reads flags_2, and 0x80195c70
@@ -224,7 +240,7 @@ typedef struct ability_secondary_data {
     u8 flags_3;              /* 0x05; ability_secondary_flags_3_e */
     u8 flags_4;              /* 0x06; ability_secondary_flags_4_e */
     u8 element;              /* 0x07 */
-    u8 formula;              /* 0x08 */
+    u8 formula;              /* 0x08; ability_formula_e */
     u8 x;                    /* 0x09; multi-hit formulas take the hit count from it */
     u8 y;                    /* 0x0a */
     u8 status_infliction_id; /* 0x0b; selects the six-byte status record at 0x8019bd78 */
@@ -408,7 +424,7 @@ typedef char item_data_size_must_be_12[(sizeof(item_data_t) == 12) ? 1 : -1];
 typedef struct weapon_data {
     u8 range;      /* 0x00 */
     u8 flags;      /* 0x01; weapon_flag_e */
-    u8 formula;    /* 0x02 */
+    u8 formula;    /* 0x02; ability_formula_e */
     u8 _unused_03; /* 0x03 */
     u8 power;      /* 0x04; copied to battle_stats_t equipment-stat slots 0x3c/0x3d */
     u8 evade;      /* 0x05; copied to battle_stats_t 0x3e/0x3f */

@@ -57,7 +57,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     battle_gfx_load_spritesheet_into_vram_slot(data, slot, unit_id, unit, palette);
     tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
-    battle_map_load_palette_data(g_battle_gfx_shadow_palette, 4, unit_id, 0);
+    battle_map_load_palette_data(g_battle_gfx_shadow_palette, MAP_PALETTE_BANK_UNIT_SHADOWS, unit_id, 0);
     unit->vram_palette_id = GetClut(unit_id << 4, 0x1e3);
     unit->tpage = slot + 0x14;
     if (flags == 0) {
@@ -77,7 +77,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->depth_height_offset = 0;
     unit->float_bob_offset = 0;
     unit->float_bob_phase = 0;
-    unit->step_phase = 0;
+    unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
     unit->movement_path_count = 0;
     unit->sprite_display_flags.half = 0;
     unit->layer_priority = 0;
@@ -141,7 +141,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->item_display = battle_gfx_init_item_sprite_display(unit_id);
     unit->position_copies_active = 0;
     unit->sprite_display_section = (battle_gfx_sprite_display_data_t*)battle_gfx_init_unit_sprite_display(unit_id);
-    sprite->graphic_type = 0;
+    sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_UNIT;
     unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
     unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);
     sprite->wait = 1;
@@ -162,11 +162,11 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         sprite = &unit->sprite_blocks[i];
         sprite->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
         if (i == 0) {
-            sprite->graphic_type = 1;
+            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_WEAPON;
             sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
             sprite->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
         } else {
-            sprite->graphic_type = 2;
+            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_EFFECT;
             sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
             sprite->seq = (u8**)battle_gfx_get_effect_seq_data(id);
         }

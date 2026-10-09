@@ -9,19 +9,19 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
     targeting_panel_entry_t* panel;
 
     switch (dir) {
-    case 0:
+    case BATTLE_TARGET_LINE_EAST:
         dx = 1;
         dy = 0;
         break;
-    case 2:
+    case BATTLE_TARGET_LINE_WEST:
         dx = -1;
         dy = 0;
         break;
-    case 6:
+    case BATTLE_TARGET_LINE_NORTH:
         dx = 0;
         dy = 1;
         break;
-    case 4:
+    case BATTLE_TARGET_LINE_SOUTH:
         dx = 0;
         dy = -1;
         break;

@@ -10,7 +10,7 @@ void battle_move_init_post_movement_display(void) {
     } else {
         g_battle_move_find_result = 0;
     }
-    g_battle_action_post_action_display_phase = 0;
+    g_battle_action_post_action_display_phase = BATTLE_POST_ACTION_DISPLAY_LEVEL_UP;
     battle_move_start_next_post_movement_step();
     if (g_battle_move_find_result != 0) {
         battle_action_clear_at_list_active();

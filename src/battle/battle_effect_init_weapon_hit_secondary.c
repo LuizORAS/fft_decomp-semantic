@@ -3,8 +3,9 @@
 
 /* Start the current effect target's weapon-hit secondary effect.
  *
- * The target's result animation selects animation 7 (hit, critical, guarded),
- * 0x12 (6-7) or 0x14 (5); result 2 keeps the slot's animation. The parameter
+ * The target's hit result selects the WEAPON_HIT animation (hit, critical,
+ * missed, no effect), EQUIP_BREAK (both BREAK results) or GOLEM; REFLECTED
+ * keeps the slot's animation. The parameter
  * is the element effect index for the weapon's element mask. Returns the target ID,
  * or 0 when the init record has no targets. */
 s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondary_init_t* source, s32 unused_is_bow) {
@@ -14,18 +15,18 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
         elements = battle_effect_get_ninja_ball(elements);
         target_id = battle_effect_allocate_secondary_slot();
         switch (source->target[0].fields.result_animation) {
-        case 0:
-        case 1:
-        case 3:
-        case 4:
-            g_battle_effect_secondary_data[target_id].animation_id = 7;
+        case BATTLE_EFFECT_HIT_NORMAL:
+        case BATTLE_EFFECT_HIT_CRITICAL:
+        case BATTLE_EFFECT_HIT_MISSED:
+        case BATTLE_EFFECT_HIT_NO_EFFECT:
+            g_battle_effect_secondary_data[target_id].animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_WEAPON_HIT;
             break;
-        case 6:
-        case 7:
-            g_battle_effect_secondary_data[target_id].animation_id = 0x12;
+        case BATTLE_EFFECT_HIT_BREAK:
+        case BATTLE_EFFECT_HIT_BREAK_ALT:
+            g_battle_effect_secondary_data[target_id].animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK;
             break;
-        case 5:
-            g_battle_effect_secondary_data[target_id].animation_id = 0x14;
+        case BATTLE_EFFECT_HIT_GOLEM:
+            g_battle_effect_secondary_data[target_id].animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM;
             break;
         }
         g_battle_effect_secondary_data[target_id].parameter = elements;

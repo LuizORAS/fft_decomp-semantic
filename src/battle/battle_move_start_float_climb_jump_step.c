@@ -35,29 +35,29 @@ void battle_move_start_float_climb_jump_step(
     apex = ((unit->current_path_step.value & 3) + 1) * 12;
     frames += SquareRoot12(apex * g_battle_move_jump_gravity * 2) / g_battle_move_jump_gravity;
     switch (unit->current_path_step.value >> 6) {
-    case 0:
-        unit->step_phase = 0x31;
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST;
         unit->facing = BATTLE_FACING_EAST;
         unit->velocity.vz = 0;
         unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->current_path_step.value & 3);
         unit->velocity.vx = 0xE000 / frames;
         break;
-    case 1:
-        unit->step_phase = 0x39;
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST;
         unit->facing = BATTLE_FACING_WEST;
         unit->velocity.vz = 0;
         unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->current_path_step.value & 3);
         unit->velocity.vx = -0xE000 / frames;
         break;
-    case 2:
-        unit->step_phase = 0x2D;
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH;
         unit->facing = BATTLE_FACING_SOUTH;
         unit->velocity.vx = 0;
         unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->current_path_step.value & 3);
         unit->velocity.vz = -0xE000 / frames;
         break;
-    case 3:
-        unit->step_phase = 0x35;
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH;
         unit->facing = BATTLE_FACING_NORTH;
         unit->velocity.vx = 0;
         unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->current_path_step.value & 3);

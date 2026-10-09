@@ -13,7 +13,6 @@ typedef struct battle_effect_trap_state {
 extern battle_effect_trap_state_t g_battle_effect_death_poof_states[];
 
 enum {
-    BATTLE_EFFECT_TRAP_GROUP = 4,
     BATTLE_EFFECT_TRAP_SLOT_COUNT = 2,
     BATTLE_EFFECT_TRAP_ANIMATION = 0x7acf,
 };
@@ -59,10 +58,13 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
         s32 i;
         u8 id;
 
-        if (effect->timer >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP_GROUP].spawn_start_frame
-            && effect->timer < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP_GROUP].spawn_end_frame) {
-            for (spawned = 0;
-                spawned < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP_GROUP].spawns_per_frame; spawned++) {
+        if (effect->timer
+                >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF].spawn_start_frame
+            && effect->timer
+                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF].spawn_end_frame) {
+            for (spawned = 0; spawned
+                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF].spawns_per_frame;
+                spawned++) {
                 for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
                     if (state->ids[i] == 0) {
                         break;
@@ -75,8 +77,9 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
                 }
                 slot = &g_battle_effect_slots[state->ids[i]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP_GROUP], &slot->motion);
-                battle_effect_init_trap_animation(BATTLE_EFFECT_TRAP_GROUP, BATTLE_EFFECT_TRAP_ANIMATION, slot);
+                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF], &slot->motion);
+                battle_effect_init_trap_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF, BATTLE_EFFECT_TRAP_ANIMATION, slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP_SLOT_COUNT) {
                     break;
@@ -110,7 +113,8 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
         current->timer = current->timer + 1;
         result = state->finish_timer != 1;
         if (state->count == 0
-            && current->timer > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP_GROUP].spawn_start_frame) {
+            && current->timer
+                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF].spawn_start_frame) {
             state->finish_timer = state->finish_timer + 1;
         }
         break;

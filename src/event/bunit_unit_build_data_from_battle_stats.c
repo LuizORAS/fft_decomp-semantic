@@ -29,7 +29,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         record->team_kind = 2;
     }
-    if (unit->auto_battle_setting != 0) {
+    if (unit->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
         record->team_kind = 3;
     }
     i = battle_action_check_at_list_for_unit_battle_id(unit);

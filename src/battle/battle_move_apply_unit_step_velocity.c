@@ -18,10 +18,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         layer = unit->map_z = unit->movement.bytes.destination_z;
     }
     switch (unit->step_phase) {
-    case 2:
-    case 4:
-    case 6:
-    case 8:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
@@ -30,10 +30,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         }
         break;
-    case 10:
-    case 12:
-    case 14:
-    case 16:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
@@ -50,10 +50,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     ground_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
     move_ground_z = battle_gfx_calculate_screen_z_from_misc_move_data(unit);
     switch (unit->step_phase) {
-    case 1:
-    case 3:
-    case 5:
-    case 7:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if ((-unit->real.vy / 4096) <= -ground_z) {
@@ -68,7 +68,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->step_phase = 0x1A;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
                 }
@@ -76,10 +76,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 9:
-    case 11:
-    case 13:
-    case 15:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if ((-unit->real.vy / 4096) <= -ground_z) {
@@ -97,7 +97,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
-                unit->step_phase = 0x1A;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
                 }
@@ -105,10 +105,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 2:
-    case 4:
-    case 6:
-    case 8:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / 4096 <= -ground_z) {
@@ -124,7 +124,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->step_phase = 0x1B;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
                 }
@@ -132,10 +132,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 10:
-    case 12:
-    case 14:
-    case 16:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / 4096 <= -ground_z) {
@@ -154,7 +154,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
             if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
-                unit->step_phase = 0x1B;
+                unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
                 }
@@ -162,18 +162,18 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 0x12:
-    case 0x13:
-    case 0x16:
-    case 0x17:
-    case 0x1A:
-    case 0x1B:
-    case 0x1E:
-    case 0x1F:
-    case 0x2D:
-    case 0x31:
-    case 0x35:
-    case 0x39:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST:
+    case BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST:
         if (unit->velocity.vy <= 0x7FFF) {
             unit->velocity.vy += g_battle_move_jump_gravity;
         }
@@ -185,10 +185,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 0x2B:
-    case 0x2F:
-    case 0x33:
-    case 0x37:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
@@ -203,10 +203,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 0x2C:
-    case 0x30:
-    case 0x34:
-    case 0x38:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
@@ -225,10 +225,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 0x22:
-    case 0x24:
-    case 0x26:
-    case 0x28:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / 4096 <= -ground_z) {
@@ -239,10 +239,10 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->shadow_dirty |= 1;
         break;
-    case 0x23:
-    case 0x25:
-    case 0x27:
-    case 0x29:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH:
+    case BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;

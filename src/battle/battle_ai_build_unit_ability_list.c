@@ -32,7 +32,7 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
         weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_AFFECTS_HP;
         weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_EVADEABLE;
         weapon->bytes.flags_3 |= BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK;
-        weapon_flags = 0;
+        weapon_flags = BATTLE_AI_WEAPON_FORMULA_NONE;
         if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
             battle_ai_store_weapon_attack_data(
                 weapon, unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], &weapon_flags);
@@ -40,17 +40,17 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
                 weapon, unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON], &weapon_flags);
         }
         switch (weapon_flags) {
-        case 0:
+        case BATTLE_AI_WEAPON_FORMULA_NONE:
             weapon->bytes.range = 1;
             /* Fall through to normal enemy targeting. */
-        case 1:
+        case BATTLE_AI_WEAPON_FORMULA_DAMAGE:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES;
             break;
-        case 2:
+        case BATTLE_AI_WEAPON_FORMULA_ABSORB_HP:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES;
             weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE;
             break;
-        case 4:
+        case BATTLE_AI_WEAPON_FORMULA_HEAL:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES;
             weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE;
             break;

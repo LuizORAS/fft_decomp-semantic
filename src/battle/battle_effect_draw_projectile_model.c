@@ -133,7 +133,7 @@ void battle_effect_draw_projectile_model(
         work = g_battle_effect_current_secondary->allocation;
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
-            if (command.opcode == 0x39) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
                 quad = &work->g4[g_battle_effect_buffer_index][g4_index];
                 quad->r0 = command.colors[0][0];
                 quad->g0 = command.colors[0][1];
@@ -166,7 +166,7 @@ void battle_effect_draw_projectile_model(
                 }
             }
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][g3_index];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];
@@ -204,7 +204,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];
@@ -246,7 +246,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < g4_index;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x37) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
                 tri = &work->gt3[g_battle_effect_buffer_index][gt3_index];
                 tri->tpage = 0x3f;
                 tri->clut = g_battle_effect_current_secondary->own_slot_id + 0x7eff;
@@ -290,7 +290,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];

@@ -35,7 +35,7 @@ void battle_gfx_update_unit_palette_animation(void) {
         } else {
             palette = (u8*)g_battle_deployed_unit_palettes;
         }
-        battle_map_load_palette_data((const u16*)palette, 2, 1, 0);
-        battle_map_load_palette_data((const u16*)(palette + 32), 2, 2, 0);
+        battle_map_load_palette_data((const u16*)palette, MAP_PALETTE_BANK_SPRITES, 1, 0);
+        battle_map_load_palette_data((const u16*)(palette + 32), MAP_PALETTE_BANK_SPRITES, 2, 0);
     }
 }

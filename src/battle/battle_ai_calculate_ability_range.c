@@ -20,7 +20,7 @@ s32 battle_ai_calculate_ability_range(void) {
     battle_ai_move_temp_unit_to_coords(&ai->current_action.coords);
     count = 0;
     if (ai->considered_ability.parameters.bytes.range != 0) {
-        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == 3) {
+        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == BATTLE_TARGET_PANELS_NONE) {
             battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
             return 0;
         }

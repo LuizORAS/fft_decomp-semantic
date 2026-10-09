@@ -6,42 +6,42 @@ void battle_camera_update_map_pan(void) {
 
     if (g_battle_state_game_flow_running != 0) {
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        switch (battle_camera_get_input_direction(0)) {
-        case 0x800:
+        switch (battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_HELD)) {
+        case BATTLE_FACING_NORTH:
             coord = &g_battle_camera_current_real_coords.vz;
             *coord += 0x4000;
             break;
-        case 0:
+        case BATTLE_FACING_SOUTH:
             coord = &g_battle_camera_current_real_coords.vz;
             *coord -= 0x4000;
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             coord = &g_battle_camera_current_real_coords.vx;
             *coord -= 0x4000;
             break;
-        case 0xC00:
+        case BATTLE_FACING_EAST:
             coord = &g_battle_camera_current_real_coords.vx;
             *coord += 0x4000;
             break;
-        case 0xA00: {
+        case BATTLE_FACING_NORTH_EAST: {
             s32* y = &g_battle_camera_current_real_coords.vz;
             *y += 0x4000;
             g_battle_camera_current_real_coords.vx += 0x4000;
             break;
         }
-        case 0x600: {
+        case BATTLE_FACING_NORTH_WEST: {
             s32* y = &g_battle_camera_current_real_coords.vz;
             *y += 0x4000;
             g_battle_camera_current_real_coords.vx -= 0x4000;
             break;
         }
-        case 0xE00: {
+        case BATTLE_FACING_SOUTH_EAST: {
             s32* y = &g_battle_camera_current_real_coords.vz;
             *y -= 0x4000;
             g_battle_camera_current_real_coords.vx += 0x4000;
             break;
         }
-        case 0x200: {
+        case BATTLE_FACING_SOUTH_WEST: {
             s32* y = &g_battle_camera_current_real_coords.vz;
             *y -= 0x4000;
             g_battle_camera_current_real_coords.vx -= 0x4000;

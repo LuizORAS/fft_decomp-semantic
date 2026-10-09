@@ -14,7 +14,7 @@ s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit) {
     switch (phase) {
     case BATTLE_MISC_FADE_OUT_FLASH:
         unit->fade_out_phase = BATTLE_MISC_FADE_OUT_DARKEN;
-        battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, -0x1f, -0x1f, -0x1f);
+        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, -0x1f, -0x1f, -0x1f);
         return 0;
     case BATTLE_MISC_FADE_OUT_DARKEN:
         if (unit->unit_id != g_battle_unit_source_misc_id) {

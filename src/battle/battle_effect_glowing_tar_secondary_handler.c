@@ -31,7 +31,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch ((u32)effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
-        if (effect->target.fields.result_animation == 4) {
+        if (effect->target.fields.result_animation == BATTLE_EFFECT_HIT_NO_EFFECT) {
             return 0;
         }
         if (effect->allocation != 0) {
@@ -55,22 +55,25 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         state = effect->allocation;
-        group = 1;
-        if (effect->target.fields.result_animation == 3) {
-            group = 9;
+        group = BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B;
+        if (effect->target.fields.result_animation == BATTLE_EFFECT_HIT_MISSED) {
+            group = BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B_MISSED;
         }
-        if (group == 1) {
+        if (group == BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B) {
             if (state->frame == 0) {
-                battle_gfx_start_misc_unit_palette_modulation(5, 0, effect->target.fields.target_id, 0x1f, 0x1f, 0x1f);
+                battle_gfx_start_misc_unit_palette_modulation(
+                    MAP_COLOR_MODE_BASE_HALF, 0, effect->target.fields.target_id, 0x1f, 0x1f, 0x1f);
             }
             if (state->frame == group) {
                 battle_gfx_start_misc_unit_palette_modulation(
-                    8, 2, g_battle_effect_current_secondary->target.fields.target_id, 0, 0, 0);
+                    MAP_COLOR_MODE_RESTORE, 2, g_battle_effect_current_secondary->target.fields.target_id, 0, 0, 0);
             }
         }
         if (state->frame < 4) {
             if (state->count_a < 8) {
-                for (i = 0; i < g_battle_effect_trap_particle_configs[0].spawns_per_frame; i++) {
+                for (i = 0; i < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_A]
+                                .spawns_per_frame;
+                    i++) {
                     for (j = 0; j < 8; j++) {
                         if (state->ids_a[j] == 0) {
                             break;
@@ -81,9 +84,11 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
                         break;
                     }
                     slot = &g_battle_effect_slots[state->ids_a[j]];
-                    slot->life
-                        = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[0], &slot->motion);
-                    battle_effect_init_trap_animation(0, g_battle_effect_current_secondary->parameter + 0x7ac0, slot);
+                    slot->life = battle_effect_spawn_particle_motion(
+                        &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_A],
+                        &slot->motion);
+                    battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_A,
+                        g_battle_effect_current_secondary->parameter + 0x7ac0, slot);
                     state->count_a++;
                     if (state->count_a == 8) {
                         break;
@@ -104,7 +109,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
                     slot = &g_battle_effect_slots[state->ids_b[j]];
                     slot->life = battle_effect_spawn_particle_motion(
                         &g_battle_effect_trap_particle_configs[group], &slot->motion);
-                    battle_effect_init_trap_animation(1, 0x7aca, slot);
+                    battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_GLOWING_TAR_B, 0x7aca, slot);
                     slot->red = slot->green = slot->blue = 0xff;
                     state->count_b++;
                     if (state->count_b == 16) {
@@ -140,7 +145,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
         }
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
-        if (g_battle_effect_current_secondary->target.fields.result_animation == 1) {
+        if (g_battle_effect_current_secondary->target.fields.result_animation == BATTLE_EFFECT_HIT_CRITICAL) {
             if (state->frame == 0) {
                 zoom.vx = zoom.vy = zoom.vz = -0x80;
                 battle_camera_execute_zoom_command(0x500, 0, 2, &zoom);

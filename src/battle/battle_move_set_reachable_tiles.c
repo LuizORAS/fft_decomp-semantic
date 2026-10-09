@@ -24,7 +24,7 @@ s32 battle_move_set_reachable_tiles(s32 unit_id, s32 unused_map_x, s32 unused_ma
         return -1;
     }
     battle_move_store_unit_movement_to_scratchpad(unit_id);
-    battle_move_set_tile_flags_for_pathfinding(1);
+    battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD);
     if (config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) {
         u8 remaining_range = 1;
         battle_target_panel_t* fill_panels = g_battle_target_panels;
@@ -45,8 +45,8 @@ s32 battle_move_set_reachable_tiles(s32 unit_id, s32 unused_map_x, s32 unused_ma
                         state->tile_index = state->row_offset + state->tile_x;
                         state->current_tile = &g_battle_map_tile_data[state->tile_index];
                         state->current_panel = &g_battle_target_panels[state->tile_index];
-                        if (frontier[state->tile_index] & 1) {
-                            frontier[state->tile_index] &= 0xfe;
+                        if (frontier[state->tile_index] & FRONTIER_FLAG_QUEUED) {
+                            frontier[state->tile_index] &= ~FRONTIER_FLAG_QUEUED;
                             battle_move_check_and_spread_one_tile_around();
                             if (!config->fly_or_teleport) {
                                 battle_move_spread_horizontal_jump();

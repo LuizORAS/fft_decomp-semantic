@@ -44,7 +44,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
         origin = &ai->current_action.coords;
     battle_ai_move_temp_unit_to_coords(origin);
     if (ai->considered_ability.parameters.bytes.range) {
-        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == 3)
+        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == BATTLE_TARGET_PANELS_NONE)
             return 0;
     } else {
         tile = g_battle_map_tile_data;

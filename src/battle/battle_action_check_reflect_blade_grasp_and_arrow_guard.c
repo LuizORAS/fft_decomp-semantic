@@ -8,7 +8,7 @@ void battle_action_check_reflect_blade_grasp_and_arrow_guard(void) {
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY) {
         return;
     }
-    if (g_battle_action_current_ability.formula == 7) {
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL) {
         return;
     }
     if (battle_action_check_reaction(g_battle_action_target) == 1) {

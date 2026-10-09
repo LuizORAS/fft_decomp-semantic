@@ -65,12 +65,12 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
             battle_heap_free_block(record->work_slots[byte_offset]);
         }
         work = record->work_slots[byte_offset] = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), record_index);
-        if (geometry->texture_page_flags & 4) {
+        if (geometry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             translucent = 0;
         } else {
             translucent = 1;
         }
-        texture_page = ((geometry->texture_page_flags & 3) << 5) | 0x86;
+        texture_page = ((geometry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (row = 0; row < 8; row++) {
             for (column = 0; column < 8; column++) {
                 quad = &work->quads[0][row * 8 + column];
@@ -133,7 +133,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         while (work->scroll_v < 0) {
             work->scroll_v += texture_height << 12;
         }
-        if (geometry->flags & 0x40) {
+        if (geometry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
             red = g_effect_palette_table[row & 0xf].factor[work->frame];
             green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];

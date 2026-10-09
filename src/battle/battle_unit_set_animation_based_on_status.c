@@ -4,7 +4,7 @@
 /*
  * Selects the unit animation from its renderer-side status mirror.
  *
- * Animation indices are spritesheet-local and therefore remain literals.
+ * Animation 0x21 belongs to status bit 0, which has no name.
  */
 void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     s32 animation;
@@ -19,7 +19,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
         if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
             animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
         } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
-            animation = 0x15;
+            animation = BATTLE_UNIT_ANIMATION_TREASURE;
         } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_ANIMATION_SELECTION_MASK) == 0) {
             animation = BATTLE_UNIT_ANIMATION_IDLE_FLYING;
             if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
@@ -70,7 +70,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
                     animation = BATTLE_UNIT_ANIMATION_DEAD;
                 } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_MOUNTED) {
-                    animation = 0x32;
+                    animation = BATTLE_UNIT_ANIMATION_RIDING;
                 } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_CRITICAL)
                     && unit->mount_state != BATTLE_MISC_MOUNT_STATE_MOUNT) {
                     animation = BATTLE_UNIT_ANIMATION_SLEEP;
@@ -119,19 +119,19 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
             if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
                 animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
             } else if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_TREASURE) {
-                animation = 0x15;
+                animation = BATTLE_UNIT_ANIMATION_TREASURE;
             }
         } else if ((unit->status_flags_1_4 & BATTLE_MISC_STATUS_ANIMATION_SELECTION_MASK) != 0) {
             if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 animation = BATTLE_UNIT_ANIMATION_DEAD;
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_MOUNTED) {
-                animation = 0x32;
+                animation = BATTLE_UNIT_ANIMATION_RIDING;
             } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_HASTE) {
-                animation = 0xa;
+                animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE_HASTE;
             } else {
                 animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE;
                 if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_SLOW) {
-                    animation = 0xb;
+                    animation = BATTLE_UNIT_ANIMATION_FLOAT_IDLE_SLOW;
                 }
             }
         } else {

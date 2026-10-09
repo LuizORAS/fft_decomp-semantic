@@ -36,8 +36,8 @@ void battle_map_reset_mesh_render_state(void) {
         bzero(g_battle_map_loaded_gns_records[i].load_info, 14);
         bzero(&g_battle_map_pending_gns_records[i].resource_type, 14);
     }
-    battle_map_set_weather_texture_overlay(0x54);
-    g_battle_map_lightning_mode = 0;
+    battle_map_set_weather_texture_overlay(MAP_WEATHER_COMMAND_CLEAR);
+    g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
     weather_flags = &g_battle_map_weather_flags;
     *weather_flags &= 0x7d;
     SetDrawMode(&g_battle_render_buffers[0].overlay_modes[1], 0, 1, 0, 0);
@@ -48,10 +48,12 @@ void battle_map_reset_mesh_render_state(void) {
     g_battle_map_ambient_polygon_color[1] = 0x80;
     g_battle_map_ambient_polygon_color[2] = 0x80;
     for (i = 0; i < 360; i++) {
-        g_battle_map_textured_triangle_positions[i].polygon_flags = -0x7fff;
+        g_battle_map_textured_triangle_positions[i].polygon_flags
+            = (s16)(MAP_POLYGON_FLAG_OWN_COLOUR | MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE);
     }
     for (i = 0; i < 710; i++) {
-        g_battle_map_textured_quad_positions[i].polygon_flags = -0x7fff;
+        g_battle_map_textured_quad_positions[i].polygon_flags
+            = (s16)(MAP_POLYGON_FLAG_OWN_COLOUR | MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE);
     }
     for (i = 0; i < 64; i++) {
         g_battle_map_untextured_triangle_positions[i].polygon_flags = 0;
@@ -60,7 +62,7 @@ void battle_map_reset_mesh_render_state(void) {
         g_battle_map_untextured_quad_positions[i].polygon_flags = 0;
     }
     for (i = 0; i < 32; i++) {
-        g_battle_map_texture_animations[i].mode = 0;
+        g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         g_battle_map_texture_animations[i].active = 0;
     }
     for (i = 0; i < 360; i++) {

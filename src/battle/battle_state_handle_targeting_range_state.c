@@ -15,7 +15,7 @@ void battle_state_handle_targeting_range_state(void) {
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
         if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
-            battle_target_set_tile_background_color(0, 2);
+            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 2);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }

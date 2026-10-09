@@ -11,7 +11,7 @@ void battle_state_handle_target_display_start_state(void) {
         g_battle_action_post_action = 1;
     }
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
-        if (g_battle_camera_rotation_action == 0) {
+        if (g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
             if (g_battle_action_post_action != 0) {
                 battle_state_enter_target_display();
             }

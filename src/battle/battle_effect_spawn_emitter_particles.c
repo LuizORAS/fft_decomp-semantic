@@ -445,10 +445,10 @@ s32 battle_effect_spawn_emitter_particles(
         particle->colour_curve_index[0] = colour_r;
         particle->colour_curve_index[1] = colour_g;
         particle->colour_curve_index[2] = colour_b;
-        if (flags & 3) {
+        if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
             particle->child_emitter_on_death = entry->child_emitter_on_death;
         }
-        if (flags & 0xc) {
+        if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
             particle->child_emitter_mid_life = entry->child_emitter_mid_life;
         }
         particle = particle->next;

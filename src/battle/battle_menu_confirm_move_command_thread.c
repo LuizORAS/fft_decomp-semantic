@@ -9,7 +9,9 @@ void battle_menu_confirm_move_command_thread(void) {
     id = battle_thread_get_current_parameter_1();
     stored_actions = &g_battle_menu_confirm_stored_unit_row_actions;
     *stored_actions = -2;
-    if (battle_unit_get_attacker_data_pointer()->status_sets.current[4] & 8) {
+    if (battle_unit_get_attacker_data_pointer()
+            ->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE)) {
         *stored_actions = -1;
         battle_sound_set_effect_to_invalid();
         battle_menu_icon_linked_entry_thread();
