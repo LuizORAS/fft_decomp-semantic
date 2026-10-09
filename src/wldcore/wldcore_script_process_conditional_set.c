@@ -6,12 +6,9 @@
  * and returns 1 for the first script that both succeeded (result bit 0x01) and
  * carries one of the caller's requested action flags.
  *
- * The block at 0x800d4644 is addressed as one record rather than as four
- * separate externs: target/wldcore.yaml names three of its members
- * independently -- g_wldcore_script_flags (+0x00), g_wldcore_script_data_ptr
- * (+0x08) and g_wldcore_script_ip (+0x0c) -- and the target materialises the
- * +0x04 address once and reaches +0x08 and +0x0c as `addiu` displacements off
- * it, which only the record view reproduces.
+ * The block at 0x800d4644 is addressed as one record: the target materialises
+ * the +0x04 address once and reaches data (+0x08) and ip (+0x0c) as `addiu`
+ * displacements off it, which only the record view reproduces.
  *
  * Two operand-order devices:
  *

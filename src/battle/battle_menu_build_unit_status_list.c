@@ -22,7 +22,7 @@ void battle_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = &g_battle_menu_billboard_data[7];
+        flag_a = &g_battle_menu_billboard_data.state.generic_monster;
         flag_b = &g_battle_menu_active_turn_banner.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_battle_menu_status_list_row_actions[i] = 0x7D0;

@@ -35,13 +35,13 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_menu_result = 0;
             g_main_system_flags ^= 4;
             wldcore_capture_state_and_play_time();
-            g_wldcore_screen_fade_box_0_priority = 0xF;
-            g_wldcore_screen_fade_box_1_flags = 0;
+            fade = &g_wldcore_screen_fade_state;
+            g_wldcore_screen_fade_state.priorities[0] = 0xF;
+            g_wldcore_screen_fade_state.flags[1] = 0;
             g_wldcore_window_record_count -= 3;
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 5;
             g_wldcore_menu_stack_depth--;
-            fade = &g_wldcore_screen_fade_state;
             fade->flags[0] = (fade->flags[0] & ~8) | 2;
             main_sound_stop_weather_sfx_music();
             main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);

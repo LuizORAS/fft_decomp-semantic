@@ -34,7 +34,7 @@ s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z) {
     tile_pos[1] = coords[2] / 28;
     tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], (u8)map_z);
     base = -(tile->height * 12);
-    half = tile->depth_half_height & 0x1f;
+    half = tile->depth_half_height.value & 0x1f;
     result = base;
     if (half != 0) {
         switch (tile->slope_type) {

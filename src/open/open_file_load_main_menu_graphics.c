@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void open_file_load_main_menu_graphics(void) {
-    main_file_load_descriptor_t* header = &g_open_file_header;
+    main_file_load_descriptor_t* header = &g_main_file_cd_state;
 
     open_file_wait_then_build_header(header, 0x1505d, 0x11, g_open_file_destination);
     open_file_wait_for_pending();

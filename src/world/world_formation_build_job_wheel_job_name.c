@@ -13,7 +13,7 @@ void world_formation_build_job_wheel_job_name(void) {
         font = g_world_text_section_pointers[27];
         g_world_job_wheel_name_text = 0x1B;
     } else {
-        font = g_world_text_job_names;
+        font = g_world_text_section_pointers[WORLD_TEXT_SECTION_JOB_NAMES];
         g_world_job_wheel_name_text = g_world_job_wheel_jobs[g_world_job_wheel_cursor_index];
     }
     name = &g_world_job_wheel_name_text;

@@ -6,7 +6,7 @@
  * level's two windows and render record, pops the stack and marks the render
  * record 0x100 before wldcore_list_open_rumors redraws. */
 void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_t* level) {
-    s32* index = &g_wldcore_scroll_text_render_record_index;
+    s32* index = &g_wldcore_scrollable_text_window.render_record_index;
 
     if (g_wldcore_window_render_records[*index].flags & 0x100) {
         return;

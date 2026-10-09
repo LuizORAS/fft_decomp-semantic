@@ -271,7 +271,7 @@ restart_event:
             world_thread_yield();
             if (world_script_check_tutorial_event_slot() != 0) {
                 world_gfx_ramp_screen_overlay_intensity_to_max();
-                g_main_game_options.value = g_world_saved_game_options;
+                g_main_game_options = g_world_saved_game_options;
                 world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
@@ -336,7 +336,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D8) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D9) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_DC) {
-            *(s16*)&g_world_text_substitution_values[0x2f] = 0xD;
+            D_80153294 = 0xD;
         }
         /* ---- Dialogue and portraits ---- */
         else if (opcode == EVENT_OPCODE_DISPLAY_MESSAGE) {

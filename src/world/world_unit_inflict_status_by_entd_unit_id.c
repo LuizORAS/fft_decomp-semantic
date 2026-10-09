@@ -30,7 +30,7 @@ void world_unit_inflict_status_by_entd_unit_id(
         } else {
             unit->action.status_removal[status_byte_index] = status_mask;
         }
-        g_world_thread_inner_subroutine_callback = resolve_unit_status_changes;
+        g_world_thread_call_target = resolve_unit_status_changes;
         world_thread_call_on_main_stack(battle_unit_index, less_strict_removal);
     }
 }

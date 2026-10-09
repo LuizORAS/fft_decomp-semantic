@@ -50,9 +50,10 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[0].affected_units,
             &state->track_keyframe[0][0], &state->track_remaining[0][0]);
-        if (g_battle_effect_targets[16].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[0].caster,
-                &state->track_keyframe[1][0], &state->track_remaining[1][0], g_battle_effect_targets[16].id.misc_id);
+                &state->track_keyframe[1][0], &state->track_remaining[1][0],
+                g_battle_effect_coord_data.targets[16].id.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[0].target,
             &state->track_keyframe[2][0], &state->track_remaining[2][0]);
@@ -79,9 +80,10 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[1].affected_units,
             &state->track_keyframe[0][1], &state->track_remaining[0][1]);
-        if (g_battle_effect_targets[16].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[1].caster,
-                &state->track_keyframe[1][1], &state->track_remaining[1][1], g_battle_effect_targets[16].id.misc_id);
+                &state->track_keyframe[1][1], &state->track_remaining[1][1],
+                g_battle_effect_coord_data.targets[16].id.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[1].target,
             &state->track_keyframe[2][1], &state->track_remaining[2][1]);

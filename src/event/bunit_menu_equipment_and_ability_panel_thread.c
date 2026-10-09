@@ -82,7 +82,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_bunit_character_status_equipment_text_image, 0xc80);
-            g_menu_inner_window_width = 0x50;
+            g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
@@ -94,7 +94,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             LoadImage(
                 &g_bunit_character_status_equipment_text_rect, (u32*)g_bunit_character_status_equipment_text_image);
             battle_clear_menu_render_buffer(g_bunit_character_status_ability_text_image, 0xc80);
-            g_menu_inner_window_width = 0x50;
+            g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + 0xb000;

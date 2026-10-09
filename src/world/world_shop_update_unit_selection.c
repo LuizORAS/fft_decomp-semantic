@@ -8,9 +8,9 @@
  *
  * On a change, the previous unit's display snapshot is kept for the slide
  * (g_world_comparison_unit_stat_summary/g_world_comparison_unit_identity, the second slot after
- * world_formation_stage_selected_unit's copies) and g_world_formation_panel_windows records the direction: 1 for
- * 0x2000/0x8 input or a forward move, 2 otherwise. g_world_formation_banner_slide_step counts the 16-frame banner slide
- * in either direction, driving the banner y positions in
+ * world_formation_stage_selected_unit's copies) and g_world_status_display_thread_params.redraw_request records the
+ * direction: 1 for 0x2000/0x8 input or a forward move, 2 otherwise. g_world_formation_banner_slide_step counts the
+ * 16-frame banner slide in either direction, driving the banner y positions in
  * g_world_status_display_thread_params.y/g_world_comparison_display_thread_params.y. Compiled at -O1; the flag update
  * goes through a pointer so each branch materialises the address like the target.
  */
@@ -52,11 +52,12 @@ void world_shop_update_unit_selection(void) {
             world_formation_stage_selected_unit();
         }
         if ((g_world_input_primary_repeat & PSX_PAD_RIGHT) || (g_world_input_secondary_repeat & PSX_PAD_R1)) {
-            g_world_formation_panel_windows[0].enabled = 1;
+            g_world_status_display_thread_params.redraw_request = 1;
         } else if ((g_world_input_primary_repeat & PSX_PAD_LEFT) || (g_world_input_secondary_repeat & PSX_PAD_L1)) {
-            g_world_formation_panel_windows[0].enabled = 2;
+            g_world_status_display_thread_params.redraw_request = 2;
         } else {
-            g_world_formation_panel_windows[0].enabled = previous < g_world_formation_selected_unit_index ? 1 : 2;
+            g_world_status_display_thread_params.redraw_request
+                = previous < g_world_formation_selected_unit_index ? 1 : 2;
         }
     } else {
         if (g_world_formation_scroll_enabled_latch != g_world_formation_scroll_enabled

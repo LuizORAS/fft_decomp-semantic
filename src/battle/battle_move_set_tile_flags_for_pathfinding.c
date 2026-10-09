@@ -35,16 +35,16 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
                 *frontier_cell |= 2;
-                if (((s8)tile->depth_half_height & 0x1f) >= 3) {
+                if (((s8)tile->depth_half_height.value & 0x1f) >= 3) {
                     *frontier_cell |= 0x40;
                 }
             } else {
-                if (((s8)tile->depth_half_height & 0x1f) > config->jump_or_1f) {
+                if (((s8)tile->depth_half_height.value & 0x1f) > config->jump_or_1f) {
                     *frontier_cell |= 0x40;
                 }
             }
             if ((tile->flags_06.bits.blocked | tile->flags_06.bits.untargetable) == 0) {
-                depth = tile->depth_half_height >> 5;
+                depth = tile->depth_half_height.value >> 5;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
                     *frontier_cell |= 0x10;
                 }

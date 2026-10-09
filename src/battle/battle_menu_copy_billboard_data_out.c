@@ -6,6 +6,6 @@
 void battle_menu_copy_billboard_data_out(void* banner, void* unit, void* billboard, void* cursor_tile) {
     battle_copy_bytes(banner, &g_battle_menu_active_turn_banner, sizeof(g_battle_menu_active_turn_banner));
     battle_copy_bytes(unit, &g_battle_active_turn_unit, sizeof(g_battle_active_turn_unit));
-    battle_copy_bytes(billboard, g_battle_menu_billboard_data, sizeof(g_battle_menu_billboard_data));
+    battle_copy_bytes(billboard, &g_battle_menu_billboard_data, sizeof(g_battle_menu_billboard_data));
     battle_copy_bytes(cursor_tile, &g_battle_map_selected_tile_data, sizeof(g_battle_map_selected_tile_data));
 }

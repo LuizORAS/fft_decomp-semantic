@@ -22,7 +22,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         }
         step++;
         battle_map_load_palette_data(g_battle_map_weather_particle_palette, 2, 0, 0);
-        g_main_gfx_unit_graphics_load_count = 0;
+        g_main_gfx_unit_graphics_load_queue.count = 0;
         break;
     case 1:
         step++;

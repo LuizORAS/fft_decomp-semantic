@@ -8,7 +8,7 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     s32 i;
     s32 offset;
 
-    g_battle_misc_unit_list_head = 0;
+    g_battle_unit_misc_list_head = 0;
     for (offset = 15 * 0x440; offset >= 0; offset -= 0x440) {
         *(s32*)&((u8*)g_battle_unit_misc_slot_flags)[offset] = 0;
     }

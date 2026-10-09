@@ -2,5 +2,5 @@
 #include "psx/types.h"
 
 s32 equip_menu_get_preview_mp_bonus(s32 unused_row) {
-    return g_equip_selected_unit_mp_bonus;
+    return g_equip_selected_unit_stat_summary.mp_bonus;
 }

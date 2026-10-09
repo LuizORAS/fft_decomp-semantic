@@ -6,7 +6,7 @@
 s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     map_tile_t* tile;
 
-    tile = &g_battle_map_tile_data[(layer << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(layer << 8) + y * g_battle_map_max_x + x];
     switch (field) {
     case MAP_TILE_DATA_SURFACE_TYPE:
         return tile->surface.value & MAP_SURFACE_MASK;
@@ -15,9 +15,9 @@ s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     case MAP_TILE_DATA_HEIGHT:
         return tile->height;
     case MAP_TILE_DATA_HALF_HEIGHT:
-        return tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;
+        return tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
     case MAP_TILE_DATA_DEPTH:
-        return tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT;
+        return tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
     case MAP_TILE_DATA_SLOPE_TYPE:
         return tile->slope_type;
     case MAP_TILE_DATA_CEILING_DEPTH:

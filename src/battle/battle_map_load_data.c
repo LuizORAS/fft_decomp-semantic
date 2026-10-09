@@ -1,11 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* g_battle_map_gns_records viewed with the loader's halfword-aligned type,
- * bound separately: a cast of the canonical array copies each record through
- * a stack temporary. */
-extern gns_record_view_t g_battle_map_gns_records_view[150];
-
 s32 battle_map_load_data(s32 map_id, s32 command) {
     s32 i;
     s32 r;
@@ -77,20 +72,20 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         g_battle_map_pending_gns_records[k].resource_type = 0;
                     }
                 }
-                for (r = 0; g_battle_map_gns_records_view[r].resource_type < 0x80; r++) {
-                    if (g_battle_map_gns_records_view[r].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
-                        state = battle_script_get_variable(g_battle_map_gns_records_view[r].script_variable_id) & 0xfff;
+                for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
+                    if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
+                        state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
                         if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records_view[r].map_state_comparison,
-                                g_battle_map_gns_records_view[r].map_state, state)) {
+                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
+                                state)) {
                             /* No braces: a braced body's block note lengthens this loop by one
                              * luid, and loop.c then hoists the 0x48 out of the record loop. */
                             j = 0;
                             do
-                                g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                    .load_info[j] = 0x48;
+                                g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type].load_info[j]
+                                    = 0x48;
                             while (++j < 14);
                         }
                         {
@@ -98,29 +93,29 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
 
                             diff = 0;
                             for (k = 0; k < 14; k++) {
-                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r].resource_type]
+                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type]
                                             .load_info[k]
-                                    ^ g_battle_map_gns_records_view[r].load_info[k];
+                                    ^ g_battle_map_gns_records[r].load_info[k];
                             }
                         }
                         if (diff) {
-                            g_battle_map_pending_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                = g_battle_map_gns_records_view[r];
+                            g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
+                                = g_battle_map_gns_records[r];
                         }
                     }
                 }
-                for (r = 0; g_battle_map_gns_records_view[r].resource_type < 0x80; r++) {
-                    if (g_battle_map_gns_records_view[r].resource_type == GNS_RESOURCE_MESH_OVERRIDE) {
-                        state = battle_script_get_variable(g_battle_map_gns_records_view[r].script_variable_id) & 0xfff;
+                for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
+                    if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_MESH_OVERRIDE) {
+                        state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
                         if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records_view[r].map_state_comparison,
-                                g_battle_map_gns_records_view[r].map_state, state)) {
+                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
+                                state)) {
                             j = 0;
                             do
-                                g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                    .load_info[j] = 0x48;
+                                g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type].load_info[j]
+                                    = 0x48;
                             while (++j < 14);
                         }
                         {
@@ -128,66 +123,65 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
 
                             diff = 0;
                             for (k = 0; k < 14; k++) {
-                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r].resource_type]
+                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type]
                                             .load_info[k]
-                                    ^ g_battle_map_gns_records_view[r].load_info[k];
+                                    ^ g_battle_map_gns_records[r].load_info[k];
                             }
                         }
                         if (diff) {
-                            g_battle_map_pending_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                = g_battle_map_gns_records_view[r];
+                            g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
+                                = g_battle_map_gns_records[r];
                         }
                     }
                 }
-                for (r = 0; g_battle_map_gns_records_view[r].resource_type < 0x80; r++) {
-                    if (g_battle_map_gns_records_view[r].resource_type == GNS_RESOURCE_TEXTURE
-                        && (g_battle_map_gns_records_view[r].script_variable_id == EVENT_SCRIPT_VAR_WEATHER_AND_TIME
-                            || g_battle_map_gns_records_view[r].script_variable_id == EVENT_SCRIPT_VAR_MAP_ARRANGEMENT)
-                        && g_battle_map_gns_records_view[r].map_state == 0) {
+                for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
+                    if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_TEXTURE
+                        && (g_battle_map_gns_records[r].script_variable_id == EVENT_SCRIPT_VAR_WEATHER_AND_TIME
+                            || g_battle_map_gns_records[r].script_variable_id == EVENT_SCRIPT_VAR_MAP_ARRANGEMENT)
+                        && g_battle_map_gns_records[r].map_state == 0) {
                         {
                             s32 k;
 
                             diff = 0;
                             for (k = 0; k < 14; k++) {
-                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r].resource_type]
+                                diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type]
                                             .load_info[k]
-                                    ^ g_battle_map_gns_records_view[r].load_info[k];
+                                    ^ g_battle_map_gns_records[r].load_info[k];
                             }
                         }
                         if (diff) {
-                            g_battle_map_pending_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                = g_battle_map_gns_records_view[r];
+                            g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
+                                = g_battle_map_gns_records[r];
                         }
                     }
                 }
-                for (r = 0; g_battle_map_gns_records_view[r].resource_type < 0x80; r++) {
-                    if (g_battle_map_gns_records_view[r].resource_type != 0
-                        && (g_battle_map_gns_records_view[r].script_variable_id != EVENT_SCRIPT_VAR_WEATHER_AND_TIME
-                            || g_battle_map_gns_records_view[r].map_state != 0)
-                        && (g_battle_map_gns_records_view[r].script_variable_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
-                            || g_battle_map_gns_records_view[r].map_state != 0)) {
-                        state = battle_script_get_variable(g_battle_map_gns_records_view[r].script_variable_id) & 0xfff;
+                for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
+                    if (g_battle_map_gns_records[r].resource_type != 0
+                        && (g_battle_map_gns_records[r].script_variable_id != EVENT_SCRIPT_VAR_WEATHER_AND_TIME
+                            || g_battle_map_gns_records[r].map_state != 0)
+                        && (g_battle_map_gns_records[r].script_variable_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
+                            || g_battle_map_gns_records[r].map_state != 0)) {
+                        state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                         state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
                         if ((s16)battle_map_is_gns_record_matching_state(
-                                g_battle_map_gns_records_view[r].map_state_comparison,
-                                g_battle_map_gns_records_view[r].map_state, state)) {
+                                g_battle_map_gns_records[r].map_state_comparison, g_battle_map_gns_records[r].map_state,
+                                state)) {
                             {
                                 s32 k;
 
                                 diff = 0;
                                 for (k = 0; k < 14; k++) {
-                                    diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records_view[r]
-                                                                                .resource_type]
+                                    diff |= g_battle_map_loaded_gns_records[g_battle_map_gns_records[r].resource_type]
                                                 .load_info[k]
-                                        ^ g_battle_map_gns_records_view[r].load_info[k];
+                                        ^ g_battle_map_gns_records[r].load_info[k];
                                 }
                             }
                             if (diff) {
-                                g_battle_map_pending_gns_records[g_battle_map_gns_records_view[r].resource_type]
-                                    = g_battle_map_gns_records_view[r];
+                                g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
+                                    = g_battle_map_gns_records[r];
                             } else {
-                                g_battle_map_pending_gns_records[g_battle_map_gns_records_view[r].resource_type]
+                                g_battle_map_pending_gns_records[g_battle_map_gns_records[r].resource_type]
                                     .resource_type = 0;
                             }
                         }
@@ -248,8 +242,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     g_battle_map_texture_pending = 1;
                     g_battle_map_resource_load_state = 0x92;
                 } else {
-                    for (i = 0; g_battle_map_gns_records_view[i].resource_type < 0x80; i++) {
-                        if (g_battle_map_gns_records_view[i].resource_type == 0) {
+                    for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
+                        if (g_battle_map_gns_records[i].resource_type == 0) {
                             break;
                         }
                     }
@@ -274,7 +268,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
 
                 i = 0;
                 source = g_battle_map_data_load_buffer;
-                destination = g_battle_map_gns_records_view;
+                destination = g_battle_map_gns_records;
                 g_battle_map_resource_load_state = 0;
                 do {
                     *destination = *source;

@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-/* Non-const view of g_battle_action_display_image_rects: the header's const
- * lets GCC move these loads and changes the schedule. */
-extern battle_action_display_image_rect_t g_battle_action_display_image_rects_view[];
-
 /* Builds the next ordinary damage, healing, stat, status, or result display.
  *
  * EXP/JP and the three failure messages above bit 0x01000000 are handled by
@@ -324,9 +320,9 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     case BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED:
     case BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED:
         result = status;
-        battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, g_battle_action_display_image_rects_view[result].u,
-            g_battle_action_display_image_rects_view[result].v, g_battle_action_display_image_rects_view[result].width,
-            (g_battle_action_display_image_rects_view + result)->height, 0);
+        battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, g_battle_action_display_image_rects[result].u,
+            g_battle_action_display_image_rects[result].v, g_battle_action_display_image_rects[result].width,
+            (g_battle_action_display_image_rects + result)->height, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN:
         battle_gfx_store_sprite_display_data(display_1, 0, -7, 16, 0xb0, 0x30, 8, 16, 0);

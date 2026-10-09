@@ -397,7 +397,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 env_a[6].format = 2;
             }
             battle_clear_menu_render_buffer(render_a, 0x700);
-            win = &g_menu_inner_window_width;
+            win = &g_menu_text_state.stride;
             origin = win - 2;
             *win = 0x38;
             battle_menu_draw_numeric_display_entries((s32)render_a, env_a, (struct menu_number_position*)origin, 6);

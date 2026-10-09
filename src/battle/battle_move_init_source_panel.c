@@ -47,8 +47,8 @@ s32 battle_move_init_source_panel(s32 direction) {
             (s16)state->tile_x, (s16)state->tile_y, state->source_side_shift, state->source_exit_height);
         if (state->source_side_height_delta >= 0 && (frontier[state->tile_index] & 0x40))
             return 3;
-        if ((state->current_tile->depth_half_height & MAP_TILE_DEPTH_MASK) && (config->movement_set_3 & 0xc0)) {
-            state->source_exit_height += (state->current_tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 2;
+        if ((state->current_tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) && (config->movement_set_3 & 0xc0)) {
+            state->source_exit_height += (state->current_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
             if (config->movement_set_3 & 0x40)
                 state->source_exit_height -= 2;
         }

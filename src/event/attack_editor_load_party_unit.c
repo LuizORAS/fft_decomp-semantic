@@ -2,7 +2,7 @@
 
 #include "psx/types.h"
 
-/* g_attack_panel_selected_billboard.team_state. Accessed through the struct, GCC keeps its address in
+/* gauges->team_kind. Accessed through the struct, GCC keeps its address in
  * a register across the three stores (1276 vs 1280 bytes); the target
  * addresses it as a standalone halfword. */
 
@@ -23,23 +23,25 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     u8 field_value;
     u16 maximum_hp;
     u16 maximum_mp;
+    battle_unit_status_record_t* gauges;
 
     main_unit_init_job_data(&g_attack_editor_party_unit_stats, party_index, 0);
     editor = g_attack_editor_unit_fields.halfwords;
     unit = &g_attack_editor_party_unit_stats;
+    gauges = &g_attack_panel_selected_billboard;
 
     g_attack_panel_selected_unit_data = party_index;
     g_attack_editor_selected_unit_id = party_index;
-    g_attack_editor_team_state = 0;
+    gauges->team_kind = 0;
     g_attack_editor_job_id = unit->job_id;
     g_attack_editor_brave = unit->brave;
     g_attack_editor_faith = unit->faith;
     g_attack_editor_zodiac = *(u16*)&unit->birthday >> 12;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
-        g_attack_editor_team_state = 1;
+        gauges->team_kind = 1;
     }
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
-        g_attack_editor_team_state = 2;
+        gauges->team_kind = 2;
     }
     g_attack_panel_selected_billboard.list_index = 0;
     g_attack_panel_selected_billboard.unit_count = 0;

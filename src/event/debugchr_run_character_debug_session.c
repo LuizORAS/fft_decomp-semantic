@@ -21,18 +21,6 @@
 /* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
 #define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
 
-typedef struct {
-    s32 _unused_00; /* 0x00 */
-    s32 _unused_04; /* 0x04 */
-    s32 _unused_08; /* 0x08 */
-    s32 redraw;     /* 0x0C */
-    s32 counter;    /* 0x10 */
-} debug_thread_t;   /* 0x14 */
-
-extern debug_thread_t g_debugchr_status_display_thread_params;
-extern debug_thread_t g_debugchr_numeric_editor_thread_params;
-extern debug_thread_t g_debugchr_character_status_frame_config;
-
 void battle_thread_start(s32 thread_id, void (*function)(void));
 
 /* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
@@ -105,8 +93,8 @@ void debugchr_run_character_debug_session(void) {
     }
     for (i = 0; i < 0x15; i++) {
         if (EDITOR_UNIT_IDS[i] != 0) {
-            g_debugchr_panel_selected_unit_data[5] = i;
-            g_debugchr_panel_selected_unit_data[0] = i;
+            g_debugchr_panel_selected_unit_data.battle_id = i;
+            g_debugchr_panel_selected_unit_data.name_id = i;
             g_debugchr_panel_selected_billboard.unit_index = i;
             debugchr_editor_load_selected_unit();
             g_debugchr_editor_selected_unit_slot = i;
@@ -115,16 +103,16 @@ void debugchr_run_character_debug_session(void) {
     }
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
-    if (g_debugchr_editor_display_mode != 0) {
+    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     }
-    g_debugchr_status_display_thread_params.counter = 0;
-    g_debugchr_numeric_editor_thread_params.counter = 0;
-    g_debugchr_character_status_frame_config.counter = 0;
+    g_debugchr_status_display_thread_params.style = 0;
+    g_debugchr_numeric_editor_thread_params.style = 0;
+    g_debugchr_character_status_frame_config.style = 0;
     battle_thread_start(8, debugchr_render_unit_status_panel_thread);
     battle_thread_set_parameters(8, (s32)&g_debugchr_status_display_thread_params, 0, 0);
     battle_thread_start(0xC, debugchr_editor_run_numeric_thread);
@@ -143,11 +131,11 @@ loop_outer:
      * it is not a movable at all, so loop.c still hoists exactly mark and the
      * constant 1, and this address is emitted into the preheader ahead of
      * them -- the target's emission order. */
-    menu_state = &g_debugchr_panel_selected_unit_data[5];
+    menu_state = &g_debugchr_panel_selected_unit_data.battle_id;
     for (;;) {
         mark = 0xE;
         /* Tied launder: it invalidates cse's constant equivalence for
-         * `mark`, which puts `mark` in $s1 and the hoisted `&g_debugchr_panel_selected_unit_data[5]`
+         * `mark`, which puts `mark` in $s1 and the hoisted `&g_debugchr_panel_selected_unit_data.battle_id`
          * in $s3, as the target has them. */
         __asm__("" : "=r"(mark) : "0"(mark));
         battle_thread_yield();
@@ -180,15 +168,15 @@ loop_outer:
             menu_state[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_display_mode != 0) {
+            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
-            g_debugchr_status_display_thread_params.redraw = 1;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 1;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         if (*g_debugchr_input_controller & PSX_PAD_L1) {
             g_debugchr_panel_status_animation[0] = 7;
@@ -205,7 +193,7 @@ loop_outer:
             menu_state[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_display_mode != 0) {
+            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
@@ -213,9 +201,9 @@ loop_outer:
             g_debugchr_editor_fields[15].destination[0] = mark;
             /* Keeps the `li v0,2` for the redraw store below the byte store. */
             __asm__ volatile("");
-            g_debugchr_status_display_thread_params.redraw = 2;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 2;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         i++;
     }
@@ -261,9 +249,9 @@ editor:
             *g_debugchr_editor_current_field->value = 0;
             debugchr_editor_apply_values_to_battle_unit(g_debugchr_editor_selected_unit_slot);
             debugchr_editor_load_selected_unit();
-            g_debugchr_status_display_thread_params.redraw = 1;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 1;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         navkeys = *g_debugchr_input_controller;
         if (navkeys & PSX_PAD_DPAD_MASK) {
@@ -377,9 +365,9 @@ editor:
                         }
                     }
                 }
-                g_debugchr_status_display_thread_params.redraw = 1;
-                g_debugchr_numeric_editor_thread_params.redraw = 1;
-                g_debugchr_character_status_frame_config.redraw = 1;
+                g_debugchr_status_display_thread_params.redraw_request = 1;
+                g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+                g_debugchr_character_status_frame_config.redraw_request = 1;
             }
         }
         buffer = i & 1;

@@ -6,7 +6,7 @@ void battle_target_clear_panel_spread_flags(void) {
     battle_target_panel_t* panel;
 
     i = 0x1FF;
-    panel = &g_battle_target_panel_last;
+    panel = &g_battle_target_panels[511];
     do {
         panel->mark = 0;
         i -= 1;

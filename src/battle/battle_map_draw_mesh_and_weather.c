@@ -4,31 +4,11 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* g_battle_map_mesh_parts viewed from vectors_a[1] (0x800fbe08), bound
- * separately: the part loop's strength-reduced pointers depend on that base. */
-typedef struct battle_map_mesh_part_view {
-    SVECTOR rotation;    /* 0x00; vectors_a[1] */
-    u8 _unused_08[0x10]; /* 0x08 */
-    SVECTOR translation; /* 0x18; vectors_b[1] */
-    u8 _unused_20[0x18]; /* 0x20 */
-    VECTOR scale;        /* 0x38; vectors_c[1] */
-    u8 _unused_48[0x10]; /* 0x48 */
-    MATRIX matrix;       /* 0x58; matrix_60 */
-    u8 _unused_78[6];    /* 0x78 */
-    u8 parent;           /* 0x7e */
-    u8 _padding_7f;      /* 0x7f; aligns starts */
-    u16 starts[4];       /* 0x80 */
-    u16 counts[4];       /* 0x88 */
-    u8 _unused_90[8];    /* 0x90 */
-} battle_map_mesh_part_view_t;
-
 typedef struct battle_map_weather_splash_rects {
     RECT rects[4];
 } battle_map_weather_splash_rects_t;
 
 extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
-
-extern battle_map_mesh_part_view_t g_battle_map_mesh_parts_view[9];
 
 #define GT3(i)       (g_battle_gfx_current_render_buffer->gt3[i])
 #define GT4(i)       (g_battle_gfx_current_render_buffer->gt4[i])
@@ -143,98 +123,98 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     SetRotMatrix(camera);
     SetTransMatrix(camera);
-    g_battle_map_part_textured_triangle_count = g_battle_map_mesh_parts_view[0].counts[0];
+    g_battle_map_part_textured_triangle_count = g_battle_map_mesh_parts[0].textured_triangle_count;
     g_battle_map_part_textured_triangle_positions
-        = &g_battle_map_textured_triangle_positions[g_battle_map_mesh_parts_view[0].starts[0]];
+        = &g_battle_map_textured_triangle_positions[g_battle_map_mesh_parts[0].textured_triangle_start];
     g_battle_map_part_textured_triangle_normals
-        = &g_battle_map_textured_triangle_normals[g_battle_map_mesh_parts_view[0].starts[0]];
+        = &g_battle_map_textured_triangle_normals[g_battle_map_mesh_parts[0].textured_triangle_start];
     battle_map_queue_textured_triangles(g_battle_gfx_current_render_buffer->otag,
-        &g_battle_gfx_current_render_buffer->gt3[g_battle_map_mesh_parts_view[0].starts[0]],
+        &g_battle_gfx_current_render_buffer->gt3[g_battle_map_mesh_parts[0].textured_triangle_start],
         g_battle_map_camera_rotation.vy, &i);
-    g_battle_map_part_textured_quad_count = g_battle_map_mesh_parts_view[0].counts[1];
+    g_battle_map_part_textured_quad_count = g_battle_map_mesh_parts[0].textured_quad_count;
     g_battle_map_part_textured_quad_positions
-        = &g_battle_map_textured_quad_positions[g_battle_map_mesh_parts_view[0].starts[1]];
+        = &g_battle_map_textured_quad_positions[g_battle_map_mesh_parts[0].textured_quad_start];
     g_battle_map_part_textured_quad_normals
-        = &g_battle_map_textured_quad_normals[g_battle_map_mesh_parts_view[0].starts[1]];
+        = &g_battle_map_textured_quad_normals[g_battle_map_mesh_parts[0].textured_quad_start];
     battle_map_queue_textured_quads(g_battle_gfx_current_render_buffer->otag,
-        &g_battle_gfx_current_render_buffer->gt4[g_battle_map_mesh_parts_view[0].starts[1]],
+        &g_battle_gfx_current_render_buffer->gt4[g_battle_map_mesh_parts[0].textured_quad_start],
         g_battle_map_camera_rotation.vy, &i);
-    g_battle_map_part_untextured_triangle_count = g_battle_map_mesh_parts_view[0].counts[2];
+    g_battle_map_part_untextured_triangle_count = g_battle_map_mesh_parts[0].untextured_triangle_count;
     g_battle_map_part_untextured_triangle_positions
-        = &g_battle_map_untextured_triangle_positions[g_battle_map_mesh_parts_view[0].starts[2]];
+        = &g_battle_map_untextured_triangle_positions[g_battle_map_mesh_parts[0].untextured_triangle_start];
     battle_map_queue_untextured_triangles(g_battle_gfx_current_render_buffer->otag,
-        &g_battle_gfx_current_render_buffer->f3[g_battle_map_mesh_parts_view[0].starts[2]],
+        &g_battle_gfx_current_render_buffer->f3[g_battle_map_mesh_parts[0].untextured_triangle_start],
         g_battle_map_camera_rotation.vy, &i);
-    g_battle_map_part_untextured_quad_count = g_battle_map_mesh_parts_view[0].counts[3];
+    g_battle_map_part_untextured_quad_count = g_battle_map_mesh_parts[0].untextured_quad_count;
     g_battle_map_part_untextured_quad_positions
-        = &g_battle_map_untextured_quad_positions[g_battle_map_mesh_parts_view[0].starts[3]];
+        = &g_battle_map_untextured_quad_positions[g_battle_map_mesh_parts[0].untextured_quad_start];
     battle_map_queue_untextured_quads(g_battle_gfx_current_render_buffer->otag,
-        &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts_view[0].starts[3]],
+        &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts[0].untextured_quad_start],
         g_battle_map_camera_rotation.vy, &i);
     /* Dead store: `matrix` is reassigned for every drawn child part before
      * use. It still survives the first CSE pass (the loop uses `matrix`), and
-     * the second pass reuses it for the loop-hoisted &g_battle_map_mesh_parts_view[0].matrix
+     * the second pass reuses it for the loop-hoisted &g_battle_map_mesh_parts[0].matrix_60
      * constant; reload then deletes that spilled constant together with this
      * set. The transient local moves the draw calls' `&i` temporary from v0
-     * to a0, as in the target. Earlier than the counts[0] access, it would
+     * to a0, as in the target. Earlier than the textured_triangle_count access, it would
      * become the base of that address instead. */
-    matrix = &g_battle_map_mesh_parts_view[0].matrix;
+    matrix = &g_battle_map_mesh_parts[0].matrix_60;
     PushMatrix();
     for (part = 1; part < 9; part++) {
         if (g_battle_map_mesh_animation_instructions[part].states[0][1].next != 0) {
             u8 parent;
 
-            rotation = &g_battle_map_mesh_parts_view[part].rotation;
-            matrix = &g_battle_map_mesh_parts_view[part].matrix;
-            parent = g_battle_map_mesh_parts_view[part].parent;
+            rotation = &g_battle_map_mesh_parts[part].rotation;
+            matrix = &g_battle_map_mesh_parts[part].matrix_60;
+            parent = g_battle_map_mesh_parts[part].parent;
             RotMatrix(rotation, matrix);
-            MulMatrix2(&g_battle_map_mesh_parts_view[parent].matrix, matrix);
-            SetRotMatrix(&g_battle_map_mesh_parts_view[parent].matrix);
-            SetTransMatrix(&g_battle_map_mesh_parts_view[parent].matrix);
-            RotTrans(&g_battle_map_mesh_parts_view[part].translation, (VECTOR*)matrix->t, &flag);
-            ScaleMatrix(matrix, &g_battle_map_mesh_parts_view[part].scale);
+            MulMatrix2(&g_battle_map_mesh_parts[parent].matrix_60, matrix);
+            SetRotMatrix(&g_battle_map_mesh_parts[parent].matrix_60);
+            SetTransMatrix(&g_battle_map_mesh_parts[parent].matrix_60);
+            RotTrans(&g_battle_map_mesh_parts[part].translation, (VECTOR*)matrix->t, &flag);
+            ScaleMatrix(matrix, &g_battle_map_mesh_parts[part].scale);
             RotMatrix(rotation, &light_rotation);
             MulMatrix0(&g_battle_map_local_light_matrix, &light_rotation, &light_matrix);
             SetLightMatrix(&light_matrix);
             SetRotMatrix(matrix);
             SetTransMatrix(matrix);
-            g_battle_map_part_textured_triangle_count = g_battle_map_mesh_parts_view[part].counts[0];
+            g_battle_map_part_textured_triangle_count = g_battle_map_mesh_parts[part].textured_triangle_count;
             g_battle_map_part_textured_triangle_positions
-                = &g_battle_map_textured_triangle_positions[g_battle_map_mesh_parts_view[part].starts[0]];
+                = &g_battle_map_textured_triangle_positions[g_battle_map_mesh_parts[part].textured_triangle_start];
             g_battle_map_part_textured_triangle_normals
-                = &g_battle_map_textured_triangle_normals[g_battle_map_mesh_parts_view[part].starts[0]];
+                = &g_battle_map_textured_triangle_normals[g_battle_map_mesh_parts[part].textured_triangle_start];
             battle_map_queue_textured_triangles(g_battle_gfx_current_render_buffer->otag,
-                &g_battle_gfx_current_render_buffer->gt3[g_battle_map_mesh_parts_view[part].starts[0]],
+                &g_battle_gfx_current_render_buffer->gt3[g_battle_map_mesh_parts[part].textured_triangle_start],
                 g_battle_map_camera_rotation.vy, &i);
-            g_battle_map_part_textured_quad_count = g_battle_map_mesh_parts_view[part].counts[1];
+            g_battle_map_part_textured_quad_count = g_battle_map_mesh_parts[part].textured_quad_count;
             g_battle_map_part_textured_quad_positions
-                = &g_battle_map_textured_quad_positions[g_battle_map_mesh_parts_view[part].starts[1]];
+                = &g_battle_map_textured_quad_positions[g_battle_map_mesh_parts[part].textured_quad_start];
             g_battle_map_part_textured_quad_normals
-                = &g_battle_map_textured_quad_normals[g_battle_map_mesh_parts_view[part].starts[1]];
+                = &g_battle_map_textured_quad_normals[g_battle_map_mesh_parts[part].textured_quad_start];
             battle_map_queue_textured_quads(g_battle_gfx_current_render_buffer->otag,
-                &g_battle_gfx_current_render_buffer->gt4[g_battle_map_mesh_parts_view[part].starts[1]],
+                &g_battle_gfx_current_render_buffer->gt4[g_battle_map_mesh_parts[part].textured_quad_start],
                 g_battle_map_camera_rotation.vy, &i);
-            g_battle_map_part_untextured_triangle_count = g_battle_map_mesh_parts_view[part].counts[2];
+            g_battle_map_part_untextured_triangle_count = g_battle_map_mesh_parts[part].untextured_triangle_count;
             g_battle_map_part_untextured_triangle_positions
-                = &g_battle_map_untextured_triangle_positions[g_battle_map_mesh_parts_view[part].starts[2]];
+                = &g_battle_map_untextured_triangle_positions[g_battle_map_mesh_parts[part].untextured_triangle_start];
             battle_map_queue_untextured_triangles(g_battle_gfx_current_render_buffer->otag,
-                &g_battle_gfx_current_render_buffer->f3[g_battle_map_mesh_parts_view[part].starts[2]],
+                &g_battle_gfx_current_render_buffer->f3[g_battle_map_mesh_parts[part].untextured_triangle_start],
                 g_battle_map_camera_rotation.vy, &i);
-            g_battle_map_part_untextured_quad_count = g_battle_map_mesh_parts_view[part].counts[3];
+            g_battle_map_part_untextured_quad_count = g_battle_map_mesh_parts[part].untextured_quad_count;
             g_battle_map_part_untextured_quad_positions
-                = &g_battle_map_untextured_quad_positions[g_battle_map_mesh_parts_view[part].starts[3]];
+                = &g_battle_map_untextured_quad_positions[g_battle_map_mesh_parts[part].untextured_quad_start];
             battle_map_queue_untextured_quads(g_battle_gfx_current_render_buffer->otag,
-                &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts_view[part].starts[3]],
+                &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts[part].untextured_quad_start],
                 g_battle_map_camera_rotation.vy, &i);
             if (g_battle_map_untextured_otz_mask != 0 && g_current_effect_work != 0
                 && (g_battle_map_loaded_id == 0x35 || g_battle_map_loaded_id == 0x37
                     || g_battle_map_loaded_id == 0x53)) {
-                RotMatrix(&g_battle_map_mesh_parts_view[part].rotation, &effect_matrix);
-                effect_translation.vx = g_battle_map_mesh_parts_view[part].translation.vx;
-                effect_translation.vy = g_battle_map_mesh_parts_view[part].translation.vy;
-                effect_translation.vz = g_battle_map_mesh_parts_view[part].translation.vz;
+                RotMatrix(&g_battle_map_mesh_parts[part].rotation, &effect_matrix);
+                effect_translation.vx = g_battle_map_mesh_parts[part].translation.vx;
+                effect_translation.vy = g_battle_map_mesh_parts[part].translation.vy;
+                effect_translation.vz = g_battle_map_mesh_parts[part].translation.vz;
                 TransMatrix(&effect_matrix, &effect_translation);
-                ScaleMatrix(&effect_matrix, &g_battle_map_mesh_parts_view[part].scale);
+                ScaleMatrix(&effect_matrix, &g_battle_map_mesh_parts[part].scale);
                 SetRotMatrix(&effect_matrix);
                 SetTransMatrix(&effect_matrix);
                 for (j = 0; j < 4; j++) {
@@ -259,8 +239,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / 28;
-            ground = -(
-                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height >> 5))
+            ground = -((g_battle_map_tile_data_ptr[tile].height
+                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
             if (g_battle_render_buffers[0].ft3[i].y0 >= 0x119) {
                 if (g_battle_map_weather_scale.vy != 0) {
@@ -351,13 +331,13 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / 28;
-            ground = -(
-                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height >> 5))
+            ground = -((g_battle_map_tile_data_ptr[tile].height
+                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
             tile = (g_battle_map_weather_particles[i + 32].z / 28) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i + 32].x / 28;
-            ground = -(
-                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height >> 5))
+            ground = -((g_battle_map_tile_data_ptr[tile].height
+                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
             if ((g_battle_map_command_0x96_frame < g_battle_map_command_0x96_duration / 8
                     && g_battle_render_buffers[0].ft3[i].y0 >= 0x119)
@@ -459,8 +439,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / 28;
-            ground = -(
-                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height >> 5))
+            ground = -((g_battle_map_tile_data_ptr[tile].height
+                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
             if (ground < g_battle_map_weather_particles[i + 32].y) {
                 g_battle_map_weather_particles[i].fall_speed = 0;
@@ -607,7 +587,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     g_battle_map_tile_data_ptr = g_battle_map_tile_data;
     if (g_battle_target_tile_mark_modes[0] == 1) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -630,7 +610,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 }
             }
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -659,7 +639,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         g_battle_target_tile_mark_modes[0] = 10;
     }
     if (g_battle_target_tile_mark_modes[1] == 2) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -682,7 +662,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 }
             }
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -711,7 +691,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         g_battle_target_tile_mark_modes[1] = 11;
     }
     if (g_battle_target_tile_mark_modes[2] == 7) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -734,7 +714,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 }
             }
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
                 g_battle_target_color_tile_y
                     = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
@@ -763,7 +743,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         g_battle_target_tile_mark_modes[2] = 12;
     }
     if (g_battle_target_tile_mark_modes[0] == 5) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             GT3(i).clut = SAVED_GT3(i).clut;
             if (!(g_battle_map_textured_triangle_positions[i].polygon_flags & 0x8000)) {
                 GT3(i).r0 = SAVED_GT3(i).r0;
@@ -771,7 +751,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 GT3(i).r2 = SAVED_GT3(i).r2;
             }
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             GT4(i).clut = SAVED_GT4(i).clut;
             if (!(g_battle_map_textured_quad_positions[i].polygon_flags & 0x8000)) {
                 GT4(i).r0 = SAVED_GT4(i).r0;
@@ -787,10 +767,10 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
     }
     if (g_battle_target_tile_mark_modes[1] == 3) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             GT3(i).clut = SAVED_GT3(i).clut;
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             GT4(i).clut = SAVED_GT4(i).clut;
         }
         g_battle_target_tile_mark_modes[1] = 0;
@@ -800,7 +780,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
     }
     if (g_battle_target_tile_mark_modes[2] == 8) {
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[0]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
             GT3(i).clut = SAVED_GT3(i).clut;
             GT3(i).r0 = SAVED_GT3(i).r0;
             GT3(i).r1 = SAVED_GT3(i).r1;
@@ -812,7 +792,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             GT3(i).b1 = SAVED_GT3(i).b1;
             GT3(i).b2 = SAVED_GT3(i).b2;
         }
-        for (i = 0; i < g_battle_map_mesh_parts_view[0].counts[1]; i++) {
+        for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
             GT4(i).clut = SAVED_GT4(i).clut;
             GT4(i).r0 = SAVED_GT4(i).r0;
             GT4(i).r1 = SAVED_GT4(i).r1;

@@ -14,7 +14,7 @@ void world_menu_build_skillset_entries(void) {
     count = 0;
     g_world_ability_selected_skill_target = 0;
     g_world_action_menu_skillsets[0] = 0;
-    g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_unit_view_battle_id,
+    g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_active_unit_data.battle_id,
         g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
     rows = (world_menu_text_row_t*)world_text_find_entry(0x5010);
     if (battle_unit_get_action_restriction(world_unit_get_battle_stats_for_stored()) == 2) {

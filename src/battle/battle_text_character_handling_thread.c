@@ -3,13 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Members of g_battle_text_typewriter_glyph (+0x02, +0x04, +0x0c, +0x0e),
- * bound separately: member stores add a spill slot to this function. */
-extern s16 g_battle_text_typewriter_glyph_y;
-extern s16 g_battle_text_typewriter_glyph_character;
-extern s16 g_battle_text_typewriter_glyph_dialogue_type;
-extern s16 g_battle_text_typewriter_glyph_palette;
-
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
 #define NEXT() text = battle_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
@@ -759,11 +752,15 @@ void battle_text_character_handling_thread(void) {
                         started = 1;
                         value -= character * g_battle_text_decimal_divisors[i];
                     }
-                    g_battle_text_typewriter_glyph.x = cursor_x;
-                    g_battle_text_typewriter_glyph_y = cursor_y;
-                    g_battle_text_typewriter_glyph_character = character;
-                    g_battle_text_typewriter_glyph_dialogue_type = rec.dialog_type & 0x70;
-                    g_battle_text_typewriter_glyph_palette = rec.color;
+                    {
+                        battle_text_glyph_state_t* glyph = &g_battle_text_typewriter_glyph;
+
+                        glyph->x = cursor_x;
+                        glyph->y = cursor_y;
+                        glyph->glyph = character;
+                        glyph->mode = rec.dialog_type & 0x70;
+                        glyph->palette = rec.color;
+                    }
                     battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                     if (character == TEXT_SPACE) {
                         cursor_x += 4;
@@ -797,11 +794,15 @@ void battle_text_character_handling_thread(void) {
                     }
                     character += *text;
                 }
-                g_battle_text_typewriter_glyph.x = cursor_x;
-                g_battle_text_typewriter_glyph_y = cursor_y;
-                g_battle_text_typewriter_glyph_character = character;
-                g_battle_text_typewriter_glyph_dialogue_type = rec.box_type;
-                g_battle_text_typewriter_glyph_palette = rec.color;
+                {
+                    battle_text_glyph_state_t* glyph = &g_battle_text_typewriter_glyph;
+
+                    glyph->x = cursor_x;
+                    glyph->y = cursor_y;
+                    glyph->glyph = character;
+                    glyph->mode = rec.box_type;
+                    glyph->palette = rec.color;
+                }
                 battle_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                 if (character == TEXT_SPACE) {
                     cursor_x += 4;

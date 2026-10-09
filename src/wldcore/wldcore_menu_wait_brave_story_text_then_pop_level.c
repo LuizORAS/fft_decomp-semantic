@@ -8,7 +8,7 @@
  * render record with 0x100 before wldcore_list_open_brave_story_propositions redraws. Mirrors
  * wldcore_menu_wait_text_then_pop_level, including its owner-pointer argument. */
 void wldcore_menu_wait_brave_story_text_then_pop_level(void) {
-    s32* index = &g_wldcore_scroll_text_render_record_index;
+    s32* index = &g_wldcore_scrollable_text_window.render_record_index;
     s32 depth;
 
     if (g_wldcore_window_render_records[*index].flags & 0x100) {

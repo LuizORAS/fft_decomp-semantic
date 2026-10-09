@@ -318,13 +318,15 @@ ramza_placed:
                             battle_thread_yield();
                         }
                     } else {
-                        cursor = g_attack_deploy_selected_unit_state[0];
-                        g_attack_deploy_selected_unit_state[0] = 1;
+                        s32* deployed = &g_attack_deploy_selected_unit_deployed;
+
+                        cursor = *deployed;
+                        *deployed = 1;
                         battle_thread_start(4, battle_menu_icon_linked_entry_thread);
                         battle_thread_set_parameters(4, (s32)&g_battle_menu_thread_menu_data[3], 0, 0);
                         battle_thread_wait_until_inactive(4);
                         battle_thread_wait_until_inactive(3);
-                        g_attack_deploy_selected_unit_state[0] = cursor;
+                        *deployed = cursor;
                         if (g_attack_deploy_confirm_result != 0) {
                             continue;
                         }

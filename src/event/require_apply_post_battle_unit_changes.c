@@ -53,12 +53,12 @@ void require_apply_post_battle_unit_changes(void) {
     affected_index = 0;
     require_text_build_battle_nicknames();
     initial_unit_index_ptr = g_require_party_affected_battle_unit_indices;
-    selected_unit_index_ptr = (s32*)g_require_active_unit_data;
+    selected_unit_index_ptr = (s32*)&g_require_active_unit_data;
     battle_unit_get_stats_from_battle_id(*initial_unit_index_ptr);
-    *(u16*)(g_require_panel_active_unit_banner + 0x52) = *(u16*)initial_unit_index_ptr;
+    g_require_active_unit_data.battle_id = *(u16*)initial_unit_index_ptr;
     *(u16*)selected_unit_index_ptr = *(u16*)initial_unit_index_ptr;
     require_editor_load_selected_unit();
-    *(u16*)(g_require_panel_active_unit_banner + 0xa) = *(u16*)initial_unit_index_ptr;
+    g_require_panel_selected_billboard.unit_index = *(u16*)initial_unit_index_ptr;
 
     /* `affected_index < count` (not `count > 0`): combine folds the known
      * zero into a `blez` and leaves the eliminated compare pseudo with a
@@ -79,7 +79,7 @@ void require_apply_post_battle_unit_changes(void) {
             g_require_numeric_editor_thread_params = -0x100;
             *transition_c_ptr = -0x100;
             battle_menu_copy_billboard_data_in(
-                g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
+                &g_require_panel_selected_billboard, &g_require_active_unit_data, &g_require_editor_unit_fields);
 
             /* This zero feeds the else-arm fade and fills the `bnez` delay
              * slot; the separate zero before the second fade is copied into
@@ -111,12 +111,12 @@ void require_apply_post_battle_unit_changes(void) {
                 *(u16*)(unit_display_data + 0) = index_value;
                 require_editor_load_selected_unit();
                 battle_menu_copy_billboard_data_in(
-                    g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
+                    &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
                 index_value = *(u16*)unit_index_ptr;
                 g_require_status_display_redraw_request = one;
                 g_require_numeric_editor_redraw_request = one;
                 g_require_character_status_redraw_request = one;
-                *(u16*)(g_require_panel_active_unit_banner + 0xa) = index_value;
+                g_require_panel_selected_billboard.unit_index = index_value;
                 battle_thread_yield();
             }
 
@@ -132,7 +132,7 @@ void require_apply_post_battle_unit_changes(void) {
             /* The removal retry re-enters the selection loop and the
              * not-joining retry re-enters the removal loop from outside, so
              * loop.c treats both loops as having multiple entries and hoists
-             * nothing out of them (the g_require_panel_active_unit_banner + 0xa address stays in the
+             * nothing out of them (the g_require_panel_selected_billboard.unit_index address stays in the
              * remove path), while flow still weights their references by
              * depth. The not-joining retry repeats the selected-unit
              * assignment; jump2 cross-jumps it into this one, so the
@@ -233,12 +233,12 @@ void require_apply_post_battle_unit_changes(void) {
                     g_require_status_display_redraw_request = one;
                     g_require_numeric_editor_redraw_request = one;
                     g_require_character_status_redraw_request = one;
-                    *(u16*)(g_require_panel_active_unit_banner + 0xa) = index_value;
+                    g_require_panel_selected_billboard.unit_index = index_value;
                     if (g_require_party_removal_result == 0) {
                         require_panel_set_transition_value(1);
                     }
                     battle_menu_copy_billboard_data_in(
-                        g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
+                        &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
                     g_battle_screen_fade = screen_fade_max;
                     do {
                         battle_thread_yield();

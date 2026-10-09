@@ -95,7 +95,7 @@ s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* wor
         break;
 
     default:
-        flags = g_main_reaction_behavior_flags_by_ability_id[g_battle_current_reaction_ability_id];
+        flags = g_main_reaction_behavior_flags[g_battle_current_reaction_ability_id - ABILITY_ID_REACTION_FIRST];
         if (flags & BATTLE_REACTION_BEHAVIOR_FLAG_TARGET_SELF) {
             *target_count = 1;
             *target_ids = actor_id;

@@ -39,7 +39,7 @@ void world_shop_run_equip_candidate_step(void) {
             return;
         }
     } else if (g_world_formation_unit_browse_enabled == 0) {
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
     }
     if (g_world_formation_unit_banner_enabled != 0 && g_world_formation_unit_browse_enabled == 0) {
         text_id = 0x20000;

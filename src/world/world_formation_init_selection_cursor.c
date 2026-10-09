@@ -1,9 +1,5 @@
 #include "fft/world.h"
 
-/* g_world_formation_cursor_position.y, bound separately: as a member store GCC
- * addresses it from the .x store's base and the code changes. */
-extern s16 g_world_formation_cursor_position_y;
-
 /*
  * Initialize the selected formation unit's stat callbacks and cursor position.
  *
@@ -11,6 +7,7 @@ extern s16 g_world_formation_cursor_position_y;
  * coordinates are finalized. The four-column layout uses signed coordinates.
  */
 void world_formation_init_selection_cursor(s16 formation_index) {
+    world_menu_point_t* cursor;
     s32 count;
     s16 x;
 
@@ -36,10 +33,11 @@ void world_formation_init_selection_cursor(s16 formation_index) {
     } while (count < 10);
     g_world_formation_scroll_enabled = world_formation_can_scroll_slots(g_world_formation_scroll_position);
     x = formation_index % 4;
-    g_world_formation_cursor_position.x = x * 62 + 34;
+    cursor = &g_world_formation_cursor_position;
+    cursor->x = x * 62 + 34;
     /* x is reused for the scroll offset, read as a byte and then sign-extended. */
     x = (u8)g_world_formation_scroll_position;
-    g_world_formation_cursor_position_y = (s8)x + (formation_index >> 2) * 60 + 61;
+    cursor->y = (s8)x + (formation_index >> 2) * 60 + 61;
     g_world_formation_selection_cursor_ready = 1;
     world_formation_reset_slots_and_frame_tpages();
 }

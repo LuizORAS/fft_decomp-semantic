@@ -12,8 +12,8 @@ void battle_move_set_float_step_delta_edge_to_center(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count) {
     VECTOR direction;
 
-    direction.vy
-        = (step_count - 1) * (tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * BATTLE_MOVE_STEP_HEIGHT_SCALE;
+    direction.vy = (step_count - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+        * BATTLE_MOVE_STEP_HEIGHT_SCALE;
     switch (*step >> 6) {
     case 0:
         direction.vx = BATTLE_MOVE_STEP_WIDTH;

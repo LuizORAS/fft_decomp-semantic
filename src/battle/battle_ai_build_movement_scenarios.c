@@ -21,9 +21,9 @@ s32 battle_ai_build_movement_scenarios(void) {
     s32 low;
     s32 high;
 
-    g_battle_ai_movement_scenario = 1;
-    decision = g_battle_ai_acting_unit_decision_ptr;
     ai = &g_battle_ai_data_base;
+    g_battle_ai_data_base.movement_scenario = 1;
+    decision = g_battle_ai_data_base.acting_unit_decision;
     if (g_battle_ai_data_base.decision_state) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.movement_decision_state == 0)

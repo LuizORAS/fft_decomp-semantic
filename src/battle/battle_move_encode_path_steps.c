@@ -79,15 +79,15 @@ void battle_move_encode_path_steps(void) {
             if (!state->destination_unit_record_index && !hit) {
                 tile = &g_battle_map_tile_data[i];
                 state->destination_entry_height
-                    = (tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->source_side_shift) & 3);
-                state->destination_opposite_height
-                    = (tile->depth_half_height & 0x1f) * ((tile->slope_type >> state->destination_side_shift) & 3);
+                    = (tile->depth_half_height.value & 0x1f) * ((tile->slope_type >> state->source_side_shift) & 3);
+                state->destination_opposite_height = (tile->depth_half_height.value & 0x1f)
+                    * ((tile->slope_type >> state->destination_side_shift) & 3);
                 state->destination_side_height_delta
                     = state->destination_entry_height - state->destination_opposite_height;
-                if (config->jump_or_1f < ((s8)tile->depth_half_height & 0x1f)) {
+                if (config->jump_or_1f < ((s8)tile->depth_half_height.value & 0x1f)) {
                     state->destination_climb = 1;
                 }
-                if (((s8)tile->depth_half_height & 0x1f) >= 3 && (frontier[i] & 2)) {
+                if (((s8)tile->depth_half_height.value & 0x1f) >= 3 && (frontier[i] & 2)) {
                     state->destination_climb = 1;
                 }
                 if (state->destination_side_height_delta >= 0) {
@@ -96,10 +96,11 @@ void battle_move_encode_path_steps(void) {
             }
             state->source_climb = 0;
             if (!state->source_unit_record_index) {
-                if (config->jump_or_1f < ((s8)state->current_tile->depth_half_height & 0x1f)) {
+                if (config->jump_or_1f < ((s8)state->current_tile->depth_half_height.value & 0x1f)) {
                     state->source_climb = 1;
                 }
-                if (((s8)state->current_tile->depth_half_height & 0x1f) >= 3 && (frontier[state->tile_index] & 2)) {
+                if (((s8)state->current_tile->depth_half_height.value & 0x1f) >= 3
+                    && (frontier[state->tile_index] & 2)) {
                     state->source_climb = 1;
                 }
             }

@@ -17,8 +17,8 @@ s32 battle_ai_build_targeted_movement(void) {
     s32 within_two_tiles;
 
     if (!g_battle_ai_data_base.decision_state
-        && (g_battle_ai_temp_unit_data->auto_battle_target == g_battle_ai_data_base.acting_unit_id
-            || ((ai->unit_decisions[g_battle_ai_temp_unit_data->auto_battle_target].targeting_flags_2 >> 4)
+        && (g_battle_ai_data_base.acting_unit->auto_battle_target == g_battle_ai_data_base.acting_unit_id
+            || ((ai->unit_decisions[g_battle_ai_data_base.acting_unit->auto_battle_target].targeting_flags_2 >> 4)
                 & (BATTLE_AI_TARGET_UNTARGETABLE >> 4)))) {
         battle_ai_clear_words((s32*)ai->tile_target_distance, sizeof(ai->tile_target_distance));
     } else if (battle_ai_fill_target_distance_grid(&ai->acting_unit_decision->target) == -1) {

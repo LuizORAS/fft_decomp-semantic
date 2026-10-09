@@ -99,7 +99,6 @@ data:
   - {addr: 0x801ca064, name: g_attack_menu_indicator_fade_work}
   - {addr: 0x801ca06c, name: g_attack_menu_indicator_state}
   - {addr: 0x801ca080, name: g_attack_panel_selected_billboard}
-  - {addr: 0x801ca082, name: g_attack_editor_team_state}
   - {addr: 0x801ca0a4, name: g_attack_panel_comparison_billboard}
   - {addr: 0x801ca0c8, name: g_attack_panel_selected_unit_data}
   - {addr: 0x801ca0ca, name: g_attack_editor_job_id}
@@ -127,7 +126,6 @@ data:
   - {addr: 0x801ca394, name: g_attack_panel_sprite_cells}
   - {addr: 0x801ca3e8, name: g_attack_panel_portrait_cell}
   - {addr: 0x801ca3f4, name: g_attack_gfx_draw_area_template}
-  - {addr: 0x801ca3f6, name: g_attack_panel_status_position_y}
   - {addr: 0x801ca3fc, name: g_attack_gfx_draw_area_scale_percent}
   - {addr: 0x801ca414, name: g_attack_panel_editor_value_cluts}
   - {addr: 0x801ca424, name: g_attack_panel_editor_label_cluts}
@@ -188,7 +186,6 @@ data:
   - {addr: 0x801cd214, name: g_attack_status_display_offset_y}
   - {addr: 0x801cd21c, name: g_attack_deploy_roster_navigation_direction}
   - {addr: 0x801cd220, name: g_attack_deploy_selected_unit_deployed}
-  - {addr: 0x801cd220, name: g_attack_deploy_selected_unit_state}
   - {addr: 0x801cd224, name: g_attack_numeric_editor_thread_params}
   - {addr: 0x801cd230, name: g_attack_numeric_editor_redraw_request}
   - {addr: 0x801cd238, name: g_attack_character_status_frame_config}
@@ -225,11 +222,11 @@ data:
   - {addr: 0x801d5bb0, name: g_attack_portrait_index_by_sprite_set}
   - {addr: 0x801d5d58, name: g_attack_special_portrait_rect}
   - {addr: 0x801d5d60, name: g_attack_special_portrait_palette_rect}
-  - {addr: 0x801d5d65, name: g_attack_monster_formation_sprite_table}
   - {addr: 0x801d5d68, name: g_attack_portrait_sheet_rect_0}
   - {addr: 0x801d5d70, name: g_attack_portrait_sheet_rect_1}
   - {addr: 0x801d5d78, name: g_attack_portrait_sheet_rect_2}
   - {addr: 0x801d5d80, name: g_attack_portrait_sheet_rect_3}
+  - {addr: 0x801d5da4, name: g_attack_monster_formation_sprite_table}
   - {addr: 0x801d5db8, name: g_attack_formation_sheet_rect}
   - {addr: 0x801d5dc0, name: g_attack_formation_sheet_source_rect}
   - {addr: 0x801d5dc8, name: g_attack_deploy_select_menu_nodes}
@@ -641,9 +638,7 @@ data:
   - {addr: 0x801cfa14, name: g_bunit_cmd_window_interior_command}
   - {addr: 0x801cfa1c, name: g_bunit_gfx_window_zoom_percent}
   - {addr: 0x801cfa24, name: g_bunit_gfx_blank_cell_rect}
-  - {addr: 0x801cfa38, name: g_bunit_menu_cursor_forward_offset_bytes}
   - {addr: 0x801cfa38, name: g_bunit_menu_cursor_forward_offset_keyframes}
-  - {addr: 0x801cfa44, name: g_bunit_menu_cursor_reverse_offset_bytes}
   - {addr: 0x801cfa44, name: g_bunit_menu_cursor_reverse_offset_keyframes}
   - {addr: 0x801cfa58, name: g_bunit_bouncing_cursor_quad}
   - {addr: 0x801cfa7c, name: g_bunit_menu_list_scroll_entry_ids}
@@ -763,8 +758,6 @@ data:
   - {addr: 0x801ec9fc, name: g_bunit_ability_selected_specific}
   - {addr: 0x801eca00, name: g_bunit_ability_selected_data_1}
   - {addr: 0x801eca04, name: g_bunit_gfx_fade_color}
-  - {addr: 0x801eca05, name: g_bunit_gfx_fade_color_g}
-  - {addr: 0x801eca06, name: g_bunit_gfx_fade_color_b}
   - {addr: 0x801eca08, name: g_bunit_gfx_fade_intensity}
   - {addr: 0x801eca0c, name: g_bunit_menu_input_mask}
   - {addr: 0x801eca10, name: g_bunit_gfx_poly_f3_capacity}
@@ -1007,8 +1000,6 @@ data:
   - {addr: 0x801ca7ec, name: g_card_gfx_scaled_sprite_scale}
   - {addr: 0x801ca861, name: g_card_gfx_scaled_sprite_count}
   - {addr: 0x801ca864, name: g_card_input_display_state}
-  - {addr: 0x801ca870, name: g_card_input_display_scale_x}
-  - {addr: 0x801ca872, name: g_card_input_display_scale_y}
   - {addr: 0x801ca888, name: g_card_file_open_descriptor}
   - {addr: 0x801ca88c, name: g_card_io_selected_slot}
   - {addr: 0x801ca88d, name: g_card_io_operation_pending}
@@ -1080,8 +1071,6 @@ data:
   - {addr: 0x801d9258, name: g_card_input_previous}
   - {addr: 0x801d925c, name: g_card_input_latched_button}
   - {addr: 0x801d9260, name: g_card_gfx_fade_color}
-  - {addr: 0x801d9261, name: g_card_gfx_fade_color_g}
-  - {addr: 0x801d9262, name: g_card_gfx_fade_color_b}
   - {addr: 0x801d9264, name: g_card_gfx_fade_intensity}
   - {addr: 0x801d9268, name: g_card_input_newly_pressed}
   - {addr: 0x801d926c, name: g_card_text_metric_3}
@@ -1090,7 +1079,6 @@ data:
   - {addr: 0x801d9278, name: g_card_gfx_poly_ft4_count}
   - {addr: 0x801d927c, name: g_card_gfx_drawenv_y}
   - {addr: 0x801d9280, name: g_card_text_digit_clut}
-  - {addr: 0x801d9280, name: g_card_text_metric_1}
   - {addr: 0x801d9288, name: g_card_gfx_otag_length}
   - {addr: 0x801d928c, name: g_card_gfx_tile_capacity}
   - {addr: 0x801d9290, name: g_card_gfx_tile_count}
@@ -1169,18 +1157,11 @@ data:
   - {addr: 0x801c52f8, name: g_debugchr_editor_third_maximum}
   - {addr: 0x801c5300, name: g_debugchr_panel_comparison_billboard}
   - {addr: 0x801c5324, name: g_debugchr_panel_selected_unit_data}
-  - {addr: 0x801c5326, name: g_debugchr_editor_job_id}
-  - {addr: 0x801c5328, name: g_debugchr_editor_brave}
-  - {addr: 0x801c532a, name: g_debugchr_editor_faith}
-  - {addr: 0x801c532c, name: g_debugchr_editor_zodiac}
-  - {addr: 0x801c532e, name: g_debugchr_editor_selected_unit_id}
   - {addr: 0x801c5334, name: g_debugchr_panel_comparison_unit_data}
-  - {addr: 0x801c533e, name: g_debugchr_panel_comparison_unit_id}
   - {addr: 0x801c5344, name: g_debugchr_editor_move}
   - {addr: 0x801c5344, name: g_debugchr_editor_unit_fields}
   - {addr: 0x801c5346, name: g_debugchr_editor_speed}
   - {addr: 0x801c5348, name: g_debugchr_editor_jump}
-  - {addr: 0x801c5352, name: g_debugchr_editor_display_mode}
   - {addr: 0x801c53c4, name: g_debugchr_editor_primary_skillset_name}
   - {addr: 0x801c53d8, name: g_debugchr_editor_secondary_skillset_name}
   - {addr: 0x801c53ec, name: g_debugchr_editor_unit_name}
@@ -1201,7 +1182,6 @@ data:
   - {addr: 0x801c55f0, name: g_debugchr_panel_sprite_cells}
   - {addr: 0x801c5644, name: g_debugchr_panel_portrait_cell}
   - {addr: 0x801c5650, name: g_debugchr_gfx_draw_area_template}
-  - {addr: 0x801c5652, name: g_debugchr_panel_status_position_y}
   - {addr: 0x801c5658, name: g_debugchr_gfx_draw_area_scale_percent}
   - {addr: 0x801c5670, name: g_debugchr_panel_editor_value_cluts}
   - {addr: 0x801c5680, name: g_debugchr_panel_editor_label_cluts}
@@ -1246,14 +1226,8 @@ data:
   - {addr: 0x801c6830, name: g_debugchr_gfx_scaled_sprite_scale}
   - {addr: 0x801c68a5, name: g_debugchr_gfx_scaled_sprite_count}
   - {addr: 0x801c68a8, name: g_debugchr_status_display_thread_params}
-  - {addr: 0x801c68b4, name: g_debugchr_panel_refresh_a}
-  - {addr: 0x801c68b8, name: g_debugchr_thread_refresh_a}
   - {addr: 0x801c68bc, name: g_debugchr_numeric_editor_thread_params}
-  - {addr: 0x801c68c8, name: g_debugchr_panel_refresh_b}
-  - {addr: 0x801c68cc, name: g_debugchr_thread_refresh_b}
   - {addr: 0x801c68d0, name: g_debugchr_character_status_frame_config}
-  - {addr: 0x801c68dc, name: g_debugchr_panel_refresh_c}
-  - {addr: 0x801c68e0, name: g_debugchr_thread_refresh_c}
   - {addr: 0x801c68e4, name: g_debugchr_editor_unit_ids}
   - {addr: 0x801c68fc, name: g_debugchr_thread_indicator_packets}
   - {addr: 0x801c6dec, name: g_debugchr_input_controller}
@@ -1506,8 +1480,6 @@ data:
   - {addr: 0x801ce40c, name: g_equip_menu_indicator_state}
   - {addr: 0x801ce414, name: g_equip_item_numeric_thread_enabled}
   - {addr: 0x801ce424, name: g_equip_selected_unit_stat_summary}
-  - {addr: 0x801ce432, name: g_equip_selected_unit_hp_bonus}
-  - {addr: 0x801ce438, name: g_equip_selected_unit_mp_bonus}
   - {addr: 0x801ce448, name: g_equip_panel_comparison_billboard}
   - {addr: 0x801ce46c, name: g_equip_panel_selected_unit_data}
   - {addr: 0x801ce47c, name: g_equip_panel_comparison_unit_data}
@@ -1648,7 +1620,6 @@ data:
   - {addr: 0x801e1044, name: g_equip_gfx_line_f2_buffer}
   - {addr: 0x801e1184, name: g_equip_gfx_tile_buffer}
   - {addr: 0x801e12c4, name: g_equip_menu_selection_entries}
-  - {addr: 0x801e12c4, name: g_equip_menu_selection_records}
   - {addr: 0x801e12e4, name: g_equip_thread_indicator_packets}
   - {addr: 0x801e17d4, name: g_equip_input_controller}
   - {addr: 0x801e17f0, name: g_equip_gfx_draw_offset_y}
@@ -1791,7 +1762,6 @@ data:
   - {addr: 0x801e9308, name: g_equip_text_help_message_id}
   - {addr: 0x801e930c, name: g_equip_menu_list_row_callbacks}
   - {addr: 0x801e934c, name: g_equip_gfx_current_ot}
-  - {addr: 0x801e934c, name: g_equip_gfx_render_otag}
   - {addr: 0x801e9350, name: g_equip_menu_list_entry_count}
 
 imports:
@@ -2170,7 +2140,6 @@ data:
   - {addr: 0x801c38e6, name: g_option_menu_at_list_menu_type}
   - {addr: 0x801c3924, name: g_option_reference_values}
   - {addr: 0x801c395c, name: g_option_current_values}
-  - {addr: 0x801c3990, name: g_option_values_unchanged}
   - {addr: 0x801c3994, name: g_option_choice_window_widths}
   - {addr: 0x801c39cc, name: g_option_choice_counts}
   - {addr: 0x801c3a04, name: g_option_value_text_id_bases}
@@ -2182,7 +2151,6 @@ data:
   - {addr: 0x801c9cf4, name: g_option_text_glyph_dest}
   - {addr: 0x801c9d04, name: g_option_menu_panel_pixels}
   - {addr: 0x801ca104, name: g_option_menu_entry_panel_rect}
-  - {addr: 0x801ca10c, name: g_dead_unit_menu_values}
   - {addr: 0x801ca10c, name: g_option_menu_at_list_primary_values}
   - {addr: 0x801ca50c, name: g_option_menu_at_list_secondary_values}
   - {addr: 0x801ca70c, name: g_option_menu_at_list_indices}
@@ -2297,20 +2265,11 @@ data:
   - {addr: 0x801cb2f8, name: g_require_menu_indicator_brightness}
   - {addr: 0x801cb300, name: g_require_menu_indicator_fade_work}
   - {addr: 0x801cb308, name: g_require_menu_indicator_state}
-  - {addr: 0x801cb31c, name: g_require_panel_active_unit_banner}
   - {addr: 0x801cb31c, name: g_require_panel_selected_billboard}
-  - {addr: 0x801cb31e, name: g_require_editor_team_state}
   - {addr: 0x801cb340, name: g_require_panel_comparison_billboard}
   - {addr: 0x801cb364, name: g_require_active_unit_data}
-  - {addr: 0x801cb366, name: g_require_editor_job_id}
-  - {addr: 0x801cb368, name: g_require_editor_brave}
-  - {addr: 0x801cb36a, name: g_require_editor_faith}
-  - {addr: 0x801cb36c, name: g_require_editor_zodiac}
-  - {addr: 0x801cb36e, name: g_require_editor_selected_unit_id}
   - {addr: 0x801cb374, name: g_require_panel_comparison_unit_data}
-  - {addr: 0x801cb37e, name: g_require_panel_comparison_unit_id}
   - {addr: 0x801cb384, name: g_require_editor_unit_fields}
-  - {addr: 0x801cb384, name: g_require_panel_billboard_data}
   - {addr: 0x801cb404, name: g_require_editor_primary_skillset_name}
   - {addr: 0x801cb418, name: g_require_editor_secondary_skillset_name}
   - {addr: 0x801cb42c, name: g_require_editor_unit_name}
@@ -2329,7 +2288,6 @@ data:
   - {addr: 0x801cb630, name: g_require_panel_sprite_cells}
   - {addr: 0x801cb684, name: g_require_panel_portrait_cell}
   - {addr: 0x801cb690, name: g_require_gfx_draw_area_template}
-  - {addr: 0x801cb692, name: g_require_panel_status_position_y}
   - {addr: 0x801cb698, name: g_require_gfx_draw_area_scale_percent}
   - {addr: 0x801cb6b0, name: g_require_panel_editor_value_cluts}
   - {addr: 0x801cb6c0, name: g_require_panel_editor_label_cluts}

@@ -13,11 +13,11 @@ void battle_effect_start_group(s32 group, s32 animation) {
     s32 i;
     u8 id;
 
-    if (g_battle_effect_groups[group].count > g_battle_effect_current_secondary->active_count
-        && g_battle_effect_current_secondary->timer >= g_battle_effect_groups[group].spawn_start_frame
-        && g_battle_effect_current_secondary->timer < g_battle_effect_groups[group].spawn_end_frame) {
-        for (spawned = 0; spawned < g_battle_effect_groups[group].spawns_per_frame; spawned++) {
-            for (i = 0; i < g_battle_effect_groups[group].count; i++) {
+    if (g_battle_effect_trap_particle_configs[group].count > g_battle_effect_current_secondary->active_count
+        && g_battle_effect_current_secondary->timer >= g_battle_effect_trap_particle_configs[group].spawn_start_frame
+        && g_battle_effect_current_secondary->timer < g_battle_effect_trap_particle_configs[group].spawn_end_frame) {
+        for (spawned = 0; spawned < g_battle_effect_trap_particle_configs[group].spawns_per_frame; spawned++) {
+            for (i = 0; i < g_battle_effect_trap_particle_configs[group].count; i++) {
                 if (g_battle_effect_current_secondary->slot_ids[i] == 0) {
                     break;
                 }
@@ -28,12 +28,12 @@ void battle_effect_start_group(s32 group, s32 animation) {
                 break;
             }
             slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[i]];
-            slot->life = battle_effect_spawn_particle_motion(
-                (battle_effect_emitter_values_t*)(&g_battle_effect_trap_particle_configs[group * 0x2e]), &slot->motion);
+            slot->life
+                = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[group], &slot->motion);
             battle_effect_init_trap_animation(group, animation + 0x7ac0, slot);
             effect = g_battle_effect_current_secondary;
             effect->active_count++;
-            if (effect->active_count == g_battle_effect_groups[group].count) {
+            if (effect->active_count == g_battle_effect_trap_particle_configs[group].count) {
                 break;
             }
         }

@@ -5,9 +5,6 @@ enum {
     MAP_MESH_LOAD_WAITING = 0x8d,
 };
 
-/* g_battle_map_gns_records viewed with the loader's halfword-aligned type,
- * which copies whole records with lwl/lwr pairs. */
-extern gns_record_view_t g_battle_map_gns_records_view[150];
 extern gns_record_view_t g_battle_map_selected_mesh_record;
 
 /* Selects the last primary-mesh record, then substitutes an alternate whose
@@ -21,19 +18,19 @@ s32 battle_map_load_mesh_variant(s32 mesh_slot) {
 
     switch (g_battle_map_mesh_load_state) {
     case MAP_MESH_LOAD_IDLE:
-        for (i = 0; g_battle_map_gns_records_view[i].resource_type < 0x80; i++) {
-            if (g_battle_map_gns_records_view[i].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
-                g_battle_map_selected_mesh_record = g_battle_map_gns_records_view[i];
+        for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
+            if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
+                g_battle_map_selected_mesh_record = g_battle_map_gns_records[i];
             }
         }
-        for (i = 0; g_battle_map_gns_records_view[i].resource_type < 0x80; i++) {
-            if (g_battle_map_gns_records_view[i].resource_type == GNS_RESOURCE_MESH_ALTERNATE) {
-                state = battle_script_get_variable(g_battle_map_gns_records_view[i].script_variable_id) & 0xfff;
+        for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
+            if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_MESH_ALTERNATE) {
+                state = battle_script_get_variable(g_battle_map_gns_records[i].script_variable_id) & 0xfff;
                 state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                 state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
-                if ((s16)battle_map_is_gns_record_matching_state(g_battle_map_gns_records_view[i].map_state_comparison,
-                        g_battle_map_gns_records_view[i].map_state, state)) {
-                    g_battle_map_selected_mesh_record = g_battle_map_gns_records_view[i];
+                if ((s16)battle_map_is_gns_record_matching_state(g_battle_map_gns_records[i].map_state_comparison,
+                        g_battle_map_gns_records[i].map_state, state)) {
+                    g_battle_map_selected_mesh_record = g_battle_map_gns_records[i];
                 }
             }
         }

@@ -2,12 +2,12 @@
 #include "psx/types.h"
 
 void world_menu_enable_all_order_entries(void) {
-    g_world_formation_panel_windows[0].enabled = 1;
-    g_world_formation_panel_windows[1].enabled = 1;
-    g_world_formation_panel_windows[5].enabled = 1;
-    g_world_formation_panel_windows[6].enabled = 1;
-    g_world_formation_panel_windows[7].enabled = 1;
-    g_world_formation_panel_windows[2].enabled = 1;
-    g_world_formation_panel_windows[3].enabled = 1;
-    g_world_formation_panel_windows[4].enabled = 1;
+    g_world_status_display_thread_params.redraw_request = 1;
+    g_world_comparison_display_thread_params.redraw_request = 1;
+    g_world_equipment_ability_panel_thread_params.redraw_request = 1;
+    g_world_numeric_editor_thread_params.redraw_request = 1;
+    g_world_preview_stats_thread_params.redraw_request = 1;
+    g_world_change_banner_panel_thread_params.redraw_request = 1;
+    g_world_stat_preview_panel_thread_params.redraw_request = 1;
+    g_world_ability_panel_thread_params.redraw_request = 1;
 }

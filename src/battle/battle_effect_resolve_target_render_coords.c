@@ -17,7 +17,7 @@ void battle_effect_resolve_target_render_coords(
             if (add_depth != 0) {
                 s32 height;
                 tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[16].id.misc_id);
-                height = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+                height = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
                 if (height < out->vy) {
                     out->vy = height;
                 }
@@ -28,7 +28,7 @@ void battle_effect_resolve_target_render_coords(
             out->vx = coord_data->targets[16].id.tile_x * 28 + 14;
             out->vz = coord_data->targets[16].tile_y * 28 + 14;
             if (add_depth != 0) {
-                out->vy = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+                out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {
                 out->vy = -(tile->height * 12);
             }
@@ -39,7 +39,7 @@ void battle_effect_resolve_target_render_coords(
             if (add_depth != 0) {
                 s32 height;
                 tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].id.misc_id);
-                height = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+                height = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
                 if (height < out->vy) {
                     out->vy = height;
                 }
@@ -50,7 +50,7 @@ void battle_effect_resolve_target_render_coords(
             out->vx = coord_data->targets[target_index].id.tile_x * 28 + 14;
             out->vz = coord_data->targets[target_index].tile_y * 28 + 14;
             if (add_depth != 0) {
-                out->vy = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+                out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {
                 out->vy = -(tile->height * 12);
             }

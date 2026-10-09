@@ -68,7 +68,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
                         rect.w = g_world_menu_list_image_width;
                         rect.h = g_world_menu_row_height;
                         world_text_render_id_list_to_image_rows(
-                            (u8*)g_world_menu_list_text_table, g_world_menu_list_row_text_ids, &rect, 0);
+                            g_world_menu_list_text_table, g_world_menu_list_row_text_ids, &rect, 0);
                     }
                 }
             } else if (g_world_menu_display_script_input & PSX_PAD_UP) {
@@ -87,7 +87,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_draw_record_t* record
                         rect.w = g_world_menu_list_image_width;
                         rect.h = g_world_menu_row_height;
                         world_text_render_id_list_to_image_rows(
-                            (u8*)g_world_menu_list_text_table, g_world_menu_list_row_text_ids, &rect, 0);
+                            g_world_menu_list_text_table, g_world_menu_list_row_text_ids, &rect, 0);
                     }
                 }
             } else {

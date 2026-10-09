@@ -66,10 +66,11 @@ s32 world_formation_run_equip_item_menu(void) {
                 slot = g_world_equip_item_slot - 1;
             }
             world_gfx_get_sprite_slot(slot, &x, &y, g_world_menu_entry_ids);
-            world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
+            world_menu_init_scrollable_list(
+                g_world_menu_entry_ids, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
             g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
             g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-            g_world_menu_aux_callback = (s32 (*)(s32))world_item_build_type_icon_source;
+            g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
             g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             g_world_equip_item_previewed_cursor = -1;
@@ -119,7 +120,7 @@ s32 world_formation_run_equip_item_menu(void) {
             } else {
                 g_world_equip_item_preview_active = 0;
             }
-            g_world_formation_panel_windows[0].enabled = 1;
+            g_world_status_display_thread_params.redraw_request = 1;
         }
         world_menu_run_display_script(g_world_equip_item_menu_script, g_world_input_primary_repeat);
     }
@@ -129,7 +130,7 @@ s32 world_formation_run_equip_item_menu(void) {
         g_world_formation_unit_cycle_mode = 2;
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_equip_item_preview_active = 0;
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         world_thread_resume(0xf);
         slot = 0;
         if (g_world_equip_item_slot != 0) {

@@ -25,7 +25,7 @@ s32 world_menu_run_best_fit_equipment(void) {
         world_menu_toggle_preview_stats_window(1);
         world_menu_toggle_stat_preview_panel_thread(1);
         g_world_preview_stats_thread_params.redraw_request = 1;
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         world_thread_suspend(0xF);
         g_world_formation_unit_cycle_mode = 1;
         g_world_item_best_remove_initialized = 1;
@@ -42,7 +42,7 @@ s32 world_menu_run_best_fit_equipment(void) {
         }
         world_menu_toggle_stat_preview_panel_thread(0);
         world_menu_toggle_preview_stats_window(0);
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         g_world_formation_unit_cycle_mode = 2;
         if (*choice == 0) {
             for (i = 0; i < 5; i++) {

@@ -296,8 +296,6 @@ extern RECT g_bunit_gfx_draw_area;
 extern const u16 g_bunit_gfx_draw_area_scale_percent[12];
 extern u16 g_bunit_gfx_draw_move_count;
 extern u8 g_bunit_gfx_fade_color[3];
-extern u8 g_bunit_gfx_fade_color_b;
-extern u8 g_bunit_gfx_fade_color_g;
 extern s16 g_bunit_gfx_fade_intensity;
 extern RECT g_bunit_gfx_fade_rect[];
 extern u8 g_bunit_gfx_increasing_fade_active;
@@ -447,8 +445,6 @@ typedef s32 (*bunit_menu_row_callback_t)(s32 row);
 
 enum { BUNIT_MENU_SELECTION_RECORD_COUNT = 14 };
 
-extern u8 g_bunit_menu_cursor_forward_offset_bytes[];
-extern u8 g_bunit_menu_cursor_reverse_offset_bytes[];
 extern s32 g_bunit_menu_cursor_row;
 extern s8 g_bunit_menu_event_speed;
 extern s32 g_bunit_menu_indicator_brightness[2];

@@ -7,7 +7,6 @@ void option_entrypoint(s32 menu_type) {
     s32 index;
     u32 packed = g_main_game_options.value;
 
-    g_option_values_unchanged = 1;
     g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT] = packed & GAME_OPTIONS_CURSOR_MOVEMENT_MASK;
     g_option_current_values[GAME_OPTION_CURSOR_REPEAT_SPEED]
         = (packed >> GAME_OPTIONS_CURSOR_REPEAT_SPEED_SHIFT) & GAME_OPTIONS_THREE_BIT_VALUE_MASK;
@@ -33,6 +32,7 @@ void option_entrypoint(s32 menu_type) {
         = (packed >> GAME_OPTIONS_MAX_EQUIP_AT_JOB_CHANGE_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
     g_option_current_values[GAME_OPTION_SOUND_MODE]
         = (packed >> GAME_OPTIONS_SOUND_MODE_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
+    g_option_current_values[GAME_OPTION_UNCHANGED] = 1;
 
     for (index = 0; index < GAME_OPTION_COUNT; index++) {
         if (g_option_current_values[index] != g_option_reference_values[index]) {

@@ -7,7 +7,7 @@ void battle_state_handle_action_help_menu_state(void) {
         g_battle_menu_help_opening = 0;
         misc_data = battle_unit_get_casting_misc_data();
         if (misc_data != 0) {
-            if (misc_data->unit_id == g_casting_unit_misc_id) {
+            if (misc_data->unit_id == g_battle_unit_source_misc_id) {
                 battle_menu_open_active_unit_idle_action_menu();
             } else {
                 battle_menu_open_non_active_unit_idle_action_menu();

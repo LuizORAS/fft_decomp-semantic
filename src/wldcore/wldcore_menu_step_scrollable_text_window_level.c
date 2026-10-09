@@ -7,12 +7,12 @@
  * object, pops the level, clears system flags 0x08002000, shows the parent
  * level's window and resumes the bar menu.
  *
- * The target keeps &g_wldcore_scroll_text_render_record_index (the window's render_record_index) in a
+ * The target keeps &g_wldcore_scrollable_text_window.render_record_index (the window's render_record_index) in a
  * register and passes it biased by -0x44; addressing the window through
  * wldcore_text_scrollable_window_t materialises a second base and does not
  * match. */
 void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t* level) {
-    s32* index = &g_wldcore_scroll_text_render_record_index;
+    s32* index = &g_wldcore_scrollable_text_window.render_record_index;
     s32 depth;
 
     if (g_wldcore_window_render_records[*index].flags & 0x10) {

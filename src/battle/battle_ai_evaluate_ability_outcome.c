@@ -12,7 +12,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
     s32 i;
     if (g_battle_ai_data_base.decision_state) {
         /* Resume: each state re-enters the evaluation step that suspended. */
-        switch (g_battle_ai_outcome_evaluation_state) {
+        switch (g_battle_ai_data_base.outcome_evaluation_state) {
         case 0:
             goto evaluate_reflected_targets;
         case 1:

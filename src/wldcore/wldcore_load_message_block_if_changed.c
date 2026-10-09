@@ -5,7 +5,7 @@
  * the disc LBA below, so entry i+1 minus entry i is that chapter's length. */
 
 void wldcore_load_message_block_if_changed(s32 chapter) {
-    g_world_text_message_section = g_wldcore_message_buffer;
+    g_world_text_section_pointers[WORLD_TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
     if (chapter != g_wldcore_loaded_message_block) {
         wldcore_wait_for_file_load();
         g_wldcore_loaded_message_block = chapter;

@@ -17,9 +17,10 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
     case 0:
         switch (g_battle_gfx_unit_graphics_load_state[0]) {
         case 0:
-            id = g_battle_gfx_spritesheet_data
-                     [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                         .shp_id;
+            id = g_battle_gfx_spritesheet_data[g_main_gfx_unit_graphics_load_queue
+                                                   .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                                                   .portrait_id]
+                     .shp_id;
             if (id < 5 || id == g_battle_gfx_last_loaded_shp_id) {
                 result = 2;
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
@@ -40,9 +41,10 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             }
             break;
         case 1:
-            id = g_battle_gfx_spritesheet_data
-                     [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                         .seq_id;
+            id = g_battle_gfx_spritesheet_data[g_main_gfx_unit_graphics_load_queue
+                                                   .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                                                   .portrait_id]
+                     .seq_id;
             if (id < 5 || id == g_battle_gfx_last_loaded_seq_id) {
                 result = 2;
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
@@ -63,30 +65,37 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             }
             break;
         case 2:
-            if (g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id >= 0xa0) {
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id = 1;
+            if (g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
+                >= 0xa0) {
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id
+                    = 1;
             }
             if (battle_gfx_is_spritesheet_id_loaded(
-                    g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id)
+                    g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                        .portrait_id)
                 != 0) {
                 g_battle_gfx_unit_graphics_load_state[3] = 0;
                 g_battle_gfx_unit_graphics_load_state[1] = 2;
                 result = 2;
                 break;
             }
-            g_battle_gfx_unit_graphics_load_state[3] = (s32)main_heap_alloc(g_battle_gfx_spritesheet_files
-                    [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                        .size);
+            g_battle_gfx_unit_graphics_load_state[3] = (s32)main_heap_alloc(
+                g_battle_gfx_spritesheet_files[g_main_gfx_unit_graphics_load_queue
+                                                   .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                                                   .portrait_id]
+                    .size);
             if (g_battle_gfx_unit_graphics_load_state[3] == 0) {
                 break;
             }
             if (main_file_call_build_header(
-                    g_battle_gfx_spritesheet_files
-                        [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                            .sector,
-                    g_battle_gfx_spritesheet_files
-                        [g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id]
-                            .size,
+                    g_battle_gfx_spritesheet_files[g_main_gfx_unit_graphics_load_queue
+                                                       .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                                                       .portrait_id]
+                        .sector,
+                    g_battle_gfx_spritesheet_files[g_main_gfx_unit_graphics_load_queue
+                                                       .descriptors[g_battle_gfx_unit_graphics_load_state[2]]
+                                                       .portrait_id]
+                        .size,
                     (void*)g_battle_gfx_unit_graphics_load_state[3])
                 == 0) {
                 g_battle_gfx_unit_graphics_load_state[1]++;
@@ -114,15 +123,16 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 (u32*)g_battle_gfx_boss_seq_tables, (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case 2:
-            battle_unit_init_misc_data(g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_x,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_y,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_level,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_height,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].palette_id,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].misc_id,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].battle_stats,
-                g_unit_graphics_load_descriptors[g_battle_gfx_unit_graphics_load_state[2]].flags,
+            battle_unit_init_misc_data(
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_x,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_y,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_level,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].map_height,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].portrait_id,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].palette_id,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].misc_id,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].battle_stats,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state[2]].flags,
                 (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             battle_unit_update_and_animate_units_three_times();
             break;
@@ -147,5 +157,5 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
         result = 2;
         break;
     }
-    return (g_battle_gfx_unit_graphics_load_state[2] < g_main_gfx_unit_graphics_load_count) ? result : 0;
+    return (g_battle_gfx_unit_graphics_load_state[2] < g_main_gfx_unit_graphics_load_queue.count) ? result : 0;
 }

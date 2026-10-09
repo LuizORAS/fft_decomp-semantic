@@ -56,7 +56,7 @@ void world_menu_auto_battle_setting_thread(void) {
                 || i == 0) {
                 selected = cursor;
                 if (selected == 0) {
-                    before = battle_menu_get_id_based_on_mount_moveable_actable(g_world_unit_view_battle_id);
+                    before = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
                     stats->auto_battle_setting = 0;
                     g_world_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
@@ -64,7 +64,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     colour[2] = 4;
                     colour[3] = 4;
                     colour[4] = 4;
-                    after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_unit_view_battle_id);
+                    after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
                     if (before != after) {
                         world_thread_set_parameters(8, 0, 0, 1);
                         world_menu_build_idle_action_stub(after);

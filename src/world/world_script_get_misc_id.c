@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Biased base: encoded event-unit IDs 0x64..0x67 reach the four halfwords at
- * g_world_event_unit_slots without subtracting 0x64 in the target. */
-extern u16 g_world_event_unit_slots_by_encoded_id[];
-
 /* Resolve an event-script unit identifier to its active Misc Unit ID.
  *
  * Character identities, Ramza and active-turn aliases, and the four event-unit
@@ -86,7 +82,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     }
 
     if ((u32)(unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST) < EVENT_UNIT_SELECTOR_SLOT_COUNT) {
-        misc_id = g_world_event_unit_slots_by_encoded_id[unit_id];
+        misc_id = (u16)g_world_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
             world_noop_800e7808(original_unit_id);
             return EVENT_MISC_ID_NONE;

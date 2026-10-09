@@ -1,11 +1,5 @@
 #include "fft/battle.h"
 
-/* Status display image IDs, eight per status_infliction/status_removal byte,
- * indexed from the byte's high bit: a non-const [5][8] view of
- * g_battle_action_status_display_image_ids, whose flat const declaration
- * changes this function's code. */
-extern u8 g_battle_action_status_display_image_ids_view[5][8];
-
 /* Queues the post-action displays for a unit's resolved action.
  *
  * A hit sets one action_display_flags bit per HP/MP, stat, level, steal and
@@ -108,13 +102,13 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                     bit = 0x80 >> j;
                     if (count < BATTLE_ACTION_STATUS_DISPLAY_CAPACITY) {
                         if (action->status_infliction[i] & bit) {
-                            image = g_battle_action_status_display_image_ids_view[i][j];
+                            image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
                                 unit->status_display_image_count++;
                             }
                         } else if (action->status_removal[i] & bit) {
-                            image = g_battle_action_status_display_image_ids_view[i][j];
+                            image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
                                 unit->status_display_image_list[unit->status_display_image_count] |= 0x80;

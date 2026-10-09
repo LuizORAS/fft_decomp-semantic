@@ -41,7 +41,7 @@ void wldcore_init_world_map_state(void) {
 
     for (i = 0; i < 2; i++) {
         g_wldcore_screen_fade_state.flags[i] = 0;
-        *(s32*)&g_wldcore_screen_fade_state.priorities[i] = 0xf;
+        g_wldcore_screen_fade_state.priorities[i] = 0xf;
         /* A typed attribute store folds the address and loses five target
          * instructions; this indexed offset preserves the verified output.
          * The rectangle stores index through a decayed pointer: plain

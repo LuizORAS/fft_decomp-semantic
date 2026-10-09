@@ -78,7 +78,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         work->secondary_colors[index] = 0;
     }
     published = work->text;
-    g_menu_text_pointer = published;
+    g_battle_text_section_pointers[31] = published;
     count = 0;
     bracketed = 0;
     /* The target publishes the buffer from a temporary and copies it into the

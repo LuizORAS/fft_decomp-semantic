@@ -7,8 +7,8 @@
  * resumes from its saved phase when the frame budget is exhausted.
  */
 s32 battle_ai_evaluate_charging_movement(void) {
-    battle_stats_t* unit = g_battle_ai_temp_unit_data;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
+    battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
     battle_action_command_prefix_t* action = (battle_action_command_prefix_t*)&unit->action_actor_id;
     s32 state;
 

@@ -16,5 +16,5 @@ void open_file_build_openbk_header(s32 image_id, void* destination) {
     start_offset = g_open_file_openbk_start_sector_offsets[image_id];
     end_offset = g_open_file_openbk_end_sector_offsets[image_id];
     open_file_wait_then_build_header(
-        &g_open_file_header, OPEN_OPENBK_BASE_SECTOR + start_offset, end_offset - start_offset, destination);
+        &g_main_file_cd_state, OPEN_OPENBK_BASE_SECTOR + start_offset, end_offset - start_offset, destination);
 }

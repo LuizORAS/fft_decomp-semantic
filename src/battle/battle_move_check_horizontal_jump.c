@@ -56,18 +56,18 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
                 continue;
             }
             state->work_height = tile->height * 2;
-            state->jump_half_height = tile->depth_half_height & 0x1f;
+            state->jump_half_height = tile->depth_half_height.value & 0x1f;
             state->jump_slope = tile->slope_type;
             height_a = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_a) & 3);
             height_b = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_b) & 3);
             if ((u8)height_a > (u8)height_b) {
                 high = height_b - (tile->ceiling_depth_and_marks.value & 0x1f) * 2;
-                depth = (tile->depth_half_height >> 5) * 2;
+                depth = (tile->depth_half_height.value >> 5) * 2;
                 state->work_height = high;
                 low = state->work_height;
                 high = height_a + depth;
             } else {
-                high = height_b + (tile->depth_half_height >> 5) * 2;
+                high = height_b + (tile->depth_half_height.value >> 5) * 2;
                 low = height_a;
                 low -= (tile->ceiling_depth_and_marks.value & 0x1f) * 2;
             }

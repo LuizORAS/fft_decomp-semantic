@@ -20,7 +20,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         = state->work_level * 256 + state->work_y * config->map_max_x + state->work_x];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
-    state->destination_half_height = state->destination_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;
+    state->destination_half_height = state->destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
     state->destination_slope = state->destination_tile->slope_type;
     destination_flags = &flags[state->destination_index];
     if (state->destination_unit_record_flag != 0) {
@@ -54,7 +54,8 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     if (state->destination_ceiling_height < state->destination_entry_height + config->unit_size)
         return 6;
     if (state->destination_unit_record_flag == 0)
-        state->destination_entry_height += (state->destination_tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 2;
+        state->destination_entry_height
+            += (state->destination_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
     if (state->destination_entry_height > state->source_exit_height) {
         if (extra_span != 0)
             return 8;

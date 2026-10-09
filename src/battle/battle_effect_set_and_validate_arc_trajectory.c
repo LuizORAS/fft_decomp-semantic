@@ -57,7 +57,7 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
         g_battle_effect_trajectory_destination.vx = tile_position->vx * 28 + 14;
         g_battle_effect_trajectory_destination.vz = tile_position->vz * 28 + 14;
         g_battle_effect_trajectory_destination.vy
-            = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+            = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
     } else {
         battle_unit_get_tile_center_and_height_by_battle_id(
             target_id, (battle_screen_coords_t*)&g_battle_effect_trajectory_destination);

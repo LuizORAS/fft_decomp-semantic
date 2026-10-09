@@ -125,8 +125,6 @@ extern u16 g_card_gfx_draw_clut;
 extern s16 g_card_gfx_draw_semitrans;
 extern u16 g_card_gfx_drawenv_y;
 extern u8 g_card_gfx_fade_color[3];
-extern u8 g_card_gfx_fade_color_b;
-extern u8 g_card_gfx_fade_color_g;
 extern s16 g_card_gfx_fade_intensity;
 extern u8 g_card_gfx_fade_overlay_color[3];
 extern RECT g_card_gfx_fade_rect;
@@ -200,10 +198,6 @@ extern u32 g_card_input_secondary_repeat_counter;
 extern u32 g_card_previous_input;
 extern u8 g_card_input_activation_timer;
 
-/* g_card_input_display_state.scale_x/.scale_y as their own symbols: the initial stores use absolute addresses, and the
- * member spelling lets GCC derive the later `state` pointer from the scale_x address instead. */
-extern s16 g_card_input_display_scale_x;
-extern u16 g_card_input_display_scale_y;
 extern u32 g_card_input_primary_repeat;
 void card_input_clear_state(void);
 void card_input_update_controller(void);
@@ -335,13 +329,10 @@ extern u8 g_card_text_data[];
 extern const char g_card_text_decimal_format[];
 extern u16 g_card_text_digit_clut;
 extern u16 g_card_text_digit_texture_page;
-extern const u8* g_card_text_glyph_bitmap_data;
-extern const u8 g_card_text_glyph_widths[];
 extern const u8 g_card_text_job_name[];
 extern s8 g_card_text_layout_mode;
 extern const u8 g_card_text_location_name[];
 extern u16 g_card_text_metric_0;
-extern u16 g_card_text_metric_1;
 extern u16 g_card_text_metric_2;
 extern u16 g_card_text_metric_3;
 extern u16 g_card_text_metric_4;

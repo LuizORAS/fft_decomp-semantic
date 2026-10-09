@@ -7,7 +7,7 @@
  *
  * On a new selection this snapshots the unit's display data, starts the
  * status-banner slide (g_world_formation_banner_slide_step), and records the scroll direction in
- * g_world_formation_panel_windows; it then toggles the per-menu windows and advances the slide.
+ * g_world_status_display_thread_params.redraw_request; it then toggles the per-menu windows and advances the slide.
  * The caller in world_menu_run_remove_item passes two arguments that this body
  * never reads. Compiled at O1 like its world_formation_stage_selected_unit
  * neighbour.
@@ -48,11 +48,12 @@ void world_formation_update_unit_selection(void) {
         previous = g_world_formation_selected_unit_index_latch;
         world_formation_stage_selected_unit();
         if ((g_world_input_primary_repeat & PSX_PAD_RIGHT) || (g_world_input_secondary_repeat & PSX_PAD_R1)) {
-            g_world_formation_panel_windows[0].enabled = 1;
+            g_world_status_display_thread_params.redraw_request = 1;
         } else if ((g_world_input_primary_repeat & PSX_PAD_LEFT) || (g_world_input_secondary_repeat & PSX_PAD_L1)) {
-            g_world_formation_panel_windows[0].enabled = 2;
+            g_world_status_display_thread_params.redraw_request = 2;
         } else {
-            g_world_formation_panel_windows[0].enabled = previous < g_world_formation_selected_unit_index ? 1 : 2;
+            g_world_status_display_thread_params.redraw_request
+                = previous < g_world_formation_selected_unit_index ? 1 : 2;
         }
     } else if (g_world_formation_scroll_enabled_latch != g_world_formation_scroll_enabled
         && g_world_formation_banner_slide_step == 0) {

@@ -22,7 +22,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
         if (result == -1 || (u32)(result - 2) < 2) {
             return -1;
         }
-        if ((g_battle_target_tile_targetable_flags[battle_map_calculate_location(acting_unit) * 8]
+        if ((g_battle_map_tile_data[battle_map_calculate_location(acting_unit)].ceiling_depth_and_marks.value
                 & MAP_TILE_FLAG_ABILITY_RANGE)
             == 0) {
             return -2;
@@ -32,7 +32,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
      * 0x0a action_target_kind, 0x0b action_target_id, 0x0c action_target_x,
      * 0x0e action_target_elevation, 0x10 action_target_y. */
     action[0xa] = BATTLE_ACTION_TARGET_TILE;
-    action[0xb] = g_battle_acting_unit_id_byte;
+    action[0xb] = g_battle_acting_unit_id;
     *(s16*)(action + 0xc) = acting_unit->x;
     *(s16*)(action + 0x10) = acting_unit->position.bits.y;
     *(u16*)(action + 0xe) = acting_unit->position.raw >> 15;

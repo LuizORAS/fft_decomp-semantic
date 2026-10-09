@@ -102,7 +102,7 @@ void attack_gfx_prepare_formation_sprites(void) {
             portrait = -1;
             code = 0x4C;
         } else if (code >= 0x3F) {
-            code = g_attack_monster_formation_sprite_table[code];
+            code = g_attack_monster_formation_sprite_table[code - 0x3F];
             portrait = code;
         } else {
             portrait = code;

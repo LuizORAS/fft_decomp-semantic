@@ -51,7 +51,7 @@ void option_menu_start_dead_unit_threads(void) {
                  * the pair into a strength-reduced giv. */
                 s32 value = bit_index + TEXT_ID_ABILITY_NAME_BASE;
 
-                g_dead_unit_menu_values[value_count++] = byte_index * 8 + value;
+                g_option_menu_at_list_primary_values[value_count++] = byte_index * 8 + value;
             }
             mask *= 2;
         }
@@ -87,14 +87,14 @@ void option_menu_start_dead_unit_threads(void) {
     g_dead_unit_result = 0;
     if (context->result == 4) {
         if (main_item_get_total_equipment_quantity(context->treasure_item, 1) == 0x63) {
-            g_dead_unit_roster_id = context->treasure_item;
-            g_dead_unit_roster_id_copy = context->treasure_item;
+            g_battle_text_substitution_values[0] = context->treasure_item;
+            g_battle_text_substitution_values[1] = context->treasure_item;
             message_id = 0x101b;
-            g_dead_unit_item_value = main_item_get_data_pointer(context->treasure_item)->price >> 2;
+            g_battle_text_substitution_values[2] = main_item_get_data_pointer(context->treasure_item)->price >> 2;
             g_dead_unit_result = context->treasure_item;
         } else {
             message_id = 0x101a;
-            g_dead_unit_roster_id = context->treasure_item;
+            g_battle_text_substitution_values[0] = context->treasure_item;
             g_dead_unit_result = context->treasure_item;
         }
         ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;

@@ -278,7 +278,7 @@ restart_script:
             battle_thread_yield();
             if (battle_script_is_tutorial_event_slot() != 0) {
                 battle_gfx_ramp_screen_overlay_intensity_to_max();
-                g_main_game_options.value = g_battle_saved_game_options;
+                g_main_game_options = g_battle_saved_game_options;
                 battle_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
@@ -341,8 +341,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D8) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D9) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_DC) {
-            /* The target stores only the low halfword of $2F. */
-            *(s16*)&g_battle_text_substitution_values[0x2f] = 0xD;
+            D_80165FB0 = 0xD;
         }
         /* ---- Dialogue and portraits ---- */
         else if (opcode == EVENT_OPCODE_DISPLAY_MESSAGE) {

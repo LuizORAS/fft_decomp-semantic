@@ -22,7 +22,7 @@ void battle_target_apply_vertical_fixed(s32 x, s32 y) {
             targeting_panel_entry_t* base = g_battle_target_panel_data;
             targeting_panel_entry_t* lvl1 = base + 0x100;
             shared = x + i;
-            mx = g_map_max_x;
+            mx = g_battle_map_max_x;
             tile_index = (vertical * mx) + shared;
             panel = &base[tile_index];
             if ((shared >= 0) && (shared < mx) && ((u8)panel->a != 0)) {
@@ -37,9 +37,9 @@ void battle_target_apply_vertical_fixed(s32 x, s32 y) {
             targeting_panel_entry_t* base = g_battle_target_panel_data;
             targeting_panel_entry_t* lvl1 = base + 0x100;
             vertical = y + i;
-            tile_index = (vertical * g_map_max_x) + shared;
+            tile_index = (vertical * g_battle_map_max_x) + shared;
             panel = &base[tile_index];
-            if ((vertical >= 0) && (vertical < g_map_max_y) && ((u8)panel->a != 0)) {
+            if ((vertical >= 0) && (vertical < g_battle_map_max_y) && ((u8)panel->a != 0)) {
                 panel->b = 1;
                 lvl1[tile_index].b = 1;
             }

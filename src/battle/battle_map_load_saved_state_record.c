@@ -64,23 +64,23 @@ u8* battle_map_load_saved_state_record(battle_map_state_record_t* record) {
                 g_battle_map_mesh_part_animation_states[i] = 0;
             }
             g_battle_map_mesh_parts[i].value_87 = 0;
-            g_battle_map_mesh_parts[i].vectors_a[1]
+            g_battle_map_mesh_parts[i].rotation
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
                           .vector_0;
-            g_battle_map_mesh_parts[i].vectors_b[1]
+            g_battle_map_mesh_parts[i].translation
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
                           .vector_8;
-            g_battle_map_mesh_parts[i].vectors_c[1].vx
+            g_battle_map_mesh_parts[i].scale.vx
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
                           .value_10;
-            g_battle_map_mesh_parts[i].vectors_c[1].vy
+            g_battle_map_mesh_parts[i].scale.vy
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
                           .value_12;
-            g_battle_map_mesh_parts[i].vectors_c[1].vz
+            g_battle_map_mesh_parts[i].scale.vz
                 = g_battle_map_mesh_animation_keyframes
                       [g_battle_map_mesh_animation_instructions[i].states[0][1].keyframe]
                           .value_14;

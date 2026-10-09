@@ -70,7 +70,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
         }
         if (state->frame < 4) {
             if (state->count_a < 8) {
-                for (i = 0; i < g_battle_effect_groups[0].spawns_per_frame; i++) {
+                for (i = 0; i < g_battle_effect_trap_particle_configs[0].spawns_per_frame; i++) {
                     for (j = 0; j < 8; j++) {
                         if (state->ids_a[j] == 0) {
                             break;
@@ -81,8 +81,8 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
                         break;
                     }
                     slot = &g_battle_effect_slots[state->ids_a[j]];
-                    slot->life = battle_effect_spawn_particle_motion(
-                        (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[0] - 2), &slot->motion);
+                    slot->life
+                        = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[0], &slot->motion);
                     battle_effect_init_trap_animation(0, g_battle_effect_current_secondary->parameter + 0x7ac0, slot);
                     state->count_a++;
                     if (state->count_a == 8) {
@@ -91,7 +91,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
                 }
             }
             if (state->frame < 4 && state->count_b < 16) {
-                for (i = 0; i < g_battle_effect_groups[group].spawns_per_frame; i++) {
+                for (i = 0; i < g_battle_effect_trap_particle_configs[group].spawns_per_frame; i++) {
                     for (j = 0; j < 16; j++) {
                         if (state->ids_b[j] == 0) {
                             break;
@@ -103,7 +103,7 @@ s32 battle_effect_glowing_tar_secondary_handler(void) {
                     }
                     slot = &g_battle_effect_slots[state->ids_b[j]];
                     slot->life = battle_effect_spawn_particle_motion(
-                        (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[group] - 2), &slot->motion);
+                        &g_battle_effect_trap_particle_configs[group], &slot->motion);
                     battle_effect_init_trap_animation(1, 0x7aca, slot);
                     slot->red = slot->green = slot->blue = 0xff;
                     state->count_b++;

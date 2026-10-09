@@ -95,15 +95,15 @@ s32 battle_target_move_cursor_by_input(void) {
             g_battle_cursor_x--;
             break;
         }
-        if (g_battle_cursor_x == g_map_max_x) {
+        if (g_battle_cursor_x == g_battle_map_max_x) {
             g_battle_cursor_x--;
-        } else if ((u32)g_battle_cursor_x > g_map_max_x) {
+        } else if ((u32)g_battle_cursor_x > g_battle_map_max_x) {
             g_battle_cursor_x = 0;
         }
-        if (g_battle_cursor_y == g_map_max_y) {
-            g_battle_cursor_y = g_map_max_y - 1;
+        if (g_battle_cursor_y == g_battle_map_max_y) {
+            g_battle_cursor_y = g_battle_map_max_y - 1;
         }
-        if ((u32)g_battle_cursor_y > g_map_max_y) {
+        if ((u32)g_battle_cursor_y > g_battle_map_max_y) {
             g_battle_cursor_y = 0;
         }
         lower = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);

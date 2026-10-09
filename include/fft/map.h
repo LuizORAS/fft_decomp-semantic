@@ -128,6 +128,17 @@ typedef union map_tile_flags_06 {
     } bits;
 } map_tile_flags_06_t;
 
+/* Tile byte 0x03: slope half-height and the depth added to the height
+ * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup).
+ * Retail reads the two as bit-fields where it loads the byte once for each. */
+typedef union map_tile_depth {
+    u8 value;
+    struct {
+        u8 half_height : 5; /* MAP_TILE_HALF_HEIGHT_MASK */
+        u8 depth : 3;       /* MAP_TILE_DEPTH_MASK */
+    } bits;
+} map_tile_depth_t;
+
 /* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at
  * BATTLE 0x801451c8 / WORLD 0x800f84f0 modifies bytes 0, 2 and 6.
@@ -138,10 +149,8 @@ typedef union map_tile_flags_06 {
 typedef struct map_tile {
     map_tile_surface_t surface; /* 0x00 */
     u8 _unknown_01;
-    u8 height; /* 0x02; tile height in whole units */
-    /* 0x03; bits 0..4 slope half-height, bits 5..7 depth added to height
-     * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup). */
-    u8 depth_half_height;
+    u8 height;                                /* 0x02; tile height in whole units */
+    map_tile_depth_t depth_half_height;       /* 0x03 */
     u8 slope_type;                            /* 0x04; two bits per exit side (battle_move_calculate_tile_ceiling) */
     map_tile_marks_t ceiling_depth_and_marks; /* 0x05; ceiling depth and the transient map marks */
     map_tile_flags_06_t flags_06;

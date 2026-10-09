@@ -2,11 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* g_world_map_selected_tile_data.display_height and .depth, bound separately:
- * the member spellings let GCC address both from one base and change the loop. */
-extern u16 g_world_selected_tile_display_height;
-extern s16 g_world_selected_tile_depth;
-
 /* Display thread at 0x800e8ab0: draws the selected tile's quad group
  * (the selected tile's display height, built by world_menu_build_quad_pieces) every frame and, when
  * the tile depth is non-zero, renders it as a one-digit
@@ -42,11 +37,12 @@ void world_menu_selected_tile_info_display_thread(void) {
     world_script_copy_bytes(&world_D_80173CBC[1], &world_D_80173CBC[0], sizeof(world_menu_quad_page_t));
 
     for (frame = 0;; frame++) {
-        s16* value = &g_world_selected_tile_depth;
+        map_selected_tile_t* tile = &g_world_map_selected_tile_data;
+        s16* value = &tile->depth;
         s32* stride;
 
         page = &world_D_80173CBC[frame & 1];
-        i = world_menu_build_quad_pieces((s16)g_world_selected_tile_display_height, page->quads) - 1;
+        i = world_menu_build_quad_pieces((s16)tile->display_height, page->quads) - 1;
         world_thread_yield();
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;

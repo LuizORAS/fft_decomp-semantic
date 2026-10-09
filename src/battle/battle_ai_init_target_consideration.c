@@ -15,10 +15,10 @@ void battle_ai_init_target_consideration(void) {
     battle_ai_nearest_target_mode_e mode;
     s32 target;
 
-    decision = g_battle_ai_acting_unit_decision_ptr;
     ai = &g_battle_ai_data_base;
+    decision = g_battle_ai_data_base.acting_unit_decision;
     if (g_battle_ai_data_base.acting_unit_team == 0) {
-        acting = g_battle_ai_temp_unit_data;
+        acting = g_battle_ai_data_base.acting_unit;
         if (acting->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
             ai->autobattle_setting = acting->auto_battle_setting;
             return;

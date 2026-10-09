@@ -12,8 +12,6 @@ extern s32 g_require_character_status_frame_config;
 extern s32 g_require_character_status_redraw_request;
 
 /* editor */
-extern s16 g_require_editor_brave;
-extern s16 g_require_editor_faith;
 extern u8 g_require_editor_unit_name[];
 extern u8 g_require_editor_secondary_skillset_name[];
 extern u8 g_require_editor_numeric_descriptor_a[];
@@ -31,12 +29,8 @@ extern u8 g_require_editor_numeric_text_a[];
 extern u8 g_require_editor_numeric_text_b[];
 extern u8 g_require_editor_numeric_texture[];
 extern u8 g_require_editor_job_name[];
-extern s16 g_require_editor_selected_unit_id;
 extern u8 g_require_editor_primary_skillset_name[];
 extern battle_menu_status_panel_slot_storage_t g_require_editor_unit_fields;
-extern s16 g_require_editor_job_id;
-extern s16 g_require_editor_zodiac;
-extern s16 g_require_editor_team_state;
 extern struct battle_stats g_require_editor_party_unit_stats;
 void require_editor_load_selected_unit(void);
 void require_editor_run_numeric_thread(void);
@@ -158,10 +152,7 @@ void require_menu_icon_strip_thread(void);
 void require_menu_wait_selection_threads(void);
 
 /* panel */
-extern u8 g_require_panel_active_unit_banner[];
-extern u8 g_require_panel_billboard_data[];
 extern battle_unit_status_record_t g_require_panel_comparison_billboard;
-extern s16 g_require_panel_comparison_unit_id;
 extern s32 g_require_panel_dim_a;
 extern s32 g_require_panel_dim_b;
 extern s32 g_require_panel_dim_c;
@@ -171,7 +162,6 @@ extern u8 g_require_panel_status_group_bounds[];
 extern u8 g_require_panel_status_group_count;
 extern u8 g_require_panel_status_group_ids[];
 extern const s16 g_require_panel_status_offsets[][6];
-extern u16 g_require_panel_status_position_y;
 extern const s16 g_require_panel_status_scales[][2];
 extern const s16 g_require_panel_status_uv_rects[][6];
 extern const u16 g_require_panel_status_y_offsets[];
@@ -195,7 +185,7 @@ extern menu_number_entry_t g_require_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_require_panel_comparison_packets[2];
 extern u8 g_require_panel_comparison_portrait_image[];
 extern RECT g_require_panel_comparison_portrait_rect;
-extern s16 g_require_panel_comparison_unit_data[];
+extern battle_active_unit_t g_require_panel_comparison_unit_data;
 extern u8 g_require_panel_editor_label_cells[];
 extern u16 g_require_panel_editor_label_cluts[][2];
 extern u8 g_require_panel_editor_mode_cell[];
@@ -296,7 +286,7 @@ void require_thread_exit_current(void);
 s32 require_thread_is_running(s32 thread_id);
 
 /* unit */
-extern u8 g_require_active_unit_data[];
+extern battle_active_unit_t g_require_active_unit_data;
 extern s32 g_require_party_affected_battle_unit_indices[];
 extern s32 g_require_party_affected_unit_count;
 extern s32 g_require_party_affected_unit_message_args[];

@@ -50,13 +50,13 @@ void battle_camera_update_map_pan(void) {
         }
         {
             s32* x = &g_battle_camera_current_real_coords.vx;
-            limit = (g_map_max_x * 0x1C000) + 0x70000;
+            limit = (g_battle_map_max_x * 0x1C000) + 0x70000;
             if (limit < *x)
                 *x = limit;
             if (*x < -0x70000)
                 *x = -0x70000;
         }
-        limit = (g_map_max_y * 0x1C000) + 0x70000;
+        limit = (g_battle_map_max_y * 0x1C000) + 0x70000;
         if (limit < g_battle_camera_current_real_coords.vz)
             g_battle_camera_current_real_coords.vz = limit;
         if (g_battle_camera_current_real_coords.vz < -0x70000)

@@ -2,13 +2,12 @@
 
 battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type) {
     s32 weapon_part;
-    u8* record;
     battle_gfx_sprite_display_data_t* display;
     battle_gfx_sprite_part_display_data_t* part;
 
     weapon_part = 2;
-    record = g_battle_gfx_weapon_sprite_display_data + unit_index * 0x440;
-    display = (battle_gfx_sprite_display_data_t*)(record + display_type * 0x24);
+    display
+        = (battle_gfx_sprite_display_data_t*)g_battle_unit_misc_data[unit_index].weapon_sprite_displays[display_type];
     part = display->parts;
     display->blue = 0x80;
     display->green = 0x80;

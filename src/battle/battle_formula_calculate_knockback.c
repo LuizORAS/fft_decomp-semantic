@@ -20,7 +20,6 @@ void battle_formula_calculate_knockback(void) {
     battle_stats_t* target;
     battle_stats_t* attacker;
     map_tile_t* tile;
-    map_tile_depth_t* depth;
     u8 surface;
     s32 dx;
     s32 dy;
@@ -78,16 +77,15 @@ void battle_formula_calculate_knockback(void) {
     if (level < 0) {
         return;
     }
-    tile = &g_battle_map_tile_data[(level << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
     surface = tile->surface.bits.type;
     if (tile->flags_06.bits.untargetable) {
         return;
     }
-    depth = (map_tile_depth_t*)&tile->depth_half_height;
-    if (depth->bits.depth != 0) {
+    if (tile->depth_half_height.bits.depth != 0) {
         return;
     }
-    if (depth->bits.half_height >= 3) {
+    if (tile->depth_half_height.bits.half_height >= 3) {
         return;
     }
     if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {

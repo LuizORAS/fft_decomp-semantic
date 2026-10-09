@@ -1,14 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The ability -> effect id tables. The target reads both with `lhu`, so the
- * elements are unsigned; include/fft/battle.h declares the 0x801b63f0
- * table as s16, so the unsigned view is bound here under its own name rather
- * than by redeclaring the catalogued one. The 0x801b637c table serves ability
- * ids from 0x200 up and overlaps the other table's tail. */
-extern u16 g_battle_effect_ability_ids_unsigned[]; /* 0x801b63f0 */
-extern u16 g_battle_effect_event_effect_ids_biased[];
-
 /*
  * Select the effect file for an ability and arm its secondary animation.
  *
@@ -30,10 +22,11 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
             else if (ball == 8)
                 g_ability_effect_id = 0x14;
         } else {
-            g_ability_effect_id = g_battle_effect_ability_ids_unsigned[ability];
+            g_ability_effect_id = (u16)g_battle_effect_ability_ids[ability];
         }
     } else {
-        g_ability_effect_id = g_battle_effect_event_effect_ids_biased[ability];
+        /* Ids from 0x200 up continue the table after the action abilities. */
+        g_ability_effect_id = (u16)g_battle_effect_ability_ids[ability - 0x200 + ABILITY_ID_SUPPORT_FIRST];
     }
 
     if (g_ability_effect_id >= 0) {

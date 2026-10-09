@@ -134,7 +134,6 @@ extern u16 g_equip_gfx_poly_ft4_capacity;
 extern u16 g_equip_gfx_poly_ft4_count;
 extern battle_menu_panel_frame_geometry_t g_equip_gfx_portrait_origin;
 extern u8 g_equip_gfx_portrait_transition_offsets[];
-extern void* g_equip_gfx_render_otag;
 extern s16 g_equip_gfx_semitransparency;
 extern u8 g_equip_gfx_sprite_color[3];
 extern s16 g_equip_gfx_sprite_ot_index;
@@ -354,11 +353,6 @@ extern world_oriented_quad_t g_equip_menu_secondary_slot_marker;
 /* Signed halfword: EQUIP reads this state with lh at 0x801c4584,
  * 0x801c45bc, and 0x801c4614. */
 extern s16 g_equip_menu_selected_list_index;
-/* The memset callers use the raw-byte name; equip_menu_set_selection_record
- * and equip_menu_restore_list_selection use the record view, which has its own
- * catalog name at the same address because reaching it through a cast of the
- * byte array moves equip_menu_restore_list_selection's codegen. */
-extern u8 g_equip_menu_selection_records[];
 extern bunit_menu_selection_record_t g_equip_menu_selection_entries[];
 extern s16 g_equip_menu_selection_values[4];
 extern world_oriented_quad_t g_equip_menu_slot_marker_rects[];
@@ -665,9 +659,6 @@ typedef struct equip_stats {
     u16 magical_accessory_evade; /* 0x22 */
     u8 _unused_24[0x5C];
 } equip_stats_t;
-
-extern s16 g_equip_selected_unit_hp_bonus;
-extern s16 g_equip_selected_unit_mp_bonus;
 
 /* Provisional: the 0x7A-byte preview records for the selected unit (index 0)
  * and its compare slot (index 1); several callers view one as raw bytes. */

@@ -38,8 +38,8 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     if ((u16)(multiplier - ABILITY_ID_MATH_FIRST) >= CALCULATOR_ABILITY_COUNT) {
         return -1;
     }
-    type_entry = &g_main_math_rsm_ability_data_by_ability_id[(s16)type];
-    multiplier_entry = &g_main_math_rsm_ability_data_by_ability_id[(s16)multiplier];
+    type_entry = &g_main_math_rsm_ability_data[(s16)type - ABILITY_ID_MATH_FIRST];
+    multiplier_entry = &g_main_math_rsm_ability_data[(s16)multiplier - ABILITY_ID_MATH_FIRST];
     type_flags = *type_entry;
     multiplier_flags = *multiplier_entry;
     if (!(type_flags & CALCULATOR_ATTRIBUTE_MASK) || !(multiplier_flags & CALCULATOR_MULTIPLE_MASK)

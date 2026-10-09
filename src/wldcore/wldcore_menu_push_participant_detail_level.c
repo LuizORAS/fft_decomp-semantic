@@ -53,7 +53,7 @@ void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant
     wldcore_unit_build_status_panel_data(g_main_active_propositions[proposition].participant_indices[participant]);
 
     g_wldcore_thread8_params.x = 0;
-    g_wldcore_thread8_offset_y = 0;
+    g_wldcore_thread8_params.y = 0;
     g_wldcore_threadc_params.y = 0;
     g_wldcore_thread9_params.y = 0;
     world_thread_start(8, world_menu_unit_status_banner_thread);

@@ -14,8 +14,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
         misc_id = -1;
-        if (g_battle_effect_targets[16].target_type == 0) {
-            misc_id = g_battle_effect_targets[16].id.misc_id;
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
+            misc_id = g_battle_effect_coord_data.targets[16].id.misc_id;
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) {
@@ -25,8 +25,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_targets[i].target_type == 0) {
-                    battle_gfx_prepare_post_action_display_by_misc_id(g_battle_effect_targets[i].id.misc_id);
+                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+                    battle_gfx_prepare_post_action_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
         }
@@ -38,8 +38,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_targets[i].target_type == 0) {
-                    battle_unit_update_display_by_misc_id(g_battle_effect_targets[i].id.misc_id);
+                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+                    battle_unit_update_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
         }
@@ -51,8 +51,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_targets[i].target_type == 0) {
-                    battle_unit_set_target_anim_by_misc_id(g_battle_effect_targets[i].id.misc_id);
+                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+                    battle_unit_set_target_anim_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
         }
@@ -65,8 +65,9 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_targets[i].target_type == 0) {
-                    battle_unit_set_specific_animation_by_misc_id(g_battle_effect_targets[i].id.misc_id, animation);
+                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+                    battle_unit_set_specific_animation_by_misc_id(
+                        g_battle_effect_coord_data.targets[i].id.misc_id, animation);
                 }
             }
         }

@@ -28,6 +28,6 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_overlay_state = 0;
     g_world_screen_fade = 0;
     g_world_menu_transition_timeout = 0;
-    world_unit_start_view_thread(2, g_world_unit_view_battle_id, 0xFF);
+    world_unit_start_view_thread(2, g_world_active_unit_data.battle_id, 0xFF);
     world_thread_exit_current();
 }

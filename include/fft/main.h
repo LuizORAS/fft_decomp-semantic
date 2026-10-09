@@ -25,6 +25,12 @@ typedef struct battle_loader_jump_record {
     u8 range;    /* 0x00 */
     u8 vertical; /* 0x01 */
 } battle_loader_jump_record_t;
+
+/* Charge ability record, 8 of them at g_main_charge_ability_data. */
+typedef struct battle_loader_charge_record {
+    u8 ct;    /* 0x00 */
+    u8 power; /* 0x01 */
+} battle_loader_charge_record_t;
 typedef char battle_loader_jump_record_size_must_be_2[(sizeof(battle_loader_jump_record_t) == 2) ? 1 : -1];
 
 typedef struct main_ability_human_skillset {
@@ -40,21 +46,19 @@ typedef struct main_ability_monster_skillset {
 extern u8 g_main_ability_aoe_data[];
 extern u8 g_main_ability_ct_data[];
 extern ability_secondary_data_t g_main_ability_range_data[];
-extern u8 g_main_jump_charge_ability_data_by_ability_id[];
-extern u8 g_main_throw_ability_item_types_by_ability_id[];
 
-/* Pre-biased so the raw ability id indexes the SCUS secondary-data byte; see
- * main_ability_calculate_pointers_and_type. */
-extern u8 g_main_math_rsm_ability_data_by_ability_id[];
+/* One secondary-data byte per ability from ABILITY_ID_MATH_FIRST on (math,
+ * reaction, support, movement). */
+extern u8 g_main_math_rsm_ability_data[ABILITY_ID_COUNT - ABILITY_ID_MATH_FIRST];
 
 /* Provisional: 12 item types indexed by throw ability id - 0x17e. */
 extern u8 g_main_throw_ability_item_types[];
 extern battle_loader_jump_record_t g_main_jump_ability_data[12];
+extern battle_loader_charge_record_t g_main_charge_ability_data[8];
 extern ability_data_t g_main_ability_data[];
 
-/* Linker alias biased so a reaction ability ID can index the 32-byte table at
- * 0x8005ebd0 directly; only IDs 0x1a6..0x1c5 are valid. */
-extern const u8 g_main_reaction_behavior_flags_by_ability_id[];
+/* Indexed by reaction ability id - ABILITY_ID_REACTION_FIRST. */
+extern const u8 g_main_reaction_behavior_flags[ABILITY_ID_SUPPORT_FIRST - ABILITY_ID_REACTION_FIRST];
 extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
 extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
@@ -269,7 +273,6 @@ extern u8 g_main_item_type_order_5[7];
 extern u8 g_main_item_type_order_6[5];
 extern weapon_data_t g_main_item_weapon_data[]; /* 0x80063ab8 */
 extern u8 g_main_weapon_page_order[0x8a];
-extern u8 g_main_item_ability_item_ids_by_ability_id[];
 extern u8 g_main_item_ability_item_ids[14];
 extern u8 g_main_item_poach_table[48][2];
 extern accessory_data_t g_main_item_accessory_data[];
@@ -374,8 +377,6 @@ extern u32 g_main_proposition_last_attempt_date_bits[27];
 extern u32 g_main_treasure_acquisition_date_bits[14];
 extern u32 g_main_land_discovery_date_bits[5];
 extern u8 g_main_proposition_states[96];
-extern u32 g_main_save_day;
-extern u32 g_main_save_month;
 extern u8 g_main_save_slot_buffer[];
 extern u32 g_main_saved_data_bits[40];
 extern wldcore_word_pair_t g_main_saved_list_cursor_state;
@@ -836,8 +837,6 @@ extern CdlATV g_main_sound_cd_mix;                 /* 0x80032a3c; written by Put
 /* g_main_sound_cd_mix val1 (CD left to SPU right) and val3 (CD right to SPU
  * left) as their own symbols: main_sound_put_type stores them through their
  * own `lui`, which field stores of g_main_sound_cd_mix do not reproduce. */
-extern u8 g_main_sound_cd_mix_left_to_right;
-extern u8 g_main_sound_cd_mix_right_to_left;
 extern s16 g_main_sound_decoded_data_result;        /* SPU transfer controller state */
 extern suzuki_waveset_t* g_main_sound_waveset_list; /* 0x80032a44 */
 extern s32 g_main_sound_spu_event;                  /* 0x80032a48; OpenEvent handle of main_sound_spu_event_handler */
@@ -1126,7 +1125,7 @@ extern u8 g_main_heap_game_allocator_table[64];
 extern u8 g_main_heap_smd_allocator_table[16];
 extern u8 g_main_heap_smd_base[];
 extern game_options_t g_main_game_options;
-extern volatile game_options_t g_main_game_options_defaults;
+extern game_options_t g_main_game_options_defaults;
 extern s32 g_main_system_frontend_world_result;
 extern u32 g_main_system_game_flow_state;
 extern u32 g_main_system_game_loop_stack_pointer;
@@ -1143,7 +1142,6 @@ extern s32 g_main_system_session_frames;
  * same address under its union type. The scalar name is retained because GCC
  * otherwise coalesces the saved-word load with the following bitfield writes
  * and changes the target instruction order. */
-extern u32 g_main_game_options_raw;
 
 extern s32 g_main_boot_startup2_has_run;
 extern u32 g_main_boot_squaresoft_logo_image_words[];
@@ -1240,7 +1238,6 @@ typedef enum main_unit_action_state {
 } main_unit_action_state_e;
 
 extern u8 g_main_party_highest_level;
-extern u8 g_party_slot_base;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
 extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
@@ -1383,7 +1380,6 @@ extern u8 g_main_gfx_zodiac_sprite_count;
 extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
 extern main_zodiac_scale_t g_main_gfx_zodiac_sprite_scales[];
 extern main_zodiac_texture_position_t g_main_gfx_zodiac_texture_position;
-extern s32 g_main_gfx_display_buffer_index;
 extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 extern s32 g_main_gfx_loading_display_frame_counter;
@@ -1419,7 +1415,6 @@ extern u8 g_main_accessory_page_order[0x21];
 extern u8 g_main_armor_page_order[0x25];
 extern u8 g_main_helmet_page_order[0x1d];
 extern u8 g_main_action_menu_types_by_skillset[0xe0];
-extern u8 table[0x100];
 extern s32 g_main_battle_bin_sector;
 extern u8 g_main_common_menu_graphics_loaded;
 extern u32 g_main_tutorial_progress_masks[];

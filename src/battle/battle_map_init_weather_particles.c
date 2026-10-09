@@ -101,7 +101,8 @@ void battle_map_init_weather_particles(s32 command) {
             for (j = 0; j < g_battle_map_tile_depth; j++) {
                 surface_y = -(
                     (g_battle_map_tile_data_ptr[(s16)(i + j * g_battle_map_tile_width)].height
-                        + (g_battle_map_tile_data_ptr[(s16)(i + j * g_battle_map_tile_width)].depth_half_height >> 5))
+                        + (g_battle_map_tile_data_ptr[(s16)(i + j * g_battle_map_tile_width)].depth_half_height.value
+                            >> 5))
                     * 12);
                 if (g_battle_map_lowest_surface_y < surface_y) {
                     g_battle_map_lowest_surface_y = surface_y;

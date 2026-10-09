@@ -27,7 +27,6 @@ extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern u8 g_attack_editor_numeric_texture[];
 extern battle_unit_status_record_t g_attack_panel_selected_billboard;
-extern s16 g_attack_editor_team_state;
 extern s16 g_attack_editor_job_id;
 extern s16 g_attack_editor_brave;
 extern s16 g_attack_editor_faith;
@@ -231,7 +230,6 @@ extern world_menu_entry_t g_attack_deploy_menu_entries[];
 extern RECT g_attack_deploy_rect_09c;
 extern RECT g_attack_deploy_rect_0ac;
 extern RECT g_attack_deploy_rect_0cc;
-extern s32 g_attack_deploy_selected_unit_state[];
 extern u16 g_attack_deploy_semitrans_clut_buffer[0x10];
 extern s32 g_attack_deploy_slot_offsets[5];
 extern world_gfx_image_load_parameters_t g_attack_deploy_text_graphic_params[9];
@@ -347,7 +345,6 @@ extern u8 g_attack_panel_sprite_cells[];
 extern u8 g_attack_panel_status_group_bounds[];
 extern u8 g_attack_panel_status_group_count;
 extern u8 g_attack_panel_status_group_ids[];
-extern u16 g_attack_panel_status_position_y;
 extern attack_gfx_point_t g_attack_panel_status_scales[];
 extern main_zodiac_sprite_frame_t g_attack_panel_status_uv_rects[];
 
@@ -393,7 +390,7 @@ extern battle_menu_status_panel_indicator_prims_t g_attack_thread_indicator_pack
 extern s32 g_attack_status_display_thread_params;
 extern RECT attack_D_801CD0A4;
 extern u8 g_attack_event_condition_blocks[];
-extern u8 g_attack_monster_formation_sprite_table[];
+extern u8 g_attack_monster_formation_sprite_table[20]; /* indexed by sprite code - 0x3f */
 extern u8 g_attack_scenario_table[];
 extern RECT g_attack_special_portrait_palette_rect;
 extern RECT g_attack_special_portrait_rect;

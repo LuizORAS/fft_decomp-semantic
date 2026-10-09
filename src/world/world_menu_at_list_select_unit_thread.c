@@ -3,7 +3,7 @@
 
 /* Thread body: pauses the four worker threads after this one, yields until
  * g_world_menu_transition_finished is raised (keeping the g_world_menu_transition_timeout timeout 100 ahead of
- * g_world_menu_transition_duration), then resets the state, waits for threads 13..10, points
+ * g_world_menu_at_list_state.selected_index), then resets the state, waits for threads 13..10, points
  * g_world_text_section_pointers[31] at g_world_menu_at_list_text, resumes the worker threads and stops itself. */
 void world_menu_at_list_select_unit_thread(void) {
     g_world_menu_transition_active = 1;
@@ -12,7 +12,7 @@ void world_menu_at_list_select_unit_thread(void) {
     world_thread_suspend(g_world_thread_current_id + 2);
     world_thread_suspend(g_world_thread_current_id + 3);
     world_thread_suspend(g_world_thread_current_id + 4);
-    while (g_world_menu_transition_timeout = g_world_menu_transition_duration + 100,
+    while (g_world_menu_transition_timeout = (u16)g_world_menu_at_list_state.selected_index + 100,
         g_world_menu_transition_finished == 0) {
         world_thread_yield();
     }

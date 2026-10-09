@@ -20,7 +20,7 @@ void battle_map_update_lighting(void) {
         rectangle.y = 0x1ee;
         rectangle.w = 0x100;
         rectangle.h = 0xe;
-        LoadImage(&rectangle, g_battle_map_palette_upload_words);
+        LoadImage(&rectangle, (u32*)g_battle_map_palette_modified_colors);
         g_battle_map_palette_state.upload_pending = 0;
         *move_pending = 1;
     }

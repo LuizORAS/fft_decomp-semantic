@@ -27,7 +27,6 @@ extern s32 g_open_file_current_openbk_image_id;
 extern void* g_open_file_destination;
 extern const s32 g_open_file_openbk_end_sector_offsets[];
 extern const s32 g_open_file_openbk_start_sector_offsets[];
-extern main_file_load_descriptor_t g_open_file_header;
 extern u8 g_open_file_location[];
 void open_file_build_openbk_header(s32 image_id, void* destination);
 void open_file_load_end_movie_graphics(void);
@@ -420,12 +419,6 @@ extern s32 g_open_script_byte_offset;      /* dispatch.byte_offset */
 extern s32 g_open_script_timing_fraction;  /* dispatch.timing_fraction */
 extern s32 g_open_script_external_counter; /* dispatch.external_counter */
 
-/* Byte bases of records[0] fields for open_opcode_create_positioned_text_record. */
-extern u8 g_open_script_glyph_height_field_base[];
-extern u8 g_open_script_glyph_width_field_base[];
-extern u8 g_open_script_glyph_x_field_base[];
-extern u8 g_open_script_glyph_y_field_base[];
-extern u8 g_open_script_record_glyph_count_field_base[];
 extern POLY_FT4 g_open_script_glyph_primitives[2][672];
 extern s32 g_open_script_initial_data_base;
 void open_script_init_state(void);
@@ -517,16 +510,13 @@ extern s32 g_open_gfx_next_render_record_56;
 extern u8* g_open_gfx_opntex_data;
 extern u32 g_open_gfx_otags[2][16];
 extern s32 g_open_gfx_primitive_count;
-extern s32 g_open_gfx_render_record_56_count;
 extern open_render_record_56_position_t g_open_gfx_record_translation[16];
 extern s32 g_open_gfx_render_record_pointer_count;
 extern open_render_record_t* g_open_gfx_render_record_pointers[16];
 extern open_render_record_36_t g_open_gfx_render_records_36[16];
-extern s32 g_open_gfx_render_records_36_y_field_base[];
 extern open_render_record_56_t g_open_gfx_render_records_56[16];
 extern open_screen_environment_t g_open_gfx_screen_environments[2];
 extern open_overlay_fade_t g_open_gfx_overlay_fade;
-extern s32 g_open_gfx_opntex_delay; /* opntex.delay */
 extern open_gfx_transition_t g_open_gfx_transition;
 extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];

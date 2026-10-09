@@ -40,7 +40,7 @@ void world_menu_start_entry_thread(void) {
     world_thread_set_parameters(8, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
     count = g_world_menu_restore_depth;
     g_world_menu_new_button_input = 0;
-    if (g_world_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_unit_view_battle_id) {
+    if (g_world_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
         g_world_text_overlay_active = 1;
         world_thread_wait_frames(2);
         if (count > 0) {
@@ -57,7 +57,7 @@ void world_menu_start_entry_thread(void) {
         g_world_text_overlay_active = 0;
     } else {
         g_world_menu_restore_depth = 0;
-        g_world_menu_restore_unit_id = g_world_unit_view_battle_id;
+        g_world_menu_restore_unit_id = g_world_active_unit_data.battle_id;
     }
     world_thread_exit_current();
 }

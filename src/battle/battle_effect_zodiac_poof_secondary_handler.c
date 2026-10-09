@@ -42,9 +42,11 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         animation = g_battle_effect_zodiac_poof_animations[(u16)effect->parameter];
-        if (effect->timer >= g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame
-            && effect->timer < g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawn_end_frame) {
-            for (spawned = 0; spawned < g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawns_per_frame; spawned++) {
+        if (effect->timer >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame
+            && effect->timer < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP3_GROUP].spawn_end_frame) {
+            for (spawned = 0;
+                spawned < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP3_GROUP].spawns_per_frame;
+                spawned++) {
                 for (i = 0; i < BATTLE_EFFECT_TRAP3_SLOT_COUNT; i++) {
                     if (state->ids[i] == 0) {
                         break;
@@ -57,8 +59,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
                 }
                 slot = &g_battle_effect_slots[state->ids[i]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP] - 2),
-                    &slot->motion);
+                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP3_GROUP], &slot->motion);
                 battle_effect_init_trap_animation(BATTLE_EFFECT_TRAP3_GROUP, animation + 0x7ac0, slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP3_SLOT_COUNT) {
@@ -94,7 +95,8 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         }
         done = state->done;
         result = done != 1;
-        if (state->count == 0 && timer > g_battle_effect_groups[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame) {
+        if (state->count == 0
+            && timer > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_TRAP3_GROUP].spawn_start_frame) {
             state->done = done + 1;
         }
         break;

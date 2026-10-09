@@ -18,7 +18,7 @@ battle_unit_misc_data_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 m
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {
-            if (matches[index]->unit_id == g_casting_unit_misc_id) {
+            if (matches[index]->unit_id == g_battle_unit_source_misc_id) {
                 return matches[index];
             }
         }

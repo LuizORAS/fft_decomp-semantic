@@ -84,15 +84,15 @@ void battle_map_reset_mesh_render_state(void) {
         g_battle_map_mesh_parts[i].textured_quad_count = 0;
         g_battle_map_mesh_parts[i].untextured_triangle_count = 0;
         g_battle_map_mesh_parts[i].untextured_quad_count = 0;
-        g_battle_map_mesh_parts[i].vectors_a[1] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_a[0] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_a[2] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_b[1] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_b[0] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_b[2] = zero_vector;
-        g_battle_map_mesh_parts[i].vectors_c[1] = unit_scale;
-        g_battle_map_mesh_parts[i].vectors_c[0] = unit_scale;
-        g_battle_map_mesh_parts[i].vectors_c[2] = unit_scale;
+        g_battle_map_mesh_parts[i].rotation = zero_vector;
+        g_battle_map_mesh_parts[i].rotation_start = zero_vector;
+        g_battle_map_mesh_parts[i].rotation_step = zero_vector;
+        g_battle_map_mesh_parts[i].translation = zero_vector;
+        g_battle_map_mesh_parts[i].translation_start = zero_vector;
+        g_battle_map_mesh_parts[i].translation_step = zero_vector;
+        g_battle_map_mesh_parts[i].scale = unit_scale;
+        g_battle_map_mesh_parts[i].scale_start = unit_scale;
+        g_battle_map_mesh_parts[i].scale_step = unit_scale;
         g_battle_map_mesh_parts[i].value_85 = 1;
         g_battle_map_mesh_part_animation_states[i] = 0;
     }

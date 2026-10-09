@@ -22,8 +22,8 @@ void battle_gfx_apply_misc_unit_palette_modulation(
 
     battle_map_modify_palette(preset_color, time, 3, misc_id, 0, (s16)red_copy, (s16)green_copy, (s16)blue_copy);
 
-    if ((tile->depth_half_height & MAP_TILE_DEPTH_MASK) != 0
-        && unit->screen.vy >= -(tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12) {
+    if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) != 0
+        && unit->screen.vy >= -(tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12) {
         battle_map_modify_palette(preset_color, time, 4, misc_id, 0, (s16)red_copy, (s16)green_copy, (s16)blue_copy);
     } else {
         battle_map_modify_palette(preset_color, time, 4, misc_id, 0, (s16)-red_copy, (s16)-green_copy, (s16)-blue_copy);

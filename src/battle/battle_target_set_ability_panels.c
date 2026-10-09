@@ -45,11 +45,11 @@ s32 battle_target_set_ability_panels(const u8* source) {
     y = unit->position.bits.y;
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
-    elevation = tile->height * 2 + (tile->depth_half_height & 0x1f) + (tile->depth_half_height >> 5) * 2;
+    elevation = tile->height * 2 + (tile->depth_half_height.value & 0x1f) + (tile->depth_half_height.value >> 5) * 2;
     panels = g_battle_target_panels;
     origin_offset = location * sizeof(battle_target_panel_t);
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);
-    index = y * g_map_max_x + x;
+    index = y * g_battle_map_max_x + x;
     if (range == 0xff) {
         for (i = 0; i < 0x200; i++) {
             panels[i].remaining_range = 1;

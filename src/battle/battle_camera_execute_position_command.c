@@ -17,12 +17,12 @@ void battle_camera_execute_position_command(s32 flags, s32 target, s32 duration,
 
     switch (flags & 0x1e0) {
     case 0x0:
-        if (g_battle_effect_targets[target].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
             battle_effect_copy_misc_unit_screen_location(
-                g_battle_effect_targets[target].id.misc_id, &g_battle_effect_camera_position_target);
+                g_battle_effect_coord_data.targets[target].id.misc_id, &g_battle_effect_camera_position_target);
         } else {
             battle_effect_convert_tile_coords_to_world_coords(
-                &g_battle_effect_targets[target].id.tile_x, &g_battle_effect_camera_position_target.vx);
+                &g_battle_effect_coord_data.targets[target].id.tile_x, &g_battle_effect_camera_position_target.vx);
         }
         coords = battle_camera_get_current_real_coords();
         battle_effect_shift_vector_right_12(&coords->vx, &g_battle_effect_camera_position_start.vx);
@@ -59,12 +59,12 @@ void battle_camera_execute_position_command(s32 flags, s32 target, s32 duration,
         }
         break;
     case 0x140:
-        if (g_battle_effect_targets[16].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
             battle_effect_copy_misc_unit_screen_location(
-                g_battle_effect_targets[16].id.misc_id, &g_battle_effect_camera_position_target);
+                g_battle_effect_coord_data.targets[16].id.misc_id, &g_battle_effect_camera_position_target);
         } else {
             battle_effect_convert_tile_coords_to_world_coords(
-                &g_battle_effect_targets[16].id.tile_x, &g_battle_effect_camera_position_target.vx);
+                &g_battle_effect_coord_data.targets[16].id.tile_x, &g_battle_effect_camera_position_target.vx);
         }
         if (offset) {
             battle_effect_add_vectors(
@@ -76,8 +76,8 @@ void battle_camera_execute_position_command(s32 flags, s32 target, s32 duration,
         sum.vy = 0;
         sum.vz = 0;
         for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-            if (g_battle_effect_targets[i].target_type == 0) {
-                screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_targets[i].id.misc_id);
+            if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+                screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 sum.vx += screen->x;
                 sum.vy += screen->z;
                 sum.vz += screen->y;

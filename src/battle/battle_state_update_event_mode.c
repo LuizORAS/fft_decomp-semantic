@@ -2,10 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* This function's target access is a signed halfword load of the shared u16
- * cell. Keep a local linker alias instead of changing the global declaration. */
-extern s16 g_battle_screen_fade_intensity_signed;
-
 /* Advances the live-map event state and submits its active screen fade.
  *
  * The target loads the shared u16 fade cell with `lh`; the local signed view
@@ -55,8 +51,8 @@ void battle_state_update_event_mode(void) {
         break;
     }
 
-    if (g_battle_screen_fade_intensity_signed != 0) {
-        intensity = g_battle_screen_fade_intensity_signed;
+    if (*(s16*)&g_battle_screen_fade_intensity != 0) {
+        intensity = *(s16*)&g_battle_screen_fade_intensity;
         level = intensity;
         if ((u32)level >= 0x100) {
             level = 0xff;

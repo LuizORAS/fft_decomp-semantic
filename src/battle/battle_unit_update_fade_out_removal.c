@@ -8,7 +8,7 @@ s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit) {
     if (modifier == 0) {
         return 0;
     }
-    if (g_battle_gfx_palette_update_flags[unit->unit_id].pending != 0) {
+    if (g_battle_map_palette_state.banks[3].animations[unit->unit_id].active != 0) {
         return 0;
     }
     switch (modifier) {

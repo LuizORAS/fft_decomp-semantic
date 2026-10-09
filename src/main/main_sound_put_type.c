@@ -20,6 +20,10 @@ void main_sound_put_type(s16 level) {
         cross = level * 160 / 255;
         g_main_sound_cd_mix.val0 = g_main_sound_cd_mix.val2 = cross;
     }
-    g_main_sound_cd_mix_left_to_right = g_main_sound_cd_mix_right_to_left = cross;
-    CdMix(&g_main_sound_cd_mix);
+    {
+        CdlATV* mix = &g_main_sound_cd_mix;
+
+        g_main_sound_cd_mix.val1 = g_main_sound_cd_mix.val3 = cross;
+        CdMix(mix);
+    }
 }

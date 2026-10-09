@@ -16,7 +16,7 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
 
     attempts = 0;
     result = 0;
-    tile = &g_battle_map_tile_data[(layer << 8) + y * g_map_max_x + x];
+    tile = &g_battle_map_tile_data[(layer << 8) + y * g_battle_map_max_x + x];
     switch (field) {
     case MAP_TILE_DATA_SURFACE_TYPE:
         tile->surface.value = (tile->surface.value & ~MAP_SURFACE_MASK) | (value & MAP_SURFACE_MASK);
@@ -28,11 +28,12 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
         tile->height = value;
         break;
     case MAP_TILE_DATA_HALF_HEIGHT:
-        tile->depth_half_height = (tile->depth_half_height & MAP_TILE_DEPTH_MASK) | (value & MAP_TILE_HALF_HEIGHT_MASK);
+        tile->depth_half_height.value
+            = (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) | (value & MAP_TILE_HALF_HEIGHT_MASK);
         break;
     case MAP_TILE_DATA_DEPTH:
         value = (value & MAP_TILE_DEPTH_VALUE_MASK) << MAP_TILE_DEPTH_SHIFT;
-        tile->depth_half_height = (tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) | value;
+        tile->depth_half_height.value = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) | value;
         break;
     case MAP_TILE_DATA_SLOPE_TYPE:
         tile->slope_type = value;

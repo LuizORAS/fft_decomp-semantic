@@ -25,7 +25,7 @@ void option_menu_at_list_select_unit_thread(void) {
     battle_thread_wait_until_inactive(11);
     battle_thread_wait_until_inactive(10);
 
-    g_menu_text_pointer = g_option_menu_at_list_text;
+    g_battle_text_section_pointers[31] = g_option_menu_at_list_text;
     battle_thread_resume(g_battle_current_thread_id + 1);
     battle_thread_resume(g_battle_current_thread_id + 2);
     battle_thread_resume(g_battle_current_thread_id + 3);

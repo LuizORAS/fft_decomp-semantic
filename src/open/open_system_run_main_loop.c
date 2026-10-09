@@ -16,7 +16,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             s32 graphics_buffer_index;
             u32* current_otag;
 
-            main_file_poll_load(&g_open_file_header);
+            main_file_poll_load(&g_main_file_cd_state);
             open_gfx_clear_and_draw_current_frame();
             open_movie_update_stream_frame();
             open_menu_update_world_formation();

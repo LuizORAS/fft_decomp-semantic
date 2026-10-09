@@ -111,8 +111,9 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         }
                         break;
                     default:
-                        outcome = -(
-                            (g_main_reaction_behavior_flags_by_ability_id[g_battle_current_reaction_ability_id] & 0x30)
+                        outcome = -((g_main_reaction_behavior_flags[g_battle_current_reaction_ability_id
+                                         - ABILITY_ID_REACTION_FIRST]
+                                        & 0x30)
                             == 0);
                         break;
                     }
@@ -137,7 +138,7 @@ s32 battle_reaction_prepare_next(u16* out_ability) {
                         action[0xA] = 5;
                         action[0xB] = i;
                         if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_DAMAGE_SPLIT) {
-                            action[0xB] = g_battle_acting_unit_id_byte;
+                            action[0xB] = g_battle_acting_unit_id;
                             unit = &g_battle_unit_stats[g_battle_acting_unit_id];
                         }
                         *(s16*)(action + 0xC) = unit->x;

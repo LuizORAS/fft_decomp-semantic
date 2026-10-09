@@ -10,7 +10,7 @@ void open_movie_init_stream(s32 sector, void* output_callback) {
     StSetRing(g_open_movie_cd_stream_ring_buffer, 0x30);
     StSetStream(1, 0, -1, 0, 0);
 
-    header = &g_open_file_header;
+    header = &g_main_file_cd_state;
     main_file_build_header_nnl(header, sector, 1, 0);
     while (g_main_file_still_loading != 0) {
         main_file_poll_load(header);

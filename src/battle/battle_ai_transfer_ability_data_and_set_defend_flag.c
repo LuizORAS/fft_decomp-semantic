@@ -1,15 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* g_battle_ai_temp_unit_data names g_battle_ai_data_base.acting_unit separately:
- * a member access makes GCC share one base register where the target keeps a
- * lui per site. */
-
 /* Reset the selected action to the candidate coordinates for the current
  * movement scenario; the Defend skillset marks a Defend when the unit has it. */
 void battle_ai_transfer_ability_data_and_set_defend_flag(void) {
     u8 scenario = g_battle_ai_data_base.movement_scenario;
-    battle_stats_t* unit = g_battle_ai_temp_unit_data;
+    battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
     u32 coords;
     s32 support;
 

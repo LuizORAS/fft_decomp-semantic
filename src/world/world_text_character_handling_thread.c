@@ -4,23 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional view of the 0x0E-byte record at 0x8013A364 (copied by
- * world_menu_copy_billboard_data_in/out). The halfword at +0x0A is also read
- * through the scalar alias g_world_unit_view_battle_id; the struct access is required here
- * because an in-struct load keeps its place after the preceding stores. */
-typedef struct world_screen_setup_c {
-    u8 _unused_00[0xA];
-    s16 battle_id; /* 0x0a: active unit banner battle ID */
-    u8 _unused_0c[2];
-} world_screen_setup_c_t;
-
-/* g_world_text_typewriter_glyph.y, .bits_per_pixel and .palette under
- * separate names: spelling any one of the three stores as a member access
- * breaks this function's match (first difference at offset 0). */
-extern s16 g_world_text_typewriter_glyph_y;
-extern s16 g_world_text_typewriter_glyph_bits_per_pixel;
-extern s16 g_world_text_typewriter_glyph_palette;
-
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
 #define NEXT() text = world_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
@@ -127,7 +110,7 @@ void world_text_character_handling_thread(void) {
             thread->function_parameter_2 = i | 0xA000;
             rec.box_type = DIALOG_BOX_TYPE_PORTRAIT;
             rec.options = 8;
-            rec.portrait = ((world_screen_setup_c_t*)g_world_active_unit_data)->battle_id;
+            rec.portrait = g_world_active_unit_data.battle_id;
         }
     }
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
@@ -790,11 +773,15 @@ void world_text_character_handling_thread(void) {
                         started = 1;
                         value -= code * g_world_text_decimal_divisors[i];
                     }
-                    g_world_text_typewriter_glyph.x = cursor_x;
-                    g_world_text_typewriter_glyph.glyph = code;
-                    g_world_text_typewriter_glyph_y = cursor_y;
-                    g_world_text_typewriter_glyph_bits_per_pixel = rec.dialog_type & 0x70;
-                    g_world_text_typewriter_glyph_palette = rec.color;
+                    {
+                        battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+
+                        glyph->x = cursor_x;
+                        glyph->y = cursor_y;
+                        glyph->glyph = code;
+                        glyph->mode = rec.dialog_type & 0x70;
+                        glyph->palette = rec.color;
+                    }
                     world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
@@ -828,11 +815,15 @@ void world_text_character_handling_thread(void) {
                     }
                     code += *text;
                 }
-                g_world_text_typewriter_glyph.x = cursor_x;
-                g_world_text_typewriter_glyph.glyph = code;
-                g_world_text_typewriter_glyph_y = cursor_y;
-                g_world_text_typewriter_glyph_bits_per_pixel = rec.box_type;
-                g_world_text_typewriter_glyph_palette = rec.color;
+                {
+                    battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+
+                    glyph->x = cursor_x;
+                    glyph->y = cursor_y;
+                    glyph->glyph = code;
+                    glyph->mode = rec.box_type;
+                    glyph->palette = rec.color;
+                }
                 world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, color);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;

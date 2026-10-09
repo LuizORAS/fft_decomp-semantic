@@ -9,10 +9,12 @@
  * container retains the target's base pointer and named field access.
  */
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id) {
-    if ((g_battle_ai_considered_ability_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) == 0) {
+    battle_ai_data_t* ai = &g_battle_ai_data_base;
+
+    if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) == 0) {
         return;
     }
-    if ((g_battle_ai_considered_ability_flags_1 & 0xEE) != 0) {
+    if ((ai->considered_ability.ai_flags.bytes.flags_1 & 0xEE) != 0) {
         return;
     }
 

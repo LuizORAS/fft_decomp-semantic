@@ -7,10 +7,10 @@
  * Return -1 to suspend and 0 when selection completes.
  */
 s32 battle_ai_select_recovery_action(void) {
-    battle_stats_t* acting = g_battle_ai_temp_unit_data;
+    battle_ai_data_t* ai = &g_battle_ai_data_base;
+    battle_stats_t* acting = g_battle_ai_data_base.acting_unit;
     battle_ai_recovery_status_list_t statuses = g_battle_ai_recovery_status_ids;
     s32 target = acting->auto_battle_target;
-    battle_ai_data_t* ai = &g_battle_ai_data_base;
     u32 status;
     s32 result;
 

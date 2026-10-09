@@ -21,7 +21,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     s32 i = g_world_menu_thread_menu_data[4].selected_index;
     s32 menu = g_battle_action_menu_row_types[i];
     s32 check_unit = g_battle_menu_skillset_disabled_flags[i];
-    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_unit_view_battle_id];
+    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
     u8* slot;
     u8* pair;
     s32 j;
@@ -50,7 +50,7 @@ void world_menu_select_unit_action_slots_thread(void) {
             g_world_menu_thread_menu_data[3].selected_index = 0;
             world_menu_run_equip_thread();
         }
-        g_world_thread_inner_subroutine_callback = (void (*)(void))world_menu_build_ability_list;
+        g_world_thread_call_target = (void (*)(void))world_menu_build_ability_list;
         world_thread_call_on_main_stack(i);
         world_script_pulse_tutorial_wait_value(0xFB);
         world_menu_scrolling_list_thread();

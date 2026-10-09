@@ -81,7 +81,7 @@ s32 battle_script_get_misc_id(s32 unit_id) {
     }
 
     if ((u32)(unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST) < EVENT_UNIT_SELECTOR_SLOT_COUNT) {
-        misc_id = g_battle_event_unit_slots_by_encoded_id[unit_id];
+        misc_id = (u16)g_battle_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
             battle_noop_80133150(original_unit_id);
             return EVENT_MISC_ID_NONE;

@@ -4,7 +4,7 @@
 s32 battle_gfx_load_unit_graphics_by_battle_id(s32 battle_id, s32 flags) {
     battle_stats_t* unit;
 
-    g_main_gfx_unit_graphics_load_count = 0;
+    g_main_gfx_unit_graphics_load_queue.count = 0;
     g_battle_gfx_unit_graphics_load_state[0] = 0;
     g_battle_gfx_unit_graphics_load_state[1] = 0;
     g_battle_gfx_unit_graphics_load_state[2] = 0;

@@ -1062,9 +1062,6 @@ data:
   - {addr: 0x80031b50, name: g_psyq_cd_common_delay_register}
   - {addr: 0x80031b54, name: g_psyq_cd_spu_registers}
   - {addr: 0x80031b58, name: g_psyq_cd_irq_state}
-  - {addr: 0x80031b58, name: g_psyq_cd_sync_interrupt}
-  - {addr: 0x80031b59, name: g_psyq_cd_ready_interrupt}
-  - {addr: 0x80031b5a, name: g_psyq_cd_second_ready_interrupt}
   - {addr: 0x80031b5c, name: g_psyq_cd_init_irq_state_pointer}
   - {addr: 0x80031b74, name: g_psyq_cd_access_delay_register}
   - {addr: 0x80031b78, name: g_psyq_cd_dma_priority_register}
@@ -1072,18 +1069,7 @@ data:
   - {addr: 0x80031b80, name: g_psyq_cd_dma_block_register}
   - {addr: 0x80031b84, name: g_psyq_cd_dma_control_register}
   - {addr: 0x80031b88, name: g_psyq_cd_read_callback}
-  - {addr: 0x80031b8c, name: g_psyq_cd_read_sectors}
   - {addr: 0x80031b8c, name: g_psyq_cd_read_state}
-  - {addr: 0x80031b90, name: g_psyq_cd_read_first_buffer}
-  - {addr: 0x80031b94, name: g_psyq_cd_read_next_buffer}
-  - {addr: 0x80031b98, name: g_psyq_cd_read_mode}
-  - {addr: 0x80031b9c, name: g_psyq_cd_read_words}
-  - {addr: 0x80031ba0, name: g_psyq_cd_read_remaining}
-  - {addr: 0x80031ba4, name: g_psyq_cd_read_sector_clock}
-  - {addr: 0x80031ba8, name: g_psyq_cd_read_start_clock}
-  - {addr: 0x80031bac, name: g_psyq_cd_read_expected_sector}
-  - {addr: 0x80031bb0, name: g_psyq_cd_read_saved_sync_callback}
-  - {addr: 0x80031bb4, name: g_psyq_cd_read_saved_ready_callback}
   - {addr: 0x80031bc8, name: g_psyq_cd_unset_index_register}
   - {addr: 0x80031bd4, name: g_psyq_cd_unset_request_register}
   - {addr: 0x80031c38, name: g_psyq_cd_stream_index_register}
@@ -1163,8 +1149,6 @@ data:
   - {addr: 0x80032a34, name: D_80032A34}
   - {addr: 0x80032a38, name: g_main_sound_heap_size}
   - {addr: 0x80032a3c, name: g_main_sound_cd_mix}
-  - {addr: 0x80032a3d, name: g_main_sound_cd_mix_left_to_right}
-  - {addr: 0x80032a3f, name: g_main_sound_cd_mix_right_to_left}
   - {addr: 0x80032a40, name: g_main_sound_decoded_data_result}
   - {addr: 0x80032a44, name: g_main_sound_waveset_list}
   - {addr: 0x80032a48, name: g_main_sound_spu_event}
@@ -1181,9 +1165,6 @@ data:
   - {addr: 0x80032a84, name: g_psyq_cd_ready_result}
   - {addr: 0x80032a8c, name: g_psyq_cd_second_ready_result}
   - {addr: 0x80032a94, name: g_psyq_cd_timeout}
-  - {addr: 0x80032a94, name: g_psyq_cd_timeout_deadline}
-  - {addr: 0x80032a98, name: g_psyq_cd_timeout_poll_count}
-  - {addr: 0x80032a9c, name: g_psyq_cd_timeout_description}
   - {addr: 0x80032aa0, name: g_psyq_cd_backloc}
   - {addr: 0x80032aa0, name: g_psyq_cd_backloc_position}
   - {addr: 0x80032aa4, name: g_psyq_cd_backloc_frame}
@@ -1287,9 +1268,7 @@ data:
   - {addr: 0x800473a7, name: D_800473A7}
   - {addr: 0x800473a8, name: g_main_common_menu_graphics_loaded}
   - {addr: 0x800473ac, name: g_main_game_options}
-  - {addr: 0x800473ac, name: g_main_game_options_raw}
   - {addr: 0x800473b0, name: g_main_game_options_defaults}
-  - {addr: 0x800473b0, name: g_main_game_options_defaults_raw}
   - {addr: 0x800473b4, name: g_main_gfx_zodiac_screen_position}
   - {addr: 0x800473bc, name: g_main_gfx_zodiac_texture_position}
   - {addr: 0x800473c4, name: g_main_gfx_zodiac_sprite_frames}
@@ -1306,8 +1285,7 @@ data:
   - {addr: 0x80047610, name: g_main_sound_system_sed_data}
   - {addr: 0x80049a10, name: g_main_saved_list_cursor_state}
   - {addr: 0x80049a18, name: g_main_scenario_condition_data}
-  - {addr: 0x80049c18, name: g_main_gfx_unit_graphics_load_count}
-  - {addr: 0x80049c1c, name: g_unit_graphics_load_descriptors}
+  - {addr: 0x80049c18, name: g_main_gfx_unit_graphics_load_queue}
   - {addr: 0x80049d5c, name: g_main_zodiac_primitives}
   - {addr: 0x8004a6bc, name: g_main_script_event_block}
   - {addr: 0x8004c6bc, name: g_main_tutorial_progress_masks}
@@ -1317,7 +1295,6 @@ data:
   - {addr: 0x8004cd48, name: g_require_gfx_poly_gt4_array_8}
   - {addr: 0x8004d720, name: g_main_gfx_now_loading_primitives}
   - {addr: 0x8004d950, name: g_main_system_flags}
-  - {addr: 0x8004d950, name: g_main_system_flags_alias}
   - {addr: 0x8004d954, name: g_main_special_portrait_unit_id}
   - {addr: 0x8004d958, name: g_main_saved_animation_speed}
   - {addr: 0x8004d95c, name: g_main_sound_music}
@@ -1327,7 +1304,6 @@ data:
   - {addr: 0x8004d9b8, name: g_main_sound_env_sed_data}
   - {addr: 0x8004e5b8, name: g_main_gfx_now_loading_frame_counter}
   - {addr: 0x8004e5bc, name: g_active_graphics_buffer_index}
-  - {addr: 0x8004e5bc, name: g_main_gfx_display_buffer_index}
   - {addr: 0x8004e5c0, name: g_main_heap_smd_allocator_table}
   - {addr: 0x8004e5d0, name: g_main_scenario_event_finish_operations}
   - {addr: 0x8004e9d0, name: g_main_replay_story_event_index}
@@ -1335,16 +1311,12 @@ data:
   - {addr: 0x8004ea14, name: g_main_gfx_draw_envs}
   - {addr: 0x8004eacc, name: g_main_gfx_display_envs}
   - {addr: 0x8004eaf4, name: g_main_file_cd_state}
-  - {addr: 0x8004eaf4, name: g_open_file_header}
   - {addr: 0x8004eaf8, name: g_main_file_still_loading}
   - {addr: 0x8004eb10, name: g_open_file_location}
   - {addr: 0x8004eb18, name: g_main_heap_smd_base}
   - {addr: 0x80056b18, name: g_main_gfx_battle_otags}
   - {addr: 0x80057718, name: g_main_system_session_frames}
   - {addr: 0x8005771c, name: g_main_script_variables}
-  - {addr: 0x800577d4, name: g_main_save_month}
-  - {addr: 0x800577d8, name: g_main_save_day}
-  - {addr: 0x80057b18, name: g_battle_overlay_loaded}
   - {addr: 0x80057b1c, name: D_80057b1c}
   - {addr: 0x80057b20, name: g_main_item_type_order_tables}
   - {addr: 0x80057b2c, name: g_main_item_type_order_1}
@@ -1370,11 +1342,9 @@ data:
   - {addr: 0x80057eec, name: g_main_active_propositions}
   - {addr: 0x80057f34, name: g_main_brave_story_character_ages}
   - {addr: 0x80057f74, name: g_main_party_data}
-  - {addr: 0x80057f75, name: g_party_slot_base}
   - {addr: 0x80059374, name: g_main_saved_data_bits}
   - {addr: 0x80059414, name: g_main_item_location_flags}
   - {addr: 0x80059494, name: g_main_item_poached_quantities}
-  - {addr: 0x80059494, name: table}
   - {addr: 0x80059594, name: g_main_saved_records}
   - {addr: 0x800596ac, name: g_main_land_discovery_date_bits}
   - {addr: 0x800596c0, name: g_main_card_bios_events}
@@ -1390,20 +1360,17 @@ data:
   - {addr: 0x8005e950, name: g_main_terrain_tile_info_pairs}
   - {addr: 0x8005e9d0, name: g_main_terrain_geomancy_abilities}
   - {addr: 0x8005ea10, name: g_main_terrain_status_flags}
-  - {addr: 0x8005ea2a, name: g_main_reaction_behavior_flags_by_ability_id}
   - {addr: 0x8005ea50, name: g_main_terrain_movement_cost_tables}
+  - {addr: 0x8005ebd0, name: g_main_reaction_behavior_flags}
   - {addr: 0x8005ebf0, name: g_main_ability_data}
   - {addr: 0x8005fbf0, name: g_main_ability_range_data}
   - {addr: 0x8005fbf1, name: g_main_ability_aoe_data}
   - {addr: 0x8005fbfc, name: g_main_ability_ct_data}
-  - {addr: 0x80060d18, name: g_main_jump_charge_ability_data_by_ability_id}
-  - {addr: 0x80060ea0, name: g_main_item_ability_item_ids_by_ability_id}
-  - {addr: 0x80060ea2, name: g_main_throw_ability_item_types_by_ability_id}
-  - {addr: 0x80060eb6, name: g_main_math_rsm_ability_data_by_ability_id}
   - {addr: 0x80061010, name: g_main_item_ability_item_ids}
   - {addr: 0x80061020, name: g_main_throw_ability_item_types}
   - {addr: 0x8006102c, name: g_main_jump_ability_data}
   - {addr: 0x80061044, name: g_main_charge_ability_data}
+  - {addr: 0x80061054, name: g_main_math_rsm_ability_data}
   - {addr: 0x800610b8, name: g_main_job_data}
   - {addr: 0x80062eb8, name: g_main_item_primary_data}
   - {addr: 0x80062ebc, name: g_main_item_secondary_data_ids}

@@ -28,18 +28,21 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
     }
     if (state->extra_render_index != -1) {
         offset = row * 16;
-        top = state->extra_base_y - offset;
+        top = state->extra_base.y - offset;
         limit = state->base.y + 8;
         if (top >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base_y = top;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y = state->extra_y;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y = state->extra_height;
-            g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
-        } else if (top + state->extra_height >= limit) {
-            g_wldcore_window_render_records[state->extra_render_index].base_y = limit;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y = state->extra_y + offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
+                = state->extra_bounds.position.y;
             g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
-                = state->extra_height - offset;
+                = state->extra_bounds.dimensions.y;
+            g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
+        } else if (top + (s16)state->extra_bounds.dimensions.y >= limit) {
+            g_wldcore_window_render_records[state->extra_render_index].base_y = limit;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
+                = state->extra_bounds.position.y + offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
+                = state->extra_bounds.dimensions.y - offset;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~0x10;
         } else {
             g_wldcore_window_render_records[state->extra_render_index].flags |= 0x10;

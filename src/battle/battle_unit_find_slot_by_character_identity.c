@@ -21,7 +21,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
         return -1;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        unit = &battle_stats[i];
+        unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->character_identity == (u8)character_identity) {
             status = unit->status_sets.current;
             if (status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
@@ -36,7 +36,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
         }
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        unit = &battle_stats[i];
+        unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->character_identity == (u8)character_identity
             && unit->existence != 0xff) {
             if (unit->existence == 0) {

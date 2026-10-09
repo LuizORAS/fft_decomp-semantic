@@ -99,7 +99,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         i = battle_gfx_get_unit_spritesheet_height_by_misc_id(
                 (u8)g_battle_effect_current_secondary->caster_block.values[1])
             + 8;
-        g_battle_effect_groups[12].position_y = g_battle_effect_groups[13].position_y = -i;
+        g_battle_effect_trap_particle_configs[12].position[1] = g_battle_effect_trap_particle_configs[13].position[1]
+            = -i;
         in.vx = screen->x;
         in.vz = screen->y;
         in.vy = screen->z - i;
@@ -143,7 +144,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             }
         }
         if (state->count.n.b < 14) {
-            for (i = 0; i < g_battle_effect_groups[12].spawns_per_frame; i++) {
+            for (i = 0; i < g_battle_effect_trap_particle_configs[12].spawns_per_frame; i++) {
                 for (j = 0; j < 14; j++) {
                     if (state->ids_b[j] == 0) {
                         break;
@@ -154,8 +155,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     break;
                 }
                 slot = &g_battle_effect_slots[state->ids_b[j]];
-                slot->life = battle_effect_spawn_particle_motion(
-                    (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[12] - 2), &slot->motion);
+                slot->life
+                    = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[12], &slot->motion);
                 battle_effect_init_trap_animation(0xc, 0x7acf, slot);
                 state->count.n.b++;
                 if (state->count.n.b == 14) {

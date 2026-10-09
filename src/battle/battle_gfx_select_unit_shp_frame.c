@@ -24,7 +24,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             } else {
                 value = table[frame + 0xd2];
             }
-        } else if (tile->depth_half_height & 0xe0) {
+        } else if (tile->depth_half_height.value & 0xe0) {
             if (unit->battle_data != 0) {
                 flags = battle_move_get_effective_flags(unit->battle_data);
                 /* The combined test keeps the table pointer's reference count
@@ -38,13 +38,13 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                 } else if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_TREASURE) {
                     value = table[frame + 2];
                 } else if ((u8)(unit->spritesheet_id - BATTLE_SPRITESHEET_ID_CHICKEN) < 2) {
-                    if ((tile->height + (tile->depth_half_height >> 5)) * 12 >= -unit->screen.vy + 4) {
+                    if ((tile->height + (tile->depth_half_height.value >> 5)) * 12 >= -unit->screen.vy + 4) {
                         value = table[frame + 0xd2];
                     } else {
                         value = table[frame + 2];
                     }
                 } else {
-                    height = (tile->height + (tile->depth_half_height >> 5)) * 12;
+                    height = (tile->height + (tile->depth_half_height.value >> 5)) * 12;
                     z = -unit->screen.vy;
                     if (height >= z + 0x24) {
                         value = table[0xd2];
@@ -55,7 +55,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                     }
                 }
             } else {
-                height = (tile->height + (tile->depth_half_height >> 5)) * 12;
+                height = (tile->height + (tile->depth_half_height.value >> 5)) * 12;
                 z = -unit->screen.vy;
                 if (height >= z + 0x24) {
                     value = table[0xd2];
@@ -75,7 +75,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             table -= 0x1d59;
         }
         /* A shifted byte offset keeps the target's base-first addu. */
-        if (tile->depth_half_height & 0xe0) {
+        if (tile->depth_half_height.value & 0xe0) {
             value = *(s32*)((u8*)table + (frame << 2));
         } else {
             value = *(s32*)((u8*)table + (frame << 2) - 0x340);

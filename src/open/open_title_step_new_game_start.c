@@ -32,7 +32,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         open_title_init_new_game_party(0, 0);
         world_menu_load_text_1c18();
 
-        if (g_main_gfx_display_buffer_index != 0) {
+        if (g_active_graphics_buffer_index != 0) {
             rect.x = 0;
             rect.y = 0;
             rect.w = 0x100;
@@ -46,7 +46,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         StoreImage(&rect, (u32*)g_open_file_destination);
         DrawSync(0);
 
-        if (g_main_gfx_display_buffer_index == 0) {
+        if (g_active_graphics_buffer_index == 0) {
             rect.x = 0;
             rect.y = 0;
             rect.w = 0x100;

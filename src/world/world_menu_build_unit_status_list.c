@@ -21,7 +21,7 @@ void world_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = (s16*)&g_world_unit_editor_panel_data;
+        flag_a = &g_world_unit_editor_fields.state.generic_monster;
         flag_b = &g_world_unit_selected_status_billboard.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
@@ -29,7 +29,7 @@ void world_menu_build_unit_status_list(void) {
             g_world_menu_status_list_row_actions[i] = 0x1015;
         }
     }
-    unit = battle_unit_get_stats_from_battle_id(g_world_unit_view_battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_world_active_unit_data.battle_id);
     for (i = 0; i < 20; i++) {
         g_world_menu_status_left_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
         g_world_menu_status_right_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;

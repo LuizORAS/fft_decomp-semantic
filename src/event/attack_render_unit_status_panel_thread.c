@@ -388,7 +388,7 @@ void attack_render_unit_status_panel_thread(void) {
                 number_entries[6].format = 2;
             }
             battle_clear_menu_render_buffer(number_pixels, 0x700);
-            window_width = &g_menu_inner_window_width;
+            window_width = &g_menu_text_state.stride;
             text_position = window_width - 2;
             *window_width = 0x38;
             battle_menu_draw_numeric_display_entries(

@@ -19,7 +19,7 @@ s32 equip_entrypoint(s32 unit, void* otag) {
         bcopy(g_equip_unit_data[0]->equipment, g_equip_unit_initial_equipment, 0xA);
         g_equip_menu_screen_state = 1;
     }
-    g_equip_gfx_render_otag = otag;
+    g_equip_gfx_current_ot = otag;
     equip_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_equip_gfx_context->otag;
     changed = 0;

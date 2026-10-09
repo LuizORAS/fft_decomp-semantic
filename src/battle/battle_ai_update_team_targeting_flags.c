@@ -8,8 +8,8 @@
  * all cached non-enemies, not just the units admitted to those counts.
  */
 void battle_ai_update_team_targeting_flags(void) {
-    battle_ai_unit_decision_t* acting_decision = g_battle_ai_acting_unit_decision_ptr;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
+    battle_ai_unit_decision_t* acting_decision = g_battle_ai_data_base.acting_unit_decision;
     s32 ally_count;
     s32 enemy_count;
     s32 impaired_ally_count;
@@ -17,7 +17,7 @@ void battle_ai_update_team_targeting_flags(void) {
 
     g_battle_ai_data_base.targetable_override = 0;
     if ((acting_decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE)
-        || (g_battle_ai_temp_unit_data->status_sets.current[4]
+        || (g_battle_ai_data_base.acting_unit->status_sets.current[4]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
         g_battle_ai_data_base.targetability.live.target_setting_flags
             &= ~BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE;

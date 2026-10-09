@@ -13,7 +13,6 @@ typedef struct debug_range {
 } debug_range_t;
 
 extern s32 g_debugchr_editor_active;
-extern s16 g_debugchr_editor_display_mode;
 extern u8 g_debugchr_editor_unit_name[];
 extern s16 g_debugchr_editor_first_maximum;
 extern u8 g_debugchr_editor_secondary_skillset_name[];
@@ -36,7 +35,6 @@ extern u8 g_debugchr_editor_numeric_text_b[];
 extern u8 g_debugchr_editor_numeric_texture[];
 extern u8 g_debugchr_editor_job_name[];
 extern s16 g_debugchr_editor_second_maximum;
-extern s16 g_debugchr_editor_selected_unit_id;
 extern s32 g_debugchr_editor_selected_unit_slot;
 extern u8 g_debugchr_editor_speed;
 
@@ -48,19 +46,15 @@ extern u8 g_debugchr_editor_primary_skillset_name[];
 extern s16 g_debugchr_editor_third_maximum;
 extern battle_menu_status_panel_slot_storage_t g_debugchr_editor_unit_fields;
 extern u8 g_debugchr_editor_unit_ids[];
-extern s16 g_debugchr_editor_job_id;
 
 /* Views of g_debugchr_panel_selected_billboard.bars[i].value (values[3 * i])
  * and bars[i].limit (the *_maximum words): debugchr_editor_apply_values_to_battle_unit
  * reaches the values from their own base register and the limits by absolute
  * address, which the member spelling does not reproduce. */
 extern s16 g_debugchr_editor_values[];
-extern s16 g_debugchr_editor_zodiac;
-extern s16 g_debugchr_editor_brave;
 extern help_navigation_record_t* g_debugchr_editor_current_field;
 extern POLY_FT4 g_debugchr_editor_cursor_polys[];
 extern POLY_FT4 g_debugchr_editor_cursor_shade_polys[];
-extern s16 g_debugchr_editor_faith;
 extern s32 g_debugchr_editor_field_edit_active;
 extern help_navigation_record_t* g_debugchr_editor_field_table;
 extern help_navigation_record_t g_debugchr_editor_fields[];
@@ -121,26 +115,23 @@ extern s32 g_debugchr_menu_indicator_state[2];
 
 /* panel */
 extern battle_unit_status_record_t g_debugchr_panel_comparison_billboard;
-extern s16 g_debugchr_panel_comparison_unit_id;
-extern s32 g_debugchr_panel_refresh_a;
-extern s32 g_debugchr_panel_refresh_b;
-extern s32 g_debugchr_panel_refresh_c;
+extern world_status_thread_t g_debugchr_status_display_thread_params;
+extern world_status_thread_t g_debugchr_numeric_editor_thread_params;
+extern world_status_thread_t g_debugchr_character_status_frame_config;
 extern battle_unit_status_record_t g_debugchr_panel_selected_billboard;
 extern u8 g_debugchr_panel_status_animation[];
 extern u8 g_debugchr_panel_status_group_bounds[];
 extern u8 g_debugchr_panel_status_group_count;
 extern u8 g_debugchr_panel_status_group_ids[];
 extern const s16 g_debugchr_panel_status_offsets[][6];
-extern u16 g_debugchr_panel_status_position_y;
 extern const s16 g_debugchr_panel_status_scales[][2];
 extern const s16 g_debugchr_panel_status_uv_rects[][6];
 extern const u16 g_debugchr_panel_status_y_offsets[];
 
-/* Selected-unit panel halfwords at 0x801c5324 ([0] unit id, [1] job, [2]
- * brave, [3] faith, [4] portrait cell, [5] zodiac and editor unit slot); the
- * comparison panel's twin follows at 0x801c5334. */
-extern s16 g_debugchr_panel_selected_unit_data[];
-extern s16 g_debugchr_panel_comparison_unit_data[];
+/* Selected-unit panel record at 0x801c5324; the comparison panel's twin
+ * follows at 0x801c5334. */
+extern battle_active_unit_t g_debugchr_panel_selected_unit_data;
+extern battle_active_unit_t g_debugchr_panel_comparison_unit_data;
 extern s16 g_debugchr_panel_slide_up_y[];
 extern battle_image_location_t g_debugchr_panel_item_icon_texture[];
 extern s16 g_debugchr_panel_slide_down_y[];
@@ -203,9 +194,6 @@ void debugchr_text_render_signed_decimal_entries(
 
 /* thread */
 extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];
-extern s32 g_debugchr_thread_refresh_a;
-extern s32 g_debugchr_thread_refresh_b;
-extern s32 g_debugchr_thread_refresh_c;
 s32 debugchr_thread_is_running(s32 thread_id);
 
 /* other */

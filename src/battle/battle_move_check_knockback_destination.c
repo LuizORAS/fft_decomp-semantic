@@ -4,7 +4,7 @@
 /* Half-unit height of a tile edge: base height plus the slope height scaled by
  * that side's two-bit slope factor. */
 #define TILE_EDGE_HEIGHT(tile, shift)                                                                                  \
-    (tile->height * 2 + (tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * ((tile->slope_type >> shift) & 3))
+    (tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * ((tile->slope_type >> shift) & 3))
 
 /* Checks whether the current target can be knocked back onto tile (x, y).
  *
@@ -30,7 +30,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     s32 index;
     s32 upper_index;
 
-    if (x < 0 || y < 0 || x >= g_map_max_x || y >= g_map_max_y) {
+    if (x < 0 || y < 0 || x >= g_battle_map_max_x || y >= g_battle_map_max_y) {
         return -1;
     }
     switch (direction) {
@@ -53,7 +53,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     }
     tile = &g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)];
     height = TILE_EDGE_HEIGHT(tile, source_shift);
-    index = y * g_map_max_x + x;
+    index = y * g_battle_map_max_x + x;
     upper_index = index + 0x100;
     lower = &g_battle_map_tile_data[index];
     upper = &g_battle_map_tile_data[upper_index];

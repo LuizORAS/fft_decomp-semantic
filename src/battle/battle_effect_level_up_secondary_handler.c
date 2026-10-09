@@ -22,14 +22,14 @@ s32 battle_effect_level_up_secondary_handler(void) {
         effect->timer = 0;
         effect->finish_timer = 0;
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        g_battle_effect_groups[5].position_y = -8;
+        g_battle_effect_trap_particle_configs[5].position[1] = -8;
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         battle_effect_start_group(5, 11);
         {
             /* Addressing through a pointer keeps the target lui/addiu pair. */
-            s16* rise = &g_battle_effect_groups[5].position_y;
+            s16* rise = &g_battle_effect_trap_particle_configs[5].position[1];
             *rise -= 3;
         }
         /* fallthrough */
@@ -48,7 +48,7 @@ s32 battle_effect_level_up_secondary_handler(void) {
         finish_timer = current->finish_timer;
         result = finish_timer != 1;
         current->timer = current->timer + 1;
-        if (current->active_count == 0 && current->timer > g_battle_effect_groups[5].spawn_start_frame) {
+        if (current->active_count == 0 && current->timer > g_battle_effect_trap_particle_configs[5].spawn_start_frame) {
             current->finish_timer = finish_timer + 1;
         }
         break;

@@ -18,24 +18,25 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     u8 field_value;
     u16 maximum_hp;
     u16 maximum_mp;
+    battle_unit_status_record_t* gauges;
 
     main_unit_init_job_data(&g_require_editor_party_unit_stats, party_index, 0);
     editor = g_require_editor_unit_fields.halfwords;
     unit = &g_require_editor_party_unit_stats;
+    gauges = &g_require_panel_selected_billboard;
 
-    /* The target stores this halfword standalone; the buffer is the u8 view. */
-    *(s16*)g_require_active_unit_data = party_index;
-    g_require_editor_selected_unit_id = party_index;
-    g_require_editor_team_state = 0;
-    g_require_editor_job_id = unit->job_id;
-    g_require_editor_brave = unit->brave;
-    g_require_editor_faith = unit->faith;
-    g_require_editor_zodiac = *(u16*)&unit->birthday >> 12;
+    g_require_active_unit_data.name_id = party_index;
+    g_require_active_unit_data.battle_id = party_index;
+    gauges->team_kind = 0;
+    g_require_active_unit_data.job_id = unit->job_id;
+    g_require_active_unit_data.brave = unit->brave;
+    g_require_active_unit_data.faith = unit->faith;
+    g_require_active_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
-        g_require_editor_team_state = 1;
+        gauges->team_kind = 1;
     }
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
-        g_require_editor_team_state = 2;
+        gauges->team_kind = 2;
     }
     g_require_panel_selected_billboard.list_index = 0;
     g_require_panel_selected_billboard.unit_count = 0;

@@ -8,7 +8,7 @@
  * script picture at g_wldcore_picture_buffer to VRAM, binds a render record to the image
  * and adds a second framing window at (-8, 0x10). It then measures every
  * entry's text through world_text_find_entry / world_text_measure_pixels to
- * size the panel, copies the entry values into g_wldcore_text_bounds with
+ * size the panel, copies the entry values into g_wldcore_list_entry_values with
  * cleared row flags, clamps the cursor to at most four visible rows, and
  * starts the panel render state centred on the measured width.
  *
@@ -123,7 +123,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
 
     for (i = 0; i < count; i++) {
         value = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entries[i];
-        g_wldcore_text_bounds[i] = value;
+        g_wldcore_list_entry_values[i] = value;
         g_wldcore_list_row_flags[i] = 0;
     }
 

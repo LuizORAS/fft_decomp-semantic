@@ -485,7 +485,6 @@ data:
   - {addr: 0x8009eb88, name: g_wldcore_treasure_sound_novel_ids}
   - {addr: 0x8009ebb8, name: g_wldcore_brave_story_help_text_ids}
   - {addr: 0x8009ebc0, name: g_wldcore_thread8_params}
-  - {addr: 0x8009ebc4, name: g_wldcore_thread8_offset_y}
   - {addr: 0x8009ebd4, name: g_wldcore_threadc_params}
   - {addr: 0x8009ebe8, name: g_wldcore_thread9_params}
   - {addr: 0x8009ebfc, name: g_wldcore_tutorial_event_ids}
@@ -496,10 +495,6 @@ data:
   - {addr: 0x8009ee50, name: g_wldcore_script_opcode_table}
   - {addr: 0x8009eef4, name: g_wldcore_location_marker_shade}
   - {addr: 0x8009eef8, name: g_wldcore_scrollable_text_window}
-  - {addr: 0x8009ef18, name: g_wldcore_scroll_text_extra_position}
-  - {addr: 0x8009ef20, name: g_wldcore_scroll_text_extra_rect}
-  - {addr: 0x8009ef3c, name: g_wldcore_scroll_text_render_record_index}
-  - {addr: 0x8009ef5c, name: g_wldcore_scroll_text_extra_render_index}
   - {addr: 0x8009ef6c, name: g_wldcore_map_cursor_scroll_x}
   - {addr: 0x8009ef80, name: g_wldcore_window_render_object_queue}
   - {addr: 0x8009f180, name: g_wldcore_window_record_count}
@@ -555,8 +550,6 @@ data:
   - {addr: 0x800bb98c, name: g_wldcore_menu_stack_records_next}
   - {addr: 0x800bbc6c, name: g_wldcore_next_map_id}
   - {addr: 0x800bbc70, name: g_wldcore_window_render_records}
-  - {addr: 0x800bbc9c, name: g_wldcore_window_render_record_widths}
-  - {addr: 0x800bbc9e, name: g_wldcore_window_render_record_heights}
   - {addr: 0x800bc2f0, name: g_wldcore_new_button_presses}
   - {addr: 0x800bc2f4, name: g_wldcore_message_buffer}
   - {addr: 0x800c72f4, name: g_wldcore_scratch_buffer}
@@ -583,7 +576,6 @@ data:
   - {addr: 0x800d0860, name: g_wldcore_tutorial_category_saved_cursor}
   - {addr: 0x800d0870, name: g_wldcore_tutorial_entries_cursor_state}
   - {addr: 0x800d0880, name: g_wldcore_list_entry_values}
-  - {addr: 0x800d0880, name: g_wldcore_text_bounds}
   - {addr: 0x800d0980, name: g_wldcore_proposition_gil_amount}
   - {addr: 0x800d0984, name: g_wldcore_context_value_display_mode}
   - {addr: 0x800d0988, name: g_wldcore_sound_novel_countdown_section}
@@ -595,9 +587,6 @@ data:
   - {addr: 0x800d09b4, name: g_wldcore_displayed_numeric_value_tertiary}
   - {addr: 0x800d09b8, name: g_wldcore_proposition_candidate_levels}
   - {addr: 0x800d0ab8, name: g_wldcore_screen_fade_state}
-  - {addr: 0x800d0abc, name: g_wldcore_screen_fade_box_1_flags}
-  - {addr: 0x800d0ac0, name: g_wldcore_screen_fade_box_0_priority}
-  - {addr: 0x800d0ac4, name: g_wldcore_screen_fade_box_1_priority}
   - {addr: 0x800d0adc, name: g_wldcore_screen_fade_box_0_color}
   - {addr: 0x800d0af0, name: g_wldcore_loaded_picture_set}
   - {addr: 0x800d0af4, name: g_wldcore_loaded_message_block}
@@ -605,12 +594,7 @@ data:
   - {addr: 0x800d0b00, name: g_wldcore_map_projection_motion_progress}
   - {addr: 0x800d0b04, name: g_wldcore_map_projection_motion_origin_x}
   - {addr: 0x800d0b14, name: g_wldcore_map_projection_motion_target_x}
-  - {addr: 0x800d0b24, name: g_wldcore_location_entry_flags}
   - {addr: 0x800d0b24, name: g_wldcore_location_entry_state}
-  - {addr: 0x800d0b3c, name: g_wldcore_route_best_path}
-  - {addr: 0x800d0b80, name: g_wldcore_route_best_path_length}
-  - {addr: 0x800d0b84, name: g_wldcore_route_best_cost}
-  - {addr: 0x800d0b88, name: g_wldcore_route_best_length_bound}
   - {addr: 0x800d0bb4, name: g_wldcore_proposition_selected_entry}
   - {addr: 0x800d0bb8, name: g_wldcore_route_search_depth}
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
@@ -619,7 +603,6 @@ data:
   - {addr: 0x800d3c88, name: g_wldcore_saved_system_flags}
   - {addr: 0x800d3c8c, name: g_wldcore_map_zoom_motion}
   - {addr: 0x800d3ca8, name: g_wldcore_map_dots}
-  - {addr: 0x800d3ca8, name: g_wldcore_map_dots_view}
   - {addr: 0x800d3cd0, name: g_wldcore_map_dot_screen_x}
   - {addr: 0x800d3cd4, name: g_wldcore_map_dot_screen_y}
   - {addr: 0x800d4564, name: g_wldcore_sound_novel_local_flags}
@@ -635,8 +618,6 @@ data:
   - {addr: 0x800d45a4, name: g_wldcore_audio_queue}
   - {addr: 0x800d4644, name: g_wldcore_script_flags}
   - {addr: 0x800d4644, name: g_wldcore_script_state}
-  - {addr: 0x800d464c, name: g_wldcore_script_data_ptr}
-  - {addr: 0x800d4650, name: g_wldcore_script_ip}
   - {addr: 0x800d4674, name: g_wldcore_script_base}
   - {addr: 0x800d4678, name: g_wldcore_route_search_cost}
   - {addr: 0x800d467c, name: g_wldcore_status_unit}
@@ -647,8 +628,6 @@ data:
   - {addr: 0x800d4848, name: g_wldcore_opcode_state}
   - {addr: 0x800d484c, name: g_wldcore_state_flags}
   - {addr: 0x800d4852, name: g_wldcore_sound_novel_counter_delta}
-  - {addr: 0x800d485c, name: g_wldcore_sound_novel_picture_render_index}
-  - {addr: 0x800d485e, name: g_wldcore_sound_novel_picture_id}
   - {addr: 0x800d4860, name: g_wldcore_sound_novel_text_history_0}
   - {addr: 0x800d4862, name: g_wldcore_sound_novel_text_history_1}
   - {addr: 0x800d4864, name: g_wldcore_sound_novel_text_history_2}

@@ -8,7 +8,7 @@ void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled
     s32 bit_index;
 
     unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
-    g_world_thread_inner_subroutine_callback = (void (*)(void))battle_status_queue_misc_graphics_flag_change;
+    g_world_thread_call_target = (void (*)(void))battle_status_queue_misc_graphics_flag_change;
     status_index = 0;
     do {
         byte_index = status_index / 8;

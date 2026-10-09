@@ -14,23 +14,21 @@ void battle_gfx_append_unit_graphics_load_descriptor(map_x, map_y, map_level, ma
     u32 flags;
 /* clang-format on */
 {
-    volatile s32* load_count = &g_main_gfx_unit_graphics_load_count;
-    s32 count;
-
-    g_unit_graphics_load_descriptors[*load_count].map_x = map_x;
-    g_unit_graphics_load_descriptors[*load_count].map_y = map_y;
-    g_unit_graphics_load_descriptors[*load_count].map_level = map_level;
-    g_unit_graphics_load_descriptors[*load_count].map_height = map_height;
-    g_unit_graphics_load_descriptors[*load_count].portrait_id = portrait_id;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].map_x = map_x;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].map_y = map_y;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].map_level = map_level;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].map_height = map_height;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].portrait_id
+        = portrait_id;
     if ((s16)portrait_id >= BATTLE_SPRITESHEET_ID_COUNT) {
-        g_unit_graphics_load_descriptors[*load_count].portrait_id = BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1;
+        g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].portrait_id
+            = BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1;
     }
-    g_unit_graphics_load_descriptors[*load_count].palette_id = palette_id;
-    g_unit_graphics_load_descriptors[*load_count].misc_id = misc_id;
-    g_unit_graphics_load_descriptors[*load_count].battle_stats = unit;
-    g_unit_graphics_load_descriptors[*load_count].flags = flags;
-    count = *load_count;
-    if (count < 16) {
-        *load_count = count + 1;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].palette_id = palette_id;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].misc_id = misc_id;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].battle_stats = unit;
+    g_main_gfx_unit_graphics_load_queue.descriptors[g_main_gfx_unit_graphics_load_queue.count].flags = flags;
+    if (g_main_gfx_unit_graphics_load_queue.count < 16) {
+        g_main_gfx_unit_graphics_load_queue.count++;
     }
 }

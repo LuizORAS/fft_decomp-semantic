@@ -61,7 +61,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     SetSemiTrans(&frames[0].portrait, 1);
     buffer = battle_menu_alloc_buffer(0x580);
     battle_clear_menu_render_buffer(buffer, 0x580);
-    stride = &g_menu_inner_window_width;
+    stride = &g_menu_text_state.stride;
     *stride = 0x58;
     battle_menu_set_text_origin(0, 0);
     origin = (battle_rect_t*)(stride - 2);

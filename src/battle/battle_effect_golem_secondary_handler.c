@@ -36,7 +36,8 @@ s32 battle_effect_golem_secondary_handler(void) {
         finish_timer = current->finish_timer;
         result = finish_timer != 1;
         current->timer = current->timer + 1;
-        if (current->active_count == 0 && current->timer > g_battle_effect_groups[16].spawn_start_frame) {
+        if (current->active_count == 0
+            && current->timer > g_battle_effect_trap_particle_configs[16].spawn_start_frame) {
             current->finish_timer = finish_timer + 1;
         }
         break;

@@ -8,13 +8,13 @@
 u8* world_gfx_bind_data_pointer(u32 index) {
     switch (index) {
     case 0:
-        g_world_text_skillset_names = g_world_text_skillset_names_data;
+        g_world_text_section_pointers[WORLD_TEXT_SECTION_SKILLSET_NAMES] = g_world_text_skillset_names_data;
         break;
     case 1:
-        g_world_text_job_names = g_world_text_job_names_data;
+        g_world_text_section_pointers[WORLD_TEXT_SECTION_JOB_NAMES] = g_world_text_job_names_data;
         break;
     case 2:
-        g_world_text_ability_names = g_world_text_ability_names_data;
+        g_world_text_section_pointers[WORLD_TEXT_SECTION_ABILITY_NAMES] = g_world_text_ability_names_data;
         break;
     case 3:
         g_world_text_section_pointers[24] = g_world_text_formation_messages_data;

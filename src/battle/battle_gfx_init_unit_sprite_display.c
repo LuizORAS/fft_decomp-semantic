@@ -7,7 +7,7 @@ u8* battle_gfx_init_unit_sprite_display(s32 unit_index) {
     u8* flags;
 
     body_part = 7;
-    display = &g_battle_gfx_unit_sprite_display_data[unit_index * 0x440];
+    display = g_battle_unit_misc_data[unit_index].unit_sprite_display;
     flags = display + 0x31;
     display[2] = 0x80;
     display[1] = 0x80;

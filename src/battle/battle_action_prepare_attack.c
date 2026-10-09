@@ -55,9 +55,9 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
         ability = ABILITY_ID_THROW_FIRST;
         item = action.item_id;
-        table = g_main_throw_ability_item_types_by_ability_id;
+        table = g_main_throw_ability_item_types - ABILITY_ID_THROW_FIRST;
         for (; ability < ABILITY_ID_JUMP_FIRST; ability++) {
-            /* The index+base integer spelling is byte-required. */
+            /* The index+base integer spelling of the biased table is byte-required. */
             if (*(u8*)(ability + (s32)table) == g_main_item_primary_data[item].type) {
                 break;
             }
@@ -135,7 +135,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             return -1;
         }
         main_util_copy_action_data((u8*)&action, (u8*)dest);
-        ct = g_main_jump_charge_ability_data_by_ability_id[ability * 2];
+        ct = g_main_charge_ability_data[ability - ABILITY_ID_CHARGE_FIRST].ct;
         do {
             skip = 1;
         } while (0);

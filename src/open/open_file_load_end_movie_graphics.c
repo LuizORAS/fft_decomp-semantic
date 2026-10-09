@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 void open_file_load_end_movie_graphics(void) {
-    main_file_load_descriptor_t* header = &g_open_file_header;
+    main_file_load_descriptor_t* header = &g_main_file_cd_state;
     RECT frame;
 
     open_file_wait_then_build_header(header, 0x150c2, 0x11, g_open_file_destination);

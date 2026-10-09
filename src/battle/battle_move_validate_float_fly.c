@@ -25,5 +25,5 @@ s32 battle_move_validate_float_fly(battle_unit_misc_data_t* unit) {
             return 0;
         }
     }
-    return tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT;
+    return tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
 }

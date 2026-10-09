@@ -20,7 +20,7 @@ s32 battle_action_perform_reaction_ability(void) {
     if (ability_id == ABILITY_ID_REACTION_REFLECT) {
         g_battle_action_attacker = &g_battle_unit_stats[g_battle_acting_unit_id];
     }
-    if ((g_main_reaction_behavior_flags_by_ability_id[ability_id] & 3) == 1) {
+    if ((g_main_reaction_behavior_flags[ability_id - ABILITY_ID_REACTION_FIRST] & 3) == 1) {
         return 0;
     }
     battle_action_clear_data();

@@ -13,7 +13,7 @@ s32 battle_ai_select_peril_target(void) {
     s32 best_score = 0;
     s32 i;
 
-    g_battle_ai_temp_unit_data->auto_battle_target = g_battle_ai_data_base.acting_unit_id;
+    g_battle_ai_data_base.acting_unit->auto_battle_target = g_battle_ai_data_base.acting_unit_id;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         battle_stats_t* unit = &g_battle_unit_stats[i];
         battle_ai_unit_decision_t* decision = &ai->unit_decisions[i];

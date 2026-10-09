@@ -272,8 +272,7 @@ written that way.
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
 - `g_wldcore_zodiac_start_dates[12][2]` (`include/fft/wldcore.h`) and OPEN's
   flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
-  the OPEN name covers both bytes, and `target/opening.yaml` still names `+1`
-  `g_open_birthday_zodiac_days`.
+  the OPEN name covers both bytes.
 - `battle_unit_misc_data_t.movement_value` (`+0x11c`, `include/fft/battle.h`)
   is a plain `u8` holding a packed step: direction in bits 6–7, layer in bit 5,
   length in bits 0–1 (`src/battle/battle_move_get_current_and_destination_tiles.c`).
@@ -283,15 +282,6 @@ written that way.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte bank is saved with it but has no
   known meaning.
-- `0x80165ef4` carries two names (`g_battle_text_substitution_values`,
-  `g_dead_unit_roster_id`) because it holds several identifier kinds; keep
-  its name generic.
-
-## Duplicated code
-
-Twins stay separate functions because each lives in its own module or
-translation unit. Share their types and constants through headers.
-
 - EFFECT: 32 groups of byte-identical routines across 110 native files. E005's
   first routine appears in 17 overlays, and E450/E480 are identical.
   E336/E461, E230/E481 and E015/E047 differ only in immediates.

@@ -7,7 +7,7 @@ void world_text_generate_formation_unit_name_string(void) {
     s32 j;
     u8 character;
 
-    out = g_world_text_roster_unit_names;
+    out = g_world_text_section_pointers[WORLD_TEXT_SECTION_ROSTER_UNIT_NAMES];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);
         if (unit->party_id == PARTY_ID_NONE) {

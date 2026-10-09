@@ -263,7 +263,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (flags & 0x200) {
                     entry->skillset_flags.packed = flags | 0x100;
                 } else if (!(flags & 0x400)) {
-                    if (ability->ct >= g_battle_ai_acting_unit_remaining_clockticks
+                    if (ability->ct >= g_battle_ai_data_base.acting_unit_remaining_clockticks
                         || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1) == 0) {
                         entry->skillset_flags.packed |= 0x100;
                     } else {

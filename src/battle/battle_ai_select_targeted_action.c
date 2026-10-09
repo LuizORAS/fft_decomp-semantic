@@ -7,7 +7,7 @@
  * -1 to suspend and 0 when selection completes.
  */
 s32 battle_ai_select_targeted_action(void) {
-    s32 target = g_battle_ai_temp_unit_data->auto_battle_target;
+    s32 target = g_battle_ai_data_base.acting_unit->auto_battle_target;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
     s32 i, result;

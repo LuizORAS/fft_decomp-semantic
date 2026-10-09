@@ -24,7 +24,8 @@ void battle_move_start_float_climb_jump_step(
     s32 apex;
 
     step = &unit->movement_value;
-    height = to->height * 2 + (to->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height + 2;
+    height = to->height * 2 + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height
+        + 2;
     height -= -unit->screen.vy / 6;
     height += ((unit->movement_value & 3) + 1) * 2;
     rise_height = height * 6;

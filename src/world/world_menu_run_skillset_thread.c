@@ -12,7 +12,7 @@ void world_menu_run_skillset_thread(void) {
     s32* param;
 
     world_menu_check_action_restrictions();
-    g_world_thread_inner_subroutine_callback = world_menu_build_skillset_entries;
+    g_world_thread_call_target = world_menu_build_skillset_entries;
     world_thread_call_on_main_stack();
     param_value = 1;
     if (g_world_menu_monster_skillset_flag != 0) {
@@ -32,7 +32,7 @@ void world_menu_run_skillset_thread(void) {
     }
     param = &g_world_thread_contexts[g_world_thread_current_id].function_parameter_2;
     *param = param_value;
-    row = g_world_menu_unit_selection_rows[g_world_unit_view_battle_id].bytes;
+    row = g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id].bytes;
     g_world_menu_thread_menu_data[4].selected_index = row[2];
     g_world_menu_restore_depth = 1;
     world_script_pulse_tutorial_wait_value(0xFC);

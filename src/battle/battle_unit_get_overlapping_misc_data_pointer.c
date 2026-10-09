@@ -28,7 +28,7 @@ battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     }
     if (count != 0) {
         for (i = 0; i < count; i++) {
-            if (list[i]->unit_id == g_casting_unit_misc_id) {
+            if (list[i]->unit_id == g_battle_unit_source_misc_id) {
                 return list[i];
             }
         }

@@ -10,7 +10,7 @@ s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
     if ((unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) != 0) {
         return 1;
     }
-    depth = g_battle_map_tile_data[battle_map_calculate_location(unit)].depth_half_height >> MAP_TILE_DEPTH_SHIFT;
+    depth = g_battle_map_tile_data[battle_map_calculate_location(unit)].depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
     if (depth < 2) {
         return 0;
     }

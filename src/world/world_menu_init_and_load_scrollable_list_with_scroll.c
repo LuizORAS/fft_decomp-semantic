@@ -5,6 +5,6 @@
 
 void world_menu_init_and_load_scrollable_list_with_scroll(
     s32 values, s32 value, s32 selected, s32 state, s32 list_record) {
-    world_menu_init_scrollable_list((const s16*)values, value, selected, state);
+    world_menu_init_scrollable_list((const s16*)values, value, selected, (u8*)state);
     world_menu_load_scrollable_list_layout((world_menu_list_record_t*)list_record);
 }

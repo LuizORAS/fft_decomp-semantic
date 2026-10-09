@@ -21,7 +21,7 @@ void battle_menu_load_selected_unit(void) {
     s16 list_value;
 
     unit = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
-    editor = g_battle_menu_billboard_data;
+    editor = g_battle_menu_billboard_data.halfwords;
     if (unit != 0) {
         battle_menu_copy_unit_data_to_status_billboard(unit, &g_battle_menu_status_billboard);
     }

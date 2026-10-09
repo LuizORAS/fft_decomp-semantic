@@ -12,13 +12,13 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_ef
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
         misc_id = -1;
-        if (g_battle_effect_targets[16].target_type == 0) {
-            misc_id = g_battle_effect_targets[16].id.misc_id;
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
+            misc_id = g_battle_effect_coord_data.targets[16].id.misc_id;
         }
     } else {
         misc_id = -1;
-        if (g_battle_effect_targets[target].target_type == 0) {
-            misc_id = g_battle_effect_targets[target].id.misc_id;
+        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
+            misc_id = g_battle_effect_coord_data.targets[target].id.misc_id;
         }
     }
     if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) && misc_id != -1) {

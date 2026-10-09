@@ -92,7 +92,7 @@ void world_script_update_tutorial_controller_input(void) {
                 g_world_script_tutorial_previous_input &= ~mask;
             }
         }
-        counter_base = (u32*)g_world_script_tutorial_repeat_counters;
+        counter_base = g_world_script_tutorial_repeat_counters;
         index = 0;
         counter = counter_base;
         do {

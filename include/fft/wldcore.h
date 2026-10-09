@@ -94,8 +94,8 @@ typedef struct wldcore_opcode_state {
     } instruction;   /* 0x00 */
     u16 state_flags; /* 0x04; g_wldcore_state_flags */
     u8 _unused_06[0x0e];
-    s16 render_index; /* 0x14; g_wldcore_sound_novel_picture_render_index */
-    s16 picture;      /* 0x16; g_wldcore_sound_novel_picture_id */
+    s16 render_index; /* 0x14 */
+    s16 picture;      /* 0x16 */
     u8 _unused_18[0x0e];
     s16 x; /* 0x26 */
     s16 y; /* 0x28 */
@@ -273,7 +273,6 @@ typedef char wldcore_thread_block_size_must_be_0x14[sizeof(wldcore_thread_block_
 extern wldcore_thread_block_t g_wldcore_thread8_params;
 extern wldcore_thread_block_t g_wldcore_thread9_params;
 extern wldcore_thread_block_t g_wldcore_threadc_params;
-extern s32 g_wldcore_thread8_offset_y;
 
 /* unit */
 extern s32 g_wldcore_participant_list_saved_cursor;
@@ -294,10 +293,10 @@ typedef char wldcore_xy16_size_must_be_4[sizeof(wldcore_xy16_t) == 4 ? 1 : -1];
  * all three walk pointers from a single symbol address. */
 typedef struct wldcore_sortbox_state {
     u32 flags[2];
-    wldcore_xy16_t priorities[2]; /* 0x08; .x is the GsSortBoxFill OT priority of each box */
-    s32 elapsed;                  /* 0x10; fade frames run, stepped by wldcore_fade_step_screen */
-    s32 duration;                 /* 0x14 */
-    GsBOXF boxes[2];              /* 0x18; full-screen fill boxes drawn by wldcore_fade_draw_screen_overlays */
+    s32 priorities[2]; /* 0x08; GsSortBoxFill OT priority of each box, read as a halfword */
+    s32 elapsed;       /* 0x10; fade frames run, stepped by wldcore_fade_step_screen */
+    s32 duration;      /* 0x14 */
+    GsBOXF boxes[2];   /* 0x18; full-screen fill boxes drawn by wldcore_fade_draw_screen_overlays */
 } wldcore_sortbox_state_t;
 typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_state_t) == 0x38 ? 1 : -1];
 
@@ -392,9 +391,6 @@ extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
  * and the sound-novel menu stores flags[1] by absolute address beside a live
  * &g_wldcore_screen_fade_state base, which the member spelling does not
  * reproduce. */
-extern s32 g_wldcore_screen_fade_box_0_priority;
-extern s32 g_wldcore_screen_fade_box_1_flags;
-extern s32 g_wldcore_screen_fade_box_1_priority;
 void wldcore_gfx_draw_world_frame_with_map(void);
 s32 wldcore_fade_step_screen(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
@@ -453,9 +449,9 @@ typedef struct wldcore_location_entry_state {
     s32 segment_frames;              /* 0x14; point distance * 2, interpolation denominator */
     wldcore_route_path_t route_path; /* 0x18; best path found */
     s32 route_index;                 /* 0x58; route_path.routes index of the current leg */
-    s32 best_path_length;            /* 0x5c; g_wldcore_route_best_path_length */
-    s32 best_cost;                   /* 0x60; g_wldcore_route_best_cost, reset to 99999 */
-    s32 best_length_bound;           /* 0x64; g_wldcore_route_best_length_bound, reset to 99999 */
+    s32 best_path_length;            /* 0x5c */
+    s32 best_cost;                   /* 0x60; reset to 99999 */
+    s32 best_length_bound;           /* 0x64; reset to 99999 */
     s32 leg_start_location;          /* 0x68; route record start (end when reversed) */
     s32 leg_end_location;            /* 0x6c; becomes the current location and script variable 0x31 on arrival */
     s32 heading;                     /* 0x70; route point heading (+0x800 when reversed), copied to the marker angle */
@@ -599,6 +595,11 @@ typedef struct wldcore_text_list_panel {
     s32 text_ids[1]; /* 0x34; row_count entries, relative to text 0xb8d9 */
 } wldcore_text_list_panel_t;
 
+typedef struct wldcore_window_render_bounds16 {
+    wldcore_xy16_t position;
+    wldcore_xy16_t dimensions;
+} wldcore_window_render_bounds16_t;
+
 /* State for a paged text window and its four decorative window records. */
 typedef struct wldcore_text_scrollable_window {
     s32 image_x; /* 0x00; text image position.x for wldcore_window_build_render_record_image; cleared by the setups */
@@ -608,14 +609,11 @@ typedef struct wldcore_text_scrollable_window {
     s32 rows_per_page;
     s32 measured_columns;
     s32 measured_rows;
-    /* 0x20..0x2e: copy of the optional extra render record's base_x/base_y and x/y/width/height, taken
-     * as two block copies; 0x800906c0 scrolls and clips the record from it. */
-    s32 extra_base_x;
-    s32 extra_base_y; /* 0x24; scrolled by row * 16 into the record's base_y */
-    u16 extra_x;
-    u16 extra_y; /* 0x2a; written (plus the clipped offset) to the record's y */
-    u16 extra_width;
-    s16 extra_height; /* 0x2e; written (minus the clipped offset) to the record's height */
+    /* 0x20..0x2e: copy of the optional extra render record's base and bounds, taken as two block
+     * copies; 0x800906c0 scrolls base.y by row * 16 into the record's base_y and clips the record's
+     * y and height from the bounds. */
+    wldcore_point32_t extra_base;                  /* 0x20 */
+    wldcore_window_render_bounds16_t extra_bounds; /* 0x28 */
     /* 0x30; wldcore_text_is_window_finished: 0 paging, 1 manual scroll while button 0x80 is held, 2 scrolling
      * back to page_start_row */
     s32 scroll_state;
@@ -644,7 +642,6 @@ extern s32 g_wldcore_displayed_numeric_value;
 extern s32 g_wldcore_displayed_numeric_value_secondary;
 extern s32 g_wldcore_displayed_numeric_value_tertiary;
 extern s32 g_wldcore_loaded_message_block;
-extern s16 g_wldcore_text_bounds[];
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row);
 void wldcore_load_message_block_if_changed(s32 chapter);
 void wldcore_text_get_padded_dimensions(s32 text_id, wldcore_text_dimensions_t* output);
@@ -800,16 +797,6 @@ typedef enum wldcore_scroll_limits {
     WLDCORE_SCROLL_MIN_Y = -64,
     WLDCORE_SCROLL_MAX_Y = 80
 } wldcore_map_scroll_limits_e;
-
-typedef struct wldcore_window_render_bounds16 {
-    wldcore_xy16_t position;
-    wldcore_xy16_t dimensions;
-} wldcore_window_render_bounds16_t;
-
-extern s32 g_wldcore_scroll_text_render_record_index;
-extern wldcore_point32_t g_wldcore_scroll_text_extra_position;
-extern s32 g_wldcore_scroll_text_extra_render_index;
-extern wldcore_window_render_bounds16_t g_wldcore_scroll_text_extra_rect;
 
 /* bar */
 /* Provisional: the bar's active-proposition list level
@@ -1572,13 +1559,6 @@ typedef struct wldcore_window_entry_36 {
 } wldcore_window_entry_36_t;
 typedef char wldcore_entry_36_size_must_be_0x24[sizeof(wldcore_window_entry_36_t) == 0x24 ? 1 : -1];
 
-/* Halfword column of the 52-byte records (width at +0x2c, height at +0x2e). */
-typedef struct wldcore_window_entry_52_s16 {
-    s16 value;
-    u8 rest[50];
-} wldcore_window_entry_52_s16_t;
-typedef char wldcore_entry_52_s16_size_must_be_0x34[sizeof(wldcore_window_entry_52_s16_t) == 0x34 ? 1 : -1];
-
 /* Colour triple of the 52-byte render records (+0x30). */
 typedef struct wldcore_window_entry_52_rgb {
     u8 red;
@@ -1637,12 +1617,6 @@ extern wldcore_window_render_record_t g_wldcore_window_render_records[];
 extern s32 g_wldcore_window_render_record_count;
 extern wldcore_window_xy_t g_wldcore_window_record_positions[];
 
-/* Width/height columns of g_wldcore_window_render_records. The text-window routines
- * at 0x80075950 and 0x8008aea0 read the height signed while
- * wldcore_window_load_image_record_to_vram reads it unsigned, so they keep these
- * signed views. */
-extern wldcore_window_entry_52_s16_t g_wldcore_window_render_record_widths[];
-extern wldcore_window_entry_52_s16_t g_wldcore_window_render_record_heights[];
 extern u32 g_wldcore_window_image_buffer[];
 extern s16 g_wldcore_active_menu_value;
 extern void (*g_wldcore_menu_idle_handlers[])(wldcore_menu_stack_record_t*);

@@ -19,10 +19,11 @@ s32 world_item_run_category_menu(void) {
             (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
             (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
+        world_menu_init_scrollable_list(
+            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
         g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
         g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-        g_world_menu_aux_callback = (s32 (*)(s32))world_item_build_type_icon_source;
+        g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
         g_world_menu_script_callbacks[3] = world_menu_get_entry_item_icon_source;
         g_world_menu_script_callbacks[4] = world_menu_get_display_value_1;
         g_world_menu_script_callbacks[5] = world_menu_get_display_value_2;
@@ -54,7 +55,8 @@ s32 world_item_run_category_menu(void) {
             (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         g_world_item_category_previewed_cursor = -1;
         world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
+        world_menu_init_scrollable_list(
+            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
     } else if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_world_menu_option_count != 0) {
@@ -83,8 +85,8 @@ s32 world_item_run_category_menu(void) {
         g_world_item_category_previewed_cursor = g_world_menu_cursor_position;
         world_item_populate_stat_preview(
             (s16)selected, &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
-        g_world_formation_panel_windows[0].enabled = 1;
-        g_world_formation_panel_windows[7].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
+        g_world_preview_stats_thread_params.redraw_request = 1;
     }
     return 0;
 }

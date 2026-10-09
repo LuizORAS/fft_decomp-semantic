@@ -19,7 +19,8 @@ void battle_effect_init_trap_animation(s32 group, u16 palette_id, battle_effect_
     u32 offset;
 
     slot->clut = palette_id;
-    offset = *(u16*)(g_battle_effect_trap_animation_data + (g_battle_effect_trap_particle_configs[group * 46] << 1));
+    offset = *(
+        u16*)(g_battle_effect_trap_animation_data + (g_battle_effect_trap_particle_configs[group].trap_animation << 1));
     slot->blue = 0x80;
     slot->green = 0x80;
     slot->red = 0x80;

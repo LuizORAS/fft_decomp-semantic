@@ -186,7 +186,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);
         }
     }
-    head = &g_battle_misc_unit_list_head;
+    head = &g_battle_unit_misc_list_head;
     unit->previous = *head;
     *head = unit;
     battle_gfx_set_thrown_item_graphic_palette(

@@ -60,5 +60,5 @@ void main_item_init_order_tables(void) {
     g_main_armor_page_order[0] = ITEM_ID_NONE;
     g_main_accessory_page_order[0] = ITEM_ID_NONE;
     g_main_item_page_order[0] = ITEM_ID_NONE;
-    memset(table, 0, 0x100);
+    memset(g_main_item_poached_quantities, 0, 0x100);
 }

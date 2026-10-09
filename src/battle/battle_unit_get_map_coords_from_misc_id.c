@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, s16* coords) {
-    battle_unit_misc_data_t* unit = g_battle_unit_last_misc_data;
+    battle_unit_misc_data_t* unit = g_battle_unit_misc_list_head;
 
     if (unit != 0) {
         do {

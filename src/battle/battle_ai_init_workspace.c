@@ -25,8 +25,8 @@ void battle_ai_init_workspace(void) {
     ai->hardcoded_status_abilities[1].skillset_flags.bytes.usage_flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     ai->present_unit_average_max_hp = 0;
-    ai->map_max_x = g_map_max_x;
-    ai->map_max_y = g_map_max_y;
+    ai->map_max_x = g_battle_map_max_x;
+    ai->map_max_y = g_battle_map_max_y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         ai->unit_battle_ids[i] = 0xff;
         if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE) {

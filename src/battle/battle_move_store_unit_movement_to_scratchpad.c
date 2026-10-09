@@ -224,8 +224,8 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         }
         movement_3 = other->movement_abilities[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(other)];
-        base = tile->height * 2 + (tile->depth_half_height & 0x1F);
-        depth = tile->depth_half_height >> 5;
+        base = tile->height * 2 + (tile->depth_half_height.value & 0x1F);
+        depth = tile->depth_half_height.value >> 5;
         byte = base;
         if (depth != 0) {
             if (other->status_sets.current[2] & 0x40) {

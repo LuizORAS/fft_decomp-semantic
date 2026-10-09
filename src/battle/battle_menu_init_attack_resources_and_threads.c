@@ -32,10 +32,8 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     g_battle_menu_panel_fade_intensity = 0;
     if (battle_script_is_tutorial_event_slot() != 0) {
         g_battle_screen_fade = 0xff;
-        /* Keep the typed saved-word store: a scalar store changes the final
-         * options write's placement in the jump delay slot. */
-        ((game_options_t*)&g_battle_saved_game_options)->value = g_main_game_options_raw;
-        options = (game_options_fields_t*)&g_main_game_options_raw;
+        g_battle_saved_game_options = g_main_game_options;
+        options = &g_main_game_options.fields;
         options->cursor_movement = GAME_CURSOR_MOVEMENT_TYPE_A;
         options->multi_height_cursor_speed = GAME_MULTI_HEIGHT_CURSOR_SPEED_REGULAR;
         options->navigation_messages = GAME_OPTION_ON;

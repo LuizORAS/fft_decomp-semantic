@@ -8,7 +8,7 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
     s32 value;
     u32 flags;
 
-    if ((g_wldcore_window_render_records[g_wldcore_scroll_text_render_record_index].flags & 0x100) != 0) {
+    if ((g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags & 0x100) != 0) {
         return;
     }
     if ((g_main_system_flags & 4) && world_thread_is_running(0xE) == 0) {

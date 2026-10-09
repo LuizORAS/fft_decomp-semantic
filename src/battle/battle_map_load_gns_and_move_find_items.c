@@ -5,9 +5,9 @@ enum {
     GNS_BUFFER_CLEAR_BYTES = 0xbb8,
 };
 
-gns_file_record_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
+gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
     u32 selected_map;
-    gns_file_record_t* gns_records;
+    gns_record_view_t* gns_records;
     u32 lba;
 
     selected_map = map_id & 0xffff;

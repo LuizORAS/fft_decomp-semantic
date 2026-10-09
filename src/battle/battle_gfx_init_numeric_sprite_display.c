@@ -6,13 +6,13 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 uni
 
     switch (display_section) {
     case 0:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_0[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[0];
         break;
     case 1:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_1[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[1];
         break;
     case 2:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_2[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[2];
         break;
     }
 

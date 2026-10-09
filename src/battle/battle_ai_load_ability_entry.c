@@ -1,13 +1,5 @@
 #include "fft/battle.h"
 
-typedef struct battle_ai_loader_charge_record {
-    u8 ct;
-    u8 _unused_01;
-} battle_ai_loader_charge_record_t;
-typedef char battle_ai_loader_charge_record_must_be_2[sizeof(battle_ai_loader_charge_record_t) == 2 ? 1 : -1];
-
-extern battle_ai_loader_charge_record_t g_main_charge_ability_data[8];
-
 /*
  * Load an ability-list entry into the considered AI ability.
  *

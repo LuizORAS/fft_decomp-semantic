@@ -51,9 +51,8 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         base->y = -0x22;
         g_wldcore_window_render_records[render].flags = (g_wldcore_window_render_records[render].flags & ~0x10) | 0x100;
         g_wldcore_scrollable_text_window.extra_render_index = render;
-        *(wldcore_point32_t*)&g_wldcore_scrollable_text_window.extra_base_x = *base;
-        *(wldcore_window_render_bounds16_t*)&g_wldcore_scrollable_text_window.extra_x
-            = g_wldcore_window_render_records[render].bounds;
+        g_wldcore_scrollable_text_window.extra_base = *base;
+        g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
     case 3:
@@ -62,7 +61,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         }
         break;
     default:
-        index = &g_wldcore_scroll_text_render_record_index;
+        index = &g_wldcore_scrollable_text_window.render_record_index;
         if (g_wldcore_window_render_records[*index].flags & 0x100) {
             break;
         }

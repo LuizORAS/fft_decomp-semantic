@@ -184,7 +184,8 @@ typedef struct world_status_thread {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
     s32 flags;          /* 0x08 */
-    s32 redraw_request; /* 0x0c: set to 1 elsewhere to request a text/portrait rebuild */
+    s32 redraw_request; /* 0x0c: set to 1 elsewhere to request a text/portrait rebuild; the status
+                           display record also keeps the selection-slide direction here */
     s32 style;          /* 0x10: 1 selects palette bank 1 */
 } world_status_thread_t;
 typedef char world_status_thread_size_must_be_0x14[(sizeof(world_status_thread_t) == 0x14) ? 1 : -1];
@@ -193,6 +194,23 @@ typedef char world_status_thread_size_must_be_0x14[(sizeof(world_status_thread_t
 enum {
     BATTLE_MENU_STATUS_PANEL_LABEL_NONE = 0xffff,
 };
+
+/* Provisional 0xe-byte active-unit record (BATTLE 0x8014d080, WORLD
+ * 0x8013a364, DEBUGCHR 0x801c5324, REQUIRE 0x801cb364), saved and restored
+ * whole by battle_menu_copy_billboard_data_out and
+ * battle_menu_copy_billboard_data_in. The load-selected-unit routines fill
+ * job_id..zodiac for the unit named by battle_id; the overlays' status panels
+ * keep a second record for the comparison unit 0x10 later. */
+typedef struct battle_active_unit {
+    s16 name_id;    /* 0x00: unit name text id less TEXT_ID_UNIT_NAME_BASE (DEBUGCHR, REQUIRE) */
+    s16 job_id;     /* 0x02 */
+    s16 brave;      /* 0x04 */
+    s16 faith;      /* 0x06 */
+    s16 zodiac;     /* 0x08 */
+    s16 battle_id;  /* 0x0a: selected unit */
+    s16 _unused_0c; /* 0x0c */
+} battle_active_unit_t;
+typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) == 0xe) ? 1 : -1];
 
 /* Per-slot editor state (0x38 bytes). Both arrays are indexed by the five
  * character slots; the status threads walk them with 2-byte cursors. The
@@ -216,6 +234,16 @@ typedef struct battle_menu_status_panel_slot_state {
 typedef char
     battle_menu_status_panel_slot_state_size_must_be_0x38[(sizeof(battle_menu_status_panel_slot_state_t) == 0x38) ? 1
                                                                                                                   : -1];
+
+/* Editor storage (0x40 bytes, copied whole by the billboard copy routines) is
+ * addressed both as a status record and as halfwords; the load-selected-unit
+ * routines fill the first 28. */
+typedef union battle_menu_status_panel_slot_storage {
+    battle_menu_status_panel_slot_state_t state;
+    s16 halfwords[0x20];
+} battle_menu_status_panel_slot_storage_t;
+typedef char battle_menu_status_panel_slot_storage_size_must_be_0x40
+    [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x40) ? 1 : -1];
 
 /* One gauge of the unit status record: the Gouraud bar is drawn value/max
  * wide, and a zero max draws the fixed 4-pixel stub. */
@@ -639,8 +667,8 @@ typedef struct world_at_descriptor {
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
  * parallel halfword columns become the layout's text_ids/text_colors tables,
  * `text` is published through g_world_text_section_pointers[31] (BATTLE:
- * g_menu_text_pointer), and `request` is the block handed to the main-stack
- * preview call, whose descriptor array follows it. */
+ * g_battle_text_section_pointers[31]), and `request` is the block handed to
+ * the main-stack preview call, whose descriptor array follows it. */
 typedef struct world_menu_at_list_work {
     s16 primary_values[40];                /* 0x000: turn-value column */
     s16 secondary_values[40];              /* 0x050: unit-name column */
@@ -906,7 +934,7 @@ typedef struct menu_text_state {
     s16 origin_x;          /* 0x04: battle_menu_set_text_origin */
     s16 origin_y;          /* 0x06 */
     s32 _unused_08;        /* 0x08 */
-    s32 stride;            /* 0x0c: rect width * 4 (g_menu_inner_window_width) */
+    s32 stride;            /* 0x0c: rect width * 4 (the inner window width) */
     s32 color;             /* 0x10: glyph blit fill; 0x44444444 while text colour 4 is drawn
                               (*_menu_draw_text_columns) */
 } menu_text_state_t;
@@ -1234,19 +1262,6 @@ enum world_unit_editor_line_layout_offset {
     WORLD_UNIT_EDITOR_LINE_Y1 = 6,
     WORLD_UNIT_EDITOR_LINE_SIZE = 7
 };
-
-/* Provisional view of the edited unit's panel data (WORLD 0x8013a392, BATTLE
- * 0x8014d0ae). The target addresses the flag and the id table from one base
- * register, so they are one object. */
-typedef struct world_unit_editor_panel_data {
-    s16 flag;   /* 0x00: selects label texts and sprite layout */
-    s16 layout; /* 0x02: selects the parameter rows copied below */
-    u8 _unused_04[0x12];
-    s16 item_ids[5];       /* 0x16; -1 for an empty slot */
-    s16 label_text_ids[5]; /* 0x20; -1 for an empty row */
-} world_unit_editor_panel_data_t;
-typedef char world_unit_editor_panel_data_item_ids_offset_must_be_0x16
-    [((unsigned long)&((world_unit_editor_panel_data_t*)0)->item_ids == 0x16) ? 1 : -1];
 
 /* Provisional 0x2ec-byte double-buffered page of the unit status panel
  * (pairs at 0x801a25f8, first page per mode from g_world_unit_status_first_page_by_mode). */

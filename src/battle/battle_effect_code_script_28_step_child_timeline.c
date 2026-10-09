@@ -65,7 +65,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
 
     target = record->target_index;
     state = (battle_effect_tick_state_t*)&record->target_index;
-    if (g_battle_effect_targets[target].id.bytes[1] != 2) {
+    if (g_battle_effect_coord_data.targets[target].id.bytes[1] != 2) {
         for (i = 0; i < 5; i++) {
             table = &g_battle_effect_timing_channels->particle[i];
             if (state->particle_remaining[i] == 0) {
@@ -154,9 +154,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_targets[16].target_type == 0) {
+                    if (g_battle_effect_coord_data.targets[16].target_type == 0) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_targets[16].id.misc_id, red, green, blue);
+                            g_battle_effect_coord_data.targets[16].id.misc_id, red, green, blue);
                     }
                 }
             }
@@ -181,9 +181,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_targets[target].target_type == 0) {
+                    if (g_battle_effect_coord_data.targets[target].target_type == 0) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_targets[target].id.misc_id, red, green, blue);
+                            g_battle_effect_coord_data.targets[target].id.misc_id, red, green, blue);
                     }
                 }
             }
@@ -257,9 +257,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
         }
         state->frame++;
     } else {
-        if (g_battle_effect_targets[target].target_type == 0) {
-            init.caster.block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[16];
-            init.target[0].block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[target];
+        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
+            init.caster.block = *(battle_effect_secondary_block_t*)&g_battle_effect_coord_data.targets[16];
+            init.target[0].block = *(battle_effect_secondary_block_t*)&g_battle_effect_coord_data.targets[target];
             battle_effect_init_secondary(10, g_battle_effect_timeline->spawn_delay, &init);
         }
         ((battle_effect_tick_record_view_t*)record)->frame = g_battle_effect_timing_channels->duration;

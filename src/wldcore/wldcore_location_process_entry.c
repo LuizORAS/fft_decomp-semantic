@@ -8,7 +8,7 @@
  * Returns 0 after the type-0x23 push, else 1.
  *
  * g_wldcore_route_search_depth is a separate scalar: as a field of the entry state it becomes
- * the address anchor that the later &g_wldcore_location_entry_flags argument is formed from, and
+ * the address anchor that the later &g_wldcore_location_entry_state argument is formed from, and
  * the chained 99999 store makes best_cost that anchor as in the target. The
  * location load and the two argument addresses share one base register in the
  * target, which needs them to be members of the one g_wldcore_location_view view. */

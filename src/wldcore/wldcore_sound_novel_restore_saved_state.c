@@ -85,7 +85,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     g_wldcore_screen_fade_state.boxes[1].r = tint;
     g_wldcore_screen_fade_state.boxes[1].g = tint;
     g_wldcore_screen_fade_state.boxes[1].b = tint;
-    g_wldcore_screen_fade_box_1_priority = 0xB;
+    g_wldcore_screen_fade_state.priorities[1] = 0xB;
     wldcore_sound_wait_for_queue_drain();
     wldcore_load_sound_novel_files(g_wldcore_saved_record_index);
     wldcore_wait_for_file_load();

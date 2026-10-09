@@ -22,7 +22,7 @@ void debugchr_menu_icon_strip_thread(void) {
     battle_copy_bytes(&frame_pair[1], frame_pair, sizeof(*frame_pair));
     redraw = 1;
     frame = 0;
-    display_x = &g_menu_inner_window_width;
+    display_x = &g_menu_text_state.stride;
     frame_base = frame_pair;
     for (;;) {
         if (frame == (frame / 7) * 7) {

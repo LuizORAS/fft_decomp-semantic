@@ -12,6 +12,6 @@ void world_formation_reset_menu_context(void) {
     world_text_generate_formation_unit_name_string();
     DrawSync(0);
     g_world_menu_thread_menu_data = g_world_menu_default_entries;
-    g_world_text_location_names = g_world_location_names_resident;
+    g_world_text_section_pointers[WORLD_TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
     g_world_menu_text_color = 0;
 }

@@ -89,7 +89,7 @@ void equip_panel_run_character_status_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_equip_panel_text_image_a, 0xc80);
-            g_menu_inner_window_width = 0x50;
+            g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & 0xff) != 0xff) {
@@ -100,7 +100,7 @@ void equip_panel_run_character_status_thread(void) {
             }
             LoadImage(&g_equip_panel_text_upload_rect_a, (u32*)g_equip_panel_text_image_a);
             battle_clear_menu_render_buffer(g_equip_panel_text_image_b, 0xc80);
-            g_menu_inner_window_width = 0x50;
+            g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + 0xb000;

@@ -8,10 +8,10 @@
  * checks, while mode 4 shares mode 0's Blood Suck exclusion.
  */
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
-    s32 nearest_distance = 0x7fffffff;
-    s32 nearest_id = g_battle_ai_acting_unit_id;
-    s32 i;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
+    s32 nearest_distance = 0x7fffffff;
+    s32 nearest_id = g_battle_ai_data_base.acting_unit_id;
+    s32 i;
     battle_stats_t* unit;
     battle_ai_unit_decision_t* decision;
     s32 distance;

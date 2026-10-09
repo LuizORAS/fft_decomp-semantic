@@ -1,26 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* map_tile_t with byte 3 split into its half-height and depth bitfields. */
-typedef struct {
-    map_tile_surface_t surface;
-    u8 _unused_01;
-    u8 height;
-    struct {
-        u8 half_height : 5;
-        u8 depth : 3;
-    } bits;
-    u8 slope_type;
-    u8 marks;
-    u8 flags_06;
-    u8 camera_block_masks;
-} battle_move_path_tile_view_t;
-
-/* g_battle_map_tile_data through the bitfield view, bound separately: this
- * function also addresses the map_tile_t array, and a cast of it lets GCC
- * share the two bases. */
-extern battle_move_path_tile_view_t g_battle_map_tile_data_view[512];
-
 /* Pathfinding pass for a generic unit (id 0x7f) from (x, y, level) to the target
  * tile; returns the route buffer, or 0 when either tile is invalid or unreachable.
  *
@@ -36,7 +16,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
     u8* frontier = g_battle_move_frontier_flags_ptr;
     s32 completed_pass = 0;
     s32 i;
-    battle_move_path_tile_view_t* tile;
+    map_tile_t* tile;
     s32 empty_flags;
 
     *suspended = 0;
@@ -161,17 +141,18 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         completed_pass = 1;
     }
     for (i = 0; i < 512; i++) {
-        tile = &g_battle_map_tile_data_view[i];
-        tile->marks &= 0xDF;
+        tile = &g_battle_map_tile_data[i];
+        tile->ceiling_depth_and_marks.value &= 0xDF;
         if (g_battle_target_panels[i].ride_remaining_range != 0
-            || ((g_battle_map_tile_data_view[i].bits.half_height < 3 || !(frontier[i] & 2))
-                && g_battle_target_panels[i].remaining_range != 0 && tile->bits.half_height < 4
-                && g_battle_map_tile_data_view[i].surface.bits.type != 0x1C
-                && (tile->bits.depth == 0 || !config->cannot_stay_on_water)
-                && (tile->bits.depth != 3 || !config->will_drown) && (tile->bits.depth < 4 || !config->will_sink)
+            || ((g_battle_map_tile_data[i].depth_half_height.bits.half_height < 3 || !(frontier[i] & 2))
+                && g_battle_target_panels[i].remaining_range != 0 && tile->depth_half_height.bits.half_height < 4
+                && g_battle_map_tile_data[i].surface.bits.type != 0x1C
+                && (tile->depth_half_height.bits.depth == 0 || !config->cannot_stay_on_water)
+                && (tile->depth_half_height.bits.depth != 3 || !config->will_drown)
+                && (tile->depth_half_height.bits.depth < 4 || !config->will_sink)
                 && (tile->surface.bits.type != 0x12 || config->move_type != 0) && (frontier[i] & 0x10))) {
             state->reachable_count++;
-            tile->marks |= 0x20;
+            tile->ceiling_depth_and_marks.value |= 0x20;
         }
     }
     g_battle_move_reachable_tiles_valid = 1;

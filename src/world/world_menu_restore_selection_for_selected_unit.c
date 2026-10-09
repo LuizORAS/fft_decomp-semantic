@@ -28,7 +28,7 @@ void world_menu_restore_selection_for_selected_unit(s32 menu_index) {
     if (i == 12) {
         return;
     }
-    row = g_world_menu_unit_selection_rows[g_world_unit_view_battle_id].bytes;
+    row = g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id].bytes;
     for (k = 0, remap = g_world_menu_value_remap_table; k < 8; remap++, k++) {
         if (menu_index == g_world_menu_value_remap_table[k].menu_index) {
             /* Keep the signed index bound used by the target. */

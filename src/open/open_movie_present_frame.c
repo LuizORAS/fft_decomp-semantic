@@ -6,11 +6,11 @@ void open_movie_present_frame(void) {
     s32 display_index;
     u32 flags;
 
-    display_index = g_main_gfx_display_buffer_index ^ 1;
-    g_main_gfx_display_buffer_index = display_index;
+    display_index = g_active_graphics_buffer_index ^ 1;
+    g_active_graphics_buffer_index = display_index;
     PutDrawEnv(&g_open_gfx_screen_environments[display_index].draw);
 
-    display_index = g_main_gfx_display_buffer_index;
+    display_index = g_active_graphics_buffer_index;
     PutDispEnv(&g_open_gfx_screen_environments[display_index].disp);
 
     flags = g_open_system_runtime_flags;
@@ -22,7 +22,7 @@ void open_movie_present_frame(void) {
         } else {
             image_rect.w = 256;
         }
-        if ((g_main_gfx_display_buffer_index & 1) != 0) {
+        if ((g_active_graphics_buffer_index & 1) != 0) {
             image_rect.y = 240;
         } else {
             image_rect.y = 0;

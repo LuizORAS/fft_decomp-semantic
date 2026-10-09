@@ -27,20 +27,21 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(
     }
     if (unit->battle_data != 0) {
         tile = battle_map_get_tile_data_pointer(coords->x / 28, coords->y / 28, coords->z);
-        if (tile->depth_half_height & MAP_TILE_DEPTH_MASK) {
+        if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             flags = battle_move_get_effective_flags(unit->battle_data);
             sprite = unit->spritesheet_id;
             animation = unit->encoded_animation >> 1;
             if ((flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) || (flags & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER)) {
-                screen_z -= (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
+                screen_z -= (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
             } else if ((u32)(sprite - BATTLE_SPRITESHEET_ID_CHICKEN) < 2) {
                 raised = screen_z + 4;
-                screen_z
-                    = raised - ((tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset);
+                screen_z = raised
+                    - ((tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset);
             } else if ((flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) || animation == 0x1a) {
-                screen_z -= ((tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) - 1) * 12 + unit->depth_height_offset;
+                screen_z
+                    -= ((tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) - 1) * 12 + unit->depth_height_offset;
             } else if (sprite == BATTLE_SPRITESHEET_ID_TREASURE || sprite == BATTLE_SPRITESHEET_ID_CRYSTAL) {
-                screen_z -= (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
+                screen_z -= (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
             } else {
                 screen_z -= unit->depth_height_offset;
             }

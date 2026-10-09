@@ -118,7 +118,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
             flags_out[count] = kind;
             turns_out[count] = turns;
         } else if (ability >= 0x196 && ability < 0x19e) {
-            ct = g_main_jump_charge_ability_data_by_ability_id[ability * 2];
+            ct = (g_main_charge_ability_data - ABILITY_ID_CHARGE_FIRST)[ability].ct;
             turns = battle_action_get_number_of_turns_to_resolve(unit_id, ct, at_list);
             mp_out[count] = 0;
             ct_out[count] = ct;

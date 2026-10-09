@@ -39,7 +39,7 @@ void world_shop_run_equip_slot_preview_step(void) {
     }
     if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
         world_menu_toggle_preview_stats_window(0);
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         g_world_shop_menu_step = 6;
         g_world_shop_equip_slot_preview_initialized = 0;
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
@@ -85,7 +85,7 @@ void world_shop_run_equip_slot_preview_step(void) {
         } else {
             world_menu_toggle_preview_stats_window(0);
         }
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
     }
     if (g_world_shop_cost_window_visible != 0) {
         world_shop_install_callbacks_and_run();

@@ -90,7 +90,7 @@ void equip_panel_run_ability_list_thread(void) {
         i = 0;
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(text, 0xc80);
-            g_menu_inner_window_width = 0x50;
+            g_menu_text_state.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 id = state->ability_ids[i] + 0xb000;

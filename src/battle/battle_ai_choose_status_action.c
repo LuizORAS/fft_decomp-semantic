@@ -20,7 +20,7 @@ s32 battle_ai_choose_status_action(void) {
             goto chicken;
         goto movement;
     }
-    unit = g_battle_ai_temp_unit_data;
+    unit = g_battle_ai_data_base.acting_unit;
     g_battle_ai_data_base.movement_scenario = 0;
     status_2 = unit->status_sets.current[2];
     if (status_2 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN)) {
@@ -116,7 +116,7 @@ s32 battle_ai_choose_status_action(void) {
     }
     if (status_2 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BERSERK)) {
         target_or_count = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_ENEMY);
-        berserk_unit = g_battle_ai_temp_unit_data;
+        berserk_unit = g_battle_ai_data_base.acting_unit;
         if (berserk_unit->primary_skillset < SKILLSET_ID_MONSTER_FIRST
             && !(berserk_unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
             entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_battle_id][0];

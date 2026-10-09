@@ -85,8 +85,8 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             base->y = -0x22;
             g_wldcore_window_render_records[render_index].priority = 9;
             g_wldcore_scrollable_text_window.extra_render_index = render_index;
-            *(wldcore_point32_t*)&g_wldcore_scrollable_text_window.extra_base_x = *base;
-            *(urect16_t*)&g_wldcore_scrollable_text_window.extra_x = *bounds;
+            g_wldcore_scrollable_text_window.extra_base = *base;
+            g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render_index].bounds;
         } else {
             g_wldcore_window_render_records[render_index].flags |= 8;
         }

@@ -8,14 +8,10 @@
 /* dead unit */
 
 extern u32* g_dead_unit_controller_input;
-extern s32 g_dead_unit_item_value;
 extern dead_unit_menu_t g_dead_unit_menu;
 extern dead_unit_entry_counts_t g_dead_unit_menu_entries;
 extern s16 g_dead_unit_menu_flags[];
-extern s16 g_dead_unit_menu_values[];
 extern s16 g_dead_unit_primary_result;
-extern s32 g_dead_unit_roster_id;
-extern s32 g_dead_unit_roster_id_copy;
 extern s16 g_dead_unit_secondary_result;
 
 /* gfx */
@@ -91,9 +87,8 @@ void option_text_set_blit_destination(s16 destination_x, s16 destination_y);
 void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height);
 
 /* other */
-extern s32 g_option_current_values[];
+extern s32 g_option_current_values[GAME_OPTION_UNCHANGED + 1];
 extern s32 g_option_reference_values[];
-extern s32 g_option_values_unchanged;
 extern s32 g_option_choice_counts[];
 extern s32 g_option_choice_window_widths[];
 extern world_menu_icon_record_t g_option_picker_icon_records[2];

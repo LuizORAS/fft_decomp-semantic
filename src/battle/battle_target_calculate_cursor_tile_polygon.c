@@ -26,7 +26,7 @@ s32 battle_target_calculate_cursor_tile_polygon(battle_screen_coords_t* coords, 
     split = 0;
     tile = battle_map_get_tile_data_pointer((coords->x / 28), (coords->y / 28), layer);
     height = tile->height;
-    depth = tile->depth_half_height;
+    depth = tile->depth_half_height.value;
     slope = tile->slope_type;
     quad[0].vx = coords->x - 14;
     quad[0].vz = coords->y + 14;

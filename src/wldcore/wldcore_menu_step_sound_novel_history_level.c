@@ -94,7 +94,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 for (;;) {
                     render_index = level->render_index;
                     if (i >= (s16)g_wldcore_window_render_records[render_index].bounds.dimensions.x
-                            * g_wldcore_window_render_record_heights[render_index].value / 8) {
+                            * (s16)g_wldcore_window_render_records[render_index].bounds.dimensions.y / 8) {
                         break;
                     }
                     i++;

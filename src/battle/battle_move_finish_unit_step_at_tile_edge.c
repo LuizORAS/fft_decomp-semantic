@@ -46,10 +46,10 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             }
             tile = battle_map_get_tile_data_pointer(unit->movement.bytes.destination_x,
                 unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
-            if ((tile->depth_half_height & MAP_TILE_DEPTH_MASK) == 0) {
+            if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) == 0) {
                 return;
             }
-            if (-unit->screen.vy >= (tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12) {
+            if (-unit->screen.vy >= (tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12) {
                 return;
             }
             battle_sound_play_landing_sfx_by_surface_type(unit);

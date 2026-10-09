@@ -70,15 +70,15 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_clear_menu_render_buffer(digits, 0xF0);
     *stride = 0x10;
     world_menu_set_text_origin(0, 0);
-    world_text_render_decimal_value_or_dashes(g_world_unit_editor_brave, 0x202, digits, origin);
+    world_text_render_decimal_value_or_dashes(g_world_active_unit_data.brave, 0x202, digits, origin);
     LoadImage(&rects[1], (u32*)digits);
     world_menu_set_text_origin(0, 0);
-    world_text_render_decimal_value_or_dashes(g_world_unit_editor_faith, 0x202, digits + 0x50, origin);
+    world_text_render_decimal_value_or_dashes(g_world_active_unit_data.faith, 0x202, digits + 0x50, origin);
     LoadImage(&rects[2], (u32*)(digits + 0x50));
     world_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
-        world_text_render_decimal_value_or_dashes(g_world_unit_view_battle_id, 0x4002, digits + 0xA0, origin);
-    } else if (g_world_unit_view_battle_id >= 0x10) {
+        world_text_render_decimal_value_or_dashes(g_world_active_unit_data.battle_id, 0x4002, digits + 0xA0, origin);
+    } else if (g_world_active_unit_data.battle_id >= 0x10) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
@@ -89,7 +89,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     frames[0].sprites[6].clut = 0x7C3C;
     frames[0].sprites[6].w = 0x18;
     frames[0].sprites[6].h = 0x14;
-    zodiac = g_world_unit_editor_zodiac;
+    zodiac = g_world_active_unit_data.zodiac;
     frames[0].sprites[6].u0 = (s16)(zodiac % 7) * 0x18;
     frames[0].sprites[6].v0 = (s16)(zodiac / 7) * 0x14 + 0x2A;
     world_script_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));

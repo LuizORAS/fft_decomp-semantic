@@ -21,7 +21,7 @@ battle_unit_misc_data_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 
     if (count != 0) {
         if (count != 1) {
             for (index = 0; index < count; index++) {
-                if (matches[index]->unit_id == g_casting_unit_misc_id) {
+                if (matches[index]->unit_id == g_battle_unit_source_misc_id) {
                     return matches[index];
                 }
             }

@@ -149,7 +149,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
             ability_id = ABILITY_ID_CHARGE_FIRST;
         }
         g_battle_action_current_ability.charge_power
-            = g_main_jump_charge_ability_data_by_ability_id[ability_id * 2 + 1];
+            = (g_main_charge_ability_data - ABILITY_ID_CHARGE_FIRST)[ability_id].power;
         /* fall through */
     case ACTION_MENU_TYPE_ATTACK:
         formula = weapon->formula;

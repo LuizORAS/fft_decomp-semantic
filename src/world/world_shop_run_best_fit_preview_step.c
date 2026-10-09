@@ -100,7 +100,7 @@ void world_shop_run_best_fit_preview_step(void) {
                 world_ability_has_two_hands(g_world_formation_selected_unit_index));
         world_menu_toggle_stat_preview_panel_thread(1);
         world_menu_toggle_preview_stats_window(1);
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         g_world_preview_stats_thread_params.redraw_request = 1;
         g_world_shop_best_fit_menu_open = 1;
         g_world_formation_unit_cycle_mode = 1;
@@ -116,7 +116,7 @@ void world_shop_run_best_fit_preview_step(void) {
         }
         world_menu_toggle_stat_preview_panel_thread(0);
         world_menu_toggle_preview_stats_window(0);
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         g_world_shop_best_fit_menu_open = 0;
         g_world_formation_unit_cycle_mode = 2;
         if (g_world_menu_selection_results[5] == 0) {

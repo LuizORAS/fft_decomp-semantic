@@ -21,7 +21,7 @@ void battle_map_extract_palette_colors(const u16* palette, s32 mesh_index, s32 p
     selected_row = palette_row_index;
     i = 0;
     component_bank = g_battle_map_palette_state.banks[mesh_index].components;
-    upload_palette_base = (u16*)g_battle_map_palette_upload_words;
+    upload_palette_base = g_battle_map_palette_modified_colors[0];
     upload_palette_bank = upload_palette_base + mesh_index * (MAP_PALETTE_UPLOAD_BANK_BYTES / sizeof(u16));
     packed_color_bank = g_battle_map_palette_state.banks[mesh_index].packed_colors;
     palette_ptr = palette;

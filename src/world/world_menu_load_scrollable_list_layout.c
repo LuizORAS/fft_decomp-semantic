@@ -60,7 +60,7 @@ void world_menu_load_scrollable_list_layout(world_menu_list_record_t* record) {
         image.rect.y = 0x130;
         image.rect.w = g_world_menu_list_image_width;
         image.rect.h = g_world_menu_row_height;
-        world_text_render_id_list_to_image_rows((u8*)g_world_menu_list_text_table, image.text_ids, &image.rect, 0);
+        world_text_render_id_list_to_image_rows(g_world_menu_list_text_table, image.text_ids, &image.rect, 0);
     }
     g_world_menu_list_scroll_direction = 0;
     g_world_menu_list_layout_pending = 0;

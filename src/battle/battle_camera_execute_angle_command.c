@@ -21,10 +21,10 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
 
     switch (flags & 0x1e0) {
     case 0x0:
-        if (g_battle_effect_targets[target].target_type == 0) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_targets[target].id.misc_id, &coords.vx);
+        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
+            battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[target].id.misc_id, &coords.vx);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_targets[target].id;
+            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[target].id;
         }
         battle_camera_choose_unblocked_rotation_for_tile(
             (battle_screen_coords_t*)&coords, (battle_camera_rotation_t*)&g_battle_effect_camera_rotation_target);
@@ -73,10 +73,10 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
         }
         break;
     case 0x140:
-        if (g_battle_effect_targets[16].target_type == 0) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_targets[16].id.misc_id, &coords.vx);
+        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
+            battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[16].id.misc_id, &coords.vx);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_targets[16].id;
+            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[16].id;
         }
         battle_camera_choose_unblocked_rotation_for_tile(
             (battle_screen_coords_t*)&coords, (battle_camera_rotation_t*)&g_battle_effect_camera_rotation_target);

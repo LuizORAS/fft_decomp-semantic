@@ -297,7 +297,7 @@ void battle_menu_display_hovered_unit_stats(
         if (frame == 0) {
             buffer = battle_menu_alloc_buffer(0x700);
             battle_clear_menu_render_buffer(buffer, 0x700);
-            inner_width = &g_menu_inner_window_width;
+            inner_width = &g_menu_text_state.stride;
             *inner_width = 0x28;
             battle_menu_draw_numeric_display_entries(
                 (s32)buffer, entries, (struct menu_number_position*)(inner_width - 2), 6);

@@ -40,7 +40,7 @@ void battle_move_set_reachable_tile_flags(void) {
         }
         if (!((config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) && (flags[i] & FRONTIER_FLAG_VALID_DESTINATION))
             && !((panel->ride_remaining_range != 0) && (config->can_ride != 0))) {
-            depth = tile->depth_half_height;
+            depth = tile->depth_half_height.value;
             half_height = depth & MAP_TILE_HALF_HEIGHT_MASK;
             if ((half_height >= 3) && (flags[i] & FRONTIER_FLAG_LOW_CORNER)) {
                 continue;
@@ -59,7 +59,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if (surface == MAP_SURFACE_OBSTACLE) {
                 continue;
             }
-            depth_bits = tile->depth_half_height & MAP_TILE_DEPTH_MASK;
+            depth_bits = tile->depth_half_height.value & MAP_TILE_DEPTH_MASK;
             if ((depth_bits != 0) && (config->cannot_stay_on_water != 0)) {
                 continue;
             }

@@ -66,8 +66,8 @@ s8 world_item_run_sort_order_menu(void) {
             (s8)(g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : 7),
             (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
         world_item_store_category_list(g_world_item_menu_category, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list_core(
-            g_world_menu_entry_ids, g_world_menu_cursor_position, g_world_text_item_names);
+        world_menu_init_scrollable_list_core(g_world_menu_entry_ids, g_world_menu_cursor_position,
+            g_world_text_section_pointers[WORLD_TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
         world_item_populate_stat_preview(g_world_menu_entry_ids[g_world_menu_cursor_position],
             &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);

@@ -10,8 +10,8 @@
  * Phase 2, once file loading finishes, uploads the preview TIM's CLUT, binds
  * the level's render record to the VRAM image with its right edge at x -0x3e
  * and centred on y 0x10, starts the progressive upload at 0x8007f998 and
- * publishes the record index, position and image rectangle at
- * g_wldcore_scroll_text_extra_render_index/g_wldcore_scroll_text_extra_position/g_wldcore_scroll_text_extra_rect. Phase
+ * publishes the record index, position and image rectangle in
+ * g_wldcore_scrollable_text_window (extra_render_index, extra_base, extra_bounds). Phase
  * 3 advances that upload one step per frame. Phase 0 tears the level down once the fade started through system flag 4
  * and WORLD thread 14 finish (then opens the saved record through 0x8007fbf0 or 0x8007bab8), restores the parent
  * list-window level and reopens the treasure list when the text window finishes, and on button 0x10 selects the saved
@@ -58,9 +58,9 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         base->x = -0x3E - image.pw;
         base->y = 0x10 - (image.ph >> 1);
         wldcore_gfx_step_dissolve_image_upload(&image, 0);
-        g_wldcore_scroll_text_extra_render_index = render;
-        g_wldcore_scroll_text_extra_position = *base;
-        g_wldcore_scroll_text_extra_rect = g_wldcore_window_render_records[render].bounds;
+        g_wldcore_scrollable_text_window.extra_render_index = render;
+        g_wldcore_scrollable_text_window.extra_base = *base;
+        g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
     case 3:

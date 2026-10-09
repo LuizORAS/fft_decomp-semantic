@@ -39,8 +39,8 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         comparison_id = unit_ids[0];
         type_id = unit_ids[0];
         unit_ids[1] = partner_id & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
-        g_debugchr_editor_selected_unit_id = selected_id;
-        g_debugchr_panel_selected_unit_data[0] = comparison_id;
+        g_debugchr_panel_selected_unit_data.battle_id = selected_id;
+        g_debugchr_panel_selected_unit_data.name_id = comparison_id;
         g_debugchr_panel_selected_billboard.unit_index = type_id;
     }
     debugchr_editor_load_selected_unit();
@@ -49,7 +49,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     /* The template store is repeated in both arms: jump2 cross-jumps the
      * identical tails only after sched2, so the join keeps the store ahead of
      * the thread-setup constant loads. */
-    if (g_debugchr_editor_display_mode != 0) {
+    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     } else {
@@ -62,9 +62,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         s32* refresh_b;
         s32* refresh_c;
 
-        refresh_a = &g_debugchr_thread_refresh_a;
-        refresh_b = &g_debugchr_thread_refresh_b;
-        refresh_c = &g_debugchr_thread_refresh_c;
+        refresh_a = &g_debugchr_status_display_thread_params.style;
+        refresh_b = &g_debugchr_numeric_editor_thread_params.style;
+        refresh_c = &g_debugchr_character_status_frame_config.style;
         *refresh_a = 0;
         *refresh_b = 0;
         *refresh_c = 0;
@@ -82,7 +82,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     animation = g_debugchr_panel_status_animation;
     animation_second = animation + 1;
     animation_third = animation + 2;
-    selected_unit = &g_debugchr_editor_selected_unit_id;
+    selected_unit = &g_debugchr_panel_selected_unit_data.battle_id;
     g_option_menu_open = 0;
 
     for (;; frame++) {
@@ -100,13 +100,13 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 sound_latched = 1;
             }
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_RESUME) != 0) {
-                g_debugchr_thread_refresh_a = one;
-                g_debugchr_thread_refresh_b = one;
-                g_debugchr_thread_refresh_c = one;
+                g_debugchr_status_display_thread_params.style = one;
+                g_debugchr_numeric_editor_thread_params.style = one;
+                g_debugchr_character_status_frame_config.style = one;
             } else {
-                g_debugchr_thread_refresh_a = 0;
-                g_debugchr_thread_refresh_b = 0;
-                g_debugchr_thread_refresh_c = 0;
+                g_debugchr_status_display_thread_params.style = 0;
+                g_debugchr_numeric_editor_thread_params.style = 0;
+                g_debugchr_character_status_frame_config.style = 0;
             }
             animation[0] = one;
             animation[1] = one;
@@ -130,11 +130,11 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 break;
             }
             if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_8014cc94(3) == 0
-                && (battle_unit_has_any_current_status(g_debugchr_editor_selected_unit_id) != 0
-                    || g_debugchr_editor_display_mode == 0)) {
-                g_debugchr_thread_refresh_a = one;
-                g_debugchr_thread_refresh_b = one;
-                g_debugchr_thread_refresh_c = one;
+                && (battle_unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
+                    || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
+                g_debugchr_status_display_thread_params.style = one;
+                g_debugchr_numeric_editor_thread_params.style = one;
+                g_debugchr_character_status_frame_config.style = one;
                 battle_thread_start(g_battle_current_thread_id - 1, battle_menu_build_unit_status_list);
                 battle_thread_set_parameters(
                     g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
@@ -156,9 +156,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 animation[0] = 0;
                 animation[1] = 0;
                 animation[2] = 0;
-                g_debugchr_thread_refresh_a = 0;
-                g_debugchr_thread_refresh_b = 0;
-                g_debugchr_thread_refresh_c = 0;
+                g_debugchr_status_display_thread_params.style = 0;
+                g_debugchr_numeric_editor_thread_params.style = 0;
+                g_debugchr_character_status_frame_config.style = 0;
             }
         }
 
@@ -178,10 +178,10 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(
-                unit_type_ptr - 5, selected_unit - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
-            g_debugchr_panel_refresh_a = one;
-            g_debugchr_panel_refresh_b = one;
-            g_debugchr_panel_refresh_c = one;
+                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            g_debugchr_status_display_thread_params.redraw_request = one;
+            g_debugchr_numeric_editor_thread_params.redraw_request = one;
+            g_debugchr_character_status_frame_config.redraw_request = one;
         }
         if ((*g_debugchr_input_controller & PSX_PAD_L1) != 0) {
             s32 slot;
@@ -199,10 +199,10 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(
-                unit_type_ptr - 5, selected_unit - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
-            g_debugchr_panel_refresh_a = 2;
-            g_debugchr_panel_refresh_b = one;
-            g_debugchr_panel_refresh_c = one;
+                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            g_debugchr_status_display_thread_params.redraw_request = 2;
+            g_debugchr_numeric_editor_thread_params.redraw_request = one;
+            g_debugchr_character_status_frame_config.redraw_request = one;
         }
     }
 
@@ -211,7 +211,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         s16* comparison_ptr;
         s16* unit_type_id_ptr;
 
-        selected_unit_ptr = &g_debugchr_editor_selected_unit_id;
+        selected_unit_ptr = &g_debugchr_panel_selected_unit_data.battle_id;
         unit_type_id_ptr = &g_debugchr_panel_selected_billboard.unit_index;
         selected_unit_ptr[0] = g_debugchr_editor_unit_ids[0];
         /* A register address keeps cse from folding this store to a direct
@@ -221,6 +221,6 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
         battle_menu_copy_billboard_data_in(
-            unit_type_id_ptr - 5, selected_unit_ptr - 5, (const u8*)&g_debugchr_editor_unit_fields.state);
+            unit_type_id_ptr - 5, selected_unit_ptr - 5, &g_debugchr_editor_unit_fields.state);
     }
 }
