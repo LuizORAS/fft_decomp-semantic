@@ -57,7 +57,7 @@ image-name:
 bootstrap: _docker-build ## Rebuild the Docker image, check-config, and extract scus-94221.bin if present
 	@$(TOOLS) check-config
 	@if [ -f scus-94221.bin ]; then $(MAKE) --no-print-directory extract; \
-	else echo 'No scus-94221.bin: skipped extraction. `make validate` works without it; `make build` needs it.'; fi
+	else echo 'No scus-94221.bin: skipped extraction. `make check` works without it; `make build` needs it.'; fi
 
 .PHONY: extract
 extract: image ## Extract scus-94221.bin (automatic for build and checksums)
@@ -67,9 +67,9 @@ extract: image ## Extract scus-94221.bin (automatic for build and checksums)
 build: extract ## Build and verify every module and the disc (MODULE=x for one module)
 	@$(TOOLS) build $(if $(strip $(MODULE)),"$(MODULE)",disc)
 
-.PHONY: validate
-validate: image ## Compile and compare with target/ hashes, no BIN needed (MODULE=x)
-	@$(TOOLS) validate $(if $(strip $(MODULE)),--module="$(MODULE)")
+.PHONY: check
+check: image ## Compile and compare with target/ hashes, no BIN needed (MODULE=x)
+	@$(TOOLS) check $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 # FUNC names a configured function; MODULE is needed only when it is ambiguous.
 function_args = $(if $(strip $(MODULE)),--module="$(MODULE)") "$(FUNC)"
@@ -113,7 +113,7 @@ symbols: image ## Rename a symbol: ACTION=rename-function|rename-global ARGS="--
 test: image ## Vet and test the Go tooling
 	@$(DOCKER_RUN) $(IMAGE) sh -c 'cd tools && go vet ./... && go test ./...'
 
-# cc1 runs with -gcoff, so moving lines can change the bytes: `make validate` after.
+# cc1 runs with -gcoff, so moving lines can change the bytes: `make check` after.
 .PHONY: fmt
 fmt: image ## clang-format every C source and header in place
 	@$(FORMAT) -i

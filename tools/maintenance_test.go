@@ -9,7 +9,7 @@ import (
 
 func TestCheckWorkflowShardsRequiresEveryModuleOnce(t *testing.T) {
 	workflow := func(shards ...string) string {
-		text := "jobs:\n  validate:\n    strategy:\n      matrix:\n        shard:\n"
+		text := "jobs:\n  check:\n    strategy:\n      matrix:\n        shard:\n"
 		for _, modules := range shards {
 			text += "          - { name: shard, modules: " + modules + " }\n"
 		}
@@ -21,10 +21,10 @@ func TestCheckWorkflowShardsRequiresEveryModuleOnce(t *testing.T) {
 		want   string
 	}{
 		{name: "complete", shards: []string{"battle", "main event"}},
-		{name: "missing", shards: []string{"battle", "main"}, want: "2 modules are in no validate shard: event-attack event-card"},
-		{name: "doubled", shards: []string{"battle main", "main event"}, want: "module main is validated by two shards"},
+		{name: "missing", shards: []string{"battle", "main"}, want: "2 modules are in no check shard: event-attack event-card"},
+		{name: "doubled", shards: []string{"battle main", "main event"}, want: "module main is checked by two shards"},
 		{name: "unknown", shards: []string{"battle main event", "nowhere"}, want: "unknown module"},
-		{name: "no shards", want: "no validate shard"},
+		{name: "no shards", want: "no check shard"},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

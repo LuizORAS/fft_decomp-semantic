@@ -88,7 +88,7 @@ authoritative for each function's source, address, size, profile and hash.
 
 ```sh
 make bootstrap             # build the Docker image (extracts the BIN if present)
-make validate [MODULE=x]   # compile and compare with target/ hashes; no BIN needed
+make check [MODULE=x]      # compile and compare with target/ hashes; no BIN needed
 make build [MODULE=x]      # full byte-exact build and disc (needs the BIN)
 make extract               # extract the BIN (build/checksums/diff do it on demand)
 make checksums             # refresh hashes from the ORIGINAL bytes only
@@ -108,10 +108,10 @@ make compile-commands      # editor compile_commands.json (host clang)
 ```
 
 `MODULE` takes an id (`battle`, `event-attack`) or an alias (`attack`,
-`bunit`, `equip`, `jobstts`); for `validate` it may be a list, and `event` or
+`bunit`, `equip`, `jobstts`); for `check` it may be a list, and `event` or
 `effect` selects every such module. `diff` and `permute` need it only when
-several modules define `FUNC`. Both compile exactly as `validate` does. Every change
-ends with `make validate` passing. Before handing off, also run `make build`
+several modules define `FUNC`. Both compile exactly as `check` does. Every change
+ends with `make check` passing. Before handing off, also run `make build`
 (disc exact), `make check-config` and `make fmt-check`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned
@@ -121,7 +121,7 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config` and `test` in one job and `validate` in four module shards,
+`check-config` and `test` in one job and `check` in four module shards,
 without the BIN; `check-config` fails unless the shards' module lists cover
 every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
@@ -147,7 +147,7 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 
 To add a function: write `src/<module>/<name>.c`, add its `functions` row and
 any new `data` rows, then `make config-fmt`, `make checksums`,
-`make validate MODULE=…`, `make build`. Rename with `make symbols` so sources,
+`make check MODULE=…`, `make build`. Rename with `make symbols` so sources,
 headers, `target/` and the file name change together.
 
 ## Compiler profiles
@@ -223,7 +223,7 @@ none), and prefer the profile of its neighbours.
 - Comments: an optional short summary above a function, then only the
   rationale needed to read the code. State facts, not history. Record retail
   bugs and caller/callee disagreements with one line in `QUIRKS.md`.
-- Run `make fmt` after editing C or headers, then `make validate`: cc1 emits
+- Run `make fmt` after editing C or headers, then `make check`: cc1 emits
   line notes, so formatting can change the bytes.
 
 ## Matching levers
@@ -342,7 +342,7 @@ only if removal changes the bytes.
 
 ## Improving the code
 
-Useful work, each step verified with `make validate`:
+Useful work, each step verified with `make check`:
 
 - Name the remaining `D_` globals, `func_` functions and `_unknown_`
   members from what the code does with them, and examine `_unused_` members
@@ -351,7 +351,7 @@ Useful work, each step verified with `make validate`:
   spelling matches. Most pins stand for something the source said another
   way: an unset local, one variable where the code has two (or two where it
   has one), a narrower local, an unused parameter, another statement order.
-- Replace `goto` (about 300 remain) with the loops, `if`/`else` and `switch`
+- Replace artificial `goto` with the loops, `if`/`else` and `switch`
   the compiler actually produced.
 - Fold adjacent globals the code proves are one record; keep separate
   symbols where the original reloads each address.

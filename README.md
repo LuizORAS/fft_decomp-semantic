@@ -15,7 +15,7 @@ The game is 100% completely decompiled, but there are plenty of semantic changes
 and cleanup to be done. Variable and function names, correcting types, improving
 enum usage/naming, etc.
 
-Each time a change is made `make validate` will ensure the changes still match
+Each time a change is made `make check` will ensure the changes still match
 byte-for-byte.
 
 ## Getting started
@@ -31,7 +31,7 @@ Then run:
 make bootstrap
 
 # Then use one of the following (make help for more):
-make validate  # verify all code against checksums (without BIN)
+make check     # verify all code against checksums (without BIN)
 make build     # build every module and a byte-matching disc (needs the BIN)
 ```
 
