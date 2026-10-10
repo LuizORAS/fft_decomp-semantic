@@ -8,10 +8,10 @@
  * (battle_ai_evaluate_before_and_after_move) when it is useful on some unit. Otherwise the search
  * tries a bounce off a Reflect unit for a reflectable ability
  * (battle_ai_evaluate_reflected_target_origins), keeps the units the ability is useful on
- * (battle_ai_has_any_unit_decided_to_use_ability; none ends it), tries areas around the unit itself
+ * (battle_ai_keep_useful_targets; none ends it), tries areas around the unit itself
  * (battle_ai_evaluate_self_target_origins), then searches the origins (battle_ai_evaluate_origins).
  * A follow-target ability is aimed at units: without CONSUME_TARGET_TILES, first at the units that
- * cannot move before a charge lands (battle_ai_check_ability_use_based_on_ct), dropping evaluated
+ * cannot move before a charge lands (battle_ai_moves_before_charge_lands), dropping evaluated
  * tiles, then at the rest. Except for a follow-target ability without area, it is then aimed at
  * tiles once the enemies that can move first are left out
  * (battle_ai_exclude_enemies_acting_before_ct). Returns -1 to suspend (also past 441 horizontal
@@ -76,7 +76,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
             }
             return 0;
         }
-        if (!battle_ai_has_any_unit_decided_to_use_ability())
+        if (!battle_ai_keep_useful_targets())
             return 0;
     evaluate_map_targets:
         if (battle_ai_evaluate_before_and_after_move() == -1) {
@@ -93,7 +93,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
             return -1;
         }
     }
-    if (!battle_ai_has_any_unit_decided_to_use_ability())
+    if (!battle_ai_keep_useful_targets())
         return 0;
     if (ai->targetability.live.unit_targetable[ai->acting_unit_id]) {
     evaluate_self_target_range:
@@ -117,7 +117,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
              * original eligibility list. The overlapping flag byte stays intact. */
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 ai->targetability.snapshot.unit_targetable_saved[i] = ai->targetability.live.unit_targetable[i];
-                if (ai->targetability.live.unit_targetable[i] && !battle_ai_check_ability_use_based_on_ct(i))
+                if (ai->targetability.live.unit_targetable[i] && !battle_ai_moves_before_charge_lands(i))
                     ai->targetability.live.unit_targetable[i] = 0;
             }
             ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_CONSUME_TARGET_TILES;
@@ -128,7 +128,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
             }
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++)
                 if (ai->targetability.snapshot.unit_targetable_saved[i]) {
-                    if (battle_ai_check_ability_use_based_on_ct(i))
+                    if (battle_ai_moves_before_charge_lands(i))
                         ai->targetability.live.unit_targetable[i] = 0;
                     else
                         ai->targetability.live.unit_targetable[i] = 1;

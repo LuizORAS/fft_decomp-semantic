@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-/*
- * Simulate strikes and eligible reactions, updating AI hit accounting.
- *
- * A nonzero reaction mode skips initial preparation and recursive reaction dispatch.
- * Hit accounting is disabled by counter 0xff; included target/strike pairs
- * can adjust priority and mark whether a valuable target was hit.
- */
+/* Resolve every strike of action with the real strike code (battle_action_resolve_ability_strike)
+ * and apply each landed result, then simulate the reactions it triggers (reaction_mode 1 for those).
+ * Untargetable units are skipped (unless the ability targets map tiles), and so are units marked as
+ * acting before the AI's unit, unless the ability is for allies; for a unit-aimed action whose target
+ * acts first, only that target counts. While hits are counted, each one adds its hit chance to the
+ * total, a hit on the intended side adds 3 to the score for a stat ability, a hit on the other side
+ * subtracts 1 (4 for a stat ability), and a hit on a unit in the targetable list marks a valuable
+ * hit. In the ranked origin search the target tile is settled when the caster's own part came out as
+ * wanted: hit by a useful effect or missed by an adverse one. */
 void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction_mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_strike_work_t work;

@@ -5,9 +5,9 @@
  * a member access makes GCC share one base register where the target keeps a
  * lui per site. */
 
-/* Reset the selected action to the candidate coordinates for the current
- * movement scenario; the Defend skillset marks a Defend when the unit has it. */
-void battle_ai_transfer_ability_data_and_set_defend_flag(void) {
+/* Make the selected action only moving to the current scenario's destination, Defending there when
+ * the unit's support ability is Defend: the fallback when no ranked action is taken. */
+void battle_ai_select_move_only_action(void) {
     u8 scenario = g_battle_ai_data_base.movement_scenario;
     battle_stats_t* unit = g_battle_ai_temp_unit_data;
     u32 coords;

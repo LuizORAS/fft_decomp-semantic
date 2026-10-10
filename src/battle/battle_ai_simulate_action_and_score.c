@@ -1,13 +1,24 @@
 #include "fft/battle.h"
 #include "psx/libetc.h"
 
-/*
- * Simulate the current action and intervening events, then score unit state.
+/* Simulate the current action and score the state it leaves (battle_ai_score_current_action keeps
+ * the best). The unit moves to the action's destination (battle_ai_simulate_movement_and_pickup)
+ * before or after using the action (battle_action_commit_command, battle_ai_simulate_ability_use);
+ * Defend makes it Defending, and Defend or moving only count as a sure hit. Its turn then ends and the
+ * clock runs (battle_turn_run_clock, at most 256 events) while any unit is charging or performing:
+ * charged actions land, statuses tick, and a unit that gets a turn and can move is marked as acting
+ * before this one. The score sums over every unit in the plan, negated for enemies: HP * 128 / max HP;
+ * each status's weight (g_battle_ai_status_priority_weights), Darkness and Silence scaled by how much
+ * the unit relies on what they block, helpful and disabling statuses ignored on a Confused, Blood
+ * Sucked or Charmed unit; 51 per equipment slot unchanged; MP * 64 / max MP, halved below its
+ * cheapest cost, times its share of MP abilities; and its team's Golem. A thrown item other than a
+ * shuriken or ball halves the hit chance. Every unit is restored afterwards. With
+ * REFRESH_UNIT_STATUS_FLAGS it only refreshes the decision flags. Returns 1 after scoring, 0 when the
+ * action fails or for the refresh pass, -1 to suspend (also past 441 horizontal blanks, or 313 while
+ * the clock runs).
  *
- * Return -1 to suspend, 0 for a rejected or flag-update-only pass, and 1
- * after scoring. Save/restore helpers preserve selected unit data, not the
- * whole AI workspace; resumed phases skip fresh action preparation.
- */
+ * Save/restore helpers preserve selected unit data, not the whole AI workspace; resumed phases skip
+ * fresh action preparation. */
 s32 battle_ai_simulate_action_and_score(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
@@ -50,7 +61,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
             if (battle_action_commit_command((u8*)action) == 1
-                && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
+                && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->decision_state = 0;
                 return 0;
@@ -63,7 +74,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
             if (battle_action_commit_command((u8*)action) == 1
-                && battle_ai_call_ability_processing((battle_ai_command_action_t*)action) == 0) {
+                && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->decision_state = 0;
                 return 0;
@@ -102,7 +113,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (status == BATTLE_TURN_EVENT_ACTION_RESULT) {
             battle_action_apply_target_result(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
-            if (battle_ai_call_ability_processing((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
+            if (battle_ai_simulate_ability_use((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
                 g_battle_turn_clock_state = ai->saved_turn_state_0;
                 g_battle_turn_clock_resume_state = ai->saved_turn_state_1;
                 g_battle_turn_unit_id = ai->saved_turn_state_2;
@@ -115,7 +126,7 @@ s32 battle_ai_simulate_action_and_score(void) {
             unit->inflicted_status[0] &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
         } else if (status == BATTLE_TURN_EVENT_UNIT_READY) {
-            if (battle_ai_decide_status_ct_based(0, unit_index))
+            if (battle_ai_can_unit_move_within(0, unit_index))
                 ai->unit_acts_before_me[unit_index] = 1;
             unit->has_turn = 0;
         }
@@ -160,7 +171,7 @@ score_state:
                 decision->flags |= BATTLE_AI_DECISION_WORTH_TARGETING;
         }
     } else {
-        battle_ai_clear_current_action_rank_byte();
+        battle_ai_clear_current_action_plan_chosen();
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             status = ai->unit_battle_ids[unit_index];
             if (status == 0xff)

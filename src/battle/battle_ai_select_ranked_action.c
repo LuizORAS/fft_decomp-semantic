@@ -1,11 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Select an action by testing ranked entries in order.
- *
- * Each visited entry consumes a random draw, including zero-hit entries.
- * If every draw fails but any hit rate is nonzero, select the first entry.
- */
+/* Choose the turn's action from the ranked list: walk the eight entries best first and take each
+ * with its hit chance (rand() % 100 below base_hit_percent), so a sure action is always taken when
+ * reached and a 30% one only 30% of the time; if every roll fails, take the first entry. Returns 0,
+ * choosing nothing, when every entry has a 0% chance, else 1. */
 s32 battle_ai_select_ranked_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;

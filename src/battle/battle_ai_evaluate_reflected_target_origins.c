@@ -33,7 +33,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             continue;
         if (!battle_ai_is_status_active_through_delay(ai->considered_ability.ct, reflector, BATTLE_STATUS_ID_REFLECT))
             continue;
-        if (battle_ai_check_ability_use_based_on_ct(ai->reflector_unit_index))
+        if (battle_ai_moves_before_charge_lands(ai->reflector_unit_index))
             continue;
         if (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE) {
             ct = ai->considered_ability.ct;
@@ -55,7 +55,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
                 continue;
             if (ai->reflected_target_unit_index == ai->acting_unit_id)
                 continue;
-            if (battle_ai_check_ability_use_based_on_ct(ai->reflected_target_unit_index))
+            if (battle_ai_moves_before_charge_lands(ai->reflected_target_unit_index))
                 continue;
             if (battle_ai_classify_ability_effect(ai->reflected_target_unit_index, 0)
                 != BATTLE_AI_ABILITY_EFFECT_USEFUL)

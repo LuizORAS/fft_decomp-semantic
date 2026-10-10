@@ -1,18 +1,17 @@
 #include "fft/battle.h"
 
-/*
- * Insert the best action into the ranked list, then reset it.
+/* Put the best use found for one ability (best_action) into the eight ranked_actions, in order, when
+ * it beats the movement baseline (only moving) and the eighth entry; then reset best_action for the
+ * next ability.
  *
- * The candidate must beat the movement baseline and the last ranked entry.
- * Insert through the shift loop's final index to preserve register lifetimes.
- */
+ * Insert through the shift loop's final index to preserve register lifetimes. */
 void battle_ai_insert_ranked_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 j;
 
-    if (battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->best_action.rank_byte,
-            (battle_ai_action_rank_t*)&ai->movement_baseline_action.rank_byte)
+    if (battle_ai_compare_action_rank((battle_ai_action_rank_t*)&ai->best_action.plan_chosen,
+            (battle_ai_action_rank_t*)&ai->movement_baseline_action.plan_chosen)
         == BATTLE_AI_RANK_ABOVE) {
         if (battle_ai_is_action_higher_ranked(&ai->best_action, &ai->ranked_actions[7])) {
             for (i = 0; i < 8; i++) {

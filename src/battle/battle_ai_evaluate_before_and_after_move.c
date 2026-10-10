@@ -3,7 +3,7 @@
 
 /* Score the current action used from the unit's own tile before moving, when allowed there, then,
  * when the destination (current_action.coords) differs and allows it, used after moving there
- * (battle_ai_can_use_ability_at_coords, battle_ai_check_set_highest_unit_priority). Returns -1 to
+ * (battle_ai_can_use_ability_at_coords, battle_ai_score_current_action). Returns -1 to
  * suspend, else 0. */
 s32 battle_ai_evaluate_before_and_after_move(void) {
     battle_ai_data_t* ai;
@@ -19,7 +19,7 @@ s32 battle_ai_evaluate_before_and_after_move(void) {
     if (battle_ai_can_use_ability_at_coords(&ai->acting_unit_coords) != 0) {
         g_battle_ai_data_base.current_action.act_before_move = 1;
     first:
-        if (battle_ai_check_set_highest_unit_priority() == -1) {
+        if (battle_ai_score_current_action() == -1) {
             ai->before_after_move_state = 0;
             return -1;
         }
@@ -32,7 +32,7 @@ s32 battle_ai_evaluate_before_and_after_move(void) {
     }
     ai->current_action.act_before_move = 0;
 second:
-    if (battle_ai_check_set_highest_unit_priority() != -1) {
+    if (battle_ai_score_current_action() != -1) {
         return 0;
     }
     ai->before_after_move_state = 1;

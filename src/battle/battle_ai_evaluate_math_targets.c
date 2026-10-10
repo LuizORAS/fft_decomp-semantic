@@ -11,7 +11,7 @@ extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
 
 /* Evaluate the acting unit's Math Skill, used from its own tile before moving. For each learned
  * Calculator-eligible ability of the four source skillsets (White, Black, Time and Yin-Yang Magic)
- * that is useful on some unit (battle_ai_has_any_unit_decided_to_use_ability), every learned type (CT,
+ * that is useful on some unit (battle_ai_keep_useful_targets), every learned type (CT,
  * Level, Exp, Height) is scored with every learned multiplier (Prime Number, 5, 4, 3), and the best is
  * ranked (battle_ai_insert_ranked_action). Returns -1 to suspend, else 0.
  *
@@ -62,7 +62,7 @@ s32 battle_ai_evaluate_math_targets(void) {
             ai->considered_ability.element = g_main_ability_range_data[ai->math_ability_id].element;
             for (unit = 0; unit < BATTLE_UNIT_SLOT_COUNT; unit++)
                 ai->targetability.live.unit_targetable[unit] = ai->targetability.live.unit_active[unit];
-            if (!battle_ai_has_any_unit_decided_to_use_ability())
+            if (!battle_ai_keep_useful_targets())
                 continue;
             for (ai->math_type_index = 0; ai->math_type_index < 4; ai->math_type_index++) {
                 if (!battle_ai_load_known_ability_flag(
@@ -75,7 +75,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                             ai->acting_unit_id, ai->considered_ability.skillset, ai->math_multiplier_index)) {
                         ai->current_action.calculator_multiplier = ai->math_multiplier_index + ABILITY_ID_MATH_FIRST;
                     evaluate_priority:
-                        if (battle_ai_check_set_highest_unit_priority() == -1)
+                        if (battle_ai_score_current_action() == -1)
                             return -1;
                     }
                     ai->math_multiplier_index++;

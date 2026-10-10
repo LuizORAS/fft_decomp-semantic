@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
+/* Return 1 when unit_id will be able to move within limit clockticks: present, Speed above 0, not
+ * Crystal, Petrified or Treasure, without Stop, Don't Move or Sleep lasting through limit, and alive,
+ * or dead with Reraise and getting its turn within limit. */
+s32 battle_ai_can_unit_move_within(s32 limit, s32 unit_id) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
 
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {

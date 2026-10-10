@@ -126,6 +126,6 @@ charging:
         }
     }
     ai->movement_scenario = 2;
-    battle_ai_transfer_ability_data_and_set_defend_flag();
+    battle_ai_select_move_only_action();
     return 0;
 }

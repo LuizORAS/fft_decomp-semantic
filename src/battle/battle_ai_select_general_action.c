@@ -48,7 +48,7 @@ evaluate_charging:
     }
     if (battle_ai_select_ranked_action() == 0) {
         ai->movement_scenario = 0;
-        battle_ai_transfer_ability_data_and_set_defend_flag();
+        battle_ai_select_move_only_action();
     }
     return 0;
 }

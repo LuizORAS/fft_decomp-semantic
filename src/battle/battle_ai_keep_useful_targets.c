@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-s32 battle_ai_has_any_unit_decided_to_use_ability(void) {
+/* Keep in the targetable list only the units the considered ability is useful on
+ * (battle_ai_classify_ability_effect, with the Reflect check) and return 1 when any is left. */
+s32 battle_ai_keep_useful_targets(void) {
     battle_ai_data_t* ai;
     s32 result;
     s32 i;

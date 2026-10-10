@@ -1,13 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Simulate an action and finalize its hit-percentage average when requested.
- *
- * Accounting starts only for the acting unit with an unset base hit rate.
- * The 0xff counter disables accounting; that path returns 1 without
- * requiring a valuable target. Counted entries are target/strike pairs.
- */
-s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action) {
+/* Simulate one action's strikes and reactions (battle_ai_simulate_strikes). For the acting unit's
+ * own action it marks ability_processing_done, and the first time (no base hit chance yet) it counts
+ * the hits: it returns 0 when no strike lands on a unit in the targetable list, else stores their
+ * average hit chance (per target and strike) as base_hit_percent. Returns 1 otherwise. */
+s32 battle_ai_simulate_ability_use(battle_ai_command_action_t* action) {
     battle_ai_data_t* ai;
     s32 base_hit;
     s32 cnt;

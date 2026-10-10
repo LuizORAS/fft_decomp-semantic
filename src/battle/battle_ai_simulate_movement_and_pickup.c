@@ -1,11 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Simulate movement and its crystal or treasure benefit.
- *
- * An unchanged coordinate word skips all updates. Crystal recovery clears
- * Critical; a noncritical pickup adds priority unless the mode is Run like a rabbit.
- */
+/* Move the simulation unit to the current action's destination, if it differs. A crystal there
+ * restores its HP and MP and clears Critical; a crystal or treasure adds 2 to the score unless the
+ * unit is still Critical or its Auto-Battle mode is Run like a rabbit. The unit counts as moved. */
 void battle_ai_simulate_movement_and_pickup(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
 

@@ -13,7 +13,7 @@ void battle_ai_init_workspace(void) {
     g_battle_ai_workspace = ai;
     g_battle_ai_unit_snapshots = g_battle_ai_unit_snapshot_storage;
     ai->decision_state = 0;
-    ai->selected_action.rank_byte = 0;
+    ai->selected_action.plan_chosen = 0;
     ai->selected_action.coords.bytes.zero = 0;
     ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_ELMDOR_BLOOD_SUCK;
     ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_ELMDOR_BLOOD_SUCK;

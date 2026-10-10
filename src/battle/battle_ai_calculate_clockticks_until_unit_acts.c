@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Return the clockticks until unit gets its next turn: the rest of any Stop, plus (100 - CT) / Speed
+ * rounded up, and at least the Sleep CT for a living sleeper. 0x7fffffff for a unit that never acts:
+ * Speed 0, Crystal, Petrified, Treasure, or dead without Reraise. */
 s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit) {
     battle_ai_data_t* ai;
     s32 speed;

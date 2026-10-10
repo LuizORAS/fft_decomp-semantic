@@ -3,7 +3,7 @@
 /* Decide whether a unit with a charged action keeps it: returns 1 when keeping it scores above
  * dropping it, 0 to choose anew, -1 to suspend. A unit without one returns 0. A Charge (Archer) is
  * judged where the unit stands, any other at the scenario's destination with its crystal or treasure.
- * A Sing or Dance performance only enters the ranking (battle_ai_check_set_highest_unit_priority,
+ * A Sing or Dance performance only enters the ranking (battle_ai_score_current_action,
  * battle_ai_insert_ranked_action) and returns 0. Otherwise the state is scored with the charge and
  * again with the charge, Charging and Performing removed; when keeping wins, the selected action is
  * to move without a new ability.
@@ -40,7 +40,7 @@ s32 battle_ai_evaluate_charged_action(void) {
     if ((u32)(action->ability_id - ABILITY_ID_SONG_ANGEL_SONG)
         <= ABILITY_ID_DANCE_LAST_DANCE - ABILITY_ID_SONG_ANGEL_SONG) {
     evaluate_song_dance:
-        if (battle_ai_check_set_highest_unit_priority() == -1) {
+        if (battle_ai_score_current_action() == -1) {
             ai->charging_state = 0;
             return -1;
         }
@@ -72,7 +72,7 @@ evaluate_without_charge:
     ai->acting_unit->charged_ability_ct = ai->saved_ability_ct;
     ai->acting_unit->status_sets.current[0] = ai->saved_current_status;
     ai->acting_unit->inflicted_status[0] = ai->saved_inflicted_status;
-    return battle_ai_compare_target_priority_and_hit_rate((battle_ai_action_rank_t*)&ai->selected_action.rank_byte,
-               (battle_ai_action_rank_t*)&ai->current_action.rank_byte)
+    return battle_ai_compare_action_rank((battle_ai_action_rank_t*)&ai->selected_action.plan_chosen,
+               (battle_ai_action_rank_t*)&ai->current_action.plan_chosen)
         == BATTLE_AI_RANK_ABOVE;
 }

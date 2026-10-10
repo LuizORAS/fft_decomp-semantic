@@ -5,7 +5,7 @@
  * (none in range ends the pass), or is the origin tile alone for an ability without range. A
  * unit-aimed or trajectory ability needs a unit on the tile (battle_ai_find_unit_on_target_tile), and
  * an arc or direct one a clear path (an item for an adjacent unit skips that check); then the action
- * is simulated and scored (battle_ai_check_set_highest_unit_priority). A settled tile
+ * is simulated and scored (battle_ai_score_current_action). A settled tile
  * (target_tile_settled, always set with CONSUME_TARGET_TILES) leaves target_tiles. Returns -1 to
  * suspend (also past 441 horizontal blanks), else 0, and stops early when the scoring clears
  * ability_processing_done. */
@@ -127,7 +127,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
                         else
                             ai->target_tile_settled = 0;
                     evaluate_priority:
-                        if (battle_ai_check_set_highest_unit_priority() == -1) {
+                        if (battle_ai_score_current_action() == -1) {
                             ai->search_resume_flag = 1;
                             return -1;
                         }

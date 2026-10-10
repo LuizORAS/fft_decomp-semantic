@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Save baseline unit data, or suspend simulated status and restore baseline status.
- *
- * Mode 0 saves selected fields, action records, and team Golem values. Any
- * nonzero mode saves only the compact status record before restoring the
- * baseline identity, death counter, current status, and Death Sentence CT.
- */
+/* Save unit data for the AI simulation. Mode 0, before an action is simulated, snapshots every unit
+ * in the plan (g_battle_ai_unit_snapshots: HP, MP, statuses and their CTs, Brave, Faith, stats, CT,
+ * position, turn flags, Auto-Battle, equipment, mount and action record) and the teams' Golem. Any
+ * other mode, when the simulation suspends, keeps the simulated statuses, death counter and Death
+ * Sentence CT (unit_status_records) and puts the snapshot's back while the frame runs. */
 void battle_ai_save_unit_state(s32 mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_status_snapshot_t* status;
