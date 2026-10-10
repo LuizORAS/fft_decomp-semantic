@@ -2,9 +2,20 @@
 #include "psx/types.h"
 
 /*
- * Selects the unit animation from its renderer-side status mirror.
+ * Select a unit's resting animation from its renderer-side status mirror.
  *
- * Animation 0x21 belongs to status bit 0, which has no name.
+ * In water less than two deep a crystal or a treasure shows its own
+ * animation. Any other unit takes the animation of the first of: dead,
+ * riding, critical (the kneel of sleep; not for a mount), stop, sleep,
+ * petrify, confusion, performing or charging (the hold animation of the
+ * ability's charge set), defending, slow, haste and cursed; with none of
+ * them it idles. The RUKA, ARUTE and KANZEN sequences have no
+ * riding or critical animation, and a sheet with the flying flag idles with
+ * the three flying animations. In deeper water the choice is the dead, the
+ * riding or one of the submerged idle animations.
+ *
+ * Animation 0x21 belongs to bit 0 of the status word, which no status maps
+ * to (g_battle_misc_status_mask_by_handler_index): that arm never runs.
  */
 void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
     s32 animation;

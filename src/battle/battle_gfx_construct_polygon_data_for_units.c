@@ -57,10 +57,14 @@ typedef struct battle_gfx_part_prim {
 
 /* Queue one POLY_FT4 per sprite part in [start, end) of a sprite display.
  *
- * The display's rotation, the caller's angle and scale, and position build the
- * GTE matrix; `mode` mirrors the parts (0x02/0x04), forces semi-transparency
- * (0x01) and selects the texture page's blend bits (0x60). Parts flagged 0x80
- * are depth-sorted by the camera pitch and zoom.
+ * The display's rotation, the caller's angle and scale, and position build
+ * the GTE matrix. `mode` is battle_misc_display_flags_e for the whole sprite:
+ * a flip bit mirrors each part's place about the sprite's origin, and its
+ * picture unless the part's own flip bit is set too. Either one's
+ * semi-transparent bit applies, and the blend bits of `mode` are added to
+ * the display's texture page. A part flagged BATTLE_MISC_DISPLAY_NEARER is
+ * queued ahead of `ot` by the camera pitch and zoom while the pitch is below
+ * a quarter turn.
  *
  * The unused VECTOR reproduces the target's 16-byte locals area. The nested
  * test with its duplicated `addPrim(ot, prim)` arm is the original shape: jump
@@ -97,24 +101,24 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         prim = (battle_gfx_part_prim_t*)(g_battle_gfx_sprite_prim_pool + index);
         prim->length = 9;
         prim->code = 0x2c;
-        if (mode & 2) {
+        if (mode & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
             x = -part->x_shift - part->width;
         } else {
             x = part->x_shift;
         }
-        if (mode & 4) {
+        if (mode & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) {
             y = -part->y_shift - part->height;
         } else {
             y = part->y_shift;
         }
-        if (flags & 2) {
+        if (flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
             g_battle_gte_rtpt_vxy1.vx = g_battle_gte_rtps_vxy0.vx = x;
             g_battle_gte_rtpt_vxy0.vx = g_battle_gte_rtpt_vxy2.vx = x + part->width;
         } else {
             g_battle_gte_rtpt_vxy0.vx = g_battle_gte_rtpt_vxy2.vx = x;
             g_battle_gte_rtpt_vxy1.vx = g_battle_gte_rtps_vxy0.vx = x + part->width;
         }
-        if (flags & 4) {
+        if (flags & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) {
             g_battle_gte_rtpt_vxy2.vy = g_battle_gte_rtps_vxy0.vy = y;
             g_battle_gte_rtpt_vxy0.vy = g_battle_gte_rtpt_vxy1.vy = y + part->height;
         } else {
@@ -123,12 +127,12 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         }
         gte_ldv3_split(&g_battle_gte_rtpt_vxy0, &g_battle_gte_rtpt_vxy1, &g_battle_gte_rtpt_vxy2);
         gte_rtpt();
-        if ((flags | mode) & 1) {
+        if ((flags | mode) & BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT) {
             prim->code |= 2;
         } else {
             prim->code &= ~2;
         }
-        prim->tpage = display->tpage | (mode & 0x60);
+        prim->tpage = display->tpage | (mode & BATTLE_MISC_DISPLAY_BLEND_MASK);
         prim->clut = display->clut;
         gte_stsxy3_split(&prim->xy0, &prim->xy1, &prim->xy2);
         gte_ldv0(&g_battle_gte_rtps_vxy0);
@@ -140,7 +144,7 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         prim->u1 = prim->u3 = prim->u0 + part->width;
         prim->v0 = prim->v1 = part->v;
         prim->v2 = prim->v3 = prim->v0 + part->height;
-        if (flags & 0x80) {
+        if (flags & BATTLE_MISC_DISPLAY_NEARER) {
             if ((g_battle_camera_render_state.vx & 0xfff) < 0x400) {
                 addPrim(ot - ((g_battle_camera_render_state.vx & 0xfff) - 0x12e) * g_battle_camera_zoom.vz / 368640 - 1,
                     prim);

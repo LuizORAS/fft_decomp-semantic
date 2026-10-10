@@ -42,7 +42,7 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
             timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target.coords, &velocity);
             unit->distortion_phase++;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
     case 1:
@@ -52,7 +52,7 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
             unit->real.vz += velocity.vz;
             velocity.vy += g_battle_move_jump_gravity;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

@@ -2,8 +2,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* UnitAnim event instruction: apply the encoded animation to every misc record
- * that resolves from the unit id. */
+/* UnitAnim event instruction: request the animation for every misc record
+ * that resolves from the unit id, and wait for the effect after a bow shot.
+ * WORLD twin of battle_script_unit_anim. */
 void world_script_unit_anim(const u8* parameters) {
     u16 unit_id;
     s32 misc_index;
@@ -22,7 +23,7 @@ void world_script_unit_anim(const u8* parameters) {
                 }
                 animation = world_script_load_halfword(parameters + 2);
                 world_unit_set_animation(unit_id, animation);
-                if (animation >= 0x53 && animation < 0x56) {
+                if (animation >= BATTLE_UNIT_ANIMATION_BOW_HIGH && animation <= BATTLE_UNIT_ANIMATION_BOW_LOW) {
                     world_script_play_effect_and_wait();
                 }
                 if (misc_index == 0) {

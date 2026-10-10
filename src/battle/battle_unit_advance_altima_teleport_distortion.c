@@ -65,8 +65,8 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 7:
         if (g_battle_state_animation_continue_check == 0) {
-            unit->distortion_animation_id = 0;
-            unit->sprite_display_flags.half &= 0xfffe;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            unit->sprite_display_flags.half &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

@@ -16,17 +16,24 @@ typedef struct {
     battle_unit_sprite_query_t query; /* 0x10 */
 } bunit_sprite_quad_t;
 
-/* One SHP frame cell: signed pixel offset, then a 10-bit 8x8 cell index (32
- * cells per row) and a 4-bit size class indexing g_bunit_sprite_cell_sizes. */
+/* battle_gfx_source_part_t with its attributes as bit-fields: the part's
+ * place, the 8x8 tile its picture starts at (32 tiles per row) and the size
+ * that indexes g_bunit_sprite_cell_sizes, this overlay's copy of
+ * g_battle_gfx_part_sizes in pixels. The flip bits are not read: the facing
+ * quadrant alone mirrors the sprite. */
 typedef struct {
-    s8 dx;
-    s8 dy;
-    u16 cell : 10;
+    s8 x_shift;
+    s8 y_shift;
+    u16 tile : 10;
     u16 size : 4;
-    u16 unk_2_14 : 2;
+    u16 flip : 2;
 } bunit_sprite_cell_t;
 
 /* Draw a unit's current SHP frame at (x, y), then its two name-plate quads.
+ *
+ * The frame's first byte is taken whole as the part count minus one, where
+ * BATTLE keeps only its low three bits; no unit frame on the disc sets the
+ * others.
  *
  * Brightness falls off with distance from the animated focal point; the
  * selected unit's plate also pulses. The target keeps two short-lived values
@@ -57,7 +64,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
         value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
-        dx = cells[i].dx;
+        dx = cells[i].x_shift;
         orientation = TEXTURE_UV_FLIP_NONE;
         if (value >= 2) {
             orientation = TEXTURE_UV_FLIP_X;
@@ -66,12 +73,12 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         /* The (s16) keeps the 0x1C offset on dx instead of letting fold
          * reassociate it onto x. */
         quad.x = x + (s16)(dx + 0x1C);
-        quad.y = cells[i].dy + (y + base_y);
+        quad.y = cells[i].y_shift + (y + base_y);
         if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             quad.y -= 8;
         }
-        quad.u = cells[i].cell % 32 * 8;
-        quad.v = cells[i].cell / 32 * 8 + quad.query.graphic_y_offset;
+        quad.u = cells[i].tile % 32 * 8;
+        quad.v = cells[i].tile / 32 * 8 + quad.query.graphic_y_offset;
         value = 7;
         if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
             value = 8;

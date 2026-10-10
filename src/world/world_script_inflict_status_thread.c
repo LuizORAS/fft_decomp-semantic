@@ -7,7 +7,7 @@
  * Parameters: ENTD unit id halfword, mode byte, then a wait-frame halfword.
  * Mode 0 revives a dead unit at 1 HP with Critical (or refreshes its mounted
  * animation when it is neither dead nor critical). Mode 1 clears Dead/Critical
- * and inflicts Crystal. Mode 2 inflicts Poison with animation 0x16. Each mode
+ * and inflicts Crystal. Mode 2 inflicts Poison with the kneeling animation. Each mode
  * records the matching staged exit mode for the later status-application pass. */
 void world_script_inflict_status_thread(void) {
     u8* parameters;
@@ -46,7 +46,7 @@ void world_script_inflict_status_thread(void) {
         g_world_unit_status_staging_data->inflict_status_mode[battle_unit_index] = UNIT_INFLICT_STATUS_MODE_POISON;
         g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
         world_thread_call_on_main_stack(misc_id);
-        world_unit_set_animation(misc_id, 0x16);
+        world_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_KNEEL);
     } else if (mode == EVENT_INFLICT_STATUS_CRYSTAL) {
         world_unit_inflict_status_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_DEAD), 0, 1);
         world_unit_inflict_status_by_entd_unit_id(unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_CRITICAL), 0, 1);

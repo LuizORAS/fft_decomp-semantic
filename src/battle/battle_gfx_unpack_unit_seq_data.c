@@ -11,16 +11,18 @@ typedef struct battle_gfx_packed_seq_record {
     u8 payload[1];      /* 0x406 */
 } battle_gfx_packed_seq_record_t;
 
-/* One 0x408-byte unit SEQ table: the two header words, then 256 resolved
- * animation addresses. */
+/* One 0x408-byte unit SEQ table: battle_gfx_unit_seq_t with its 0x100
+ * sequence pointers and no data of its own. */
 typedef struct battle_gfx_seq_table {
     u32 header[2];    /* 0x000 */
     u32 entry[0x100]; /* 0x008 */
 } battle_gfx_seq_table_t;
 
-/* Resolve a SEQ record's two header halfwords and its 256 packed offsets into
- * blob addresses, then append the record's payload to the blob and advance
- * the allocation cursor. An entry of -1 resolves to the blob start.
+/* Unpack a unit SEQ file: its two header halfwords (the first sequence of
+ * the attack set and the first of the SP2 set) become words and its 256
+ * sequence offsets pointers into the sequence data, which is appended at
+ * g_battle_gfx_seq_data_cursor. An offset of -1 resolves to the start of
+ * that data, the first sequence.
  *
  * Near twin of battle_gfx_resolve_packed_offset_table, which resolves the
  * same record without the two header words. As there, the target keeps a

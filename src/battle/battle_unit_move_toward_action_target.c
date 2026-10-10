@@ -43,7 +43,7 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
             velocity.vz /= timer;
             unit->distortion_phase++;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
     case 1:
@@ -54,7 +54,7 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
             }
             unit->real.vz += velocity.vz;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

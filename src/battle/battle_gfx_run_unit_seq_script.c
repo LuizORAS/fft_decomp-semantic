@@ -1,17 +1,26 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Run a unit's SEQ animation script until it shows the next frame or ends.
+/* Run a unit's SEQ sequence up to its next frame instruction, or to its end.
  *
- * Control opcodes (0xbe-0xff after a 0xff escape) move, loop, branch and start
- * sub-sprite animations; a plain byte pair is a frame and its wait. With
- * `advance` clear the current frame is reloaded without resetting its wait. */
+ * `state->sequence_id` selects the sequence: one of the unit's own SEQ table,
+ * or sequence n of an EVTCHR slot for 500 + n and 600 + n. The commands in
+ * front of the frame instruction run at once (battle_seq_opcode_e); then the
+ * frame's parts are expanded into the unit's display and the state keeps the
+ * frame, its wait and the position after it. With `advance` clear the
+ * position first steps back to the frame instruction read last, which shows
+ * that frame again without restarting its wait.
+ *
+ * A sequence that ends leaves a unit on its SHP type's
+ * g_battle_gfx_targeted_frame_front or _back frame with a wait of 0. The
+ * unpackers resolve a missing sequence to the start of the sequence data,
+ * never to -1, so the MAIN_SYSTEM_ERROR_SEQ_ANIMATION test cannot fire. */
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance) {
-    battle_gfx_shp0_t* seq;
+    battle_gfx_unit_seq_t* seq;
     battle_unit_sprite_block_t* block;
     battle_unit_misc_data_t* target;
-    u16 anim;
-    u16 anim_index;
+    u16 sequence_id;
+    u16 index;
     u16 frame;
     u16 i;
     s16 pos;
@@ -19,50 +28,50 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
     u16 count;
     s16 offset;
     u8 block_id;
-    u8 block_anim;
+    u8 block_sequence;
     u8 timer;
 
-    anim = state->animation_id;
+    sequence_id = state->sequence_id;
     pos = state->script_pos;
-    anim_index = anim;
-    if (anim < 500) {
+    index = sequence_id;
+    if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
         seq = state->seq;
-    } else if (anim < 600) {
-        anim_index = anim - 500;
-        seq = &g_battle_gfx_vram_slots[0].shp0;
+    } else if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
+        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_0;
+        seq = &g_battle_gfx_vram_slots[0].seq;
     } else {
-        seq = &g_battle_gfx_vram_slots[1].shp0;
-        anim_index = anim - 600;
+        seq = &g_battle_gfx_vram_slots[1].seq;
+        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_1;
     }
     if (!advance) {
         pos -= 2;
     }
-    if (seq->frames[anim_index] == (u8*)-1) {
+    if (seq->sequences[index] == (u8*)-1) {
         main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
     for (;;) {
         u8 op;
 
-        if (seq->frames[anim_index][pos] == BATTLE_SEQ_OP_PREFIX) {
+        if (seq->sequences[index][pos] == BATTLE_SEQ_OP_PREFIX) {
             pos++;
-            op = seq->frames[anim_index][pos++];
+            op = seq->sequences[index][pos++];
             switch (op) {
             case BATTLE_SEQ_OP_FLIP_HORIZONTAL:
-                state->flags ^= 2;
+                state->flags ^= BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_FLIP_VERTICAL:
-                state->flags ^= 4;
+                state->flags ^= BATTLE_MISC_DISPLAY_VERTICAL_FLIP;
                 break;
-            case BATTLE_SEQ_OP_SET_SHADOW:
+            case BATTLE_SEQ_OP_SHOW_SHADOW:
                 unit->shadow_graphic_trigger = 1;
                 break;
-            case BATTLE_SEQ_OP_CLEAR_SHADOW:
+            case BATTLE_SEQ_OP_HIDE_SHADOW:
                 unit->shadow_graphic_trigger = 0;
                 break;
             case BATTLE_SEQ_OP_END_ANIMATION:
             case BATTLE_SEQ_OP_PAUSE_ANIMATION:
-                if (anim < 500) {
-                    if (anim % 2) {
+                if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
+                    if (sequence_id % 2) {
                         frame = g_battle_gfx_targeted_frame_back[g_battle_gfx_spritesheet_data[unit->spritesheet_id]
                                 .shp_id];
                     } else {
@@ -72,21 +81,24 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                     unit->seq_offset.vz = 0;
                     unit->seq_offset.vy = 0;
                     unit->seq_offset.vx = 0;
-                    battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, anim);
+                    battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, sequence_id);
                 }
                 state->wait = 0;
                 return;
-            case BATTLE_SEQ_OP_INCREMENT_LOOP:
+            case BATTLE_SEQ_OP_RESTART:
                 pos = 0;
                 state->restart_count++;
                 break;
-            case BATTLE_SEQ_OP_SET_Y_ROTATION_0:
+            case BATTLE_SEQ_OP_CLEAR_ROTATION:
                 state->display->rotation = 0;
                 break;
-            case BATTLE_SEQ_OP_POST_GENERIC_ATTACK:
+            case BATTLE_SEQ_OP_STRIKE_TARGETS:
                 if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
                     break;
                 }
+                /* The abilities whose hit is the weapon swing itself: a plain
+                 * attack (0), the frog's, the Battle Skill breaks, the Snipe
+                 * shots, Jump and Charge. */
                 attack_id = unit->last_attack_id;
                 if (attack_id == 0 || attack_id == ABILITY_ID_FROG_ATTACK
                     || (attack_id >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK
@@ -106,7 +118,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                     }
                 }
                 break;
-            case BATTLE_SEQ_OP_QUEUE_THROW_ANIMATION:
+            case BATTLE_SEQ_OP_LAUNCH_PROJECTILE:
                 battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(unit);
             case BATTLE_SEQ_OP_UNKNOWN_C7:
             case BATTLE_SEQ_OP_UNKNOWN_C8:
@@ -120,106 +132,106 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_UNKNOWN_FB:
                 pos += 2;
                 break;
-            case BATTLE_SEQ_OP_RELOAD_ANIMATION:
-                anim = state->saved_animation_id;
+            case BATTLE_SEQ_OP_RETURN:
+                sequence_id = state->saved_sequence_id;
                 pos = state->saved_script_pos;
-                anim_index = anim;
-                if (anim >= 500) {
-                    if (anim < 600) {
-                        anim_index = anim - 500;
+                index = sequence_id;
+                if (sequence_id >= BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
+                    if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
+                        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_0;
                     } else {
-                        anim_index = anim - 600;
+                        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_1;
                     }
                 }
                 break;
-            case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_2:
+            case BATTLE_SEQ_OP_WAIT_FOR_EFFECT:
                 if (g_battle_state_animation_continue_check != 0) {
-                    offset = (s8)seq->frames[anim_index][pos];
+                    offset = (s8)seq->sequences[index][pos];
                     pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
-                battle_sound_play_movement_sfx(unit, seq->frames[anim_index][pos++]);
+                battle_sound_play_movement_sfx(unit, seq->sequences[index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_RL:
-                battle_unit_shift_right_or_left(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_right_or_left(unit, seq->sequences[index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_DU:
-                battle_unit_shift_down_or_up(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_down_or_up(unit, seq->sequences[index][pos++]);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_FB:
-                battle_unit_shift_forward_or_backward(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_forward_or_backward(unit, seq->sequences[index][pos++]);
                 break;
-            case BATTLE_SEQ_OP_SET_SLOWDOWN:
-                state->wait_bias = (s8)seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_SET_WAIT_BIAS:
+                state->wait_bias = (s8)seq->sequences[index][pos++];
                 break;
-            case BATTLE_SEQ_OP_SET_FRAME_OFFSET:
-                state->frame_bias = (s8)seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_SET_FRAME_BIAS:
+                state->frame_bias = (s8)seq->sequences[index][pos++];
                 break;
-            case BATTLE_SEQ_OP_OVERRIDE_ANIMATION:
-                state->saved_animation_id = anim;
-                anim = seq->frames[anim_index][pos++];
-                anim_index = anim;
-                if (anim >= 500) {
-                    if (anim < 600) {
-                        anim_index = anim - 500;
+            case BATTLE_SEQ_OP_CALL_SEQUENCE:
+                state->saved_sequence_id = sequence_id;
+                sequence_id = seq->sequences[index][pos++];
+                index = sequence_id;
+                if (sequence_id >= BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
+                    if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
+                        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_0;
                     } else {
-                        anim_index = anim - 600;
+                        index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_1;
                     }
                 }
                 state->saved_script_pos = pos;
                 pos = 0;
                 break;
             case BATTLE_SEQ_OP_SET_LAYER_PRIORITY:
-                unit->layer_priority = seq->frames[anim_index][pos++];
+                unit->layer_priority = seq->sequences[index][pos++];
                 break;
-            case BATTLE_SEQ_OP_QUEUE_SPRITE_ANIM:
-                block_id = seq->frames[anim_index][pos++];
-                block_anim = seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_START_BLOCK_SEQUENCE:
+                block_id = seq->sequences[index][pos++];
+                block_sequence = seq->sequences[index][pos++];
                 if (block_id == 0) {
                     main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 }
                 block = &unit->sprite_blocks[block_id - 1];
                 block->wait = 1;
-                block->animation_id = block_anim;
+                block->sequence_id = block_sequence;
                 block->script_pos = 0;
                 block->wait_bias = 0;
                 block->frame_bias = 0;
-                block->loop_count = 0;
+                block->repeat_count = 0;
                 block->trigger = 1;
                 break;
-            case BATTLE_SEQ_OP_WAIT:
-                offset = (s8)seq->frames[anim_index][pos++];
-                count = seq->frames[anim_index][pos++];
-                if (state->loop_count != 0) {
-                    if (--state->loop_count != 0) {
+            case BATTLE_SEQ_OP_REPEAT:
+                offset = (s8)seq->sequences[index][pos++];
+                count = seq->sequences[index][pos++];
+                if (state->repeat_count != 0) {
+                    if (--state->repeat_count != 0) {
                         pos += offset - 4;
                     }
                 } else {
                     pos += offset - 4;
-                    state->loop_count = count;
+                    state->repeat_count = count;
                 }
                 break;
-            case BATTLE_SEQ_OP_UNKNOWN_F9:
-                unit->screen_offset.vx += (s8)seq->frames[anim_index][pos++];
-                unit->screen_offset.vy += (s8)seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET:
+                unit->screen_offset.vx += (s8)seq->sequences[index][pos++];
+                unit->screen_offset.vy += (s8)seq->sequences[index][pos++];
                 break;
-            case BATTLE_SEQ_OP_SAVE_Y_SPIN:
+            case BATTLE_SEQ_OP_SET_ROTATION:
                 /* The one-trip loop is load-bearing: flow weights register
                  * references by loop depth, and the extra weight lets `count`
                  * take a0 ahead of `offset` (target a0/a1 in 0xfc and 0xe5). */
                 do {
-                    count = seq->frames[anim_index][pos++];
-                    count |= seq->frames[anim_index][pos++] << 8;
+                    count = seq->sequences[index][pos++];
+                    count |= seq->sequences[index][pos++] << 8;
                     state->display->rotation = count;
                 } while (0);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT:
-                battle_unit_shift_right_or_left(unit, seq->frames[anim_index][pos++]);
-                battle_unit_shift_down_or_up(unit, seq->frames[anim_index][pos++]);
-                battle_unit_shift_forward_or_backward(unit, seq->frames[anim_index][pos++]);
+                battle_unit_shift_right_or_left(unit, seq->sequences[index][pos++]);
+                battle_unit_shift_down_or_up(unit, seq->sequences[index][pos++]);
+                battle_unit_shift_forward_or_backward(unit, seq->sequences[index][pos++]);
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
                 pos += 3;
@@ -248,60 +260,60 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             case BATTLE_SEQ_OP_MOVE_UP_2:
                 battle_unit_shift_down_or_up(unit, -2);
                 break;
-            case BATTLE_SEQ_OP_LOAD_MF_ITEM:
+            case BATTLE_SEQ_OP_SHOW_ITEM:
                 unit->item_display_active = 1;
                 break;
-            case BATTLE_SEQ_OP_UNLOAD_MF_ITEM:
+            case BATTLE_SEQ_OP_HIDE_ITEM:
                 unit->item_display_active = 0;
                 break;
             case BATTLE_SEQ_OP_WAIT_FOR_INPUT:
                 if (g_battle_action_post_action == 0) {
-                    offset = (s8)seq->frames[anim_index][pos];
+                    offset = (s8)seq->sequences[index][pos];
                     pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
-            case BATTLE_SEQ_OP_PLAY_ATTACK_SOUND:
-                battle_sound_select_weapon_hit(unit, seq->frames[anim_index][pos++]);
+            case BATTLE_SEQ_OP_PLAY_WEAPON_SOUND:
+                battle_sound_select_weapon_hit(unit, seq->sequences[index][pos++]);
                 break;
-            case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_1:
+            case BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD:
                 if (g_battle_state_animation_continue_check == 1) {
-                    offset = (s8)seq->frames[anim_index][pos];
+                    offset = (s8)seq->sequences[index][pos];
                     pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
-            case BATTLE_SEQ_OP_MF_ITEM_POS:
-                unit->item_get_x_offset = seq->frames[anim_index][pos++];
-                unit->item_get_y_offset = seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_SET_ITEM_POSITION:
+                unit->item_get_x_offset = seq->sequences[index][pos++];
+                unit->item_get_y_offset = seq->sequences[index][pos++];
                 break;
-            case BATTLE_SEQ_OP_QUEUE_DISTORT_ANIM:
-                unit->distortion_animation_id = seq->frames[anim_index][pos++] + 2;
-                timer = seq->frames[anim_index][pos++];
+            case BATTLE_SEQ_OP_START_DISTORTION:
+                unit->distortion_animation_id = seq->sequences[index][pos++] + 2;
+                timer = seq->sequences[index][pos++];
                 unit->distortion_phase = 0;
                 unit->distortion_timer = timer;
                 break;
-            case BATTLE_SEQ_OP_WAIT_FOR_DISTORT:
-                if (unit->distortion_animation_id != 0) {
-                    offset = (s8)seq->frames[anim_index][pos];
+            case BATTLE_SEQ_OP_WAIT_FOR_DISTORTION:
+                if (unit->distortion_animation_id != BATTLE_DISTORTION_ANIMATION_NONE) {
+                    offset = (s8)seq->sequences[index][pos];
                     pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
-            case BATTLE_SEQ_OP_HOLD_WEAPON:
-                offset = (s8)seq->frames[anim_index][pos];
+            case BATTLE_SEQ_OP_JUMP:
+                offset = (s8)seq->sequences[index][pos];
                 pos += offset - 2;
                 break;
-            case BATTLE_SEQ_OP_UNKNOWN_BF:
+            case BATTLE_SEQ_OP_START_POSITION_COPIES:
                 battle_gfx_init_position_vector_copies(unit);
                 break;
-            case BATTLE_SEQ_OP_UNKNOWN_BE:
+            case BATTLE_SEQ_OP_STOP_POSITION_COPIES:
                 unit->position_copies_active = 0;
                 break;
-            case BATTLE_SEQ_OP_UNKNOWN_C2:
+            case BATTLE_SEQ_OP_NOP:
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_CA:
             case BATTLE_SEQ_OP_UNKNOWN_D7:
@@ -319,19 +331,20 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 break;
             }
         } else {
-            frame = state->frame_bias + seq->frames[anim_index][pos++];
+            frame = state->frame_bias + seq->sequences[index][pos++];
             if (advance) {
-                state->wait = seq->frames[anim_index][pos++] + state->wait_bias;
+                state->wait = seq->sequences[index][pos++] + state->wait_bias;
+                /* A bias below the wait wraps the halfword: wait one frame. */
                 if (state->wait > 0x100) {
                     state->wait = 1;
                 }
             } else {
                 pos++;
             }
-            battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, anim);
+            battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, sequence_id);
             state->script_pos = pos;
             state->frame = frame;
-            state->animation_id = anim;
+            state->sequence_id = sequence_id;
             return;
         }
     }

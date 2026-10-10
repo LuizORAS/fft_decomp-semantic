@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
-/* Distortion animation 0x0f: slide a unit toward its target over
- * distortion_timer frames (used by Rush).
+/* Distortion animation 0x0f: slide a unit away from its target over
+ * distortion_timer frames (Rush winds up with it).
  *
  * Phase 0 aims at the first unit in the target list, or at the centre of the
  * action target tile (28 screen units per tile), reduces each horizontal step
@@ -40,7 +40,7 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* uni
             velocity.vz /= timer;
             unit->distortion_phase++;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
     case 1:
@@ -48,7 +48,7 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* uni
             unit->real.vx += velocity.vx;
             unit->real.vz += velocity.vz;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

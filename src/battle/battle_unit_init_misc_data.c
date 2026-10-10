@@ -59,7 +59,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
     battle_map_load_palette_data(g_battle_gfx_shadow_palette, MAP_CLUT_ROW_UNIT_SHADOWS, unit_id, 0);
     unit->clut = GetClut(unit_id << 4, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS);
-    unit->tpage = slot + 0x14;
+    unit->tpage = slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     if (flags == 0) {
         unit->draw_enabled = 1;
         unit->sprite_graphic_trigger = 1;
@@ -83,7 +83,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->layer_priority = 0;
     unit->turn_action_flags = 0;
     unit->special_graphic_y_offset = 0;
-    unit->distortion_animation_id = 0;
+    unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
     unit->distortion_phase = 0;
     tile_x = map_x;
     unit->map_x = tile_x;
@@ -147,12 +147,12 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     sprite->wait = 1;
     sprite->restart_count = 0;
     sprite->script_pos = 0;
-    sprite->animation_id = 6;
+    sprite->sequence_id = BATTLE_UNIT_ANIMATION_IDLE << 1;
     sprite->frame = 0;
     sprite->flags = 0;
     sprite->wait_bias = 0;
     sprite->frame_bias = 0;
-    sprite->loop_count = 0;
+    sprite->repeat_count = 0;
     unit->sprite_display_section->scale_x = ONE;
     unit->sprite_display_section->scale_y = ONE;
     unit->sprite_display_section->rotation = 0;
@@ -173,12 +173,12 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         sprite->trigger = 0;
         sprite->wait = 1;
         sprite->script_pos = 0;
-        sprite->animation_id = 0;
+        sprite->sequence_id = 0;
         sprite->frame = 0;
         sprite->flags = 0;
         sprite->wait_bias = 0;
         sprite->frame_bias = 0;
-        sprite->loop_count = 0;
+        sprite->repeat_count = 0;
         sprite->display->scale_x = ONE;
         sprite->display->scale_y = ONE;
         sprite->display->rotation = 0;

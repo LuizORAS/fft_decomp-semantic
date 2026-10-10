@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Free a slot's page if it holds a unit's attack image. */
 s32 battle_gfx_release_reserved_vram_slot(s32 slot_index) {
-    if ((g_battle_gfx_vram_slots[slot_index].owner & 0x80) != 0) {
-        g_battle_gfx_vram_slots[slot_index].owner = 0xff;
+    if ((g_battle_gfx_vram_slots[slot_index].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE) != 0) {
+        g_battle_gfx_vram_slots[slot_index].owner = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
         g_battle_gfx_vram_slots[slot_index].evtchr_load_state = 0;
         return 1;
     }

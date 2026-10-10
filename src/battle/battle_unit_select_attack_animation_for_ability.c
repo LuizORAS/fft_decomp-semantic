@@ -1,16 +1,19 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start the attacker's animation for the ability it uses: the cast for the
+ * RUKA, ARUTE and KANZEN sequences, else the ability table's attack
+ * animation, which may ask for the weapon's attack or the item animation. */
 void battle_unit_select_attack_animation_for_ability(
     battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
     s32 animation;
-    s32 sequence_id;
+    s32 seq_type;
 
-    sequence_id = g_battle_gfx_spritesheet_data[attacker->spritesheet_id].seq_id;
-    if (sequence_id < 8) {
-        if (sequence_id >= 5) {
+    seq_type = g_battle_gfx_spritesheet_data[attacker->spritesheet_id].seq_id;
+    if (seq_type < 8) {
+        if (seq_type >= BATTLE_SEQ_RUKA) {
             /* facing is loaded signed (lh) here. */
-            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_BOSS_ABILITY, attacker->facing, attacker);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CAST, attacker->facing, attacker);
             return;
         }
     }

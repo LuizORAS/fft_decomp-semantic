@@ -1,8 +1,14 @@
 #include "fft/battle.h"
 
+/* Make item `graphic_id` the one a unit's weapon and effect blocks draw.
+ *
+ * The item's two palettes of g_battle_gfx_item_graphic_data go to the unit's
+ * CLUTs of the ITEM_A and ITEM_B rows, and its type selects the frame set of
+ * the weapon SHP; a thrown weapon, any Throw ability and Throw Stone use
+ * set 0x15. get_item_data_pointer takes the item id still in $a0. */
 void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc_data_t* unit) {
     u8* item;
-    u32 palette_id;
+    u32 weapon_type;
     s32 clut_index;
     s32 idx;
     battle_unit_misc_data_t* unit2;
@@ -13,11 +19,11 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
 
     unit2 = unit;
     item = get_item_data_pointer();
-    palette_id = item[5];
-    if ((palette_id >= 0x20)
+    weapon_type = item[5];
+    if ((weapon_type >= ITEM_TYPE_SHURIKEN)
         || ((u32)(unit2->used_ability_id - ABILITY_ID_THROW_FIRST) < ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST)
         || ((ability_id = unit->used_ability_id), ability_id == ABILITY_ID_BASIC_SKILL_THROW_STONE)) {
-        palette_id = 0x15;
+        weapon_type = 0x15;
     }
     idx = graphic_id * 2;
     clut_index = unit->unit_id;
@@ -28,5 +34,5 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
     battle_map_load_palette_data(&((u16*)g_battle_gfx_item_palettes)[(g_battle_gfx_item_graphic_data[idx] & 0xF) * 16],
         MAP_CLUT_ROW_ITEM_B, clut_index, 0);
     unit->used_item_or_weapon_id = graphic_id;
-    unit->equipped_weapon_type = palette_id;
+    unit->equipped_weapon_type = weapon_type;
 }

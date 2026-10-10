@@ -29,7 +29,7 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* uni
         if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             flags = battle_move_get_effective_flags(unit->battle_data);
             sprite = unit->spritesheet_id;
-            animation = unit->encoded_animation >> 1;
+            animation = unit->sequence_id >> 1;
             if ((flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) || (flags & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER)) {
                 screen_z -= (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12 + unit->depth_height_offset;
             } else if (sprite == BATTLE_SPRITESHEET_ID_CHICKEN || sprite == BATTLE_SPRITESHEET_ID_FROG) {

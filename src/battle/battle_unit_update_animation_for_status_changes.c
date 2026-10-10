@@ -2,11 +2,17 @@
 #include "psx/types.h"
 
 /*
- * Applies this frame's pending status changes to a unit's renderer state:
- * plays the add/remove animations for the two low status bits, raises the
- * death smoke and movement sound for a newly added status 1-4 bit 2, and then
- * picks the follow-up animation and its countdown from whether the unit is
- * floating or flying.
+ * Apply this frame's pending status changes to a unit's animation.
+ *
+ * A unit that becomes a chicken or a frog starts its idle animation, and one
+ * that stops being either the animation its statuses select. A death raises
+ * the death smoke for the chocobo and monster sequences and, outside events,
+ * the cry of the unit's sex or kind; a new crystal or treasure gets its
+ * puff. In an event, gaining and losing the Jump status play the jump's
+ * departure and landing. Outside events a death or a revival on land plays
+ * BATTLE_UNIT_ANIMATION_DEATH or _REVIVE; in water two or more deep, in
+ * events too, the unit is put straight into its dead or its submerged idle
+ * sequence, with the wait cleared so that the sequence starts at once.
  */
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit) {
     battle_stats_t* stats;
@@ -52,13 +58,13 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         if ((battle_move_get_water_depth(unit) & 0xff) >= 2) {
             if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-                unit->encoded_animation = BATTLE_UNIT_ANIMATION_DEAD << 1;
-                unit->animation_countdown = 0;
+                unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+                unit->animation_wait = 0;
             } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(
                     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-                unit->encoded_animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-                unit->animation_countdown = 0;
+                unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+                unit->animation_wait = 0;
             }
         }
     } else if ((battle_move_get_water_depth(unit) & 0xff) < 2) {
@@ -69,11 +75,11 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         }
     } else if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-        unit->encoded_animation = BATTLE_UNIT_ANIMATION_DEAD << 1;
-        unit->animation_countdown = 0;
+        unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+        unit->animation_wait = 0;
     } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-        unit->encoded_animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-        unit->animation_countdown = 0;
+        unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+        unit->animation_wait = 0;
     }
 }

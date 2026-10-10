@@ -24,14 +24,15 @@ void battle_state_handle_open_sp2_files_state(void) {
         }
     } else if (main_file_is_still_loading() == 0) {
         counter = 0;
-        empty_slot = 0xff;
+        empty_slot = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
         /* Keep the target's byte-offset induction; advancing a slot pointer changes the exact code. */
         offset = 0;
         do {
             if (((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->owner == empty_slot) {
                 image_rect_address = &image_rect;
                 sp2_data = g_battle_gfx_sp2_data;
-                ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->owner = unit->unit_id | 0x40;
+                ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->owner
+                    = unit->unit_id | BATTLE_GFX_VRAM_SLOT_OWNER_SP2;
                 image_rect_address->x
                     = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->image_rect.x;
                 image_rect_address->y

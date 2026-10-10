@@ -10,10 +10,12 @@ typedef struct battle_gfx_packed_offset_table {
     u8 payload[1];      /* 0x406 */
 } battle_gfx_packed_offset_table_t;
 
-/* Resolve the record's 256 packed offsets into blob pointers, then append the
- * record's payload bytes to the blob and advance the allocation cursor.
+/* Unpack a weapon or effect SEQ file, which has no header words: its 256
+ * sequence offsets become pointers into the sequence data, which is appended
+ * at g_battle_gfx_seq_data_cursor.
  *
- * An entry of -1 resolves to the blob start instead of to a real offset.
+ * An offset of -1 resolves to the start of that data instead of to a real
+ * sequence.
  *
  * `header` and `unused_frame_pad` are matching constraints. The target keeps
  * two live copies of the record pointer (`move t2,a1` at +0x4, with `a1` still

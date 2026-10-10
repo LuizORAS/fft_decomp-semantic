@@ -260,15 +260,15 @@ void battle_state_run_game_loop(void) {
             if (g_main_system_battle_frame_hsync_count_max < frame_measurement) {
                 g_main_system_battle_frame_hsync_count_max = frame_measurement;
             }
-            empty_timer = 0xfe;
+            empty_timer = BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR;
             timer_field = g_battle_gfx_vram_slots;
             timer_offset = 0;
             do {
                 /* The byte offset preserves the target's separate indexed load. */
-                timer = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + timer_offset))->evtchr_load_marker;
+                timer = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + timer_offset))->image_buffer_state;
                 timer_offset += sizeof(*timer_field);
                 if (timer != 0 && timer != empty_timer) {
-                    timer_field->evtchr_load_marker = timer - 1;
+                    timer_field->image_buffer_state = timer - 1;
                 }
                 i++;
                 timer_field++;

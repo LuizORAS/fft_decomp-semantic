@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start the first animation of the used ability's charge set, if it has one. */
 void battle_unit_start_ability_charge_animation(battle_unit_misc_data_t* unit) {
     u8 animation;
 

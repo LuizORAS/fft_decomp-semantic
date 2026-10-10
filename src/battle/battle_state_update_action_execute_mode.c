@@ -38,7 +38,7 @@ void battle_state_update_action_execute_mode(void) {
             battle_camera_update_cursor_tile_vector();
         }
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
-            && (unit->animation_countdown == 0 || (unit->encoded_animation >> 1) < 0x3cU)) {
+            && (unit->animation_wait == 0 || (unit->sequence_id >> 1) < 0x3cU)) {
             main_sound_replay_bg_sfx();
             if (unit->target_count != 0) {
                 for (i = 0; i < unit->target_count; i++) {
@@ -64,7 +64,7 @@ void battle_state_update_action_execute_mode(void) {
         battle_camera_update_cursor_tile_vector();
         battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
-            && (unit->animation_countdown == 0 || (unit->encoded_animation >> 1) < 0x3cU)) {
+            && (unit->animation_wait == 0 || (unit->sequence_id >> 1) < 0x3cU)) {
             if (unit->target_count != 0) {
                 for (i = 0; i < unit->target_count; i++) {
                     target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);

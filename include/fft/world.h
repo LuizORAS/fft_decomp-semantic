@@ -1744,6 +1744,9 @@ extern u8 g_world_unit_summary_digit_images[];
 extern world_menu_palette_primitives_t g_world_unit_editor_palette;
 extern world_menu_palette_slot_t g_world_unit_summary_palettes[];
 extern s32 g_world_companion_overlay_prims;
+/* WalkToAnim: the animation each unit takes once it has moved and stopped, and
+ * whether it has been seen moving since. Twins of g_battle_unit_pending_animation_ids
+ * and g_battle_unit_was_moving_latch. */
 extern u16 g_world_unit_pending_animations[];
 extern u16 g_world_unit_was_moving_latch[];
 extern vec3u16_t g_world_misc_unit_screen_coords;
@@ -1785,7 +1788,7 @@ void world_script_join_units_silently(void);
 void world_menu_load_selected_unit(void);
 void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
 void world_unit_reset_animation_states(void);
-void world_unit_set_animation(s32 misc_id, u32 value);
+void world_unit_set_animation(s32 misc_id, u32 animation);
 void world_unit_set_facing(s32 misc_id, s32 rotation);
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 s32 world_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* misc_index);

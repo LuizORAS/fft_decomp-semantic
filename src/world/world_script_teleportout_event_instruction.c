@@ -13,7 +13,7 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
         g_world_thread_call_target = battle_effect_set_secondary_teleport_by_misc_id;
         world_thread_call_on_main_stack(misc_id);
         unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
-        world_unit_set_animation(misc_id, 0x1b);
+        world_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
         battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, 0x1f, 0x1f, 0x1f);
         world_thread_wait_frames(0x3c);
         battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, -0x1f);

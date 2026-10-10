@@ -45,7 +45,7 @@ void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
             velocity.vy += g_battle_move_jump_gravity;
         } else {
             battle_unit_set_real_coords_from_map_coords(unit);
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         break;
     }

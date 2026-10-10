@@ -17,10 +17,10 @@ void battle_unit_set_target_animation_from_attack_type(
     if (attacker == target) {
         return;
     }
-    if ((target->encoded_animation >> 1) == BATTLE_UNIT_ANIMATION_DEAD) {
+    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEAD) {
         return;
     }
-    if ((target->encoded_animation >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
+    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
     water_depth = battle_move_get_water_depth(target);

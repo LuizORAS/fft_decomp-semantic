@@ -16,8 +16,8 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
         ((u8*)g_battle_gfx_spritesheet_slots)[offset] = 0;
     }
     for (i = 0; i < 2; i++) {
-        g_battle_gfx_vram_slots[i].owner = 0xff;
-        g_battle_gfx_vram_slots[i].evtchr_load_marker = 0;
+        g_battle_gfx_vram_slots[i].owner = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
+        g_battle_gfx_vram_slots[i].image_buffer_state = BATTLE_GFX_VRAM_SLOT_BUFFER_FREE;
         g_battle_gfx_vram_slots[i].evtchr_load_state = 0;
     }
     g_battle_gfx_vram_slots[0].image_rect.x = 0x100;

@@ -66,8 +66,8 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
             battle_unit_set_real_coords_from_map_coords(unit);
             unit->shadow_graphic_trigger = 1;
             unit->status_flags_5_6 &= ~BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
-            unit->distortion_animation_id = 0;
-            unit->sprite_display_flags.half &= 0xfffe;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            unit->sprite_display_flags.half &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

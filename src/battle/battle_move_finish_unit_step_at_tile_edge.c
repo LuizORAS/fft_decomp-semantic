@@ -12,7 +12,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
 
     battle_gfx_load_trap_and_unit_frame_parts(
-        unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->encoded_animation);
+        unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
     direction = battle_move_get_direction(unit);
     battle_move_apply_unit_step_velocity(unit);
     if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
@@ -28,7 +28,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (unit->screen.vy < target_z) {
         return;
     }
-    if (((unit->encoded_animation >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
+    if (((unit->sequence_id >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
             switch (g_battle_move_step_value.bits.climb) {

@@ -27,7 +27,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST:
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH:
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST:
-        if (unit->animation_countdown == 0) {
+        if (unit->animation_wait == 0) {
             unit->step_phase++;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
             battle_sound_play_movement_sfx(unit, MAIN_SFX_JUMP);

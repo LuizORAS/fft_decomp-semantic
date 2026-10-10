@@ -1,13 +1,18 @@
 #include "fft/battle.h"
 
-/* Select the SHP frame table and frame entry for a unit.
+/* Return the frame tables that a unit frame id indexes and the frame itself:
+ * a battle_gfx_source_frame_t pointer, as a word.
  *
- * Frames below 0xd2 come from the unit's own SHP; a unit standing in deep
- * enough water uses the submerged half of the table unless it floats, flies
- * over the water, or is a crystal/treasure. Higher frames come from a shared
- * table selected by the animation ID. */
-void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* sprite, u16 frame,
-    u16 animation, s32** out_table, s32* out_value) {
+ * A frame below BATTLE_SHP_FRAME_EVTCHR_FIRST is one of the unit's own SHP.
+ * Its submerged table replaces the plain one for a rider that is not
+ * jumping, and for a unit on a water tile whose surface is 12 or more above
+ * the unit's feet; from 36 above, the unit shows submerged frame 0 whatever
+ * the frame id. A unit that floats or moves on water, a crystal and a
+ * treasure keep the plain table, and a chicken or a frog changes at 4.
+ * Higher frame ids index the SHP of an EVTCHR slot: slot 0 for the sequences
+ * below 600 and slot 1 for the rest, the submerged table on a water tile. */
+void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
+    u16 sequence_id, s32** out_table, s32* out_value) {
     map_tile_t* tile;
     s32* table;
     s32 value;
@@ -16,8 +21,8 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
     s32 z;
 
     tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
-    if (frame < 0xd2) {
-        table = sprite->shp;
+    if (frame < BATTLE_SHP_FRAME_EVTCHR_FIRST) {
+        table = state->shp;
         if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
             if (unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) {
                 value = table[frame + 2];
@@ -70,9 +75,10 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             value = table[frame + 2];
         }
     } else {
-        /* Flat word view of the second slot's SHP section: header then frames. */
-        table = g_battle_gfx_vram_slots[1].shp1.header;
-        if (animation < 600) {
+        /* Flat word view of the second slot's SHP: header, then frames. The
+         * first slot's is one slot record, 0x1d59 words, below it. */
+        table = g_battle_gfx_vram_slots[1].shp.header;
+        if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
             table -= 0x1d59;
         }
         /* A shifted byte offset keeps the target's base-first addu. */

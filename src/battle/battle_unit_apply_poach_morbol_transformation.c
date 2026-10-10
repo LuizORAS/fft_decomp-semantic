@@ -23,7 +23,7 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     unit->shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
     unit->seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
     unit->stored_palette = 0;
-    unit->tpage = unit->spritesheet_vram_slot + 0x14;
+    unit->tpage = unit->spritesheet_vram_slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     tile = battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
     /* The target reads the u16 facing field signed (lh). */

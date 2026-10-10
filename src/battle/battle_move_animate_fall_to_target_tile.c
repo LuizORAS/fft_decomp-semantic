@@ -62,7 +62,7 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
         } else {
             unit->real.vy = coords.vy << 12;
             unit->position_copies_active = 0;
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         break;
     }

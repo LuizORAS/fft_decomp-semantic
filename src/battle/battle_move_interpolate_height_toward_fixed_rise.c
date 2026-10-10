@@ -17,7 +17,7 @@ void battle_move_interpolate_height_toward_fixed_rise(battle_unit_misc_data_t* m
             misc->real.vy = step + misc->real.vy;
         } else {
             misc->real.vy = target;
-            misc->distortion_animation_id = 0;
+            misc->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         height = misc->real.vy;
         misc->screen.vy = height / ONE;

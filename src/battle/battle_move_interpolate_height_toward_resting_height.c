@@ -18,7 +18,7 @@ void battle_move_interpolate_height_toward_resting_height(battle_unit_misc_data_
             misc->real.vy = step + misc->real.vy;
         } else {
             misc->real.vy = z;
-            misc->distortion_animation_id = 0;
+            misc->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         real_z = misc->real.vy;
         misc->screen.vy = real_z / ONE;

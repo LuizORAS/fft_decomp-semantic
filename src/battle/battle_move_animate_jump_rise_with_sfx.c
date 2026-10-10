@@ -24,7 +24,7 @@ void battle_move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
         height = -battle_gfx_calculate_screen_z_from_misc_screen_data(unit) + 0x120;
         unit->status_flags_5_6 |= BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
         if (-unit->screen.vy >= height) {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
         speed = SquareRoot12(height * g_battle_move_jump_gravity * 2);
@@ -38,7 +38,7 @@ void battle_move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_battle_move_jump_gravity;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

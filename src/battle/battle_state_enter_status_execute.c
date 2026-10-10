@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Enters the status-execute state for the source unit and shows its message:
- * action type 0x500 shows message 0x183a with animation 0x16; otherwise the
+ * action type 0x500 shows message 0x183a with the kneeling animation; otherwise the
  * statuses to add select message 0x183d, 0x183c or none, followed by the
  * post-action display. */
 void battle_state_enter_status_execute(void) {
@@ -17,7 +17,7 @@ void battle_state_enter_status_execute(void) {
         battle_text_set_message_duration_frames(0x3C);
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183A,
             unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);
-        battle_unit_store_animation_facing_movement_data(0x16, unit->facing, unit);
+        battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_KNEEL, unit->facing, unit);
         return;
     }
     battle_text_set_message_duration_frames(0xB4);
