@@ -9,7 +9,7 @@
 s32 battle_ai_evaluate_charging_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
-    battle_action_command_prefix_t* action = (battle_action_command_prefix_t*)&unit->action_actor_id;
+    battle_unit_action_command_t* action = &unit->action_command;
     s32 state;
 
     if (g_battle_ai_data_base.resume_pending) {
@@ -23,7 +23,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     }
     if (unit->charged_ability_ct == 0xff)
         return 0;
-    if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_CHARGE) {
+    if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_CHARGE) {
         g_battle_ai_data_base.current_action.coords.word = g_battle_ai_data_base.acting_unit_coords.word;
     } else {
         g_battle_ai_data_base.current_action.coords.word

@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Hand-assembled in the retail binary: the loads go through $at as a base
@@ -21,5 +22,5 @@ s32 world_thread_is_previous_running(void) {
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
     thread_array = *(u8**)((u8*)global_pointer + 0x327c);
     __asm__("nop\nadd $8,$8,$9" : "=r"(offset) : "0"(offset), "r"(thread_array));
-    return *(s32*)(offset + 0x48);
+    return ((native_thread_t*)offset)->is_running;
 }

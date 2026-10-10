@@ -26,8 +26,8 @@ void world_ability_learn(s16 unit_id, s16 job_id, s16 ability_id) {
     bit = 7 - (i & 7);
     mask = 1;
     i = mask << bit;
-    /* Keeping the field base as byte arithmetic preserves the target's
-     * separate addiu 0x7a before the byte-index addition. */
-    learned_abilities = (u8*)g_world_formation_unit_pointers[unit_id] + generic_job * 3 + 0x7A;
+    /* Keeping the job-byte stride before the field address preserves the retail load/add order. */
+    learned_abilities = ((world_formation_unit_t*)((u8*)g_world_formation_unit_pointers[unit_id] + generic_job * 3))
+                            ->learned_abilities;
     learned_abilities[byte] |= i;
 }

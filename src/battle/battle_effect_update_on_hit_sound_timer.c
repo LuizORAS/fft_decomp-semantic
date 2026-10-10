@@ -9,16 +9,17 @@
  * Sound ids are relative to g_battle_effect_sound_data_base, the effect sound
  * section's id set by battle_effect_load_sound_section.
  */
-void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
+void battle_effect_update_on_hit_sound_timer(
+    battle_effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
     s16 index = *entry_index;
     s32 effect_kind;
     s32 sound_index;
 
-    if (index < *(s16*)(schedule + 0x1c)) {
+    if (index < schedule->entry_count) {
         if (*countdown == 0) {
             *entry_index = index + 1;
-            *countdown = *(u16*)((index << 1) + (s32)schedule);
-            effect_kind = *(schedule + index + 0x12);
+            *countdown = schedule->durations[index];
+            effect_kind = schedule->channels[index];
 
             if (effect_kind >= 2) {
                 sound_index = battle_effect_get_on_hit_sound_index(effect_kind - 2);

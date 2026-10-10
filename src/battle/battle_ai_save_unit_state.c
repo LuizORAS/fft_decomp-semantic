@@ -22,7 +22,7 @@ void battle_ai_save_unit_state(s32 mode) {
         }
         unit = &g_battle_unit_stats[i];
         if (mode != 0) {
-            status = (battle_ai_status_snapshot_t*)ai->unit_status_records[id];
+            status = &ai->unit_status_records[id];
         } else {
             status = &g_battle_ai_unit_snapshots[id].status;
         }
@@ -52,7 +52,7 @@ void battle_ai_save_unit_state(s32 mode) {
             battle_ai_transfer_byte_values(&snapshot->has_turn, &unit->has_turn, 3);
             snapshot->mount_info = unit->mount_info;
             battle_ai_transfer_byte_values(&snapshot->auto_battle_setting, &unit->auto_battle_setting, 8);
-            battle_ai_transfer_halfword_values(ai->unit_action_records[id], &unit->action_actor_id, 20);
+            battle_ai_transfer_halfword_values(&ai->unit_action_records[id], &unit->action_command, 20);
         }
     }
     if (mode == 0) {

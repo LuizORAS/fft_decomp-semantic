@@ -45,10 +45,10 @@ s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record
              * the record's variable id and map state as single bytes (lbu), not
              * as the halfwords the struct declares, so those two stay byte reads.
              */
-            requested_layout = battle_script_get_variable(((u8*)selected)[0]) & 0xfff;
+            requested_layout = battle_script_get_variable(*(u8*)&selected->script_variable_id) & 0xfff;
             requested_layout_and_weather
                 = requested_layout | ((battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12);
-            if (battle_map_is_gns_record_matching_state(selected->map_state_comparison, ((u8*)selected)[2],
+            if (battle_map_is_gns_record_matching_state(selected->map_state_comparison, *(u8*)&selected->map_state,
                     requested_layout_and_weather
                         | ((battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15))) {
                 battle_map_dispatch_gns_resource(selected->resource_type, (u8*)selected);

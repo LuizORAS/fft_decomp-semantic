@@ -2191,14 +2191,14 @@ data:
   - {addr: 0x801cd16c, name: g_world_name_confirm_result}
   - {addr: 0x801cd170, name: g_world_thread_current_id}
   - {addr: 0x801cd174, name: g_world_thread_inner_subroutine_result}
-  - {addr: 0x801cd178, name: g_world_gfx_tiles_24_capacity}
+  - {addr: 0x801cd178, name: g_world_gfx_flat_line_capacity}
   - {addr: 0x801cd17c, name: g_world_gfx_line_f3_capacity}
   - {addr: 0x801cd180, name: g_world_gfx_gradient_line_capacity}
   - {addr: 0x801cd184, name: g_world_gfx_line_g3_capacity}
   - {addr: 0x801cd188, name: g_world_gfx_line_f4_capacity}
   - {addr: 0x801cd18c, name: g_world_gfx_line_g4_capacity}
   - {addr: 0x801cd194, name: g_world_gfx_poly_ft3_capacity}
-  - {addr: 0x801cd198, name: g_world_gfx_tiles_24_count}
+  - {addr: 0x801cd198, name: g_world_gfx_flat_line_count}
   - {addr: 0x801cd19c, name: g_world_gfx_poly_gt3_capacity}
   - {addr: 0x801cd1a0, name: g_world_gfx_textured_quad_capacity}
   - {addr: 0x801cd1a4, name: g_world_gfx_line_f3_count}

@@ -1,8 +1,6 @@
 #include "fft/battle.h"
 #include "psx/libgte.h"
 
-struct battle_effect_obstacle_unit_list;
-
 /*
  * Sets up an arcing projectile trajectory between a source unit and either a
  * target unit or a bare tile, and reports whether the flight is obstructed.
@@ -19,7 +17,7 @@ struct battle_effect_obstacle_unit_list;
 s32 battle_effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile_position, s32 target_id) {
     VECTOR delta;
     map_tile_t* tile;
-    void* obstacles;
+    battle_effect_obstacle_unit_list_t* obstacles;
     s32 distance;
     s32 source_height;
     s32 target_height;
@@ -32,7 +30,7 @@ s32 battle_effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile
             target_height = 12;
         }
     }
-    battle_effect_list_valid_unit_targeting_data(source_id, -1, (struct battle_effect_obstacle_unit_list**)&obstacles);
+    battle_effect_list_valid_unit_targeting_data(source_id, -1, &obstacles);
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= source_height;
     if (target_id == -1) {

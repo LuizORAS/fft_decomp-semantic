@@ -22,7 +22,7 @@ void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_ota
     g_world_gfx_textured_quad_count = 0;
     g_world_gfx_gradient_quad_count = 0;
     g_world_gfx_textured_gradient_quad_count = 0;
-    g_world_gfx_tiles_24_count = 0;
+    g_world_gfx_flat_line_count = 0;
     g_world_gfx_gradient_line_count = 0;
     g_world_gfx_tile_count = 0;
     g_world_gfx_draw_move_count = 0;

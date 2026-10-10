@@ -38,8 +38,8 @@ void battle_state_handle_jp_exp_gain_state(void) {
     }
     if (battle_action_check_change_of_turn(unit->battle_data->misc_unit_id) == 1) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
-        unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_actor_id;
-        unit->used_ability_id = unit->battle_data->last_ability_id;
+        unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_command;
+        unit->used_ability_id = unit->battle_data->action_command.ability_id;
         if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
             unit->attack_phase_state = BATTLE_ATTACK_PREPARATION_CHARGE;
             battle_gfx_reset_unit_graphic_trigger(unit->unit_id);

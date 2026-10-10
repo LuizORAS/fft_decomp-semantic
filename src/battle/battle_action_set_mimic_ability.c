@@ -80,7 +80,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     saved_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    result = battle_action_prepare_attack(&action, (battle_ai_command_action_t*)&self->action_actor_id, 1);
+    result = battle_action_prepare_attack(&action, (battle_ai_command_action_t*)&self->action_command, 1);
     self->charged_ability_ct = 0xff;
     main_status_change_unit(self, 0,
         BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)

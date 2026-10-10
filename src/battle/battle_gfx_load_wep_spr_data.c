@@ -1,23 +1,23 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Load a battle texture archive: two 0x200-byte tables and three 4bpp texture
- * pages into VRAM, with the palette block at +0x10400 sent to map mesh 0xb.
- */
+/* Upload WEP.SPR's weapon, trail and particle images. Keep weapon and trail
+ * CLUTs in their CPU tables; the particle CLUTs use the map palette manager. */
 void battle_gfx_load_wep_spr_data(u8* data) {
+    battle_gfx_weapon_sprite_archive_t* archive;
     s32 i;
     u8* cursor;
 
-    cursor = data;
-    for (i = 0; i < 0x200; i++) {
+    archive = (battle_gfx_weapon_sprite_archive_t*)data;
+    cursor = (u8*)archive->weapon_palettes;
+    for (i = 0; i < (s32)sizeof(archive->weapon_palettes); i++) {
         ((u8*)g_battle_gfx_item_palettes)[i] = *cursor++;
     }
-    LoadTPage((u32*)(data + 0x200), 0, 0, 0x240, 0, 0x100, 0x100);
-    for (i = 0, cursor = data + 0x8200; i < 0x200; i++) {
+    LoadTPage((u32*)archive->weapon_pixels, 0, 0, 0x240, 0, 0x100, 0x100);
+    for (i = 0, cursor = (u8*)archive->trail_palettes; i < (s32)sizeof(archive->trail_palettes); i++) {
         g_battle_gfx_eff_palettes[i] = *cursor++;
     }
-    LoadTPage((u32*)(data + 0x8400), 0, 0, 0x200, 0, 0x100, 0x100);
-    battle_map_load_palette_data((u16*)(data + 0x10400), MAP_CLUT_ROW_WEAPONS, 0, 1);
-    LoadTPage((u32*)(data + 0x10600), 0, 0, 0x200, 0x70, 0x100, 0x90);
+    LoadTPage((u32*)archive->trail_pixels, 0, 0, 0x200, 0, 0x100, 0x100);
+    battle_map_load_palette_data(&archive->particle_palettes[0][0], MAP_CLUT_ROW_WEAPONS, 0, 1);
+    LoadTPage((u32*)archive->particle_pixels, 0, 0, 0x200, 0x70, 0x100, 0x90);
 }

@@ -5,12 +5,7 @@
  * and shows the level window and the render record again. Otherwise, once
  * 0x800903e4 reports the window finished, it drops one window and one render
  * object, pops the level, clears system flags 0x08002000, shows the parent
- * level's window and resumes the bar menu.
- *
- * The target keeps &g_wldcore_scrollable_text_window.render_record_index (the window's render_record_index) in a
- * register and passes it biased by -0x44; addressing the window through
- * wldcore_text_scrollable_window_t materialises a second base and does not
- * match. */
+ * level's window and resumes the bar menu. */
 void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t* level) {
     s32* index = &g_wldcore_scrollable_text_window.render_record_index;
     s32 depth;
@@ -22,7 +17,7 @@ void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t*
             g_wldcore_window_render_records[*index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
     } else if (!(g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)
-        && wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) == 0) {
+        && wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) == 0) {
         g_wldcore_window_record_count--;
         g_wldcore_window_render_object_count--;
         depth = g_wldcore_menu_stack_depth;

@@ -15,7 +15,7 @@
  * Left/Right and adds Up/Down to the slow one. Any input other than Select, or a thread starting or stopping across
  * the yield, sets five frames of event input suppression.
  */
-void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
+void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     u32 filtered_input;
     s32 initial_delay;
     s32 repeat_delay;
@@ -28,7 +28,7 @@ void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_battle_gfx_current_otag_entry = state;
+    g_battle_gfx_current_otag_entry = otag;
     g_card_input_controller = battle_script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;

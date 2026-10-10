@@ -15,8 +15,8 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
     s16 mp;
     ability_secondary_data_t* ability;
 
-    ability_id = unit->last_ability_id;
-    menu = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    ability_id = unit->action_command.ability_id;
+    menu = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     g_battle_action_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);

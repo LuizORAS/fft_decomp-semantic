@@ -589,9 +589,9 @@ typedef struct battle_ai_data {
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
-    u8 unit_action_records[16][0x14]; /* 0x0cd4; battle_ai_command_action_t rows */
-    u16 throw_ability_id;             /* 0x0e14 */
-    u8 throw_weapon_id;               /* 0x0e16 */
+    battle_unit_action_command_t unit_action_records[16]; /* 0x0cd4 */
+    u16 throw_ability_id;                                 /* 0x0e14 */
+    u8 throw_weapon_id;                                   /* 0x0e16 */
     /* All slots with entd_slot != 0xff, capped at 255 by 0x80199d20. */
     u8 present_unit_average_max_hp;                  /* 0x0e17 */
     u8 unit_acts_before_me[BATTLE_UNIT_SLOT_COUNT];  /* 0x0e18..0x0e2c; all slots cleared at 0x8019d408–0x8019d41c */
@@ -611,17 +611,17 @@ typedef struct battle_ai_data {
     u8 status_to_cancel[5]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */
-    u8 reflector_unit_index;             /* 0x0e49 */
-    u8 reflected_target_unit_index;      /* 0x0e4a */
-    u8 reflected_candidate_level;        /* 0x0e4b */
-    u8 ability_effect_on_self;           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
-    u8 ranked_origin_scan;               /* 0x0e4d; consume the ranked origin tiles */
-    u8 useful_on_caster_flag;            /* 0x0e4e */
-    u8 acting_unit_remaining_clockticks; /* 0x0e4f */
-    u8 unit_status_records[16][8];       /* 0x0e50; battle_ai_status_snapshot_t rows */
-    u8 saved_ability_ct;                 /* 0x0ed0 */
-    u8 saved_current_status;             /* 0x0ed1 */
-    u8 saved_inflicted_status;           /* 0x0ed2 */
+    u8 reflector_unit_index;                             /* 0x0e49 */
+    u8 reflected_target_unit_index;                      /* 0x0e4a */
+    u8 reflected_candidate_level;                        /* 0x0e4b */
+    u8 ability_effect_on_self;                           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
+    u8 ranked_origin_scan;                               /* 0x0e4d; consume the ranked origin tiles */
+    u8 useful_on_caster_flag;                            /* 0x0e4e */
+    u8 acting_unit_remaining_clockticks;                 /* 0x0e4f */
+    battle_ai_status_snapshot_t unit_status_records[16]; /* 0x0e50 */
+    u8 saved_ability_ct;                                 /* 0x0ed0 */
+    u8 saved_current_status;                             /* 0x0ed1 */
+    u8 saved_inflicted_status;                           /* 0x0ed2 */
     u8 _unused_0ed3;
     u8 main_ai_state;             /* 0x0ed4 */
     u8 autobattle_state;          /* 0x0ed5 */
@@ -1342,7 +1342,7 @@ void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void battle_script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void battle_script_teleportout_event_instruction(s32 arg, s32 remove);
 void battle_script_unit_animation_rotate_event_instruction(const u8* parameters);
-void battle_script_unlockdate_event_instruction(s32 bitset, s32 date_index, s32 month, s32 day);
+void battle_script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
 void battle_script_wait_value_event_instruction(u8* parameters);
 void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void battle_script_waitspritemove_event_instruction(s32 unit_id);
@@ -1620,7 +1620,7 @@ void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
 void battle_state_start_game_flow(void);
 void battle_state_stop_game_flow(void);
-s32 battle_state_sync_frame(u32 ordering_table);
+s32 battle_state_sync_frame(u32* ordering_table);
 s32 battle_state_update_controller_input(void);
 s32 battle_state_announce_next_charged_action(void);
 void battle_state_enter_target_display_start(void);
@@ -3218,6 +3218,15 @@ typedef struct effect_camera_keyframes_21 {
     s16 last_keyframe_index;
 } effect_camera_keyframes_21_t;
 
+/* A parent-timeline sound track: channel 0/1 is silent; other values select
+ * the effect's sound channel plus two. */
+typedef struct battle_effect_sound_track {
+    u16 durations[9]; /* 0x00 */
+    u8 channels[9];   /* 0x12 */
+    u8 _padding_1b;   /* aligns entry_count */
+    s16 entry_count;  /* 0x1c */
+} battle_effect_sound_track_t;
+
 /* The timeline section of an effect file (effect_file_header_t.timeline).
  *
  * A script that spawns children (opcode 29) runs the parent timeline in three
@@ -3247,10 +3256,10 @@ typedef struct effect_timeline {
     s16 command[17];         /* 0x806; as effect_camera_keyframes_21_t.command */
     s16 last_keyframe_index; /* 0x828; highest valid keyframe index */
     battle_effect_keyframe_table_t particle_channels[2][5]; /* 0x82a; [phase][channel] */
-    u8 sound_tracks[2][3][0x1e]; /* 0xd2a; [phase][track]: see battle_effect_update_on_hit_sound_timer */
-    effect_timeline_color_tracks_t color_tracks[2]; /* 0xdde */
-    effect_camera_keyframes_21_t phase1_camera;     /* 0x14e6 */
-    effect_camera_keyframes_21_t phase2_camera;     /* 0x16b6 */
+    battle_effect_sound_track_t sound_tracks[2][3];         /* 0xd2a; [phase][track] */
+    effect_timeline_color_tracks_t color_tracks[2];         /* 0xdde */
+    effect_camera_keyframes_21_t phase1_camera;             /* 0x14e6 */
+    effect_camera_keyframes_21_t phase2_camera;             /* 0x16b6 */
 } effect_timeline_t;
 typedef char
     effect_timeline_command_offset_must_be_0x806[((unsigned long)&((effect_timeline_t*)0)->command == 0x806) ? 1 : -1];
@@ -4596,7 +4605,8 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
 void battle_effect_step_motion(battle_effect_motion_t* motion);
 void battle_effect_set_gravity(battle_effect_gravity_t* src);
 
-s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, void* obstacles);
+s32 battle_effect_trace_arc_trajectory_path(
+    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, battle_effect_obstacle_unit_list_t* obstacles);
 
 s32 battle_effect_test_position_for_obstacle(
     battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref);
@@ -4651,8 +4661,10 @@ void battle_effect_submit_sprite_to_ordering_table(
     battle_effect_sprite_block_t* set, s16* position, s16 angle, VECTOR* zoom, u32* ot);
 
 /* Steps the projectile along its trajectory, testing each obstacle. */
-s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles);
-void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
+s32 battle_effect_trace_projectile_path(
+    VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles);
+void battle_effect_update_on_hit_sound_timer(
+    battle_effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
 void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
 void battle_effect_interpolate_svector_cos(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
@@ -5290,6 +5302,15 @@ void battle_unit_set_screen_coords_from_real_coords(struct battle_unit_misc_data
 void battle_unit_clear_misc_units(void);
 
 /* gfx */
+/* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
+typedef struct battle_gfx_weapon_sprite_archive {
+    u16 weapon_palettes[16][16];   /* 0x00000 */
+    u8 weapon_pixels[256][128];    /* 0x00200; 4bpp */
+    u16 trail_palettes[16][16];    /* 0x08200 */
+    u8 trail_pixels[256][128];     /* 0x08400; 4bpp */
+    u16 particle_palettes[16][16]; /* 0x10400 */
+    u8 particle_pixels[144][128];  /* 0x10600; 4bpp */
+} battle_gfx_weapon_sprite_archive_t;
 
 /* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
 typedef enum battle_background_color_command {
@@ -6138,16 +6159,6 @@ typedef enum elemental_affinity_index {
     ELEMENTAL_AFFINITY_COUNT = 5,
 } elemental_affinity_index_e;
 
-/* Shared command prefix at battle_stats_t +0x16e and AI action +0x08.
- * The charge evaluator at 0x80195f8c reads ability_id as unsigned; simulation
- * at 0x8019dd8c reads the same bits as signed. This is not the full command. */
-typedef struct battle_action_command_prefix {
-    u8 actor_id;
-    u8 skillset_id;
-    u16 ability_id;
-} battle_action_command_prefix_t;
-typedef char battle_action_command_prefix_size_must_be_4[(sizeof(battle_action_command_prefix_t) == 4) ? 1 : -1];
-
 /* Ordinary SP/PA/MA/Brave/Faith action-result encoding. CT and EXP reuse
  * these bits with distinct sentinel or sign meanings and are excluded. */
 typedef enum battle_action_stat_change {
@@ -6513,9 +6524,9 @@ extern battle_stats_t* g_battle_action_target;
 extern battle_post_effect_msg_t g_battle_action_post_effect_msgs[];
 extern u8 g_battle_action_menu_skillsets[];
 
-/* g_battle_action_saved_command + 2: the saved battle_stats_t
- * last_ability_id. The container is a raw byte copy of the unit's action
- * fields, so this halfword keeps its own name. */
+/* g_battle_action_saved_command + 2: the saved action_command.ability_id.
+ * The container is a byte copy of the unit's command, so this halfword
+ * keeps its own name. */
 extern s16 g_battle_reaction_unit_last_ability_id;
 extern battle_current_attacker_data_t g_battle_action_current_attacker;
 extern battle_action_data_t g_battle_action_attacker_action_data;
@@ -6545,6 +6556,7 @@ u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_
 s32 battle_action_calculate_at_list_and_get_specific_unit_id(s32 unit_idx);
 s32 battle_action_calculate_chance_to_react(const battle_stats_t* unit);
 void battle_action_call_attack_preparation(battle_ai_command_action_t* action);
+void battle_action_store_used_weapon(battle_unit_action_command_t* action);
 s32 battle_action_can_unit_react(const battle_stats_t* unit);
 
 /* Provisional: the definition falls off the end after the tail call to
@@ -6781,7 +6793,7 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, u8 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, s32 action, s32 at_list);
+s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_apply_jp_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
@@ -8347,6 +8359,13 @@ gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);
 
 /* menu */
+/* One EVTFACE.BIN portrait block; both GPU uploads use 64 halfword columns. */
+typedef struct battle_menu_portrait_image_file {
+    u32 pixels[48][32]; /* 0x0000 */
+    u32 palette[2][32]; /* 0x1800 */
+    u8 _unknown_1900[0x700];
+} battle_menu_portrait_image_file_t;
+
 /* BATTLE scratch at 0x801cc074, in the event-overlay area past BATTLE.BIN:
  * battle_menu_build_sprite_page lays it out as two sprite pages and the
  * scrolling ability list saves its five 16-colour CLUTs there. WORLD keeps
@@ -8671,7 +8690,7 @@ s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, 
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out);
 void battle_menu_confirm_action_silently(void* menu);
 s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(u16* dst, u8* src);
-void battle_menu_copy_palette_colors(const void* source);
+void battle_menu_copy_palette_colors(const u8* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 s32 battle_menu_dispatch_system_function(
@@ -8805,7 +8824,7 @@ extern RECT g_battle_numeric_display_text_rect_a;
 extern RECT g_battle_numeric_display_text_rect_b;
 extern RECT g_battle_numeric_display_text_rect_c;
 extern world_gfx_image_load_parameters_t g_battle_numeric_display_image_params[18];
-extern u8 g_battle_numeric_display_entries[];
+extern menu_number_entry_t g_battle_numeric_display_entries[15];
 extern world_menu_palette_slot_t g_battle_numeric_display_palettes[];
 extern u8 g_battle_player_unit_fallen;
 

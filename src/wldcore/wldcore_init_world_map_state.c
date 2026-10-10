@@ -47,11 +47,8 @@ void wldcore_init_world_map_state(void) {
     for (i = 0; i < 2; i++) {
         g_wldcore_screen_fade_state.flags[i] = 0;
         g_wldcore_screen_fade_state.priorities[i] = 0xf;
-        /* A typed attribute store folds the address and loses five target
-         * instructions; this indexed offset preserves the verified output.
-         * The rectangle stores index through a decayed pointer: plain
-         * boxes[i] also changes the address arithmetic. */
-        *(u32*)((u8*)g_wldcore_screen_fade_state.boxes + (i << 4)) = 0x60000000;
+        /* The byte stride keeps the attribute address separate from the rectangle-field walker. */
+        ((GsBOXF*)((u8*)g_wldcore_screen_fade_state.boxes + (i << 4)))->attribute = 0x60000000;
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].x = -0x80;
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].y = -0x78;
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].w = 0x100;

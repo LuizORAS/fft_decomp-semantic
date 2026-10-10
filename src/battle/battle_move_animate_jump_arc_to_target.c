@@ -36,10 +36,10 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
                     = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
                 target.coords.vz = other->screen.vz;
             } else {
-                target.coords.vx = unit->battle_data->action_target_x * 28 + 14;
-                target.coords.vz = unit->battle_data->action_target_y * 28 + 14;
-                target.coords.vy
-                    = battle_map_calculate_slope_height(&target.coords.vx, unit->battle_data->action_target_elevation);
+                target.coords.vx = unit->battle_data->action_command.target_x * 28 + 14;
+                target.coords.vz = unit->battle_data->action_command.target_y * 28 + 14;
+                target.coords.vy = battle_map_calculate_slope_height(
+                    &target.coords.vx, unit->battle_data->action_command.target_elevation);
             }
             timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target.coords, &velocity);
             unit->distortion_phase++;

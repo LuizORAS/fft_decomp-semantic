@@ -45,10 +45,10 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         base[i].ability_outcome = 0;
     }
 
-    menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    menu_type = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     flags_1 = 0;
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_DEFAULT || (menu_type & 0xff) == ACTION_MENU_TYPE_MONSTER) {
-        ability_id = unit->last_ability_id;
+        ability_id = unit->action_command.ability_id;
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
             flags_1 = g_main_ability_range_data[ability_id].flags_1;
         }
@@ -58,7 +58,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
         || (menu_type & 0xff) == ACTION_MENU_TYPE_WEAPON_INVENTORY
         || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-        result = battle_target_validate_weapon_target((battle_ai_command_action_t*)&unit->action_actor_id);
+        result = battle_target_validate_weapon_target((battle_ai_command_action_t*)&unit->action_command);
     }
     if (result == -1) {
         return -1;
@@ -80,7 +80,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     if (battle_action_calculate_chance_to_react(target) != 0) {
         return -1;
     }
-    action = &target->action_actor_id;
+    action = (u8*)&target->action_command;
     if (battle_action_can_unit_react(target) != 0) {
         return -1;
     }
@@ -89,7 +89,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     main_util_copy_action_data(action, g_battle_action_saved_command);
     g_battle_current_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
-    target->action_actor_id = tid;
+    target->action_command.actor_id = tid;
     if (battle_action_store_counter_ability(target, SKILLSET_ID_ATTACK, 0, 1) == 0
         && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);

@@ -17,7 +17,7 @@
  * zero-step loop without ever writing it.
  */
 s32 battle_effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, void* obstacles) {
+    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, battle_effect_obstacle_unit_list_t* obstacles) {
     SVECTOR rotation;
     SVECTOR step;
     VECTOR position;

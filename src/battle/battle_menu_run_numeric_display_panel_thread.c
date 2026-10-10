@@ -29,16 +29,15 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_clear_menu_render_buffer(buffer, 0x918);
     g_menu_text_state.pen.stride = 0x14;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries(
-        buffer, (struct menu_number_entry*)g_battle_numeric_display_entries, &g_menu_text_state.pen, 3);
+    battle_menu_draw_numeric_display_entries(buffer, g_battle_numeric_display_entries, &g_menu_text_state.pen, 3);
     g_menu_text_state.pen.stride = 0x40;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries(buffer + 0x168,
-        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x24), &g_menu_text_state.pen, 4);
+    battle_menu_draw_numeric_display_entries(
+        buffer + 0x168, &g_battle_numeric_display_entries[3], &g_menu_text_state.pen, 4);
     g_menu_text_state.pen.stride = 0x64;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_draw_numeric_display_entries(buffer + 0x468,
-        (struct menu_number_entry*)(g_battle_numeric_display_entries + 0x54), &g_menu_text_state.pen, 8);
+    battle_menu_draw_numeric_display_entries(
+        buffer + 0x468, &g_battle_numeric_display_entries[7], &g_menu_text_state.pen, 8);
     LoadImage(&g_battle_numeric_display_text_rect_a, (u32*)buffer);
     LoadImage(&g_battle_numeric_display_text_rect_b, (u32*)(buffer + 0x168));
     LoadImage(&g_battle_numeric_display_text_rect_c, (u32*)(buffer + 0x468));

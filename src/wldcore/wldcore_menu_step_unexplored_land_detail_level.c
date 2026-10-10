@@ -68,7 +68,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
             break;
         }
-        if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
+        if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
             break;
         }
         depth = g_wldcore_menu_stack_depth;

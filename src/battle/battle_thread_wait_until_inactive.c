@@ -3,8 +3,7 @@
 
 /* Yield until thread_id's slot is idle. It yields before the first test. */
 void battle_thread_wait_until_inactive(s32 thread_id) {
-    s32 offset = thread_id * NATIVE_THREAD_STRIDE;
     do {
         battle_thread_yield();
-    } while (*(s32*)(offset + (s32)g_battle_threads + 0x48) != 0);
+    } while (g_battle_threads[thread_id].is_running != 0);
 }

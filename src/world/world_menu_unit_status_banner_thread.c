@@ -50,7 +50,7 @@ void world_menu_unit_status_banner_thread(void) {
     s32 suppress;                                           /* spD8 */
 
     s32 thread_id;
-    u8* threads;
+    native_thread_t* threads;
     s32 i;
     s32 draw_x;
     s32 draw_y;
@@ -67,9 +67,9 @@ void world_menu_unit_status_banner_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     cur = (u8*)world_input_get_menu_controller(0);
     thread_id = g_world_thread_current_id;
-    threads = (u8*)g_world_threads;
+    threads = g_world_threads;
     g_world_input_frame_controller_input = (u32*)(cur + 4);
-    display = *(battle_menu_status_panel_display_thread_t**)((thread_id * NATIVE_THREAD_STRIDE) + threads);
+    display = (battle_menu_status_panel_display_thread_t*)threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         status = (battle_menu_status_panel_packet_t*)g_world_selected_unit_status_packets;
         summary = (battle_menu_status_panel_editor_packet_t*)g_world_selected_unit_summary_packets;

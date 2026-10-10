@@ -76,7 +76,7 @@ void require_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* output, const world_status_thread_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
-void require_gfx_build_portrait_poly_ft4(s32 flags, void* output);
+void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 
 void require_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
@@ -196,6 +196,13 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+/* BONUS.BIN stores 200 rows of 64 halfword pixels, followed by the CLUT. */
+typedef struct require_reward_bonus_image_file {
+    u32 pixels[200][32]; /* two pixels per word */
+    u32 palette[64];     /* 64 halfword colors in each of two rows */
+    u8 _unknown_6500[0x300];
+} require_reward_bonus_image_file_t;
+
 /* g_require_reward_war_trophy_entry_types[]: what a war trophy entry's
  * value in g_require_reward_war_trophy_entry_values is. */
 typedef enum require_war_trophy_entry {
@@ -337,7 +344,7 @@ extern char g_require_text_wait_for_file_allocation_message[];
 extern u32* g_require_input_controller;
 extern u8 g_require_work[];
 extern job_data_t* g_require_formation_job_data;
-extern u8 g_require_join_menu_descriptor[];
+extern world_menu_entry_t g_require_join_menu_descriptor[];
 extern u8 g_require_saved_thread_block[];
 extern RECT g_require_special_portrait_palette_rect;
 extern RECT g_require_special_portrait_rect;

@@ -20,7 +20,7 @@ void battle_action_store_acting_unit_data(battle_stats_t* unit) {
         g_battle_acting_unit_y = unit->position.bits.y;
         g_battle_acting_unit_elevation = unit->position.raw >> 15;
     } else {
-        main_util_copy_action_data(g_battle_action_saved_command, &unit->action_actor_id);
+        main_util_copy_action_data(g_battle_action_saved_command, &unit->action_command);
         g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
     }
 }

@@ -4,7 +4,7 @@
 
 /*
  * Copies the caster's action target data (battle_stats_t 0x16e..0x181) into
- * its Misc unit_t Data at 0x15c..0x16f, then latches the used ability id.
+ * its misc command state's action, then latches the used ability id.
  */
 void battle_state_enter_commence_attack_phase(void) {
     battle_stats_t* stats;
@@ -16,10 +16,10 @@ void battle_state_enter_commence_attack_phase(void) {
     unit = battle_unit_get_source_misc_data();
     stats_pointer = &unit->battle_data;
     stats = unit->battle_data;
-    memcpy((u8*)unit + 0x15c, &stats->action_actor_id, 0x10);
-    memcpy((u8*)unit + 0x16c, &stats->action_target_y, 4);
-    /* last_ability_id is s16 in the header; the target loads it with lhu. */
-    unit->used_ability_id = (*stats_pointer)->last_ability_id;
+    memcpy(&unit->command_state.ai.data.action, &stats->action_command, 0x10);
+    memcpy(&unit->command_state.ai.data.action.target_y, &stats->action_command.target_y, 4);
+    /* action_command.ability_id is s16 in the header; the target loads it with lhu. */
+    unit->used_ability_id = (*stats_pointer)->action_command.ability_id;
     unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
     if (unit->used_ability_id != 0) {
         battle_unit_start_ability_charge_hold_animation(unit);

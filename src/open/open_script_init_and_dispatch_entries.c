@@ -35,10 +35,10 @@ s32 open_script_init_and_dispatch_entries(void) {
         do {
             entry = (s16*)open_script_add_pointer_offset(dispatch_arguments[0], dispatch_arguments[1]);
             handlers[*entry](entry);
-            /* The target keeps only the &data_base pointer live across the
-             * handler call and reads flags at -0x28 from it; `state->flags`
-             * allocates a separate base register. */
-            flags = *(u32*)((u8*)dispatch_arguments - 0x28);
+            /* Keep the data_base pointer live across the handler; a separate state base adds two instructions. */
+            flags = ((open_script_dispatch_state_t*)((u8*)dispatch_arguments - (u32)
+                         & ((open_script_dispatch_state_t*)0)->data_base))
+                        ->flags;
             if ((flags & OPEN_SCRIPT_DISPATCH_RUNNING) == 0) {
                 return 0;
             }

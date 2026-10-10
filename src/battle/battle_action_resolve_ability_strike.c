@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-struct battle_action_used_weapon_context;
-
-extern void battle_action_store_used_weapon(struct battle_action_used_weapon_context* action);
-
 /* Resolve one strike of the current ability: build the target list, run the
  * per-target formula setup and fill the strike work record.
  *
@@ -52,11 +48,11 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             }
             reaction_targeted = 1;
         }
-    } else if (attacker->last_skillset_id == i) {
+    } else if (attacker->action_command.skillset_id == i) {
         work->math_skill_flag = 1;
     }
     if (!reaction_targeted) {
-        if (battle_target_calculate_map_for_action((battle_ai_command_action_t*)&attacker->action_actor_id, &flags_3)
+        if (battle_target_calculate_map_for_action((battle_ai_command_action_t*)&attacker->action_command, &flags_3)
             == -1) {
             work->target_count = 0;
             work->continue_attack = 0;
@@ -79,12 +75,12 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     }
     g_battle_action_current_ability.target_count = count;
     battle_action_store_ability_data(targets);
-    battle_action_store_used_weapon((struct battle_action_used_weapon_context*)&attacker->action_actor_id);
+    battle_action_store_used_weapon(&attacker->action_command);
     for (i = 0; i < 21; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
             g_battle_action_current_ability.defaulted_to_attack = 0;
-            battle_action_run_pre_formula_setup(&attacker->action_actor_id, target_id);
+            battle_action_run_pre_formula_setup((u8*)&attacker->action_command, target_id);
         }
     }
     battle_status_remove_transparent_if_jump_used(attacker);
@@ -103,7 +99,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     battle_target_set_coordinates_for_ability(attacker, work);
     if (count == 0) {
         g_battle_action_current_ability.strike_counter++;
-        work->last_attack_id = attacker->last_ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
         work->reaction_id = 0;
         if (!(flags_3 & ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS)) {
             work->skip_empty_tile_effect = 1;
@@ -124,7 +120,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else if (g_battle_action_current_ability.defaulted_to_attack != 0) {
         work->last_attack_id = 0;
     } else {
-        work->last_attack_id = attacker->last_ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
     }
     work->reaction_id = g_battle_action_current_ability.reaction_id;
     if (g_battle_action_current_ability.knockback_flags != 0) {

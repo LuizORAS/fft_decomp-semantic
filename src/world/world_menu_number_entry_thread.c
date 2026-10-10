@@ -20,6 +20,7 @@ void world_menu_number_entry_thread(void) {
     s16 original;
     s32 digits;
     native_thread_t* thread;
+    s32* parameter;
     world_menu_entry_t* param;
     s16 value;
     s32 i;
@@ -37,10 +38,8 @@ void world_menu_number_entry_thread(void) {
      * &g_world_menu_text_state.pen.stride - 8 instead of folding the constant. */
     stride = &g_world_menu_text_state.pen.stride;
     thread = &g_world_threads[g_world_thread_current_id];
-    /* Read as a plain word rather than thread->function_parameter_1: GCC 2.6.3
-     * lets a struct-member load pass the g_world_menu_list_controller_input store above, but the
-     * target keeps the store first. */
-    param = *(world_menu_entry_t**)thread;
+    parameter = &thread->function_parameter_1;
+    param = (world_menu_entry_t*)*parameter;
     range = (world_menu_number_range_t*)param->text_binding;
     digits = world_text_count_decimal_digits(range->max);
     original = *param->value;

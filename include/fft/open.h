@@ -313,7 +313,7 @@ extern u8 g_open_birthday_window_image[];
  * ({3, 21}, {4, 20}, ...). open_birthday_convert_to_zodiac_position indexes
  * it flat ([i * 2], [i * 2 + 1]), and it is not const: that routine reloads a
  * day after storing through its month pointer. */
-extern u8 g_open_birthday_zodiac_months[ZODIAC_SIGN_ORDINARY_COUNT * 2];
+extern u8 g_open_birthday_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
 void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);

@@ -102,7 +102,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     outcome |= battle_action_remove_broken_or_stolen_equipment();
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN) {
         battle_action_increment_item_quantity_for_steal_break(
-            g_battle_action_target, g_battle_action_target->used_item_or_equipment);
+            g_battle_action_target, g_battle_action_target->action_command.item_or_equipment);
     }
     if (g_battle_action_target_data->gil_change != 0 || g_battle_action_target_data->exp_change != 0) {
         outcome |= 1;

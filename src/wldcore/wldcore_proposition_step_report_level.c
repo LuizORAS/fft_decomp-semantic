@@ -284,7 +284,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         if (wldcore_proposition_step_participant_message(level, g_wldcore_job_selection.result * 6 + 0x24, -1) == 0) {
             return;
         }
-        (*(s32*)level)++;
+        level->state++;
         if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;

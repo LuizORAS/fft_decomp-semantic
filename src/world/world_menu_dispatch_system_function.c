@@ -186,10 +186,11 @@ s32 world_menu_dispatch_system_function(
             NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_world_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         world_text_set_message_duration_frames(0x3C);
-        if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {
-            g_world_text_substitution_values[1] = unit->calculator_multiplier_ability + TEXT_ID_ABILITY_NAME_BASE;
-            g_world_text_substitution_values[0] = unit->calculator_type_ability + TEXT_ID_ABILITY_NAME_BASE;
-            g_world_text_substitution_values[2] = unit->last_ability_id + TEXT_ID_ABILITY_NAME_BASE;
+        if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {
+            g_world_text_substitution_values[1]
+                = unit->action_command.calculator_multiplier + TEXT_ID_ABILITY_NAME_BASE;
+            g_world_text_substitution_values[0] = unit->action_command.calculator_type + TEXT_ID_ABILITY_NAME_BASE;
+            g_world_text_substitution_values[2] = unit->action_command.ability_id + TEXT_ID_ABILITY_NAME_BASE;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {
             if (action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {

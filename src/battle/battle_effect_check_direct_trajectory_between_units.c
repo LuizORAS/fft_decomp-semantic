@@ -1,9 +1,6 @@
 #include "fft/battle.h"
 #include "psx/libgte.h"
 
-/* Collects every other active unit's tile position into a scratchpad list. */
-struct battle_effect_obstacle_unit_list;
-
 /*
  * Trace a projectile path from one unit's upper body to another's.
  *
@@ -17,7 +14,7 @@ s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_
     SVECTOR unused_20;
     VECTOR delta;
     s32 unused_38[2];
-    void* obstacles;
+    battle_effect_obstacle_unit_list_t* obstacles;
     s32 distance;
     s32 source_height;
     s32 target_height;
@@ -27,8 +24,7 @@ s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_
     if (target_height == 0) {
         target_height = 12;
     }
-    battle_effect_list_valid_unit_targeting_data(
-        source_id, target_id, (struct battle_effect_obstacle_unit_list**)&obstacles);
+    battle_effect_list_valid_unit_targeting_data(source_id, target_id, &obstacles);
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &origin);
     origin.vy -= source_height;
     battle_unit_get_tile_center_and_height_by_battle_id(target_id, &destination);

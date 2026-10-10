@@ -93,9 +93,9 @@ s32 wldcore_map_roll_random_encounter(s32 location, s32 route) {
                 }
             }
         }
-        /* entd_ids[7 - location] as a flat byte index: the typed form folds the
-         * 0x0e field offset differently and breaks the match. */
-        g_wldcore_random_battle_entd_id = ((u8*)base)[offset + 21 - location];
+        /* Typed indexing folds the base and index differently; derive the byte index from the last ENTD. */
+        g_wldcore_random_battle_entd_id
+            = ((u8*)base)[offset + (u32) & ((wldcore_encounter_entry_t*)0)->entd_ids[7] - location];
         g_wldcore_random_battle_map_id = ENTRY_AT(offset)->battle_map_id;
         return 1;
     }

@@ -3,8 +3,8 @@
 
 /* Filters the target's pending status inflictions and removals.
  *
- * Unless removal_only is set, inflictions are masked by the rider whitelist,
- * the target's current (sets 0-2) or innate (sets 3-4) statuses, immunities,
+ * The rider whitelist always masks pending inflictions. Unless removal_only
+ * is set, further masks use the current (sets 0-2) or innate (sets 3-4) statuses, immunities,
  * the immortal blacklist and each status's can't-stack list, then every
  * remaining infliction clears the statuses it cancels. Inflicting Frog on a
  * frog turns into its removal. Removals always drop innate statuses and keep

@@ -14,15 +14,15 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     if (unit->job_id == JOB_ID_MIME) {
         return;
     }
-    main_util_copy_action_data(&unit->action_actor_id, &g_battle_action_current_attacker.action);
-    if (unit->action_target_kind == BATTLE_ACTION_TARGET_UNIT) {
-        target = &g_battle_unit_stats[unit->action_target_id];
+    main_util_copy_action_data(&unit->action_command, &g_battle_action_current_attacker.action);
+    if (unit->action_command.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+        target = &g_battle_unit_stats[unit->action_command.target_id];
         x = target->x;
         y = target->position.bits.y;
     } else {
         /* Only the low byte of the s16 target coordinates is read. */
-        x = unit->action_target_x;
-        y = unit->action_target_y;
+        x = unit->action_command.target_x;
+        y = unit->action_command.target_y;
     }
     g_battle_action_current_attacker.target_delta_x = x - unit->x;
     g_battle_action_current_attacker.target_delta_y = y - unit->position.bits.y;

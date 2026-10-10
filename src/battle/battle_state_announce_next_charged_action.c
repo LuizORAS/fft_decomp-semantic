@@ -43,7 +43,7 @@ s32 battle_state_announce_next_charged_action(void) {
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_unit_id = unit->unit_id;
-                battle_text_determine_spell_quote((world_unit_command_action_t*)&unit->battle_data->action_actor_id,
+                battle_text_determine_spell_quote((world_unit_command_action_t*)&unit->battle_data->action_command,
                     unit->battle_data->misc_unit_id, 1);
                 ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;

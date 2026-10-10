@@ -16,7 +16,8 @@ void world_script_handle_tutorial_command_change_dialog(void) {
                 + (g_world_script_tutorial_command_ptr[1] + 0xB800)),
             0);
         g_world_script_tutorial_command_ptr += 3;
-        /* Thread 16's task_id; the typed member access splits the address at -O0. */
-        *(s32*)((u8*)g_world_threads + 0x404C) = NATIVE_THREAD_TASK_RESUME;
+        /* Direct slot/member indexing splits this address at -O0. */
+        *(s32*)((u8*)g_world_threads + (u32) & ((native_thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_id)
+            = NATIVE_THREAD_TASK_RESUME;
     }
 }

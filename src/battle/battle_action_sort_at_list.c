@@ -28,10 +28,10 @@ s32 battle_action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_en
             list[i].sort_key = key;
             if (mode != 0) {
                 unit_code = ability_code;
-                if (unit->last_skillset_id == SKILLSET_ID_JUMP) {
+                if (unit->action_command.skillset_id == SKILLSET_ID_JUMP) {
                     unit_code = unit_id + 0x60;
                 } else {
-                    ability_id = unit->last_ability_id;
+                    ability_id = unit->action_command.ability_id;
                     list[i].flags = ability_id;
                     if (ability_id >= 0x100) {
                         unit_code = unit_id - 0x40;

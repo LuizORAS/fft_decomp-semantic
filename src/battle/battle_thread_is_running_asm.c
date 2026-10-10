@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /*
@@ -25,5 +26,5 @@ s32 battle_thread_is_running_asm(s32 thread_id) {
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
     thread_array = *(u8**)((u8*)global_pointer + 0x5f98);
     __asm__("nop\naddu $8,$8,$9" : "=r"(thread_offset) : "0"(thread_offset), "r"(thread_array));
-    return *(s32*)(thread_offset + 0x48);
+    return ((native_thread_t*)thread_offset)->is_running;
 }

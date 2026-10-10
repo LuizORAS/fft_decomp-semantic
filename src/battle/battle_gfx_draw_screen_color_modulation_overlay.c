@@ -17,6 +17,6 @@ void battle_gfx_draw_screen_color_modulation_overlay(void) {
         g_battle_gfx_screen_modulation_polygons[g_main_gfx_screen_polarity].b0
             = g_battle_gfx_screen_color_modulation[2];
         AddPrim(main_gfx_get_otag(), &g_battle_gfx_screen_modulation_polygons[g_main_gfx_screen_polarity]);
-        AddPrim(main_gfx_get_otag(), (u8*)g_battle_gfx_screen_modulation_draw_modes + g_main_gfx_screen_polarity * 0xc);
+        AddPrim(main_gfx_get_otag(), &g_battle_gfx_screen_modulation_draw_modes[g_main_gfx_screen_polarity]);
     }
 }

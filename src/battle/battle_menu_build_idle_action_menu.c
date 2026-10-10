@@ -24,6 +24,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     s32 column;
     u8* label_table;
     world_menu_entry_t* entry;
+    s16* selected_index;
 
     if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {
         if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
@@ -49,9 +50,8 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
                 entry += 1;
             } while (i < IDLE_ACTION_MENU_ENTRY_COUNT);
             battle_menu_restore_selection_for_selected_unit(menu_id);
-            /* Entry 8's selected_index. A typed member store moves into the following jal
-             * delay slot; this raw access preserves the target's store ordering. */
-            *(s16*)((u8*)g_battle_menu_thread_menu_data + 0x218) = 0;
+            selected_index = &g_battle_menu_thread_menu_data[8].selected_index;
+            *selected_index = 0;
             g_battle_menu_status_scroll_offset = 0;
             battle_menu_clear_entry_selections();
             battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_start_entry_thread);

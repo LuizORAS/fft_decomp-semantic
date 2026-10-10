@@ -96,11 +96,11 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                         != 0) {
                         offset = g_wldcore_script_state.args[0] * 10;
                         records = g_wldcore_deep_dungeon_battles;
-                        /* The byte offset and shared base preserve the target's choice-index calculation. */
                         record = (wldcore_deep_dungeon_battle_t*)((u8*)records + offset);
                         g_wldcore_next_map_id[0] = record->map_id;
+                        /* Index from the first choices array to retain the shared record-table base. */
                         world_script_set_variable(
-                            EVENT_SCRIPT_VAR_CURRENT_ENTD, ((u8*)records)[((rand() * 8) >> 15) + offset + 2]);
+                            EVENT_SCRIPT_VAR_CURRENT_ENTD, (&records->choices[0])[((rand() * 8) >> 15) + offset]);
                         world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
                         world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);

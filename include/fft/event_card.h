@@ -185,7 +185,7 @@ extern u32 g_card_input_primary_repeat;
 void card_input_clear_state(void);
 void card_input_update_controller(void);
 void card_input_update_suppressed_during_fade(void);
-void card_input_update_event_state(void* state, u32 input, s32 count_frame);
+void card_input_update_event_state(u32* otag, u32 input, s32 count_frame);
 
 /* menu */
 

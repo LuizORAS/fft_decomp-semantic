@@ -16,14 +16,12 @@ enum {
  * Returns the reacting unit's slot and writes its reaction ability id to
  * `out_ability`, or -1 when no unit reacts.
  *
- * The action block is addressed through a `u8*` at battle_stats_t +0x16e for
- * the same reason as battle_action_store_counter_ability: the target keeps that
- * pointer in its own register and stores through it rather than through the
- * unit.
+ * The action pointer has its own register because stores use that base while
+ * the unit pointer can change for Damage Split.
  */
 s32 battle_reaction_prepare_next(s16* out_ability) {
     battle_stats_t* unit;
-    u8* action;
+    battle_unit_action_command_t* action;
     s32 i;
     s32 outcome;
     s32 result;
@@ -40,7 +38,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
         g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
         if (i != g_battle_acting_unit_id) {
             unit = &g_battle_unit_stats[i];
-            action = &unit->action_actor_id;
+            action = &unit->action_command;
             if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_NONE
                 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                 can_react = battle_action_can_unit_react(unit);
@@ -51,11 +49,11 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                     g_battle_action_context = BATTLE_ACTION_CONTEXT_REACTION_OR_SIMULATION;
                     main_util_copy_action_data(action, g_battle_action_saved_command);
                     g_battle_current_reaction_ability_id = ability;
-                    action[0] = i;
-                    action[1] = 0;
+                    action->actor_id = i;
+                    action->skillset_id = 0;
                     reaction_id = *(u16*)&g_battle_current_reaction_ability_id;
                     outcome = 1;
-                    *(u16*)(action + 2) = reaction_id;
+                    action->ability_id = reaction_id;
                     last_attack = unit->action.last_received_attack;
                     unit->action.reaction_id = 0;
                     switch (reaction_id) {
@@ -66,8 +64,8 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         if (battle_action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         } else {
-                            action[1] = 1;
-                            action[0xA] = 5;
+                            action->skillset_id = 1;
+                            action->targeting_type = 5;
                         }
                         break;
                     case ABILITY_ID_REACTION_COUNTER_MAGIC:
@@ -97,16 +95,17 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                             break;
                         }
-                        action[1] = 6;
-                        action[8] = result;
-                        action[0xA] = 5;
-                        action[0xB] = i;
-                        *(s16*)(action + 0xC) = unit->x;
-                        *(s16*)(action + 0x10) = unit->position.bits.y;
-                        *(u16*)(action + 0xE) = unit->position.raw >> 15;
-                        result = battle_action_call_attack_preparation_at_preview(action);
+                        action->skillset_id = 6;
+                        /* Auto-Potion updates only the low byte of the item/equipment word. */
+                        *(u8*)&action->item_or_equipment = result;
+                        action->targeting_type = 5;
+                        action->target_id = i;
+                        action->target_x = unit->x;
+                        action->target_y = unit->position.bits.y;
+                        action->target_elevation = unit->position.raw >> 15;
+                        result = battle_action_call_attack_preparation_at_preview((u8*)action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
-                        unit->last_ability_id = ABILITY_ID_REACTION_AUTO_POTION;
+                        unit->action_command.ability_id = ABILITY_ID_REACTION_AUTO_POTION;
                         if (result == -1 || result == 2 || result == 3) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
@@ -143,19 +142,19 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                             = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
                         g_battle_action_current_ability.secondary_weapon_id
                             = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-                        action[1] = 0;
-                        action[0xA] = 5;
-                        action[0xB] = i;
+                        action->skillset_id = 0;
+                        action->targeting_type = 5;
+                        action->target_id = i;
                         if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_DAMAGE_SPLIT) {
-                            action[0xB] = g_battle_acting_unit_id;
+                            action->target_id = g_battle_acting_unit_id;
                             unit = &g_battle_unit_stats[g_battle_acting_unit_id];
                         }
-                        *(s16*)(action + 0xC) = unit->x;
-                        *(s16*)(action + 0x10) = unit->position.bits.y;
-                        *(u16*)(action + 0xE) = unit->position.raw >> 15;
+                        action->target_x = unit->x;
+                        action->target_y = unit->position.bits.y;
+                        action->target_elevation = unit->position.raw >> 15;
                     }
                     *out_ability = g_battle_current_reaction_ability_id;
-                    action[0] = i;
+                    action->actor_id = i;
                     return i;
                 }
             }

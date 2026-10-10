@@ -93,7 +93,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
         while ((target_id = battle_reaction_prepare_next((s16*)&target_index)) != -1) {
             if (ai->unit_acts_before_me[target_id] == 0) {
                 battle_ai_simulate_strikes(
-                    (battle_ai_command_action_t*)&g_battle_unit_stats[target_id].action_actor_id, 1);
+                    (battle_ai_command_action_t*)&g_battle_unit_stats[target_id].action_command, 1);
             }
         }
     }

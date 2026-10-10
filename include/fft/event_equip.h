@@ -208,7 +208,7 @@ extern u16 g_equip_gfx_sprite_16_count;
 extern world_oriented_quad_t g_equip_gfx_blank_cell_rect;
 void equip_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
-void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, void* poly);
+void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
 void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread);

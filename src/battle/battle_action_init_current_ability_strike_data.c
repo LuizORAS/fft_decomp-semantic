@@ -50,7 +50,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         g_battle_action_current_ability.job_level_gained_flag = 0;
     }
 
-    menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    menu_type = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     g_battle_loaded_ability_flags_1 = 0;
     g_battle_action_current_ability.primary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     g_battle_action_current_ability.secondary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
@@ -61,12 +61,12 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     }
 
     if (menu_type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        g_battle_action_current_ability.primary_weapon_id = unit->used_item_or_equipment;
+        g_battle_action_current_ability.primary_weapon_id = unit->action_command.item_or_equipment;
         return;
     }
 
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
-        ability_id = unit->last_ability_id;
+        ability_id = unit->action_command.ability_id;
         if (ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST) {
             data = &g_main_ability_range_data[ability_id];
             g_battle_loaded_ability_flags_1 = data->flags_1;

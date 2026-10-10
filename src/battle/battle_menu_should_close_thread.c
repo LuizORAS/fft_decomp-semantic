@@ -9,7 +9,6 @@
  * thread's third parameter is set, which is how a menu thread is asked to close. */
 s32 battle_menu_should_close_thread(s32* out_flag) {
     s32 i;
-    s32 offset;
     s32 task_state;
 
     if (g_battle_menu_input_lock_mode != 0 || g_battle_menu_help_open != 0) {
@@ -18,10 +17,9 @@ s32 battle_menu_should_close_thread(s32* out_flag) {
     }
     i = 0;
     task_state = 3;
-    offset = 0;
-    for (; i < 16; i++, offset += NATIVE_THREAD_STRIDE) {
+    for (; i < 16; i++) {
         if (i != g_battle_current_thread_id && battle_thread_is_running_asm(i) != 0
-            && *(s32*)((s8*)g_battle_thread_task_ids + offset) == task_state) {
+            && g_battle_thread_task_ids[i][0] == task_state) {
             *out_flag = 0;
             break;
         }

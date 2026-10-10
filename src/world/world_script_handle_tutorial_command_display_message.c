@@ -2,7 +2,7 @@
 
 /* Tutorial command: start the text thread on a new message. Operands: two
  * message-id bytes (little-endian, biased by 0xB800) and a third byte stored
- * into the thread block at +0x405C.
+ * as the text thread's y offset.
  *
  * -O0, like the neighbouring tutorial handlers. The message id is summed as
  * pointer arithmetic on purpose: written as plain integer addition, GCC
@@ -14,8 +14,8 @@ void world_script_handle_tutorial_command_display_message(void) {
         (s32)((u8*)(g_world_script_tutorial_command_ptr[2] * 0x100)
             + (g_world_script_tutorial_command_ptr[1] + 0xB800)),
         0);
-    /* The raw byte displacement preserves the target's single +0x405c address
-     * calculation; the equivalent typed member access splits it at -O0. */
-    *(s32*)((u8*)g_world_threads + 0x405C) = g_world_script_tutorial_command_ptr[3];
+    /* Direct slot/member indexing splits this address at -O0. */
+    *(s32*)((u8*)g_world_threads + (u32) & ((native_thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_words[3])
+        = g_world_script_tutorial_command_ptr[3];
     g_world_script_tutorial_command_ptr += 4;
 }

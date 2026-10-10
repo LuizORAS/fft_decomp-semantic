@@ -9,11 +9,13 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     s32 offset;
 
     g_battle_unit_misc_list_head = 0;
-    for (offset = 15 * 0x440; offset >= 0; offset -= 0x440) {
-        *(s32*)&((u8*)g_battle_unit_misc_slot_flags)[offset] = 0;
+    for (offset = 15 * sizeof(battle_unit_misc_slot_flag_t); offset >= 0;
+        offset -= sizeof(battle_unit_misc_slot_flag_t)) {
+        ((battle_unit_misc_slot_flag_t*)((u8*)g_battle_unit_misc_slot_flags + offset))->in_use = 0;
     }
-    for (offset = 8 * 0x32d6; offset >= 0; offset -= 0x32d6) {
-        ((u8*)g_battle_gfx_spritesheet_slots)[offset] = 0;
+    for (offset = 8 * sizeof(battle_gfx_spritesheet_slot_t); offset >= 0;
+        offset -= sizeof(battle_gfx_spritesheet_slot_t)) {
+        ((battle_gfx_spritesheet_slot_t*)((u8*)g_battle_gfx_spritesheet_slots + offset))->in_use = 0;
     }
     for (i = 0; i < 2; i++) {
         g_battle_gfx_vram_slots[i].owner = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;

@@ -20,9 +20,9 @@ void require_apply_post_battle_unit_changes(void) {
     s32* initial_unit_index_ptr;
     s32* unit_index_ptr;
     s32* selected_unit_index_ptr;
-    u8* menu_base;
+    world_menu_entry_t* menu_base;
     u8* menu_fields;
-    u8* unit_display_data;
+    battle_active_unit_t* unit_display_data;
     s32 one;
     battle_stats_t* unit;
     s32 input;
@@ -48,7 +48,7 @@ void require_apply_post_battle_unit_changes(void) {
         = text_data + g_require_text_section_offsets[2];
     saved_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
-    g_battle_menu_thread_menu_data = (world_menu_entry_t*)menu_base;
+    g_battle_menu_thread_menu_data = menu_base;
     g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
         = text_data + g_require_text_section_offsets[3];
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
@@ -69,9 +69,9 @@ void require_apply_post_battle_unit_changes(void) {
      * 8-byte frame slots. */
     if (affected_index < g_require_party_affected_unit_count) {
         transition_c_ptr = &g_require_character_status_frame_config;
-        unit_display_data = (u8*)selected_unit_index_ptr;
+        unit_display_data = (battle_active_unit_t*)selected_unit_index_ptr;
         one = 1;
-        menu_fields = menu_base + 4;
+        menu_fields = (u8*)&menu_base->inner_width;
         /* Hide the constants from local-alloc, or the s3-s5 assignment rotates. */
         __asm__("" : "=r"(one) : "0"(one));
         __asm__("" : "=r"(menu_fields) : "0"(menu_fields));
@@ -113,8 +113,8 @@ void require_apply_post_battle_unit_changes(void) {
 
                 battle_unit_get_stats_from_battle_id(*unit_index_ptr);
                 index_value = *unit_index_ptr;
-                *(u16*)(unit_display_data + 0x0a) = index_value;
-                *(u16*)(unit_display_data + 0) = index_value;
+                unit_display_data->battle_id = index_value;
+                unit_display_data->name_id = index_value;
                 require_editor_load_selected_unit();
                 battle_menu_copy_billboard_data_in(
                     &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
@@ -173,22 +173,35 @@ void require_apply_post_battle_unit_changes(void) {
                     half_menu_x = text_width % 4 + 0x18;
                     menu_x = text_width_px + half_menu_x;
                     half_menu_x = menu_x / 2;
-                    *(s16*)(menu_fields + 0x10) = menu_x;
-                    *(s16*)(menu_fields + 0x08) = menu_x;
-                    *(s16*)(menu_fields + 0x00) = menu_x;
-                    *(s16*)(menu_fields + 0x04) = 0x100 - half_menu_x + menu_x % 2;
+                    /* A recovered struct pointer hoists the owner address across the call (two instructions differ).
+                     * Derive each byte displacement from the named field instead. */
+#define MENU_FIELD(field)                                                                                              \
+    (*(s16*)(menu_fields + (unsigned long)&((world_menu_entry_t*)0)->field                                             \
+        - (unsigned long)&((world_menu_entry_t*)0)->inner_width))
+                    MENU_FIELD(text_image.width) = menu_x;
+                    MENU_FIELD(window_width) = menu_x;
+                    MENU_FIELD(inner_width) = menu_x;
+                    MENU_FIELD(window_x) = 0x100 - half_menu_x + menu_x % 2;
+#undef MENU_FIELD
                     if (require_party_get_free_slot_status(*selected_unit_index_ptr) == 2) {
                         g_require_message_menu_result = 0;
                     } else {
                         g_require_menu_selection_result = 0xff;
                         battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, require_menu_icon_strip_thread);
-                        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, (s32)(menu_fields - 4), 0, 0);
+                        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE,
+                            (s32)(menu_fields - (unsigned long)&((world_menu_entry_t*)0)->inner_width), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {
                             battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x1dc), 0, 0);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
+                                (s32)(menu_fields + 8 * sizeof(*menu_base)
+                                    - (unsigned long)&((world_menu_entry_t*)0)->inner_width),
+                                0, 0);
                         } else {
                             battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x38), 0, 0);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
+                                (s32)(menu_fields + sizeof(*menu_base)
+                                    - (unsigned long)&((world_menu_entry_t*)0)->inner_width),
+                                0, 0);
                         }
                     }
 
@@ -232,8 +245,8 @@ void require_apply_post_battle_unit_changes(void) {
                      * into v1 after the call; one shared local is one allocno
                      * and takes v1 at both sites. */
                     display_index = *selected_unit_index_ptr;
-                    *(u16*)(unit_display_data + 0x0a) = display_index;
-                    *(u16*)(unit_display_data + 0) = display_index;
+                    unit_display_data->battle_id = display_index;
+                    unit_display_data->name_id = display_index;
                     require_editor_load_selected_unit();
                     index_value = *selected_unit_index_ptr;
                     g_require_status_display_redraw_request = one;

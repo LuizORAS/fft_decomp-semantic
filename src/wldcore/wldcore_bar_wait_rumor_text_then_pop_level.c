@@ -11,7 +11,7 @@ void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_
     if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
-    if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
+    if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
         return;
     }
     g_wldcore_window_records[level->first_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;

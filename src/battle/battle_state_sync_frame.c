@@ -10,7 +10,7 @@
  * is 16 or more), with the timer counting down each frame, and g_frame_pacing
  * replaces it when larger. The test for a g_frame_pacing of 1 cannot succeed,
  * since the value it is compared with is at least 2. */
-s32 battle_state_sync_frame(u32 ordering_table) {
+s32 battle_state_sync_frame(u32* ordering_table) {
     s32 wait;
     s32 sync_wait;
     s32 timer;
@@ -49,7 +49,7 @@ s32 battle_state_sync_frame(u32 ordering_table) {
 
     PutDispEnv(&g_main_gfx_display_envs[g_main_gfx_screen_polarity]);
     PutDrawEnv(&g_main_gfx_draw_envs[g_main_gfx_screen_polarity]);
-    DrawOTag((u32*)ordering_table);
+    DrawOTag(ordering_table);
     FntFlush(-1);
     return sync_result;
 }

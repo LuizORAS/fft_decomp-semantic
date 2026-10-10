@@ -10,7 +10,7 @@ s32 battle_status_remove_charging_ability_ct(battle_stats_t* unit, s32 do_disabl
     for (;;) {
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING))
-            && unit->charged_ability_ct != 0xFF && unit->last_skillset_id == SKILLSET_ID_CHARGE) {
+            && unit->charged_ability_ct != 0xFF && unit->action_command.skillset_id == SKILLSET_ID_CHARGE) {
             if (do_disable != 0) {
                 battle_status_disable_acting(unit);
             }
