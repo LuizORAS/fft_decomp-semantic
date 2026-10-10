@@ -30,11 +30,11 @@ void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id
             wldcore_sound_stop_weather_sfx_and_send_quad(weather_sound_id);
         }
         if (track != 0) {
-            if ((u8)g_wldcore_active_saved_record.music_selection != track) {
+            if ((g_wldcore_active_saved_record.music_selection & 0xFF) != track) {
                 wldcore_sound_change_scenario_music(track);
                 music_flags = &g_wldcore_audio_queue.music.flags;
                 *music_flags |= WLDCORE_AUDIO_MUSIC_PLAYING;
-                main_sound_switch_music_track(((g_wldcore_active_saved_record.music_selection << 16)) >> 24, 0, 0);
+                main_sound_switch_music_track(g_wldcore_active_saved_record.music_selection >> 8, 0, 0);
                 main_sound_set_current_music_target(g_wldcore_audio_queue.volume, 0x28);
             }
         }

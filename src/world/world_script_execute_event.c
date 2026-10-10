@@ -21,14 +21,14 @@ void world_script_execute_event(void) {
     s32 unit_lookup_status;
     s32 ghost_misc_id;
     s32 region_misc_id;
-    s32 zalera_misc_id;
+    s16 zalera_misc_id;
     s32 month;
     s32 appearance_battle_id;
     s32 work_index;
 
     s16 first_halfword;
     s32 removed_misc_id;
-    s32 erased_misc_id;
+    s16 erased_misc_id;
     s16 shadow_misc_id;
     s16 misc_id_for_7f;
     s16 palette_misc_id;
@@ -110,7 +110,7 @@ restart_event:
         } else if ((opcode - EVENT_CONDITION_SECOND_GTE_FIRST) < 6U) {
             world_script_run_condition(opcode);
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
-            operand_1 = (u16)first_halfword;
+            operand_1 = first_halfword & 0xFFFF;
             world_script_run_variable_command(opcode, operand_1,
                 world_script_load_halfword(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
@@ -250,7 +250,7 @@ restart_event:
                 world_script_warp_unit_display_to_paired_unit(operand_1);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
-                zalera_misc_id = (s16)world_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
+                zalera_misc_id = world_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
                 if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                     world_unit_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 0);
@@ -723,7 +723,7 @@ restart_event:
                 }
             }
         } else if (opcode == EVENT_OPCODE_DRAW) {
-            zalera_misc_id = (s16)world_script_get_misc_id(first_halfword);
+            zalera_misc_id = world_script_get_misc_id(first_halfword);
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(zalera_misc_id);
                 if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
@@ -734,7 +734,7 @@ restart_event:
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
-            erased_misc_id = (s16)world_script_get_misc_id(first_halfword);
+            erased_misc_id = world_script_get_misc_id(first_halfword);
             if (erased_misc_id != EVENT_MISC_ID_NONE) {
                 battle_gfx_reset_unit_graphic_trigger(erased_misc_id);
             }

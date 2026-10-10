@@ -121,9 +121,9 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
         }
         row |= g_world_thread_task_active != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE;
         world_menu_draw_pressable_button(
-            MENU_PRESSABLE_BUTTON_L2, 0x26, (s16)value, input & PSX_PAD_L2, (s16)row, MAIN_SFX_PAGE_SWITCH);
+            MENU_PRESSABLE_BUTTON_L2, 0x26, value, input & PSX_PAD_L2, row, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(
-            MENU_PRESSABLE_BUTTON_R2, 0xc2, (s16)value, input & PSX_PAD_R2, (s16)row, MAIN_SFX_PAGE_SWITCH);
+            MENU_PRESSABLE_BUTTON_R2, 0xc2, value, input & PSX_PAD_R2, row, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(window, 0, 0);
         world_gfx_enqueue_textured_quad_list(
             cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);

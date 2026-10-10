@@ -115,9 +115,9 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                 }
                 world_formation_cycle_selected_unit(buttons);
                 world_menu_draw_pressable_button(
-                    MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, buttons & PSX_PAD_L1, (s16)i, MAIN_SFX_PAGE_SWITCH);
+                    MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, buttons & PSX_PAD_L1, i, MAIN_SFX_PAGE_SWITCH);
                 world_menu_draw_pressable_button(
-                    MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, buttons & PSX_PAD_R1, (s16)i, MAIN_SFX_PAGE_SWITCH);
+                    MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, buttons & PSX_PAD_R1, i, MAIN_SFX_PAGE_SWITCH);
             }
             if (g_world_formation_current_menu != WORLD_FORMATION_MENU_ITEM_REMOVE) {
                 world_formation_update_unit_selection();

@@ -89,7 +89,7 @@ void world_card_build_save_image(s32 slot) {
 
     world_bit_cursor_set_primary(g_world_load_work_buffer->parity_bits);
     block = (u8*)g_world_load_work_buffer;
-    for (i = 0; (u32)i < 0x3c; i++) {
+    for (i = 0; i >= 0 && i < 0x3c; i++) {
         parity = 0;
         world_bit_cursor_set_secondary(block);
         for (j = 0; j < 0x400; j++) {

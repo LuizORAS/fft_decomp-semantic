@@ -33,8 +33,8 @@ void wldcore_gfx_calculate_scaled_rectangle(
         break;
     }
 
-    x = (s16)source->dimensions.x;
-    y = (s16)source->dimensions.y;
+    x = source->dimensions.x;
+    y = source->dimensions.y;
     scaled_x = x * scale;
     scaled_y = y * scale;
     half_x = (x / 2) & 0xfffc;

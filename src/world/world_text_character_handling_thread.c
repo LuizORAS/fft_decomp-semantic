@@ -32,7 +32,7 @@ void world_text_character_handling_thread(void) {
     s32 repeat;
     u8* saved;
     s32 width_override;
-    u16 cursor_y;
+    s16 cursor_y;
     s16 right;
     s16 bottom;
     u16 mark_x;
@@ -784,7 +784,7 @@ void world_text_character_handling_thread(void) {
                         glyph->mode = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
                         glyph->palette = rec.color;
                     }
-                    world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
+                    world_text_draw_glyph_with_typewriter_delay(cursor_x, cursor_y, delay);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -826,7 +826,7 @@ void world_text_character_handling_thread(void) {
                     glyph->mode = rec.box_type;
                     glyph->palette = rec.color;
                 }
-                world_text_draw_glyph_with_typewriter_delay(cursor_x, (s16)cursor_y, delay);
+                world_text_draw_glyph_with_typewriter_delay(cursor_x, cursor_y, delay);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

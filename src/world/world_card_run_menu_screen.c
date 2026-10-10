@@ -33,8 +33,8 @@ typedef struct world_card_screen_packets {
  */
 s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_card_screen_packets_t packets;
-    s32 music_handle;
-    s32 input;
+    s16 music_handle;
+    u16 input;
     s32 buttons;
     s32 step;
 
@@ -75,7 +75,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     g_world_card_mode_select_enabled = mode_select_enabled;
     music_handle = main_sound_open_music_into_free_slot(0x29);
     while (main_return_zero_80043708() != 0) { }
-    main_sound_switch_music_track((s16)music_handle, 0x7f, 0);
+    main_sound_switch_music_track(music_handle, 0x7f, 0);
     world_card_clear_events();
     g_world_card_directory_buffer = packets.directory_buffer;
     world_card_init_menu_state();
@@ -89,7 +89,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         world_gfx_enqueue_tile(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
         if (g_world_card_menu_step == WORLD_CARD_MENU_STEP_SELECT_SAVE
             && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0) {
-            input = (u16)g_world_input_primary_repeat;
+            input = g_world_input_primary_repeat;
         } else {
             input = 0;
         }
@@ -130,7 +130,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
     world_free_work_buffer();
     world_noop_801325d4();
-    main_sound_unload_scenario_mus((s16)music_handle);
+    main_sound_unload_scenario_mus(music_handle);
     world_formation_reset_menu_context();
     world_text_generate_formation_unit_name_string();
     return g_world_card_menu_result;

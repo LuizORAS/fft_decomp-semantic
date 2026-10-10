@@ -9,8 +9,8 @@
  * when the counter reads 0 or -1 (except for layout 0x0b). */
 void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* request) {
     s32 layout;
-    u16* counter;
-    s32 message;
+    s16* counter;
+    s16 message;
     wldcore_window_record_t* record;
     s32 window;
 
@@ -28,14 +28,14 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
         layout = request->layout;
         counter = g_wldcore_window_layout_rows[layout].counter;
         if (counter != 0) {
-            if (layout != 0xB && (u16)(*counter + 1) < 2) {
+            if (layout != 0xB && *counter >= -1 && *counter < 1) {
                 return;
             }
             message = g_wldcore_window_layout_rows[layout].message_base + *counter;
         } else {
             message = g_wldcore_window_layout_rows[layout].message_base;
         }
-        wldcore_menu_push_message_level((s16)message, 1);
+        wldcore_menu_push_message_level(message, 1);
         g_world_thread_task_active = 1;
         window = request->window_index;
         record = &g_wldcore_window_records[window];

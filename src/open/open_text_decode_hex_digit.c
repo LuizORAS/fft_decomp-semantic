@@ -1,18 +1,18 @@
 #include "psx/types.h"
 
 s32 open_text_decode_hex_digit(s32 character) {
-    s32 value;
+    u32 value;
 
     value = character - '0';
-    if ((u32)value < 10) {
+    if (value < 10) {
         return value;
     }
 
-    if ((u32)(character - 'A') < 6) {
+    if (character >= 'A' && character < 'G') {
         return character - ('A' - 10);
     }
 
-    if ((u32)(character - 'a') < 6) {
+    if (character >= 'a' && character < 'g') {
         return character - ('a' - 10);
     }
 

@@ -3,7 +3,7 @@
 
 void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     const u8* text;
-    s32 padded;
+    u16 padded;
     u16 w;
     u16 h;
 
@@ -16,7 +16,7 @@ void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* h
             *width = 8;
         }
     }
-    padded = (u16)*width + 0x18;
+    padded = *width + 0x18;
     *width = padded + (padded & 3);
     *height = *height * 16 + 16;
     entry->window_x = 0x102 - (*width >> 1);

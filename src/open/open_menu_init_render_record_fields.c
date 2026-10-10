@@ -35,7 +35,7 @@ void open_menu_init_render_record_fields(s32 record_index, open_menu_packed_half
     quad_base = (RECT*)(tail_base + 1);
     quad = quad_base + record_index * (sizeof(open_render_record_56_t) / sizeof(RECT));
     quad->x = (first_pair.first & 0x3f) * 2;
-    quad->y = (u8)first_pair.second;
+    quad->y = first_pair.second & 0xFF;
     quad->w = second_pair.first * 2;
     quad->h = second_pair.second;
     color_base = (CVECTOR*)(tail_base + 2);

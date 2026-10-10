@@ -16,7 +16,7 @@
  * times the event-speed frame count after every glyph.
  *
  * The ring byte is read before the phase so the pen-x load lands in its own
- * register behind the slot arithmetic, and the inner bound is `(s32)pitch / 2`
+ * register behind the slot arithmetic, and the inner bound is `pitch / 2`
  * so it is recomputed per row, as in the target.
  */
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay) {
@@ -28,8 +28,8 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
     s32 kind;
     s32 next_glyph;
     s32 next_kind;
-    s32 ring;
-    u32 pitch;
+    u8 ring;
+    s32 pitch;
     u8* image;
     u8* previous;
     s32 row;
@@ -64,7 +64,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             world_thread_yield();
         }
 
-        ring = (u8)g_world_menu_slot_states[slot];
+        ring = g_world_menu_slot_states[slot];
         phase = request->x & 3;
         image = g_world_text_typewriter_glyph_images[slot][ring];
         previous = g_world_text_typewriter_previous_images[slot];
@@ -97,7 +97,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                 g_world_text_typewriter_column_scratch[i] = (previous + j)[g_world_text_slot_source_columns[slot]];
             }
             for (i = 0; i < 14; i++) {
-                image[(s32)(i * pitch) / 2] = g_world_text_typewriter_column_scratch[i];
+                image[i * pitch / 2] = g_world_text_typewriter_column_scratch[i];
             }
         }
 
@@ -120,7 +120,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
 
         for (row = 0; row < 14; row++) {
             offset = row * pitch;
-            for (i = phase >> 1; i < (s32)pitch / 2; i++) {
+            for (i = phase >> 1; i < pitch / 2; i++) {
                 if (request->mode == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {

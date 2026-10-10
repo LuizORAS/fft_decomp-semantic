@@ -19,8 +19,8 @@ void world_shop_run_fur_sell_list_step(void) {
 
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, message, 0);
         g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
-        world_item_build_category_list(-1, (s16)(g_world_shop_item_category + 1),
-            (s8)(g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER),
+        world_item_build_category_list(-1, g_world_shop_item_category + 1,
+            g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
             g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
         world_menu_init_scrollable_list_core(
             g_world_menu_entry_ids, 0, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);

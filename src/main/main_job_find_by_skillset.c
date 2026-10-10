@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 s32 main_job_find_by_skillset(s32 skillset_id) {
-    s32 job_id;
+    u32 job_id;
     s32 result;
     job_data_t* job_data;
 
@@ -19,7 +19,7 @@ s32 main_job_find_by_skillset(s32 skillset_id) {
             break;
         }
         job_id++;
-        result = (u32)(job_id & 0xff) < (JOB_ID_COUNT - 1);
+        result = (job_id & 0xff) < (JOB_ID_COUNT - 1);
     } while (result != 0);
     return result;
 }

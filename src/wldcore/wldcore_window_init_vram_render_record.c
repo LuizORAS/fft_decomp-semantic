@@ -14,12 +14,11 @@ void wldcore_window_init_vram_render_record(
               & ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
         | flags;
     g_wldcore_window_render_records[index].clut = clut;
-    g_wldcore_window_render_records[index].tpage
-        = GetTPage(0, 0, (s16)bounds.position.x, (s16)bounds.position.y) & 0xFFFF;
+    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, bounds.position.x, bounds.position.y) & 0xFFFF;
     record_bounds = &g_wldcore_window_render_records[index].bounds;
     record_bounds->position.x = (bounds.position.x & 0x3F) * 2;
-    record_bounds->position.y = (u8)bounds.position.y;
-    record_bounds->dimensions.x = (s16)bounds.dimensions.x * 2;
+    record_bounds->position.y = bounds.position.y & 0xFF;
+    record_bounds->dimensions.x = bounds.dimensions.x * 2;
     record_bounds->dimensions.y = bounds.dimensions.y;
     rgb = &g_wldcore_window_render_records[index].color;
     rgb->r = 0x80;

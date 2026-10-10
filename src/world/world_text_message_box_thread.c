@@ -35,8 +35,8 @@ void world_text_message_box_thread(void) {
     u8* base_entry;
     s16 x;
     s16 y;
-    u16 cursor_x;
-    u16 cursor_y;
+    s16 cursor_x;
+    s16 cursor_y;
     s16 right;
     s16 bottom;
     u16 delay;
@@ -170,8 +170,7 @@ void world_text_message_box_thread(void) {
     }
     x = win->quads[0].u0 + 8;
     y = win->quads[0].v0 + 8;
-    /* One word compare of box_type == 0x10 and position == 1, as in the target. */
-    if (*(s32*)&rec.box_type == 0x10010) {
+    if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.position == 1) {
         x = win->quads[0].u0 + 0x30;
     }
     delay = 1;
@@ -411,7 +410,7 @@ void world_text_message_box_thread(void) {
                     g_world_text_message_box_glyph.y = cursor_y;
                     g_world_text_message_box_glyph.mode = rec.dialog_type & DIALOG_TYPE_BOX_TYPE_MASK;
                     g_world_text_message_box_glyph.palette = rec.color;
-                    world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, delay);
+                    world_text_draw_glyph_with_typewriter_delay_2(cursor_x, cursor_y, delay);
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
@@ -442,7 +441,7 @@ void world_text_message_box_thread(void) {
                 g_world_text_message_box_glyph.palette = rec.color;
                 g_world_text_message_box_glyph.x = cursor_x;
                 g_world_text_message_box_glyph.y = cursor_y;
-                world_text_draw_glyph_with_typewriter_delay_2((s16)cursor_x, (s16)cursor_y, delay);
+                world_text_draw_glyph_with_typewriter_delay_2(cursor_x, cursor_y, delay);
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {

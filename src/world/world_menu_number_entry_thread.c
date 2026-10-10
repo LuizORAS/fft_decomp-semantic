@@ -93,7 +93,7 @@ void world_menu_number_entry_thread(void) {
             redraw = 0;
             world_menu_free_memory(buffer);
         }
-        if (world_menu_check_thread_completion((s32*)g_world_menu_list_controller_input) != 0) {
+        if (world_menu_check_thread_completion(g_world_menu_list_controller_input) != 0) {
             break;
         }
         input = *g_world_menu_list_controller_input;

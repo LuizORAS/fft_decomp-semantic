@@ -250,7 +250,7 @@ void world_build_options_menu(void) {
             LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
         }
         world_thread_yield();
-        if (world_menu_check_thread_completion((s32*)input0) != 0) {
+        if (world_menu_check_thread_completion(input0) != 0) {
             break;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {

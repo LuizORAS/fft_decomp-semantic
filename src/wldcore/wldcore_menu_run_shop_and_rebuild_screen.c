@@ -10,7 +10,7 @@
  * saved-register base for its two loads. */
 void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
     s32* selected;
-    s32* clear;
+    u32* clear;
     s32 i;
 
     world_menu_set_brightness(0x80, 0x80, 0x80);

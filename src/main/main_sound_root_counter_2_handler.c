@@ -53,8 +53,8 @@ s32 main_sound_root_counter_2_handler(void) {
 
     music = g_main_sound_active_music_list;
     while (music != 0) {
-        /* The playing bit is tested as a sign (`lh`, `bgez`). */
-        if ((s16)music->status < 0) {
+        /* The playing bit (15) is the sign. */
+        if (music->status < 0) {
             if (music->snapshot_restore_tick != 0 && music->sequence_ticks >= music->snapshot_restore_tick)
                 main_smd_restore_snapshot(music);
             if (music->tempo_scale.count != 0) {

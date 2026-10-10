@@ -25,8 +25,7 @@ void world_script_face_tile(const u8* parameters) {
     unit_id = world_script_load_halfword(parameters);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-            if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&g_world_unit_face_slot_order[i], &misc_index)
-                != 0) {
+            if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
                 world_unit_copy_misc_screen_coords(unit_id, position);
                 dx = target[0] - position[0];
                 dy = target[2] - position[2];

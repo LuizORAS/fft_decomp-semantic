@@ -51,8 +51,8 @@ void world_unit_update_monster_breeding(s32 unused) {
                 }
             } else {
                 levels[unit_count++] = unit->level;
-                if ((u32)(world_job_get_skillset(unit->job_id) - SKILLSET_ID_MONSTER_FIRST)
-                    < SKILLSET_ID_END - SKILLSET_ID_MONSTER_FIRST) {
+                value = world_job_get_skillset(unit->job_id);
+                if (value >= SKILLSET_ID_MONSTER_FIRST && value < SKILLSET_ID_END) {
                     monsters[monster_count++] = i;
                 }
             }

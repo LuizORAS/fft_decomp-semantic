@@ -7,7 +7,7 @@
  * Input bit 0x100 opens the entry's auxiliary text thread when its table
  * selector is nonzero. Completion waits for all other task-3 threads.
  */
-s32 world_menu_check_thread_completion(s32* input) {
+s32 world_menu_check_thread_completion(u32* input) {
     world_menu_entry_t* parameter;
     s32 i;
 

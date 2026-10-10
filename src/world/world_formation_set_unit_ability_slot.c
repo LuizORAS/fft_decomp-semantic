@@ -8,7 +8,7 @@
  * replacement set. Return 1 on success and -2 when the unit cannot change.
  */
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment) {
-    u16 equipment[5];
+    s16 equipment[5];
     s32 i;
     if (world_formation_get_unit_lock(unit_id) == WORLD_FORMATION_UNIT_UNLOCKED) {
         world_formation_unit_ability_slots_t* unit
@@ -19,7 +19,7 @@ s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s3
         if (update_equipment != 0) {
             if (unit_id != 20) {
                 if (g_world_formation_unit_pointers[unit_id]->job_id != JOB_ID_MIME) {
-                    world_unit_build_best_fit_equipment(unit_id, (s16*)equipment);
+                    world_unit_build_best_fit_equipment(unit_id, equipment);
                     for (i = 0; i < 5; i++) {
                         world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
                     }

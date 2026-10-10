@@ -10,16 +10,7 @@ extern world_menu_button_piece_t g_world_menu_button_pieces[];
  * g_world_menu_button_piece_starts[index]..g_world_menu_button_piece_starts[index + 1] are drawn at OT depth 50 upward.
  * Compiled at -O1 like the other formation/shop sprite drawers.
  */
-/* clang-format off */
-void world_menu_draw_pressable_button(index, x, y, pressed, disabled, sound_effect_id)
-    s16 index;
-    s32 x;
-    s32 y;
-    s16 pressed;
-    u16 disabled;
-    u16 sound_effect_id;
-/* clang-format on */
-{
+void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 disabled, u16 sound_effect_id) {
     world_oriented_quad_t sprite;
     world_menu_button_piece_t* piece;
     s32 speed;

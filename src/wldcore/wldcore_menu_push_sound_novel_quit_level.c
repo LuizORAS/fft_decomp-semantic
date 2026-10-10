@@ -44,7 +44,7 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 8;
     depth = g_wldcore_menu_stack_depth;
-    base->x = -((s16)bounds.dimensions.x / 2);
+    base->x = -(bounds.dimensions.x / 2);
     base->y = -0x18;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].position.x
         = g_wldcore_window_render_records[index].base.x + 6;

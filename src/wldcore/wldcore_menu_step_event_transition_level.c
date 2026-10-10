@@ -21,8 +21,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
     RECT rect;
     s32 step;
     s32 shade;
-    s32 red_sum;
-    s32 green_red_sum;
+    u8 red_sum;
     s32 angle;
 
     if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
@@ -46,7 +45,7 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
         g_wldcore_screen_fade_box_0_color.r = red_sum;
         g_wldcore_screen_fade_box_0_color.g = g_wldcore_screen_fade_box_0_color.g + 8;
         g_wldcore_screen_fade_box_0_color.b = g_wldcore_screen_fade_box_0_color.b + 8;
-        if ((u8)red_sum >= 0xF8) {
+        if (red_sum >= 0xF8) {
             g_wldcore_screen_fade_box_0_color.b = 0xFF;
             g_wldcore_screen_fade_box_0_color.g = 0xFF;
             g_wldcore_screen_fade_box_0_color.r = 0xFF;
@@ -62,10 +61,9 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
     }
     if (level->fade_phase == WLDCORE_EVENT_TRANSITION_FADE_FLASH) {
         g_wldcore_screen_fade_box_0_color.r = g_wldcore_screen_fade_box_0_color.r + 0x10;
-        green_red_sum = g_wldcore_screen_fade_box_0_color.g + 0x10;
-        g_wldcore_screen_fade_box_0_color.g = green_red_sum;
+        g_wldcore_screen_fade_box_0_color.g = g_wldcore_screen_fade_box_0_color.g + 0x10;
         g_wldcore_screen_fade_box_0_color.b = g_wldcore_screen_fade_box_0_color.b + 0x10;
-        if ((u8)green_red_sum >= 0x80) {
+        if (g_wldcore_screen_fade_box_0_color.g >= 0x80) {
             g_wldcore_screen_fade_box_0_color.r = 0;
             g_wldcore_screen_fade_box_0_color.g = 0;
             g_wldcore_screen_fade_box_0_color.b = 0;

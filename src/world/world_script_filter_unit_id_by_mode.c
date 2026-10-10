@@ -6,8 +6,9 @@
  *
  * Modes 3 and 5 reject the status check set 8; mode 5 ignores bit 0x10 in
  * the first status byte. The target has no defined return value for other
- * modes; callers must pass 0-5. */
-s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
+ * modes; callers must pass 0-5. `in_id` is read as a halfword: callers pass
+ * the address of an int slot counter or of an s16 slot-order entry. */
+s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
     battle_stats_t* unit;
     s32 index;
     s32 i;
@@ -18,7 +19,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     if (*mode == 0) {
         return 1;
     }
-    *out_id = *in_id;
+    *out_id = *(u16*)in_id;
     if (battle_unit_has_misc_id(*out_id) != 0) {
         index = battle_unit_get_battle_index_by_misc_id(*out_id);
         if (index != -1) {

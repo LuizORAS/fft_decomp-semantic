@@ -43,7 +43,7 @@ s32 main_sound_find_sfx_channel(s32 sound_id, s32 voice_count) {
     } while (--count != 0);
 
     index = 6 - voice_count;
-    group = (u32)-1 >> (32 - voice_count);
+    group = 0xFFFFFFFF >> (32 - voice_count);
     mask = group << index;
     music = g_main_sound_sfx_music;
     g_main_sound_sfx_restart_channels = channels;

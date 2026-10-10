@@ -14,7 +14,7 @@
  * A field-to-field copy narrows the load to the store's mode at expand time;
  * routing the value through a named local of the field's own width does not,
  * and combine cannot re-narrow it afterwards. The target narrows exactly where
- * no local is involved (`sprite.u = fx + object->bounds.position.x` is `lbu`), so the
+ * no local is involved (`sprite.u = object->bounds.position.x + fx` is `lbu`), so the
  * locals and their absence both follow the target's load widths.
  *
  * - The anim test is `>= 4`: the target puts the counter-step arm at the
@@ -62,8 +62,8 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     page = object->tpage;
     sprite.tpage = page;
     if (object->flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
-        s32 fx;
-        s32 fy;
+        s16 fx;
+        s16 fy;
         s32 ox;
         s32 oy;
 
@@ -74,8 +74,8 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
         sprite.x = fx + ox;
         oy = object->base.y;
         sprite.y = fy + oy;
-        sprite.u = fx + object->bounds.position.x;
-        sprite.v = fy + object->bounds.position.y;
+        sprite.u = object->bounds.position.x + fx;
+        sprite.v = object->bounds.position.y + fy;
         sprite.w = frame.dimensions.x;
         sprite.h = frame.dimensions.y;
         if (object->anim_counter / 2 >= 4) {
@@ -87,8 +87,8 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     } else {
         s32 sx;
         s32 sy;
-        s32 su;
-        s32 sv;
+        s16 su;
+        s16 sv;
 
         sx = object->base.x;
         sprite.x = sx;

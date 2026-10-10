@@ -46,7 +46,7 @@ s32 world_ability_run_view_list(void) {
         rect.h = 0x10;
         g_world_view_job_name_list[0] = g_world_learn_selected_job;
         world_text_render_id_list_to_image_rows(
-            g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES], (s16*)g_world_view_job_name_list, &rect, 0);
+            g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_world_view_job_name_list, &rect, 0);
         g_world_ability_category = world_menu_update_wrapped_horizontal_selection(4, WORLD_MENU_CURSOR_ABILITY_TAB, 0);
         world_ability_find_unit_abilities(g_world_formation_selected_unit_index, g_world_learn_selected_job,
             g_world_ability_category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_VIEW_ALL);
@@ -77,9 +77,8 @@ s32 world_ability_run_view_list(void) {
             world_menu_set_selection_record(g_world_ability_category + 10, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, g_world_ability_entries);
             g_world_ability_category = category;
-            /* The target passes the category narrowed to a halfword. */
             world_ability_find_unit_abilities(g_world_formation_selected_unit_index, g_world_learn_selected_job,
-                (s16)category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_VIEW_ALL);
+                g_world_ability_category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_VIEW_ALL);
             world_menu_get_selection_record(g_world_ability_category + 10, &x, &y, g_world_ability_entries);
             world_menu_init_scrollable_list(
                 g_world_ability_entries, x, y, g_world_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);

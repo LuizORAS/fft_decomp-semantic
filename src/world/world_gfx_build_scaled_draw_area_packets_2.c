@@ -16,8 +16,8 @@
 void world_gfx_build_scaled_draw_area_packets_2(
     world_gfx_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
     s32 percent;
-    u16 w;
-    u16 h;
+    s16 w;
+    s16 h;
     s32 crop;
 
     if (g_world_event_speed == 2) {
@@ -33,10 +33,10 @@ void world_gfx_build_scaled_draw_area_packets_2(
     pair->rects[0].x -= 0x80;
     pair->rects[0].x += offset->x;
     pair->rects[0].y += offset->w;
-    crop = ((s16)w * percent) / 200;
-    pair->rects[0].x = (s16)w / 2 + pair->rects[0].x - crop;
-    crop = ((s16)h * percent) / 200;
-    pair->rects[0].y = (s16)h / 2 + pair->rects[0].y - crop;
+    crop = (w * percent) / 200;
+    pair->rects[0].x = w / 2 + pair->rects[0].x - crop;
+    crop = (h * percent) / 200;
+    pair->rects[0].y = h / 2 + pair->rects[0].y - crop;
     pair->rects[0].w = (pair->rects[0].w * percent) / 100;
     pair->rects[0].h = (pair->rects[0].h * percent) / 100;
     if (flag != 0) {

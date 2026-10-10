@@ -9,12 +9,12 @@ void wldcore_window_transform_point_for_mode(s32 mode, wldcore_window_render_bou
     switch (mode) {
     case 0:
     case 1:
-        output[0] = (s16)bounds.position.x / 4 + 0x180 + mode * 64;
-        output[1] = (s16)bounds.position.y;
+        output[0] = bounds.position.x / 4 + 0x180 + mode * 64;
+        output[1] = bounds.position.y;
         break;
     case 2:
-        output[0] = ((s16)bounds.position.x / 4) + 0x240;
-        output[1] = (s16)bounds.position.y + 0x100;
+        output[0] = (bounds.position.x / 4) + 0x240;
+        output[1] = bounds.position.y + 0x100;
         break;
     }
 }

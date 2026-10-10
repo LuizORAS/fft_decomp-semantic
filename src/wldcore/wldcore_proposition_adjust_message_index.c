@@ -7,7 +7,7 @@
 s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
     s32 faith_band;
     s32 bravery_band;
-    s32 is_not_male;
+    u32 is_not_male;
     party_data_t* party;
 
     party = wldcore_get_party_data_pointer(party_index);
@@ -30,7 +30,7 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
         faith_band = 0;
     }
     is_not_male = party->gender_flags & UNIT_FLAG_MALE;
-    is_not_male = (u32)is_not_male < 1;
+    is_not_male = is_not_male < 1;
     return base
         + wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_MESSAGE_ADJUSTMENTS)
               ->message_adjustments[faith_band * 3 + bravery_band]

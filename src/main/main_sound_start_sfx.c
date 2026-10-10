@@ -135,8 +135,8 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
     music->status |= SUZUKI_MUSIC_STATUS_PLAYING;
     if (voices != 0) {
         for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
-            /* The playing bit is tested as a sign (`lh`), as elsewhere in the driver. */
-            if ((music->status & SUZUKI_MUSIC_STATUS_SMD) && (s16)music->status < 0) {
+            /* The playing bit (15) is the sign. */
+            if ((music->status & SUZUKI_MUSIC_STATUS_SMD) && music->status < 0) {
                 channel = music->channels;
                 count = music->channel_count;
                 do {

@@ -24,7 +24,7 @@ void wldcore_init_core(void) {
     GsDrawOt(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     DrawSync(0);
     wldcore_gfx_set_display_rect(g_active_graphics_buffer_index, &rect.x);
-    StoreImage(&rect, (u32*)g_wldcore_scratch_buffer);
+    StoreImage(&rect, g_wldcore_scratch_buffer);
     DrawSync(0);
     g_wldcore_loaded_background_set = -1;
     GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);

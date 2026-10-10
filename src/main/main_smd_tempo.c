@@ -5,10 +5,10 @@
  * the MUS record and the channel; this one only touches the MUS record.
  * `volatile` keeps the redundant `andi 0xff` after the `lbu`. */
 u8* main_smd_tempo(volatile u8* note_data, suzuki_music_t* music) {
-    u16 tempo;
+    u8 tempo;
 
     tempo = note_data[0] & 0xff;
     music->tempo.raw = tempo << 16;
-    music->scaled_tempo = (u8)tempo * (music->tempo_scale.value >> 16);
+    music->scaled_tempo = tempo * (music->tempo_scale.value >> 16);
     return note_data + 1;
 }

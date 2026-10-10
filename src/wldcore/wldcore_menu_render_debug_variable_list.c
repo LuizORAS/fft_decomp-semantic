@@ -32,7 +32,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
      * and breaks the exact match. Retain the target's biased base and stride. */
     records = &g_wldcore_window_render_records[0].base;
     base = (wldcore_point32_t*)((u8*)records + index * sizeof(wldcore_window_render_record_t));
-    base->x = -((s16)bounds.dimensions.x / 2);
+    base->x = -(bounds.dimensions.x / 2);
     base->y = -88;
     point.x = 8;
     point.y = 8;

@@ -142,9 +142,9 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_entry_text_cursor_anim, busy);
         world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0x37, 0x50,
-            (u16)g_world_input_primary_repeat & PSX_PAD_L1, (s16)busy, MAIN_SFX_PAGE_SWITCH);
+            g_world_input_primary_repeat & PSX_PAD_L1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xB1, 0x50,
-            (u16)g_world_input_primary_repeat & PSX_PAD_R1, (s16)busy, MAIN_SFX_PAGE_SWITCH);
+            g_world_input_primary_repeat & PSX_PAD_R1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
         world_menu_draw_active_window_frames();

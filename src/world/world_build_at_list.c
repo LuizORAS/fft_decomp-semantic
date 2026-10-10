@@ -58,7 +58,7 @@ void world_build_at_list(void) {
     window.rect.h = entry->window_height - 0x1A;
     world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
     texture_window.x = 0;
-    texture_window.y = (u8)entry->vram_y;
+    texture_window.y = entry->vram_y & 0xFF;
     texture_window.w = 0x100;
     texture_window.h = 0x100;
     for (i = 0; i < 2; i++) {
@@ -224,7 +224,7 @@ void world_build_at_list(void) {
         }
         entry->selected_index = cursor + row_offset;
         entry->select_text_table = row_offset;
-        if (world_menu_check_thread_completion((s32*)input0) != 0) {
+        if (world_menu_check_thread_completion(input0) != 0) {
             break;
         }
         if (delta == 0) {
@@ -275,7 +275,7 @@ void world_build_at_list(void) {
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->draw_areas, &entry->window_x, i, g_active_graphics_buffer_index);
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
-        if ((s16)entry->header_id >= 5) {
+        if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
         }
         world_gfx_draw_or_append_gpu_primitive(&page->draw_areas.areas[1]);

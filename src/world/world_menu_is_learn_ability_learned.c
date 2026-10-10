@@ -7,5 +7,5 @@ s32 world_menu_is_learn_ability_learned(s32 index) {
     if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ABILITY_LEARN) {
         return g_world_ability_entries[index] & ABILITY_LIST_ENTRY_LEARNED;
     }
-    return (((u16)g_world_ability_entries[index] >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) ^ 1) & 1;
+    return (g_world_ability_entries[index] & ABILITY_LIST_ENTRY_DISABLED) == 0;
 }

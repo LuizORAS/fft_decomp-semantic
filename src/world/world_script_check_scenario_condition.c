@@ -51,7 +51,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 x, s3
         unit = battle_unit_get_stats_from_battle_id(g_world_script_acting_unit_id);
         if (unit->unit_id == id
             || (unit->unit_id >= EVENT_UNIT_ID_DEPLOYED_FIRST && unit->unit_id < EVENT_UNIT_ID_DEPLOYED_END
-                && unit->character_identity == id && (u32)id < CHARACTER_IDENTITY_GENERIC_FIRST
+                && unit->character_identity == id && id >= 0 && id < CHARACTER_IDENTITY_GENERIC_FIRST
                 && id != CHARACTER_IDENTITY_ENTD_NONE))
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
         return EVENT_SCENARIO_CONDITION_RESULT_FAIL;

@@ -53,7 +53,7 @@
  * because the symbol canonicalises to the second operand of the address PLUS
  * and is expanded last; no operand respelling changes that (`fold` rewrites
  * `base - -(idx * 5)` straight back to a PLUS). Giving the row base its own
- * local and its own statement (`room_base = (u16*)&g_world_shop_fitting_room_items[0][0];`
+ * local and its own statement (`room_base = &g_world_shop_fitting_room_items[0][0];`
  * then `reserved = room_base + idx * 5;`) forces the `la` to be emitted at
  * that statement, ahead of the index arithmetic.
  *
@@ -73,13 +73,13 @@ void world_shop_run_best_fit_preview_step(void) {
 
     if (g_world_shop_best_fit_menu_open == 0) {
         world_formation_unit_t** unit_slot;
-        u16* room_base;
-        u16* reserved;
+        s16* room_base;
+        s16* reserved;
 
         g_world_shop_best_fit_menu.selected_index = 0;
         bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, 8);
         unit_slot = &g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
-        room_base = (u16*)&g_world_shop_fitting_room_items[0][0];
+        room_base = &g_world_shop_fitting_room_items[0][0];
         reserved = room_base + g_world_formation_selected_unit_index * 5;
         for (i = 0; i < 4; i++, reserved++) {
             if (((*unit_slot)->equipment[i] >> 15) != 0) {

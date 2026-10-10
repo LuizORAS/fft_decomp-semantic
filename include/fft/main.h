@@ -245,7 +245,7 @@ int main_file_build_header(
 
 void* main_file_load_checked_to_heap(int sector, int size);
 void* main_file_load_checked_to_address(int sector, int size, void* destination);
-void* main_file_get_smd(int sector, int size);
+void* main_file_get_smd(int sector, u32 size);
 void* main_file_load_to_heap(s32 sector, u32 size);
 void* main_file_load_to_address(int sector, u32 size, void* destination);
 void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
@@ -370,7 +370,7 @@ typedef struct wldcore_saved_record {
     s16 text_history_2;       /* 0x24 */
     s16 text_history_3;       /* 0x26 */
     s16 value_display_mode;   /* 0x28 */
-    u16 music_selection;      /* 0x2a */
+    s16 music_selection;      /* 0x2a */
     s16 sound_mode;           /* 0x2c */
     s16 picture_x;            /* 0x2e */
     s16 picture_y;            /* 0x30 */
@@ -745,7 +745,7 @@ typedef struct suzuki_music {
     struct suzuki_music* snapshot; /* 0x04; freed by main_smd_free_snapshots */
     suzuki_smd_header_t* smd;      /* 0x08 */
     u8 _unused_00c[4];             /* 0x0c */
-    u16 status;                    /* 0x10; suzuki_music_status_e */
+    s16 status;                    /* 0x10; suzuki_music_status_e */
     u16 id;                        /* 0x12; SMD id */
     u8 _unknown_014;               /* 0x14; SMD _unknown_12 */
     u8 tick_divisor;               /* 0x15 */
@@ -1519,7 +1519,7 @@ void* main_heap_alloc_smd(u32 size);
 void main_heap_call_free(void* allocation);
 void main_heap_clear_game_allocator_table(void);
 s32 main_heap_free(void* allocation);
-u8* main_heap_reserve_at(void* allocation, u32 size);
+u8* main_heap_reserve_at(u8* allocation, u32 size);
 s32 main_heap_free_smd(void* allocation);
 void main_util_clear_byte_data(void* destination, s32 count);
 

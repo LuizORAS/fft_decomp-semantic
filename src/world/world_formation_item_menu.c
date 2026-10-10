@@ -76,7 +76,7 @@ void world_formation_item_menu(void) {
     }
     if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM) {
         g_world_formation_unit_cycle_mode = 2;
-        if ((u16)g_world_menu_selection_results[1] < 3
+        if (g_world_menu_selection_results[1] >= 0 && g_world_menu_selection_results[1] < 3
             && world_formation_get_unit_lock(g_world_formation_selected_unit_index) < 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             world_menu_reset_selection_results();

@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-void* main_file_get_smd(int sector, int size) {
+void* main_file_get_smd(int sector, u32 size) {
     void* buffer;
     main_file_load_descriptor_t* header;
 
@@ -9,7 +9,7 @@ void* main_file_get_smd(int sector, int size) {
     if (buffer == 0) {
         main_system_handle_error(MAIN_SYSTEM_ERROR_SMD_LOAD);
     }
-    while (main_file_build_header_nnl(&g_main_file_cd_state, sector, (u32)size >> 11, buffer) != 0) {
+    while (main_file_build_header_nnl(&g_main_file_cd_state, sector, size >> 11, buffer) != 0) {
         VSync(0);
         main_noop_800449ec();
         main_file_poll_load(&g_main_file_cd_state);

@@ -13,7 +13,7 @@ void world_script_set_units_palette_update_suppression(u16 id, s32 enable) {
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {
-            if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
+            if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 if (enable == 0) {
                     battle_unit_clear_palette_update_suppression(unit_id);
                 } else {

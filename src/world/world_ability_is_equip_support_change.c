@@ -9,7 +9,7 @@
 s32 world_ability_is_equip_support_change(s16 unit_id, s16 ability_id) {
     if (unit_id == 20 || g_main_game_options.fields.max_equip_at_job_change != GAME_OPTION_ON)
         return 0;
-    if (((u16)(ability_id - ABILITY_ID_SUPPORT_EQUIP_ARMOR)) < 8U)
+    if (ability_id >= ABILITY_ID_SUPPORT_EQUIP_ARMOR && ability_id < ABILITY_ID_SUPPORT_EQUIP_ARMOR + 8)
         return 1;
     if (ability_id == ABILITY_ID_SUPPORT_MARTIAL_ARTS || ability_id == ABILITY_ID_SUPPORT_TWO_HANDS)
         return 1;

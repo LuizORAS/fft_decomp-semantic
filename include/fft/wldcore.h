@@ -350,8 +350,8 @@ void wldcore_unit_build_status_panel_data(s32 party_index);
  * sprite display object, and the same shape again as the frame descriptor
  * wldcore_gfx_calculate_scaled_rectangle fills in. */
 typedef struct wldcore_window_render_bounds16 {
-    upoint16_t position;
-    upoint16_t dimensions;
+    point16_t position;
+    point16_t dimensions;
 } wldcore_window_render_bounds16_t;
 
 /* g_wldcore_context_value_display_mode: the layout of the HUD numeric readout
@@ -411,7 +411,7 @@ extern CVECTOR g_wldcore_hud_color;
 
 /* HUD ordering-table priority. The sort calls read it as a halfword (lhu);
  * its three setters store a whole word. */
-extern u16 g_wldcore_hud_ot_priority;
+extern s32 g_wldcore_hud_ot_priority;
 extern s32 g_wldcore_loaded_background_set;
 
 /* Currently resident picture set, reset to -1 by wldcore_init_world_map_state. */
@@ -421,7 +421,7 @@ extern u8 g_wldcore_dissolve_band_progress[16];
 
 /* Destination image buffer (read back as a TIM by wldcore_opcode_load_picture). */
 extern u32* g_wldcore_picture_buffer;
-extern s32* g_wldcore_scratch_buffer;
+extern u32* g_wldcore_scratch_buffer;
 
 /* Per-channel tint factors, one byte each, 0x80 == unity. */
 extern u8 g_wldcore_screen_brightness_rgb[3];
@@ -1398,7 +1398,7 @@ typedef struct wldcore_window_layout_request {
  * the trailing halfwords: the record's x and y extents (plus 14 and 12) and the
  * kind that selects the redraw delay. */
 typedef struct wldcore_window_layout_row {
-    u16* counter;     /* 0x00 */
+    s16* counter;     /* 0x00 */
     u16 message_base; /* 0x04 */
     u8 up;            /* 0x06 */
     u8 down;          /* 0x07 */

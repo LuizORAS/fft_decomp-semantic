@@ -80,7 +80,7 @@ void world_run_option_choice_menu(void) {
     world_thread_wait_frames(1);
     cursor = g_world_game_option_values[kind];
     for (width = 0;; width++) {
-        world_menu_check_thread_completion((s32*)input);
+        world_menu_check_thread_completion(input);
         record = &g_world_option_picker_icon_records[width & 1].base;
         if (world_menu_is_input_allowed()) {
             if (*input & PSX_PAD_CROSS) {

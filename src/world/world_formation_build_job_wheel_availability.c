@@ -13,8 +13,8 @@ void world_formation_build_job_wheel_availability(void) {
     u16 entry;
     s32 id;
 
-    g_world_job_wheel_job_count = world_job_build_unit_list(g_world_formation_selected_unit_index,
-        (s16*)g_world_job_wheel_jobs, WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS);
+    g_world_job_wheel_job_count = world_job_build_unit_list(
+        g_world_formation_selected_unit_index, g_world_job_wheel_jobs, WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS);
     for (i = 0; i < g_world_job_wheel_job_count; i++) {
         unit = g_world_formation_selected_unit_index;
         entry = g_world_job_wheel_jobs[i];

@@ -60,7 +60,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     g_wldcore_scrollable_text_window.image_y = 0xC0;
     box.x = (dims[0] + 24) & 0xFFFC;
     box.y = (dims[1] << 4) + 16;
-    g_wldcore_scrollable_text_window.base.x = -((u32)box.x >> 1);
+    g_wldcore_scrollable_text_window.base.x = -(box.x / 2);
     g_wldcore_scrollable_text_window.base.y = -(box.y >> 1);
     g_wldcore_scrollable_text_window.text_width = dims[0];
     g_wldcore_scrollable_text_window.rows_per_page = dims[1];

@@ -44,7 +44,7 @@ void world_menu_scrolling_list_thread(void) {
     s32 i;
     s32 column;
     s32 index;
-    s32 value;
+    s16 value;
     s32 step;
     s32 top;
     s32 arrow_u;
@@ -226,20 +226,21 @@ void world_menu_scrolling_list_thread(void) {
                             layout->columns.text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
-                            && (u16)layout->columns.text_ids[column][index] < 2
+                            && layout->columns.text_ids[column][index] >= 0
+                            && layout->columns.text_ids[column][index] < 2
                             && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
                                 || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
                             g_world_menu_text_state.pen.rect.y += 2;
                             world_menu_draw_stacked_glyph_pair(buffer, &g_world_menu_text_state.pen);
                         } else {
-                            value = (u16)layout->columns.text_ids[column][index];
+                            value = layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
                                     g_world_menu_text_color = 0;
                                     g_world_menu_text_state.pen.rect.x += 3;
                                     world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.pen);
                                 } else {
-                                    world_draw_menu_number_glyphs((s16)value, 2, buffer, &g_world_menu_text_state.pen);
+                                    world_draw_menu_number_glyphs(value, 2, buffer, &g_world_menu_text_state.pen);
                                 }
                             }
                         }
@@ -334,7 +335,7 @@ void world_menu_scrolling_list_thread(void) {
         }
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;
-        if ((s16)entry->header_id >= 5) {
+        if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[1]);
             if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0) {

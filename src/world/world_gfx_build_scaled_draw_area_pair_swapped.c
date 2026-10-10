@@ -10,8 +10,8 @@
 void world_gfx_build_scaled_draw_area_pair_swapped(
     world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag) {
     s32 percent;
-    u16 w;
-    u16 h;
+    s16 w;
+    s16 h;
     s32 half_extent;
 
     if (g_world_event_speed == 2) {
@@ -30,10 +30,10 @@ void world_gfx_build_scaled_draw_area_pair_swapped(
     }
     w = packets->rects[0].w;
     h = packets->rects[0].h;
-    half_extent = ((s16)w * percent) / 200;
-    packets->rects[0].x = (s16)w / 2 + packets->rects[0].x - half_extent;
-    half_extent = ((s16)h * percent) / 200;
-    packets->rects[0].y = (s16)h / 2 + packets->rects[0].y - half_extent;
+    half_extent = (w * percent) / 200;
+    packets->rects[0].x = w / 2 + packets->rects[0].x - half_extent;
+    half_extent = (h * percent) / 200;
+    packets->rects[0].y = h / 2 + packets->rects[0].y - half_extent;
     packets->rects[0].w = (packets->rects[0].w * percent) / 100;
     packets->rects[0].h = (packets->rects[0].h * percent) / 100;
     if (flag != 0) {

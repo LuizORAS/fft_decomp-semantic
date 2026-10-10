@@ -160,9 +160,9 @@ void world_shop_run_screen(s32 shop_type) {
                 buttons = 0;
             }
             world_menu_draw_pressable_button(
-                MENU_PRESSABLE_BUTTON_L1, 0xC, 0xC, buttons & PSX_PAD_L1, (s16)disabled, MAIN_SFX_PAGE_SWITCH);
+                MENU_PRESSABLE_BUTTON_L1, 0xC, 0xC, buttons & PSX_PAD_L1, disabled, MAIN_SFX_PAGE_SWITCH);
             world_menu_draw_pressable_button(
-                MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xC, buttons & PSX_PAD_R1, (s16)disabled, MAIN_SFX_PAGE_SWITCH);
+                MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xC, buttons & PSX_PAD_R1, disabled, MAIN_SFX_PAGE_SWITCH);
         }
         g_world_shop_menu_step_handlers[g_world_shop_menu_step]();
         if (g_world_shop_menu_step != WORLD_SHOP_STEP_RENAME_NAME_ENTRY

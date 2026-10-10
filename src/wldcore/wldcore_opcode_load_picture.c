@@ -32,8 +32,7 @@ void wldcore_opcode_load_picture(void) {
     bounds.dimensions.y = image.ph;
     clut_position.x = image.cx;
     clut_position.y = image.cy;
-    LoadTPage(image.pixel, 0, 0, (s16)bounds.position.x, (s16)bounds.position.y, (s16)bounds.dimensions.x * 4,
-        (s16)bounds.dimensions.y);
+    LoadTPage(image.pixel, 0, 0, bounds.position.x, bounds.position.y, bounds.dimensions.x * 4, bounds.dimensions.y);
     LoadClut(image.clut, clut_position.x, clut_position.y);
     wldcore_window_init_vram_render_record(
         g_wldcore_opcode_state.render_index, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);

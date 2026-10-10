@@ -53,7 +53,7 @@ void world_menu_window_frame_thread_2(void) {
     LoadImage(&texture, (u32*)pixels);
     world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
-    texture_v = (u8)texture.y;
+    texture_v = texture.y & 0xFF;
     for (index = 0; index < 4; index++) {
         g_world_menu_panel_texture_windows_2[index].x = (texture_u + index) * 0x10;
         g_world_menu_panel_texture_windows_2[index].y = texture_v;

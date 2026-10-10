@@ -19,7 +19,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     s32 j;
     s32 keep;
     u16 rel;
-    s32 id;
+    u32 id;
     s32 checking;
     u8 skillset;
     u8 secondary;
@@ -107,7 +107,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
                 }
             }
             if (flags & RSM_ABILITY_FILTER_MOVEMENT) {
-                if ((u32)(id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
+                if ((id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
                     keep = 1;
                 }
             }

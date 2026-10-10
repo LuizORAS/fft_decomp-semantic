@@ -25,7 +25,7 @@ void wldcore_gfx_draw_world_frame(void) {
     GsSwapDispBuff();
     if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE)) {
         wldcore_gfx_set_display_rect(g_active_graphics_buffer_index == 0, &rect.x);
-        LoadImage(&rect, (u32*)g_wldcore_scratch_buffer);
+        LoadImage(&rect, g_wldcore_scratch_buffer);
     }
     GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
 }

@@ -11,7 +11,7 @@ void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT
     RECT from2;
     u16* easing;
     s32 i;
-    s32 step;
+    u32 step;
     s32 fade;
     u16 x;
     u16 y;
@@ -35,7 +35,7 @@ void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT
     do {
         step = *easing;
         for (i = 0; i < 3 - g_world_event_speed; i++) {
-            fade = (ONE - (u32)step) >> 5;
+            fade = (ONE - step) >> 5;
             world_thread_yield();
             if (table == 4) {
                 if (*easing != ONE) {

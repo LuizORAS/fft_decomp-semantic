@@ -56,7 +56,7 @@ s32 world_item_run_rearrange_mode(void) {
     }
     scroll_offset = g_world_menu_scroll_offset;
     row = g_world_item_rearrange_picked_cursor - scroll_offset;
-    if ((u32)row < 8) {
+    if (row >= 0 && row < 8) {
         frame = g_world_item_rearrange_anim_frame++;
         if (frame & 1) {
             tile = g_world_menu_clut_front;

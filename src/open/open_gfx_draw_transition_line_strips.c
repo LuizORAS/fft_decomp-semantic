@@ -1,9 +1,8 @@
 /* Builds two overlapping POLY_GT4 strips per transition step.
  *
  * Matching notes: the coordinates are written in setXY4 order (x0, y0, x1,
- * y1, ...) per primitive; the colour-halving is spelled once as `/ 2` and once
- * as an explicit shift so loop.c does not merge the two computations; and
- * width + 1 goes through its own variable (the target adds left afterwards).
+ * y1, ...) per primitive, and width + 1 goes through its own variable (the
+ * target adds left afterwards).
  */
 #include "fft/open.h"
 #include "psx/libgpu.h"
@@ -86,15 +85,15 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
         prims[prim_index].r0 = intensity;
         prims[prim_index].g0 = intensity;
         prims[prim_index].b0 = intensity;
-        prims[prim_index + 1].r0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
-        prims[prim_index + 1].g0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
-        prims[prim_index + 1].b0 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].r0 = intensity / 2;
+        prims[prim_index + 1].g0 = intensity / 2;
+        prims[prim_index + 1].b0 = intensity / 2;
         prims[prim_index].r2 = intensity;
         prims[prim_index].g2 = intensity;
         prims[prim_index].b2 = intensity;
-        prims[prim_index + 1].r2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
-        prims[prim_index + 1].g2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
-        prims[prim_index + 1].b2 = (s32)(intensity + ((u32)intensity >> 31)) >> 1;
+        prims[prim_index + 1].r2 = intensity / 2;
+        prims[prim_index + 1].g2 = intensity / 2;
+        prims[prim_index + 1].b2 = intensity / 2;
 
         clut = GetClut(0, 0x1e3);
         prims[prim_index + 1].clut = clut;

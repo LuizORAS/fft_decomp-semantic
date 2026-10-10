@@ -100,9 +100,8 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 return;
             }
             if ((buttons & PSX_PAD_START)
-                && (*(s32*)&g_wldcore_active_saved_record.state_flags
-                       & (WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE | WLDCORE_OPCODE_STATE_WHITE_OVERLAY))
-                    == WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
+                && (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE)
+                && !(g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_WHITE_OVERLAY)) {
                 g_wldcore_window_records[level->left_window].sequence
                     = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON_PRESS;
                 g_wldcore_window_records[level->left_window].frame_index

@@ -7,7 +7,7 @@
 void world_menu_icon_strip_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
-    s32 input;
+    u32 input;
     world_menu_entry_t* param;
     void* buffer;
     s32 i;

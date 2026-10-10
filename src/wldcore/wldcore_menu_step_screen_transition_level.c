@@ -12,7 +12,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             rect.y = 0;
             rect.w = 0x100;
             rect.h = 0xF0;
-            StoreImage(&rect, (u32*)g_wldcore_scratch_buffer);
+            StoreImage(&rect, g_wldcore_scratch_buffer);
             DrawSync(0);
             VSync(0);
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_TRANSITION, 0, 0, 1);

@@ -6,7 +6,7 @@
 u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
     s32 output_count;
     s32 ability_index;
-    s32 ability_id;
+    u32 ability_id;
     s32 keep;
 
     if (skillset_id >= 0x100) {
@@ -16,11 +16,11 @@ u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
     ability_index = 0;
     do {
         ability_id = main_ability_get_id_from_skillset(skillset_id, ability_index);
-        if ((u32)(ability_id & 0xFFFF) < ABILITY_ID_REACTION_FIRST) {
+        if ((ability_id & 0xFFFF) < ABILITY_ID_REACTION_FIRST) {
             keep = filters & SKILLSET_ABILITY_FILTER_ACTION;
-        } else if ((u32)(ability_id & 0xFFFF) < ABILITY_ID_SUPPORT_FIRST) {
+        } else if ((ability_id & 0xFFFF) < ABILITY_ID_SUPPORT_FIRST) {
             keep = filters & SKILLSET_ABILITY_FILTER_REACTION;
-        } else if ((u32)(ability_id & 0xFFFF) <= ABILITY_ID_MOVEMENT_FIRST) {
+        } else if ((ability_id & 0xFFFF) <= ABILITY_ID_MOVEMENT_FIRST) {
             /* One past ABILITY_ID_MOVEMENT_FIRST in the original. */
             keep = filters & SKILLSET_ABILITY_FILTER_SUPPORT;
         } else {

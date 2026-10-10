@@ -12,7 +12,7 @@ void world_script_set_units_movement_effect_suppression(const u8* parameters) {
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {
-            if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
+            if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 if (parameters[2] != 0) {
                     battle_unit_set_movement_effect_suppression(unit_id);
                 } else {

@@ -1195,9 +1195,9 @@ typedef char battle_menu_allocation_size_must_be_8[(sizeof(battle_menu_allocatio
  * world_script_load_event_input_state and battle_script_load_event_input_state copy
  * them to. */
 typedef struct world_menu_input_state {
-    s32 new_buttons;
-    s32 current_buttons;
-    s32 previous_buttons;
+    u32 new_buttons;
+    u32 current_buttons;
+    u32 previous_buttons;
     s32 initial_repeat_counter;
     s32 repeat_counter;
     s32 secondary_repeat_counter;

@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 void wldcore_sound_change_scenario_music(s32 scenario) {
-    u16 packed = g_wldcore_active_saved_record.music_selection;
-    s32 slot = (s8)(packed >> 8);
+    s16 packed = g_wldcore_active_saved_record.music_selection;
+    s32 slot = packed >> 8;
 
     if ((packed & 0xFF) != 0) {
         main_sound_stop_current_music();

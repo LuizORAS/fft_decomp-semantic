@@ -24,7 +24,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     s32 frame;
     s32 i;
     s32 value;
-    s32 zodiac;
+    s16 zodiac;
 
     speed = 0x16;
     slide = 0x84;
@@ -88,8 +88,8 @@ void world_menu_run_unit_summary_panel_thread(void) {
     frames[0].sprites[6].w = 0x18;
     frames[0].sprites[6].h = 0x14;
     zodiac = g_world_active_unit_data.zodiac;
-    frames[0].sprites[6].u0 = (s16)(zodiac % 7) * 0x18;
-    frames[0].sprites[6].v0 = (s16)(zodiac / 7) * 0x14 + 0x2A;
+    frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
+    frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
     world_script_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
     frames[0].palette = &g_world_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_world_unit_summary_palettes[1].primitives;

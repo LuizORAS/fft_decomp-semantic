@@ -8,7 +8,6 @@
 void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* record) {
     s32 kind;
     s32 index;
-    u16 width;
     /* HImode is load-bearing. `cse` keys its constant equivalence classes by
      * mode, so a u16 `size` is not value-equal to the SImode 0x10 of the
      * `kind == 0x10` test below; that restores the target's separate
@@ -25,8 +24,7 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
     rect->x = param->vram_x;
     rect->y = param->vram_y;
-    width = param->inner_width;
-    rect->w = (s16)width >> 2;
+    rect->w = param->inner_width >> 2;
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
@@ -43,8 +41,7 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     record->base.sprites[1].v0 = 0;
     record->base.sprites[2].u0 = 0xb8;
     record->base.sprites[2].v0 = 0;
-    /* The icon kind is read as a signed halfword. */
-    kind = *(s16*)&param->header_id;
+    kind = param->header_id;
     /* The range test below reads its own halfword copy of the kind. */
     index = (s16)kind;
     if (kind == 0x10) {

@@ -10,15 +10,7 @@
  * Unequippable is not On. Categories 0-4 and 7 with sort modes 1-5 go
  * through world_item_sort_list_by_category_order, which returns the new count.
  */
-/* clang-format off */
-s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
-    s16 unit_id;
-    u16 sort_mode;
-    s8 category;
-    s16* entries;
-    u8 mode;
-/* clang-format on */
-{
+s32 world_item_build_category_list(s16 unit_id, s16 sort_mode, s8 category, s16* entries, u8 mode) {
     s32 count;
     s32 item;
     s32 entry;
@@ -95,7 +87,7 @@ s32 world_item_build_category_list(unit_id, sort_mode, category, entries, mode)
     } else if (category == ITEM_LIST_FILTER_OTHER) {
         list_index = 4;
     }
-    if (list_index < 5 && (u16)(sort_mode - 1) < 5) {
+    if (list_index < 5 && sort_mode >= 1 && sort_mode < 6) {
         count = world_item_sort_list_by_category_order(list_index, entries);
     } else {
         world_item_sort_id_list(sort_mode & 0xF, entries);

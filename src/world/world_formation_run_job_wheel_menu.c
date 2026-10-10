@@ -9,7 +9,7 @@ void world_formation_run_job_wheel_menu(void) {
     u32 pad;
     u32 buttons;
     u16 job;
-    s32 angle;
+    s16 angle;
 
     if (g_world_job_wheel_initialized == 0) {
         g_world_job_wheel_spin_progress = 0;
@@ -53,13 +53,13 @@ void world_formation_run_job_wheel_menu(void) {
     }
     if (g_world_job_change_anim_state != WORLD_JOB_CHANGE_ANIM_DONE) {
         g_world_job_change_anim_state
-            = world_formation_process_job_change(((s16*)g_world_job_wheel_jobs)[g_world_job_wheel_cursor_index]);
+            = world_formation_process_job_change(g_world_job_wheel_jobs[g_world_job_wheel_cursor_index]);
         if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_DONE) {
             i = g_main_game_options.value & GAME_OPTIONS_MAX_EQUIP_AT_JOB_CHANGE_MASK;
             world_formation_change_unit_job(
                 g_world_formation_selected_unit_index, g_world_job_wheel_jobs[g_world_job_wheel_cursor_index], i == 0);
             world_formation_stage_selected_unit();
-            world_job_build_unit_list(g_world_formation_selected_unit_index, (s16*)g_world_job_wheel_jobs,
+            world_job_build_unit_list(g_world_formation_selected_unit_index, g_world_job_wheel_jobs,
                 WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS);
             g_world_formation_unit_banner_enabled = g_world_formation_saved_banner_enabled;
             world_formation_layout_job_wheel_portrait();
@@ -225,8 +225,8 @@ void world_formation_run_job_wheel_menu(void) {
             if (g_world_job_wheel_job_count >= 2) {
                 angle = ((g_world_job_wheel_spin_direction << 12) * g_world_job_wheel_spin_progress
                             / g_world_job_wheel_job_count)
-                    / 36;
-                world_formation_draw_job_wheel_sprites((s16)(angle % ONE), ONE, ONE);
+                    / 36 % ONE;
+                world_formation_draw_job_wheel_sprites(angle, ONE, ONE);
             }
             if (g_world_thread_task_active == 0) {
                 g_world_status_display_thread_params.style = 0;

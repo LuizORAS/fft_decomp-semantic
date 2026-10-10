@@ -37,7 +37,7 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
             g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
                 = state->extra_bounds.dimensions.y;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        } else if (top + (s16)state->extra_bounds.dimensions.y >= limit) {
+        } else if (top + state->extra_bounds.dimensions.y >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base.y = limit;
             g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
                 = state->extra_bounds.position.y + offset;

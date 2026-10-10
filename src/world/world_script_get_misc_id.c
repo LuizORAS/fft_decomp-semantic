@@ -11,7 +11,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     s32 battle_id;
     s32 unit_state;
     s32 original_unit_id;
-    s32 misc_id;
+    u16 misc_id;
     battle_stats_t* unit;
 
     if (unit_id >= CHARACTER_IDENTITY_RAMZA_CHAPTER_1 && unit_id < CHARACTER_IDENTITY_GENERIC_FIRST) {
@@ -84,7 +84,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
 
     if (unit_id >= EVENT_UNIT_SELECTOR_SLOT_FIRST
         && unit_id < EVENT_UNIT_SELECTOR_SLOT_FIRST + EVENT_UNIT_SELECTOR_SLOT_COUNT) {
-        misc_id = (u16)g_world_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
+        misc_id = g_world_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
             world_noop_800e7808(original_unit_id);
             return EVENT_MISC_ID_NONE;

@@ -2,29 +2,9 @@
 #include "psx/pad.h"
 
 /* Fur shop: confirm a sale. The party receives half price, and the sold copies join the
- * poached stock.
- *
- * The category block reproduces the target's three loads of
- * g_world_shop_item_category: one for the reconcile argument, one `u8 cat`
- * shared by both `+ 1` operands (the target's a0, feeding `addiu a1,a0,1` and
- * `addiu v0,a0,1`), and a third feeding only the `!= 4` compare (the target's
- * v1). `u8` is load-bearing: an `s32 cat` lets cse fold the roles back
- * together.
- *
- * To keep the s8 truncation of `cat + 1` inside the arm rather than after the
- * join, `category` is the wide type (s32) with the narrowing spelled as a cast
- * on the value: `category = (s8)(cat + 1)`. In gcc 2.6.3 a local declared `s8`
- * is a bare SImode pseudo (expand_decl hands locals a promoted reg, not a
- * SUBREG_PROMOTED_VAR), so storing to it emits no conversion and the extend
- * is forced to the use. Widening the local makes the assignment itself the
- * conversion, which puts `addiu v0,a0,1 / sll v0,v0,0x18 / j /
- * sra a2,v0,0x18` in the arm; the else arm's `li a2,0x7` is already in range
- * and needs no extend. */
+ * poached stock. */
 void world_shop_run_fur_sell_confirm_step(void) {
     s32 result = 1;
-    s32 category;
-    s32 next_category;
-    u8 cat;
 
     if (g_world_shop_fur_sale_message_wait != 0) {
         if (g_world_input_primary_repeat
@@ -47,15 +27,9 @@ void world_shop_run_fur_sell_confirm_step(void) {
                 g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF837, 0);
             world_item_reconcile_sorted_list(g_world_shop_item_category);
-            cat = g_world_shop_item_category;
-            next_category = cat + 1;
-            if (g_world_shop_item_category != 4) {
-                category = (s8)(cat + 1);
-            } else {
-                category = ITEM_LIST_FILTER_OTHER;
-            }
-            /* An s32 third parameter is load-bearing: s8 re-narrows the value and sinks the extend past the join. */
-            world_item_build_category_list(0, next_category, category, g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
+            world_item_build_category_list(0, g_world_shop_item_category + 1,
+                g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
+                g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
                 g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], g_world_shop_sale_confirm_menu_script);
             world_menu_set_window_scale_step(10);

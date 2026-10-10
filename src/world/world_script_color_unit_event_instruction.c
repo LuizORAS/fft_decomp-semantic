@@ -12,7 +12,7 @@ void world_script_color_unit_event_instruction(const u8* parameters) {
         parameters += 2;
         unit_index = 0;
         do {
-            if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
+            if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 battle_gfx_start_misc_unit_palette_modulation(
                     parameters[0], parameters[4], unit_id, (s8)parameters[1], (s8)parameters[2], (s8)parameters[3]);
                 if (misc_index == 0) {

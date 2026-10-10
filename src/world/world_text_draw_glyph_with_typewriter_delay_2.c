@@ -9,7 +9,7 @@ extern world_glyph_blit_t g_world_text_message_box_state;
  *
  * Cousin of world_text_draw_glyph_with_typewriter_delay without the request pointer, task-id checks or
  * script counters. The ring byte is read before the phase and the inner bound
- * is `(s32)width / 2`, which keeps the per-row recomputation of the target.
+ * is `width / 2`, which keeps the per-row recomputation of the target.
  */
 void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
     s32 slot;
@@ -18,8 +18,8 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
     s32 phase;
     u8* dst;
     u8* src;
-    u32 width;
-    s32 ring;
+    s32 width;
+    u8 ring;
     s32 offset;
 
     if (g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_PORTRAIT
@@ -53,7 +53,7 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
         world_thread_yield();
     }
 
-    ring = (u8)g_world_text_message_box_slot_glyph_counters[slot];
+    ring = g_world_text_message_box_slot_glyph_counters[slot];
     phase = g_world_text_message_box_glyph.x & 3;
     dst = g_world_text_message_box_glyph_images[slot][ring];
     src = g_world_text_message_box_previous_images[slot];
@@ -84,7 +84,7 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
                     + g_world_text_message_box_slot_carry_offset[slot]);
         }
         for (i = 0; i < 14; i++) {
-            dst[(s32)(i * width) / 2] = g_world_text_message_box_column_scratch[i];
+            dst[i * width / 2] = g_world_text_message_box_column_scratch[i];
         }
     }
 
@@ -118,7 +118,7 @@ void world_text_draw_glyph_with_typewriter_delay_2(s32 x, s32 y, s32 wait) {
 
     for (j = 0; j < 14; j++) {
         offset = j * width;
-        for (i = phase >> 1; i < (s32)width / 2; i++) {
+        for (i = phase >> 1; i < width / 2; i++) {
             if (g_world_text_message_box_glyph.mode == 0) {
                 (dst + i)[offset / 2] = 0;
             } else {

@@ -4,23 +4,9 @@
 
 /* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at
  * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it into
- * ordering table entry priority. With color the quad is shaded with it.
- *
- * Old-style definition: the target reads texture_page and clut as halfwords
- * from their argument slots, while the int prototype in fft/world.h keeps the
- * callers from masking them. */
-/* clang-format off */
-void world_gfx_enqueue_textured_quad(rect, u, v, color, semi_trans, texture_page, clut, priority)
-    RECT* rect;
-    s32 u;
-    s32 v;
-    void* color;
-    s32 semi_trans;
-    u16 texture_page;
-    u16 clut;
-    s32 priority;
-/* clang-format on */
-{
+ * ordering table entry priority. With color the quad is shaded with it. */
+void world_gfx_enqueue_textured_quad(
+    RECT* rect, s32 u, s32 v, void* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority) {
     POLY_FT4* poly;
     CVECTOR* rgb = color;
 

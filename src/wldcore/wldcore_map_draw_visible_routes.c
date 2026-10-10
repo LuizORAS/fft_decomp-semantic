@@ -34,7 +34,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     s32 j;
     s16 slot;
     SVECTOR* vertex;
-    u16 raw;
+    s16 raw;
     s32 count_tmp;
 
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES) {
@@ -65,7 +65,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
         slot = 0;
         points = table[i];
         raw = *points++;
-        count_tmp = (s16)raw;
+        count_tmp = raw;
         in.vz = 0;
         j = 0;
         if (j < count_tmp) {

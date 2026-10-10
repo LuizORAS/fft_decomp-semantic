@@ -8,7 +8,6 @@
  */
 void world_formation_cycle_selected_unit(s16 pad_buttons) {
     u16 index;
-    s32 prev;
 
     index = pad_buttons;
     if (pad_buttons & PSX_PAD_L1) {
@@ -17,8 +16,7 @@ void world_formation_cycle_selected_unit(s16 pad_buttons) {
             if (g_world_formation_selected_unit_index == 0) {
                 index = g_world_formation_unit_count - 1;
             } else {
-                prev = (u16)g_world_formation_selected_unit_index;
-                index = prev - 1;
+                index = g_world_formation_selected_unit_index - 1;
             }
             g_world_formation_selected_unit_index = index;
         } while (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);

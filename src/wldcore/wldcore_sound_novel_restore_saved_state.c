@@ -52,7 +52,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
         wldcore_opcode_load_background_set();
     }
     if (g_wldcore_active_saved_record.music_selection & 0xFF) {
-        wldcore_sound_enqueue_music_start((s16)g_wldcore_active_saved_record.music_selection);
+        wldcore_sound_enqueue_music_start(g_wldcore_active_saved_record.music_selection);
     } else {
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);

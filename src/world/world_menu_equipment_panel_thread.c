@@ -24,7 +24,7 @@ void world_menu_equipment_panel_thread(void) {
     s32 frame;
     s32 mode;
     s32 color_bits;
-    s32 id;
+    s16 id;
     s32 i;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
@@ -109,10 +109,9 @@ void world_menu_equipment_panel_thread(void) {
         for (i = 0; i < 5; i++) {
             world_gfx_init_image_loading(&screen->sprites[19 + i], g_world_panel_item_icon_texture,
                 &g_world_equipment_panel_origin, &g_world_equipment_panel_icon_params[i]);
-            /* Read unsigned: the target extends the id only where it is passed on. */
-            id = *(u16*)&state->equipment[i];
+            id = state->equipment[i];
             if ((id & 0xff) != 0xff) {
-                world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], (s16)id);
+                world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], id);
             } else {
                 (&screen->sprites[i])[19].x0 = 0;
             }

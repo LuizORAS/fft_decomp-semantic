@@ -22,7 +22,7 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     s32 auto_learn;
     s32 learned;
     s32 i;
-    s32 ability_id;
+    u16 ability_id;
     s32 scratch;
     ability_data_t* ability;
     u8 character;
@@ -66,7 +66,7 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     }
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         learned = 0;
-        ability_id = (u16)main_ability_get_id_from_skillset(skillset, i);
+        ability_id = main_ability_get_id_from_skillset(skillset, i);
         if (ability_id != 0) {
             ability = &g_main_ability_data[ability_id];
             scratch = ability->learn_rate;

@@ -25,5 +25,5 @@ void world_card_draw_slot_text(s32 save_slot_index) {
         destination_rect.h = 0x20;
     }
     world_text_render_id_list_to_image_rows(g_world_card_save_slot_descriptions[save_slot_index],
-        (s16*)g_world_card_slot_description_row_ids, &destination_rect, 0);
+        g_world_card_slot_description_row_ids, &destination_rect, 0);
 }

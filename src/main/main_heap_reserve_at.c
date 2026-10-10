@@ -1,6 +1,6 @@
 #include "fft/main.h"
 
-u8* main_heap_reserve_at(void* allocation, u32 size) {
+u8* main_heap_reserve_at(u8* allocation, u32 size) {
     u32 addr;
     u32 base;
     s32 start;
@@ -12,7 +12,7 @@ u8* main_heap_reserve_at(void* allocation, u32 size) {
     addr = (u32)allocation;
     base = (u32)g_main_heap_high_overlay_load_address;
     id = 1;
-    start = (s32)(addr - base) / 2048;
+    start = (allocation - g_main_heap_high_overlay_load_address) / 2048;
     nblocks = size >> 11;
     if ((size & 0x7FF) != 0) {
         nblocks += 1;

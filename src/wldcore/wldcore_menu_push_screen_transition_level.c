@@ -27,7 +27,7 @@
  * The new level's fields go through the stack-record union, whose field
  * access is what keeps the target's per-field `$at` bases. */
 void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b) {
-    s32* clear;
+    u32* clear;
     s32 count;
     s32 i;
     s32 depth;

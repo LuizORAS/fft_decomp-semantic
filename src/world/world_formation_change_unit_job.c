@@ -8,7 +8,7 @@
  * ordinary slots return their old equipment before reserving replacements.
  */
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment) {
-    u16 equipment[5];
+    s16 equipment[5];
     s32 i;
     g_world_formation_unit_pointers[unit_id]->job_id = job_id;
     if (job_id == JOB_ID_MIME) {
@@ -24,7 +24,7 @@ s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipmen
     if (update_equipment != 0) {
         if (unit_id != 20) {
             if (g_world_formation_unit_pointers[unit_id]->job_id != JOB_ID_MIME) {
-                world_unit_build_best_fit_equipment(unit_id, (s16*)equipment);
+                world_unit_build_best_fit_equipment(unit_id, equipment);
                 for (i = 0; i < 5; i++) {
                     world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
                 }

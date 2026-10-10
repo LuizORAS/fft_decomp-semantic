@@ -6,14 +6,14 @@
 s32 world_get_party_unit_formation_sprite(s32 party_index) {
     party_data_t* party_unit;
     job_data_t* job_data;
-    s32 sprite_set;
+    u32 sprite_set;
     s32 portrait_id;
     s32 formation_sprite;
 
     party_unit = main_party_get_data_pointer(party_index);
     sprite_set = party_unit->sprite_set;
     portrait_id = sprite_set;
-    if ((u32)sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
+    if (sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
         if (sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
             portrait_id = (party_unit->job_id - JOB_ID_SQUIRE) * 2 + 0x60;
             if (party_unit->job_id == JOB_ID_MIME) {

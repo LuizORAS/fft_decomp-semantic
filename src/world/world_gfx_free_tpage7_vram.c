@@ -16,7 +16,7 @@ void world_gfx_free_tpage7_vram(RECT* rect) {
     s32 value;
     if (rect->x != -1 && rect != (void*)-1) {
         g_world_gfx_free_rect_texels[0] = (rect->x - 0x1c0) * 4;
-        g_world_gfx_free_rect_texels[1] = (u8)rect->y;
+        g_world_gfx_free_rect_texels[1] = rect->y & 0xFF;
         source = g_world_gfx_free_rect_texels;
         i = 0;
         g_world_gfx_free_rect_texels[2] = rect->w * 4;

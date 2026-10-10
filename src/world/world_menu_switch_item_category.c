@@ -27,8 +27,7 @@ void world_menu_switch_item_category(s32 input) {
             cursor_slot = g_world_shop_item_category;
         } else {
             world_item_build_category_list(-1, g_world_shop_item_category + 1,
-                category != 4 ? (s8)(category + 1) : ITEM_LIST_FILTER_OTHER, g_world_menu_entry_ids,
-                ITEM_LIST_MODE_ALL);
+                category != 4 ? category + 1 : ITEM_LIST_FILTER_OTHER, g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             cursor_slot = g_world_shop_item_category + 5;
         }
         world_menu_get_selection_record(cursor_slot, &x, &y, g_world_menu_entry_ids);

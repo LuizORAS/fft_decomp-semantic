@@ -19,7 +19,7 @@ void wldcore_init_world_map_state(void) {
     s32 i;
     s32 offset;
 
-    g_wldcore_scratch_buffer = (s32*)0x801d0000;
+    g_wldcore_scratch_buffer = (u32*)0x801d0000;
     g_wldcore_loaded_message_block = -1;
     g_wldcore_loaded_picture_set = -1;
     g_wldcore_menu_ordering_table_offset = 1;
@@ -84,8 +84,7 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_audio_queue.volume = 0x7f;
     g_wldcore_context_value_display_position.x = 0x30;
     g_wldcore_context_value_display_position.y = 0x54;
-    /* The target stores the whole word (sw), not the u16 the sorts read. */
-    *(s32*)&g_wldcore_hud_ot_priority = 4;
+    g_wldcore_hud_ot_priority = 4;
     g_wldcore_audio_queue.count = 0;
     g_wldcore_audio_queue.music.flags = 0;
     g_wldcore_audio_queue.music.tracks[2] = 0;

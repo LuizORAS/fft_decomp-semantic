@@ -3,7 +3,6 @@
 
 void world_formation_step_scroll_velocity(s8* velocity, s8* position) {
     s8 next;
-    s32 value;
 
     if (*velocity == 0) {
         switch (*position) {
@@ -30,16 +29,14 @@ void world_formation_step_scroll_velocity(s8* velocity, s8* position) {
         *velocity = next;
         if (next < -0x3B) {
             *velocity = 0;
-            value = (u8)*position;
-            *position = value - 0x3C;
+            *position -= 0x3C;
         }
     } else if (*velocity > 0) {
         next = *velocity + 4;
         *velocity = next;
         if (next >= 0x3C) {
             *velocity = 0;
-            value = (u8)*position;
-            *position = value + 0x3C;
+            *position += 0x3C;
         }
     }
 }
