@@ -21,9 +21,6 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `src/world/world_script_toggle_message_portrait_flip.c`: the record index is never
   assigned; all six passes use whatever `$s0` held. Keep the local
   uninitialized.
-- `src/world/world_menu_resize_parent_entry_to_digits.c`: calls
-  `world_text_count_decimal_digits` with no argument; the callee reads a stale
-  `$a0`.
 - `src/wldcore/wldcore_proposition_determine_success.c`: the preferred-job
   check resolves the party unit once, before its loop, from the scoring loop's
   leftover (past-the-end) index, so it tests that one unit every pass.
@@ -37,7 +34,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_gfx_update_all_unit_rotation_and_vectors`) do the same for units
   that chapter-end cutscenes walk off the map.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
-  (`0x34`) path writes map Y into `real_z` (not `real_y`); the height branch
+  (`0x34`) path writes map Y into `real.vy` (not `real.vz`); the height branch
   then overwrites it.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
@@ -80,8 +77,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/event/jobstts_text_render_encoded_ids_to_image.c`,
   `bunit_text_render_encoded_ids_to_image.c`, `equip_text_render_encoded_ids_to_image.c`
   and `card_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
-  its glyph counter (`glyph_index`, `col`) against the line width but never
-  assigns it; the stale register stays below the width, so text never wraps.
+  its glyph counter (`col`) against the line width but never assigns it; the
+  stale register stays below the width, so text never wraps.
 - `src/battle/battle_unit_init_misc_data.c`: tints the new unit's palette
   before it clears `mount_state`, so a misc slot last held by a rider looks up
   a mount that is gone and reads its screen data through NULL (kernel RAM).
@@ -102,12 +99,6 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `world_menu_scrolling_list_thread`: `SetSemiTrans(&frame, 1)` passes the
   address of the `frame` pointer, so the semi-transparency bit lands in a stack
   byte past the pointer and the sprite is unchanged.
-- `src/event/helpmenu_menu_run_battle_help.c` and its REQUIRE twin
-  `src/event/helpmenu_menu_run_require_help.c`: the vertical cursor writes its
-  shadow's coordinates through `vert_poly[2]`, past the two-entry
-  `cursor_polys`; the stack places `shadow_polys` there, so the writes reach the
-  polygon `vert_shadow_poly` addresses. One four-entry array does not reproduce
-  the two separate stack addresses.
 - Unchecked divisions whose divisor can be zero; the R3000 `div` does not trap
   and leaves quotient -1 (1 for a negative dividend) and the dividend as the
   remainder: `100 / ct` in `bunit_ability_get_ct_display_value`,
@@ -144,7 +135,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `helpmenu_menu_run_require_help` and `world_menu_run_require_help` reach
   the shadow quads by indexing past the end of the local `cursor[2]`
   (`quad[2]`, `quads[buffer + 2]`), relying on `shadow[2]` following it on
-  the stack. `entry`, `x` and `y` are assigned only on frames where text
+  the stack; one four-entry array does not reproduce the two stack addresses.
+  `entry`, `x` and `y` are assigned only on frames where text
   thread 0x10 is idle and are unset if it is already running on the first
   frame.
 - The six `*_text_render_decimal_value` copies assign 1 on every rung of the
@@ -221,8 +213,13 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `main_overlay_call_battle_return_zero`.
 - Formation menu states 22 and 23 have handler table entries and code paths
   and no code stores them. Menu input mode 1 is tested in four places and
-  never stored. The confirm-move thread rejects Move for menu ids 0x21 and
-  0x33 and the selection resolver special-cases 0x19; nothing produces them.
+  never stored.
+- `battle_menu_wait_thread` and `world_menu_wait_thread` store -2 over the
+  Wait entry's row action (7, `BATTLE_MENU_ID_WAIT_YES_NO`) before confirming,
+  so the Yes/No entry of the menu table never opens. No code, row action or
+  system function opens entries 0x09, 0x0d, 0x16, 0x17 (the only way to 0x18)
+  or the four no-act turn menus (0x20, 0x21, 0x32, 0x33), yet the confirm-move
+  threads reject Move for 0x21 and 0x33.
 - `world_item_build_category_list` and `world_shop_build_item_list` treat
   filters 0 and 1 (the two hand slots) identically.
 - The fur shop's "sell" list sells ordinary inventory at half price; its
@@ -240,7 +237,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
   result.
 - `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help`: the
-  `mode == 2` arm cannot run (the first arm takes modes 1 and 2); request
+  `UNIT_VIEW_MODE_HOVERED_UNIT` arm and its navigation table cannot be reached
+  (the first arm, which closes the help, takes modes 1 and 2); request
   kinds 4, 0x11, 0x12 and 0x17 call the close routine for an empty id and
   then start the text thread anyway, relying on close not returning.
 - `main_heap_free`: the clearing loop stops at the first page byte that differs
@@ -293,6 +291,34 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0xb30-byte header of WAVESET.WD (176 instruments), and most music channels
   end with Instrument 0xFF before End Bar, so entry 255 is read 0x4f0 bytes
   past the copy.
+- `equip_item_sort_list_by_criteria` and `world_item_sort_id_list`: the evade
+  keys read `g_main_item_shield_data` for ids 0x7a-0x8f and
+  `g_main_item_accessory_data` for 0x90-0xef by `secondary_data_id`, so thrown
+  weapons (122-127) read far past the 16 shield records, and headgear and body
+  armour (0-63) read the 32 accessory records and on past them.
+- `world_item_cash_out_excess_inventory` walks ids below `ITEM_ID_END - 1`, so
+  Phoenix Downs (0xfd, the last item) over 99 are never cashed out; every
+  other item walk runs to `ITEM_ID_END`.
+- `battle_move_calculate_pathing` copies 256 terrain costs from row 0 of
+  `g_main_terrain_movement_cost_tables` (64 a row) to the scratchpad cost
+  block at 0x1f800100, on over the spread state at 0x1f800180. Its flag-0x100
+  test (a WalkTo with the elevation flag clear) compares the cost-table index,
+  not the cost, with 0xff, so blocked surfaces cost 1 too.
+  `battle_move_store_unit_movement_to_scratchpad` copies 64 and keeps 0xff.
+- `battle_formula_weapon_heal` (formula 0x07, the Healing Staff) applies
+  zodiac compatibility twice, once itself and once inside
+  `battle_formula_apply_physical_xa_modifying_statuses_support`, whose Defense
+  Up and Protect steps also cut the healing to two thirds.
+- `battle_formula_raise_level_by_one_add_status_on_caster` (formula 0x57,
+  Please Eat) stores a full HP and MP heal (max-HP damage for an undead
+  target) and then overwrites `attack_type` with the level change's:
+  `battle_action_finalize_attack_and_flag_reactions` still applies the
+  amounts, but `battle_gfx_prepare_post_action_display` shows no number.
+- `main_sound_unload_scenario_mus` releases a slot's music record and SMD
+  without clearing `g_main_sound_music.state` when that slot is the playing
+  one. The shop, formation and both save screens unload their own music this
+  way, so the next `main_sound_stop_current_music` hands the released record
+  to `SuzukiDeallocateMUSChannels`.
 
 ## Calls that disagree with the callee
 
@@ -305,12 +331,14 @@ written that way.
   with different signatures; assignments erase their function types.
 - `battle_target_set_panels_for_action` reads `$v0` after a void-returning
   panel builder; the value is the callee's leftover register contents.
-- `src/world/world_menu_resize_parent_entry_to_digits.c` passes none to
-  `world_text_count_decimal_digits` (see above).
+- `src/world/world_menu_resize_parent_entry_to_digits.c`: calls
+  `world_text_count_decimal_digits` with no argument; the callee reads a stale
+  `$a0`.
 - `src/battle/battle_move_animate_fall_to_target_tile.c` passes a coordinate
   buffer to the one-argument
   `battle_gfx_calculate_screen_z_from_misc_screen_data`, as it does to
-  `_with_caller_data`; `battle_move_animate_jump_arc_to_own_tile.c` does not.
+  `battle_gfx_calculate_screen_z_with_caller_data`;
+  `battle_move_animate_jump_arc_to_own_tile.c` does not.
 - `g_main_smd_modulator_waveforms` entries 8-15 call the void
   `main_smd_modulator_deactivate`; `main_smd_update_modulators` adds the
   leftover `$v0` (the cleared modulator flags) to the channel output.
@@ -377,15 +405,19 @@ written that way.
 - WLDCORE passes its 8-byte records by value:
   `wldcore_window_render_bounds16_t` to the three render-record builders and
   `wldcore_point32_t` to `wldcore_window_build_yes_no_panel`.
+- `battle_script_filter_unit_id_by_mode` and
+  `world_script_filter_unit_id_by_mode` read `in_id` as a halfword; most
+  callers pass the address of an `int` loop counter (BATTLE through a
+  `(u16*)` cast), so the id is that counter's low half.
 
 ## Declaration leads
 
 - `include/fft/menu.h`: `world_menu_entry_t.window_x` is `u16`, but
   `src/world/world_menu_open_entry_window.c` needs it signed.
-- The unit status record (`battle_unit_status_record_t`, `include/fft/battle.h`)
-  is redeclared per overlay: `status_panel_gauges_t` (ATTACK, REQUIRE), the head
-  of `equip_unit_data_t`, `battle_unit_status_record_t`, and HELPMENU's raw
-  `g_helpmenu_active_banner`.
+- The unit status record (`battle_unit_status_record_t`, `include/fft/menu.h`)
+  is laid out again by the heads of `equip_unit_data_t`, `bunit_unit_data_t`
+  and `world_formation_unit_t`, by `world_item_stat_summary_t` and by
+  HELPMENU's raw `g_helpmenu_active_banner`.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
@@ -393,8 +425,9 @@ written that way.
   flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
   the OPEN name covers both bytes.
 - The movement step byte is one bit-field record (`battle_move_step_t`) in
-  three places: the path elements, `battle_unit_misc_data_t.movement_value`
-  and the working global `g_battle_move_step_value`.
+  three places: the path elements (`battle_unit_misc_data_t.movement_path`),
+  `battle_unit_misc_data_t.current_path_step` and the working global
+  `g_battle_move_step_value`.
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.
@@ -405,6 +438,14 @@ written that way.
   the sound rows, which begin at `0x8009ec1c` for sound id 1: its row 0 is the
   eighth word of `g_wldcore_tutorial_event_ids`, whose eight entries
   `wldcore_list_handle_tutorial_mask_1_entries_input` indexes.
+- `g_battle_effect_ending_secondary_function_id` (`0x801b8530`) is
+  `g_battle_effect_secondary_animations[BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING].function_id`
+  under a second name; the table's own symbol covers the 21 records before
+  it.
+- `0x80044128` has two names in `target/main.yaml`: the function
+  `main_sound_stop_current_weather_sfx` and the data row
+  `main_sound_pause_tracked_sfx`, the name BATTLE calls and `include/fft/main.h`
+  declares.
 
 ## Duplicated code
 
@@ -425,8 +466,8 @@ translation unit. Share their types and constants through headers.
 - `battle_map_blend_ambient_light_color.c` and
   `battle_map_blend_darkness_color.c` are one 1,032-byte function over
   different records.
-- `world_gfx_init_scaled_draw_area_packets{,_2,_3}.c` differ only in the `RECT`
-  they install.
+- `world_gfx_init_scaled_draw_area_packets{,_2,_3,_4}.c` differ only in the
+  eight bytes they install as the second `RECT`.
 - Overlays share load addresses, so an address match is not an identity
   match. Compare bytes: REQUIRE and EQUIP both have code at `0x801c2dcc`, and
   the two routines differ.
@@ -450,13 +491,11 @@ translation unit. Share their types and constants through headers.
   `+0x8d`, so Counter (`0x1ba`) wins.
 - `g_main_debug_display_enabled` is only ever cleared by retail code; the
   add-unit threads and unit-summary panels print debug output when it is set.
-- `src/event/helpmenu_menu_run_battle_help.c`: an earlier close arm catches
-  help mode 2, so its group is unreachable.
 - `src/wldcore/wldcore_input_check_repeating_directional.c`: the arms test
   UP, DOWN, RIGHT, LEFT, R1, L1, but the counters sit in UP, DOWN, LEFT, RIGHT,
   R1, L1 address order. The early-out clears only the four direction counters.
 - `src/wldcore/wldcore_map_roll_random_encounter.c`: encounter masks count from
-  the high bit, so the chosen ENTD is `entds[7 - bit]`.
+  the high bit, so the chosen ENTD is `entd_ids[7 - bit]`.
 - `src/battle/battle_action_finalize_draw_out_katana_result.c`: when the
   katana breaks, the strike work's `can_earn_experience` is copied onto itself.
 - `src/psyq/libc/memmove.c`: the overlap-safe copy returns the original destination on its backward path and the advanced destination on its forward path.
@@ -472,7 +511,7 @@ translation unit. Share their types and constants through headers.
 - `src/world/world_gfx_load_wldface_to_frame_buffer.c`: the WLDFACE rectangles (`g_world_wldface_vram_rects`) use x = 1664–1856; the GPU masks VRAM transfer coordinates, so the pages land at x = 640–832.
 - `SuzukiSPUInitialiser`: `main_sound_init_sfx_music` reaches `main_smd_insert_music`, which disables and re-enables `g_main_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `main_sound_quit` closed on a soft reset.
 - `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUTs into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
-- EFFECT scripts never run six state handlers: E314's script names no file function, and E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires.
+- EFFECT scripts never run seven state handlers: E000's script calls only `effect_e000_noop` (opcode 07) and E314's names no file function, so native function ids 1 and 90 are bound by nothing; E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires. E457.BIN, which has no code, binds native function 88 (0x801c2578, E259's `effect_e259_update_summon_mesh_state`; data in its own image) to slot 0, and none of its keyframes names a slot.
 - `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_run_weather_command(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
 - `src/world/world_script_handle_tutorial_command_end.c`: two paths fall off the end of the s32 handler and return a stale nonzero `$v0` (the fade's result, or the 1 just stored), so the formation loop keeps running.
@@ -506,7 +545,7 @@ translation unit. Share their types and constants through headers.
   the next moves it to y 0x1e0. Rows 8 and 9 have state and are uploaded, but
   no clut word in the code addresses them.
 - Rolls one off their round number: `wldcore_map_roll_random_encounter` tests
-  `chance >= roll` over 0..99, so the retail chance byte 30 gives 31 in 100;
+  `chance >= pick` over 0..99, so the retail chance byte 30 gives 31 in 100;
   the preferred-job promotion in `wldcore_proposition_determine_success`
   passes on a roll below 0x3D, 61 in 100; `battle_formula_apply_status_to_action`
   divides the displayed accuracy of separate statuses by four and keeps each
@@ -567,17 +606,48 @@ translation unit. Share their types and constants through headers.
   0x23-byte `feds` sound bank with id 0x7000.
 - Ability data the code and the tables disagree on:
   `battle_target_set_green_panels_for_action` passes range-record `flags_2`
-  bit 0x20 to `battle_target_apply_vertical_tolerance` as `single_layer`, and
-  none of the 368 records sets it; the low nibble of
+  bit 0x20 (`ABILITY_SECONDARY_FLAG_2_TOP_DOWN`) to
+  `battle_target_apply_vertical_tolerance` as `single_layer`, and none of the
+  368 records sets it; the low nibble of
   `ability_data_t.type_flags` holds the ability type plus one (0 for ids 0,
   0x1fe and 0x1ff) and nothing reads it, because
   `main_ability_calculate_pointers_and_type` derives the type from the id.
-- `main_status_init_check_data` builds eleven status check sets; sets 2
-  (`MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ALLY`) and 7 are read by
-  nothing.
+- `main_status_init_check_data` builds eleven status check sets; sets 2 and 7
+  (`MAIN_STATUS_CHECK_SET_UNREAD_2`, `_UNREAD_7`) are read by nothing.
 - WORLD's copies of BATTLE's action-menu and tile-info routines
   (`world_menu_build_ability_list`, `world_menu_build_skillset_entries`,
   `world_menu_selected_tile_info_display_thread` and nine more) keep BATTLE's
   absolute data addresses 0x80173cbc, 0x8017403c, 0x80174048 and 0x8017404c.
   In WORLD's image those lie inside the text file embedded at 0x8016ee68, so
   the routines would read and write text bytes there.
+- `g_main_terrain_geomancy_abilities` gives Gusty Wind for Sky and Kamaitachi
+  for Darkness, Cross section and the unnamed surfaces 0x2f-0x3e; the terrain
+  help text says "None" for Sky, Darkness and Cross section.
+- `battle_camera_update_rotation` chains a held R1 through
+  `battle_camera_rotate_left`, as it does L1; the two helpers differ only in
+  which way they move a destination that is a multiple of 0x400.
+- `main_unit_copy_job_data` adds the immortal and formation immunity sets
+  only to a unit that is both immortal and flagged save- or load-formation;
+  the per-flag tests inside the loop are then always true.
+- `battle_formula_apply_status_to_action`: the
+  `BATTLE_ACTION_STATE_PREVIEW` test in the separate-status loop cannot pass;
+  any state but EXECUTE was switched to all-or-nothing above it.
+- No module calls `battle_camera_zoom_map`,
+  `battle_camera_handle_tilt_request` (L2 and R2 go through
+  `battle_camera_toggle_zoom` and `battle_camera_toggle_tilt`) or
+  `battle_formula_49_unused_with_extra_steps`, a second entry to formula
+  0x49's handler that the formula table does not name.
+- `main_gfx_build_now_loading` loads the NOW LOADING CLUT to VRAM (0x70,
+  0x1e2), clut word 0x7887; in battle that is
+  `MAP_CLUT(MAP_CLUT_ROW_SPRITES, 7)`, the status bubble CLUT.
+- The effect interpreter indexes fixed tables with wider fields and no check:
+  the opcode is masked to nine bits over the 120 entries of
+  `g_battle_effect_instructions` (0x2e-0x77 are the error report);
+  `g_battle_effect_particle_render_handlers` has four entries for
+  `(kind_flags >> 12) & 0xf`, so `EFFECT_WORK_KIND_HEAP_BLOCK` would call
+  through `g_battle_effect_camera_rotation_mode`; opcode 06 takes a six-bit
+  callback slot and a keyframe action names slot 1-7 over the record's four
+  (5 writes `target_index`). Retail files use opcodes below 0x2e, kinds 0 and
+  2 and slots 1-4.
+- Special unit name 0x44, "Rofokare", is given to no ENTD unit; every other
+  named entry of the 256 is.
