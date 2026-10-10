@@ -744,6 +744,10 @@ void battle_formula_store_speed_and_x(void);
 void battle_formula_store_xa_times_ya_damage(void);
 
 /* ai */
+/* The AI that plays computer, guest and Auto-Battle units: its workspace, the per-unit ability lists
+ * and decision records, the movement scenarios and tile grids, the ability search, and the
+ * simulation, scoring and ranking that choose the turn's command (docs/mechanics/AI.md). */
+
 typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_MOVE = 0,
     BATTLE_AI_COMMAND_ACT = 1,
@@ -1427,48 +1431,41 @@ extern battle_ai_data_t* g_battle_ai_workspace;                   /* 0x8019f3ac 
 
 /* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
 extern union battle_ai_workspace* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
-s32 battle_ai_can_unit_move_within(s32 limit, s32 unit_id);
-s32 battle_ai_build_reachable_tiles(s32 movement_taken);
-void battle_ai_set_ability_considerations(s32 action_taken);
-void battle_ai_build_origin_and_target_tiles(void);
+
+s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count);
+void battle_ai_begin_simulation(void);
 s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command);
 void battle_ai_build_monster_skill_tile_mask(void);
 s32 battle_ai_build_movement_scenarios(void);
+void battle_ai_build_origin_and_target_tiles(void);
+s32 battle_ai_build_reachable_tiles(s32 movement_taken);
+s32 battle_ai_build_retreat_movement(void);
 void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 radius);
 s32 battle_ai_build_targeted_movement(void);
 void battle_ai_build_unit_ability_list(s32 unit_id);
-s32 battle_ai_count_target_tiles_in_range(void);
 s32 battle_ai_calculate_clockticks_until_death_counter_expires();
 s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
 s32 battle_ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
 s32 battle_ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
-s32 battle_ai_get_unit_height_above_coords(battle_ai_coords_t* coords, battle_stats_t* unit);
-s32 battle_ai_simulate_ability_use(battle_ai_command_action_t* action);
-s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords);
-s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id);
-s32 battle_ai_is_unit_untargetable(s32 unit_id);
-s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coordinates);
-s32 battle_ai_moves_before_charge_lands(s32 unit_index);
-s32 battle_ai_is_facing_tile_blocked(battle_ai_coords_t* source, battle_ai_coords_t* target);
 s32 battle_ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
-s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
-s32 battle_ai_evaluate_before_and_after_move(void);
-s32 battle_ai_score_current_action(void);
-s32 battle_ai_is_unit_out_of_play(s32 unit_id);
+s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords);
+s32 battle_ai_can_unit_move_within(s32 limit, s32 unit_id);
+s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coordinates);
 void battle_ai_check_unit_for_crystal_or_treasure_status(void);
-s32 battle_ai_status_lasts_until_turn(battle_stats_t* unit, s32 status);
-s32 battle_ai_evaluate_ability_list(void);
 s32 battle_ai_choose_random_action(void);
 s32 battle_ai_choose_status_action(void);
 s32 battle_ai_choose_wait_facing(void);
 battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 check_reflect);
 void battle_ai_clear_current_action_plan_chosen(void);
-
+void battle_ai_clear_words(s32* destination, s32 byte_count);
 battle_ai_rank_order_e battle_ai_compare_action_rank(battle_ai_action_rank_t* a, battle_ai_action_rank_t* b);
-
 s32 battle_ai_count_flagged_tiles_within_map_bounds(u16* rows);
+s32 battle_ai_count_target_tiles_in_range(void);
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id);
+void battle_ai_end_simulation(void);
+s32 battle_ai_evaluate_ability_list(void);
 s32 battle_ai_evaluate_ability_outcome(void);
+s32 battle_ai_evaluate_before_and_after_move(void);
 s32 battle_ai_evaluate_charged_action(void);
 s32 battle_ai_evaluate_math_targets(void);
 s32 battle_ai_evaluate_origins(void);
@@ -1476,70 +1473,74 @@ s32 battle_ai_evaluate_reflected_target_origins(void);
 s32 battle_ai_evaluate_self_target_origins(void);
 s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id);
 s32 battle_ai_evaluate_target_tiles(void);
+s32 battle_ai_exclude_enemies_acting_before_ct(void);
 void battle_ai_fill_foe_proximity_grid(void);
 s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target);
 s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
 battle_ai_direction_e battle_ai_find_direction_of_target(const s8* target, const s8* origin);
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode);
 s32 battle_ai_find_unit_at_coordinates(battle_ai_coords_t* coords);
-s32 battle_ai_get_target_reach(void);
-s32 battle_ai_handle_autobattle(void);
-s32 battle_ai_keep_useful_targets(void);
 s32 battle_ai_find_unit_on_target_tile(void);
+s32 battle_ai_get_target_reach(void);
+s32 battle_ai_get_unit_height_above_coords(battle_ai_coords_t* coords, battle_stats_t* unit);
+s32 battle_ai_handle_autobattle(void);
 void battle_ai_init_acting_unit_data(void);
 void battle_ai_init_selected_action(void);
 void battle_ai_init_target_consideration(void);
 void battle_ai_init_unit_abilities(s32 unit_id);
 void battle_ai_init_workspace(void);
 void battle_ai_insert_ranked_action(void);
-void battle_ai_set_movement_baseline(void);
 s32 battle_ai_is_action_higher_ranked(battle_ai_action_data_t* a, battle_ai_action_data_t* b);
+s32 battle_ai_is_facing_tile_blocked(battle_ai_coords_t* source, battle_ai_coords_t* target);
 s32 battle_ai_is_propagation_budget_spent(void);
+s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
+s32 battle_ai_is_unit_out_of_play(s32 unit_id);
+s32 battle_ai_is_unit_untargetable(s32 unit_id);
+s32 battle_ai_keep_useful_targets(void);
 void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry);
 s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit);
-
+void battle_ai_move_temp_unit_to_coords(battle_ai_coords_t* coordinates);
+s32 battle_ai_moves_before_charge_lands(s32 unit_index);
 s32 battle_ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
-
 void battle_ai_record_sprung_trap(s32 x, s32 y, s32 level);
 s32 battle_ai_refresh_unit_decision_flags(void);
 void battle_ai_reset_action_ranking_fields(battle_ai_action_data_t* action);
-void battle_ai_end_simulation(void);
 void battle_ai_restore_unit_state(s32 mode);
-s32 battle_ai_build_retreat_movement(void);
-s32 battle_ai_select_general_action(void);
-void battle_ai_move_temp_unit_to_coords(battle_ai_coords_t* coordinates);
-s32 battle_ai_select_save_fading_life_action(void);
 void battle_ai_save_unit_state(s32 mode);
+s32 battle_ai_score_current_action(void);
 s32 battle_ai_score_reachable_tiles(void);
+s32 battle_ai_select_action(void);
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id);
 void battle_ai_select_candidate_coords_and_check_crystal(void);
 s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e order);
 void battle_ai_select_destination_with_nearest_fallback(s32 range);
 void battle_ai_select_destination_with_range_floor(s32 range);
-s32 battle_ai_select_action(void);
-s32 battle_ai_select_peril_target(void);
-s32 battle_ai_select_ranked_action(void);
-s32 battle_ai_select_protect_allies_action(void);
-s32 battle_ai_select_retreat_action(void);
 s32 battle_ai_select_fight_for_life_action(void);
-s32 battle_ai_simulate_action_and_score(void);
+s32 battle_ai_select_general_action(void);
+void battle_ai_select_move_only_action(void);
+s32 battle_ai_select_peril_target(void);
+s32 battle_ai_select_protect_allies_action(void);
+s32 battle_ai_select_ranked_action(void);
+s32 battle_ai_select_retreat_action(void);
+s32 battle_ai_select_save_fading_life_action(void);
+void battle_ai_set_ability_considerations(s32 action_taken);
 void battle_ai_set_candidate_and_actor_reachable_tiles(void);
-s32 battle_ai_exclude_enemies_acting_before_ct(void);
+void battle_ai_set_movement_baseline(void);
+s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id);
+s32 battle_ai_simulate_ability_use(battle_ai_command_action_t* action);
+s32 battle_ai_simulate_action_and_score(void);
 void battle_ai_simulate_movement_and_pickup(void);
 void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction_mode);
-void battle_ai_begin_simulation(void);
+s32 battle_ai_status_lasts_until_turn(battle_stats_t* unit, s32 status);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 void battle_ai_take_best_origin(void);
 s32 battle_ai_take_random_tile(u16* tiles, battle_ai_coords_t* coordinates, s32 count);
-void battle_ai_select_move_only_action(void);
 void battle_ai_transfer_byte_values(u8* destination, const u8* source, s32 byte_count);
 void battle_ai_transfer_halfword_values(u16* destination, u16* source, s32 byte_count);
 void battle_ai_transfer_unit_coordinates(s32 unit_index, battle_ai_coords_t* destination);
 void battle_ai_update_team_targeting_flags(void);
-s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count);
-void battle_ai_clear_words(s32* destination, s32 byte_count);
 
 /* animation */
 typedef enum battle_facing {
