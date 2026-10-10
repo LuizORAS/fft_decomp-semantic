@@ -9,7 +9,8 @@
  * as the new packet cursor.
  */
 
-u32* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, u8 len) {
+u32* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len) {
+    u8 packet_length = len;
     u32* slot;
     s32 idx;
 
@@ -19,8 +20,8 @@ u32* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, u8 len) {
     }
     slot = ot->org + idx;
     *tag = *slot;
-    setlen(tag, len);
+    setlen(tag, packet_length);
     *slot = (u32)tag;
     setlen(slot, 0);
-    return tag + (len + 1);
+    return tag + (packet_length + 1);
 }

@@ -14,6 +14,7 @@ libraries:
   - {id: libgs, addr: 0x800e0228, end: 0x800e1a98, kind: psyq, library: LIBGS}
 
 functions:
+  - {addr: 0x800e0228, size: 452, name: GsSortPoly, hash: 9a10ac6f8c76b4ec, source: src/psyq/libgs/GsSortPoly.c}
   - {addr: 0x800e03ec, size: 148, name: psyq_gs_sort_sprite_bg, hash: 33eb380bed08096b, source: src/psyq/libgs/psyq_gs_sort_sprite_bg.c}
   - {addr: 0x800e0480, size: 1276, name: GsSortSprite, hash: 8e76bcf090d5aa77, source: src/psyq/libgs/GsSortSprite.c}
   - {addr: 0x800e097c, size: 380, name: GsSortFastSprite, hash: a5429d5475642a68, source: src/psyq/libgs/GsSortFastSprite.c}
@@ -1028,7 +1029,6 @@ data:
   - {addr: 0x800e0070, name: g_world_script_pause_message}
   - {addr: 0x800e007c, name: g_world_text_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
-  - {addr: 0x800e0228, name: GsSortPoly}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x800feff0, name: world_text_blit_glyph}
   - {addr: 0x800ff284, name: world_text_blit_font_glyph_to_4bpp}
@@ -2351,7 +2351,6 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 regions:
-  - {addr: 0x800e0228, end: 0x800e03ec, kind: handwritten, why: "LIBGS GsSortPoly: hand-written assembly, not reconstructed"}
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}
   - {addr: 0x800ff284, end: 0x800ff3d4, kind: handwritten, why: "handwritten scratchpad-frame 4bpp blitter"}
   - {addr: 0x800ff3d4, end: 0x800ff450, kind: handwritten, why: "handwritten zero-fill; byte-identical to battle twin"}
