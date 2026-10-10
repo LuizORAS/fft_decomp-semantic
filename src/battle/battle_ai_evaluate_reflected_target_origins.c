@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 
-/*
- * Evaluate reachable origins for reflecting an ability onto another unit.
+/* Evaluate bouncing the considered ability off a Reflect unit onto another unit. A reflector is
+ * targetable, not the acting unit, keeps Reflect through the charge, cannot move before it lands, and
+ * if dead does not crystallize first; its area gives the target tiles. For each other unit the
+ * ability is useful on that cannot move first, the origin is the tile mirrored through the reflector
+ * (2 x reflector - target); where that tile is reachable, the use is evaluated acting before and
+ * after moving (battle_ai_evaluate_target_tiles; battle_ai_can_use_ability_at_coords tests the unit's
+ * own tile both times). Ends by ranking the best use (battle_ai_insert_ranked_action); returns -1 to
+ * suspend, else 0.
  *
- * Return -1 to suspend and 0 after restoring the temporary unit's position
- * and submitting the action to the ranked list. Stored counters survive
- * suspension, but the target does not reload the local reflector pointer
- * on resume; later target iterations can therefore use the caller's s2.
- */
+ * Stored counters survive suspension, but the resume entry does not reload the reflector pointer;
+ * later iterations use the caller's $s2 (QUIRKS.md). */
 s32 battle_ai_evaluate_reflected_target_origins(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* reflector;
@@ -20,8 +23,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
         goto evaluate_targets;
     }
     g_battle_ai_data_base.current_action.reflected_action = 1;
-    g_battle_ai_data_base.targetability.live.target_setting_flags
-        &= ~BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
+    g_battle_ai_data_base.targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_CONSUME_TARGET_TILES;
     for (ai->reflector_unit_index = 0; ai->reflector_unit_index < BATTLE_UNIT_SLOT_COUNT; ai->reflector_unit_index++) {
         reflector = &g_battle_unit_stats[ai->reflector_unit_index];
         decision = &ai->unit_decisions[ai->reflector_unit_index];
@@ -38,13 +40,13 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             if (battle_ai_calculate_clockticks_until_death_counter_expires(reflector) < ct)
                 continue;
         }
-        ai->current_action.targeting_type = 5;
+        ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
         battle_ai_transfer_unit_coordinates(ai->reflector_unit_index, &ai->considered_unit_coords);
         mode = BATTLE_AI_TILE_MASK_AOE;
-        if (ai->current_action.targeting_type == 6)
+        if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT)
             mode = BATTLE_AI_TILE_MASK_EXPLICIT;
         battle_ai_build_targetable_tile_mask(mode, 0);
-        battle_ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, 72);
+        battle_ai_transfer_halfword_values(ai->target_tiles, ai->targetable_tiles, 72);
         for (ai->reflected_target_unit_index = 0; ai->reflected_target_unit_index < BATTLE_UNIT_SLOT_COUNT;
             ai->reflected_target_unit_index++) {
             if (!ai->targetability.live.unit_targetable[ai->reflected_target_unit_index])
@@ -77,7 +79,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
                     ai->current_action.act_before_move = 1;
                     ai->reflected_origin_phase = 0;
                     for (;;) {
-                        if (battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
+                        if (battle_ai_can_use_ability_at_coords(&ai->acting_unit_coords)) {
                         evaluate_targets:
                             if (battle_ai_evaluate_target_tiles() == -1)
                                 return -1;

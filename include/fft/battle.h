@@ -799,7 +799,7 @@ enum {
     BATTLE_AI_ABILITY_LINEAR_TRAJECTORY = 0x00200000,
     BATTLE_AI_ABILITY_DIRECT_TRAJECTORY = 0x00400000,
     BATTLE_AI_ABILITY_ARC_TRAJECTORY = 0x00800000,
-    BATTLE_AI_ABILITY_CONSUME_EVALUATED_ORIGINS = 0x01000000,
+    BATTLE_AI_ABILITY_CONSUME_TARGET_TILES = 0x01000000,
     BATTLE_AI_ABILITY_EXHAUSTIVE_ORIGIN_SCAN = 0x04000000,
     BATTLE_AI_ABILITY_REQUIRES_MONSTER_SKILL = 0x08000000,
     BATTLE_AI_ABILITY_ENEMIES_ONLY = 0x20000000,
@@ -975,7 +975,7 @@ typedef struct battle_ai_action_data {
     u16 calculator_multiplier; /* 0x0e */
     u8 item_id;                /* 0x10 */
     u8 _unused_11;
-    u8 targeting_type;    /* 0x12; 5 tile-targeted, 6 unit-targeted */
+    u8 targeting_type;    /* 0x12; battle_action_target_kind_e */
     u8 target_id;         /* 0x13 */
     u16 target_x;         /* 0x14; read with lhu */
     u16 target_elevation; /* 0x16; 0 or 1 map layer */
@@ -1070,7 +1070,8 @@ typedef enum battle_ai_targeting_flags_2 {
 
 typedef enum battle_ai_target_setting_flags {
     BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS = 0x01000000,
-    BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS = 0x02000000,
+    /* Drop each target tile once evaluated (battle_ai_evaluate_target_tiles). */
+    BATTLE_AI_TARGET_SETTING_CONSUME_TARGET_TILES = 0x02000000,
     BATTLE_AI_TARGET_SETTING_HOLY_WATER_USABLE = 0x20000000, /* set by the usable-ability pass; read by nothing */
     BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE = 0x40000000,
 } battle_ai_target_setting_flags_e;
@@ -1140,10 +1141,12 @@ typedef struct battle_ai_data {
      * (battle_ai_build_reachable_tiles); battle_ai_build_movement_scenarios and
      * battle_ai_build_targeted_movement derive scenarios 1 and 2 from it. */
     u16 reachable_tiles[3][2][18]; /* 0x0a74; byte strides 72/36/2 */
-    u16 targetable_tiles[0x24];    /* 0x0b4c */
-    u16 movable_tiles[0x24];       /* 0x0b94 */
-    u16 attack_origin_tiles[0x24]; /* 0x0bdc */
-    u16 walkable_tiles[0x24];      /* 0x0c24; not blocked, not a cross section */
+    /* Scratch: a range diamond (battle_ai_build_targetable_tile_mask), then the target tiles
+     * in range of the origin (battle_ai_evaluate_target_tiles). */
+    u16 targetable_tiles[0x24]; /* 0x0b4c */
+    u16 origin_tiles[0x24];     /* 0x0b94; the reachable tiles to act from */
+    u16 target_tiles[0x24];     /* 0x0bdc; the tiles to aim at, dropped once settled */
+    u16 walkable_tiles[0x24];   /* 0x0c24; not blocked, not a cross section */
     u8 _unused_0c6c;
     u8 initial_targeting_state; /* 0x0c6d */
     u8 action_selection_phase;  /* 0x0c6e; 0x801971b8 selects scorer/distance resume; 0x80197ff4 uses 0..4 */
@@ -1156,13 +1159,13 @@ typedef struct battle_ai_data {
     battle_ai_coords_t considered_unit_coords; /* 0x0c74 */
     battle_ai_targetability_t targetability;   /* 0x0c78 */
     /* Included target/strike pairs, not unique units; 0xff disables counting. */
-    u16 total_hit_percent;       /* 0x0cb8 */
-    u8 hit_counter;              /* 0x0cba */
-    u8 attack_origin_tile_count; /* 0x0cbb */
-    u8 movable_tile_count;       /* 0x0cbc */
-    u8 ability_counter;          /* 0x0cbd */
-    u8 has_mp_recovery_ability;  /* 0x0cbe; a usable ability affects MP without targeting enemies */
-    u8 crystal_treasure_status;  /* 0x0cbf; 1 crystal, 2 treasure */
+    u16 total_hit_percent;      /* 0x0cb8 */
+    u8 hit_counter;             /* 0x0cba */
+    u8 target_tile_count;       /* 0x0cbb */
+    u8 origin_tile_count;       /* 0x0cbc */
+    u8 ability_counter;         /* 0x0cbd */
+    u8 has_mp_recovery_ability; /* 0x0cbe; a usable ability affects MP without targeting enemies */
+    u8 crystal_treasure_status; /* 0x0cbf; 1 crystal, 2 treasure */
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
@@ -1188,27 +1191,30 @@ typedef struct battle_ai_data {
     u8 status_to_cancel[5]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */
-    u8 reflector_unit_index;             /* 0x0e49 */
-    u8 reflected_target_unit_index;      /* 0x0e4a */
-    u8 reflected_candidate_level;        /* 0x0e4b */
-    u8 ability_effect_on_self;           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
-    u8 weapon_range_flag;                /* 0x0e4d */
-    u8 useful_on_caster_flag;            /* 0x0e4e */
+    u8 reflector_unit_index;        /* 0x0e49 */
+    u8 reflected_target_unit_index; /* 0x0e4a */
+    u8 reflected_candidate_level;   /* 0x0e4b */
+    u8 ability_effect_on_self;      /* 0x0e4c; 0 none, 1 usable, 2 adverse */
+    /* 1: take the origins best first (battle_ai_take_best_origin). */
+    u8 ranked_origin_search; /* 0x0e4d */
+    /* Drop the target tile just evaluated: always with CONSUME_TARGET_TILES; in the ranked search
+     * also when the caster's own part came out as wanted (battle_ai_simulate_strikes). */
+    u8 target_tile_settled;              /* 0x0e4e */
     u8 acting_unit_remaining_clockticks; /* 0x0e4f */
     u8 unit_status_records[16][8];       /* 0x0e50 */
     u8 saved_ability_ct;                 /* 0x0ed0 */
     u8 saved_current_status;             /* 0x0ed1 */
     u8 saved_inflicted_status;           /* 0x0ed2 */
     u8 _unused_0ed3;
-    u8 main_ai_state;             /* 0x0ed4 */
-    u8 autobattle_state;          /* 0x0ed5 */
-    u8 charging_state;            /* 0x0ed6 */
-    u8 find_highest_target_state; /* 0x0ed7; check_if_map_allows_use_and_find_highest_target's progress variable */
-    u8 reflected_origin_phase;    /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
-    u8 highest_priority_state;    /* 0x0ed9 */
-    u8 max_possibilities;         /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
-    u8 y_counter;                 /* 0x0edb */
-    u8 map_level_counter;         /* 0x0edc */
+    u8 main_ai_state;           /* 0x0ed4 */
+    u8 autobattle_state;        /* 0x0ed5 */
+    u8 charging_state;          /* 0x0ed6 */
+    u8 before_after_move_state; /* 0x0ed7; battle_ai_evaluate_before_and_after_move resume point */
+    u8 reflected_origin_phase;  /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
+    u8 origin_search_state;     /* 0x0ed9; battle_ai_evaluate_origins resume point */
+    u8 max_possibilities;       /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
+    u8 y_counter;               /* 0x0edb */
+    u8 map_level_counter;       /* 0x0edc */
     /* Calculator search counters survive suspension at 0x8019bbbc–0x8019bf2c. */
     u8 math_ability_id;       /* 0x0edd; low byte of the selected ability entry */
     u8 math_type_index;       /* 0x0ede; 0..3 */
@@ -1259,11 +1265,11 @@ typedef char battle_ai_target_flags_must_be_0xcb4
     [((unsigned long)&((battle_ai_data_t*)0)->targetability.live.target_setting_flags == 0xcb4) ? 1 : -1];
 
 /* Runtime policy byte in battle_ai_ability_entry_t. The low three bits control
- * how the AI searches and consumes candidate action origins; initialization
+ * how the AI searches its origins and drops evaluated target tiles; initialization
  * recomputes them while preserving the remaining bits. */
 typedef enum battle_ai_ability_entry_flag {
-    BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS = 0x01,
-    BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS = 0x02,
+    BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES = 0x01,
+    BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES = 0x02,
     BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN = 0x04,
     BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL = 0x08,
     BATTLE_AI_ABILITY_ENTRY_ENEMIES_ONLY = 0x20,
@@ -1422,14 +1428,14 @@ extern union battle_ai_workspace* g_battle_ai_workspace_ptr; /* pointer cell rel
 s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id);
 s32 battle_ai_build_reachable_tiles(s32 movement_taken);
 void battle_ai_set_ability_considerations(s32 action_taken);
-void battle_ai_evaluate_linear_ability_behaviors(void);
+void battle_ai_build_origin_and_target_tiles(void);
 s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command);
 void battle_ai_build_monster_skill_tile_mask(void);
 s32 battle_ai_build_movement_scenarios(void);
 void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 radius);
 s32 battle_ai_build_targeted_movement(void);
 void battle_ai_build_unit_ability_list(s32 unit_id);
-s32 battle_ai_calculate_ability_range(void);
+s32 battle_ai_count_target_tiles_in_range(void);
 s32 battle_ai_calculate_clockticks_until_death_counter_expires();
 s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
 s32 battle_ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
@@ -1438,13 +1444,13 @@ s32 battle_ai_get_unit_height_above_coords(battle_ai_coords_t* coords, battle_st
 s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action);
 s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords);
 s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id);
-s32 battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(s32 unit_id);
-s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coordinates);
+s32 battle_ai_is_unit_untargetable(s32 unit_id);
+s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coordinates);
 s32 battle_ai_check_ability_use_based_on_ct(s32 unit_index);
 s32 battle_ai_is_facing_tile_blocked(battle_ai_coords_t* source, battle_ai_coords_t* target);
 s32 battle_ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
 s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
-s32 battle_ai_check_map_allows_use_and_find_highest_target(void);
+s32 battle_ai_evaluate_before_and_after_move(void);
 s32 battle_ai_check_set_highest_unit_priority(void);
 s32 battle_ai_is_unit_out_of_play(s32 unit_id);
 void battle_ai_check_unit_for_crystal_or_treasure_status(void);
@@ -1464,7 +1470,7 @@ void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t
 s32 battle_ai_evaluate_ability_outcome(void);
 s32 battle_ai_evaluate_charged_action(void);
 s32 battle_ai_evaluate_math_targets(void);
-s32 battle_ai_evaluate_movement_origins(void);
+s32 battle_ai_evaluate_origins(void);
 s32 battle_ai_evaluate_reflected_target_origins(void);
 s32 battle_ai_evaluate_self_target_origins(void);
 s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id);
@@ -1478,7 +1484,7 @@ s32 battle_ai_find_unit_at_coordinates(battle_ai_coords_t* coords);
 s32 battle_ai_get_target_reach(void);
 s32 battle_ai_handle_autobattle(void);
 s32 battle_ai_has_any_unit_decided_to_use_ability(void);
-s32 battle_ai_has_any_unit_on_target_panel(void);
+s32 battle_ai_find_unit_on_target_tile(void);
 void battle_ai_init_acting_unit_data(void);
 void battle_ai_init_selected_action(void);
 void battle_ai_init_target_consideration(void);
@@ -1524,7 +1530,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
 void battle_ai_begin_simulation(void);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
-void battle_ai_take_next_movement_origin(void);
+void battle_ai_take_best_origin(void);
 s32 battle_ai_take_random_tile(u16* tiles, battle_ai_coords_t* coordinates, s32 count);
 void battle_ai_transfer_ability_data_and_set_defend_flag(void);
 void battle_ai_transfer_byte_values(u8* destination, const u8* source, s32 byte_count);
@@ -4065,6 +4071,7 @@ typedef enum battle_action_state {
     BATTLE_ACTION_STATE_PREVIEW = 2,
 } battle_action_state_e;
 
+/* What an action's target names: a tile (target_x, _y, _elevation) or a unit (target_id). */
 typedef enum battle_action_target_kind {
     BATTLE_ACTION_TARGET_TILE = 5,
     BATTLE_ACTION_TARGET_UNIT = 6,

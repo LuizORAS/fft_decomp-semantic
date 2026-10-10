@@ -18,7 +18,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         unit = &g_battle_unit_stats[unit_id];
         decision = &ai->unit_decisions[unit_id];
-        if (battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(unit_id)) {
+        if (battle_ai_is_unit_untargetable(unit_id)) {
             /* Other cached fields are intentionally untouched for excluded units. */
             decision->targeting_flags_2 |= BATTLE_AI_TARGET_UNTARGETABLE;
             continue;

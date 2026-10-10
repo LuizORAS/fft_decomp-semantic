@@ -18,11 +18,11 @@ void battle_target_select_tile(void) {
     if (unit->ability_preview_phase == 2) {
         main_util_set_svector(
             (SVECTOR*)&unit->command_state.ai.data.action.target_x, unit->map_x, unit->map_z, unit->map_y);
-        unit->command_state.ai.data.action.targeting_type = 5;
+        unit->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
     } else if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         main_util_set_svector((SVECTOR*)&unit->command_state.ai.data.action.target_x, g_battle_cursor_x,
             g_battle_cursor_z, g_battle_cursor_y);
-        unit->command_state.ai.data.action.targeting_type = 5;
+        unit->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
     }
     result = battle_target_mark_action_area(&unit->command_state.ai.data.action.unit_id);
     unit->target_select_result = result;

@@ -26,7 +26,7 @@ s32 battle_target_mark_action_area(const u8* source) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    if (action.targeting_type == 6 && action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (action.targeting_type == BATTLE_ACTION_TARGET_UNIT && action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {

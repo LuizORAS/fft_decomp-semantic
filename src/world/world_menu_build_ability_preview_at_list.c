@@ -69,7 +69,7 @@ void world_menu_build_ability_preview_at_list(void) {
     g_world_menu_thread_menu_data[52].select_text_table = 0x13;
     g_world_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
     text_id = at_table[g_world_menu_thread_menu_data[3].selected_index];
-    g_world_menu_preview_action.targeting_type = 5;
+    g_world_menu_preview_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
     entry = &g_world_menu_thread_menu_data[52];
     if ((text_id & 0xf800) == TEXT_ID_ABILITY_NAME_BASE) {
         staged_item = 0;

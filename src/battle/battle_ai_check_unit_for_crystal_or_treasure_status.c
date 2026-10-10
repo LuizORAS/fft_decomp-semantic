@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Note what the simulation picks up at the current action's destination
+ * (battle_ai_simulate_movement_and_pickup): crystal_treasure_status 1 for a Crystal, 2 for a Treasure
+ * (it wins), 0 for neither or no unit. */
 void battle_ai_check_unit_for_crystal_or_treasure_status(void) {
     s32 unit_id;
     battle_stats_t* unit;

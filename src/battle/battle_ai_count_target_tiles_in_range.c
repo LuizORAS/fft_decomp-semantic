@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 
-/* Intersect attack-origin tiles with the current ability's range.
- *
- * The acting unit's coordinates are restored before every return. */
-s32 battle_ai_calculate_ability_range(void) {
+/* Put into targetable_tiles the target tiles in the considered ability's range from the current
+ * action's coords (battle_target_set_panels_for_action, or that tile alone without range) and return
+ * their count, 0 when none is in range. battle_ai_choose_random_action picks among them; the
+ * simulation unit returns to its own tile. */
+s32 battle_ai_count_target_tiles_in_range(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     map_tile_t* tile;
     s32 count;
@@ -15,7 +16,7 @@ s32 battle_ai_calculate_ability_range(void) {
     u16 row;
     s32 tile_mask;
     u32 level_address;
-    char unused[24];
+    char unused[24]; /* dead local kept for the target's frame size */
 
     battle_ai_move_temp_unit_to_coords(&ai->current_action.coords);
     count = 0;
@@ -41,7 +42,7 @@ s32 battle_ai_calculate_ability_range(void) {
     for (level_address = (u32)ai; level < 2; level++, level_address += 18 * sizeof(u16)) {
         for (y = 0; y < ai->map_max_y; y++) {
             target_rows = (u16*)(level_address + ((u32)&ai->targetable_tiles - (u32)ai));
-            origin_rows = (u16*)(level_address + ((u32)&ai->attack_origin_tiles - (u32)ai));
+            origin_rows = (u16*)(level_address + ((u32)&ai->target_tiles - (u32)ai));
             target_rows[y] = 0;
             row = origin_rows[y];
             if (row != 0) {

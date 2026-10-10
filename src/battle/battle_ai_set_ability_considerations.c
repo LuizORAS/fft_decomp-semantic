@@ -281,14 +281,14 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     }
                 }
                 flags = entry->skillset_flags.packed;
-                if (flags & (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS << 8)) {
-                    entry->skillset_flags.packed = flags | (BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8);
+                if (flags & (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8)) {
+                    entry->skillset_flags.packed = flags | (BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
                 } else if (!(flags & (BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN << 8))) {
                     if (ability->ct >= g_battle_ai_acting_unit_remaining_clockticks
                         || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1) == 0) {
-                        entry->skillset_flags.packed |= BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8;
+                        entry->skillset_flags.packed |= BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8;
                     } else {
-                        entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8);
+                        entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
                     }
                 }
                 if (action_taken != 0) {

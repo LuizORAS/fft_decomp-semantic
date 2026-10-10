@@ -1,10 +1,7 @@
 #include "fft/battle.h"
 
-/*
- * Test whether the terrain selects the considered Geomancy ability.
- *
- * Return 1 for the terrain table's matching ability ID, otherwise 0.
- */
+/* Return 1 when the tile at coords gives the considered Geomancy ability: the entry of its surface
+ * type in g_geomancy_terrain_ability_table. */
 s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords) {
     u32 tile_id;
     u32 tile_type;

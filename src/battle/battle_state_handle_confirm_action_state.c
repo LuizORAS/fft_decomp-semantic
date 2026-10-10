@@ -32,7 +32,7 @@ void battle_state_handle_confirm_action_state(void) {
                 unit->command_state.ai.data.action.targeting_type = *command_address;
                 unit->command_state.ai.data.action.target_id = target->battle_data->misc_unit_id;
             } else {
-                unit->command_state.ai.data.action.targeting_type = 5;
+                unit->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
             }
             main_util_set_svector(
                 &unit->command_state.cursor.target_panel, g_battle_cursor_x, g_battle_cursor_z, g_battle_cursor_y);

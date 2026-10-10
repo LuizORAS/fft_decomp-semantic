@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-/*
- * Score target tiles from the current simulated action origin.
- *
- * Intersect range with remaining target candidates, apply direct/arc path checks,
- * and resume suspended priority evaluation at its saved tile. A -1 result
- * suspends this pass; 0 ends it. Coordinate restoration belongs to callers.
- */
+/* Evaluate the considered ability from the current origin (the unit's own tile when it acts before
+ * moving) against each target tile in range. The range comes from battle_target_set_panels_for_action
+ * (none in range ends the pass), or is the origin tile alone for an ability without range. A
+ * unit-aimed or trajectory ability needs a unit on the tile (battle_ai_find_unit_on_target_tile), and
+ * an arc or direct one a clear path (an item for an adjacent unit skips that check); then the action
+ * is simulated and scored (battle_ai_check_set_highest_unit_priority). A settled tile
+ * (target_tile_settled, always set with CONSUME_TARGET_TILES) leaves target_tiles. Returns -1 to
+ * suspend (also past 441 horizontal blanks), else 0, and stops early when the scoring clears
+ * ability_processing_done. */
 s32 battle_ai_evaluate_target_tiles(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 x, y, level;
@@ -60,7 +62,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
     for (level = 0, level_address = (u32)ai; level < 2; level++, level_address += 18 * sizeof(u16)) {
         for (y = 0; y < ai->map_max_y; y++) {
             target_rows = (u16*)(level_address + ((u32)&ai->targetable_tiles - (u32)ai));
-            origin_rows = (u16*)(level_address + ((u32)&ai->attack_origin_tiles - (u32)ai));
+            origin_rows = (u16*)(level_address + ((u32)&ai->target_tiles - (u32)ai));
             row = origin_rows[y];
             target_rows[y] = 0;
             if (row != 0) {
@@ -93,13 +95,14 @@ s32 battle_ai_evaluate_target_tiles(void) {
                         ai->current_action.target_x = x;
                         ai->current_action.target_y = y;
                         ai->current_action.target_elevation = level;
-                        if (ai->current_action.targeting_type == 6
+                        if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT
                             || (ai->considered_ability.ai_flags.word
                                 & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY))) {
-                            target_id = battle_ai_has_any_unit_on_target_panel();
+                            target_id = battle_ai_find_unit_on_target_tile();
                             ai->current_action.target_id = target_id;
+                            /* An empty tile is dropped by the flag the previous tile left. */
                             if (target_id == BATTLE_UNIT_ID_NONE)
-                                goto remove_useful_origin;
+                                goto drop_settled_target;
                         }
                         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ARC_TRAJECTORY) {
                             path_clear = battle_effect_check_arc_trajectory_between_units(
@@ -119,11 +122,10 @@ s32 battle_ai_evaluate_target_tiles(void) {
                         if (path_clear == 0)
                             continue;
                     set_self_effect:
-                        if (ai->targetability.live.target_setting_flags
-                            & BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS)
-                            ai->useful_on_caster_flag = 1;
+                        if (ai->targetability.live.target_setting_flags & BATTLE_AI_TARGET_SETTING_CONSUME_TARGET_TILES)
+                            ai->target_tile_settled = 1;
                         else
-                            ai->useful_on_caster_flag = 0;
+                            ai->target_tile_settled = 0;
                     evaluate_priority:
                         if (battle_ai_check_set_highest_unit_priority() == -1) {
                             ai->search_resume_flag = 1;
@@ -131,17 +133,17 @@ s32 battle_ai_evaluate_target_tiles(void) {
                         }
                         if (ai->ability_processing_done == 0)
                             return 0;
-                    remove_useful_origin:
-                        if (ai->useful_on_caster_flag) {
+                    drop_settled_target:
+                        if (ai->target_tile_settled) {
                             /* A typed level pointer moves the field offset before
                              * the AI base addition; retain the target's order. */
                             {
                                 u32 origin_address = level * (18 * sizeof(u16)) + (u32)ai;
-                                u16* origin_row = (u16*)(origin_address + ((u32)&ai->attack_origin_tiles - (u32)ai));
+                                u16* origin_row = (u16*)(origin_address + ((u32)&ai->target_tiles - (u32)ai));
                                 origin_row[y] ^= 0x8000 >> x;
                             }
-                            ai->attack_origin_tile_count--;
-                            if (ai->attack_origin_tile_count == 0)
+                            ai->target_tile_count--;
+                            if (ai->target_tile_count == 0)
                                 break;
                         }
                     }

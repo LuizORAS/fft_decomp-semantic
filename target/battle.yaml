@@ -1576,16 +1576,16 @@ functions:
   - {addr: 0x8019693c, size: 416, name: battle_ai_select_destination, hash: 005953b3a80b40c8}
   - {addr: 0x80196adc, size: 432, name: battle_ai_filter_reachable_tiles_by_target_distance, hash: 91a249b987c1a46e}
   - {addr: 0x80196c8c, size: 92, name: battle_ai_is_unit_out_of_play, hash: f7149729c18d0cb2}
-  - {addr: 0x80196ce8, size: 200, name: battle_ai_can_unit_be_targeted_cryst_trea_mount_trans, hash: cf7b80ddaa6588a6}
+  - {addr: 0x80196ce8, size: 200, name: battle_ai_is_unit_untargetable, hash: cf7b80ddaa6588a6}
   - {addr: 0x80196db0, size: 112, name: battle_ai_compare_target_priority_and_hit_rate, hash: b4962e4eb03b44e5}
   - {addr: 0x80196e20, size: 212, name: battle_ai_is_action_higher_ranked, hash: 7769374ed90ef8cb}
-  - {addr: 0x80196ef4, size: 208, name: battle_ai_check_map_allows_use_and_find_highest_target, hash: dbadc6cf82598b56}
+  - {addr: 0x80196ef4, size: 208, name: battle_ai_evaluate_before_and_after_move, hash: dbadc6cf82598b56}
   - {addr: 0x80196fc4, size: 248, name: battle_ai_insert_ranked_action, hash: 4149504c7e477619}
   - {addr: 0x801970bc, size: 252, name: battle_ai_select_ranked_action, hash: fc6a741315f98565}
   - {addr: 0x801971b8, size: 896, name: battle_ai_choose_status_action, hash: fe0ea62d7cc53ffe}
   - {addr: 0x80197538, size: 940, name: battle_ai_choose_random_action, hash: 421c3aff50b3460a}
   - {addr: 0x801978e4, size: 120, name: battle_ai_find_direction_of_target, hash: 43fe7efa46caa0a3}
-  - {addr: 0x8019795c, size: 464, name: battle_ai_calculate_ability_range, hash: 20b0383d19442bf0}
+  - {addr: 0x8019795c, size: 464, name: battle_ai_count_target_tiles_in_range, hash: 20b0383d19442bf0}
   - {addr: 0x80197b2c, size: 316, name: battle_ai_take_random_tile, hash: a6ce03e6c6dd9fe4}
   - {addr: 0x80197c68, size: 164, name: battle_ai_count_flagged_tiles_within_map_bounds, hash: eac777c7a9d30596}
   - {addr: 0x80197d0c, size: 340, name: battle_ai_select_active_units, hash: 8206f4a867d328a7}
@@ -1627,20 +1627,20 @@ functions:
   - {addr: 0x8019aef0, size: 40, name: battle_ai_is_propagation_budget_spent, hash: aff84ed05931c150}
   - {addr: 0x8019af18, size: 1012, name: battle_ai_evaluate_ability_outcome, hash: 963caa337e1e1c7a, rodata: [{addr: 0x80193db0, size: 36, hash: 8a91fa7090317da7}]}
   - {addr: 0x8019b30c, size: 488, name: battle_ai_evaluate_self_target_origins, hash: 98555857b62c3032}
-  - {addr: 0x8019b4f4, size: 444, name: battle_ai_check_ability_use_at_coords, hash: 81477fd3bef0c505}
+  - {addr: 0x8019b4f4, size: 444, name: battle_ai_can_use_ability_at_coords, hash: 81477fd3bef0c505}
   - {addr: 0x8019b6b0, size: 164, name: battle_ai_get_unit_height_above_coords, hash: 9bcad0cdcecc5aed}
   - {addr: 0x8019b754, size: 100, name: battle_ai_can_elemental_ability_be_used, hash: e60c20b40acae19a}
   - {addr: 0x8019b7b8, size: 872, name: battle_ai_evaluate_reflected_target_origins, hash: fdc930fa98af6e86}
   - {addr: 0x8019bb20, size: 156, name: battle_ai_check_unit_for_crystal_or_treasure_status, hash: 50d76cc59e51cd64}
   - {addr: 0x8019bbbc, size: 880, name: battle_ai_evaluate_math_targets, hash: 8689a189a4a77c50}
-  - {addr: 0x8019bf2c, size: 736, name: battle_ai_evaluate_movement_origins, hash: bcbfefa0160f251c}
+  - {addr: 0x8019bf2c, size: 736, name: battle_ai_evaluate_origins, hash: bcbfefa0160f251c}
   - {addr: 0x8019c20c, size: 116, name: battle_ai_select_candidate_coords_and_check_crystal, hash: 6e3db359eeeddbd7}
-  - {addr: 0x8019c280, size: 340, name: battle_ai_take_next_movement_origin, hash: 73020a4fc24dfbde}
-  - {addr: 0x8019c3d4, size: 1304, name: battle_ai_evaluate_linear_ability_behaviors, hash: fc6ef51e7636d2e8}
+  - {addr: 0x8019c280, size: 340, name: battle_ai_take_best_origin, hash: 73020a4fc24dfbde}
+  - {addr: 0x8019c3d4, size: 1304, name: battle_ai_build_origin_and_target_tiles, hash: fc6ef51e7636d2e8}
   - {addr: 0x8019c8ec, size: 680, name: battle_ai_build_targetable_tile_mask, hash: 4e2a9dc6a6cee172}
   - {addr: 0x8019cb94, size: 520, name: battle_ai_build_monster_skill_tile_mask, hash: 3c2dbeca3eb019d1}
   - {addr: 0x8019cd9c, size: 1148, name: battle_ai_evaluate_target_tiles, hash: 48dc3babee0d6a0e}
-  - {addr: 0x8019d218, size: 124, name: battle_ai_has_any_unit_on_target_panel, hash: 94c60f8e4da13419}
+  - {addr: 0x8019d218, size: 124, name: battle_ai_find_unit_on_target_tile, hash: 94c60f8e4da13419}
   - {addr: 0x8019d294, size: 116, name: battle_ai_find_unit_at_coordinates, hash: d857ff9b76d7522e}
   - {addr: 0x8019d308, size: 116, name: battle_ai_check_set_highest_unit_priority, hash: 8dfb057830540343}
   - {addr: 0x8019d37c, size: 2052, name: battle_ai_simulate_action_and_score, hash: 122e4a684a8c8f25, rodata: [{addr: 0x80193de0, size: 112, hash: cf8dc01c4e3c88bd}]}

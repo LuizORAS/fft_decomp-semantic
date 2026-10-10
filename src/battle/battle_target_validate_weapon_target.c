@@ -70,7 +70,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         }
         flags = g_main_item_weapon_data[weapon_id].flags;
     } else {
-        if (action.targeting_type == 6) {
+        if (action.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
             if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
                 return -1;
             }

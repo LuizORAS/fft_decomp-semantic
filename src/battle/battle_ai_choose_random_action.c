@@ -3,9 +3,9 @@
 /* Make a random valid use of the considered ability the selected action, for the statuses that take
  * control. Math Skill first draws a learned, AI-usable, Calculator-eligible spell from one of the four
  * source skillsets, then a learned type (CT, Level, Exp, Height) and multiplier (Prime Number, 5, 4,
- * 3). A map-tile ability takes a random reachable tile that battle_ai_check_ability_use_at_coords
+ * 3). A map-tile ability takes a random reachable tile that battle_ai_can_use_ability_at_coords
  * accepts. Any other takes a random origin around the targetable units
- * (battle_ai_evaluate_linear_ability_behaviors) and a random tile in range, facing it, aimed at a unit
+ * (battle_ai_build_origin_and_target_tiles) and a random tile in range, facing it, aimed at a unit
  * or at the tile (an ability that can follow its target picks one of the two at random). Returns 1
  * after copying the action, 0 when no origin and target work. */
 s32 battle_ai_choose_random_action(void) {
@@ -40,40 +40,40 @@ s32 battle_ai_choose_random_action(void) {
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
         battle_ai_transfer_halfword_values(
             ai->targetable_tiles, (u16*)ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
-        ai->movable_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
-        if (!ai->movable_tile_count)
+        ai->origin_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
+        if (!ai->origin_tile_count)
             return 0;
         do {
-            if (!battle_ai_take_random_tile(ai->targetable_tiles, &ai->current_action.coords, ai->movable_tile_count))
+            if (!battle_ai_take_random_tile(ai->targetable_tiles, &ai->current_action.coords, ai->origin_tile_count))
                 return 0;
-            ai->movable_tile_count--;
-            if (battle_ai_check_ability_use_at_coords(&ai->current_action.coords)) {
+            ai->origin_tile_count--;
+            if (battle_ai_can_use_ability_at_coords(&ai->current_action.coords)) {
                 ai->current_action.wait_facing_hint = BATTLE_AI_DIRECTION_OVERLAP;
                 goto selected;
             }
-        } while (ai->movable_tile_count);
+        } while (ai->origin_tile_count);
     } else {
         /* A single attempt block lets missing movement candidates exit early. */
         do {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
-                ai->current_action.targeting_type = rand() % 2 + 5;
+                ai->current_action.targeting_type = rand() % 2 + BATTLE_ACTION_TARGET_TILE;
             else
-                ai->current_action.targeting_type = 5;
-            battle_ai_evaluate_linear_ability_behaviors();
-            if (!ai->movable_tile_count) {
-                if (ai->current_action.targeting_type == 6) {
-                    ai->current_action.targeting_type = 5;
-                    battle_ai_evaluate_linear_ability_behaviors();
+                ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+            battle_ai_build_origin_and_target_tiles();
+            if (!ai->origin_tile_count) {
+                if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+                    ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+                    battle_ai_build_origin_and_target_tiles();
                 }
-                if (!ai->movable_tile_count)
+                if (!ai->origin_tile_count)
                     break;
             }
             do {
-                if (!battle_ai_take_random_tile(ai->movable_tiles, &ai->current_action.coords, ai->movable_tile_count))
+                if (!battle_ai_take_random_tile(ai->origin_tiles, &ai->current_action.coords, ai->origin_tile_count))
                     return 0;
-                ai->movable_tile_count--;
+                ai->origin_tile_count--;
                 /* Keep the original count even when a rejected target bit is removed. */
-                index_or_count = battle_ai_calculate_ability_range();
+                index_or_count = battle_ai_count_target_tiles_in_range();
                 if (index_or_count) {
                     do {
                         if (!battle_ai_take_random_tile(
@@ -84,7 +84,7 @@ s32 battle_ai_choose_random_action(void) {
                         ai->current_action.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
-                        if (ai->current_action.targeting_type != 6)
+                        if (ai->current_action.targeting_type != BATTLE_ACTION_TARGET_UNIT)
                             goto selected;
                     } while (
                         (ai->current_action.target_id = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
@@ -92,7 +92,7 @@ s32 battle_ai_choose_random_action(void) {
                     goto selected;
                 }
             next_origin:;
-            } while (ai->movable_tile_count);
+            } while (ai->origin_tile_count);
         } while (0);
     }
     return 0;

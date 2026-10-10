@@ -1,11 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Mark an actor-origin choice and check the resulting tile for crystal or treasure.
- *
- * An actor-origin choice sets act_before_move and substitutes the movement
- * scenario's candidate coordinates; other origins clear that flag.
- */
+/* Turn the origin in the current action's coords into a plan: an origin on the unit's own tile acts
+ * first and then moves to the scenario's destination, any other moves there and then acts. Then note
+ * the crystal or treasure at the destination
+ * (battle_ai_check_unit_for_crystal_or_treasure_status). */
 void battle_ai_select_candidate_coords_and_check_crystal(void) {
     battle_ai_data_t* ai;
 

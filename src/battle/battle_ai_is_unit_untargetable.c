@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Excludes absent, inert, mounted, or hidden enemies from ordinary AI targeting.
+/* Return 1 when the AI cannot target unit_id: absent, Crystal or Treasure, a ridden mount, or a
+ * Transparent enemy, except a rider whose mount is Transparent too (QUIRKS.md). Any other unit that is
+ * not an enemy is targetable.
  *
- * The native code deliberately uses only 4 bits for the rider's partner ID,
- * unlike other mount consumers' 5-bit mask. A Transparent rider is admitted
- * only when its mount is not also Transparent. */
-s32 battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(s32 unit_idx) {
+ * The mount is read from the low 4 bits of mount_info, where other mount code uses 5
+ * (BATTLE_MOUNT_INFO_PARTNER_ID_MASK). */
+s32 battle_ai_is_unit_untargetable(s32 unit_idx) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
     s32 mount;

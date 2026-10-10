@@ -67,7 +67,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         default:
             misc->command_state.ai = *command;
             misc->command_state.ai.data.action.unit_id = misc->battle_data->misc_unit_id;
-            misc->command_state.ai.data.action.targeting_type = 5;
+            misc->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
             battle_action_resolve_command_ability(&misc->command_state.ai.data.action);
             misc->used_ability_id = misc->command_state.ai.data.action.ability_id;
             result = battle_target_set_panels_for_action((u8*)&misc->command_state.ai.data.action);

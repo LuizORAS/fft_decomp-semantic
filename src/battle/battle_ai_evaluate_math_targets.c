@@ -9,12 +9,13 @@ typedef struct battle_ai_math_ability_id_list {
 extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
 /* Borrowed from main's temporary skillset list, not a private AI copy. */
 
-/*
- * Evaluate learned Math Skill ability and parameter combinations.
+/* Evaluate the acting unit's Math Skill, used from its own tile before moving. For each learned
+ * Calculator-eligible ability of the four source skillsets (White, Black, Time and Yin-Yang Magic)
+ * that is useful on some unit (battle_ai_has_any_unit_decided_to_use_ability), every learned type (CT,
+ * Level, Exp, Height) is scored with every learned multiplier (Prime Number, 5, 4, 3), and the best is
+ * ranked (battle_ai_insert_ranked_action). Returns -1 to suspend, else 0.
  *
- * Test four source skillsets and learned type/multiplier pairs. Persistent
- * indices resume a suspended priority check; -1 suspends and 0 ends this pass.
- */
+ * The extra known-ability call for the listed special ids discards its result (QUIRKS.md). */
 s32 battle_ai_evaluate_math_targets(void) {
     battle_ai_math_ability_id_list_t special_abilities = g_battle_math_extra_known_bit_ids;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
@@ -23,7 +24,7 @@ s32 battle_ai_evaluate_math_targets(void) {
 
     if (g_battle_ai_data_base.decision_state)
         goto evaluate_priority; /* resume inside the multiplier loop */
-    if (!battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords))
+    if (!battle_ai_can_use_ability_at_coords(&ai->acting_unit_coords))
         return 0;
     g_battle_ai_data_base.current_action.act_before_move = 1;
     for (g_battle_ai_math_skillset_index = 0; g_battle_ai_math_skillset_index < 4; g_battle_ai_math_skillset_index++) {

@@ -1,12 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Take the lowest-key remaining movement origin for target evaluation.
- *
- * Rank by signed tile priority, then foe proximity; later tiles win ties.
- * Requires a consistent nonempty movable mask/count; there is no empty guard.
- */
-void battle_ai_take_next_movement_origin(void) {
+/* Move the best remaining origin tile into the current action's coords and remove it: the lowest
+ * tile_priority, then the lowest tile_foe_proximity; ties go to the last tile scanned. The caller
+ * guarantees one is left (there is no empty check). */
+void battle_ai_take_best_origin(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 best_key = 0x7fffffff;
     s32 x, y, level;
@@ -19,7 +16,7 @@ void battle_ai_take_next_movement_origin(void) {
         for (y = 0; y < ai->map_max_y; y++) {
             /* Typed indexing changes the mask-base instruction order. */
             mask_level_address = level * (18 * sizeof(u16)) + (u32)ai;
-            movable_rows = (u16*)(mask_level_address + ((u32)&ai->movable_tiles - (u32)ai));
+            movable_rows = (u16*)(mask_level_address + ((u32)&ai->origin_tiles - (u32)ai));
             row = movable_rows[y];
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
@@ -42,8 +39,8 @@ void battle_ai_take_next_movement_origin(void) {
     {
         /* Typed indexing folds the field offset before the selected level. */
         u32 selected_level_address = ai->current_action.coords.bytes.elevation * (18 * sizeof(u16)) + (u32)ai;
-        movable_rows = (u16*)(selected_level_address + ((u32)&ai->movable_tiles - (u32)ai));
+        movable_rows = (u16*)(selected_level_address + ((u32)&ai->origin_tiles - (u32)ai));
         movable_rows[ai->current_action.coords.bytes.y] ^= 0x8000 >> ai->current_action.coords.bytes.x;
     }
-    ai->movable_tile_count--;
+    ai->origin_tile_count--;
 }

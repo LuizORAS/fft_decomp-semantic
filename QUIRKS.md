@@ -507,3 +507,9 @@ translation unit. Share their types and constants through headers.
   so a unit with exactly the lower half sees them greyed.
 - `src/battle/battle_ai_handle_autobattle.c`: Protect allies falls back to Run like a rabbit when
   `battle_ai_select_protect_allies_action` returns -2, which it never does.
+- `src/battle/battle_ai_evaluate_origins.c`: an ability without
+  `BATTLE_AI_ABILITY_EXHAUSTIVE_ORIGIN_SCAN` multiplies its origin and target tile counts and tests
+  the byte product against 10, but both arms set `ranked_origin_search`, so every such ability
+  takes its origins best first (`battle_ai_take_best_origin`).
+- `src/battle/battle_ai_is_unit_untargetable.c`: a Transparent enemy is left out of the AI's
+  targets, except a rider whose mount is Transparent too.

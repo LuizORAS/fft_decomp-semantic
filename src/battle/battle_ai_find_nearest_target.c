@@ -21,7 +21,7 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
         /* Crystals always qualify as healer-mode destinations. */
         if (mode != BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL
             || !(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
-            if (battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(i))
+            if (battle_ai_is_unit_untargetable(i))
                 continue;
             if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 continue;

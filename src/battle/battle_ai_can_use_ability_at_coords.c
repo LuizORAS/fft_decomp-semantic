@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Check depth, terrain, and Monster Skill restrictions at an AI origin.
- *
- * Return 1 when these checks permit use, otherwise 0. Geomancy delegates
- * directly to its terrain check; this is not a complete ability-use test.
- */
-s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
+/* Return 1 when the considered ability may be used from coords: not water 2 or more deep for a unit
+ * with the water penalty; for Geomancy, terrain that gives this ability
+ * (battle_ai_can_elemental_ability_be_used); for an ability that needs Monster Skill, a same-team
+ * holder that can react on or next to the tile, within 2 levels. Range and targets are checked
+ * elsewhere. */
+s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coords) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 dx;

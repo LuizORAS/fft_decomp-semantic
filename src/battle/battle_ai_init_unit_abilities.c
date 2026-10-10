@@ -74,12 +74,12 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
                 }
                 if (g_main_ability_range_data[ai->considered_ability.ability_id].flags_2
                     & (ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES)) {
-                    entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS << 8);
+                    entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8);
                     continue;
                 }
             }
             if (ai->considered_ability.parameters.bytes.aoe == 0) {
-                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS << 8);
+                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8);
             }
         }
     }

@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
-/* Index of the first present unit standing on the current action's target
- * panel, or BATTLE_UNIT_ID_NONE if none. */
-s32 battle_ai_has_any_unit_on_target_panel(void) {
+/* Return the first present unit's slot on the current action's target tile (target_x, _y,
+ * _elevation), or BATTLE_UNIT_ID_NONE: battle_ai_find_unit_at_coordinates for those fields. */
+s32 battle_ai_find_unit_on_target_tile(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     battle_stats_t* unit;

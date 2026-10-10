@@ -1,7 +1,3 @@
-/*
- * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the
- * target's table.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 

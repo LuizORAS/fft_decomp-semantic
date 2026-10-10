@@ -41,10 +41,11 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                     continue;
                 }
                 if (!(behavior[1] & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {
-                    if (battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(target_id) != 0) {
+                    if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
-                    if (action->targeting_type == 6 && ai->unit_acts_before_me[action->target_id] != 0) {
+                    if (action->targeting_type == BATTLE_ACTION_TARGET_UNIT
+                        && ai->unit_acts_before_me[action->target_id] != 0) {
                         if (action->target_id != target_id) {
                             continue;
                         }
@@ -79,11 +80,11 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
         }
         battle_action_apply_actor_result(action->unit_id);
     } while (work.continue_attack != 0);
-    if (ai->hit_counter != 0xff && ai->weapon_range_flag != 0) {
+    if (ai->hit_counter != 0xff && ai->ranked_origin_search != 0) {
         if (ai->ability_effect_on_self == 1 && self_hit != 0) {
-            ai->useful_on_caster_flag = 1;
+            ai->target_tile_settled = 1;
         } else if (ai->ability_effect_on_self == 2 && self_hit == 0) {
-            ai->useful_on_caster_flag = 1;
+            ai->target_tile_settled = 1;
         }
     }
     battle_action_store_acting_unit_data(&g_battle_unit_stats[action->unit_id]);
