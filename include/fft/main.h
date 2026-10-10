@@ -1103,7 +1103,7 @@ typedef enum main_sound_sfx_priority {
     MAIN_SOUND_SFX_PRIORITY_DIRECT = 0x80,     /* SuzukiPlaySound1 (main_sound_play_sfx), channels 6-7 */
 } main_sound_sfx_priority_e;
 
-#define MAIN_SOUND_SFX_CHANNEL_ID(priority, channel) (((priority) << 8) | (channel))
+#define MAIN_SOUND_SFX_CHANNEL_ID(priority, channel) ((s16)(((priority) << 8) | (channel)))
 
 /* Sound resources. A sound id is MAIN_SOUND_ID(resource, sound): the id of a
  * loaded main_sound_resource_t in the high halfword and the index of a
