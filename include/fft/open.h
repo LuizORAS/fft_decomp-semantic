@@ -304,6 +304,7 @@ typedef struct open_birthday_confirmation_state {
 typedef char
     open_birthday_confirmation_state_size_must_be_0x64[(sizeof(open_birthday_confirmation_state_t) == 0x64) ? 1 : -1];
 
+/* Days in each month of the birthday entry. February has 28, so 29 February cannot be entered. */
 extern u8 g_open_birthday_month_lengths[12];
 extern u8 g_open_birthday_title_image[];
 extern u8 g_open_birthday_window_image[];

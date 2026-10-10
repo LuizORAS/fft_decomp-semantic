@@ -14,7 +14,7 @@
  * which includes the two mark selectors. The tile address is not bounds-checked.
  * The event script uses only the flat camera block selector.
  *
- * Selector 15 touches no tile: it calls battle_return_zero_801842f8 until that
+ * Selector 15 touches no tile: it calls battle_map_tile_data_15_stub until that
  * returns 0, at most 1000 times, and raises battle load exception 0x80 when it
  * never does. The callee always returns 0, so neither the retry nor the exception
  * can run.

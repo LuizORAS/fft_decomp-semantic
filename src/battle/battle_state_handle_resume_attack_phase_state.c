@@ -16,7 +16,7 @@ extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_head
  * due, or in the pre-action phase, the JP and EXP rewards begin.
  *
  * The facing computed for the acting unit's own action is passed to
- * battle_noop_8018ef2c, which is empty. */
+ * battle_action_post_action_facing_stub, which is empty. */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;

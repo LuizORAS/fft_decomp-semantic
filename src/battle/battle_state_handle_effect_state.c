@@ -4,7 +4,8 @@
 /* Effect game-state handler: animate the units, the screen colour modulation and
  * the camera while an effect plays. When the effect cycle has ended, the game
  * state and animation speed saved by battle_state_enter_effect_playback are
- * restored. */
+ * restored. Neither function that stores this state has a caller, so the
+ * handler does not run. */
 void battle_state_handle_effect_state(void) {
     battle_gfx_update_all_unit_rotation_and_vectors();
     if (g_battle_menu_status_screen_selected != 1) {

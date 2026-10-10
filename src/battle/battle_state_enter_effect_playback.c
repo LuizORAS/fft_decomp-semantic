@@ -2,7 +2,7 @@
 
 /* Enter the effect-playback game state, saving the state and animation speed
  * that battle_state_handle_effect_state restores. Returns 1 when the effect data is
- * not ready yet and the caller must retry. */
+ * not ready yet and the caller must retry. No code calls it. */
 s32 battle_state_enter_effect_playback(void) {
     s32 previous_state;
     s32 previous_animation_speed;

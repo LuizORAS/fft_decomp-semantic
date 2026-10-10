@@ -2103,6 +2103,7 @@ extern s16 D_80032A58; /* only ever stored */
 extern s32 D_800459D8;
 extern u8 D_800473A7;
 extern u8 D_80057b1c;
+/* Two bytes per map_surface_type_e; all 64 pairs are 0x19, 0x19. */
 extern u8 g_main_terrain_tile_info_pairs[];
 
 /* entry */

@@ -34,8 +34,10 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_gfx_update_all_unit_rotation_and_vectors`) do the same for units
   that chapter-end cutscenes walk off the map.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
-  (`0x34`) path writes map Y into `real.vy` (not `real.vz`); the height branch
-  then overwrites it.
+  (`0x34`) path writes the tile-centre depth into `real.vy` (not `real.vz`).
+  The first frame adds the fall speed to it, which puts the unit below the
+  ground, and the next frame snaps it to the ground: an event fall ends on its
+  second frame.
 - `src/battle/battle_map_light_state_command.c`: several arms return an
   uninitialized pointer.
 - `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the
@@ -117,7 +119,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_map_dispatch_gns_resource` returns a local no path assigns (`$s8`);
   `battle_menu_get_cursor_bob_offset` and `world_menu_get_cursor_bob_offset`
   walk an unset table pointer for a mode other than 0 or 1; `battle_effect_summon_charge_secondary_handler` returns
-  `result` (`$a1`) unset when the phase is not 1-3;
+  `result` (`$a1`) unset when the phase is not 1-3, as does
+  `battle_effect_linear_projectile_secondary_handler`;
   `bunit_unit_get_current_stat`, `bunit_unit_get_max_stat` and
   `world_get_formation_unit_stat_by_mode` return `value` (`$a1`) for a stat
   mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the
@@ -129,7 +132,16 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help` read
   `node`, `x` and `y` in the cursor loop when the text thread is already
   running on the first frame, and `navigation` when the unit view mode is
-  not 1-4.
+  not 1-4; `battle_menu_init_system_function` passes `ptr` on unset for
+  SCENARIO_CHECK and CLOSE; `battle_gfx_init_numeric_sprite_display` leaves
+  `display` unset for a section outside 0-2 (its caller passes 0-2);
+  `battle_map_update_mesh_part_animations` indexes the instructions with
+  `next`, assigned only when a keyframe expires in the same pass, for a part
+  whose animation state is set and whose keyframe is 0;
+  `battle_map_control_gte_background_color` returns `result` unset for DISABLE
+  and RESTORE (every caller issues SET); `open_card_get_info_with_retries`
+  returns `result` unset for a retry limit below 1 (its caller passes 2);
+  `battle_sound_stop_weather_sfx` returns an unset `result` no caller reads.
 - `world_card_read_file_chunked` sets `result` to -1 when the last read was
   short and then returns `total`; the test has no effect.
 - `helpmenu_menu_run_require_help` and `world_menu_run_require_help` reach
@@ -161,7 +173,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
     0xe4) have operand lengths in the size table and no handler; the
     scanners step over them and the interpreter ends the script on them. No
     retail script uses them.
-  - AddGhostUnit with no free misc slot `continue`s without advancing or
+  - AddGhostUnit runs an empty four-pass countdown before its free-slot
+    search; with no free misc slot it `continue`s without advancing or
     yielding, so the script thread spins.
   - BlockStart, AddUnitStart or CameraFusionStart with no matching End gets
     offset 0 from the finder and the script resumes at byte 1.
@@ -173,6 +186,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
     2000 indexes the rotation table.
   - WaitUnitReady waits on `battle_return_one`, so it never waits.
   - Effect stores its x and y operands to two globals nothing reads.
+  - DebugPause prints "PAUSE", yields one frame and sets a word nothing reads
+    (`battle_script_print_debug_message`); instruction 0xdc stores 13 to
+    another. Neither changes the script's course.
   - In WORLD, WalkTo is an empty arm outside a block, Arrow resolves both
     units and never sets the trajectory, and ChangeMap calls an empty
     function where BATTLE resets the camera script transform.
@@ -210,7 +226,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   the deployment screen handles four squads.
 - Words 0xab-0xff of the script variable block are reachable by no variable
   id, yet word 0xff gates the BATTLE call in
-  `main_overlay_call_battle_return_zero`.
+  `main_overlay_call_battle_return_zero`, which itself has no caller.
 - Formation menu states 22 and 23 have handler table entries and code paths
   and no code stores them. Menu input mode 1 is tested in four places and
   never stored.
@@ -319,6 +335,93 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   one. The shop, formation and both save screens unload their own music this
   way, so the next `main_sound_stop_current_music` hands the released record
   to `SuzukiDeallocateMUSChannels`.
+- `battle_map_stop_texture_animation` clears the active byte of slot `handle`,
+  but `battle_map_start_texture_animation` returns slot + 1: it stops the slot
+  after the handle's own, and handle 8 clears the byte after the eight slots,
+  the first of `g_battle_gfx_cycled_deployed_palettes`.
+- `battle_gfx_append_unit_graphics_load_descriptor` writes its record before it
+  tests the count, which stops at 16: a seventeenth append lands one past the
+  16-entry queue, on the head of `g_main_zodiac_primitives`.
+- `battle_effect_remove_secondary`: removing a record from the middle of the
+  active chain leaves the record before it with `next_slot_id` naming the freed
+  record. When that one is removed while a newer effect is still active, it
+  patches the freed record's link (by then a free-chain link) and its real
+  successor keeps naming it as the previous record.
+- `main_heap_alloc` tags a new block one above the highest tag met below it, so
+  it can repeat the tag of the block directly above (free pages 0-3 under a
+  block tagged 3: allocating 1, 1 and 2 pages gives tags 1, 2, 3).
+  `main_heap_free` tells blocks apart by tag alone: freeing the lower block
+  frees both, and freeing the upper one returns 0 and frees nothing.
+  `main_heap_reserve_at` picks an unused tag.
+- `main_unit_calculate_entd_equipment`: the random body-armor roll tests
+  `BATTLE_SUPPORT_SET_1_EQUIP_SHIELD` before asking for `ITEM_TYPE_ARMOR`;
+  Equip Armor is tested only for the helmet.
+- `battle_target_clear_panels_on_untargetable_tiles` (ability ranges) visits
+  only the 256 lower-level panels, so an untargetable upper-level tile keeps
+  its range; the weapon-range twin `battle_target_can_select_tile` visits all
+  512.
+- `battle_unit_store_coordinate_mount_animation_data` and
+  `battle_unit_restore_facing_after_attack`: for a mounted pair the second
+  `battle_unit_set_tile_position` call names the unit's own battle record again
+  (the first function finds its "mount" by the unit's own `unit_id`), so the
+  partner's battle stats take no tile or facing here. The second function also
+  writes the partner record's facing with no null test.
+- `battle_gfx_release_reserved_vram_slot` tests owner bit 0x80
+  (`BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE`), which the EVTCHR (0xfe) and free
+  (0xff) markers also carry, so the event instruction releases a saved EVTCHR
+  slot too.
+- `battle_effect_draw_projectile_model`, the Reflect shield: the depth is
+  assigned from each corner in turn where the other models sum them, so only
+  the last corner counts, and every triangle is linked at ordering-table entry
+  0 whatever its depth.
+- `battle_map_load_data`: the fourth selection pass does not exclude filler
+  rows (type 0x31; 1,533 in the retail GNS files, all with variable 0x22, state
+  1 and comparison equal). One whose comparison holds indexes entry 49 of the
+  49-entry `g_battle_map_loaded_gns_records` and
+  `g_battle_map_pending_gns_records`: it reads
+  `g_battle_map_saved_light_matrix` and can overwrite the first 20 bytes of
+  `g_battle_map_local_light_matrix`.
+- `main_gfx_build_zodiac_primitives` and `card_gfx_build_zodiac_primitives`:
+  the round-to-nearest step of the sprite scale adds 1, not `ONE`, to the 4.12
+  product before dividing, so it only rounds up a remainder of `ONE` - 1.
+- `battle_state_handle_open_sp2_files_state` frees its 0x8000-byte buffer when
+  `battle_gfx_open_sp2_file` returns 0, which means the read has started, and
+  keeps it on 1 (loader busy). The next frame allocates again and has its
+  second request refused, so the file arrives in the kept block only because
+  the heap hands the freed pages back.
+- `wldcore_menu_step_treasure_detail_level` and
+  `wldcore_menu_step_unexplored_land_detail_level` wait, in their LOAD phase,
+  on the render record named by level word 0x08 (`saved_record_index`). Their
+  pushes never set it: it holds what the last level at that stack depth left.
+- `battle_effect_set_secondary` (fall dust, splash, level up, venom trap,
+  zodiac poof, death smoke, teleport) builds its init record in a local of
+  which `battle_effect_build_secondary_init` sets five fields;
+  `battle_effect_init_secondary` copies the rest of the two ten-byte blocks and
+  `used_weapon_id` as the stack left them.
+- `battle_gfx_draw_unit_shadow` sets bit 0 of `shadow_dirty` before testing it,
+  so the shadow quad is recalculated on every call and the dirty bit the
+  movement code sets gates nothing.
+- Tests that cannot succeed: `battle_state_sync_frame` zeroes a
+  `g_frame_pacing` of 1 under `wait < g_frame_pacing` with `wait` at least 2;
+  `battle_state_run_deployment` loops until
+  `battle_state_update_deployment_controller_input` returns -1, and it always
+  returns 1; the first `switch` of `battle_move_apply_unit_step_velocity`
+  repeats the layer test that the statement before it has just made false;
+  `battle_status_check_unit` cannot report Sleep, whose
+  `g_main_status_effect_data` record carries the freeze-CT flag tested first;
+  `battle_unit_set_animation_based_on_mounted_state` tests a depth masked to a
+  byte for `< 0` and a nonzero animation for 0; `battle_menu_is_still_building`
+  tests `i != 3` inside its scan of threads 4-9;
+  `battle_camera_rotate_when_unit_tile_not_visible` adjusts a negative
+  `direction` after masking it to 0-0xfff; selector 15 of
+  `battle_map_set_tile_data_value` retries `battle_map_tile_data_15_stub`,
+  which returns 0 at once, up to 1000 times before load exception 0x80.
+  `battle_gfx_run_unit_seq_script`, `battle_gfx_run_wep_eff_seq_script` and
+  `battle_gfx_load_trap_and_unit_frame_parts` test sequence and frame pointers
+  for -1, which the unpackers replace with the start of the data, and the last
+  tests a three-bit part count plus one for `> 8`. The weapon interpreter's own
+  bounds (`sequence_id > 0x100`, `frame > 0x200`) admit the index one past each
+  table.
 
 ## Calls that disagree with the callee
 
@@ -333,7 +436,7 @@ written that way.
   panel builder; the value is the callee's leftover register contents.
 - `src/world/world_menu_resize_parent_entry_to_digits.c`: calls
   `world_text_count_decimal_digits` with no argument; the callee reads a stale
-  `$a0`.
+  `$a0`. Nothing calls the function itself.
 - `src/battle/battle_move_animate_fall_to_target_tile.c` passes a coordinate
   buffer to the one-argument
   `battle_gfx_calculate_screen_z_from_misc_screen_data`, as it does to
@@ -409,6 +512,31 @@ written that way.
   `world_script_filter_unit_id_by_mode` read `in_id` as a halfword; most
   callers pass the address of an `int` loop counter (BATTLE through a
   `(u16*)` cast), so the id is that counter's low half.
+- `battle_script_process_pending_requests` assigns the results of
+  `battle_map_command_get_3d_object_state` and
+  `battle_map_command_get_texture_animation_active`, which are defined `void`
+  and have no prototype in `battle.h`; the value is the `$v0` that
+  `battle_map_dispatch_map_data_command` left.
+- `battle_move_calculate_walkto_pathing` has no return statement; its caller
+  uses the path block pointer `battle_move_calculate_pathing` left in `$v0`.
+- `battle_map_load_gns_and_move_find_items` falls off its end for a map with no
+  GNS sector and returns what `bzero` left in `$v0`. `battle_map_load_data`
+  compares the result with the GNS table and, when it is not the table (also
+  when the read could not start), returns 0 with its 0x20000-byte load buffer
+  still allocated.
+- `battle_gfx_set_thrown_item_graphic_palette` calls
+  `main_item_get_data_pointer` with no argument, through
+  `get_item_data_pointer`, a second name `target/main.yaml` gives 0x8005a884;
+  the callee takes the item id still in `$a0`.
+- `g_battle_effect_secondary_handlers` entries 0x07, 0x0a, 0x0b, 0x0e and 0x10
+  are empty `void` functions, although `battle_effect_update_secondary_effects`
+  ends an effect on a handler result of 0. No record of
+  `g_battle_effect_secondary_animations` names them.
+- `jobstts_ability_is_non_action_learned` passes one word (0x801f0050, named
+  both `g_jobstts_selected_ability_data` and
+  `g_jobstts_selected_ability_secondary_data`) for both outputs of
+  `main_ability_calculate_pointers_and_type`, so the ability data pointer is
+  overwritten by the secondary data pointer.
 
 ## Declaration leads
 
@@ -446,6 +574,12 @@ written that way.
   `main_sound_stop_current_weather_sfx` and the data row
   `main_sound_pause_tracked_sfx`, the name BATTLE calls and `include/fft/main.h`
   declares.
+- `g_open_file_openbk_end_sector_offsets` (`0x80073f5c`) is
+  `g_open_file_openbk_start_sector_offsets + 1`: eight sector offsets of
+  OPNBK.BIN under two names, each image ending where the next starts.
+- `g_open_gfx_image_copy_progress` (`0x800854b5`) is
+  `g_open_gfx_image_copy_row_flags[1]`;
+  `open_gfx_copy_file_image_to_210x180_buffer` clears it through the array.
 
 ## Duplicated code
 
@@ -468,6 +602,20 @@ translation unit. Share their types and constants through headers.
   different records.
 - `world_gfx_init_scaled_draw_area_packets{,_2,_3,_4}.c` differ only in the
   eight bytes they install as the second `RECT`.
+- Routines compiled twice into one module, identical apart from the addresses
+  they jump to, call and load: `battle_script_run_next_event` and
+  `battle_script_run_next_event_unused` (and the WORLD pair);
+  `battle_unit_add_event_offset_by_misc_id_unused` and
+  `battle_unit_add_event_offset_by_misc_id`;
+  `battle_move_set_float_step_delta_center_to_edge` and
+  `battle_move_set_float_step_delta_edge_to_center`, which repeat the
+  `battle_move_set_unit_step_delta_*` pair;
+  `battle_text_advance_cursor_with_backreferences` and
+  `battle_menu_text_advance_cursor_with_backreferences` (and the WORLD pair);
+  `world_menu_set_cursor_position` and `world_menu_init_cursor_position`;
+  WORLD's `world_option_gfx_*` and `world_screen_gfx_*` scaled-draw-area
+  routines and its two thin-window-frame threads. The two copies named unused
+  have no caller.
 - Overlays share load addresses, so an address match is not an identity
   match. Compare bytes: REQUIRE and EQUIP both have code at `0x801c2dcc`, and
   the two routines differ.
@@ -515,7 +663,7 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_run_weather_command(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCC60-byte stack frame of packet pools reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
 - `src/world/world_script_handle_tutorial_command_end.c`: two paths fall off the end of the s32 handler and return a stale nonzero `$v0` (the fade's result, or the 1 just stored), so the formation loop keeps running.
-- `src/world/world_menu_draw_thread_status_indicators.c` and its BUNIT, ATTACK and EQUIP twins: while a unit-status banner thread (8 or 7; 13 or 14 in EQUIP) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
+- `src/world/world_menu_draw_thread_status_indicators.c` and its BUNIT twin (the ATTACK, DEBUGCHR, EQUIP and REQUIRE copies have no caller): while a unit-status banner thread (8 or 7) is being stopped its first parameter is 0, and the panel check reads that "display record" at RAM address 0.
 - `src/open/open_script_draw_text_records.c`: passes OT entries by value (`otag[15]`, `otag[8]`) to `AddPrim`; after `ClearOTagR` each holds the physical address of the entry below it, so the credits fade, bands and glyphs link into layers 14 and 7 through the KUSEG mirror.
 - `src/wldcore/wldcore_gfx_step_dissolve_image_upload.c`: the step-0 call (start the dissolve) has no return value of its own; `$v0` keeps its clearing cursor, the address one byte below the band-progress table. Its three callers ignore that result.
 - `src/world/world_menu_build_icon_record.c`: for the Bar's send-unit list (header 0x10) the arrow x reads the "height" of the record at the panel's value pointer, `&g_wldcore_active_menu_value` + 6, which is the upper half of `g_wldcore_proposition_dispatch_days` (0).
@@ -632,22 +780,42 @@ translation unit. Share their types and constants through headers.
 - `battle_formula_apply_status_to_action`: the
   `BATTLE_ACTION_STATE_PREVIEW` test in the separate-status loop cannot pass;
   any state but EXECUTE was switched to all-or-nothing above it.
-- No module calls `battle_camera_zoom_map`,
-  `battle_camera_handle_tilt_request` (L2 and R2 go through
-  `battle_camera_toggle_zoom` and `battle_camera_toggle_tilt`) or
-  `battle_formula_49_unused_with_extra_steps`, a second entry to formula
-  0x49's handler that the formula table does not name.
 - `main_gfx_build_now_loading` loads the NOW LOADING CLUT to VRAM (0x70,
   0x1e2), clut word 0x7887; in battle that is
   `MAP_CLUT(MAP_CLUT_ROW_SPRITES, 7)`, the status bubble CLUT.
 - The effect interpreter indexes fixed tables with wider fields and no check:
   the opcode is masked to nine bits over the 120 entries of
-  `g_battle_effect_instructions` (0x2e-0x77 are the error report);
+  `g_battle_effect_instructions` (0x2e-0x77 are the error report, a `void`
+  function in a table of `s16` handlers: `battle_effect_run_block` would test
+  its leftover `$v0` and the script position would not move);
   `g_battle_effect_particle_render_handlers` has four entries for
   `(kind_flags >> 12) & 0xf`, so `EFFECT_WORK_KIND_HEAP_BLOCK` would call
   through `g_battle_effect_camera_rotation_mode`; opcode 06 takes a six-bit
-  callback slot and a keyframe action names slot 1-7 over the record's four
-  (5 writes `target_index`). Retail files use opcodes below 0x2e, kinds 0 and
+  callback slot over the five words of `g_battle_effect_callback_slots`, and a
+  keyframe action names slot 1-7 over the record's four (5 writes
+  `target_index`). Retail files use opcodes below 0x2e, kinds 0 and
   2 and slots 1-4.
 - Special unit name 0x44, "Rofokare", is given to no ENTD unit; every other
   named entry of the 256 is.
+- `battle_heap_alloc_block` has no failure exit: when no free block is large
+  enough it walks the circular free list forever.
+- `battle_menu_run_unit_editor_panel_thread` hands a unit with mount info (a
+  rider or a mount) to DEBUGCHR.OUT's `debugchr_editor_run_unit_thread`
+  (`battle_menu_open_debugchr_unit_editor`); any other unit gets BATTLE's own
+  panel.
+- Functions that nothing references: no `jal` or `j` in any executable or overlay that can be resident with them targets them, and no word or `lui`/`addiu` pair there holds their address. Psy-Q library routines are left out, as are functions whose only callers are listed here.
+  - BATTLE (118): `battle_action_activate_move_act`, `battle_action_load_last_used_ability`, `battle_action_store_8019387c_if_not_reacting`, `battle_camera_convert_screen_coords_by_1_from_misc_id`, `battle_camera_copy_offset_screen_coords`, `battle_camera_get_offset_screen_coords`, `battle_camera_handle_tilt_request`, `battle_camera_restore_offset_screen_coords`, `battle_camera_set_offset_screen_coord_delta_from_value`, `battle_camera_set_offset_screen_coord_delta_from_values`, `battle_camera_set_offset_screen_coords`, `battle_camera_set_real_coord_delta_from_destination`, `battle_camera_set_real_coord_delta_from_values`, `battle_camera_set_rotation_delta_from_value`, `battle_camera_set_rotation_delta_from_values`, `battle_camera_set_zoom_delta_from_value`, `battle_camera_set_zoom_delta_from_values`, `battle_camera_zoom_map`, `battle_copy_misc_unit_screen_coords`, `battle_effect_add_2_to_halfword`, `battle_effect_add_4_to_halfword`, `battle_effect_add_6_to_halfword`, `battle_effect_add_8_to_halfword`, `battle_effect_get_list_node`, `battle_effect_get_prim_buffer_offset`, `battle_effect_get_screen_location_by_battle_id`, `battle_effect_init_fall_dust_secondary`, `battle_effect_init_single_target_trajectory`, `battle_effect_load_data`, `battle_effect_noop`, `battle_effect_noop_return_zero`, `battle_effect_replace_flags_0006`, `battle_effect_select_larger_magnitude_s16`, `battle_effect_start_basic_ability_animation`, `battle_formula_49_unused_with_extra_steps`, `battle_gfx_clear_screen_color_modulation`, `battle_gfx_copy_screen_color_modulation`, `battle_gfx_get_vram_slot_summary`, `battle_gfx_restore_screen_color_modulation`, `battle_gfx_set_sprite_part_flip`, `battle_gfx_set_thrown_item_graphic_palette_by_battle_id`, `battle_heap_print_stats`, `battle_map_adjust_background_color`, `battle_map_copy_background_color`, `battle_map_get_background_color`, `battle_map_get_weather`, `battle_map_restore_background_color`, `battle_map_set_ambient_light_color`, `battle_map_set_background_color`, `battle_map_stop_palette_animation`, `battle_map_transition_and_store_ambient_light_color`, `battle_map_transition_and_store_darkness_color`, `battle_map_update_all_palettes_from_color_data`, `battle_map_update_and_store_palette_colors`, `battle_map_update_palette_colors_by_index`, `battle_menu_clear_window_buffer_pair_by_thread`, `battle_menu_confirm_sound_delay_thread`, `battle_menu_display_text_entry_past_choice_marks`, `battle_menu_load_portrait_image`, `battle_menu_reset_unit_records_wrapper`, `battle_menu_start_help_thread`, `battle_move_calculate_pathing_time_sliced`, `battle_script_run_next_event_unused`, `battle_script_set_current_otag_entry_and_update_input`, `battle_state_enter_effect_playback`, `battle_state_get_frame_measurement`, `battle_state_halve_animation_speed_for_effects`, `battle_state_halve_animation_speed_for_jump_in`, `battle_state_halve_animation_speed_for_jump_out`, `battle_status_resolve_unit_changes_in_preview`, `battle_text_measure`, `battle_text_set_substitution_values_7e_7f`, `battle_unit_add_event_offset_by_misc_id_unused`, `battle_unit_call_bow_hardcoding_by_battle_id`, `battle_unit_check_exists`, `battle_unit_check_party_member_exists`, `battle_unit_count_from_misc_data`, `battle_unit_erase_pending_party_removal`, `battle_unit_get_camera_facing_quadrant_by_misc_id`, `battle_unit_get_camera_facing_sixteenth_by_misc_id`, `battle_unit_get_screen_data_ptr_by_battle_id`, `battle_unit_init_party_member_battle_data`, `battle_unit_mount_by_misc_ids`, `battle_unit_restore_target_facings_after_attack`, `battle_unit_set_animation_from_facing_hint`, `battle_unit_set_movement_idle_animation_by_misc_id`, `battle_unit_set_target_anim_by_battle_id`, `battle_unit_store_camera_facing_animation_for_all`, `battle_unit_update_display_by_battle_id`, `battle_noop_8008de88` (and the same at 80134430, 80134a6c, 80137b90, 8013bd64, 8013bdc4, 8013c740, 8013caf4, 8013d624, 8013d62c, 8013da60, 8013da68, 8013da78, 8013da80, 8013f4a0, 8013f7ac, 8014268c, 80147918, 8014a824, 801a1328, 801a6010, 801a6018, 801a866c, 801a8e74, 801aad30, 801b0ff4), `battle_return_argument_80133494`, `battle_return_zero_8008e6d0` (and the same at 8013d1f0). `battle_camera_zoom_map` and `battle_camera_handle_tilt_request` are bypassed (L2 and R2 go through `battle_camera_toggle_zoom` and `battle_camera_toggle_tilt`); `battle_formula_49_unused_with_extra_steps` is a second entry to formula 0x49's handler that the formula table does not name. The eight `battle_camera_set_*_delta_*` setters are the only code that starts the countdowns of `battle_camera_update_real_coord_animation` and its offset, zoom and rotation siblings, which the action-execute, event and map-change states call every frame and which never move anything. `battle_state_enter_effect_playback` and `battle_state_halve_animation_speed_for_effects` are the only code that stores `BATTLE_GAME_STATE_EFFECT`, so `battle_state_handle_effect_state` never runs.
+  - WORLD (87): `world_copy_misc_unit_screen_coords`, `world_font_upload_glyph_image`, `world_formation_show_unit_message`, `world_gfx_append_gpu_primitive_to_secondary_otag`, `world_gfx_append_poly_f4_to_otag`, `world_gfx_clear_draw_suppress_flag`, `world_gfx_flip_poly_ft4_uv_if_negative`, `world_gfx_set_draw_suppress_flag`, `world_job_calculate_and_store_unlocks`, `world_map_get_weather`, `world_menu_clear_window_buffer_pair_by_thread`, `world_menu_confirm_sound_delay_thread`, `world_menu_disable_alternate_main_palette`, `world_menu_enable_alternate_main_palette`, `world_menu_get_dead_unit_selection`, `world_menu_get_selected_command_address`, `world_menu_icon_clamped_list_thread`, `world_menu_icon_strip_thread`, `world_menu_init_and_load_scrollable_list_with_scroll`, `world_menu_init_attack_resources_and_threads`, `world_menu_init_system_function`, `world_menu_load_portrait_image`, `world_menu_poll_small_load`, `world_menu_preview_ability_turn_at_list`, `world_menu_request_open_companion_data_file`, `world_menu_request_open_small`, `world_menu_request_transition`, `world_menu_reset_unit_record`, `world_menu_reset_unit_records_wrapper`, `world_menu_resize_parent_entry_to_digits`, `world_menu_restore_selection_for_selected_unit`, `world_menu_run_require_help`, `world_menu_run_thread_with_selected_index`, `world_menu_set_default_entry_0_text_values`, `world_menu_set_default_entry_1_text_values`, `world_menu_set_main_scroll_parameters`, `world_menu_start_entry_chain_threads`, `world_menu_start_entry_thread`, `world_menu_start_mini_menu_display_thread`, `world_menu_store_auto_battle_main_target_id`, `world_menu_take_and_clear_thread_result`, `world_menu_text_entry_thread`, `world_menu_thin_window_frame_thread`, `world_menu_update_menus_and_event_speed`, `world_noop`, `world_option_gfx_build_scaled_draw_area_packets`, `world_option_gfx_init_scaled_draw_area_packets`, `world_return_parameter_1`, `world_return_zero`, `world_screen_gfx_build_scaled_draw_area_packets`, `world_screen_gfx_init_scaled_draw_area_packets`, `world_screen_menu_thin_window_frame_thread`, `world_script_filter_controller_input`, `world_script_get_scenario_finish_operation_flags`, `world_script_is_deployment_running`, `world_script_reset_event_state`, `world_script_run_next_event_unused`, `world_script_scale_music_volume`, `world_script_set_current_otag_entry_and_update_input`, `world_text_count_characters`, `world_text_print_fnt_value_and_next`, `world_text_set_substitution_values_7e_7f`, `world_text_start_thread_if_idle`, `world_thread_start_idle_5_to_8`, `world_thread_stop_after_empty_slots_5_to_8`, `world_thread_yield_then_stop_current`, `world_unit_update_facing_and_pending_animations`, `world_noop_800e8aa8` (and the same at 800e90e4, 800eba28, 800ef97c, 800ef9cc, 800f01f0, 800f05a4, 800f0f54, 800f0f5c, 800f1378, 800f1380, 800f1390, 800f1398, 800f2d18, 800f3024, 800f5f04, 800fad84, 80106138), `world_return_argument_800e7b54`, `world_return_zero_800f0b5c`. Most are its copies of BATTLE and overlay code; the quirks recorded above for `world_menu_resize_parent_entry_to_digits` and `world_menu_run_require_help` therefore never execute in WORLD.
+  - WLDCORE (3): `wldcore_find_save_slot_entry_by_tag`, `wldcore_script_calculate_save_data_completion_percent`, `wldcore_text_get_padded_dimensions`.
+  - OPEN (3): `open_card_wait_for_hardware_event`, `open_menu_init_render_record_fields`, `open_text_measure_menu_image`; the last is the only caller of `open_card_poll_hardware_event`.
+  - MAIN (55): `func_800184e0`, `main_ability_get_aoe`, `main_ability_get_range`, `main_gfx_fade_in_orbonne_monastery`, `main_gfx_fade_out_orbonne_monastery`, `main_job_find_by_skillset`, `main_overlay_call_battle_return_zero`, `main_smd_dispatch_snapshot`, `main_smd_get_held_voices`, `main_smd_get_instrument_attr`, `main_smd_get_min_loop_count`, `main_smd_get_music_filename`, `main_smd_get_play_time`, `main_smd_init_channel_streams`, `main_smd_pause_music`, `main_smd_resume_music`, `main_smd_seed_random`, `main_smd_set_channel_mute_mask`, `main_smd_set_channel_select`, `main_smd_set_flags_all_channels`, `main_smd_set_stop_bar`, `main_sound_find_waveset`, `main_sound_flush_key_off`, `main_sound_flush_key_on`, `main_sound_free_wavesets`, `main_sound_get_current_scenario_music`, `main_sound_get_largest_free_block`, `main_sound_get_music_handle`, `main_sound_get_sfx_channels`, `main_sound_open_music_into_slot`, `main_sound_play_sfx_in_channel`, `main_sound_play_sfx_with_settings_in_channel`, `main_sound_set_current_music_balance_shift_timed`, `main_sound_set_current_music_pitch_shift_timed`, `main_sound_set_current_music_tempo_scale_timed`, `main_sound_set_sfx_balance`, `main_sound_stop_all`, `main_sound_stop_sfx_channel_pair`, `main_sound_sum_resource_words`, `main_sound_wait_for_scenario_smd_load`, `main_system_disable_root_counter_2_evcb`, `main_system_enable_root_counter_2_evcb`, `main_unit_init_stats_and_statuses`, `main_noop_800121cc` (and the same at 800121d4, 800124ac, 800124b4, 800124bc, 800124c4, 80013634, 80015864, 80018654, 800186bc, 80059ac0), `main_return_zero_80014204`. `main_set_display_draw_new_game` is called only by `main_gfx_fade_in_orbonne_monastery`. `func_800184e0` stores a word that `SuzukiSPUInitialiser` and `main_sound_quit` clear and nothing reads.
+  - ATTACK (17): `attack_deploy_get_valid_tile`, `attack_deploy_init_valid_tiles`, `attack_deploy_set_arrow_position_mode`, `attack_deploy_set_cursor_tile`, `attack_deploy_set_valid_tile`, `attack_gfx_build_gradient_grid_primitives`, `attack_gfx_build_item_graphic_descriptor`, `attack_gfx_build_zodiac_primitives`, `attack_input_update_event_state`, `attack_menu_draw_thread_status_indicators`, `attack_panel_run_ability_list_thread`, `attack_panel_run_equipment_list_thread`, `attack_return_zero`, `attack_text_render_decimal_entry_list`, `attack_noop_801c087c` (and the same at 801c3070, 801c61dc).
+  - BUNIT (13): `bunit_gfx_build_item_graphic_descriptor`, `bunit_gfx_get_transition_frame`, `bunit_gfx_move_image_and_wait`, `bunit_job_calculate_and_store_unlocks`, `bunit_menu_clear_selection_values`, `bunit_menu_icon_strip_thread`, `bunit_menu_init_and_draw_scrollable_list`, `bunit_menu_init_and_draw_scrollable_list_simple`, `bunit_menu_text_entry_wait_thread`, `bunit_panel_run_ability_list_thread`, `bunit_panel_run_equipment_list_thread`, `bunit_text_render_decimal_entry_list`, `bunit_noop_801c0adc`.
+  - CARD (7): `card_gfx_enqueue_textured_quad_list`, `card_gfx_set_draw_color`, `card_menu_set_vsync_mode_and_event_speed`, `card_save_clear_selection_indices`, `card_text_count_encoded_glyphs`, `card_text_start_character_thread_if_idle`, `card_text_start_thread_if_idle`.
+  - DEBUGCHR (12): `debugchr_gfx_build_gradient_grid_primitives`, `debugchr_gfx_build_item_graphic_descriptor`, `debugchr_gfx_build_zodiac_primitives`, `debugchr_input_update_event_state`, `debugchr_menu_draw_thread_status_indicators`, `debugchr_menu_icon_list_thread`, `debugchr_menu_icon_strip_thread`, `debugchr_menu_text_entry_wait_thread`, `debugchr_panel_run_ability_list_thread`, `debugchr_panel_run_equipment_list_thread`, `debugchr_text_render_decimal_entry_list`, `debugchr_noop_801c090c`.
+  - EQUIP (17): `equip_gfx_enqueue_textured_quad_corners`, `equip_gfx_enqueue_textured_quad_list`, `equip_gfx_move_image_and_wait`, `equip_gfx_set_draw_color`, `equip_input_update_event_state`, `equip_menu_clear_selection_record`, `equip_menu_draw_thread_status_indicators`, `equip_menu_icon_strip_thread`, `equip_menu_init_and_draw_scrollable_list`, `equip_menu_init_and_draw_scrollable_list_simple`, `equip_menu_stop_threads`, `equip_menu_text_entry_wait_thread`, `equip_panel_run_ability_list_thread`, `equip_panel_run_character_status_thread`, `equip_set_s16_801d86ac`, `equip_unit_has_two_hands`, `equip_noop_801c151c`.
+  - ETC (1): `etc_noop_801bf3d8`.
+  - JOBSTTS (8): `jobstts_bits_init_secondary_reader`, `jobstts_bits_read_secondary`, `jobstts_gfx_enqueue_oriented_textured_quad`, `jobstts_gfx_enqueue_textured_quad_corners`, `jobstts_gfx_enqueue_textured_quad_list`, `jobstts_gfx_enqueue_textured_quad_rect`, `jobstts_menu_init_and_draw_scrollable_list`, `jobstts_menu_init_and_draw_scrollable_list_simple`.
+  - OPTION (4): `option_gfx_build_scaled_draw_area_packets`, `option_gfx_init_scaled_draw_area_packets`, `option_menu_thin_window_frame_thread`, `option_thread_stop_after_yield`.
+  - REQUIRE (15): `require_file_load_sync`, `require_gfx_build_item_graphic_descriptor`, `require_gfx_build_zodiac_primitives`, `require_input_update_event_state`, `require_input_wait_skip`, `require_menu_draw_thread_status_indicators`, `require_menu_icon_list_thread`, `require_menu_text_entry_wait_thread`, `require_panel_run_ability_list_thread`, `require_panel_run_equipment_list_thread`, `require_sound_play_music_tracks`, `require_text_render_decimal_entry_list`, `require_thread_stop_after_16_frames`, `require_noop_801c07ac` (and the same at 801c9fa4).
+  - SMALL (1): `small_return_zero`.
