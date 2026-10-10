@@ -1,5 +1,13 @@
 #include "fft/battle.h"
 
+/* Enter the confirm-action state and open the confirmation prompt for the pending
+ * action.
+ *
+ * The prompt option follows the ability preview's targeting mode and whether a
+ * selectable unit stands on the cursor tile: 1 for a unit under a unit-or-tile
+ * ability, 4 for a unit under a tile-only ability, 3 for a unit under an ability
+ * with no target choice, 2 for an empty tile in all three, and 0 for any other
+ * mode. */
 void battle_action_confirm(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;

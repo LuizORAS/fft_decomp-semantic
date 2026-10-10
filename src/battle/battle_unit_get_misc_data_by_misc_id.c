@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* The misc (display) record whose unit_id is misc_id, or 0. */
 battle_unit_misc_data_t* battle_unit_get_misc_data_by_misc_id(u16 misc_id) {
     battle_unit_misc_data_t* unit;
 

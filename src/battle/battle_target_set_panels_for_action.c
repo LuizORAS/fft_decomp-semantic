@@ -5,6 +5,21 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Build the targeting panels for an action and report how its target is chosen.
+ *
+ * The skillset's menu type picks the range. Abilities (the default and monster
+ * menus, the Elemental ability of the unit's tile, the Draw Out of the chosen
+ * katana) use their range data through battle_target_set_ability_panels. Item
+ * reaches 1 tile, or 4 with Throw Item or for a Mime. Throw reaches the unit's
+ * Move and excludes its own tile. Attack and Charge use the weapon's range, Jump
+ * the unit's Jump abilities.
+ *
+ * Returns a battle_target_panels_e value: INVALID for an absent unit, a katana or
+ * ability id out of range or a menu type without an action; NO_TARGETING for the
+ * remaining menu types and for an auto ability with range 0 that does not use the
+ * weapon's range; NONE when no tile is marked; TILE_ONLY when the action cannot
+ * follow a unit (always for Item, Throw, Attack, Charge and Jump); otherwise
+ * UNIT_OR_TILE. */
 s32 battle_target_set_panels_for_action(u8* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;

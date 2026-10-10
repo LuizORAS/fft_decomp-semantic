@@ -1,6 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Rebuilds the camera matrix from the angles (`render_buffers`, an SVECTOR), the
+ * screen offset and the zoom.
+ *
+ * The matrix is the rotation scaled by the zoom, with a translation that puts
+ * g_battle_camera_integer_coords (the negated camera position) at the screen
+ * offset. It is stored in *camera_matrix, g_battle_map_camera_matrix and map mesh
+ * part 0; the angles and zoom are kept in g_battle_map_camera_rotation and
+ * g_battle_map_camera_zoom, and the light rotation matrix is rebuilt. The GTE is
+ * left with the scaled rotation and the bare screen offset as its translation. */
 void battle_camera_update_matrices(
     MATRIX* camera_matrix, void* render_buffers, void* offset_screen_coords, VECTOR* camera_zoom) {
     long result;

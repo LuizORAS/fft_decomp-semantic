@@ -2,6 +2,13 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Return the newly pressed buttons in `buttons`, or else Up or Down when that
+ * held direction's auto-repeat fires, or 0.
+ *
+ * A new press clears the four direction counters. A held direction counts once
+ * per call; past g_open_input_directional_repeat_initial_delay it fires and steps
+ * back by g_open_input_directional_repeat_period. Unlike the WLDCORE twin only Up
+ * and Down repeat: the other two counters are cleared and never counted. */
 u32 open_input_check_repeating_directional(u32 buttons) {
     s32 next;
     u32 pressed;

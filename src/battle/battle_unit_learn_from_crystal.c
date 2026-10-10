@@ -1,6 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Fills a unit's action result for picking up a crystal or treasure
+ * (BATTLE_CRYSTAL_* flags).
+ *
+ * The result starts as a cancelled miss. TAKE_TREASURE adds
+ * g_main_crystal_treasure_item_id to the inventory and returns that call's
+ * result, ignoring the other flags. RESTORE_HP_MP turns the result into a hit
+ * that heals the missing HP and MP. LEARN_ABILITIES ORs
+ * g_main_crystal_learnable_abilities into the unit's learned-ability bits. These
+ * return 0. */
 s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     s32 i;
     u8* dst;

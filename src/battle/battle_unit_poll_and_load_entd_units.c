@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Loads the encounter's ENTD units once the ENTD file has arrived, then frees the
+ * file. Returns 1 while the file is still loading, else 0 (also when there is no
+ * current encounter). */
 s32 battle_unit_poll_and_load_entd_units(void) {
     entd_encounter_t* entd_data;
 

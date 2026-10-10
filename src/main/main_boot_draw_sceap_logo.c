@@ -1,6 +1,9 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
+/* Present one frame of the SCEAP.DAT fade: swap the display buffers after VSync,
+ * upload the 320x32 strip at line 104 of the new draw buffer and draw the
+ * caller's fade list over it. Returns VSync's result. */
 int main_boot_draw_sceap_logo(void* otag, void* image) {
     RECT destination;
     int elapsed;

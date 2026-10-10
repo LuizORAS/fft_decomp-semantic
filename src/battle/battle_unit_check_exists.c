@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Marks a present unit that has a formation index for removal: the slot is
+ * emptied and its existence set to pending removal. Returns -1 when the slot is
+ * empty or has no formation index, else 0. No retail code calls it. */
 s32 battle_unit_check_exists(s32 unit_id) {
     battle_stats_t* unit;
 

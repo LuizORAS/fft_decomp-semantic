@@ -1,6 +1,30 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Advance a moving unit by one frame of its step: add the per-frame velocity to
+ * its real (Q12) position, keep the height consistent with the ground for the
+ * stage in step_phase, and refresh the screen coordinates. A mount also places
+ * its rider, 10 screen units above it.
+ *
+ * The tile under the new position is real / 0x1c000 (28 screen units per tile);
+ * on entering the destination tile the unit takes the destination's layer. Height
+ * is negative upward. ground_z is the ground under the unit and move_ground_z the
+ * ground at the destination tile. Per stage:
+ * - walk and climb, to the edge or to the centre: at or below the ground the unit
+ *   snaps onto it and the horizontal delta is rebuilt for the slope (the climb
+ *   stages first raise step_speed by g_battle_move_jump_gravity, up to 0x7fff).
+ *   Above the ground it snaps when less than 6 units up, otherwise it gains
+ *   gravity; 0x2a units or more above the ground (the destination's ground in
+ *   the to-centre stages) turns the step into a jump, with the fall animation
+ *   outside action execution.
+ * - jump ascent and descent, float jump: gravity, stopping at the ground while
+ *   the unit moves down.
+ * - float: at the ground, snap and rebuild the float delta; above it the fall
+ *   speed gains gravity while it is under 0x2000.
+ * - fly: at the ground, rebuild the velocity for the run of contiguous steps.
+ *
+ * The first switch repeats the layer test that the statement before it has just
+ * made false, so its bodies never run. */
 void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     s16 tile[2];
     u8 layer;

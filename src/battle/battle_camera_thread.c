@@ -1,3 +1,8 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+#define ABS(x) (x < 0 ? -(x) : x)
+
 /*
  * The event CAMERA instruction (0x19) thread.
  * Instruction-for-instruction twin of world_camera_thread (0x800f9438).
@@ -14,13 +19,6 @@
  * mode 1 and late mode 2 paths while first and elapsed are block-local, which
  * gives the target's s0-s3 assignment.
  */
-#include "fft/battle.h"
-#include "psx/types.h"
-
-#define ABS(x) (x < 0 ? -(x) : x)
-
-/* Script-variable index for each camera component, 0x80165ed4. */
-
 void battle_camera_thread(void) {
     s32 target[8];
     s32 start[7];

@@ -1,5 +1,10 @@
 #include "fft/open.h"
 
+/* Begin the new-game prologue: start MAIN_MUSIC_NEW_GAME with the master volume
+ * ramping up from 0, upload the prologue's text pages, read OPNBK image 1 as the
+ * frame image, request the 12-entry sequence g_open_new_game_transition_entries
+ * with its text in ordering-table entries 3 and 4, and push the new-game
+ * controller (handler 4) at step 0 as the screen is revealed. */
 void open_title_start_new_game_transition(void) {
     s32 controller;
     s32 stack_padding[4];
@@ -18,5 +23,3 @@ void open_title_start_new_game_transition(void) {
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_NEW_GAME_START;
     g_open_current_controller_index = controller + 1;
 }
-
-/* The title-menu callers enter this path for the new-game selection. */

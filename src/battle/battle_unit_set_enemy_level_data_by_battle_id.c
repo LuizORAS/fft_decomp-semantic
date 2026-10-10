@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Puts an off-field unit on the field: the slot becomes occupied, its existence
+ * active, and a unit of any team but blue is counted into the enemy level
+ * statistics.
+ *
+ * Returns 0, also for a unit already present, or -1 when the slot is empty in any
+ * state other than off-field. */
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id) {
     battle_stats_t* stats = &g_battle_unit_stats[battle_id];
 

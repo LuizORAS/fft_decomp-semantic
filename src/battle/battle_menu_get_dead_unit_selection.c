@@ -3,6 +3,9 @@
 
 extern crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
 
+/* Run battle_unit_generate_crystal_or_treasure for the unit on the main stack,
+ * keep its record in g_battle_dead_unit_context and return the treasure item when
+ * the result is 4, otherwise -1. */
 s32 battle_menu_get_dead_unit_selection(s32 battle_id) {
     battle_stats_t* stats;
     crystal_pickup_result_t* result;

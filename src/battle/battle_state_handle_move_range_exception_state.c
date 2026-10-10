@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* MoveRangeException game-state handler: when the message closes (command 7, 8 or
+ * 0xff), reopen the idle action menu of the unit under the cursor. */
 void battle_state_handle_move_range_exception_state(void) {
     s32 selected_command;
 

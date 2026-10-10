@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Counts the decimal digits of the magnitude (at least one), not a minus sign. */
 s32 battle_text_count_decimal_digits(s32 value) {
     s32 digits;
 

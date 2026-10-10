@@ -1,5 +1,14 @@
 #include "fft/battle.h"
 
+/* Read event block `id` (EVENT_BLOCK_SECTORS sectors from the event archive) into
+ * the script event block, yielding until the load finishes, then turn the block's
+ * text offset into the event-message section pointer.
+ *
+ * The offset word is then overwritten with EVENT_TEXT_OFFSET_PROCESSED: the
+ * interpreter starts at byte zero of the block and reads those four bytes as
+ * one-byte NOP opcodes. A block whose first word already holds that marker leaves
+ * the section pointer alone. Both the read request and the load poll run on the
+ * main stack. */
 void battle_script_load_event(s32 id) {
     event_file_block_t* block;
     u32 off;

@@ -10,6 +10,13 @@ typedef struct battle_sound_bg_fade_request {
     u8 steps;       /* 0x4 */
 } battle_sound_bg_fade_request_t;
 
+/* Thread task 0x35: ramp the volume of an environment sound from volume_from to
+ * volume_to over `steps` yields, then settle on the final level and exit the
+ * thread.
+ *
+ * A step's volume is never 0, which would stop the sound: a negative level is
+ * negated and 0 becomes 1. The event script's edit-background-sound instruction
+ * starts it as a thread, and battle_sound_bg_thread continues in it. */
 void battle_sound_edit_bg_thread(void) {
     battle_sound_bg_fade_request_t* request;
     s32 sound_id;

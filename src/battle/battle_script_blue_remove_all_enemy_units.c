@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* CallFunction 4: tint blue (red and green modulated by -0x1f) every displayed
+ * unit whose initial team is not the blue one, skipping units whose ENTD lookup
+ * reports -2. */
 void battle_script_blue_remove_all_enemy_units(void) {
     s32 i;
     s32 idx;

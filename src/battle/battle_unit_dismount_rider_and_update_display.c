@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* battle_unit_dismount_rider, followed by a display update of the rider and of
+ * the mount. */
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider) {
     battle_unit_misc_data_t* mount;
 

@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Open the Wait menu for the source unit, or skip it.
+ *
+ * A scenario check that finds a pending event whose finish operation is nonzero
+ * starts that event instead. A unit whose turn status blocks the Wait menu goes
+ * straight to the between-turn events. Otherwise the wait-menu state opens with
+ * the cursor unit's panel. The AT-list-active flag follows whether the player
+ * controls the unit. */
 void battle_action_choose_wait(void) {
     battle_unit_misc_data_t* unit;
 

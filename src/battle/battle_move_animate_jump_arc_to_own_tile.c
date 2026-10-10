@@ -1,12 +1,15 @@
-/*
- * Sibling of battle_move_animate_jump_arc_to_target (0x80089f24) and
- * battle_move_animate_jump_start (0x8008a35c): same distortion-animation
- * shape (timer/velocity copy, switch on distortion_phase, velocity write-back
- * then battle_unit_set_screen_coords_from_real_coords).
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Distortion animation 0x07: jump along an arc to the centre of the unit's own
+ * map tile.
+ *
+ * Phase 0 asks battle_move_calculate_jump_arc_velocity for the velocity and frame
+ * count from the current screen position to the tile centre at ground height.
+ * Phase 1 applies the velocity for that many frames, the height speed gaining
+ * g_battle_move_jump_gravity each frame, then stops the horizontal motion. Phase
+ * 2 keeps falling until the unit reaches the ground under it, snaps it to the
+ * tile and ends the animation. */
 void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
     /* Unreferenced 8-byte frame slot below the target point, like the one in
      * battle_move_animate_jump_start; it puts `target` at sp+0x18. */

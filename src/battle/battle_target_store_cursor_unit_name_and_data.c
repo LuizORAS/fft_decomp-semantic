@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Start the hovered-unit stats panel for the unit on the cursor tile, or the tile
+ * info panel when the tile is empty. */
 void battle_target_store_cursor_unit_name_and_data(void) {
     battle_unit_misc_data_t* misc;
     s32 mode;

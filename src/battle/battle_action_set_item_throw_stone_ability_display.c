@@ -1,6 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the action-execute state for the casting unit, point the cursor at its
+ * action's target and release the ability's effect. The secondary-effect state
+ * calls it every frame.
+ *
+ * A plain attack (ability 0), the knockback strike (ABILITY_ID_KNOCKBACK) and an
+ * ability without an effect file play nothing. Accumulate and the Charge
+ * abilities play the effect at animation speed 1 unless it is an item effect.
+ * Every other ability plays at animation speed 2 with the tracked sound effects
+ * paused; an item effect is held back until the unit shows its hold-item
+ * animation. The AT-list-active flag is cleared on every path. */
 void battle_action_set_item_throw_stone_ability_display(void) {
     battle_unit_misc_data_t* unit;
     s32 ability;

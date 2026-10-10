@@ -1,5 +1,21 @@
 #include "fft/battle.h"
 
+/* ActionExecute game-state handler: animate the strike, run the knockback step of
+ * every target and, when everything has settled, refresh the targets and show the
+ * battle message.
+ *
+ * The strike has settled when no effect cycle or target step is running
+ * (g_battle_state_animation_continue_check), the casting unit shows no numeric
+ * display, and its animation countdown is 0 or its animation id is below 0x3c.
+ *
+ * An ability other than Knockback and Throw Stone follows the cursor tile with
+ * the camera only when it has no effect file or is a Charge ability; on settling
+ * it restarts the background sound and refreshes each target's display. For a
+ * reaction ability the target instead starts the post-attack animation display,
+ * and only when the ability has no effect file and its attack animation is not
+ * the weapon's. A plain attack (id 0), Knockback or Throw Stone always follows
+ * the cursor tile and runs the menu layer each frame; Knockback prepares each
+ * target's post-action display before the refresh. */
 void battle_state_update_action_execute_mode(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;

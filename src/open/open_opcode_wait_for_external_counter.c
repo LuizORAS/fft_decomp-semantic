@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Opcode 6: wait until the text has scrolled command[1] pixels, counted from the
+ * call that arms the wait. Four bytes. */
 void open_opcode_wait_for_external_counter(s16* entry) {
     u32 flags;
     s32 counter;

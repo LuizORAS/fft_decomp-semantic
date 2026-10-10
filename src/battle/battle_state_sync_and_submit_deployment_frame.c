@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* End a frame of the deployment screen: wait for drawing and one vertical blank,
+ * flip the display and draw environments and draw the ordering table. Returns
+ * VSync's hsync count. */
 s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table) {
     s32 sync_result;
 

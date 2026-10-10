@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Provisional 0x28-byte heap state kept in the secondary effect's allocation. */
+/* 0x28-byte heap state kept in the secondary effect's allocation. */
 typedef struct battle_effect_burst_state {
     s32 frame;    /* 0x00 */
     s32 done;     /* 0x04 */

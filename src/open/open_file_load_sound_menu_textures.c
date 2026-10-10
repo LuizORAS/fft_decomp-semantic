@@ -1,6 +1,9 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Upload the two TIMs at sectors 0x43 and 0x54 of OPNTEX.BIN: the text pages at
+ * VRAM (256, 256) and (320, 256) that the new-game prologue draws its lines from.
+ * The only caller is open_title_start_new_game_transition. */
 void open_file_load_sound_menu_textures(void) {
     main_file_load_descriptor_t* header = &g_main_file_cd_state;
 

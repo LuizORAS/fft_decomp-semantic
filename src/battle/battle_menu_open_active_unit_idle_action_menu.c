@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Open the source unit's own action menu: the unit becomes the casting unit, the
+ * cursor returns to it, the idling-action-menus state begins with the unit
+ * summary panel, and the menu for its remaining move and action is built. */
 void battle_menu_open_active_unit_idle_action_menu(void) {
     battle_unit_misc_data_t* misc_data;
 

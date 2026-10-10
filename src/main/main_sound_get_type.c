@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* The sound output setting as MAIN_SOUND_TYPE_MONO, _STEREO or _WIDE, read from
+ * the driver flags. The opposite-phase wide mode is reported as _WIDE. */
 s32 main_sound_get_type(void) {
     s32 result;
 

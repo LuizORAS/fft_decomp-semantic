@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* MapJumpingIn game-state handler: lighten the screen by
+ * g_battle_state_screen_fade_step per frame. When it is clear, the saved game
+ * state resumes at animation speed 1. */
 void battle_state_handle_map_jumping_in_state(void) {
     u16 intensity;
     s32 previous_state;

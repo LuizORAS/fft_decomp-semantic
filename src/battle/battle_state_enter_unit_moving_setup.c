@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the unit-moving setup state and open the prompt that precedes the casting
+ * unit's move, addressed to the source unit.
+ *
+ * A pending mount opens move feedback option 1. A teleport path (path count
+ * BATTLE_MOVE_PATH_TELEPORT or BATTLE_MOVE_PATH_TELEPORT_FAILED) opens the move
+ * confirmation when navigation messages are On and feedback option 0 otherwise. A
+ * walked path opens feedback option 4 when a crystal lies on the cursor tile and
+ * option 0 when not. */
 void battle_state_enter_unit_moving_setup(void) {
     battle_unit_misc_data_t* src;
     battle_unit_misc_data_t* cast;

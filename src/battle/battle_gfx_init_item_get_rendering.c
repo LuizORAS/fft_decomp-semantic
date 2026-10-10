@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Queues the unit's item icon at its item-get offset from the unit's screen
+ * position, at the unit's ordering-table depth and scale ONE. The x offset is
+ * negated unless the sprite is flipped horizontally. */
 void battle_gfx_init_item_get_rendering(battle_unit_misc_data_t* unit) {
     SVECTOR position;
     SVECTOR zoom;

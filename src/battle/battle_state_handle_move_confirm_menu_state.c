@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* MoveConfirmMenu game-state handler. Command 7 keeps the move and finishes it.
+ * Command 8 or 0xff undoes it and returns to choosing a destination, except after
+ * a teleport, which is kept like command 7. */
 void battle_state_handle_move_confirm_menu_state(void) {
     s32* selected_command_address;
     s32 selected_command;

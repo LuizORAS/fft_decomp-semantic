@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Re-run the pre-formula setup against the current target as a plain weapon
+ * Attack, then restore the attacker's skillset and ability and the strike
+ * counter. It ends with the current ability's weapon_proc_pending and reaction_id
+ * cleared. */
 void battle_action_switch_ability_to_default_attack(void) {
     battle_stats_t* unit;
     battle_stats_t* u2;

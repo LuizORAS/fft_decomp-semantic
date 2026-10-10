@@ -1,6 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Allocate size bytes from the music heap: 16 pages of 0x800 bytes at
+ * g_main_heap_smd_base, tagged in g_main_heap_smd_allocator_table. The algorithm
+ * is main_heap_alloc's; returns 0 when no run of free pages is long enough. */
 void* main_heap_alloc_smd(u32 size) {
     u32 run = 0;
     u32 needed = size >> 11;

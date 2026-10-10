@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* VSync callback. Draws one rand() per frame, advances the play-time clock at 60
+ * frames a second (the hours stop at 1000) and counts
+ * g_main_system_session_frames. */
 void main_system_handle_vsync_callback(void) {
     rand();
 

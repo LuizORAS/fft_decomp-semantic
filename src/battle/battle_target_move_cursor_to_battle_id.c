@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Move the cursor to the unit with this battle id. Returns 1 when the unit has
+ * misc data, otherwise 0 with the cursor unchanged. */
 s32 battle_target_move_cursor_to_battle_id(u32 battle_id) {
     battle_unit_misc_data_t* unit;
 

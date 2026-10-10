@@ -1,6 +1,20 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Fill a battle unit's seven equipment slots from its ENTD record, rolling a
+ * random item for each slot the record marks ENTD_VALUE_RANDOM.
+ *
+ * A monster takes main_unit_store_monster_equipment instead. The random right
+ * hand tries, in order, a Two Hands weapon, a Two Swords weapon, then the type of
+ * each Equip weapon support the unit has (sword, katana, crossbow, spear, axe,
+ * gun), then any weapon. The left hand is emptied when the right-hand weapon
+ * needs both hands or the unit has Two Hands; otherwise it rolls a Two Swords
+ * weapon, then a shield if the unit can equip one. Either hand's item goes to
+ * that hand's weapon or shield slot by its kind. Head and body prefer a helmet or
+ * armor when the support test passes, then any headgear or body armor. A roll
+ * that finds nothing leaves the slot empty, and item 0 is stored as ITEM_ID_NONE.
+ *
+ * The body-armor preference tests Equip Shield, not Equip Armor. */
 void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* entd) {
     battle_stats_t* unit = unit_arg;
     u8 item;

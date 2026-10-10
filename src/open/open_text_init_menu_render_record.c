@@ -2,6 +2,9 @@
 
 #define OPEN_MENU_TEXT_MARGIN 8
 
+/* Build and upload a window render record, drawing text combined_text_index
+ * inside it at (8, 8) first unless the index is 0, and start its pop-in
+ * animation. */
 void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, void* image) {
     /* The pair is stack-resident (0x18 / 0x1c) because it is passed by value,
      * which also lets the y store fill the beqz delay slot. */

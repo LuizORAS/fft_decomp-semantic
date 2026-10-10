@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Mark the panels along a straight line from (x, y) in one compass direction
+ * (BATTLE_TARGET_LINE_*), the starting tile included.
+ *
+ * On both map levels a panel that still has range (a) gets its mark (b) set; the
+ * table is g_battle_target_panels seen as targeting_panel_entry_t. The walk stops
+ * at the map edge or after 32 tiles, and any other direction value marks nothing.
+ * `dir` is reused as the panel index. */
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
     s32 i;
     s32 dx;

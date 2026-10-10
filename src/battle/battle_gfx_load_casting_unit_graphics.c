@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Rebuilds the casting unit's sprite parts for its current animation and frame. */
 void battle_gfx_load_casting_unit_graphics(void) {
     battle_unit_misc_data_t* unit;
 

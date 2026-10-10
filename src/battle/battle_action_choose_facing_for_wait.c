@@ -1,5 +1,10 @@
 #include "fft/battle.h"
 
+/* Enter the wait-direction state for the source unit, starting from its current
+ * facing.
+ *
+ * A rider first takes its mount's facing. A unit the player does not control gets
+ * its facing from battle_ai_choose_wait_facing as the cursor's facing hint. */
 void battle_action_choose_facing_for_wait(void) {
     battle_unit_misc_data_t* mounted_unit;
     battle_unit_misc_data_t* unit;

@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread that runs the unit list overlay (BUNIT.OUT) and returns to the battle;
+ * battle_menu_run_bunit_transition_thread starts it in the borrowed fade-out slot
+ * once the overlay is loaded and the screen is dark.
+ *
+ * It holds g_battle_menu_transition_state at 4, waits for thread 6 to end, hands
+ * the frame driver the overlay's entry point and waits for it to return, frees
+ * the high overlay memory, asks threads 2-14 to stop, fades the screen back in
+ * over 32 frames and restores the hovered-unit view for the active-turn unit. */
 void battle_menu_fade_out_thread(void) {
     s32 thread_id;
     s32 fade;

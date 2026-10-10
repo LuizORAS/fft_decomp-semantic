@@ -1,6 +1,9 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
+/* Present a frame: flip g_main_gfx_screen_polarity, wait for the GPU and VSync,
+ * apply the new buffer's display and draw environments and draw otag. Returns
+ * VSync's result. */
 int main_gfx_swap_display_area(u32* otag) {
     /* Matching constraint: the retail function reserves one unused RECT. */
     RECT matching_stack_space;

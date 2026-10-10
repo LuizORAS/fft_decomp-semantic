@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* CommenceAttackPhase game-state handler. A Jump waits for the source unit's
+ * animation to end, then marks its action taken and enters the after-command
+ * state. Any other action starts the pre-action phase and announces the next
+ * action that is due. */
 void battle_state_handle_commence_attack_phase_state(void) {
     battle_unit_misc_data_t* unit;
 

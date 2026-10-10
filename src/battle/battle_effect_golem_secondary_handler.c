@@ -1,5 +1,15 @@
 #include "fft/battle.h"
 
+/* Secondary effect function 0x03 in g_battle_effect_secondary_handlers: the
+ * particles of BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM.
+ *
+ * Initializing clears the counters. Executing starts this frame's share of the
+ * Golem particle group with CLUT 13 of the weapons row and, like Finalizing,
+ * steps the live slots under the secondary-effect inertia threshold and a gravity
+ * of (0, ONE, 0), then puts back the effect file's own values. Once no slot is
+ * live and the timer has passed the group's spawn_start_frame, finish_timer
+ * counts up; the handler returns 0 on the frame after that begins, and 1 until
+ * then. */
 s32 battle_effect_golem_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     battle_effect_secondary_data_t* current;

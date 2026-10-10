@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the active-turn state and show entry at_index of the AT list.
+ *
+ * For a charged action (bit 0x100 of the entry) the cursor moves to the action's
+ * target and the tiles it will hit are marked; for a unit's turn the cursor moves
+ * to the unit and the tile marks are removed. An empty entry leaves the cursor
+ * alone. */
 void battle_action_get_next_acting_unit(s32 at_index) {
     s32 id;
     battle_unit_misc_data_t* unit;

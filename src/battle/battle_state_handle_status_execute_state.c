@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* StatusExecute game-state handler: once the message has closed (command 7, 8 or
+ * 0xff), no animation is pending and the source unit's numeric display is idle,
+ * refresh the unit's display and run the between-turn events. */
 void battle_state_handle_status_execute_state(void) {
     s32 id;
     battle_unit_misc_data_t* misc;

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Starts a linear move of the camera position to `destination` (20.12) over
+ * frame_count frames (divided by the animation speed), applied by
+ * battle_camera_update_real_coord_animation. No retail code calls it. */
 void battle_camera_set_real_coord_delta_from_destination(const VECTOR* destination, s32 frame_count) {
     s32 animation_frames;
 

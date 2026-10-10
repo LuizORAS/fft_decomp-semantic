@@ -9,7 +9,7 @@
  * noat" warning. */
 __asm__(".set noat");
 
-/* Return parameter 0x8 (word) of the currently selected event thread record. */
+/* Return parameter 3 (the word at 0x08) of the current thread's record. */
 s32 battle_thread_get_current_parameter_3(void) {
     register void* global_pointer __asm__("$1");
     register s32 thread_offset __asm__("$8");

@@ -3,24 +3,47 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* BATTLE scenario interpreter.
- *
- * One cooperative thread runs this loop: fetch the opcode and its first four
- * operand bytes, dispatch through the else-if chain below, then advance by the
- * opcode's encoded length. The chain order is the target's compare order and
- * must not be re-sorted. Handlers that seek (jumps) `continue` without the
- * length step; EventEnd may `goto restart_script` for a chained scenario.
- *
- * WORLD carries the same interpreter (world_script_execute_event); the two are
- * kept structurally identical so differences stay visible.
- *
- * Unresolved external signatures below remain visibly provisional. The native
- * trampoline forwards arbitrary callback arguments; its () is intentional. */
-
-/* Declared locally: other reconstructions bind these under different
- * provisional signatures, or the symbol is still unresolved. */
+/* battle.h has no prototype for the Jump handler; this file and
+ * battle_script_block_start_thread declare it. */
 void battle_script_jump_event_instruction(battle_script_jump_instruction_t* instr);
 
+/* BATTLE event-script interpreter: the body of the event thread
+ * (NATIVE_THREAD_SLOT_EVENT), entered from battle_script_run_next_event once
+ * battle_script_load_next_event has read the event block.
+ *
+ * Setup: with player input it waits for thread slots 2..13 and the camera to
+ * go idle (in the other input modes it moves the four unit-stats displays to
+ * y 0xAA). It then clears the status staging data, snapshots every unit's
+ * statuses while the battle has not started (otherwise it runs the staged
+ * inflict-status commands), and clears the disabled-menu, disabled-input and
+ * forced-input variables.
+ *
+ * Each pass fetches the opcode at instruction_offset in g_battle_event_block
+ * with its first four operand bytes and its first operand halfword,
+ * dispatches through the else-if chain, then advances by
+ * 1 + g_battle_script_event_instruction_sizes[opcode]. The jumps `continue`
+ * without the length step; the Start instructions (camera fusion, block, add
+ * unit) hand their body to a new thread and seek to the matching End. Most
+ * long-running instructions start a helper thread on the first idle slot with
+ * a pointer to their operands; work that belongs to the main loop is posted
+ * in request globals that battle_script_process_pending_requests serves.
+ *
+ * EventEnd either chains into the event the scenario conditions select
+ * (`goto restart_script`) or replays the staged statuses, settles the units'
+ * facings and exits the thread. An opcode outside the chain, or a
+ * ForwardTargetExit reached in sequence, also ends the thread.
+ *
+ * The chain order is retail's compare order. world_script_execute_event is
+ * the WORLD copy of this function. BATTLE differs in five places: WalkTo
+ * starts the unit's movement and Arrow sets an arrow trajectory (WORLD
+ * recognises both and does nothing), DarkScreen's thread opens REQUIRE and
+ * runs its image burst (WORLD's only takes the task id), the two ChangeMap
+ * instructions reset the script camera transform, and the thread scans of
+ * ResumeWaitingDialog and WaitForInstruction cover slots 1..15 where WORLD's
+ * cover 1..16.
+ *
+ * battle_thread_call_on_main_stack is declared without a parameter list: it
+ * forwards whatever arguments its current call target takes. */
 void battle_script_execute_event(void) {
     s32 added_unit_state;
     u8* message_cursor;
@@ -292,6 +315,9 @@ restart_script:
                 battle_gfx_init_evtchr_vram_slots();
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
+            /* An event with no after-event code, outside events
+             * 0x190..0x1a9, checks the scenario conditions and chains into
+             * the event they select. */
             finish_operation = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
             if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0
                 && (operand_1 - EVENT_ID_COMMON_FIRST) >= 0x1AU && operand_1 != 0) {
@@ -301,6 +327,8 @@ restart_script:
                     goto restart_script;
                 }
             }
+            /* Otherwise the event ends: replay the staged statuses and copy
+             * each displayed unit's facing quadrant to its battle record. */
             work_index = 0;
             battle_unit_snap_all_facings_to_quadrants();
             battle_unit_update_staged_status_data(0, 1);
@@ -408,7 +436,7 @@ restart_script:
                 battle_thread_yield();
             } while (g_battle_field_object_wait_status != 0);
         }
-        /* ---- unit_t sprites and animation ---- */
+        /* ---- Unit sprites and animation ---- */
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
             battle_script_mirrorsprite_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
@@ -519,7 +547,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_74) {
             battle_script_opcode_74_event_instruction(parameters);
         }
-        /* ---- unit_t movement and facing ---- */
+        /* ---- Unit movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
             g_battle_thread_call_target = (void (*)(void))battle_script_walkto_event_instruction;
             battle_thread_call_on_main_stack(parameters);
@@ -747,6 +775,8 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
             ghost_parameters = instruction_offset + ((u8*)g_battle_event_block) + 3;
+            /* An empty four-pass countdown precedes the search for a free
+             * misc slot. */
             ghost_misc_id = 3;
             do {
                 ghost_misc_id -= 1;
@@ -763,6 +793,8 @@ restart_script:
                     g_battle_event_unit_slots[ghost_parameters[0]], ghost_parameters[5]);
                 g_battle_unit_graphics_load_pending = 1U;
             } else {
+                /* No free misc slot: the instruction is retried at once,
+                 * with no yield in between. */
                 continue;
             }
         } else if (opcode == EVENT_OPCODE_UNKNOWN_75) {

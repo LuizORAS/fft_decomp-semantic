@@ -1,8 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* StartEffectFileOpen game-state handler: step the effect-file load
+ * (battle_effect_init_data); when no work remains, resolve the strike and pick
+ * the attacker's animation. */
 void battle_state_handle_start_effect_file_open_state(void) {
-    /* The target loads no argument; the parameter is the $a0 value unhandled states return. */
     if (battle_effect_init_data() != 0) {
         g_battle_state_animation_continue_check = 1;
     } else {

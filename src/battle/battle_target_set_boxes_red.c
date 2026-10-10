@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Start target selection for the source unit's previewed action and return its
+ * ability_preview_phase (battle_target_panels_e).
+ *
+ * An action with a target to choose enters the targeting-range state with the
+ * range tiles shown and the cursor unit as preview target. An action without
+ * targeting selects its tile at once. With no valid panels the idle action menu
+ * reopens. */
 s32 battle_target_set_boxes_red(void) {
     battle_unit_misc_data_t* unit;
 

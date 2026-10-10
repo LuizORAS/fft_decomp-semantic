@@ -2,6 +2,13 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/* Show the active-turn unit in DEBUGCHR.OUT's unit editor when the unit has mount
+ * info (it is a rider or a mount); for any other unit it returns at once and the
+ * caller's own panel is used.
+ *
+ * The editor replaces the unit panels and the menu thread; afterwards the idle
+ * action menu is rebuilt, the unit summary view restarts and the calling thread
+ * exits. */
 void battle_menu_open_debugchr_unit_editor(void) {
     s16* selected = &g_battle_active_turn_unit.battle_id;
 

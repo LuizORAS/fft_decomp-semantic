@@ -2,6 +2,10 @@
 #include "psx/libcd.h"
 #include "psx/types.h"
 
+/* Prepare the MDEC and the 0x30-sector CD ring for a movie and aim the drive at
+ * it: a one-sector read with no destination makes the file loader seek to
+ * `sector` and leaves its position in g_open_file_location (the loader
+ * descriptor's position field), which is then set as the read location. */
 void open_movie_init_stream(s32 sector, void* output_callback) {
     main_file_load_descriptor_t* header;
 

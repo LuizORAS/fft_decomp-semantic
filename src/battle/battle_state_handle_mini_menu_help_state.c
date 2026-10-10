@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* MiniMenuHelp game-state handler: when the help window has gone, reopen the mini
+ * menu. */
 void battle_state_handle_mini_menu_help_state(void) {
     if (battle_menu_is_still_building() != 2) {
         g_battle_menu_help_opening = 0;

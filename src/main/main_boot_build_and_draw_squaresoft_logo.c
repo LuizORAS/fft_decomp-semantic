@@ -1,5 +1,12 @@
 #include "fft/main.h"
 
+/* Fade in the Squaresoft logo from the image linked into the executable
+ * (g_main_boot_squaresoft_logo_image_words).
+ *
+ * A full-screen subtractive quad steps from 248 to 0 in 32 frames while
+ * main_boot_draw_squaresoft_logo uploads the logo each frame. The logo stays on
+ * screen while the caller loads its files; main_boot_fade_out_squaresoft_logo
+ * removes it. */
 void main_boot_build_and_draw_squaresoft_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];

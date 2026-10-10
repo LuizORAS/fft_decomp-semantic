@@ -4,6 +4,20 @@ enum {
     IDLE_ACTION_MENU_ENTRY_COUNT = 0x34,
 };
 
+/* Open an idle action menu (battle_menu_id_e) for the active-turn unit: place the
+ * entry windows beside the unit, restore the row the unit last chose and start
+ * the menu-building thread on battle_menu_start_entry_thread.
+ *
+ * Nothing happens while menu input is blocked. The menu is also skipped while the
+ * menus are suspended, a help window is open,
+ * g_battle_menu_building_thread_started is set (it is cleared here either way) or
+ * menu_id is BATTLE_MENU_ID_NONE.
+ *
+ * g_battle_menu_idle_action_entry_labels holds two window x bytes per entry, each
+ * 0x80 less than the screen x; the second is used when the unit's projected x is
+ * 0x101 or more, and a zero byte leaves the entry's x unchanged. The single s16
+ * handed to battle_unit_project_misc_to_screen receives x: the routine stores x
+ * and y, and the y store lands in stack padding. */
 void battle_menu_build_idle_action_menu(s32 menu_id) {
     s16 screen_y;
     s32 i;
@@ -21,7 +35,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
             i = 0;
             entry = g_battle_menu_thread_menu_data;
             label_table = g_battle_menu_idle_action_entry_labels;
-            /* Two label columns per entry; the lower half of the screen uses the second. */
+            /* Two window x bytes per entry; a projected x of 0x101 or more uses the second. */
             column = screen_y >= 0x101;
             do {
                 /* The offset-plus-base integer sum is byte-required (addu operand order). */

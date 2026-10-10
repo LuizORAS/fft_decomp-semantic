@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start loading the effect file of g_battle_ability_effect_id; an effect whose
+ * file has no size is replaced by the Cure effect. Nothing in the game calls it:
+ * battle_effect_init_data does the same in its first state. */
 void battle_effect_load_data(void) {
     s32 lba;
     s32 byte_length;

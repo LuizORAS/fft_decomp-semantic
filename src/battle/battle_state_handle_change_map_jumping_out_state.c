@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* MapJumpingOut2 game-state handler: darken the screen by
+ * g_battle_state_screen_fade_step per frame. Past full black it stops the map
+ * animations, clears the units and starts the map init sequence (MapInitialize2). */
 void battle_state_handle_change_map_jumping_out_state(void) {
     u16 intensity;
     char unused[24];

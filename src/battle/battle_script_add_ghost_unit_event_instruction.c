@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* AddGhostUnit: queue the graphics load that creates an event-only unit on the
+ * given misc slot.
+ *
+ * Restarts the unit-graphics loader at its first file kind and queues a single
+ * descriptor with no battle unit behind it. map_height carries the instruction's
+ * facing operand and portrait_id its spritesheet id; flags is the hidden flag.
+ * Returns 0 without queuing when misc_id is already in use, otherwise 1. */
 s32 battle_script_add_ghost_unit_event_instruction(
     s32 map_x, s32 map_y, s32 map_level, s16 facing, s16 spritesheet_id, s32 misc_id, s32 flags) {
     s32 ret;

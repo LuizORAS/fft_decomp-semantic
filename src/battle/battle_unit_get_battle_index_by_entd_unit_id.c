@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Resolves an event unit id to a battle unit slot through
+ * battle_script_get_misc_id. Returns 0x7d0 when the id resolves to no unit with
+ * battle stats. */
 s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id) {
     s32 misc_id = battle_script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {

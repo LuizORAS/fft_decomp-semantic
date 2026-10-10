@@ -6,6 +6,10 @@
 #define SYSTEM_SED_SIZE 0x2800
 #define ENV_SED_SIZE    0x1000
 
+/* Start the sound driver and load the resident sound data: WAVESET.WD is read to
+ * the low overlay address and uploaded to SPU RAM, SYSTEM.SED and ENV.SED are
+ * appended to the driver's sound resources, the music slots are cleared, and the
+ * five files of g_main_sound_permanent_smd_files are read into SMD slots 3..7. */
 void main_sound_open_generic_sfx(void) {
     s32 i;
 

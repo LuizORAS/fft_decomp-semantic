@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Resolve the casting unit's next strike and start showing it.
+ *
+ * When a reaction replaced the ability, or the strike is a plain attack, the
+ * knockback strike or an ability without an effect file, the attack animation
+ * starts directly. Otherwise the game enters the effect-file-open state with the
+ * targets and their result animations stored for the effect. */
 void battle_action_set_damage_display_type_based_on_ability(void) {
     battle_unit_misc_data_t* misc;
     u16 raw;

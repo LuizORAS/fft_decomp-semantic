@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Resolves an event unit id to battle stats for the scenario conditions; returns
+ * -1 for none.
+ *
+ * An id found among the ENTD unit ids gives that unit when it has a misc record.
+ * Otherwise an id in the special-character identity range is looked up by
+ * character identity and accepted only for a deployed party member (unit id
+ * 0x78..0x7c). */
 battle_stats_t* battle_unit_get_by_unit_id(s32 unit_id) {
     s32 index;
     battle_stats_t* stats;

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Starts a linear change of the zoom scales by the vector `values` over
+ * frame_count frames (divided by the animation speed). No retail code calls it. */
 void battle_camera_set_zoom_delta_from_values(const VECTOR* values, s32 frame_count) {
     s32 animation_frames;
 

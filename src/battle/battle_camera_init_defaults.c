@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Resets the camera for a new map: screen offset (0x100, 0xa0, 0x280), zoom ONE,
+ * pitch 0x12e (the low tilt), yaw 0xe00, position at the origin, cursor on tile
+ * (0, 0), no acting or casting unit, no rotation, tilt or zoom in progress and
+ * directional panning off. */
 void battle_camera_init_defaults(void) {
     main_util_set_vector(&g_battle_offset_screen_coords, 0x100, 0xA0, 0x280);
     main_util_set_vector(&g_battle_camera_zoom, ONE, ONE, ONE);

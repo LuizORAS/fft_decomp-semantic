@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Request an ability's effect with misc unit 0 as the caster and misc unit 1 as
+ * its single target, hit normally. Nothing in the game calls it. */
 void battle_effect_start_basic_ability_animation(s32 ability_id) {
     battle_effect_secondary_init_t effect_data;
 

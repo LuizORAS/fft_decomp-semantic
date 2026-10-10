@@ -1,6 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Pick a unit's idle action menu (battle_menu_id_e), before the rider variants.
+ *
+ * While the unit taking its turn is not a manually controlled player unit, every
+ * unit gets an inspect menu: PLAYER_UNIT_INSPECT or OTHER_UNIT_INSPECT. Otherwise
+ * the unit with the turn gets one of the four TURN menus, by whether its move is
+ * gone (moved, or Don't Move) and its action is gone (acted, or any action
+ * restriction), and any other unit gets PLAYER_UNIT or OTHER_UNIT.
+ *
+ * The local can_evade holds the action restriction. */
 s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
     battle_stats_t* act;
     s32 flag;

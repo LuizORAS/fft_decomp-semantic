@@ -2,6 +2,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Return the first job id below JOB_ID_COUNT - 1 whose job record has this
+ * skillset. The result is 0 when none has, which is also job 0's id. */
 s32 main_job_find_by_skillset(s32 skillset_id) {
     u32 job_id;
     s32 result;

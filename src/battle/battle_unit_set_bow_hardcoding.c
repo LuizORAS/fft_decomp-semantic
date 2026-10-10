@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Lands a projectile strike on its target: the weapon hit sound, the target's
+ * reaction animation, its post-action display and the evade and weapon-element
+ * effect data. Does nothing when either unit is missing. */
 void battle_unit_set_bow_hardcoding(battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
     if ((attacker != 0) && (target != 0)) {
         battle_sound_select_weapon_hit(attacker, 1);

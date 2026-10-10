@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the target-display state: move the cursor to the casting unit's
+ * auto-battle target, turn the camera when its tile is hidden and show its
+ * summary panel. */
 void battle_state_enter_target_display(void) {
     battle_stats_t* cast;
     battle_unit_misc_data_t* unit;

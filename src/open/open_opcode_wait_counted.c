@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Opcode 5: wait command[1] frames. The first call arms the wait and each later
+ * call counts one frame, yielding until the count is reached. Four bytes. */
 void open_opcode_wait_counted(s16* entry) {
     u32 flags;
     s32 counter;

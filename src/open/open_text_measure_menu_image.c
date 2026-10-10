@@ -1,5 +1,9 @@
 #include "fft/open.h"
 
+/* Padded pixel size of the window image for a text entry: 10 pixels per column
+ * plus 24, rounded down to a multiple of 4, and 16 pixels per row plus 16. The
+ * WLDCORE twin wldcore_text_get_padded_dimensions measures the text in pixels
+ * instead. Nothing in OPEN.BIN calls it. */
 void open_text_measure_menu_image(s32 combined_text_index, wldcore_text_dimensions_t* dimensions) {
     s16 columns;
     s16 rows;

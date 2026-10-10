@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* TargetDisplayStart game-state handler: once the prompt has closed (command 7, 8
+ * or 0xff) and the camera has settled, enter the target display. */
 void battle_state_handle_target_display_start_state(void) {
     s32 id;
 

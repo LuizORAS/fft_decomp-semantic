@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Blade Grasp. An ability flagged Blade Grasp eligible has its accuracy set to
+ * 100 - Brave of the target; when the target passes its reaction roll during
+ * execution the strike becomes a miss and the reaction is recorded. */
 void battle_action_check_blade_grasp_usability(void) {
     battle_stats_t* attacker;
     battle_action_data_t* target;

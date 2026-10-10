@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* For an ability whose status infliction type is cancel, copies its status bytes
+ * to g_battle_action_canceled_statuses. Run during the pre-formula setup. */
 void battle_status_remove(void) {
     s32 i;
     if (g_battle_action_current_ability.status_infliction.type & BATTLE_STATUS_INFLICTION_TYPE_CANCEL) {

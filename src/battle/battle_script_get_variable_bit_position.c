@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Map a script variable id to the position of its field within its storage word:
+ * bit id & 31 for the one-bit flags (0x80..0x35f), bit (id & 7) * 4 for the
+ * nibbles (0x360..0x3ff), and -1 for the whole-word variables below 0x80. Ids
+ * from 0x400 are invalid and stop the calling thread. */
 s32 battle_script_get_variable_bit_position(s32 value) {
     s32 result;
 

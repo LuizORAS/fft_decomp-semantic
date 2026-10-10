@@ -1,5 +1,7 @@
 #include "psx/types.h"
 
+/* Widen a 0xff-terminated byte list into halfwords, without the terminator, and
+ * return the number of entries copied. */
 s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(u16* dst, u8* src) {
     s32 count;
 

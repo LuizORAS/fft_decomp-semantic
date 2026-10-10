@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Give range 1 to the panels of map position (x, y), on either level, whose
+ * height lies in lo..hi. Heights are in half steps (height * 2 + slope half
+ * height + depth * 2); a negative lo counts as 0 and a position off the map is
+ * ignored. The strike and lunge weapon ranges are built from it. */
 void battle_target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi) {
     s32 level;
     s32 idx;

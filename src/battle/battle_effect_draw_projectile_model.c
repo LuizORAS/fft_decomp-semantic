@@ -56,6 +56,25 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
 #define SCRATCH ((VECTOR*)0x1f800000)
 #define PT(k)   (*(VECTOR*)((s32)scratch + (command.vertices[k] << 4)))
 
+/* Draw one of the projectile models resident in BATTLE.BIN for the current
+ * secondary effect: the low byte of parameter is a battle_effect_model_e.
+ *
+ * The model's vertices go through three transforms in the scratchpad: the spin
+ * rotation, then the angles rotation with scale and position, then the camera
+ * matrix. The model's draw commands are then decoded one by one into the effect's
+ * work buffer for the current frame buffer and linked into the effect ordering
+ * table:
+ * - ARROW: G4 and G3 commands, at a quarter of the corners' average z (their sum
+ *   over 16 or 12).
+ * - STONE and SHURIKEN: G3 commands only, at the same depth.
+ * - REFLECT: only the first timer * 3 commands, so the shield grows by three
+ *   triangles a frame. Its GT3 commands use texture page 0x3f and the CLUT at
+ *   0x7eff plus the effect's own slot id. The depth is the last corner's z over
+ *   12, and every triangle is linked at ordering table entry 0, not at its
+ *   depth.
+ *
+ * A polygon whose depth is not between 1 and EFFECT_OT_DEPTH_MAX - 1 is built but
+ * not drawn. */
 void battle_effect_draw_projectile_model(
     SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter) {
     battle_effect_decoded_t command;

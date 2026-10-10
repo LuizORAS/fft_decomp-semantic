@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* AbilityPreviewHandling game-state handler: the pending ability's targets are
+ * marked and the unit confirms or backs out.
+ *
+ * For a player-controlled unit circle restores the cursor input mode and opens
+ * the confirmation prompt (battle_action_confirm). Cross clears the target marks
+ * and returns to the idle action menu when the ability has no target choice,
+ * otherwise to the range display (battle_target_set_boxes_red). An AI-controlled
+ * unit confirms by itself once its state frame counter reaches 0x1f. */
 void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
     battle_unit_misc_data_t* unit;

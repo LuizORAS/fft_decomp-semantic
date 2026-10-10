@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* MapInitialize2 game-state handler, the map change an event asks for: run one
+ * step of the map init sequence behind a black screen. At step 0xd the saved game
+ * state resumes with the screen still black; the event fades it in with
+ * battle_state_start_change_map_jump_in. */
 void battle_state_handle_change_map_init_state(void) {
     s32 old_state;
     char unused[24]; /* unreferenced; sizes the target's 0x30-byte frame */

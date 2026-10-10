@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Store the 0x1000-wide band of [-0x4000, 0x4000) that contains value in
+ * g_battle_camera_yaw_band. No code reads the result. */
 void battle_camera_store_yaw_band(s32 value) {
     s32 lower_bound;
 

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Store the tile a strike lands on in the strike work record: the random-fire
+ * tile picked for this strike, else the target unit's tile and level, else the
+ * action's target tile. skip_empty_tile_effect is cleared. */
 void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out) {
     battle_stats_t* target;
 

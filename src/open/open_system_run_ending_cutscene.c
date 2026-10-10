@@ -4,6 +4,16 @@
 /* Each graphics buffer's ordering table holds 16 words. */
 #define OPEN_OTAG_BUFFER_BYTES 64
 
+/* Entry point of OPEN.BIN for the ending: play FFTEND.STR, then run the ending
+ * script until it finishes.
+ *
+ * Each frame polls the CD read, clears the ordering table, steps the movie,
+ * queues the script's primitives, runs the current controller, reads the pad and
+ * calls VSync with g_open_system_vsync_mode (0 during the movie, 2 while the
+ * script runs). The ordering table is drawn after the buffer flip, on top of the
+ * background open_movie_present_frame has just put into the new draw buffer. On
+ * exit the VRAM page saved by open_movie_init_and_play_end is restored, the
+ * display is blanked and the CD audio returns to mix level 0xc0. */
 void open_system_run_ending_cutscene(void) {
     u32* otag_0;
     u32* otag_1;

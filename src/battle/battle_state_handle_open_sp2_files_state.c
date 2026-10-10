@@ -1,5 +1,15 @@
 #include "fft/battle.h"
 
+/* OpenSp2Files game-state handler: load the SP2 sheet holding the casting unit's
+ * attack animation, then start the strike
+ * (battle_action_set_damage_display_type_based_on_ability).
+ *
+ * With no buffer yet, a 0x8000-byte buffer is allocated and the read requested. A
+ * unit that needs no SP2 file frees the buffer and starts the strike at once; a
+ * refused read request frees the buffer so the next frame asks again. Once the
+ * file has loaded, the first free of the two VRAM slots (owner 0xff) takes the
+ * unit's id | 0x40 as owner, the 64x256 image is uploaded to the slot's rectangle
+ * and the strike starts. While neither slot is free the state waits. */
 void battle_state_handle_open_sp2_files_state(void) {
     RECT image_rect;
     battle_unit_misc_data_t* unit;

@@ -1,5 +1,8 @@
 #include "fft/open.h"
 
+/* 1 when a memory card answers in either slot, 0 when neither does. Slot 1 is
+ * probed first, then slot 0, which stays selected; complete and new card both
+ * count as a card. */
 s32 open_card_check_slots(void) {
     s32 card_present = 0;
     s32 result;

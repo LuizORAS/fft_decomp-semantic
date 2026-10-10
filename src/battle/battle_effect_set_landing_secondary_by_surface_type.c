@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start the landing effect that suits the surface of the unit's destination tile:
+ * the fall dust on hard ground, floors and structures, the splash on swamp, marsh
+ * and open water. Other surfaces (grassland, thicket, snow, lava, rugs, furniture
+ * and the like) get none.
+ *
+ * Nothing starts when the unit's movement word carries
+ * BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS. */
 void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
     s32 surface;

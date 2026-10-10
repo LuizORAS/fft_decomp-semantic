@@ -1,6 +1,45 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Map loader: takes a command between loads, then advances the load of a map's
+ * files by one step per call.
+ *
+ * Commands, read only while g_battle_map_gns_load_phase is idle: START and
+ * START_HELD allocate the 0x20000-byte load buffer, read the map's GNS (and reset
+ * the mesh state) only when map_id is not the loaded map, and go on to choose
+ * resources. LOAD_GNS always reads the GNS; no caller issues it. Any other
+ * command, and every call during a load, only advances.
+ *
+ * Steps:
+ * - GNS file: once read, its first 150 rows are copied to
+ *   g_battle_map_gns_records.
+ * - Selection: fill g_battle_map_pending_gns_records, indexed by resource type.
+ *   A row's comparison is tested against the low 12 bits of its script
+ *   variable with the weather in bits 12-14 and the time of day in bit 15. A row
+ *   is taken when its file bytes differ from the row last loaded for its type.
+ *   Four passes: primary meshes, override meshes, the default texture, then
+ *   every other row whose comparison holds.
+ * - Resources: read the pending rows one file at a time in type order and hand
+ *   each to battle_map_dispatch_gns_resource. Types 0x12-0x17 come last: 0x12
+ *   raises exception 0x3cb, the texture quarters load without being applied
+ *   here, and the texture is followed by the pending lighting, the texture
+ *   upload and the pending palettes.
+ * - Mesh records: battle_map_append_mesh_geometry requests them; the render
+ *   records of the nine mesh parts are rebuilt once in each render buffer.
+ * - End: run the command records after the file rows, apply the script
+ *   weather, free the buffer.
+ *
+ * Returns g_battle_map_gns_load_phase: nonzero while loading, 0 when done or
+ * idle. A command that cannot start because a file read is in progress also
+ * returns 0, and a loaded file held by START_HELD returns MAP_LOAD_RESULT_HELD
+ * until MAP_DATA_COMMAND_RELEASE_GNS_HOLD.
+ *
+ * Texture rows are never copied to g_battle_map_loaded_gns_records, so a selected
+ * texture is read again on every start. The fourth pass does not exclude the
+ * filler rows (type 0x31): one whose comparison holds reads and writes entry 49
+ * of the two 49-entry tables. Quarter n loads at buffer + 0x8000 * (n + 1), one
+ * quarter above where the dispatcher uploads it from, and quarter 3 lies past the
+ * end of the buffer; retail GNS files hold no quarter rows. */
 s32 battle_map_load_data(s32 map_id, s32 command) {
     s32 i;
     s32 r;
@@ -8,6 +47,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
     s16 state;
     u8 diff;
 
+    /* A command is taken only between loads. */
     if (g_battle_map_gns_load_phase == MAP_GNS_LOAD_PHASE_IDLE) {
         switch (command) {
         case MAP_LOAD_COMMAND_LOAD_GNS:
@@ -62,6 +102,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
 
     if (g_battle_map_resource_load_state == MAP_LOAD_STATE_IDLE) {
         if (g_battle_map_gns_load_phase != MAP_GNS_LOAD_PHASE_RESOURCES) {
+            /* Selection: fill the pending table, indexed by resource type. */
             if (g_battle_map_gns_load_phase == MAP_GNS_LOAD_PHASE_START) {
                 g_battle_map_gns_record_cursor = 0;
                 g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_RESOURCES;
@@ -72,6 +113,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         g_battle_map_pending_gns_records[k].resource_type = GNS_RESOURCE_NONE;
                     }
                 }
+                /* Pass 1: primary meshes. A row whose comparison holds forgets
+                 * what is loaded for its type, so it is always read again. */
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
                     if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
                         state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
@@ -103,6 +146,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         }
                     }
                 }
+                /* Pass 2: override meshes, by the same rule. */
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
                     if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_MESH_OVERRIDE) {
                         state = battle_script_get_variable(g_battle_map_gns_records[r].script_variable_id) & 0xfff;
@@ -132,6 +176,7 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         }
                     }
                 }
+                /* Pass 3: the default texture (state 0 of the two map variables). */
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
                     if (g_battle_map_gns_records[r].resource_type == GNS_RESOURCE_TEXTURE
                         && (g_battle_map_gns_records[r].script_variable_id == EVENT_SCRIPT_VAR_WEATHER_AND_TIME
@@ -153,6 +198,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                         }
                     }
                 }
+                /* Pass 4: every other row whose comparison holds replaces the
+                 * choice for its type, or cancels it when that file is loaded. */
                 for (r = 0; g_battle_map_gns_records[r].resource_type < 0x80; r++) {
                     if (g_battle_map_gns_records[r].resource_type != GNS_RESOURCE_NONE
                         && (g_battle_map_gns_records[r].script_variable_id != EVENT_SCRIPT_VAR_WEATHER_AND_TIME
@@ -186,6 +233,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                 }
             }
         } else {
+            /* Resources: start the next pending file. Types 0x12-0x17 are
+             * passed over here and taken after the others. */
             if (main_file_is_still_loading() == 0) {
                 while (
                     (g_battle_map_pending_gns_records[g_battle_map_gns_record_cursor].resource_type == GNS_RESOURCE_NONE
@@ -250,6 +299,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     g_battle_map_texture_pending = 1;
                     g_battle_map_resource_load_state = MAP_LOAD_STATE_APPLY_LIGHTING;
                 } else {
+                    /* Nothing left: run the command records that follow the
+                     * row ending the file rows, then finish. */
                     for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
                         if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_NONE) {
                             break;
@@ -319,6 +370,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
             }
             g_battle_map_resource_load_state = MAP_LOAD_STATE_IDLE;
             break;
+        /* Rebuild the mesh render records once in each render buffer: each
+         * state waits until the current buffer is not the one last written. */
         case MAP_LOAD_STATE_MESH_RECORDS:
             if (g_battle_map_mesh_data_buffer != (s32)g_battle_gfx_current_render_buffer) {
                 g_battle_map_textured_triangle_render_record_count = 0;

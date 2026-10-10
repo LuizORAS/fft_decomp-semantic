@@ -1,13 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Writes the scaled step direction into the unit's per-frame velocity. */
-
 enum {
     BATTLE_MOVE_STEP_WIDTH = 28,
     BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
 };
 
+/* Set a floating unit's per-frame velocity from the tile centre to its exit edge.
+ * The body is the same as battle_move_set_unit_step_delta_center_to_edge. */
 void battle_move_set_float_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count) {
     VECTOR direction;

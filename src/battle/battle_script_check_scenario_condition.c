@@ -1,10 +1,25 @@
-/* Evaluates one scenario condition record for process_scenario_conditionals
- * (0x801425b0). Twin of world_script_check_scenario_condition (WORLD 0x800f5f0c),
- * which documents the condition types; BATTLE is built without the divide
- * checks. The unit_id range test is spelled as two comparisons so GCC reloads
- * the byte as the target does. */
 #include "fft/battle.h"
 
+/* Evaluate one scenario condition record for
+ * battle_script_run_scenario_conditions.
+ *
+ * The record's halfwords arrive as type (event_scenario_condition_e), id and
+ * value; the two tile conditions also read a y and an elevation, with value as
+ * the x. Returns EVENT_SCENARIO_CONDITION_RESULT_PASS when the condition holds,
+ * RESULT_RUN_EVENT for type RUN_EVENT after storing id as the current event, and
+ * RESULT_FAIL otherwise, including for every type that has no test here.
+ *
+ * ACTING_UNIT looks at the unit the check runs for
+ * (g_battle_script_condition_unit_battle_id): it passes when that unit's unit id
+ * is id, or when it is a deployed unit whose character identity is id and id is a
+ * named (non-generic) identity. While the battle id is 0xff the condition fails.
+ * ITEM_EQUIPPED searches the seven equipment slots of the units with unit ids 1
+ * to 3. The HP percentage is hp * 100 / (max_hp + 1). The casualty conditions
+ * compare with id, not value.
+ *
+ * world_script_check_scenario_condition is the WORLD copy, built with divide
+ * checks. The unit id range test is written as two comparisons: that spelling
+ * reloads the byte, as retail does. */
 s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {
     battle_stats_t* unit;
     s32 i;

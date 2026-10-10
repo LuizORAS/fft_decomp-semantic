@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Damage Split: when the target takes HP damage and passes its reaction roll,
+ * record the reaction with half the damage, rounded up, as its amount. */
 void battle_action_check_damage_split_usability(void) {
     u16 hp;
     battle_action_data_t* action;

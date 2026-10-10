@@ -1,5 +1,11 @@
 #include "fft/battle.h"
 
+/* Queues the failure message for a charged action that cannot start: mode 1 no
+ * target, 2 silenced, 3 not enough MP (the result of
+ * battle_action_init_current_data); any other mode queues none.
+ *
+ * The three numeric displays are pointed at the FRAME.BIN page, and the first
+ * display is built at once unless one is already running. */
 void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s32 mode) {
     battle_gfx_sprite_display_data_t* display_0 = unit->numeric_displays[0];
     battle_gfx_sprite_display_data_t* display_1 = unit->numeric_displays[1];

@@ -1,5 +1,10 @@
 #include "fft/battle.h"
 
+/* Starts a linear move of the screen offset by the vector `values` over
+ * frame_count frames (divided by the animation speed).
+ *
+ * The per-frame step is stored in g_battle_camera_real_coord_delta, the vector
+ * the camera-position move also uses. No retail code calls it. */
 void battle_camera_set_offset_screen_coord_delta_from_values(const VECTOR* values, s32 frame_count) {
     s32 animation_frames;
 

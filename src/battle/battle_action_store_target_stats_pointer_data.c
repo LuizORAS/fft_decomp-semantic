@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Apply the prepared action result to one target: make the unit the current
+ * target, copy the 0x2c-byte result from g_battle_action_attacker_action_data
+ * into its action record and finalize it with
+ * battle_action_finalize_attack_and_flag_reactions.
+ *
+ * Returns that routine's result, or -1 for an invalid or empty slot. A result
+ * that is not a hit is marked as cancelled. */
 s32 battle_action_store_target_stats_pointer_data(s32 unit_id) {
     battle_stats_t* stats;
     battle_action_data_t* action;

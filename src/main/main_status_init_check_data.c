@@ -1,5 +1,12 @@
 #include "fft/main.h"
 
+/* Build g_main_status_check_sets, the status bit masks the engine tests units
+ * against, and clear the 0x80 bytes of g_main_item_location_flags.
+ *
+ * Sets 0 to 9 collect, for each of the 40 statuses, one flag bit of its
+ * g_main_status_effect_data record (the KO, unit-lost, CT-freezing,
+ * reaction-blocking, immunity, script-filter and mount-removal classes). Set 10,
+ * the statuses that make a chocobo unmountable, is written as constants. */
 void main_status_init_check_data(void) {
     int status;
     u8 flags4;

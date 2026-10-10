@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* battle_map_update_palette_colors, then copy the colours into the row's packed
+ * mirror as well, which makes them the base colours that the MAP_COLOR_MODE_BASE
+ * modes and RESTORE of battle_map_modify_palette start from: all 256 when
+ * update_all is 1, otherwise the 16 of CLUT clut_index. */
 void battle_map_update_and_store_palette_colors(
     s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors) {
     s32 index;

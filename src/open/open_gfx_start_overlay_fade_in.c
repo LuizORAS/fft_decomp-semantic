@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Fade the screen to black over `duration` frames: the subtractive overlay fades
+ * in. */
 void open_gfx_start_overlay_fade_in(u32 duration) {
     u32* control = &g_open_gfx_overlay_fade.flags;
     u32 flags = *control;

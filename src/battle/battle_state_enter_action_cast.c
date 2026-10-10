@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the action-cast state for the source unit, unless the scenario check
+ * starts an event first; the camera turns when the unit's tile is hidden. */
 void battle_state_enter_action_cast(void) {
     battle_unit_misc_data_t* unit;
 

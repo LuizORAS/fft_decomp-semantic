@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Fill g_battle_map_selected_tile_data for the tile under the cursor, which the
+ * tile information display shows: the surface type, the depth, the displayed
+ * height in half-height units (height * 2 + slope half-height + depth * 2) and
+ * the surface type's two bytes of g_main_terrain_tile_info_pairs. */
 void battle_map_store_selected_tile_data(void) {
     s16 coords[3];
     s16* surface_type;

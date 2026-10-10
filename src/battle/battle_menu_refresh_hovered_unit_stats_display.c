@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread entry of the hovered-unit stats panel: load the selected unit and run
+ * the panel with the active-turn banner. The display mode is 2, or 0x0c00 when
+ * the banner's list_index is negative. */
 void battle_menu_refresh_hovered_unit_stats_display(void) {
     s16* display_mode;
 

@@ -1,6 +1,12 @@
 #include "fft/main.h"
 #include "psx/libgte.h"
 
+/* Fill one textured quad from a zodiac sprite record.
+ *
+ * The record's offset and size are multiplied by scale (ONE = 1.0) and rounded to
+ * nearest; a negative size is made positive. The quad's top-left corner is base +
+ * offset + the scaled record offset + (0x100, 0x78), and it samples the unscaled
+ * record rectangle from the 8-bit texture page that holds *texture. */
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture, upoint16_t* base,
     main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset) {
     s32 x = frame->offset_x * scale->x;

@@ -1,6 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Run the scenario check for a unit at a turn boundary; when it starts an event,
+ * save the game state, enter the event state and return 1. Returns 0 otherwise.
+ *
+ * With a unit becoming ready, or no turn event, the check may start an event
+ * directly (option 0). For a ready ability or an action result the check first
+ * only queues the event (option 2), and the event is started only when its finish
+ * operation is nonzero and the unit's spritesheet is not one of Ramza's. In every
+ * other case, and for the remaining turn event types, the check only closes the
+ * menu (option 1) and no event starts. */
 s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit) {
     s32 result;
 

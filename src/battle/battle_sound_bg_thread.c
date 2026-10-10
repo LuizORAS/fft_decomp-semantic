@@ -9,6 +9,14 @@ typedef struct battle_sound_bg_request {
     u8 find_channel; /* 0x3 */
 } battle_sound_bg_request_t;
 
+/* Thread task 0x35, started by the event script's background-sound instruction:
+ * restart an environment sound (sound resource ENV), on a free SFX channel pair
+ * when find_channel is set and as the remembered background sound otherwise, and
+ * set its volume (0 becomes 1).
+ *
+ * It then continues in battle_sound_edit_bg_thread, which reads the same
+ * parameter record as a fade request: from the volume byte to byte 2 over the
+ * number of steps in byte 4. */
 void battle_sound_bg_thread(void) {
     battle_sound_bg_request_t* request;
     s32 sound_id;

@@ -2,6 +2,13 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Classify an ability id and return pointers to its two table records.
+ *
+ * *out_ability_data always receives the common 8-byte record. *out_secondary_data
+ * receives the record of the id's range: the range/effect record of an ordinary
+ * ability, the item id of an Item ability, the item type of a Throw ability, the
+ * Jump or Charge record, or the one-byte record shared by Math, reaction, support
+ * and movement abilities. The result is the matching ability_type_e. */
 s32 main_ability_calculate_pointers_and_type(s32 ability_id, u8** out_ability_data, u8** out_secondary_data) {
     ability_id &= ABILITY_ID_MASK;
     /* 0x8005ebf0: Ability Data 1, 8 bytes each. */

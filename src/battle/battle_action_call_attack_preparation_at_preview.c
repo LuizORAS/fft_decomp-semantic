@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Run battle_action_prepare_attack phase 1 on a command, writing the prepared
+ * action into the acting unit's own action fields.
+ *
+ * An action that resolves immediately also ends the unit's Charging, Jump,
+ * Defending and Performing statuses, but only in the primary action context.
+ * Returns the battle_attack_preparation_e result. */
 s32 battle_action_call_attack_preparation_at_preview(u8* command) {
     battle_stats_t* unit;
     s32 result;

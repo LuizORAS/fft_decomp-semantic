@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Steps the camera tilt script variable by 0x10 per frame to the nearer of the
+ * two resting pitches (0x12e below the midpoint 0x177, 0x1c0 from it up),
+ * yielding the thread each frame, then stores the matching tilt target
+ * (BATTLE_MAP_TILT_LOW or BATTLE_MAP_TILT_HIGH) and restores the zoomed-in scale
+ * (BATTLE_MAP_ZOOM_IN, zoom variable ONE).
+ *
+ * BATTLE twin of world_camera_init_tilt_and_zoom. The event interpreter runs it
+ * on the End instructions, as the last step before the event thread exits. */
 void battle_camera_init_tilt_and_zoom(void) {
     s32 current_tilt;
     s32 target_tilt;

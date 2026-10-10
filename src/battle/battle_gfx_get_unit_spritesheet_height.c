@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* The sprite height of the unit's sheet, or 0 for an absent, dead, crystal or
+ * treasure unit. */
 u32 battle_gfx_get_unit_spritesheet_height(battle_unit_misc_data_t* unit) {
     if (unit == 0) {
         return 0;

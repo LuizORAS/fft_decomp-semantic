@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Empties a unit slot and marks it off the field (defined but not placed). Always
+ * returns 0. */
 s32 battle_unit_set_cannot_exist(s32 unit_index) {
     battle_stats_t* unit;
     unit = &g_battle_unit_stats[unit_index];

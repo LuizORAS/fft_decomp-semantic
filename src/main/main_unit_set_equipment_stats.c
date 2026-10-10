@@ -2,6 +2,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Fill unit->equipment_stats from the equipped items: the job's class evade, the
+ * accessory's and each shield's physical and magic evade, and each weapon's power
+ * and evade. A slot whose item is not of the expected kind leaves zeros, and a
+ * monster gets only the class evade. */
 void main_unit_set_equipment_stats(battle_stats_t* unit) {
     item_data_t* item;
     shield_data_t* shield;

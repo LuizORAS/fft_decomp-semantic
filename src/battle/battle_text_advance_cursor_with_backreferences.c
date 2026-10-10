@@ -1,7 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Target 0x80130718. */
+/* Advance a text cursor by one byte, leaving a finished back-reference run and
+ * entering a new one.
+ *
+ * A back-reference is a three-byte command 0xF0-0xF3 that replays earlier text:
+ * the run length is (byte 0 & 3) * 8 + (byte 1 >> 5) + 4 bytes, and it starts
+ * (byte 1 & 0xf) * 0xfe + byte 2 bytes before the command. After the run the
+ * cursor returns to the byte following the command. */
 u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;

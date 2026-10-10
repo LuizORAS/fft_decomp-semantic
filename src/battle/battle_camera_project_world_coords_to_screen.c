@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Projects a world position to screen x and y. Rebuilds the camera matrices first
+ * and leaves them loaded in the GTE. */
 void battle_camera_project_world_coords_to_screen(SVECTOR* world_coords, s16* screen_coords) {
     VECTOR transformed_coords;
     s32 result;

@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Opcode 13: fade the OPNTEX picture out over command[1] frames (intensity 0x80
+ * to 0). Four bytes. */
 void open_opcode_start_fade_intensity_decrease(s16* command) {
     s32 value = command[1];
 

@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Starts a unit's fade-out removal with a colour flash.
+ *
+ * The unit moves to the head of the misc list, enters BATTLE_MISC_FADE_OUT_FLASH,
+ * loses its shadow and its float and depth offsets, and is drawn with additive
+ * blending while its palette fades by (red, green, blue) from the last applied
+ * colour. `mode` is the amount battle_map_modify_palette steps the fade by, not a
+ * colour mode. battle_unit_update_fade_out_removal continues from there. */
 void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue) {
     battle_unit_misc_data_t* unit;
 

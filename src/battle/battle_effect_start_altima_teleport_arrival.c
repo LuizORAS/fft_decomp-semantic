@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Start the arrival effect of a teleport. Altima's two forms request their own
+ * ability effect and the result is 1; any other unit gets the teleport secondary
+ * effect and the teleport-in sound, and the result is 0. */
 s32 battle_effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit) {
     battle_effect_secondary_init_t teleport_data;
 

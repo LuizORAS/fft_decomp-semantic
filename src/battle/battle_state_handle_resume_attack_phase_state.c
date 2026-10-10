@@ -3,6 +3,20 @@
 struct battle_gfx_misc_data_header;
 extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_header*);
 
+/* ResumeAttackPhase game-state handler: show the remaining post-effect messages,
+ * then finish the strike.
+ *
+ * Each closed message (command 7, 8 or 0xff) lets
+ * battle_action_resume_attack_phase_control open the next queued one. When none
+ * remains and the casting unit's numeric display is idle, a continued attack
+ * starts its next strike. Otherwise the SP2 buffer and VRAM slot are released,
+ * the acting unit's data is stored and the units return to their status
+ * animations. Outside the pre-action phase the action phase then advances (up to
+ * the reacting-unit phase) and the next due action is announced; when none is
+ * due, or in the pre-action phase, the JP and EXP rewards begin.
+ *
+ * The facing computed for the acting unit's own action is passed to
+ * battle_noop_8018ef2c, which is empty. */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;

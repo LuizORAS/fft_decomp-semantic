@@ -2,6 +2,25 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Advance the keyframe animations of map mesh parts 1-8 by one frame, from
+ * battle_map_draw_mesh_and_weather.
+ *
+ * A part whose running instruction row has a successor (states[0][1].next) adds
+ * (speed >> 4) * g_main_system_animation_speed to its elapsed time. When that
+ * passes the keyframe's duration the part asks for its next instruction; an
+ * instruction of duration 0 ends the animation. For a new keyframe the current
+ * rotation, translation and scale become the start values and each of the nine
+ * channels takes its delta: target minus start for TWEEN_TO, the keyframe value
+ * for TWEEN_BY. Each frame a channel is then start + delta * f, where f is
+ * elapsed / duration (LINEAR), the sine of the angle interpolated from
+ * angle_start to angle_end (SINE), or that sine plus 1.0 (RAISED_SINE).
+ *
+ * `next` is assigned only when a keyframe expires in the same pass. A part with a
+ * nonzero animation state and keyframe 0 that did not expire indexes the
+ * instructions with the value an earlier part left, or with an unset local.
+ *
+ * A channel with none of the three curve bits is not recomputed, yet its start
+ * value is still added to it every frame. */
 void battle_map_update_mesh_part_animations(void) {
     s32 i;
     u8 next;
@@ -18,6 +37,8 @@ void battle_map_update_mesh_part_animations(void) {
     current_b = &g_battle_map_mesh_parts[0].translation;
 
     for (i = 1; i < 9; i++) {
+        /* Advance the timer. A keyframe that has run its length asks for the
+         * next instruction; one of duration 0 ends the animation. */
         if (g_battle_map_mesh_animation_instructions[i].states[0][1].next != 0) {
             g_battle_map_mesh_parts[i].elapsed
                 += (g_battle_map_mesh_parts[i].speed >> 4) * g_main_system_animation_speed;
@@ -30,6 +51,8 @@ void battle_map_update_mesh_part_animations(void) {
             }
         }
         if (g_battle_map_mesh_part_animation_states[i] != 0) {
+            /* Start the next keyframe: the current values become the start
+             * values and each channel takes its delta. */
             if (g_battle_map_mesh_parts[i].keyframe == 0) {
                 g_battle_map_mesh_parts[i].keyframe
                     = g_battle_map_mesh_animation_instructions[i].states[0][next].keyframe;
@@ -119,6 +142,8 @@ void battle_map_update_mesh_part_animations(void) {
                     g_battle_map_mesh_parts[i].scale_step.vz = g_battle_map_mesh_animation_keyframes[anim].scale_z;
                 }
             }
+            /* Evaluate each channel's delta at elapsed / duration on its
+             * curve: linear, sine or raised sine. */
             anim = g_battle_map_mesh_parts[i].keyframe;
             duration = g_battle_map_mesh_parts[i].duration;
             time = g_battle_map_mesh_parts[i].elapsed;
@@ -305,6 +330,7 @@ void battle_map_update_mesh_part_animations(void) {
                             + ONE)
                     >> 12;
             }
+            /* Offset every channel by its start value. */
             g_battle_map_mesh_parts[i].rotation.vx += g_battle_map_mesh_parts[i].rotation_start.vx;
             g_battle_map_mesh_parts[i].rotation.vy += g_battle_map_mesh_parts[i].rotation_start.vy;
             g_battle_map_mesh_parts[i].rotation.vz += g_battle_map_mesh_parts[i].rotation_start.vz;

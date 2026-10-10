@@ -2,6 +2,12 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Render a text record into a freshly built window image at the record's own
+ * origin, upload it to the record's rectangle and free the buffer.
+ *
+ * A portrait dialog gets the window with its tail, every other type the plain
+ * frame; a centered box is skipped. The thread yields once between the upload and
+ * the free. BATTLE twin of world_menu_render_text_image_at_record_origin. */
 void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record) {
     if (record->box_type != DIALOG_BOX_TYPE_CENTERED) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {

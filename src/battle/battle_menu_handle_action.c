@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional view of the menu entry passed to the action handler: the
+/* View of the menu entry passed to the action handler: the
  * action word at 0x24 is either a small negative code (-15..-1) or a pointer
  * to one s16 action per option; 0x34 points at the halfword that receives
  * the chosen option. Same stride as world_menu_entry_t. */

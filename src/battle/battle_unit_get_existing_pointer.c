@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* The battle stats of an occupied unit slot, or 0 for an empty slot or an id past
+ * the last slot. */
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id) {
     battle_stats_t* unit = 0;
     if (unit_id < BATTLE_UNIT_SLOT_COUNT) {

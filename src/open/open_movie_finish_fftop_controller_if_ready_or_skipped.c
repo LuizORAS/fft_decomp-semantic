@@ -26,6 +26,3 @@ void open_movie_finish_fftop_controller_if_ready_or_skipped(void) {
         open_movie_stop_stream(1);
     }
 }
-
-/* State one stops an active stream on Start and performs its pop on the */
-/* following update, after movie flag 2 has cleared.                     */

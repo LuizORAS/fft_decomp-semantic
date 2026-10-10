@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Opcode 14: yield each frame until the XA audio is neither playing, starting nor
+ * stopping. Two bytes. */
 void open_opcode_wait_for_xa_audio_idle(void) {
     u32* control = &g_open_script_state.dispatch.flags;
     u32 state = *control;

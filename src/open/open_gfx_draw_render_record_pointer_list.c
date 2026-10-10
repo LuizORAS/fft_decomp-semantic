@@ -1,5 +1,10 @@
 #include "fft/open.h"
 
+/* Draw the listed render records into the ordering table. A record with BLANK or
+ * HIDDEN set is skipped; ANIMATED selects the 36-byte layout and IMAGE the
+ * 56-byte one. Nothing is drawn while
+ * OPEN_SYSTEM_RUNTIME_FLAG_RENDER_RECORDS_HIDDEN is set, which no code in
+ * OPEN.BIN does. */
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count) {
     s32 i;
     open_render_record_t* record;

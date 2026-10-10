@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Release the menu window buffer pair whose first buffer is `buffer`: both slot
+ * pointers become -1 and the active and thread_id words of both buffers are
+ * cleared. -1 is ignored; a buffer that is not the first of one of the three
+ * pairs stops the current thread.
+ *
+ * BATTLE twin of world_menu_release_window_buffer_pair. */
 void battle_menu_release_window_buffer_pair(s32 buffer) {
     s32 slot;
     s32 offset;

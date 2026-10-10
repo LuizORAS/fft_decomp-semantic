@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Distribute: when the healing exceeds the target's missing HP and the reaction
+ * roll passes, record the reaction with the excess as its amount. */
 void battle_action_check_distribute_usability(void) {
     battle_stats_t* target = g_battle_action_target;
     battle_action_data_t* action = g_battle_action_target_data;

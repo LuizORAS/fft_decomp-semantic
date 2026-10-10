@@ -1,6 +1,17 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* TargetingRange game-state handler: the ability's range is shown and the target
+ * tile is chosen.
+ *
+ * A player-controlled unit moves the cursor and the camera. Cross clears the
+ * marks and returns to the idle action menu; circle selects the cursor tile when
+ * it carries the ability-range mark and opens the out-of-range prompt when not.
+ * An AI-controlled unit puts the cursor on its target panel (targeting type 5) or
+ * its target unit (type 6) and selects once its state frame counter reaches 0x1f;
+ * a target unit that does not exist reopens the action menus.
+ *
+ * The two tile pointers fetched on the AI path are not used. */
 void battle_state_handle_targeting_range_state(void) {
     u16 frame_data;
     battle_unit_misc_data_t* unit;

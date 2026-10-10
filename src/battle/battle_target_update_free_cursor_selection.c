@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Move the cursor while a target is being chosen: onto selected_unit when one is
+ * given, otherwise to the tile stored in the unit's cursor command state.
+ *
+ * When the cursor tile changes, the unit panels are refreshed for the current
+ * game state: the cursor unit's panel in the free-cursor, close-move-help and
+ * target-select states, the preview target's panel in the targeting-range state. */
 void battle_target_update_free_cursor_selection(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* selected_unit) {
     s32 old_x;
     s32 old_z;

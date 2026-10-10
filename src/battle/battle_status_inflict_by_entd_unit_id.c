@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Event-script status change: inflicts (which != 0) or removes one status on the
+ * unit an event unit id resolves to.
+ *
+ * The unit's pending infliction and removal bytes are cleared, the one status bit
+ * is set and battle_status_resolve_unit_changes runs on the main stack with
+ * removal_only. Nothing happens when the id resolves to no unit on the field. */
 void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 removal_only) {
     s32 idx;
     battle_stats_t* unit;

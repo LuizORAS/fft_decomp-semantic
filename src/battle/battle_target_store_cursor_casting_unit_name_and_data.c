@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start the unit panels for a selected target tile: the attack preview for the
+ * source unit against the unit on the cursor tile, or the source unit's own stats
+ * when the tile is empty. */
 void battle_target_store_cursor_casting_unit_name_and_data(void) {
     battle_unit_misc_data_t* target;
     battle_unit_misc_data_t* source;

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* SEQ script step: moves the sprite offset by delta across the unit's facing: +x
+ * facing north, -x facing south, +z facing west, -z facing east. A diagonal
+ * facing matches no case. */
 void battle_unit_shift_right_or_left(battle_unit_misc_data_t* unit, s8 delta) {
     s16* vector;
     switch (unit->facing & (BATTLE_FACING_EAST | BATTLE_FACING_NORTH)) {

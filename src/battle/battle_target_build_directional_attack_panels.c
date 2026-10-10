@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 
-/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e. */
+/* Local view of the 20-byte action record main_util_copy_action_data copies;
+ * the layout of battle_stats_t +0x16e. */
 typedef struct battle_target_unit_action_copy {
     u8 actor_id;         /* 0x00 */
     u8 skillset_id;      /* 0x01 */
@@ -16,6 +17,15 @@ typedef struct battle_target_unit_action_copy {
     u8 _unused_12[2];
 } battle_target_unit_action_copy_t;
 
+/* Narrow an ability's panels to the straight lines that leave the acting unit
+ * toward its target: mode 1 for a linear attack, mode 3 for a three-direction
+ * attack.
+ *
+ * On each axis where the target tile differs from the unit's, the line in that
+ * direction is kept; mode 3 also keeps the two perpendicular lines. Every panel
+ * off the kept lines loses its range, and the marks that identified the lines are
+ * cleared. The call also turns on nearest-first ordering of the target list
+ * (g_battle_sort_targets_nearest_first). */
 void battle_target_build_directional_attack_panels(const void* source, u8 mode) {
     battle_target_unit_action_copy_t action;
     battle_stats_t* unit;

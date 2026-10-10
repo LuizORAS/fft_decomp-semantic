@@ -1,5 +1,13 @@
 #include "fft/battle.h"
 
+/* Send an effect file's palette section to VRAM: its two 256-colour blocks go to
+ * the CLUT rows MAP_CLUT_ROW_EFFECT and MAP_CLUT_ROW_EFFECT_SECOND, and the
+ * texture image that follows them to (0x180, 0).
+ *
+ * The image is preceded by its byte size as a 24-bit little-endian value and a
+ * width flag: nonzero for an image 0x80 VRAM words (256 bytes) wide, zero for
+ * 0x40 words (128 bytes). The height is the size over the row length.
+ * g_battle_effect_palette_ptr keeps the section's address. */
 void battle_effect_init_palette(s16 index) {
     RECT rect;
     effect_file_header_t* base;

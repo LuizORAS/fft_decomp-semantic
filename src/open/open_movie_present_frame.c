@@ -1,5 +1,15 @@
 #include "fft/open.h"
 
+/* Flip the frame buffers and repaint the background of the new draw buffer.
+ *
+ * Applies the other buffer's draw and display environments. Unless a movie is
+ * streaming, the 256- or 320-pixel-wide frame is then cleared
+ * (OPEN_SYSTEM_RUNTIME_FLAG_CLEAR_FRAME), overwritten with the 512x240 picture at
+ * VRAM (512, 256) (OPEN_SYSTEM_RUNTIME_FLAG_FRAME_FROM_VRAM, the ending script)
+ * or uploaded from the frame image at g_open_file_destination. The display is
+ * enabled unless OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED is set.
+ *
+ * Nothing in OPEN.BIN sets OPEN_SYSTEM_RUNTIME_FLAG_CLEAR_FRAME. */
 void open_movie_present_frame(void) {
     RECT image_rect;
     RECT move_rect;

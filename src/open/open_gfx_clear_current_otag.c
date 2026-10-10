@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Clear the active buffer's 16-entry ordering table and release the frame's
+ * sprite primitives. */
 void open_gfx_clear_current_otag(void) {
     u32 stack_padding[2];
 

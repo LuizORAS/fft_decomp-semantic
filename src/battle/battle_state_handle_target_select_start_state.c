@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* TargetSelectStart game-state handler: when the prompt closes (command 7, 8 or
+ * 0xff), enter target selection. */
 void battle_state_handle_target_select_start_state(void) {
     s32 selected_command;
 

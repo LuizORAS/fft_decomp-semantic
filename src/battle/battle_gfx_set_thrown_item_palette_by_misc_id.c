@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* TempWeapon event instruction: battle_gfx_set_thrown_item_graphic_palette for a
+ * misc id. An absent unit is skipped. */
 void battle_gfx_set_thrown_item_palette_by_misc_id(u32 item_id, u32 misc_id) {
     battle_unit_misc_data_t* unit;
 

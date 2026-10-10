@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Empty the post-effect message queue, then queue the messages of every target of
+ * the casting unit. */
 void battle_action_build_targets_post_action_message(void) {
     battle_unit_misc_data_t* base;
     s32 i;

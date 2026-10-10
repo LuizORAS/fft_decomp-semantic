@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* UnitMove game-state handler: command 7 goes on to choosing a destination
+ * (battle_menu_close_move_help); 8 or 0xff returns to the idle action menu. */
 void battle_state_handle_unit_move_state(void) {
     s32 selected_command;
 

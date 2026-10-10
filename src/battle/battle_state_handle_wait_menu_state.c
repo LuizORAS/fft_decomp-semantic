@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* WaitMenu game-state handler. Command 7 goes on to choosing a facing. Command 8
+ * or 0xff returns to the after-command state, unless the unit's turn is over
+ * (battle_action_check_change_of_turn returns 1): then it chooses a facing too. */
 void battle_state_handle_wait_menu_state(void) {
     s32* selected_command_address;
     s32 selected_command;

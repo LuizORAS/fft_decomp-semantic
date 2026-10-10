@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Starts a linear turn of the camera angles by values[0..2] over frame_count
+ * frames (divided by the animation speed). No retail code calls it. */
 void battle_camera_set_rotation_delta_from_values(const s16* values, s32 frame_count) {
     s32 animation_frames;
     s32 value_x;

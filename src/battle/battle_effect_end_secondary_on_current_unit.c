@@ -8,6 +8,10 @@
  */
 enum { SECONDARY_EFFECT_RECORD_SIZE = 0x54 };
 
+/* Start BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING in a fresh secondary effect
+ * record and return its id. Its null handler only steps through the phases, so
+ * the record lasts two more frames. The arrow handler starts it when the arrow
+ * lands without a hit. */
 s32 battle_effect_end_secondary_on_current_unit(void) {
     s32 secondary_id = battle_effect_allocate_secondary_slot() & 0xFF;
     s32 record_offset = secondary_id * SECONDARY_EFFECT_RECORD_SIZE;

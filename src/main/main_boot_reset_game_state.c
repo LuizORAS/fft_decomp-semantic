@@ -1,6 +1,16 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Prepare a fresh session before the opening runs: reset the save words and
+ * options, rebuild the status check sets and restore the save data and item order
+ * tables.
+ *
+ * On the first pass after power-on only that is done, because
+ * main_boot_run_startup has just shown the logos. On every later pass (a soft
+ * reset or the end of the game) it first frees the game heap, unloads the
+ * scenario music, zeroes the play time, restarts the GPU, SPU and CD, and shows
+ * the Squaresoft logo again for at least 60 frames while the shared sounds and
+ * the zodiac frame reload. */
 void main_boot_reset_game_state(void) {
     int frame;
 

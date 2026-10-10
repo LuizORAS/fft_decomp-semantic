@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* TargetSelectDenied game-state handler: when the message closes (command 7, 8 or
+ * 0xff), return to target selection. */
 void battle_state_handle_target_select_denied_state(void) {
     s32 selected_command;
 

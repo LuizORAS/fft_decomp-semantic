@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter the target-select-start state: open the targeting prompt for the casting
+ * unit. */
 void battle_state_enter_target_select_start(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;

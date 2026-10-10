@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* ActionHelpMenu game-state handler: when the help window has gone, reopen the
+ * idle action menu, the active unit's when the casting unit is the source unit
+ * and the non-active unit's otherwise. */
 void battle_state_handle_action_help_menu_state(void) {
     battle_unit_misc_data_t* misc_data;
 

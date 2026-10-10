@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Play the landing sound for the surface of the tile a unit's step ends on:
+ * MAIN_SFX_LAND_SOFT for grassland, thicket and rug, MAIN_SFX_LAND_WATER for the
+ * water and marsh surfaces, MAIN_SFX_LAND_WOOD for wooden floor, tree and box,
+ * and MAIN_SFX_LAND_DEFAULT otherwise. Nothing plays for a unit whose motion
+ * flags suppress landing effects, or when the destination tile does not exist. */
 void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
     s32 surface;

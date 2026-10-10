@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Starts a unit's hop to a nearby tile (called from the knockback handler at
- * 0x8006cc94): derives the launch rise and flight frames from the landing
+/* Starts a unit's hop to a nearby tile (called from
+ * battle_move_update_walking_step_at_tile_edge): derives the launch rise and flight frames from the landing
  * height, then sets the facing, destination tile and horizontal velocity for
  * the direction in bits 6-7 of `current_path_step`.
  *

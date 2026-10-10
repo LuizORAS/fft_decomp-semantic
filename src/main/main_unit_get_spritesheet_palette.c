@@ -1,5 +1,13 @@
 #include "fft/main.h"
 
+/* Resolve a unit's character identity to a spritesheet id; *palette is 0 except
+ * for a monster.
+ *
+ * An identity below 0x80 is its own spritesheet. The generic male and female
+ * selectors give the job's sheet, 0x60 + (job - JOB_ID_SQUIRE) * 2 plus one for a
+ * female, with Dancer and Mime counted one job lower. The monster selector
+ * returns the spritesheet and palette already in the unit (from its job record).
+ * Any higher identity gives job_id + 0x28. */
 u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette) {
     u8 job_id;
     u8 sprite_set;

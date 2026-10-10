@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Queues the screen colour-modulation overlay for this frame, the polygon and its
+ * draw mode of the current screen polarity, unless all three components are 0.
+ * `unused` reproduces the frame size. */
 void battle_gfx_draw_screen_color_modulation_overlay(void) {
     char unused[24];
 

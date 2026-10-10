@@ -2,6 +2,9 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/* Thread entry of menu entry 0x2c: close the unit panels and the menu thread,
+ * load DEBUGCHR.OUT, run its character debug session and restore the menu state
+ * afterwards. */
 void battle_menu_open_debugchr(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     battle_menu_set_option_menu_open();

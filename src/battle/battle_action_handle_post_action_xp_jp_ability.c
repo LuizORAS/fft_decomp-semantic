@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start the post-action reports: restore the units' facings, apply the source
+ * unit's EXP and JP rewards (clearing the display values when nothing is
+ * awarded), start the earned EXP/JP display and enter the level-up phase of
+ * battle_action_init_learn_ability_on_hit. */
 void battle_action_handle_post_action_xp_jp_ability(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;

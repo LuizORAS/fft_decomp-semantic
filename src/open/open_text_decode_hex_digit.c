@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Value of a hexadecimal digit character, or 0 for any other character. */
 s32 open_text_decode_hex_digit(s32 character) {
     u32 value;
 

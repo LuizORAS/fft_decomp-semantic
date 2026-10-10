@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* PreAttackAnimation game-state handler: execute the ability once the source
+ * unit's animation has ended or looped, or its state frame counter has reached
+ * 0x3d, and the camera has settled. */
 void battle_state_handle_pre_attack_animation_state(void) {
     battle_unit_misc_data_t* unit;
 

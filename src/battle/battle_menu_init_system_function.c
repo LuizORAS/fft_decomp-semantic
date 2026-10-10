@@ -3,6 +3,13 @@
 struct world_unit_command_action;
 extern void battle_text_determine_spell_quote(struct world_unit_command_action*, s32, s32);
 
+/* Run a system function (battle_menu_system_command_e) for unit_id, looking up
+ * the unit's command action first except for SCENARIO_CHECK and CLOSE.
+ *
+ * SPELL_QUOTE goes to battle_text_determine_spell_quote, a void routine whose
+ * leftover v0 is returned. ABILITY_ANNOUNCEMENT drops option, parameter and
+ * enabled. Everything else returns battle_menu_dispatch_system_function's result;
+ * for SCENARIO_CHECK and CLOSE the action pointer passed on is unset. */
 s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled) {
     s32 ptr;
 

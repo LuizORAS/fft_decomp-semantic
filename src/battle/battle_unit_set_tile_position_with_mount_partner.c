@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Stores a unit's tile and facing in its battle stats and gives its mount partner
+ * the same facing, camera-relative facing and tile. Run when the wait direction
+ * is confirmed. */
 void battle_unit_set_tile_position_with_mount_partner(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* mounted_unit;
 

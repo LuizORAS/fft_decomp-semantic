@@ -12,6 +12,16 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* On the cancel button, while the menu may accept input, close a menu entry and
+ * its thread group.
+ *
+ * When the entry has a thread group (thread_count is not -1), each of its
+ * threads, counted from the current thread, gets thread parameter 3 set to 1,
+ * after which battle_menu_can_accept_input refuses it input; thread 8 also clears
+ * the four pending selections. Every thread whose task is 1 (a running text
+ * thread) is asked to stop (task 3). The entry's result cell receives -1, the
+ * event input is consumed, the cancel sound is queued and event input stays
+ * suppressed for 5 frames. */
 void battle_handle_menu_cancel_input(void* menu) {
     world_menu_entry_t* ctx = menu;
     s32 count;

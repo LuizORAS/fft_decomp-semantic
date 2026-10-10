@@ -1,6 +1,10 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Start the ending script: leave the 320-pixel and 24-bit modes, make each
+ * frame's background the picture copied from VRAM
+ * (OPEN_SYSTEM_RUNTIME_FLAG_FRAME_FROM_VRAM), reset the script state, which sets
+ * up the 512-pixel screen, select VSync mode 2 and push handler 10. */
 void open_script_push_controller(void) {
     s32 controller;
 

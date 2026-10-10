@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* ActionExecuteSetup game-state handler: command 7 goes on to the range display
+ * (battle_target_set_boxes_red); 8 or 0xff returns to the idle action menu. */
 void battle_state_handle_action_execute_setup_state(void) {
     s32 selected_command;
 

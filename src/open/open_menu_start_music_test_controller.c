@@ -1,6 +1,13 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
+/* Open the music test: read OPNBK image 1 as the background, fill the 96-entry
+ * track list (text ids 0xc000 + entry, flags clear) and push the music test
+ * controller (handler 7) at OPEN_MUSIC_TEST_STEP_OPEN as the screen is revealed.
+ *
+ * The list is drawn by the WORLD menu frame, which this turns on with Circle,
+ * Cross and Select withheld from it and ordering-table entry 4 as its base. The
+ * only caller is step 5 of open_title_step_new_game_start. */
 void open_menu_start_music_test_controller(void) {
     s32 i;
     s32 four;

@@ -1,6 +1,9 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
+/* Present one frame of the Squaresoft logo fade: swap the display buffers after
+ * VSync, upload the 180x16 logo at (70, 112) of the new draw buffer and draw the
+ * caller's fade list over it. Returns VSync's result. */
 int main_boot_draw_squaresoft_logo(u32* otag, u32* image) {
     RECT destination;
     int elapsed;

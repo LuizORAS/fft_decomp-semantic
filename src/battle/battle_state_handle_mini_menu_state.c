@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* MiniMenu game-state handler. Select opens the help window. A menu result of 0
+ * (closed) restores the cursor movement option and returns to the free cursor; a
+ * result of 0x64 or more shows the unit of AT-list entry result - 0x64. */
 void battle_state_handle_mini_menu_state(void) {
     s32 menu_result;
 

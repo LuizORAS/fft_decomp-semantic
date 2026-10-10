@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Seats one unit on another by misc id (battle_unit_mount_rider_onto_unit).
+ * Returns 0 when either record is missing. No retail code calls it. */
 s32 battle_unit_mount_by_misc_ids(u32 rider_misc_id, u32 mount_misc_id) {
     battle_unit_misc_data_t* rider;
     battle_unit_misc_data_t* mount;

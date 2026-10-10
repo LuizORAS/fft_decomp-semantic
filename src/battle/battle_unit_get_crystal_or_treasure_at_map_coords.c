@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* The crystal or treasure lying on a tile, or 0. Among several, the source unit
+ * (g_battle_unit_source_misc_id) is preferred, then the first in list order. The
+ * candidate array holds 16 entries and is filled without a bound check. */
 battle_unit_misc_data_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
     battle_unit_misc_data_t* matches[16];
     battle_unit_misc_data_t* unit;

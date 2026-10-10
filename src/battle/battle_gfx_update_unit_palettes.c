@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Ends the repeating tint of every unit CLUT that has an animation running and
+ * fades it back to its last applied colours. */
 void battle_gfx_update_unit_palettes(void) {
     s32 palette_index;
 

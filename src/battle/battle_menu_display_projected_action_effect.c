@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Provisional layout of the preview value panel at 0x801687a0. */
+/* The preview value panel at 0x801687a0, as this file uses it. */
 typedef struct battle_menu_preview_value_panel {
     s16 x;                /* 0x00 */
     s16 y;                /* 0x02 */
@@ -14,7 +14,7 @@ typedef struct battle_menu_preview_value_panel {
     s16 hit_percent_kind; /* 0x16; second number entry's kind: 0 draws, 2 hides */
 } battle_menu_preview_value_panel_t;
 
-/* Provisional 0x3c-byte label entries at 0x80168474; entry 1 holds the defaults. */
+/* The two 0x3c-byte label entries at 0x80168474, as this file uses them; entry 1 holds the defaults. */
 typedef struct battle_menu_preview_label_panel {
     u16 x;               /* 0x00 */
     u8 _unused_02[0xa];  /* 0x02 */

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Report a level up recorded in the unit's rewards: message 0x183f for three
+ * seconds, the level-up animation and effect, the cursor on the unit and the
+ * level-up tune. Returns 1 after reporting one, otherwise 0. */
 s32 battle_action_report_level_up(battle_unit_misc_data_t* misc) {
     if (misc->action_rewards.level_for_display != 0) {
         u8 battle_id;
@@ -14,5 +17,3 @@ s32 battle_action_report_level_up(battle_unit_misc_data_t* misc) {
     }
     return 0;
 }
-
-/* padding */

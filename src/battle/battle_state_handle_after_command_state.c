@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* AfterCommand game-state handler: once the window has closed (command 7, 8 or
+ * 0xff) and the source unit's numeric display is idle, enter the JP/EXP gain
+ * state. */
 void battle_state_handle_after_command_state(void) {
     s32* command_address;
     s32 command;

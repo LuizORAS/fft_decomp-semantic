@@ -2,6 +2,18 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* The top-level loop of the game: opening, then world map and battles until a
+ * reset or the ending. It never returns; main_system_reset_game re-enters it from
+ * the top with the stack restored.
+ *
+ * Each pass empties the inventory to the new-game stock and runs OPEN.BIN (after
+ * main_boot_reset_game_state, unless the world map asked for the title screen
+ * with result 5, which also skips the opening movie). An OPEN.BIN result of 0
+ * goes straight into BATTLE.BIN; otherwise WLDCORE and WORLD run first and leave
+ * their result in g_main_system_frontend_world_result. World map and BATTLE.BIN
+ * then alternate until g_main_system_game_flow_state asks for a reset or the
+ * ending. The ending sets event 0x12a, plays OPEN.BIN's ending cutscene and runs
+ * BATTLE.BIN once more. */
 void main_system_run_game_loop(void) {
     int open_mode;
 

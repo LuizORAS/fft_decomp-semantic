@@ -1,6 +1,12 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Power-on initialisation: install the VSync, DrawSync and CD callbacks, start
+ * the GPU, pad, SPU and CD, show the two logos, open the memory-card events and
+ * load the shared sounds and the zodiac frame while the Squaresoft logo is up.
+ *
+ * rand is seeded with 1, and g_main_boot_startup2_has_run is cleared so the first
+ * main_boot_reset_game_state does not repeat the hardware restart. */
 void main_boot_run_startup(void) {
     main_heap_clear_game_allocator_table();
     ResetCallback();

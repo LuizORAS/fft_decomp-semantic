@@ -1,5 +1,10 @@
 #include "fft/battle.h"
 
+/* Projects a unit's position to display coordinates (x, then y).
+ *
+ * The missing-unit test compares with -1, but
+ * battle_unit_get_screen_data_ptr_by_misc_id returns 0 for a missing unit, so the
+ * projection then reads address 0. */
 void battle_unit_project_misc_to_screen(u32 misc_id, s16* screen_coords) {
     SVECTOR* screen_data;
 

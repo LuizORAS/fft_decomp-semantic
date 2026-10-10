@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Start the right-side stats panel for the unit on the cursor tile, or the tile
+ * info panel when the tile is empty. */
 void battle_target_store_cursor_unit_as_preview_target(void) {
     battle_unit_misc_data_t* misc
         = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);

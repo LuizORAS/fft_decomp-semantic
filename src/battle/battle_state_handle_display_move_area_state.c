@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* DisplayMoveArea game-state handler, a unit's move range shown from the free
+ * cursor: cross clears the marks, restores the cursor input mode and returns to
+ * the free cursor. */
 void battle_state_handle_display_move_area_state(void) {
     if (g_main_input_pressed_buttons & PSX_PAD_CROSS) {
         battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);

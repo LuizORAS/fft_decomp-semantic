@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* As battle_thread_resolve_id, but the search for an idle slot starts above the
+ * current thread's slot. */
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id) {
     s32 i;
 

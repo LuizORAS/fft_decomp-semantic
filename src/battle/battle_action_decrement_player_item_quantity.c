@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Check, and optionally spend, one of an inventory item for a unit that started
+ * the battle on the blue team; other teams have unlimited stock.
+ *
+ * Returns -1 when the party owns none, otherwise 0. One item is removed only when
+ * always_one is nonzero and the action is executing (not a preview or an AI
+ * simulation); with always_one 0 the call only tests the stock. */
 s32 battle_action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 always_one) {
     u32 idx;
     s32 qty;

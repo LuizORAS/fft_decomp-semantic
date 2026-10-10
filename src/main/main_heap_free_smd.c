@@ -1,6 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Free the music-heap block that starts at ptr; the rules are main_heap_free's. */
 s32 main_heap_free_smd(void* ptr) {
     u32 index;
     s32 tag;

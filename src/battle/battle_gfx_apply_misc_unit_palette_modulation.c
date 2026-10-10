@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Tints one unit's two CLUTs through battle_map_modify_palette; `preset_color` is
+ * the MAP_COLOR_MODE_* command and `time` its amount.
+ *
+ * The unit's CLUT of MAP_CLUT_ROW_UNITS takes the offsets as given. Its CLUT of
+ * MAP_CLUT_ROW_UNIT_SHADOWS takes the same offsets while the unit stands on a
+ * tile with depth, at or below the tile's surface, and the negated offsets
+ * otherwise. An absent unit is skipped. */
 void battle_gfx_apply_misc_unit_palette_modulation(
     s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue) {
     SVECTOR screen_coordinates;

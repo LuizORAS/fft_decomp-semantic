@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Move the cursor to the target of the unit's stored action: the target tile, or
+ * the tile of the target unit. */
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit) {
     battle_stats_t* bd;
 

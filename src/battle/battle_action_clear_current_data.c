@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Reset an action result record to "hit, 100% accuracy, no effect".
+ *
+ * Bytes 0x00-0x0d, 0x10-0x25 and 0x28-0x29 are cleared; reaction_id (0x0e) and
+ * last_received_attack (0x26) keep their values. The cancelled-status list is
+ * cleared with the record's status changes. */
 void battle_action_clear_current_data(battle_action_data_t* action) {
     main_util_clear_byte_data(action, 0xE);
     main_util_clear_byte_data(&action->special_effect, 0x16);

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter the target-display-start state: show the tile info panel and open the
+ * targeting prompt for the casting unit. */
 void battle_state_enter_target_display_start(void) {
     battle_state_stop_game_flow();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY_START;

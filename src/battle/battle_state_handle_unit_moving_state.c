@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* UnitMoving game-state handler: advance the casting unit along its path. When
+ * the last step has ended and no animation is pending, refresh its display and
+ * open the move confirmation. */
 void battle_state_handle_unit_moving_state(void) {
     battle_unit_misc_data_t* casting_misc_data;
 

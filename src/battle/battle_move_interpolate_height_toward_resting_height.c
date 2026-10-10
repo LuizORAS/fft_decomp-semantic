@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Distortion animation 0x03: lower the unit to the ground height under it in
+ * equal steps over distortion_timer frames.
+ *
+ * Phase 0 stores the ground height (Q12) in distortion_target and replaces the
+ * frame count in distortion_timer with the per-frame step; phase 1 steps while
+ * the unit is above the ground, then snaps and ends the animation. A unit that
+ * starts at or below the ground snaps on the first frame. */
 void battle_move_interpolate_height_toward_resting_height(battle_unit_misc_data_t* misc) {
     s32 step;
     s32 z;

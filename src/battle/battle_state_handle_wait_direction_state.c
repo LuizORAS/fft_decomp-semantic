@@ -1,6 +1,17 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* WaitDirection game-state handler: the acting unit picks the facing it ends its
+ * turn with.
+ *
+ * A player-controlled unit shows the direction indicator and turns with the pad
+ * (a mount or rider turns with it); circle ends the turn and runs the
+ * between-turn events, cross returns to the after-command state. An AI-controlled
+ * unit takes its stored facing hint (0-3, in quarter turns) and ends the turn
+ * once its state frame counter reaches 0x1f.
+ *
+ * Ending the turn applies battle_action_end_turn and re-registers the unit's tile
+ * together with its mount partner. */
 void battle_state_handle_wait_direction_state(void) {
     s32 facing;
     s32 facing_hint;

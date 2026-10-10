@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Clear the range and the mark of each panel whose tile is flagged untargetable.
+ * Only the 256 lower-level panels are visited. */
 void battle_target_clear_panels_on_untargetable_tiles(void) {
     s32 i;
     map_tile_t* src;

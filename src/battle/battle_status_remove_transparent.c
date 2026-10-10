@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Between-turn step: makes a unit that has acted lose Transparent.
+ *
+ * The unit becomes the current target with a cleared action result. When it has
+ * taken its action, carries Transparent as an inflicted status and has
+ * transparent_removal_flag set, the result becomes a status change removing
+ * Transparent. Returns the result's attack type, nonzero when there is a change
+ * to show. Crystals, treasures, dead, petrified and jumping units return 0
+ * untouched. */
 s32 battle_status_remove_transparent(battle_stats_t* unit) {
     battle_stats_t* target;
 

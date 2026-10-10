@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Per-frame driver of battle_menu_request_open_companion_executable: start the
+ * disc read of the requested overlay on the main stack, at its offset from the
+ * companion overlay load address, then poll until the read finishes and clear the
+ * request. */
 void battle_menu_open_companion_executable(void) {
     s32 idx;
 

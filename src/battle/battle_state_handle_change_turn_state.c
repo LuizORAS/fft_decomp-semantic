@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* ChangeTurn game-state handler. Once the menu layer reports command 7, 8 or 0xff
+ * (the message closed) and the camera has settled (no cursor vector, no
+ * rotation), the turn event type picks the next state: a ready ability enters the
+ * action cast, an action result or a Mime action enters status execution, and
+ * anything else opens the next action menus. */
 void battle_state_handle_change_turn_state(void) {
     s32 command;
     s32 type;

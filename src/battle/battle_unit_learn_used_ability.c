@@ -4,6 +4,12 @@
 /* Integer address arithmetic preserves the retail instruction order here. */
 #define LEARNED_ABILITIES_OFFSET ((u32) & ((battle_stats_t*)0)->learned_abilities)
 
+/* Learn-on-hit: marks the acting unit's used ability as learned in the unit's
+ * current job.
+ *
+ * Walks the 24 abilities of the unit's primary skillset; the one whose id equals
+ * g_battle_acting_unit_used_ability_id and is not yet learned gets its bit set
+ * (MSB first, three bytes per job). A job below Squire uses job slot 0. */
 void battle_unit_learn_used_ability(battle_stats_t* unit) {
     u8 learned[3];
     u8 skillset;

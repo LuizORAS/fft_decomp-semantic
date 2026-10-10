@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Moves a unit's record to the head of the misc unit list, so list walks reach it
+ * first. Returns 1 when moved, 0 when no record has the misc id. */
 s32 battle_unit_move_misc_unit_to_head(u32 misc_id) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* iterator;

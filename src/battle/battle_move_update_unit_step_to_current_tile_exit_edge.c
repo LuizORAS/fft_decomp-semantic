@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Step handler of the FLY_TO_EDGE stages: advance a flying unit one frame toward
+ * the exit edge of its tile.
+ *
+ * At the edge it stores the edge heights of the current and destination tiles
+ * (height * 2 + slope half-height * edge value), clears the unit it stood on,
+ * builds the velocity for the run of contiguous steps and enters the
+ * FLY_TO_CENTRE stage. */
 void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit) {
     s32 direction;
 

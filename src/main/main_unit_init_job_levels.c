@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Compute the packed job levels from the JP totals: one byte per pair of jobs,
+ * the first job's level in the high nibble. */
 void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels) {
     s32 i;
     u8* job_levels;

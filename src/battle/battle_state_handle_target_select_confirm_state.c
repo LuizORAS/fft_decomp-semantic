@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* TargetSelectConfirm game-state handler: command 7 stores the unit under the
+ * cursor as the casting unit's auto-battle target and opens the next action
+ * menus; 8 or 0xff returns to target selection. */
 void battle_state_handle_target_select_confirm_state(void) {
     battle_unit_misc_data_t* caster;
     battle_unit_misc_data_t* target;

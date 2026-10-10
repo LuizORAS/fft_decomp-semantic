@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* The misc (display) record whose battle stats occupy unit slot battle_id, or 0. */
 battle_unit_misc_data_t* battle_unit_get_misc_data_by_battle_id(u16 battle_id) {
     battle_unit_misc_data_t* unit;
 

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the display-move-area state for the unit picked with the free cursor:
+ * compute and show its reachable tiles, and switch the cursor input to
+ * free-cursor mode with the previous mode saved. */
 void battle_target_show_move_range_in_free_cursor(void) {
     battle_unit_misc_data_t* misc;
     battle_stats_t* stats;

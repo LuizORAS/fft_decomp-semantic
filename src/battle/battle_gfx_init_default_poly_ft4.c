@@ -1,6 +1,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Initialize the fixed 4-point textured quad used by BATTLE menus: a grey quad
+ * with all four corners parked off-screen at x -0x200, texture page 0 at x=0x1c0,
+ * CLUT 0x7c3c. BATTLE twin of world_gfx_init_default_poly_ft4. */
 void battle_gfx_init_default_poly_ft4(POLY_FT4* poly) {
     SetPolyFT4(poly);
     SetShadeTex(poly, 0);

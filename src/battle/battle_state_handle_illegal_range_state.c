@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* IllegalRange game-state handler: when the message closes (command 7, 8 or
+ * 0xff), return to the range display. */
 void battle_state_handle_illegal_range_state(void) {
     s32 selected_command;
 

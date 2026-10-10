@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Teleport distortion: begin the arrival. Altima's forms release the ability
+ * effect that battle_effect_start_altima_teleport_arrival requested; the unit's
+ * palette is refreshed for the shadow mode of the tile it stands on and a palette
+ * modulation of -31 on each colour component starts. The distortion moves to its
+ * next phase with the timer at 0. */
 void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
 

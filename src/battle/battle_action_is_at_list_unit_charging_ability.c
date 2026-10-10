@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Show the next AT list entry and advance the AT list cursor past it.
+ *
+ * Empty entries are skipped. A charged action moves the cursor to its target and
+ * marks the tiles it will hit; a unit's turn moves the cursor to the unit and
+ * removes the tile marks. The free cursor's Start button and the status-menu
+ * request call it. The loop has no exit when every entry is empty. */
 void battle_action_is_at_list_unit_charging_ability(void) {
     s32 id;
     battle_unit_misc_data_t* unit;

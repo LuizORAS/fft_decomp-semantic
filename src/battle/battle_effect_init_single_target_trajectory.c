@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Aim a projectile from one unit at another: set up the direct trajectory to the
+ * target's tile and make the target the attacker's only target. Returns 1 when
+ * both units exist. Nothing in the game calls it. */
 s32 battle_effect_init_single_target_trajectory(u32 attacker_id, u32 target_id) {
     battle_unit_misc_data_t* attacker;
     battle_unit_misc_data_t* target;

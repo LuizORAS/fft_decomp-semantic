@@ -2,6 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* TargetDisplay game-state handler: circle or cross puts the cursor back on the
+ * casting unit and opens the next action menus. */
 void battle_state_handle_target_display_state(void) {
     s32 flags;
     battle_state_handle_free_cursor_input();

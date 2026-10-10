@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Link the "Now Loading" quads of the current display buffer into otag while the
+ * message is visible. It blinks: 60 calls shown, 60 calls hidden. */
 void main_gfx_add_now_loading_to_otag(u32* otag) {
     int i;
 

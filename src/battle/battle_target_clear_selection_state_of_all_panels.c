@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Publish the marked panels to the map: a tile whose panel mark is set gets
+ * MAP_TILE_FLAG_ABILITY_RANGE unless it is blocked or a cross-section surface,
+ * and every other tile loses the flag. Returns the number of flagged tiles.
+ *
+ * battle_target_set_ability_panels ends with it for abilities that have the
+ * vertical-fixed or a unit-panels flag; the others end with
+ * battle_target_set_all_panels_targeted_if_targetable, which tests the panel's
+ * range instead of its mark. */
 s32 battle_target_clear_selection_state_of_all_panels(void) {
     map_tile_t* tile;
     targeting_panel_entry_t* panel;

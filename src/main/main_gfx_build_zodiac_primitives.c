@@ -1,6 +1,16 @@
 #include "fft/main.h"
 #include "psx/libgte.h"
 
+/* Build the ZODIAC.BIN backdrop of the deployment screen: one textured quad per
+ * record of g_main_gfx_zodiac_sprite_frames, then a dark (8, 8, 8)
+ * semi-transparent quad over (0, 0)..(255, 255).
+ *
+ * Each sprite is scaled by its own table scale times the context scale (ONE =
+ * 1.0) and shaded with the context brightness. The rounding step adds 1 to the
+ * product before the division by ONE, so it only rounds up a remainder of ONE -
+ * 1. The dark quad is always linked into context->ot. The sprites are linked only
+ * when context->link_primitives is set; otherwise poly does not advance, so every
+ * sprite and then the dark quad are built in the same primitive. */
 void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly) {
     s32 i;
     s32 x;

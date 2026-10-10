@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 
+/* Moves a rider killed on its mount (pending_attack_result set) off it: the pair
+ * is unlinked, the unit takes the relocation tile in dismount as its map position
+ * and screen position, its battle stats follow, and the pending result is
+ * cleared. */
 void battle_unit_set_map_coords_after_death_dismount(battle_unit_misc_data_t* unit) {
-    /* pending_attack_result is the "Death by Dismount" word. */
+    /* pending_attack_result is -1 when the action killed a rider on its mount. */
     if (unit->pending_attack_result != 0) {
         battle_unit_dismount_rider_and_update_display(unit);
         unit->map_x = unit->dismount.x;

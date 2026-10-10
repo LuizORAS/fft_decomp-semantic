@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start resolving a unit's queued action: check and spend its MP, record it as
+ * the acting unit with its last ability, clear every unit's reaction and outcome
+ * and set up the first strike.
+ *
+ * Returns 0 when the action can run, -1 for an empty unit slot, 6 when Hamedo
+ * pre-empted the action (g_battle_action_hamedo_flag set), or the nonzero
+ * rejection code of battle_action_check_and_consume_mp; on those failures only
+ * the acting-unit data is stored. */
 s32 battle_action_init_current_data(s32 id) {
     battle_stats_t* unit;
     s32 i;

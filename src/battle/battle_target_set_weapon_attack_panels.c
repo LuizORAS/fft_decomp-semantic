@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Build the targeting panels for a weapon attack: the weapon's range around the
+ * acting unit, without the unit's own tile. Returns the number of tiles in range. */
 s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
     u8 action[20];
     battle_stats_t* unit;

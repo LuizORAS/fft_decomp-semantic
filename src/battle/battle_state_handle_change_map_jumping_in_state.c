@@ -2,10 +2,10 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Per-frame update for a battle state that fades the screen out: it advances
- * the simulation unless the status screen owns the frame, runs the event
- * script and then draws the fade overlay one step darker. When the fade
- * reaches zero the previous game state is restored. */
+/* MapJumpingIn2 game-state handler, the fade-in that ends an event's map change:
+ * it advances the simulation unless the status screen owns the frame, runs the
+ * event script and then draws the subtractive fade overlay one step lighter. When
+ * the fade reaches zero the saved game state is restored. */
 void battle_state_handle_change_map_jumping_in_state(void) {
     u16 intensity;
     char unused[24];

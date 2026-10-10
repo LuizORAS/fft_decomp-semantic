@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Per-frame tick while the Deep Dungeon overworld map is up: poll the
-   cursor, render the menu, drive the map-load state machine, then when
-   the map is fully loaded refresh every live unit's display and clear
-   the load-in-progress flag (g_battle_map_deep_dungeon_load_in_progress). */
+/* Per-frame body of the two Deep Dungeon mesh game states, which run while the
+ * map reloads for a new crystal count: handle the free cursor, update the menus
+ * and advance the map load. Once the load has finished, refresh the display of
+ * misc units 0-15, clear g_battle_map_deep_dungeon_load_in_progress and return 1;
+ * until then return 0. */
 s32 battle_map_update_deep_dungeon_and_animation(void) {
     s32 misc_id;
 

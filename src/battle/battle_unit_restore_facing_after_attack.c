@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Turns a living unit back to the facing saved in attack_facing (-1 for none) and
+ * clears the saved value; a dead unit only has it cleared.
+ *
+ * The battle stats take the facing in quarter turns through
+ * battle_unit_set_tile_position. For a mounted pair the partner record's facing
+ * is copied too, without a null test, and the tile position is stored a second
+ * time under the unit's own id. */
 void battle_unit_restore_facing_after_attack(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* mount;
     s16 rot;

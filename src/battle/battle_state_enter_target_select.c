@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the target-select state: show the panel for the cursor tile and tint the
+ * units the casting unit's selection command may pick, the other teams' red for a
+ * targeted selection and its own team's blue for a recovery selection. */
 void battle_state_enter_target_select(void) {
     battle_state_stop_game_flow();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT;

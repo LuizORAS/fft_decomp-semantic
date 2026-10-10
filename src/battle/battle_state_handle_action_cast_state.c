@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* ActionCast game-state handler: once the message has closed and the camera has
+ * settled, enter the commence-attack phase. */
 void battle_state_handle_action_cast_state(void) {
     s32 selected_command;
 

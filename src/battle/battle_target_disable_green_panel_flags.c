@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Clear MAP_TILE_FLAG_TARGETED on all 512 tiles. */
 void battle_target_disable_green_panel_flags(void) {
     map_tile_t* tile;
     s32 i;

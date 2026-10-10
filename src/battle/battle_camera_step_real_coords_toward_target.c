@@ -1,16 +1,21 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The caller's record carries the camera's destination as three signed
- * halfwords in X, Z, Y order at +0x40, which is SVECTOR: this
- * function reads 0x40, 0x42 and 0x44 off its argument and compares each against
- * the matching component of g_battle_camera_current_real_coords divided by
- * ONE. Provisional view of the record. */
+/* View of the argument: the only caller passes the acting unit's
+ * battle_unit_misc_data_t, whose SVECTOR at 0x40 is `screen` (vx = x,
+ * vy = height, vz = map depth). */
 typedef struct battle_camera_step_target {
     u8 _unused_00[0x40];
     SVECTOR coords; /* 0x40 */
 } battle_camera_step_target_t;
 
+/* Moves the camera position by this frame's step vector (g_battle_current_vector)
+ * toward the unit's position without passing it.
+ *
+ * Each component of g_battle_camera_current_real_coords (20.12) advances only
+ * while it is still short of the target in the step's direction, and is set to
+ * the target exactly when the step carries it past. Called for the acting unit
+ * while it moves, chooses its wait direction or starts an attack animation. */
 void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* target) {
     if (g_battle_current_vector.vx < 0) {
         if (g_battle_camera_current_real_coords.vx / ONE > target->coords.vx) {

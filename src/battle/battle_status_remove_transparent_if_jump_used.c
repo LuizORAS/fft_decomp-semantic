@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Makes the attacker's own action result remove Transparent when its last
+ * skillset is Jump and it carries Transparent as an inflicted status. Also points
+ * g_battle_action_attacker_data at the attacker's result. */
 void battle_status_remove_transparent_if_jump_used(battle_stats_t* unit) {
     battle_action_data_t* action = &g_battle_action_attacker_action_data;
     g_battle_action_attacker_data = action;

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Start the fade-in that ends an event's map change (MapJumpingIn2), saving the
+ * current game state to return to. The screen lightens by 0x100 / duration per
+ * frame; a duration of 0 takes one frame. */
 void battle_state_start_change_map_jump_in(s32 duration) {
     s32 previous_state;
 

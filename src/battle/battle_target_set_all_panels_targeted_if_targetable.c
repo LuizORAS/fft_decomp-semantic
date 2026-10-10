@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Publish the panels in range to the map: a tile whose panel has range left gets
+ * MAP_TILE_FLAG_ABILITY_RANGE unless it is blocked or a cross-section surface,
+ * and every other tile loses the flag. Returns the number of flagged tiles. */
 s32 battle_target_set_all_panels_targeted_if_targetable(void) {
     map_tile_t* tile;
     targeting_panel_entry_t* panel;

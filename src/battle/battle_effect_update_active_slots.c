@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Advance the current secondary effect's particles: every effect slot in the
+ * first count entries of slot_ids, count being the particle group's. A slot that
+ * has finished is freed and active_count drops by one. */
 void battle_effect_update_active_slots(s32 group) {
     s32 i;
     s32 id;

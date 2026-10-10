@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* ActionAnnouncement game-state handler: when the announcement closes (command 7,
+ * 8 or 0xff), go on to load the casting unit's SP2 sheet. */
 void battle_state_handle_action_announcement_state(void) {
     s32 selected_command;
 

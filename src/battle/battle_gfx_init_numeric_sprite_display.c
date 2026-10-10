@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Resets one of a unit's three numeric sprite displays to neutral colour and no
+ * parts. A display_section outside 0..2 leaves `display` unset; the only caller
+ * passes 0, 1 and 2. */
 battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 unit_index, s32 display_section) {
     battle_gfx_sprite_display_data_t* display;
     s32 i;

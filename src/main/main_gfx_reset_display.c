@@ -1,6 +1,12 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
+/* Restart the GPU and set up double-buffered drawing at width x height with the
+ * second buffer 240 lines below the first (an interlaced 480-line mode uses one).
+ *
+ * Unlike main_set_display_draw this also calls ResetGraph(0) and InitGeom, clears
+ * the whole 1024x512 VRAM, loads the debug font at (640, 0) and opens a print
+ * stream, and leaves background clearing off. The display stays masked. */
 void main_gfx_reset_display(int width, int height, int projection, u8 red, u8 green, u8 blue) {
     RECT image_rect = { 0, 0, 1024, 512 };
     int second_y = height == 480 ? 0 : 240;

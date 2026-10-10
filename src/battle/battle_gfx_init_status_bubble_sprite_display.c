@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Resets a unit's status bubble display to one 14 x 12 part at (0, 0xb0) of the
+ * FRAME.BIN page with CLUT 7 of the sprite row, neutral colour and scale ONE. */
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index) {
     battle_gfx_sprite_display_data_t* display;
     s32 i;

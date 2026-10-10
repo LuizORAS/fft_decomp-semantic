@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the unit's battle_unit_action_restriction_e.
+ *
+ * CANNOT_ACT for Don't Act or a ridden mount. DEEP_WATER on a tile of depth 2 or
+ * more, unless the unit has Float, Chicken or Frog, one of the Move in Water,
+ * Walk on Water or Float movement abilities, or is a rider. */
 s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
     s32 depth;
 

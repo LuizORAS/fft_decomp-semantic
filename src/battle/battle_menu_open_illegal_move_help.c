@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the illegal-move state and show move feedback option 2, which rejects the
+ * chosen destination. */
 void battle_menu_open_illegal_move_help(void) {
     battle_unit_misc_data_t* unit;
     battle_state_stop_game_flow();

@@ -1,6 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Blocking read of a sound file into a new block of the music heap. size is in
+ * bytes and only whole sectors are read. A full heap reports
+ * MAIN_SYSTEM_ERROR_SMD_LOAD and returns 0; the loader then only seeks, because
+ * it skips the read for a null destination. */
 void* main_file_get_smd(int sector, u32 size) {
     void* buffer;
     main_file_load_descriptor_t* header;

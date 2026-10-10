@@ -18,6 +18,31 @@ typedef struct battle_effect_item_slot_view {
     POLY_FT4 prims[2]; /* 0x34 */
 } battle_effect_item_slot_view_t;
 
+/* Secondary effect function 0x14 in g_battle_effect_secondary_handlers: a
+ * projectile flying in a straight line. It runs the crossbow bolt (the arrow
+ * model), the thrown stone and the thrown item animations.
+ *
+ * Initializing measures the trajectory, takes the flight time from
+ * g_battle_effect_trajectory_step_count and allocates what the projectile draws
+ * with: the polygon buffer of the arrow or stone model, or for a thrown item the
+ * shuriken model's buffer (items ITEM_ID_SHURIKEN to ITEM_ID_YAGYU_DARKNESS) or
+ * else an effect slot holding the item's icon as a quad. Executing moves 0x8000
+ * (8 units in Q12) along the line each frame, aims the model along it and draws
+ * it: the arrow at scale 0x40, the stone and the shuriken at 0xc0 and spinning by
+ * the frames left, any other item as its icon sprite.
+ *
+ * With two frames left and a unit hit by the trajectory
+ * (g_battle_effect_trajectory_hit_unit_id), the target's hit reaction
+ * (battle_unit_call_bow_hardcoding_by_misc_id) starts, unless the item is one of
+ * the balls or a consumable (ITEM_ID_POTION to ITEM_ID_PHOENIX_DOWN). When the
+ * count runs out the icon slot is freed; a unit target whose result is neither
+ * MISSED nor NO_EFFECT releases the requested ability effect at animation speed
+ * 2, and otherwise a requested effect is dropped after the hit reaction. The
+ * handler then enters Finalizing, whose return of 0 removes it.
+ *
+ * g_battle_effect_projectile_spin_passes is the count of frames left. result is
+ * unset for a phase outside 1-3, and scale and spin for a model other than the
+ * arrow or the stone. */
 s32 battle_effect_linear_projectile_secondary_handler(void) {
     s32 unused[2];
     VECTOR delta;

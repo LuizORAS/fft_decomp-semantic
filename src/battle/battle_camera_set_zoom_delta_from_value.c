@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Starts a linear change of all three zoom scales to the one value
+ * *destination_value over frame_count frames (divided by the animation speed),
+ * applied by battle_camera_update_zoom_animation. No retail code calls it. */
 void battle_camera_set_zoom_delta_from_value(const s32* destination_value, s32 frame_count) {
     s32 animation_frames;
     s32 delta_x;

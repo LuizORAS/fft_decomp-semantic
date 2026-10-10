@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Fade out the Squaresoft logo that main_boot_build_and_draw_squaresoft_logo left
+ * on screen: the subtractive quad steps from 0 to 255 in 32 frames, then both
+ * display buffers are cleared. */
 void main_boot_fade_out_squaresoft_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];

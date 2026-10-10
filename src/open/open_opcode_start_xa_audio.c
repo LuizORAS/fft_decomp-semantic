@@ -1,5 +1,9 @@
 #include "fft/open.h"
 
+/* Opcode 7: start channel command[1] of ENDING.XA and wait until the start
+ * sequence of open_script_update_xa_audio has finished. The CD volume is dropped
+ * to 0 first. The opcode is skipped when XA audio is already playing, starting or
+ * stopping. Four bytes. */
 void open_opcode_start_xa_audio(s16* command) {
     u32 flags = g_open_script_state.dispatch.flags;
 

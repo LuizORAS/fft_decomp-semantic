@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Start the ending movie at CD mix level 0x7e and push handler 9. The second
+ * argument, the stream's length in sectors, is not read. */
 void open_movie_stream_fftend(s32 start_sector, s32 unused, s32 end_frame) {
     s32 controller;
 

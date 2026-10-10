@@ -1,5 +1,11 @@
 #include "fft/battle.h"
 
+/* Distortion animation 0x02: raise the unit by 0x24000 (36 screen units) in equal
+ * steps over distortion_timer frames.
+ *
+ * Phase 0 replaces the frame count in distortion_timer with the per-frame step
+ * and stores the destination height in distortion_target; phase 1 steps until the
+ * unit reaches it, then snaps and ends the animation. */
 void battle_move_interpolate_height_toward_fixed_rise(battle_unit_misc_data_t* misc) {
     s32 step;
     s32 target;

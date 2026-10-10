@@ -1,6 +1,10 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Issue _card_info on the selected slot once, then poll for its result; the
+ * request is issued again when card status bit 0 is set with no event. A result
+ * other than complete is checked again with two blocking attempts, and error is
+ * reported as timeout. */
 s32 open_card_poll_info_result(void) {
     s32 status;
     s32 result;

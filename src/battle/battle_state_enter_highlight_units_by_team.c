@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter the highlight-units state: tint every unit by its team, save the cursor
+ * input mode and switch to the free cursor with map panning. */
 void battle_state_enter_highlight_units_by_team(void) {
     battle_state_start_game_flow();
     g_battle_game_state = BATTLE_GAME_STATE_HIGHLIGHT_UNITS;

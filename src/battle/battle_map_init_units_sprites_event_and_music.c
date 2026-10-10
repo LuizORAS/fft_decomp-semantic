@@ -106,7 +106,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         break;
     case 12:
         battle_sound_start_weather_sfx();
-        /* The target calls these three-parameter initializers without loading arguments. */
+        /* Seed the three colour fades from the colours the loaded map set. */
         battle_map_init_background_gradient();
         battle_map_init_ambient_light();
         battle_map_init_darkness();

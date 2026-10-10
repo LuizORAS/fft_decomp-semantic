@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Finds another unit standing on tile (x, y, z): one with battle stats in an
+ * occupied slot, other than self and, when self is mounted or ridden, other than
+ * its mount partner.
+ *
+ * Among several, the source unit (g_battle_unit_source_misc_id) is preferred,
+ * then the first in list order. Returns 0 for none. The candidate array holds 16
+ * entries and is filled without a bound check. */
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     battle_unit_misc_data_t* self, s32 x, s32 y, s32 z) {
     battle_unit_misc_data_t* list[16];

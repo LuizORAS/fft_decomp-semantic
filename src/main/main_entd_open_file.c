@@ -7,6 +7,12 @@ enum {
     ENTD4_FIRST_EVENT = 0x180,
 };
 
+/* Start loading the ENTD file that holds g_main_entd_current_event_id into a new
+ * 0x14000-byte heap block (g_main_entd_set). The four files cover 0x80 events
+ * each.
+ *
+ * Returns 1 once the read is queued, and also for event 0, which loads nothing.
+ * Returns 0 with the block freed when the loader is busy; the caller retries. */
 int main_entd_open_file(void) {
     int lba;
     entd_file_t* entd_set;

@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Record the acting unit's action for Mimes to copy: the action itself, the
+ * target's offset from the unit, the unit's facing, team and weapons.
+ *
+ * A Mime's own action is not recorded. For a tile target only the low byte of
+ * each coordinate is used. */
 void battle_action_set_current_attacker_data(battle_stats_t* unit) {
     battle_stats_t* target;
     u8 x;

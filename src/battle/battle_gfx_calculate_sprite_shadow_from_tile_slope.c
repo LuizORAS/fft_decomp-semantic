@@ -2,6 +2,21 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Lays the unit's shadow quad on the terrain surface under the unit.
+ *
+ * The quad is a 20 x 20 square of world units centred on the unit's position
+ * (with its event, SEQ and float offsets), at the surface of the tile it stands
+ * on: height plus depth, 12 world units per level, negative y upwards. On a
+ * sloped tile (non-zero slope half-height, rising 12 units per step across the
+ * 28-unit tile) the quad follows the slope at the unit's offset inside the tile:
+ *
+ * - an edge slope interpolates along its axis and tilts the quad by 6 units up
+ *   and down across the two edges, whatever the steepness;
+ * - a corner slope picks the triangle the unit stands on, by comparing its
+ *   offsets from the two sides, and puts the flat quad at that triangle's height
+ *   under the unit.
+ *
+ * battle_gfx_draw_unit_shadow calls it before projecting the quad. */
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit) {
     SVECTOR coords;
     SVECTOR unused; /* unreferenced; keeps the 0x30-byte target frame */

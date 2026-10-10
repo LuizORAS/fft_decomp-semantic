@@ -5,6 +5,18 @@
 #define OPEN_BIRTHDAY_CURSOR_STEP 0x20
 #define OPEN_PAD_START_OR_CIRCLE  0x820
 
+/* Per-frame handler of the birthday date-entry controller (handler 5).
+ *
+ * Input is ignored while the date window is popping in. Start or Circle recolours
+ * the menu for the prompt and pushes the confirmation controller. Up and Down
+ * (with auto-repeat) step the selected field: a day rolls over into the next or
+ * previous month, a month wraps between December and January and clamps the day
+ * to the new month's length. Each change releases the date window record (the
+ * last one allocated) and rebuilds it. Left selects the month field and Right the
+ * day field, moving the cursor 0x20 pixels.
+ *
+ * February has 28 days in g_open_birthday_month_lengths, so 29 February cannot be
+ * entered. */
 void open_birthday_handle_menu_input(open_birthday_date_state_t* menu) {
     if (g_open_gfx_render_records_56[menu->window_record_56].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Return to the free-cursor state at animation speed 1: show the panel for the
+ * cursor tile and refresh the source unit's control flags from its ENTD flags. */
 void battle_state_set_free_cursor(void) {
     battle_unit_misc_data_t* unit;
 

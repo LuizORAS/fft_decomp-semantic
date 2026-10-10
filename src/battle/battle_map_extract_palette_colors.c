@@ -5,6 +5,9 @@ enum {
     MAP_CLUT_ROW_UPLOAD_BYTES = 0x200,
 };
 
+/* Load the sixteen colours of one CLUT into a map CLUT row: the upload staging
+ * (g_battle_map_palette_modified_colors), the row's packed mirror, and its
+ * decoded 5-bit components and alpha bit. */
 void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index) {
     s32 color_index;
     s32 selected_clut;

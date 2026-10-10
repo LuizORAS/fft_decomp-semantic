@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Start the mini menu in the menu thread slot, on
+ * battle_menu_display_triangle_selection with the mini menu's entry, unless the
+ * menu or its child thread is running or the menus are suspended. */
 void battle_menu_start_mini_menu_display_thread(void) {
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0) {
         return;

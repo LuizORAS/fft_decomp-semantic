@@ -5,7 +5,8 @@
  *
  * Rebuild all per-unit flags and return whether any unit was selected.
  * target_id == 0xff excludes the acting unit. Confusion bypasses decision
- * flag 0x80, but does not bypass untargetability. Unknown modes allow either side.
+ * flag 0x80, but does not bypass untargetability. BATTLE_AI_UNIT_FILTER_ANY and any
+ * value outside the enum allow either side.
  */
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
     s32 any_active = 0;
@@ -25,7 +26,7 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
             continue;
-        /* Target dispatch uses a signed comparison, including unknown modes. */
+        /* Target dispatch uses a signed comparison, including values outside the enum. */
         switch ((s32)mode) {
         case BATTLE_AI_UNIT_FILTER_SPECIFIC:
             if (i != target_id)

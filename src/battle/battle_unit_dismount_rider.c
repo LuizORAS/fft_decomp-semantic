@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Unlinks a rider from its mount: both records return to the unmounted state and
+ * the rider loses its mounted display flag. Does nothing for a unit that is not a
+ * rider. */
 void battle_unit_dismount_rider(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* mount;
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {

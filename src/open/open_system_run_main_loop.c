@@ -4,6 +4,16 @@
 /* Each graphics buffer's ordering table holds 16 words. */
 #define OPEN_OTAG_BUFFER_BYTES 64
 
+/* Entry point of OPEN.BIN for the title sequence. Runs until a controller clears
+ * OPEN_SYSTEM_RUNTIME_FLAG_RUNNING and returns g_open_system_result: 0 for a new
+ * game, or a loaded save with a next scenario and no formation return event,
+ * which main_system_run_game_loop takes straight into BATTLE; 1 for any other
+ * loaded save and 2 for the tutorial, which go to WORLD.
+ *
+ * skip_movie starts at the title menu instead of the FFTST.STR logo movie. Each
+ * frame polls the CD read, clears the ordering table and queues the overlay fade,
+ * steps the movie, runs the WORLD menu frame while it is on and then the current
+ * controller, draws the render records, reads the pad and flips the buffers. */
 s32 open_system_run_main_loop(s32 skip_movie) {
     u32* otag_0;
     u32* otag_1;

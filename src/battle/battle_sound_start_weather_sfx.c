@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enable the weather sounds and start the rain sound when the weather has set one
+ * (g_battle_sound_primary_weather_sfx_id). */
 void battle_sound_start_weather_sfx(void) {
     s32 sound_id;
 

@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Zeroes all 16 thread records (16 * 0x400 bytes), resets the current
- * thread id and marks thread 0's word 0x12 (offset 0x48). */
+/* Zeroes all 16 thread records (16 * 0x400 bytes), makes thread 0 the current
+ * thread and marks it running. */
 void battle_thread_reset_scheduler(void) {
     s32* word;
     s32 index;

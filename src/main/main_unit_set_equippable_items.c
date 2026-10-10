@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Add to the unit's equippable item types those its Equip support abilities grant
+ * (Equip Armor covers helmets and armor), and the ribbon, bag and perfume types
+ * for a female unit. */
 void main_unit_set_equippable_items(battle_stats_t* unit) {
     s32 support = unit->support_abilities[0];
 

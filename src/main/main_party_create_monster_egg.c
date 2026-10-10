@@ -1,5 +1,11 @@
 #include "fft/main.h"
 
+/* Add an egg of monster_job to the first empty ordinary roster slot. Returns the
+ * slot, or -1 when there is none.
+ *
+ * egg_modifier is stored as the unit's birthday (values from 0x16e up become 1)
+ * and the zodiac sign is derived from it; the breeding code passes the same value
+ * in both nibbles. */
 s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color) {
     s32 party_index;
     party_data_t* party_data;

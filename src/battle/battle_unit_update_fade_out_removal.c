@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Steps a unit's fade-out removal; each phase waits for the unit's palette
+ * animation to end.
+ *
+ * FLASH starts the fade to black and moves to DARKEN. DARKEN then disables the
+ * battle unit slot, removes the misc record and returns 1; for the source unit it
+ * only resets the graphic trigger. Every other path returns 0. */
 s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit) {
     u8 phase;
 

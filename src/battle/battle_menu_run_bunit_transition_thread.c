@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread that opens the unit list (BUNIT.OUT): fade the screen out over 16
+ * frames, suspend the menus, ask the menu and the four unit panel threads to
+ * stop, load the overlay's first half, reserve 0x20000 bytes for the high overlay
+ * and load the second half there, then start battle_menu_fade_out_thread in the
+ * fade-out slot and exit. */
 void battle_menu_run_bunit_transition_thread(void) {
     s32 fade;
 

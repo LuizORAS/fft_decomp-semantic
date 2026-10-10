@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Hand the battle over to an event script: enter the event state at animation
+ * speed 2, reset the jump graphics and the event state, disable the status menu
+ * and clear the casting and source unit ids (0xff). */
 void battle_action_set_casting_unit_id_ff(void) {
     g_main_system_animation_speed = 2;
     g_battle_game_state = BATTLE_GAME_STATE_EVENT;

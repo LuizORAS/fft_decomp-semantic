@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Seed inflicted_status with the current statuses the unit does not have
+ * innately, then set up the status CTs (main_status_init_ct) and reconcile the
+ * status flags. */
 void main_status_init_unit(battle_stats_t* unit) {
     s32 status_set;
 

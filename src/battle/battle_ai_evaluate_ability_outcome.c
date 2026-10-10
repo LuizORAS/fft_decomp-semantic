@@ -5,7 +5,6 @@
  *
  * Return -1 to suspend and 0 when finished, including rejected abilities.
  * Suspended target searches resume without reinitializing the candidate.
- * Unknown flags remain numeric.
  */
 s32 battle_ai_evaluate_ability_outcome(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;

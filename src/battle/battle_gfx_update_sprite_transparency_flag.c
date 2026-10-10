@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Draws a unit with the Transparent status semi-transparent with averaging blend
+ * (the blend bits cleared), and any other unit opaque. */
 void battle_gfx_update_sprite_transparency_flag(battle_unit_misc_data_t* unit) {
     u16 sprite_flags;
 

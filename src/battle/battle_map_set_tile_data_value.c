@@ -9,6 +9,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Store one packed field of the tile at (x, y, layer): the setter of
+ * battle_map_get_tile_data_value. Returns 0, or -2 for a selector with no case,
+ * which includes the two mark selectors. The tile address is not bounds-checked.
+ * The event script uses only the flat camera block selector.
+ *
+ * Selector 15 touches no tile: it calls battle_return_zero_801842f8 until that
+ * returns 0, at most 1000 times, and raises battle load exception 0x80 when it
+ * never does. The callee always returns 0, so neither the retry nor the exception
+ * can run.
+ *
+ * The shifted selectors reassign `value` first; an inline shift swaps the `or`
+ * operands and breaks the target's shared or/sb tails. */
 s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value) {
     map_tile_t* tile;
     s32 attempts;

@@ -10,8 +10,8 @@
  * a mount's walking height into account when one is present and float/fly slope
  * otherwise.  A height difference of at most one step starts an ordinary step
  * (the WALK_TO_CENTRE phase) or a climb-speed step (CLIMB_TO_CENTRE); up to seven
- * starts the dismounting climb at 0x8006aa80, and anything higher the fall at
- * 0x8006a7c0. */
+ * starts battle_move_start_unit_climb_hop_step, and anything higher
+ * battle_move_start_unit_climb_jump_step. */
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     s32 direction;
     u8 rider;

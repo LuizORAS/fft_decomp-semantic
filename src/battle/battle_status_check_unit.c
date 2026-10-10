@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the BATTLE_TURN_STATUS_* flags that decide how a unit takes part in the
+ * turn order.
+ *
+ * CT_FROZEN alone for an empty slot, a unit with a status of the freeze-CT set or
+ * a ridden mount; INCAPACITATED | DEAD for a dead unit; otherwise INCAPACITATED |
+ * SLEEP for Sleep plus the HASTE and SLOW bits. The retail status data puts Sleep
+ * in the freeze-CT set, which leaves the SLEEP result unreachable. */
 s32 battle_status_check_unit(battle_stats_t* unit) {
     s32 status1;
     s32 status4;

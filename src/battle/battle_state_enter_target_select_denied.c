@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Enter the target-select-denied state for the cursor tile: show the summary of a
+ * unit standing there and open the refusal variant of the target-confirm prompt
+ * for the casting unit.
+ *
+ * Option 3 is used for an empty tile, 1 for a targeted auto-battle selection and
+ * 2 for a recovery selection. Any other selection command over a unit opens no
+ * prompt. */
 void battle_state_enter_target_select_denied(void) {
     battle_unit_misc_data_t* misc;
     battle_unit_misc_data_t* unit;

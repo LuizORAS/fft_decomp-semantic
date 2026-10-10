@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Returns 1 when the unit has any current status byte set. */
 s32 battle_unit_has_any_current_status(s32 unit_id) {
     battle_stats_t* unit;
     s32 index;

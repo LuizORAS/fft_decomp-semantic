@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Record reaction_id when the action deals HP damage and the target passes its
+ * reaction roll; the HP damage is the reaction's amount. */
 void battle_action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(s16 reaction_id) {
     battle_action_data_t* action;
 

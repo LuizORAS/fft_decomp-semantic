@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Jump: cancel the unit's accumulated event offset, then build its one-step path
+ * of param0 - 1 tiles in direction param1 through
+ * battle_unit_prepare_rider_dismount. The unit's Jump stat is 6 while that runs
+ * and is restored afterwards. A unit id that does not resolve does nothing. */
 void battle_script_jump_event_instruction(battle_script_jump_instruction_t* instr) {
     SVECTOR vec;
     s32 misc_id;

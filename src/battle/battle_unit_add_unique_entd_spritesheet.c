@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Keeps the list of distinct spritesheets the ENTD units need.
+ *
+ * Mode 0xff empties the list and mode 0 restarts it with value; any other mode
+ * adds value when it is not listed yet. Returns 1 when value's position in the
+ * list is limit or more (no spritesheet is left for it), else 0. */
 s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit) {
     s32 idx;
     s32 i;

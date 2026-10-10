@@ -2,6 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Read the pad and derive the held and newly pressed buttons, both 0 while
+ * OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED is set. L1, R1, Select and Start held
+ * with nothing else reset the game. OPEN_SYSTEM_RUNTIME_FLAG_SOFT_RESET_DISABLED
+ * would prevent that; no code in OPEN.BIN sets it. */
 void open_input_update_buttons_and_check_game_reset(void) {
     u32 input;
     u32 previous;

@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Polled by a menu thread each frame; out_flag is the frame's input word.
+ *
+ * While input is locked or a help window is open the input is cleared and 0
+ * returned. If another running thread carries the stop-request task id, the input
+ * is cleared too. Returns 1 only when no such thread exists and the current
+ * thread's third parameter is set, which is how a menu thread is asked to close. */
 s32 battle_menu_should_close_thread(s32* out_flag) {
     s32 i;
     s32 offset;

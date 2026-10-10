@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Provisional eight-byte per-secondary-effect spawn state at 0x801bc0e0,
+/* Eight-byte spawn state of one death poof (g_battle_effect_death_poof_states),
  * indexed by battle_effect_secondary_data_t::own_slot_id. It carries the same
  * roles the generic trap spawner keeps in the effect record itself. */
 typedef struct battle_effect_trap_state {
@@ -23,10 +23,9 @@ enum {
  * gravity of (0, ONE, 0) and finishes once the spawn state's finish_timer
  * reaches 1.
  *
- * The unrecognized-phase return path preserves its second incoming argument
- * (`passthrough`).
- * The handler table calls through a no-argument function-pointer type, so the
- * arguments remain provisional ABI evidence rather than semantic parameters.
+ * The handler table calls it with no arguments: for a phase outside 1-3 the
+ * result is `passthrough`, whatever the caller left in the second argument
+ * register.
  */
 s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) {
     battle_effect_secondary_data_t* effect;

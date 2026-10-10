@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* BattleMessageDisplay game-state handler: when the message closes (command 7, 8
+ * or 0xff), queue and show the casting unit's post-effect messages. */
 void battle_state_handle_battle_message_display_state(void) {
     s32 selected_command;
 

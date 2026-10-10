@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Step handler of the FLOAT_JUMP stages: advance a floating unit's jump to a
+ * higher tile by one frame.
+ *
+ * Outside events it pushes aside a unit on the destination tile. Past the
+ * destination tile's entry edge the horizontal motion stops, and once the unit is
+ * down at the ground height there a float step starts into the FLOAT_TO_CENTRE
+ * stage of the direction. */
 void battle_move_update_unit_step_to_destination_tile_entry_edge(battle_unit_misc_data_t* unit) {
     s32 direction;
 

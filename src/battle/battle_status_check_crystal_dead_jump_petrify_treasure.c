@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* 1 for an empty slot or a unit that is a crystal, dead, in the air from Jump,
+ * petrified or a treasure; otherwise 0. */
 s32 battle_status_check_crystal_dead_jump_petrify_treasure(battle_stats_t* unit) {
     s32 result;
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /*
- * Debug-print battle heap usage: total and largest free_node block on the free_node
+ * Debug-print battle heap usage: total and largest free block on the free
  * ring, the low-water mark of the largest block, a "DP" value, and the bytes
  * held by each of the 16 allocation owners.
  *

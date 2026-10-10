@@ -1,6 +1,14 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Allocate size bytes from the game heap: 64 pages of 0x800 bytes starting at
+ * g_main_heap_high_overlay_load_address, one tag byte per page in
+ * g_main_heap_game_allocator_table (0 = free).
+ *
+ * First fit over whole pages. The new block's tag is one more than the highest
+ * tag met before the block, so it differs from the block below it, but the block
+ * above can hold the same tag; main_heap_free tells blocks apart by tag alone.
+ * Returns 0 when no run of free pages is long enough. */
 void* main_heap_alloc(u32 size) {
     u32 run = 0;
     u32 needed = size >> 11;

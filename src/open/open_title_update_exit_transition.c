@@ -1,6 +1,13 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
+/* Per-frame handler of the title-exit controller (handler 12), pushed when New
+ * Game is chosen with no memory card inserted.
+ *
+ * Cross, or Circle or Start, records the choice and fades the screen to black.
+ * When the fade has ended the notice record and the controller are released: on
+ * Cross the frame image saved in g_open_work_buffer_0 is copied back and the
+ * title menu is pushed again; on Circle or Start the new-game prologue starts. */
 void open_title_update_exit_transition(open_title_exit_state_t* transition) {
     s32 state;
     u32 buttons;

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the unit-moving state: save the casting unit's tile, facing and mount
+ * state for an undo (and its partner's when it is a mount) and start its path
+ * from the first step at speed 0x2000. */
 void battle_state_enter_unit_moving(void) {
     battle_unit_misc_data_t* unit;
 

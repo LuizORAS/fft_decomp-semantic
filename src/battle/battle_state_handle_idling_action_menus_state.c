@@ -10,9 +10,9 @@
  * target selection/display, the event check or scripted menus.
  *
  * The kind is switched as s32: the unsigned enum type makes GCC emit sltiu
- * where the target has slti. The empty 0xfe/0xff range is provisional: some
- * two-value range above 0x19 is required, since it both disables the jump
- * table (range > 10 * count) and yields the target's compare-tree split. */
+ * where the target has slti. The empty cases for the unresolved commands 0xfe
+ * and 0xff keep the switch a compare tree with the target's split: a
+ * two-value range above 0x19 disables the jump table (range > 10 * count). */
 void battle_state_handle_idling_action_menus_state(void) {
     battle_ai_command_t* command;
     battle_unit_misc_data_t* misc;

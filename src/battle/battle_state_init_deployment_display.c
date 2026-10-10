@@ -1,5 +1,14 @@
 #include "fft/battle.h"
 
+/* Reset the GPU and set up the two frame buffers for a width x height battle
+ * screen with the given projection distance and background colour.
+ *
+ * The second buffer lies at y 0xf0 unless the height is 0x1e0. The draw
+ * environments start at x -0x80, so primitive x 0x80 is the left screen edge;
+ * dithering is on and the automatic background clear is off. The area of
+ * g_battle_deployment_clear_rect is cleared to black and, when font printing is
+ * enabled, main_gfx_load_efc_fnt loads the print font again.
+ * battle_state_run_deployment calls this with 256 x 240 and projection 0x200. */
 void battle_state_init_deployment_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue) {
     RECT clear_rect;
     s32 second_y;

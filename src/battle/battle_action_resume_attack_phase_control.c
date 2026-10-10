@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the resume-attack-phase state and show the last queued post-effect
+ * message, if any, as a post-action result. Returns 1 after showing a message and
+ * 0 when the queue is empty. */
 s32 battle_action_resume_attack_phase_control(void) {
     s32 idx;
 

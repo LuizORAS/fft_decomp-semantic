@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Fade the background gradient to `colors` and make them the base pair that the
+ * MAP_COLOR_MODE_BASE modes and RESTORE start from. */
 void battle_map_transition_and_store_background_gradient(
     s32 frame_duration, const map_background_gradient_colors_t* colors) {
     battle_map_transition_background_gradient(frame_duration, colors);

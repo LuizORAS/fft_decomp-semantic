@@ -1,3 +1,10 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+/* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
+ * target passes to battle_menu_alloc_memory. */
+#define BATTLE_CAMERA_FUSION_COMPONENT_COUNT 7
+
 /* Runs an event camera fusion: seeds one track per camera component from the
  * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
  * each frame until track 3 finishes.
@@ -7,13 +14,6 @@
  * reads each track through a `track` pointer taken first in the body: that
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
-#include "fft/battle.h"
-#include "psx/types.h"
-
-/* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
- * target passes to battle_menu_alloc_memory. */
-#define BATTLE_CAMERA_FUSION_COMPONENT_COUNT 7
-
 void battle_camera_fusion_thread(void) {
     battle_camera_track_t* tracks;
     battle_camera_track_t* track;
@@ -34,6 +34,7 @@ void battle_camera_fusion_thread(void) {
     script = (u8*)battle_thread_get_current_parameter_1();
     battle_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
 
+    /* One key per CAMERA instruction up to the end marker, plus the starting key. */
     cursor = script;
     key_count = 0;
     for (;;) {
@@ -51,6 +52,9 @@ void battle_camera_fusion_thread(void) {
     cursor = script;
     battle_camera_store_yaw_band(g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
 
+    /* Key 0 is the camera as it stands. Each later key is the next CAMERA
+     * instruction, after the Focus, RelativeCamera and FocusSpeed instructions
+     * in front of it have run. */
     for (key_index = 0; key_index < key_count; key_index++) {
         if (key_index == 0) {
             for (i = 0; i < BATTLE_CAMERA_FUSION_COMPONENT_COUNT; i++) {
@@ -102,6 +106,7 @@ void battle_camera_fusion_thread(void) {
         }
     }
 
+    /* Play the tracks; the three position tracks stand still while the position is locked. */
     for (;;) {
         track = tracks;
         for (key_index = 0; key_index < 3; key_index++, track++) {

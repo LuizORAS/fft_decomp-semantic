@@ -4,6 +4,11 @@
 /* volatile views: the target reloads these globals at every use. */
 extern volatile s32 g_battle_entd_selection_mode;
 
+/* Chooses the encounter's ENTD id and starts reading its ENTD file.
+ *
+ * The id is script variable EVENT_SCRIPT_VAR_CURRENT_ENTD unless
+ * g_battle_entd_selection_mode overrides it: 250, a random id 75..79, a random id
+ * 1..59, or the map id when that is not 0. Returns main_entd_open_file's result. */
 s32 battle_unit_select_and_open_entd(void) {
     volatile s32* current_event_id;
     s32 event_id;

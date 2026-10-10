@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Comparison opcodes 0xa0..0xa5: replace the comparison-result variable (script
+ * word 0) with the truth value of comparing it against the operand variable (word
+ * 1), using <=, >=, ==, !=, < and > in opcode order. Any other opcode changes
+ * nothing. */
 void battle_script_run_condition(event_opcode_e opcode) {
     if (opcode == EVENT_CONDITION_SECOND_GTE_FIRST) {
         g_battle_script_variables[EVENT_SCRIPT_VAR_COMPARISON_RESULT]

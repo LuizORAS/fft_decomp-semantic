@@ -4,8 +4,10 @@
  * Prepares a knocked-back unit's movement record: a one-step path, the
  * fly/float movement flags, and the direction bits (0x4000/0x8000 of the
  * packed 0x9c word) chosen by battle_move_get_direction.
- * The 0x9c word is intentionally handled as a word: it packs the path count
- * byte with the first path step, whose bit layout is only partly known.
+ * The 0x9c word is handled as a word: it packs the path count byte with the
+ * first path step in bits 8-15 (battle_move_step_t). The step's length, slow,
+ * climb and mount bits are cleared and its higher bit (0x2000) takes the
+ * destination layer.
  */
 void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
     u32* path_word = (u32*)&unit->movement_path_count;

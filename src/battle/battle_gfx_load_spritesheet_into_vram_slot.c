@@ -1,3 +1,6 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
 /*
  * Loads a unit spritesheet into spritesheet slot unit->spritesheet_vram_slot: the first
  * 0x200 bytes become the slot's 16 CLUTs with the STP bit (0x80 in each high
@@ -10,9 +13,6 @@
  * three RECT locals reproduce the 0x50-byte frame; only the middle one is
  * written (dead x/y stores the target keeps).
  */
-#include "fft/battle.h"
-#include "psx/types.h"
-
 void battle_gfx_load_spritesheet_into_vram_slot(
     u8* data, u32 index, s32 unused, battle_unit_misc_data_t* unit, s16 unused_palette) {
     u8* palette;

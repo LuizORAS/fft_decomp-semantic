@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Advance the movement of every misc unit (ids 0-15) that has a path by one
+ * frame. */
 void battle_move_update_unit_by_misc_id(void) {
     s32 i;
     battle_unit_misc_data_t* unit;

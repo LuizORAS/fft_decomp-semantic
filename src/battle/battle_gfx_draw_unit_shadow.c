@@ -12,6 +12,9 @@
  * the quad is sorted by that ground point's depth; otherwise it goes into
  * the caller's ordering-table entry.
  *
+ * The dirty test sets bit 0 of shadow_dirty before testing it, so the quad is
+ * recalculated on every call.
+ *
  * `unused` reproduces the target's 0x58-byte frame. */
 void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     VECTOR transformed;

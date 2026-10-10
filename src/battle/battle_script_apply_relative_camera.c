@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* RelativeCamera: rewrite the next Camera instruction's seven operand halfwords
+ * as the current camera values plus this instruction's deltas.
+ *
+ * src points at the seven camera script variables (x, z, y, tilt, yaw, roll,
+ * zoom); the three positions are divided by 1024 first. A delta of
+ * BATTLE_CAMERA_FUSION_HOLD_SENTINEL (10000) is written through unchanged, which
+ * keeps that component. The Camera instruction is the one that follows, or the
+ * one after a FocusSpeed that follows. */
 void battle_script_apply_relative_camera(u8* parameters, s32* src) {
     u8* dst;
     s32 i;

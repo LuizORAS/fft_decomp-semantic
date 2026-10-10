@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Clearance above a tile for battle_move_clamp_z_to_tile_headroom, in half-height
+ * units.
+ *
+ * When the position's other layer is not blocked and its surface is higher, the
+ * result is twice the gap between that layer's underside (its height less its
+ * ceiling depth) and a point 3 levels above this tile's surface. Otherwise it is
+ * 0x40. */
 s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer) {
     map_tile_t* from;
     map_tile_t* to;

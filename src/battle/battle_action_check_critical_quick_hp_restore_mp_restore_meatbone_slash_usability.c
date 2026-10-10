@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Record reaction_id for a target that is in Critical, is taking HP damage and
+ * passes its reaction roll. */
 void battle_action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(s16 reaction_id) {
     battle_stats_t* unit;
 

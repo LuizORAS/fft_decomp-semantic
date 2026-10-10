@@ -1,6 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the yaw a Focus instruction gives the camera for a pair of units.
+ *
+ * The flat-pitch camera-block masks of the two units' tiles are combined; each of
+ * the four low bits rules out one entry of g_battle_camera_diagonal_yaws. Of the
+ * remaining yaws the one with the smallest angular distance from the current yaw
+ * (taken modulo a full turn of 0x1000) wins, and the result is the yaw script
+ * variable moved by that distance in the shorter direction, so the variable is
+ * not wrapped.
+ *
+ * With all four directions blocked no candidate replaces the initial distance
+ * 0x8000, and the result is the yaw variable plus 0x8000 truncated to s16. */
 s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 yaw;
     s32 mask;
@@ -31,6 +42,7 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     sign = 1;
     for (i = 0; i < 4; i++) {
         if ((s16)(bit & mask) == 0) {
+            /* Distance to this diagonal directly (delta) and the other way round (wrapped). */
             delta = g_battle_camera_diagonal_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {

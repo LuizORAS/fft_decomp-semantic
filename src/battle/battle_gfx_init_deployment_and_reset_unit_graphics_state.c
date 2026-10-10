@@ -2,6 +2,13 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Builds the deployed units' data when a map starts and rewinds the unit graphics
+ * loader.
+ *
+ * A battle whose deployment screen is skipped places the units from
+ * g_main_deployed_unit_map_coordinates; otherwise the coordinate slots of the
+ * deployment screen are used, and in the debug battle style the red team is set
+ * up from them first. */
 void battle_gfx_init_deployment_and_reset_unit_graphics_state(void) {
     g_main_gfx_unit_graphics_load_queue.count = 0;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) == 0) {

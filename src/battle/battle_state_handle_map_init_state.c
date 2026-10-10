@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* MapInitialize game-state handler: run one step of the map init sequence behind
+ * a black screen; at step 0xd start the fade-in (MapJumpingIn). */
 void battle_state_handle_map_init_state(void) {
     char unused[24]; /* unreferenced; sizes the target's 0x30-byte frame */
 

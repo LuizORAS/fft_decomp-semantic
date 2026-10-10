@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Start a change to map_id (MapJumpingOut), saving the current game state: the
+ * screen darkens by 0x100 / duration per frame (a duration of 0 takes one frame),
+ * the map loads, the screen fades back in and the saved state resumes. */
 void battle_state_start_map_jump_out(s32 map_id, s32 duration) {
     s32 previous_state;
 

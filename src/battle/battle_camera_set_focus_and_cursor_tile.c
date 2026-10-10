@@ -1,6 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Places the camera for a map's GNS camera-position record.
+ *
+ * The position is the negated coords in 20.12 and the angles are masked to
+ * 0x1fff. The cursor goes to the tile under the position (0x1c000 per tile) on
+ * layer 0, and the camera height to that tile's height, 0xc000 (12 world units)
+ * per level, negative upwards. */
 void battle_camera_set_focus_and_cursor_tile(const SVECTOR* coords, const SVECTOR* rotation) {
     s32 tile_x;
     s32 tile_y;

@@ -8,11 +8,13 @@ void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* t
 
 /* Per-frame camera vector update, dispatched on the game state.
  *
- * State 0x15 tracks the map cursor with a narrow acceptance window; the
- * acting-unit states (0x11, 0x13, 0x1C) track the source unit's item-get
- * camera position and step the real coordinates toward it; below 0x29 the
- * idle path is the same one battle_camera_update_cursor_tile_vector takes,
- * and 0x29 and above simply clears the vector.
+ * The crystal-learn state tracks the map cursor with a narrow acceptance
+ * window; the acting-unit states (unit moving, wait direction and pre-attack
+ * animation) track the source unit's camera-relative position and step the
+ * real coordinates toward the unit; the other states below
+ * BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT take the idle path of
+ * battle_camera_update_cursor_tile_vector, and that state and those above it
+ * clear the vector.
  *
  * The scaling routine passes the normal routine's result through, and these
  * callers hand it on.

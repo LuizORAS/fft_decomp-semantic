@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* ActiveTurn game-state handler, the view of a unit picked from the AT list:
+ * circle or cross returns to the mini menu. */
 void battle_state_handle_active_turn_state(void) {
     s32 controller_input;
 

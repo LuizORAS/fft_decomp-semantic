@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Uploads the fixed CLUTs of the sprite row: 1 and 2 the deployed-unit palettes,
+ * 3 the wait-direction arrow, 4 the map selection cursor, 5 the shadow and 7 the
+ * status bubble. */
 void battle_gfx_extract_deployed_unit_palettes(void) {
     RECT rect; /* never used; retail reserves its 8 bytes */
 

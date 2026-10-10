@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Fill the init record of a teleport effect: the unit is the caster and the only
+ * target, and there are no spectators. Both teleport starters use it for every
+ * unit, not only for Altima. */
 void battle_effect_init_altima_teleport_data(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data) {
     u8 misc_id;

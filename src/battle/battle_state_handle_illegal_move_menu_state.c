@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* IllegalMoveMenu game-state handler: when the message closes (command 7, 8 or
+ * 0xff), return to choosing a destination (battle_menu_close_move_help). */
 void battle_state_handle_illegal_move_menu_state(void) {
     s32 selected_command;
 

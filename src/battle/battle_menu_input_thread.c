@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread entry of system function 0x28 (the silent move confirmation): with menu
+ * sounds suppressed, handle confirm and cancel on the menu each frame until
+ * battle_menu_should_close_thread asks it to stop. The thread exits only when its
+ * second parameter is 0. */
 void battle_menu_input_thread(void) {
     void* menu;
 

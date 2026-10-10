@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Continue a jump step on the ground once the landing animation is over: restart
+ * the step (at climb speed when the step byte's climb bit is set) and enter its
+ * to-centre stage for the direction of travel. */
 void battle_move_advance_display_unit_step(battle_unit_misc_data_t* unit) {
     s32 direction;
 

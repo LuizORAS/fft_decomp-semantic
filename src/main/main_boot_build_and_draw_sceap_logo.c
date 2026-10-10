@@ -1,5 +1,12 @@
 #include "fft/main.h"
 
+/* Show the publisher's logo strip at power-on.
+ *
+ * Loads SCEAP.DAT (sector 198, a 320x32 16-bit image) to the high overlay address
+ * and switches to a 320x240 display. A full-screen subtractive black quad fades
+ * the strip in over 32 frames, it stays for 180 frames, and the same quad fades
+ * it out over 32; each frame uploads the image again through
+ * main_boot_draw_sceap_logo. Both display buffers are cleared before and after. */
 void main_boot_build_and_draw_sceap_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];

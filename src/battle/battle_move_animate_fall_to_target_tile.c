@@ -1,8 +1,3 @@
-/*
- * Sibling of battle_move_animate_jump_start (0x8008a35c) and
- * battle_move_animate_jump_arc_to_own_tile (0x8008a118): same
- * distortion-animation shape.
- */
 #include "fft/battle.h"
 #include "psx/types.h"
 
@@ -11,6 +6,20 @@
 #define screen_z_from_misc_screen_data                                                                                 \
     ((s32 (*)(battle_unit_misc_data_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_misc_screen_data)
 
+/* Distortion animation 0x0d: drop the unit straight down until it reaches the
+ * ground.
+ *
+ * Phase 0 sets the fall speed to g_battle_move_jump_gravity, starts the six
+ * position copies that draw the sprite's trail and shows the shadow. Phase 1
+ * takes the landing height each frame: during an event the ground under the
+ * unit's own tile, otherwise the ground under the first target's tile, or under
+ * the action target tile when the unit has no target. Above that height the unit
+ * falls and gains g_battle_move_jump_gravity per frame; on reaching it the unit
+ * snaps to it, the position copies stop and the animation ends.
+ *
+ * During an event the unit is also centred on its tile, but retail writes the
+ * depth coordinate into real.vy instead of real.vz. The height then sits below
+ * the ground on the next frame, so an event fall ends on its second frame. */
 void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
     SVECTOR coords;
     /* Unreferenced 8-byte frame slot above `coords`; it puts `velocity` at
@@ -39,9 +48,9 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
             unit->real.vx = x << 12;
             y = unit->map_y * 28 + 14;
             unit->screen.vz = y;
-            /* Target really stores the map-Y fixed-point word into real.vy
-             * (0x01c), not real.vz (0x020); the height branch below overwrites
-             * it, so this looks like an original bug. */
+            /* Retail stores the tile-centre depth into real.vy (the height),
+             * not real.vz. The first frame adds the fall speed to it and the
+             * next one snaps the height to the ground. */
             unit->real.vy = y << 12;
             main_util_set_svector(&coords, unit->map_x * 28 + 14, unit->map_z, unit->map_y * 28 + 14);
             coords.vy = screen_z_from_misc_screen_data(unit, &coords);

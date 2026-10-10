@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Faces a unit in a direction given in sixteenths of a turn and restarts its
+ * current animation with that facing; an animation below idle becomes standing.
+ * Returns the misc id, or -1 when no record has it. */
 s32 battle_unit_set_animation_from_facing_nibble(u32 misc_id, s32 facing_nibble) {
     battle_unit_misc_data_t* unit;
     s32 animation;

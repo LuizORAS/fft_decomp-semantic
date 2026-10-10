@@ -3,7 +3,7 @@
 
 /*
  * Advance a walking unit by one frame: the elaborate sibling of
- * battle_move_update_knockback_step at 0x8006db10, with the full 0x3c-entry
+ * battle_move_update_knockback_step, with the full 0x3c-entry
  * step-phase table instead of the knockback subset.
  *
  * The jump-start phases dismount any rider once the jump animation has run

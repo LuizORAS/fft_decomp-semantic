@@ -12,6 +12,14 @@ typedef struct open_menu_render_record_tail_pair {
     void* image;
 } open_menu_render_record_tail_pair_t;
 
+/* Prepare a 56-byte render record for an image that is already in VRAM.
+ *
+ * first_pair is the image's VRAM position and second_pair its size. The source
+ * rectangle keeps x within the 64-word texture page and doubles x and the width
+ * (4-bit texels). `pair` becomes the record's CLUT position and `flags` replaces
+ * the 8-bit, blank and hidden bits. The WLDCORE twin
+ * wldcore_window_init_vram_render_record stores a texture page id where this one
+ * stores the VRAM position. Nothing in OPEN.BIN calls it. */
 void open_menu_init_render_record_fields(s32 record_index, open_menu_packed_halfword_pair_t first_pair,
     open_menu_packed_halfword_pair_t second_pair, open_menu_render_record_tail_pair_t pair, u32 flags) {
     open_menu_render_record_tail_pair_t* tail_base;

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Advances the screen-offset move by one frame while its countdown runs. Only the
+ * uncalled battle_camera_set_offset_screen_coord_delta_* routines start the
+ * countdown, so nothing moves in retail. */
 void battle_camera_update_offset_screen_coord_animation(void) {
     s32 fixed_x;
     s32 fixed_z;

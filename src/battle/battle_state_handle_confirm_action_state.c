@@ -1,5 +1,15 @@
 #include "fft/battle.h"
 
+/* ConfirmAction game-state handler: act on the answer to the prompt
+ * battle_action_confirm opened.
+ *
+ * For a player-controlled unit command 5 targets the cursor tile; 6 and 7 target
+ * the unit on it, storing the command as the targeting type and the unit's battle
+ * id, or fall back to targeting type 5 when no unit stands there. All three store
+ * the cursor tile as the target panel and enter the pre-attack animation. Command
+ * 8 or 0xff clears the tile marks and returns to the range display. An
+ * AI-controlled unit keeps the target it already chose: 5, 6 and 7 only enter the
+ * pre-attack animation. */
 void battle_state_handle_confirm_action_state(void) {
     battle_unit_misc_data_t* unit;
     s32* selected_command_address;

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Enter the unit-move state and show the source unit's targeting prompt. */
 void battle_action_handle_move_command(void) {
     battle_unit_misc_data_t* unit;
 

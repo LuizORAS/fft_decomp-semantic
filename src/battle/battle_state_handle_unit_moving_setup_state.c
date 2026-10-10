@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* UnitMovingSetup game-state handler: command 7 starts the move; 8 or 0xff
+ * discards the path and returns to choosing a destination. */
 void battle_state_handle_unit_moving_setup_state(void) {
     s32* selected_command_address;
     s32 selected_command;

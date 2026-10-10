@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Queue the casting unit's own post-effect messages and show the first one. With
+ * effect messages turned off, or nothing to report, an effect message with text
+ * id 0 is requested instead. */
 void battle_action_show_caster_post_effect_messages(void) {
     battle_unit_misc_data_t* unit;
 

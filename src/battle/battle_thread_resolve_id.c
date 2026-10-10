@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the slot a thread should start in: a requested id below 16 as it is,
+ * otherwise (NATIVE_THREAD_SLOT_FIRST_IDLE) the first idle slot from 1 up. With
+ * every slot busy the calling thread exits, and the function has no return value
+ * for that path. */
 s32 battle_thread_resolve_id(s32 requested_thread_id) {
     s32 i;
 

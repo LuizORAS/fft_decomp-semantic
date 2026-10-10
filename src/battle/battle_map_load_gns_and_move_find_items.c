@@ -5,6 +5,12 @@ enum {
     GNS_BUFFER_CLEAR_BYTES = 0xbb8,
 };
 
+/* Make a map current for loading: copy its move-find item record, clear the
+ * 150-row GNS table and start reading the first 0x1000 bytes of its GNS file into
+ * the load buffer.
+ *
+ * Returns the GNS table when the read started and 0 when it could not start. A
+ * map without a GNS sector returns whatever bzero left in $v0. */
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
     u32 selected_map;
     gns_record_view_t* gns_records;

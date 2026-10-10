@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Enter the pre-attack animation state: clear the tile marks and start the used
+ * ability's charge animation, or the standing animation when the ability has no
+ * charge animation set. */
 void battle_state_enter_pre_attack_animation(void) {
     battle_unit_misc_data_t* unit;
     u16 ability;

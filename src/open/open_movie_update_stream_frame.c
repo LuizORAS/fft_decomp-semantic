@@ -8,6 +8,14 @@ typedef struct open_movie_ring_status {
     u8 _unused_0c[4]; /* 16-byte block at sp+0x10 */
 } open_movie_ring_status_t;
 
+/* Per-frame movie step while a stream plays.
+ *
+ * When the ring has fewer than 16 free sectors the stream is masked up to the
+ * frame StGetBackloc reports and the read restarts at that location. The MDEC is
+ * then started on the bitstream decoded last frame and on the first output slice,
+ * the next frame's bitstream is decoded, and the routine waits for the picture to
+ * be complete. The stream stops when the frame header reached end_frame (pausing
+ * the CD audio) or video_end_frame (leaving it playing). */
 void open_movie_update_stream_frame(void) {
     open_movie_ring_status_t status;
     s32 words;

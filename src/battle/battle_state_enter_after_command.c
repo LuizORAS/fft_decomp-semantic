@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Enter the after-command state at animation speed 1: put the cursor on the
+ * source unit and close the open system window. */
 void battle_state_enter_after_command(void) {
     g_main_system_animation_speed = 1;
     g_battle_game_state = BATTLE_GAME_STATE_AFTER_COMMAND;

@@ -1,6 +1,16 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* Read pad 1 and derive the frame's pressed and released buttons; always returns
+ * 1.
+ *
+ * While script variable EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS is set the
+ * event script filters the raw buttons first. The pressed and previous words of
+ * the frame before are kept in four copies each, and g_controller_stable_frames
+ * counts the frames the buttons have not changed. Triangle outside the event
+ * state requests the status menu, with its sound, when the menu is enabled, not
+ * yet requested and the source unit is not player controlled. Holding Start,
+ * Select, L1 and R1 together resets the game. */
 s32 battle_state_update_controller_input(void) {
     u32 pressed;
     u32 previous;

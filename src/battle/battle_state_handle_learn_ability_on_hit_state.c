@@ -1,5 +1,14 @@
 #include "fft/battle.h"
 
+/* LearnAbilityOnHit game-state handler: steps through the post-action reports
+ * (level up, job level up, learn on hit).
+ *
+ * Command 7 on the learn-on-hit report teaches the used ability to the unit found
+ * for it. Commands 7, 8 and 0xff all advance to the next report, and after the
+ * third the action is marked finished. From then on, once no animation is pending
+ * and neither the casting unit nor any of its targets still shows a numeric
+ * display, the source unit returns to its status animation and the after-command
+ * state begins. */
 void battle_state_handle_learn_ability_on_hit_state(void) {
     s32* selected_command_address;
     s32 selected_command;

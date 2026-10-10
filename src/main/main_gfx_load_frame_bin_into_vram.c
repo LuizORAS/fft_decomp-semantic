@@ -10,6 +10,8 @@ typedef struct main_gfx_frame_bin {
     u32 palette_tail[0x600 / sizeof(u32)];
 } main_gfx_frame_bin_t;
 
+/* Load EVENT/FRAME.BIN (sector 0xe68) and upload its image and two palette blocks
+ * to VRAM. */
 void main_gfx_load_frame_bin_into_vram(void) {
     main_gfx_frame_bin_t* frame = main_file_load_checked_to_heap(DISC_SECTOR_EVENT_FRAME_BIN, 0x9800);
 

@@ -1,5 +1,9 @@
 #include "fft/main.h"
 
+/* Called by main_file_poll_load on every poll of an unfinished read. Unless the
+ * counter is -1 (message off), the 64th call unmasks the display and from then on
+ * every call draws the blinking message on its own, alternating the two display
+ * buffers; the counter stays at 0x40 or 0x41. */
 void main_gfx_draw_now_loading_message(void) {
     s32 frame;
     u32* otag;
