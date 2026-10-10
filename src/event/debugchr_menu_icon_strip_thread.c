@@ -1,6 +1,9 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/* Menu window thread without a cursor: rebuilds the text image every seventh
+ * frame and alternates between two sprite records until the menu closes. The
+ * DEBUGCHR twin of world_menu_icon_strip_thread. */
 void debugchr_menu_icon_strip_thread(void) {
     RECT rect;
     world_menu_icon_record_t frames[2];

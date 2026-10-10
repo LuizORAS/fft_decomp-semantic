@@ -2,6 +2,22 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Thread task of the unit status screen opened on one battle unit: the
+ * read-only use of the DEBUGCHR panels (g_debugchr_editor_active stays 0).
+ *
+ * Loads `unit_id` and starts the status banner, numeric and character status
+ * panel threads. L1/R1 switch between the unit and its mount partner, Circle
+ * opens the status-effect list as the previous thread slot and waits for it
+ * (refused for a generic monster with no status), and Cross closes the
+ * panels and ends the loop, after which the first unit is loaded again. The
+ * menu-building thread holds the status groups' animation bytes at 1 while
+ * it runs, and the panels are dimmed only while a NATIVE_THREAD_TASK_RESUME
+ * thread is running as well.
+ *
+ * `sound_latched` is read before anything assigns it when the menu-building
+ * thread is already running on the first frame.
+ */
 void debugchr_editor_run_unit_thread(s32 unit_id) {
     s32 frame;
     s32 one;

@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: when a track is selected, switch playback to its slot
+ * at volume 0 and fade to the queue's volume over operand 0 * 3 steps. */
 void wldcore_opcode_switch_music_track(void) {
     s16 track = g_wldcore_active_saved_record.music_selection;
     s32* state;

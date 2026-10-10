@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Thread tail of the help menu: restore the text section pointers saved
+ * when it opened, free the overlay reservation and exit. */
 void world_menu_close_help_menu(void) {
     world_script_copy_bytes(
         g_world_text_section_pointers, g_world_text_section_pointer_backup, sizeof(g_world_text_section_pointers));

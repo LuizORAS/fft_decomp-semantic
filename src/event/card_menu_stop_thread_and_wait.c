@@ -1,6 +1,8 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Ask a thread to stop and run input-update frames until it has ended; then
+ * clear the managed-thread state. */
 void card_menu_stop_thread_and_wait(s32 id) {
     s32 output;
 

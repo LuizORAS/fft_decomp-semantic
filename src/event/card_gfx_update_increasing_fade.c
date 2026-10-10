@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Step the fade to full intensity by 8 per event-speed step and draw the fade
+ * tile over the screen. Returns 0 on the call that reaches 0xff and ends the
+ * fade, 1 otherwise (also when no fade is active). */
 s32 card_gfx_update_increasing_fade(void) {
     u32 stack_padding[4];
     s32 result = 1;

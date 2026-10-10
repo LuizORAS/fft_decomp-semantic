@@ -2,6 +2,24 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Fills the comparison and selected-unit billboards and the status panel's
+ * fields for the selected battle unit. WORLD copy of
+ * battle_menu_load_selected_unit.
+ *
+ * The halfword fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
+ * power, 5/6 right and left weapon evade, 7 set for a monster skillset, 8 set
+ * when a lone weapon is held in two hands, 9 physical attack, 10 class evade,
+ * 11/12 shield (the larger hand) and accessory physical evade, 14 magic
+ * attack, 16/17 shield and accessory magic evade, 18..22 the equipped items
+ * (-1 for none) and 23..27 the ability rows (-1 for none): both skillsets,
+ * reaction, support and movement, or a monster's skillset abilities packed to
+ * the front, the fourth kept only while unit_has_adjacent_monster_skill_support
+ * allows it.
+ *
+ * An empty secondary skillset marks byte 1 of its name buffer, not byte 0,
+ * before the names are cleared and copied.
+ */
 void world_menu_load_selected_unit(void) {
     battle_stats_t* unit;
     s16* editor;

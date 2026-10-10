@@ -1,5 +1,8 @@
 #include "fft/event_bunit.h"
 
+/* Return the listed unit's current HP, MP, or CT value, as
+ * g_bunit_unit_stat_mode selects. For any other mode the value returned is
+ * never assigned. */
 s32 bunit_unit_get_current_stat(s32 unit_index) {
     menu_unit_readout_e mode;
     bunit_unit_data_t* entry;

@@ -1,12 +1,27 @@
 #include "fft/wldcore.h"
 
-/* Provisional view of the picture state at 0x800d485c (render record index,
+/* View of the picture state at 0x800d485c (render record index,
  * then the pending picture id). */
 typedef struct wldcore_script_picture_state {
     s16 render_index; /* 0x00; g_wldcore_active_saved_record.picture_render_index */
     s16 picture;      /* 0x02; g_wldcore_active_saved_record.picture_id */
 } wldcore_script_picture_state_t;
 
+/*
+ * Loads the sound novel's reading state and replays what it implies.
+ *
+ * Slots 0..4 of g_main_saved_records hold a saved position; any other index
+ * starts from a reset record. `render_record` becomes the picture's render
+ * record. The saved picture and background set are reloaded through their
+ * opcode handlers, the saved music is restarted (or the music faded out and
+ * unloaded when none is saved), the saved sound replayed (bit 0x4000 selects
+ * wldcore_sound_stop_music_and_play_sound), the level's two button prompts
+ * and the value display re-shown when their state flags say so, and the fade
+ * box set to the saved
+ * brightness (0x100 is stored as 0xFF). After the novel's files are loaded
+ * the script resumes at the saved section's word table entry, or branches to
+ * the start when the section is 0.
+ */
 void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     u32* word;
     s32 i;

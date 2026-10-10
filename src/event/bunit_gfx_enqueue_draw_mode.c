@@ -1,6 +1,8 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Takes the next DR_MODE packet from the pool, fills it and links it into
+ * ordering-table entry idx. */
 void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx) {
     DR_MODE* primitive;
 

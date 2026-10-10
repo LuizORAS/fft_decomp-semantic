@@ -7,11 +7,9 @@
  * wldcore_list_open_tutorial_mask_1_entries list, the chapter-5 tutorial topics, and entry 3 (or cancel),
  * which starts WORLD thread 14 on text 0xb8de and moves to mode 1. Mode 1
  * waits for confirm/cancel and starts the fade out, mode 2 clears VRAM once
- * the fade flag is set and mode 3 pops the level: with system flag 0x80000 it
+ * the fade flag has cleared and mode 3 pops the level: with system flag 0x80000 it
  * hands back to the caller through 0x10000000, otherwise it fades in and calls
- * wldcore_menu_push_entry_window_level.
- *
- * Names beyond the shared headers remain provisional. */
+ * wldcore_menu_push_entry_window_level. */
 void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;

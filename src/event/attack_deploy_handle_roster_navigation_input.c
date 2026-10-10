@@ -2,6 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* L1 and R1 on the deployment screen: start the previous- or next-unit
+ * thread in the roster step slot, unless one is still running. */
 void attack_deploy_handle_roster_navigation_input(void) {
     u32* flags;
 

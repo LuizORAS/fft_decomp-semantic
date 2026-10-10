@@ -2,6 +2,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Event instruction: face a unit at once and set its animation.
+ *
+ * Parameters: 0x00 unit id (halfword), 0x02 rotation, 0x03 animation id
+ * (halfword; its high byte is also read as 0x04, the facing-update mode:
+ * 0 clears the suppression, anything else sets it).
+ */
 void world_script_unit_animation_rotate_event_instruction(const u8* parameters) {
     const u8* data = parameters;
     u8 rotation;

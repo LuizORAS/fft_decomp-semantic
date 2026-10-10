@@ -1,6 +1,15 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Can battle unit `unit_id` join the roster? Returns 2 for a unit with the
+ * save-formation flag (a guest), 1 when one of the regular roster slots is
+ * free and 0 when they are all taken.
+ *
+ * main_party_find_free_slot clears the byte it is handed for a palette. Here
+ * that is the palette of the first roster record with a Ramza identity (the
+ * last record when there is none).
+ */
 s32 require_party_get_free_slot_status(s32 unit_id) {
     party_data_t* party;
     battle_stats_t* unit;

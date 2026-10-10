@@ -1,6 +1,14 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Load bonus image `image_id` (a 0x6800-byte file, 13 sectors apart from
+ * sector 0x16c0) and upload it to VRAM.
+ *
+ * Waits until 0x8000 bytes can be reserved at the high overlay address, reads
+ * the file there on the main stack, uploads the pixels and the palette that
+ * follows them, and frees the buffer after one more frame.
+ */
 void require_reward_load_bonus_image(s32 image_id) {
     void* allocation;
     s32 (*build_operation)();

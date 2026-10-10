@@ -1,6 +1,10 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Run the next `then_count` commands and skip the following `else_count`
+ * when row callback command[3] returns nonzero; otherwise skip the first
+ * group and run the second. The callback's argument is command[6], or the row
+ * being drawn while a list row is rendered. */
 u8* equip_cmd_run_if_else_group_handler(u8* command) {
     s32 then_count;
     s32 else_count;

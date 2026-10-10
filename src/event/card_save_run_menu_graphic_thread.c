@@ -1,6 +1,14 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the save screen's zodiac backdrop: draws it every frame
+ * until the third thread parameter asks it to stop.
+ *
+ * It is centred at (0x100, 0x80), or at (0, 8) on the formation screen.
+ * With the first parameter zero it starts at twice its size (4.12 scale
+ * 0x2000) and shrinks by 0x100 per event-speed step to 0x1000.
+ */
 void card_save_run_menu_graphic_thread(void) {
     s32 frame;
 

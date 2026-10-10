@@ -1,6 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Reads a `count`-bit value, most significant bit first, from the secondary
+ * bitstream. The first read after a reset starts at bit 7 of the current
+ * byte. */
 s32 equip_bits_read_secondary(s32 count) {
     s32 result;
     u8* cursor;

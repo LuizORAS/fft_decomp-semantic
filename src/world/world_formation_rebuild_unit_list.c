@@ -1,6 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Rebuild the formation unit list for the screen in use: every unit on the
+ * formation screen, the monsters at the soldier office and the available
+ * humans in the other shops. Also reconciles the five item category lists
+ * and resets the cursor and scroll. */
 void world_formation_rebuild_unit_list(void) {
     s32 mode;
 

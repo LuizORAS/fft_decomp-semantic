@@ -1,6 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Steps the formation unit grid's vertical scroll.
+ *
+ * `position` rests at 0, -0x3C or -0x78 (three of the five rows of four are
+ * visible at a time). At rest, a selected unit outside the visible rows
+ * starts a scroll; `velocity` then holds the signed pixels covered so far,
+ * growing by 4 a call, and after one row height (0x3C) it folds into
+ * `position` and returns to 0.
+ */
 void world_formation_step_scroll_velocity(s8* velocity, s8* position) {
     s8 next;
 

@@ -1,6 +1,15 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Draw a menu window's 5x9/5x7 border pieces around its rectangle and tile
+ * the interior through card_cmd_draw_tiled_rectangle_handler.
+ *
+ * CARD copy of world_menu_parse_draw_window_frame: source 2 takes the signed
+ * rectangle from the shared window record, other sources use the command's
+ * byte operands, and source 1 selects the alternate border texture
+ * coordinates. Returns the command that follows.
+ */
 world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command) {
     RECT rect;
     s32 left;

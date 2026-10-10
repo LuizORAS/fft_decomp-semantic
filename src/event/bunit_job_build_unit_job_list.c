@@ -1,6 +1,15 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Writes a unit's selectable jobs to a -1-terminated list and returns their
+ * count. BUNIT copy of world_job_build_unit_list without its list modes.
+ *
+ * The base job comes first, followed by the generic jobs whose unlocked bit
+ * is set (Bard excluded for female units, Dancer for male units); special
+ * monsters and units using monster skillsets get only the base job. The
+ * third argument is not read.
+ */
 s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2) {
     s32 saved_unit_id = unit_id;
     u32 unit_index = (u8)saved_unit_id;

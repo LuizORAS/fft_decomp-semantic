@@ -1,6 +1,8 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Stream command: enqueue a draw-area rect (x, y, w, h from the command)
+ * unless the zoom transition already emitted one. */
 u8* jobstts_cmd_set_draw_area_if_unlocked_handler(u8* data) {
     RECT area;
 

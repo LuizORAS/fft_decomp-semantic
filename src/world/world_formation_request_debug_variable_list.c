@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Menu action: request the debug variable list from the world map, hand the formation input
+ * state to the event input and exit the thread. */
 void world_formation_request_debug_variable_list(void) {
     g_world_debug_variable_list_request_state = 1;
     g_world_formation_menu_new_buttons = 0;

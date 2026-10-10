@@ -2,6 +2,19 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
+/*
+ * Steps the menu level that swaps the world-map screen for a full-screen
+ * menu level.
+ *
+ * After `delay` frames it stores the 256x240 frame buffer into the scratch
+ * buffer, asks the transition thread to finish and forgets the loaded
+ * background set. Once that thread has ended it pops itself, restarts the
+ * message box (line 0xB848, or 0xB8DD for the tutorial lists) and pushes the
+ * level named by `screen`: Brave Story, a story event text, the tutorial
+ * categories, the formation tutorials, the mask-1 tutorial entries or a
+ * treasure detail. The two tutorial entry lists first un-hide the parent
+ * list's windows and frame.
+ */
 void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_level_t* level) {
     RECT rect;
 

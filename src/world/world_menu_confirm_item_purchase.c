@@ -1,6 +1,16 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
+/*
+ * Shop buy step: runs the purchase-quantity prompt for the highlighted item
+ * and completes the purchase.
+ *
+ * On "yes" the gil is deducted (price times quantity), the items are added to
+ * the inventory and message 0xF811 is shown; on "no" message 0xF80A. That
+ * message, or the prompt's refusal (stack full or not affordable), stays
+ * until any face button or d-pad press, which returns to the buy list. The
+ * list, the Triangle button and the gil display are drawn every frame.
+ */
 void world_menu_confirm_item_purchase(void) {
     s32 result = 1;
 

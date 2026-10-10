@@ -1,6 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 
+/* Point render record `index` at the formation portrait of party member
+ * `party_index`: its texture page, cell rectangle and CLUT (16 colours at
+ * x 0x280 + 0x40 per 40 portraits + 16 * (code % 4), y 0x1F0 +
+ * (code % 40) / 4), at full brightness, and show the record. The first
+ * argument is not read. */
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* unused, s32 party_index, s32 index) {
     POLY_FT4 poly;
     s32 code;

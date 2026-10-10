@@ -1,6 +1,9 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Run the next `count` commands only if condition data[3] returns nonzero
+ * for the row (literal data[5], or the row being drawn while a list row is
+ * rendered); otherwise skip them. */
 u8* jobstts_cmd_run_if_group_handler(u8* data) {
     s32 count;
     jobstts_condition_t condition;

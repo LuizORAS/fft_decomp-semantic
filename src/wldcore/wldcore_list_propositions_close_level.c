@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Pop the propositions list level: toggle the input-blocked system flag and
+ * unblock the menu buttons. */
 /* Target 0x80072ef4. */
 /* The caller hands in its menu level; the target reads no argument. */
 void wldcore_list_propositions_close_level(wldcore_menu_panel_level_t* level) {

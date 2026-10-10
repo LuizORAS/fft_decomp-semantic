@@ -1,6 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Read `size` bytes at the file's current position, seeking back and trying
+ * again after a short transfer, up to ten tries in all. Returns `size`, or -1 when
+ * the position cannot be read, the descriptor reports an error or every try
+ * falls short. */
 s32 world_card_read_file_with_retries(s32 descriptor, void* destination, s32 size) {
     s32 error;
     s32 result;

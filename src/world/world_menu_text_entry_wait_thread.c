@@ -2,6 +2,13 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Menu thread body for an entry that shows a message: runs the text
+ * binding's prepare hook, confirms the entry, starts the text thread named by the
+ * entry's text binding with the entry's header and text ids and the
+ * binding's speaker, then waits for the previous thread slot and the text
+ * thread to end.
+ */
 void world_menu_text_entry_wait_thread(void) {
     world_menu_entry_t* param;
     world_menu_text_binding_t* task;

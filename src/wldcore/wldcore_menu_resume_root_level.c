@@ -1,6 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Resume handler of the world map's root level: show the war funds in the
+ * context value display, reset the level's window palette, restore the live
+ * map if the captured frame is showing and run any pending script requests. */
 void wldcore_menu_resume_root_level(s32* param) {
     s32 index = param[0];
 

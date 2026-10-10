@@ -1,6 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: yield while a screen fade is running. */
 void wldcore_opcode_wait_for_fade(void) {
     u16* flags;
 

@@ -10,8 +10,8 @@
  * local copy, which is what keeps the depth in the target's registers. The
  * target reserves 0x30 bytes of frame the function never uses.
  *
- * Provisional: the level is the type-0x13 proposition confirmation record
- * (see wldcore_proposition_handle_cancel_confirm_input); until wldcore_menu_stack_record_t has a member for it,
+ * The level is the type-0x13 proposition confirmation record
+ * (see wldcore_proposition_handle_cancel_confirm_input); wldcore_menu_stack_record_t has no member for it, so
  * its words are reached through union members at the same offsets
  * (+0x10 proposition, +0x14 choice, +0x18 confirmed, +0x20 second window). */
 void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {

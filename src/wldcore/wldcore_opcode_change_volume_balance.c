@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: set the master volume to operand 0 * 0x40 (0xff maps
+ * to the maximum 0x3fff) over operand 1 * 3 steps, at least one. */
 void wldcore_opcode_change_volume_balance(void) {
     s32 unused[2];
     s32 balance = g_wldcore_active_saved_record.instruction.bytes.operand_1 * 3;

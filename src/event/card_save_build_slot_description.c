@@ -1,6 +1,15 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Compose the two-line text of a save slot into `destination`.
+ *
+ * Mode 1 copies text entry 14 (the empty-slot line). Mode 0 builds the line
+ * for the save buffer's header: name, job name at x 0x58, entry 13 (the
+ * level label) at x 0xac with the two level digits, end of line; then the
+ * month name, a space, the two day digits and the location name at x 0x58.
+ * Digits are stored as glyphs 0..9 and each line ends with 0xfe.
+ */
 void card_save_build_slot_description(s32 mode, u8* destination) {
     s32 index;
     u8 stack_padding[4];

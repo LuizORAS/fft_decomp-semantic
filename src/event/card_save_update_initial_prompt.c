@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Save-menu state CARD_SAVE_MENU_INITIAL_PROMPT: after 40 frames, runs the
+ * "save the game?" menu. Choosing row 0 goes on to card selection; anything
+ * else leaves the screen. */
 void card_save_update_initial_prompt(void) {
     if (g_card_save_initial_prompt_thread_state == 0) {
         if (g_card_save_initial_prompt_timer < 40) {

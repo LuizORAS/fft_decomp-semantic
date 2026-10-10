@@ -1,6 +1,10 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Unloads the current scenario music, then loads the two requested music
+ * ids (main_music_e, 0 for none) into slots 1 and 2 through the main-stack
+ * dispatcher, each followed by the one-VSync wait stub, and plays slot 1
+ * when slot_1_music_id is nonzero. */
 void require_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id) {
     main_sound_unload_scenario_music_and_tunes();
     if (slot_1_music_id != 0) {

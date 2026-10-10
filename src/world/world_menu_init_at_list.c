@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Provisional: one 4-byte slot of the unit list filled on the main stack by
+/* One 4-byte slot of the unit list filled on the main stack by
  * battle_action_calculate_at_list. Bits 0-4 of `flags` hold the battle id (0x1f ends the list);
  * 0x40 marks a bracketed name, 0x20/0x80 select its sprite row. */
 typedef struct {

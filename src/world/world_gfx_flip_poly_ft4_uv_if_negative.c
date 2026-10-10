@@ -1,8 +1,8 @@
 #include "psx/types.h"
 
-/* Provisional layout: four 8-byte slots starting at +0xc, each with a pair of
- * bytes at +0/+1. Only reached through a function pointer, so the owning
- * type is not yet identified. */
+/* Four 8-byte slots starting at +0xc, each with a pair of bytes at +0/+1.
+ * The function is reached only through a function pointer, and no other code
+ * names the owning type. */
 typedef struct {
     u8 x;
     u8 y;

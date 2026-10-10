@@ -1,5 +1,13 @@
 #include "fft/event_bunit.h"
 
+/*
+ * Per-frame handler of the unit list's sort-order menu.
+ *
+ * The menu lists the 11 sort keys in their current priority order. Choosing
+ * a row moves that key to the front, shifting the rows above it down one,
+ * then stores the order back and re-sorts and rebuilds the unit list. The
+ * handler returns to the unit list when the menu thread ends.
+ */
 void bunit_menu_run_reorder_list(void) {
     s16 opts[16];
     s16* src;

@@ -2,6 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Pushes the "how many days" number panel of a proposition: shows prompt
+ * 0xB813 with the row's minimum and maximum days, starts the number panel
+ * thread on that range starting at the minimum, and withholds Circle and
+ * Cross from the WORLD menu threads (the level's own step handles them). */
 void wldcore_menu_push_number_panel_level(void) {
     wldcore_point32_t origin;
     s32 record_index;

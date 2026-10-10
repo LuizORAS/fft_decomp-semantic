@@ -13,6 +13,15 @@ typedef struct wldcore_map_dot_source {
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
 
+/*
+ * Builds the 43 world-map location dots and queues them for drawing.
+ *
+ * Each dot takes its kind, sub-kind and map position from
+ * g_wldcore_map_dot_sources; kind 2 uses the second dot sequence. A location
+ * whose colour script variable is set gets palette 0xc (locations 0..23) or
+ * 0x10 (the rest), any other the default palette, and one whose visibility
+ * variable is 0 is hidden. Resets the pulse state and projects the dots.
+ */
 void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_source_t* src;
     wldcore_map_dot_t* dots;

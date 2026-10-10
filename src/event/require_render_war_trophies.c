@@ -13,6 +13,18 @@ typedef struct require_reward_war_trophy_primitives {
 
 extern require_reward_war_trophy_primitives_t g_require_reward_war_trophy_primitives[2];
 
+/*
+ * Thread body of the post-battle "war trophies" list.
+ *
+ * Collects the entries (require_reward_collect_war_trophies_and_bonus_money)
+ * and exits at once when there are none. Otherwise it starts the banner
+ * thread and reveals the entries eight to a page: a new entry appears every
+ * 0x1f frames or on Circle, and the last entry of a page stays for 0x79
+ * frames before the page is cleared. Fewer than five entries form one column,
+ * more form two. An item entry is its 16x16 icon and name; any other entry is
+ * a number followed by an 18x8 label glyph. Each new line of text is uploaded to
+ * VRAM and its buffer freed on the following frame.
+ */
 void require_render_war_trophies(void) {
     SPRT sprite;
     s32 start;

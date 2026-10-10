@@ -1,6 +1,10 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Stream command: draw a flat tile of size (cmd[4], cmd[5]) at
+ * (cmd[2], cmd[3]) in the RGB colour at cmd[6]. While a list row is
+ * rendered, y is offset by the row's position and the scroll offset. Returns
+ * the next command. */
 u8* equip_cmd_draw_translucent_tile_handler(u8* cmd) {
     RECT rect;
     s32 y;

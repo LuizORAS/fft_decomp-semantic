@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Put the save list cursor on the last used slot and return the number of
+ * available slots. The scroll step is then run until it has rested for ten
+ * calls in a row, so the list opens already scrolled to the cursor. */
 s32 card_save_init_occupied_slot_selection(void) {
     s32 slot;
     s32 occupied_count;

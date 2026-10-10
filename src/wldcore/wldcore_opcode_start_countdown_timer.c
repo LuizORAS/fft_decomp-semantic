@@ -1,6 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: start a countdown of the 16-bit operand in seconds
+ * (60 frames each); when it runs out the script branches to the section in
+ * the top operand byte. */
 void wldcore_opcode_start_countdown_timer(void) {
     u32 instruction;
 

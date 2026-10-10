@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-/* Provisional: sector-offset table whose entry i is the start sector of set i
+/* g_wldcore_background_sector_offsets is a sector-offset table whose entry i is the start sector of set i
  * relative to the disc LBA below it, so entry i+1 minus entry i is that set's
  * sector count. Same shape as g_wldcore_sound_novel_script_sector_offsets and
  * g_wldcore_sound_novel_text_sector_offsets used by

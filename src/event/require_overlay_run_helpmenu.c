@@ -2,6 +2,10 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Thread body that runs the HELPMENU overlay from the REQUIRE screen: waits
+ * until 0x10000 bytes can be reserved at the high overlay address, loads the
+ * overlay and runs helpmenu_menu_run_require_help in the first idle slot,
+ * with the panel's two animation flags set while it runs. */
 void require_overlay_run_helpmenu(void) {
     s32 thread_id;
 

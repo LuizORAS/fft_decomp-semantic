@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Reset the unit animation states and, while no thread occupies the event
+ * slot, the camera speed curve and position lock. The two no-op calls stand
+ * where BATTLE snapshots and resets its camera. */
 void world_script_reset_event_state(void) {
     world_unit_reset_animation_states();
     if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) == 0) {

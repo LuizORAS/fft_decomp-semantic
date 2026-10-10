@@ -1,6 +1,10 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Stream command closing a zoomed window: when the zoom transition queued a
+ * cropped draw area, queue the full draw area again one ordering-table entry
+ * above the window's contents, move on to the next entry and clear the
+ * lock. */
 u8* jobstts_cmd_release_otag_lock_handler(u8* data) {
     s16 otag_index;
     if (g_jobstts_gfx_otag_index_locked != 0) {

@@ -5,6 +5,16 @@
  * both spellings, and a single name lets GCC merge the two stores. */
 extern s32 g_wldcore_sound_novel_countdown_frames_reset;
 
+/*
+ * Steps the sound novel's choice countdown. Returns 1 on the frame the script
+ * is redirected to the timeout section, 0 otherwise.
+ *
+ * While a countdown is set, each call counts one frame and, with the play
+ * time display selected, shows the time remaining (60 frames to the second).
+ * When it runs out the message thread is told to close (task 3) and the
+ * countdown becomes -1; once that thread has ended the script branches to
+ * g_wldcore_sound_novel_countdown_section.
+ */
 s32 wldcore_sound_novel_update_countdown_timer(void) {
     s32 elapsed;
     s32 remaining;

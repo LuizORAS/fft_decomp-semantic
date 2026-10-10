@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Remove a formation unit from the roster, unequipping its five slots first
+ * so the items return to the inventory. Does nothing when
+ * world_formation_can_dismiss_unit refuses. */
 void world_formation_dismiss_unit(s16 formation_idx) {
     s32 i;
 

@@ -2,8 +2,9 @@
 
 /* Pushes the active-proposition list level (type 0x26).
  *
- * Starts WORLD thread 14 on entry point 0xb848, hides the parent level's
- * cursor window and content render record, then appends a cursor window and
+ * Starts WORLD thread 14 on entry point 0xb848, re-shows the parent level's
+ * cursor window and list panel (popping the panel in) when the panel is
+ * hidden, then appends a cursor window and
  * three column-header windows (sequences 2 / 0x63 / 0x64 / 0x65) plus one
  * render record sized to g_main_save_proposition_count rows.  One row is
  * seeded per saved proposition, and the panel image is drawn in three passes:

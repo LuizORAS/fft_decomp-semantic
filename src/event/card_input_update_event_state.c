@@ -2,6 +2,19 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Per-frame event input update: derives the edge/auto-repeat input word,
+ * publishes it, and yields once while tracking thread status changes.
+ *
+ * CARD copy of bunit_input_update_event_state without its frame_arg latch,
+ * the numeric-value flag and the thread status indicators; CARD instead sets
+ * g_main_gfx_screen_polarity when `count_frame` is nonzero. A held direction
+ * or L1/R1 repeats after g_main_input_repeat_initial_delay frames and then
+ * every repeat period (directions) or secondary repeat period (L1/R1), all
+ * divided by the event speed; holding Square restricts the fast repeat to
+ * Left/Right and adds Up/Down to the slow one. Any input other than Select, or a thread starting or stopping across
+ * the yield, sets five frames of event input suppression.
+ */
 void card_input_update_event_state(void* state, u32 input, s32 count_frame) {
     u32 filtered_input;
     s32 initial_delay;

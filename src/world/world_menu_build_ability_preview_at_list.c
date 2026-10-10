@@ -3,11 +3,10 @@
 #include "psx/types.h"
 
 /*
- * Provisional: the layout record at 0x80153cd0 bound into menu entry 52. Its
+ * The layout record at 0x80153cd0 bound into menu entry 52. Its
  * head is exactly world_menu_text_layout_t; the halfword at +0x28 is the
  * scroll row this function sets and world_screen_menu_draw_text_columns receives as
- * its `row_offset` argument. Proposed as a `s16 scroll_row;` field appended to
- * world_menu_text_layout_t in include/fft/menu.h (size assert 0x28 -> 0x2c).
+ * its `row_offset` argument.
  */
 #define LAYOUT(entry) ((world_menu_scroll_text_layout_t*)(entry)->text_binding)
 

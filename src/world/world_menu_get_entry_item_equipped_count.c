@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Get the equipped count of the item in a menu row.
+ *
+ * MENU_NUMBER_VALUE_DISABLED is set when the unit cannot equip the item. */
 s32 world_menu_get_entry_item_equipped_count(s32 entry_index) {
     s32 result;
 

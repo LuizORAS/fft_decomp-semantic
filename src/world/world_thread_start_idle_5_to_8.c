@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
+/* Park every idle thread slot from 5 to 8 on world_thread_idle_yield_forever. */
 void world_thread_start_idle_5_to_8(void) {
     s32 thread_id = 8;
 

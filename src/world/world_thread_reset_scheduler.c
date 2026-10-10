@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Zeroes all 16 thread records (16 * 0x400 bytes), makes the main thread
+ * current and marks it running. */
 void world_thread_reset_scheduler(void) {
     s32* word;
     s32 i;

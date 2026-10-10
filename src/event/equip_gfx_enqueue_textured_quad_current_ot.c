@@ -1,6 +1,10 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at
+ * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it at the
+ * ordering-table entry g_equip_gfx_current_ot points to; the last argument
+ * is not read. With `color` the quad is shaded with it. */
 void equip_gfx_enqueue_textured_quad_current_ot(
     const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 unused_priority) {
     POLY_FT4* poly;

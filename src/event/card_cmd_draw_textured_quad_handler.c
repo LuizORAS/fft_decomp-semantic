@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Stream command: draw a textured quad of size (command[5], command[6]) at
+ * (command[3], command[4]) with texture origin (command[7], command[8]), in the
+ * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. Returns the next command. */
 u8* card_cmd_draw_textured_quad_handler(u8* command) {
     RECT rect;
     const u8* color;

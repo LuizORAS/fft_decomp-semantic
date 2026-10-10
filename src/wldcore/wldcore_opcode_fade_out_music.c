@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: fade the music to silence over operand 0 * 3 steps and
+ * clear the playing flag and the selected music id (the slot is kept). */
 void wldcore_opcode_fade_out_music(void) {
     s32* state;
     s32 operand;

@@ -1,6 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Set up the WORLD menu subsystems from the main thread: common graphics,
+ * the 0xe800-byte menu text file at sector 0x1bd8 and the default menu
+ * entries.
+ *
+ * The file opens with 0x20 section offsets relative to its byte 0x80; they
+ * become g_world_text_section_pointers, with the location names taken from
+ * the resident copy. The deployment script variables are reset to one squad.
+ */
 void world_menu_load_text_1bd8(void) {
     s32 i;
     s32 value;

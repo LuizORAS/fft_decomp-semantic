@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Variant of world_menu_load_text_1bd8 that loads no graphics and reads the
+ * 0x5800-byte text file at sector 0x1C18; all 0x20 section pointers come
+ * from the file, relative to the end of its offset table. */
 void world_menu_load_text_1c18(void) {
     s32 i;
 

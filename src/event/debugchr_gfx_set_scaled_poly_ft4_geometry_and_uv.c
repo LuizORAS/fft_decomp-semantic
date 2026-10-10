@@ -2,6 +2,11 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Fills one POLY_FT4 for a sprite-sheet frame: scales the frame's offset and
+ * size by a 12-bit fixed scale (rounded to the nearest pixel, size made
+ * positive) and places it at position + offset. The texture page is the
+ * 8-bit page holding `texture`. DEBUGCHR copy of
+ * world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
 void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
     const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
     const main_zodiac_draw_offset_t* offset) {

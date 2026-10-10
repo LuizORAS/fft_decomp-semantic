@@ -2,6 +2,17 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Save-menu state CARD_SAVE_MENU_WRITING: writes the game to save slot `slot`.
+ *
+ * The first call builds the save buffer and shows the "saving" notice; the
+ * write itself happens two calls later so the notice is on screen. The
+ * 0x1e00-byte file is written in one go, then reopened to write the 0x80-byte
+ * slot header at offset 0x100. On success the slot is marked occupied, its
+ * description, list text and play time are refreshed and it becomes the last
+ * used slot. On failure the error notice stays until Circle or Cross, which
+ * returns the menu to the card scan.
+ */
 void card_save_update_slot_write(s32 slot) {
     s32 write_result;
     s32 header_result;

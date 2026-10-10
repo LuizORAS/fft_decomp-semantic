@@ -1,5 +1,7 @@
 #include "psx/types.h"
 
+/* Count the characters of a 0xFE-terminated text string; bytes 0xD0..0xDF
+ * carry a one-byte operand. */
 s32 card_text_count_encoded_glyphs(const u8* data) {
     s32 count = 0;
 

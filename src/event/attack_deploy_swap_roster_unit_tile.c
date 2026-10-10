@@ -1,6 +1,9 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Move roster unit `roster_id` to deployment tile (column, row), swapping it
+ * with whatever that tile held. Does nothing when the unit is not on the
+ * grid. */
 void attack_deploy_swap_roster_unit_tile(s32 column, s32 row, s32 roster_id) {
     s32 scan_row;
     s32 scan_column;

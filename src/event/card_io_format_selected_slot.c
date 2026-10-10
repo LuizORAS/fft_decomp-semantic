@@ -2,6 +2,8 @@
 #include "psx/libapi.h"
 #include "psx/types.h"
 
+/* Format the selected memory card, calling format() three times, and return
+ * the last call's result; 0 when the card is not ready. */
 s32 card_io_format_selected_slot(void) {
     s32 result;
     char path[8];

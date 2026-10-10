@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Resolve a thread slot argument: a real slot id is returned unchanged; any
+ * other value picks the first idle slot from 1 to 16. With none idle the
+ * current thread exits. */
 s32 world_thread_resolve_id(s32 thread_id) {
     s32 index;
 

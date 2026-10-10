@@ -2,6 +2,15 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Per-frame input update of the EQUIP screen.
+ *
+ * Reads the pad, then clears all three input words during frames 1..3 of the
+ * screen transition and while the text thread runs. The text state goes 1 on
+ * the thread's first frame (which queues the window-open sound), 2 after it
+ * and 0 once it has ended, when the message and sound locks are released.
+ * Any repeat input starts a five-frame timer during which L2 is masked out.
+ */
 void equip_input_update_with_message_state(void) {
     s32 running;
     s32 frame;

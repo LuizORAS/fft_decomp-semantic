@@ -16,8 +16,7 @@
  *
  * Row 0 is the solid part of the strip and row 1 a narrow edge whose shade
  * fades to 0; `reverse` selects which side of `width` is drawn. Column 0 is
- * the same quad offset by one pixel with a different blend mode (provisional
- * reading: a drop shadow).
+ * the same quad offset by one pixel with a different blend mode.
  *
  * `height` is a local rather than a literal so the narrowed y2/y3 sums reuse
  * the y0 sum (a literal lets fold reassociate them). `rest` is assigned inside

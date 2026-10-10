@@ -2,14 +2,12 @@
  *
  * Waits out the screen transition (system flags 4/8), then: cancel or the
  * "leave" row (entry 4) starts the fade back to the map and announces text
- * 0xb807; L1 opens the help message for the highlighted row from
+ * 0xb807; Select opens the help message for the highlighted row from
  * g_wldcore_bar_row_help_text_ids; confirm dispatches on the row value through a five-entry jump
  * table at 0x80067034 - 0 rumors, 1 the proposition-location list
  * (wldcore_list_open_available_propositions), 2 wldcore_list_open_completed_propositions, 3 the proposition list, 4
- * leave; and up/down wrap the cursor, moving the cursor window 16 pixels a row and re-announcing text 0xb806 while mode
- * is set.
- *
- * Names beyond the shared headers remain provisional.
+ * leave; and up/down wrap the cursor, moving the cursor window 16 pixels a row; a move re-announces text 0xb806 when
+ * content_render is set, and clears it.
  */
 
 #include "fft/wldcore.h"

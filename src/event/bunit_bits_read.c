@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Reads a `bit_count`-bit value (taken modulo 32), most significant bit
+ * first, from the bitstream at g_bunit_bits_cursor. The first read after a
+ * reset starts at bit 7 of the current byte. */
 s32 bunit_bits_read(s32 bit_count) {
     s32 accumulator;
 

@@ -1,6 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Resolve finished proposition `job_id` before its report: unpack its data
+ * row, pick the unit who reports, decide the result and work out the JP and
+ * gil, the bonus reward and the extra-days multiplier. */
 void wldcore_proposition_prepare_report(s32 job_id) {
     u8* entry = &g_main_active_propositions[job_id].proposition_id;
 

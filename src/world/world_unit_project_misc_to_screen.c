@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
+/* Project a displayed unit's position to screen coordinates; nothing is
+ * written when the unit has no screen data. */
 void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords) {
     SVECTOR* world_coords = battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
 

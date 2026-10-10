@@ -1,6 +1,8 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Wait until the menu thread ends or a selection result (-1, 0 or 1) is in,
+ * then ask the message thread to close and wait for both threads. */
 void require_menu_wait_selection_threads(void) {
     while (g_battle_threads[REQUIRE_THREAD_SLOT_MENU].is_running != 0) {
         s32 selection = g_require_menu_selection_result;

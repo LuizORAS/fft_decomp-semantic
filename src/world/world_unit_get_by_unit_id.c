@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
+/*
+ * Resolve an event unit id to its battle unit, or return (battle_stats_t*)-1.
+ *
+ * An id found by find_unit_by_id counts only while that unit has a misc id.
+ * Otherwise a special character identity (Ramza's first identity up to the
+ * first generic one) is looked up by identity and accepted when its battle
+ * unit carries a deployed-unit id.
+ */
 battle_stats_t* world_unit_get_by_unit_id(s32 unit_id) {
     s32 index;
     battle_stats_t* stats;

@@ -2,6 +2,15 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Save-menu state CARD_SAVE_MENU_SCAN_RESULT: acts on what the card scan found.
+ *
+ * A card error or removal stops the notices and rescans. A pending notice
+ * (set by the scan, or the "no data" notice when all 15 slots are
+ * unavailable) is shown until Circle or Cross, which returns to card
+ * selection. With no notice the slot list is reset to its first row and the
+ * menu moves on to slot selection.
+ */
 void card_save_update_slot_scan_result(void) {
     s32 index;
     s32 all_empty;

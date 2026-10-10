@@ -1,6 +1,9 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Point the scrollable list menu at a new -1 terminated entry list and reset
+ * its render state. The scroll base is reset only when the selected index
+ * is 0. */
 void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table) {
     g_jobstts_menu_list_entries = entries;
     g_jobstts_menu_list_text_table = text_table;

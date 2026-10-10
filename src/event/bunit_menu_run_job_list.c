@@ -2,6 +2,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Runs the unit list's job list for the selected unit.
+ *
+ * The first call builds the unit's job list and installs the job level, JP,
+ * next-level, total-JP and mastered row callbacks. Cross returns
+ * MENU_JOB_LIST_STEP_CLOSE; Circle, while the job menu is the current menu,
+ * caches the job's id, generic index and JP figures and returns
+ * MENU_JOB_LIST_STEP_ABILITIES; otherwise the list script runs and the
+ * result is MENU_JOB_LIST_STEP_JOBS. */
 s32 bunit_menu_run_job_list(void) {
     s16 out_a;
     s16 out_b;

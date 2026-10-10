@@ -1,6 +1,10 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/* Write the editor's values back to battle unit `unit_id`: HP, MP and CT
+ * (each first capped at its maximum), level, experience, Brave, Faith, the
+ * zodiac sign (the top nibble of the birthday halfword), move, speed and
+ * jump. */
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
     battle_stats_t* unit;
     s32 zodiac;

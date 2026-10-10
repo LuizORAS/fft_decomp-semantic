@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Load the WORLD menu text and portraits, rebuild the roster name strings and
+ * apply any pending date advance from its script variable. */
 void wldcore_load_formation_unit_name_and_face(void) {
     s32 value;
 

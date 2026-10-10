@@ -1,5 +1,9 @@
 #include "fft/event_jobstts.h"
 
+/* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at
+ * (rect->x + 0x80, rect->y) textured with the icon source's cell, CLUT and
+ * texture page, and links it into ordering table entry ot_index. With
+ * `color` the quad is shaded with it. */
 void jobstts_gfx_enqueue_textured_quad_rect(
     RECT* rect, world_item_icon_source_t* tex, u8* color, s32 semitrans, s32 ot_index) {
     POLY_FT4* poly;

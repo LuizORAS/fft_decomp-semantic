@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Save the system flags and hide the world map's layers (dots, routes,
+ * background, display objects, context value, date and location marker)
+ * with the display off, for a full-screen menu. */
 void world_formation_save_and_set_system_flags(void) {
     g_world_formation_saved_system_flags = g_main_system_flags;
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES

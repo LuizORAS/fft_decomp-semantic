@@ -1,5 +1,7 @@
 #include "fft/wldcore.h"
 
+/* Sound-novel opcode: load background set operand 0 unless it is the one
+ * already recorded, waiting for the file. */
 void wldcore_opcode_load_background_set(void) {
     s32 value;
 

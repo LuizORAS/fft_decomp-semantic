@@ -1,6 +1,15 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/*
+ * Runs the WORLD menu code for one world-map frame, drawing into `context`.
+ *
+ * Skipped while MAIN_SYSTEM_FLAG_SKIP_MENU_FRAME is set. While the unit panel
+ * threads are in use it draws the window frames, runs the event input update
+ * and plays the frame's sound effect itself; otherwise it runs the formation
+ * menu frame. Buttons in g_wldcore_menu_blocked_buttons are withheld from
+ * the menus.
+ */
 void wldcore_menu_run_world_frame(GsOT* context) {
     u32* otag_entries;
     u32* sprite_entries;

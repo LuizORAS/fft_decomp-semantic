@@ -1,6 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Clear the 15-by-16 allocation grid consumed by the tpage-7 VRAM allocator. */
 void world_gfx_clear_tpage7_vram_allocation_grid(void) {
     s32 row;
     s32 column;

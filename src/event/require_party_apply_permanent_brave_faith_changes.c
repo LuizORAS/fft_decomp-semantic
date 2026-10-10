@@ -1,6 +1,15 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the post-battle Brave/Faith report.
+ *
+ * Exits at once in the world debug battle style, or when
+ * require_apply_permanent_brave_faith_changes_and_collect_warnings reports
+ * nobody. Otherwise it binds the Brave/Faith text sections, shows banner 5
+ * and plays each affected unit's warning line in turn before fading the
+ * banner out.
+ */
 void require_party_apply_permanent_brave_faith_changes(void) {
     s32 i;
     s32 main_thread;

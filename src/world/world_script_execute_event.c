@@ -13,9 +13,8 @@
  * BATTLE carries the same interpreter (battle_script_execute_event); the two
  * are kept structurally identical so differences stay visible.
  *
- * Unresolved external interfaces retain provisional names. The native
- * inner-call trampoline intentionally forwards varying argument counts through
- * its () ABI. */
+ * The native inner-call trampoline intentionally forwards varying argument
+ * counts through its () ABI. */
 
 void world_script_execute_event(void) {
     s32 unit_lookup_status;

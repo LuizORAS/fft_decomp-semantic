@@ -2,6 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Wait `frames` frames, ending early when Circle is newly pressed. */
 void require_input_wait_frames_or_skip(s32 frames) {
     s32 reserved_stack_words[2];
     s32 i = 0;

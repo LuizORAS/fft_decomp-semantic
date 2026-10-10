@@ -2,6 +2,16 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Item menu "equipped by" view: browse the formation units that have the
+ * highlighted item equipped.
+ *
+ * The first call rebuilds the formation list filtered by that item and turns
+ * on unit browsing and the banner. Cross or Circle (once the comparison
+ * banner thread is idle) restores the full list and the selected unit, stops
+ * the three panel threads and returns MENU_ITEM_LIST_STATE_BROWSE; until then
+ * the result is MENU_ITEM_LIST_STATE_EQUIPPED_BY.
+ */
 s32 world_item_show_units_equipping_selected(void) {
     if (g_world_item_equipping_units_initialized == 0) {
         world_formation_save_records_to_party_data();

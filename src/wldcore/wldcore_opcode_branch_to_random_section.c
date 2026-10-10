@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: branch to one of the three sections named by the
+ * operand bytes, chosen by rand() with equal weight. */
 void wldcore_opcode_branch_to_random_section(void) {
     s32 pick;
     s32 value;

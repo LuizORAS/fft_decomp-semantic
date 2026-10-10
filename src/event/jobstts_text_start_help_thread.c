@@ -1,5 +1,8 @@
 #include "fft/event_jobstts.h"
 
+/* Start the help text thread for the current help message, if one is set:
+ * save the text section pointers, bind the help text table and lock the menu
+ * input. The dialog type is `thread_data` + 0x38. */
 void jobstts_text_start_help_thread(s32 thread_data) {
     if (g_jobstts_text_selected_job_id > 0) {
         battle_text_save_section_pointers();

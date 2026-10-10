@@ -1,6 +1,14 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body: suspend thread g_require_thread_suspended_id and draw the
+ * gradient grid and status group primitives every frame in its place until
+ * the third thread parameter is set.
+ *
+ * The suspended thread's record is copied aside first and copied back before
+ * the thread is resumed.
+ */
 void require_gfx_run_suspended_thread_transition(void) {
     s32 frame = 0;
     u8* saved;

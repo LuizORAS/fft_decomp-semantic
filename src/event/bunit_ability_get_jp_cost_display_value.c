@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Returns the displayed JP cost of an ability list entry: the ability's JP
+ * cost, dashes for an entry whose details are hidden, with the disabled flag
+ * added for a disabled entry. */
 s32 bunit_ability_get_jp_cost_display_value(s32 index) {
     s32 entry = g_bunit_ability_entries[index];
     s32 result;

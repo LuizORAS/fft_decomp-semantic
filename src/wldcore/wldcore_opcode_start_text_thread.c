@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: show text operand 0 (text id 0x8800 + operand) in the
+ * message thread with dialog type 9, and record it as the current text. */
 void wldcore_opcode_start_text_thread(void) {
     s32 operand;
 

@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 #include "psx/pad.h"
 
-/* Provisional: the map camera block at 0x8009f2c0. The target relates the
+/* The map camera block at 0x8009f2c0. The target relates the
  * origin and scale addresses to one symbol (origin.vx is kept in a register
  * while both scale stores use the absolute form), so they are one object. */
 typedef struct wldcore_map_projection_view {
@@ -12,7 +12,7 @@ typedef struct wldcore_map_projection_view {
 
 extern wldcore_map_projection_view_t g_wldcore_map_projection_view;
 
-/* Provisional view of wldcore_window_record_t with its x/y pair as one
+/* View of wldcore_window_record_t with its x/y pair as one
  * point: the target passes records[i].x/y by value with two absolute-form
  * loads, which only a real point member reproduces (a local copy spills to
  * the stack and a cast view computes the address into a register). */

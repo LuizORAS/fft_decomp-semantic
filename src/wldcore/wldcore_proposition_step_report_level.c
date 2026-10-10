@@ -3,6 +3,28 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 
+/*
+ * Steps the proposition report level: the bar's account of a finished job.
+ *
+ * `load_phase` first loads the proposition's report message block and then,
+ * for a treasure or unexplored-land reward, its picture set. `state` then
+ * walks the report one acknowledged message at a time (each message id is the
+ * first of a group of six, see wldcore_proposition_step_message):
+ *   0..3    the opening lines and a participant's line for the result;
+ *   4..6    praise for the unit wldcore_proposition_find_preferred_job_unit
+ *           names, or 7..8 when there is none;
+ *   9..10   the bad-failure lines, which skip the reward;
+ *   11      branches on success to 12..14 (a random participant is named as
+ *           the finder, and a treasure or land picture pops in beside its
+ *           caption window with the completion sound) or to 15;
+ *   16..17  the closing lines for the result, after which the two picture
+ *           records are dropped and the message thread is told to close;
+ *   18      waits for the message thread; the next step pops this level and
+ *           pushes the result level.
+ * The level is pushed in state -1, or in state 99 to skip the report. Both
+ * share the wait arm of 18: -1 then continues at 0 and 99 goes straight to
+ * the final step.
+ */
 void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* level) {
     GsIMAGE image;
     wldcore_window_render_bounds16_t bounds;

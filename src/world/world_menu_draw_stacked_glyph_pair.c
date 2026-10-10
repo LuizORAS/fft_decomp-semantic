@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Blit the two halves of the tall shadow glyph, one above the other, 2
+ * pixels left of and below the pen position. */
 void world_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* dest) {
     dest->rect.x -= 2;
     dest->rect.y += 2;

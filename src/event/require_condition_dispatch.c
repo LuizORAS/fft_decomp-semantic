@@ -1,6 +1,17 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the REQUIRE overlay: runs one display condition.
+ *
+ * Parameter 1 is the condition id and parameter 2 its argument. The general
+ * conditions draw their banner inline (the argument is the hold time). The
+ * others each run their routine in the first idle thread slot and wait for
+ * it: the special-case banner (held for the argument's frames or until
+ * skipped), "ready", the battle congratulations, the gil reward, the war
+ * trophies, the permanent Brave/Faith changes and the low-Brave/high-Faith
+ * desertions. The post-battle unit changes run inline.
+ */
 void require_condition_dispatch(void) {
     s32 condition;
     s32 parameter;

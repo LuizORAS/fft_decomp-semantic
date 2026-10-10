@@ -2,6 +2,16 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
+/*
+ * Start tutorial `index` (0 only clears the tutorial id).
+ *
+ * Loads the tutorial's files and binds its command stream and messages, then
+ * swaps the game state for the tutorial's: the current game is serialised
+ * into g_world_tutorial_saved_game_image, the 0x2000-byte tutorial save image
+ * at sector 0x11A7F is loaded in its place (keeping the player's job-change
+ * equip and sound options, with unequippable items shown) and unpacked into
+ * the globals.
+ */
 void world_script_start_tutorial(s32 index) {
     g_world_script_tutorial_id = index;
     if (index != 0) {

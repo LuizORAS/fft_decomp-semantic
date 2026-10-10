@@ -1,6 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: stop the weather sound and clear the recorded sound. */
 void wldcore_opcode_stop_music(void) {
     u16 flags;
 

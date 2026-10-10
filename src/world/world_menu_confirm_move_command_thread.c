@@ -1,6 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Menu thread for the "Move" command row.
+ *
+ * A unit with Don't Move stores row action -1, plays the invalid sound and
+ * falls back to the linked entry. The menus of a unit that has already moved
+ * also refuse with the invalid sound. Otherwise the entry is confirmed.
+ */
 void world_menu_confirm_move_command_thread(void) {
     world_menu_entry_t* entry = world_thread_get_current_parameter_1();
     s32 menu_id;

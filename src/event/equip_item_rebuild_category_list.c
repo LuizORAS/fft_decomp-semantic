@@ -1,5 +1,9 @@
 #include "fft/event_equip.h"
 
+/* Reconcile one sorted item category list (0 weapons and shields, then
+ * headgear, body armour, accessories and other: the menu category minus one)
+ * with what the party owns: a newly owned item is put first, an item neither
+ * owned nor equipped is removed, and the others keep their order. */
 void equip_item_rebuild_category_list(s32 category) {
     s32 i;
     s16 item;

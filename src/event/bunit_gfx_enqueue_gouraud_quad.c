@@ -1,6 +1,12 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Append a four-color menu quad to the selected ordering-table entry.
+ *
+ * `pts` holds the four corners as x, y pairs and `color` four RGB triples.
+ * Screen x coordinates use the menu's +0x80 origin.
+ */
 void bunit_gfx_enqueue_gouraud_quad(u16* pts, u8* color, s32 semi, s32 idx) {
     POLY_G4* poly;
 

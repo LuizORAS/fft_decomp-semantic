@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Takes the next TILE packet from the pool, fills it from the rectangle
+ * (x offset by 0x80) and the RGB triple and links it into ordering-table
+ * entry otag_index. */
 void card_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index) {
     TILE* tile;
 

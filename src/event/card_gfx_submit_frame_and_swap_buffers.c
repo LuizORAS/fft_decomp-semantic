@@ -1,6 +1,14 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Submit the finished CARD frame and swap to the other graphics context.
+ *
+ * Resets the primitive counts, waits for the GPU and the configured VSync
+ * count, installs the other context's display and draw environments, draws
+ * the finished ordering table from entry draw_otag (-1 skips the draw) and
+ * clears the new one from first_otag onward.
+ */
 void card_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     u32* previous_otag = g_card_gfx_context->otag;
     card_graphics_context_t* context;

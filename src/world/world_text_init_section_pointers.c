@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Turn the text file's table of section offsets into
+ * g_world_text_section_pointers. The offsets are relative to the end of the
+ * table. */
 void world_text_init_section_pointers(void) {
     s32* offset;
     u8** section;

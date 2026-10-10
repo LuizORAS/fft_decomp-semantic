@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Step the event script's 16-bit random generator,
+ * seed = seed * 25173 + 13849 (mod 65536), and return the new seed. */
 u32 world_script_get_rand16(void) {
     u32 seed = g_world_event_random_seed;
     u32 triple = (seed << 1) + seed;

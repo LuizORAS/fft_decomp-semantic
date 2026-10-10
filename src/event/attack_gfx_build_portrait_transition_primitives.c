@@ -1,5 +1,16 @@
 #include "fft/event_attack.h"
 
+/*
+ * Build the primitives of the status banner's portrait cross-fade. ATTACK
+ * copy of world_gfx_build_portrait_transition_primitives.
+ *
+ * *transition counts the steps: 0 shows the first portrait, 1 the second,
+ * 2-3 capture both CLUTs, 4-9 wipe between the two portraits with two opaque
+ * and two semi-transparent quads; from step 2 on it advances by the event
+ * speed. `direction` 1 brings the first portrait in from the right as the
+ * second leaves to the left; anything else mirrors that. `i` serves the
+ * vertex loop, the CLUT loops and the wipe step alike.
+ */
 void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction) {
     RECT second_rect;

@@ -1,6 +1,8 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Caches and returns whether the `index`th job's skillset has nothing left
+ * to list (an empty ability list in mode 2). */
 s32 jobstts_job_calculate_current_mastered(s32 index) {
     s16 ability_list[24];
 

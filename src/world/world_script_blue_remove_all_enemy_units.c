@@ -2,6 +2,8 @@
 #include "fft/wldcore.h"
 #include "fft/world.h"
 
+/* Tints blue (red and green modulated by -0x1f) every displayed unit whose
+ * initial team is not the player's. */
 void world_script_blue_remove_all_enemy_units(void) {
     s32 resolved_id;
     s32 unit_index;

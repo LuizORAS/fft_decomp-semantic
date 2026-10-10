@@ -3,6 +3,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* TeleportOut event instruction: play the teleport effect and sound on the
+ * unit, flash its palette to white and then to black over 60 frames each,
+ * and with `remove_unit` remove the unit from existence. */
 void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
     s32 misc_id;
     s32 unit_index;

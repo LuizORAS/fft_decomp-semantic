@@ -7,6 +7,9 @@ typedef struct small_text_name_section_offsets {
 
 extern const small_text_name_section_offsets_t g_small_text_name_section_offsets;
 
+/* Bind the roster and job name sections to the overlay's name data, alias
+ * the skillset-name copy to the skillset names and zero the deployment unit
+ * limit. */
 void small_text_init_battle_pointers(void) {
     u8* string_data;
 

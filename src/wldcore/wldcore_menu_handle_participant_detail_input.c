@@ -2,6 +2,20 @@
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 
+/*
+ * Input step of the proposition participant detail level (the unit status
+ * panels of one unit sent on a job).
+ *
+ * Circle or Cross asks the three panel threads to close and blocks input;
+ * once the status banner thread has ended the level pops, the saved screen
+ * strip is moved back, line 0xB849 is shown with the proposition's name and
+ * the participant list level is pushed again. Select opens the layout window.
+ * R1 and L1 step to the next or previous participant with wrap-around and
+ * request a redraw of the panels (banner direction 1 or 2); with a single
+ * participant they only play the page sound. The L1/R1 prompts show their
+ * pressed sequence while held, and one button is ignored while the other's
+ * pressed sequence is showing.
+ */
 void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level_t* level) {
     RECT rect;
     u32 buttons;

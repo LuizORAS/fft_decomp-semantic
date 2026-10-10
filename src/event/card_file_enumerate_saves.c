@@ -2,6 +2,8 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
+/* List the selected card slot's directory into `entries` and return the
+ * count: the game's save files, or every file when `all_files` is set. */
 s32 card_file_enumerate_saves(DIRENTRY* entries, s32 all_files) {
     s32 count;
     char path[128];

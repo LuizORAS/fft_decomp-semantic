@@ -1,5 +1,7 @@
 #include "fft/event_require.h"
 
+/* Return a roster unit's seven equipped items to the inventory. Always
+ * returns 0. */
 s32 require_party_restore_item_counts(s32 party_index) {
     party_data_t* party = main_party_get_data_pointer(party_index);
     s32 index = 0;

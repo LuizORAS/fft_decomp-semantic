@@ -2,6 +2,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Thread body: after one yield, mark the asynchronous map-data load
+ * complete, yield once more and exit. */
 void world_map_data_load_complete_thread(void) {
     world_thread_yield();
     battle_map_mark_data_load_complete();

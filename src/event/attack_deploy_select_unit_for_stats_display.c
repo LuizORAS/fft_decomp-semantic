@@ -1,6 +1,8 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Move the roster cursor forward (wrapping at 20) to the first unit the
+ * current squad may still deploy and load it into the status panels. */
 void attack_deploy_select_unit_for_stats_display(void) {
     attack_deploy_mark_other_squad_units_undeployable();
     while (1) {

@@ -1,6 +1,23 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * End-of-battle party update. Returns the number of units that still need a
+ * "join the party?" prompt.
+ *
+ * First pass, every occupied roster slot that fielded a battle unit: a unit
+ * that is gone (disabled, absent or not found) and is not one of ENTD units
+ * 1..3 is removed from the roster, its equipment going back to the inventory
+ * unless it became a treasure; Ramza's identities are always saved; a guest
+ * without the save-formation flag is dropped; anyone else is saved.
+ *
+ * Second pass, every present battle unit with no roster slot that is not a
+ * Ramza identity, has unit id 4 or more and either carries the
+ * join-after-event flag or is invited: one with the save-formation flag joins
+ * at once (equipment over the inventory limit is sold); the others are queued
+ * for the prompt with message 0x1800 + (identity - 0x80) * 8 + a variant from
+ * the random script variable.
+ */
 s32 require_party_save_battle_units_and_find_join_candidates(void) {
     s32 prompt_count = 0;
     s32 party_index;

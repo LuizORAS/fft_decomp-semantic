@@ -7,6 +7,25 @@ typedef struct world_chained_record world_chained_record_t;
 
 extern world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
 
+/*
+ * Menu-script handler for a scrollable list: the WORLD original of the
+ * overlays' scrollable-list body commands.
+ *
+ * Moves the cursor on Up/Down (bits 0x10000000 and 0x40000000 of the script
+ * input, the held-repeat flags of Up and Down, keep a scroll going without
+ * moving the cursor) and pages through
+ * world_menu_scroll_list_page. Moving past the first or last visible row
+ * starts a one-row scroll: the newly exposed row is rendered into the list's
+ * VRAM strip at x 0x240, the pixel offset advances by the slow step until the
+ * repeat timer reaches g_main_menu_scroll_accel_delay and by the fast step
+ * after it, and when a full row height is covered the strip is moved one row
+ * with draw-move primitives (one per row when scrolling up). Then it draws the list image, the up and down
+ * arrows, the scrollbar thumb and the cursor, and replays the per-row record
+ * group once per visible row, plus one while a scroll is in progress.
+ *
+ * An empty list only skips record->skip_count + 1 chained records. Returns
+ * the record that follows the list.
+ */
 u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     RECT rect;
     s32 unused[4];

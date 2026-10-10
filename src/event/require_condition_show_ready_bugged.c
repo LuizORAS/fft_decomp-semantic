@@ -1,6 +1,8 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Thread body of display condition "ready": runs the hovered-unit stats
+ * display thread for 60 frames, or until Circle, then stops it. */
 void require_condition_show_ready_bugged(void) {
     s32 thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
 

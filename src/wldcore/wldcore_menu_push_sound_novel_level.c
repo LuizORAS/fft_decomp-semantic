@@ -1,6 +1,19 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
+/*
+ * Pushes the sound-novel menu level (WLDCORE_MENU_LEVEL_SOUND_NOVEL).
+ * `argument` is kept in the level and names the treasure detail reopened
+ * when the novel ends; the novel read is the one in
+ * g_wldcore_saved_record_index.
+ *
+ * Hides the context value display, clears VRAM and the scratch buffer, and
+ * appends the level's display objects, all hidden: the two button prompts,
+ * the VRAM strip record and the overlay. It then appends the novel's sound
+ * effect data, restores any saved reading state into the first render record
+ * (wldcore_sound_novel_restore_saved_state), blocks Cross, Square and Select
+ * for the menu and starts the screen fade.
+ */
 void wldcore_menu_push_sound_novel_level(s32 argument) {
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t origin;

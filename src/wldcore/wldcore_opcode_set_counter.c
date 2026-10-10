@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: set the record's counter to the 16-bit operand
+ * (instruction bits 8..23). */
 void wldcore_opcode_set_counter(void) {
     u32 word;
     u16 flags;

@@ -1,6 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: stop the weather sound and play sound operand 0. A
+ * nonzero operand 1 also records the sound so a restored reading replays
+ * it. */
 /* Target 0x8008c7ac. */
 void wldcore_opcode_play_sound_effect_quad(void) {
     char unused[8];

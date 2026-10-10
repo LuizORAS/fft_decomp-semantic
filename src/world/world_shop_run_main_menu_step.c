@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Shop main menu step: runs the Buy / Sell / Fitting Room menu and, when it
+ * closes, moves to the chosen step (rows 0..2; the fitting room also sets its
+ * message), or to the exit fade with its message for anything else. */
 void world_shop_run_main_menu_step(void) {
     u8 running;
 

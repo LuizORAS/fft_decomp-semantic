@@ -1,6 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Read back the cursor and scroll base saved for list `index` and check them
+ * against the rebuilt -1-terminated `entries`.
+ *
+ * They are kept when the saved entry id is still at the cursor row. Otherwise
+ * the cursor moves to the row that holds that id (low ten bits), keeping the
+ * scroll base, or both reset to 0 when the id is gone.
+ */
 void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries) {
     s32 entry_id;
     s32 found_end;

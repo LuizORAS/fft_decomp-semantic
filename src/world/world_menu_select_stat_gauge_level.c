@@ -1,6 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Draws the mastered-job star over a job-wheel sprite at (x, y).
+ *
+ * `value` is the wheel's animation counter. The star twinkles twice per
+ * cycle: it runs through frames 1..4 over counts 0x3C..0x4F, and again from
+ * 0x5E (frame 4 from 0x64 on); otherwise it shows frame 0. Frames are 10
+ * texels apart from u 0x24.
+ */
 void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value) {
     s32 level;
     world_oriented_quad_t* sprite;

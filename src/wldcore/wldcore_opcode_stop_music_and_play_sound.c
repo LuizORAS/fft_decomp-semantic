@@ -1,5 +1,8 @@
 #include "fft/wldcore.h"
 
+/* Sound-novel opcode: stop the weather sound and play environment sound
+ * operand 0 as the background sound. A nonzero operand 1 also records the
+ * sound, flagged 0x4000, so a restored reading replays it. */
 void wldcore_opcode_stop_music_and_play_sound(void) {
     char unused[8];
     s32 sound_id;

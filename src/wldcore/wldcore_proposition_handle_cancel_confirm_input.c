@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Provisional: the yes/no confirmation menu level this handler drives. The
+/* The yes/no confirmation menu level this handler drives. The
  * level owns a cursor window (0x00), a render record (0x04), the proposition
- * it acts on (0x10), the highlighted answer (0x14) and a second window
- * (0x20). Only these words are touched here. */
+ * it acts on (0x10), the highlighted answer (0x14), the confirmed flag
+ * (0x18) and a second window (0x20). Only these words are touched here. */
 typedef struct wldcore_menu_proposition_confirm_level {
     s32 window;        /* 0x00 */
     s32 render_index;  /* 0x04 */

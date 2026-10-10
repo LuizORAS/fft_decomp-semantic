@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Store save slot `slot`'s play time as hours (capped at 99), minutes and
+ * seconds from the save buffer's elapsed seconds, or zeros for a slot that
+ * is not occupied. */
 void card_save_update_slot_playtime(s32 slot) {
     s32 component;
     s32 unused_04;

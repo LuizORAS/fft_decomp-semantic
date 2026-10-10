@@ -2,6 +2,16 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Picks the camera yaw for a shot of two units: of the four candidate yaws
+ * in g_world_camera_candidate_yaws, the one nearest the current yaw whose bit
+ * is clear in the flat camera-block masks of both units' tiles.
+ *
+ * Returns the camera-yaw script variable moved by the shorter signed arc to
+ * that candidate (angles are 4096 to the turn). With all four candidates
+ * blocked nothing replaces the initial distance and the result is the
+ * variable plus 0x8000.
+ */
 s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 yaw;
     s32 mask;

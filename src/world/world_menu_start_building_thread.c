@@ -2,6 +2,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Start the help-menu thread in the menu-building slot when nothing prevents
+ * it: no thread-change cooldown, menu transition, active camera move or
+ * companion overlay, and the slot idle. A menu other than the mini menu that
+ * is already open or building is flagged first. */
 void world_menu_start_building_thread(void) {
     if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU)
         || world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING)) {

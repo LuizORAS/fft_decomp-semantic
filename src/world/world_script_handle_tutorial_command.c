@@ -1,5 +1,15 @@
 #include "fft/world.h"
 
+/*
+ * Per-frame step of the tutorial script. Returns 1 while no tutorial runs or
+ * the current one continues, and the END command's result when it ends.
+ *
+ * Reads pad 0 as the tutorial's own button input (the soft-reset combination
+ * resets the game), advances the highlight brightness while a wait is timed,
+ * and dispatches the command byte at g_world_script_tutorial_command_ptr:
+ * values below WORLD_TUTORIAL_CMD_SHIFT_LIMIT are pad-input commands, the
+ * rest display a message, draw the highlight ring, wait or end.
+ */
 s32 world_script_handle_tutorial_command(void) {
     s32 pad;
     u8 cmd;

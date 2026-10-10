@@ -1,6 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Sound-novel opcode: wait operand 0 frames. The first pass (state bit
+ * 0x10) latches the frame count and clears the counter; each later pass
+ * yields until the counter has passed the count, then asks for the next
+ * instruction. */
 void wldcore_opcode_wait_frames(void) {
     u16* state_flags;
     u16 flags;

@@ -1,6 +1,11 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Stream command: ask row callback cmd[2] for the icon of a row (literal
+ * cmd[3], or the row being drawn while a list row is rendered) and, when it
+ * returns one, draw it as a textured quad at (cmd[4], cmd[5]) with the
+ * icon's size, texture origin, CLUT and texture page. Returns the next
+ * command. */
 u8* equip_cmd_draw_row_callback_quad_handler(u8* cmd) {
     equip_row_callback_t fn;
     world_item_icon_source_t* entry;

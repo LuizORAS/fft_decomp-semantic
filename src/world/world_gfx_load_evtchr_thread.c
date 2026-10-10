@@ -4,6 +4,12 @@
 #define EVTCHR_BLOCK_SECTORS 15
 #define EVTCHR_BLOCK_BYTES   0x7800
 
+/*
+ * Loads one 0x7800-byte block of EVTCHR.BIN into a fresh heap allocation
+ * (the read runs on the main stack), publishing it through g_world_event_pending_loaded_evtchr_slot
+ * and g_world_event_loaded_evtchr_buffer before releasing it. Parameter 2
+ * selects the block; each occupies 15 sectors from 0x1d4c.
+ */
 void world_gfx_load_evtchr_thread(void) {
     void* param;
     s32 block;

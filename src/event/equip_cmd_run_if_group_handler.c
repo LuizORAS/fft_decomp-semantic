@@ -1,6 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Run the next `count` commands only if row callback command[3] returns
+ * nonzero for the row (literal command[5], or the row being drawn while a
+ * list row is rendered); otherwise skip them. */
 u8* equip_cmd_run_if_group_handler(u8* command) {
     s32 (*handler)(s32);
     s32 count;

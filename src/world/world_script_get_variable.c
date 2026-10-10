@@ -1,6 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Read event script variable `variable_id` the way a script does, through
+ * the Zero and Add variable commands, so that bit-packed and special
+ * variables resolve identically. The comparison-result word those commands
+ * compute into is saved and restored around the read.
+ *
+ * Reading the combined weather/time variable first rebuilds it: time of day
+ * in bit 15 and weather in bits 12..14.
+ */
 s32 world_script_get_variable(s32 variable_id) {
     s32 saved = *g_world_script_variables;
 

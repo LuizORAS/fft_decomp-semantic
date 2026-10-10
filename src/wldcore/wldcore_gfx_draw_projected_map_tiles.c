@@ -18,6 +18,10 @@
 #define WLDCORE_MAP_ROW_STRIDE   17
 #define WLDCORE_MAP_DOT_CLUT_Y   0x1e0
 
+/* Sorts the world map's projected tile grid into `ot` as textured quads.
+ * Each tile spans from its own projected corner to the next column's x and
+ * the next row's y; a tile flagged off screen or empty is skipped. All tiles
+ * share the map CLUT and the current screen tint. */
 void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     POLY_FT4 poly;
     CVECTOR color;

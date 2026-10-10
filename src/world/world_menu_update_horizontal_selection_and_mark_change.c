@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Update a wrapping horizontal menu cursor, request sound `value` when it
+ * moves and return the new position. */
 s32 world_menu_update_horizontal_selection_and_mark_change(u16 count, u8 index, s32 input, u8 value) {
     s16 previous;
     s16 current;

@@ -1,6 +1,8 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Empty the eight cursor trail points (x = -1) and set the texture pages of
+ * the cursor sprite and its shadow. */
 void bunit_gfx_init_rhombus_cursor_tpages(void) {
     s16 term = -1;
     s32 i = 7;

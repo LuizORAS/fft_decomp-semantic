@@ -1,5 +1,7 @@
 #include "fft/event_jobstts.h"
 
+/* Takes the next DR_MOVE packet from the pool, sets it up to copy `rect`
+ * to (u, v) and links it into ordering-table entry otag_index. */
 void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index) {
     DR_MOVE* prim;
 

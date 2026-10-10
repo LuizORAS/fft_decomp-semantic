@@ -1,6 +1,9 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Point the battle text sections at an overlay text file: 32 offsets
+ * followed by the section data they are relative to. The event-message
+ * section is left as it is. */
 void attack_text_init_battle_pointers(s32* offsets) {
     s32 i;
     u8* data;

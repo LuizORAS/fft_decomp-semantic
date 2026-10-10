@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Hold the menu input masks at zero while the comparison banner thread runs,
+ * a status banner slide is requested or the unit list has to scroll, and for
+ * nine further calls after the last of those. */
 void bunit_input_update_lock_timer(void) {
     s32 timer;
 

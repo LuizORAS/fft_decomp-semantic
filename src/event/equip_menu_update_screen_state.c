@@ -1,6 +1,16 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/*
+ * Per-frame state machine of the EQUIP screen.
+ *
+ * Keeps the command menu thread (Equip / Remove / item list rows) running and
+ * shows the highlighted row's help text. A chosen row parks the child slot
+ * on an idle thread and enters that row's mode; result row 1 is refused with
+ * the invalid sound. Each mode handler returns 0 when it is finished, which
+ * returns to the command menu and suspends the child slot on the next call.
+ * The screen closes when the command menu thread ends.
+ */
 void equip_menu_update_screen_state(void) {
     s32 result;
     s32 state;

@@ -1,5 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
+/* Copy the selected unit's stat summary, identity and stat detail blocks
+ * into the panel records and request a redraw of all four panels. */
 void bunit_unit_copy_selected_data(void) {
     bunit_unit_data_t* unit_data;
 

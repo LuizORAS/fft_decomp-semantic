@@ -1,6 +1,15 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Builds the war-trophy entry list and pays the trophies out.
+ *
+ * The bonus money (when nonzero) is the first entry, followed by one entry
+ * per trophy item found by battle_unit_find_war_trophies_and_bonus_money.
+ * Money entries are added to the war funds. An item entry adds one to the
+ * inventory, unless 99 are already held or equipped: the item is then sold
+ * for a quarter of its price, rounded toward zero.
+ */
 void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 i;
     s32 item_id;

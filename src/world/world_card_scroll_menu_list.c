@@ -1,6 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Keeps `row` inside the four visible rows of the save-slot list and steps
+ * the list's scroll.
+ *
+ * At rest, a row above or below the window moves the first visible row by
+ * one and starts a scroll. The velocity word then holds the signed pixels
+ * covered so far, growing by 4 a call; after one row height (0x30) it folds
+ * into g_world_card_list_scroll_y and returns to 0.
+ */
 void world_card_scroll_menu_list(s32 row) {
     s16 velocity;
     s16 first;

@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Menu activity summary: 2 while the menu-building thread runs, else 4 when
+ * any of thread slots 4..8 runs, else 0. */
 s32 world_menu_get_thread_activity(void) {
     s32 i;
 

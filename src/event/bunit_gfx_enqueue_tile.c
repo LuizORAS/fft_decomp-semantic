@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Takes the next TILE packet from the pool, fills it from the rectangle
+ * (x offset by 0x80) and the RGB triple and links it into ordering-table
+ * entry idx. */
 void bunit_gfx_enqueue_tile(RECT* rect, u8* color, u8 semi, s32 idx) {
     TILE* tile;
 

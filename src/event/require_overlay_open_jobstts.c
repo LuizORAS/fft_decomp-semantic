@@ -1,6 +1,15 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body that runs the JOBSTTS overlay from the REQUIRE screen.
+ *
+ * Copies the selected unit's billboard in, waits until 0x1f000 bytes can be
+ * reserved at the high overlay address, requests the overlay and hands the
+ * frame loop the JOBSTTS state. Until that state returns to idle the
+ * controller word is zeroed every frame so this screen sees no input. Then
+ * the reservation is freed and the option-menu flag cleared.
+ */
 void require_overlay_open_jobstts(void) {
     void* allocation;
 

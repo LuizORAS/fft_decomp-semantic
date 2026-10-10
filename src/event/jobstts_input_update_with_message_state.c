@@ -1,6 +1,15 @@
 #include "fft/event_jobstts.h"
 #include "psx/pad.h"
 
+/*
+ * Per-frame input update of the JOBSTTS screen.
+ *
+ * Reads the pad, then clears all three input words during frames 1..7 of the
+ * screen transition, while the text thread runs and on the frame it ends.
+ * The text state goes 1 on the thread's first frame (which queues the
+ * window-open sound), 2 after it and 0 once it has ended. Any repeat input
+ * starts a five-frame timer during which L2 is masked out.
+ */
 void jobstts_input_update_with_message_state(void) {
     s32 running;
     s32 frame;

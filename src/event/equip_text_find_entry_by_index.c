@@ -1,6 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Advance past `count` text terminators (0xfe or 0xff), stepping over the
+ * second byte of two-byte glyphs, and return the entry that follows. The
+ * third argument is not read. */
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2) {
     if (count != 0) {
         do {

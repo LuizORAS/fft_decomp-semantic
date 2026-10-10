@@ -1,6 +1,13 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Fills a status billboard (level, team kind, experience and the HP/MP/CT
+ * gauges) from a battle unit, leaving the unit index, list index and unit
+ * count 0.
+ *
+ * Team kind is 0 for the player's side, 1 for the enemy team, 2 for a unit on
+ * neither the enemy team nor under player control, and 3 for a unit on auto
+ * battle. A zero maximum HP or MP is stored as 1. */
 void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, battle_unit_status_record_t* output) {
     u16 maximum_hp;
     u16 maximum_mp;

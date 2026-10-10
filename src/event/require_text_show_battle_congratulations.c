@@ -1,6 +1,14 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the "Congratulations!" battle-complete display.
+ *
+ * Swaps the scenario music for the victory track, shows banner 1 and, half a
+ * second later, banner 7, holds them, then fades both out and waits for
+ * their threads. During event 0x145 a different track plays, the waits
+ * cannot be skipped and the hold is 300 frames in place of 180.
+ */
 void require_text_show_battle_congratulations(void) {
     s32 thread_a;
     s32 thread_b;

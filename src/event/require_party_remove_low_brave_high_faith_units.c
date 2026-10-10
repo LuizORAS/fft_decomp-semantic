@@ -1,6 +1,15 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the post-battle desertions.
+ *
+ * Exits at once unless require_party_find_low_brave_high_faith_departures
+ * found someone. Otherwise it binds the Brave/Faith text sections, shows the
+ * banner and, for each departing unit in turn, plays its farewell line beside
+ * the "left the party" banner for its gender, waits half a second and
+ * removes the unit from the roster.
+ */
 void require_party_remove_low_brave_high_faith_units(void) {
     s32 i;
     s32 main_thread;

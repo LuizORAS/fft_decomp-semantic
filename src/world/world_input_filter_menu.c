@@ -1,6 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Read the menu input (tutorial or pad) and filter it: nothing while the
+ * item category change, the status banner or the lockout timer is busy, and
+ * no Select or Start (mask 0xF0FF) while a help text is requested or
+ * showing, or while the dismiss menu's message runs. */
 s32 world_input_filter_menu(void) {
     s32 input = world_input_read_tutorial_or_controller(0);
 

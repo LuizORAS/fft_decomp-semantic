@@ -1,6 +1,8 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Update a wrapping vertical menu selection, queue `sound_id` when it moves
+ * and return the new selection. */
 s32 equip_menu_update_vertical_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id) {
     s32 index = selection_index & 0xFF;

@@ -3,6 +3,29 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/*
+ * Thread task 0x39: the unit status banner (portrait, name and job, level,
+ * exp, HP/MP/CT bars, Brave, Faith and zodiac). WORLD copy of
+ * debugchr_render_unit_status_panel_thread.
+ *
+ * Slot 8 draws the selected unit's banner and any other slot the comparison
+ * unit's; each has its own packets, text images and unit records. The thread's
+ * first parameter is its battle_menu_status_panel_display_thread_t. Both
+ * packet sets are built once and copied for the second frame buffer, then
+ * every frame the thread:
+ *  - dims the banner while a task-0x3b status panel thread runs with a text
+ *    task active, or the display record asks for it;
+ *  - runs the slide-down or slide-up table once when the display flags ask
+ *    for it, leaving only MENU_STATUS_PANEL_HIDDEN set at the end;
+ *  - cross-fades the portrait when the shown unit changes
+ *    (world_gfx_build_portrait_transition_primitives);
+ *  - redraws the number and name images on the first frame and whenever
+ *    display->work is set. While the preview-stats window is open the first
+ *    number block is drawn by five separate calls.
+ * The gauge bars have a fixed width here. On the unit-join screen the mode
+ * row is always row 0 and the roster number is left blank. The thread runs
+ * until its third parameter is set, then frees its six text images.
+ */
 void world_menu_unit_status_banner_thread(void) {
     RECT rects[6];
     s32 anim_state;

@@ -1,6 +1,9 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Rebuild the roster name text section from the battle units: one 0xFE
+ * terminated name per battle unit slot, with a terminator appended to a name
+ * that fills all 16 bytes. */
 void require_text_build_battle_nicknames(void) {
     u8* output;
     s32 unit_id;

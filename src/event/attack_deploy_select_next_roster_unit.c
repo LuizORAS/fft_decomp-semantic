@@ -1,6 +1,10 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Thread body: step the deployment roster cursor to the next deployable
+ * unit, wrapping over the 20 slots (or jump to the pending index when one is
+ * set), load that unit into the panels and request their redraw with slide
+ * direction 1. */
 void attack_deploy_select_next_roster_unit(void) {
     s32 pending;
 

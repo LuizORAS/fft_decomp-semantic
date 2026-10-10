@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Provisional: the menu entry handed in; only its record index is read. */
+/* The menu entry handed in; only its record index is read. */
 typedef struct {
     s32 record_index;
 } wldcore_map_pop_level_entry_t;

@@ -1,6 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Variant of world_menu_load_text_1bd8 for a caller that is not the main
+ * thread: it leaves g_world_thread_current_id alone, loads the common
+ * graphics in mode 1 and also uploads the WLDFACE portraits.
+ */
 void world_menu_load_text_1bd8_with_face(void) {
     s32 i;
     s32 value;

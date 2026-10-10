@@ -1,6 +1,10 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Load the selected unit into the EQUIP panels: clamp its HP and MP to their
+ * maximums, copy its stat summary, identity and stat detail blocks, add the
+ * equipment's stat details, copy the unit to compare slot 1 and reset the
+ * menu state flags. */
 void equip_unit_load_selected_data(void) {
     u8 unused[0x80];
     equip_unit_data_t* unit;

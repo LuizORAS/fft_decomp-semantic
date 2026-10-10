@@ -1,6 +1,11 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Stream command: draw a textured quad of size (cmd[5], cmd[6]) at
+ * (cmd[3], cmd[4]) with texture origin (cmd[7], cmd[8]), in the
+ * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. While
+ * a list row is rendered, y is offset by the row's position and the scroll
+ * offset. Returns the next command. */
 u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
     s16 params[4];
     s32 index;

@@ -1,6 +1,8 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Empty the deployment tables: the 5x5 grid of roster ids by tile and the
+ * four squads' 25-entry unit lists. */
 void attack_deploy_reset_tables(void) {
     s32 row;
     s32 column;

@@ -2,8 +2,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Provisional: 17-byte per-unit menu row at g_world_menu_unit_selection_rows (compare
- * WORLD_UNKNOWN_ROW_BYTES in world_menu_restore_selection_for_selected_unit). */
+/* g_world_menu_unit_selection_rows holds one 17-byte menu row per unit (compare
+ * WORLD_UNKNOWN_ROW_BYTES in world_menu_record_selection_for_selected_unit). */
 
 /* Menu entry 4's value and the loop counter share $s0 in the target: the
  * index dies after the two table loads and the register is reused by the

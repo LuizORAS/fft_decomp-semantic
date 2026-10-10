@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Returns the $gp register. Hand-written assembly in retail. */
 void* world_thread_get_current_global_pointer(void) {
     register void* global_pointer __asm__("$28");
     register void* result __asm__("$2") = global_pointer;

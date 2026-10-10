@@ -1,6 +1,8 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Fade g_require_gfx_fade_rgb linearly from its current value to eight times
+ * each target over 31 frames, yielding once per frame. */
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2) {
     s32 current[3];
     s32 interpolated[3];

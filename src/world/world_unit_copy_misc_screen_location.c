@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
+/* Widen a displayed unit's screen x, y and z halfwords into a word triple. */
 void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination) {
     SVECTOR* screen_data;
 

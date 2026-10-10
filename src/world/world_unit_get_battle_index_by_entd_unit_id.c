@@ -2,6 +2,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Battle unit index of the displayed unit with the given event unit id, or
+ * 2000 when there is none. */
 s32 world_unit_get_battle_index_by_entd_unit_id(s32 entd_unit_id) {
     s32 misc_id = world_script_get_misc_id(entd_unit_id);
     s32 unit_id;

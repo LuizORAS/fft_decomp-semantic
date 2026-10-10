@@ -3,19 +3,10 @@
 #include "psx/types.h"
 
 /*
- * The Soldier Office "dismiss unit" menu step. Three phases:
- *   - the dismissal animation timer (g_world_formation_dismiss_anim_timer) counting to 0x11, after
- *     which the roster slot is released and the script variables tied to the
- *     unit's sprite set are set;
- *   - first entry, which picks the prompt text and menu record; and
- *   - the per-frame poll of the prompt/menu thread.
- */
-
-/*
- * Provisional. The sprite-set -> script-variable table walked by the
+ * The sprite-set -> script-variable table walked by the
  * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
  * proved by the target advancing both its record pointer and its byte-offset
- * index by 4 per iteration. Proposed for include/fft/world.h.
+ * index by 4 per iteration.
  */
 typedef struct world_formation_dismiss_entry {
     s16 sprite_set;  /* 0x00 */
@@ -23,10 +14,9 @@ typedef struct world_formation_dismiss_entry {
 } world_formation_dismiss_entry_t;
 
 /*
- * Provisional. The menu record handed to world_menu_run_thread for the
- * dismissal prompt. Offsets 0x74 is world_menu_thread_data_t.selection; the
- * other two fields are established here only. Proposed as an extension of
- * world_menu_thread_data_t in include/fft/world.h.
+ * The menu record handed to world_menu_run_thread for the
+ * dismissal prompt. Offset 0x74 is world_menu_thread_data_t.selection; the
+ * other two fields are written only here.
  */
 typedef struct world_formation_dismiss_menu {
     u8 _unused_00[0x74];
@@ -41,6 +31,26 @@ extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
+/*
+ * Per-frame step of the "dismiss unit" menu
+ * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_process_frame.
+ * Three phases: first entry, which picks the prompt text and menu record;
+ * the per-frame poll of the prompt or menu thread; and the dismissal timer.
+ *
+ * On entry a unit that is away on a proposition only gets message 0xC012.
+ * Otherwise g_world_formation_dismiss_step takes
+ * world_formation_can_dismiss_unit's answer: 0 shows the unit's refusal line
+ * and returns to the grid, nonzero runs the yes/no confirmation. The line
+ * comes from the dismiss-reply text (0xE800 + n): a generic unit (sprite set
+ * 0x4B and up) draws one of eight lines for its gender or monster kind with
+ * rand(); a special unit uses its sprite set, + 0x17 for the farewell and
+ * + 0x61 for the refusal, with sprite set 0x48 sharing 0x49's lines.
+ *
+ * Confirming plays the dismiss sound and starts a 16-frame timer (the unit
+ * index is carried in its high byte); when it runs out every
+ * g_world_formation_dismiss_entries row matching the unit's sprite set has
+ * its script variable set to 0xC and the unit is removed.
+ */
 void world_formation_run_dismiss_unit_menu_step(void) {
     world_formation_unit_t* unit;
     world_formation_dismiss_menu_t* menu;

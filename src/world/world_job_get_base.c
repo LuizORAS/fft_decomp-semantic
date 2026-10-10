@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* The job that heads a unit's job list: a monster's own job, Squire for a
+ * generic human identity, and for a special character the identity value
+ * itself, which is that character's job id. */
 s32 world_job_get_base(s16 formation_idx) {
     world_formation_unit_t* unit = g_world_formation_unit_pointers[formation_idx];
     u32 job = unit->sprite_set;

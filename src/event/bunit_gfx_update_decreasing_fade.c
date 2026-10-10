@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Step the fade toward zero intensity by 8 per event-speed step and draw the
+ * fade tile over the screen. Returns 0 on the call that reaches zero and
+ * ends the fade, 1 otherwise (also when no fade is active). */
 s32 bunit_gfx_update_decreasing_fade(void) {
     s32 ret = 1;
     s32 speed = bunit_menu_get_event_speed();

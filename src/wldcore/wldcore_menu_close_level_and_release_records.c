@@ -1,6 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Pop the current menu level and give back the display records it appended:
+ * each of the four slots that is not -1 releases one window or render record
+ * and its queue entry. With `restore` the level underneath is resumed. Also
+ * unblocks the menu buttons and re-shows the location marker. */
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore) {
     g_wldcore_menu_blocked_buttons = 0;
     if (slots->window_a != -1) {

@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* EQUIP.OUT 001bfa44 - Clear the 6-byte record at `index` in the table at 0x801e12c4. */
+/* Clear the 6-byte selection record at `index`. */
 void equip_menu_clear_selection_record(s32 index) {
     memset(&g_equip_menu_selection_entries[index], 0, 6);
 }

@@ -1,5 +1,17 @@
 #include "fft/world.h"
 
+/*
+ * Draws the active WORLD message and menu windows, last slot pair first.
+ *
+ * WORLD copy of battle_menu_draw_active_window_frames with one brightness for
+ * every window. A window is drawn while its buffer is active and its owner
+ * thread runs. A message box is dimmed while a menu task is active. The
+ * scroll icons sit 15 pixels in from the right edge (13 when the width is not
+ * 4 more than a multiple of 8), shifted 4 pixels up or down for a portrait
+ * box, and the scroll marker lies between them in proportion to
+ * scroll_position / scroll_range. The portrait quad takes its texture from
+ * portrait_code unless that is -1.
+ */
 void world_menu_draw_active_window_frames(void) {
     menu_window_buffer_t* window;
     menu_window_buffer_t* buffer;

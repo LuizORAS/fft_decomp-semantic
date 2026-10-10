@@ -2,6 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Fill a 16x16 item icon descriptor: VRAM u/v, size, CLUT and texture page. */
 void debugchr_gfx_build_item_graphic_descriptor(battle_menu_status_panel_graphic_descriptor_t* output, u32 item_id) {
     SPRT graphic;
 

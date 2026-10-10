@@ -1,6 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Queue a drawing-area primitive, shifting it to the back buffer when needed. */
 void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx) {
     DR_AREA* p;
 

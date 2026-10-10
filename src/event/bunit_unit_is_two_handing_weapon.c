@@ -1,6 +1,10 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Returns 1 when the unit holds a single weapon in two hands: exactly one of
+ * the two hand slots is occupied, its item is below the throwable range, and
+ * the weapon either forces two hands or allows them while `allow_secondary`
+ * (the Two Hands support ability) is set. */
 s32 bunit_unit_is_two_handing_weapon(s16* slots, s32 allow_secondary) {
     s32 ret = 0;
     s32 id = 0;

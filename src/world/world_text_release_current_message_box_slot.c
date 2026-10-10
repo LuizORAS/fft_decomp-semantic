@@ -1,6 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Free the message box slot (of three) owned by the current thread, if any. */
 void world_text_release_current_message_box_slot(void) {
     s32 i;
 

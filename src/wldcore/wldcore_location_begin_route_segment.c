@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Provisional: a route word read whole (lw, stored as its low half) or as its
+/* A route word read whole (lw, stored as its low half) or as its
  * high half (lhu at +2). */
 typedef union wldcore_route_word {
     s32 word;
@@ -11,7 +11,7 @@ typedef union wldcore_route_word {
     } halves;
 } wldcore_route_word_t;
 
-/* Provisional: one 12-byte route point. The heading's high half is a 12-bit
+/* One 12-byte route point. The heading's high half is a 12-bit
  * angle. The points follow the wldcore_route_record_t header and are indexed
  * as 4-byte words from the record base, (point * 3 + 1) * 4. */
 typedef struct wldcore_route_point {

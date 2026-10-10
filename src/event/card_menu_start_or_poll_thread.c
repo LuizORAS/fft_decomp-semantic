@@ -1,6 +1,8 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Restart the menu thread with the given data, running 20 input-update
+ * frames, or poll the running thread's status into g_card_thread_state. */
 void card_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* descriptor) {
     s32 state[2];
     s32 i;

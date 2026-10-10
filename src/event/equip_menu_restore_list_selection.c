@@ -1,6 +1,14 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/*
+ * Read back the cursor (*p1) and scroll base (*p2) saved for list `idx` and
+ * check them against the rebuilt -1-terminated `list`.
+ *
+ * They are kept when the saved entry id is still at the cursor row. Otherwise
+ * the cursor moves to the row that holds that id (low ten bits), keeping the
+ * scroll base, or both reset to 0 when the id is gone.
+ */
 void equip_menu_restore_list_selection(s32 idx, s16* p1, s16* p2, s16* list) {
     s32 i;
     s32 found;

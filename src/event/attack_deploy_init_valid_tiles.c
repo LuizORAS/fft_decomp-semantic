@@ -1,6 +1,9 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Enter the deployment screen's tiles-only view: hide the menu, reset the
+ * cursor and grid slide, prepare the valid-tile primitives and start the
+ * deployment render thread. */
 void attack_deploy_init_valid_tiles(void) {
     g_attack_deploy_tiles_only_mode = 1;
     g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_HIDDEN;

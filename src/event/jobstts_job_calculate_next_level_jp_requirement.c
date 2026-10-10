@@ -1,6 +1,10 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* JP needed for the next level of the job whose level
+ * jobstts_job_calculate_current_level last cached: the table entry for levels
+ * below 8, otherwise the previous value with the dashes flag set. The
+ * `index`th job is looked up but its result is not used. */
 s32 jobstts_job_calculate_next_level_jp_requirement(s32 index) {
     s32 level;
 

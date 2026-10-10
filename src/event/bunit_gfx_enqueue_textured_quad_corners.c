@@ -1,6 +1,13 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Append a textured menu quad, given by its four corners, to the selected
+ * ordering-table entry.
+ *
+ * Screen x coordinates use the menu's +0x80 origin. With `color` the quad is
+ * shaded with that color; otherwise texture shading is disabled.
+ */
 void bunit_gfx_enqueue_textured_quad_corners(world_gfx_textured_quad_source_t* src, u8* color, s32 semi, s32 idx) {
     POLY_FT4* poly;
 

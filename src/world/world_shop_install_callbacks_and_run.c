@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Run the fitting room's cost display script with its three menu value
+ * callbacks installed (gil, fitting cost, gil minus cost); the script gets
+ * no input while a menu is busy. */
 void world_shop_install_callbacks_and_run(void) {
     g_world_menu_script_callbacks[0] = world_shop_obtain_gil;
     g_world_menu_script_callbacks[1] = world_shop_add_fitting_room_cost;

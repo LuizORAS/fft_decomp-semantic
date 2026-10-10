@@ -1,6 +1,12 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Draw one 10x14 font glyph into a 4bpp image at `position` and return the
+ * glyph's width.
+ *
+ * A glyph is 35 bytes of 2-bit pixels, most significant bits first. A
+ * nonzero pixel is stored as its value plus style * 4, which selects the
+ * style's four palette entries; an odd x is rounded down to the even pixel. */
 s32 equip_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style) {
     s32 row;

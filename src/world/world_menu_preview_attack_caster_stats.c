@@ -2,6 +2,17 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Attack-preview caster panel, WORLD copy of
+ * battle_menu_preview_attack_caster_stats: stamp the selected unit's battle id
+ * into its pending action, run the preview calculation on the main
+ * stack unless the ability's secondary flag 0x04 is set or the skillset
+ * changes equipment, and publish the target's action results through
+ * g_world_menu_preview_target_action (0 when skipped).
+ *
+ * For an item id the ability pointers are never set, yet secondary_data[5]
+ * is still read before the id is tested.
+ */
 void world_menu_preview_attack_caster_stats(void) {
     battle_stats_t* stored;
     battle_stats_t* target;

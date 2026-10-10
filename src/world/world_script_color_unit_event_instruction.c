@@ -2,6 +2,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * ColorUnit event instruction: start a palette modulation on the addressed
+ * unit(s). Parameters: 0x00 unit id (halfword; a group id selects several
+ * units), 0x02 mode, 0x03..0x05 signed red, green and blue amounts, 0x06
+ * duration.
+ */
 void world_script_color_unit_event_instruction(const u8* parameters) {
     u16 unit_id;
     s32 misc_index;

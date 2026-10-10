@@ -2,6 +2,9 @@
 
 #define WORLD_MENU_SCRIPT_PALETTE_BYTE 0x29
 
+/* Run the shop's roster-count display script (its palette byte set to the
+ * party unit count) with menu value callback 0 removed, then restore the
+ * callback. */
 void world_menu_run_script_with_callback_suppressed(void) {
     s32 (*previous_callback)(s32);
 

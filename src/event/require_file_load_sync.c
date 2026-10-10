@@ -1,6 +1,9 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* Read `size` bytes from sector `lba` to `destination` through the main
+ * stack, yielding every frame until the request is accepted and then until
+ * the load has finished. */
 void require_file_load_sync(s32 lba, s32 size, void* destination) {
     do {
         g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;

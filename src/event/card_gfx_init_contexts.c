@@ -2,6 +2,14 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Partition the ordering tables, the POLY_FT4 pool and the TILE pool across
+ * the two graphics contexts and set up their 256x240 draw and display
+ * environments (context 0 draws at y 0 and displays y 0xf0, context 1 the
+ * reverse).
+ *
+ * CARD copy of world_gfx_init_double_packet_buffers reduced to the POLY_FT4
+ * and TILE pools; the pools this overlay does not use are arguments nobody
+ * reads. */
 void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 unused_2, s32 unused_3, s32 unused_4,
     POLY_FT4* polygons, s32 unused_6, s32 unused_7, s32 unused_8, s32 unused_9, s32 unused_10, s32 unused_11,
     s32 unused_12, s32 unused_13, s32 unused_14, s32 unused_15, TILE* tiles, s32 unused_17, s32 unused_18,

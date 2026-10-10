@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Ask a thread to stop and run event input frames until it has ended; then
+ * clear the menu-thread running status. */
 void world_menu_stop_thread_and_wait(s32 thread_id) {
     u32 unused[2];
 

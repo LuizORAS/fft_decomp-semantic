@@ -1,6 +1,13 @@
 #include "fft/event_etc.h"
 #include "psx/types.h"
 
+/*
+ * Show the game-over graphic: swap the scenario music for the game-over
+ * track, reveal the graphic from the left, one pixel column (one row of the
+ * rotated texture) per event-speed step, hold it for 600 steps, then fade its
+ * brightness from 0x80 to 0 over 128 steps. The two primitive buffers
+ * alternate by frame.
+ */
 void etc_graphic_show_game_over(s32 graphic_id) {
     /* The target reserves two otherwise unreferenced local words. */
     s32 reserved_stack_words[2];

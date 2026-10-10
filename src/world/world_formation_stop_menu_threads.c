@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Ask the formation screen's panel threads to stop (both status banners, the
+ * equipment/ability panel, the numeric editor and the two preview windows)
+ * and clear the panel styles. */
 void world_formation_stop_menu_threads(void) {
     world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
     world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);

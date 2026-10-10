@@ -1,6 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Steps a level that waits for the message box to close: once the message
+ * thread has ended it pops the level, restores the blocked buttons, resumes
+ * the level underneath and (when asked) restores the text section pointers.
+ * Over the Brave Story or proposition category level it keeps the displayed
+ * play time current while waiting. */
 void wldcore_menu_finish_close_request(wldcore_menu_message_level_t* level) {
     if (g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth - 1] == WLDCORE_MENU_LEVEL_BRAVE_STORY
         || g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth - 1] == WLDCORE_MENU_LEVEL_PROPOSITION_CATEGORY) {

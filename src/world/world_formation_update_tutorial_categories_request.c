@@ -2,6 +2,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Steps a pending request to open the tutorial categories from the world
+ * map: start the screen fade-out, wait for it, then reset the menu context
+ * and raise MAIN_SYSTEM_FLAG_REQUEST_TUTORIAL. */
 void world_formation_update_tutorial_categories_request(void) {
     s16 state = g_world_tutorial_categories_request_state;
 

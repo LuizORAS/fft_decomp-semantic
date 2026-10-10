@@ -1,6 +1,13 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Render a decimal value into a text image at `position`.
+ *
+ * The low nibble of `flags` is the field width in digit columns of 5 pixels;
+ * the MENU_DECIMAL_* bits add a slash or dotted prefix glyph, a minus or plus
+ * sign and leading zeros, and widen the field for the value 100. A zero with
+ * the minus flag draws only the sign glyph. Digits are drawn right to left,
+ * at most the low byte of `flags` of them. */
 void attack_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position) {
     s32 saved_color;
     s32 plus;

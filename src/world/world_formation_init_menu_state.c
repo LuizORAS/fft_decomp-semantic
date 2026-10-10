@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Reset the formation screen to its initial state: every submenu's
+ * "initialized" latch, the panel thread styles, the selected unit and the
+ * banner and browse settings, then the menu display and the unit list. */
 void world_formation_init_menu_state(void) {
     g_world_formation_main_menu_initialized = 0;
     g_world_item_menu_initialized = 0;

@@ -1,6 +1,13 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/*
+ * Append a textured menu quad, given by its four corners, to the selected
+ * ordering-table entry.
+ *
+ * Screen x coordinates use the menu's +0x80 origin. With `color` the quad is
+ * shaded with that color; otherwise texture shading is disabled.
+ */
 void equip_gfx_enqueue_textured_quad_corners(
     const world_gfx_textured_quad_source_t* descriptor, const u8* color, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;

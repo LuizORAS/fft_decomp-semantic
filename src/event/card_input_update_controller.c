@@ -2,6 +2,19 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Read pad 0 and publish the newly pressed buttons and two repeat rates for
+ * the CARD menus.
+ *
+ * One button at a time is latched: once the idle counter (advanced by the
+ * event speed each idle frame) reaches 4 the lowest pressed bit wins, and a
+ * d-pad press is accepted at once. A held button
+ * repeats once its counter reaches the initial delay, every repeat period in
+ * the primary word (which also raises bit 16 + n while repeating) and every
+ * secondary period, after twice the delay, in the secondary word. All three
+ * periods are divided by the event speed. Counter slots 4..11 are skipped;
+ * those buttons use only the newly pressed mask.
+ */
 void card_input_update_controller(void) {
     s16 bit;
     s32 index;

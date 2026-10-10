@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Serve a pending request to open the fixed number panel from the world
+ * map: reset the menu context, reload and relocate the menu text file and
+ * raise MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL. */
 void world_formation_update_fixed_number_panel_request(void) {
     s32 state = g_world_fixed_number_panel_request_state;
 

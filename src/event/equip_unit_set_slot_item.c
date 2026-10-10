@@ -1,5 +1,13 @@
 #include "fft/event_equip.h"
 
+/* Install an item into a unit's equipment slot. EQUIP copy of
+ * world_formation_equip_item_to_unit_slot.
+ *
+ * Returns the validation result when it is negative. Otherwise the slot's
+ * old item goes back to the inventory, and equipping into a hand slot with
+ * any result other than EQUIP_SLOT_ITEM_ALLOWED also returns the other hand's
+ * item and clears that slot. Unit index 1 is the preview record: it is
+ * updated without touching the inventory or the battle stats. */
 s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id) {
     s16 value;
     equip_item_slot_result_e result;

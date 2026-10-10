@@ -2,6 +2,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Event instruction: put the addressed unit(s) into their status idle
+ * animation and wait.  Parameters: 0x00 unit id (halfword), 0x02 wait length
+ * in frames.  A unit id above 0xff selects a group, so the misc-state loop
+ * runs over all 21 unit indices.
+ */
 void world_script_march_units(const u8* parameters) {
     u16 unit_id;
     s32 misc_index;

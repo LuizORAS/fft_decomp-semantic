@@ -3,6 +3,21 @@
 #define ATTACK_NAME_BYTES 16
 #define ATTACK_NAME_END   0xfe
 
+/*
+ * Prepare the deployment screen's roster: bind its text sections, flag each
+ * of the roster slots that may be fielded and write the party name list.
+ *
+ * A slot is fieldable when it is occupied, is not a guest slot, is not away
+ * on a proposition and is not an egg; every other slot gets an empty name.
+ * A name with no terminator within its 16 bytes gets one appended.
+ *
+ * Outside scenario events the squad is then chosen: normally from the
+ * primary-squad script variable, whose unit limit is published. With the
+ * world debug battle style set, the first squad record for the current map
+ * is used instead (squad 0 when it has no valid tiles), two squads are
+ * announced and the record's unit limit is overwritten with 4 after being
+ * published.
+ */
 void attack_deploy_find_fieldable_units(void) {
     s32 index;
     s32 name_index;

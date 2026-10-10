@@ -5,7 +5,7 @@
  * 0x801f0024 has 10 steps used while it is active. The target indexes both
  * with a single scaled byte offset, so each curve is read as a byte array at
  * [i] and [i + 1]; one struct array keeps an extra unscaled index live and
- * adds an instruction to each scan. The curve names are provisional. */
+ * adds an instruction to each scan. */
 
 /* Advances the animated 16x16 marker at `anchor` and enqueues it with its
  * semi-transparent shadow.

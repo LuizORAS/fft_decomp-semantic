@@ -1,6 +1,17 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Write `size` bytes of `source` to the memory card file `filename` and
+ * return the number of bytes written, or -1 when the file cannot be opened
+ * or closed.
+ *
+ * With `create_file` set the file is first created, with the block count
+ * taken from byte 3 of the data, closed and reopened for writing. The write
+ * seeks by the running total, with origin 1, before each attempt and gives up
+ * after 40 attempts that leave it short. The final comparison of the last
+ * write against `size` changes only a value that is not returned.
+ */
 s32 card_file_write_buffer(const char* filename, const u8* source, s32 size, s32 create_file) {
     s32 error;
     s32 result;

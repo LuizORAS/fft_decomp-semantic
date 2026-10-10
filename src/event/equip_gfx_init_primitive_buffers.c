@@ -2,6 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Initialize the LINE_F2, POLY_F4, POLY_FT4, TILE and DR_MOVE primitive
+ * headers of one graphics context, up to each pool's capacity; the quads
+ * also get texture shading enabled. */
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context) {
     s32 i;
 

@@ -2,6 +2,20 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * The save screen: the CARD overlay's entry for companion overlay state 5,
+ * called from the event frame loops of BATTLE and WORLD.
+ *
+ * Builds its graphics context on its own stack frame, starts the save music
+ * and the backdrop thread, and runs one frame per iteration until the closing
+ * fade completes: the handler of g_card_save_menu_state (initial prompt, card
+ * selection, scan, scan result, slot list, write), the window frames, the
+ * event input update and the frame's sound effect. A LEAVE state fades the
+ * music, waits for the pending card operation and starts the closing fade.
+ * The event input is the held d-pad plus the newly pressed buttons; the face
+ * and shoulder buttons are passed on only while a text, child-menu or
+ * slot-14 thread runs. The save-file directory buffer also lives on this frame.
+ */
 void card_save_run_menu(s32 unused) {
     TILE tile_storage[20];
     u32 otag_storage[0x80];

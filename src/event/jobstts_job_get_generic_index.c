@@ -1,6 +1,7 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Map generic jobs (Squire through Mime) to zero-based indexes; unique jobs map to 0. */
 s32 jobstts_job_get_generic_index(s32 job_id) {
     u16 id = job_id;
     s16 result;

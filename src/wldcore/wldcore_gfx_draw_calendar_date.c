@@ -1,6 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Draws the world map's date: the month's zodiac sequence for the month
+ * script variable, then the day as one or two digit sequences 0x1A pixels to
+ * its right, in the tinted HUD colour. Nothing is drawn while
+ * MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE is set. */
 void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     wldcore_window_record_t request;
     CVECTOR color;

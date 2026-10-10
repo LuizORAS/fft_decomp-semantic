@@ -1,6 +1,10 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Set up the unit list page: an empty scrollable list, the row callbacks for
+ * current and maximum stats, level, experience, Brave and Faith, and the
+ * status banner's position (at the bottom, y 0x90, while the selected unit
+ * is in the upper rows). The argument is not read. */
 void bunit_menu_init_unit_list(s32 unused_selected_index) {
     s32 ret;
 

@@ -1,6 +1,11 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Append a Gouraud-shaded textured rectangle to the selected ordering-table
+ * entry. Screen x coordinates use the menu's +0x80 origin; `color` holds four
+ * RGB triples, one per corner.
+ */
 void bunit_gfx_enqueue_gouraud_textured_quad(
     const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
     POLY_GT4* poly;

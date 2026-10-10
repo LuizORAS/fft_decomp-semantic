@@ -1,5 +1,10 @@
 #include "fft/event_jobstts.h"
 
+/* Stream command: draw a textured quad of size (data[5], data[6]) at
+ * (data[3], data[4]) with texture origin (data[7], data[8]), in the
+ * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. While
+ * a list row is rendered, y is offset by the row's position and the scroll
+ * offset. Returns the next command. */
 u8* jobstts_cmd_draw_textured_quad_handler(u8* data) {
     RECT rect;
     s32 y;

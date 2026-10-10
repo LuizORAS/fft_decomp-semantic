@@ -1,8 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of bunit_ability_get_jp_cost_display_value: an ability entry is
- * the ability id in the low ten bits with flags above it. */
+/* Returns the displayed JP cost of an ability list entry: the ability's JP
+ * cost, dashes for an entry whose details are hidden, with the disabled flag
+ * added for a disabled entry. An entry is the ability id in the low ten bits
+ * with flags above it. */
 s32 world_ability_get_jp_cost_display_value(s32 index) {
     s32 entry = g_world_ability_entries[index];
     s32 result;

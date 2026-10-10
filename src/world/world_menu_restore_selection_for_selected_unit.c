@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Provisional: 5-byte remap record, 8 entries at g_world_menu_value_remap_table. */
+/* 5-byte remap record, 8 entries at g_world_menu_value_remap_table. */
 typedef struct world_menu_value_remap {
     u8 menu_index;  /* 0x00 */
     u8 replacement; /* 0x01 */

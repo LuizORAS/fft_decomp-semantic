@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Nonzero when the unit's facing, relative to the camera yaw quadrant, is
+ * one of the six "away from camera" directions 7..12 (of 16). */
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id) {
     s32 misc_id;
     s32 camera_facing;

@@ -1,5 +1,8 @@
 #include "fft/event_jobstts.h"
 
+/* Reset every primitive count, record the draw environment's y, switch to the
+ * other packet buffer and clear its ordering table from entry `first_otag`
+ * to the end. The second argument is not read. */
 void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused) {
     DRAWENV env;
     jobstts_gfx_context_t* context;

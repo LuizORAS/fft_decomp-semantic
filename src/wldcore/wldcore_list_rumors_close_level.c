@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Pop the rumors list level: toggle the input-blocked system flag and
+ * unblock the menu buttons. */
 /* Target 0x80072404. */
 /* The caller hands in its menu level; the target reads no argument. */
 void wldcore_list_rumors_close_level(wldcore_menu_panel_level_t* level) {

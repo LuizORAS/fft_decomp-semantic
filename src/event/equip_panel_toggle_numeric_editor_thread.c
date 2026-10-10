@@ -1,6 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Starts thread 12 on equip_editor_run_numeric_thread (parameter
+ * g_equip_numeric_panel_params) when `enable` is set and the thread is idle;
+ * stops it otherwise. */
 void equip_panel_toggle_numeric_editor_thread(s32 enable) {
     if (enable != 0) {
         if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) == 0) {

@@ -1,5 +1,8 @@
 #include "fft/event_bunit.h"
 
+/* Point the scrollable list menu at a new -1 terminated entry list and reset
+ * its render state. The scroll base is reset only when the selected index
+ * is 0. */
 void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table) {
     s32 first;
 

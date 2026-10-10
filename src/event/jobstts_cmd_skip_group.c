@@ -1,6 +1,8 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Skip a command plus, for group opcodes 1 and 2, the child commands it counts;
+ * return the command that follows. */
 u8* jobstts_cmd_skip_group(u8* data) {
     s32 count;
 

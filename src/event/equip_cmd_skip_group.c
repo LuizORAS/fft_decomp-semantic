@@ -1,6 +1,8 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Skip a command plus, for group opcodes 1 and 2, the child commands it counts;
+ * return the command that follows. */
 u8* equip_cmd_skip_group(u8* command) {
     s32 count;
 

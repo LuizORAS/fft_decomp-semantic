@@ -1,5 +1,7 @@
 #include "fft/wldcore.h"
 
+/* Sound-novel opcode: show the context value display in the mode of operand
+ * 0 at (-0x20, 0x54). Any mode but the play time shows the record's counter. */
 void wldcore_opcode_start_pending_value_transition(void) {
     s32 mode;
 

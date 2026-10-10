@@ -2,6 +2,26 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/*
+ * Per-frame handler of the formation screen's job wheel, called by
+ * world_formation_process_frame for the job-wheel menu values.
+ *
+ * The first call binds the job descriptions, stops the two detail panels and
+ * installs the wheel's menu-script callbacks. Menu value
+ * WORLD_FORMATION_MENU_JOB_WHEEL_ENTER slides the unit grid out and opens
+ * the wheel; WORLD_FORMATION_MENU_JOB_WHEEL_LEAVE closes it and brings the
+ * grid back. On the wheel itself:
+ *  - Left/Right start a spin of 36 progress units (2 a frame with fewer than
+ *    four jobs, 3 otherwise) that moves the cursor one job and wraps;
+ *  - Circle on an available job starts the job-change flash
+ *    (world_formation_process_job_change), after which the job is changed,
+ *    with replacement equipment chosen when the "max equip at job change"
+ *    option field is 0, and the job list rebuilt; on an unavailable job other
+ *    than the unit's own it shows that job's text with the error sound;
+ *  - Select shows the job's text, Square toggles the unit banner (L1/R1
+ *    cycle units while it is hidden) and Cross leaves.
+ * With fewer than two jobs the wheel is not drawn and Circle is refused.
+ */
 void world_formation_run_job_wheel_menu(void) {
     u8 unused[0x28];
     s32 i;

@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Stat preview for swapping one movement ability for another: clears
+ * `stat_diff` and stores the difference in the Move and Jump bonuses the two
+ * abilities give. */
 void world_ability_find_stat_changes_due_to_equipped(
     world_item_stat_detail_t* stat_diff, s32 old_ability, s32 new_ability) {
     world_item_stat_summary_t summary;

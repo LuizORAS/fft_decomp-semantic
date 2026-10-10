@@ -1,6 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Tutorial command: advance on any button once the tutorial text thread has
+ * ended or has stopped printing. */
 void world_script_handle_tutorial_command_wait_for_button(void) {
     s32 running = world_thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT);
 

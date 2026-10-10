@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Returns 1 when no formation unit (special monsters aside) has generic job
+ * `job_id` unlocked. */
 s32 world_job_is_locked_for_all_units(s16 job_id) {
     s32 i;
 

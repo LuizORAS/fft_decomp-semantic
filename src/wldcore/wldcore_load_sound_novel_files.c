@@ -1,9 +1,11 @@
 #include "fft/wldcore.h"
 
-/* Provisional: two seven-entry sector-offset tables. Each entry is the start
- * sector of one chapter's data relative to the disc LBA below it, so entry
- * i+1 minus entry i is that chapter's sector count. */
-
+/* Load sound-novel chapter `chapter`: its script into the save slot buffer
+ * and its text into the message buffer, which becomes the message section.
+ *
+ * Each file comes from a seven-entry sector-offset table. An entry is the
+ * start sector of one chapter's data relative to the disc LBA added to it,
+ * so entry i+1 minus entry i is that chapter's sector count. */
 void wldcore_load_sound_novel_files(s32 chapter) {
     wldcore_wait_for_file_load();
     wldcore_file_wait_then_build_header(&g_main_file_cd_state,

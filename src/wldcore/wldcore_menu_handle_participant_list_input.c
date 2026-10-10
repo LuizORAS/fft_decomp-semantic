@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: proposition participant-chooser level pushed over the
+/* Proposition participant-chooser level pushed over the
  * proposition list (0x80085760). One cursor window rides a render record
  * listing entry_count participant rows. */
 typedef struct wldcore_menu_participant_list_level {

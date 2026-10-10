@@ -1,6 +1,14 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Per-frame input update of the BUNIT screen.
+ *
+ * Reads the pad, then clears the input words while the text thread runs or a
+ * help screen is open, on the frame the text ends and during a screen fade.
+ * The help text state goes 1 on the text thread's first frame (which queues
+ * the window-open sound), 2 after it and 0 otherwise.
+ */
 void bunit_menu_update_event_thread_state(void) {
     s32 running;
 

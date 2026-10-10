@@ -2,6 +2,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Jump event instruction: cancel the unit's event offset and start a jump
+ * with the instruction's two parameters. The unit's Jump stat is set to 6
+ * for the duration of the call. */
 void world_script_jump_event_instruction(battle_script_jump_instruction_t* instr) {
     SVECTOR vec;
     s32 misc_id;

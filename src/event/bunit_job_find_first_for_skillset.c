@@ -1,6 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Return the lowest job id whose skillset is the given one, or -1. */
 s32 bunit_job_find_first_for_skillset(s32 skillset_id) {
     s32 job_id = 0;
 
