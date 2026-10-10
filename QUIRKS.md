@@ -165,9 +165,6 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   into the two AI targeting flags and `ai_initial_enemy_flag`.
 - EQUIP never fills the physical accessory evade slot of `equip_unit_data_t`
   (0x48); it stores the accessory's magic evade to 0x52.
-- `battle_status_modify_inflictions` masks five status bytes with the 4-byte
-  table at 0x8018f60c; the fifth mask is the low byte of
-  `g_battle_formula_handlers[0]`.
 - Event script, both interpreters:
   - Ten instruction values (0x14, 0x20, 0x34-0x36, 0x52, 0x67, 0xe1, 0xe2,
     0xe4) have operand lengths in the size table and no handler; the
@@ -544,18 +541,13 @@ written that way.
   `src/world/world_menu_open_entry_window.c` needs it signed.
 - The unit status record (`battle_unit_status_record_t`, `include/fft/menu.h`)
   is laid out again by the heads of `equip_unit_data_t`, `bunit_unit_data_t`
-  and `world_formation_unit_t`, by `world_item_stat_summary_t` and by
-  HELPMENU's raw `g_helpmenu_active_banner`.
+  and `world_formation_unit_t`, and by `world_item_stat_summary_t`.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
-- `g_wldcore_zodiac_start_dates[12][2]` (`include/fft/wldcore.h`) and OPEN's
-  flat `g_open_birthday_zodiac_months[24]` are the same `{month, day}` table;
-  the OPEN name covers both bytes.
-- The movement step byte is one bit-field record (`battle_move_step_t`) in
-  three places: the path elements (`battle_unit_misc_data_t.movement_path`),
-  `battle_unit_misc_data_t.current_path_step` and the working global
-  `g_battle_move_step_value`.
+- `g_wldcore_zodiac_start_dates[12][2]` and OPEN's flat
+  `g_open_birthday_zodiac_start_dates[24]` store the same `{month, day}` pairs
+  through different array views.
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.
