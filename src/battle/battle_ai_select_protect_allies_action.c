@@ -87,7 +87,7 @@ movement:
     }
     ai->movement_scenario = 1;
 charging:
-    result = battle_ai_evaluate_charging_movement();
+    result = battle_ai_evaluate_charged_action();
     switch (result) {
     case -1:
         ai->action_selection_phase = 2;

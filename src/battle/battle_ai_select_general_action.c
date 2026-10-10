@@ -2,7 +2,7 @@
 
 /* The general search, for a unit without a controlling status or an Auto-Battle mode: build the
  * movement scenarios, take moving to the destination as the baseline (battle_ai_set_movement_baseline),
- * keep a charged action when that scores better (battle_ai_evaluate_charging_movement), then rank every
+ * keep a charged action when that scores better (battle_ai_evaluate_charged_action), then rank every
  * usable ability against every unit worth targeting (battle_ai_evaluate_ability_list) and take a ranked
  * action (battle_ai_select_ranked_action); with none, it only moves (and Defends when Defend is its
  * support ability). Returns -1 to suspend, else 0. */
@@ -30,7 +30,7 @@ evaluate_movement:
     battle_ai_set_movement_baseline();
     ai->movement_scenario = 1;
 evaluate_charging:
-    charging_result = battle_ai_evaluate_charging_movement();
+    charging_result = battle_ai_evaluate_charged_action();
     switch (charging_result) {
     case -1:
         ai->autobattle_state = 2;

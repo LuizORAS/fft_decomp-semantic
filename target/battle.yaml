@@ -1560,15 +1560,15 @@ functions:
   - {addr: 0x80194570, size: 428, name: battle_ai_update_team_targeting_flags, hash: 3fa4c2f3e4d313ae}
   - {addr: 0x8019471c, size: 496, name: battle_ai_init_target_consideration, hash: 42a6f4a87d51533d}
   - {addr: 0x8019490c, size: 56, name: battle_ai_store_main_target_id_and_focus_on_target_flag, hash: 8933f237e942035c}
-  - {addr: 0x80194944, size: 1300, name: battle_ai_set_movement_panel_data, hash: 87b37e2a68f06c65}
+  - {addr: 0x80194944, size: 1300, name: battle_ai_build_reachable_tiles, hash: 87b37e2a68f06c65}
   - {addr: 0x80194e58, size: 2408, name: battle_ai_set_ability_considerations, hash: f98e0d388c80ac00}
   - {addr: 0x801957c0, size: 184, name: battle_ai_disable_ability_if_only_inflicts_status, hash: 73d947bc66e8cd42}
   - {addr: 0x80195878, size: 1308, name: battle_ai_load_ability_entry, hash: 3d235e2da278332b, rodata: [{addr: 0x80193d48, size: 40, hash: 008e79808dddd18e}]}
   - {addr: 0x80195d94, size: 472, name: battle_ai_select_action, hash: 368891fb63e3f348}
   - {addr: 0x80195f6c, size: 32, name: battle_ai_reset_action_ranking_fields, hash: 074e296c669c045a}
-  - {addr: 0x80195f8c, size: 528, name: battle_ai_evaluate_charging_movement, hash: 3191770bb63ed22f}
+  - {addr: 0x80195f8c, size: 528, name: battle_ai_evaluate_charged_action, hash: 3191770bb63ed22f}
   - {addr: 0x8019619c, size: 260, name: battle_ai_select_general_action, hash: 6310e1c24c1e8dbf}
-  - {addr: 0x801962a0, size: 108, name: battle_ai_get_movement_range, hash: 88654b0b36d4bdd5}
+  - {addr: 0x801962a0, size: 108, name: battle_ai_get_target_reach, hash: 88654b0b36d4bdd5}
   - {addr: 0x8019630c, size: 128, name: battle_ai_set_movement_baseline, hash: 6f379ad4de1281a5}
   - {addr: 0x8019638c, size: 1296, name: battle_ai_build_movement_scenarios, hash: aeef3869e98e84ad}
   - {addr: 0x8019689c, size: 108, name: battle_ai_select_destination_with_range_floor, hash: a8d847b07684baf7}
@@ -1621,14 +1621,14 @@ functions:
   - {addr: 0x8019ab48, size: 48, name: battle_ai_transfer_byte_values, hash: dd334a2332330457}
   - {addr: 0x8019ab78, size: 60, name: battle_ai_clear_words, hash: 26700038eda56a40}
   - {addr: 0x8019abb4, size: 448, name: battle_ai_choose_wait_facing, hash: 973e56c289cb4289}
-  - {addr: 0x8019ad74, size: 188, name: battle_ai_check_facing_tile, hash: 135a5e2ce5e9febf}
+  - {addr: 0x8019ad74, size: 188, name: battle_ai_is_facing_tile_blocked, hash: 135a5e2ce5e9febf}
   - {addr: 0x8019ae30, size: 40, name: battle_ai_init_selected_action, hash: 9545f9d85017e9ff}
   - {addr: 0x8019ae58, size: 152, name: battle_ai_record_sprung_trap, hash: e691b9d21adf6ad3}
-  - {addr: 0x8019aef0, size: 40, name: battle_ai_is_vsync_hblank_past_threshold, hash: aff84ed05931c150}
+  - {addr: 0x8019aef0, size: 40, name: battle_ai_is_propagation_budget_spent, hash: aff84ed05931c150}
   - {addr: 0x8019af18, size: 1012, name: battle_ai_evaluate_ability_outcome, hash: 963caa337e1e1c7a, rodata: [{addr: 0x80193db0, size: 36, hash: 8a91fa7090317da7}]}
   - {addr: 0x8019b30c, size: 488, name: battle_ai_evaluate_self_target_origins, hash: 98555857b62c3032}
   - {addr: 0x8019b4f4, size: 444, name: battle_ai_check_ability_use_at_coords, hash: 81477fd3bef0c505}
-  - {addr: 0x8019b6b0, size: 164, name: battle_ai_calculate_height_difference_between_units, hash: 9bcad0cdcecc5aed}
+  - {addr: 0x8019b6b0, size: 164, name: battle_ai_get_unit_height_above_coords, hash: 9bcad0cdcecc5aed}
   - {addr: 0x8019b754, size: 100, name: battle_ai_can_elemental_ability_be_used, hash: e60c20b40acae19a}
   - {addr: 0x8019b7b8, size: 872, name: battle_ai_evaluate_reflected_target_origins, hash: fdc930fa98af6e86}
   - {addr: 0x8019bb20, size: 156, name: battle_ai_check_unit_for_crystal_or_treasure_status, hash: 50d76cc59e51cd64}
@@ -2756,8 +2756,8 @@ data:
   - {addr: 0x8019f308, name: g_battle_ai_status_priority_weights}
   - {addr: 0x8019f358, name: g_battle_ai_facing_tile_offsets}
   - {addr: 0x8019f360, name: g_battle_math_source_skillsets}
-  - {addr: 0x8019f368, name: g_battle_ai_target_in_range}
-  - {addr: 0x8019f36c, name: g_battle_ai_closest_ability_range}
+  - {addr: 0x8019f368, name: g_battle_ai_target_within_reach}
+  - {addr: 0x8019f36c, name: g_battle_ai_target_reach}
   - {addr: 0x8019f370, name: g_battle_ai_movement_unit_index}
   - {addr: 0x8019f374, name: g_battle_ai_target_distance}
   - {addr: 0x8019f378, name: g_battle_ai_stay_near_destination_fixed}

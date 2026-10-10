@@ -1128,16 +1128,22 @@ typedef struct battle_ai_data {
     battle_ai_action_data_t best_action;               /* 0x0034 */
     battle_ai_action_data_t ranked_actions[8];         /* 0x0054 */
     battle_ai_action_data_t movement_baseline_action;  /* 0x0154; only moving: a ranked action must beat it */
-    u8 tile_foe_proximity[2][18][16];                  /* 0x0174; level/y/x, strides
-                                                        * 288/16/1 at 0x80196e68..0x80196ebc */
-    u8 tile_target_distance[2][18][16];                /* 0x03b4; level/y/x, strides 288/16/1 */
-    u16 tile_priority[2][18][16];                      /* 0x05f4; level/y/x, byte strides 576/32/2 */
-    /* Scenario/level/y; row bits 15..0 represent x=0..15. */
+    /* Per reachable tile, 10 - distance summed over the imminent enemies within 10 tiles
+     * (battle_ai_fill_foe_proximity_grid). */
+    u8 tile_foe_proximity[2][18][16]; /* 0x0174; level/y/x, strides 288/16/1 at 0x80196e68..0x80196ebc */
+    /* Per tile, the movement cost from the decision target (battle_ai_fill_target_distance_grid). */
+    u8 tile_target_distance[2][18][16]; /* 0x03b4; level/y/x, strides 288/16/1 */
+    /* Per reachable tile, the negated score of standing there (battle_ai_score_reachable_tiles):
+     * lower is better. */
+    u16 tile_priority[2][18][16]; /* 0x05f4; level/y/x, byte strides 576/32/2 */
+    /* Scenario/level/y; row bits 15..0 represent x=0..15. Scenario 0 holds every reachable tile
+     * (battle_ai_build_reachable_tiles); battle_ai_build_movement_scenarios and
+     * battle_ai_build_targeted_movement derive scenarios 1 and 2 from it. */
     u16 reachable_tiles[3][2][18]; /* 0x0a74; byte strides 72/36/2 */
     u16 targetable_tiles[0x24];    /* 0x0b4c */
     u16 movable_tiles[0x24];       /* 0x0b94 */
     u16 attack_origin_tiles[0x24]; /* 0x0bdc */
-    u16 walkable_tiles[0x24];      /* 0x0c24 */
+    u16 walkable_tiles[0x24];      /* 0x0c24; not blocked, not a cross section */
     u8 _unused_0c6c;
     u8 initial_targeting_state; /* 0x0c6d */
     u8 action_selection_phase;  /* 0x0c6e; 0x801971b8 selects scorer/distance resume; 0x80197ff4 uses 0..4 */
@@ -1166,7 +1172,7 @@ typedef struct battle_ai_data {
     /* All slots with entd_slot != 0xff, capped at 255 by 0x80199d20. */
     u8 present_unit_average_max_hp;                  /* 0x0e17 */
     u8 unit_acts_before_me[BATTLE_UNIT_SLOT_COUNT];  /* 0x0e18..0x0e2c; all slots cleared at 0x8019d408–0x8019d41c */
-    u8 movement_scenario;                            /* 0x0e2d; 0..2 */
+    u8 movement_scenario;                            /* 0x0e2d; 0..2, the reachable_tiles in use */
     u8 acting_unit_id;                               /* 0x0e2e */
     u8 acting_unit_battle_id;                        /* 0x0e2f */
     battle_ai_coords_t acting_unit_coords;           /* 0x0e30 */
@@ -1223,7 +1229,7 @@ typedef struct battle_ai_data {
     battle_stats_t* acting_unit;                             /* 0x17f8 */
     battle_ai_action_data_t selected_action;                 /* 0x17fc */
     /* Up to four tiles where a unit sprang a trap this battle (battle_ai_record_sprung_trap); the AI
-     * leaves them out of its reachable tiles (battle_ai_set_movement_panel_data). x == 0xff ends it. */
+     * leaves them out of its reachable tiles (battle_ai_build_reachable_tiles). x == 0xff ends it. */
     battle_ai_coords_t sprung_trap_tiles[4];                          /* 0x181c */
     battle_ai_unit_decision_t unit_decisions[BATTLE_UNIT_SLOT_COUNT]; /* 0x182c */
     /* 0x80195ed4 saves the complete decision before retreat; 0x80195efc
@@ -1319,7 +1325,7 @@ typedef enum battle_ai_direction {
 /* Decision byte 6, rebuilt for every unit by battle_ai_set_ability_considerations from its usable
  * abilities. */
 typedef enum battle_ai_targeting_flags_1 {
-    BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY = 0x01, /* an arc or direct one: keep 3 tiles from an enemy */
+    BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY = 0x01, /* an arc or direct one: may stop 3 tiles from an enemy */
     BATTLE_AI_TARGETING_FLAG_1_HEALER = 0x02,         /* one restores allies' HP */
     /* At least 77 of 128 of its abilities help allies; the least helpful non-enemy never has it. */
     BATTLE_AI_TARGETING_FLAG_1_SUPPORTER = 0x04,
@@ -1414,7 +1420,7 @@ extern battle_ai_data_t* g_battle_ai_workspace;                   /* 0x8019f3ac 
 /* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
 extern union battle_ai_workspace* g_battle_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
 s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id);
-s32 battle_ai_set_movement_panel_data(s32 movement_taken);
+s32 battle_ai_build_reachable_tiles(s32 movement_taken);
 void battle_ai_set_ability_considerations(s32 action_taken);
 void battle_ai_evaluate_linear_ability_behaviors(void);
 s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command);
@@ -1428,14 +1434,14 @@ s32 battle_ai_calculate_clockticks_until_death_counter_expires();
 s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
 s32 battle_ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
 s32 battle_ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
-s32 battle_ai_calculate_height_difference_between_units(battle_ai_coords_t* coords, battle_stats_t* unit);
+s32 battle_ai_get_unit_height_above_coords(battle_ai_coords_t* coords, battle_stats_t* unit);
 s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action);
 s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords);
 s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id);
 s32 battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(s32 unit_id);
 s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coordinates);
 s32 battle_ai_check_ability_use_based_on_ct(s32 unit_index);
-s32 battle_ai_check_facing_tile(battle_ai_coords_t* source, battle_ai_coords_t* target);
+s32 battle_ai_is_facing_tile_blocked(battle_ai_coords_t* source, battle_ai_coords_t* target);
 s32 battle_ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
 s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
 s32 battle_ai_check_map_allows_use_and_find_highest_target(void);
@@ -1456,7 +1462,7 @@ battle_ai_rank_order_e battle_ai_compare_target_priority_and_hit_rate(
 s32 battle_ai_count_flagged_tiles_within_map_bounds(u16* rows);
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id);
 s32 battle_ai_evaluate_ability_outcome(void);
-s32 battle_ai_evaluate_charging_movement(void);
+s32 battle_ai_evaluate_charged_action(void);
 s32 battle_ai_evaluate_math_targets(void);
 s32 battle_ai_evaluate_movement_origins(void);
 s32 battle_ai_evaluate_reflected_target_origins(void);
@@ -1469,7 +1475,7 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
 battle_ai_direction_e battle_ai_find_direction_of_target(const s8* target, const s8* origin);
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode);
 s32 battle_ai_find_unit_at_coordinates(battle_ai_coords_t* coords);
-s32 battle_ai_get_movement_range(void);
+s32 battle_ai_get_target_reach(void);
 s32 battle_ai_handle_autobattle(void);
 s32 battle_ai_has_any_unit_decided_to_use_ability(void);
 s32 battle_ai_has_any_unit_on_target_panel(void);
@@ -1481,7 +1487,7 @@ void battle_ai_init_workspace(void);
 void battle_ai_insert_ranked_action(void);
 void battle_ai_set_movement_baseline(void);
 s32 battle_ai_is_action_higher_ranked(battle_ai_action_data_t* a, battle_ai_action_data_t* b);
-s32 battle_ai_is_vsync_hblank_past_threshold(void);
+s32 battle_ai_is_propagation_budget_spent(void);
 void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry);
 s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit);
 

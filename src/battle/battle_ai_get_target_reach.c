@@ -1,12 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Choose the range threshold used to partition movement candidates.
- *
- * A focused enemy uses enemy_reach; a focused ally uses ally_reach.
- * Without a focused target, use Move. The caller consumes the full register.
- */
-s32 battle_ai_get_movement_range(void) {
+/* Return the acting unit's reach toward its focus target: enemy_reach for an enemy, ally_reach for
+ * anyone else, and Move without a focus target. The caller consumes the full register. */
+s32 battle_ai_get_target_reach(void) {
     battle_ai_unit_decision_t* acting = g_battle_ai_acting_unit_decision_ptr;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     if (acting->flags & BATTLE_AI_DECISION_FOCUS_TARGET) {

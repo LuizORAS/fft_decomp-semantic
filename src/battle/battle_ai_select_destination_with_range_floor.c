@@ -1,11 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Select a destination with the conditional three-tile distance floor.
- *
- * Against an enemy target, BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY raises smaller limits to 3.
- * Selection still uses the ordinary unrestricted distance-first fallback.
- */
+/* Choose the destination within distance_limit of the decision target, raised to 3 for a ranged unit
+ * (BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY) against an enemy target so it may stop 3 tiles away,
+ * else the nearest tile (battle_ai_select_destination_with_nearest_fallback). */
 void battle_ai_select_destination_with_range_floor(s32 distance_limit) {
     battle_ai_unit_decision_t* decision = g_battle_ai_data_base.acting_unit_decision;
     if (g_battle_ai_data_base.unit_decisions[decision->main_target_id].enemy_flag != 0

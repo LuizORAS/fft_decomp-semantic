@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Return the direction from origin to target along the larger of the x and y offsets (+y is north,
+ * +x east). An exact diagonal goes to north (+x+y), east (+x-y), south (-x-y) or west (-x+y), and
+ * the same tile gives BATTLE_AI_DIRECTION_OVERLAP. Both point at battle_ai_coords_t bytes (x at 0, y
+ * at 2). */
 battle_ai_direction_e battle_ai_find_direction_of_target(const s8* target, const s8* origin) {
     s32 z1 = target[2];
     s32 x1 = target[0];

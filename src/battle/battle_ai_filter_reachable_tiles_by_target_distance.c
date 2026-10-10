@@ -1,13 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Build a reachable-tile mask within the target-distance limit.
+/* Put into the current scenario the scenario-0 reachable tiles at most distance_limit from the
+ * decision target and return 1; with none, copy all of scenario 0 and return 0.
  *
- * Filter scenario 0 into the selected scenario, accepting distances equal
- * to the limit. Return 1 if any tile qualifies; otherwise copy all scenario
- * 0 rows and return 0. The destination is cleared before reading the source,
- * so callers select scenario 1 to preserve the scenario 0 mask.
- */
+ * The destination is cleared before reading the source, so callers select scenario 1 to preserve the
+ * scenario 0 mask. */
 s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
     s32 found = 0;
     battle_ai_data_t* ai = &g_battle_ai_data_base;

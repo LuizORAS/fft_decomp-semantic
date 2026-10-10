@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Score each reachable tile, resuming suspended evaluations.
+/* Score standing on each reachable tile of the current scenario: simulate moving there without
+ * acting, with the crystal or treasure pickup (battle_ai_check_unit_for_crystal_or_treasure_status,
+ * battle_ai_simulate_action_and_score), and store the negated score in tile_priority. The simulation
+ * unit returns to its own tile when the scan ends. Returns -1 to suspend, resuming at the same tile,
+ * else 0.
  *
- * Return -1 to suspend and 0 after restoring the simulation coordinates.
- * Integer address stages preserve the target's addition order; direct typed
- * indexing changes the machine code. Each level has 18 rows of 16 tiles.
- */
+ * Integer address stages preserve the target's addition order; direct typed indexing changes the
+ * machine code. Each level has 18 rows of 16 tiles. */
 s32 battle_ai_score_reachable_tiles(void) {
     s32 x, y, level;
     battle_ai_data_t* ai = &g_battle_ai_data_base;

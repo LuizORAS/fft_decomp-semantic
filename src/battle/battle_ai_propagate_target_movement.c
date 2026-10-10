@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/* Propagate the acting unit's movement budget outward from a target tile.
+/* Spread the unit's movement outward from a target tile for battle_ai_fill_target_distance_grid,
+ * the AI twin of battle_move_set_reachable_tiles: the unit's movement rules
+ * (battle_move_store_unit_movement_to_scratchpad) with Move 124 and 125 left on the target tile, so
+ * 125 minus a tile's remaining range is its cost from the target. With check_budget, once a pass has
+ * run and the frame budget is spent (battle_ai_is_propagation_budget_spent), it saves the scratchpad
+ * and sets *suspended; initialize 0 resumes. Returns the reachable count, or -1 for an absent unit.
  *
- * Each pass snapshots the frontier before visiting it. A time-budget pause
- * saves scratchpad state and sets *suspended to 1 while returning 0.
- * Return -1 for an absent unit on initialization, or the reachable count
- * on completion. The caller must check suspension before using that count.
- */
+ * Each pass snapshots the frontier before visiting it. */
 s32 battle_ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget) {
     u8 frontier_snapshot[512];
@@ -56,7 +57,7 @@ s32 battle_ai_propagate_target_movement(
             fill_panels[pass].remaining_range = remaining_range;
     } else {
         for (pass = g_battle_ai_propagation_resume_pass; pass < config->move; pass++) {
-            if (check_budget && battle_ai_is_vsync_hblank_past_threshold() && completed_pass) {
+            if (check_budget && battle_ai_is_propagation_budget_spent() && completed_pass) {
                 g_battle_ai_propagation_resume_pass = pass;
                 *suspended = 1;
                 main_util_copy_byte_data((void*)0x1f800000, g_battle_ai_unit_snapshot_storage, 1024);

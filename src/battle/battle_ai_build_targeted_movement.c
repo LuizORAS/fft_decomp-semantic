@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Prepare movement scenarios around the policy's designated target.
- *
- * Return -1 while target-distance propagation is suspended, otherwise 0.
- * Recovery mode limits its initial destination search to 2 when farther away;
- * scenario 2 may approach one tile closer if the actor has not acted.
- */
+/* Build the movement scenarios of Fight for life and Protect allies around the decision target (the
+ * Auto-Battle target; every distance is 0 when that is the unit itself or untargetable). Scenario 0's
+ * destination is the best-scored tile within reach of the target (battle_ai_get_target_reach; for
+ * Protect allies, within 2 tiles when the ally is farther), else the nearest; with a reflected action,
+ * the best-scored tile anywhere. Scenario 1 starts from that destination and keeps the tiles within
+ * reach of the target, or only it and the unit's own tile when there are none. Scenario 2 copies
+ * scenario 0's tiles; its destination is a tile nearer to the target when the unit has not acted,
+ * else scenario 1's. The unit's own tile joins scenario 1. Returns -1 to suspend, else 0. */
 s32 battle_ai_build_targeted_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 target;
@@ -29,7 +30,7 @@ s32 battle_ai_build_targeted_movement(void) {
         return -1;
     }
 prepare:
-    range = battle_ai_get_movement_range();
+    range = battle_ai_get_target_reach();
     /* Direct typed level indexing reverses the two address-building instructions
      * at +0xbc/+0xc0. Stage only the level base; retain the real member offset
      * and typed row/column indexing for the byte-exact match. */

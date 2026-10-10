@@ -41,7 +41,7 @@ s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
             if (dy < 0)
                 dy = -dy;
             if (dx + dy < 2) {
-                if ((u32)(battle_ai_calculate_height_difference_between_units(coords, unit) + 2) < 5)
+                if ((u32)(battle_ai_get_unit_height_above_coords(coords, unit) + 2) < 5)
                     return 1;
             }
         }

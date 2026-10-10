@@ -1,12 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Compare the unit tile's height with the supplied AI coordinates.
- *
- * Return their signed half-height difference divided by 2, truncating
- * toward 0. unit_t body height and water depth are not included.
- */
-s32 battle_ai_calculate_height_difference_between_units(battle_ai_coords_t* coords, battle_stats_t* unit) {
+/* Return how many levels unit's tile stands above the tile at coords: the half-height difference
+ * halved, truncated toward 0. Body height and water depth do not count. */
+s32 battle_ai_get_unit_height_above_coords(battle_ai_coords_t* coords, battle_stats_t* unit) {
     map_tile_t* tile;
     s32 h1;
     s32 h2;

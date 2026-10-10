@@ -1,13 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Reject a facing candidate outside the map or too far above the source.
- *
- * Return 1 for rejection and 0 otherwise. Tile flag 0 also rejects a candidate.
- * Only the destination's lower layer is checked; a rise of 3 is rejected,
- * but descents are unrestricted. Slope and depth do not affect this test.
- */
-s32 battle_ai_check_facing_tile(battle_ai_coords_t* source, battle_ai_coords_t* target) {
+/* Return 1 when a unit on source should not face target, the tile next to it: off the map, blocked,
+ * or at least 3 higher (the lower layer's height against the source's own layer). Descents, slopes and
+ * depth do not count. */
+s32 battle_ai_is_facing_tile_blocked(battle_ai_coords_t* source, battle_ai_coords_t* target) {
     s32 x = target->bytes.x;
     s32 width = g_battle_ai_data_base.map_max_x;
     s32 y;

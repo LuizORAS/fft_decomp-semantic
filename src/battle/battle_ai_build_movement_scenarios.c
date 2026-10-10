@@ -1,18 +1,25 @@
 #include "fft/battle.h"
 
 /* Workspace aliases preserve the target's separate entry address loads. */
-extern s32 g_battle_ai_target_in_range;             /* 1 for range >= distance or charging; 0 otherwise. */
-extern s32 g_battle_ai_closest_ability_range;       /* Movement range, possibly halved before tile selection. */
+extern s32 g_battle_ai_target_within_reach;         /* 1 within reach, or with a reflected action. */
+extern s32 g_battle_ai_target_reach;                /* The reach toward the target, maybe halved. */
 extern s32 g_battle_ai_movement_unit_index;         /* Reused unit/row loop index or Stay Near occupant ID. */
 extern s32 g_battle_ai_target_distance;             /* Target-distance byte at the acting unit's tile. */
 extern s32 g_battle_ai_stay_near_destination_fixed; /* 1 after a reachable Stay Near destination is fixed. */
 
-/* Prepare candidate destinations and reachable movement scenarios.
+/* Build the general search's movement scenarios around the decision target (the focus unit's or the
+ * stay-near tile; every distance is 0 when the focus unit is the unit itself or untargetable). A unit
+ * below half HP or short of MP, without Death Sentence, counts crystal tiles as 1 from its target.
+ * Scenario 1 holds the tiles to act from. Within reach of the target (battle_ai_get_target_reach, or
+ * always with a reflected action) they are the reachable tiles at most Move plus the unit's own
+ * distance from the target, or only the free stay-near tile; out of reach, the tiles nearer to the
+ * target. Its destination is the best-scored tile (battle_ai_score_reachable_tiles), or out of reach
+ * the best one within reach of the target (the reach halved one time in seven outside the player
+ * team), else the nearest. Scenario 2 is the rest of the reachable tiles. Scenario 0's destination,
+ * for only moving, is a tile nearer to a focus target within reach when the unit has not acted, else
+ * scenario 1's. The unit's own tile joins scenario 1. Returns -1 to suspend, else 0.
  *
- * Return -1 when a child suspends and 0 after all scenarios are prepared.
- * Scratch words preserve branch decisions across suspension. Their broader
- * ownership and the address-named child helpers remain provisional.
- */
+ * Scratch words preserve branch decisions across suspension. */
 s32 battle_ai_build_movement_scenarios(void) {
     battle_ai_unit_decision_t* decision;
     battle_ai_data_t* ai;
@@ -59,12 +66,12 @@ s32 battle_ai_build_movement_scenarios(void) {
     g_battle_ai_target_distance
         = ai->tile_target_distance[ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
                                   [ai->acting_unit_coords.bytes.x];
-    g_battle_ai_closest_ability_range = battle_ai_get_movement_range();
+    g_battle_ai_target_reach = battle_ai_get_target_reach();
     limit = g_battle_ai_target_distance;
     g_battle_ai_stay_near_destination_fixed = 0;
-    if (g_battle_ai_closest_ability_range >= limit
+    if (g_battle_ai_target_reach >= limit
         || (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION)) {
-        g_battle_ai_target_in_range = 1;
+        g_battle_ai_target_within_reach = 1;
         if (decision->flags & BATTLE_AI_DECISION_STAY_NEAR_COORDINATES) {
             g_battle_ai_movement_unit_index = battle_ai_find_unit_at_coordinates(&decision->target);
             if (g_battle_ai_movement_unit_index == ai->acting_unit_id
@@ -80,7 +87,7 @@ s32 battle_ai_build_movement_scenarios(void) {
         }
         battle_ai_filter_reachable_tiles_by_target_distance(ai->acting_unit_move + g_battle_ai_target_distance);
     } else {
-        g_battle_ai_target_in_range = 0;
+        g_battle_ai_target_within_reach = 0;
         battle_ai_filter_reachable_tiles_by_target_distance(limit - 1);
     }
 score_tiles:
@@ -89,12 +96,12 @@ score_tiles:
         return -1;
     }
     if (!g_battle_ai_stay_near_destination_fixed) {
-        if (g_battle_ai_target_in_range) {
+        if (g_battle_ai_target_within_reach) {
             battle_ai_select_destination(0x7fffffff, BATTLE_AI_DESTINATION_PRIORITY_FIRST);
         } else {
             if (ai->acting_unit_team && rand() % 7 == 0)
-                g_battle_ai_closest_ability_range /= 2;
-            battle_ai_select_destination_with_nearest_fallback(g_battle_ai_closest_ability_range);
+                g_battle_ai_target_reach /= 2;
+            battle_ai_select_destination_with_nearest_fallback(g_battle_ai_target_reach);
         }
     }
     /* XOR preserves the target operation without assuming scenario 1 is a subset. */
@@ -111,7 +118,7 @@ score_tiles:
     ai->candidate_coords[2].word = ai->candidate_coords[1].word;
     ai->movement_scenario = 0;
     if (!ai->acting_unit->action_taken && (decision->flags & BATTLE_AI_DECISION_FOCUS_TARGET)
-        && g_battle_ai_target_in_range
+        && g_battle_ai_target_within_reach
         && !(decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION)) {
         battle_ai_select_destination_with_range_floor(g_battle_ai_target_distance - 1);
     } else {

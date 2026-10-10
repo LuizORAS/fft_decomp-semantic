@@ -39,7 +39,7 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
                 if (battle_ai_should_exclude_from_imminent_enemies(i))
                     continue;
                 if (battle_ai_calculate_distance_between_units(ai->acting_unit, unit) < 2
-                    && battle_ai_calculate_height_difference_between_units(&ai->acting_unit_coords, unit) < -2)
+                    && battle_ai_get_unit_height_above_coords(&ai->acting_unit_coords, unit) < -2)
                     continue;
                 break;
             case BATTLE_AI_NEAREST_ENEMY:

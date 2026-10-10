@@ -43,7 +43,7 @@ movement:
     if (battle_ai_select_ranked_action())
         return 0;
 charging:
-    result = battle_ai_evaluate_charging_movement();
+    result = battle_ai_evaluate_charged_action();
     switch (result) {
     case -1:
         g_battle_ai_retreat_phase = 2;

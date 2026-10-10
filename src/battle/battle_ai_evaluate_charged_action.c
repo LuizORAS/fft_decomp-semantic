@@ -1,12 +1,16 @@
 #include "fft/battle.h"
 
-/* Evaluate movement while keeping or removing the acting unit's charge.
+/* Decide whether a unit with a charged action keeps it: returns 1 when keeping it scores above
+ * dropping it, 0 to choose anew, -1 to suspend. A unit without one returns 0. A Charge (Archer) is
+ * judged where the unit stands, any other at the scenario's destination with its crystal or treasure.
+ * A Sing or Dance performance only enters the ranking (battle_ai_check_set_highest_unit_priority,
+ * battle_ai_insert_ranked_action) and returns 0. Otherwise the state is scored with the charge and
+ * again with the charge, Charging and Performing removed; when keeping wins, the selected action is
+ * to move without a new ability.
  *
- * The second simulation temporarily changes unit data; a suspended pass
- * preserves those changes until resumed and completed. The simulation helper
- * resumes from its saved phase when the frame budget is exhausted.
- */
-s32 battle_ai_evaluate_charging_movement(void) {
+ * The second simulation temporarily changes unit data; a suspended pass keeps those changes until it
+ * resumes and completes. */
+s32 battle_ai_evaluate_charged_action(void) {
     battle_stats_t* unit = g_battle_ai_temp_unit_data;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_action_command_prefix_t* action = (battle_action_command_prefix_t*)&unit->action_actor_id;
@@ -33,7 +37,8 @@ s32 battle_ai_evaluate_charging_movement(void) {
     }
     ai->current_action.act_before_move = 0;
     ai->current_action.skillset = 0;
-    if ((u32)(action->ability_id - 0x56) < 14) {
+    if ((u32)(action->ability_id - ABILITY_ID_SONG_ANGEL_SONG)
+        <= ABILITY_ID_DANCE_LAST_DANCE - ABILITY_ID_SONG_ANGEL_SONG) {
     evaluate_song_dance:
         if (battle_ai_check_set_highest_unit_priority() == -1) {
             ai->charging_state = 0;

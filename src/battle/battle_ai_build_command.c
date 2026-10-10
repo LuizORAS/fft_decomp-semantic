@@ -63,7 +63,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         }
         battle_ai_set_ability_considerations(ai->acting_unit->action_taken);
     movement:
-        if (battle_ai_set_movement_panel_data(ai->acting_unit->movement_taken) == -1) {
+        if (battle_ai_build_reachable_tiles(ai->acting_unit->movement_taken) == -1) {
             ai->main_ai_state = BATTLE_AI_COMMAND_BUILD_MOVEMENT;
             ai->decision_state = 1;
             return -1;

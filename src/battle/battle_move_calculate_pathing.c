@@ -118,7 +118,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         main_util_copy_byte_data(g_battle_ai_unit_snapshot_storage, (void*)0x1f800000, 1024);
     }
     for (i = g_battle_move_pathing_resume_pass; i < config->move; i++) {
-        if (check_budget && battle_ai_is_vsync_hblank_past_threshold() && completed_pass) {
+        if (check_budget && battle_ai_is_propagation_budget_spent() && completed_pass) {
             g_battle_move_pathing_resume_pass = i;
             *suspended = 1;
             main_util_copy_byte_data((void*)0x1f800000, g_battle_ai_unit_snapshot_storage, 1024);

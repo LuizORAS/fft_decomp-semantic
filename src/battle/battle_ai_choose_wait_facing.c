@@ -9,15 +9,12 @@ typedef struct battle_ai_wait_facing_work {
     u8 past_viable_directions;
 } battle_ai_wait_facing_work_t;
 
-/*
- * Choose a facing hint for an AI-controlled unit's Wait command.
- *
- * Values other than 5 are returned directly. Otherwise prefer the nearest
- * imminent enemy, then any enemy, while rejecting blocked or steeply rising
- * adjacent tiles. The original does not bounds-check the direction lookup, so
- * coincident source and target coordinates can read one byte past the four-byte
- * viability array.
- */
+/* Return the facing for the acting unit's Wait: the selected action's hint, unless it is
+ * BATTLE_AI_DIRECTION_CHOOSE_AT_WAIT. Then the unit faces the nearest imminent enemy, trying the next
+ * one while that direction is not viable, and last the nearest enemy. A direction is viable when the
+ * tile next to the unit there does not block it (battle_ai_is_facing_tile_blocked); all are when none
+ * is. Failing that it keeps its facing when viable, else takes the last viable direction. An enemy on
+ * its own tile reads past the four directions (QUIRKS.md). */
 s32 battle_ai_choose_wait_facing(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_wait_facing_work_t work;
@@ -51,7 +48,7 @@ s32 battle_ai_choose_wait_facing(void) {
             = ai->acting_unit_coords.bytes.x + g_battle_ai_facing_tile_offsets.bytes[offset];
         work.target_coords.bytes.y = ai->acting_unit_coords.bytes.y + g_battle_ai_facing_tile_offsets.bytes[offset + 1];
         work.target_coords.bytes.elevation = 0;
-        if (battle_ai_check_facing_tile(&ai->acting_unit_coords, (battle_ai_coords_t*)&work.target_coords) != 0) {
+        if (battle_ai_is_facing_tile_blocked(&ai->acting_unit_coords, (battle_ai_coords_t*)&work.target_coords) != 0) {
             *viability = 0;
         } else {
             s32 valid = 1;
