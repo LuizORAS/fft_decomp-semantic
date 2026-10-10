@@ -23,7 +23,7 @@ void attack_render_unit_status_panel_thread(void) {
     u8* value_pixels;                                      /* sp98 */
     u8* name_pixels;                                       /* spA0 */
     battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
-    s16* unit_info;                                        /* spB0 */
+    battle_active_unit_t* unit_info;                       /* spB0 */
     battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
     s32 shake;                                             /* spC0 */
     s32 dimmed;                                            /* spC8 */
@@ -77,7 +77,7 @@ void attack_render_unit_status_panel_thread(void) {
         name_pixels = g_attack_panel_comparison_name_image;
         number_entries = g_attack_panel_comparison_numeric_entries;
         state = &g_attack_panel_comparison_billboard;
-        unit_info = g_attack_panel_comparison_unit_data;
+        unit_info = &g_attack_panel_comparison_unit_data;
         transition = &g_attack_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
@@ -366,8 +366,8 @@ void attack_render_unit_status_panel_thread(void) {
                 }
             }
         }
-        panel->sprites[6].u0 = (unit_info[4] % 7) * 0x18;
-        portrait_cell = unit_info[4];
+        panel->sprites[6].u0 = (unit_info->zodiac % 7) * 0x18;
+        portrait_cell = unit_info->zodiac;
         panel->sprites[6].w = 0x18;
         panel->sprites[6].h = 0x14;
         panel->sprites[6].v0 = (portrait_cell / 7) * 0x14 + 0x2A;
@@ -391,23 +391,23 @@ void attack_render_unit_status_panel_thread(void) {
             battle_clear_menu_render_buffer(name_pixels, 0x580);
             *window_width = 0x58;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(unit_info[0] + 0x5800, name_pixels, text_position);
+            battle_menu_display_text_entry(unit_info->name_id + 0x5800, name_pixels, text_position);
             battle_menu_set_text_origin(0, 0x10);
-            battle_menu_display_text_entry(unit_info[1] + TEXT_ID_JOB_NAME_BASE, name_pixels, text_position);
+            battle_menu_display_text_entry(unit_info->job_id + TEXT_ID_JOB_NAME_BASE, name_pixels, text_position);
             LoadImage(&rects[2], name_pixels);
             battle_clear_menu_render_buffer(value_pixels, 0xF0);
             *window_width = 0x10;
             battle_menu_set_text_origin(0, 0);
-            battle_text_draw_large_number_glyphs(unit_info[2], 0x202, value_pixels, text_position);
+            battle_text_draw_large_number_glyphs(unit_info->brave, 0x202, value_pixels, text_position);
             LoadImage(&rects[3], value_pixels);
             battle_menu_set_text_origin(0, 0);
             value_pixels_b = value_pixels + 0x50;
-            battle_text_draw_large_number_glyphs(unit_info[3], 0x202, value_pixels_b, text_position);
+            battle_text_draw_large_number_glyphs(unit_info->faith, 0x202, value_pixels_b, text_position);
             LoadImage(&rects[4], value_pixels_b);
             if (g_battle_post_battle_unit_changes_active == 0) {
                 battle_menu_set_text_origin(0, 0);
                 value_pixels_c = value_pixels + 0xA0;
-                battle_text_draw_large_number_glyphs(unit_info[5] + 1, 0x4002, value_pixels_c, text_position);
+                battle_text_draw_large_number_glyphs(unit_info->battle_id + 1, 0x4002, value_pixels_c, text_position);
                 LoadImage(&rects[5], value_pixels_c);
             } else {
                 LoadImage(&rects[5], value_pixels + 0xA0);

@@ -76,16 +76,16 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     }
     if (config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) {
         move_flags = &g_battle_move_effective_flags;
-        *move_flags = 8;
+        *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT;
         value = config->movement_3;
-        if (value & 0x80) {
-            *move_flags = 0x28;
-        } else if (value & 0x40) {
-            *move_flags = 0x18;
+        if (value & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+            *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT | BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
+        } else if (value & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
+            *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT | BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
         }
-        if (value & 2) {
+        if (value & BATTLE_MOVEMENT_SET_3_SILENT_WALK) {
             move_flags = &g_battle_move_effective_flags;
-            *move_flags |= 2;
+            *move_flags |= BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK;
         }
         if (battle_move_calculate_teleport_chances() != 0) {
             g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT;

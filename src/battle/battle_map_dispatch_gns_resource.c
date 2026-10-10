@@ -110,7 +110,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         for (i = 0; i < 360; i++) {
             flags = *polygon_flags++;
             g_battle_map_textured_triangle_positions[i].polygon_flags = flags;
-            if (!(flags & MAP_POLYGON_FLAG_OWN_COLOUR)) {
+            if (!(flags & MAP_POLYGON_FLAG_LIT)) {
                 g_battle_render_buffers[0].gt3[i].r0 = 0x80;
                 g_battle_render_buffers[0].gt3[i].r1 = 0x80;
                 g_battle_render_buffers[0].gt3[i].r2 = 0x80;
@@ -137,7 +137,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         for (i = 0; i < 710; i++) {
             flags = *polygon_flags++;
             g_battle_map_textured_quad_positions[i].polygon_flags = flags;
-            if (!(flags & MAP_POLYGON_FLAG_OWN_COLOUR)) {
+            if (!(flags & MAP_POLYGON_FLAG_LIT)) {
                 g_battle_render_buffers[0].gt4[i].r0 = 0x80;
                 g_battle_render_buffers[0].gt4[i].r1 = 0x80;
                 g_battle_render_buffers[0].gt4[i].r2 = 0x80;

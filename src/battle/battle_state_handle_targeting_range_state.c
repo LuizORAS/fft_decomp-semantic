@@ -42,7 +42,7 @@ void battle_state_handle_targeting_range_state(void) {
         }
     } else {
         switch (unit->command_state.ai.data.action.targeting_type) {
-        case 5:
+        case BATTLE_TARGETING_TYPE_TILE:
             battle_target_update_free_cursor_selection(unit, 0);
             frame_data = unit->state_frame_counter++;
             if (frame_data >= 0x1f) {
@@ -51,7 +51,7 @@ void battle_state_handle_targeting_range_state(void) {
                 battle_target_select_tile();
             }
             return;
-        case 6:
+        case BATTLE_TARGETING_TYPE_UNIT:
             target = battle_unit_get_misc_data_by_battle_id(unit->command_state.ai.data.action.target_id);
             if (target != 0) {
                 battle_target_update_free_cursor_selection(unit, target);

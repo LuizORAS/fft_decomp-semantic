@@ -7,7 +7,7 @@ s32 battle_move_calculate_teleport_chances(void) {
     battle_move_pathfind_scratch_t* ctx = g_battle_move_config_ptr;
     s32 dx, dy;
 
-    if (ctx->movement_set_2 & 4) {
+    if (ctx->movement_set_2 & BATTLE_MOVEMENT_SET_2_TELEPORT_2) {
         return 1;
     }
     dy = ctx->target_x - ctx->x;

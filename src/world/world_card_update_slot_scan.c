@@ -46,8 +46,8 @@ void world_card_update_slot_scan(void) {
                 g_world_card_slot_scan_index = 0;
                 while (g_world_card_slot_scan_index < CARD_SAVE_SLOT_COUNT) {
                     if (g_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
-                        bcopy(g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
-                            &g_world_load_work_buffer->slot, 0x18);
+                        bcopy(&g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
+                            &g_world_load_work_buffer->summary, sizeof(card_save_summary_t));
                         world_card_build_save_slot_description(
                             g_card_save_slot_file_states[g_world_card_slot_scan_index],
                             g_world_card_save_slot_descriptions[g_world_card_slot_scan_index]);
@@ -178,9 +178,10 @@ void world_card_update_slot_scan(void) {
                 if (descriptor != -1) {
                     status = world_card_seek_file_with_retries(descriptor, 0x100, 0);
                     if (status != -1) {
-                        status = world_card_read_file_with_retries(descriptor, &g_world_load_work_buffer->slot, 0x80);
+                        status
+                            = world_card_read_file_with_retries(descriptor, &g_world_load_work_buffer->summary, 0x80);
                     }
-                    if (status != -1 && g_world_load_work_buffer->slot >= 0x10
+                    if (status != -1 && g_world_load_work_buffer->summary.slot >= 0x10
                         && world_card_delete_file(g_world_card_save_file_names[g_world_card_slot_scan_index]) != 0) {
                         g_world_card_free_block_count++;
                         status = 0;
@@ -212,8 +213,8 @@ void world_card_update_slot_scan(void) {
             if (g_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
                 world_card_build_save_slot_description(g_card_save_slot_file_states[g_world_card_slot_scan_index],
                     g_world_card_save_slot_descriptions[g_world_card_slot_scan_index]);
-                bcopy(&g_world_load_work_buffer->slot, g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
-                    0x18);
+                bcopy(&g_world_load_work_buffer->summary, &g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
+                    sizeof(card_save_summary_t));
                 world_card_update_save_slot_playtime(g_world_card_slot_scan_index);
                 world_card_draw_slot_text(g_world_card_slot_scan_index);
             }

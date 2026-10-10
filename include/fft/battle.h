@@ -176,6 +176,10 @@ enum {
 enum {
     BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK = 0x01,
     BATTLE_AI_ABILITY_FLAG_3_MAGICAL_ATTACK = 0x02,
+    /* Four area-shape bits, tested only together: 0x20 a line from the user
+     * (BATTLE_AI_ABILITY_LINEAR_TRAJECTORY in the word view), 0x10 the eight
+     * breath and bracelet cones, 0x08 Triple Attack alone, 0x04 Triple Bracelet
+     * alone. With any of them set the AI tries every origin tile. */
     BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK = 0x3c,
     BATTLE_AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY = 0x40,
     BATTLE_AI_ABILITY_FLAG_3_ARC_TRAJECTORY = 0x80,
@@ -227,7 +231,7 @@ typedef struct battle_ai_command_action {
     u16 calculator_multiplier;
     u8 item_id;
     u8 _unused_09;
-    u8 targeting_type;
+    u8 targeting_type; /* battle_targeting_type_e */
     u8 target_id;
     u16 target_x;
     u16 target_elevation;
@@ -368,10 +372,24 @@ typedef char battle_ai_considered_ability_size_must_be_0x14[(sizeof(battle_ai_co
 typedef char battle_ai_status_tail_must_be_at_offset_8
     [((unsigned long)&((battle_ai_considered_ability_t*)0)->parameters.words.status_tail == 8) ? 1 : -1];
 
+/* battle_ai_action_rank_t.decided of the selected action once it is chosen. */
+enum {
+    BATTLE_AI_ACTION_DECIDED = 0xff,
+};
+
+/* How an action follows its target: battle_ai_action_data_t.targeting_type and
+ * its copies in the command and menu action records. */
+typedef enum battle_targeting_type {
+    BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_x, target_elevation, target_y */
+    BATTLE_TARGETING_TYPE_UNIT = 6, /* follows the unit target_id */
+} battle_targeting_type_e;
+
 /* The ranking tail of an action, compared by
  * battle_ai_compare_target_priority_and_hit_rate. */
 typedef struct battle_ai_action_rank {
-    u8 rank_byte; /* first comparison key at 0x80196db0; meaning unresolved. */
+    /* BATTLE_AI_ACTION_DECIDED on the selected action once the turn's action is
+     * chosen, 0 on every candidate; the first comparison key at 0x80196db0. */
+    u8 decided;
     u8 base_hit_percent;
     s16 priority;
 } battle_ai_action_rank_t;
@@ -395,7 +413,7 @@ typedef struct battle_ai_action_data {
     u16 calculator_multiplier; /* 0x0e */
     u8 item_id;                /* 0x10 */
     u8 _unused_11;
-    u8 targeting_type;    /* 0x12; 5 tile-targeted, 6 unit-targeted */
+    u8 targeting_type;    /* 0x12; battle_targeting_type_e */
     u8 target_id;         /* 0x13 */
     u16 target_x;         /* 0x14; read with lhu */
     u16 target_elevation; /* 0x16; 0 or 1 map layer */
@@ -452,8 +470,7 @@ typedef union battle_ai_weapon_data {
 typedef char battle_ai_weapon_data_must_be_8[sizeof(battle_ai_weapon_data_t) == 8 ? 1 : -1];
 
 /* Per-unit AI behavior flags copied from ENTD data to decision +0x04. The
- * three transient status bits are rebuilt during action simulation. Bit 0x80
- * is deliberately unnamed: refresh and simulation give it overlapping uses. */
+ * three transient status bits are rebuilt during action simulation. */
 typedef enum battle_ai_decision_flags {
     BATTLE_AI_DECISION_TRANSIENT_DEAD = 0x01,
     BATTLE_AI_DECISION_TRANSIENT_PETRIFIED = 0x02,
@@ -462,6 +479,12 @@ typedef enum battle_ai_decision_flags {
     BATTLE_AI_DECISION_AGGRESSIVE = 0x10,
     BATTLE_AI_DECISION_STAY_NEAR_COORDINATES = 0x20,
     BATTLE_AI_DECISION_FOCUS_TARGET = 0x40,
+    /* Worth acting on: every non-enemy and every enemy with an action charging;
+     * the refresh simulation adds each enemy that ends it alive (or dead with
+     * Reraise), unpetrified and without Death Sentence. Target searches skip a
+     * unit without it unless the unit is confused. The copy from the ENTD
+     * record leaves the stay-near tile's level here until the first refresh. */
+    BATTLE_AI_DECISION_CONSIDERED = 0x80,
 } battle_ai_decision_flags_e;
 
 /* Targeting policy copied from ENTD AI Flags 2 to decision +0x07. The low
@@ -5045,9 +5068,8 @@ extern u8 g_battle_unit_summary_digit_images[];
 extern world_menu_palette_primitives_t g_battle_unit_editor_palette;
 extern s32 g_battle_companion_overlay_primitives;
 
-/* Four bytes: battle_status_modify_inflictions masks five status bytes with it,
- * so the fifth mask is the low byte of g_battle_formula_handlers[0]. */
-extern u8 g_battle_rider_status_infliction_mask[4];
+/* The statuses a rider can be inflicted with, one mask per status byte. */
+extern u8 g_battle_rider_status_infliction_mask[BATTLE_STATUS_BYTE_COUNT];
 extern s32 g_battle_entd_selection_mode; /* battle_entd_selection_e */
 
 /* Count and x/y/level byte triples of the tiles already handed out as dismount
@@ -5634,7 +5656,7 @@ extern RECT g_battle_gfx_screen_modulation_tex_window;
 extern s32 g_battle_gfx_unit_graphics_load_state[4];
 extern u8 g_battle_gfx_cycled_deployed_palettes[2][32];
 extern u8 g_battle_gfx_unit_animation_data[];
-extern u8 g_battle_gfx_item_palettes[0x200];
+extern u16 g_battle_gfx_item_palettes[16][16]; /* the first 0x200 bytes of WEP.SPR */
 extern u8 g_battle_gfx_eff_palettes[0x200];
 extern u16 g_battle_gfx_frog_palettes[][16];
 extern u16 g_battle_gfx_crystal_palettes[][16];
@@ -5686,16 +5708,19 @@ extern battle_render_buffer_t* g_battle_gfx_current_render_buffer;
  * four layers: 0 is the unit's own sprite, n its sprite block n - 1. */
 extern s32 g_battle_gfx_animation_layer_priorities[][4];
 
+/* Where a weapon or item graphic sits in WEP.SPR, per item graphic id. */
+typedef struct battle_gfx_item_graphic {
+    u8 palettes;    /* 0x00; g_battle_gfx_item_palettes rows: high nibble for MAP_CLUT_ROW_ITEM_A, low for _B */
+    u8 texture_row; /* 0x01; top of the graphic on its texture page, in steps of 8 pixels */
+} battle_gfx_item_graphic_t;
+
 /* Fixed chicken palettes; the other three blocks are g_battle_gfx_frog_palettes,
  * g_battle_gfx_crystal_palettes and g_battle_gfx_treasure_palettes. */
 extern u16 g_battle_gfx_chicken_palettes[][16];
 extern s16 g_battle_gfx_counter;
 extern u8 g_battle_gfx_fallback_seq_data[];
 extern u8 g_battle_gfx_fallback_shp_frame_data[];
-/* Two bytes for each item: the palettes of g_battle_gfx_item_palettes for
- * its weapon (high nibble) and effect (low nibble) sprites, then the row of
- * 8-pixel tiles added to the v of its weapon frames. */
-extern u8 g_battle_gfx_item_graphic_data[];
+extern battle_gfx_item_graphic_t g_battle_gfx_item_graphic_data[0x92];
 extern s32 g_battle_gfx_last_loaded_seq_id;
 extern s32 g_battle_gfx_last_loaded_shp_id;
 
@@ -6139,6 +6164,8 @@ typedef enum battle_action_equipment_slot_mask {
     BATTLE_ACTION_EQUIPMENT_SLOT_RIGHT_SHIELD = 0x08,
     BATTLE_ACTION_EQUIPMENT_SLOT_LEFT_WEAPON = 0x04,
     BATTLE_ACTION_EQUIPMENT_SLOT_LEFT_SHIELD = 0x02,
+    /* Every slot bit: stored by the Steal/Break slot picker before it chooses one. */
+    BATTLE_ACTION_EQUIPMENT_SLOT_ALL = 0xfe,
 } battle_action_equipment_slot_mask_e;
 
 /* The strike loader fills this 40-byte work record; it is distinct from
@@ -6204,15 +6231,6 @@ typedef struct battle_target_panel {
     u8 max_height_delta;
 } battle_target_panel_t;
 typedef char battle_targeting_panel_size_must_be_5[(sizeof(battle_target_panel_t) == 5) ? 1 : -1];
-
-/* One five-byte targeting panel entry, 0x200 of them, indexed in parallel with
- * the map tile data. Nine routines walk the table with `+= 5` byte arithmetic. */
-typedef struct targeting_panel_entry {
-    u8 a;
-    u8 b;
-    s8 c[3];
-} targeting_panel_entry_t;
-typedef char targeting_panel_entry_size_must_be_5[(sizeof(targeting_panel_entry_t) == 5) ? 1 : -1];
 
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's
@@ -6485,7 +6503,7 @@ extern s32 g_battle_unit_source_misc_id;
 extern s32 g_battle_casting_unit_id;
 extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
 extern u8 g_battle_target_ability_targets_list[16];
-extern targeting_panel_entry_t g_battle_target_panel_data[0x200];
+extern battle_target_panel_t g_battle_target_panel_data[0x200];
 extern battle_current_ability_t g_battle_action_current_ability;
 extern s32 g_battle_action_hamedo_flag;
 extern s32 g_battle_script_loaded_event_id;
@@ -6504,14 +6522,14 @@ extern battle_action_data_t g_battle_action_attacker_action_data;
 extern battle_stats_t* g_battle_action_attacker;
 extern u8 g_battle_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */
 extern s32 g_battle_action_learn_on_hit_unit_id;
-extern void (*g_battle_formula_handlers[])(void);
+extern void (*g_battle_formula_handlers[])(void); /* by formula id less 1: formula 0 has no handler */
 extern u16 g_battle_target_color_tile_x;
 extern s16 g_battle_target_color_tile_y;
 extern s16 g_battle_target_tile_mark_modes[3]; /* battle_tile_mark_mode_e, one per tile mark */
 extern u8 g_battle_action_canceled_statuses[];
 
-/* Typed alias of targeting_panel_data: 512 map panels followed by 16 auxiliary
- * panels, all initialized at 0x80174e84. This declaration allocates no storage. */
+/* Second name of g_battle_target_panel_data, unsized: 512 map panels followed
+ * by 16 auxiliary panels, all initialized at 0x80174e84. */
 extern battle_target_panel_t g_battle_target_panels[];
 extern SVECTOR g_battle_current_misc_screen_coords;
 extern VECTOR g_battle_current_vector;
@@ -7461,6 +7479,7 @@ typedef enum gns_resource_type {
     GNS_RESOURCE_SET_CAMERA_ROTATION = 0x84,
     GNS_RESOURCE_SET_INDOOR = 0x85,
     GNS_RESOURCE_SET_OUTDOOR = 0x86,
+    GNS_RESOURCE_UNHANDLED_87 = 0x87, /* rows of this type are in 14 maps' files; the dispatcher has no case for it */
     GNS_RESOURCE_CLEAR_SNOW = 0x88,
     GNS_RESOURCE_SET_SNOW = 0x89,
     GNS_RESOURCE_RESERVED_8A = 0x8a,
@@ -7552,16 +7571,29 @@ typedef enum map_gns_load_phase {
 
 /* Commands of battle_map_polygon_flag_command. */
 typedef enum map_polygon_flag_command {
-    MAP_POLYGON_FLAG_COMMAND_RESET_ACTIVE = 0x46,    /* copy OWN_COLOUR into OWN_COLOUR_ACTIVE on every polygon */
-    MAP_POLYGON_FLAG_COMMAND_CLEAR_ACTIVE = 0x47,    /* clear OWN_COLOUR_ACTIVE everywhere */
-    MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without OWN_COLOUR in the ambient colour */
+    MAP_POLYGON_FLAG_COMMAND_RESET_ACTIVE = 0x46,    /* copy LIT into LIT_ACTIVE on every polygon */
+    MAP_POLYGON_FLAG_COMMAND_CLEAR_ACTIVE = 0x47,    /* clear LIT_ACTIVE everywhere */
+    MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without LIT in the ambient colour */
 } map_polygon_flag_command_e;
 
-/* polygon_flags of the textured map polygons (GNS_RESOURCE_POLYGON_FLAGS). */
+/* polygon_flags of the textured map polygons (GNS_RESOURCE_POLYGON_FLAGS).
+ * The four battle_map_queue_ routines skip a polygon whose hide bit for the
+ * camera yaw is set. No mesh file sets bits 0, 1 or 14. */
 enum {
-    /* working copy of OWN_COLOUR; cleared on a polygon a tile mark tints */
-    MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE = 0x0001,
-    MAP_POLYGON_FLAG_OWN_COLOUR = 0x8000, /* the polygon keeps its vertex colours: no ambient colour */
+    /* Working copy of LIT, the bit the queue routines test: the polygon's
+     * colours come from its normals this frame. Cleared on a polygon a tile
+     * mark tints. */
+    MAP_POLYGON_FLAG_LIT_ACTIVE = 0x0001,
+    /* Hidden while the yaw is in 45-degree band n: bit 2 + n, where
+     * n = ((yaw - 1) & 0xe00) >> 9. Tested every frame. */
+    MAP_POLYGON_FLAG_HIDDEN_IN_YAW_BAND_0 = 0x0004,
+    /* Hidden while the camera rests on diagonal n: bit 10 + n, where
+     * n = yaw >> 10. Tested only when (yaw + 0x200) & 0x3ff is 0. */
+    MAP_POLYGON_FLAG_HIDDEN_AT_RESTING_YAW_0 = 0x0400,
+    MAP_POLYGON_FLAG_HIDDEN_MASK = 0x3ffc,
+    /* Lit from its normals each frame; a polygon without it keeps the flat
+     * ambient colour. */
+    MAP_POLYGON_FLAG_LIT = 0x8000,
 };
 
 /* Commands of battle_map_light_state_command. The 0x63-0x65 bodies access
@@ -7756,25 +7788,26 @@ typedef char gns_command_record_prefix_size_must_be_0x14[(sizeof(gns_command_rec
 /* Mesh files begin with 49 32-bit byte offsets indexed by resource ID (slot = ID * 4).
  * The dispatcher visits IDs 0x10..0x30; slots 0..0x0f and the other reserved
  * words are zero in the USA disc's mesh files. A zero offset means the chunk
- * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. */
+ * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. Each
+ * member is named after its gns_resource_type_e id. */
 typedef struct map_mesh_file_header {
-    u32 _unused_00[16];                   /* 0x00 */
-    u32 geometry_offset;                  /* 0x40 */
-    u32 color_palette_offset;             /* 0x44 */
-    u32 _unused_48;                       /* 0x48 */
-    u32 texture_quarter_0_offset;         /* 0x4c */
-    u32 _unused_50[5];                    /* 0x50 */
-    u32 lights_background_offset;         /* 0x64 */
-    u32 terrain_offset;                   /* 0x68 */
-    u32 texture_animation_offset;         /* 0x6c */
-    u32 palette_animation_offset;         /* 0x70 */
-    u32 _unused_74[2];                    /* 0x74 */
-    u32 grayscale_palette_offset;         /* 0x7c */
-    u32 _unused_80[3];                    /* 0x80 */
-    u32 mesh_animation_offset;            /* 0x8c */
-    u32 animated_mesh_offsets[8];         /* 0x90 */
-    u32 polygon_render_properties_offset; /* 0xb0 */
-    u32 _unused_b4[4];                    /* 0xb4 */
+    u32 _unused_00[16];                  /* 0x00 */
+    u32 primary_geometry_offset;         /* 0x40 */
+    u32 palettes_offset;                 /* 0x44 */
+    u32 _unused_48;                      /* 0x48 */
+    u32 texture_quarter_0_offset;        /* 0x4c */
+    u32 _unused_50[5];                   /* 0x50 */
+    u32 lighting_offset;                 /* 0x64 */
+    u32 terrain_offset;                  /* 0x68 */
+    u32 texture_animations_offset;       /* 0x6c */
+    u32 palette_animation_frames_offset; /* 0x70 */
+    u32 _unused_74[2];                   /* 0x74 */
+    u32 marked_tile_palettes_offset;     /* 0x7c */
+    u32 _unused_80[3];                   /* 0x80 */
+    u32 state_records_offset;            /* 0x8c */
+    u32 part_geometry_offsets[8];        /* 0x90 */
+    u32 polygon_flags_offset;            /* 0xb0 */
+    u32 _unused_b4[4];                   /* 0xb4 */
 } map_mesh_file_header_t;
 typedef char map_mesh_file_header_size_must_be_0xc4[(sizeof(map_mesh_file_header_t) == 0xc4) ? 1 : -1];
 

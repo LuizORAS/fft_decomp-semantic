@@ -4,7 +4,7 @@
 void world_script_dismiss_unit_event_instruction(s32 sprite_set) {
     party_data_t* party_data;
     s32 party_index = 1;
-    s32 empty_party_id = 0xff;
+    s32 empty_party_id = PARTY_ID_NONE;
     s32 empty_item;
     s32 slot;
     u8 item;

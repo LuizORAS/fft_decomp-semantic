@@ -14,7 +14,7 @@ void battle_ai_init_workspace(void) {
     g_battle_ai_workspace = ai;
     g_battle_ai_unit_snapshots = g_battle_ai_unit_snapshot_storage;
     ai->resume_pending = 0;
-    ai->selected_action.rank.rank_byte = 0;
+    ai->selected_action.rank.decided = 0;
     ai->selected_action.coords.bytes.zero = 0;
     ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
     ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_BLOOD_SUCK;

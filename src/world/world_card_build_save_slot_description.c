@@ -26,14 +26,14 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         return 0;
     } else if (mode == 0) {
         index = 0;
-        while (g_world_load_work_buffer->name[index] != 0xFE) {
-            *slot_graphic++ = g_world_load_work_buffer->name[index];
+        while (g_world_load_work_buffer->summary.name[index] != 0xFE) {
+            *slot_graphic++ = g_world_load_work_buffer->summary.name[index];
             index++;
         }
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0x58;
         source = world_text_find_entry_by_index(
-            world_text_bind_section_data(WORLD_TEXT_DATA_JOB_NAMES), g_world_load_work_buffer->job_id, 1);
+            world_text_bind_section_data(WORLD_TEXT_DATA_JOB_NAMES), g_world_load_work_buffer->summary.job_id, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
@@ -43,20 +43,20 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
-        *slot_graphic++ = g_world_load_work_buffer->level / 10;
-        *slot_graphic++ = g_world_load_work_buffer->level % 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.level / 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.level % 10;
         *slot_graphic++ = 0xFE;
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, g_world_load_work_buffer->month, 1);
+        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, g_world_load_work_buffer->summary.month, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
         *slot_graphic++ = 0xFA;
-        *slot_graphic++ = g_world_load_work_buffer->day / 10;
-        *slot_graphic++ = g_world_load_work_buffer->day % 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.day / 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.day % 10;
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0x58;
         source = world_text_find_entry_by_index(
-            g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES], g_world_load_work_buffer->location, 1);
+            g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES], g_world_load_work_buffer->summary.location, 1);
         while ((*slot_graphic++ = *source++) != 0xFE) { }
     }
     *slot_graphic = 0xFE;

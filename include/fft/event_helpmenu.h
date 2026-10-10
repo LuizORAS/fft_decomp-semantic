@@ -5,13 +5,15 @@
 
 #include "fft/battle.h"
 
-extern s16 g_helpmenu_menu_cursor_tile[];
+/* Saved copies of four BATTLE records (battle_menu_copy_billboard_data_out);
+ * a second, unused slot follows the banner and the unit record. */
+extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
 extern u8 g_helpmenu_menu_text_id_tables[];
 void helpmenu_menu_run_require_help(void);
 void helpmenu_menu_close(void);
 
-extern u8 g_helpmenu_active_banner[];
-extern u8 g_helpmenu_active_unit_data[];
+extern battle_unit_status_record_t g_helpmenu_active_banner;
+extern battle_active_unit_t g_helpmenu_active_unit_data;
 
 /* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
 extern battle_menu_status_panel_slot_state_t g_helpmenu_billboard;

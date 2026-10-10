@@ -50,9 +50,10 @@ extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
 /* help */
 
 extern u16 g_world_help_portrait_clut_by_sheet_id[];
-extern u8 g_world_help_menu_cursor_tile[];
-extern u8 g_world_help_active_banner[];
-extern u8 g_world_help_active_unit_data[];
+/* Saved copies of the WORLD records world_menu_copy_billboard_data_out reads. */
+extern map_selected_tile_t g_world_help_menu_cursor_tile;
+extern battle_unit_status_record_t g_world_help_active_banner;
+extern battle_active_unit_t g_world_help_active_unit_data;
 
 /* Copy of the 0x40-byte unit editor fields (world_menu_copy_billboard_data_out);
  * the layout is battle_menu_status_panel_slot_state_t, as in the HELPMENU twin. */
@@ -870,9 +871,11 @@ extern u8 g_world_gfx_black_tile_color[];
 extern world_status_thread_t g_world_change_banner_panel_thread_params;
 extern world_gfx_textured_quad_source_t g_world_vertical_cursor_quad;
 extern RECT g_world_gfx_fade_tile_rect;
-extern s32 g_world_shop_background_tim_files[];
-extern s32 g_world_script_tutorial_message_files[]; /* LBA/size pairs */
-extern s32 g_world_script_tutorial_script_files[];  /* LBA/size pairs */
+/* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
+ * member access changes how the target addresses them. */
+extern s32 g_world_shop_background_tim_files[9 * 2];
+extern s32 g_world_script_tutorial_message_files[7 * 2];
+extern s32 g_world_script_tutorial_script_files[7 * 2];
 extern s32 g_world_gfx_free_rect_texels[4];
 extern s32 g_world_gfx_free_rect_grid_cells[4];
 extern RECT g_world_gfx_draw_area_template;
@@ -1436,8 +1439,8 @@ extern zodiac_draw_context_t g_world_formation_view;
 /* Portrait code per sprite set: low byte is the portrait index. */
 extern u16 g_world_formation_sprite_by_portrait[];
 
-/* Remaps portrait indices 0x3f and above. */
-extern u8 g_world_monster_formation_sprite_table[];
+/* Remaps the monster portrait indices, 0x3f and above; indexed from 0x3f. */
+extern u8 g_world_monster_formation_sprite_table[20];
 extern u8 g_world_formation_menu_text_table[];
 extern u32 g_world_formation_menu_palettes[];
 extern u8 g_world_formation_saved_sprite_color[4];
@@ -2054,18 +2057,7 @@ typedef struct world_menu_image_pages {
     u32 second_page[1];
 } world_menu_image_pages_t;
 
-/* The 0x9800-byte font resource uploads pixels at +0x1000 and palettes at
- * +0x9000/+0x9200. Its leading 0x1000 bytes are not uploaded here. */
-typedef struct world_menu_font_image {
-    u8 prefix[4096];
-    u32 pixels[8192];
-    u32 palettes_a[128];
-    u32 palettes_b[384];
-} world_menu_font_image_t;
-
-typedef char world_menu_font_image_size[(sizeof(world_menu_font_image_t) == 0x9800) ? 1 : -1];
-
-/* Persistent palette source, separate from the temporary font resource.
+/* Persistent palette source, separate from the temporary FRAME.BIN buffer.
  * Only the 64-byte color block at +0x1000 is established. */
 typedef struct world_menu_palette_source {
     u8 prefix[4096];

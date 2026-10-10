@@ -49,7 +49,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
         x = unit->x;
         y = unit->position.bits.y;
         elevation = unit->position.bits.higher_elevation;
-    } else if (action_copy.targeting_type != 6) {
+    } else if (action_copy.targeting_type != BATTLE_TARGETING_TYPE_UNIT) {
         x = (u8)action_copy.target_x;
         y = (u8)action_copy.target_y;
         elevation = (u8)action_copy.target_elevation;

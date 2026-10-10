@@ -46,12 +46,12 @@ void card_save_update_slot_write(s32 slot) {
     card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
     header_result = 0;
     if (write_result == 0x1e00) {
-        g_card_save_buffer_pointer->slot = slot;
+        g_card_save_buffer_pointer->summary.slot = slot;
         descriptor = card_file_open_selected_with_retries(g_card_save_file_names[slot], 2);
         if (descriptor >= 0) {
             header_result = card_file_seek_with_retries(descriptor, 0x100, 0);
             if (header_result != -1) {
-                header_result = card_file_write_with_retries(descriptor, &g_card_save_buffer_pointer->slot, 0x80);
+                header_result = card_file_write_with_retries(descriptor, &g_card_save_buffer_pointer->summary, 0x80);
             }
             if (card_file_close_with_retries(descriptor) == 0) {
                 header_result = 0;
@@ -64,7 +64,7 @@ void card_save_update_slot_write(s32 slot) {
         g_card_save_slot_file_states[slot] = CARD_SAVE_SLOT_OCCUPIED;
         card_save_build_slot_description(0, g_card_save_slot_descriptions[slot].data);
         card_save_render_slot_text(slot);
-        bcopy(&g_card_save_buffer_pointer->slot, g_main_card_save_slot_metadata[slot], 0x18);
+        bcopy(&g_card_save_buffer_pointer->summary, &g_main_card_save_slot_metadata[slot], sizeof(card_save_summary_t));
         card_save_update_slot_playtime(slot);
         g_card_sound_queued_effect_id = MAIN_SFX_COMPLETE;
         g_card_save_write_phase = 0;

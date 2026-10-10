@@ -54,7 +54,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
         ai->targetability.live.unit_targetable[i] = ai->targetability.live.unit_active[i];
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
         s32 acting_id = ai->acting_unit_id;
-        ai->current_action.targeting_type = 6;
+        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_UNIT;
         ai->current_action.target_id = acting_id;
         ai->current_action.coords = ai->candidate_coords[ai->movement_scenario];
         battle_ai_check_unit_for_crystal_or_treasure_status();
@@ -94,7 +94,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
     }
     ai->ability_effect_on_self = battle_ai_classify_ability_effect(ai->acting_unit_id, 1);
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET) {
-        ai->current_action.targeting_type = 6;
+        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_UNIT;
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CONSUME_EVALUATED_ORIGINS) {
             ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
         evaluate_single_unit_pass:
@@ -138,7 +138,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
         }
     }
     if (battle_ai_exclude_enemies_acting_before_ct()) {
-        ai->current_action.targeting_type = 5;
+        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CONSUME_EVALUATED_ORIGINS)
             ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
     evaluate_tile_targets:

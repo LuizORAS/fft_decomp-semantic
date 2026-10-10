@@ -63,7 +63,7 @@ void helpmenu_menu_run_require_help(void) {
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_battle_threads[g_battle_current_thread_id];
     battle_menu_copy_billboard_data_out(
-        g_helpmenu_active_banner, g_helpmenu_active_unit_data, &g_helpmenu_billboard, g_helpmenu_menu_cursor_tile);
+        &g_helpmenu_active_banner, &g_helpmenu_active_unit_data, &g_helpmenu_billboard, &g_helpmenu_menu_cursor_tile);
     if (g_helpmenu_selected_unit_panel_mode != 0 || g_battle_post_battle_unit_changes_active != 0) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
         g_helpmenu_require_navigation[7].destination[3] = 2;

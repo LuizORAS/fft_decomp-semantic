@@ -28,10 +28,10 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     u8 parity;
     u8* block;
 
-    if (g_world_load_work_buffer->slot == 0xff) {
+    if (g_world_load_work_buffer->summary.slot == 0xff) {
         return 0;
     }
-    if (g_world_load_work_buffer->format_version != 4) {
+    if (g_world_load_work_buffer->summary.format_version != 4) {
         return 0;
     }
 

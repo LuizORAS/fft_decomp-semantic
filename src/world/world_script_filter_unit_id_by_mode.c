@@ -4,10 +4,10 @@
 
 /* Filter a copied misc unit ID by presence, team, and status for modes 0-5.
  *
- * Modes 3 and 5 reject the status check set 8; mode 5 ignores bit 0x10 in
- * the first status byte. The target has no defined return value for other
- * modes; callers must pass 0-5. `in_id` is read as a halfword: callers pass
- * the address of an int slot counter or of an s16 slot-order entry. */
+ * Modes 3 and 5 reject the status check set 8; mode 5 ignores Undead. The
+ * target has no defined return value for other modes; callers must pass 0-5.
+ * `in_id` is read as a halfword: callers pass the address of an int slot
+ * counter or of an s16 slot-order entry. */
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
     battle_stats_t* unit;
     s32 index;
@@ -68,7 +68,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
         first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 status = unit->status_sets.current[0] & 0xef;
+                s32 status = unit->status_sets.current[0] & (0xff ^ BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD));
 
                 blocked = first & status;
             } else {

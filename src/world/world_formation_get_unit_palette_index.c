@@ -53,8 +53,8 @@ s32 world_formation_get_unit_palette_index(s32 party_index) {
     if (portrait == 0x18) {
         return 0x7A;
     }
-    if (portrait >= 0x3F) {
-        portrait = g_world_monster_formation_sprite_table[portrait];
+    if (portrait >= MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) {
+        portrait = g_world_monster_formation_sprite_table[portrait - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT];
     } else if (unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
         portrait -= 1;
     }

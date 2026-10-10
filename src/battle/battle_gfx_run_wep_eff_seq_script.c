@@ -43,7 +43,7 @@ void battle_gfx_run_wep_eff_seq_script(
     u16 attr;
 
     sequence_id = sprite->sequence_id;
-    graphic_v = g_battle_gfx_item_graphic_data[unit->used_item_or_weapon_id * 2 + 1] * 8;
+    graphic_v = g_battle_gfx_item_graphic_data[unit->used_item_or_weapon_id].texture_row * 8;
     pos = sprite->script_pos;
     shp = sprite->shp;
     seq = sprite->seq;

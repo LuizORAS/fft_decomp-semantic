@@ -33,22 +33,22 @@ void world_card_build_save_image(s32 slot) {
         i = 0;
     }
 
-    bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->name, 0x10);
-    g_world_load_work_buffer->name_terminator = 0xfe;
-    g_world_load_work_buffer->job_id = g_world_formation_unit_pointers[i]->job_id;
-    g_world_load_work_buffer->level = g_world_formation_unit_pointers[i]->level;
+    bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->summary.name, 0x10);
+    g_world_load_work_buffer->summary.name_terminator = 0xfe;
+    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->job_id;
+    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->level;
 
     script_var_2f = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
     script_var_2e = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_world_load_work_buffer->day = script_var_2f;
-    g_world_load_work_buffer->month = script_var_2e;
+    g_world_load_work_buffer->summary.day = script_var_2f;
+    g_world_load_work_buffer->summary.month = script_var_2e;
     location = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     slot_marker = (slot >= 0) ? 0xff : 0;
-    g_world_load_work_buffer->location = location;
-    g_world_load_work_buffer->slot = slot_marker;
+    g_world_load_work_buffer->summary.location = location;
+    g_world_load_work_buffer->summary.slot = slot_marker;
     g_world_load_work_buffer->elapsed_seconds
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
-    g_world_load_work_buffer->format_version = 4;
+    g_world_load_work_buffer->summary.format_version = 4;
 
     world_card_build_save_file_header(
         slot, g_world_formation_unit_pointers[i]->level, &g_world_load_work_buffer->header);

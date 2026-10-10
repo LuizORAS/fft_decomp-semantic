@@ -13,7 +13,7 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
     s32 dx;
     s32 dy;
     s32 map_width;
-    targeting_panel_entry_t* panel;
+    battle_target_panel_t* panel;
 
     switch (dir) {
     case BATTLE_TARGET_LINE_EAST:
@@ -53,14 +53,14 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
         }
         dir = y * map_width + x;
         panel = &g_battle_target_panel_data[dir];
-        if (panel->a != 0) {
-            panel->b = 1;
+        if (panel->remaining_range != 0) {
+            panel->mark = 1;
         }
         dir += 0x100;
         panel = &g_battle_target_panel_data[dir];
         y += dy;
-        if (panel->a != 0) {
-            panel->b = 1;
+        if (panel->remaining_range != 0) {
+            panel->mark = 1;
         }
         i += 1;
         x += dx;

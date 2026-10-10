@@ -186,7 +186,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     if (g_battle_action_target_data->hit == 0) {
         return 1;
     }
-    g_battle_formula_handlers[formula]();
+    g_battle_formula_handlers[formula - 1]();
     if (formula < 7) {
         battle_formula_apply_poach_and_train();
     }

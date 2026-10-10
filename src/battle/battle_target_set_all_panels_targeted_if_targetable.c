@@ -6,7 +6,7 @@
  * and every other tile loses the flag. Returns the number of flagged tiles. */
 s32 battle_target_set_all_panels_targeted_if_targetable(void) {
     map_tile_t* tile;
-    targeting_panel_entry_t* panel;
+    battle_target_panel_t* panel;
     s32 count;
     s32 i;
 
@@ -14,7 +14,7 @@ s32 battle_target_set_all_panels_targeted_if_targetable(void) {
     for (i = 0; i < 0x200; i++) {
         tile = &g_battle_map_tile_data[i];
         panel = &g_battle_target_panel_data[i];
-        if (panel->a != 0 && !(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
+        if (panel->remaining_range != 0 && !(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
             && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
             count++;
             tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;

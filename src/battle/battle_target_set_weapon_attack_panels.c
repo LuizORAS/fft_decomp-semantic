@@ -14,12 +14,12 @@ s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
     battle_target_clear_panel_data();
     battle_target_calculate_weapon_range(unit);
     {
-        targeting_panel_entry_t* p1;
-        targeting_panel_entry_t* p2;
+        battle_target_panel_t* p1;
+        battle_target_panel_t* p2;
         p1 = &g_battle_target_panel_data[idx];
         p2 = &g_battle_target_panel_data[idx + 0x100];
-        p1->a = 0;
-        p2->a = 0;
+        p1->remaining_range = 0;
+        p2->remaining_range = 0;
         return battle_target_set_all_panels_targeted_if_targetable();
     }
 }

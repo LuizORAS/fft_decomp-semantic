@@ -31,8 +31,8 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             goto choose;
         }
     }
-    if (ai->selected_action.rank.rank_byte == 0xff && ai->acting_unit->movement_taken == ai->movement_taken
-        && ai->acting_unit->action_taken == ai->action_taken) {
+    if (ai->selected_action.rank.decided == BATTLE_AI_ACTION_DECIDED
+        && ai->acting_unit->movement_taken == ai->movement_taken && ai->acting_unit->action_taken == ai->action_taken) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
         return 0;
     }
@@ -50,7 +50,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
     battle_ai_init_acting_unit_data();
     if (ai->acting_unit->charged_ability_ct == 0xff)
         ai->acting_unit_decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
-    if (!ai->selected_action.rank.rank_byte || ai->acting_unit->action_taken) {
+    if (!ai->selected_action.rank.decided || ai->acting_unit->action_taken) {
         battle_ai_store_considered_action_data();
     refresh:
         if (battle_ai_refresh_unit_decision_flags() == -1) {
@@ -75,7 +75,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             return -1;
         }
         ai->resume_pending = 0;
-        ai->selected_action.rank.rank_byte = 0xff;
+        ai->selected_action.rank.decided = BATTLE_AI_ACTION_DECIDED;
         if (ai->selected_action.reflected_action)
             ai->acting_unit_decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION;
         battle_ai_restore_considered_action_data();

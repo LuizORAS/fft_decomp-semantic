@@ -202,13 +202,15 @@ enum {
 };
 
 /* Provisional 0xe-byte active-unit record (BATTLE 0x8014d080, WORLD
- * 0x8013a364, DEBUGCHR 0x801c5324, REQUIRE 0x801cb364), saved and restored
+ * 0x8013a364, DEBUGCHR 0x801c5324, REQUIRE 0x801cb364, ATTACK 0x801ca0c8), saved and restored
  * whole by battle_menu_copy_billboard_data_out and
  * battle_menu_copy_billboard_data_in. The load-selected-unit routines fill
  * job_id..zodiac for the unit named by battle_id; the overlays' status panels
  * keep a second record for the comparison unit 0x10 later. */
 typedef struct battle_active_unit {
-    s16 name_id;    /* 0x00: unit name text id less TEXT_ID_UNIT_NAME_BASE (DEBUGCHR, REQUIRE) */
+    /* 0x00: unit name text id less TEXT_ID_UNIT_NAME_BASE (DEBUGCHR, REQUIRE);
+     * in ATTACK the roster index, a row of the names it builds at text 0x5800 */
+    s16 name_id;
     s16 job_id;     /* 0x02 */
     s16 brave;      /* 0x04 */
     s16 faith;      /* 0x06 */

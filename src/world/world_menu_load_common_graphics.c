@@ -3,7 +3,7 @@
 /* One pointer holds each loaded resource in turn. */
 typedef union world_menu_graphics_resource {
     world_menu_image_pages_t pages;
-    world_menu_font_image_t font;
+    main_gfx_frame_bin_t frame;
 } world_menu_graphics_resource_t;
 
 /*
@@ -27,10 +27,11 @@ void world_menu_load_common_graphics(s32 load_extra_pages) {
     LoadImage(&g_world_menu_common_clut_rect, g_world_menu_common_clut_data);
     DrawSync(0);
     g_world_thread_call_target = main_file_load_checked_to_heap;
-    resource = (world_menu_graphics_resource_t*)world_thread_call_on_main_stack(DISC_SECTOR_EVENT_FRAME_BIN, 0x9800);
-    LoadImage(&g_world_menu_frame_image_rect, resource->font.pixels);
-    LoadImage(&g_world_menu_frame_palette_rect, resource->font.palettes_a);
-    LoadImage(&g_world_menu_frame_palette_tail_rect, resource->font.palettes_b);
+    resource = (world_menu_graphics_resource_t*)world_thread_call_on_main_stack(
+        DISC_SECTOR_EVENT_FRAME_BIN, sizeof(main_gfx_frame_bin_t));
+    LoadImage(&g_world_menu_frame_image_rect, resource->frame.pixels);
+    LoadImage(&g_world_menu_frame_palette_rect, resource->frame.cluts);
+    LoadImage(&g_world_menu_frame_palette_tail_rect, resource->frame.cluts_tail);
     world_menu_set_palette_colors(g_world_menu_glyph_sheet->colors);
     DrawSync(0);
     main_heap_call_free(resource);

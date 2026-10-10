@@ -29,20 +29,20 @@ void card_save_build_buffer(s32 slot) {
         }
     }
 
-    bcopy(unit->name, g_card_save_buffer_pointer->name, sizeof(unit->name));
-    g_card_save_buffer_pointer->name_terminator = 0xfe;
-    g_card_save_buffer_pointer->job_id = unit->job_id;
-    g_card_save_buffer_pointer->level = unit->level;
+    bcopy(unit->name, g_card_save_buffer_pointer->summary.name, sizeof(unit->name));
+    g_card_save_buffer_pointer->summary.name_terminator = 0xfe;
+    g_card_save_buffer_pointer->summary.job_id = unit->job_id;
+    g_card_save_buffer_pointer->summary.level = unit->level;
 
     day = battle_script_get_variable(EVENT_SCRIPT_VAR_DAY);
     month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_card_save_buffer_pointer->day = day;
-    g_card_save_buffer_pointer->month = month;
-    g_card_save_buffer_pointer->location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
-    g_card_save_buffer_pointer->slot = 0xff;
+    g_card_save_buffer_pointer->summary.day = day;
+    g_card_save_buffer_pointer->summary.month = month;
+    g_card_save_buffer_pointer->summary.location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    g_card_save_buffer_pointer->summary.slot = 0xff;
     g_card_save_buffer_pointer->elapsed_seconds
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
-    g_card_save_buffer_pointer->format_version = 4;
+    g_card_save_buffer_pointer->summary.format_version = 4;
 
     card_build_save_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 

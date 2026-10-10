@@ -92,7 +92,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
                         ai->current_action.target_x = x;
                         ai->current_action.target_y = y;
                         ai->current_action.target_elevation = level;
-                        if (ai->current_action.targeting_type == 6
+                        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             || (ai->considered_ability.ai_flags.word
                                 & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY))) {
                             target_id = battle_ai_has_any_unit_on_target_panel();

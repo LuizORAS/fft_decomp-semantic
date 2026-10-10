@@ -27,11 +27,6 @@ extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
 extern world_gfx_image_load_parameters_t g_attack_editor_numeric_texture[];
 extern battle_unit_status_record_t g_attack_panel_selected_billboard;
-extern s16 g_attack_editor_job_id;
-extern s16 g_attack_editor_brave;
-extern s16 g_attack_editor_faith;
-extern s16 g_attack_editor_zodiac;
-extern s16 g_attack_editor_selected_unit_id;
 extern u8 g_attack_editor_primary_skillset_name[];
 extern u8 g_attack_editor_secondary_skillset_name[];
 
@@ -343,7 +338,7 @@ extern menu_number_entry_t g_attack_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
 extern u16 g_attack_panel_comparison_portrait_image[];
 extern RECT g_attack_panel_comparison_portrait_rect;
-extern s16 g_attack_panel_comparison_unit_data[];
+extern battle_active_unit_t g_attack_panel_comparison_unit_data;
 extern world_gfx_image_load_parameters_t g_attack_panel_editor_label_cells[];
 extern u16 g_attack_panel_editor_label_cluts[][2];
 extern world_gfx_image_load_parameters_t g_attack_panel_editor_mode_cell[];
@@ -403,7 +398,7 @@ void attack_text_render_signed_decimal_entries(
 void attack_text_init_battle_pointers(s32* offsets);
 
 /* unit */
-extern s16 g_attack_panel_selected_unit_data;
+extern battle_active_unit_t g_attack_panel_selected_unit_data;
 
 /* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
 extern battle_menu_status_panel_slot_storage_t g_attack_editor_unit_fields;

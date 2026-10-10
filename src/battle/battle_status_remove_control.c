@@ -20,6 +20,6 @@ void battle_status_remove_control(battle_stats_t* unit) {
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM))
         == 0) {
-        unit->team_flags = (unit->team_flags & 0xCF) | (unit->initial_team_flags & BATTLE_TEAM_MASK);
+        unit->team_flags = (unit->team_flags & ~BATTLE_TEAM_MASK) | (unit->initial_team_flags & BATTLE_TEAM_MASK);
     }
 }

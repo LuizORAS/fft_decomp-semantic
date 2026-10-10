@@ -157,7 +157,7 @@ score_state:
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
                 decision->flags |= BATTLE_AI_DECISION_TRANSIENT_JUMP;
-            if (!(decision->flags & 0x80)
+            if (!(decision->flags & BATTLE_AI_DECISION_CONSIDERED)
                 && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 && (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
@@ -166,7 +166,7 @@ score_state:
                         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
-                decision->flags |= 0x80;
+                decision->flags |= BATTLE_AI_DECISION_CONSIDERED;
         }
     } else {
         battle_ai_clear_current_action_rank_byte();

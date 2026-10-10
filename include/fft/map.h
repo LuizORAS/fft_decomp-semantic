@@ -187,7 +187,8 @@ enum { MAP_SURFACE_MASK = 0x3f };
 
 /* Selectors accepted by battle_map_get_tile_data_value and its setter twin.
  * Selector 14 is unsupported; setter selector 15 performs a separate operation
- * whose relationship to tile data is not established. */
+ * whose relationship to tile data is not established. No caller passes
+ * selector 1 or 10. */
 typedef enum map_tile_data_selector {
     MAP_TILE_DATA_SURFACE_TYPE = 0,
     MAP_TILE_DATA_UNKNOWN_01 = 1,
@@ -250,8 +251,10 @@ typedef union map_tile_flags {
         u8 blocked : 1;
         u8 untargetable : 1;
         u8 shadow_mode : 2;
+        /* A value 0-5 in the terrain files. The trajectory obstacle test copies
+         * it to g_battle_effect_trajectory_tile_flags, which nothing reads. */
         u8 unknown_4_6 : 3;
-        u8 cannot_stop : 1;
+        u8 cannot_stop : 1; /* set by no terrain file */
     } bits;
 } map_tile_flags_t;
 
@@ -287,14 +290,12 @@ typedef enum map_slope_type {
 /* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at
  * BATTLE 0x801451c8 / WORLD 0x800f84f0 modifies bytes 0, 2 and 6.
- * Byte 0 holds the surface type in its low six bits and the depth bias in
- * bit 6. Opcode
- * 0x40 replaces the untargetable bit and clears the blocked bit. Its bitfield
- * accesses reproduce the separate surface-byte
- * reload and flag-update order at BATTLE 0x801451e4..0x80145244. */
+ * Opcode 0x40 replaces the untargetable bit and clears the blocked bit. Its
+ * bitfield accesses reproduce the separate surface-byte reload and
+ * flag-update order at BATTLE 0x801451e4..0x80145244. */
 typedef struct map_tile {
-    map_tile_surface_t surface; /* 0x00 */
-    u8 _unknown_01;
+    map_tile_surface_t surface;               /* 0x00 */
+    u8 _unknown_01;                           /* 0x01; 0 in every terrain file; reached only by tile data selector 1 */
     u8 height;                                /* 0x02; tile height in whole units */
     map_tile_depth_t depth_half_height;       /* 0x03 */
     u8 slope_type;                            /* 0x04; map_slope_type_e: two bits per exit side */
@@ -311,7 +312,8 @@ typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
  * world_map_store_selected_tile_data and saved whole by
  * world_menu_copy_billboard_data_out.
  * _unknown_02/_unknown_04 are the two bytes of the per-surface-type main table
- * g_main_terrain_tile_info_pairs; their meaning is unproven. */
+ * g_main_terrain_tile_info_pairs, 25 and 25 for all 64 surface types; nothing
+ * reads them back. */
 typedef struct map_selected_tile {
     s16 surface_type;   /* 0x00 */
     s16 _unknown_02;    /* 0x02 */

@@ -4,8 +4,8 @@
  * Select active units for the AI ability search.
  *
  * Rebuild all per-unit flags and return whether any unit was selected.
- * target_id == 0xff excludes the acting unit. Confusion bypasses decision
- * flag 0x80, but does not bypass untargetability. BATTLE_AI_UNIT_FILTER_ANY and any
+ * target_id == 0xff excludes the acting unit. Confusion bypasses the
+ * considered flag, but does not bypass untargetability. BATTLE_AI_UNIT_FILTER_ANY and any
  * value outside the enum allow either side.
  */
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
@@ -22,7 +22,7 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
             continue;
         if (!(g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
-            && !(decision->flags & 0x80))
+            && !(decision->flags & BATTLE_AI_DECISION_CONSIDERED))
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
             continue;

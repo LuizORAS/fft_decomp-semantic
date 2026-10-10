@@ -10,6 +10,9 @@
  * and time of day. Only the low byte of the record's variable id and of its map
  * state is read.
  *
+ * Rows are applied in file order, so the last row of a kind wins; type 0x87 has
+ * no dispatcher case.
+ *
  * Only phase 2 does anything, and it is the only phase the map loader passes.
  * Always returns 0. */
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record) {

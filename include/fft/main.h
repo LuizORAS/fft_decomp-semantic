@@ -132,24 +132,31 @@ enum {
     CARD_SAVE_HEADER_BLOCK_COUNT_ONE = 1,
 };
 
+/* What a save slot's line on the save screen shows: the first 0x18 bytes of a
+ * save's data block. g_main_card_save_slot_metadata keeps one per slot. */
+typedef struct card_save_summary {
+    u8 slot;            /* 0x00; save slot, 0xff while the buffer is incomplete */
+    u8 name[0x10];      /* 0x01; save-description leader name, 0xfe-terminated */
+    u8 name_terminator; /* 0x11 */
+    u8 job_id;          /* 0x12 */
+    u8 level;           /* 0x13 */
+    u8 month;           /* 0x14; script variable 0x2e */
+    u8 day;             /* 0x15; script variable 0x2f */
+    u8 location;        /* 0x16; script variable 0x31, location text index */
+    u8 format_version;  /* 0x17; CARD writes 4 and WORLD load requires 4 */
+} card_save_summary_t;
+typedef char card_save_summary_size_must_be_0x18[(sizeof(card_save_summary_t) == 0x18) ? 1 : -1];
+
 /* The 0x1e00-byte memory-card save image, parity-covered per 128-byte block.
  * WORLD holds it in g_world_load_work_buffer (0x801cd1ec) and its serializer
  * and loader establish the fields below; CARD fills the same layout from the
  * SCUS globals in card_save_build_buffer (0x801c01ac) through
  * g_card_save_buffer_pointer. */
 typedef struct card_save_buffer {
-    card_save_header_t header; /* 0x000 */
-    u8 slot;                   /* 0x100; save slot, 0xff while the buffer is incomplete */
-    u8 name[0x10];             /* 0x101; save-description leader name, 0xfe-terminated */
-    u8 name_terminator;        /* 0x111 */
-    u8 job_id;                 /* 0x112 */
-    u8 level;                  /* 0x113 */
-    u8 month;                  /* 0x114; script variable 0x2e */
-    u8 day;                    /* 0x115; script variable 0x2f */
-    u8 location;               /* 0x116; script variable 0x31, location text index */
-    u8 format_version;         /* 0x117; CARD writes 4 and WORLD load requires 4 */
-    u8 parity_bits[8];         /* 0x118; one parity bit per 128-byte block */
-    s32 elapsed_seconds;       /* 0x120 */
+    card_save_header_t header;   /* 0x000 */
+    card_save_summary_t summary; /* 0x100 */
+    u8 parity_bits[8];           /* 0x118; one parity bit per 128-byte block */
+    s32 elapsed_seconds;         /* 0x120 */
     /* 0x124-0x1dbe: filled by world_card_build_save_image and
      * card_save_build_buffer from the SCUS globals named in their bcopy calls. */
     u8 treasure_acquisition_date_bits[0x35];     /* 0x124; 47 packed 9-bit dates and 1 spare bit */
@@ -198,7 +205,7 @@ extern u8 g_main_card_bios_events_opened;
 extern u8 g_main_card_save_last_used_slot; /* the save slot last loaded or written */
 extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
-extern u8 g_main_card_save_slot_metadata[][0x18];
+extern card_save_summary_t g_main_card_save_slot_metadata[CARD_SAVE_SLOT_COUNT];
 extern u8 g_main_card_save_slot_playtimes[][3];
 void main_card_init_events(void);
 
@@ -1962,6 +1969,39 @@ extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
 extern POLY_FT4 g_main_zodiac_primitives[2][30];
 
 /* gfx */
+
+/* EVENT/FRAME.BIN as loaded: 0x92c0 bytes of file in a sector-rounded
+ * 0x9800-byte buffer. Its loaders upload the three regions after the first
+ * 0x1000 bytes; the arrays are words for LoadImage. */
+typedef struct main_gfx_frame_bin {
+    u8 _unused_0000[0x1000];            /* 0x0000; not uploaded */
+    u32 pixels[0x8000 / sizeof(u32)];   /* 0x1000; 256x256 at 4 bits per pixel */
+    u32 cluts[0x200 / sizeof(u32)];     /* 0x9000; 16 CLUTs */
+    u32 cluts_tail[0xc0 / sizeof(u32)]; /* 0x9200; 6 CLUTs */
+    u8 _padding_92c0[0x540];            /* 0x92c0; past the end of the file, to the sector boundary */
+} main_gfx_frame_bin_t;
+typedef char main_gfx_frame_bin_size_must_be_0x9800[(sizeof(main_gfx_frame_bin_t) == 0x9800) ? 1 : -1];
+
+/* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
+ * per pixel, eight across and five down, then sixteen rows of four CLUTs.
+ * CLUT n is portrait n's; rows 10-15 hold the other palettes of the monster
+ * portraits, one row per monster with the palette number as the column. */
+typedef struct main_gfx_wldface_sheet {
+    u32 pixels[0x7800 / sizeof(u32)]; /* 0x0000 */
+    u32 cluts[0x800 / sizeof(u32)];   /* 0x7800 */
+} main_gfx_wldface_sheet_t;
+
+enum {
+    MAIN_GFX_WLDFACE_SHEET_COUNT = 4,
+    MAIN_GFX_WLDFACE_SHEET_SIZE = 0x8000,
+    MAIN_GFX_WLDFACE_FILE_SIZE = MAIN_GFX_WLDFACE_SHEET_COUNT * MAIN_GFX_WLDFACE_SHEET_SIZE,
+    MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET = 40,
+    MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT = 0x3f,
+    MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW = 10, /* first CLUT row of the monsters' other palettes */
+    MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT = 6,
+};
+typedef char main_gfx_wldface_sheet_size_must_be_0x8000[(sizeof(main_gfx_wldface_sheet_t) == 0x8000) ? 1 : -1];
+
 extern RECT g_main_gfx_frame_image_rect;
 extern RECT g_main_gfx_frame_palette_rect;
 extern RECT g_main_gfx_frame_palette_tail_rect;

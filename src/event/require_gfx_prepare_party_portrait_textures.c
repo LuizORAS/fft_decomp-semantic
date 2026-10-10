@@ -29,15 +29,15 @@ void require_gfx_prepare_party_portrait_textures(void) {
     u8* src;
     RECT unused[2];
 
-    file = (s32)main_heap_alloc(0x20000);
+    file = (s32)main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
     if (ENTRY_MODE != 0) {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, 0x20000, file);
+        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
     } else {
         StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file);
-        StoreImage(&g_require_portrait_sheet_rect_1, (u32*)(file + 0x8000));
-        StoreImage(&g_require_portrait_sheet_rect_2, (u32*)(file + 0x10000));
-        StoreImage(&g_require_portrait_sheet_rect_3, (u32*)(file + 0x18000));
+        StoreImage(&g_require_portrait_sheet_rect_1, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE));
+        StoreImage(&g_require_portrait_sheet_rect_2, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 2));
+        StoreImage(&g_require_portrait_sheet_rect_3, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 3));
         DrawSync(0);
     }
     for (i = 0; i < 0x15; i++) {
@@ -81,8 +81,8 @@ void require_gfx_prepare_party_portrait_textures(void) {
         }
         cell = value & 0xff;
         palette = (value & 0xc00) >> 10;
-        sheet = cell / 40;
-        value = cell - sheet * 40;
+        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 8;
         col = value % 8;
         g_require_portrait_cell_rect.x = (i % 7) * 8 + 0x100;
@@ -95,7 +95,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
         offset <<= 12;
         offset += col * 0x20;
         offset >>= 1;
-        src = (u8*)(sheet * 0x8000 + file + offset);
+        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + file + offset);
         for (; value < 0x30; value++) {
             for (col = 0; col < 0x10; col++) {
                 g_require_portrait_cell_pixels[value * 0x10 + col] = src[col];
@@ -108,22 +108,24 @@ void require_gfx_prepare_party_portrait_textures(void) {
         g_require_portrait_palette_rect.y = i / 3;
         g_require_portrait_palette_rect.w = 0x10;
         g_require_portrait_palette_rect.h = 1;
-        sheet = cell / 40;
-        value = cell - sheet * 40;
+        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 4;
         col = value % 4;
         value = row;
         if (palette != 0) {
-            sheet = (cell - 0x3f) / 6;
+            sheet = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) / MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
             col = palette;
-            row = (cell - 0x3f) % 6;
-            value = row + 10;
+            row = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) % MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
+            value = row + MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW;
         }
         pal_offset = value * 0x100 + 0xf000 + col * 0x40 >> 1;
         if (i == 20) {
-            LoadImage(&g_require_special_portrait_palette_rect, (u32*)(file + sheet * 0x8000 + pal_offset));
+            LoadImage(&g_require_special_portrait_palette_rect,
+                (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
         } else {
-            LoadImage(&g_require_portrait_palette_rect, (u32*)(file + sheet * 0x8000 + pal_offset));
+            LoadImage(
+                &g_require_portrait_palette_rect, (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
         }
         DrawSync(0);
     }

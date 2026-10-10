@@ -68,7 +68,7 @@ void attack_text_build_deployment_strings(void) {
                 APPEND_TEXT_ID(g_attack_editor_item_and_ability_ids[j + 5], 0x7800);
             }
         }
-        APPEND_TEXT(g_attack_editor_job_id + 0x6000);
+        APPEND_TEXT(g_attack_panel_selected_unit_data.job_id + 0x6000);
     }
     g_attack_deploy_unit_text_section = g_attack_scenario_table;
     g_attack_deploy_help_text_section = g_attack_event_condition_blocks;

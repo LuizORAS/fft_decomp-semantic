@@ -45,8 +45,8 @@ void card_save_update_slot_scan(void) {
                 g_card_save_slot_scan_index = 0;
                 while (g_card_save_slot_scan_index < CARD_SAVE_SLOT_COUNT) {
                     if (g_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
-                        bcopy(g_main_card_save_slot_metadata[g_card_save_slot_scan_index],
-                            &g_card_save_buffer_pointer->slot, 0x18);
+                        bcopy(&g_main_card_save_slot_metadata[g_card_save_slot_scan_index],
+                            &g_card_save_buffer_pointer->summary, sizeof(card_save_summary_t));
                         card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
                             g_card_save_slot_descriptions[g_card_save_slot_scan_index].data);
                         card_save_render_slot_text(g_card_save_slot_scan_index);
@@ -175,9 +175,9 @@ void card_save_update_slot_scan(void) {
                 if (descriptor != -1) {
                     status = card_file_seek_with_retries(descriptor, 0x100, 0);
                     if (status != -1) {
-                        status = card_file_read_with_retries(descriptor, &g_card_save_buffer_pointer->slot, 0x80);
+                        status = card_file_read_with_retries(descriptor, &g_card_save_buffer_pointer->summary, 0x80);
                     }
-                    if (status != -1 && g_card_save_buffer_pointer->slot >= 0x10
+                    if (status != -1 && g_card_save_buffer_pointer->summary.slot >= 0x10
                         && card_file_delete_selected_with_retries(g_card_save_file_names[g_card_save_slot_scan_index])
                             != 0) {
                         g_card_free_block_count++;
@@ -210,8 +210,8 @@ void card_save_update_slot_scan(void) {
             if (g_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
                 card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
                     g_card_save_slot_descriptions[g_card_save_slot_scan_index].data);
-                bcopy(&g_card_save_buffer_pointer->slot, g_main_card_save_slot_metadata[g_card_save_slot_scan_index],
-                    0x18);
+                bcopy(&g_card_save_buffer_pointer->summary,
+                    &g_main_card_save_slot_metadata[g_card_save_slot_scan_index], sizeof(card_save_summary_t));
                 card_save_update_slot_playtime(g_card_save_slot_scan_index);
                 card_save_render_slot_text(g_card_save_slot_scan_index);
             }

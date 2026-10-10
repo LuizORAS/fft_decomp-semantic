@@ -2650,7 +2650,7 @@ data:
   - {addr: 0x8018f5fc, name: g_battle_action_state}
   - {addr: 0x8018f600, name: g_battle_zodiac_compatibility_modifiers}
   - {addr: 0x8018f60c, name: g_battle_rider_status_infliction_mask}
-  - {addr: 0x8018f610, name: g_battle_formula_handlers}
+  - {addr: 0x8018f614, name: g_battle_formula_handlers}
   - {addr: 0x8018f7a8, name: g_battle_move_pathing_scratch}
   - {addr: 0x8018f7ac, name: g_battle_move_pathing_frontier}
   - {addr: 0x8018f7b4, name: g_battle_move_pathing_tile_index}

@@ -30,7 +30,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     skip = 0;
-    if (action.targeting_type == 6) {
+    if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
         if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }

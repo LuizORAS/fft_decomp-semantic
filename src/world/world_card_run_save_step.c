@@ -44,13 +44,13 @@ void world_card_run_save_step(s32 slot) {
         header_written = 0;
         world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
         if (bytes_written == 0x1E00) {
-            g_world_load_work_buffer->slot = slot;
+            g_world_load_work_buffer->summary.slot = slot;
             descriptor = world_card_open_file_with_retries(g_world_card_save_file_names[slot], 2);
             if (descriptor >= 0) {
                 header_written = world_card_seek_file_with_retries(descriptor, 0x100, 0);
                 if (header_written != -1) {
                     header_written
-                        = world_card_write_file_with_retries(descriptor, &g_world_load_work_buffer->slot, 0x80);
+                        = world_card_write_file_with_retries(descriptor, &g_world_load_work_buffer->summary, 0x80);
                 }
                 if (world_card_close_file_with_retries(descriptor) == 0) {
                     header_written = 0;
@@ -61,7 +61,8 @@ void world_card_run_save_step(s32 slot) {
                 g_card_save_slot_file_states[slot] = CARD_SAVE_SLOT_OCCUPIED;
                 world_card_build_save_slot_description(0, g_world_card_save_slot_descriptions[slot]);
                 world_card_draw_slot_text(slot);
-                bcopy(&g_world_load_work_buffer->slot, g_main_card_save_slot_metadata[slot], 0x18);
+                bcopy(&g_world_load_work_buffer->summary, &g_main_card_save_slot_metadata[slot],
+                    sizeof(card_save_summary_t));
                 world_card_update_save_slot_playtime(slot);
                 g_world_menu_sound_effect_id = MAIN_SFX_COMPLETE;
                 g_world_card_save_step_state = 0;

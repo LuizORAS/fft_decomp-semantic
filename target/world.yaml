@@ -1359,7 +1359,7 @@ data:
   - {addr: 0x8018a141, name: g_world_formation_view_graphic_count}
   - {addr: 0x8018a144, name: g_world_formation_view}
   - {addr: 0x8018a168, name: g_world_formation_sprite_by_portrait}
-  - {addr: 0x8018a2d1, name: g_world_monster_formation_sprite_table}
+  - {addr: 0x8018a310, name: g_world_monster_formation_sprite_table}
   - {addr: 0x8018a330, name: g_world_screen_menu_thin_panel_texture_windows}
   - {addr: 0x8018a368, name: g_world_screen_menu_panel_texture_windows}
   - {addr: 0x8018a3b4, name: g_world_menu_zoom_percentages}

@@ -52,10 +52,10 @@ void helpmenu_menu_run_battle_help(void) {
         battle_thread_exit_current();
     }
     battle_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
-    banner = g_helpmenu_active_banner;
-    unit_data = g_helpmenu_active_unit_data;
+    banner = &g_helpmenu_active_banner;
+    unit_data = &g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;
-    cursor_tile = g_helpmenu_menu_cursor_tile;
+    cursor_tile = &g_helpmenu_menu_cursor_tile;
     g_battle_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
     g_battle_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
@@ -237,7 +237,7 @@ void helpmenu_menu_run_battle_help(void) {
             g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
             battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
             battle_thread_set_parameters(
-                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile[0] + 0x5800, 0);
+                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile.surface_type + 0x5800, 0);
             g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
             battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;

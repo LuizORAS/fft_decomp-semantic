@@ -9,8 +9,7 @@
  *   2  the unit is on the blue team
  *   3  blue team and free of the check-set 8 statuses
  *   4  the unit is on a non-blue team
- *   5  non-blue team and free of the check-set 8 statuses, ignoring 0x10 in
- *      the first status byte
+ *   5  non-blue team and free of the check-set 8 statuses, ignoring Undead
  *
  * The switch has no default: an unknown mode falls off the end and returns the
  * 5 left in $v0 by the last comparison, which is what the target does.
@@ -75,7 +74,7 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 status = unit->status_sets.current[0] & 0xef;
+                s32 status = unit->status_sets.current[0] & (0xff ^ BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD));
 
                 blocked = first & status;
             } else {

@@ -33,7 +33,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         u32 identity;
 
         unit->misc_unit_id = battle_id;
-        if (g_main_unit_deployed_coords[i].party_id != 0xff) {
+        if (g_main_unit_deployed_coords[i].party_id != PARTY_ID_NONE) {
             unit->entd_slot = battle_id;
             unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
             if (main_unit_init_job_data(unit, g_main_unit_deployed_coords[i].party_id, 0) != 0) {

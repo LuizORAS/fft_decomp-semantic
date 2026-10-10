@@ -52,10 +52,10 @@ void world_menu_run_battle_help(void) {
         world_thread_exit_current();
     }
     world_script_copy_bytes(g_world_text_section_pointer_backup, g_world_text_section_pointers, 0x80);
-    setup_banner = g_world_help_active_banner;
-    setup_unit_data = g_world_help_active_unit_data;
+    setup_banner = &g_world_help_active_banner;
+    setup_unit_data = &g_world_help_active_unit_data;
     setup_billboard = &g_world_help_billboard;
-    setup_cursor_tile = g_world_help_menu_cursor_tile;
+    setup_cursor_tile = &g_world_help_menu_cursor_tile;
     g_world_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
     g_world_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
@@ -237,7 +237,7 @@ void world_menu_run_battle_help(void) {
             g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
             world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
             world_thread_set_parameters(
-                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, (*(s16*)g_world_help_menu_cursor_tile) + 0x5800, 0);
+                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_world_help_menu_cursor_tile.surface_type + 0x5800, 0);
             g_world_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
             world_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_world_help_controller_state_ptr = 0;

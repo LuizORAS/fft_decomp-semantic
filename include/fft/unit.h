@@ -66,7 +66,7 @@ typedef struct battle_action_data {
     u8 brave_change;          /* 0x16 */
     u8 faith_change;          /* 0x17 */
     u8 miss_display_flags;    /* 0x18 */
-    u8 equipment_destroyed;   /* 0x19; battle_action_equipment_slot_mask_e; 0xfe is a selection sentinel */
+    u8 equipment_destroyed;   /* 0x19; battle_action_equipment_slot_mask_e */
     u8 stolen_item_id;        /* 0x1a */
     u8 status_infliction[5];  /* 0x1b */
     u8 status_removal[5];     /* 0x20 */
@@ -754,10 +754,14 @@ typedef struct entd_unit {
     u8 war_trophy;                           /* 0x1e; 0x8005e478 copies to battle +0x163 */
     u8 bonus_money_modifier;                 /* 0x1f; same initializer copies to battle +0x164 */
     u8 unit_id;                              /* 0x20 */
-    u8 ai_target_xy[2];   /* 0x21; AI "stay near" X, Y (copied to battle_stats_t ai_target_x onward) */
-    u8 ai_flags;          /* 0x23; battle_ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
-    u8 ai_target_unit_id; /* 0x24 */
-    u8 _unused_25[3];     /* 0x25; read through ai_target_xy[4..6] into the two AI targeting flags and the enemy flag */
+    /* 0x21-0x27 are copied as seven bytes to battle_stats_t ai_target_x onward
+     * by a loop that indexes ai_target_xy, so nothing names the members after it. */
+    u8 ai_target_xy[2];       /* 0x21; AI "stay near" X, Y */
+    u8 ai_flags;              /* 0x23; battle_ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
+    u8 ai_target_unit_id;     /* 0x24; battle_stats_t prioritized_target */
+    u8 ai_targeting_flags_1;  /* 0x25; copied to battle_ai_unit_decision_t +0x06 */
+    u8 ai_targeting_flags_2;  /* 0x26; battle_ai_targeting_flags_2_e */
+    u8 ai_initial_enemy_flag; /* 0x27 */
 } entd_unit_t;
 typedef char entd_unit_size_must_be_0x28[(sizeof(entd_unit_t) == 0x28) ? 1 : -1];
 

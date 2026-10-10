@@ -44,7 +44,8 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                     if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
-                    if (action->targeting_type == 6 && ai->unit_acts_before_me[action->target_id] != 0) {
+                    if (action->targeting_type == BATTLE_TARGETING_TYPE_UNIT
+                        && ai->unit_acts_before_me[action->target_id] != 0) {
                         if (action->target_id != target_id) {
                             continue;
                         }

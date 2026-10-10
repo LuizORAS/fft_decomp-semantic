@@ -58,7 +58,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
         return -1;
     }
     main_util_copy_action_data(current, &action);
-    action.targeting_type = 5;
+    action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     action.unit_id = self->misc_unit_id;
     unit_id = self->misc_unit_id;
     action.target_x = x;

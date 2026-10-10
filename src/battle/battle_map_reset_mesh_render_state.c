@@ -49,11 +49,11 @@ void battle_map_reset_mesh_render_state(void) {
     g_battle_map_ambient_polygon_color[2] = 0x80;
     for (i = 0; i < 360; i++) {
         g_battle_map_textured_triangle_positions[i].polygon_flags
-            = (s16)(MAP_POLYGON_FLAG_OWN_COLOUR | MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE);
+            = (s16)(MAP_POLYGON_FLAG_LIT | MAP_POLYGON_FLAG_LIT_ACTIVE);
     }
     for (i = 0; i < 710; i++) {
         g_battle_map_textured_quad_positions[i].polygon_flags
-            = (s16)(MAP_POLYGON_FLAG_OWN_COLOUR | MAP_POLYGON_FLAG_OWN_COLOUR_ACTIVE);
+            = (s16)(MAP_POLYGON_FLAG_LIT | MAP_POLYGON_FLAG_LIT_ACTIVE);
     }
     for (i = 0; i < 64; i++) {
         g_battle_map_untextured_triangle_positions[i].polygon_flags = 0;

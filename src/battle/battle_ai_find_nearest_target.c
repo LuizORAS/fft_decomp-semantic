@@ -53,7 +53,7 @@ s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode) {
             case BATTLE_AI_NEAREST_ELIGIBLE_ENEMY:
                 if (!decision->enemy_flag || (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITHOUT_RERAISE))
                     continue;
-                if (!ai->targetability.live.unit_targetable[i] || !(decision->flags & 0x80))
+                if (!ai->targetability.live.unit_targetable[i] || !(decision->flags & BATTLE_AI_DECISION_CONSIDERED))
                     continue;
             case BATTLE_AI_NEAREST_WITHOUT_BLOOD_SUCK:
                 if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_BLOOD_SUCK)]

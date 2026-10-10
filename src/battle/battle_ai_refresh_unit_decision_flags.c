@@ -46,9 +46,9 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
             /* Cross-multiply the strict three-quarter HP threshold. */
             if (unit->hp * 4 < unit->max_hp * 4 - unit->max_hp)
                 decision->targeting_flags_2 |= BATTLE_AI_TARGET_HP_BELOW_THREE_QUARTERS;
-            decision->flags &= 0x7f;
+            decision->flags &= ~BATTLE_AI_DECISION_CONSIDERED;
             if (!decision->enemy_flag || unit->charged_ability_ct != 0xff)
-                decision->flags |= 0x80;
+                decision->flags |= BATTLE_AI_DECISION_CONSIDERED;
         }
         ai->current_action.act_before_move = 1;
         ai->current_action.skillset = 0;

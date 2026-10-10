@@ -54,13 +54,13 @@ s32 battle_ai_choose_random_action(void) {
         /* A single attempt block lets missing movement candidates exit early. */
         do {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
-                ai->current_action.targeting_type = rand() % 2 + 5;
+                ai->current_action.targeting_type = rand() % 2 + BATTLE_TARGETING_TYPE_TILE;
             else
-                ai->current_action.targeting_type = 5;
+                ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             battle_ai_evaluate_linear_ability_behaviors();
             if (!ai->movable_tile_count) {
-                if (ai->current_action.targeting_type == 6) {
-                    ai->current_action.targeting_type = 5;
+                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
+                    ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
                     battle_ai_evaluate_linear_ability_behaviors();
                 }
                 if (!ai->movable_tile_count)
@@ -80,7 +80,7 @@ s32 battle_ai_choose_random_action(void) {
                         ai->current_action.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
-                        if (ai->current_action.targeting_type == 6
+                        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             && (ai->current_action.target_id
                                    = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
                                 == BATTLE_UNIT_ID_NONE)
