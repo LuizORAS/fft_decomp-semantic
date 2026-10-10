@@ -16,9 +16,10 @@ typedef struct open_menu_sound_test_state {
  * Circle fades out any current track and queues the selected entry's music.
  * Cross stops playback or, when idle, closes the menu, reloads OPENBK and
  * returns to the previous controller. Select opens the thread-2 text window
- * on text id 0xC800 + entry; the Music Test track names and comments are
- * stored in OPEN.LZW, but which of them that id selects is unverified. Up and
- * Down are withheld from the list for ten frames after each selection.
+ * on text id 0xC800 + entry, OPEN.LZW text section 25 (the track comments);
+ * the list rows are 0xC000 + entry, section 24 (the track names), 96 entries
+ * each. Up and Down are withheld from the list for ten frames after each
+ * selection.
  */
 void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
     open_point32_t extent;

@@ -260,6 +260,39 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `ABILITY_ID_ITEM_FIRST`.
 - `battle_reaction_prepare_next`: Counter Tackle performs Dash under the
   Black Magic skillset, the skillset Counter Magic passes.
+- `battle_formula_apply_elemental`: Oil on a fire-element action doubles XA
+  after every caller has stored the HP damage, and nothing reads XA again: Oil
+  is removed and the damage is unchanged. The weapon-element path
+  (`battle_formula_modify_elemental_damage`) does not test Oil at all.
+- `src/wldcore/wldcore_proposition_determine_success.c`: the level score is
+  read from the bravery scores (proposition data record 5, three rows of
+  five) with a ten-entry stride, so it runs on into the faith scores (record
+  6). Record 7, three rows of ten level scores, is fetched by nothing: with
+  job list 1 a level 91-99 unit scores 5 where record 7 holds 50.
+- `src/battle/battle_ai_add_usable_skillset_abilities.c`: the Faith test that
+  skips abilities for a unit with innate Innocent reads the AI workspace's
+  considered ability (whichever was loaded last), not the ability being
+  added. The bare Jump entry for a unit with no level-jump ability is written
+  without being counted, so the caller's next entry overwrites it.
+- `src/battle/battle_target_validate_weapon_target.c`: the weapon-range flag
+  is read from `g_main_ability_range_data[(u8)ability_id]`, so abilities
+  0x100 and up use the record of their id's low byte.
+- `battle_unit_apply_level_up_down_ability`: a level-1 target of a level-down
+  (the Degenerator trap; formula 0x59 misses at level 1) is clamped back to
+  level 1 and still loses raw / (growth + 1) of every raw stat.
+- `main_sound_set_reverb_mode`: a negative mode is meant to keep the current
+  mode, but the stored mode still carries the 0x100 work-area flag that LIBSPU
+  strips from its own copy only. It never equals the SPU's mode, so there is
+  no early return, and the reloaded value is treated as a mode of 10 or more.
+  The 100 music files all hold mode 4.
+- `g_main_smd_opcode_lengths`: the 37 unassigned opcodes have length 0, so
+  the look-ahead of `main_smd_read_instructions` would never step past one,
+  and 0x9D has three parameter bytes there while `main_smd_stop_sfx` consumes
+  two. No retail sequence uses any of them.
+- `main_smd_set_instrument`: the waveset kept on the Suzuki heap is the
+  0xb30-byte header of WAVESET.WD (176 instruments), and most music channels
+  end with Instrument 0xFF before End Bar, so entry 255 is read 0x4f0 bytes
+  past the copy.
 
 ## Calls that disagree with the callee
 
@@ -368,6 +401,10 @@ written that way.
 - `g_main_item_location_flags` (`0x80059414`): only the first 64 bytes (512
   Move-Find bits) are proven; the next 64-byte block is saved with it but has no
   known meaning.
+- `g_wldcore_sound_quad_command_bytes` (`0x8009ec18`) starts one row before
+  the sound rows, which begin at `0x8009ec1c` for sound id 1: its row 0 is the
+  eighth word of `g_wldcore_tutorial_event_ids`, whose eight entries
+  `wldcore_list_handle_tutorial_mask_1_entries_input` indexes.
 
 ## Duplicated code
 
@@ -468,3 +505,79 @@ translation unit. Share their types and constants through headers.
   `battle_map_upload_clut_rows`: one call loads the 256x14 image to y 0x1ee,
   the next moves it to y 0x1e0. Rows 8 and 9 have state and are uploaded, but
   no clut word in the code addresses them.
+- Rolls one off their round number: `wldcore_map_roll_random_encounter` tests
+  `chance >= roll` over 0..99, so the retail chance byte 30 gives 31 in 100;
+  the preferred-job promotion in `wldcore_proposition_determine_success`
+  passes on a roll below 0x3D, 61 in 100; `battle_formula_apply_status_to_action`
+  divides the displayed accuracy of separate statuses by four and keeps each
+  status on a roll below 24.
+- `battle_unit_apply_level_up_down_ability` stores the new level before
+  calling `main_unit_apply_level_growth`, so an ability level-up divides each
+  raw stat by growth + new level; an EXP level-up (`main_unit_check_level_up`)
+  and the generated-unit replay in `main_unit_calculate_actual_stats` divide
+  by growth + old level.
+- `battle_unit_find_war_trophies_and_bonus_money` computes
+  `level_bonus_money` ((highest enemy level - lowest party level) * 100, 0
+  once a player unit has fallen) and nothing reads it; REQUIRE pays
+  `level_sum_money` and `bonus_money`.
+- `battle_formula_apply_weather_effects_on_bows` reads the weather variable
+  itself, not `battle_map_get_effective_weather`: the bow penalty of a storm
+  also applies on a snow map and on a map flagged to ignore weather, where the
+  elemental and movement rules see no storm.
+- `src/battle/battle_ai_load_ability_entry.c`: with Throw Item the AI gives an
+  item a range of the unit's Move; `battle_target_set_panels_for_action` uses
+  4, and gives a Mime the same.
+- `battle_process_map_gns_record`: command rows 0x85, 0x86, 0x88, 0x89, 0x8a
+  and 0x8b skip the map-state comparison and are applied in file order, so the
+  last of a kind wins: MAP017.GNS has one set-outdoor row followed by six
+  set-indoor rows and ends indoors. Row types 0x87 (49 rows in 14 maps) and
+  0x8a (125 rows) have no case in `battle_map_dispatch_gns_resource`, and no
+  retail GNS holds a 0x83, 0x84 or 0x8b row, the three that take arguments.
+- Terrain data the code does not expect: five tiles hold a slope byte outside
+  `map_slope_type_e` (0x10 in MAP017.10, MAP043.9 and MAP078.9, 0x46 in
+  MAP036.46, 0x01 in MAP045.7), and the terrain chunks of 37 maps arrive with
+  mark bits already set in tile byte 5, which
+  `battle_map_copy_xy_coords_and_tile_data` copies as they are. Tile flag 0x80
+  (`cannot_stop`), which `battle_move_set_reachable_tile_flags` tests, is set
+  in no terrain chunk, and tile byte 1 is 0 in all of them.
+- `g_battle_map_file_table` is the string `C:\FFTIMG\MAP\GNS\`; every map
+  file load passes it as the first argument, which
+  `battle_map_start_file_load` ignores.
+- The Brave Story "Fact" row never appears:
+  `EVENT_SCRIPT_VAR_FACTS_ENABLED` (0x92) gates it
+  (`wldcore_menu_build_brave_story_entries`), no code sets it, and the one
+  event script that writes it, 0x075, stores 0 while setting facts
+  0x1a4-0x1aa. The 24 fact names in WORLD.LZW are empty strings.
+- `g_wldcore_treasure_sound_novel_ids` is 0 for every treasure but 31
+  (Germonik Scriptures, novel 5), so `wldcore_menu_step_treasure_detail_level`
+  opens no reader for the four book treasures 17-20.
+- World-map script opcodes 0x10 and 0x11 pass on a date on or after and on or
+  before their operand (`wldcore_opcode_map_check_date_on_or_after`,
+  `_on_or_before`); scenario condition types 16 and 17 are the reverse
+  (`EVENT_SCENARIO_CONDITION_DATE_ON_OR_BEFORE`, `_ON_OR_AFTER`), although the
+  war-funds and casualty tests beside them share their numbers.
+- The Music Test names and comments (OPEN.LZW text sections 24 and 25, text
+  ids 0xC000 and 0xC800 + entry) are not translated: each string is the
+  Japanese release's glyph codes around Latin fragments such as the composer
+  tags.
+- SCUS_942.21 0x80028f94-0x80028fe7, between `g_main_smd_modulator_waveforms`
+  and `g_main_smd_key_octaves`, is referenced by no instruction or pointer in
+  any executable: a five-byte SMD sequence (`B0 91 7F 99 90`), ten words whose
+  last nine are the LIBSPU reverb work-area sizes of modes 1-9, and a
+  0x23-byte `feds` sound bank with id 0x7000.
+- Ability data the code and the tables disagree on:
+  `battle_target_set_green_panels_for_action` passes range-record `flags_2`
+  bit 0x20 to `battle_target_apply_vertical_tolerance` as `single_layer`, and
+  none of the 368 records sets it; the low nibble of
+  `ability_data_t.type_flags` holds the ability type plus one (0 for ids 0,
+  0x1fe and 0x1ff) and nothing reads it, because
+  `main_ability_calculate_pointers_and_type` derives the type from the id.
+- `main_status_init_check_data` builds eleven status check sets; sets 2
+  (`MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ALLY`) and 7 are read by
+  nothing.
+- WORLD's copies of BATTLE's action-menu and tile-info routines
+  (`world_menu_build_ability_list`, `world_menu_build_skillset_entries`,
+  `world_menu_selected_tile_info_display_thread` and nine more) keep BATTLE's
+  absolute data addresses 0x80173cbc, 0x8017403c, 0x80174048 and 0x8017404c.
+  In WORLD's image those lie inside the text file embedded at 0x8016ee68, so
+  the routines would read and write text bytes there.

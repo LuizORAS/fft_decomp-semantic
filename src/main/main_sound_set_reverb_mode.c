@@ -4,11 +4,12 @@
 
 /* Sets the SPU reverb mode and parameters.
  *
- * A negative mode keeps the current mode and returns early if the SPU
- * already uses it. Modes 0-9 are Psy-Q reverb types: the reverb is switched
- * off while a changed mode (or mode 0) is programmed with the work-area
- * clear flag 0x100; any mode from 10 up only records depth, delay and
- * feedback. */
+ * Modes 0-9 are Psy-Q reverb types: the reverb is switched off while a
+ * changed mode (or mode 0) is programmed with the work-area clear flag
+ * 0x100; any mode from 10 up only records depth, delay and feedback. A
+ * negative mode reloads the stored mode, which still carries 0x100 (LIBSPU
+ * strips the flag from its own copy only): it never equals the SPU's mode,
+ * so there is no early return, and it is then treated as 10 or more. */
 void main_sound_set_reverb_mode(s32 mode, s16 depth, s32 delay, s32 feedback) {
     SpuReverbAttr current;
 

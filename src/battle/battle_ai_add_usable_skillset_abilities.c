@@ -6,10 +6,12 @@
  * Throw adds three shuriken and three ball entries, then at most one entry for
  * the first other known throw ability; Arithmeticks adds a single entry;
  * Charge is skipped with a gun equipped. Other skillsets add each AI-usable,
- * known ability whose MP cost, Faith and sword/materia-blade requirements
- * pass. Jump keeps only the best level-jump ability, falling back to one
- * bare Jump entry. For monster skillsets only the fourth ability keeps the
- * monster-skill flag.
+ * known ability whose MP cost fits the unit's maximum MP and whose
+ * sword/materia-blade requirement passes; a unit with innate Innocent adds
+ * none while the workspace's considered ability, not the one being added, is
+ * Faith-based. Jump keeps only the best level-jump ability; without one it
+ * writes a bare Jump entry that the returned count does not include. For
+ * monster skillsets only the fourth ability keeps the monster-skill flag.
  *
  * The known-throw tail sits before the main body because the target emits it
  * there and GCC 2.6.3 keeps source block order. The per-loop temporaries,

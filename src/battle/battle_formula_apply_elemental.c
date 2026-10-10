@@ -11,8 +11,9 @@ void battle_formula_apply_elemental(void) {
     s32 mount_info;
 
     element = g_battle_action_current_ability.range_data.element;
-    /* Oil (status 3 bit 0x80) against fire (element bit 0x80) is removed and doubles XA. The HP damage is
-     * already stored and no later step reads XA, so the damage stays as it was. */
+    /* Oil (status byte 2 bit 0x80) is removed by fire (element bit 0x80). XA is
+     * doubled, but every caller has already stored the HP damage and nothing
+     * reads XA afterwards, so the damage does not change. */
     if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
         && (element & BATTLE_ELEMENT_FIRE)) {
@@ -29,7 +30,7 @@ void battle_formula_apply_elemental(void) {
     if (mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
         unit = &g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
     }
-    /* Float (status 3 bit 0x40) nullifies earth (element bit 0x08). */
+    /* Float (status byte 2 bit 0x40) nullifies earth (element bit 0x08). */
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
         && (element & BATTLE_ELEMENT_EARTH)) {

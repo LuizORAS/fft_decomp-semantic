@@ -1084,20 +1084,20 @@ typedef char item_secondary_data_size_must_be_3[(sizeof(item_secondary_data_t) =
 /* Shield records at 0x80063eb8 (g_main_item_shield_data), indexed by
  * item_data_t.secondary_data_id for items with type flag 0x40. */
 typedef struct shield_data {
-    u8 physical_evade; /* 0x00; battle_stats_t 0x40 */
-    u8 magic_evade;    /* 0x01; battle_stats_t 0x44 */
+    u8 physical_evade; /* 0x00; battle_stats_t 0x41 (right hand) / 0x42 (left hand) */
+    u8 magic_evade;    /* 0x01; battle_stats_t 0x45 (right hand) / 0x46 (left hand) */
 } shield_data_t;
 
 /* Accessory records at 0x80063f58 (g_main_item_accessory_data), indexed by
  * item_data_t.secondary_data_id for items with type flag 0x08. */
 typedef struct accessory_data {
-    u8 physical_evade;
-    u8 magic_evade;
+    u8 physical_evade; /* 0x00; battle_stats_t 0x40 */
+    u8 magic_evade;    /* 0x01; battle_stats_t 0x44 */
 } accessory_data_t;
 
 typedef struct armor_data {
-    u8 hp_bonus; /* 0x00; battle_stats_t 0x41/0x42 */
-    u8 mp_bonus; /* 0x01; battle_stats_t 0x45/0x46 */
+    u8 hp_bonus; /* 0x00; added to battle_stats_t.max_hp */
+    u8 mp_bonus; /* 0x01; added to battle_stats_t.max_mp */
 } armor_data_t;
 
 /* Static innate, immunity and starting-status masks embedded in item and job

@@ -4,23 +4,24 @@
 
 /* Loads the 16 ENTD units of the encounter into the battle unit slots.
  *
- * Each present unit is initialised, deduplicated against the party limit and
- * capped at party limit + 7 enemies; the exception reports use the error
- * bases 600, 300, 100 and 200 plus the slot. `status` holds both the
- * initialisation result and the graphics descriptor's not-deployed flag:
- * sharing the one variable is what gives the flag enough uses to win s1 ahead
- * of battle_id. */
+ * Each present unit is initialised. A unit that would need a new spritesheet
+ * beyond the sheets left for the ENTD (nine less the deployment unit limit) is
+ * taken off the field, and the units placed on the field are capped at that
+ * number + 7; the exception reports use the error bases 600, 300, 100 and 200
+ * plus the slot. `status` holds both the initialisation result and the
+ * graphics descriptor's not-deployed flag: sharing the one variable is what
+ * gives the flag enough uses to win s1 ahead of battle_id. */
 void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     s32 battle_id;
     s32 enemy_count;
-    s32 party_limit;
+    s32 free_spritesheets;
     s32 enemy_limit;
     s32 duplicate_message_shown = 0;
     s32 limit_message_shown = 0;
     s32 status;
     u8 next_unused_unit_id = 0xfe;
     u8 palette_id;
-    u8 portrait_id;
+    u8 spritesheet_id;
     s32 unit_id;
     u8 presence;
     battle_stats_t* unit;
@@ -31,9 +32,9 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     g_battle_enemy_level_sum = 0;
     g_battle_highest_enemy_level = 0;
     main_party_calculate_highest_level();
-    party_limit = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
-    party_limit = (party_limit < 10) ? 9 - party_limit : 0;
-    enemy_limit = party_limit + 7;
+    free_spritesheets = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
+    free_spritesheets = (free_spritesheets < 10) ? 9 - free_spritesheets : 0;
+    enemy_limit = free_spritesheets + 7;
     enemy_count = 0;
     battle_unit_add_unique_entd_spritesheet(0xff, 0, 0);
     for (battle_id = 0, entd = entd_list; battle_id < ENTD_UNITS_PER_ENCOUNTER; entd++, battle_id++) {
@@ -52,7 +53,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         if (status != 0) {
             main_system_handle_battle_load_exception(battle_id + 600);
         }
-        portrait_id = main_unit_calculate_palette_spritesheet(unit, &palette_id);
+        spritesheet_id = main_unit_calculate_palette_spritesheet(unit, &palette_id);
         main_unit_init_status_and_rewards(unit, 0);
         /* s32 so the fallback id is zero-extended once here and passed on
          * unmasked, like the target. */
@@ -80,7 +81,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (battle_unit_add_unique_entd_spritesheet(battle_id, portrait_id, party_limit) != 0) {
+        if (battle_unit_add_unique_entd_spritesheet(battle_id, spritesheet_id, free_spritesheets) != 0) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
             if (duplicate_message_shown != 0) {
@@ -111,7 +112,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             battle_unit_set_enemy_level_data(unit);
         }
         battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
-            unit->position.bits.higher_elevation, unit->position.bits.facing, portrait_id, palette_id, unit_id, unit,
+            unit->position.bits.higher_elevation, unit->position.bits.facing, spritesheet_id, palette_id, unit_id, unit,
             status);
         if (presence != BATTLE_TEAM_PRESENCE_MASK) {
             enemy_count++;

@@ -2,12 +2,12 @@
 #include "psx/types.h"
 
 /* Thread task 0x35: restart the parameter's sound of sound resource 1 (ENV.SED),
- * apply its echo setting, then continue in the looping editor thread. */
+ * apply its volume, then continue in the looping editor thread. */
 void world_sound_bg_thread(void) {
     u8* parameter;
     s32 sound_id;
     s32 handle;
-    s32 echo;
+    s32 volume;
     s32 resource;
     s32 use_find_channel;
 
@@ -25,10 +25,10 @@ void world_sound_bg_thread(void) {
         main_sound_stop_sfx(handle);
         main_sound_play_bg_sfx(handle);
     }
-    echo = parameter[1];
-    if (echo == 0) {
-        echo = 1;
+    volume = parameter[1];
+    if (volume == 0) {
+        volume = 1;
     }
-    main_sound_set_sfx_echo(sound_id | resource, echo);
+    main_sound_set_sfx_echo(sound_id | resource, volume);
     world_sound_edit_bg_thread();
 }

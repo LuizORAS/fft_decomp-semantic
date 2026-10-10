@@ -4,7 +4,7 @@
 
 /* Scores the current proposition's success chance.
  *
- * A dispatched proposition (flags bit 2) clears the outer score rows and
+ * A recalled proposition (progress flag 0x02) clears the outer score rows and
  * reports result 2. Otherwise each participant's score (row 1) accumulates
  * four proposition data tables (records 3..6) keyed on the proposition's
  * fields, the participant's job category and its bravery, faith and level

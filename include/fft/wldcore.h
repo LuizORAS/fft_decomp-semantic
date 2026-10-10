@@ -213,8 +213,9 @@ typedef struct wldcore_audio_queue {
 } wldcore_audio_queue_t;
 typedef char wldcore_audio_queue_size_must_be_0xa0[sizeof(wldcore_audio_queue_t) == 0xa0 ? 1 : -1];
 
-/* Staged world-script arguments at 0x800d4664 (event ids, SetVar2 and path
- * arguments, deep-dungeon entry values). */
+/* Rows of four sound numbers in the WLDCORE sound bank (id 0xE1), indexed by
+ * a sound id from 1. Row 0 is not a sound row: 0x8009ec18 holds the eighth
+ * word of g_wldcore_tutorial_event_ids (0x1a8). */
 extern u8 g_wldcore_sound_quad_command_bytes[][4];
 extern s32 g_wldcore_sound_novel_script_sector_offsets[];
 extern s32 g_wldcore_sound_novel_text_sector_offsets[];

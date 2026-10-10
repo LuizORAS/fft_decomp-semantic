@@ -7896,7 +7896,7 @@ void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t*
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
-s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 unused_resource_type);
+s32 battle_map_start_file_load(void* unused_directory_path, u8* load_info, s32 destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 

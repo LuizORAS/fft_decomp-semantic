@@ -12,7 +12,7 @@ enum {
 
 /* Start reading one map file into `destination`. Returns `destination` when
  * the read was started, 0 when the row names no file or the start failed. */
-s32 battle_map_start_file_load(void* unused_file_table, u8* load_info, s32 destination, s32 unused_resource_type) {
+s32 battle_map_start_file_load(void* unused_directory_path, u8* load_info, s32 destination, s32 unused_resource_type) {
     s32 result;
 
     if (load_info[MAP_FILE_LOAD_PRESENT_OFFSET] == 0) {

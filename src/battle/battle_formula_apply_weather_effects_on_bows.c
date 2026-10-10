@@ -17,7 +17,8 @@ void battle_formula_apply_weather_effects_on_bows(void) {
         if (time_of_day == 1) { /* night */
             g_battle_action_current_ability.base_hit = g_battle_action_current_ability.base_hit * 3 / 4;
         }
-        /* storm or strong storm; snow is not folded in here */
+        /* The raw weather variable, not battle_map_get_effective_weather: a
+         * storm strength counts on a snow map and on a map that ignores weather. */
         if (weather == BATTLE_WEATHER_STORM || weather == BATTLE_WEATHER_STRONG_STORM) {
             base_hit = &g_battle_action_current_ability.base_hit;
             *base_hit = *base_hit * 3 / 4;

@@ -2,12 +2,12 @@
 #include "psx/types.h"
 
 /* Sets the velocity of every SFX channel playing sound_id, or stops those
- * channels when echo is 0.
+ * channels when volume is 0.
  *
  * The stop branch repeats main_sound_stop_sfx_channels with its own locals
  * and its own read of g_main_sound_sfx_music, which is what the target's
  * register allocation reflects. */
-void SuzukiSetSfxEcho(int sound_id, s16 echo) {
+void SuzukiSetSfxEcho(int sound_id, s16 volume) {
     suzuki_music_t* music;
     suzuki_music_channel_t* channel;
     s32 count;
@@ -15,11 +15,11 @@ void SuzukiSetSfxEcho(int sound_id, s16 echo) {
     count = 8;
     music = g_main_sound_sfx_music;
     channel = music->channels;
-    if (echo != 0) {
+    if (volume != 0) {
         do {
             if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                 if (channel->sound_id.raw == sound_id) {
-                    channel->velocity = echo << 8;
+                    channel->velocity = volume << 8;
                     channel->voice_update_flags = SUZUKI_VOICE_UPDATE_VOLUME;
                 }
             }

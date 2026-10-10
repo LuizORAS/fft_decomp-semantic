@@ -161,7 +161,8 @@ typedef enum map_slope_type {
 /* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at
  * BATTLE 0x801451c8 / WORLD 0x800f84f0 modifies bytes 0, 2 and 6.
- * Only the low six surface bits have an established meaning here. Opcode
+ * Byte 0 holds the surface type in its low six bits and the depth bias in
+ * bit 6. Opcode
  * 0x40 replaces the untargetable bit and clears the blocked bit. Its bitfield
  * accesses reproduce the separate surface-byte
  * reload and flag-update order at BATTLE 0x801451e4..0x80145244. */

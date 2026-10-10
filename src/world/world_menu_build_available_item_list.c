@@ -1,9 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Build the list of available items (script variables 0x200..0x22a) and
- * position the menu around the currently selected one. `selected` stays
- * unset when no listed item is the current location. */
+/* Build the list of visible world locations (script variables 0x200..0x22a,
+ * rows of location-name text 0x9000 + location) and position the menu around
+ * the current one. `selected` stays unset when the current location is not
+ * listed. */
 void world_menu_build_available_item_list(void) {
     s32 i;
     s32 count;

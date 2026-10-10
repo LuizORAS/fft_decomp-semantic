@@ -157,7 +157,7 @@ typedef struct card_save_buffer {
     u8 proposition_last_attempt_date_bits[0x6c]; /* 0x16b; packed 9-bit dates */
     u8 proposition_states[0x60];                 /* 0x1d7; low 6 bits are a remaining-day counter */
     u8 _unused_0237[1];                          /* 0x237; serialized and parity-covered */
-    u8 saved_records[5][0x38];                   /* 0x238; domain remains unproven */
+    u8 saved_records[5][0x38];                   /* 0x238; wldcore_saved_record_t: one sound-novel reading state each */
     u32 saved_data_bits[40];                     /* 0x350 */
     u32 secondary_saved_data_bits[2];            /* 0x3f0 */
     u8 brave_story_character_ages[0x40];         /* 0x3f8 */
@@ -1099,7 +1099,7 @@ extern main_sound_music_t g_main_sound_music;
 extern main_sound_smd_file_t g_main_sound_scenario_smd_files[];
 extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
 extern s32 g_main_sound_weather_sfx_id;
-void main_sound_set_sfx_echo(int sound_id, int echo);
+void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);
 void main_sound_pause_tracked_sfx(void);
 s32 main_sound_get_current_scenario_music(void);
@@ -1148,7 +1148,7 @@ suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd);
 void SuzukiPlaySound1(int sound_id);
 void SuzukiPlaySound2(int sound_id);
 void SuzukiPlaySoundFindChannel(s32 sound_id);
-void SuzukiSetSfxEcho(int sound_id, s16 echo);
+void SuzukiSetSfxEcho(int sound_id, s16 volume);
 void SuzukiSPUInitialiser(s32 flags);
 void SuzukiTurnOffAllMusic(void);
 void SuzukiUnloadMUS(suzuki_music_t* music);
