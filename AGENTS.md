@@ -234,13 +234,14 @@ When a cleanup changes the bytes, look here first.
   get `lh` from a `u16` (or `lhu` from an `s16`), cast the lvalue
   (`*(s16*)&g`), not the value.
 - A narrow prototype adds `andi` or `sll`/`sra` at callers; widening removes
-  them. Retail callers usually pass full words and the callee narrows: declare
-  the parameter `s32` and narrow at its uses (`(u8)x`, or one narrow local).
-  Where the callee loads a narrow stack parameter (`lhu 0x10(sp)`), no
-  prototype-style definition matches: write an old-style definition
-  (`void f(a, b) u16 a; u8* b; {`) with an all-wide prototype in the header.
-  `make check-config` compares the two by promoted types. Keep its head under
-  `clang-format off`, one parameter declaration per line.
+  them. Give a parameter the type whose conversion the callers show
+  (`sll`/`sra`: `s16` or `s8`; `andi`: `u16` or `u8`; none and a narrow read
+  in the callee: the argument was already that narrow), in the prototype and
+  the definition alike, and the casts at the call sites go. Where callers
+  pass full words and the callee narrows, declare the parameter `s32` and
+  narrow at its uses (one narrow local). A callee that loads a narrow stack
+  parameter (`lhu 0x10(sp)`) is the first case with the right signedness, not
+  a reason for an old-style definition: none is left in the tree.
 - Callers and callees agree in the source. An argument every caller passes and
   the callee never reads is an `unused_` parameter; a parameter no caller
   passes is a local. A function-pointer cast at a call site is the last

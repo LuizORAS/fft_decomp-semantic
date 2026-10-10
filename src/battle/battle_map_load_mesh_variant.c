@@ -53,7 +53,7 @@ s32 battle_map_load_mesh_variant(s32 palette_mode) {
             /* Retail scales this byte offset as a word index. */
             mesh_data_offset = ((map_mesh_file_header_t*)mesh_data)->color_palette_offset * 4;
             mesh_data = (u8*)mesh_data + mesh_data_offset;
-            battle_map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, (const u16*)mesh_data);
+            battle_map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, mesh_data);
             main_heap_free(g_battle_map_mesh_load_buffer);
             g_battle_map_mesh_load_state = MAP_MESH_LOAD_IDLE;
         }

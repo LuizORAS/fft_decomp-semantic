@@ -13,6 +13,6 @@ s32 StGetNext(void** frame_data, void** header) {
     *&record->status = StLOCK;
     *frame_data = (u8*)(g_psyq_cd_stream_ring + g_psyq_cd_stream_ring_sectors)
         + g_psyq_cd_stream_read_index * PSYQ_CD_STREAM_PAYLOAD_BYTES;
-    *header = (void*)record;
+    *header = record;
     return 0;
 }

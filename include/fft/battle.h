@@ -6782,7 +6782,6 @@ typedef enum battle_trap_id {
  * strength scale covers rain and snow; the map's palette-mod flag word says
  * which one is falling.  battle_map_get_effective_weather folds that flag in by
  * adding 3, so callers that compare against it see the snow values.
- * The equivalent GNS scale is fft_weather_e in libfft.
  */
 typedef enum battle_weather {
     BATTLE_WEATHER_NONE = 0,
@@ -7101,7 +7100,7 @@ enum {
 
 /* Eight runtime slots rotate a range of colours of a CLUT row for map texture animations.
  * They are separate from the 32 serialized 0x14-byte animation instructions
- * described by the Maps/Mesh format. */
+ * a map's mesh file carries. */
 enum {
     MAP_TEXTURE_ANIMATION_CAPACITY = 8,
     MAP_TEXTURE_ANIMATION_STATE_BYTES = 0x0a,

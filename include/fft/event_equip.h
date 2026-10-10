@@ -330,7 +330,7 @@ void equip_item_store_category_list(s32 category_index, const s16* source);
 void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
 s32 equip_run_item_type_order_mode(void);
 void equip_item_sort_list_by_criteria(s32 mode, s16* list);
-s32 equip_item_build_filtered_list(s32 unit_index, s32 sort_mode, s32 category, s16* list, s32 equip_filter);
+s32 equip_item_build_filtered_list(s16 unit_index, s16 sort_mode, s8 category, s16* list, u8 equip_filter);
 battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_source(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);
 

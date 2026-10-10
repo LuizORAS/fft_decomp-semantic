@@ -22,7 +22,7 @@ s32 equip_menu_run_slot_item_browser(void) {
         category = g_equip_selected_slot;
         g_equip_slot_item_browser_previewed_index = -1;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : ITEM_LIST_FILTER_OTHER,
+            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? category + 1 : ITEM_LIST_FILTER_OTHER,
             g_equip_item_list_entries, ITEM_LIST_MODE_ALL);
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);
         equip_menu_init_scrollable_list(
@@ -54,7 +54,7 @@ s32 equip_menu_run_slot_item_browser(void) {
         g_equip_selected_slot = slot;
         category = g_equip_selected_slot;
         equip_item_build_filtered_list(g_equip_unit_selected_index, category + 1,
-            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? (s8)(category + 1) : ITEM_LIST_FILTER_OTHER,
+            g_equip_selected_slot != EQUIP_SLOT_ACCESSORY ? category + 1 : ITEM_LIST_FILTER_OTHER,
             g_equip_item_list_entries, ITEM_LIST_MODE_ALL);
         g_equip_slot_item_browser_previewed_index = -1;
         equip_menu_restore_list_selection(g_equip_selected_slot, &selected, &scroll, g_equip_item_list_entries);

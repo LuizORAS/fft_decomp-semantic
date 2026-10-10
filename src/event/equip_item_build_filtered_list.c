@@ -8,15 +8,7 @@
  * category list index below 5 uses that category order list; anything else falls back to
  * equip_item_sort_list_by_criteria. Returns the number of listed items.
  */
-/* clang-format off */
-s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_filter)
-    s16 unit_index;
-    u16 sort_mode;
-    s8 category;
-    s16* list;
-    u8 equip_filter;
-/* clang-format on */
-{
+s32 equip_item_build_filtered_list(s16 unit_index, s16 sort_mode, s8 category, s16* list, u8 equip_filter) {
     s32 count;
     s32 item_id;
     s32 entry;
@@ -89,7 +81,7 @@ s32 equip_item_build_filtered_list(unit_index, sort_mode, category, list, equip_
     } else if (category == ITEM_LIST_FILTER_OTHER) {
         category_index = 4;
     }
-    if (category_index < 5 && (u16)(sort_mode - 1) < 5) {
+    if (category_index < 5 && sort_mode >= 1 && sort_mode < 6) {
         count = equip_item_sort_list_by_category_order(category_index, list);
     } else {
         equip_item_sort_list_by_criteria(sort_mode & 0xF, list);
