@@ -111,7 +111,7 @@ void world_build_at_list(void) {
     world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;
-    world_menu_draw_text_columns_2(entry, &row_offset, buffer);
+    world_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
     image_rect.w = g_world_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);

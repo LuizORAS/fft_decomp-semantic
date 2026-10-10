@@ -26,7 +26,7 @@ u8* jobstts_cmd_draw_window_frame_handler(u8* stream) {
 
     command = (world_menu_window_command_t*)stream;
     priority = g_jobstts_gfx_otag_index;
-    clut = g_jobstts_gfx_background_clut_id;
+    clut = g_jobstts_menu_palette_clut;
     left = command->x - 5;
     top = command->y - 9;
     width = command->width;

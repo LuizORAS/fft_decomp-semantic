@@ -13,7 +13,7 @@ void world_menu_open_debugchr_unit_editor(void) {
         world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_DEBUGCHR);
         world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
         world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-        world_thread_wait_for_10_to_13();
+        world_thread_wait_for_unit_view_panels();
         world_menu_record_selection_for_selected_unit();
         battle_menu_enter_status_screen_selection();
         debugchr_editor_run_unit_thread(*unit_index);

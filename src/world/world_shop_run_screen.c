@@ -117,7 +117,7 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_formation_unit_banner_enabled = 0;
     while (g_world_shop_menu_step != WORLD_SHOP_STEP_EXIT) {
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
-        world_thread_update_task_state();
+        world_input_update_with_message_state();
         world_menu_update_thread_7_idle_countdown();
         world_gfx_update_fade_in_tile();
         if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
@@ -182,8 +182,8 @@ void world_shop_run_screen(s32 shop_type) {
         } else {
             ot_index = 9;
         }
-        world_script_update_event_frame_input(g_world_gfx_active_packet_buffer->otag + ot_index,
-            world_input_filter_menu(), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
+        world_input_update_event_state(g_world_gfx_active_packet_buffer->otag + ot_index, world_input_filter_menu(),
+            g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         if (g_world_shop_menu_step != last_step) {
             g_world_formation_unit_cycle_mode = 0;
             world_script_set_vsync_mode_and_event_speed(0);

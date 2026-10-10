@@ -7,8 +7,8 @@
 
 /* ability */
 extern s16 g_bunit_ability_category; /* menu_ability_category_e */
-extern u8* g_bunit_ability_selected_data_1;
-extern u8* g_bunit_ability_selected_specific;
+extern u8* g_bunit_selected_ability_data;
+extern u8* g_bunit_selected_ability_secondary_data;
 extern s32 g_bunit_ability_type;
 extern u8 g_bunit_ability_list_menu_script[];
 extern s8 g_bunit_ability_list_confirm_prompt_state;
@@ -178,13 +178,13 @@ extern u16 g_bunit_text_clut_3_mode0;
 extern u16 g_bunit_text_clut_3_mode1;
 extern u16 g_bunit_text_clut_0_mode1;
 extern u16 g_bunit_text_clut_0_mode0;
-extern u16 g_bunit_text_metric_3;
-extern u16 g_bunit_text_metric_2;
-extern u16 g_bunit_text_metric_1;
-extern u16 g_bunit_text_metric_0;
-extern u16 g_bunit_text_metric_4;
-extern u16 g_bunit_text_metric_5;
-extern u8 g_bunit_text_layout_mode;
+extern u16 g_bunit_menu_disabled_number_clut;
+extern u16 g_bunit_menu_palette_clut;
+extern u16 g_bunit_menu_alternate_number_clut;
+extern u16 g_bunit_menu_window_clut;
+extern u16 g_bunit_menu_active_clut_front;
+extern u16 g_bunit_menu_active_clut_back;
+extern u8 g_bunit_menu_use_alternate_palette;
 
 /* Text-section buffers: bunit_menu_run_reorder_list passes g_bunit_text_reorder_list_buffer
  * straight to bunit_text_concatenate_entries as its u8* output string and
@@ -204,7 +204,7 @@ s32 bunit_text_render_glyph_to_4bpp_image(
 void bunit_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
-void bunit_text_set_palette_and_metrics(s32 mode);
+void bunit_menu_set_palette_mode(s32 mode);
 void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s32 separate);
 void bunit_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 
@@ -228,7 +228,7 @@ s32 bunit_thread_is_running(s32 thread_id);
 void bunit_thread_request_stop(s32 thread_id);
 void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
-void bunit_thread_toggle_9_and_12(s32 enable);
+void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 
 /* cursor */
 /* Oriented-quad descriptors for the two cursor halves. */
@@ -700,7 +700,7 @@ extern world_oriented_quad_t g_bunit_unit_shadow_sprite;
 /* Halfword field index, per sort key, into the 0x10C-byte formation record
  * built by bunit_unit_build_data_list. The name is provisional. */
 extern s8 g_bunit_unit_sort_field_indices[];
-void bunit_unit_sort_index_list_by_order_keys(s32 a);
+void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode);
 void bunit_unit_build_list_index_map(void);
 s32 bunit_unit_build_reorderable_index_list(void);
 void bunit_unit_copy_orders_to_reorder_list(s32 unused, s16* entries);

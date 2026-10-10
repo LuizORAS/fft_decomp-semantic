@@ -5,7 +5,7 @@
    colour triple of the command. */
 u8* equip_cmd_set_draw_color_handler(u8* cmd) {
     u8 blue;
-    if (g_equip_text_compact_layout != 0) {
+    if (g_equip_menu_use_alternate_palette != 0) {
         g_equip_gfx_sprite_color[0] = cmd[5];
         g_equip_gfx_sprite_color[1] = cmd[6];
         blue = cmd[7];

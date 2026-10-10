@@ -16,7 +16,7 @@ void world_menu_run_equip_thread(void) {
     saved = g_world_unit_view_mode;
     world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_world_menu_overlay_state = 1;
-    world_thread_wait_for_10_to_13();
+    world_thread_wait_for_unit_view_panels();
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
     world_menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);

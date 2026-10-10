@@ -15,7 +15,7 @@ void world_menu_run_bunit_transition_thread(void) {
     world_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
-    world_thread_wait_for_10_to_13();
+    world_thread_wait_for_unit_view_panels();
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_BUNIT);
     world_menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_BUNIT_SECOND_HALF);

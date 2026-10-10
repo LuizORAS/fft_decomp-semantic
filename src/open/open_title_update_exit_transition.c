@@ -1,11 +1,6 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-/* The title-exit controller's view of its open_controller_record_t. */
-typedef struct open_title_exit_state {
-    s32 state;
-} open_title_exit_state_t;
-
 void open_title_update_exit_transition(open_title_exit_state_t* transition) {
     s32 state;
     u32 buttons;

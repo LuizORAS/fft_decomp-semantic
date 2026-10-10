@@ -20,7 +20,7 @@ u8* card_cmd_draw_tiled_rectangle_handler(u8* command) {
     s32 column;
 
     otag_index = g_card_text_otag_index;
-    clut = g_card_text_metric_2;
+    clut = g_card_menu_palette_clut;
 
     if (command[2] == 2) {
         base_x = g_card_gfx_tiled_rect.x;

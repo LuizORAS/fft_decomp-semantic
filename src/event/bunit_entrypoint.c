@@ -101,7 +101,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
             battle_text_restore_section_pointers();
         }
-        bunit_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
+        bunit_menu_set_palette_mode(g_battle_menu_input_lock_mode);
         if (g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
             bunit_menu_update_job();
             /* The target also passes a1 = 0 to this one-argument callee. */
@@ -137,7 +137,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_NONE;
         g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
     } while (running != 0);
-    bunit_thread_toggle_9_and_12(0);
+    bunit_panel_toggle_equipment_and_numeric_editor_threads(0);
     bunit_panel_toggle_unit_status_thread(0);
     while (DrawSync(1) != 0) { }
     VSync(0);

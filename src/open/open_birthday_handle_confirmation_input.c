@@ -21,7 +21,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_36 -= 3;
         g_open_gfx_render_record_pointer_count -= 6;
         g_open_current_controller_index -= 2;
-        open_movie_stream_and_push_controller_1(DISC_SECTOR_OPEN_FFTOP_STR, 0x64D8, 0x9E4);
+        open_movie_stream_fftop_and_push_controller(DISC_SECTOR_OPEN_FFTOP_STR, 0x64D8, 0x9E4);
         return;
     }
 
@@ -47,8 +47,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(
-            (open_birthday_date_state_t*)&g_open_controller_records[g_open_current_controller_index]);
+        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
     if (buttons & PSX_PAD_CROSS) {
@@ -58,8 +57,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(
-            (open_birthday_date_state_t*)&g_open_controller_records[g_open_current_controller_index]);
+        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
 

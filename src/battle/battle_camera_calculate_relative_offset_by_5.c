@@ -1,0 +1,8 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+/* battle_camera_calculate_relative_offset with offset 5: the depth point of a stepping unit on a
+ * tile with MAP_TILE_SURFACE_FLAG_DEPTH_BIAS. */
+void battle_camera_calculate_relative_offset_by_5(const u16* input, s16* output) {
+    battle_camera_calculate_relative_offset(input, output, 5);
+}

@@ -78,7 +78,7 @@ void world_menu_run_battle_help(void) {
         g_world_help_require_navigation[2].destination[2] = 7;
         g_world_help_require_navigation[7].destination[3] = 2;
     }
-    help_thread_id = world_thread_find_running_from_4();
+    help_thread_id = world_thread_find_first_running_menu_thread();
     g_world_help_controller_state_ptr = world_input_get_menu_controller(0);
     menu_index = 0;
     for (quad_index = 0; quad_index < 2; quad_index++) {

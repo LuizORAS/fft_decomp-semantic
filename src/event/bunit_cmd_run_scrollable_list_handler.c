@@ -154,7 +154,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows + 10;
             bunit_gfx_enqueue_textured_quad(&rect, 0, g_bunit_menu_scroll_pixel_offset + 0x2b, 0,
-                g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, g_bunit_text_metric_0,
+                g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, g_bunit_menu_window_clut,
                 g_bunit_gfx_otag_index);
         } else {
             rect.x = command[7];
@@ -162,10 +162,10 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows;
             bunit_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_bunit_gfx_semitrans_enabled,
-                g_bunit_text_digit_texture_page, g_bunit_text_metric_0, g_bunit_gfx_otag_index);
+                g_bunit_text_digit_texture_page, g_bunit_menu_window_clut, g_bunit_gfx_otag_index);
         }
     }
-    if (g_bunit_text_layout_mode == 0) {
+    if (g_bunit_menu_use_alternate_palette == 0) {
         if (g_bunit_menu_scroll_base_index != 0) {
             rect.x = g_bunit_menu_window_right_x;
             rect.y = command[12];
@@ -201,7 +201,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         marker.x = command[7] - command[11];
         marker.y = command[8] + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * ROW_HEIGHT;
         bunit_menu_update_and_draw_animated_cursor(
-            (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_text_layout_mode);
+            (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
     }
     command += command[1];
     g_bunit_menu_cursor_row = 0;

@@ -35,7 +35,7 @@ s32 world_formation_run_item_submenu_step(void) {
 
     if (g_world_item_submenu_initialized == 0) {
         g_world_item_submenu_initialized = 1;
-        g_world_item_menu_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_ITEM_TAB, 0);
+        g_world_item_menu_category = world_menu_init_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
         world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
         world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);

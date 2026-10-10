@@ -10,7 +10,7 @@ void world_shop_run_item_sell_list_step(void) {
     if (g_world_shop_sell_list_initialized == 0) {
         world_thread_set_parameters(
             NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, world_menu_has_items(0) != 0 ? 0xF80C : 0xF80B, 0);
-        g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
+        g_world_shop_item_category = world_menu_init_cursor_position(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
         world_item_build_category_list(-1, g_world_shop_item_category + 1,
             g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
             g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);

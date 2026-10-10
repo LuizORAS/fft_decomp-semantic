@@ -31,7 +31,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
                 break;
         }
         if (battle_id == 16) {
-            world_noop_800e7808(original_unit_id);
+            world_script_report_missing_unit_stub(original_unit_id);
             return EVENT_MISC_ID_NONE;
         }
         unit_id = unit->unit_id;
@@ -64,7 +64,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
             if (battle_id == 3
                 || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
-                world_noop_800e7808(original_unit_id);
+                world_script_report_missing_unit_stub(original_unit_id);
                 return EVENT_MISC_ID_NONE;
             }
         }
@@ -86,7 +86,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
         && unit_id < EVENT_UNIT_SELECTOR_SLOT_FIRST + EVENT_UNIT_SELECTOR_SLOT_COUNT) {
         misc_id = g_world_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
-            world_noop_800e7808(original_unit_id);
+            world_script_report_missing_unit_stub(original_unit_id);
             return EVENT_MISC_ID_NONE;
         }
         return misc_id;
@@ -95,7 +95,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &unit_state);
     if (unit_state < 0 && unit_state != -2
         && world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GAME_OVER_RAMZA) {
-        world_noop_800e7808(original_unit_id);
+        world_script_report_missing_unit_stub(original_unit_id);
         return EVENT_MISC_ID_NONE;
     }
     for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
@@ -106,7 +106,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     if (unit_id == -1
         || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
-        world_noop_800e7808(original_unit_id);
+        world_script_report_missing_unit_stub(original_unit_id);
         return EVENT_MISC_ID_NONE;
     }
     return unit_id;

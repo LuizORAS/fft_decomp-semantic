@@ -25,10 +25,10 @@ s32 world_item_run_category_menu(void) {
         g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
         g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
         g_world_menu_script_callbacks[3] = world_menu_get_entry_item_icon_source;
-        g_world_menu_script_callbacks[4] = world_menu_get_display_value_1;
-        g_world_menu_script_callbacks[5] = world_menu_get_display_value_2;
-        g_world_menu_script_callbacks[6] = world_menu_get_value_1;
-        g_world_menu_script_callbacks[7] = world_menu_get_value_2;
+        g_world_menu_script_callbacks[4] = world_menu_get_selected_unit_hp_bonus_or_dashes;
+        g_world_menu_script_callbacks[5] = world_menu_get_selected_unit_mp_bonus_or_dashes;
+        g_world_menu_script_callbacks[6] = world_menu_get_selected_unit_hp_bonus;
+        g_world_menu_script_callbacks[7] = world_menu_get_selected_unit_mp_bonus;
     }
     world_menu_toggle_preview_stats_window(1);
     if (g_world_menu_option_count != 0) {

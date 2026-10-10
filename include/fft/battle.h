@@ -1257,14 +1257,14 @@ void battle_script_wait_for_unit_ready(s32 misc_id);
 void battle_script_warp_unit(const u8* parameters);
 void battle_script_set_units_movement_effect_suppression(const u8* parameters);
 s32 battle_script_run_scenario_conditions(void);
-s32 battle_script_check_scenario_condition(s32 a, s32 b, s32 c, s32 d, s32 e);
+s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
 void battle_script_run_sprite_move(s32 arg, s32 use_speed);
 
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons);
 void battle_script_load_event_input_state(const world_menu_input_state_t* saved);
-void battle_script_clear_indexed_variable_bit0(void);
+void battle_camera_clear_zoom_variable_low_bit(void);
 void battle_script_copy_32_bytes(void* destination, const void* source);
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
 u32 battle_script_get_event_initial_repeat_counter(void);
@@ -1495,19 +1495,19 @@ extern s32 g_frame_pacing_suppressed;
 extern s32 g_frame_pacing_timer;
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
-void battle_noop_8018ef2c(battle_stats_t* unused_unit, s32 unused_facing);
+void battle_action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
 void battle_state_enter_open_sp2_files(void);
 void battle_bin_entrypoint(void);
 s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
-void battle_noop_8012e190(void);
-void battle_noop_80143bd0(void);
+void battle_menu_init_stub(void);
+void battle_script_add_unit_stub(void);
 void battle_state_enter_pre_attack_animation(void);
 void* game_realloc(void*, u32);
-void battle_noop_80079298(void);
-void battle_noop_8007aecc(void* unused_sprite_display_section);
-void battle_noop_8013ccec(void);
-void battle_noop_8013da70(void);
-void battle_noop_8014a82c(void);
+void battle_state_deployment_frame_stub(void);
+void battle_gfx_release_unit_sprite_display_stub(void* unused_sprite_display_section);
+void battle_menu_run_companion_overlay_stub(void);
+void battle_script_frame_after_threads_stub(void);
+void battle_script_frame_after_requests_stub(void);
 
 /* BATTLE 0x8014bf54..0x8014bf7c: destination first. This do-while loop
  * requires a positive count; it is not a general-purpose memcpy. */
@@ -1615,8 +1615,8 @@ void battle_state_start_change_map_jump_out(s32 map_id, s32 duration);
 s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table);
 s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
-void battle_noop_80133150(s32 unused_unit_id);
-void battle_noop_80149be4(const u8* unused_parameters);
+void battle_script_report_missing_unit_stub(s32 unused_unit_id);
+void battle_script_opcode_74_event_instruction(const u8* unused_parameters);
 
 /* thread */
 /* 0x8014ceb4..0x8014cf58 forwards a0-a3 to the callback in 0x80173ca8,
@@ -1642,7 +1642,7 @@ extern s32 g_battle_thread_task_ids[][256];
  * was spelled as in 22 files. Files doing raw byte arithmetic cast (u8*) at
  * the use site. */
 extern native_thread_t* g_battle_threads;
-void battle_thread_wait_for_10_to_13(void);
+void battle_thread_wait_for_unit_view_panels(void);
 void battle_script_block_start_thread(void);
 s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);
@@ -1654,14 +1654,14 @@ s32 battle_thread_get_current_parameter_3(void);
 s32 battle_thread_get_current_task_id(void);
 s32 battle_thread_is_previous_running(void);
 s32 battle_thread_is_running(s32 thread_id);
-s32 battle_thread_is_running_8014cc94(s32 thread_id);
+s32 battle_thread_is_running_asm(s32 thread_id);
 void battle_thread_reset_scheduler(void);
 s32 battle_thread_resolve_id(s32 requested_thread_id);
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
 void battle_thread_resume(s32 thread_id);
 void battle_thread_set_current_task_id(s32 task_id);
 void battle_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
-void battle_thread_set_parameters_4(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
+void battle_thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
 void battle_thread_start(s32 thread_id, void (*function)(void));
 void battle_thread_suspend(s32 thread_id);
 void battle_thread_wait_frames(s32 count);
@@ -2420,7 +2420,7 @@ void battle_camera_normalize_yaw_angle(void);
 s32 battle_camera_is_active(void);
 void battle_camera_project_world_coords_to_screen(SVECTOR* world_coords, s16* screen_coords);
 void battle_camera_request_rotation(s32 angle);
-void battle_camera_reset_script_transform(void);
+void battle_map_reset_script_light_transform(void);
 void battle_camera_restore_current_real_coords(void);
 void battle_camera_restore_rotation(void);
 void battle_camera_restore_zoom(void);
@@ -2450,8 +2450,8 @@ void battle_camera_update_zoom_animation(void);
 s32 battle_camera_wrap_yaw_angle(void);
 void battle_camera_advance_effect_tracks(s16 frame);
 void battle_camera_calculate_relative_offset(const u16* input, s16* output, s32 offset);
-void battle_camera_calculate_relative_offset_1(const u16* input, s16* output);
-void battle_camera_calculate_relative_offset_5(const u16* input, s16* output);
+void battle_camera_calculate_relative_offset_by_1(const u16* input, s16* output);
+void battle_camera_calculate_relative_offset_by_5(const u16* input, s16* output);
 
 void battle_camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECTOR* rotation_out);
 
@@ -5098,8 +5098,8 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
 void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
 u8 battle_unit_calculate_move_exp_jp_up_to_earn(battle_stats_t* unit);
 void battle_unit_restore_all_facings_after_attack(void);
-void battle_unit_clear_distortion_animation(battle_unit_misc_data_t* unit);
-void battle_unit_clear_distortion_animation_2(battle_unit_misc_data_t* unit);
+void battle_unit_clear_distortion_animation_id_10(battle_unit_misc_data_t* unit);
+void battle_unit_clear_distortion_animation_id_11(battle_unit_misc_data_t* unit);
 void battle_unit_clear_facing_update_suppression(u32 misc_id);
 void battle_unit_clear_status_staging_data(void);
 void battle_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
@@ -5790,7 +5790,8 @@ s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination);
 void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
     u16 sequence_id, s32** out_table, s32* out_value);
 
-void battle_gfx_set_sprite_part_flag_bit_0(battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
+void battle_gfx_set_sprite_part_semi_transparent(
+    battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
 void battle_gfx_shift_and_fill_position_copies(struct battle_unit_misc_data* unit);
 void battle_gfx_store_item_display_data(struct battle_unit_misc_data* unit, u32 item_id);
 void battle_gfx_unpack_unit_shp_data(battle_gfx_unit_shp_frame_tables_t* dst, u8* src);
@@ -7170,6 +7171,12 @@ extern u8 g_battle_move_jump_landing_phases[];
 extern u8* g_battle_move_pathing_frontier;
 extern s32 g_battle_move_pathing_resume_pass;
 extern s32 g_battle_move_pathing_tile_index;
+/* Zeroed by battle_move_calculate_pathing and never read. That pass keeps in statics what
+ * battle_move_store_unit_movement_to_scratchpad keeps in locals; these three stand where it sets
+ * its team, ignore_terrain and count locals (the generic unit has no team, terrain rule or units). */
+extern u8 g_battle_move_pathing_team;
+extern u8 g_battle_move_pathing_ignore_terrain;
+extern s32 g_battle_move_pathing_unit_record_count;
 extern void (*g_battle_move_spread_preset_table[])(void);
 extern u8 g_battle_move_terrain_cost;
 
@@ -8470,8 +8477,13 @@ extern s32 g_battle_help_text_id_tables_ptr;
 extern u16 g_battle_menu_anything_ability_id;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern s32 g_battle_active_menu; /* active menu */
+/* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread
+ * does not read the parameter. */
+extern s32 g_battle_menu_dead_unit_panel_parameter;
 extern RECT g_battle_menu_ability_list_clut_rect;
 extern s16 g_battle_menu_ability_scroll_offset;
+/* row_offset of the status list's scroll layout, which starts at g_battle_menu_status_visible_rows */
+extern s16 g_battle_menu_status_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
 extern void* g_battle_menu_buffer_slots[6];
 extern u16 g_battle_menu_height_display_suppressed;
@@ -8558,7 +8570,7 @@ void battle_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
 s32 battle_menu_get_id_based_on_mount_moveable_actable(s32 misc_id);
 void battle_menu_init_subsystem_pointers(void);
 void battle_menu_init_subsystems(void);
-s32 battle_menu_init_system_function(s32 type, s32 b, s32 c, s32 d, s32 e);
+s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled);
 s32 battle_menu_is_still_building(void);
 u16 battle_menu_load_elemental_abilities(s32 skillset_slot, u8 unit_id);
 void battle_menu_leave_status_screen_selection(void);
@@ -8566,7 +8578,7 @@ s32 battle_menu_lerp_fixed12(s32 start, s32 end, s32 factor);
 void battle_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 factor);
 void battle_menu_open_active_unit_idle_action_menu(void);
 void battle_menu_open_companion_executable(void);
-void battle_menu_open_require(void);
+void battle_script_dark_screen_thread(void);
 void battle_menu_open_debugchr_unit_editor(void);
 void battle_menu_open_free_cursor_help(void);
 void battle_menu_open_free_cursor_mini_menu(void);
@@ -8807,8 +8819,11 @@ extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column
 /* Text variables $00-$1F. TEXT_PRINT_INDEXED_VALUE indexes them with a raw
  * text byte, so a larger index reads the globals that follow. */
 extern s32 g_battle_text_substitution_values[32];
-extern s16 D_80165FB0; /* event opcode 0xdc stores 0xd */
-extern RECT D_801660EC;
+extern s16 g_battle_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
+
+/* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
+ * as the four halfwords battle_text_set_substitution_values_7e_7f stores. */
+extern RECT g_battle_text_substitution_rect;
 
 extern u8 g_battle_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */
 extern u8 g_battle_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
@@ -8840,7 +8855,7 @@ s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_fill_field_with_terminators(u8* text);
 void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_glyph_blit_t* region);
-u8* battle_text_advance_cursor_with_backreferences_2(world_text_backreference_state_t* reader, u8* p);
+u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* p);
 
 /* other */
 /* Unshifted zodiac IDs. Party and battle records store these in the high
@@ -8911,7 +8926,7 @@ extern u8 g_main_terrain_geomancy_abilities[];
 extern job_data_t* g_main_job_data_pointer;
 extern s32 g_main_system_battle_frame_hsync_count_max;
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
-s32 battle_return_zero_801842f8(void);
+s32 battle_map_tile_data_15_stub(void);
 s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
 void battle_script_process_inflict_status_commands(void);
 s32 battle_menu_poll_small_load(void);
@@ -8936,12 +8951,7 @@ extern s32 D_800F668C;
  * it, so the names stay provisional. */
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
-extern s16 D_801669E8;
-extern s32 D_80173C70;
 extern u8 D_8018F4FC;
-extern u8 D_8018F7CC;
-extern u8 D_8018F7D0;
-extern s32 D_8018F7D8;
 extern u8 D_8019387C;
 extern s32* D_801B8A34;
 extern s32 D_801B8B18;

@@ -313,16 +313,16 @@ extern u8 g_card_text_color[3];
 extern const u8 g_card_text_command_help[];
 extern u8 g_card_text_data[];
 extern const char g_card_text_decimal_format[];
-extern u16 g_card_text_digit_clut;
+extern u16 g_card_menu_alternate_number_clut;
 extern u16 g_card_text_digit_texture_page;
 extern const u8 g_card_text_job_name[];
-extern s8 g_card_text_layout_mode;
+extern s8 g_card_menu_use_alternate_palette;
 extern const u8 g_card_text_location_name[];
-extern u16 g_card_text_metric_0;
-extern u16 g_card_text_metric_2;
-extern u16 g_card_text_metric_3;
-extern u16 g_card_text_metric_4;
-extern u16 g_card_text_metric_5;
+extern u16 g_card_menu_window_clut;
+extern u16 g_card_menu_palette_clut;
+extern u16 g_card_menu_disabled_number_clut;
+extern u16 g_card_menu_active_clut_front;
+extern u16 g_card_menu_active_clut_back;
 extern s16 g_card_text_otag_index;
 extern u16 g_card_text_clut_2_mode0;
 extern u16 g_card_text_clut_2_mode1;
@@ -340,7 +340,7 @@ s32 card_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
 void card_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
-void card_text_set_palette_and_metrics(s32 mode);
+void card_menu_set_palette_mode(s32 mode);
 const u8* card_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 
 /* thread */

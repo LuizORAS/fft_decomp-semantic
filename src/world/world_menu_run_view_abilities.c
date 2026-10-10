@@ -11,7 +11,7 @@ void world_menu_run_view_abilities(void) {
         g_world_status_display_thread_params.style = 1;
         g_world_numeric_editor_thread_params.style = 1;
         g_world_equipment_ability_panel_thread_params.style = 1;
-        world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_ABILITY_TAB, 0);
+        world_menu_init_cursor_position(WORLD_MENU_CURSOR_ABILITY_TAB, 0);
         world_menu_clear_selection_records();
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
     }

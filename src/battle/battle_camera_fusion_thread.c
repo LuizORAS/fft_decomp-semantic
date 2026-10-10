@@ -118,7 +118,7 @@ void battle_camera_fusion_thread(void) {
         if (tracks[3].finished == 1) {
             break;
         }
-        battle_script_clear_indexed_variable_bit0();
+        battle_camera_clear_zoom_variable_low_bit();
         battle_thread_yield();
     }
 

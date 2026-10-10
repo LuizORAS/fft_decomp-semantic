@@ -94,7 +94,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
         }
 
-        if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
+        if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
             if (sound_latched == 0) {
                 g_battle_sound_pending_sfx_id = one;
                 sound_latched = 1;
@@ -129,8 +129,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
-            if ((input & PSX_PAD_CIRCLE) != 0
-                && battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
+            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
                 && (battle_unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
                     || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
                 g_debugchr_status_display_thread_params.style = one;
@@ -149,7 +148,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                         render_offset = (frame & 1) * 0x4b0;
                         debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
                     }
-                    if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                         break;
                     }
                     frame++;

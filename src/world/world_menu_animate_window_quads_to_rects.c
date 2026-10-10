@@ -50,10 +50,10 @@ void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, REC
     for (; t <= limit; t += step) {
         for (frame = 0; frame < 3 - g_world_event_speed; frame++) {
             world_thread_yield();
-            world_menu_lerp_rect_to_poly_ft4_b(
+            world_screen_menu_lerp_rect_to_poly_ft4(
                 &buffers[g_world_menu_packet_buffer_index].quads[0], &from_main, to_main, t);
             if (to_icon->x != 0) {
-                world_menu_lerp_rect_to_poly_ft4_b(
+                world_screen_menu_lerp_rect_to_poly_ft4(
                     &buffers[g_world_menu_packet_buffer_index].quads[1], &from_icon, to_icon, t);
             }
         }
@@ -69,10 +69,10 @@ void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, REC
         for (t = limit; t >= ONE; t -= 32) {
             for (frame = 0; frame < 3 - g_world_event_speed; frame++) {
                 world_thread_yield();
-                world_menu_lerp_rect_to_poly_ft4_b(
+                world_screen_menu_lerp_rect_to_poly_ft4(
                     &buffers[g_world_menu_packet_buffer_index].quads[0], &from_main, to_main, t);
                 if (to_icon->x != 0) {
-                    world_menu_lerp_rect_to_poly_ft4_b(
+                    world_screen_menu_lerp_rect_to_poly_ft4(
                         &buffers[g_world_menu_packet_buffer_index].quads[1], &from_icon, to_icon, t);
                 }
             }
@@ -82,9 +82,10 @@ void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, REC
     t = ONE;
     for (frame = 0; frame < 3 - g_world_event_speed; frame++) {
         world_thread_yield();
-        world_menu_lerp_rect_to_poly_ft4_b(&buffers[g_world_menu_packet_buffer_index].quads[0], &from_main, to_main, t);
+        world_screen_menu_lerp_rect_to_poly_ft4(
+            &buffers[g_world_menu_packet_buffer_index].quads[0], &from_main, to_main, t);
         if (to_icon->x != 0) {
-            world_menu_lerp_rect_to_poly_ft4_b(
+            world_screen_menu_lerp_rect_to_poly_ft4(
                 &buffers[g_world_menu_packet_buffer_index].quads[1], &from_icon, to_icon, t);
         }
     }

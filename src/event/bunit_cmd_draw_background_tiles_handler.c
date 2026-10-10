@@ -26,7 +26,7 @@ u8* bunit_cmd_draw_background_tiles_handler(u8* desc) {
     packed_height = desc[6];
     packed_width = desc[5];
     otag_index = g_bunit_gfx_otag_index;
-    clut_id = g_bunit_text_metric_2;
+    clut_id = g_bunit_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;
     full_rows = packed_height >> 4;

@@ -38,7 +38,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
             /* Entry 8's selected_index. A typed member store moves into the following jal
              * delay slot; this raw access preserves the target's store ordering. */
             *(s16*)((u8*)g_battle_menu_thread_menu_data + 0x218) = 0;
-            D_801669E8 = 0;
+            g_battle_menu_status_scroll_offset = 0;
             battle_menu_clear_entry_selections();
             battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_start_entry_thread);
             battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, menu_id, 0, 0);

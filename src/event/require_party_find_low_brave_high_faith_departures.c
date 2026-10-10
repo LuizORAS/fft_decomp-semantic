@@ -69,7 +69,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
                 g_require_party_affected_unit_count = count + 1;
             }
             /* The target passes three arguments the callee does not take. */
-            require_noop_801c43e0(battle_index, unit->unit_id, unit->character_identity);
+            require_party_report_brave_departure_stub(battle_index, unit->unit_id, unit->character_identity);
             departure_count++;
         } else if (faith >= 0x5f) {
             if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {

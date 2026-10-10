@@ -9,6 +9,6 @@ void equip_menu_dispatch_with_override(u8* menu, s32 state, s32 override) {
     if (override != 0) {
         effective_state = 0;
     }
-    equip_text_set_palette_and_metrics(override);
+    equip_menu_set_palette_mode(override);
     equip_cmd_run_stream(menu, effective_state);
 }

@@ -385,8 +385,8 @@ extern s32 g_attack_numeric_editor_redraw_request;
 
 /* Entries [1] and [2] of the unit-name text file's section-offset table (0x801cd2b0, s32[32], ending at
  * g_attack_text_data). */
-extern s32 g_attack_text_section_offset_1;
-extern s32 g_attack_text_section_offset_2;
+extern s32 g_attack_text_roster_unit_names_offset;
+extern s32 g_attack_text_job_names_offset;
 extern u8 g_attack_text_data[];
 extern u8 g_attack_numeric_editor_thread_params[];
 extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;

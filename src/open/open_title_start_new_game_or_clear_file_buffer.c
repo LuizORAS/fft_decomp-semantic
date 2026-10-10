@@ -28,8 +28,8 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     } while (index < 0x7800);
 
     open_gfx_start_overlay_fade_out(0x10);
-    record
-        = open_gfx_append_render_record_36(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
+    record = open_gfx_append_animated_render_record(
+        g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_gfx_render_records_36[record].anim_id = 0x12;
     g_open_gfx_render_records_36[record].frame_timer = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
@@ -37,7 +37,7 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     controller = g_open_current_controller_index;
     position[0] = -4;
     position[1] = -16;
-    g_open_controller_stream_start[controller].stream_start = 0;
+    g_open_controller_records_next[controller].title_exit.state = 0;
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TITLE_EXIT;
     g_open_current_controller_index = controller + 1;
 }

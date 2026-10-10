@@ -92,6 +92,6 @@ s32 jobstts_update_ability_list_menu(void) {
     rect.w = 0x50;
     rect.h = 0x10;
     jobstts_gfx_enqueue_textured_quad(
-        &rect, 0, 0xc8, 0, 0, g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0, 0xb);
+        &rect, 0, 0xc8, 0, 0, g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut, 0xb);
     return MENU_JOB_LIST_STEP_ABILITIES;
 }

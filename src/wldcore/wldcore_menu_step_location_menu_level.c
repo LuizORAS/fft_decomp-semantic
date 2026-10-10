@@ -46,7 +46,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     }
     if (level->delay != 0) {
         if (level->delay == 8) {
-            world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+            world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
             world_thread_set_parameters(
                 WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         }

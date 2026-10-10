@@ -18,7 +18,7 @@ void SuzukiSPUInitialiser(s32 flags) {
     g_main_sound_driver_flags = flags | MAIN_SOUND_DRIVER_INITIALISED;
     SpuInitMalloc(6, g_main_sound_spu_malloc_table);
     main_sound_init_heap(g_main_sound_heap_memory, 0x8000);
-    main_noop_80014544();
+    main_sound_init_stub();
     g_main_smd_random_state = 0x12345678;
     g_main_sound_active_music_list = 0;
     g_main_sound_sfx_music = 0;

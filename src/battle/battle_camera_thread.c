@@ -152,7 +152,7 @@ void battle_camera_thread(void) {
             }
             *variable = value;
         }
-        battle_script_clear_indexed_variable_bit0();
+        battle_camera_clear_zoom_variable_low_bit();
         battle_thread_yield();
     }
 
@@ -168,7 +168,7 @@ void battle_camera_thread(void) {
             g_battle_script_variables[g_battle_camera_script_variable_indices[i]] = target[i];
         }
     }
-    battle_script_clear_indexed_variable_bit0();
+    battle_camera_clear_zoom_variable_low_bit();
     battle_thread_yield();
     battle_thread_exit_current();
 }

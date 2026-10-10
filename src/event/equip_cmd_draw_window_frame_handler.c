@@ -37,7 +37,7 @@ world_menu_window_command_t* equip_cmd_draw_window_frame_handler(world_menu_wind
     height = command->height;
     full_rows = height >> 4;
     partial_height = height & 15;
-    clut = g_equip_text_metric_2;
+    clut = g_equip_menu_palette_clut;
     g_equip_cmd_window_interior_command.rectangle_source = command->rectangle_source;
     g_equip_menu_window_right_x = command->width + left + 5;
     if (command->rectangle_source == 1) {

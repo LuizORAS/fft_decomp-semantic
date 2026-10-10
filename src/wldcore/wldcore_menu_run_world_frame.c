@@ -16,7 +16,7 @@ void wldcore_menu_run_world_frame(GsOT* context) {
         g_world_gfx_active_otag_entries = otag_entries + g_wldcore_menu_ordering_table_offset;
         world_menu_draw_active_window_frames();
         sprite_entries = context->org;
-        world_script_update_event_frame_input(sprite_entries + g_wldcore_menu_ordering_table_offset + 2,
+        world_input_update_event_state(sprite_entries + g_wldcore_menu_ordering_table_offset + 2,
             g_wldcore_current_button_input, g_active_graphics_buffer_index * 240);
         if (g_world_sound_effect_id_to_play != -1) {
             wldcore_sound_play_effect(g_world_sound_effect_id_to_play);

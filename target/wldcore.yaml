@@ -106,7 +106,7 @@ functions:
   - {addr: 0x8006f528, size: 340, name: wldcore_menu_push_layout_window_level, hash: ab1438ef2fc8d3e1}
   - {addr: 0x8006f67c, size: 212, name: wldcore_window_apply_layout, hash: 4fed0d29e1d2fe7b}
   - {addr: 0x8006f750, size: 104, name: wldcore_window_finalize_record_and_stop_task, hash: 9e9129e51d124b70}
-  - {addr: 0x8006f7b8, size: 8, name: wldcore_noop_8006f7b8, hash: 6d64edf91449c1b1}
+  - {addr: 0x8006f7b8, size: 8, name: wldcore_menu_publish_layout_window_level, hash: 6d64edf91449c1b1}
   - {addr: 0x8006f7c0, size: 816, name: wldcore_menu_handle_layout_window_input, hash: c1e8409fe84df98d}
   - {addr: 0x8006faf0, size: 2036, name: wldcore_menu_push_location_menu_level, hash: f4f64a730589fe4a}
   - {addr: 0x800702e4, size: 56, name: wldcore_window_set_render_state_0_from_arg_0x10, hash: fee0e6d3cb0d88e0}
@@ -191,7 +191,7 @@ functions:
   - {addr: 0x8007b7d4, size: 740, name: wldcore_proposition_handle_cancel_confirm_input, hash: ecedf486c1c63c54}
   - {addr: 0x8007bab8, size: 1360, name: wldcore_menu_push_sound_novel_level, hash: a9b47b074e27ea14}
   - {addr: 0x8007c008, size: 292, name: wldcore_window_reload_data_set_and_resume_thread14, hash: 60796fceb233cfcb}
-  - {addr: 0x8007c12c, size: 8, name: wldcore_noop_8007c12c, hash: 6d64edf91449c1b1}
+  - {addr: 0x8007c12c, size: 8, name: wldcore_menu_publish_sound_novel_level, hash: 6d64edf91449c1b1}
   - {addr: 0x8007c134, size: 1880, name: wldcore_menu_step_sound_novel_level, hash: 38e6aa4b211d76d0}
   - {addr: 0x8007c88c, size: 1052, name: wldcore_menu_push_sound_novel_quit_level, hash: 85d07d42edfefb9c}
   - {addr: 0x8007cca8, size: 208, name: wldcore_window_clear_slot_state, hash: b5918d30a7aa2ca2}
@@ -255,11 +255,11 @@ functions:
   - {addr: 0x80086f1c, size: 824, name: wldcore_menu_push_participant_detail_level, hash: e15c1dbc046fa045}
   - {addr: 0x80087254, size: 1028, name: wldcore_unit_build_status_panel_data, hash: 796f68c885a6523d}
   - {addr: 0x80087658, size: 76, name: wldcore_window_clear_pair_state, hash: f2b1173af70ed5f4}
-  - {addr: 0x800876a4, size: 8, name: wldcore_noop_800876a4, hash: 6d64edf91449c1b1}
+  - {addr: 0x800876a4, size: 8, name: wldcore_menu_publish_participant_detail_level, hash: 6d64edf91449c1b1}
   - {addr: 0x800876ac, size: 1256, name: wldcore_menu_handle_participant_detail_input, hash: f8be7dedd4e53a7c}
   - {addr: 0x80087b94, size: 508, name: wldcore_list_open_brave_story_propositions, hash: 74076060530601d2}
-  - {addr: 0x80087d90, size: 8, name: wldcore_noop_80087d90, hash: 6d64edf91449c1b1}
-  - {addr: 0x80087d98, size: 8, name: wldcore_noop_80087d98, hash: 6d64edf91449c1b1}
+  - {addr: 0x80087d90, size: 8, name: wldcore_menu_resume_brave_story_propositions_level, hash: 6d64edf91449c1b1}
+  - {addr: 0x80087d98, size: 8, name: wldcore_menu_publish_brave_story_propositions_level, hash: 6d64edf91449c1b1}
   - {addr: 0x80087da0, size: 516, name: wldcore_list_handle_brave_story_propositions_input, hash: d0220aeec018bc1e}
   - {addr: 0x80087fa4, size: 476, name: wldcore_menu_push_proposition_attempt_detail_level, hash: c9cc9c865ac2e396}
   - {addr: 0x80088180, size: 392, name: wldcore_menu_wait_brave_story_text_then_pop_level, hash: b3f0c6a8cf2e5f9d}
@@ -323,7 +323,7 @@ functions:
   - {addr: 0x8008bf1c, size: 64, name: wldcore_opcode_add_counter_delta, hash: 5a83c06ac2b2c98e}
   - {addr: 0x8008bf5c, size: 64, name: wldcore_opcode_subtract_counter_delta, hash: 47accf9b5276e028}
   - {addr: 0x8008bf9c, size: 144, name: wldcore_opcode_start_pending_value_transition, hash: 0e8c7d16fb25a71d}
-  - {addr: 0x8008c02c, size: 48, name: wldcore_opcode_system_flag_800_flags_04, hash: 33df93c6e87c5be3}
+  - {addr: 0x8008c02c, size: 48, name: wldcore_opcode_hide_value_display, hash: 33df93c6e87c5be3}
   - {addr: 0x8008c05c, size: 116, name: wldcore_opcode_apply_pending_delta_and_clamp_value, hash: f60cd93b941df914}
   - {addr: 0x8008c0d0, size: 64, name: wldcore_opcode_play_sound, hash: 324ef0f32cc12574}
   - {addr: 0x8008c110, size: 64, name: wldcore_opcode_play_music, hash: 147e3922b16a7121}
@@ -356,7 +356,7 @@ functions:
   - {addr: 0x8008d194, size: 308, name: wldcore_map_get_dot_snap_step, hash: 983f17049348bd36}
   - {addr: 0x8008d2c8, size: 248, name: wldcore_map_build_location_menu_entries, hash: d2122546324ab53a}
   - {addr: 0x8008d3c0, size: 340, name: wldcore_location_collect_choice_text_ids, hash: 6061327aac03598c}
-  - {addr: 0x8008d514, size: 8, name: wldcore_noop_8008d514, hash: 6d64edf91449c1b1}
+  - {addr: 0x8008d514, size: 8, name: wldcore_init_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8008d51c, size: 740, name: wldcore_map_draw_visible_routes, hash: 536661d7cc829621}
   - {addr: 0x8008d800, size: 416, name: wldcore_location_begin_route_segment, hash: ec085cca25775352}
   - {addr: 0x8008d9a0, size: 604, name: wldcore_map_prepare_path_animation, hash: 8fc93df7e7f43eb6}
@@ -385,7 +385,7 @@ functions:
   - {addr: 0x8008fcc8, size: 192, name: wldcore_list_clamp_cursor_state, hash: 9061fdc2d690113e}
   - {addr: 0x8008fd88, size: 44, name: wldcore_list_clear_cursor_state, hash: a7a3eb5e83910bea}
   - {addr: 0x8008fdb4, size: 548, name: wldcore_window_init_number_panel_render_thread, hash: f1523edab18f34e8}
-  - {addr: 0x8008ffd8, size: 8, name: wldcore_noop_8008ffd8, hash: 6d64edf91449c1b1}
+  - {addr: 0x8008ffd8, size: 8, name: wldcore_window_number_panel_noop_callback, hash: 6d64edf91449c1b1}
   - {addr: 0x8008ffe0, size: 908, name: wldcore_text_init_scrollable_window, hash: 7080a27f95ba794c}
   - {addr: 0x8009036c, size: 120, name: wldcore_window_init_record, hash: c2ddfb60e7100f16}
   - {addr: 0x800903e4, size: 732, name: wldcore_text_is_window_finished, hash: b51b825f77122c7e}

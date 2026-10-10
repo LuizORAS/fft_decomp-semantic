@@ -75,10 +75,10 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     world_menu_open_scrollable_list(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);
-    world_thread_update_task_state();
+    world_input_update_with_message_state();
     while (g_world_name_entry_state != 0xFF) {
         world_gfx_update_fade_in_tile();
-        main_noop_800449ec();
+        main_system_frame_stub();
         g_world_gfx_poly_f3_count = 0;
         g_world_gfx_poly_ft3_count = 0;
         g_world_gfx_poly_f4_count = 0;
@@ -121,7 +121,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         world_gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
         DrawOTag(otag);
         ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
-        world_thread_update_task_state();
+        world_input_update_with_message_state();
         busy = world_map_is_busy();
         if (busy == 0) {
             if (g_world_input_primary_repeat & PSX_PAD_L1) {
@@ -148,7 +148,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
         world_menu_draw_active_window_frames();
-        world_script_update_event_frame_input(
+        world_input_update_event_state(
             g_world_gfx_active_packet_buffer->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         value = g_world_name_entry_state;
         if (value != g_world_name_entry_last_state) {

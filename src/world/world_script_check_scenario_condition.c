@@ -15,7 +15,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 x, s32 elevation) {
+s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {
     battle_stats_t* unit;
     s32 i;
     s32 j; /* equipment slot, then battle index: one variable (a0 in both loops) */
@@ -97,7 +97,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 x, s3
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
         unit = world_unit_get_by_unit_id(id);
-        if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.bits.y == x
+        if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.bits.y == tile_y
             && unit->position.bits.higher_elevation == elevation)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }
@@ -107,7 +107,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 x, s3
                 j = battle_unit_get_battle_index_by_misc_id(i);
                 if (j != -1) {
                     unit = battle_unit_get_stats_from_battle_id(j);
-                    if (unit->x == value && unit->position.bits.y == x
+                    if (unit->x == value && unit->position.bits.y == tile_y
                         && unit->position.bits.higher_elevation == elevation && unit->sprite_palette == id)
                         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
                 }

@@ -193,7 +193,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST], 0, 0);
                 column = 0;
                 while (1) {
-                    if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                         LoadImage(&g_battle_menu_ability_list_clut_rect, (u32*)(saved_clut + 48));
                         break;
                     }

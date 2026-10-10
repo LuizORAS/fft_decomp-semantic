@@ -113,7 +113,7 @@ void battle_state_run_deployment(void) {
              * past the loop end, which the target keeps inline. */
             goto done;
         }
-        battle_noop_80079298();
+        battle_state_deployment_frame_stub();
         (g_battle_screen_fade_polygons + g_main_gfx_screen_polarity)->r0 = fade;
         (g_battle_screen_fade_polygons + g_main_gfx_screen_polarity)->g0 = fade;
         (g_battle_screen_fade_polygons + g_main_gfx_screen_polarity)->b0 = fade;
@@ -123,7 +123,7 @@ void battle_state_run_deployment(void) {
         g_main_system_battle_frame_hsync_count
             = battle_state_sync_and_submit_deployment_frame(main_gfx_get_otag() + 0x17f);
         main_file_poll_load(&g_main_file_cd_state);
-        main_noop_800449ec();
+        main_system_frame_stub();
     }
     fade = 0;
 done:

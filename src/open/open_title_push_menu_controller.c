@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Title-menu view of g_open_controller_stream_start; indexing it as an array of
+/* Title-menu view of g_open_controller_records_next; indexing it as an array of
  * this type (rather than casting the controller-record array) is required for
  * the target's constant-folded field addresses. */
 extern open_title_controller_t g_open_title_menu_states[];
@@ -40,8 +40,8 @@ void open_title_push_menu_controller(s32 argument) {
     LoadImage(&rect, g_open_file_destination);
     DrawSync(0);
 
-    record
-        = open_gfx_append_render_record_36(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
+    record = open_gfx_append_animated_render_record(
+        g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     entry = g_open_gfx_render_records_36;
     records = entry;
     field = &records->x;
@@ -55,7 +55,7 @@ void open_title_push_menu_controller(s32 argument) {
     positions[record].y = 0x64;
 
     for (i = 0, y = 0x1e; i < 4; i++) {
-        record = open_gfx_append_render_record_36(
+        record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
         g_open_title_menu_states[g_open_current_controller_index].records_36[i + 1] = record;
         g_open_gfx_render_records_36[record].anim_id = i + 3;
@@ -67,8 +67,8 @@ void open_title_push_menu_controller(s32 argument) {
         positions[record].x = -0x18;
     }
 
-    record
-        = open_gfx_append_render_record_36(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
+    record = open_gfx_append_animated_render_record(
+        g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_title_menu_states[g_open_current_controller_index].cursor_record_36 = record;
     entry = &g_open_gfx_render_records_36[record];
     entry->anim_id = 0x13;

@@ -790,15 +790,16 @@ typedef enum suzuki_voice_mask_request {
  * main_smd_read_instructions would never get past one. */
 typedef enum suzuki_smd_opcode {
     SUZUKI_SMD_OPCODE_FIRST = 0x80,
-    SUZUKI_SMD_OPCODE_REST = 0x80,        /* ticks */
-    SUZUKI_SMD_OPCODE_FERMATA = 0x81,     /* ticks: holds the sounding note that much longer */
-    SUZUKI_SMD_OPCODE_NOP_8A = 0x8a,      /* nothing; main_smd_no_instruction_2 */
-    SUZUKI_SMD_OPCODE_LOOP_SELECT = 0x8d, /* selector: a Loop when it equals music->loop_select; main_smd_opcode_8d */
-    SUZUKI_SMD_OPCODE_SKIP_3 = 0x8e,      /* three ignored bytes */
-    SUZUKI_SMD_OPCODE_NOP_8F = 0x8f,      /* nothing; main_smd_no_instruction_4 */
-    SUZUKI_SMD_OPCODE_END_BAR = 0x90,     /* jumps to the loop point; ends the channel when none is set */
-    SUZUKI_SMD_OPCODE_LOOP = 0x91,        /* sets the loop point */
-    SUZUKI_SMD_OPCODE_OCTAVE = 0x94,      /* octave */
+    SUZUKI_SMD_OPCODE_REST = 0x80,    /* ticks */
+    SUZUKI_SMD_OPCODE_FERMATA = 0x81, /* ticks: holds the sounding note that much longer */
+    SUZUKI_SMD_OPCODE_NOP_8A = 0x8a,  /* nothing; main_smd_opcode_8a */
+    SUZUKI_SMD_OPCODE_LOOP_SELECT
+    = 0x8d, /* selector: a Loop when it equals music->loop_select; main_smd_loop_point_if_selected */
+    SUZUKI_SMD_OPCODE_SKIP_3 = 0x8e,  /* three ignored bytes */
+    SUZUKI_SMD_OPCODE_NOP_8F = 0x8f,  /* nothing; main_smd_opcode_8f */
+    SUZUKI_SMD_OPCODE_END_BAR = 0x90, /* jumps to the loop point; ends the channel when none is set */
+    SUZUKI_SMD_OPCODE_LOOP = 0x91,    /* sets the loop point */
+    SUZUKI_SMD_OPCODE_OCTAVE = 0x94,  /* octave */
     SUZUKI_SMD_OPCODE_RAISE_OCTAVE = 0x95,
     SUZUKI_SMD_OPCODE_LOWER_OCTAVE = 0x96,
     SUZUKI_SMD_OPCODE_TIME_SIGNATURE = 0x97, /* beats per bar, beat unit */
@@ -817,15 +818,16 @@ typedef enum suzuki_smd_opcode {
     SUZUKI_SMD_OPCODE_UNKNOWN_A5 = 0xa5,         /* delta: adds to music->_unknown_01c; main_smd_opcode_a5 */
     SUZUKI_SMD_OPCODE_MASTER_VOLUME = 0xa6,      /* volume of the whole music */
     SUZUKI_SMD_OPCODE_MASTER_VOLUME_RAMP = 0xa7, /* time in 32/240 s units, target volume */
-    SUZUKI_SMD_OPCODE_GATE_TIME = 0xa9,  /* sixteenths of each note's length that stay keyed on; main_smd_opcode_a9 */
+    SUZUKI_SMD_OPCODE_GATE_TIME = 0xa9,  /* sixteenths of each note's length that stay keyed on; main_smd_gate_time */
     SUZUKI_SMD_OPCODE_SET_VOICE = 0xaa,  /* SPU voice number */
     SUZUKI_SMD_OPCODE_INSTRUMENT = 0xac, /* instrument of the channel's waveset */
-    SUZUKI_SMD_OPCODE_LENGTH_ADJUST = 0xad, /* signed ticks added to length_adjust, 0 clears it; main_smd_opcode_ad */
-    SUZUKI_SMD_OPCODE_NOP_AE = 0xae,        /* nothing; main_smd_no_instruction_5 */
-    SUZUKI_SMD_OPCODE_NOP_AF = 0xaf,        /* nothing; main_smd_no_instruction_6 */
-    SUZUKI_SMD_OPCODE_SLUR_ON = 0xb0,       /* every note is tied to the next; main_smd_opcode_b0 */
-    SUZUKI_SMD_OPCODE_SLUR_OFF = 0xb1,      /* main_smd_opcode_b1 */
-    SUZUKI_SMD_OPCODE_ENABLE_LFO = 0xb2,    /* SPU pitch LFO on the channel's voice (odd voices only) */
+    SUZUKI_SMD_OPCODE_LENGTH_ADJUST
+    = 0xad,                              /* signed ticks added to length_adjust, 0 clears it; main_smd_length_adjust */
+    SUZUKI_SMD_OPCODE_NOP_AE = 0xae,     /* nothing; main_smd_opcode_ae */
+    SUZUKI_SMD_OPCODE_NOP_AF = 0xaf,     /* nothing; main_smd_opcode_af */
+    SUZUKI_SMD_OPCODE_SLUR_ON = 0xb0,    /* every note is tied to the next; main_smd_slur_on */
+    SUZUKI_SMD_OPCODE_SLUR_OFF = 0xb1,   /* main_smd_slur_off */
+    SUZUKI_SMD_OPCODE_ENABLE_LFO = 0xb2, /* SPU pitch LFO on the channel's voice (odd voices only) */
     SUZUKI_SMD_OPCODE_DISABLE_LFO = 0xb3,
     SUZUKI_SMD_OPCODE_ENABLE_NOISE = 0xb4,   /* noise clock */
     SUZUKI_SMD_OPCODE_INCREASE_NOISE = 0xb5, /* noise clock delta, modulo 64 */
@@ -845,14 +847,15 @@ typedef enum suzuki_smd_opcode {
     SUZUKI_SMD_OPCODE_ATTACK_MODE = 0xc8,             /* SPU envelope mode */
     SUZUKI_SMD_OPCODE_SUSTAIN_MODE = 0xc9,            /* SPU envelope mode */
     SUZUKI_SMD_OPCODE_RELEASE_MODE = 0xca,            /* SPU envelope mode */
-    SUZUKI_SMD_OPCODE_PITCH_OFFSET = 0xd0,            /* signed, 1/8 semitone; main_smd_opcode_d0 */
-    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET = 0xd1,      /* signed delta, 1/8 semitone; main_smd_opcode_d1 */
-    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET_FINE = 0xd2, /* signed delta, 1/32 semitone; main_smd_opcode_d2 */
-    /* Signed 16-bit delta in 1/256 semitone, high byte first; main_smd_opcode_d3. */
+    SUZUKI_SMD_OPCODE_PITCH_OFFSET = 0xd0,            /* signed, 1/8 semitone; main_smd_pitch_offset */
+    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET = 0xd1,      /* signed delta, 1/8 semitone; main_smd_add_pitch_offset_coarse */
+    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET_FINE = 0xd2, /* signed delta, 1/32 semitone; main_smd_add_pitch_offset_fine */
+    /* Signed 16-bit delta in 1/256 semitone, high byte first; main_smd_add_pitch_offset_wide. */
     SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET_WORD = 0xd3,
-    SUZUKI_SMD_OPCODE_PITCH_SLIDE = 0xd4,      /* ticks, signed semitones */
-    SUZUKI_SMD_OPCODE_PITCH_SLIDE_HOLD = 0xd5, /* toggles SUZUKI_RAMP_PITCH_SLIDE_HOLD; main_smd_opcode_d5 */
-    SUZUKI_SMD_OPCODE_PORTAMENTO = 0xd6, /* ticks a key-on slides from the previous key, 0 off; main_smd_opcode_d6 */
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE = 0xd4, /* ticks, signed semitones */
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE_HOLD
+    = 0xd5,                              /* toggles SUZUKI_RAMP_PITCH_SLIDE_HOLD; main_smd_toggle_pitch_slide_hold */
+    SUZUKI_SMD_OPCODE_PORTAMENTO = 0xd6, /* ticks a key-on slides from the previous key, 0 off; main_smd_portamento */
     /* The vibrato opcodes program modulator 0 on the pitch; their handlers
      * are main_smd_pitch_shift_fade_in, main_smd_pitch_shift,
      * main_smd_pitch_shift_waveform, main_smd_pitch_shift_on and
@@ -862,7 +865,7 @@ typedef enum suzuki_smd_opcode {
     SUZUKI_SMD_OPCODE_VIBRATO_WAVEFORM = 0xd9, /* speed, signed depth, waveform (bit 4: no restart on key-on) */
     SUZUKI_SMD_OPCODE_VIBRATO_ON = 0xda,
     SUZUKI_SMD_OPCODE_VIBRATO_OFF = 0xdb,
-    SUZUKI_SMD_OPCODE_PITCH_SLIDE_OFF = 0xdc, /* main_smd_opcode_dc */
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE_OFF = 0xdc, /* main_smd_pitch_slide_off */
     SUZUKI_SMD_OPCODE_DYNAMIC = 0xe0,         /* channel volume */
     SUZUKI_SMD_OPCODE_CRESCENDO = 0xe1,       /* signed volume delta */
     SUZUKI_SMD_OPCODE_VOLUME_RAMP = 0xe2,     /* ticks, target volume; main_smd_fermata_ramp */
@@ -1757,11 +1760,12 @@ extern u32 g_main_boot_squaresoft_logo_image_words[];
 extern u8* g_main_heap_high_overlay_load_address;
 extern u8* g_main_heap_low_overlay_load_address;
 extern u8* g_main_heap_world_overlay_load_address;
-void main_noop_800449ec(void);
+/* 0x800449ec: empty (nop, jr ra). Every main loop and every blocking wait calls it once per frame. */
+void main_system_frame_stub(void);
 
 /* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
  * but neither their original meaning nor the hook's original name is proven. */
-void main_noop_800449f8(s32 category, s32 code);
+void main_system_report_stub(s32 category, s32 code);
 void main_overlay_call_battle_entrypoint(void);
 void main_overlay_exec_battle_bin(void);
 int main_overlay_exec_open_bin_main_loop(int mode);
@@ -1805,7 +1809,7 @@ void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void* game_malloc(s32 byte_length);
 void main_util_copy_action_data(const void* source, void* destination);
 void main_heap_clear_smd_allocator_table(void);
-void main_noop_80014544(void);
+void main_sound_init_stub(void);
 void main_system_enable_root_counter_2_evcb(void);
 void main_system_disable_root_counter_2_evcb(void);
 void main_util_copy_bytes(const void* source, void* destination, int count);
@@ -2049,7 +2053,7 @@ extern s32 g_main_deployed_unit_map_coordinates[];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
-s32 main_return_zero_80043708(void);
+s32 main_sound_is_music_loading_stub(void);
 
 /* unnamed */
 void func_800184e0(u16 value);

@@ -23,7 +23,7 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
     packed_height = stream[6];
     packed_width = stream[5];
     otag_index = g_jobstts_gfx_otag_index;
-    clut_id = g_jobstts_gfx_background_clut_id;
+    clut_id = g_jobstts_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;
     full_rows = packed_height >> 4;

@@ -2,13 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-typedef struct open_title_new_game_state {
-    /* 0x00 */ u8 _unused_00[0x10];
-    /* 0x10 */ s32 step;
-    /* 0x14 */ u8 _unused_14[0x0c];
-    /* 0x20 */ s32 name_text_id;
-} open_title_new_game_state_t;
-
 typedef struct open_title_party_name_block {
     /* 0x00 */ char name[16];
 } open_title_party_name_block_t;
@@ -76,6 +69,6 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
     if (open_gfx_update_transition_sequence() != 0) {
         return;
     }
-    open_noop_8006d7ec();
+    open_gfx_transition_finished_stub();
     state->step = 4;
 }

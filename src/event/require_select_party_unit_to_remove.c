@@ -125,7 +125,7 @@ s32 require_select_party_unit_to_remove(void) {
 
     show_unit_message:
         battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
-        battle_thread_set_parameters_4(
+        battle_thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_battle_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
         battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
@@ -237,7 +237,7 @@ s32 require_select_party_unit_to_remove(void) {
             goto show_unit_message;
         g_require_menu_selection_result = 0xff;
         battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
-        battle_thread_set_parameters_4(
+        battle_thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_battle_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
         battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);

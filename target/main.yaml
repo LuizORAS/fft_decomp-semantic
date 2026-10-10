@@ -104,7 +104,7 @@ functions:
   - {addr: 0x800143ac, size: 128, name: main_sound_get_largest_free_block, hash: ec544aa2d787d18d, profile: gcc-2.6.3_O2_G8_aspsx-2.34, source: src/psyq/suzuki/main_sound_get_largest_free_block.c}
   - {addr: 0x8001442c, size: 164, name: main_sound_copy_memory, hash: bcf044e1d17f66f5}
   - {addr: 0x800144d0, size: 116, name: main_sound_clear_memory, hash: 4ba829a78b79d216}
-  - {addr: 0x80014544, size: 8, name: main_noop_80014544, hash: 6d64edf91449c1b1}
+  - {addr: 0x80014544, size: 8, name: main_sound_init_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8001454c, size: 32, name: main_sound_alloc_spu_ram, hash: b321a6f7ac0e83d6}
   - {addr: 0x8001456c, size: 36, name: main_sound_free_spu_ram, hash: c270971f843e72ec}
   - {addr: 0x80014590, size: 648, name: main_sound_update_voice_attrs, hash: 8c3ed88a730f8d9d}
@@ -121,10 +121,10 @@ functions:
   - {addr: 0x8001586c, size: 8, name: main_smd_no_instruction, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x80015874, size: 40, name: main_smd_rest, hash: 3c07da86436791ee}
   - {addr: 0x8001589c, size: 28, name: main_smd_fermata, hash: c89ff34cc5d52578}
-  - {addr: 0x800158b8, size: 8, name: main_smd_no_instruction_2, hash: cc2f57dc1c5c5ee3}
-  - {addr: 0x800158c0, size: 40, name: main_smd_opcode_8d, hash: e16dea549c332a48}
-  - {addr: 0x800158e8, size: 8, name: main_smd_skip_3, hash: 65daf2b210532dc2}
-  - {addr: 0x800158f0, size: 8, name: main_smd_no_instruction_4, hash: cc2f57dc1c5c5ee3}
+  - {addr: 0x800158b8, size: 8, name: main_smd_opcode_8a, hash: cc2f57dc1c5c5ee3}
+  - {addr: 0x800158c0, size: 40, name: main_smd_loop_point_if_selected, hash: e16dea549c332a48}
+  - {addr: 0x800158e8, size: 8, name: main_smd_opcode_8e, hash: 65daf2b210532dc2}
+  - {addr: 0x800158f0, size: 8, name: main_smd_opcode_8f, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800158f8, size: 228, name: main_smd_end_bar, hash: ebfa8b04e60ca1ba}
   - {addr: 0x800159dc, size: 20, name: main_smd_loop, hash: a2ad1daff59e8313}
   - {addr: 0x800159f0, size: 32, name: main_smd_octave, hash: 42e6663d6b65e801}
@@ -144,14 +144,14 @@ functions:
   - {addr: 0x80015d04, size: 64, name: main_smd_tempo_ramp, hash: 6d845e8fe32e3ced}
   - {addr: 0x80015d44, size: 64, name: main_smd_master_volume, hash: 1742c685bbd5cae9}
   - {addr: 0x80015d84, size: 76, name: main_smd_master_volume_ramp, hash: bbff1c62b5c5c18f}
-  - {addr: 0x80015dd0, size: 20, name: main_smd_opcode_a9, hash: fccc3c40f25736fa}
+  - {addr: 0x80015dd0, size: 20, name: main_smd_gate_time, hash: fccc3c40f25736fa}
   - {addr: 0x80015de4, size: 76, name: main_smd_set_voice, hash: de642dc1acca061f}
   - {addr: 0x80015e30, size: 56, name: main_smd_instrument, hash: 1129a2507f862374}
-  - {addr: 0x80015e68, size: 48, name: main_smd_opcode_ad, hash: 330d1890032a337f}
-  - {addr: 0x80015e98, size: 8, name: main_smd_no_instruction_5, hash: cc2f57dc1c5c5ee3}
-  - {addr: 0x80015ea0, size: 8, name: main_smd_no_instruction_6, hash: cc2f57dc1c5c5ee3}
-  - {addr: 0x80015ea8, size: 24, name: main_smd_opcode_b0, hash: 7a816527a9ab6c52}
-  - {addr: 0x80015ec0, size: 24, name: main_smd_opcode_b1, hash: 03f572b01af10f9c}
+  - {addr: 0x80015e68, size: 48, name: main_smd_length_adjust, hash: 330d1890032a337f}
+  - {addr: 0x80015e98, size: 8, name: main_smd_opcode_ae, hash: cc2f57dc1c5c5ee3}
+  - {addr: 0x80015ea0, size: 8, name: main_smd_opcode_af, hash: cc2f57dc1c5c5ee3}
+  - {addr: 0x80015ea8, size: 24, name: main_smd_slur_on, hash: 7a816527a9ab6c52}
+  - {addr: 0x80015ec0, size: 24, name: main_smd_slur_off, hash: 03f572b01af10f9c}
   - {addr: 0x80015ed8, size: 64, name: main_smd_enable_lfo, hash: af780db3ed1de897}
   - {addr: 0x80015f18, size: 44, name: main_smd_disable_lfo, hash: 1f8feff52e26286c}
   - {addr: 0x80015f44, size: 112, name: main_smd_enable_noise, hash: 117cc0af0af66697}
@@ -172,14 +172,14 @@ functions:
   - {addr: 0x80016260, size: 28, name: main_smd_attack_mode, hash: 2c74c0a8b7befd3d}
   - {addr: 0x8001627c, size: 28, name: main_smd_sustain_mode, hash: 8c61477e7b5ee112}
   - {addr: 0x80016298, size: 28, name: main_smd_release_mode, hash: 4f0e3b03799948c5}
-  - {addr: 0x800162b4, size: 36, name: main_smd_opcode_d0, hash: 764c2a2fda5f0df2}
-  - {addr: 0x800162d8, size: 44, name: main_smd_opcode_d1, hash: 42ebd1eb90cc2188}
-  - {addr: 0x80016304, size: 44, name: main_smd_opcode_d2, hash: 6beac3b12e52d5c6}
-  - {addr: 0x80016330, size: 52, name: main_smd_opcode_d3, hash: f9d32f663d81a073}
+  - {addr: 0x800162b4, size: 36, name: main_smd_pitch_offset, hash: 764c2a2fda5f0df2}
+  - {addr: 0x800162d8, size: 44, name: main_smd_add_pitch_offset_coarse, hash: 42ebd1eb90cc2188}
+  - {addr: 0x80016304, size: 44, name: main_smd_add_pitch_offset_fine, hash: 6beac3b12e52d5c6}
+  - {addr: 0x80016330, size: 52, name: main_smd_add_pitch_offset_wide, hash: f9d32f663d81a073}
   - {addr: 0x80016364, size: 88, name: main_smd_pitch_slide, hash: 5d675a12ede777f2}
-  - {addr: 0x800163bc, size: 24, name: main_smd_opcode_d5, hash: 2213363c0876fe42}
-  - {addr: 0x800163d4, size: 24, name: main_smd_opcode_dc, hash: bd1ab570d8a0236d}
-  - {addr: 0x800163ec, size: 52, name: main_smd_opcode_d6, hash: cf8b8047445710f5}
+  - {addr: 0x800163bc, size: 24, name: main_smd_toggle_pitch_slide_hold, hash: 2213363c0876fe42}
+  - {addr: 0x800163d4, size: 24, name: main_smd_pitch_slide_off, hash: bd1ab570d8a0236d}
+  - {addr: 0x800163ec, size: 52, name: main_smd_portamento, hash: cf8b8047445710f5}
   - {addr: 0x80016420, size: 180, name: main_smd_pitch_shift, hash: e93a98459a8d2915}
   - {addr: 0x800164d4, size: 216, name: main_smd_pitch_shift_waveform, hash: 3b08982f32c2dc29}
   - {addr: 0x800165ac, size: 56, name: main_smd_pitch_shift_fade_in, hash: 8c0df19ef08daf67}
@@ -690,7 +690,7 @@ functions:
   - {addr: 0x800435bc, size: 8, name: main_file_handle_cd_read_callback, hash: 6d64edf91449c1b1}
   - {addr: 0x800435c4, size: 156, name: main_sound_open_and_play_music, hash: dc882519778a9dfe}
   - {addr: 0x80043660, size: 168, name: main_sound_open_music_into_free_slot, hash: 185c9e9bb1bb9c55}
-  - {addr: 0x80043708, size: 8, name: main_return_zero_80043708, hash: 207819bf4ebe3078}
+  - {addr: 0x80043708, size: 8, name: main_sound_is_music_loading_stub, hash: 207819bf4ebe3078}
   - {addr: 0x80043710, size: 200, name: main_sound_open_music_into_slot, hash: d068d9f896a5379b}
   - {addr: 0x800437d8, size: 248, name: main_sound_open_scenario_smd_files, hash: 0b6f75c1755d440b}
   - {addr: 0x800438d0, size: 136, name: main_sound_poll_scenario_smd_load, hash: 96a506be6e381a11}
@@ -736,7 +736,7 @@ functions:
   - {addr: 0x80044954, size: 60, name: main_file_load_checked_to_address, hash: e4a2578d2206edfb}
   - {addr: 0x80044990, size: 60, name: main_file_load_checked_to_heap, hash: f704f1ec47fb6ed5}
   - {addr: 0x800449cc, size: 32, name: main_heap_call_free, hash: 68e41579281fa6e2}
-  - {addr: 0x800449f8, size: 8, name: main_noop_800449f8, hash: 6d64edf91449c1b1}
+  - {addr: 0x800449f8, size: 8, name: main_system_report_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x80044a00, size: 8, name: main_system_handle_malloc_exception, hash: 6d64edf91449c1b1}
   - {addr: 0x80044a08, size: 44, name: main_system_handle_error, hash: 0520ba9fd79942b9}
   - {addr: 0x80044a34, size: 44, name: main_system_handle_pointer_exception, hash: c49c56d6a872179f}
@@ -1216,7 +1216,7 @@ data:
   - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
   - {addr: 0x80044414, name: game_malloc}
   - {addr: 0x800444dc, name: game_realloc}
-  - {addr: 0x800449ec, name: main_noop_800449ec}
+  - {addr: 0x800449ec, name: main_system_frame_stub}
   - {addr: 0x80044a08, name: animation_exception_handler}
   - {addr: 0x800454cc, name: g_main_brave_story_ages_source}
   - {addr: 0x8004593c, name: _ramsize}

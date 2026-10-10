@@ -16,19 +16,19 @@ void open_menu_start_music_test_controller(void) {
 
     world_script_set_event_speed(1);
     g_open_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
-    /* The same 4 is stored twice; the local keeps it in a saved register
-     * across the fade-out call instead of being rematerialized. */
+    /* The same 4 is stored twice, as the formation OT index and as OPEN_MUSIC_TEST_STEP_OPEN; the local
+     * keeps it in a saved register across the fade-out call instead of being rematerialized. */
     four = 4;
     g_open_menu_formation_otag_index = four;
     g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
     open_gfx_start_overlay_fade_out(0x20);
 
     controller = g_open_current_controller_index;
-    g_open_controller_stream_start[controller].stream_start = 0;
-    g_open_controller_stream_start[controller].stream_length = 0;
-    g_open_controller_stream_start[controller]._unknown_08 = 0;
-    g_open_controller_stream_start[controller]._unknown_0c = four;
-    g_open_controller_stream_start[controller]._unknown_10 = 0;
+    g_open_controller_records_next[controller].music_test.music_id = 0;
+    g_open_controller_records_next[controller].music_test.delay = 0;
+    g_open_controller_records_next[controller].music_test.music_slot = 0;
+    g_open_controller_records_next[controller].music_test.step = four;
+    g_open_controller_records_next[controller].music_test.blink_frames = 0;
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_MUSIC_TEST;
     g_open_current_controller_index = controller + 1;
 }

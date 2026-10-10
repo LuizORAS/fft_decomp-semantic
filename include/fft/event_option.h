@@ -62,7 +62,7 @@ extern u8 g_option_menu_panel_pixels[];
  * Indexing the array is what reproduces the target's symbol-plus-byte-offset
  * addressing. */
 extern RECT g_option_menu_panel_texture_windows[7];
-extern RECT g_option_menu_panel_texture_windows_b[7];
+extern RECT g_option_menu_thin_panel_texture_windows[7];
 extern u8 g_option_menu_render_buffer[];
 extern s32 g_option_menu_state;
 extern u16 g_option_menu_transition_duration;

@@ -102,9 +102,9 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         position.vy -= (tile->depth_half_height.value >> 5) * 12;
         if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
             if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
-                battle_camera_calculate_relative_offset_5((u16*)&position, &offset.vx);
+                battle_camera_calculate_relative_offset_by_5((u16*)&position, &offset.vx);
             } else {
-                battle_camera_calculate_relative_offset_1((u16*)&position, &offset.vx);
+                battle_camera_calculate_relative_offset_by_1((u16*)&position, &offset.vx);
             }
         } else if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
             battle_camera_convert_screen_coords_modify_by_5(&position.vx, &offset.vx);

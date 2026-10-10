@@ -55,7 +55,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
-        if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
+        if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
             for (i = 17; i >= 0; i--) {
                 record->sprites[i].clut = 0x7D3C;
             }

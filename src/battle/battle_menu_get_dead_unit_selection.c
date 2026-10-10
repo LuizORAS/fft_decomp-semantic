@@ -12,7 +12,7 @@ s32 battle_menu_get_dead_unit_selection(s32 battle_id) {
     result = (crystal_pickup_result_t*)battle_thread_call_on_main_stack(stats);
     g_battle_dead_unit_context = result;
     if (result->result == -1 || result->result == 0) {
-        main_noop_800449f8(0x11, 7);
+        main_system_report_stub(0x11, 7);
     }
     /* Reload the published context after the call; reusing result changes the frame and registers. */
     if (g_battle_dead_unit_context->result != 4) {

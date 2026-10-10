@@ -7,8 +7,8 @@ void open_movie_stream_title_demo_and_push_controller(
     open_movie_start_stream(start_sector, end_frame, -1, cd_mix_level);
     g_open_system_runtime_flags &= ~OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
     controller = g_open_current_controller_index;
-    g_open_controller_stream_start[controller].stream_start = start_sector;
-    g_open_controller_stream_start[controller].stream_length = stream_length;
+    g_open_controller_records_next[controller].movie.start_sector = start_sector;
+    g_open_controller_records_next[controller].movie.stream_length = stream_length;
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TITLE_DEMO_MOVIE;
     g_open_current_controller_index = controller + 1;
 }

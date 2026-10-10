@@ -18,7 +18,7 @@ void battle_menu_run_equip_thread(void) {
     saved = g_battle_unit_view_mode;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_battle_menu_suspend_state = 1;
-    battle_thread_wait_for_10_to_13();
+    battle_thread_wait_for_unit_view_panels();
     battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
     battle_menu_reserve_high_overlay(0x20000);
     battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);

@@ -20,7 +20,7 @@ world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_windo
     s32 row;
 
     priority = g_card_text_otag_index;
-    clut = g_card_text_metric_2;
+    clut = g_card_menu_palette_clut;
     if (command->rectangle_source == 2) {
         left = g_card_menu_window_rect_source->rect.x - 5;
         top = g_card_menu_window_rect_source->rect.y - 9;

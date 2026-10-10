@@ -20,7 +20,7 @@ void wldcore_window_init_number_panel_render_thread(
     g_wldcore_window_panel_number_state.max = max;
     g_wldcore_window_panel_number_state._unknown_04[0] = -1;
     g_wldcore_window_panel_number_state._unknown_04[1] = -1;
-    g_wldcore_window_panel_number_state.on_change = wldcore_noop_8008ffd8;
+    g_wldcore_window_panel_number_state.on_change = wldcore_window_number_panel_noop_callback;
     g_wldcore_list_entry_values[0] = g_wldcore_list_entry_values[1] = 0x7d0;
     if (min < 10 && max < 10) {
         width = 1;

@@ -48,9 +48,9 @@ functions:
   - {addr: 0x80068bb0, size: 224, name: open_gfx_init_render_buffers, hash: 39decc2065a64d27}
   - {addr: 0x80068c90, size: 64, name: open_gfx_clear_current_otag, hash: 7dbb971d4cb43ee9}
   - {addr: 0x80068cd0, size: 176, name: open_gfx_draw_render_record_pointer_list, hash: a3a591bbfb26047c}
-  - {addr: 0x80068d80, size: 1164, name: open_gfx_draw_render_record_36, hash: d2445b3917e77445}
+  - {addr: 0x80068d80, size: 1164, name: open_gfx_draw_animated_render_record, hash: d2445b3917e77445}
   - {addr: 0x8006920c, size: 1212, name: open_gfx_draw_window_record, hash: 6c7b3dae23c3f006}
-  - {addr: 0x800696c8, size: 232, name: open_gfx_append_render_record_36, hash: a3135d544f819f6f}
+  - {addr: 0x800696c8, size: 232, name: open_gfx_append_animated_render_record, hash: a3135d544f819f6f}
   - {addr: 0x800697b0, size: 272, name: open_gfx_append_window_record, hash: 6a95dfcd435c9a47}
   - {addr: 0x800698c0, size: 276, name: open_gfx_calculate_scaled_rectangle, hash: 9676150bdf1ed31c}
   - {addr: 0x800699d4, size: 96, name: open_file_wait_then_build_header, hash: b839cd0a4c5eb016}
@@ -65,8 +65,8 @@ functions:
   - {addr: 0x80069eb4, size: 112, name: open_controller_dispatch_current, hash: 56c28d63abc90fb7}
   - {addr: 0x80069f24, size: 180, name: open_movie_stream_fftst_and_push_controller, hash: 3466a0da8fc6b302}
   - {addr: 0x80069fd8, size: 156, name: open_movie_finish_stream_controller_if_ready_or_skipped, hash: e736c342c3869071}
-  - {addr: 0x8006a074, size: 108, name: open_movie_stream_and_push_controller_1, hash: 1636df55b15cecbb}
-  - {addr: 0x8006a0e0, size: 148, name: open_movie_finish_controller_1_if_ready_or_skipped, hash: 5190c9b35c57fef9}
+  - {addr: 0x8006a074, size: 108, name: open_movie_stream_fftop_and_push_controller, hash: 1636df55b15cecbb}
+  - {addr: 0x8006a0e0, size: 148, name: open_movie_finish_fftop_controller_if_ready_or_skipped, hash: 5190c9b35c57fef9}
   - {addr: 0x8006a174, size: 1028, name: open_title_push_menu_controller, hash: 28b9116834e90955}
   - {addr: 0x8006a578, size: 248, name: open_gfx_show_four_render_records, hash: 778fee05b7f00a4b}
   - {addr: 0x8006a670, size: 248, name: open_gfx_hide_four_render_records, hash: d7c265230ad7b5f5}
@@ -98,7 +98,7 @@ functions:
   - {addr: 0x8006d524, size: 308, name: open_title_start_new_game_or_clear_file_buffer, hash: efa74633bab45d83}
   - {addr: 0x8006d658, size: 340, name: open_title_update_exit_transition, hash: 7c3ab8fe1d7d5d9c}
   - {addr: 0x8006d7ac, size: 64, name: open_gfx_init_transition_request, hash: d59678a277450164}
-  - {addr: 0x8006d7ec, size: 8, name: open_noop_8006d7ec, hash: 6d64edf91449c1b1}
+  - {addr: 0x8006d7ec, size: 8, name: open_gfx_transition_finished_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8006d7f4, size: 912, name: open_gfx_update_transition_sequence, hash: 7bbe865958bd3a67}
   - {addr: 0x8006db84, size: 1252, name: open_gfx_draw_transition_line_strips, hash: 44f9ccd8cbccd92c}
   - {addr: 0x8006e068, size: 212, name: open_gfx_copy_file_image_to_210x180_buffer, hash: 5e7217187c9c4567}
@@ -216,7 +216,7 @@ data:
   - {addr: 0x800852b0, name: g_open_movie_mdec_stream_state}
   - {addr: 0x800852c0, name: g_open_controller_records}
   - {addr: 0x800852e8, name: g_open_music_test_list_params}
-  - {addr: 0x80085324, name: g_open_controller_stream_start}
+  - {addr: 0x80085324, name: g_open_controller_records_next}
   - {addr: 0x80085324, name: g_open_title_menu_states}
   - {addr: 0x80085328, name: g_open_controller_stream_length}
   - {addr: 0x80085340, name: g_open_controller_selected_options}
@@ -249,8 +249,8 @@ data:
   - {addr: 0x8008641c, name: g_open_input_directional_repeat_period}
   - {addr: 0x80086420, name: g_open_input_up_repeat_counter}
   - {addr: 0x80086424, name: g_open_input_down_repeat_counter}
-  - {addr: 0x80086428, name: g_open_input_direction_counter_2}
-  - {addr: 0x8008642c, name: g_open_input_direction_counter_3}
+  - {addr: 0x80086428, name: g_open_input_left_repeat_counter}
+  - {addr: 0x8008642c, name: g_open_input_right_repeat_counter}
   - {addr: 0x80086430, name: g_open_birthday_title_image}
   - {addr: 0x80087030, name: g_open_birthday_window_image}
   - {addr: 0x8008e430, name: g_open_menu_blocked_buttons}

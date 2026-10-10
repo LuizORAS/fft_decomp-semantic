@@ -35,7 +35,7 @@ s32 equip_entrypoint(s32 unit, void* otag) {
             battle_text_restore_section_pointers();
         }
     }
-    equip_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
+    equip_menu_set_palette_mode(g_battle_menu_input_lock_mode);
     g_equip_menu_screen_state_handlers[g_equip_menu_screen_state]();
     if (g_equip_sound_suppress_queued != 0) {
         g_equip_sound_queued_effect_id = MAIN_SFX_NONE;

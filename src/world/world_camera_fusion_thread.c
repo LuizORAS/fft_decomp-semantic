@@ -118,7 +118,7 @@ void world_camera_fusion_thread(void) {
         if (tracks[3].finished == 1) {
             break;
         }
-        world_script_clear_current_event_word_bit_0();
+        world_camera_clear_zoom_variable_low_bit();
         world_thread_yield();
     }
 

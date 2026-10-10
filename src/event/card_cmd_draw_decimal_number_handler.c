@@ -31,7 +31,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
 
     value = command[9];
     y = command[8];
-    clut = g_card_text_digit_clut;
+    clut = g_card_menu_alternate_number_clut;
     glyph.u = 0x78;
     glyph.v = 0x10;
     glyph.w = 6;

@@ -41,8 +41,8 @@ s32 battle_menu_dispatch_system_function(
             }
             return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
         } else if (option != 1) {
-            if (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_EVENT) != 0) {
-                main_noop_800449f8(7, 3);
+            if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
+                main_system_report_stub(7, 3);
                 if (option != 2) {
                     battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
                 }
@@ -310,7 +310,7 @@ s32 battle_menu_dispatch_system_function(
             battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         }
     } else {
-        main_noop_800449f8(7, 5);
+        main_system_report_stub(7, 5);
         battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         g_battle_menu_system_function_command = command;
         g_battle_menu_system_function_option = option;

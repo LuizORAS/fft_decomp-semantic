@@ -75,7 +75,7 @@ void bunit_menu_update_unit_browser(void) {
             g_bunit_status_display_offset_y = 0;
         }
     }
-    bunit_thread_toggle_9_and_12(g_bunit_unit_browse_enabled);
+    bunit_panel_toggle_equipment_and_numeric_editor_threads(g_bunit_unit_browse_enabled);
     enable = 0;
     if (g_bunit_status_banner_enabled != 0 || g_bunit_unit_browse_enabled != 0) {
         enable = 1;

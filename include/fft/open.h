@@ -43,7 +43,7 @@ s32 open_file_get_cd_sync_state_delta(void);
  * g_open_controller_handler_indices. */
 typedef enum open_controller_handler {
     OPEN_CONTROLLER_FFTST_MOVIE = 0,           /* open_movie_finish_stream_controller_if_ready_or_skipped */
-    OPEN_CONTROLLER_MOVIE_1 = 1,               /* open_movie_finish_controller_1_if_ready_or_skipped */
+    OPEN_CONTROLLER_FFTOP_MOVIE = 1,           /* open_movie_finish_fftop_controller_if_ready_or_skipped */
     OPEN_CONTROLLER_TITLE_MENU = 2,            /* open_title_update_menu */
     OPEN_CONTROLLER_SOUND_TYPE_MENU = 3,       /* open_menu_handle_sound_type_input */
     OPEN_CONTROLLER_NEW_GAME_START = 4,        /* open_title_step_new_game_start */
@@ -58,29 +58,6 @@ typedef enum open_controller_handler {
 } open_controller_handler_e;
 
 /* input */
-/* One 100-byte state record per controller. The current controller c runs
- * g_open_controller_handlers[g_open_controller_handler_indices[c - 1]] on
- * g_open_controller_records[c]. A push made while the current index is c
- * fills g_open_controller_stream_start[c] (which is records[c + 1]) and
- * stores the new handler id at handler_indices[c]. Only the stream pair is
- * common; the remaining words are handler-specific (the thread-2 controller
- * keeps run_followup / result in the first two words). */
-typedef struct open_controller_record {
-    /* 0x00 */ s32 stream_start;
-    /* 0x04 */ s32 stream_length;
-    /* 0x08 */ s32 _unknown_08;
-    /* 0x0c */ s32 _unknown_0c;
-    /* 0x10 */ s32 _unknown_10;
-    /* 0x14 */ s32 _unknown_14;
-    /* 0x18 */ s32 _unused_18;
-    /* 0x1c */ s32 _unused_1c;
-    /* 0x20 */ s32 _unknown_20; /* birthday date menu: month */
-    /* 0x24 */ s32 _unknown_24; /* birthday date menu: day */
-    /* 0x28 */ s32 _unknown_28; /* birthday date menu: selecting_month */
-    /* 0x2c */ u8 _unused_2c[0x64 - 0x2c];
-} open_controller_record_t;
-typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
-
 /* Field-base view used to read birthday values from 100-byte controller records. */
 typedef struct open_controller_birthday {
     s32 month;
@@ -93,11 +70,9 @@ typedef void (*open_controller_handler_t)(void* record);
 extern open_controller_birthday_t g_open_controller_birthdays[];
 extern s32 g_open_controller_handler_indices[]; /* open_controller_handler_e */
 extern open_controller_handler_t g_open_controller_handlers[];
-extern open_controller_record_t g_open_controller_records[];
-extern open_controller_record_t g_open_controller_stream_start[];
 extern u32 g_open_input_current_buttons;
-extern s32 g_open_input_direction_counter_2;
-extern s32 g_open_input_direction_counter_3;
+extern s32 g_open_input_left_repeat_counter;
+extern s32 g_open_input_right_repeat_counter;
 extern s32 g_open_input_directional_repeat_initial_delay;
 extern s32 g_open_input_directional_repeat_period;
 extern s32 g_open_input_down_repeat_counter;
@@ -167,7 +142,7 @@ void open_movie_start_fftst_or_title_menu(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level);
 void open_movie_stop_stream(s32 pause_cd_audio);
-void open_movie_stream_and_push_controller_1(s32 start_sector, s32 unused, s32 end_frame);
+void open_movie_stream_fftop_and_push_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame);
 void open_movie_stream_fftend(s32 start_sector, s32 unused, s32 end_frame);
 void open_movie_stream_fftst_and_push_controller(
     s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame);
@@ -374,6 +349,62 @@ typedef struct open_sound_menu_state {
     /* 0x1c */ s32 sound_mode_selection; /* Signed so decrement can wrap below Mono. */
     /* 0x20 */ s32 step;
 } open_sound_menu_state_t;
+
+/* Movie controller state (handlers 0 and 11): the stream the FFTST and title demo movies play. */
+typedef struct open_movie_stream_controller_state {
+    s32 start_sector;
+    s32 stream_length;
+} open_movie_stream_controller_state_t;
+
+/* New-game start controller state (handler 4). */
+typedef struct open_title_new_game_state {
+    /* 0x00 */ u8 _unused_00[0x10];
+    /* 0x10 */ s32 step;
+    /* 0x14 */ u8 _unused_14[0x0c];
+    /* 0x20 */ s32 name_text_id;
+} open_title_new_game_state_t;
+
+/* Music test controller state (handler 7), pushed by open_menu_start_music_test_controller. */
+typedef struct open_menu_sound_test_state {
+    /* 0x00 */ s32 music_id;     /* scenario music selected for playback */
+    /* 0x04 */ s32 delay;        /* frames before loading music_id */
+    /* 0x08 */ s32 music_slot;   /* slot from main_sound_open_music_into_free_slot */
+    /* 0x0c */ s32 step;         /* open_music_test_step_e */
+    /* 0x10 */ s32 blink_frames; /* counts ten frames after a selection, while Up and Down stay blocked */
+} open_menu_sound_test_state_t;
+
+/* Text message controller state (handler 8). */
+typedef struct open_controller_thread_completion {
+    s32 run_followup;
+    s32 saved_blocked_buttons; /* g_open_menu_blocked_buttons when the message started */
+} open_controller_thread_completion_t;
+
+/* Title exit controller state (handler 12). */
+typedef struct open_title_exit_state {
+    s32 state;
+} open_title_exit_state_t;
+
+/* One 100-byte state record per controller, laid out by its handler. The current controller c runs
+ * g_open_controller_handlers[g_open_controller_handler_indices[c - 1]] on
+ * g_open_controller_records[c]. A push made while the current index is c
+ * fills g_open_controller_records_next[c] (which is records[c + 1]) and
+ * stores the new handler id at handler_indices[c]. */
+typedef union open_controller_record {
+    open_movie_stream_controller_state_t movie;
+    open_title_controller_t title;
+    open_sound_menu_state_t sound_menu;
+    open_title_new_game_state_t new_game;
+    open_birthday_date_state_t birthday_date;
+    open_birthday_confirmation_state_t birthday_confirmation;
+    open_menu_sound_test_state_t music_test;
+    open_controller_thread_completion_t text_message;
+    open_title_exit_state_t title_exit;
+    u8 bytes[0x64];
+} open_controller_record_t;
+typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
+
+extern open_controller_record_t g_open_controller_records[];
+extern open_controller_record_t g_open_controller_records_next[];
 
 extern s16 g_open_music_test_row_actions[16];
 extern world_menu_entry_t g_open_music_test_list_params;
@@ -612,11 +643,11 @@ extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
 extern u32** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
-void open_gfx_draw_render_record_36(open_render_record_36_t* actor, u32* ot);
+void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* ot);
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
 s32 open_gfx_update_transition_sequence(void);
 void open_gfx_draw_transition_line_strips(s32 intensity);
-s32 open_gfx_append_render_record_36(open_render_record_t** list, s32* count);
+s32 open_gfx_append_animated_render_record(open_render_record_t** list, s32* count);
 s32 open_gfx_append_window_record(open_render_record_t** list, s32* count);
 void open_gfx_restore_frame_vram_page(void);
 void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle);
@@ -671,7 +702,7 @@ extern u32 g_open_system_runtime_flags;
 extern s32 g_open_system_vsync_mode;
 extern open_gfx_transition_entry_t** g_open_new_game_transition_entries;
 void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
-void open_noop_8006d7ec(void);
+void open_gfx_transition_finished_stub(void);
 void open_system_init_runtime_state(void);
 
 /* other */

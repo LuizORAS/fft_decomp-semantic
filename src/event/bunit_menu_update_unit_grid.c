@@ -220,7 +220,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     bunit_gfx_enqueue_textured_quad(&rect,
                         ((u8*)g_bunit_unit_grid_label_tiles)[g_bunit_unit_stat_mode * 6 + 4],
                         ((u8*)g_bunit_unit_grid_label_tiles)[g_bunit_unit_stat_mode * 6 + 5], color, 0,
-                        g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                        g_bunit_menu_icon_texture_page, g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_max_stat_number.x = cell.x + 40;
                     g_bunit_unit_grid_max_stat_number.y = cell_y + 45;
                     g_bunit_unit_grid_max_stat_number.value = unit_index;
@@ -233,8 +233,8 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.y = top + 5;
                     rect.w = 6;
                     rect.h = 11;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page, g_bunit_text_metric_1, 8);
+                    bunit_gfx_enqueue_textured_quad(&rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
                     if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP) {
                         clut = g_bunit_unit_grid_hp_gauge_clut;
                         gradient = g_bunit_unit_grid_hp_gauge_colors;
@@ -277,14 +277,14 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.h = g_bunit_unit_grid_label_tiles[3].h + 1;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[3].u,
                         g_bunit_unit_grid_label_tiles[3].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x = cell.x + 26;
                     rect.y = label_y3;
                     rect.w = g_bunit_unit_grid_label_tiles[4].w + 2;
                     rect.h = g_bunit_unit_grid_label_tiles[4].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[4].u,
                         g_bunit_unit_grid_label_tiles[4].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_level_number.x = cell.x + 13;
                     g_bunit_unit_grid_level_number.y = upper_y3;
                     g_bunit_unit_grid_level_number.value = unit_index;
@@ -303,26 +303,26 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.h = g_bunit_unit_grid_label_tiles[5].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[5].u,
                         g_bunit_unit_grid_label_tiles[5].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x += rect.w - 2;
                     rect.y += 5;
                     rect.w = 3;
                     rect.h = 3;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                    bunit_gfx_enqueue_textured_quad(&rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x = cell.x + 26;
                     rect.y = label_y4;
                     rect.w = g_bunit_unit_grid_label_tiles[7].w;
                     rect.h = g_bunit_unit_grid_label_tiles[7].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[7].u,
                         g_bunit_unit_grid_label_tiles[7].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x += rect.w;
                     rect.y += 5;
                     rect.w = 3;
                     rect.h = 3;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                    bunit_gfx_enqueue_textured_quad(&rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_brave_number.x = cell.x + 13;
                     g_bunit_unit_grid_brave_number_wide.y = g_bunit_unit_grid_brave_number.y = upper_y4;
                     g_bunit_unit_grid_brave_number_wide.value = g_bunit_unit_grid_brave_number.value = unit_index;

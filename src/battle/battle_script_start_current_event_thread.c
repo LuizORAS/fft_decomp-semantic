@@ -6,7 +6,7 @@ void battle_script_start_current_event_thread(void) {
     g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         battle_camera_store_state_to_script_variables();
-        battle_camera_reset_script_transform();
+        battle_map_reset_script_light_transform();
         g_battle_camera_position_locked = 0;
         g_battle_camera_speed_curve = 0;
     }

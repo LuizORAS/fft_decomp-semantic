@@ -8,8 +8,8 @@
 /* ability */
 extern s16 g_jobstts_ability_category;  /* menu_ability_category_e */
 extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
-extern u8* g_jobstts_ability_selected_specific;
-extern u8* g_jobstts_ability_selected_specific_arg_alias;
+extern u8* g_jobstts_selected_ability_secondary_data;
+extern u8* g_jobstts_selected_ability_data; /* the same word: both outputs of the ability lookup land in it */
 extern s32 g_jobstts_ability_type;
 extern u8 g_jobstts_ability_list_render_commands[];
 extern u8 g_jobstts_ability_list_initialized;
@@ -95,7 +95,7 @@ typedef struct jobstts_gfx_context {
 } jobstts_gfx_context_t;
 typedef char jobstts_gfx_context_size_must_be_0xf4[(sizeof(jobstts_gfx_context_t) == 0xF4) ? 1 : -1];
 
-extern u16 g_jobstts_gfx_background_clut_id;
+extern u16 g_jobstts_menu_palette_clut;
 extern u16 g_jobstts_gfx_background_texture_page;
 extern u16 g_jobstts_gfx_clut_id;
 extern jobstts_gfx_context_t* g_jobstts_gfx_context;
@@ -287,12 +287,12 @@ extern u16 g_jobstts_text_clut_3_mode0;
 extern u16 g_jobstts_text_clut_3_mode1;
 extern u16 g_jobstts_text_clut_0_mode1;
 extern u16 g_jobstts_text_clut_0_mode0;
-extern u8 g_jobstts_text_layout_mode;
-extern u16 g_jobstts_text_metric_3;
-extern u16 g_jobstts_text_metric_1;
-extern u16 g_jobstts_text_metric_0;
-extern u16 g_jobstts_text_metric_4;
-extern u16 g_jobstts_text_metric_5;
+extern u8 g_jobstts_menu_use_alternate_palette;
+extern u16 g_jobstts_menu_disabled_number_clut;
+extern u16 g_jobstts_menu_alternate_number_clut;
+extern u16 g_jobstts_menu_window_clut;
+extern u16 g_jobstts_menu_active_clut_front;
+extern u16 g_jobstts_menu_active_clut_back;
 
 /* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the
  * three data bytes ahead of the first function. */
@@ -307,7 +307,7 @@ void jobstts_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, 
 s32 jobstts_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void jobstts_text_set_palette_and_metrics(s32 mode);
+void jobstts_menu_set_palette_mode(s32 mode);
 const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);
 void jobstts_text_start_help_thread(s32 thread_data);
 

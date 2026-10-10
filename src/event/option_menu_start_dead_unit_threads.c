@@ -136,12 +136,12 @@ void option_menu_start_dead_unit_threads(void) {
                 (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 battle_thread_yield();
-                if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 3) != 0) {
+                if (battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0) {
                     battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, option_thread_wait_forever);
                 } else {
                     battle_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }
-                if (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 1) == 0) {
+                if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                     break;
                 }
                 g_option_dead_unit_controller_input = battle_script_get_controller_input_pointer(0);

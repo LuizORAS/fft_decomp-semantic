@@ -9,7 +9,7 @@ s32 battle_thread_resolve_id(s32 requested_thread_id) {
     }
     i = 1;
     do {
-        if (battle_thread_is_running_8014cc94(i) == 0) {
+        if (battle_thread_is_running_asm(i) == 0) {
             return i;
         }
         i++;

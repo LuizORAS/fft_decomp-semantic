@@ -152,7 +152,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows + 10;
             equip_gfx_enqueue_textured_quad(&rect, 0, g_equip_menu_list_scroll_offset + 0x2b, 0,
-                g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_text_metric_0,
+                g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_menu_window_clut,
                 g_equip_gfx_sprite_ot_index);
         } else {
             rect.x = command[7];
@@ -160,10 +160,10 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
             equip_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_equip_gfx_semitransparency,
-                g_equip_text_digit_texture_page, g_equip_text_metric_0, g_equip_gfx_sprite_ot_index);
+                g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
         }
     }
-    if (g_equip_text_compact_layout == 0) {
+    if (g_equip_menu_use_alternate_palette == 0) {
         if (g_equip_menu_scroll_base_index != 0) {
             rect.x = g_equip_menu_window_right_x;
             rect.y = command[12];
@@ -203,7 +203,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
         marker.y = command[8]
             + (g_equip_menu_selected_list_index - g_equip_menu_scroll_base_index) * g_equip_menu_list_row_height;
         equip_menu_update_and_draw_animated_cursor(
-            &marker, g_equip_menu_list_cursor_anim_state, g_equip_text_compact_layout);
+            &marker, g_equip_menu_list_cursor_anim_state, g_equip_menu_use_alternate_palette);
     }
     command += command[1];
     g_equip_menu_list_row_index = 0;

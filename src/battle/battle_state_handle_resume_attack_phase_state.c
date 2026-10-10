@@ -36,7 +36,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
             }
             facing = (u32)facing >> 10;
             battle_data = unit->battle_data;
-            battle_noop_8018ef2c(battle_data, facing & 0xff);
+            battle_action_post_action_facing_stub(battle_data, facing & 0xff);
         }
         battle_action_store_acting_unit_data(unit->battle_data);
         battle_unit_call_set_animation_based_on_status(unit);

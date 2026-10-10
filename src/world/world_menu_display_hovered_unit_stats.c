@@ -104,7 +104,8 @@ void world_menu_display_hovered_unit_stats(
             world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
-        world_noop_800e90ec(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+        world_menu_display_projected_action_effect(
+            &page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
     } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
             world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
@@ -152,7 +153,7 @@ void world_menu_display_hovered_unit_stats(
             }
         }
         running = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
-        if (running != 0 && world_thread_is_running_80100164(running - 1) == 0) {
+        if (running != 0 && world_thread_is_running_asm(running - 1) == 0) {
             running = 0;
         }
         page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode] + (frame & 1)];

@@ -50,7 +50,7 @@ s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
     if (g_jobstts_previous_event_mode != 0 && g_battle_menu_input_lock_mode == 0) {
         battle_text_restore_section_pointers();
     }
-    jobstts_text_set_palette_and_metrics(g_battle_menu_input_lock_mode);
+    jobstts_menu_set_palette_mode(g_battle_menu_input_lock_mode);
     if (g_jobstts_active_page == MENU_JOB_LIST_STEP_JOBS) {
         g_jobstts_active_page = jobstts_menu_update_job_list();
         if (g_jobstts_input_primary_repeat & PSX_PAD_CROSS) {

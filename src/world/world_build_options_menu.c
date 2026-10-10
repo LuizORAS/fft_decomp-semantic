@@ -132,7 +132,7 @@ void world_build_options_menu(void) {
     accum = 0;
     timer = 0;
     world_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
-    world_menu_draw_text_columns_2(entry, &row_offset, image);
+    world_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
     image_rect.w = g_world_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)image);

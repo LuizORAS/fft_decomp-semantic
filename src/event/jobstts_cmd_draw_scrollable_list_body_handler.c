@@ -157,7 +157,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.h = (g_jobstts_menu_list_row_height * g_jobstts_menu_list_visible_rows) + 0xa;
             jobstts_gfx_enqueue_textured_quad(&rect, 0, g_jobstts_menu_list_scroll_offset_y + 0x2b, 0,
-                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0,
+                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut,
                 g_jobstts_gfx_otag_index);
         } else {
             rect.x = command[7];
@@ -165,10 +165,10 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.h = g_jobstts_menu_list_row_height * g_jobstts_menu_list_visible_rows;
             jobstts_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_gfx_background_texture_page, g_jobstts_text_metric_0, g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut, g_jobstts_gfx_otag_index);
         }
     }
-    if (g_jobstts_text_layout_mode == 0) {
+    if (g_jobstts_menu_use_alternate_palette == 0) {
         if (g_jobstts_menu_scroll_base_index != 0) {
             rect.x = g_jobstts_menu_window_right_x;
             rect.y = command[0xc];
@@ -205,7 +205,7 @@ u8* jobstts_cmd_draw_scrollable_list_body_handler(u8* command) {
                 + ((g_jobstts_menu_list_selected_index - g_jobstts_menu_scroll_base_index)
                     * g_jobstts_menu_list_row_height);
             jobstts_menu_update_and_draw_animated_cursor(
-                &marker, &g_jobstts_menu_list_cursor_anim_state, g_jobstts_text_layout_mode);
+                &marker, &g_jobstts_menu_list_cursor_anim_state, g_jobstts_menu_use_alternate_palette);
         }
     }
     command += command[1];

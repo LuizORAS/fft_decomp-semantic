@@ -429,7 +429,7 @@ void equip_menu_icon_list_thread(void);
 void equip_menu_scroll_list_by_page(s32 direction, const u8* menu);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
 s32 equip_menu_set_selection_value(u8 index, s16 value);
-s32 equip_menu_set_selection_value_2(u8 index, s16 value);
+s32 equip_menu_init_selection_value(u8 index, s16 value);
 void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* state, s32 mode);
 s32 equip_menu_update_clear_all_equipment_prompt(void);
 s32 equip_menu_update_equipment(void);
@@ -542,11 +542,11 @@ extern s8 g_equip_slot_item_browser_previewed_index;
 extern point16_t g_equip_slot_marker_rect;
 
 /* text */
-extern u8 g_equip_text_compact_layout;
+extern u8 g_equip_menu_use_alternate_palette;
 extern u16 g_equip_text_digit_texture_page;
 extern s32 g_equip_text_help_message_id;
 extern s16 g_equip_text_message_thread_active;
-extern u16 g_equip_text_metric_2;
+extern u16 g_equip_menu_palette_clut;
 extern u8 g_equip_text_thread_running_state;
 extern u8 g_equip_text_data[];
 extern u8 g_equip_numeric_panel_params[];
@@ -561,11 +561,11 @@ extern u16 g_equip_text_clut_3_mode1;
 extern u16 g_equip_text_clut_0_mode0;
 extern u16 g_equip_text_clut_0_mode1;
 extern u8 g_equip_text_restore_pending;
-extern u16 g_equip_text_metric_3;
-extern u16 g_equip_text_metric_1;
-extern u16 g_equip_text_metric_0;
-extern u16 g_equip_text_metric_4;
-extern u16 g_equip_text_metric_5;
+extern u16 g_equip_menu_disabled_number_clut;
+extern u16 g_equip_menu_alternate_number_clut;
+extern u16 g_equip_menu_window_clut;
+extern u16 g_equip_menu_active_clut_front;
+extern u16 g_equip_menu_active_clut_back;
 
 /* The "%d" format string at the head of the overlay. */
 extern const char g_equip_text_decimal_format[];
@@ -578,7 +578,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
 s32 equip_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void equip_text_set_palette_and_metrics(s32 compact);
+void equip_menu_set_palette_mode(s32 mode);
 void equip_text_start_help_thread(s32 text_id);
 void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s32 separate);
 
@@ -611,7 +611,7 @@ extern u8 g_equip_thread_idle_stop_pending;
 extern s32 g_equip_thread_state;
 extern battle_menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
 void equip_thread_request_stop(s32 id);
-void equip_text_start_character_thread_if_idle(s32 a, s32 b, s32 c, s32 d);
+void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
 s32 equip_thread_start_managed(s32 thread_id, world_menu_entry_t* desc);
 void equip_thread_stop_and_clear_state(s32 id);
 void equip_thread_wait_forever(void);

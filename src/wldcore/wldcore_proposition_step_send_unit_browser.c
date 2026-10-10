@@ -116,7 +116,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS);
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
-        world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+        world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         g_wldcore_window_records[level->list_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[level->layout_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;

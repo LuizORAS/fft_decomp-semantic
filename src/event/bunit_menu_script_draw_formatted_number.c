@@ -63,12 +63,12 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
         color = 0;
     }
     if (command->alternate_palette != 0) {
-        clut = g_bunit_text_metric_1;
+        clut = g_bunit_menu_alternate_number_clut;
     } else {
-        clut = g_bunit_text_metric_2;
+        clut = g_bunit_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_bunit_text_metric_3;
+        clut = g_bunit_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (command->style == 1) {
@@ -118,7 +118,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
                 negative = 0;
             } else {
                 if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
-                    clut = g_bunit_text_metric_2;
+                    clut = g_bunit_menu_palette_clut;
                 }
                 if (blanks != 0) {
                     digit = 0;
@@ -127,7 +127,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
                         continue;
                     }
                     if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS && i < command->width - 1) {
-                        clut = g_bunit_text_metric_3;
+                        clut = g_bunit_menu_disabled_number_clut;
                     }
                 } else {
                     digit = text[text_index] - '0';

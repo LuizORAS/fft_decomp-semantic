@@ -62,7 +62,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     world_script_start_tutorial(tutorial);
     if (tutorial == 0) {
         g_world_menu_music_slot = main_sound_open_music_into_free_slot(MAIN_MUSIC_FORMATION);
-        while (main_return_zero_80043708() != 0) { }
+        while (main_sound_is_music_loading_stub() != 0) { }
         main_sound_switch_music_track(g_world_menu_music_slot, 0x7F, 0);
     }
     if (g_world_formation_screen_running != 0) {
@@ -71,7 +71,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (world_script_handle_tutorial_command() == 0) {
                 break;
             }
-            world_thread_update_task_state();
+            world_input_update_with_message_state();
             if (g_world_unit_status_banner_active != 0) {
                 world_menu_run_unit_status_banner_countdown(0, 0);
                 world_input_clear_state();
@@ -139,7 +139,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (g_world_formation_cursor_ot_override != 0) {
                 i = g_world_formation_cursor_ot_override;
             }
-            world_script_update_event_frame_input(g_world_gfx_active_packet_buffer->otag + i, world_input_filter_menu(),
+            world_input_update_event_state(g_world_gfx_active_packet_buffer->otag + i, world_input_filter_menu(),
                 g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
             if (g_world_formation_current_menu != last_menu) {
                 g_world_formation_cursor_ot_override = 0;
@@ -165,7 +165,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             buttons = 1;
             world_text_resume_printing(WORLD_THREAD_SLOT_TUTORIAL_TEXT);
         }
-        world_script_update_event_frame_input(g_world_gfx_active_packet_buffer->otag, 0, 0);
+        world_input_update_event_state(g_world_gfx_active_packet_buffer->otag, 0, 0);
     } while (buttons != 0);
     if (tutorial == 0) {
         main_sound_unload_scenario_mus(g_world_menu_music_slot);

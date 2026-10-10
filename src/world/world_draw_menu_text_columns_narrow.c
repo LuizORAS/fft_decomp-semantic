@@ -1,4 +1,4 @@
-/* Twin of world_menu_draw_text_columns with the stride reduced by 8. */
+/* Twin of world_screen_menu_draw_text_columns with the stride reduced by 8. */
 #include "fft/world.h"
 #include "psx/types.h"
 

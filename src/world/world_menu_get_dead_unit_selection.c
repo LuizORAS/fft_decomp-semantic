@@ -12,7 +12,7 @@ s32 world_menu_get_dead_unit_selection(s32 battle_unit_index) {
     g_world_thread_call_target = (void (*)(void))battle_unit_generate_crystal_or_treasure;
     g_world_thread_inner_subroutine_result = (crystal_pickup_result_t*)world_thread_call_on_main_stack(unit);
     if (g_world_thread_inner_subroutine_result->result == -1 || g_world_thread_inner_subroutine_result->result == 0) {
-        main_noop_800449f8(0x11, 7);
+        main_system_report_stub(0x11, 7);
     }
     if (g_world_thread_inner_subroutine_result->result == 4) {
         return g_world_thread_inner_subroutine_result->treasure_item;

@@ -14,7 +14,7 @@ void world_menu_start_or_poll_thread(s32 thread_id, world_menu_thread_data_t* da
         world_thread_start(thread_id, data->thread_entry);
         world_thread_set_parameters(thread_id, (s32)g_world_menu_thread_menu_data, 0, 0);
         for (i = 0; i < 20; i++) {
-            world_script_update_event_frame_input(unused, 0, 0);
+            world_input_update_event_state(unused, 0, 0);
         }
         status = 1;
     } else {

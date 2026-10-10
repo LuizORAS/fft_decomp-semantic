@@ -4,7 +4,7 @@
 
 /* The six input words at 0x801aed44 are g_world_formation_menu_input_state,
  * but a struct global makes GCC keep a base register for the field accesses
- * (see world_script_update_event_frame_input), so they are separate scalars here. */
+ * (see world_input_update_event_state), so they are separate scalars here. */
 extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous_input,
     g_world_formation_menu_initial_repeat_counter, g_world_formation_menu_repeat_counter,
     g_world_formation_menu_secondary_repeat_counter;
@@ -15,7 +15,7 @@ extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous
  * g_world_formation_open_request_state.. flags is set), runs the formation/memory-card request
  * updates, publishes the input, yields once while tracking thread status
  * changes and returns the menu result slot g_world_menu_pending_selection[0] (-2 while pending).
- * Formation-menu sibling of world_script_update_event_frame_input. */
+ * Formation-menu sibling of world_input_update_event_state. */
 s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     s32 profile;
     u32 previous_input;
@@ -120,7 +120,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
 
     thread_id = 1;
     do {
-        g_world_formation_thread_status_snapshot[thread_id] = world_thread_is_running_80100164(thread_id);
+        g_world_formation_thread_status_snapshot[thread_id] = world_thread_is_running_asm(thread_id);
         thread_id++;
     } while (thread_id < 16);
 
@@ -128,7 +128,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     thread_id = 1;
     do {
         status = g_world_formation_thread_status_snapshot[thread_id];
-        if (status != world_thread_is_running_80100164(thread_id)) {
+        if (status != world_thread_is_running_asm(thread_id)) {
             g_world_thread_change_cooldown = 5;
         }
         thread_id++;

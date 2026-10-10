@@ -78,7 +78,7 @@ void helpmenu_menu_run_battle_help(void) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
         g_helpmenu_require_navigation[7].destination[3] = 2;
     }
-    text_thread_id = helpmenu_thread_find_running_from_4();
+    text_thread_id = helpmenu_thread_find_first_running_menu_thread();
     g_helpmenu_controller_state_ptr = battle_script_get_controller_input_pointer(0);
     menu_index = 0;
     for (poly_index = 0; poly_index < 2; poly_index++) {

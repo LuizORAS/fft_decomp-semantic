@@ -45,7 +45,7 @@ void world_menu_ability_panel_thread(void) {
     }
     world_menu_init_numeric_display_frame_primitives(&g_world_ability_panel_origin, &screen->numeric_frame);
     world_gfx_init_menu_tile_and_line_primitives(screen);
-    world_gfx_init_scaled_draw_area_packets_3(&screen->portrait);
+    world_panel_gfx_init_scaled_draw_area_packets(&screen->portrait);
     screen->tiles[1].x0 += g_world_equipment_panel_origin.x;
     screen->tiles[1].y0 += g_world_equipment_panel_origin.y;
     for (i = 4; i < 8; i++) {
@@ -122,7 +122,7 @@ void world_menu_ability_panel_thread(void) {
         SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
         offset[0] = thread->x - 0x73;
         offset[1] = thread->y;
-        world_gfx_build_scaled_draw_area_packets(
+        world_panel_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_world_ability_panel_draw_area, frame, g_world_frame_arg, offset);
         world_menu_configure_status_panel_primitive_colors(screen, thread);
         world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);

@@ -46,7 +46,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_window_panel_render_state.header_id = 0x10;
     g_wldcore_window_panel_render_state.selected_index = 0;
     g_wldcore_menu_scroll_offset = 0;
-    world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
+    world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
 
     index = wldcore_window_append_record_and_reset_color(

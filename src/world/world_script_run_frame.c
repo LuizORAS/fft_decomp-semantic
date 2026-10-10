@@ -36,12 +36,12 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_gfx_active_otag_entries = ot;
     world_gfx_submit_screen_fade_overlay(
         &g_world_screen_tint_tiles[g_world_menu_packet_buffer_index], g_world_screen_fade);
-    world_noop_800f6ea8();
+    world_camera_store_state_to_script_variables();
     world_menu_draw_active_window_frames();
 
     if (g_world_event_finish_check_pending != 0) {
         for (i = 1; i < 17; i++) {
-            if (world_thread_is_running_80100164(i) != 0) {
+            if (world_thread_is_running_asm(i) != 0) {
                 break;
             }
         }
@@ -136,30 +136,30 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_thread_change_cooldown = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_world_event_thread_status_snapshot[i] = world_thread_is_running_80100164(i);
+        g_world_event_thread_status_snapshot[i] = world_thread_is_running_asm(i);
     }
     world_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_80100164(i)) {
+        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_asm(i)) {
             g_world_thread_change_cooldown = 5;
         }
     }
     if (g_world_thread_change_cooldown != 0) {
         g_world_thread_change_cooldown--;
     }
-    world_noop_800f6ea0();
+    world_camera_load_state_from_script_variables();
     g_world_frame_counter++;
     g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;
     }
-    world_noop_800f1388();
+    world_script_frame_after_threads_stub();
     if (g_world_frame_result_override != 0) {
         return g_world_frame_result_override;
     }
 
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
-        world_noop_800f079c();
+        world_menu_run_companion_overlay_stub();
         g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
     } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_BUNIT) {
         world_script_set_event_speed(1);
@@ -177,8 +177,8 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     }
     world_menu_open_companion_executable();
     world_menu_open_companion_data_file();
-    world_noop_800f6e98();
-    world_noop_800fdce8();
+    world_script_process_pending_requests();
+    world_script_frame_after_requests_stub();
     if (g_world_menu_input_mode == MENU_INPUT_BLOCKED) {
         return 1;
     }
@@ -186,7 +186,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 17; i++) {
-        if (world_thread_is_running_80100164(i) != 0) {
+        if (world_thread_is_running_asm(i) != 0) {
             break;
         }
     }

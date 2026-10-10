@@ -1,16 +1,6 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-/* Controller 7 (hidden Music Test menu) state, pushed by
- * open_menu_start_music_test_controller. */
-typedef struct open_menu_sound_test_state {
-    /* 0x00 */ s32 music_id;     /* scenario music selected for playback */
-    /* 0x04 */ s32 delay;        /* frames before loading music_id */
-    /* 0x08 */ s32 music_slot;   /* slot from main_sound_open_music_into_free_slot */
-    /* 0x0c */ s32 step;         /* 0 idle, 1 exiting, 2 fading out, 3 starting track, 4 opening */
-    /* 0x10 */ s32 blink_frames; /* counts ten frames after a selection, while Up and Down stay blocked */
-} open_menu_sound_test_state_t;
-
 /* Runs the hidden Music Test menu.
  *
  * Circle fades out any current track and queues the selected entry's music.
@@ -43,7 +33,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             state->step = OPEN_MUSIC_TEST_STEP_IDLE;
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_START_TRACK) {
-        if (main_return_zero_80043708() == 0) {
+        if (main_sound_is_music_loading_stub() == 0) {
             g_open_music_test_sound_handle = main_sound_switch_music_track(state->music_slot, 0x7F, 0x10);
             state->step = OPEN_MUSIC_TEST_STEP_IDLE;
         }

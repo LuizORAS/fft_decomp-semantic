@@ -78,7 +78,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
             g_battle_thread_contexts[thread_id].function_parameter_3 = 1;
             if (thread_id == 8) {
                 for (j = 0; j < action; j++) {
-                    if (battle_thread_is_running_8014cc94(8 - j) != 0) {
+                    if (battle_thread_is_running_asm(8 - j) != 0) {
                         g_battle_menu_pending_selection[j]
                             = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
                                   ->selected_index;

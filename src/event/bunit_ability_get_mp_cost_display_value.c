@@ -8,7 +8,7 @@ s32 bunit_ability_get_mp_cost_display_value(s32 index) {
     if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
         result = MENU_NUMBER_VALUE_DASHES;
     } else {
-        result = ((ability_secondary_data_t*)g_bunit_ability_selected_specific)->mp_cost;
+        result = ((ability_secondary_data_t*)g_bunit_selected_ability_secondary_data)->mp_cost;
     }
     if (entry >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) {
         result |= MENU_NUMBER_VALUE_DISABLED;

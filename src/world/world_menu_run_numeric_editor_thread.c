@@ -48,7 +48,7 @@ void world_menu_run_numeric_editor_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_editor_numeric_table[0], &buffer->numeric_frame);
-    world_gfx_init_scaled_draw_area_packets_3(&buffer->portrait);
+    world_panel_gfx_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
@@ -101,7 +101,7 @@ void world_menu_run_numeric_editor_thread(void) {
         field_y = g_world_frame_arg;
         use_offset = field_y != 0xF0;
         g_world_gfx_draw_area_y = -use_offset & 0xF0;
-        world_gfx_build_scaled_draw_area_packets(
+        world_panel_gfx_build_scaled_draw_area_packets(
             &buffer->portrait, &g_world_editor_numeric_table[1], frame, field_y, thread);
         buffer->draw_offsets[0].x = thread->x - 0x80;
         buffer->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;

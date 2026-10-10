@@ -89,7 +89,7 @@ typedef union world_fade_intensity {
     u8 bytes[4];
 } world_fade_intensity_t;
 
-/* Draw-area pair built by world_gfx_build_scaled_draw_area_packets_3: two DR_AREA packets whose
+/* Draw-area pair built by world_screen_gfx_build_scaled_draw_area_packets: two DR_AREA packets whose
  * rectangles are scaled around their centre by a percentage from
  * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step).
  * The BATTLE menus and the overlay status panels build the same pair: the

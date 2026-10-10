@@ -29,7 +29,7 @@ extern u16* g_helpmenu_current_text_ids;
 extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_4_navigation[];
-s32 helpmenu_thread_find_running_from_4(void);
+s32 helpmenu_thread_find_first_running_menu_thread(void);
 void helpmenu_menu_run_battle_help(void);
 
 #endif

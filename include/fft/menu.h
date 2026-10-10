@@ -255,7 +255,7 @@ typedef char battle_menu_status_panel_slot_storage_size_must_be_0x40
  * wide, and a zero max draws the fixed 4-pixel stub. */
 typedef struct battle_unit_status_gauge {
     s16 value; /* 0x00 */
-    s16 bonus; /* 0x02; equipment-preview delta (world_menu_get_display_value_1/_2); 0 in battle */
+    s16 bonus; /* 0x02; equipment-preview delta (world_menu_get_selected_unit_hp_bonus_or_dashes/_2); 0 in battle */
     s16 max;   /* 0x04 */
 } battle_unit_status_gauge_t;
 typedef char battle_unit_status_gauge_size_must_be_6[(sizeof(battle_unit_status_gauge_t) == 6) ? 1 : -1];
@@ -667,8 +667,8 @@ typedef enum menu_text_column_mode {
     MENU_TEXT_COLUMN_NUMBER_GLYPHS = 3, /* two-digit numbers, drawn by *_draw_menu_number_glyphs */
 } menu_text_column_mode_e;
 
-/* Provisional: three-column menu text layout walked by world_menu_draw_text_columns (0x80109374) /
- * world_menu_draw_text_columns_2 (reached through world_menu_entry_t::text_binding when
+/* Provisional: three-column menu text layout walked by world_screen_menu_draw_text_columns (0x80109374) /
+ * world_menu_draw_text_columns (reached through world_menu_entry_t::text_binding when
  * that record is a layout rather than a binding). Column i uses x[i],
  * mode[i] (menu_text_column_mode_e), text_ids[i] and
  * text_colors[i], each indexed by row + row offset. */
@@ -779,7 +779,7 @@ typedef struct world_menu_icon_record {
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
  * alternates between frames (world_menu_scrolling_list_thread at 0x801a3d58,
- * world_build_at_list at 0x801ac6b4, world_build_at_list_2 at 0x801bfda4). */
+ * world_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
 typedef struct world_menu_list_page {
     SPRT frame;                                   /* 0x00: text image / cursor frame */
     SPRT arrows[2];                               /* 0x14: scroll arrows */

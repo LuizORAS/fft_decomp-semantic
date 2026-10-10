@@ -42,6 +42,6 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point
     g_open_music_test_list_params.selected_index = 0;
     g_open_music_test_list_params.select_text_table = 0;
 
-    world_thread_start(thread_id, world_build_at_list_2);
+    world_thread_start(thread_id, world_screen_build_at_list);
     world_thread_set_parameters(thread_id, (s32)&g_open_music_test_list_params, 0, 0);
 }

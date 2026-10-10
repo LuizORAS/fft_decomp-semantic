@@ -21,7 +21,7 @@ void world_menu_text_entry_wait_thread(void) {
     *g_world_input_frame_controller_input = PSX_PAD_CIRCLE;
     world_menu_handle_entry_confirm(param, 0);
     world_thread_start(thread_id, world_text_character_handling_thread);
-    world_thread_set_parameters_4(thread_id, first, second, third, third);
+    world_thread_set_four_parameters(thread_id, first, second, third, third);
     world_thread_wait_until_inactive(g_world_thread_current_id - 1);
     world_thread_wait_until_inactive(thread_id);
     world_thread_exit_current();

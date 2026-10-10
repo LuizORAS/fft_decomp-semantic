@@ -316,8 +316,8 @@ extern s32 g_wldcore_random_battle_entd_id;
 extern s32 g_wldcore_random_battle_map_id;
 extern s32 g_wldcore_random_battle_squad_id;
 void wldcore_restore_previous_stack(void);
-void wldcore_noop_8008d514(void);
-void wldcore_noop_8008ffd8(void);
+void wldcore_init_stub(void);
+void wldcore_window_number_panel_noop_callback(void);
 void wldcore_reset_game_if_special_keycode_is_pressed(void);
 
 /* thread */
@@ -1596,7 +1596,10 @@ typedef enum wldcore_detail_phase {
 typedef struct wldcore_menu_variable_detail_level {
     s32 value;        /* 0x00 */
     s32 render_index; /* 0x04 */
-    s32 _unknown_08;
+    /* 0x08; no push sets it. The treasure detail stores the saved record of the treasure's sound novel
+     * here before it leaves. The treasure and unexplored-land details also read it in their LOAD phase,
+     * as a render record index, when it still holds what the last level at this depth left. */
+    s32 saved_record_index;
     s32 phase; /* 0x0c; wldcore_detail_phase_e; LOAD at push */
     s32 timer; /* 0x10; cleared at push; text delay or dissolve step, counted per frame */
 } wldcore_menu_variable_detail_level_t;
@@ -2010,7 +2013,7 @@ extern s32* g_wldcore_window_aux_render_object_queue[];
 /* Shared panel renderer state at 0x800bb31c, filled by
  * wldcore_window_init_panel_render_state and
  * wldcore_window_init_number_panel_render_thread and read by
- * world_build_at_list_2. Its text binding is the label layout at 0x800bb394
+ * world_screen_build_at_list. Its text binding is the label layout at 0x800bb394
  * (column mode 0 text, 2 hidden, 3 alternate number) or, for number panels,
  * g_wldcore_window_panel_number_state. */
 extern world_menu_text_layout_t g_wldcore_window_panel_label_state;

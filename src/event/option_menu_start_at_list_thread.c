@@ -15,8 +15,8 @@ void option_menu_start_at_list_thread(void) {
 
     do {
         battle_thread_yield();
-    } while (battle_thread_is_running_8014cc94(g_battle_current_thread_id - 2) != 0
-        || battle_thread_is_running_8014cc94(g_battle_current_thread_id - 3) != 0);
+    } while (battle_thread_is_running_asm(g_battle_current_thread_id - 2) != 0
+        || battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0);
 
     g_battle_menu_thread_menu_data = previous_menu_descriptor;
     battle_thread_exit_current();

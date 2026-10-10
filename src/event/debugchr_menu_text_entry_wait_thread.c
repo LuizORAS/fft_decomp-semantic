@@ -23,7 +23,7 @@ void debugchr_menu_text_entry_wait_thread(void) {
     *ctl = PSX_PAD_CIRCLE;
     battle_menu_handle_action(obj, 0);
     battle_thread_start(id, battle_text_character_handling_thread);
-    battle_thread_set_parameters_4(id, header_id, text_id, arg, arg);
+    battle_thread_set_four_parameters(id, header_id, text_id, arg, arg);
     battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
     battle_thread_wait_until_inactive(id);
     battle_thread_exit_current();

@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* This is the second separately addressable copy of the accumulator. */
+/* Add `amount` to a unit's event offset. The copy every caller uses;
+ * battle_unit_add_event_offset_by_misc_id_unused is the same routine compiled twice. */
 s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount) {
     battle_unit_misc_data_t* unit;
 

@@ -9,8 +9,8 @@ u32 open_input_check_repeating_directional(u32 buttons) {
     pressed = g_open_input_new_button_presses;
     pressed &= buttons;
     if (pressed != 0) {
-        g_open_input_direction_counter_3 = 0;
-        g_open_input_direction_counter_2 = 0;
+        g_open_input_right_repeat_counter = 0;
+        g_open_input_left_repeat_counter = 0;
         g_open_input_down_repeat_counter = 0;
         g_open_input_up_repeat_counter = 0;
         return pressed;

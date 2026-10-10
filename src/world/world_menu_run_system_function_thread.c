@@ -18,7 +18,7 @@ void world_menu_run_system_function_thread(void) {
     }
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
-        while (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_EVENT) != 0) {
+        while (world_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
             if (g_world_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 world_thread_exit_current();
             }
@@ -34,14 +34,14 @@ void world_menu_run_system_function_thread(void) {
     g_world_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->thread_count;
     if (id == 0x1f) {
         world_thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_open_option_dead_unit_panel);
-        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, D_801A668C, 0);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_world_menu_dead_unit_panel_parameter, 0);
         world_thread_exit_current();
     }
     if (id != 8) {
         world_script_pulse_tutorial_wait_value(id);
     }
     world_thread_start(NATIVE_THREAD_SLOT_MENU, entry->thread_entry);
-    world_thread_set_parameters_4(
+    world_thread_set_four_parameters(
         NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[entry->menu_entry_index], 0, 0, 0);
     g_world_system_function_thread_busy = 0;
     world_thread_exit_current();

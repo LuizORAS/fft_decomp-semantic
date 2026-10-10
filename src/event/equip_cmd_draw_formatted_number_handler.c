@@ -58,12 +58,12 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
         negative = 1;
     }
     if (data[6] != 0) {
-        clut = g_equip_text_metric_1;
+        clut = g_equip_menu_alternate_number_clut;
     } else {
-        clut = g_equip_text_metric_2;
+        clut = g_equip_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_equip_text_metric_3;
+        clut = g_equip_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (data[2] == 1) {
@@ -133,7 +133,7 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
                     glyph.u = glyph.w * (digit - 8) + 0x20;
                 }
                 equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
-                    g_equip_text_digit_texture_page, g_equip_text_metric_0, g_equip_gfx_sprite_ot_index);
+                    g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
             }
         }
     }

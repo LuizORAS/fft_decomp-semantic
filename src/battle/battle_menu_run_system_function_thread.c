@@ -20,7 +20,7 @@ void battle_menu_run_system_function_thread(void) {
     }
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
-        while (battle_thread_is_running_8014cc94(NATIVE_THREAD_SLOT_EVENT) != 0) {
+        while (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
             if (g_battle_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 battle_thread_exit_current();
             }
@@ -36,14 +36,14 @@ void battle_menu_run_system_function_thread(void) {
     g_battle_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->thread_count;
     if (id == 0x1f) {
         battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_menu_open_option_dead_unit_panel);
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, D_80173C70, 0);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_battle_menu_dead_unit_panel_parameter, 0);
         battle_thread_exit_current();
     }
     if (id != 8) {
         battle_script_pulse_tutorial_wait_value(id);
     }
     battle_thread_start(NATIVE_THREAD_SLOT_MENU, entry->thread_entry);
-    battle_thread_set_parameters_4(
+    battle_thread_set_four_parameters(
         NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[entry->menu_entry_index], 0, 0, 0);
     g_battle_system_function_thread_busy = 0;
     battle_thread_exit_current();

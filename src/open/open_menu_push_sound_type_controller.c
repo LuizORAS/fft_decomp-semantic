@@ -19,10 +19,9 @@ void open_menu_push_sound_type_controller(void) {
     open_sound_menu_state_t* menu;
 
     for (i = 0; i < 3; i++) {
-        record = open_gfx_append_render_record_36(
+        record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
-        ((open_sound_menu_state_t*)&g_open_controller_stream_start[g_open_current_controller_index])->render_records[i]
-            = record;
+        g_open_controller_records_next[g_open_current_controller_index].sound_menu.render_records[i] = record;
         g_open_gfx_render_records_36[record].ot_layer = 4;
         g_open_gfx_render_records_36[record].anim_id = i + 7;
         (&g_open_gfx_render_records_36[record])->frame_timer = 0;
@@ -35,7 +34,7 @@ void open_menu_push_sound_type_controller(void) {
     sound_type = main_sound_get_type();
     controller_index = g_open_current_controller_index;
     g_open_controller_selected_options[controller_index * 25] = sound_type;
-    menu = (open_sound_menu_state_t*)&g_open_controller_stream_start[controller_index];
+    menu = &g_open_controller_records_next[controller_index].sound_menu;
     sound_type <<= 2;
     /* The explicit byte offset preserves the target's index shift before the
      * menu-base addition; direct array indexing schedules those instructions

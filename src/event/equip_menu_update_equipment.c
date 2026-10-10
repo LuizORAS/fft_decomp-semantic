@@ -15,7 +15,7 @@ s32 equip_menu_update_equipment(void) {
 
     if (g_equip_menu_ready == 0) {
         g_equip_menu_ready = 1;
-        g_equip_selected_slot = equip_menu_set_selection_value_2(2, 0);
+        g_equip_selected_slot = equip_menu_init_selection_value(2, 0);
         battle_thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
         equip_thread_request_stop(EQUIP_THREAD_SLOT_UNIT_STATUS);
         equip_thread_request_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);

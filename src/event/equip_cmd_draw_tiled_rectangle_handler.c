@@ -20,7 +20,7 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
     s32 column;
 
     otag_index = g_equip_gfx_sprite_ot_index;
-    clut = g_equip_text_metric_2;
+    clut = g_equip_menu_palette_clut;
 
     if (command[2] == 2) {
         base_x = g_equip_gfx_tiled_rect.x;

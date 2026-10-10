@@ -92,7 +92,7 @@ void world_menu_run_ability(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_formation_current_menu = *selection + WORLD_FORMATION_MENU_ABILITY_SET;
                 if (g_world_formation_current_menu != WORLD_FORMATION_MENU_ABILITY_LEARN) {
-                    world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_thread_idle_wait_forever_b);
+                    world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_ability_menu_idle_thread);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_SET_ABILITY_SLOT, 0);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_ABILITY_SLOT, 0);
                 } else {

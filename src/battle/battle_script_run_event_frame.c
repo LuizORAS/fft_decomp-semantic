@@ -41,7 +41,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
 
     if (g_battle_script_threads_idle != 0) {
         for (i = 1; i < 16; i++) {
-            if (battle_thread_is_running_8014cc94(i) != 0) {
+            if (battle_thread_is_running_asm(i) != 0) {
                 break;
             }
         }
@@ -140,11 +140,11 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         g_battle_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
-        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_8014cc94(i);
+        g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_asm(i);
     }
     battle_thread_yield();
     for (i = 1; i < 16; i++) {
-        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_8014cc94(i)) {
+        if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_asm(i)) {
             g_battle_event_input_suppression_frames = 5;
         }
     }
@@ -157,13 +157,13 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     if (g_battle_menu_input_block_frames != 0) {
         g_battle_menu_input_block_frames--;
     }
-    battle_noop_8013da70();
+    battle_script_frame_after_threads_stub();
     if (g_battle_script_frame_result_override != 0) {
         return g_battle_script_frame_result_override;
     }
 
     if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
-        battle_noop_8013ccec();
+        battle_menu_run_companion_overlay_stub();
         g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
     } else if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_BUNIT) {
         battle_script_set_event_speed(1);
@@ -182,7 +182,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     battle_menu_open_companion_executable();
     battle_menu_open_companion_data_file();
     battle_script_process_pending_requests();
-    battle_noop_8014a82c();
+    battle_script_frame_after_requests_stub();
     if (g_battle_menu_input_mode == MENU_INPUT_BLOCKED) {
         return 1;
     }
@@ -190,7 +190,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         return 0;
     }
     for (i = 1; i < 16; i++) {
-        if (battle_thread_is_running_8014cc94(i) != 0) {
+        if (battle_thread_is_running_asm(i) != 0) {
             break;
         }
     }

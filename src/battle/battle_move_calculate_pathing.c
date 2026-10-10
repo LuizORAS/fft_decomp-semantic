@@ -54,7 +54,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         config->cost_table = MAIN_TERRAIN_COST_TABLE_DEFAULT;
         config->move_type = BATTLE_MOVEMENT_CLASS_NORMAL;
         config->movement_3 = 0;
-        D_8018F7D0 = 0;
+        g_battle_move_pathing_ignore_terrain = 0;
         g_battle_move_pathing_scratch = config->cost_table;
         for (i = 0; i < 256; i++) {
             g_battle_move_terrain_cost = g_main_terrain_movement_cost_tables[g_battle_move_pathing_scratch][i];
@@ -76,13 +76,13 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         config->mountable_chocobo = 0;
         config->move = 124;
         config->can_ride = 0;
-        D_8018F7CC = 0;
+        g_battle_move_pathing_team = 0;
         config->_unknown_1a = D_8018F4FC;
         empty_flags = 0xFF;
         for (i = 15; i >= 0; i--) {
             records[i].unit_id_flags = empty_flags;
         }
-        D_8018F7D8 = 0;
+        g_battle_move_pathing_unit_record_count = 0;
         battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY);
         state->outer_count = 4;
         g_battle_target_panels[g_battle_move_pathing_tile_index].remaining_range = config->move + 1;

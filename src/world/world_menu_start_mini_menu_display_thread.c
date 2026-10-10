@@ -4,10 +4,10 @@
 /* Starts menu thread 8 on world_menu_display_triangle_selection with the g_world_menu_system_entries menu
  * data when threads 7 and 8 are idle and g_world_menu_overlay_state is clear. */
 void world_menu_start_mini_menu_display_thread(void) {
-    if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU) != 0) {
+    if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0) {
         return;
     }
-    if (world_thread_is_running_80100164(NATIVE_THREAD_SLOT_MENU_CHILD) != 0) {
+    if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_CHILD) != 0) {
         return;
     }
     if (g_world_menu_overlay_state != 0) {

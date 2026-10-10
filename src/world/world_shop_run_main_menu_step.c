@@ -13,7 +13,7 @@ void world_shop_run_main_menu_step(void) {
         world_menu_clear_selection_records();
         if (g_world_menu_selection_results[0] == 0) {
             g_world_shop_menu_step = WORLD_SHOP_STEP_BUY_LIST;
-            g_world_shop_item_category = world_menu_set_cursor_position_2(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
+            g_world_shop_item_category = world_menu_init_cursor_position(WORLD_MENU_CURSOR_SHOP_ITEM_TAB, 0);
         } else if (g_world_menu_selection_results[0] == 1) {
             g_world_shop_menu_step = WORLD_SHOP_STEP_SELL_LIST;
         } else if (g_world_menu_selection_results[0] == 2) {

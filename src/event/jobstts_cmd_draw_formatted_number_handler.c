@@ -78,12 +78,12 @@ u8* jobstts_cmd_draw_formatted_number_handler(u8* data) {
 
     value = condition(arg);
     if (data[6] != 0) {
-        clut = g_jobstts_text_metric_1;
+        clut = g_jobstts_menu_alternate_number_clut;
     } else {
-        clut = g_jobstts_gfx_background_clut_id;
+        clut = g_jobstts_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_jobstts_text_metric_3;
+        clut = g_jobstts_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
 

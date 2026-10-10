@@ -681,7 +681,7 @@ void battle_text_character_handling_thread(void) {
             for (i = 0; i < 0x10; i++) {
                 if (g_battle_current_thread_id != i
                     && g_battle_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
-                    && battle_thread_is_running_8014cc94(i)) {
+                    && battle_thread_is_running_asm(i)) {
                     g_battle_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
                 }
             }
