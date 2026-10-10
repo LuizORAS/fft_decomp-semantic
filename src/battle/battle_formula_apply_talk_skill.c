@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Effect of each talk skill: Negotiate takes gil, Persuade zeroes CT, Praise
+ * and Threaten change Brave by Y, Preach and Solution change Faith by Y; the
+ * rest inflict their status. */
 void battle_formula_apply_talk_skill(void) {
     switch (g_battle_action_current_ability.ability_id) {
     case ABILITY_ID_TALK_NEGOTIATE:

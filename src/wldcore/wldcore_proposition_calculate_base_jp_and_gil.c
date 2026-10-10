@@ -1,6 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* JP (row 0) and gil (row 2) of each participant: the proposition's JP and gil
+ * amounts, on a failure JP / 10 and gil / 5, on a bad failure both / 20; each
+ * then gains the participant's score (row 1). Nothing is done when
+ * wldcore_proposition_determine_success set the gate. */
 void wldcore_proposition_calculate_base_jp_and_gil(void) {
     const u16* jp_rewards;
     const u16* gil_rewards;

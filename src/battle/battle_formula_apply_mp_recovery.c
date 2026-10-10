@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Convert the pending MP-cost field into an actual MP recovery event on
-   the current action and mirror the amount onto the linked reaction
-   record so the animation reports "MP restored". */
+/* MP drain step: the stored HP damage becomes MP damage on the target; when it
+ * lands, the attacker recovers the same amount of MP. */
 void battle_formula_apply_mp_recovery(void) {
     u16 mp_amount;
     battle_action_data_t* action;

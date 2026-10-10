@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Side of origin the target tile lies on, split along the two diagonals (south
+ * is lower y, west lower x). A tile on a diagonal counts as south (to the
+ * south-west), west (north-west), north (north-east) or east (south-east).
+ * OVERLAP for the same tile. */
 battle_ai_direction_e battle_ai_find_direction_of_target(const s8* target, const s8* origin) {
     s32 z1 = target[2];
     s32 x1 = target[0];

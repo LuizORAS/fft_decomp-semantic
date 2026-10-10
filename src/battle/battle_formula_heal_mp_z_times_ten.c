@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x49: heal (Z * 10) MP. */
 void battle_formula_heal_mp_z_times_ten(void) {
     s32 index;
     s32 amount;

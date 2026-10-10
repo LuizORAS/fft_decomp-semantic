@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Score the considered ability cast from the unit's own tile (act, then move)
+ * and, when the action's destination tile differs and allows the ability, cast
+ * from there (move, then act). -1 suspends. */
 s32 battle_ai_check_map_allows_use_and_find_highest_target(void) {
     battle_ai_data_t* ai;
 

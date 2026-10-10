@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Effect of each song. XA + YA is MA + Y; the stat songs add 1. */
 void battle_formula_apply_song_abilities(void) {
     switch (g_battle_action_current_ability.ability_id) {
     case ABILITY_ID_SONG_ANGEL_SONG:

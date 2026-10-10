@@ -9,7 +9,7 @@
  * four proposition data tables (records 3..6) keyed on the proposition's
  * fields, the participant's job category and its bravery, faith and level
  * tiers; the total maps onto result 0 (>= 0x63), 1 (>= 0x3b) or 2. A named
- * preferred job then gives a 60% roll to promote the result back to 0. The
+ * preferred job then gives a 61 in 100 roll to promote the result back to 0. The
  * preferred-job scan reads the party record once, with the scoring loop's
  * leftover index, as the target does. The target builds the row walk pointers
  * from the proposition_index address, which needs the rows and that word to be

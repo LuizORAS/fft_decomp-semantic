@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* For an enemy-targeting ability, drop from the target list each enemy that
+ * will act before the ability lands. Returns 1 while a target is left. */
 s32 battle_ai_exclude_enemies_acting_before_ct(void) {
     s32 result;
     s32 i;

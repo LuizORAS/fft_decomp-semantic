@@ -10,6 +10,9 @@ typedef struct battle_formula_evasion_target {
     u8 x5C;
 } battle_formula_evasion_target_t;
 
+/* Target statuses on the evades: Don't Act, Sleep, Stop, Confusion, Charging
+ * or Performing clear all four; Defending halves the base hit, which doubles
+ * them. */
 void battle_formula_apply_evasion_changes_due_to_statuses(void) {
     battle_formula_evasion_target_t* target;
     u8 flag;

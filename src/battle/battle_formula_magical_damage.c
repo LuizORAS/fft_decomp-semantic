@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Formula 0x08: damage F(MA * Y) with element; magic evade; 19% status. */
 void battle_formula_magical_damage(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         battle_formula_store_ma_and_y();

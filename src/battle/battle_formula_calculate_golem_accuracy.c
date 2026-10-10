@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Golem's hit chance: (MA with Magic Attack Up + X) * caster Faith / 100, the
+ * Faith status counting as 100 and Innocent as 0. No zodiac compatibility and
+ * no target Faith. Returns 1 on a miss. */
 s32 battle_formula_calculate_golem_accuracy(void) {
     battle_action_data_t* action;
 

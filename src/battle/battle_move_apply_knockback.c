@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Resolve a pending knockback as the target's own action. A grounded target
+ * that is not a crystal, dead or petrified takes (fall height / 2 - Jump) *
+ * MaxHP / 10 fall damage when that is positive, at most 999; a flying one
+ * takes none. */
 void battle_move_apply_knockback(void) {
     u8* flags;
     battle_stats_t* unit;

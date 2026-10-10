@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Faith step: HP damage * caster Faith * target Faith / 10000. The Faith
+ * status counts as 100 and Innocent as 0; Innocent wins when a unit has both. */
 void battle_formula_calculate_faith(void) {
     u8* act;
 

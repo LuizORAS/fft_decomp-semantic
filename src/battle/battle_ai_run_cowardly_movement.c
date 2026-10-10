@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Score the reachable tiles, fill the distance grid for the decision's target,
+ * and store the best destination as movement scenario 1. -1 suspends; the next
+ * call resumes at the step that did. */
 s32 battle_ai_run_cowardly_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 state;

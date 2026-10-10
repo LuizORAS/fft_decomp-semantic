@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Arm a counter-type reaction on the target: the attack must not come through
+ * Math Skill, its flags_4 must have a bit of mask, and the target's Brave roll
+ * must pass. Records the reaction and the ability it answers. */
 void battle_action_check_counter_reaction_usability(u16 reaction_id, u32 mask) {
     battle_action_data_t* action;
 

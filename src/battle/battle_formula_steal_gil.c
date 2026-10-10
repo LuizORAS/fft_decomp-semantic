@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Formula 0x27: steal (Level * SP) gil, hit (SP+X)%; physical evade. */
 void battle_formula_steal_gil(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_speed_and_x();

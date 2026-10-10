@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x2F: absorb (PA * WP) MP; physical evade. */
 void battle_formula_absorb_mp_pa_times_wp(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_pa_and_weapon_power();

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Formula 0x07: heal weapon (XA * YA) HP (damage to undead); no evade. Zodiac
+ * compatibility is applied twice. */
 void battle_formula_weapon_heal(void) {
     battle_formula_calculate_base_xa();
     battle_formula_apply_zodiac_compatibility();

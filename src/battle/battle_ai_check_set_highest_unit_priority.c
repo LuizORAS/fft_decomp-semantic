@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Simulate and score the current action and keep it as the best when it
+ * outranks the best so far. -1 suspends; otherwise 0. */
 s32 battle_ai_check_set_highest_unit_priority(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 result = battle_ai_simulate_action_and_score();

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Apply the removals of the unit's action result: each removed status leaves
+ * inflicted_status, has its CT cleared and, when executing, its graphics flag
+ * switched off; then the current set is rebuilt as innate | inflicted. */
 void battle_status_set_inflicted_ct_and_transfer_last_used_ct(s32 unit_idx) {
     battle_stats_t* unit;
     s32 i;

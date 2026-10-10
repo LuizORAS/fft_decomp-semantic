@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x25: break the equipment the ability names, hit (PA+WP+Y)%;
+ * physical evade; Maintenance blocks it. With nothing in that slot the action
+ * becomes a plain attack. */
 void battle_formula_break_equipped_hit_pa_wp_x_percent(void) {
     battle_action_data_t* action;
 

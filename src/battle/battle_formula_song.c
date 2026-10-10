@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x1C: song, hit X%: heal (MA + Y) MP or HP, +1 Speed, PA or MA,
+ * status, or Quick by ability. Never hits a sleeping target. */
 void battle_formula_song(void) {
     battle_formula_force_sleeping_target_miss();
     if (g_battle_action_target_data->hit != 0) {

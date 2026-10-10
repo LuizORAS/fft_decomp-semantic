@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Confusion, Blood Suck, Berserk, Chicken and Charm take the unit out of
+ * player control; without them the control bit comes back from the initial
+ * team flags. Without Charm the team bits come back from the initial team as
+ * well. */
 void battle_status_remove_control(battle_stats_t* unit) {
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)

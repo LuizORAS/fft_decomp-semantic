@@ -2,9 +2,11 @@
 
 /* Apply the acting unit's pending EXP and JP rewards.
  *
- * Gained JP Up affects only the actor; other battle slots receive one quarter
- * of the unmodified JP through the callee's team filter.
- */
+ * EXP saturates at 255 before the level-up check. JP is 8 + job level * 2 +
+ * level / 4, from the level and job level before this award, or 0 when the
+ * action earned no EXP; monsters earn none. Gained JP Up (* 3/2) affects only
+ * the actor; other battle slots receive one quarter of the unmodified JP
+ * through the callee's team filter. */
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display) {
     s32 job_slot;
     battle_stats_t* unit;

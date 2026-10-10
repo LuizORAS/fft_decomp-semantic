@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* 1 when the unit, or its rider when it is a mount, is charging an attack of
+ * the Charge skillset; with do_disable, battle_status_disable_acting is called
+ * on that unit. */
 s32 battle_status_remove_charging_ability_ct(battle_stats_t* unit, s32 do_disable) {
     u8 mount_info;
 

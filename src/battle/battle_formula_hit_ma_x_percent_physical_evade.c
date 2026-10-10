@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Formula 0x50: status, hit (MA+X)%; physical evade. */
 void battle_formula_hit_ma_x_percent_physical_evade(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_ma_and_x();

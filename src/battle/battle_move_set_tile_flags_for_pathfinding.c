@@ -1,5 +1,16 @@
 #include "fft/battle.h"
 
+/* Rebuild the frontier flags of all 512 tiles from slope, half height, depth
+ * and the tile flags, then mark the tiles under the 16 unit records. A unit of
+ * another team makes its tile not enterable (a flier may still cross on top of
+ * it). One of the mover's team can be mounted unless its record says
+ * otherwise, and stood on when it is a stepping stone and the mover is not
+ * one. Altima's second form blocks its tile.
+ *
+ * A mode with bit 0 set also clears the panel ranges and the reachable count.
+ * START_SPREAD queues the mover's own tile with Move + 1 range (and the unit
+ * record on that tile when it is mountable); TERRAIN_ONLY leaves the units
+ * out. */
 void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;

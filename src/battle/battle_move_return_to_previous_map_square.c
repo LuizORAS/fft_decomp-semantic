@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Put the unit back on the tile, facing and mount state saved before its move,
+ * then refresh its screen position and animation facing. */
 void battle_move_return_to_previous_map_square(battle_unit_misc_data_t* unit) {
     unit->map_x = unit->previous_map_x;
     unit->map_y = unit->previous_map_y;

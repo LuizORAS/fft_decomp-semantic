@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* MP damage of Y% of the target's max MP, rounded up. */
 void battle_formula_calculate_mp_percent_damage(void) {
     battle_action_data_t* action;
     s32 damage;

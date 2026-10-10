@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Poison takes and Regen restores an eighth of max HP, rounded down; Poison
+ * wins when a unit has both. Returns the resulting action type: 0 with neither
+ * status, or for a unit that is crystal, dead, jumping, petrified or treasure. */
 s32 battle_status_apply_poison_and_regen(battle_stats_t* unit) {
     u8 status;
     if (battle_status_check_crystal_dead_jump_petrify_treasure(unit) != 0) {

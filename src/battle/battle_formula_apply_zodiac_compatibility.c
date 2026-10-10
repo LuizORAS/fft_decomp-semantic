@@ -8,6 +8,9 @@
  * result, otherwise same-sex pairs get the worst result and opposite-sex pairs
  * the best.
  *
+ * Good and bad change XA by a quarter, best and worst by a half (XA * 25 / 100
+ * or / 50, truncated); the result is at least 1.
+ *
  * Casting the attacker sign to its stored 4-bit domain preserves the target's
  * distinct comparison copy without a compiler constraint.
  */

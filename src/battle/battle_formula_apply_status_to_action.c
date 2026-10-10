@@ -1,13 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Apply the current ability's status set to the target action.
+/* Apply the current ability's status set to the target action. Also the
+ * handler of formula 0x38 (status, 100%).
  *
  * All-or-nothing copies the full set, random chooses one status, separate
- * rolls each status independently, and cancel writes the removal set. Preview
- * and AI evaluation force probabilistic modes through the all-or-nothing path.
- */
+ * rolls each status independently, and cancel writes the removal set. Separate
+ * keeps a status when a roll of 0..99 is below 24, while the shown accuracy is
+ * divided by four. Preview and AI evaluation force probabilistic modes through
+ * the all-or-nothing path. A set that changes nothing on the target is a
+ * forced miss. */
 void battle_formula_apply_status_to_action(void) {
     s32 status_ids[BATTLE_STATUS_COUNT];
     s32 type;

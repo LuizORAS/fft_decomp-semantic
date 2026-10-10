@@ -15,6 +15,10 @@ typedef struct battle_target_reflect_action {
     s16 target_y;         /* 0x17e */
 } battle_target_reflect_action_t;
 
+/* Aim a reflected spell: the unit casts the ability it received, under the
+ * Black Magic skillset, at the tile as far beyond it as the caster is in front
+ * of it. -1 when the caster stands on the unit's tile or that tile is off the
+ * map or blocked. */
 s32 battle_target_apply_reflect(battle_stats_t* unit) {
     battle_target_reflect_action_t* act;
     s32 x;

@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Evaluate each entry of the acting unit's ability list in turn: 34 entries at
+ * most, ended early by SKILLSET_ID_NONE. -1 suspends, and the next call
+ * resumes inside the loop. */
 s32 battle_ai_choose_move_from_move_list(void) {
     battle_ai_data_t* ai;
     battle_ai_ability_entry_t* entry;

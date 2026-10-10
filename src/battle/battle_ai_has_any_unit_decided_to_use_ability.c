@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Keep in the target list only the units the considered ability is useful on.
+ * Returns 1 while one is left. */
 s32 battle_ai_has_any_unit_decided_to_use_ability(void) {
     battle_ai_data_t* ai;
     s32 result;

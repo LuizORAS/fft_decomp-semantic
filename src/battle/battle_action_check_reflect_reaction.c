@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Reflect: a reflectable ability not cast through Math Skill misses the target
+ * and is recorded on it for the bounce. */
 void battle_action_check_reflect_reaction(void) {
     battle_action_data_t* action;
     /* Loaded through a pointer so the reaction_id store stays above it. */

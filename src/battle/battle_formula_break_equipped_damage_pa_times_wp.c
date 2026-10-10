@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x2E: break the equipment the ability names and damage (PA * WP)
+ * with the weapon's element; physical evade. Fails with nothing in that slot
+ * or against Maintenance. */
 void battle_formula_break_equipped_damage_pa_times_wp(void) {
     battle_action_data_t* action;
 

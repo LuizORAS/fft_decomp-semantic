@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Add the ability's status as a side effect of a hit: the hit flag, accuracy
+ * and miss type are kept when the status does not apply. */
 void battle_formula_apply_status(void) {
     u8 hit, miss_type;
     u16 accuracy;

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Apply an action result's EXP change when executing. Without bit 0x80 the
+ * amount is gained: EXP saturates at 255 and the level-up check runs. With it
+ * the low seven bits are lost, down to 0. */
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount) {
     s32 total;
     u8 capped;

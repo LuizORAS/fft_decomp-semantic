@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* 1 when the unit can act limit clockticks from now: present, Speed above 0,
+ * not crystal, petrified or treasure, with no Stop, Don't Move or Sleep that
+ * lasts that long, and alive, or dead with Reraise and due a turn by then. */
 s32 battle_ai_decide_status_ct_based(s32 limit, s32 unit_id) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
 

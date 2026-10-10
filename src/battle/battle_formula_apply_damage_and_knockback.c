@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Damage XA * rnd(1..Y). When executing, the target is knocked back if a roll
+ * of 0..(its Brave - 1) comes out under a roll of 0..(attacker Brave - 1). */
 void battle_formula_apply_damage_and_knockback(void) {
     battle_action_data_t* action;
     s32 damage;

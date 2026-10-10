@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x21: Draw Out MP damage (MA * Y); katana break roll. */
 void battle_formula_draw_out_mp_damage(void) {
     s16 damage;
     battle_action_data_t* action;

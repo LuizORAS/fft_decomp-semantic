@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Lower PA (Power Break, Power Ruin), MA (Mind Break, Mind Ruin) or Speed
+ * (Speed Break, Speed Ruin) by X; other abilities change nothing. */
 void battle_formula_determine_reduced_stat(void) {
     u16 ability;
 

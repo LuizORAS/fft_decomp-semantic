@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x63: thrown weapon damage (SP * WP) with the weapon's element;
+ * Catch, then physical evade. */
 void battle_formula_damage_sp_times_wp(void) {
     battle_formula_apply_catch();
     if (g_battle_action_target_data->hit == 0) {

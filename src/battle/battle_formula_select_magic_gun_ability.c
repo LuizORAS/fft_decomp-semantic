@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Selects a Fire, Lightning, or Ice spell and installs its ability data. */
+/* Selects the Fire, Bolt or Ice line from the gun's element and the tier from
+ * a roll of 0..99: below 10 the third spell, below 40 the second, otherwise
+ * the first (10/30/60%). Installs that spell's ability data. */
 void battle_formula_select_magic_gun_ability(void) {
     u8 element;
     u8 pct;

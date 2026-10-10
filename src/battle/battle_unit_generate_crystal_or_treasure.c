@@ -13,6 +13,13 @@ typedef struct {
 
 /* Resolve a crystal or treasure pickup for the unit that moved onto its tile.
  *
+ * A treasure gives one item (result 4). A crystal (result 2) offers a human
+ * mover the abilities of a human crystal, job by job: the base job only when
+ * both share a character identity, the others when the mover has the job
+ * unlocked (never Bard for a woman or Dancer for a man). Each ability the
+ * crystal knows and the mover does not is inherited when a roll of 0..99 is
+ * below its learn rate; result bit 0 is set when at least one is.
+ *
  * The two one-trip loops around the crystal result store emit no code; they
  * count that use of the CSE'd &g_main_crystal_pickup_result pseudo two loop levels deeper
  * (8 refs), so global-alloc ranks it above `mover` and gives it s1 as in the

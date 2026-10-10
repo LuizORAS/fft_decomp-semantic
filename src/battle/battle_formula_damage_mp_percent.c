@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Formula 0x1B: MP damage (Y)% of max MP, hit F(MA+X)%; magic evade. */
 void battle_formula_damage_mp_percent(void) {
     if (battle_formula_calculate_magical_evade() == 0) {
         if (battle_formula_calculate_magic_accuracy() == 0) {

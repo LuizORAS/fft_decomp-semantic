@@ -1,12 +1,13 @@
 #include "fft/battle.h"
 
-/*
- * Prepare the action record for a movement ability's benefit.
+/* Prepare the action record for a movement ability's benefit.
  *
- * Initialize the record, then select HP, MP, EXP or JP in that order.
- * Return -1 for a blocking status and 0 otherwise, including when no
- * movement benefit is present. The caller applies and displays the result.
- */
+ * Initialize the record, then select HP, MP, EXP or JP in that order. Move-HP
+ * Up and Move-MP Up restore a tenth of the maximum, rounded up; Move-Get EXP
+ * and Move-Get JP give battle_unit_calculate_move_exp_jp_up_to_earn's amount,
+ * doubled by Gained EXP Up or Gained JP Up. Return -1 for a blocking status
+ * and 0 otherwise, including when no movement benefit is present. The caller
+ * applies and displays the result. */
 s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit) {
     s32 flags;
     u8 unit_id;

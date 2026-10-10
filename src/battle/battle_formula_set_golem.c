@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x14: Golem, hit ((MA+X) * caster Faith / 100)%. */
 void battle_formula_set_golem(void) {
     if (battle_formula_calculate_golem_accuracy() == 0) {
         /* The halfword store clears all other special-effect flags. */

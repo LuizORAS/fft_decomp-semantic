@@ -1,9 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* 0x801938e6: set when the current target is undead, read by this formula to
+/* Formula 0x0E: damage (Y)% of max HP, hit F(MA+X)%; magic evade. The
+ * ability's status must apply. An undead target skips the evade and its magic
+ * defences and is healed instead; a target immune to Dead is missed.
+ *
+ * 0x801938e6: set when the current target is undead, read by this formula to
  * skip the magic-defense stage. */
-
 void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
     if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {

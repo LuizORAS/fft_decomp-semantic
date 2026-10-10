@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Drop a pending weapon proc together with the added-effect flag (special
+ * effect 0x0200). */
 void battle_formula_clear_nullify_flags(void) {
     u16* pflag;
     battle_action_data_t* action;

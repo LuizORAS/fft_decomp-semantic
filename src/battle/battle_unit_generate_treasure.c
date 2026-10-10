@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Item a fallen unit leaves as treasure: one of its equipped items at random,
+ * or with nothing equipped one of the thirteen consumables other than Elixir.
+ * Decided only when executing; in any other state the function returns without
+ * a value. */
 u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     u8 buf[8];
     s32 count;

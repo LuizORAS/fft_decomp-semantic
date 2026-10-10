@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Attacker statuses on XA: Berserk * 3/2; a Frog's XA is 1. */
 void battle_formula_apply_attacker_berserk_frog(void) {
     if (g_battle_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_BERSERK)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BERSERK)) {

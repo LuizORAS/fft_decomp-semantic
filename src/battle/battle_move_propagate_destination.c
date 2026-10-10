@@ -25,7 +25,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     destination_flags = &flags[state->destination_index];
     if (state->destination_unit_record_flag != 0) {
         if (!(*destination_flags & (FRONTIER_FLAG_MOUNTABLE_UNIT | FRONTIER_FLAG_STAND_ON_UNIT)))
-            return 1;
+            return 1; /* no unit there to mount or stand on */
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
         state->destination_entry_height = records[state->destination_unit_record_index].top_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
@@ -33,10 +33,10 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         if (*destination_flags & FRONTIER_FLAG_MOUNTABLE_UNIT)
             battle_move_check_occupied_tile_standing_height(state->destination_unit_record_index, extra_span);
         if (!(*destination_flags & FRONTIER_FLAG_STAND_ON_UNIT))
-            return 17;
+            return 17; /* the unit cannot be stood on (a mount was handled by the helper) */
     } else {
         if (!(*destination_flags & FRONTIER_FLAG_ENTERABLE))
-            return 2;
+            return 2; /* the tile is not enterable */
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);
         state->destination_opposite_height = state->destination_base_height_times_two
@@ -45,26 +45,26 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
             state->work_x, state->work_y, state->destination_side_shift, state->destination_entry_height);
         if (state->destination_side_height_delta > 0 && (*destination_flags & FRONTIER_FLAG_STEEP))
-            return 3;
+            return 3; /* a steep slope entered from its low side */
     }
     if (state->destination_ceiling_height < state->source_exit_height + config->unit_size)
-        return 4;
+        return 4; /* too low a ceiling over the destination for the mover's exit height */
     if (state->source_ceiling_height < state->destination_entry_height + config->unit_size)
-        return 5;
+        return 5; /* too low a ceiling over the source for the destination's entry height */
     if (state->destination_ceiling_height < state->destination_entry_height + config->unit_size)
-        return 6;
+        return 6; /* no headroom on the destination itself */
     if (state->destination_unit_record_flag == 0)
         state->destination_entry_height
             += (state->destination_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
     if (state->destination_entry_height > state->source_exit_height) {
         if (extra_span != 0)
-            return 8;
+            return 8; /* a step that spans tiles cannot climb */
         state->height_delta = state->destination_entry_height - state->source_exit_height;
     } else {
         state->height_delta = state->source_exit_height - state->destination_entry_height;
     }
     if (state->height_delta > config->jump_times_two)
-        return 9;
+        return 9; /* beyond the jump limit */
     state->work_height = state->source_panel->max_height_delta;
     state->height_delta = state->work_height < state->height_delta ? state->height_delta : state->work_height;
     if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY)
@@ -72,15 +72,15 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     if (state->destination_unit_record_flag != 0) {
         state->candidate_remaining_range.value = state->source_panel->remaining_range - 1 - extra_span;
         if (state->candidate_remaining_range.value <= 0)
-            return 11;
+            return 11; /* no range left to step onto the unit */
         if (state->candidate_remaining_range.bytes.low
             < g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range)
-            return 12;
+            return 12; /* the unit top is already reached with more range left */
         if (state->candidate_remaining_range.bytes.low
                 == g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
             && state->height_delta
                 >= g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta)
-            return 13;
+            return 13; /* same range left, and no smaller height difference */
         g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
             = state->candidate_remaining_range.bytes.low;
         g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta = state->height_delta;
@@ -88,12 +88,12 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         state->candidate_remaining_range.value = state->source_panel->remaining_range - extra_span
             - terrain_costs[state->destination_tile->surface.value & MAP_SURFACE_MASK];
         if (state->candidate_remaining_range.value <= 0)
-            return 14;
+            return 14; /* no range left after the terrain cost */
         if (state->candidate_remaining_range.bytes.low < state->destination_panel->remaining_range)
-            return 15;
+            return 15; /* the tile is already reached with more range left */
         if (state->candidate_remaining_range.bytes.low == state->destination_panel->remaining_range
             && state->height_delta >= state->destination_panel->max_height_delta)
-            return 16;
+            return 16; /* same range left, and no smaller height difference */
         state->destination_panel->remaining_range = state->candidate_remaining_range.bytes.low;
         state->destination_panel->max_height_delta = state->height_delta;
     }

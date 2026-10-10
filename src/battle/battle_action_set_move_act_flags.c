@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Mark the unit's move and/or action as taken and end its turn once nothing is
+ * left to do. -1 for an absent unit, 1 when the turn ended, otherwise 0. */
 s32 battle_action_set_move_act_flags(s32 idx, s32 move_flag, s32 act_flag) {
     battle_stats_t* unit;
     s32 ret;

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Target affinities on the stored HP damage: absorb flags the action, nullify
+ * cancels it, half halves, weak doubles. Half and weak both apply. */
 void battle_formula_modify_damage_for_element(s32 element) {
     u8 element_mask;
     battle_stats_t* unit;

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Hit chance (XA+YA)% with Attack Up, Martial Arts, Berserk or Frog, Defense
+ * Up, the target's statuses and zodiac compatibility on XA. Returns 1 on a
+ * miss. */
 s32 battle_formula_calculate_physical_status_accuracy(void) {
     battle_formula_apply_attack_up_and_martial_arts();
     battle_formula_apply_physical_status_support_compatibility();

@@ -2,6 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* L1 starts a quarter turn left and R1 one right, each with its sound, unless
+ * a rotation is running. */
 void battle_camera_handle_rotation_input(void) {
     if (g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
         if (g_main_input_pressed_buttons & PSX_PAD_L1) {

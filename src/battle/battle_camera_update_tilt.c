@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Step the pitch toward the tilt target, 0x1c0 (high) or 0x12e (low), from
+ * either side, by an increment that grows by twice the animation speed each
+ * frame until it passes 0x2f. The tilt ends on the target. */
 void battle_camera_update_tilt(void) {
     s16 tilt;
 

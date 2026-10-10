@@ -5,7 +5,8 @@ enum {
     POACH_ITEM_RARE = 1,
 };
 
-/* Add a poached monster's common or rare item to the Fur Shop inventory.
+/* Add a poached monster's item to the Fur Shop inventory: the rare one when a
+ * roll of 0..255 is below 31 (31 in 256), otherwise the common one.
  *
  * Inventory quantities saturate at 0xff. */
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void) {

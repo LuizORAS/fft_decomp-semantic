@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* With an ally in peril, switch to the recovery policy and return -2.
+ * Otherwise focus on the unit's auto-battle target and run the general search;
+ * -1 suspends. */
 s32 battle_ai_select_fading_life_action(void) {
     if (g_battle_ai_data_base.resume_pending == 0) {
         if (battle_ai_select_peril_target() != 0) {

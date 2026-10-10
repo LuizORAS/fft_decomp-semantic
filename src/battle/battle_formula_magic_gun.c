@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x04: magic gun. Casts the first, second or third spell of the gun's
+ * element (60/30/10%); damage F(WP * that spell's Y) with its element; no
+ * evade. */
 void battle_formula_magic_gun(void) {
     u16 weapon_power;
     u16 ability_y;

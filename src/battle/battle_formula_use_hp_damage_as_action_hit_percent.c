@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Use the percentage in hp_damage as the hit chance and clear it. 100 or more
+ * always hits. Below that the shown accuracy is scaled by it and, when
+ * executing, a roll of 0..99 at or above it misses; a chance of 0 misses in
+ * every state. */
 void battle_formula_use_hp_damage_as_action_hit_percent(void) {
     s32 pct;
     s32 amount;

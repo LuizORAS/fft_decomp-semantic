@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Formula 0x06: weapon damage (XA * YA), absorbed by the attacker as HP
+ * (reversed against undead); physical evade; no element. */
 void battle_formula_weapon_absorb_hp(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_calculate_base_xa();

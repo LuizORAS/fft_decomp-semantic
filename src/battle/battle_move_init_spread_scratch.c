@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Reset the best-candidate fields of the spread state and load the current
+ * tile's heights. */
 void battle_move_init_spread_scratch(void) {
     battle_move_spread_state_t* spread = g_battle_move_scratch_pad_ptr;
     spread->best_height_delta = 0xFF;

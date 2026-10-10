@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Hit chance (XA+YA)% with every physical modifier on XA, Two Hands included.
+ * Returns 1 on a miss. */
 s32 battle_formula_calculate_physical_accuracy(void) {
     battle_formula_apply_physical_xa_modifying_statuses_support();
     battle_formula_store_xa_plus_ya_status_damage();

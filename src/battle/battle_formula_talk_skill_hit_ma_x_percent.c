@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x2A: talk skill, hit (MA+X)%: gil (Level * SP), CT to 0, +/-Brave
+ * or Faith (Y), or status by ability. Misses a sleeping target and, without
+ * Monster Talk, a monster; Finger Guard can cancel it. */
 void battle_formula_talk_skill_hit_ma_x_percent(void) {
     battle_formula_force_sleeping_target_miss();
     if ((g_battle_action_target->unit_flags & UNIT_FLAG_MONSTER)

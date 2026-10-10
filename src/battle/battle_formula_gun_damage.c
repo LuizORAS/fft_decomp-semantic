@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x03: gun damage (WP * WP); no evade roll, element or status. */
 void battle_formula_gun_damage(void) {
     u16 weapon_power = g_battle_action_current_ability.weapon_data.power;
 

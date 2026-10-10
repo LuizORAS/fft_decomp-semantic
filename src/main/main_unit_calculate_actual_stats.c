@@ -1,6 +1,14 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Derive max HP, max MP, Speed, PA and MA from the 24-bit raw stats: raw * job
+ * multiplier / 1638400, at least 1; HP and MP at most 999, Speed at most 50,
+ * PA and MA at most 99. An egg's HP and MP are ten times that, capped at
+ * 0xffff.
+ *
+ * Mode 0 also fills HP and MP and, for a generated unit, first replays the
+ * growth of levels 2 to its level (raw += raw / (growth + level - 1) for
+ * each). A mode with bit 0 set leaves Speed, PA and MA as they are. */
 void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     u32 value;
     u32 multiplier;

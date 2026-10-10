@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* XA and YA of formula 0x64 (Jump): XA = PA, or PA * 3/2 with a polearm; YA =
+ * weapon power, or bare-handed XA * Brave / 100 (at least 1). */
 void battle_formula_init_weapon_xa_ya(void) {
     u8 weapon_type = g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type;
 

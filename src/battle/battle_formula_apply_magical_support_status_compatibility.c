@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Magical modifiers on XA, in order: Magic Attack Up, Magic Defense Up, the
+ * target's statuses (Shell, Frog or Chicken), zodiac compatibility. */
 void battle_formula_apply_magical_support_status_compatibility(void) {
     battle_formula_apply_magic_attack_up();
     battle_formula_apply_magic_defense_up();

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Step the three zoom scales toward the zoom target, ONE zooming in or 0xc00
+ * zooming out, by an increment that grows by four times the animation speed
+ * each frame until it reaches 0x300. The zoom ends on the target. */
 void battle_camera_update_zoom(void) {
     s32 increment;
     s32* zoom_ptr;

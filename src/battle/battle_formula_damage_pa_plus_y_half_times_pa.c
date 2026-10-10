@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x31: damage ((PA + Y) / 2 * PA) with element; physical evade; 19%
+ * status. */
 void battle_formula_damage_pa_plus_y_half_times_pa(void) {
     if (battle_formula_calculate_physical_evade() == 0) {
         battle_formula_store_pa_and_pa_plus_y_divided_by_two();

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Gil stolen: attacker Level * Speed, capped at the war funds when the target
+ * is on team 0 (blue). Nothing to take is a miss. */
 void battle_formula_calculate_stolen_gil(void) {
     battle_stats_t* attacker;
     battle_action_data_t* action;

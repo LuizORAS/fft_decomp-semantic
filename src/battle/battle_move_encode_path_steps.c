@@ -1,5 +1,10 @@
 #include "fft/battle.h"
 
+/* Encode the traced path as battle_move_step_t bytes in g_battle_move_path,
+ * byte 0 holding the step count. Starting from the unit's tile, step n goes to
+ * the tile or unit record the back-trace marked with path_length - n; the byte
+ * records the direction, the distance, the level, whether the step ends on a
+ * unit and whether either end is a climb. */
 void battle_move_encode_path_steps(void) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;

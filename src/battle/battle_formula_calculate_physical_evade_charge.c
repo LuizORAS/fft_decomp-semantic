@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* battle_formula_calculate_physical_evade without the bow weather penalty. */
 s32 battle_formula_calculate_physical_evade_charge(void) {
     battle_formula_store_physical_evade_values();
     battle_formula_calculate_concentrate();

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Formula 0x0C: heal F(MA * Y) HP (damage to undead). */
 void battle_formula_magical_heal(void) {
     battle_formula_store_ma_and_y();
     battle_formula_apply_elemental_strengthen();

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* 1 while the camera is moving: a pan vector is left, or it is rotating,
+ * tilting or zooming. */
 s32 battle_camera_is_active(void) {
     if (g_battle_current_vector.vx == 0 && g_battle_current_vector.vy == 0 && g_battle_current_vector.vz == 0
         && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE

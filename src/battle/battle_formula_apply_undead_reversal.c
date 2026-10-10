@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Healing step: the stored HP damage becomes healing. An undead target takes
+ * it as damage instead, and the ability no longer counts as cancelling the
+ * statuses of the first status byte (Dead among them). */
 void battle_formula_apply_undead_reversal(void) {
     battle_action_data_t* action;
     battle_action_data_t* action_again;

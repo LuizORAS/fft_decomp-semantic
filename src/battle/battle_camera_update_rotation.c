@@ -2,6 +2,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Step the yaw toward its destination by an increment that grows by twice the
+ * animation speed each frame until it passes 0x2f. On arrival the yaw snaps to
+ * the destination; while L1 (turning left) or R1 (turning right) is still held
+ * outside an event, the next quarter turn starts at the speed reached, and
+ * otherwise the rotation ends: both rotate sounds stop and the stop sound
+ * plays. */
 void battle_camera_update_rotation(void) {
     s32 angle;
 

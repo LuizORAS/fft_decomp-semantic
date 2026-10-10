@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Attacker supports on XA for ability formulas: Attack Up * 4/3, then Martial
+ * Arts * 3/2 when the weapon's item type is unarmed. No Two Hands step. */
 void battle_formula_apply_attack_up_and_martial_arts(void) {
     if (g_battle_action_attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
         g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 4 / 3;

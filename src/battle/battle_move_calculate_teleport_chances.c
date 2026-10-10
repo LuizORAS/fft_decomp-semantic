@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* 1 when the teleport succeeds: always with Teleport 2, otherwise it fails
+ * with a 10 in 100 chance per tile of distance beyond Move. */
 s32 battle_move_calculate_teleport_chances(void) {
     battle_move_pathfind_scratch_t* ctx = g_battle_move_config_ptr;
     s32 dx, dy;

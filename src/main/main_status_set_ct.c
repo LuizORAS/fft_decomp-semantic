@@ -2,6 +2,11 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Start a timed status's CT from g_main_status_effect_data, or clear it when
+ * removing. For Dead, in either case, the death counter is set to 3, or to
+ * 0xff for an immortal unit and for one with a save- or load-formation flag.
+ * Returns -1 when Death Sentence is already counting, so a second one does not
+ * restart it; otherwise 0. */
 s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing) {
     battle_stats_t* stats = unit;
     u32 ct_index;

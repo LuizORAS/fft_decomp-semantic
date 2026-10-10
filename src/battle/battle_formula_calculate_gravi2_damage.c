@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* HP damage equal to the target's current HP - 1 (0 when it has none). */
 void battle_formula_calculate_gravi2_damage(void) {
     battle_stats_t* target;
 

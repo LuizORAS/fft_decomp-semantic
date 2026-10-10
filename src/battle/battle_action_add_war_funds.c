@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Add total to the war funds, plus a quarter of the item's price when an item
+ * is given (battle_action_increment_item_quantity_for_steal_break passes one
+ * the stock is full of). Only for a unit on team 0 and only when executing;
+ * the funds stay within 0..99,999,999. Returns the amount added. */
 s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id) {
     s32 value;
 

@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Set crystal_treasure_status for the unit on the current action's tile: 0
+ * none, 1 crystal, 2 treasure. */
 void battle_ai_check_unit_for_crystal_or_treasure_status(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 unit_id;

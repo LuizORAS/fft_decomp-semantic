@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* 1 when the unit gets a turn before the considered ability's charge time runs
+ * out and can act by then; 0 for an instant ability. */
 s32 battle_ai_check_ability_use_based_on_ct(s32 unit_index) {
     s32 min_ct;
     u8 ct;

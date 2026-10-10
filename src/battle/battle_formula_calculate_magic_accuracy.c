@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Hit chance F(MA+X)%: elemental strengthen and the magical modifiers on MA,
+ * zodiac compatibility on both terms, then Faith. Returns 1 on a miss. */
 s32 battle_formula_calculate_magic_accuracy(void) {
     battle_formula_store_ma_and_x();
     battle_formula_apply_elemental_strengthen();

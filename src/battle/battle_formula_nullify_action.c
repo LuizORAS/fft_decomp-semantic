@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Cancel the action on this target: no hit, damage, accuracy or special
+ * effect, and a pending weapon proc and knockback are dropped. */
 void battle_formula_nullify_action(void) {
     battle_action_data_t* target_data;
     battle_action_data_t* target_data_reload;

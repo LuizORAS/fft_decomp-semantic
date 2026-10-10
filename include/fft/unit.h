@@ -388,38 +388,37 @@ typedef enum battle_status_id {
 
 /* Rows of g_main_status_check_sets. main_status_init_check_data builds rows 0
  * to 9 from the flag bytes of g_main_status_effect_data and writes row 10
- * itself. In this release the rows hold:
- *   KO: Crystal, Dead, Petrify, Invite, Blood Suck, Treasure.
- *   UNIT_LOST: Crystal, Invite, Treasure; a unit of the highest team
- *     importance that has one counts against its team's outcome.
- *   UNREAD_2: Crystal, Treasure; nothing reads the row.
- *   FREEZE_CT: Crystal, Petrify, Treasure, Stop, Sleep.
- *   PREVENT_REACTION: Crystal, Dead, Jump, Petrify, Confusion, Blood Suck,
- *     Treasure, Berserk, Chicken, Frog, Stop, Sleep, Don't Act.
- *   IMMORTAL_IMMUNITY: Crystal, Dead, Undead, Petrify, Invite, Confusion,
- *     Blood Suck, Treasure, Chicken, Frog, Charm, Sleep, Don't Act, Death
- *     Sentence.
- *   FORMATION_IMMUNITY: the same without Confusion, Sleep and Don't Act.
- *   UNREAD_7: Darkness, Confusion, Silence, Transparent, Berserk, Chicken,
- *     Frog, Stop, Charm, Sleep, Don't Move, Don't Act; nothing reads the row.
- *   SCRIPT_FILTER_EXCLUDED: Crystal, Dead, Undead, Jump, Petrify, Invite,
- *     Treasure, Critical; the event scripts' unit filters 3 and 5 pass over a
- *     unit that has one (filter 5 leaves Undead out).
- *   MOUNT_REMOVAL: Confusion, Berserk, Poison, Stop, Sleep, Don't Move, Don't
- *     Act, Death Sentence.
- *   UNMOUNTABLE: Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk,
- *     Chicken, Frog, Charm. */
+ * itself. Each enumerator's comment lists the statuses its row holds in this
+ * release, then what the row is used for. */
 typedef enum main_status_check_set {
+    /* Crystal, Dead, Petrify, Invite, Blood Suck, Treasure. A unit with none of them still fights for its side. */
     MAIN_STATUS_CHECK_SET_KO = 0,
+    /* Crystal, Invite, Treasure. On an importance-3 unit of either team it decides the battle. */
     MAIN_STATUS_CHECK_SET_UNIT_LOST = 1,
+    /* Crystal, Treasure. Built; no code reads it. */
     MAIN_STATUS_CHECK_SET_UNREAD_2 = 2,
+    /* Crystal, Petrify, Treasure, Stop, Sleep. The unit's CT does not advance. */
     MAIN_STATUS_CHECK_SET_FREEZE_CT = 3,
+    /* Crystal, Dead, Jump, Petrify, Confusion, Blood Suck, Treasure, Berserk, Chicken, Frog, Stop, Sleep, Don't Act.
+     * No reaction, no learning on hit, no movement-ability benefit. */
     MAIN_STATUS_CHECK_SET_PREVENT_REACTION = 4,
+    /* Crystal, Dead, Undead, Petrify, Invite, Confusion, Blood Suck, Treasure, Chicken, Frog, Charm, Sleep,
+     * Don't Act, Death Sentence. Added to the immunities of an immortal unit with a save- or load-formation flag. */
     MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY = 5,
+    /* Crystal, Dead, Undead, Petrify, Invite, Blood Suck, Treasure, Chicken, Frog, Charm, Death Sentence.
+     * Added with set 5, and never inflicted on an immortal unit. */
     MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY = 6,
+    /* Darkness, Confusion, Silence, Transparent, Berserk, Chicken, Frog, Stop, Charm, Sleep, Don't Move, Don't Act.
+     * Built; no code reads it. */
     MAIN_STATUS_CHECK_SET_UNREAD_7 = 7,
+    /* Crystal, Dead, Undead, Jump, Petrify, Invite, Treasure, Critical. Script unit filters 3 and 5 leave out a
+     * unit with one of them (filter 5 lets Undead through). */
     MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED = 8,
+    /* Confusion, Berserk, Poison, Stop, Sleep, Don't Move, Don't Act, Death Sentence. Removed from a mount when its
+     * rider ends a move. */
     MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL = 9,
+    /* Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk, Chicken, Frog, Charm; set in code, not from the status
+     * data. A chocobo with one of them cannot be mounted. */
     MAIN_STATUS_CHECK_SET_UNMOUNTABLE = 10,
     MAIN_STATUS_CHECK_SET_COUNT = 11,
 } main_status_check_set_e;
@@ -734,10 +733,10 @@ typedef struct entd_unit {
     u8 sprite_set;                           /* 0x00 */
     u8 unit_flags;                           /* 0x01; unit_flags_e */
     u8 name_id;                              /* 0x02 */
-    u8 level;                                /* 0x03 */
-    u8 birthday[2];                          /* 0x04; month, day (read bytewise) */
-    u8 bravery;                              /* 0x06 */
-    u8 faith;                                /* 0x07 */
+    u8 level;                                /* 0x03; 0 or 0xfe: L - rnd(0..L/8); 100 + n: L + n; L: top party level */
+    u8 birthday[2];                          /* 0x04; month, day (read bytewise); out of range: a random day */
+    u8 bravery;                              /* 0x06; above 100: random 45..74 */
+    u8 faith;                                /* 0x07; above 100: random 45..74 */
     u8 job_unlock;                           /* 0x08 */
     u8 job_level;                            /* 0x09 */
     u8 job_id;                               /* 0x0a */
@@ -750,8 +749,8 @@ typedef struct entd_unit {
     u8 team_flags;                           /* 0x18 */
     s8 x;                                    /* 0x19 */
     entd_unit_position_t position;           /* 0x1a */
-    u8 experience;                           /* 0x1c */
-    u8 primary_skillset;                     /* 0x1d */
+    u8 experience;                           /* 0x1c; 100 and above: random 0..99 */
+    u8 primary_skillset;                     /* 0x1d; 0 or 0xff: the job's own */
     u8 war_trophy;                           /* 0x1e; 0x8005e478 copies to battle +0x163 */
     u8 bonus_money_modifier;                 /* 0x1f; same initializer copies to battle +0x164 */
     u8 unit_id;                              /* 0x20 */

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Target statuses on physical XA: Protect * 2/3; Sleep or Charging * 3/2;
+ * Chicken or Frog * 3/2. */
 void battle_formula_apply_target_xa_affecting_statuses(void) {
     battle_stats_t* target;
 

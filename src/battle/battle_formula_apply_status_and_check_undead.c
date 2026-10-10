@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Apply the ability's status. Returns 1 when it changes something or the
+ * target is undead; otherwise the action is cancelled as a forced failure and
+ * 0 returned. */
 s32 battle_formula_apply_status_and_check_undead(void) {
     battle_formula_apply_status();
     if (g_battle_action_target_data->attack_type & BATTLE_ACTION_TYPE_STATUS_CHANGE) {

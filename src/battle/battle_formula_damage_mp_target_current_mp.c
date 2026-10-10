@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Formula 0x16: MP damage equal to the target's current MP, hit F(MA+X)%;
+ * magic evade. */
 void battle_formula_damage_mp_target_current_mp(void) {
     battle_stats_t* target;
     battle_action_data_t* action;

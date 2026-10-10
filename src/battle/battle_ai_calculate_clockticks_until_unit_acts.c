@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Clockticks until the unit gets a turn: its Stop CT plus (100 - CT) / Speed
+ * rounded up, and no less than its Sleep CT while it sleeps. 0x7fffffff when
+ * it never will: Speed 0, crystal, petrified, treasure, or dead without
+ * Reraise (from its decision record). Don't Act and Don't Move are not looked
+ * at. */
 s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit) {
     battle_ai_data_t* ai;
     s32 speed;

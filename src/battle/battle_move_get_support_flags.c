@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Post-move benefits of the unit's movement abilities: Move-HP Up, Move-MP Up,
+ * Move-Get EXP and Move-Get JP, each with the common benefit bit. */
 s32 battle_move_get_support_flags(battle_stats_t* unit) {
     u8 flags = unit->movement_abilities[1];
     s32 post_event_flags = (0 - (unit->movement_abilities[0] & BATTLE_MOVEMENT_SET_1_MOVE_HP_UP))

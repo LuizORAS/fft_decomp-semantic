@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Status byte 1: 0x20 Dead, 0x10 Undead. */
+/* Result of formula 0x0E: an undead target is healed by the amount and
+ * receives none of the statuses of the first status byte; a target immune to
+ * Dead is missed; anyone else takes it as HP damage.
+ *
+ * Status byte 1: 0x20 Dead, 0x10 Undead. */
 void battle_formula_apply_undead_absorb_attack(void) {
     battle_stats_t* unit = g_battle_action_target;
 

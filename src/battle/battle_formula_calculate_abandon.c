@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Apply Abandon by halving the target's current evasion contribution. */
+/* Abandon: a target free to act halves the base hit, which doubles each of its
+ * evades. */
 void battle_formula_calculate_abandon(void) {
     u8* evade_counter;
     if ((battle_unit_get_action_restriction(g_battle_action_target) == BATTLE_UNIT_ACTION_RESTRICTION_NONE)

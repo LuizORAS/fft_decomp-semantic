@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Count down the unit's timed statuses, Poison through Reflect (Death Sentence
+ * is not among them), and queue the removal of each that runs out. */
 void battle_status_update_expiring(s32 unit_id) {
     s32 i;
     s32 byte_idx;

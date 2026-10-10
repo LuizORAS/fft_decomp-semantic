@@ -1,6 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Insert an entry into the 40-entry AT list ahead of the first one with a
+ * larger key; the last entry drops off. Mode 0 is a unit's turn (the unit id).
+ * Mode 1 is a charged ability landing: unit id + 0x40 with the ability id's
+ * low byte in flags, unit id - 0x40 for an ability id of 0x100 or more, or
+ * unit id + 0x60 for Jump. Returns 1 when the entry was placed. */
 s32 battle_action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* list) {
     battle_stats_t* unit;
     s32 i;

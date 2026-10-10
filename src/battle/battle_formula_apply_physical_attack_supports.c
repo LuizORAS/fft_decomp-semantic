@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Attacker supports on XA, in order: Two Hands * 2 (active, on a weapon that
+ * allows it and is not two-handed already), Attack Up * 4/3, Martial Arts *
+ * 3/2 with no weapon (weapon id ITEM_ID_NOTHING). */
 void battle_formula_apply_physical_attack_supports(void) {
     u8 weapon_characteristics = g_battle_action_current_ability.weapon_data.flags;
 

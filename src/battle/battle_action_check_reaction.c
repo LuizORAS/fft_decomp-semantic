@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Whether a reaction is already in play: 1 while a weapon's proc ability is
+ * being resolved, 2 when the unit's result already carries a reaction, 0
+ * otherwise. */
 s32 battle_action_check_reaction(battle_stats_t* unit) {
     s32 result;
     /* Both globals are loaded unsigned (lhu) here. */

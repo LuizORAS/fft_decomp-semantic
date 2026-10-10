@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Element step, run after the HP damage is stored: Oil against fire, Float
+ * against earth (a rider uses its mount's Float), then the target's affinities
+ * to the ability's elements. */
 void battle_formula_apply_elemental(void) {
     u8 element;
     battle_action_data_t* action;
@@ -8,7 +11,8 @@ void battle_formula_apply_elemental(void) {
     s32 mount_info;
 
     element = g_battle_action_current_ability.range_data.element;
-    /* Oil (status 3 bit 0x80) doubles fire (element bit 0x80) and is removed. */
+    /* Oil (status 3 bit 0x80) against fire (element bit 0x80) is removed and doubles XA. The HP damage is
+     * already stored and no later step reads XA, so the damage stays as it was. */
     if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL))
         && (element & BATTLE_ELEMENT_FIRE)) {

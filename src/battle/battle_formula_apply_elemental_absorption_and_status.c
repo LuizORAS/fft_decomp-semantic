@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Absorption, then the added-effect roll; when it succeeds the ability's
+ * status is applied. Returns the roll's result (0 when applied). */
 s32 battle_formula_apply_elemental_absorption_and_status(void) {
     s32 result;
 

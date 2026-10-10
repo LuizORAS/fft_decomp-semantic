@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Cancel a move at the confirm prompt. The unit returns to its previous tile;
+ * a mount takes its rider back with it, a unit that was riding is put back on
+ * its mount, and a mount it climbed onto during the move is freed. */
 void battle_move_undo_unit_move(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* other;
 

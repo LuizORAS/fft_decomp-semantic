@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Horizontal jumps: from the current tile, in each direction, try landing 2 to
+ * jump_half + 1 tiles away, provided every tile in between can be jumped over
+ * at the landing height (battle_move_check_horizontal_jump). The best
+ * candidate is saved and, outside AI propagation, applied to the spread state. */
 void battle_move_calculate_spread(void) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;

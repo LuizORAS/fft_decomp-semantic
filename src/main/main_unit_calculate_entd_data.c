@@ -7,7 +7,13 @@
  * Formation-loading entries reuse their persistent party unit; other entries
  * derive identity, level, birthday, position, rewards, and AI fields from the
  * encounter definition. The AI-byte copy intentionally uses the global current
- * ENTD pointer, matching the target even if it differs from entd. */
+ * ENTD pointer, matching the target even if it differs from entd.
+ *
+ * Level 0 or 0xfe is random in [L - L / 8, L] for the highest party level L,
+ * and 100 or more means L + (level - 100); the result is kept within 1..99. A
+ * birthday whose month is outside 1..12 or day outside 1..31 becomes a random
+ * day of the year. Brave and Faith above 100 are rolled in 45..74, and
+ * experience of 100 or more in 0..99. */
 s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     const job_data_t* ramza_jobs;
     party_data_t* party_unit;

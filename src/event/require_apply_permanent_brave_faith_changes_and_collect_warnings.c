@@ -3,6 +3,10 @@
 
 /* Apply permanent Brave/Faith changes and collect party-leaving warnings.
  *
+ * Each unit keeps a quarter of the battle's change (delta * 250 / 100 / 10,
+ * each division truncating). A unit then at Brave 6..15 or Faith 85..94 gets a
+ * warning; guests, Ramza and unit ids 1..3 are exempt.
+ *
  * The staged multiplication and divisions preserve the target's two signed
  * constant-division sequences. */
 s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {

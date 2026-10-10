@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Drain step: once the target's result is final, a hit heals the attacker by
+ * the HP damage. Against an undead target it is reversed: the attacker takes
+ * the damage and the target is healed by it. */
 void battle_formula_apply_hp_absorption(void) {
     battle_action_data_t* action;
     battle_action_data_t* attacker;

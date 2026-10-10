@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Effect of each dance. XA + YA is the weapon's XA plus its power
+ * (battle_formula_calculate_base_xa); the stat dances take 1. */
 void battle_formula_apply_dance_abilities(void) {
     switch (g_battle_action_current_ability.ability_id) {
     case ABILITY_ID_DANCE_WITCH_HUNT:

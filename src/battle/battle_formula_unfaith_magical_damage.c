@@ -1,8 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 1F: damage (MA + Y) * MA / 2 scaled by (100 - caster faith) and
- * (100 - target faith), with Faith treated as 0 and Innocent as 100. */
+/* Formula 0x1F: damage ((MA + Y) / 2 * MA) with element, scaled by (100 -
+ * caster Faith) and (100 - target Faith) over 10000, the Faith status counting
+ * as 0 and Innocent as 100; magic evade; 19% status. Strikes rnd(1..X) times
+ * (battle_action_init_current_ability_strike_data). */
 void battle_formula_unfaith_magical_damage(void) {
     battle_action_data_t* action;
 

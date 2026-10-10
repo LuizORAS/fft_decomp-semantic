@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Start a tilt toward the low pitch 0x12e (mode 0) or the high pitch 0x1c0
+ * (mode 1) from whichever side the pitch is on. No retail code calls it; the
+ * R2 input goes through battle_camera_toggle_tilt. */
 void battle_camera_handle_tilt_request(s32 mode) {
     switch (mode) {
     case 0:

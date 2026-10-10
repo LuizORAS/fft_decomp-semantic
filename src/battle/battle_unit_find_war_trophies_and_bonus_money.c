@@ -1,10 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Collect the war trophies and bonus money of every present unit into
+/* Collect the war trophies and bonus money of every present unit into
  * `result`, zero-filling the unused trophy slots.
- */
+ *
+ * bonus_money is the sum of each present unit's bonus_money_modifier * 100.
+ * level_sum_money is g_battle_enemy_level_sum * 100. level_bonus_money is
+ * (highest enemy level - lowest level among the present party units) * 100, or
+ * 0 when that is not positive or a player unit has fallen. */
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) {
     s32 count;
     s32 money;
