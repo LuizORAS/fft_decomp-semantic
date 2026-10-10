@@ -10,7 +10,7 @@
  * the transfer callback clears them. The empty case 5 is part of the
  * target's five-entry jump table. */
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode) {
-    main_sound_wait_for_spu_transfer(0x10);
+    main_sound_wait_for_spu_transfer(MAIN_SOUND_SPU_TRANSFER_WAIT);
     g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_TRANSFER;
     SpuSetTransferMode(0);
     SpuSetTransferStartAddr(spu_address);

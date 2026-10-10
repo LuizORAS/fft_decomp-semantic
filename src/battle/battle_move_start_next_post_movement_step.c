@@ -98,7 +98,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         if (!(source->team_flags & BATTLE_TEAM_MASK)) {
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM,
                 g_battle_move_find_display_item.item_id, source->battle_data->misc_unit_id, 0, 1);
-            main_sound_play_tune(2);
+            main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
             return 1;
         }
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM,

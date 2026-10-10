@@ -76,7 +76,7 @@ void main_smd_init_channels(suzuki_music_t* music) {
                 channel->_unknown_024 = 0;
                 channel->loop_count = 0;
                 channel->_unknown_02a = 0;
-                channel->rest_length = 0;
+                channel->event_ticks = 0;
                 channel->length_adjust = 0;
                 channel->pitch_offset = 0;
                 channel->previous_key = 0;

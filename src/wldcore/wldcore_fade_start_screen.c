@@ -8,7 +8,8 @@ void wldcore_fade_start_screen(s32 flags, s32 duration) {
         g_wldcore_screen_fade_state.duration = duration;
         g_main_system_flags |= MAIN_SYSTEM_FLAG_FADING;
         if (flags & WLDCORE_SCREEN_FADE_START_MUSIC) {
-            wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x11b);
+            wldcore_sound_enqueue_audio_command(
+                WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
         }
         if (flags & WLDCORE_SCREEN_FADE_STOP_MUSIC) {

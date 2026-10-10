@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Marks every in-use channel that holds a fermata and is not muted or
- * flagged 0x10 for retriggering (voice_update_flags bit 0) and returns the voices
- * of those channels.
+/* Marks every in-use channel that is sounding and is not muted or flagged
+ * SUZUKI_CHANNEL_NO_RETRIGGER for a new key-on and returns the voices of
+ * those channels.
  *
  * The two single-bit tests are merged by GCC into one word-wide
  * `(flags & 0x101) == 0x101` test (`lw`), which the target contains; a

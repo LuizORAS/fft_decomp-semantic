@@ -40,14 +40,14 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     case WLDCORE_MENU_LEVEL_BRAVE_STORY:
         wldcore_window_set_render_objects_visible(0);
         wldcore_sound_wait_for_queue_drain();
-        wldcore_sound_enqueue_music_start(0x220);
+        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         break;
     case WLDCORE_MENU_LEVEL_STORY_EVENTS:
         wldcore_window_set_render_objects_visible(0);
         world_menu_set_slot_4_cursor_index(2);
         count = 0;
         wldcore_sound_wait_for_queue_drain();
-        wldcore_sound_enqueue_music_start(0x220);
+        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
             for (i = 0; i < 0x18; i++) {
@@ -71,7 +71,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     case WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES:
         wldcore_window_set_render_objects_visible(0);
         wldcore_sound_wait_for_queue_drain();
-        wldcore_sound_enqueue_music_start(0x21A);
+        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_TUTORIAL));
         break;
     case WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS:
         wldcore_list_build_tutorial_category_panel_image(
@@ -92,7 +92,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_wait_for_file_load();
         wldcore_sound_wait_for_queue_drain();
         main_sound_set_master_volume(0x3FFF, 1);
-        wldcore_sound_enqueue_music_start(0x220);
+        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         break;
     default:
         break;

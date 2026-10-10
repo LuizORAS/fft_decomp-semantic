@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Restarts a modulator: called by the SMD opcodes that program one
- * (0xD8 "Pitch Shift", 0xD9, 0xE4, 0xE5, 0xED, 0xF5, 0xF6). */
+/* Restarts a modulator: called by the SMD opcodes that program one (the
+ * vibrato, tremolo and pan LFO opcodes) or enable one (0xF5, 0xF6). */
 void main_smd_modulator_reset(suzuki_modulator_t* modulator) {
     modulator->timer = 1;
     modulator->value = 0;

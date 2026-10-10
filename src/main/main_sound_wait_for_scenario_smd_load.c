@@ -1,10 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-s32 main_sound_wait_for_scenario_smd_load(s32 scenario) {
+s32 main_sound_wait_for_scenario_smd_load(s32 music_id) {
     s32 result;
 
-    result = main_sound_open_scenario_smd_files(scenario);
+    result = main_sound_open_scenario_smd_files(music_id);
     if (result != 0) {
         while (main_sound_poll_scenario_smd_load() != 0) {
             VSync(0);

@@ -16,9 +16,10 @@ typedef struct open_menu_sound_test_state {
  * Circle fades out any current track and queues the selected entry's music.
  * Cross stops playback or, when idle, closes the menu, reloads OPENBK and
  * returns to the previous controller. Select opens the thread-2 text window
- * on text id 0xC800 + entry, OPEN.LZW text section 25 (the track comments);
- * the list rows are 0xC000 + entry, section 24 (the track names), 96 entries
- * each. Up and Down are withheld from the list for ten frames after each
+ * on text id 0xC800 + entry: the list shows text 0xC000 + entry, section 24
+ * of OPEN.LZW (the 96 track titles), and Select the same entry of section 25
+ * (the composers' comments); both are still the Japanese text in this
+ * release. Up and Down are withheld from the list for ten frames after each
  * selection.
  */
 void open_menu_update_music_test(open_menu_sound_test_state_t* state) {

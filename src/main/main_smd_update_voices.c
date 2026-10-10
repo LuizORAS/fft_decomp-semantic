@@ -2,16 +2,17 @@
 #include "psx/types.h"
 
 /* Per-tick voice pass run after the SMD interpreter and the modulators.
- * voice_update_flags bit 8 rebuilds the SPU voice volume: channel volume plus its
- * modulation (clamped to 0-0x7fff), scaled by velocity and the MUS master
- * volume, then split by balance (channel, modulation and MUS balance shift,
- * clamped to 0-0x7f00) into left/right levels when the driver runs in
- * stereo (g_main_sound_driver_flags bit 8), or both set to 0x5a00/0x8000 of the volume in
- * mono. Bit 9 converts the key (pitch slide, pitch modulation and MUS pitch
- * shift) to an SPU pitch. voice_attr_flags bits 0 and 2 hand the new volume and
- * pitch to the root-counter voice update. Bits 0 and 1 queue the channel's
- * voices for key on (unless muted) and key off in the MUS masks, filtered by
- * the voices SFX own unless this is the SFX record (status bit 1).
+ * SUZUKI_VOICE_UPDATE_VOLUME rebuilds the SPU voice volume: channel volume
+ * plus its modulation (clamped to 0-0x7fff), scaled by velocity and the MUS
+ * master volume, then split by balance (channel, modulation and MUS balance
+ * shift, clamped to 0-0x7f00) into left/right levels when the driver runs in
+ * stereo, or both set to 0x5a00/0x8000 of the volume in mono.
+ * SUZUKI_VOICE_UPDATE_PITCH converts the pitch (with its modulation and the
+ * MUS pitch shift) to an SPU pitch. The VOLUME and PITCH voice attribute
+ * marks hand the results to main_sound_update_voice_attrs. KEY_ON and
+ * KEY_OFF queue the channel's voices for key on (unless muted) and key off
+ * in the MUS masks, filtered by the voices SFX own unless this is the SFX
+ * record.
  *
  * The channel pointer is a copy of the parameter so the count parameter is
  * copied first in the prologue, as in the target. */
@@ -69,7 +70,7 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
                 channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_VOLUME;
             }
             if ((voice_update_flags & SUZUKI_VOICE_UPDATE_PITCH) != 0) {
-                channel->spu_pitch = main_smd_calculate_pitch((channel->pitch_slide >> 16) + channel->pitch_modulation
+                channel->spu_pitch = main_smd_calculate_pitch((channel->pitch >> 16) + channel->pitch_modulation
                                          + (music->pitch_shift.value >> 16))
                     & 0x3fff;
                 channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_PITCH;

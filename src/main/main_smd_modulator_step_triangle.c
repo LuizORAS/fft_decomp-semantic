@@ -1,8 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Modulator step: triangle wave; the increment flips sign (flags bit 3)
- * each time the timer expires and is accumulated into value every step. */
+/* Modulator step: triangle wave; the increment flips sign
+ * (SUZUKI_MODULATOR_NEGATED) each time the timer expires and is accumulated
+ * into value every step. */
 s32 main_smd_modulator_step_triangle(suzuki_modulator_t* modulator) {
     s32 increment;
     u16 timer;

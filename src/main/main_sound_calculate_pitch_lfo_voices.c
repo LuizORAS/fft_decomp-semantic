@@ -2,8 +2,9 @@
 #include "psx/libspu.h"
 #include "psx/types.h"
 
-/* Collects the pitch-LFO voice masks of every playing MUS record; records
- * with status bit 0 lose the voices reserved by SFX (g_main_mask_exclusion). */
+/* Collects the pitch-LFO voice masks of every playing MUS record and hands
+ * them to the SPU; SMD music records lose the voices reserved by SFX
+ * (g_main_mask_exclusion), the SFX record keeps its own. */
 void main_sound_calculate_pitch_lfo_voices(void) {
     suzuki_music_t* music;
     s32 status;

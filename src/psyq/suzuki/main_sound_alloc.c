@@ -22,7 +22,7 @@ void* main_sound_alloc(u32 size) {
         allocated->end = payload + size;
         allocated->next = 0;
         allocated->_unknown_04 = 0;
-        allocated->flags = 2;
+        allocated->flags = SUZUKI_HEAP_BLOCK_ALLOCATED;
         allocated->_unknown_02 = 0;
         allocated->next = block->next;
         block->next = allocated;

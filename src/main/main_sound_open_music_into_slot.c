@@ -10,16 +10,16 @@
         g_main_sound_music.slots.handles.loading_slot = slot;                                                          \
     } while (0)
 
-/* Loads scenario music file `scenario` into music slot `slot` (1-based) if
- * the slot is free. Returns the slot, or 0 when it was occupied or the load
+/* Starts the asynchronous load of music file `music_id` (main_music_e) into
+ * music slot `slot` (1-based) if the slot is free. Returns the slot, or 0 when it was occupied or the load
  * failed (which also raises exception 0x11). */
-s32 main_sound_open_music_into_slot(s32 scenario, s32 slot) {
+s32 main_sound_open_music_into_slot(s32 music_id, s32 slot) {
     if (g_main_sound_music.slots.smd[slot] == 0) {
-        suzuki_smd_header_t* data = main_heap_alloc_smd(g_main_sound_scenario_smd_files[scenario].size);
+        suzuki_smd_header_t* data = main_heap_alloc_smd(g_main_sound_scenario_smd_files[music_id].size);
 
         if (data != 0
-            && main_file_call_build_header(g_main_sound_scenario_smd_files[scenario].sector,
-                   g_main_sound_scenario_smd_files[scenario].size, data)
+            && main_file_call_build_header(g_main_sound_scenario_smd_files[music_id].sector,
+                   g_main_sound_scenario_smd_files[music_id].size, data)
                 == 0) {
             g_main_sound_music.slots.smd[slot] = data;
             set_opened_music_slot(slot);

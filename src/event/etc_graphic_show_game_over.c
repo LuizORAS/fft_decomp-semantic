@@ -12,7 +12,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
     battle_thread_call_on_main_stack();
     g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(0x32);
+    battle_thread_call_on_main_stack(MAIN_MUSIC_GAME_OVER);
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;

@@ -8,12 +8,18 @@
  * allocator (0x8001423c-0x8001442c) rounds requests to 16 bytes and chains
  * blocks in address order from g_main_sound_heap_blocks. */
 typedef struct suzuki_heap_block {
-    u16 flags;                      /* 0x00; 0x8000 list head, 0x2 in use */
-    u16 _unknown_02;                /* 0x02; cleared on allocation */
-    u32 _unknown_04;                /* 0x04; cleared on allocation */
+    u16 flags;                      /* 0x00; suzuki_heap_block_flag_e; written, never tested */
+    u16 _unknown_02;                /* 0x02; cleared on allocation, never read */
+    u32 _unknown_04;                /* 0x04; cleared on allocation, never read */
     u8* end;                        /* 0x08; end of the payload */
     struct suzuki_heap_block* next; /* 0x0c */
 } suzuki_heap_block_t;
+
+/* suzuki_heap_block_t.flags. */
+typedef enum suzuki_heap_block_flag {
+    SUZUKI_HEAP_BLOCK_ALLOCATED = 0x0002,
+    SUZUKI_HEAP_BLOCK_HEAD = 0x8000, /* the list head main_sound_init_heap places at the arena start */
+} suzuki_heap_block_flag_e;
 
 extern suzuki_heap_block_t* g_main_sound_heap_arena;  /* 0x800329f8 */
 extern suzuki_heap_block_t* g_main_sound_heap_blocks; /* 0x800329fc */

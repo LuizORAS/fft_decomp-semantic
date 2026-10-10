@@ -81,7 +81,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
         } else {
-            wldcore_sound_enqueue_music_start(0x11B);
+            wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
         }
         g_wldcore_brave_story_saved_cursor[0] = 0;
         return;

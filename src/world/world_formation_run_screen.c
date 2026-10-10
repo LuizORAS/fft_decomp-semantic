@@ -61,7 +61,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     tutorial = -(tutorial < 11) & tutorial;
     world_script_start_tutorial(tutorial);
     if (tutorial == 0) {
-        g_world_menu_music_slot = main_sound_open_music_into_free_slot(0x1F);
+        g_world_menu_music_slot = main_sound_open_music_into_free_slot(MAIN_MUSIC_FORMATION);
         while (main_return_zero_80043708() != 0) { }
         main_sound_switch_music_track(g_world_menu_music_slot, 0x7F, 0);
     }

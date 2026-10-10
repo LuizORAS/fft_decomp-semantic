@@ -473,10 +473,10 @@ typedef struct open_script_state {
     /* 0x0000 */ open_script_dispatch_state_t dispatch;
     /* 0x0030 */ open_script_record_t records[16];
     /* 0x1670 */ s32 _unused_1670;
-    /* 0x1674 */ s32 _unknown_1674; /* cleared by open_script_init_state */
-    /* 0x1678 */ s32 control_parameter;
-    /* 0x167c */ s32 control_state;
-    /* 0x1680 */ s32 xa_wait_frames;
+    /* 0x1674 */ s32 _unknown_1674;     /* cleared by open_script_init_state */
+    /* 0x1678 */ s32 control_parameter; /* XA channel of ENDING.XA to play */
+    /* 0x167c */ s32 control_state;     /* step of the XA start or stop sequence (open_script_update_xa_audio) */
+    /* 0x1680 */ s32 xa_wait_frames;    /* frames since the XA read started */
     /* 0x1684 */ open_opntex_sequence_state_t opntex;
     /* 0x16a4 */ s32 opntex_control_value;
 } open_script_state_t;

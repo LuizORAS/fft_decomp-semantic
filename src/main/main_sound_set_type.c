@@ -32,6 +32,6 @@ void main_sound_set_type(s32 type) {
         main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
     }
     if (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_PUT_TYPE) {
-        main_sound_put_type(g_main_sound_spu_state.sound_type);
+        main_sound_put_type(g_main_sound_spu_state.cd_mix_level);
     }
 }

@@ -77,18 +77,18 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_shop_id = shop_type;
     buttons = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     if (shop_type == WORLD_SHOP_ID_FUR_SHOP) {
-        ot_index = 0x1E;
+        ot_index = MAIN_MUSIC_FUR_SHOP;
         g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_MENU;
         disabled = 0xF82F;
         tim_index = 3;
     } else if (shop_type == WORLD_SHOP_ID_SOLDIER_OFFICE) {
-        ot_index = 0x1D;
+        ot_index = MAIN_MUSIC_SOLDIER_OFFICE;
         g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
         disabled = 0xF820;
         tim_index = 6;
     } else {
         g_world_shop_id = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
-        ot_index = 0x1C;
+        ot_index = MAIN_MUSIC_SHOP;
         disabled = 0xF801;
         tim_index = 0;
         g_world_shop_menu_step = WORLD_SHOP_STEP_MAIN_MENU;

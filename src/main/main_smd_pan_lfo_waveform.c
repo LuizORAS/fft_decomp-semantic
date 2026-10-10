@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xED: as 0xEC, but the low nibble of the
- * third byte selects the waveform and the modulator starts without a delay;
- * flags bit 1 is set unless bit 4 of that byte is set.
+/* SMD opcode 0xED "Pan LFO Waveform": as Pan LFO (0xEC), but the low nibble
+ * of the third byte selects the waveform and the modulator starts without a
+ * delay; it restarts on key-on unless bit 4 of that byte is set.
  *
  * Matching notes: depth and param are reassigned in place (the loads lose
  * sched1's birthing boost and keep the target's load order, and param's

@@ -41,7 +41,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        wldcore_sound_enqueue_music_start(0x11B);
+        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
         return;
     }
 

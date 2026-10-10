@@ -2,14 +2,14 @@
 #include "psx/libspu.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xFF: when the envelope of the channel's
- * SPU voice has reached zero, clears voice_update_flags bits 0-1, releases the
- * channel (active = 0) and leaves the read position on the opcode. For the
- * SFX record (status bit 1) the voice is queued for SFX key-off, dropped from
- * the LFO/noise/reverb voice masks and from g_main_mask_exclusion, and its
- * attack, sustain and LFO parameters are marked for update (voice_attr_flags
- * 0x54); otherwise it is queued for music key-off. While the envelope is
- * non-zero the handler only returns the position after the opcode. */
+/* SMD opcode 0xFF "End Track": when the envelope of the channel's SPU voice
+ * has reached zero, cancels its pending key-on and key-off, releases the
+ * channel (flags = 0) and leaves the read position on the opcode. For the
+ * SFX record the voice is queued for SFX key-off, dropped from the
+ * LFO/noise/reverb voice masks and from g_main_mask_exclusion, and its
+ * LFO, noise and reverb marks are set so those voice masks are recalculated;
+ * otherwise it is queued for music key-off. While the envelope is non-zero
+ * the handler only returns the position after the opcode. */
 u8* main_smd_end_track(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     s32 key_stat;
     s16 envx;

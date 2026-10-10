@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xF2: for the modulator selected by 0xF0,
- * the first byte is the start delay and fade_level and its reset value
+/* SMD opcode 0xF2 "Modulator Set Fade In": for the modulator selected by
+ * 0xF0, the first byte is the start delay and fade_level and its reset value
  * become 0x100 / (second byte + 1). Generic twin of 0xD7, 0xE3 and 0xEB. */
 u8* main_smd_modulator_set_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     suzuki_modulator_t* modulator;

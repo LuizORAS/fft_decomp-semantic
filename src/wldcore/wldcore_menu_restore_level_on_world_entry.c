@@ -24,7 +24,8 @@ void wldcore_menu_restore_level_on_world_entry(void) {
         } else {
             wldcore_menu_dispatch_pending_script_requests();
         }
-        wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x11B);
+        wldcore_sound_enqueue_audio_command(
+            WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 4);
         return;
     }

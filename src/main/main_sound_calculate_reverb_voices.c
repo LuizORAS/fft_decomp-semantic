@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Sibling of the pitch-LFO (0x80014f58) and noise (0x80014ff8) voice
- * calculators; the three voice masks feed the SPU pitch-LFO / noise / reverb
- * voice registers. */
+/* Collects the reverb voice masks of every playing MUS record and hands them
+ * to the SPU; SMD music records lose the voices reserved by SFX
+ * (g_main_mask_exclusion), the SFX record keeps its own. */
 void main_sound_calculate_reverb_voices(void) {
     suzuki_music_t* music;
     s32 status;

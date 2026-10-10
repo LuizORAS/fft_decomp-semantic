@@ -3,9 +3,9 @@
 
 /* Mutes the channels whose bit is set in mask (bit n = channel n) and
  * unmutes the others. A newly muted channel's voice is queued for key-off;
- * a newly unmuted one is queued for key-on when active has 0x100 set and
- * 0x10 clear. GCC merges those two bit tests into one word-wide `lw`/`andi`
- * test, as in the target. */
+ * a newly unmuted one is queued for key-on when it is sounding and
+ * SUZUKI_CHANNEL_NO_RETRIGGER is clear. GCC merges those two bit tests into
+ * one word-wide `lw`/`andi` test, as in the target. */
 void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask) {
     suzuki_music_channel_t* channel;
     u16 key_off;

@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xD8 "Pitch Shift": programs modulator 0 (pitch) as a
+/* SMD opcode 0xD8 "Vibrato": programs modulator 0 (pitch) as a
  * centred triangle (waveform 3) with the given speed, signed depth and
  * delay, and restarts it. The depth is squared with its sign kept.
  *

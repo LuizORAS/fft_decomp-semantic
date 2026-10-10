@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Stops every SFX channel playing a sound of the given VFX resource (sound
- * id high half == resource id). main_sound_remove_vfx_resource calls it
- * before unlinking the resource. */
+/* Stops every SFX channel playing a sound of the given sound resource
+ * (sound id high half == resource id). main_sound_remove_vfx_resource calls
+ * it before unlinking the resource. */
 void main_sound_stop_resource_sfx(main_sound_resource_t* resource) {
     suzuki_music_channel_t* channel;
     s32 sound_id;

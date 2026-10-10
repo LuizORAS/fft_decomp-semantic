@@ -56,7 +56,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
             } else {
-                wldcore_sound_enqueue_music_start(0x11B);
+                wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
             }
             g_wldcore_tutorial_category_saved_cursor = 0;
         }

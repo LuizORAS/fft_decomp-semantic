@@ -24,7 +24,7 @@ void world_sound_edit_bg_thread(void) {
     volume_from = parameter[1];
     steps = parameter[4];
     volume_to = parameter[2];
-    resource = 0x10000;
+    resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (steps != 0) {
         delta = volume_to - volume_from;
         accumulator = 0;

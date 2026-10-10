@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Modulator step: square wave between +amplitude and -amplitude, the sign
- * tracked in flags bit 3. Returns the current value. */
+ * tracked in SUZUKI_MODULATOR_NEGATED. Returns the current value. */
 s32 main_smd_modulator_step_alternating(suzuki_modulator_t* modulator) {
     s32 next_value;
     u16 timer;

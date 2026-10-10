@@ -1,10 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xAA: assigns the channel a fixed SPU
- * voice. A voice number below 25 sets voice_mask to 1 << voice and marks
- * every voice parameter for update (voice_attr_flags 0x1ff); a larger number
- * clears both. */
+/* SMD opcode 0xAA "Set Voice": assigns the channel a fixed SPU voice. A
+ * voice number below 25 sets voice_mask to 1 << voice and marks every voice
+ * attribute for update; a larger number clears both. */
 u8* main_smd_set_voice(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u8 voice;
 

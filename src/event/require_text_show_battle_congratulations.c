@@ -8,7 +8,9 @@ void require_text_show_battle_congratulations(void) {
     g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
     battle_thread_call_on_main_stack();
     g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145 ? 0x2b : 0x2c);
+    battle_thread_call_on_main_stack(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145
+            ? MAIN_MUSIC_CONGRATULATIONS
+            : MAIN_MUSIC_CONGRATULATIONS_EVENT_145);
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;

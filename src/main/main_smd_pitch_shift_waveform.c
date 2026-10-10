@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xD9: like Pitch Shift (0xD8), but the
- * third byte selects the waveform (low nibble) instead of the delay, which
- * is cleared; flags bit 1 is set when bit 4 of that byte is clear.
+/* SMD opcode 0xD9 "Vibrato Waveform": like Vibrato (0xD8), but the third
+ * byte selects the waveform (low nibble) instead of the delay, which is
+ * cleared; the modulator restarts on key-on unless bit 4 of that byte is set.
  *
  * Taking the modulator pointer before the step calculation call keeps it a
  * separate pseudo (combine does not merge across the call), which places

@@ -183,12 +183,17 @@ typedef union wldcore_audio_music_slots {
     s32 tracks[3];
 } wldcore_audio_music_slots_t;
 
+/* Value of WLDCORE_AUDIO_COMMAND_PLAY_MUSIC and of
+ * wldcore_sound_enqueue_music_start: a music slot (1 or 2) and the
+ * main_music_e id to load into it. */
+#define WLDCORE_AUDIO_MUSIC(slot, music_id) (((slot) << 8) | (music_id))
+
 /* Commands of the audio queue (wldcore_sound_enqueue_audio_command), and the
  * wait states wldcore_sound_process_audio_queue moves the current command
  * through. */
 typedef enum wldcore_audio_command {
     WLDCORE_AUDIO_COMMAND_NONE = 0x00,       /* idle: takes the next queued command */
-    WLDCORE_AUDIO_COMMAND_PLAY_MUSIC = 0x01, /* value: slot << 8 | track */
+    WLDCORE_AUDIO_COMMAND_PLAY_MUSIC = 0x01, /* value: WLDCORE_AUDIO_MUSIC(slot, music id) */
     WLDCORE_AUDIO_COMMAND_FADE_OUT = 0x02,   /* value << 2: fade time */
     WLDCORE_AUDIO_COMMAND_FADE_IN = 0x03,    /* the current slot, to the stored volume over value << 2 */
     WLDCORE_AUDIO_COMMAND_UNLOAD = 0x04,     /* value: slot, 0 for the current one */
@@ -1444,8 +1449,8 @@ typedef struct wldcore_menu_window_pair_level {
 /* wldcore_menu_countdown_t.phase. */
 typedef enum wldcore_countdown_phase {
     WLDCORE_COUNTDOWN_PHASE_MESSAGES = 0,     /* circle shows the next message */
-    WLDCORE_COUNTDOWN_PHASE_LAST_MESSAGE = 1, /* waits for the message box, then starts music 0x214 */
-    WLDCORE_COUNTDOWN_PHASE_JINGLE = 2,       /* 180 frames, then back to music 0x221 */
+    WLDCORE_COUNTDOWN_PHASE_LAST_MESSAGE = 1, /* waits for the message box, then starts MAIN_MUSIC_MILESTONE */
+    WLDCORE_COUNTDOWN_PHASE_JINGLE = 2,       /* 180 frames, then back to MAIN_MUSIC_BAR */
     WLDCORE_COUNTDOWN_PHASE_CLOSE = 3,        /* waits for the audio queue, then pops */
 } wldcore_countdown_phase_e;
 

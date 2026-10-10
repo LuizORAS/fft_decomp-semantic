@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xE3: modulator 1 fade_level and its
- * reset value become 0x100 / (byte + 1), like 0xD7 does for modulator 0. */
+/* SMD opcode 0xE3 "Tremolo Fade In": modulator 1 fade_level and its reset
+ * value become 0x100 / (byte + 1), like 0xD7 does for modulator 0. */
 u8* main_smd_tremolo_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     s16 divisor;
 

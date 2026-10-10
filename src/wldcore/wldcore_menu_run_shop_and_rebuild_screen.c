@@ -31,5 +31,5 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
         *clear = 0;
         clear--;
     }
-    wldcore_sound_enqueue_music_start(0x11B);
+    wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
 }

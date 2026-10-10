@@ -5,7 +5,7 @@ void open_title_start_new_game_transition(void) {
     s32 stack_padding[4];
 
     main_sound_set_master_volume(0, 1);
-    main_sound_set_current_music_track(0x22);
+    main_sound_set_current_music_track(MAIN_MUSIC_NEW_GAME);
     main_sound_set_master_volume(0x3fff, 5);
     open_file_load_sound_menu_textures();
     open_file_build_openbk_header(1, g_open_file_destination);

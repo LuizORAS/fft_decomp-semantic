@@ -2,6 +2,24 @@
 #include "psx/libcd.h"
 #include "psx/types.h"
 
+/* OPEN/ENDING.XA on the disc: its first and last sectors. */
+#define ENDING_XA_FIRST_SECTOR 0x2f551
+#define ENDING_XA_LAST_SECTOR  0x3586c
+
+/* Runs the XA audio state machine once per frame.
+ *
+ * Starting: sets the drive mode to 0x68 (real-time ADPCM, sub-header filter,
+ * 2340-byte sectors at single speed), seeks to ENDING.XA, sets the filter to
+ * file 1 and the channel in control_parameter (command 0xd, CdlSetfilter),
+ * starts a streaming read and waits for it to be acknowledged; control_state
+ * counts the steps and open_file_get_cd_sync_state_delta advances it past
+ * each command and back one step on a disc error. A seek (step 5) still
+ * unfinished after 120 frames resets the CD subsystem and starts over.
+ * Playing: from two seconds in, restarts the sequence if the drive stopped
+ * reading, and stops once the head (command 0x10, CdlGetlocL) has passed the
+ * file's last sector.
+ * Stopping: pauses the drive, restores double speed and brings the CD
+ * volume back for the streams. */
 void open_script_update_xa_audio(void) {
     u8 result[8];
     u8 play[2];
@@ -19,7 +37,7 @@ void open_script_update_xa_audio(void) {
             }
             break;
         case 4:
-            CdIntToPos(0x2f551, g_open_file_location);
+            CdIntToPos(ENDING_XA_FIRST_SECTOR, g_open_file_location);
             CdControlF(CdlSeekL, g_open_file_location);
             {
                 s32* state = &g_open_script_state.control_state;
@@ -34,7 +52,7 @@ void open_script_update_xa_audio(void) {
             s32 value = *state;
 
             *state = value + delta;
-            if (g_main_system_session_frames >= 0x79 && *state == CdlDiskError) {
+            if (g_main_system_session_frames >= 0x79 && *state == 5) {
                 main_file_reset_cd_subsystems();
                 *state = 0;
             }
@@ -58,7 +76,7 @@ void open_script_update_xa_audio(void) {
             *state = value + delta;
         } break;
         case 8:
-            CdControlF(0x1b, 0);
+            CdControlF(CdlReadS, 0);
             {
                 s32* state = &g_open_script_state.control_state;
 
@@ -94,7 +112,7 @@ void open_script_update_xa_audio(void) {
                 *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STARTING;
                 return;
             }
-            if (CdControl(0x10, 0, result) != 0 && CdPosToInt(result) > 0x3586c) {
+            if (CdControl(0x10, 0, result) != 0 && CdPosToInt(result) > ENDING_XA_LAST_SECTOR) {
                 open_sound_set_cd_mix_and_volume(0, 1);
                 g_open_script_state.control_state = 0;
                 *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STOPPING;
@@ -106,7 +124,7 @@ void open_script_update_xa_audio(void) {
     if (g_open_script_state.dispatch.flags & OPEN_SCRIPT_DISPATCH_XA_STOPPING) {
         switch (g_open_script_state.control_state) {
         case 0:
-            CdControlF(9, 0);
+            CdControlF(CdlPause, 0);
             {
                 s32* state = &g_open_script_state.control_state;
 

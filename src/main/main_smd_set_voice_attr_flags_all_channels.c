@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* ORs mask into voice_attr_flags of every channel that is in use
- * (callers pass 0x7000 / 0x71ff). */
+/* ORs mask into voice_attr_flags of every channel that is in use (callers
+ * pass 0x7000, which nothing tests, with or without SUZUKI_VOICE_ATTR_ALL). */
 void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask) {
     suzuki_music_channel_t* channel;
     u16 voice_attr_flags;

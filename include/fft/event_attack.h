@@ -423,7 +423,7 @@ extern RECT g_attack_special_portrait_palette_rect;
 extern RECT g_attack_special_portrait_rect;
 extern s32 g_attack_status_display_offset_y[];
 s32 attack_load_scenario_conditionals(void);
-void attack_sound_play_music_tracks(s32 primary_track, s32 alternate_track);
+void attack_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
 void attack_sound_wait_for_music_stub(void);
 s32 attack_thread_is_running(s32 thread_id);
 void attack_deploy_prepare_valid_tiles(SPRT* sprites);

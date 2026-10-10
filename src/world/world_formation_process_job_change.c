@@ -39,7 +39,7 @@ s32 world_formation_process_job_change(s32 job) {
     s32 line_x;
 
     if (g_world_job_change_active == 0) {
-        main_sound_play_tune(5);
+        main_sound_play_tune(MAIN_SOUND_TUNE_JOB_CHANGE);
         g_world_job_change_active = 1;
         g_world_job_change_frame = 0;
         g_world_job_change_skip_requested = 0;

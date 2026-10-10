@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xEC: programs and restarts modulator 2
- * (balance) with the centred triangle waveform. Parameters: speed, signed
- * depth, start delay. A zero speed or depth leaves the modulator unchanged.
+/* SMD opcode 0xEC "Pan LFO": programs and restarts modulator 2 (balance)
+ * with the centred triangle waveform. Parameters: speed, signed depth, start
+ * delay. A zero speed or depth leaves the modulator unchanged.
  *
  * speed is s16 like the calculate_step parameter: the target tests and
  * passes a copy of it and keeps the original for timer_reset. */

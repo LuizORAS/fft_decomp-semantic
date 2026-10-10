@@ -15,7 +15,7 @@ void world_sound_bg_thread(void) {
     parameter = world_thread_get_current_parameter_1();
     use_find_channel = parameter[3];
     sound_id = parameter[0];
-    resource = 0x10000;
+    resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (use_find_channel != 0) {
         handle = sound_id + resource;
         main_sound_stop_sfx(handle);

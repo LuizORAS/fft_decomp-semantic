@@ -72,7 +72,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                 switch (value) {
                 case 0x5D:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    wldcore_sound_enqueue_music_start(0x221);
+                    wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BAR));
                     wldcore_bar_push_menu_level();
                     return;
                 case 0x5E:
@@ -109,7 +109,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                             = (g_main_system_flags | MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE) ^ MAIN_SYSTEM_FLAG_RUNNING;
                     } else {
                         wldcore_fade_start_screen(0, 0x10);
-                        wldcore_sound_enqueue_music_start(0x11B);
+                        wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
                     }
                     return;
                 }

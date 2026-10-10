@@ -6,8 +6,8 @@
  * the fade-in level fade_level is below 0x100 the result is scaled by
  * fade_level / 0x100 and fade_level grows by fade_step. The high half
  * of the result is added to the pitch, volume or balance modulation selected
- * by target, and voice_update_flags marks a pitch (0x200) or volume/balance (0x100)
- * change for the voice update.
+ * by target, and voice_update_flags marks a pitch or volume/balance change
+ * for the voice update.
  *
  * Iterating a copy of the channels parameter keeps the target's prologue
  * order (the count parameter is copied first). */

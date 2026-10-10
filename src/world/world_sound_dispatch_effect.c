@@ -1,9 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Per-frame WORLD sound effect dispatch: stops the previous looping sound
- * when a stop id (0x73/0x2d) is queued, remembers ids 2/3 as the held loop,
- * and plays whichever id remains. */
+/* Per-frame WORLD sound effect dispatch. A queued text glyph or page sound
+ * plays at once on a free channel pair, as does an error message sound in
+ * the menu queue. Then the id in g_world_sound_effect_id_to_play (dropped
+ * when negative or while the menu sounds are muted), or failing that the one
+ * in g_world_menu_sound_effect_id, plays on the main_sound_play_sfx channels
+ * and both queues are cleared. Cancel and Cursor Move are copied to the menu
+ * queue before the mute test, so they still play while muted. */
 void world_sound_dispatch_effect(void) {
     s32 sound_id;
 
@@ -18,7 +22,7 @@ void world_sound_dispatch_effect(void) {
         main_sound_play_sfx_find_channel(MAIN_SFX_ERROR_MESSAGE);
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
     }
-    if (g_world_sound_effect_id_to_play == 2 || g_world_sound_effect_id_to_play == 3) {
+    if (g_world_sound_effect_id_to_play == MAIN_SFX_CANCEL || g_world_sound_effect_id_to_play == MAIN_SFX_CURSOR_MOVE) {
         g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
     }
     if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {

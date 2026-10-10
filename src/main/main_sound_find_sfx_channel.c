@@ -6,7 +6,7 @@
  * returns the first channel of a free group of voice_count channels,
  * searching down from channel 6 - voice_count in steps of voice_count. When
  * every group is busy it returns the channel with the smallest start tick
- * among those whose priority is at most 0x20; best is left unset if none
+ * among those whose priority is at most STEALABLE; best is left unset if none
  * qualifies, as in the target.
  *
  * mask is reused for the search mask: a separate variable changes the
@@ -53,7 +53,7 @@ s32 main_sound_find_sfx_channel(s32 sound_id, s32 voice_count) {
     oldest = -1;
     while (busy & mask) {
         if (channel->start_tick < oldest) {
-            if (channel->priority <= 0x20) {
+            if (channel->priority <= MAIN_SOUND_SFX_PRIORITY_STEALABLE) {
                 oldest = channel->start_tick;
                 best = index;
             }

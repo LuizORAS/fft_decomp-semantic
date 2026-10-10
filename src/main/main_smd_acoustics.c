@@ -1,8 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xB8 "Acoustics": reverb depth, delay and feedback,
- * applied at once with reverb mode 10. */
+/* SMD opcode 0xB8 "Acoustics": reverb depth, delay and feedback, passed on
+ * with reverb mode 10, for which main_sound_set_reverb_mode only records
+ * them. */
 u8* main_smd_acoustics(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     s16 depth;
     s8 delay;

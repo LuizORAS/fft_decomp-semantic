@@ -58,11 +58,12 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         if (rand() % 480 == 0) {
             g_battle_map_lightning_state.timer = 60;
             if (rand() & 1) {
-                g_battle_sound_secondary_weather_sfx_id = 0x10003;
-                main_sound_play_sfx_find_channel(0x10003);
+                g_battle_sound_secondary_weather_sfx_id
+                    = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A);
+                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A));
             } else {
-                g_battle_sound_tertiary_weather_sfx_id = 0x1000E;
-                main_sound_play_sfx_find_channel(0x1000E);
+                g_battle_sound_tertiary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B);
+                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B));
             }
         }
         if (g_battle_map_lightning_state.timer != 0) {

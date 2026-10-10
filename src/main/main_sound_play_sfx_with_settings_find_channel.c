@@ -7,6 +7,7 @@ void main_sound_play_sfx_with_settings_find_channel(s32 sound_id, s32 volume, s3
     if ((g_main_sound_driver_flags & MAIN_SOUND_DRIVER_SFX_ENABLED) != 0) {
         s32 channel = main_sound_find_sfx_channel(sound_id, 2);
         g_main_sound_sfx_channel_count = 2;
-        main_sound_start_sfx(channel | 0x2000, sound_id, volume << 8, balance << 8);
+        main_sound_start_sfx(
+            MAIN_SOUND_SFX_CHANNEL_ID(MAIN_SOUND_SFX_PRIORITY_STEALABLE, channel), sound_id, volume << 8, balance << 8);
     }
 }

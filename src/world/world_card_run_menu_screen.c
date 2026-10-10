@@ -73,7 +73,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
     /* 1 from the world menu, 0 from the title screen's Continue (load only). */
     g_world_card_mode_select_enabled = mode_select_enabled;
-    music_handle = main_sound_open_music_into_free_slot(0x29);
+    music_handle = main_sound_open_music_into_free_slot(MAIN_MUSIC_SAVE);
     while (main_return_zero_80043708() != 0) { }
     main_sound_switch_music_track(music_handle, 0x7f, 0);
     world_card_clear_events();

@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 
 /* Phase driver for a countdown object: phase 1 waits for the menu event flag
- * and plays cue 0x214, phase 2 waits 180 frames and plays cue 0x221, phase 3
+ * and plays the milestone music, phase 2 waits 180 frames and returns to the bar music, phase 3
  * pops the menu level through 0x80077174 once both busy words clear; any
  * other phase steps the countdown on a confirm press (0x20). The busy words
  * are read as g_wldcore_audio_queue members, not scalars, which keeps the timer store
@@ -19,14 +19,16 @@ void wldcore_map_step_discovery_announcement(wldcore_menu_countdown_t* countdown
             && countdown->timer >= 180) {
             countdown->phase = WLDCORE_COUNTDOWN_PHASE_CLOSE;
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
-            wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x221);
+            wldcore_sound_enqueue_audio_command(
+                WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BAR));
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
         }
     } else if (countdown->phase == WLDCORE_COUNTDOWN_PHASE_LAST_MESSAGE) {
         if (world_menu_get_event_state_flag() != 0
             && g_wldcore_audio_queue.current_command == WLDCORE_AUDIO_COMMAND_NONE
             && g_wldcore_audio_queue.count == 0) {
-            wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, 0x214);
+            wldcore_sound_enqueue_audio_command(
+                WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_MILESTONE));
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
             countdown->phase = WLDCORE_COUNTDOWN_PHASE_JINGLE;
         }

@@ -2,10 +2,10 @@
 #include "psx/types.h"
 
 /* Modulator step: triangle wave centred on its start value. The first
- * half-period lasts timer_reset steps; flags bit 2 then doubles every later
- * one, so value swings between -amplitude * timer_reset and
- * +amplitude * timer_reset. The increment flips sign (flags bit 3) each time
- * the timer expires. */
+ * half-period lasts timer_reset steps; SUZUKI_MODULATOR_HALF_PERIOD_DONE
+ * then doubles every later one, so value swings between
+ * -amplitude * timer_reset and +amplitude * timer_reset. The increment flips
+ * sign (SUZUKI_MODULATOR_NEGATED) each time the timer expires. */
 s32 main_smd_modulator_step_triangle_centered(suzuki_modulator_t* modulator) {
     s32 amplitude;
     u16 flags;

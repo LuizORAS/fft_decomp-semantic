@@ -6,8 +6,8 @@
 /* Resumes a music handle paused by main_smd_pause_music: with the
  * root-counter event disabled it fades the master volume in from 0,
  * re-applies the song's reverb mode, forces every channel's voice
- * parameters, retriggers held voices, then clears the pause bit 0x100 and
- * marks the record playing. */
+ * parameters, retriggers held voices, then clears the pause bit and marks
+ * the record playing. */
 void main_smd_resume_music(suzuki_music_t* music, s16 volume, s16 fade) {
     if (music != 0) {
         DisableEvent(g_main_root_counter_2_event);

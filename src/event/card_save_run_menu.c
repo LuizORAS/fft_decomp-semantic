@@ -21,7 +21,7 @@ void card_save_run_menu(s32 unused) {
     card_gfx_init_contexts((card_graphics_context_t*)context_storage, otag_storage, 0, 0, 0,
         g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
     card_save_init_menu_graphics();
-    music_slot = main_sound_open_music_into_free_slot(0x29);
+    music_slot = main_sound_open_music_into_free_slot(MAIN_MUSIC_SAVE);
     while (main_return_zero_80043708() != 0) { }
     main_sound_switch_music_track(music_slot, 0x7f, 0);
     card_io_consume_all_events();

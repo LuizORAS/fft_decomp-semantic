@@ -20,7 +20,7 @@ void main_sound_open_generic_sfx(void) {
     SuzukiAppendVFXSMD(main_file_load_to_address(SYSTEM_SED_SECTOR, SYSTEM_SED_SIZE, g_main_sound_system_sed_data));
     SuzukiAppendVFXSMD(main_file_load_to_address(ENV_SED_SECTOR, ENV_SED_SIZE, g_main_sound_env_sed_data));
 
-    g_main_sound_music.state.forced_music = 0;
+    g_main_sound_music.state.current_smd = 0;
     g_main_sound_music.slots.tune = 0;
     g_main_sound_music.slots.handles.loading_slot = 0;
     for (i = 6; i >= 0; i--) {

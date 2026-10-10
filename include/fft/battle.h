@@ -2461,6 +2461,8 @@ extern s32 g_battle_sound_suppressed;
 extern s32 g_battle_sound_tertiary_weather_sfx_id;
 extern u8 g_battle_sound_weather_sfx_enabled;
 extern s32 g_battle_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
+/* main_sfx_e by the weapon's item_type_e (0x20 entries each): the swing, the
+ * hit, and the hit a shield or Golem stops (battle_sound_select_weapon_hit). */
 extern u8 g_battle_sound_weapon_miss_sfx_ids[];
 extern u8 g_battle_sound_weapon_hit_sfx_ids[];
 extern u8 g_battle_sound_shield_deflect_sfx_ids[];
@@ -2482,7 +2484,7 @@ extern s16 g_battle_music_unload_slot_request; /* 0x80165fca */
  * duration = (packed >> 14) & 0x3ffc. Not a linear duration field. */
 extern s32 g_battle_music_volume_transition_request;
 void battle_sound_play_movement_sfx(battle_unit_misc_data_t* unit, s32 sound_id);
-void battle_sound_play_music_tracks(s32 first_track, s32 second_track);
+void battle_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
 void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit);
 void battle_sound_set_effect_to_cancel(void);
 void battle_sound_set_effect_to_confirm(void);

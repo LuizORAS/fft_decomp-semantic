@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xAD: a non-zero byte is added to
- * length_adjust, a zero byte resets it. */
+/* SMD opcode 0xAD "Length Adjust": a non-zero byte is added to
+ * length_adjust (signed, as the member is s8), a zero byte resets it. */
 u8* main_smd_opcode_ad(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u8 delta;
 

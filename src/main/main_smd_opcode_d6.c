@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xD6: stores the byte in portamento_ticks and
- * mirrors "non-zero" into bit 2 of ramp_flags. */
+/* SMD opcode 0xD6 "Portamento": the ticks each key-on takes to slide from
+ * the previous key (main_smd_read_instructions); 0 turns it off. */
 u8* main_smd_opcode_d6(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u16 value;
 

@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0x90 "End Bar & Loop": jumps back to the loop point set
- * by Loop (0x91), counting the pass and restoring the octave. Without a loop
+/* SMD opcode 0x90 "End Bar": jumps back to the loop point set by Loop
+ * (0x91), counting the pass and restoring the octave. Without a loop
  * point the channel ends: its SPU voice is queued for key-off (the SFX MUS
  * record also drops the voice from its LFO, noise and reverb masks and from
  * the SFX reservation, and marks envelope and LFO parameters for update),

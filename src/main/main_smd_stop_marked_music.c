@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Stops every queued music record whose status bit 0 is set, queueing the
- * voices of its active channels for key-off. */
+/* Stops every queued record that plays SMD music (not the SFX record),
+ * queueing the voices of its active channels for key-off. */
 void main_smd_stop_marked_music(void) {
     suzuki_music_t* music;
 

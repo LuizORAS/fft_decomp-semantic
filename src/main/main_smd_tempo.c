@@ -1,8 +1,12 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xA0 "Tempo". Handlers receive the note-data pointer,
- * the MUS record and the channel; this one only touches the MUS record.
+/* SMD opcode 0xA0 "Tempo". The root counter ticks 240 times a second and a
+ * sequencer tick takes 0x10000 / (tempo * tempo scale) of them, 48 sequencer
+ * ticks to a quarter note: at the default scale a tempo byte is worth 75/64
+ * quarter notes a minute (the default 0x66 is 119.5). Handlers receive the
+ * note-data pointer, the MUS record and the channel; this one only touches
+ * the MUS record.
  * `volatile` keeps the redundant `andi 0xff` after the `lbu`. */
 u8* main_smd_tempo(volatile u8* note_data, suzuki_music_t* music) {
     u8 tempo;

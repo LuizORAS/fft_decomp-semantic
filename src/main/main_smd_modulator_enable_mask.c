@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xF5: bit n of the parameter restarts and
- * activates modulator n, a clear bit deactivates it (modulators 0-3). */
+/* SMD opcode 0xF5 "Modulator Enable Mask": bit n of the parameter restarts
+ * and activates modulator n, a clear bit deactivates it (modulators 0-3). */
 u8* main_smd_modulator_enable_mask(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     suzuki_modulator_t* modulator;
     s32 i;

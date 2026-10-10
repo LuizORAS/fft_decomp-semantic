@@ -3,10 +3,12 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
-/* Starts SFX sound_id (resource id << 16 | sound index) on
- * g_main_sound_sfx_channel_count consecutive SFX channels from channel & 0xff; the high byte of
- * channel is the priority main_sound_find_sfx_channel checks before stealing
- * a channel. Channels whose stream offset is 0 are stopped instead. The
+/* Starts SFX sound_id (a MAIN_SOUND_ID) on g_main_sound_sfx_channel_count
+ * consecutive SFX channels from channel_id & 0xff, one per stream of the
+ * sound; the high byte of channel_id is the priority
+ * main_sound_find_sfx_channel checks before stealing a channel
+ * (MAIN_SOUND_SFX_CHANNEL_ID). Channels whose stream offset is 0 are stopped
+ * instead. A sound id whose resource is not loaded does nothing. The
  * volume is scaled by the resource's per-sound volume byte, then the SFX
  * voices are claimed in the SFX music and in g_main_mask_exclusion, and
  * music channels on those voices are marked for a full voice update.
@@ -85,7 +87,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             channel->_unknown_024 = 0;
             channel->loop_count = 0;
             channel->_unknown_02a = 0;
-            channel->rest_length = 0;
+            channel->event_ticks = 0;
             channel->length_adjust = 0;
             channel->pitch_offset = 0;
             channel->previous_key = 0;

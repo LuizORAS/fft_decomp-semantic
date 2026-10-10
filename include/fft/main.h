@@ -417,7 +417,7 @@ extern event_file_block_t g_main_script_event_block[];
 /* sound */
 /* Suzuki sound driver (SCUS_942.21 0x800120f4-0x800186c4) records, tables and
  * globals. Offsets and widths are taken from the driver code named beside
- * each field; _unknown_XX members are provisional. */
+ * each field; the driver writes its _unknown_XX members and never reads them. */
 /* Linear ramp stepped once per tick by main_smd_step_ramp (0x80014f18):
  * value moves by step until count reaches zero, then snaps to target << 16.
  * The root-counter handler tests count with `lh` before stepping MUS
@@ -431,7 +431,10 @@ typedef struct suzuki_ramp {
 
 /* WAVESET instrument entry (0x10 bytes). main_smd_set_instrument
  * (0x80016fb4) and main_smd_get_instrument_attr copy it into a channel or an
- * SpuVoiceAttr. */
+ * SpuVoiceAttr. The rates, the level and the modes are LIBSPU envelope
+ * arguments. Modes: 1 linear increase, 3 linear decrease, 5 exponential
+ * increase, 7 exponential decrease (attack: 5 or linear; sustain: 1, 5, 7 or
+ * linear decrease; release: 7 or linear). */
 typedef struct suzuki_instrument {
     u32 start;        /* 0x00; sample offset from the waveset's SPU address */
     u16 loop_offset;  /* 0x04; loop start relative to start */
@@ -455,7 +458,7 @@ typedef struct suzuki_waveset {
     u32 header_size;                    /* 0x10 */
     u32 wave_size;                      /* 0x14 */
     u32 wave_offset;                    /* 0x18 */
-    u8 _unused_1c[4];                   /* 0x1c */
+    u8 _unused_1c[4];                   /* 0x1c; index of the last instrument (0xaf in WAVESET.WD) */
     u16 id;                             /* 0x20 */
     u8 _unused_22[6];                   /* 0x22 */
     u32 spu_address;                    /* 0x28; SpuMalloc result, freed by main_sound_free_waveset */
@@ -463,28 +466,29 @@ typedef struct suzuki_waveset {
     suzuki_instrument_t instruments[1]; /* 0x30 */
 } suzuki_waveset_t;
 
-/* SMD/SED sequence header ("smds"), read by main_smd_transfer_music_data,
+/* SMD music sequence header ("smds"), read by main_smd_transfer_music_data,
  * main_smd_init_channels, main_smd_init_channel_streams and
- * main_smd_get_music_filename. */
+ * main_smd_get_music_filename. The values noted as "on the disc" hold for
+ * all 100 MUSIC_NN.SMD files. */
 typedef struct suzuki_smd_header {
-    u8 magic[4];            /* 0x00 */
-    u8 _unused_04[4];       /* 0x04 */
-    u32 size;               /* 0x08 */
+    u8 magic[4];            /* 0x00; "smds" */
+    u8 _unused_04[4];       /* 0x04; differs in every file */
+    u32 size;               /* 0x08; file size in bytes */
     u8 _unused_0c[4];       /* 0x0c */
-    u16 id;                 /* 0x10; copied to MUS id and channel sound_id */
-    u8 _unknown_12;         /* 0x12; copied to MUS _unknown_014 */
-    u8 tick_divisor;        /* 0x13 */
+    u16 id;                 /* 0x10; copied to MUS id and channel sound_id; 0 on the disc */
+    u8 _unknown_12;         /* 0x12; copied to MUS _unknown_014; 2 on the disc */
+    u8 tick_divisor;        /* 0x13; divides the 48 ticks of a beat for the bar and beat counters; 1 on the disc */
     u8 channel_count;       /* 0x14 */
-    u8 _unknown_15;         /* 0x15; copied to MUS _unknown_017 */
-    u16 waveset_id;         /* 0x16 */
-    u16 _unknown_18;        /* 0x18; copied to MUS _unknown_01a */
-    s8 reverb_mode;         /* 0x1a */
+    u8 _unknown_15;         /* 0x15; copied to MUS _unknown_017; 0 on the disc */
+    u16 waveset_id;         /* 0x16; 0 on the disc */
+    u16 _unknown_18;        /* 0x18; copied to MUS _unknown_01a; 0x28-0x7f on the disc */
+    s8 reverb_mode;         /* 0x1a; 4 on the disc */
     u8 reverb_depth;        /* 0x1b */
     u8 reverb_delay;        /* 0x1c */
     u8 reverb_feedback;     /* 0x1d */
-    u16 filename_offset;    /* 0x1e */
+    u16 filename_offset;    /* 0x1e; offset of the zero-terminated name the sequence was built from */
     u16 data_offset;        /* 0x20 */
-    u16 channel_offsets[1]; /* 0x22; zero-terminated */
+    u16 channel_offsets[1]; /* 0x22; one stream offset per channel (0: no stream), then a zero */
 } suzuki_smd_header_t;
 
 /* Suzuki sequencer modulator (0x20 bytes). Each channel has four, at
@@ -518,13 +522,21 @@ typedef enum suzuki_modulator_target {
     SUZUKI_MODULATOR_TARGET_BALANCE = 2,
 } suzuki_modulator_target_e;
 
-/* suzuki_modulator_t.waveform: index into g_main_smd_modulator_waveforms.
- * Only the waveforms whose amplitude main_smd_modulator_calculate_step
- * scales are named. */
+/* suzuki_modulator_t.waveform: index into g_main_smd_modulator_waveforms,
+ * the low nibble of the waveform byte of the modulator opcodes. Indices
+ * 8-15 hold main_smd_modulator_deactivate, which stops the modulator on its
+ * first step. main_smd_modulator_calculate_step scales the amplitude of the
+ * triangles and of sawtooth 4 only. */
 typedef enum suzuki_modulator_waveform {
+    SUZUKI_MODULATOR_WAVEFORM_SQUARE = 0,            /* main_smd_modulator_step_square: 0 and +amplitude */
+    SUZUKI_MODULATOR_WAVEFORM_ALTERNATING = 1,       /* main_smd_modulator_step_alternating: +/-amplitude */
     SUZUKI_MODULATOR_WAVEFORM_TRIANGLE = 2,          /* main_smd_modulator_step_triangle */
     SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED = 3, /* main_smd_modulator_step_triangle_centered */
     SUZUKI_MODULATOR_WAVEFORM_SAWTOOTH = 4,          /* main_smd_modulator_step_sawtooth */
+    SUZUKI_MODULATOR_WAVEFORM_SAWTOOTH_UNSCALED = 5, /* the same step function, amplitude not divided */
+    SUZUKI_MODULATOR_WAVEFORM_RANDOM = 6,            /* main_smd_modulator_step_random: sample and hold */
+    SUZUKI_MODULATOR_WAVEFORM_RANDOM_BIPOLAR = 7,    /* main_smd_modulator_step_random_bipolar */
+    SUZUKI_MODULATOR_WAVEFORM_OFF = 8,               /* main_smd_modulator_deactivate, as are 9-15 */
 } suzuki_modulator_waveform_e;
 
 /* suzuki_modulator_t.flags. */
@@ -537,22 +549,23 @@ typedef enum suzuki_modulator_flag {
 
 typedef s32 (*suzuki_modulator_step_t)(suzuki_modulator_t* modulator);
 
-/* Repeat stack entry (0xc bytes) pushed by Repeat (0x98) and consumed by
- * Coda (0x99) and To Coda (0x9A). */
+/* Repeat stack entry (0xc bytes) pushed by Repeat and consumed by Coda and
+ * To Coda. */
 typedef struct suzuki_repeat {
-    u8 count;       /* 0x00 */
+    u8 count;       /* 0x00; passes left after the current one */
     u8 _unused_01;  /* 0x01 */
-    u8 octave_base; /* 0x02 */
-    u8 coda_octave; /* 0x03 */
-    u8* start;      /* 0x04 */
-    u8* coda;       /* 0x08 */
+    u8 octave_base; /* 0x02; octave_base at the section start */
+    u8 coda_octave; /* 0x03; octave_base at the Coda */
+    u8* start;      /* 0x04; first byte of the section */
+    u8* coda;       /* 0x08; the byte after the Coda */
 } suzuki_repeat_t;
 
 /* Suzuki sequencer channel record (0x160 bytes), the third argument of every
  * SMD opcode handler (note data, music, channel). Field names follow the
- * opcode that writes them; _unknown_XXX members are written by unnamed opcodes.
+ * opcode that writes them. Offsets 0x34-0x73 have the layout of an
+ * SpuVoiceAttr; the driver passes the members to LIBSPU one by one.
  *
- * flags is the note flag word (suzuki_channel_flag_e); a channel is
+ * flags is the channel flag word (suzuki_channel_flag_e); a channel is
  * allocated while it is non-zero, and main_smd_set_flags_all_channels ORs a
  * mask into every non-zero word. voice_update_flags (suzuki_voice_update_e)
  * queues work for main_smd_update_voices, voice_attr_flags
@@ -561,11 +574,11 @@ typedef struct suzuki_repeat {
  * marks the ramps stepped by main_smd_update_channel_ramps.
  *
  * octave_base is written at halfword width (Octave, Raise/Lower Octave, End
- * Bar & Loop) but saved into the u8 loop_octave_base by Loop (0x91) and
- * opcode 0x8D, which read it with `lbu`: GCC narrows the u16 load itself.
+ * Bar) but saved into the u8 loop_octave_base by Loop and Loop Select, which
+ * read it with `lbu`: GCC narrows the u16 load itself.
  *
- * sound_id is the SMD/SED id for music and `resource id << 16 | n` for VFX
- * sounds; Play VFX SMD (0x80015c38) reads the resource id half with `lh`,
+ * sound_id is the SMD id for music and a MAIN_SOUND_ID (`resource id << 16 |
+ * sound`) for sound effects; Play VFX reads the resource id half with `lh`,
  * the SFX API compares the whole word. */
 typedef struct suzuki_music_channel {
     u16 flags;              /* 0x00; suzuki_channel_flag_e */
@@ -576,27 +589,27 @@ typedef struct suzuki_music_channel {
         u32 raw;
         struct {
             u16 low;
-            s16 high; /* VFX resource id */
+            s16 high; /* sound resource id (main_sound_resource_id_e) */
         } halves;
-    } sound_id;                /* 0x08 */
-    u8 channel_number;         /* 0x0c; 0xff + channel index (SFX: the index); write-only */
-    u8 priority;               /* 0x0d; SFX steal priority (channel id >> 8; stolen when <= 0x20); music: 0x10 */
-    u8 _padding_00e[2];        /* 0x0e; aligns start_tick */
-    u32 start_tick;            /* 0x10; g_main_sound_tick_count when main_sound_start_sfx started the channel */
-    u8* note_data_start;       /* 0x14 */
-    u8* note_data;             /* 0x18; read position */
-    u8* loop_note_data;        /* 0x1c; set by Loop and opcode 0x8D, jumped to by End Bar & Loop */
-    u8* restart_note_data;     /* 0x20; set by main_smd_init_channel_streams */
-    u32 _unknown_024;          /* 0x24; cleared by the channel initialiser */
-    u16 loop_count;            /* 0x28; End Bar & Loop */
-    u8 _unknown_02a;           /* 0x2a; cleared by the channel initialiser */
-    u8 loop_octave_base;       /* 0x2b; octave_base saved with loop_note_data */
-    u8 instrument;             /* 0x2c */
-    u8 voice;                  /* 0x2d; SPU voice (opcode 0xAA); bit 0 allows the pitch LFO */
-    u16 note_release_time;     /* 0x2e; Release stores its byte here and in release_time */
+    } sound_id;            /* 0x08 */
+    u8 channel_number;     /* 0x0c; 0xff + channel index (SFX: the index); write-only */
+    u8 priority;           /* 0x0d; SFX steal priority (channel id >> 8; stolen when <= 0x20); music: 0x10 */
+    u8 _padding_00e[2];    /* 0x0e; aligns start_tick */
+    u32 start_tick;        /* 0x10; g_main_sound_tick_count when main_sound_start_sfx started the channel */
+    u8* note_data_start;   /* 0x14 */
+    u8* note_data;         /* 0x18; read position */
+    u8* loop_note_data;    /* 0x1c; loop point set by Loop and Loop Select; End Bar jumps to it */
+    u8* restart_note_data; /* 0x20; set by main_smd_init_channel_streams */
+    u32 _unknown_024;      /* 0x24; cleared by both channel initialisers, never read */
+    u16 loop_count;        /* 0x28; times End Bar has jumped to the loop point */
+    u8 _unknown_02a;       /* 0x2a; cleared by both channel initialisers, never read */
+    u8 loop_octave_base;   /* 0x2b; octave_base saved with loop_note_data */
+    u8 instrument;         /* 0x2c; index into waveset->instruments */
+    u8 voice;              /* 0x2d; SPU voice (Set Voice); only an odd voice takes Enable LFO */
+    u16 note_release_rate; /* 0x2e; the instrument's or Release Rate's value; each note reloads release_rate from it */
     suzuki_waveset_t* waveset; /* 0x30; Select Sound Font */
     u32 voice_mask;            /* 0x34; SPU voice bit(s) owned by this channel */
-    u32 voice_attr_mask;       /* 0x38; SpuVoiceAttr mask; 0xff9f */
+    u32 voice_attr_mask;       /* 0x38; SpuVoiceAttr mask; 0xff9f, never read */
     s16 spu_volume_left;       /* 0x3c; SpuSetVoiceVolume(Attr) left, from main_smd_update_voices */
     s16 spu_volume_right;      /* 0x3e */
     s16 spu_volume_mode_left;  /* 0x40; SpuSetVoiceVolumeAttr left mode; cleared by the channel initialiser */
@@ -606,43 +619,43 @@ typedef struct suzuki_music_channel {
     u8 _unused_04a[6];         /* 0x4a; SpuVoiceAttr note, sample_note, envx */
     u32 start_address;         /* 0x50; instrument sample SPU address */
     u32 loop_address;          /* 0x54; instrument loop SPU address */
-    s32 attack_mode;           /* 0x58 */
+    s32 attack_mode;           /* 0x58; LIBSPU envelope modes, see suzuki_instrument_t */
     s32 sustain_mode;          /* 0x5c */
     s32 release_mode;          /* 0x60 */
-    u16 attack_time;           /* 0x64 */
-    u16 decay_time;            /* 0x66 */
-    u16 sustain_time;          /* 0x68 */
-    u16 release_time;          /* 0x6a */
+    u16 attack_rate;           /* 0x64; LIBSPU envelope rates and level */
+    u16 decay_rate;            /* 0x66 */
+    u16 sustain_rate;          /* 0x68 */
+    u16 release_rate;          /* 0x6a */
     u16 sustain_level;         /* 0x6c */
     u8 _unused_06e[6];         /* 0x6e; SpuVoiceAttr adsr1, adsr2 */
-    s16 rest_length;           /* 0x74; Rest or Fermata hold length, counted down per tick */
-    s8 length_adjust;          /* 0x76; signed note-length adjust: opcode 0xAD adds to or clears it */
+    s16 event_ticks;           /* 0x74; ticks left of the current note, Rest or Fermata; 0 reads the next event */
+    s8 length_adjust;          /* 0x76; ticks added to each event's length (Length Adjust) */
     u8 _padding_077;           /* 0x77; aligns note_ticks */
-    u16 note_ticks;            /* 0x78; ticks left in the note; 0 sets active bit 0x400 */
-    u16 gate_time;             /* 0x7a; key-on time in sixteenths of the length (0xA9); initialised to 0xf */
+    u16 note_ticks;            /* 0x78; ticks until the note is keyed off (SUZUKI_CHANNEL_KEYED_OFF) */
+    u16 gate_time;             /* 0x7a; key-on time in sixteenths of the length (Gate Time); initialised to 0xf */
     u8 previous_key;           /* 0x7c; previous note's key, the portamento start; cleared by the channel initialiser */
     u8 key;                    /* 0x7d; key number of the current note */
     u16 octave_base;           /* 0x7e; key number of the current octave, octave * 12 */
-    s32 pitch_slide;           /* 0x80; accumulated by the 0xD4 ramp */
-    s16 fine_tune;             /* 0x84; instrument fine_tune, added to key << 8 (1/256 semitone) */
-    s16 pitch_offset;          /* 0x86; fine pitch; 0xD0/0xD1 scale their byte by 32, 0xD2 by 8 */
-    s16 pitch_modulation;      /* 0x88; modulator target 0 output */
-    s16 volume_modulation;     /* 0x8a; modulator target 1 output */
-    s16 balance_modulation;    /* 0x8c; modulator target 2 output */
-    u8 _unused_08e[2];         /* 0x8e */
-    u16 portamento_ticks;      /* 0x90; portamento length (opcode 0xD6), mirrored into ramp_flags bit 2 */
-    s16 balance;               /* 0x92; balance byte << 8 */
-    s16 velocity;              /* 0x94; velocity << 8, 0x6000 by default */
-    u8 _padding_096[2];        /* 0x96; aligns volume */
-    s32 volume;                /* 0x98; volume byte << 24 */
-    s32 pitch_slide_step;      /* 0x9c; opcode 0xD4 */
-    s32 volume_step;           /* 0xa0; Fermata Ramp (0xE2) */
-    s16 balance_step;          /* 0xa4; opcode 0xEA */
-    u16 pitch_slide_count;     /* 0xa6 */
-    u16 volume_step_count;     /* 0xa8 */
-    u16 balance_step_count;    /* 0xaa */
-    u16 repeat_depth;          /* 0xac; -1 when the repeat stack is empty */
-    u16 modulator_index;       /* 0xae; modulator selected by opcode 0xF0 */
+    s32 pitch;              /* 0x80; 1/256 semitones << 16: each note's key, moved by the pitch slide and portamento */
+    s16 fine_tune;          /* 0x84; instrument fine_tune, added to key << 8 (1/256 semitone) */
+    s16 pitch_offset;       /* 0x86; detune in 1/256 semitone (the Pitch Offset opcodes), added to each note */
+    s16 pitch_modulation;   /* 0x88; modulator target 0 output */
+    s16 volume_modulation;  /* 0x8a; modulator target 1 output */
+    s16 balance_modulation; /* 0x8c; modulator target 2 output */
+    u8 _unused_08e[2];      /* 0x8e */
+    u16 portamento_ticks;   /* 0x90; Portamento length; non-zero sets SUZUKI_RAMP_PORTAMENTO */
+    s16 balance;            /* 0x92; balance byte << 8 */
+    s16 velocity;           /* 0x94; velocity << 8, 0x6000 by default */
+    u8 _padding_096[2];     /* 0x96; aligns volume */
+    s32 volume;             /* 0x98; volume byte << 24 */
+    s32 pitch_slide_step;   /* 0x9c; per-tick pitch delta of Pitch Slide or the portamento */
+    s32 volume_step;        /* 0xa0; per-tick volume delta of Volume Ramp */
+    s16 balance_step;       /* 0xa4; per-tick balance delta of Balance Ramp */
+    u16 pitch_slide_count;  /* 0xa6 */
+    u16 volume_step_count;  /* 0xa8 */
+    u16 balance_step_count; /* 0xaa */
+    u16 repeat_depth;       /* 0xac; -1 when the repeat stack is empty */
+    u16 modulator_index;    /* 0xae; modulator selected by Modulator Select */
     suzuki_repeat_t repeats[4];       /* 0xb0 */
     suzuki_modulator_t modulators[4]; /* 0xe0 */
 } suzuki_music_channel_t;
@@ -663,7 +676,7 @@ typedef enum suzuki_channel_flag {
     SUZUKI_CHANNEL_SOUNDING = 0x0100,           /* a note or Fermata holds the channel; ends the tick's opcode reads */
     SUZUKI_CHANNEL_TIED = 0x0200,               /* the gate time does not key the note off */
     SUZUKI_CHANNEL_KEYED_OFF = 0x0400,          /* resting or past the gate time; the next note keys on */
-    SUZUKI_CHANNEL_SLUR = 0x0800,               /* opcodes 0xB0/0xB1: every note is tied */
+    SUZUKI_CHANNEL_SLUR = 0x0800,               /* Slur On/Off: every note is tied */
     SUZUKI_CHANNEL_NOTE_FOLLOWS = 0x1000,       /* the look-ahead found a note as the next event */
     SUZUKI_CHANNEL_STREAMS_SET = 0x4000,        /* main_smd_init_channel_streams; never tested */
     SUZUKI_CHANNEL_INSTRUMENT_PENDING = 0x8000, /* the next note marks the voice attributes */
@@ -699,8 +712,8 @@ typedef enum suzuki_voice_attr {
 /* suzuki_music_channel_t.ramp_flags. */
 typedef enum suzuki_ramp_flag {
     SUZUKI_RAMP_PITCH_SLIDE = 0x01,
-    SUZUKI_RAMP_PITCH_SLIDE_HOLD = 0x02, /* toggled by opcode 0xD5: the slide count does not run down */
-    SUZUKI_RAMP_PORTAMENTO = 0x04,       /* opcode 0xD6: a key-on slides from the previous key */
+    SUZUKI_RAMP_PITCH_SLIDE_HOLD = 0x02, /* toggled by Pitch Slide Hold: the slide count does not run down */
+    SUZUKI_RAMP_PORTAMENTO = 0x04,       /* Portamento: a key-on slides from the previous key */
     SUZUKI_RAMP_VOLUME = 0x08,
     SUZUKI_RAMP_BALANCE = 0x10,
 } suzuki_ramp_flag_e;
@@ -713,17 +726,121 @@ typedef enum suzuki_voice_mask_request {
     SUZUKI_VOICE_MASK_REQUEST_REVERB = 0x4,
 } suzuki_voice_mask_request_e;
 
-/* SMD opcodes the look-ahead of main_smd_read_instructions tests, named
- * after their handlers in g_main_smd_opcode_handlers. Bytes below 0x80 are
- * notes. */
+/* SMD instruction bytes. A byte below SUZUKI_SMD_OPCODE_FIRST starts a note:
+ * it is the velocity, the next byte indexes g_main_smd_note_semitones and
+ * g_main_smd_note_durations, and a length byte follows when that duration
+ * is 0. Every other byte is an opcode; g_main_smd_opcode_handlers and
+ * g_main_smd_opcode_lengths are indexed by opcode - SUZUKI_SMD_OPCODE_FIRST.
+ *
+ * Each comment lists the parameter bytes after the opcode. The handler of
+ * SUZUKI_SMD_OPCODE_X is main_smd_x unless the comment names another. The 37
+ * opcodes without an enumerator share main_smd_no_instruction and have
+ * length 0 in g_main_smd_opcode_lengths, so the look-ahead of
+ * main_smd_read_instructions would never get past one. */
 typedef enum suzuki_smd_opcode {
-    SUZUKI_SMD_OPCODE_REST = 0x80,
-    SUZUKI_SMD_OPCODE_FERMATA = 0x81,
-    SUZUKI_SMD_OPCODE_END_BAR = 0x90,
-    SUZUKI_SMD_OPCODE_CODA = 0x99,
-    SUZUKI_SMD_OPCODE_TO_CODA = 0x9a,
-    SUZUKI_SMD_OPCODE_SLUR_ON = 0xb0,  /* main_smd_opcode_b0 */
-    SUZUKI_SMD_OPCODE_SLUR_OFF = 0xb1, /* main_smd_opcode_b1 */
+    SUZUKI_SMD_OPCODE_FIRST = 0x80,
+    SUZUKI_SMD_OPCODE_REST = 0x80,        /* ticks */
+    SUZUKI_SMD_OPCODE_FERMATA = 0x81,     /* ticks: holds the sounding note that much longer */
+    SUZUKI_SMD_OPCODE_NOP_8A = 0x8a,      /* nothing; main_smd_no_instruction_2 */
+    SUZUKI_SMD_OPCODE_LOOP_SELECT = 0x8d, /* selector: a Loop when it equals music->loop_select; main_smd_opcode_8d */
+    SUZUKI_SMD_OPCODE_SKIP_3 = 0x8e,      /* three ignored bytes */
+    SUZUKI_SMD_OPCODE_NOP_8F = 0x8f,      /* nothing; main_smd_no_instruction_4 */
+    SUZUKI_SMD_OPCODE_END_BAR = 0x90,     /* jumps to the loop point; ends the channel when none is set */
+    SUZUKI_SMD_OPCODE_LOOP = 0x91,        /* sets the loop point */
+    SUZUKI_SMD_OPCODE_OCTAVE = 0x94,      /* octave */
+    SUZUKI_SMD_OPCODE_RAISE_OCTAVE = 0x95,
+    SUZUKI_SMD_OPCODE_LOWER_OCTAVE = 0x96,
+    SUZUKI_SMD_OPCODE_TIME_SIGNATURE = 0x97, /* beats per bar, beat unit */
+    SUZUKI_SMD_OPCODE_REPEAT = 0x98,         /* pass count: opens a repeated section */
+    SUZUKI_SMD_OPCODE_CODA = 0x99,           /* closes the section: jumps back while passes remain */
+    SUZUKI_SMD_OPCODE_TO_CODA = 0x9a,        /* on the last pass, jumps past the section's Coda */
+    SUZUKI_SMD_OPCODE_PLAY_SFX = 0x9c,       /* sound id low, high, volume */
+    /* Sound id low, high. g_main_smd_opcode_lengths counts three parameter
+     * bytes, one more than the handler consumes. */
+    SUZUKI_SMD_OPCODE_STOP_SFX = 0x9d,
+    SUZUKI_SMD_OPCODE_PLAY_VFX = 0x9e,           /* sound low, high, stream: continues in a loaded sound resource */
+    SUZUKI_SMD_OPCODE_TEMPO = 0xa0,              /* tempo: 75/64 quarter notes a minute per unit */
+    SUZUKI_SMD_OPCODE_ACCELERANDO = 0xa1,        /* signed tempo delta */
+    SUZUKI_SMD_OPCODE_TEMPO_RAMP = 0xa2,         /* ticks, target tempo */
+    SUZUKI_SMD_OPCODE_UNKNOWN_A4 = 0xa4,         /* value: sets music->_unknown_01c; main_smd_opcode_a4 */
+    SUZUKI_SMD_OPCODE_UNKNOWN_A5 = 0xa5,         /* delta: adds to music->_unknown_01c; main_smd_opcode_a5 */
+    SUZUKI_SMD_OPCODE_MASTER_VOLUME = 0xa6,      /* volume of the whole music */
+    SUZUKI_SMD_OPCODE_MASTER_VOLUME_RAMP = 0xa7, /* time in 32/240 s units, target volume */
+    SUZUKI_SMD_OPCODE_GATE_TIME = 0xa9,  /* sixteenths of each note's length that stay keyed on; main_smd_opcode_a9 */
+    SUZUKI_SMD_OPCODE_SET_VOICE = 0xaa,  /* SPU voice number */
+    SUZUKI_SMD_OPCODE_INSTRUMENT = 0xac, /* instrument of the channel's waveset */
+    SUZUKI_SMD_OPCODE_LENGTH_ADJUST = 0xad, /* signed ticks added to length_adjust, 0 clears it; main_smd_opcode_ad */
+    SUZUKI_SMD_OPCODE_NOP_AE = 0xae,        /* nothing; main_smd_no_instruction_5 */
+    SUZUKI_SMD_OPCODE_NOP_AF = 0xaf,        /* nothing; main_smd_no_instruction_6 */
+    SUZUKI_SMD_OPCODE_SLUR_ON = 0xb0,       /* every note is tied to the next; main_smd_opcode_b0 */
+    SUZUKI_SMD_OPCODE_SLUR_OFF = 0xb1,      /* main_smd_opcode_b1 */
+    SUZUKI_SMD_OPCODE_ENABLE_LFO = 0xb2,    /* SPU pitch LFO on the channel's voice (odd voices only) */
+    SUZUKI_SMD_OPCODE_DISABLE_LFO = 0xb3,
+    SUZUKI_SMD_OPCODE_ENABLE_NOISE = 0xb4,   /* noise clock */
+    SUZUKI_SMD_OPCODE_INCREASE_NOISE = 0xb5, /* noise clock delta, modulo 64 */
+    SUZUKI_SMD_OPCODE_TURN_ON_NOISE = 0xb6,  /* noise with the clock left as it is */
+    SUZUKI_SMD_OPCODE_DISABLE_NOISE = 0xb7,
+    SUZUKI_SMD_OPCODE_ACOUSTICS = 0xb8, /* reverb depth, delay, feedback */
+    SUZUKI_SMD_OPCODE_ENABLE_REVERB = 0xba,
+    SUZUKI_SMD_OPCODE_DISABLE_REVERB = 0xbb,
+    SUZUKI_SMD_OPCODE_NATURALE = 0xc0,                /* reloads the channel's instrument */
+    SUZUKI_SMD_OPCODE_ENVELOPE_SHAPE = 0xc1,          /* attack, sustain and release modes */
+    SUZUKI_SMD_OPCODE_ATTACK_RATE = 0xc2,             /* rate; main_smd_attack_time */
+    SUZUKI_SMD_OPCODE_DECAY_RATE = 0xc3,              /* rate; main_smd_decay_time */
+    SUZUKI_SMD_OPCODE_SUSTAIN_RATE = 0xc4,            /* rate; main_smd_sustain_time */
+    SUZUKI_SMD_OPCODE_RELEASE_RATE = 0xc5,            /* rate; main_smd_release */
+    SUZUKI_SMD_OPCODE_SUSTAIN_LEVEL = 0xc6,           /* level */
+    SUZUKI_SMD_OPCODE_ENVELOPE_TAIL = 0xc7,           /* decay rate, sustain level */
+    SUZUKI_SMD_OPCODE_ATTACK_MODE = 0xc8,             /* SPU envelope mode */
+    SUZUKI_SMD_OPCODE_SUSTAIN_MODE = 0xc9,            /* SPU envelope mode */
+    SUZUKI_SMD_OPCODE_RELEASE_MODE = 0xca,            /* SPU envelope mode */
+    SUZUKI_SMD_OPCODE_PITCH_OFFSET = 0xd0,            /* signed, 1/8 semitone; main_smd_opcode_d0 */
+    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET = 0xd1,      /* signed delta, 1/8 semitone; main_smd_opcode_d1 */
+    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET_FINE = 0xd2, /* signed delta, 1/32 semitone; main_smd_opcode_d2 */
+    /* Signed 16-bit delta in 1/256 semitone, high byte first; main_smd_opcode_d3. */
+    SUZUKI_SMD_OPCODE_SHIFT_PITCH_OFFSET_WORD = 0xd3,
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE = 0xd4,      /* ticks, signed semitones */
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE_HOLD = 0xd5, /* toggles SUZUKI_RAMP_PITCH_SLIDE_HOLD; main_smd_opcode_d5 */
+    SUZUKI_SMD_OPCODE_PORTAMENTO = 0xd6, /* ticks a key-on slides from the previous key, 0 off; main_smd_opcode_d6 */
+    /* The vibrato opcodes program modulator 0 on the pitch; their handlers
+     * are main_smd_pitch_shift_fade_in, main_smd_pitch_shift,
+     * main_smd_pitch_shift_waveform, main_smd_pitch_shift_on and
+     * main_smd_pitch_shift_off. */
+    SUZUKI_SMD_OPCODE_VIBRATO_FADE_IN = 0xd7,  /* fade-in length in ticks, less one */
+    SUZUKI_SMD_OPCODE_VIBRATO = 0xd8,          /* speed, signed depth, delay: a centred triangle */
+    SUZUKI_SMD_OPCODE_VIBRATO_WAVEFORM = 0xd9, /* speed, signed depth, waveform (bit 4: no restart on key-on) */
+    SUZUKI_SMD_OPCODE_VIBRATO_ON = 0xda,
+    SUZUKI_SMD_OPCODE_VIBRATO_OFF = 0xdb,
+    SUZUKI_SMD_OPCODE_PITCH_SLIDE_OFF = 0xdc, /* main_smd_opcode_dc */
+    SUZUKI_SMD_OPCODE_DYNAMIC = 0xe0,         /* channel volume */
+    SUZUKI_SMD_OPCODE_CRESCENDO = 0xe1,       /* signed volume delta */
+    SUZUKI_SMD_OPCODE_VOLUME_RAMP = 0xe2,     /* ticks, target volume; main_smd_fermata_ramp */
+    /* The tremolo opcodes program modulator 1 on the volume. */
+    SUZUKI_SMD_OPCODE_TREMOLO_FADE_IN = 0xe3,  /* fade-in length in ticks, less one */
+    SUZUKI_SMD_OPCODE_TREMOLO = 0xe4,          /* speed, signed depth, delay: a triangle */
+    SUZUKI_SMD_OPCODE_TREMOLO_WAVEFORM = 0xe5, /* speed, signed depth, waveform (bit 4: no restart on key-on) */
+    SUZUKI_SMD_OPCODE_TREMOLO_ON = 0xe6,
+    SUZUKI_SMD_OPCODE_TREMOLO_OFF = 0xe7,
+    SUZUKI_SMD_OPCODE_BALANCE = 0xe8,       /* balance: 0 left, 0x40 centre, 0x7f right */
+    SUZUKI_SMD_OPCODE_SHIFT_BALANCE = 0xe9, /* signed balance delta */
+    SUZUKI_SMD_OPCODE_BALANCE_RAMP = 0xea,  /* ticks, target balance */
+    /* The pan LFO opcodes program modulator 2 on the balance. */
+    SUZUKI_SMD_OPCODE_PAN_LFO_FADE_IN = 0xeb,  /* fade-in length in ticks, less one */
+    SUZUKI_SMD_OPCODE_PAN_LFO = 0xec,          /* speed, signed depth, delay: a centred triangle */
+    SUZUKI_SMD_OPCODE_PAN_LFO_WAVEFORM = 0xed, /* speed, signed depth, waveform (bit 4: no restart on key-on) */
+    SUZUKI_SMD_OPCODE_PAN_LFO_ON = 0xee,
+    SUZUKI_SMD_OPCODE_PAN_LFO_OFF = 0xef,
+    /* Modulator index, waveform (bit 4: no restart on key-on), target: selects
+     * the modulator the next two opcodes program. */
+    SUZUKI_SMD_OPCODE_MODULATOR_SELECT = 0xf0,
+    SUZUKI_SMD_OPCODE_MODULATOR_SET_DEPTH = 0xf1,   /* speed, signed depth high, depth low */
+    SUZUKI_SMD_OPCODE_MODULATOR_SET_FADE_IN = 0xf2, /* delay, fade-in length in ticks less one */
+    SUZUKI_SMD_OPCODE_MODULATOR_ENABLE_MASK = 0xf5, /* bit n: modulator n restarts and runs, clear stops it */
+    SUZUKI_SMD_OPCODE_MODULATOR_ENABLE = 0xf6,      /* modulator index */
+    SUZUKI_SMD_OPCODE_MODULATOR_DISABLE = 0xf7,     /* modulator index */
+    SUZUKI_SMD_OPCODE_SCALE_TEMPO = 0xfd,           /* tempo multiplier, 0 ignored */
+    SUZUKI_SMD_OPCODE_SELECT_SOUND_FONT = 0xfe,     /* waveset id */
+    SUZUKI_SMD_OPCODE_END_TRACK = 0xff,             /* ends the channel once its voice's envelope has run out */
 } suzuki_smd_opcode_e;
 
 /* Suzuki MUS (music sequence) record: 0xb8 bytes followed by channel_count
@@ -739,7 +856,7 @@ typedef enum suzuki_smd_opcode {
  *
  * tempo is tempo byte << 16. It is a union because Scale Tempo (0x80016e14)
  * reads the tempo byte back with `lh 0x7e`, while Tempo, Accelerando and
- * opcode 0xA2 use the whole word. */
+ * Tempo Ramp use the whole word. */
 typedef struct suzuki_music {
     struct suzuki_music* next;     /* 0x00 */
     struct suzuki_music* snapshot; /* 0x04; freed by main_smd_free_snapshots */
@@ -747,15 +864,15 @@ typedef struct suzuki_music {
     u8 _unused_00c[4];             /* 0x0c */
     s16 status;                    /* 0x10; suzuki_music_status_e */
     u16 id;                        /* 0x12; SMD id */
-    u8 _unknown_014;               /* 0x14; SMD _unknown_12 */
+    u8 _unknown_014;               /* 0x14; SMD _unknown_12, 1 for the SFX record */
     u8 tick_divisor;               /* 0x15 */
     u8 channel_count;              /* 0x16 */
-    u8 _unknown_017;               /* 0x17; SMD _unknown_15 */
+    u8 _unknown_017;               /* 0x17; SMD _unknown_15, 0 for the SFX record */
     s16 waveset_id;                /* 0x18; sound font id */
     u16 _unknown_01a;              /* 0x1a; SMD _unknown_18, 0x7f for SFX */
-    u8 _unknown_01c;               /* 0x1c; set by opcode 0xA4, adjusted by 0xA5 */
-    u8 channel_select;             /* 0x1d; opcode 0x8D acts when its byte matches */
-    u16 noise_clock;               /* 0x1e; opcodes 0xB4/0xB5 */
+    u8 _unknown_01c;               /* 0x1c; set by opcode 0xA4, added to by 0xA5, cleared by the header reset */
+    u8 loop_select;                /* 0x1d; the Loop Select opcode whose byte equals it sets the loop point */
+    u16 noise_clock;               /* 0x1e; SpuSetNoiseClock value (Enable Noise, Increase Noise) */
     s32 timer_ticks;               /* 0x20; incremented every tick */
     u32 sequence_ticks;            /* 0x24; ticks while the record owns voices */
     u32 ticks;                     /* 0x28; root-counter ticks played, in 1/256 units (tempo scale) */
@@ -792,9 +909,9 @@ typedef struct suzuki_music {
             s16 high; /* the tempo byte itself */
         } halves;
     } tempo;                            /* 0x7c */
-    s32 tempo_step;                     /* 0x80; per-step tempo delta of opcode 0xA2 */
+    s32 tempo_step;                     /* 0x80; per-tick tempo delta of Tempo Ramp */
     u16 tempo_step_count;               /* 0x84 */
-    u16 tempo_target;                   /* 0x86; tempo byte the 0xA2 ramp approaches */
+    u16 tempo_target;                   /* 0x86; tempo byte Tempo Ramp ends on */
     suzuki_ramp_t tempo_scale;          /* 0x88; value is scale byte << 24, its high halfword the multiplier */
     suzuki_ramp_t master_volume;        /* 0x94; value is volume byte << 24 */
     suzuki_ramp_t pitch_shift;          /* 0xa0 */
@@ -817,16 +934,18 @@ typedef enum suzuki_music_status {
     SUZUKI_MUSIC_STATUS_PLAYING = 0x8000,
 } suzuki_music_status_e;
 
-/* Loaded SED/SMD sound block ("feds" VFX resource), kept by the Suzuki driver
- * in a singly linked list through next (SuzukiAppendVFXSMD). Play VFX SMD
- * (0x80015c38) matches id and indexes channel_offsets. */
+/* Loaded sound resource (a "feds" block: SYSTEM.SED, ENV.SED, or the block
+ * inside an effect file or WLDCORE.BIN), kept by the Suzuki driver in a
+ * singly linked list through next (SuzukiAppendVFXSMD). main_sound_start_sfx
+ * and Play VFX (0x80015c38) match id and index channel_offsets. Each sound
+ * has two streams, so one sound plays on a pair of SFX channels. */
 typedef struct main_sound_resource {
-    u8 _unused_00[0xa];
-    u16 id;                           /* 0x0a */
-    u16 volume_offset;                /* 0x0c; offset of the per-sound u8 volume table */
+    u8 _unused_00[0xa];               /* 0x00; "feds", the size at 0x04, the sound count at 0x08 */
+    u16 id;                           /* 0x0a; main_sound_resource_id_e, the high half of a sound id */
+    u16 volume_offset;                /* 0x0c; offset of the per-sound u8 volume table (0x80 = full) */
     u8 _padding_0e[2];                /* 0x0e; aligns next */
     struct main_sound_resource* next; /* 0x10 */
-    u16 channel_offsets[1];           /* 0x14 */
+    u16 channel_offsets[1];           /* 0x14; two stream offsets per sound, 0 for no stream */
 } main_sound_resource_t;
 
 /* Driver SPU state at 0x80037020: the common attributes passed to LIBSPU,
@@ -839,7 +958,7 @@ typedef struct suzuki_spu_state {
     s16 music_volume;         /* 0x28 0x80037048; applied to common.mvol */
     s16 cd_volume;            /* 0x2a 0x8003704a; applied to common.cd.volume */
     s16 reverb_depth;         /* 0x2c 0x8003704c; applied to g_main_sound_reverb_attr.depth */
-    s16 sound_type;           /* 0x2e 0x8003704e; Put Sound Type argument */
+    s16 cd_mix_level;         /* 0x2e 0x8003704e; the CdMix level last given to main_sound_put_type */
     suzuki_ramp_t music_ramp; /* 0x30 0x80037050 */
     suzuki_ramp_t cd_ramp;    /* 0x3c 0x8003705c */
 } suzuki_spu_state_t;
@@ -879,6 +998,10 @@ typedef enum main_sound_spu_transfer {
     MAIN_SOUND_SPU_TRANSFER_READ_DECODED = 3,    /* SpuReadDecodedData, every buffer */
     MAIN_SOUND_SPU_TRANSFER_READ_DECODED_CD = 4, /* SpuReadDecodedData, CD buffers only */
     MAIN_SOUND_SPU_TRANSFER_NONE = 5,
+    /* Flag of main_sound_wait_for_spu_transfer: wait for the running transfer
+     * to end. main_sound_load_waveset also sets it in its transfer mode,
+     * where only the low nibble is read. */
+    MAIN_SOUND_SPU_TRANSFER_WAIT = 0x10,
 } main_sound_spu_transfer_e;
 
 /* Mode argument of main_smd_dispatch_snapshot. */
@@ -899,10 +1022,10 @@ typedef u8* (*suzuki_smd_handler_t)(u8* note_data, suzuki_music_t* music, suzuki
  * main_sound_stop_current_music hands it straight to
  * SuzukiDeallocateMUSChannels, which takes a suzuki_music_t*. */
 typedef struct main_sound_music_state {
-    s32 scenario_track;                /* 0x00 0x8004d95c slot of the playing scenario music */
-    suzuki_music_t* current_music;     /* 0x04 0x8004d960 */
-    suzuki_smd_header_t* forced_music; /* 0x08 0x8004d964 SMD data of the playing music */
-    s32 volume;                        /* 0x0c 0x8004d968 */
+    s32 current_slot;                 /* 0x00 0x8004d95c slot of the playing scenario music */
+    suzuki_music_t* current_music;    /* 0x04 0x8004d960 */
+    suzuki_smd_header_t* current_smd; /* 0x08 0x8004d964 SMD data of the playing music */
+    s32 volume;                       /* 0x0c 0x8004d968 */
 } main_sound_music_state_t;
 
 /* Music slot table at 0x8004d96c. Slots are 1-based: slots 1-2 hold the
@@ -914,7 +1037,7 @@ typedef struct main_sound_music_state {
  * 0x8004d994 + 4t from a 0x8004d96c base; 0x80043a90 reads smd at
  * 0x8004d98c + 4*track and the handle 0x1c bytes below it. */
 typedef struct main_sound_music_slots {
-    s32 tune; /* 0x00 0x8004d96c pending tune (id | 0x80) or playing tune id */
+    s32 tune; /* 0x00 0x8004d96c main_sound_tune_e: pending tune (id | 0x80) or playing tune id */
     union {
         s32 loading_slot;         /* the word of slot 0: the slot whose SMD load is in flight */
         suzuki_music_t* music[7]; /* the music record SuzukiPutPlaySMD returned, by slot */
@@ -923,22 +1046,85 @@ typedef struct main_sound_music_slots {
 } main_sound_music_slots_t;
 
 /* The music state and slot table are one object: main_sound_open_generic_sfx
- * derives the slot words from the &state.forced_music base register, and the
+ * derives the slot words from the &state.current_smd base register, and the
  * tune/slot helpers reach across tune, handles and smd from single bases. */
 typedef struct main_sound_music {
     main_sound_music_state_t state; /* 0x00 0x8004d95c */
     main_sound_music_slots_t slots; /* 0x10 0x8004d96c */
 } main_sound_music_t;
 
+/* Music ids: the index of a MUSIC_NN.SMD file in
+ * g_main_sound_scenario_smd_files (MAIN_MUSIC_COUNT entries). Only the ids
+ * the code passes by number are named, after the screen that plays them;
+ * event scripts and scenario data choose the others. The music test offers
+ * ids 1-96 (g_open_music_test_music_ids). */
+typedef enum main_music {
+    MAIN_MUSIC_NONE = 0,         /* the *_sound_play_music_tracks functions and the WLDCORE audio queue skip it */
+    MAIN_MUSIC_ALTIMA = 0x13,    /* EVENT_CALL_FUNCTION_PLAY_ALTIMA_MUSIC */
+    MAIN_MUSIC_MILESTONE = 0x14, /* wldcore_map_step_discovery_announcement, in the bar */
+    MAIN_MUSIC_TUTORIAL = 0x1a,  /* the world menu's tutorial screen */
+    MAIN_MUSIC_WORLD_MAP = 0x1b,
+    MAIN_MUSIC_SHOP = 0x1c,                      /* world_shop_run_screen: the item shop */
+    MAIN_MUSIC_SOLDIER_OFFICE = 0x1d,            /* world_shop_run_screen */
+    MAIN_MUSIC_FUR_SHOP = 0x1e,                  /* world_shop_run_screen */
+    MAIN_MUSIC_FORMATION = 0x1f,                 /* world_formation_run_screen */
+    MAIN_MUSIC_BRAVE_STORY = 0x20,               /* the Brave Story screens */
+    MAIN_MUSIC_BAR = 0x21,                       /* the bar of a town */
+    MAIN_MUSIC_NEW_GAME = 0x22,                  /* name and birthday entry of a new game */
+    MAIN_MUSIC_PROPOSITION_REPORT = 0x23,        /* a finished proposition's report */
+    MAIN_MUSIC_SAVE = 0x29,                      /* the memory card screens */
+    MAIN_MUSIC_DEPLOYMENT = 0x2a,                /* the ATTACK unit placement screen */
+    MAIN_MUSIC_CONGRATULATIONS = 0x2b,           /* require_text_show_battle_congratulations */
+    MAIN_MUSIC_CONGRATULATIONS_EVENT_145 = 0x2c, /* the same screen after event 0x145 */
+    MAIN_MUSIC_GAME_OVER = 0x32,                 /* etc_graphic_show_game_over */
+    MAIN_MUSIC_COUNT = 100,
+} main_music_e;
+
+/* Tunes of main_sound_play_tune: short pieces that fade the scenario music
+ * out, play once and fade it back in (main_sound_update_tunes). Tune t is
+ * MUSIC_(44 + t).SMD, kept loaded in music slot 2 + t. Tune 4 has no caller
+ * in the code; EVENT_OPCODE_PLAY_TUNE passes its operand. */
+typedef enum main_sound_tune {
+    MAIN_SOUND_TUNE_NONE = 0,
+    MAIN_SOUND_TUNE_LEVEL_UP = 1,
+    MAIN_SOUND_TUNE_ITEM_FOUND = 2, /* an item found by moving, a poach, a trained monster */
+    MAIN_SOUND_TUNE_JOB_LEVEL_UP = 3,
+    MAIN_SOUND_TUNE_JOB_CHANGE = 5,
+    MAIN_SOUND_TUNE_ID_MASK = 0x3f, /* the id in g_main_sound_music.slots.tune */
+    MAIN_SOUND_TUNE_PENDING = 0x80, /* set there until the scenario music has faded out */
+} main_sound_tune_e;
+
+/* Steal priority of an SFX channel, the high byte of a main_sound_start_sfx
+ * channel id. When no channel pair is free, main_sound_find_sfx_channel takes
+ * the oldest busy one whose priority is at most STEALABLE. */
+typedef enum main_sound_sfx_priority {
+    MAIN_SOUND_SFX_PRIORITY_STEALABLE = 0x20,  /* a sound on a searched or caller-named channel pair */
+    MAIN_SOUND_SFX_PRIORITY_BACKGROUND = 0x60, /* SuzukiPlaySound2 (main_sound_play_bg_sfx), channels 4-5 */
+    MAIN_SOUND_SFX_PRIORITY_DIRECT = 0x80,     /* SuzukiPlaySound1 (main_sound_play_sfx), channels 6-7 */
+} main_sound_sfx_priority_e;
+
+#define MAIN_SOUND_SFX_CHANNEL_ID(priority, channel) (((priority) << 8) | (channel))
+
+/* Sound resources. A sound id is MAIN_SOUND_ID(resource, sound): the id of a
+ * loaded main_sound_resource_t in the high halfword and the index of a
+ * sound in it in the low. Each battle effect file brings a resource of its
+ * own (battle_effect_load_sound_section). */
+typedef enum main_sound_resource_id {
+    MAIN_SOUND_RESOURCE_SYSTEM = 0,         /* SOUND/SYSTEM.SED: main_sfx_e */
+    MAIN_SOUND_RESOURCE_ENV = 1,            /* SOUND/ENV.SED: main_env_sfx_e */
+    MAIN_SOUND_RESOURCE_SOUND_NOVEL = 0xe1, /* g_wldcore_sound_novel_sound_resource, 81 sounds */
+} main_sound_resource_id_e;
+
+#define MAIN_SOUND_ID(resource, sound) (((resource) << 16) | (sound))
+
 /* Sound-effect ids passed to main_sound_play_sfx and the module queues that
  * feed it (wldcore_sound_play_effect, world_sound_dispatch_effect and the
  * g_*_sound_*effect_id globals); every path reaches main_sound_start_sfx with
- * resource id 0 (SYSTEM.SED) in the high halfword, so this is one id space.
- * 1/2/3/5 are the Confirm, Cancel, Cursor Move and Invalid sounds; the rest
- * are named from their users. Ids with 0x10000 set select ENV.SED (weather
- * and scripted background sounds) and are not part of this enum. The event
- * frames store -1 in the pending globals for "no request"; the dispatchers
- * turn a negative id into MAIN_SFX_NONE. */
+ * MAIN_SOUND_RESOURCE_SYSTEM in the high halfword, so this is one id space.
+ * SYSTEM.SED holds MAIN_SFX_COUNT sounds; the ones named here are named
+ * from their users in the code, the others are played only by event and
+ * animation script data. The event frames store -1 in the pending globals
+ * for "no request"; the dispatchers turn a negative id into MAIN_SFX_NONE. */
 typedef enum main_sfx {
     /* Nothing queued. SYSTEM.SED entry 0 has no streams, so playing it stops
      * the channel pair main_sound_play_sfx uses;
@@ -969,6 +1155,16 @@ typedef enum main_sfx {
     MAIN_SFX_WORLD_MAP_ZOOM_OUT = 0x10,
     MAIN_SFX_CAMERA_ZOOM_OUT = 0x11,
     MAIN_SFX_WINDOW_OPEN = 0x12, /* help, message or text window opens */
+    /* The weapon sounds of battle_sound_select_weapon_hit, by the weapon's
+     * item_type_e: g_battle_sound_weapon_miss_sfx_ids (the swing, played
+     * before the hit is known), g_battle_sound_weapon_hit_sfx_ids and
+     * g_battle_sound_shield_deflect_sfx_ids. */
+    MAIN_SFX_HIT_BLADE = 0x13,    /* knife, ninja blade, sword, knight sword, katana */
+    MAIN_SFX_HIT_HEAVY = 0x15,    /* axe, flail; also the deflect of a fist, bag or cloth */
+    MAIN_SFX_HIT_UNARMED = 0x18,  /* fist, bag, cloth */
+    MAIN_SFX_SWING_LIGHT = 0x19,  /* fist, knife, ninja blade, instrument, book, bag, cloth */
+    MAIN_SFX_SWING_MEDIUM = 0x1a, /* sword, knight sword, katana, rod, staff */
+    MAIN_SFX_SWING_HEAVY = 0x1b,  /* axe, flail, polearm, pole */
     /* Started by the spell-charge and summon-charge secondary effects, which
      * stop them with main_sound_stop_sfx_channels when they finish. */
     MAIN_SFX_SPELL_CHARGE = 0x1f,
@@ -982,17 +1178,22 @@ typedef enum main_sfx {
     MAIN_SFX_JUMP = 0x27, /* a jump rise starts; the fall that ends a mount ride starts */
     MAIN_SFX_LAND_SOFT = 0x28,
     MAIN_SFX_LAND_DEFAULT = 0x29,
-    MAIN_SFX_TEXT_PAGE = 0x2d, /* dialogue/scroll window advances a page */
+    MAIN_SFX_TEXT_PAGE = 0x2d,            /* dialogue/scroll window advances a page */
+    MAIN_SFX_SHIELD_DEFLECT_LIGHT = 0x2e, /* blades, rod, staff, polearm, pole */
+    MAIN_SFX_SHIELD_DEFLECT_HEAVY = 0x2f, /* axe, flail */
     /* An error message opens: a memory-card load, save or scan failure, or a
      * refused equip, dismissal, job change or ability.
      * battle_sound_select_weapon_hit plays it for an attack stopped by an
-     * accessory or class evade, a forced failure, a blade grasp or a catch. */
+     * accessory or class evade, a forced failure, a blade grasp or a catch,
+     * and as the shield deflect of an instrument or book. */
     MAIN_SFX_ERROR_MESSAGE = 0x30,
     MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_HIT_ROD = 0x38,     /* rod, staff */
     MAIN_SFX_LAND_WOOD = 0x3a,
     /* Circle on a name-entry character key, or on an occupied tile of the
      * ATTACK deploy screen. */
     MAIN_SFX_SELECT = 0x3c,
+    MAIN_SFX_HIT_POLE = 0x3e,         /* polearm, pole */
     MAIN_SFX_EVENT_REVIVE = 0x41,     /* the event script's revive status change (*_script_inflict_status_thread) */
     MAIN_SFX_WORLD_MAP_ARRIVE = 0x43, /* a route leg ends at a location with no event or encounter */
     /* Dead status added outside an event
@@ -1000,6 +1201,8 @@ typedef enum main_sfx {
      * male, female or monster flag; the male sound is 0x9a. */
     MAIN_SFX_DEATH_FEMALE = 0x45,
     MAIN_SFX_DEATH_MONSTER = 0x46,
+    MAIN_SFX_SHIELD_DEFLECT_BULLET = 0x47, /* gun */
+    MAIN_SFX_SHIELD_DEFLECT_ARROW = 0x49,  /* crossbow, bow */
     /* Proposition result (g_wldcore_job_selection.result): 0 plays the
      * 0x4d/0x4e pair through main_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
      * 2 plays 0x51. */
@@ -1008,6 +1211,10 @@ typedef enum main_sfx {
     MAIN_SFX_PROPOSITION_PARTIAL_A = 0x4f,
     MAIN_SFX_PROPOSITION_PARTIAL_B = 0x50,
     MAIN_SFX_PROPOSITION_FAILURE = 0x51,
+    MAIN_SFX_SWING_BOW = 0x52,
+    MAIN_SFX_SWING_CROSSBOW = 0x56,
+    MAIN_SFX_SWING_GUN = 0x5a,
+    MAIN_SFX_HIT_GUN = 0x5b,
     MAIN_SFX_TELEPORT_OUT = 0x6a,
     MAIN_SFX_TELEPORT_IN = 0x6b,
     /* Animation step 4 of the world event-transition indicator
@@ -1019,6 +1226,7 @@ typedef enum main_sfx {
     = 0x71,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
     MAIN_SFX_CRITICAL_HIT = 0x72, /* a weapon hit whose action is critical (battle_sound_select_weapon_hit) */
     MAIN_SFX_TEXT_GLYPH = 0x73,   /* typewriter tick after a dialogue glyph */
+    MAIN_SFX_HIT_ARROW = 0x74,    /* crossbow, bow */
     /* World map: 0x76 when a path animation starts, drawing or erasing; 0x77
      * when a hidden location is made visible. */
     MAIN_SFX_WORLD_MAP_PATH = 0x76,
@@ -1030,7 +1238,18 @@ typedef enum main_sfx {
     MAIN_SFX_SHOP_TRANSACTION = 0x97, /* shop buy/sell confirmed */
     MAIN_SFX_ABILITY_LEARNED = 0x98,  /* an ability bought in the learn list */
     MAIN_SFX_DEATH_MALE = 0x9a,
+    MAIN_SFX_HIT_BOOK = 0x9c, /* instrument, book */
+    MAIN_SFX_COUNT = 0xa8,    /* the sound count in the SYSTEM.SED header */
 } main_sfx_e;
+
+/* Sounds of MAIN_SOUND_RESOURCE_ENV that the code plays by number. ENV.SED
+ * holds 27 (0, 0x15, 0x16 and 0x17 are empty); event scripts choose the
+ * others through EVENT_OPCODE_BG_SOUND. */
+typedef enum main_env_sfx {
+    MAIN_ENV_SFX_RAIN = 2,      /* battle_map_run_weather_command: rain without snow, and the thunder command */
+    MAIN_ENV_SFX_THUNDER_A = 3, /* battle_map_draw_mesh_and_weather picks one of the two for a lightning flash */
+    MAIN_ENV_SFX_THUNDER_B = 0xe,
+} main_env_sfx_e;
 
 /* Sector/size pairs for scenario and permanently loaded music SMD files. */
 typedef struct main_sound_smd_file {
@@ -1051,9 +1270,12 @@ extern u8 g_main_sound_env_sed_data[];
 extern u8 g_main_sound_system_sed_data[];
 
 /* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
-extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80];      /* 0x80028b0c; opcodes 0x80-0xff */
-extern u8 g_main_smd_opcode_lengths[0x80];                         /* 0x80028d0c; opcode plus parameters */
-extern u8 g_main_smd_note_durations[228];                          /* 0x80028d8c; ticks per note byte */
+extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80]; /* 0x80028b0c; opcodes 0x80-0xff */
+extern u8 g_main_smd_opcode_lengths[0x80];                    /* 0x80028d0c; opcode plus parameters */
+/* 0x80028d8c; ticks per note byte. Each of the twelve semitones has the same
+ * 19 lengths: 0 (a length byte follows), then 192 (a whole note), 144, 96,
+ * 72, 64, 48, 36, 32, 24, 18, 16, 12, 9, 8, 6, 4, 3 and 2. */
+extern u8 g_main_smd_note_durations[228];
 extern u8 g_main_smd_note_semitones[228];                          /* 0x80028e70; note byte / 19 */
 extern suzuki_modulator_step_t g_main_smd_modulator_waveforms[16]; /* 0x80028f54 */
 extern u8 g_main_smd_key_octaves[120];                             /* 0x80028fe8; key / 12 */
@@ -1065,7 +1287,8 @@ extern u16 g_main_smd_pitch_table[12 * 256];
 
 /* Driver globals (0x800329f0-0x80032a68, gp = 0x800329bc). The heap globals
  * are only ever reached $gp-relative, by 0x8001423c-0x8001442c. */
-extern s16 g_main_sound_sfx_channel_count;                /* SFX request mode; the Play Sound wrappers store 2 */
+extern s16
+    g_main_sound_sfx_channel_count; /* channels main_sound_start_sfx fills, one per stream of a sound: always 2 */
 extern main_sound_resource_t* g_main_sound_resource_list; /* 0x80032a00 */
 extern s16* g_main_sound_spu_transfer_status_records;     /* SPU transfer status records, 16 bytes each */
 extern u32 g_main_sound_music_key_off_voices;             /* voices queued for key-off by stopped music */
@@ -1073,7 +1296,7 @@ extern u32 g_main_mask_exclusion;                         /* 0x80032a0c; voices 
 extern u32 g_main_sound_sfx_restart_channels;             /* last SFX voice search: channel mask */
 extern u32 g_main_sound_sfx_restart_voices;               /* last SFX voice search: voice mask */
 extern s32 g_main_smd_random_state;                       /* 0x80032a18 */
-extern s16 g_main_sound_sfx_instrument;
+extern s16 g_main_sound_sfx_instrument;            /* instrument every started SFX channel begins with; always 0 */
 extern u32 g_main_sound_sfx_key_off_voices;        /* SFX voices pending key-off */
 extern u32 g_main_sound_tick_count;                /* root-counter tick count; odd ticks step the ramps */
 extern u16 g_main_sound_spu_transfer_status_index; /* index into g_main_sound_spu_transfer_status_records */
@@ -1098,7 +1321,7 @@ extern u8 g_main_sound_spu_malloc_table[];        /* 0x800408e0; SpuInitMalloc(6
 extern main_sound_music_t g_main_sound_music;
 extern main_sound_smd_file_t g_main_sound_scenario_smd_files[];
 extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
-extern s32 g_main_sound_weather_sfx_id;
+extern s32 g_main_sound_weather_sfx_id; /* the background sound main_sound_play_bg_sfx started, 0 for none */
 void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);
 void main_sound_pause_tracked_sfx(void);
@@ -1107,11 +1330,11 @@ suzuki_music_t* main_sound_get_music_handle(s32 slot);
 
 /* Verified SCUS scenario-music and tune wrappers. Include this header in
  * their definitions as well as callers so ABI declarations cannot drift. */
-s32 main_sound_open_and_play_music(s32 scenario, s32 slot);
+s32 main_sound_open_and_play_music(s32 music_id, s32 slot);
 void main_sound_open_generic_sfx(void);
-s32 main_sound_open_music_into_free_slot(s32 scenario);
-s32 main_sound_open_music_into_slot(s32 scenario, s32 slot);
-s32 main_sound_open_scenario_smd_files(s32 scenario);
+s32 main_sound_open_music_into_free_slot(s32 music_id);
+s32 main_sound_open_music_into_slot(s32 music_id, s32 slot);
+s32 main_sound_open_scenario_smd_files(s32 music_id);
 void main_sound_play_sfx(s32 sound_id);
 void main_sound_play_bg_sfx(s32 sound_id);
 void main_sound_play_sfx_find_channel(s32 sound_id);
@@ -1121,10 +1344,10 @@ s32 main_sound_set_current_music_balance_shift_timed(s32 value, s32 time);
 s32 main_sound_set_current_music_pitch_shift_timed(s32 value, s32 time);
 s32 main_sound_set_current_music_target(s32 volume, s32 time);
 s32 main_sound_set_current_music_tempo_scale_timed(s32 value, s32 time);
-void main_sound_set_current_music_track(s32 track);
+void main_sound_set_current_music_track(s32 music_id);
 s32 main_sound_set_current_music_volume(s32 volume, s32 time);
 s32 main_sound_set_current_music_volume_timed(s32 time);
-s32 main_sound_set_tune_volume(s32 volume);
+s32 main_sound_set_tune_volume(s32 time);
 s32 main_sound_stop_current_music(void);
 
 /* battle_map_step_init_sequence calls this without loading $a0, but the body reads sound_id. */
@@ -1134,7 +1357,7 @@ void main_sound_unload_current_scenario_music(void);
 s32 main_sound_unload_scenario_mus(s32 slot);
 void main_sound_unload_scenario_music_and_tunes(void);
 s32 main_sound_update_tunes(void);
-s32 main_sound_wait_for_scenario_smd_load(s32 scenario);
+s32 main_sound_wait_for_scenario_smd_load(s32 music_id);
 
 /* Suzuki driver entry points. The music handle passed by the game wrappers
  * is the suzuki_music_t* that SuzukiPutPlaySMD returns. */
@@ -1186,7 +1409,8 @@ void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music);
 
 /* SFX (0x800124cc-0x80013f74). The SFX music record has eight channels on
  * SPU voices 16-23; the low byte of a start_sfx channel id is the first
- * channel and its high byte the steal priority. */
+ * channel and its high byte the steal priority
+ * (MAIN_SOUND_SFX_CHANNEL_ID). */
 void main_sound_set_sfx_enabled(s32 enabled);
 void main_sound_play_sfx_in_channel(s32 sound_id, s32 channel);
 void main_sound_play_sfx_with_settings_find_channel(s32 sound_id, s32 volume, s32 balance);

@@ -5,7 +5,7 @@ void main_sound_init_heap(void* arena, u32 size) {
     suzuki_heap_block_t* head = arena;
     size &= ~15;
     g_main_sound_heap_end = (u8*)arena + size;
-    head->flags = 0x8000;
+    head->flags = SUZUKI_HEAP_BLOCK_HEAD;
     g_main_sound_heap_arena = head;
     g_main_sound_heap_size = size;
     g_main_sound_heap_blocks = head;
