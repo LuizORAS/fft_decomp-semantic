@@ -44,8 +44,8 @@ s32 wldcore_map_roll_random_encounter(s32 location, s32 route) {
     s32 count;
     s32 pick;
 
-    location -= 24;
-    if (location < 0 || location >= 19) {
+    location -= WORLD_LOCATION_FIELD_FIRST;
+    if (location < 0 || location >= WORLD_LOCATION_FIELD_COUNT) {
         return 0;
     }
     base = g_wldcore_random_battle_data;

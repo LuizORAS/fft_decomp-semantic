@@ -49,7 +49,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_coordinate_mode = 1;
         character = entry >> 4;
-        g_wldcore_scrollable_text_window.text_id = (entry & 0xFF) | 0x8800;
+        g_wldcore_scrollable_text_window.text_id = (entry & 0xFF) | TEXT_ID_WORLD_MESSAGE_BASE;
         if (character == 0) {
             g_wldcore_scrollable_text_window.text_substitutions[0] = g_world_text_substitution_values[0];
             g_wldcore_scrollable_text_window.text_substitutions[1] = g_main_brave_story_character_ages[0];

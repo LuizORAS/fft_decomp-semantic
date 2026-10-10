@@ -2,7 +2,6 @@
 
 enum {
     IDLE_ACTION_MENU_ENTRY_COUNT = 0x34,
-    IDLE_ACTION_MENU_INVALID_ID = -1,
 };
 
 void battle_menu_build_idle_action_menu(s32 menu_id) {
@@ -14,7 +13,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
 
     if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {
         if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
-            && (g_battle_menu_building_thread_started == 0) && (menu_id != IDLE_ACTION_MENU_INVALID_ID)) {
+            && (g_battle_menu_building_thread_started == 0) && (menu_id != BATTLE_MENU_ID_NONE)) {
             g_battle_menu_current_id = menu_id;
             g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
             battle_unit_project_misc_to_screen(

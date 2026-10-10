@@ -12,7 +12,7 @@ void world_gfx_load_wldface_to_frame_buffer(void) {
     u8* image;
 
     g_world_thread_call_target = main_file_load_checked_to_heap;
-    image = (u8*)world_thread_call_on_main_stack(0x18ba, 0x20000);
+    image = (u8*)world_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, 0x20000);
     LoadImage(&g_world_wldface_vram_rects, (u32*)image);
     LoadImage(&g_world_wldface_vram_rect_1, (u32*)(image + 0x8000));
     LoadImage(&g_world_wldface_vram_rect_2, (u32*)(image + 0x10000));

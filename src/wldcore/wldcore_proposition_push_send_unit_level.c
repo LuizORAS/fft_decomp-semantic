@@ -202,7 +202,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     }
     g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB812, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].send_unit.shown_preview = -1;

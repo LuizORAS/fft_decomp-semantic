@@ -3,7 +3,7 @@
 
 /* Collects the text ids of the location's selectable choices into out.
  *
- * Location 0x14 returns -1, and locations whose script variable 0x267 + id is
+ * Location WORLD_LOCATION_MUROND_DEATH_CITY returns -1, and locations whose script variable 0x267 + id is
  * set have no choices; otherwise the up-to-four entries of
  * g_wldcore_script_state.choice_vars are filtered by script variable
  * 0x292 + their menu byte, and at most five survive. */
@@ -13,7 +13,7 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     s32 written;
     s32 entry;
 
-    if (location_id == 0x14) {
+    if (location_id == WORLD_LOCATION_MUROND_DEATH_CITY) {
         return -1;
     }
     if (world_script_get_variable(location_id + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
@@ -32,7 +32,7 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     }
     if (available == 1) {
         entry = g_wldcore_script_state.choice_vars[0];
-        *out = entry + 0xa7ff;
+        *out = entry + (TEXT_ID_MAP_NAME_BASE - 1);
         return 1;
     }
     written = 0;
@@ -41,7 +41,7 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
         if (world_script_get_variable(
                 g_wldcore_choice_hidden_variable_offsets[entry] + EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST)
             == 0) {
-            out[written++] = entry + 0xa7ff;
+            out[written++] = entry + (TEXT_ID_MAP_NAME_BASE - 1);
             if (written == 5) {
                 break;
             }

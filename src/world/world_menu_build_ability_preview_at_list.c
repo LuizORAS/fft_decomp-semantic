@@ -67,11 +67,12 @@ void world_menu_build_ability_preview_at_list(void) {
 
     at_table = g_battle_ai_workspace_ptr->ability_list.ids;
     work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
-    g_world_menu_thread_menu_data[52].select_text_table = 0x13;
-    g_world_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
-    text_id = at_table[g_world_menu_thread_menu_data[3].selected_index];
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].select_text_table = 0x13;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].text_binding
+        = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
+    text_id = at_table[g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index];
     g_world_menu_preview_action.targeting_type = 5;
-    entry = &g_world_menu_thread_menu_data[52];
+    entry = &g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST];
     if ((text_id & 0xf800) == TEXT_ID_ABILITY_NAME_BASE) {
         staged_item = 0;
         g_world_menu_preview_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
@@ -90,8 +91,9 @@ void world_menu_build_ability_preview_at_list(void) {
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {
-        g_world_menu_thread_menu_data[53].text_id = 0x1023;
-        world_thread_set_parameters(g_world_thread_current_id, (s32)&g_world_menu_thread_menu_data[53], 0, 0);
+        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE].text_id = 0x1023;
+        world_thread_set_parameters(g_world_thread_current_id,
+            (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE], 0, 0);
         count = 0;
         world_menu_icon_linked_entry_thread();
     }

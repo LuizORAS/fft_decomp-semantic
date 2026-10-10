@@ -50,12 +50,12 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         action = actions[selected_option];
     }
     if (action >= 0) {
-        if (action & 0x1000) {
+        if (action & BATTLE_MENU_ROW_ACTION_SILENT) {
             silent = 1;
             /* Zero-instruction use: raises silent's allocation priority so it
                takes $s6 and selected_option keeps $s7, as in the target. */
             __asm__("" : : "r"(silent), "r"(silent));
-            action -= 0x1000;
+            action -= BATTLE_MENU_ROW_ACTION_SILENT;
         }
     }
     if (action >= 0) {

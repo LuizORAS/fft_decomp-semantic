@@ -14,7 +14,7 @@ void require_reward_load_bonus_image(s32 image_id) {
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))build_operation;
-    } while (battle_thread_call_on_main_stack(image_id * 13 + 0x16c0, 0x6800, allocation) != 0);
+    } while (battle_thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, 0x6800, allocation) != 0);
 
     {
         s32 (*poll_operation)() = main_file_is_still_loading;

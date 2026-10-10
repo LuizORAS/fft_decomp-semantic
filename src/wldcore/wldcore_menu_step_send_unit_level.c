@@ -62,7 +62,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     }
 
     if (!(g_wldcore_window_render_records[level->layout_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
-        value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF;
+        value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK;
         if (value != level->shown_preview) {
             level->shown_preview = value;
             wldcore_window_load_party_unit_sprite_record(level, value, level->preview_render);
@@ -117,7 +117,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     }
 
     wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-    value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF;
+    value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK;
     for (i = 0; i < g_wldcore_proposition_send_unit_count; i++) {
         if (g_wldcore_proposition_send_units[i] == value) {
             for (value = i + 1; value < 3; value++) {

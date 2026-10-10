@@ -75,7 +75,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             }
             text_id = g_wldcore_active_saved_record.text_id;
             if (text_id != -1) {
-                text_id += 0x8800;
+                text_id += TEXT_ID_WORLD_MESSAGE_BASE;
                 i = 0;
                 image = g_wldcore_window_image_buffer;
                 point.x = 8;

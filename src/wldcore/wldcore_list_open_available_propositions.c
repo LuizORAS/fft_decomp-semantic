@@ -46,18 +46,18 @@ void wldcore_list_open_available_propositions(void) {
             .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     }
     count = 0;
-    for (i = 0; i < 0x60; i++) {
+    for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
         if (!(world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & (WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS | WLDCORE_PROPOSITION_VARIABLE_COMPLETED))
             && !(g_main_proposition_states[i] & WLDCORE_PROPOSITION_STATE_DAYS_MASK)
             && wldcore_proposition_set_based_on_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
-            g_wldcore_list_entry_values[count] = i + 0xD000;
+            g_wldcore_list_entry_values[count] = i + TEXT_ID_PROPOSITION_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;
         }
     }
     if (count != 0) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80B, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITIONS_INTRO, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
         if (count < 6) {
             i = count;
@@ -73,7 +73,7 @@ void wldcore_list_open_available_propositions(void) {
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     } else {
         wldcore_menu_dispatch_resume_handler();
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80D, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_PROPOSITIONS, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.content_render = 1;
         return;
     }

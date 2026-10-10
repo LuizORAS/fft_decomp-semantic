@@ -55,9 +55,10 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
         if ((g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK)
                 != GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS
             || (message & 0xff00) != (g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK)) {
-            g_world_menu_thread_menu_data[35].text_id = message;
+            g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[35], 0, 0);
+            world_thread_set_parameters(g_world_thread_current_id - 1,
+                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
         }
         if (mode == 2) {
             world_sound_set_effect_to_invalid();
@@ -67,8 +68,8 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
             world_thread_exit_current();
         }
     } else {
-        mode = g_world_menu_row_type_confirm_actions
-            [g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index]][0];
+        mode = g_world_menu_row_type_confirm_actions[g_battle_action_menu_row_types
+                [g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
         if (mode < 0) {
             g_world_menu_action_slot_row_actions = mode;
             world_menu_confirm_action_silently(parameter);

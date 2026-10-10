@@ -50,7 +50,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Same exit as case 4 below; GCC cross-jumps the two copies. */
         g_wldcore_bar_menu_saved_cursor = 0;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB807, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_GOODBYE, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 1;
@@ -91,7 +91,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
             return;
         case WLDCORE_BAR_MENU_ROW_LEAVE:
             g_wldcore_bar_menu_saved_cursor = 0;
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB807, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_GOODBYE, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;
@@ -122,7 +122,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     }
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     if (level->content_render != 0) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB806, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
         level->content_render = 0;
     }
 }

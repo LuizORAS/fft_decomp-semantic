@@ -14,7 +14,7 @@ s32 world_text_measure_entry_pixel_width(u8* text) {
         if (code < TEXT_FORMAT_FIRST) {
             if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 text++;
-                code = ((code & 0xF) * 0xD0) + *text;
+                code = ((code & 0xF) * TEXT_GLYPHS_PER_PREFIX) + *text;
             }
             width += g_world_text_glyph_widths[code];
         } else if (code == TEXT_SPACE) {

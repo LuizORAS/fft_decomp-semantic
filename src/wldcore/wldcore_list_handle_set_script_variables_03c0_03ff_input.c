@@ -15,7 +15,7 @@ void wldcore_list_handle_set_script_variables_03c0_03ff_input(wldcore_menu_panel
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF);
             wldcore_menu_push_variable_detail_level(
-                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
+                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK);
             return;
         }
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]

@@ -12,14 +12,14 @@ void wldcore_list_open_unexplored_lands(void) {
     s32 record_index;
 
     count = 0;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
-            g_wldcore_list_entry_values[count] = i - 0x2800;
+            g_wldcore_list_entry_values[count] = i + (s16)TEXT_ID_UNEXPLORED_LAND_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;
         }
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
     if (count < 8) {
         i = count;

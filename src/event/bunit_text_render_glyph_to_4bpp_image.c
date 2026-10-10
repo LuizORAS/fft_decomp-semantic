@@ -12,7 +12,7 @@ s32 bunit_text_render_glyph_to_4bpp_image(
     u8 byte;
 
     glyph_bitmap = g_text_glyph_bitmap_data;
-    bunit_bits_init_reader(glyph_bitmap + glyph_id * 35);
+    bunit_bits_init_reader(glyph_bitmap + glyph_id * TEXT_GLYPH_BYTES);
     for (row = 0; row < 14; row++) {
         stride = position->row_stride * 2;
         dst = image + stride * (position->y + row) + (position->x >> 1);

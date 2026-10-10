@@ -51,9 +51,10 @@ void world_menu_check_action_restrictions(void) {
             world_sound_set_effect_to_confirm_checked();
         } else if (g_world_menu_restore_pending == 0) {
             world_sound_set_effect_to_invalid();
-            g_world_menu_thread_menu_data[35].text_id = message;
+            g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[35], 0, 0);
+            world_thread_set_parameters(g_world_thread_current_id - 1,
+                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         }
         if (message == 0x1002 || message == 0x1003) {

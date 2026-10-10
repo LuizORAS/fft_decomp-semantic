@@ -351,7 +351,8 @@ void battle_text_character_handling_thread(void) {
     g_battle_text_current_line = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+        if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
+            && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
         } else {
             u32 line_width = g_battle_text_line_widths[0] + 0x18;
@@ -573,7 +574,8 @@ void battle_text_character_handling_thread(void) {
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-                if ((event_id == 0xF9 || event_id == 0x12A) && g_battle_etc_graphics_enabled == 0) {
+                if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
+                    && g_battle_etc_graphics_enabled == 0) {
                     cursor_x = rec.x;
                 } else {
                     u32 line_width;
@@ -781,7 +783,7 @@ void battle_text_character_handling_thread(void) {
                 if (character < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     character = *text;
                 } else if ((character & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
-                    character = (*text & 0xF) * 0xD0;
+                    character = (*text & 0xF) * TEXT_GLYPHS_PER_PREFIX;
                     NEXT();
                     if ((*text & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (*text & 0xF) < 4) {
                         saved = text + 3;

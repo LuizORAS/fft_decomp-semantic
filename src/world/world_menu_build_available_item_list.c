@@ -11,9 +11,9 @@ void world_menu_build_available_item_list(void) {
     s32 selected;
     world_menu_entry_t* menu;
 
-    for (i = 0, count = 0; i < 0x2B; i++) {
+    for (i = 0, count = 0; i < WORLD_LOCATION_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) != 0) {
-            g_world_menu_location_list_text_ids[count] = i - 0x7000;
+            g_world_menu_location_list_text_ids[count] = i + (s16)TEXT_ID_LOCATION_NAME_BASE;
             if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) == 0) {
                 g_world_menu_location_list_row_colors[count] = 8;
             } else {

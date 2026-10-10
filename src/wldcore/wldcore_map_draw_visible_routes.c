@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define WLDCORE_ROUTE_COUNT 48
-
 /* Draws the visible world-map routes into the auxiliary ordering table as
  * textured semi-transparent ribbons. Each route record is a run of packed
  * (x, y) pairs holding the two edges of the ribbon; every point is projected

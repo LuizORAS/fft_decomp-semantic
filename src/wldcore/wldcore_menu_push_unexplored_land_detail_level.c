@@ -45,7 +45,7 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     base->x = -0x74;
     base->y = -0x22;
     wldcore_read_nine_bit_record(g_main_land_discovery_date_bits, value, date);
-    g_wldcore_scrollable_text_window.text_id = value + 0x8800;
+    g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
         g_wldcore_scrollable_text_window.image_x = 0;
@@ -63,7 +63,7 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.priority = 0xa;
     g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
     g_wldcore_scrollable_text_window.extra_render_index = -1;
-    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + 0xb84f;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
     g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
@@ -77,8 +77,8 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_world_text_substitution_values[0] = value + 0xd800;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB849, 0);
+    g_world_text_substitution_values[0] = value + TEXT_ID_UNEXPLORED_LAND_NAME_BASE;
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_UNEXPLORED_LAND_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;

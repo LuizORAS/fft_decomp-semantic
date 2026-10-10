@@ -18,9 +18,9 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     i = 0;
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
-    for (; i < 24; i++) {
+    for (; i < EVENT_SCRIPT_VAR_FACT_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
-            *values = i - 0x6800;
+            *values = i + (s16)TEXT_ID_FACT_NAME_BASE;
             *flags = 0;
             flags++;
             values++;
@@ -44,7 +44,7 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.content_render]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;

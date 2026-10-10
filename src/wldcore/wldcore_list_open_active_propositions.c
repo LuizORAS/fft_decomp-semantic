@@ -35,7 +35,7 @@ void wldcore_list_open_active_propositions(void) {
     s32 temp;
     s32 dead_locals[20];
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
 
     if (g_wldcore_window_render_records[PARENT.title_window].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
         g_wldcore_window_records[PARENT.cursor_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -104,7 +104,7 @@ void wldcore_list_open_active_propositions(void) {
             g_main_active_propositions[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                            .proposition_list.entries[i]]
                     .proposition_id
-                | 0xD000,
+                | TEXT_ID_PROPOSITION_NAME_BASE,
             point, g_wldcore_window_image_buffer);
         point.y += 0x10;
         i++;
@@ -118,7 +118,7 @@ void wldcore_list_open_active_propositions(void) {
             = g_main_active_propositions[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                              .proposition_list.entries[i]]
                   .participant_count;
-        wldcore_menu_display_text_entry(index, 0xB866, point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_VALUE, point, g_wldcore_window_image_buffer);
         point.y += 0x10;
         i++;
     }
@@ -130,7 +130,7 @@ void wldcore_list_open_active_propositions(void) {
         s32 entry = LEVEL.entries[i];
         g_world_text_substitution_values[0]
             = g_main_active_propositions[entry].assigned_days - g_main_active_propositions[entry].elapsed_days;
-        wldcore_menu_display_text_entry(index, 0xB867, point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_TWO_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
         point.y += 0x10;
         i++;
     }

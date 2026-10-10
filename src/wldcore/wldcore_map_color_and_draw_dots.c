@@ -32,7 +32,7 @@ void wldcore_map_color_and_draw_dots(void) {
     g_wldcore_map_dot_pulse_direction = 0;
     g_wldcore_map_dot_pulse_phase = 0;
     g_wldcore_map_dot_count = 0;
-    for (i = 0; i < 0x2b; i++) {
+    for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
         g_wldcore_map_dots[i].kind = src[i].a.b[2];
         g_wldcore_map_dots[i].sub_kind = src[i].a.b[3];
         g_wldcore_map_dots[i].position.vx = src[i].a.w;
@@ -48,7 +48,7 @@ void wldcore_map_color_and_draw_dots(void) {
         is_castle = g_wldcore_map_dots[i].kind == 2;
         g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
-            if (i < 0x18) {
+            if (i < WORLD_LOCATION_FIELD_FIRST) {
                 g_wldcore_map_dots[i].palette = 0xc;
             } else {
                 g_wldcore_map_dots[i].palette = 0x10;
@@ -66,6 +66,6 @@ void wldcore_map_color_and_draw_dots(void) {
         g_wldcore_window_render_object_queue[queue_index] = (s32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
         g_wldcore_window_render_object_count = queue_index + 1;
     }
-    g_wldcore_map_dot_count = 0x2b;
+    g_wldcore_map_dot_count = WORLD_LOCATION_COUNT;
     wldcore_map_project_and_cull_dots();
 }

@@ -19,7 +19,7 @@ void attack_map_load_title_graphic(void) {
     group = adjusted - group * 4;
 
     if (adjusted != 0xff) {
-        title = group_input * 5 + 0xdac;
+        title = group_input * 5 + DISC_SECTOR_EVENT_MAPTITLE_BIN;
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
         battle_thread_call_on_main_stack(title, 0x2800, image);
     }

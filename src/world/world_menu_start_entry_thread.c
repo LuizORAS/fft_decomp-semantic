@@ -45,13 +45,14 @@ void world_menu_start_entry_thread(void) {
         world_thread_wait_frames(2);
         if (count > 0) {
             world_thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
-            world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[4], 0, 0);
+            world_thread_set_parameters(
+                NATIVE_THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST], 0, 0);
         }
         world_thread_wait_frames(2);
         if (count >= 2) {
             world_thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, world_menu_select_unit_action_slots_thread);
-            world_thread_set_parameters(
-                NATIVE_THREAD_SLOT_MENU_GRANDCHILD, (s32)&g_world_menu_thread_menu_data[3], 0, 0);
+            world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_GRANDCHILD,
+                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
         world_thread_wait_frames(2);
         g_world_menu_restore_pending = 0;

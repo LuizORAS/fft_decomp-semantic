@@ -43,7 +43,7 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
     } else if (buttons & PSX_PAD_CIRCLE) {
         if (g_wldcore_list_row_flags[g_wldcore_window_panel_render_state.selected_index] != 0) {
             wldcore_sound_play_effect(MAIN_SFX_INVALID);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB81C, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RETURN_TOMORROW, 0);
         } else {
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             level->confirmed = 1;

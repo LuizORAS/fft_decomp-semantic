@@ -44,12 +44,12 @@ void wldcore_list_open_completed_propositions(void) {
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB819, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_RETURNED, 0);
     count = 0;
     loaded_count = g_main_save_proposition_count;
     if ((i = 0, loaded_count) > 0) {
         location = &g_wldcore_map_projection_state.marker.kind;
-        entry_value_base = 0xD000;
+        entry_value_base = TEXT_ID_PROPOSITION_NAME_BASE;
         total = loaded_count;
         do {
             if ((g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RETURNED)

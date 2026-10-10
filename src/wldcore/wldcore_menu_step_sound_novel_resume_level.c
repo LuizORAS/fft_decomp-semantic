@@ -48,7 +48,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xb848, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_menu_push_treasure_detail_level(level->mode);
         return;

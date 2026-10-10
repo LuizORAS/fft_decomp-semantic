@@ -9,7 +9,7 @@ void world_menu_load_portrait_image(s32 index) {
 
     buffer = world_menu_alloc_ui_buffer(0x2000);
     g_world_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-    world_thread_call_on_main_stack(index * 4 + 0x164B, 0x2000, buffer);
+    world_thread_call_on_main_stack(index * 4 + DISC_SECTOR_EVENT_EVTFACE_BIN, 0x2000, buffer);
     LoadImage(&g_world_menu_portrait_pixel_rect, buffer);
     LoadImage(&g_world_menu_portrait_palette_rect, buffer + 0x1800);
     world_menu_free_memory(buffer);

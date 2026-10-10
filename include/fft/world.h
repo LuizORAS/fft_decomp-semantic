@@ -2899,9 +2899,10 @@ void world_item_sort_id_list(s32 mode, s16* list);
 void world_item_sum_equipment_stat_details(struct world_item_stat_detail* total, u16* equipment);
 
 /* shop */
-/* World-map location ids (EVENT_SCRIPT_VAR_LOCATION). The first fifteen are
- * the towns; a town's id is also its outfitter's shop id and its bit, counted
- * from the top, in g_world_shop_item_availability. */
+/* World-map location ids (EVENT_SCRIPT_VAR_LOCATION), named as the location
+ * name text (TEXT_ID_LOCATION_NAME_BASE + id) spells them. The first fifteen
+ * are the towns; a town's id is also its outfitter's shop id and its bit,
+ * counted from the top, in g_world_shop_item_availability. */
 typedef enum world_location_id {
     WORLD_LOCATION_LESALIA = 0,
     WORLD_LOCATION_RIOVANES = 1,
@@ -2919,7 +2920,38 @@ typedef enum world_location_id {
     WORLD_LOCATION_BERVENIA = 13,
     WORLD_LOCATION_ZARGHIDAS = 14,
     WORLD_LOCATION_TOWN_COUNT = 15,
-    WORLD_LOCATION_DEEP_DUNGEON = 0x16,
+    WORLD_LOCATION_FORT_ZEAKDEN = 15,
+    WORLD_LOCATION_MUROND_HOLY_PLACE = 16,
+    WORLD_LOCATION_THIEVES_FORT = 17,
+    WORLD_LOCATION_ORBONNE_MONASTERY = 18,
+    WORLD_LOCATION_GOLGORAND_EXECUTION_SITE = 19,
+    WORLD_LOCATION_MUROND_DEATH_CITY = 20,
+    WORLD_LOCATION_BETHLA_GARRISON = 21,
+    WORLD_LOCATION_DEEP_DUNGEON = 22,
+    WORLD_LOCATION_NELVESKA_TEMPLE = 23,
+    WORLD_LOCATION_MANDALIA_PLAINS = 24,
+    WORLD_LOCATION_FOVOHAM_PLAINS = 25,
+    WORLD_LOCATION_SWEEGY_WOODS = 26,
+    WORLD_LOCATION_BERVENIA_VOLCANO = 27,
+    WORLD_LOCATION_ZEKLAUS_DESERT = 28,
+    WORLD_LOCATION_LENALIA_PLATEAU = 29,
+    WORLD_LOCATION_ZIGOLIS_SWAMP = 30,
+    WORLD_LOCATION_YUGUO_WOODS = 31,
+    WORLD_LOCATION_ARAGUAY_WOODS = 32,
+    WORLD_LOCATION_GROG_HILL = 33,
+    WORLD_LOCATION_BED_DESERT = 34,
+    WORLD_LOCATION_ZIREKILE_FALLS = 35,
+    WORLD_LOCATION_DOLBODAR_SWAMP = 36,
+    WORLD_LOCATION_BARIAUS_HILL = 37,
+    WORLD_LOCATION_DOGUOLA_PASS = 38,
+    WORLD_LOCATION_BARIAUS_VALLEY = 39,
+    WORLD_LOCATION_FINATH_RIVER = 40,
+    WORLD_LOCATION_POESKAS_LAKE = 41,
+    WORLD_LOCATION_GERMINAS_PEAK = 42,
+    /* The fields, where random battles happen: Mandalia Plains to Germinas Peak. */
+    WORLD_LOCATION_FIELD_FIRST = WORLD_LOCATION_MANDALIA_PLAINS,
+    WORLD_LOCATION_FIELD_COUNT = 19,
+    WORLD_LOCATION_COUNT = 43,
 } world_location_id_e;
 
 /* g_world_shop_id: a town's location id while its outfitter is open, or one of

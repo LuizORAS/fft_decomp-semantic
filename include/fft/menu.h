@@ -1025,31 +1025,89 @@ typedef enum battle_menu_system_dispatch_result {
     BATTLE_MENU_SYSTEM_DISPATCH_DONE = 1,            /* a system function was started, or nothing had to run */
     BATTLE_MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
 } battle_menu_system_dispatch_result_e;
-/* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu.
- * The unit menus are entries of g_battle_menu_idle_action_entries picked by
- * battle_menu_get_id_based_on_mount_moveable_actable; ids from 0x64 belong to
- * system functions (battle_system_function_t::menu_id). 0x19, 0x21 and 0x33
- * are tested without a producer in the C and have no name here. */
+/* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu,
+ * and the index of its entry in g_battle_menu_idle_action_entries (WORLD:
+ * g_world_menu_system_entries), which is also what a row action from 0 to
+ * 0xff opens. The unit menus are picked by
+ * battle_menu_get_id_based_on_mount_moveable_actable. A system function
+ * (battle_system_function_t) shows its text in MESSAGE or in one of the
+ * choice entries and sets the current id itself; ids from 0x62 exist only
+ * there and have no entry.
+ *
+ * Nothing in the C or in the two tables opens EMPTY_MESSAGE,
+ * PERFORMING_MESSAGE, PROMPT_16, PROMPT_17 or the four NO_ACT turn menus,
+ * and WAIT_YES_NO is linked only by a row action that is overwritten. */
 typedef enum battle_menu_id {
     BATTLE_MENU_ID_NONE = -1,
-    BATTLE_MENU_ID_TURN = 0x00,        /* the unit's turn: it can move and act */
-    BATTLE_MENU_ID_MINI_MENU = 0x0a,   /* *_menu_start_mini_menu_display_thread */
-    BATTLE_MENU_ID_TURN_MOVED = 0x0e,  /* moved, or Don't Move */
-    BATTLE_MENU_ID_PLAYER_UNIT = 0x0f, /* a player unit, not its turn */
-    BATTLE_MENU_ID_OTHER_UNIT = 0x10,  /* any other unit, not its turn */
+    BATTLE_MENU_ID_TURN = 0x00,               /* the unit's turn: it can move and act */
+    BATTLE_MENU_ID_AUTO_BATTLE = 0x01,        /* the Auto-battle row: the five settings */
+    BATTLE_MENU_ID_AUTO_BATTLE_TARGET = 0x02, /* Change target, Check target: a setting chosen again */
+    BATTLE_MENU_ID_ABILITY_LIST = 0x03,       /* the abilities or items of the chosen SKILLSET_LIST row */
+    BATTLE_MENU_ID_SKILLSET_LIST = 0x04,      /* the Act row: the unit's commands */
+    BATTLE_MENU_ID_STATUS = 0x05,             /* the Status row: the unit status panel */
+    BATTLE_MENU_ID_WAIT = 0x06,               /* the Wait row */
+    BATTLE_MENU_ID_WAIT_YES_NO = 0x07,        /* WAIT's row action in the table; *_menu_wait_thread replaces it */
+    BATTLE_MENU_ID_STATUS_LIST = 0x08,        /* the status panel's list of current statuses */
+    BATTLE_MENU_ID_EMPTY_MESSAGE = 0x09,      /* a message entry with empty text 0x8000 */
+    BATTLE_MENU_ID_MINI_MENU = 0x0a,          /* *_menu_start_mini_menu_display_thread: AT, Unit List, Option */
+    BATTLE_MENU_ID_OPTIONS = 0x0b,            /* MINI_MENU's Option row: OPTION.OUT */
+    BATTLE_MENU_ID_UNIT_LIST = 0x0c,          /* MINI_MENU's Unit List row: BUNIT.OUT */
+    BATTLE_MENU_ID_PERFORMING_MESSAGE = 0x0d, /* a message entry with text 0x8002 */
+    BATTLE_MENU_ID_TURN_MOVED = 0x0e,         /* moved, or Don't Move */
+    BATTLE_MENU_ID_PLAYER_UNIT = 0x0f,        /* a player unit, not its turn */
+    BATTLE_MENU_ID_OTHER_UNIT = 0x10,         /* any other unit, not its turn */
     /* The same two while the active unit is not under the player's control,
      * or while the status menu is open. */
     BATTLE_MENU_ID_PLAYER_UNIT_INSPECT = 0x11,
     BATTLE_MENU_ID_OTHER_UNIT_INSPECT = 0x12,
     BATTLE_MENU_ID_TURN_ACTED = 0x13, /* acted, or cannot act */
     BATTLE_MENU_ID_TURN_MOVED_ACTED = 0x14,
-    BATTLE_MENU_ID_RIDER_TURN = 0x2e, /* the four TURN menus of a mounted unit */
+    BATTLE_MENU_ID_JOBSTTS = 0x15,   /* a STATUS_LIST row: JOBSTTS.OUT */
+    BATTLE_MENU_ID_PROMPT_16 = 0x16, /* two equal message entries whose row opens PROMPT_YES_NO */
+    BATTLE_MENU_ID_PROMPT_17 = 0x17,
+    BATTLE_MENU_ID_PROMPT_YES_NO = 0x18, /* Yes, No */
+    /* Yes, No under MESSAGE. As the current id: a system function that asks
+     * (ride the chocobo, move here, inherit the crystal, learn the ability). */
+    BATTLE_MENU_ID_MESSAGE_YES_NO = 0x19,
+    /* The choices a system function shows without its navigation message. */
+    BATTLE_MENU_ID_TARGET_KIND = 0x1a,   /* Unit, Panel, Quit */
+    BATTLE_MENU_ID_PANEL_EXECUTE = 0x1b, /* Execute, Quit for a panel target */
+    BATTLE_MENU_ID_MESSAGE = 0x1c,       /* a system function's navigation message */
+    BATTLE_MENU_ID_AT_LIST = 0x1d,       /* MINI_MENU's AT row: OPTION.OUT's AT list */
+    BATTLE_MENU_ID_EXECUTE = 0x1e,       /* Execute, Quit */
+    BATTLE_MENU_ID_ANNOUNCEMENT = 0x1f,  /* the timed banner: an ability name or an action result */
+    /* TURN and TURN_MOVED with the rows Move, Wait and Status only. */
+    BATTLE_MENU_ID_TURN_NO_ACT = 0x20,
+    BATTLE_MENU_ID_TURN_NO_ACT_MOVED = 0x21,
+    BATTLE_MENU_ID_MOVE = 0x22,                       /* the Move row: *_menu_confirm_move_command_thread */
+    BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE = 0x23, /* why the unit cannot act or use the ability */
+    BATTLE_MENU_ID_ABILITY_CONFIRM = 0x24,            /* an ABILITY_LIST row: *_menu_validate_skill_selection_thread */
+    /* The same choices under MESSAGE. */
+    BATTLE_MENU_ID_MESSAGE_TARGET_KIND = 0x25,
+    BATTLE_MENU_ID_MESSAGE_PANEL_EXECUTE = 0x26,
+    BATTLE_MENU_ID_AUTO_BATTLE_CONFIRM = 0x27, /* an AUTO_BATTLE row chosen for the first time */
+    BATTLE_MENU_ID_AUTO_BATTLE_UNIT = 0x28,    /* Attack, Quit or Defend, Quit: the unit an auto-battle setting names */
+    BATTLE_MENU_ID_MESSAGE_ATTACK_UNIT = 0x29, /* Attack, Quit under MESSAGE */
+    BATTLE_MENU_ID_MESSAGE_DEFEND_UNIT = 0x2a, /* Defend, Quit under MESSAGE */
+    BATTLE_MENU_ID_EFFECT_MESSAGE = 0x2b,      /* BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE's entry */
+    BATTLE_MENU_ID_DEBUGCHR = 0x2c,            /* *_menu_open_debugchr */
+    BATTLE_MENU_ID_MESSAGE_EXECUTE = 0x2d,     /* Execute, Quit under MESSAGE */
+    BATTLE_MENU_ID_RIDER_TURN = 0x2e,          /* the TURN menus of a mounted unit, with a Stop ride row */
     BATTLE_MENU_ID_RIDER_TURN_MOVED = 0x2f,
     BATTLE_MENU_ID_RIDER_TURN_ACTED = 0x30,
     BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED = 0x31,
-    BATTLE_MENU_ID_EGG = 0x36,       /* replaces OTHER_UNIT and OTHER_UNIT_INSPECT for an egg */
-    BATTLE_MENU_ID_DEAD_UNIT = 0x69, /* crystal or treasure options */
+    BATTLE_MENU_ID_RIDER_TURN_NO_ACT = 0x32,
+    BATTLE_MENU_ID_RIDER_TURN_NO_ACT_MOVED = 0x33,
+    BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST = 0x34, /* the turn order with the ability under the cursor in it */
+    BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE = 0x35, /* shown instead when that ability gets no turn */
+    BATTLE_MENU_ID_EGG = 0x36,                     /* replaces OTHER_UNIT and OTHER_UNIT_INSPECT for an egg */
+    BATTLE_MENU_ID_EGG_STATUS = 0x37,              /* EGG's Status row: only the invalid sound */
+    BATTLE_MENU_ID_DEAD_UNIT = 0x69,               /* crystal or treasure options */
 } battle_menu_id_e;
+/* A row action (world_menu_entry_t::row_actions) from 0 to 0xff is the
+ * battle_menu_id_e entry *_menu_handle_action opens; with this bit the entry
+ * opens without the confirm sound. */
+enum { BATTLE_MENU_ROW_ACTION_SILENT = 0x1000 };
 /* Indices of the system function table (g_battle_system_function_table and
  * its WORLD twin) that the dispatcher names; the rest are message variants. */
 typedef enum battle_system_function_id {
@@ -1400,6 +1458,14 @@ typedef struct world_options_menu_page {
 typedef char world_options_menu_page_size_must_be_0x190[(sizeof(world_options_menu_page_t) == 0x190) ? 1 : -1];
 
 /* text */
+/* The font, EVENT/FONT.BIN: 2200 glyphs of 14 rows of 10 two-bit pixels. A
+ * byte from TEXT_EXTENDED_GLYPH_PREFIX_FIRST selects a page of glyphs and
+ * the byte after it the glyph: (prefix & 0xf) * TEXT_GLYPHS_PER_PREFIX + byte. */
+enum {
+    TEXT_GLYPH_BYTES = 35,
+    TEXT_GLYPHS_PER_PREFIX = 0xd0,
+};
+
 /* Encoded menu-string controls. The 0xe2-0xfd meanings come from the dialog
  * interpreter branches (battle_text_character_handling_thread and its WORLD
  * twin) and, for 0xe7, the menu text-image renderers; codes with an operand
@@ -1498,8 +1564,28 @@ typedef enum text_id_base {
     TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE = 0x4200,
     TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE = 0x4300,
     TEXT_ID_ABILITY_NAME_BASE = 0x7000,
-    TEXT_ID_SECTION_9000_BASE = 0x9000,
+    /* By world_location_id_e. ATTACK binds its deployment messages to this
+     * section instead. */
+    TEXT_ID_LOCATION_NAME_BASE = 0x9000,
     TEXT_ID_SKILLSET_NAME_SOURCE_BASE = 0xb000, /* section 22, which SMALL also binds as section 2 */
+    /* The sections of EVENT/WORLD.LZW that only the world map uses, each
+     * indexed by the id its name gives unless noted. */
+    TEXT_ID_WORLD_HELP_MESSAGE_BASE = 0x5800,
+    TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE = 0x6000, /* the Brave Story's Job list, by proposition */
+    TEXT_ID_PROPOSITION_REWARD_NAME_BASE = 0x7800,
+    TEXT_ID_TIP_NAME_BASE = 0x8000,
+    TEXT_ID_WORLD_MESSAGE_BASE = 0x8800, /* the block of WORLD/WLDMES.BIN that is loaded */
+    TEXT_ID_FACT_NAME_BASE = 0x9800,
+    TEXT_ID_MAP_NAME_BASE = 0xa800,   /* by map_id_e less one */
+    TEXT_ID_WORLD_MENU_BASE = 0xb800, /* wldcore_text_id_e */
+    TEXT_ID_TUTORIAL_NAME_BASE = 0xc000,
+    TEXT_ID_RUMOR_NAME_BASE = 0xc800,
+    TEXT_ID_PROPOSITION_NAME_BASE = 0xd000,
+    TEXT_ID_UNEXPLORED_LAND_NAME_BASE = 0xd800,
+    TEXT_ID_TREASURE_NAME_BASE = 0xe000,
+    TEXT_ID_STORY_EVENT_NAME_BASE = 0xe800,         /* the Brave Story's Record list */
+    TEXT_ID_PERSON_PROFILE_NAME_BASE = 0xf000,      /* by person * 16 + profile */
+    TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE = 0xf800, /* by wldcore_proposition_fields_t::name_text less one */
 } text_id_base_e;
 
 /* Index into the 32 text section pointers (g_battle_text_section_pointers,
@@ -1545,7 +1631,7 @@ typedef enum text_format_code {
     TEXT_FORMAT_FIRST = 0xe0,
     TEXT_FORMAT_RAMZA_NAME = 0xe0,
     TEXT_FORMAT_UNIT_NAME = 0xe1,
-    TEXT_FORMAT_SECTION_9000 = 0xe5,
+    TEXT_FORMAT_LOCATION_NAME = 0xe5,
     TEXT_FORMAT_ITEM_NAME = 0xe9,
     TEXT_FORMAT_ABILITY_NAME = 0xea,
     TEXT_FORMAT_EXPLICIT_ID = 0xeb,

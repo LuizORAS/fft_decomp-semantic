@@ -13,7 +13,7 @@ void wldcore_list_handle_script_flags_01a4_01bb_input(wldcore_menu_panel_level_t
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB);
             wldcore_menu_push_script_flag_01a4_detail_level(
-                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
+                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK);
             return;
         }
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB);

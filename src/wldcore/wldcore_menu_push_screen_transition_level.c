@@ -50,7 +50,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
-            for (i = 0; i < 0x18; i++) {
+            for (i = 0; i < EVENT_SCRIPT_VAR_FACT_COUNT; i++) {
                 if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
                     count++;
                 }

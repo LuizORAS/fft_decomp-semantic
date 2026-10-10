@@ -25,7 +25,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
 
     records = g_wldcore_map_route_tables;
     g_wldcore_map_path_animation.flags = 0;
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < WLDCORE_ROUTE_COUNT; i++) {
         record = *records;
         first = record->start_location;
         second = (*(u32*)record & 0xFF0000) >> 16;

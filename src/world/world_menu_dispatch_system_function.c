@@ -22,7 +22,7 @@ s32 world_menu_dispatch_system_function(
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {
         value = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if (value >= 0x19A && value <= 0x1A9) {
+        if (value >= EVENT_ID_TUTORIAL_FIRST && value <= EVENT_ID_TUTORIAL_LAST) {
             if (option != 2) {
                 world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }
@@ -50,13 +50,13 @@ s32 world_menu_dispatch_system_function(
                 if ((battle_action_check_battle_outcome() < 0 || count != 0)
                     && world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
                     if (option != 2) {
-                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x190);
+                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER);
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
                         g_world_menu_scenario_event_started = 1;
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = 0x190;
+                        g_world_finish_operation_event_id = EVENT_ID_GAME_OVER;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 }
@@ -82,24 +82,24 @@ s32 world_menu_dispatch_system_function(
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
                         if (world_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
-                            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x193);
+                            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_DEBUG_BATTLE_START);
                         } else {
-                            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x191);
+                            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_BATTLE_START);
                         }
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = 0x191;
+                        g_world_finish_operation_event_id = EVENT_ID_BATTLE_START;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else if (battle_action_check_battle_outcome() == 0) {
                     if (option != 2) {
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
-                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x192);
+                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_BATTLE_WON);
                         g_world_menu_scenario_event_started = 1;
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = 0x192;
+                        g_world_finish_operation_event_id = EVENT_ID_BATTLE_WON;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else {

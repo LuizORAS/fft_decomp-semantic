@@ -61,7 +61,8 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     point.x = 8;
     point.y = 8;
     for (i = 0; i < level->entry_count; i++) {
-        wldcore_menu_display_text_entry(index, level->entries[i] + 0xB800, point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(
+            index, level->entries[i] + TEXT_ID_WORLD_MENU_BASE, point, g_wldcore_window_image_buffer);
         point.y += 0x10;
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);

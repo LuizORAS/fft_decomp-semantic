@@ -75,19 +75,19 @@ void open_title_update_menu(open_title_controller_t* state) {
         g_open_current_controller_index--;
         switch (demo) {
         case 1:
-            start_sector = 0x25160;
+            start_sector = DISC_SECTOR_OPEN_FFTPR_STR;
             stream_length = 0x1d60;
             end_frame = 0x2b7;
             cd_mix_level = 0x7a;
             break;
         case 2:
-            start_sector = 0x26ec0;
+            start_sector = DISC_SECTOR_OPEN_FFTUNIT_STR;
             stream_length = 0x8691;
             end_frame = 0xd4d;
             cd_mix_level = 0x73;
             break;
         default:
-            start_sector = 0x1e038;
+            start_sector = DISC_SECTOR_OPEN_FFTPRE_STR;
             stream_length = 0x38d0;
             end_frame = 0x54e;
             cd_mix_level = 0x85;

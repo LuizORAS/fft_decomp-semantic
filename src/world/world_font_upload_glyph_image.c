@@ -17,7 +17,7 @@ void world_font_upload_glyph_image(u16 code, s32 x, s32 y, s32 style) {
     rect.h = 0x10;
     if (code > 0xcfff) {
         glyph = (code >> 8) & 0xf;
-        glyph = glyph * 0xd0 + (code & 0xff);
+        glyph = glyph * TEXT_GLYPHS_PER_PREFIX + (code & 0xff);
     } else {
         if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             return;

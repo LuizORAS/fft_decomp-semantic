@@ -35,7 +35,7 @@ void wldcore_window_build_yes_no_panel(wldcore_point32_t origin) {
     bounds.dimensions.x = 0x28;
     bounds.dimensions.y = 0x30;
     bounds.position.y = 0;
-    wldcore_window_init_render_record_image(index, bounds, 0, 0xB805, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(index, bounds, 0, WLDCORE_TEXT_ID_OK_NO, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     g_wldcore_window_render_records[index].base = origin;
 

@@ -32,8 +32,9 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.extras = g_battle_ai_workspace_ptr->ability_list.extras;
     unit_index = g_world_active_unit_data.battle_id;
     unit = world_unit_get_battle_stats_for_stored();
-    type = g_battle_action_menu_row_types[g_world_menu_thread_menu_data[4].selected_index];
-    skillset = g_world_action_menu_skillsets[g_world_menu_thread_menu_data[4].selected_index];
+    type = g_battle_action_menu_row_types[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
+    skillset
+        = g_world_action_menu_skillsets[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     g_world_menu_preview_action.skillset = skillset;
     for (i = 0; i < 0x50; i++) {
         g_battle_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;
@@ -180,11 +181,11 @@ void world_menu_build_ability_list(s32 mode) {
         columns = 5;
     }
 
-    g_world_menu_thread_menu_data[3].inner_width = window_x;
-    g_world_menu_thread_menu_data[3].window_width = window_x;
-    g_world_menu_thread_menu_data[3].text_image.width = window_x;
-    g_world_menu_thread_menu_data[3].header_id = row_mode;
-    g_world_menu_thread_menu_data[3].select_text_table = columns;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].inner_width = window_x;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_width = window_x;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].text_image.width = window_x;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = row_mode;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].select_text_table = columns;
     for (i = 0; i < count; i++) {
         g_battle_ai_workspace_ptr->ability_list.ids[i] |= row_flags;
         if (type == ACTION_MENU_TYPE_DEFAULT) {
@@ -204,20 +205,20 @@ void world_menu_build_ability_list(s32 mode) {
     }
     if (count == 0) {
         count = 1;
-        g_world_menu_thread_menu_data[3].header_id = 0;
+        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = 0;
         g_battle_ai_workspace_ptr->ability_list.ids[0] = TEXT_ID_ABILITY_NAME_BASE;
         g_battle_ai_workspace_ptr->ability_list.values[0] = 0;
         g_battle_ai_workspace_ptr->ability_list.extras[0] = 0;
         g_world_menu_ability_display_flags[0] = 4;
     }
-    g_world_menu_thread_menu_data[3].window_y = 0x30;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y = 0x30;
     if (count >= 7) {
         g_world_ability_menu_layout.hidden_rows = count - 6;
         g_world_ability_menu_layout.visible_rows = 6;
     } else {
         g_world_ability_menu_layout.hidden_rows = 0;
         g_world_ability_menu_layout.visible_rows = count;
-        g_world_menu_thread_menu_data[3].window_y += (6 - count) * 8;
+        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y += (6 - count) * 8;
     }
     /* Menu-thread parameters 2-4 request a redraw, reset the cursor and
      * request a refresh. */

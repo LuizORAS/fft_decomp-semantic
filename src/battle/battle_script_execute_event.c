@@ -136,7 +136,7 @@ restart_script:
             battle_thread_wait_frames(4);
             if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
                 if (operand_1 == EVENT_CALL_FUNCTION_JOIN_UNITS_SILENTLY) {
-                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) < 0x4E) {
+                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) < EVENT_ID_NEW_GAME_INVENTORY_END) {
                         main_item_init_new_game_inventory();
                     }
                     battle_script_join_units_silently();
@@ -149,7 +149,7 @@ restart_script:
                         battle_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x12C) {
+                    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_EPILOGUE) {
                         battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -288,13 +288,13 @@ restart_script:
                 }
             }
             operand_1 = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-            if (operand_1 != 0x1AD && operand_1 != 0x1D1) {
+            if (operand_1 != EVENT_ID_OLAN_WOUNDED && operand_1 != EVENT_ID_BEOWULF_INVITATION) {
                 battle_gfx_init_evtchr_vram_slots();
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
             finish_operation = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0 && (operand_1 - 0x190) >= 0x1AU
-                && operand_1 != 0) {
+            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0
+                && (operand_1 - EVENT_ID_COMMON_FIRST) >= 0x1AU && operand_1 != 0) {
                 g_battle_script_condition_unit_battle_id = 0xFF;
                 battle_script_run_scenario_conditions();
                 if (battle_script_load_next_event() != 0) {
@@ -733,7 +733,7 @@ restart_script:
             draw_misc_id = battle_script_get_misc_id(first_halfword);
             if (draw_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(draw_misc_id);
-                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x18C) {
+                if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     battle_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
                     g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;

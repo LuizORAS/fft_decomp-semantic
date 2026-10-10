@@ -14,14 +14,14 @@ void wldcore_list_open_story_events(void) {
     s32 i;
     s32 record_index;
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     count = 0;
     i = 0;
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
-    for (; i < 64; i++) {
+    for (; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
-            *values = i - 0x1800;
+            *values = i + (s16)TEXT_ID_STORY_EVENT_NAME_BASE;
             *flags = 0;
             flags++;
             values++;

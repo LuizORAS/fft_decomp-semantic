@@ -7879,7 +7879,7 @@ extern void* g_battle_map_data_load_buffer;
 extern s32 g_battle_map_data_load_complete;
 extern s32 g_battle_map_deep_dungeon_load_in_progress;
 extern u8 g_battle_map_file_table[];
-extern u32 g_battle_map_gns_lba[];
+extern u32 g_battle_map_gns_lba[MAP_ID_COUNT]; /* 0 where the map id has no file */
 extern u32 g_battle_map_gns_record_cursor;
 extern gns_record_view_t g_battle_map_gns_records[150];
 extern s32 g_battle_map_id;
@@ -7888,7 +7888,7 @@ extern u8 g_battle_map_max_y;
 extern s32 g_battle_map_mesh_data_buffer;
 extern void* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
-extern map_move_find_item_data_t g_battle_map_move_find_item_data[];
+extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
 extern s32 g_battle_map_resource_load_state;
 extern s32 g_battle_map_texture_animation_handles[];

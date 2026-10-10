@@ -19,9 +19,10 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         g_wldcore_menu_stack_depth--;
         MoveImage(&rect, 0x180, 0);
         DrawSync(0);
-        g_world_text_substitution_values[0] = g_main_active_propositions[level->proposition].proposition_id | 0xD000;
+        g_world_text_substitution_values[0]
+            = g_main_active_propositions[level->proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB849, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
         wldcore_menu_push_participant_list_level(level->proposition);
         return;
     }

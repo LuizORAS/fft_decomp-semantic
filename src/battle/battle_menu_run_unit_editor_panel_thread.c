@@ -218,8 +218,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
                     || (g_battle_menu_billboard_data.state.generic_monster == 0
                         && g_battle_menu_active_turn_banner.team_kind != 1))) {
                 battle_thread_start(g_battle_current_thread_id - 1, battle_menu_build_unit_status_list);
-                battle_thread_set_parameters(
-                    g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[8], 0, 0);
+                battle_thread_set_parameters(g_battle_current_thread_id - 1,
+                    (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);

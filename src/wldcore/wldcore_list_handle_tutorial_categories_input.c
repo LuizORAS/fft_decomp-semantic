@@ -68,7 +68,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB8DE, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_PROMPT, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_record_count -= 1;
@@ -102,7 +102,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             wldcore_list_open_tutorial_topics();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE:
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB8DE, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_PROMPT, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;

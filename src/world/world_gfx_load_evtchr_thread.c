@@ -1,9 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define EVTCHR_ARCHIVE_START_SECTOR 0x1D4C
-#define EVTCHR_BLOCK_SECTORS        15
-#define EVTCHR_BLOCK_BYTES          0x7800
+#define EVTCHR_BLOCK_SECTORS 15
+#define EVTCHR_BLOCK_BYTES   0x7800
 
 void world_gfx_load_evtchr_thread(void) {
     void* param;
@@ -19,7 +18,7 @@ void world_gfx_load_evtchr_thread(void) {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (world_thread_call_on_main_stack(
-                 block * EVTCHR_BLOCK_SECTORS + EVTCHR_ARCHIVE_START_SECTOR, EVTCHR_BLOCK_BYTES, buffer)
+                 block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, EVTCHR_BLOCK_BYTES, buffer)
         != 0);
 
     do {

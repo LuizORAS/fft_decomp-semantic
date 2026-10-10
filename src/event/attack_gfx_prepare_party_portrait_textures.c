@@ -33,10 +33,10 @@ void attack_gfx_prepare_party_portrait_textures(void) {
     file = (s32)main_heap_alloc(0x20000);
     if (ENTRY_MODE != 0) {
         if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-            attack_file_load_sync(0x18ba, 0x20000, file);
+            attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, 0x20000, file);
         } else {
             g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-            battle_thread_call_on_main_stack(0x18ba, 0x20000, file);
+            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, 0x20000, file);
         }
     } else {
         StoreImage(&g_attack_portrait_sheet_rect_0, (u32*)file);

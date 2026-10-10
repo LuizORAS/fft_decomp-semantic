@@ -21,7 +21,7 @@ void wldcore_menu_push_tutorial_topic_text_level(s32 topic) {
     s32 depth;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = topic;
-    g_wldcore_scrollable_text_window.text_id = topic + 0x8800;
+    g_wldcore_scrollable_text_window.text_id = topic + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
         g_wldcore_scrollable_text_window.image_x = 0;

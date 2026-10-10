@@ -40,7 +40,8 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x781B;
         break;
     case WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS:
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x7800;
+        g_world_text_substitution_values[0]
+            = g_wldcore_job_selection.reward_index + TEXT_ID_PROPOSITION_REWARD_NAME_BASE;
         break;
     default:
         g_world_text_substitution_values[0] = 0x7806;
@@ -50,7 +51,8 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     panel_text = &g_wldcore_selected_proposition_row[0].fields.name_text;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.render_index = index;
-    world_text_measure_pixels(&text_width, &text_rows, world_text_find_entry(*panel_text + 0xF7FF));
+    world_text_measure_pixels(
+        &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     bounds.position.x = 0;
     bounds.position.y = 0x60;
     bounds.dimensions.x = 0xF4;
@@ -59,13 +61,14 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;
-    wldcore_menu_display_text_entry(index, 0xB830, point, g_wldcore_window_image_buffer);
+    wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_JOB_RESULT_LABELS, point, g_wldcore_window_image_buffer);
     point.x = 8;
     point.y = 8;
-    wldcore_menu_display_text_entry(index, 0xB84E, point, g_wldcore_window_image_buffer);
+    wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_JOB_CONTENTS_LABEL, point, g_wldcore_window_image_buffer);
     point.x = 0x44;
     point.y = 8;
-    wldcore_menu_display_text_entry(index, *panel_text + 0xF7FF, point, g_wldcore_window_image_buffer);
+    wldcore_menu_display_text_entry(
+        index, *panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1), point, g_wldcore_window_image_buffer);
     for (i = 0; i < count; i++) {
         s32 row = i + 2;
         s32 x = 0x38;
@@ -82,7 +85,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         point.x = 0xA0;
         point.y = (text_rows + row) * 0x10 + 8;
         g_world_text_substitution_values[0] = g_wldcore_job_selection.rows[0][i];
-        wldcore_menu_display_text_entry(index, 0xB831, point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_FOUR_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
@@ -103,8 +106,8 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
-    world_thread_set_parameters(
-        WLDCORE_THREAD_SLOT_MESSAGE, 0x19, wldcore_proposition_adjust_message_index(message, *party) + 0x8800, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
+        wldcore_proposition_adjust_message_index(message, *party) + TEXT_ID_WORLD_MESSAGE_BASE, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.proposition = proposition;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;
     switch (g_wldcore_job_selection.result) {

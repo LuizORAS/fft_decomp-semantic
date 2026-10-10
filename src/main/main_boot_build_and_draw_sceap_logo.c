@@ -11,7 +11,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
     int frame;
 
     main_set_display_draw(320, 240, 512, 0, 0, 0);
-    main_file_load_checked_to_address(198, 0x5000, g_main_heap_high_overlay_load_address);
+    main_file_load_checked_to_address(DISC_SECTOR_SCEAP_DAT, 0x5000, g_main_heap_high_overlay_load_address);
     frame = 0;
 
     SetPolyF4(&polygons[0]);

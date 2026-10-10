@@ -40,7 +40,8 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     bounds.dimensions.x = 0x3C;
     bounds.dimensions.y = 0x30;
     bounds.position.y = 0;
-    wldcore_window_init_render_record_image(index, bounds, 0, 0xB83A, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(
+        index, bounds, 0, WLDCORE_TEXT_ID_QUIT_CONTINUE, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 8;
     depth = g_wldcore_menu_stack_depth;

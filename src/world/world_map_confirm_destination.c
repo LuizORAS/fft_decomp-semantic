@@ -15,7 +15,7 @@ void world_map_confirm_destination(void) {
 
         g_world_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
         pending[0] = 0;
-        value = g_world_menu_location_list_text_ids[selection] + 0x7000;
+        value = g_world_menu_location_list_text_ids[selection] - (s16)TEXT_ID_LOCATION_NAME_BASE;
         pending[1] = value;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, value);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;

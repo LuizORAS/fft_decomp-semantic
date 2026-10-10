@@ -58,8 +58,9 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.position.y = 0x70;
     bounds.dimensions.x = 0x7C;
     bounds.dimensions.y = 0x80;
-    g_world_text_substitution_values[0] = mode + 0xE000;
-    wldcore_window_init_render_record_image(index, bounds, 1, 0xB84C, g_wldcore_window_image_buffer);
+    g_world_text_substitution_values[0] = mode + TEXT_ID_TREASURE_NAME_BASE;
+    wldcore_window_init_render_record_image(
+        index, bounds, 1, WLDCORE_TEXT_ID_SUBSTITUTED_TEXT, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     base1 = &g_wldcore_window_render_records[index].base;
     base1->x = -0x70;
@@ -82,7 +83,8 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.position.y = 0x70;
     bounds.dimensions.x = 0x70;
     bounds.dimensions.y = 0x70;
-    wldcore_window_init_render_record_image(index, bounds, 1, 0xB84B, g_wldcore_window_image_buffer + 0x400);
+    wldcore_window_init_render_record_image(
+        index, bounds, 1, WLDCORE_TEXT_ID_SOUND_NOVEL_RESUME_CHOICES, g_wldcore_window_image_buffer + 0x400);
     g_wldcore_window_render_records[index].priority = 0xA;
     base4 = &g_wldcore_window_render_records[index].base;
     base4->x = 8;

@@ -32,7 +32,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
     }
     if ((buttons & PSX_PAD_CIRCLE) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        unit = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF;
+        unit = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK;
         g_wldcore_proposition_send_units[level->slot] = unit;
         wldcore_window_draw_text_rows(level);
         wldcore_proposition_load_send_unit_candidates(level);

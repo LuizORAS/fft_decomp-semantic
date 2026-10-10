@@ -14,7 +14,7 @@ void wldcore_list_handle_tutorial_topics_input(wldcore_menu_panel_level_t* level
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS);
             wldcore_menu_push_tutorial_topic_text_level(
-                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
+                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK);
             return;
         }
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS);

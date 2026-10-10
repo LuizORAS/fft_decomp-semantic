@@ -2,9 +2,8 @@
 #include "psx/libcd.h"
 #include "psx/types.h"
 
-/* OPEN/ENDING.XA on the disc: its first and last sectors. */
-#define ENDING_XA_FIRST_SECTOR 0x2f551
-#define ENDING_XA_LAST_SECTOR  0x3586c
+/* The last sector of OPEN/ENDING.XA (DISC_SECTOR_OPEN_ENDING_XA is its first). */
+#define ENDING_XA_LAST_SECTOR 0x3586c
 
 /* Runs the XA audio state machine once per frame.
  *
@@ -37,7 +36,7 @@ void open_script_update_xa_audio(void) {
             }
             break;
         case 4:
-            CdIntToPos(ENDING_XA_FIRST_SECTOR, g_open_file_location);
+            CdIntToPos(DISC_SECTOR_OPEN_ENDING_XA, g_open_file_location);
             CdControlF(CdlSeekL, g_open_file_location);
             {
                 s32* state = &g_open_script_state.control_state;

@@ -11,7 +11,6 @@
 enum {
     EVENT_BLOCK_BYTES = 8192,
     EVENT_BLOCK_SECTORS = 4,
-    EVENT_ARCHIVE_START_SECTOR = 0xe7b,
     EVENT_OPCODE_COUNT = 256,
     /* Number of simulation unit slots an interpreter scans by misc id. */
     EVENT_UNIT_SLOT_COUNT = BATTLE_UNIT_SLOT_COUNT,
@@ -525,6 +524,9 @@ typedef enum event_script_variable_id {
     /* WLDCORE also uses this value to select the current-location marker's
      * animation on the world map. */
     EVENT_SCRIPT_VAR_TOWN_BACKGROUND = 0x69,
+    /* World help message 0 stores 1 here as it ends (TEXT_STORE_VARIABLE);
+     * Gariland's world script shows that message while this is clear. */
+    EVENT_SCRIPT_VAR_WORLD_MAP_HELP_SHOWN = 0x6d,
     /* Main story progress counter. */
     EVENT_SCRIPT_VAR_STORY_PROGRESS = 0x6e,
     EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY = 0x6f,
@@ -538,14 +540,58 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED = 0x90,
     EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED = 0x91,
     EVENT_SCRIPT_VAR_FACTS_ENABLED = 0x92,
+    /* Set by event EVENT_ID_MALAK_REVIVED; Goug's steel ball events need it. */
+    EVENT_SCRIPT_VAR_GOUG_EVENTS_UNLOCKED = 0x94,
     /* Set by event 0x071. */
     EVENT_SCRIPT_VAR_ELIDIBS_DEFEATED = 0x95,
+    /* The option chosen in events 0x010 (destroy the Death Corps, or save
+     * Algus), 0x07a (leave, or stay for the chocobo) and 0x08c (stay out,
+     * or help Mustadio): 1 for the second. */
+    EVENT_SCRIPT_VAR_ALGUS_RESCUE_CHOICE = 0x96,
+    EVENT_SCRIPT_VAR_CHOCOBO_RESCUE_CHOICE = 0x97,
+    EVENT_SCRIPT_VAR_MUSTADIO_RESCUE_CHOICE = 0x98,
+    /* Goug's four events with Besrodio, each waiting for the one before:
+     * 0x0d3 shows the steel ball, 0x0d5 starts the Steel Giant, 0x0d7 shows
+     * the machine like a heavenly globe and 0x0d9 summons Cloud with it. */
+    EVENT_SCRIPT_VAR_STEEL_BALL_SHOWN = 0x99,
+    EVENT_SCRIPT_VAR_STEEL_GIANT_STARTED = 0x9a,
+    EVENT_SCRIPT_VAR_HEAVENLY_GLOBE_SHOWN = 0x9b,
+    EVENT_SCRIPT_VAR_CLOUD_SUMMONED = 0x9c,
+    /* The answer in event 0x0fb to whether Ramza has read the scriptures:
+     * 1 for No. */
+    EVENT_SCRIPT_VAR_SCRIPTURES_READ_CHOICE = 0x9d,
+    /* Set by event 0x1c9 and cleared by EVENT_ID_FUNERAL; while set, Orbonne
+     * Monastery offers the fourth floor of its book storage. */
+    EVENT_SCRIPT_VAR_ORBONNE_UNDERGROUND_OPEN = 0x9f,
     EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL = 0xa0,
+    /* Zarghidas's flower girl. Event 0x1cb stores the answer (1: bought a
+     * flower), 0x1cc and 0x1cd set FLOWER_GIRL_MET, and Cloud's battle there
+     * (event 0x0da) needs CLOUD_SUMMONED and a bought flower; 0x0de and 0x1cc
+     * close it. */
+    EVENT_SCRIPT_VAR_FLOWER_CHOICE = 0xa1,
+    EVENT_SCRIPT_VAR_FLOWER_GIRL_MET = 0xa2,
+    EVENT_SCRIPT_VAR_ZARGHIDAS_CLOUD_BATTLE_CLOSED = 0xa3,
     /* Set by event 0x1c9, at story progress 53. */
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_UNLOCKED = 0xa4,
     /* Set by event 0x1cf; Warjilis then draws the path to the dungeon and
      * its dot. */
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_OPENED = 0xa5,
+    /* Stored by the text of rumor 20, "Ghost of Colliery"; with the steel
+     * ball shown, Lesalia then starts event 0x1d0. */
+    EVENT_SCRIPT_VAR_COLLIERY_RUMOR_READ = 0xa6,
+    /* Beowulf at Goland's bar: event 0x1d1 stores the answer to his
+     * invitation (1: go together), 0x1d2 and 0x1d3 mark it answered, and
+     * event 0x1e3 ends with Reis saved. */
+    EVENT_SCRIPT_VAR_BEOWULF_ANSWERED = 0xa7,
+    EVENT_SCRIPT_VAR_BEOWULF_INVITATION_CHOICE = 0xa8,
+    EVENT_SCRIPT_VAR_REIS_RESCUED = 0xa9,
+    /* Stored by the text of rumor 21, "Cursed Island, Nelveska"; Zeltennia
+     * then draws the path to Nelveska Temple and its dot. */
+    EVENT_SCRIPT_VAR_NELVESKA_RUMOR_READ = 0xaa,
+    /* Set by events 0x1e7 (Worker 7 destroyed at Nelveska Temple) and 0x1e9
+     * (Reis returns to human form). */
+    EVENT_SCRIPT_VAR_WORKER_7_DEFEATED = 0xab,
+    EVENT_SCRIPT_VAR_REIS_RESTORED = 0xac,
     /* When set, the interpreters skip the DismissUnit, CallFunction,
      * UnlockDate, and SetDateAdvance side effects. */
     EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS = 0x1fc,
@@ -578,6 +624,59 @@ typedef enum event_script_variable_id {
      * a profile that has reached 12. */
     EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST = 0x3c0,
 } event_script_variable_id_e;
+
+/* How many variables each of those ranges holds. The location ranges hold
+ * WORLD_LOCATION_COUNT and the path range WLDCORE_ROUTE_COUNT. */
+enum {
+    EVENT_SCRIPT_VAR_FACT_COUNT = 24,
+    EVENT_SCRIPT_VAR_STORY_EVENT_COUNT = 64,
+    EVENT_SCRIPT_VAR_RUMOR_COUNT = 64,
+    EVENT_SCRIPT_VAR_TREASURE_COUNT = 47,
+    EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT = 16,
+    EVENT_SCRIPT_VAR_PROPOSITION_COUNT = 96,
+    EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT = 64,
+};
+
+/* Event ids: EVENT_SCRIPT_VAR_CURRENT_EVENT, the 0x2000-byte block of
+ * EVENT/TEST.EVT that holds the event's script and text, and the index of
+ * g_main_scenario_event_finish_operations. The game has no names for its
+ * events; the ones the code singles out are named here for what their own
+ * script and text show. */
+typedef enum event_id {
+    /* CallFunction JOIN_UNITS_SILENTLY also restores the new-game inventory
+     * in the events below this one. */
+    EVENT_ID_NEW_GAME_INVENTORY_END = 0x4e,
+    /* A Zodiac Stone speaks in these two. Their centred messages start at
+     * the box's left edge while ETC's graphics are off. */
+    EVENT_ID_WIEGRAF_PACT_WITH_VELIUS = 0xf9,
+    /* Also the event the ending leaves current, with the next scenario
+     * requested, so that ATTACK steps on from it. */
+    EVENT_ID_MALAK_REVIVED = 0x12a,
+    /* King Delita and Ovelia. Its save does not request the next scenario. */
+    EVENT_ID_EPILOGUE = 0x12c,
+    /* REQUIRE congratulates the player on completing the game after it. */
+    EVENT_ID_FINAL_BATTLE_WON = 0x145,
+    /* *_script_run_event_frame returns 0x13 when it ends. */
+    EVENT_ID_FUNERAL = 0x147,
+    /* A unit the event draws also gets its status graphics. */
+    EVENT_ID_LIMBERRY_CEMETERY_BATTLE = 0x18c,
+    /* The 0x1a events no scenario names, through TUTORIAL_LAST:
+     * SCENARIO_CHECK starts the first four, and the sixteen tutorials follow. */
+    EVENT_ID_COMMON_FIRST = 0x190,
+    EVENT_ID_GAME_OVER = 0x190,    /* the battle is lost */
+    EVENT_ID_BATTLE_START = 0x191, /* while EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED is set */
+    EVENT_ID_BATTLE_WON = 0x192,
+    EVENT_ID_DEBUG_BATTLE_START = 0x193, /* BATTLE_START under EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE */
+    /* The same script as GAME_OVER; while it runs, every unit selector
+     * resolves to the first unit that is a Ramza. */
+    EVENT_ID_GAME_OVER_RAMZA = 0x194,
+    EVENT_ID_TUTORIAL_FIRST = 0x19a,
+    EVENT_ID_TUTORIAL_LAST = 0x1a9,
+    /* These two scenes carry on in the event that follows; the EVTCHR sprites
+     * stay loaded after them. */
+    EVENT_ID_OLAN_WOUNDED = 0x1ad,
+    EVENT_ID_BEOWULF_INVITATION = 0x1d1,
+} event_id_e;
 
 /* The Deep Dungeon location menu stores the chosen floor in the pending
  * sound effect's variable before it runs the entry script. */

@@ -87,9 +87,11 @@ void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 sour
             g_battle_script_variable_write_guard = 0;
             if (replay_mode != 0 && (destination_id - EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST) >= 0x20U
                 && (destination_id - EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) >= 4U
-                && destination_id != EVENT_SCRIPT_VAR_TEXT_STORE_INDEX && (destination_id - 0x32) >= 8U
-                && destination_id >= 0x2c && destination_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
-                && (destination_id - 0x56) >= 5U && destination_id != EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) {
+                && destination_id != EVENT_SCRIPT_VAR_TEXT_STORE_INDEX
+                && (destination_id - EVENT_SCRIPT_VAR_CURRENT_ENTD) >= 8U
+                && destination_id >= EVENT_SCRIPT_VAR_WAR_FUNDS && destination_id != EVENT_SCRIPT_VAR_MAP_ARRANGEMENT
+                && (destination_id - EVENT_SCRIPT_VAR_TUTORIAL_WAIT_VALUE) >= 5U
+                && destination_id != EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) {
                 return;
             }
         }

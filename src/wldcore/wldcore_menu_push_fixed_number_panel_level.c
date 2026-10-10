@@ -12,7 +12,8 @@ void wldcore_menu_push_fixed_number_panel_level(void) {
     origin.x = -0x28;
     origin.y = -0x16;
     g_wldcore_active_menu_value = 0;
-    wldcore_window_init_number_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0x3E70000, 0xB826, &origin);
+    wldcore_window_init_number_panel_render_thread(
+        WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0x3E70000, WLDCORE_TEXT_ID_PARTY_NUMBER_LABEL, &origin);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].panel.result = 0;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL;

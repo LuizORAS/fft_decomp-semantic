@@ -432,7 +432,7 @@ void world_text_message_box_thread(void) {
                 if (code < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = *text;
                 } else if ((code & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
-                    code = (*text & 0xF) * 0xD0;
+                    code = (*text & 0xF) * TEXT_GLYPHS_PER_PREFIX;
                     NEXT();
                     code = code + *text;
                 }

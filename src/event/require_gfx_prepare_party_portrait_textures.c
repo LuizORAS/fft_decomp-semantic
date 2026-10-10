@@ -32,7 +32,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
     file = (s32)main_heap_alloc(0x20000);
     if (ENTRY_MODE != 0) {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(0x18ba, 0x20000, file);
+        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, 0x20000, file);
     } else {
         StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file);
         StoreImage(&g_require_portrait_sheet_rect_1, (u32*)(file + 0x8000));

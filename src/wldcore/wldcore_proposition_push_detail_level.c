@@ -27,10 +27,11 @@ void wldcore_proposition_push_detail_level(s32 value) {
         chance = 0xA;
     }
     if ((rand() * 100 >> 15) < chance) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + 0xB879, 0);
+        world_thread_set_parameters(
+            WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + WLDCORE_TEXT_ID_PROPOSITION_HINT_FIRST, 0);
     } else {
-        g_world_text_substitution_values[0] = value + 0xD000;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80C, 0);
+        g_world_text_substitution_values[0] = value + TEXT_ID_PROPOSITION_NAME_BASE;
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITION_ABOUT, 0);
     }
     wldcore_unpack_proposition_row(g_wldcore_selected_proposition_row, value);
     index = wldcore_window_append_render_record_and_reset_color(
@@ -40,7 +41,8 @@ void wldcore_proposition_push_detail_level(s32 value) {
     bounds.dimensions.x = 0xF4;
     bounds.dimensions.y = 0x80;
     bounds.position.x = 0;
-    wldcore_window_init_render_record_image(index, bounds, 0, value + 0x8800, g_wldcore_window_image_buffer);
+    wldcore_window_init_render_record_image(
+        index, bounds, 0, value + TEXT_ID_WORLD_MESSAGE_BASE, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 9;
     depth = g_wldcore_menu_stack_depth;

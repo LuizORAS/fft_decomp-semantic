@@ -29,7 +29,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
 
     if (g_wldcore_route_search_depth < 16) {
         table = g_wldcore_map_route_tables;
-        for (route = 0; route < 48; route++) {
+        for (route = 0; route < WLDCORE_ROUTE_COUNT; route++) {
             if (VSync(1) > 200) {
                 main_file_poll_load(&g_main_file_cd_state);
                 wldcore_sound_process_audio_queue();

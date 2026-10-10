@@ -14,15 +14,15 @@ void wldcore_list_open_brave_story_propositions(void) {
     s32 i;
     s32 record_index;
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     count = 0;
     i = 0;
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
-    for (; i < 96; i++) {
+    for (; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
             & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
-            *values = i + 0x6000;
+            *values = i + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
             *flags = 0;
             flags++;
             values++;

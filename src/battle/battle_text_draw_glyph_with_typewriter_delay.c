@@ -128,8 +128,8 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             g_battle_text_typewriter_state.pen.stride = pitch;
             battle_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
                 battle_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
-            battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + request->glyph * 0x23, (s32)image,
-                &g_battle_text_typewriter_state.pen, request->palette);
+            battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + request->glyph * TEXT_GLYPH_BYTES,
+                (s32)image, &g_battle_text_typewriter_state.pen, request->palette);
             g_battle_text_typewriter_vram_rect.x
                 = (pen_x >> 2) + (s16)(battle_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_battle_text_typewriter_vram_rect.y = pen_y;

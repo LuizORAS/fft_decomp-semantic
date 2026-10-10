@@ -117,7 +117,8 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state->glyph_page = 0;
             }
         } else {
-            state->column += g_world_text_glyph_widths[(state->glyph_page & 0xF) * 0xD0 + state->command];
+            state->column
+                += g_world_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
         cursor = world_text_advance_cursor_with_backreferences(state, cursor);

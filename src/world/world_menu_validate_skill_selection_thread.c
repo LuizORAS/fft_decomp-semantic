@@ -15,7 +15,7 @@ void world_menu_validate_skill_selection_thread(void) {
     battle_stats_t* unit;
     world_ability_list_t* skill_tables;
 
-    skill = g_world_menu_thread_menu_data[3].selected_index;
+    skill = g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
     parameter = world_thread_get_current_parameter_1();
     skill_tables = &g_battle_ai_workspace_ptr->ability_list;
     ct = skill_tables->skill_ct[skill];
@@ -63,9 +63,10 @@ void world_menu_validate_skill_selection_thread(void) {
         } else {
             g_world_menu_transition_active = 1;
             g_world_menu_selected_option = 0;
-            g_world_menu_thread_menu_data[35].text_id = message;
+            g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[35], 0, 0);
+            world_thread_set_parameters(g_world_thread_current_id - 1,
+                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             world_sound_set_effect_to_invalid();
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
             g_world_menu_transition_active = 0;

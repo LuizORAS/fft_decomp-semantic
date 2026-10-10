@@ -56,7 +56,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
         state->command = *cursor;
         if (state->command >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
-                state->command = (*cursor & 0xF) * 0xD0;
+                state->command = (*cursor & 0xF) * TEXT_GLYPHS_PER_PREFIX;
                 cursor = world_text_advance_cursor_with_backreferences_2(state, cursor);
                 state->command = *cursor + state->command;
             } else {
@@ -123,7 +123,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
                             }
                             if (line >= g_world_menu_text_param_22) {
                                 world_text_blit_font_glyph_to_4bpp(
-                                    g_world_text_glyph_bitmap_data + state->command * 0x23, pixels,
+                                    g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, pixels,
                                     &g_world_text_draw_origin, g_world_menu_text_color);
                             }
                         }
@@ -169,8 +169,8 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
             break;
         }
         if (line >= g_world_menu_text_param_22) {
-            world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * 0x23, pixels,
-                &g_world_text_draw_origin, g_world_menu_text_color);
+            world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES,
+                pixels, &g_world_text_draw_origin, g_world_menu_text_color);
         }
         g_world_text_draw_origin.rect.x += g_world_text_glyph_widths[state->command];
         if (g_world_text_draw_origin.rect.x >= g_world_text_draw_origin.stride - 8) {

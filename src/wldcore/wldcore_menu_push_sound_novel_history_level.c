@@ -75,7 +75,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     position->y = -0x64;
     g_wldcore_window_render_records[index].clut.x = 0x3C0;
     g_wldcore_window_render_records[index].clut.y = 0x1F2;
-    wldcore_window_draw_centered_text(index, *newest + 0x8800);
+    wldcore_window_draw_centered_text(index, *newest + TEXT_ID_WORLD_MESSAGE_BASE);
 
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.first_window]

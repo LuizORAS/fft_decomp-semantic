@@ -208,8 +208,9 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts[part].untextured_quad_start],
                 g_battle_map_camera_rotation.vy, &i);
             if (g_battle_map_untextured_otz_mask != 0 && g_battle_effect_current_work != 0
-                && (g_battle_map_loaded_id == 0x35 || g_battle_map_loaded_id == 0x37
-                    || g_battle_map_loaded_id == 0x53)) {
+                && (g_battle_map_loaded_id == MAP_ID_ENTRANCE_TO_DEATH_CITY
+                    || g_battle_map_loaded_id == MAP_ID_GRAVEYARD_OF_AIRSHIPS
+                    || g_battle_map_loaded_id == MAP_ID_ZIREKILE_FALLS)) {
                 RotMatrix(&g_battle_map_mesh_parts[part].rotation, &effect_matrix);
                 effect_translation.vx = g_battle_map_mesh_parts[part].translation.vx;
                 effect_translation.vy = g_battle_map_mesh_parts[part].translation.vy;

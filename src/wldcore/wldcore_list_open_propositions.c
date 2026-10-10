@@ -21,11 +21,11 @@ void wldcore_list_open_propositions(void) {
     s16* row_flags;
     s32 active_row_flag;
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB81B, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_IN_PROGRESS, 0);
     count = 0;
     loaded_count = g_main_save_proposition_count;
     if ((i = 0, loaded_count) > 0) {
-        entry_value_base = 0xD000;
+        entry_value_base = TEXT_ID_PROPOSITION_NAME_BASE;
         row_flags = g_wldcore_list_row_flags;
         active_row_flag = 8;
         total = loaded_count;

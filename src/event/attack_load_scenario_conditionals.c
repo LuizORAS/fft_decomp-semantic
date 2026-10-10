@@ -93,13 +93,13 @@ s32 attack_load_scenario_conditionals(void) {
     battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 1);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL) != 0
         && battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0
-        && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 0x12a) {
+        && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_MALAK_REVIVED) {
         battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12b);
     } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
         id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if (id == 0x5a) {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x74);
-        } else if (id == 0x12a) {
+        } else if (id == EVENT_ID_MALAK_REVIVED) {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x148);
         } else {
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id + 1);
@@ -123,15 +123,15 @@ s32 attack_load_scenario_conditionals(void) {
             = (scenario->after_event[0] << 8) | ((scenario->next_scenario[1] << 10) + scenario->next_scenario[0]);
         scenario++;
     }
-    g_main_scenario_event_finish_operations[0x192] = 0x8000;
-    g_main_scenario_event_finish_operations[0x191] = 0;
-    g_main_scenario_event_finish_operations[0x193] = 0;
+    g_main_scenario_event_finish_operations[EVENT_ID_BATTLE_WON] = 0x8000;
+    g_main_scenario_event_finish_operations[EVENT_ID_BATTLE_START] = 0;
+    g_main_scenario_event_finish_operations[EVENT_ID_DEBUG_BATTLE_START] = 0;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
-        g_main_scenario_event_finish_operations[0x190] = 0x8000;
-        g_main_scenario_event_finish_operations[0x194] = 0x8000;
+        g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER] = 0x8000;
+        g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER_RAMZA] = 0x8000;
     } else {
-        g_main_scenario_event_finish_operations[0x190] = 0x8200;
-        g_main_scenario_event_finish_operations[0x194] = 0x8200;
+        g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER] = 0x8200;
+        g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER_RAMZA] = 0x8200;
     }
     scenario = (attack_scenario_t*)g_attack_scenario_table;
     for (i = 0; i < 500; i++) {

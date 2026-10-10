@@ -16,7 +16,7 @@ void wldcore_list_handle_unexplored_lands_input(wldcore_menu_panel_level_t* leve
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS);
             wldcore_menu_push_unexplored_land_detail_level(
-                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & 0x7FF);
+                g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK);
             return;
         }
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS);

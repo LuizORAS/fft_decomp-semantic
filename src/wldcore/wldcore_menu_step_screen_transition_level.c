@@ -27,22 +27,22 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
         switch (level->screen) {
         case WLDCORE_MENU_LEVEL_BRAVE_STORY:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
             wldcore_menu_push_brave_story_level();
             break;
         case WLDCORE_MENU_LEVEL_STORY_EVENTS:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
             wldcore_menu_push_story_event_text_level(g_main_replay_story_event_index);
             break;
         case WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB8DD, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             wldcore_list_open_tutorial_categories(level->param_a, level->param_b);
             break;
         case WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB8DD, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.main_window]
                 .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -56,7 +56,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             break;
         case WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB8DD, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.main_window]
                 .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -70,7 +70,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             break;
         case WLDCORE_MENU_LEVEL_TREASURE_DETAIL:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB848, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
             wldcore_menu_push_treasure_detail_level(level->param_a);
             break;
         }

@@ -53,7 +53,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_
                     if (code < TEXT_FORMAT_FIRST) {
                         if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                             code &= 0xF;
-                            code = code * 0xD0 + *text++;
+                            code = code * TEXT_GLYPHS_PER_PREFIX + *text++;
                         }
                         position.x
                             += jobstts_text_render_glyph_to_4bpp_image(code, image, &position, (*colors >> 14) | style);

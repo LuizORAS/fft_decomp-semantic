@@ -41,7 +41,7 @@ void attack_text_build_deployment_strings(void) {
     dst = g_attack_scenario_table;
     file = main_heap_alloc(0x18000);
     g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-    battle_thread_call_on_main_stack(0x1a3a, 0x16800, file);
+    battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_ATCHELP_LZW, 0x16800, file);
     battle_text_save_section_pointers();
     attack_text_init_battle_pointers(file);
     for (i = 0; i < 0x10; i++) {

@@ -10,7 +10,7 @@ void world_script_load_event(s32 id) {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (world_thread_call_on_main_stack(
-                 id * EVENT_BLOCK_SECTORS + EVENT_ARCHIVE_START_SECTOR, EVENT_BLOCK_BYTES, g_main_script_event_block)
+                 id * EVENT_BLOCK_SECTORS + DISC_SECTOR_EVENT_TEST_EVT, EVENT_BLOCK_BYTES, g_main_script_event_block)
         != 0);
 
     do {

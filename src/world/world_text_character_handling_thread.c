@@ -804,7 +804,7 @@ void world_text_character_handling_thread(void) {
                 if (code < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     code = *text;
                 } else if ((code & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
-                    code = (*text & 0xF) * 0xD0;
+                    code = (*text & 0xF) * TEXT_GLYPHS_PER_PREFIX;
                     NEXT();
                     if ((*text & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (*text & 0xF) < 4) {
                         saved = text + 3;

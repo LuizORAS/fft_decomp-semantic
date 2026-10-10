@@ -7,7 +7,7 @@ void battle_menu_load_portrait_image(s32 portrait_id) {
 
     buffer = battle_menu_alloc_memory(0x2000);
     g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-    battle_thread_call_on_main_stack(portrait_id * 4 + 0x164B, 0x2000, buffer);
+    battle_thread_call_on_main_stack(portrait_id * 4 + DISC_SECTOR_EVENT_EVTFACE_BIN, 0x2000, buffer);
     LoadImage(&g_battle_menu_portrait_pixel_rect, (u32*)buffer);
     LoadImage(&g_battle_menu_portrait_palette_rect, (u32*)(buffer + 0x1800));
     battle_menu_free_memory(buffer);

@@ -33,7 +33,7 @@ void wldcore_list_open_tutorial_topics(void) {
 
     count = 0;
     for (i = 0; i < 41; i++) {
-        append_panel_list_entry(count, i - 0x8000);
+        append_panel_list_entry(count, i + (s16)TEXT_ID_TIP_NAME_BASE);
     }
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
     if (count < 8) {

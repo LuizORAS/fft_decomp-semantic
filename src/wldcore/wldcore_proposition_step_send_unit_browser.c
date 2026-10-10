@@ -33,7 +33,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         g_wldcore_window_records[level->right_arrow].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         level->mode = WLDCORE_SEND_UNIT_MODE_STATUS;
         menu_selected_index = &g_wldcore_window_panel_render_state.selected_index;
-        wldcore_start_core_background_threads(g_wldcore_list_entry_values[*menu_selected_index] & 0x7FF);
+        wldcore_start_core_background_threads(g_wldcore_list_entry_values[*menu_selected_index] & TEXT_ID_ENTRY_MASK);
         level->slot = *menu_selected_index;
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS) {
         buttons = g_wldcore_new_button_presses;
@@ -97,7 +97,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
             direction = 2;
         }
         g_wldcore_thread8_params.redraw_request = direction;
-        wldcore_unit_build_status_panel_data(g_wldcore_list_entry_values[level->slot] & 0x7FF);
+        wldcore_unit_build_status_panel_data(g_wldcore_list_entry_values[level->slot] & TEXT_ID_ENTRY_MASK);
         g_wldcore_threadc_params.redraw_request = 1;
         g_wldcore_thread9_params.redraw_request = 1;
     done:
@@ -115,7 +115,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         level->mode = WLDCORE_SEND_UNIT_MODE_SELECT;
         g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS);
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB812, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
         world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_build_at_list_2);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         g_wldcore_window_records[level->list_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;

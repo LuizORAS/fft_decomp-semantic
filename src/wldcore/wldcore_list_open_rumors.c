@@ -25,12 +25,12 @@ void wldcore_list_open_rumors(void) {
     values = g_wldcore_list_entry_values;
     locations = g_wldcore_rumor_location_masks;
     mask = 0x4000 >> g_wldcore_map_projection_state.marker.kind;
-    for (; i < 64; i++, locations++) {
+    for (; i < EVENT_SCRIPT_VAR_RUMOR_COUNT; i++, locations++) {
         /* A register operand keeps the loaded word first in the `and`;
          * testing *locations directly lets expand_binop swap them. */
         entry = *locations;
         if ((entry & mask) && world_script_get_variable(i + EVENT_SCRIPT_VAR_RUMOR_FIRST) != 0) {
-            *values = i - 0x3800;
+            *values = i + (s16)TEXT_ID_RUMOR_NAME_BASE;
             *flags = 0;
             flags++;
             values++;
@@ -39,7 +39,7 @@ void wldcore_list_open_rumors(void) {
     }
     if (count != 0) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB808, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RUMORS_INTRO, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
         if (count < 8) {
             i = count;
@@ -70,7 +70,7 @@ void wldcore_list_open_rumors(void) {
             .frame_index = g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                                         .window_pair_render.first_window]
                                .anim_counter = 0;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, 0xB80A, 0);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_RUMORS, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_pair_render.panel_rows = 1;
         return;
     }

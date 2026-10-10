@@ -215,8 +215,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
                     || (g_world_unit_editor_fields.state.generic_monster == 0
                         && g_world_unit_selected_status_billboard.team_kind != 1))) {
                 world_thread_start(g_world_thread_current_id - 1, world_menu_build_unit_status_list);
-                world_thread_set_parameters(
-                    g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[8], 0, 0);
+                world_thread_set_parameters(g_world_thread_current_id - 1,
+                    (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);

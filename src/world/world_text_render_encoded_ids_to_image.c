@@ -52,7 +52,7 @@ void world_text_render_encoded_ids_to_image(
                     if (code < TEXT_FORMAT_FIRST) {
                         if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                             code &= 0xF;
-                            code = code * 0xD0 + *text++;
+                            code = code * TEXT_GLYPHS_PER_PREFIX + *text++;
                         }
                         target.x
                             += world_text_decode_font_glyph_to_4bpp(code, image, &target, (*colors >> 14) | palette);

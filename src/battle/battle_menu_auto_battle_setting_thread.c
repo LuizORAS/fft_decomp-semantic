@@ -82,16 +82,16 @@ void battle_menu_auto_battle_setting_thread(void) {
                     colour[4] = 0;
                     colour[selected] = 8;
                 }
-                g_battle_menu_auto_battle_row_actions[1] = 0x27;
-                g_battle_menu_auto_battle_row_actions[2] = 0x27;
-                g_battle_menu_auto_battle_row_actions[3] = 0x27;
-                g_battle_menu_auto_battle_row_actions[4] = 0x27;
+                g_battle_menu_auto_battle_row_actions[1] = BATTLE_MENU_ID_AUTO_BATTLE_CONFIRM;
+                g_battle_menu_auto_battle_row_actions[2] = BATTLE_MENU_ID_AUTO_BATTLE_CONFIRM;
+                g_battle_menu_auto_battle_row_actions[3] = BATTLE_MENU_ID_AUTO_BATTLE_CONFIRM;
+                g_battle_menu_auto_battle_row_actions[4] = BATTLE_MENU_ID_AUTO_BATTLE_CONFIRM;
                 if (cursor == previous) {
-                    g_battle_menu_auto_battle_row_actions[1] = 2;
-                    g_battle_menu_auto_battle_row_actions[2] = 2;
+                    g_battle_menu_auto_battle_row_actions[1] = BATTLE_MENU_ID_AUTO_BATTLE_TARGET;
+                    g_battle_menu_auto_battle_row_actions[2] = BATTLE_MENU_ID_AUTO_BATTLE_TARGET;
                 }
                 previous = cursor;
-                g_battle_menu_thread_menu_data[2].selected_index = 0;
+                g_battle_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE_TARGET].selected_index = 0;
                 battle_menu_handle_action(param, previous);
             }
             for (j = 0; j < 5; j++) {

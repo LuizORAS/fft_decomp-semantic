@@ -18,7 +18,7 @@ void battle_gfx_load_evtchr_thread(void) {
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
-    } while (battle_thread_call_on_main_stack((block * 15) + 0x1d4c, 0x7800, buffer) != 0);
+    } while (battle_thread_call_on_main_stack((block * 15) + DISC_SECTOR_EVENT_EVTCHR_BIN, 0x7800, buffer) != 0);
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_file_is_still_loading;

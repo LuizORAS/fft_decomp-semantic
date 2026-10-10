@@ -58,7 +58,7 @@ void require_reward_animate_bonus_image_burst(void) {
     g_require_thread_suspended_id = g_battle_current_thread_id;
     g_battle_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE]
         = g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY];
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145) {
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON) {
         require_reward_load_bonus_image(0);
     } else {
         require_reward_load_bonus_image(1);

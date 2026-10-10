@@ -94,29 +94,29 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_location_entry_state.flags = 0;
 
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNLOCK_ALL) {
-        for (i = 0; i < 0x40; i++)
+        for (i = 0; i < EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST + i, 1);
-        for (i = 0; i < 0x40; i++)
+        for (i = 0; i < EVENT_SCRIPT_VAR_RUMOR_COUNT; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_RUMOR_FIRST + i, 1);
-        for (i = 0; i < 0x30; i++)
+        for (i = 0; i < WLDCORE_ROUTE_COUNT; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + i, 1);
-        for (i = 0; i < 0x2b; i++)
+        for (i = 0; i < WORLD_LOCATION_COUNT; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST + i, 1);
-        for (i = 0; i < 0x40; i++)
+        for (i = 0; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++)
             world_script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
 
         if (!(PadRead(0) & PSX_PAD_START)) {
             record[0] = 1;
             record[1] = 1;
-            for (i = 0; i < 0x2f; i++) {
+            for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, record);
             }
-            for (i = 0; i < 0x10; i++) {
+            for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, record);
             }
-            for (i = 0; i < 0x60; i++)
+            for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++)
                 world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);
         }
 
