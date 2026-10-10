@@ -40,4 +40,4 @@ make build     # build every module and a byte-matching disc (needs the BIN)
 ## Thanks
 
 This project is an ode to the [FFHacktics](https://ffhacktics.com/wiki/)
-community. This project would not be possible without it. ❤️
+community. ❤️
