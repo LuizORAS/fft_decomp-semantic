@@ -15,7 +15,7 @@ void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit) {
     s32 i;
 
     weapon_type = main_item_get_data_pointer(unit->used_weapon_id)->type;
-    if (weapon_type >= ITEM_TYPE_THROWING) {
+    if (weapon_type >= ITEM_TYPE_SHURIKEN) {
         weapon_type = ITEM_TYPE_KNIFE;
     }
     switch (hit) {

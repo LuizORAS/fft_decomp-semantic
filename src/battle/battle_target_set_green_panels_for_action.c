@@ -42,7 +42,8 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     unit = &g_battle_unit_stats[unit_id];
     if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
         flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;
-        flags_2 &= 0x39;
+        flags_2 &= ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER | ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE
+            | ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET | ABILITY_SECONDARY_FLAG_2_TOP_DOWN;
     }
     if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
@@ -99,7 +100,8 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
             panel->remaining_range = aoe + 1;
             other_panel->remaining_range = aoe + 1;
             battle_target_spread_panels(aoe, 0);
-            battle_target_apply_vertical_tolerance(height, vertical, (flags_2 >> 5) & 1);
+            battle_target_apply_vertical_tolerance(
+                height, vertical, (flags_2 & ABILITY_SECONDARY_FLAG_2_TOP_DOWN) != 0);
             battle_target_check_moldball_virus_depth(action_copy.ability_id);
         }
     }

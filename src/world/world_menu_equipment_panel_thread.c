@@ -92,11 +92,11 @@ void world_menu_equipment_panel_thread(void) {
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
-                if ((state->equipment[i] & 0xff) != 0xff) {
+                if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     color_bits = state->equipment[i] & 0xc000;
                     g_world_menu_text_color = color_bits >> 12;
-                    world_menu_display_text_entry(
-                        (state->equipment[i] & 0xff) | TEXT_ID_ITEM_NAME_BASE, text, &g_world_menu_text_state.pen);
+                    world_menu_display_text_entry((state->equipment[i] & ITEM_ID_MASK) | TEXT_ID_ITEM_NAME_BASE, text,
+                        &g_world_menu_text_state.pen);
                 }
                 g_world_menu_text_state.pen.rect.y += 0x10;
             }
@@ -110,7 +110,7 @@ void world_menu_equipment_panel_thread(void) {
             world_gfx_init_image_loading(&screen->sprites[19 + i], g_world_panel_item_icon_texture,
                 &g_world_equipment_panel_origin, &g_world_equipment_panel_icon_params[i]);
             id = state->equipment[i];
-            if ((id & 0xff) != 0xff) {
+            if ((id & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], id);
             } else {
                 (&screen->sprites[i])[19].x0 = 0;

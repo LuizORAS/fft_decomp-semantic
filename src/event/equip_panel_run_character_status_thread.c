@@ -87,7 +87,7 @@ void equip_panel_run_character_status_thread(void) {
             g_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
-                if ((state->equipment[i] & 0xff) != 0xff) {
+                if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     battle_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
                         g_equip_panel_text_image_a, &g_menu_text_state.pen);
                 }
@@ -122,7 +122,7 @@ void equip_panel_run_character_status_thread(void) {
         for (i = 0; i < 5; i++) {
             battle_gfx_init_image_loading(&screen->sprites[19 + i], g_equip_panel_item_icon_texture, FRAME_RECT,
                 &g_equip_panel_item_icon_layouts[i]);
-            if ((state->equipment[i] & 0xff) != 0xff) {
+            if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
                 /* The target indexes the five icon sprites from their own base (i * 0x14 + 0x1a8), as a

@@ -160,7 +160,7 @@ void helpmenu_menu_run_battle_help(void) {
                         battle_thread_wait_frames(1);
                         helpmenu_menu_close();
                     }
-                    help_id += 0x26;
+                    help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
                     help_id |= 0x7800;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
@@ -193,8 +193,8 @@ void helpmenu_menu_run_battle_help(void) {
                         help_id |= 0x9800;
                     } else if (text_base == TEXT_ID_ITEM_NAME_BASE) {
                         help_id &= 0x7FF;
-                        if ((help_id - 0x26) < 0xAU) {
-                            help_id += 0x26;
+                        if ((help_id - ITEM_ID_ASURA_KNIFE) < 0xAU) {
+                            help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
                             help_id |= 0x7800;
                         } else {
                             help_id |= 0x6800;

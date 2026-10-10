@@ -29,7 +29,7 @@ void world_item_sort_id_list(s32 mode, s16* list) {
     count = 0;
     while (list[count] != -1) {
         id = list[count] & 0x3ff;
-        if (id == 0 || id >= 0xfe) {
+        if (id == 0 || id >= ITEM_ID_END) {
             j = count;
             while ((list[j] = list[j + 1]) != -1) {
                 j++;
@@ -67,23 +67,23 @@ void world_item_sort_id_list(s32 mode, s16* list) {
                 } else if (criterion == ITEM_SORT_KEY_RANKING) {
                     key_a = world_item_get_ranking_value(item_a);
                 } else if (criterion == ITEM_SORT_KEY_PHYSICAL_EVADE) {
-                    if (item_a < 0x7a) {
+                    if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = g_main_item_weapon_data[g_main_item_primary_data[item_a].secondary_data_id].evade;
-                    } else if (item_a < 0x90) {
+                    } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
                         key_a = g_main_item_shield_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .physical_evade;
-                    } else if (item_a < 0xf0) {
+                    } else if (item_a < ITEM_ID_CONSUMABLE_FIRST) {
                         key_a = g_main_item_accessory_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .physical_evade;
                     } else {
                         key_a = 0;
                     }
                 } else if (criterion == ITEM_SORT_KEY_MAGIC_EVADE) {
-                    if (item_a < 0x7a) {
+                    if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = 0;
-                    } else if (item_a < 0x90) {
+                    } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
                         key_a = g_main_item_shield_data[g_main_item_primary_data[item_a].secondary_data_id].magic_evade;
-                    } else if (item_a < 0xf0) {
+                    } else if (item_a < ITEM_ID_CONSUMABLE_FIRST) {
                         key_a = g_main_item_accessory_data[g_main_item_primary_data[item_a].secondary_data_id]
                                     .magic_evade;
                     } else {
@@ -102,23 +102,23 @@ void world_item_sort_id_list(s32 mode, s16* list) {
                 } else if (criterion == ITEM_SORT_KEY_RANKING) {
                     key_b = world_item_get_ranking_value(item_b);
                 } else if (criterion == ITEM_SORT_KEY_PHYSICAL_EVADE) {
-                    if (item_b < 0x7a) {
+                    if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
-                    } else if (item_b < 0x90) {
+                    } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
                         key_b = g_main_item_shield_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .physical_evade;
-                    } else if (item_b < 0xf0) {
+                    } else if (item_b < ITEM_ID_CONSUMABLE_FIRST) {
                         key_b = g_main_item_accessory_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .physical_evade;
                     } else {
                         key_b = 0;
                     }
                 } else if (criterion == ITEM_SORT_KEY_MAGIC_EVADE) {
-                    if (item_b < 0x7a) {
+                    if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
-                    } else if (item_b < 0x90) {
+                    } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
                         key_b = g_main_item_shield_data[g_main_item_primary_data[item_b].secondary_data_id].magic_evade;
-                    } else if (item_b < 0xf0) {
+                    } else if (item_b < ITEM_ID_CONSUMABLE_FIRST) {
                         key_b = g_main_item_accessory_data[g_main_item_primary_data[item_b].secondary_data_id]
                                     .magic_evade;
                     } else {
@@ -130,10 +130,10 @@ void world_item_sort_id_list(s32 mode, s16* list) {
                 k++;
                 if (criterion == ITEM_SORT_KEY_RANKING) {
                     diff = 0;
-                    if (item_a >= 0x7a && item_a < 0x90) {
+                    if (item_a >= ITEM_ID_THROWABLE_FIRST && item_a < ITEM_ID_HEADGEAR_FIRST) {
                         diff = 1;
                     }
-                    if (item_b >= 0x7a && item_b < 0x90) {
+                    if (item_b >= ITEM_ID_THROWABLE_FIRST && item_b < ITEM_ID_HEADGEAR_FIRST) {
                         diff |= 2;
                     }
                     if (diff == 1) {

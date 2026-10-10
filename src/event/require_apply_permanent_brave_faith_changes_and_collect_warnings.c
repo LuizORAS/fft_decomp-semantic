@@ -86,7 +86,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
                 value2 = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[value2] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[value2]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x800;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x800;
                 g_require_party_affected_battle_unit_indices[value2] = battle_index;
                 g_require_party_affected_unit_count = value2 + 1;
             }
@@ -123,7 +123,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
                 value4 = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[value4] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[value4]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x80c;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x80c;
                 g_require_party_affected_battle_unit_indices[value4] = battle_index;
                 g_require_party_affected_unit_count = value4 + 1;
             }

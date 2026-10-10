@@ -19,7 +19,7 @@ s32 battle_action_check_battle_outcome(void) {
         if ((unit->initial_team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
             if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
                 selected = unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED;
-                selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY);
+                selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_UNIT_LOST);
                 if (selected != 0) {
                     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
                         enemy_unit_count++;

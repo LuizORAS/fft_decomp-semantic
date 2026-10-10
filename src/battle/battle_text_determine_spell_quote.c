@@ -46,7 +46,7 @@ void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 
     } else {
         known = 0;
     }
-    if ((known == 0 && (ability->type_flags & ABILITY_DATA_FLAG_SPELL_QUOTE)
+    if ((known == 0 && (ability->type_flags & ABILITY_TYPE_FLAG_SHOW_NAME)
             && g_main_game_options.fields.ability_names == GAME_OPTION_ON)
         || action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
         battle_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT, 0, unit_id, 0, enabled,

@@ -52,7 +52,7 @@ extern ability_secondary_data_t g_main_ability_range_data[];
  * reaction, support, movement). */
 extern u8 g_main_math_rsm_ability_data[ABILITY_ID_COUNT - ABILITY_ID_MATH_FIRST];
 
-/* Provisional: 12 item types indexed by throw ability id - 0x17e. */
+/* The item_type_e each Throw ability throws, indexed by ability id - ABILITY_ID_THROW_FIRST. */
 extern u8 g_main_throw_ability_item_types[];
 extern battle_loader_jump_record_t g_main_jump_ability_data[12];
 extern battle_loader_charge_record_t g_main_charge_ability_data[8];
@@ -1723,6 +1723,30 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t
     main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
 
 /* other */
+/* g_main_terrain_status_flags has one byte per map_surface_type_e; only
+ * MAP_SURFACE_POISONED_MARSH has a bit. */
+enum {
+    MAIN_TERRAIN_STATUS_FLAG_POISON = 0x80, /* battle_status_prepare_terrain_poison poisons a unit standing there */
+};
+
+/* Rows of g_main_terrain_movement_cost_tables, chosen from the unit's movement
+ * abilities by battle_move_store_unit_movement_to_scratchpad; each has one
+ * cost per map_surface_type_e. */
+typedef enum main_terrain_cost_table {
+    MAIN_TERRAIN_COST_TABLE_DEFAULT = 0,
+    MAIN_TERRAIN_COST_TABLE_FLY_TELEPORT = 1, /* every surface costs 1 */
+    MAIN_TERRAIN_COST_TABLE_FLOAT = 2,        /* every surface costs 1 */
+    MAIN_TERRAIN_COST_TABLE_WATER = 3,        /* Move in Water and Walk on Water */
+    MAIN_TERRAIN_COST_TABLE_UNDERWATER = 4,
+    MAIN_TERRAIN_COST_TABLE_LAVA = 5,
+} main_terrain_cost_table_e;
+
+/* Costs in those rows that are not a number of Move points. */
+enum {
+    MAIN_TERRAIN_COST_WEATHER = 0,    /* replaced by battle_move_get_weather_terrain_cost */
+    MAIN_TERRAIN_COST_BLOCKED = 0xff, /* stays so under Any Ground */
+};
+
 extern volatile u8 g_fntload_clut_y_offset_immediate;
 extern s32 g_main_font_print_enabled;
 extern u8* g_main_brave_story_ages_source;

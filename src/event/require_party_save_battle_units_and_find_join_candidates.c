@@ -95,7 +95,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
                     prompt_count++;
                     count = g_require_party_affected_unit_count;
                     g_require_party_affected_unit_message_ids[count]
-                        = ((unit->character_identity - 0x80) << 3) + script_variant + 0x1800;
+                        = ((unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) << 3) + script_variant
+                        + 0x1800;
                     g_require_party_affected_battle_unit_indices[count] = party_index;
                     g_require_party_affected_unit_count = count + 1;
                 }

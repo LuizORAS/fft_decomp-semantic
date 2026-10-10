@@ -73,7 +73,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     }
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)) {
-        counter = unit->status_ct[15];
+        counter = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
         counter -= 1;
         if (counter == 0) {
             action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
@@ -86,7 +86,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
                 return 3;
             }
         } else {
-            unit->status_ct[15] = counter;
+            unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] = counter;
         }
     }
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]

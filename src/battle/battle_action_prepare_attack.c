@@ -95,10 +95,10 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         item = action.item_id;
-        if (item < 0x26 || item > 0x2f) {
+        if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        ability = item + 0x26;
+        ability = item + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         action.ability_id = ability;
         if (phase & 1) {
             battle_action_decrement_player_item_quantity(unit, item, 1);

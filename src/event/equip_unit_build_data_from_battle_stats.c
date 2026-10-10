@@ -96,7 +96,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     unit->equipment[EQUIP_SLOT_BODY] = stats->equipment[UNIT_EQUIPMENT_SLOT_BODY];
     unit->equipment[EQUIP_SLOT_ACCESSORY] = stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
     for (i = 0; i < EQUIP_SLOT_COUNT; i++) {
-        if (unit->equipment[i] >= 0xFF) {
+        if (unit->equipment[i] >= ITEM_ID_NONE) {
             unit->equipment[i] = 0;
         }
     }

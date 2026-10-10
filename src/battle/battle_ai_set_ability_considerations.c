@@ -125,7 +125,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         if (battle_ai_load_known_ability_flag(
                                 unit_id, ability->skillset, throw_id - (ABILITY_ID_THROW_KNIFE - 2))) {
                             item_type = g_main_throw_ability_item_types[type_index];
-                            for (item_id = 0; item_id < 0x100; item_id++) {
+                            for (item_id = 0; item_id < ITEM_ID_COUNT; item_id++) {
                                 if (g_main_item_primary_data[item_id].type == item_type) {
                                     level = g_main_item_primary_data[item_id].required_level;
                                     if (level >= best_level) {
@@ -162,7 +162,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                             if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_REFLECTABLE) {
                                 enemy_reflectable++;
                             }
-                            if (ability->element & 8) {
+                            if (ability->element & BATTLE_ELEMENT_EARTH) {
                                 enemy_earth++;
                             }
                         }

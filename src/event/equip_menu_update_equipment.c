@@ -68,8 +68,8 @@ s32 equip_menu_update_equipment(void) {
         if (item_id < ITEM_ID_THROWABLE_FIRST) {
             equip_menu_draw_weapon_hand_icons(item_id);
         }
-        if (g_equip_item_list_entries[g_equip_menu_selected_list_index] >= 0x90
-            && g_equip_item_list_entries[g_equip_menu_selected_list_index] <= 0xcf) {
+        if (g_equip_item_list_entries[g_equip_menu_selected_list_index] >= ITEM_ID_HEADGEAR_FIRST
+            && g_equip_item_list_entries[g_equip_menu_selected_list_index] <= ITEM_ID_ACCESSORY_FIRST - 1) {
             equip_menu_dispatch_with_override(g_equip_armor_bonus_render_commands, 0, 0);
         }
         equip_menu_draw_item_status_list(g_equip_item_list_entries[g_equip_menu_selected_list_index]);

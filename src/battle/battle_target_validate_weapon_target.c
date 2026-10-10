@@ -62,11 +62,11 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         }
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == 0xff) {
+            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == ITEM_ID_NONE) {
             weapon = 0;
         }
         weapon_id = weapon;
-        if (weapon_id >= 0x80) {
+        if (weapon_id >= ITEM_ID_SHIELD_FIRST) {
             return -1;
         }
         flags = g_main_item_weapon_data[weapon_id].flags;

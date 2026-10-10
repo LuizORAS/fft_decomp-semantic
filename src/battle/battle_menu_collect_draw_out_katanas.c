@@ -22,24 +22,24 @@ s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_
         return 0;
     }
     if (skillset != SKILLSET_ID_DRAW_OUT) {
-        *out_item_ids = 0xFF;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     ability_count = battle_menu_get_unit_skillset_ability_data(
         unit_id, SKILLSET_ID_DRAW_OUT, (s16*)abilities, mp_costs, ability_ct, 0, ability_flags, turns);
     if (ability_count == 0) {
-        *out_item_ids = 0xFF;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     for (i = 0; i < ability_count; i++) {
         ability_id = abilities[i];
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
-            item_id = ability_id - 0x26;
+            item_id = ability_id - (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
             *out_item_ids = item_id;
             out_item_ids++;
             count++;
         }
     }
-    *out_item_ids = 0xFF;
+    *out_item_ids = ITEM_ID_NONE;
     return count + 0x100;
 }

@@ -29,7 +29,7 @@ void main_unit_set_equippable_items(battle_stats_t* unit) {
     }
     support = unit->unit_flags;
     if (support & UNIT_FLAG_FEMALE) {
-        unit->equipment_categories[2] |= BATTLE_EQUIPMENT_SET_3_HAIR_ORNAMENT | BATTLE_EQUIPMENT_SET_3_BAG;
+        unit->equipment_categories[2] |= BATTLE_EQUIPMENT_SET_3_RIBBON | BATTLE_EQUIPMENT_SET_3_BAG;
         unit->equipment_categories[3] |= BATTLE_EQUIPMENT_SET_4_PERFUME;
     }
 }

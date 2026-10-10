@@ -51,5 +51,5 @@ void battle_ai_init_workspace(void) {
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;
-    ai->throw_weapon_id = 1;
+    ai->throw_weapon_id = ITEM_ID_DAGGER;
 }

@@ -64,7 +64,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
                 count = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[count] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[count]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x1000;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x1000;
                 g_require_party_affected_battle_unit_indices[count] = battle_index;
                 g_require_party_affected_unit_count = count + 1;
             }
@@ -103,7 +103,7 @@ s32 require_party_find_low_brave_high_faith_departures(void) {
                 count = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[count] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[count]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x100c;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x100c;
                 g_require_party_affected_battle_unit_indices[count] = battle_index;
                 g_require_party_affected_unit_count = count + 1;
             }

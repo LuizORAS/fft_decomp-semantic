@@ -85,7 +85,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
-                if ((state->equipment[i] & 0xff) != 0xff) {
+                if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     world_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
                         g_world_change_banner_text_image, &g_world_menu_text_state.pen);
                 }
@@ -122,7 +122,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         for (; i < 5; i++) {
             world_gfx_init_image_loading(&screen->sprites[19 + i], g_world_panel_item_icon_texture,
                 &g_world_equipment_ability_panel_origin, &g_world_equipment_panel_icon_params[i]);
-            if ((state->equipment[i] & 0xff) != 0xff) {
+            if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
                 ((battle_menu_status_panel_buffer_t*)cursor)->sprites[19].x0 = -0x200;

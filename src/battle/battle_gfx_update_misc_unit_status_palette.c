@@ -35,7 +35,7 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
         } else if (status & BATTLE_MISC_STATUS_OIL) {
             battle_gfx_modify_misc_unit_palette(
                 misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, -4, -4, -4, final_value);
-        } else if (status & BATTLE_MISC_STATUS_CURSED) {
+        } else if (status & BATTLE_MISC_STATUS_UNNAMED_0E) {
             battle_gfx_modify_misc_unit_palette(
                 misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, -8, -8, -8, final_value);
         } else if ((status & BATTLE_MISC_STATUS_UNDEAD) && misc->spritesheet_id != BATTLE_SPRITESHEET_ID_SKELETON

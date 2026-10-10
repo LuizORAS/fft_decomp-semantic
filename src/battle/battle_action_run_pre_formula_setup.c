@@ -92,7 +92,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        action.ability_id = action.item_id + 0x26;
+        action.ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
     }
     switch (menu_type) {
     case ACTION_MENU_TYPE_ELEMENTS:
@@ -126,9 +126,9 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
         id = action.item_id;
-        if (id >= 0xF0) {
+        if (id >= ITEM_ID_CONSUMABLE_FIRST) {
             g_battle_action_current_ability_view.weapon_id = id;
-            id += 0x10;
+            id += ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST;
             item = &g_main_item_secondary_data[id];
             g_battle_action_current_ability.used_item_id = id;
             g_battle_action_current_ability.proc_id = item->status_infliction_id;

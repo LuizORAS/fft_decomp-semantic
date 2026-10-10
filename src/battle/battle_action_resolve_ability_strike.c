@@ -46,7 +46,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         work->reaction_ability_id = g_battle_current_reaction_ability_id;
         if (battle_action_build_reaction_targets(misc_unit_id, work, &count, targets)) {
             if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
-                flags_3 = 1;
+                flags_3 = ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS;
             } else {
                 flags_3 = 0;
             }
@@ -105,8 +105,8 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         g_battle_action_current_ability.strike_counter++;
         work->last_attack_id = attacker->last_ability_id;
         work->reaction_id = 0;
-        if (!(flags_3 & 1)) {
-            work->animate_on_miss_flag = 1;
+        if (!(flags_3 & ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS)) {
+            work->skip_empty_tile_effect = 1;
         }
         if (g_battle_action_current_ability.strike_counter < g_battle_action_current_ability.strike_count) {
             work->continue_attack = 1;
@@ -116,7 +116,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         return 1;
     }
     work->post_action_message = g_battle_action_current_ability.post_action_message;
-    work->animate_on_miss_flag = 0;
+    work->skip_empty_tile_effect = 0;
     reaction_id = g_battle_action_current_ability.reaction_id;
     if (reaction_id != 0 && g_battle_action_current_ability.weapon_proc_pending == 0) {
         work->last_attack_id = reaction_id;
@@ -139,7 +139,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else {
         if (g_battle_action_current_ability.knockback_flags != 0) {
             work->reaction_occurred = 1;
-            work->animate_on_miss_flag = 1;
+            work->skip_empty_tile_effect = 1;
             work->last_attack_id = ABILITY_ID_KNOCKBACK;
         }
         g_battle_action_current_ability.strike_counter++;

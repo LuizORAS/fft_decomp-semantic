@@ -28,8 +28,8 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     stored_palette = unit->stored_palette;
     clut_index = unit->unit_id;
 
-    if (g_battle_gfx_spritesheet_slots[slot].spritesheet_id >= 0x60
-        && g_battle_gfx_spritesheet_slots[slot].spritesheet_id <= 0x9a) {
+    if (g_battle_gfx_spritesheet_slots[slot].spritesheet_id >= BATTLE_SPRITESHEET_ID_JOB_FIRST
+        && g_battle_gfx_spritesheet_slots[slot].spritesheet_id <= BATTLE_SPRITESHEET_ID_STEEL_GIANT) {
         battle_map_load_palette_data(g_battle_gfx_spritesheet_slots[slot].palettes[stored_palette + 8],
             MAP_CLUT_ROW_UNITS_SECOND, clut_index, 0);
     } else {

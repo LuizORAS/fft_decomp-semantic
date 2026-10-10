@@ -54,7 +54,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             unit_bits = unit_id << 10;
             for (row = ai->ability_lists[list_id]; i < 3; i++) {
                 row[count].skillset_flags.bytes.skillset = skillset;
-                row[count].id.packed_id = unit_bits + i + 0x7d;
+                row[count].id.packed_id = unit_bits + i + ITEM_ID_FIRE_BALL;
                 count++;
             }
         }

@@ -77,7 +77,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         }
         if (parameter == -1) {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if (item >= 0x7a && item <= 0x7c) {
+            if (item >= ITEM_ID_SHURIKEN && item <= ITEM_ID_YAGYU_DARKNESS) {
                 work16 = main_heap_alloc(0x380);
                 g_battle_effect_current_secondary->allocation = work16;
                 for (i = 0; i < 2; i++) {
@@ -141,7 +141,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         } else {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if (item >= 0x7a && item <= 0x7c) {
+            if (item >= ITEM_ID_SHURIKEN && item <= ITEM_ID_YAGYU_DARKNESS) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
@@ -155,7 +155,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         }
         if (g_battle_effect_projectile_spin_passes == 2 && g_battle_effect_trajectory_hit_unit_id != -1) {
             kind = g_battle_effect_current_secondary->used_weapon_id;
-            if ((kind < 0x7d || kind > 0x7f) && (kind < 0xf0 || kind > 0xfd)
+            if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
+                && (kind < ITEM_ID_CONSUMABLE_FIRST || kind > ITEM_ID_END - 1)
                 && g_battle_effect_current_secondary->target_count != 0) {
                 battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
                     g_battle_effect_current_secondary->target.fields.target_id);

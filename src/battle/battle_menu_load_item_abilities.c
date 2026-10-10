@@ -31,13 +31,13 @@ s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) 
         return 0;
     }
     if (skillset != SKILLSET_ID_ITEM) {
-        *out_item_ids = 0xff;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     count = battle_menu_get_unit_skillset_ability_data(
         unit_id, SKILLSET_ID_ITEM, (s16*)abilities, mp_costs, ability_ct, 0, ability_flags, turns);
     if (count == 0) {
-        *out_item_ids = 0xff;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     for (i = 0; i < count; i++) {
@@ -50,6 +50,6 @@ s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) 
             out_item_ids++;
         }
     }
-    *out_item_ids = 0xff;
+    *out_item_ids = ITEM_ID_NONE;
     return found + 0x100;
 }

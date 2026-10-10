@@ -23,7 +23,7 @@ s32 main_status_find_action_highest_order_effect(const battle_action_data_t* act
             if (current_order > highest_order) {
                 highest_order = current_order;
                 result = status_index + 0x81;
-                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8) {
+                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_SCRIPT_FILTER_EXCLUDED) {
                     result = status_index + 0x181;
                 }
             }
@@ -33,7 +33,7 @@ s32 main_status_find_action_highest_order_effect(const battle_action_data_t* act
             if (current_order > highest_order) {
                 highest_order = current_order;
                 result = status_index + 1;
-                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8) {
+                if (g_main_status_effect_data[status_index].flags_2 & STATUS_EFFECT_FLAG_2_SCRIPT_FILTER_EXCLUDED) {
                     result = status_index + 0x101;
                 }
             }

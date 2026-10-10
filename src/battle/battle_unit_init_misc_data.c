@@ -41,7 +41,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
         return 0;
     }
-    if (id >= 0x60 && id < 0x86 && stats != 0) {
+    if (id >= BATTLE_SPRITESHEET_ID_JOB_FIRST && id < BATTLE_SPRITESHEET_ID_CHOCOBO && stats != 0) {
         palette = stats->sprite_palette;
     }
     if (palette >= 6) {
@@ -182,7 +182,8 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         sprite->display->scale_x = ONE;
         sprite->display->scale_y = ONE;
         sprite->display->rotation = 0;
-        if ((s16)id < 0x86 && (s16)id < 0x3c && (s16)id >= 0x4a && (s16)id != 0x5d) {
+        if ((s16)id < BATTLE_SPRITESHEET_ID_CHOCOBO && (s16)id < BATTLE_SPRITESHEET_ID_VELIUS
+            && (s16)id >= BATTLE_SPRITESHEET_ID_BOY && (s16)id != BATTLE_SPRITESHEET_ID_DAMI) {
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);
         }
     }

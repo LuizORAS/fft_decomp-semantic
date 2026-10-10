@@ -56,7 +56,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
                         animation = BATTLE_UNIT_ANIMATION_IDLE_HASTE;
                     }
-                } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CURSED) {
+                } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_UNNAMED_0E) {
                     animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & 1) {
                     animation = 0x21;
@@ -100,7 +100,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {
                     if (battle_gfx_get_spritesheet_flying_flag(unit->spritesheet_id) == 0) {
                         animation = BATTLE_UNIT_ANIMATION_IDLE_HASTE;
                     }
-                } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_CURSED) {
+                } else if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_UNNAMED_0E) {
                     animation = BATTLE_UNIT_ANIMATION_STAND;
                 } else if (unit->status_flags_1_4 & 1) {
                     animation = 0x21;

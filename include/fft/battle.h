@@ -58,6 +58,7 @@ typedef enum battle_support_set_4 {
  * flag's negative polarity. */
 typedef enum ability_type_flag {
     ABILITY_TYPE_FLAG_LEARN_ON_HIT = 0x20,
+    ABILITY_TYPE_FLAG_SHOW_NAME = 0x40, /* the announcement shows the ability's name when the option is on */
     ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP = 0x80,
 } ability_type_flag_e;
 
@@ -96,6 +97,7 @@ typedef enum ability_secondary_flags_2 {
     ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
     ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
     ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET = 0x10, /* tile targeting without the follow-unit choice */
+    ABILITY_SECONDARY_FLAG_2_TOP_DOWN = 0x20,         /* only the upper terrain layer is targeted; no ability has it */
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
 } ability_secondary_flags_2_e;
@@ -2059,16 +2061,17 @@ typedef struct battle_unit_misc_data {
     battle_dismount_coords_t dismount; /* 0x184 */
     u8 _unused_18a[2];
     /* Current action data, 0x18c..0x1d7. */
-    u8 actor_id;             /* 0x18c; first byte of the strike work record: the acting unit's battle id */
-    u8 target_count;         /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
-    u8 target_list[0x10];    /* 0x18e; misc ids, 0xff terminated */
-    u8 animate_on_miss_flag; /* 0x19e; 1 when animate-on-miss is false, cleared on hit */
-    u8 math_skill_flag;      /* 0x19f; 0x01 math skill */
-    u16 last_attack_id;      /* 0x1a0 */
-    u8 post_action_message;  /* 0x1a2; 6 poached, 9 trained, else 0 */
-    u8 reaction_occurred;    /* 0x1a3 */
-    u8 continue_attack;      /* 0x1a4 */
-    u8 current_hit_number;   /* 0x1a5 */
+    u8 actor_id;               /* 0x18c; first byte of the strike work record: the acting unit's battle id */
+    u8 target_count;           /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
+    u8 target_list[0x10];      /* 0x18e; misc ids, 0xff terminated */
+    u8 skip_empty_tile_effect; /* 0x19e; 1 when a strike without targets plays no effect
+                                  (ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS clear, or a knockback) */
+    u8 math_skill_flag;        /* 0x19f; 0x01 math skill */
+    u16 last_attack_id;        /* 0x1a0 */
+    u8 post_action_message;    /* 0x1a2; 6 poached, 9 trained, else 0 */
+    u8 reaction_occurred;      /* 0x1a3 */
+    u8 continue_attack;        /* 0x1a4 */
+    u8 current_hit_number;     /* 0x1a5 */
     s16 reaction_id;         /* 0x1a6; g_battle_action_current_ability.reaction_id, the ability shown for the attack */
     u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
     u8 target_new_y;         /* 0x1a9 */
@@ -4556,7 +4559,7 @@ typedef enum battle_misc_status_flags_1_4 {
     /* Misc +0x141. */
     BATTLE_MISC_STATUS_FAITH = 0x00008000,
     BATTLE_MISC_STATUS_BERSERK = 0x00004000,
-    BATTLE_MISC_STATUS_CURSED = 0x00002000,
+    BATTLE_MISC_STATUS_UNNAMED_0E = 0x00002000,
     BATTLE_MISC_STATUS_HASTE = 0x00001000,
     BATTLE_MISC_STATUS_SLOW = 0x00000800,
     BATTLE_MISC_STATUS_DEFENDING = 0x00000400,
@@ -4948,21 +4951,180 @@ enum {
     BATTLE_GFX_TPAGE_FRAME = 0x1f, /* FRAME.BIN */
 };
 
-/* Reviewed direct spritesheet IDs and exclusive range boundaries; the
- * remaining IDs are not yet a complete semantic domain. */
-enum {
+/* Spritesheet ids index g_battle_gfx_spritesheet_data and
+ * g_battle_gfx_spritesheet_files. An id below 0x80 is the character_identity_e
+ * value it is loaded for (main_unit_get_spritesheet_palette returns those
+ * unchanged) and has that identity's name; a numbered name loads the file of
+ * the sheet with the plain name. From 0x60 the sheets are the generic jobs',
+ * male then female: the generic selectors resolve to
+ * 0x60 + (job - JOB_ID_SQUIRE) * 2, plus one for a female unit, with Dancer
+ * and Mime moved down one job. Then comes one sheet per monster family, named
+ * by the first job whose record has it (job_data_t.spritesheet_id), and the
+ * four status sheets, which have no file of their own. */
+typedef enum battle_spritesheet_id {
     BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1 = 0x01,
-    BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_2_3 = 0x02,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_4 = 0x03,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_1 = 0x04,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_2_3 = 0x05,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_4 = 0x06,
+    BATTLE_SPRITESHEET_ID_ALGUS = 0x07,
+    BATTLE_SPRITESHEET_ID_ZALBAG = 0x08,
+    BATTLE_SPRITESHEET_ID_DYCEDARG = 0x09,
+    BATTLE_SPRITESHEET_ID_LARG = 0x0a,
+    BATTLE_SPRITESHEET_ID_GOLTANA = 0x0b,
+    BATTLE_SPRITESHEET_ID_OVELIA = 0x0c,
+    BATTLE_SPRITESHEET_ID_ORLANDU = 0x0d,
+    BATTLE_SPRITESHEET_ID_FUNERAL = 0x0e,
+    BATTLE_SPRITESHEET_ID_REIS_HUMAN = 0x0f,
+    BATTLE_SPRITESHEET_ID_ZALMO = 0x10,
+    BATTLE_SPRITESHEET_ID_GAFGARION_ENEMY = 0x11,
+    BATTLE_SPRITESHEET_ID_MALAK_12 = 0x12,
+    BATTLE_SPRITESHEET_ID_SIMON = 0x13,
+    BATTLE_SPRITESHEET_ID_ALMA_BATTLE = 0x14,
+    BATTLE_SPRITESHEET_ID_OLAN = 0x15,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_JOIN = 0x16,
+    BATTLE_SPRITESHEET_ID_GAFGARION_GUEST = 0x17,
+    BATTLE_SPRITESHEET_ID_DRACLAU = 0x18,
+    BATTLE_SPRITESHEET_ID_RAFA_GUEST = 0x19,
+    BATTLE_SPRITESHEET_ID_MALAK = 0x1a,
+    BATTLE_SPRITESHEET_ID_ELMDOR = 0x1b,
+    BATTLE_SPRITESHEET_ID_TETA = 0x1c,
+    BATTLE_SPRITESHEET_ID_BARINTEN = 0x1d,
+    BATTLE_SPRITESHEET_ID_AGRIAS_JOIN = 0x1e,
+    BATTLE_SPRITESHEET_ID_BEOWULF = 0x1f,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_1 = 0x20,
+    BATTLE_SPRITESHEET_ID_BALMAFULA = 0x21,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_GUEST = 0x22,
+    BATTLE_SPRITESHEET_ID_RUDVICH = 0x23,
+    BATTLE_SPRITESHEET_ID_VORMAV = 0x24,
+    BATTLE_SPRITESHEET_ID_ROFEL = 0x25,
+    BATTLE_SPRITESHEET_ID_IZLUDE = 0x26,
+    BATTLE_SPRITESHEET_ID_KLETIAN = 0x27,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_2_3 = 0x28,
+    BATTLE_SPRITESHEET_ID_RAFA_JOIN = 0x29,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_JOIN = 0x2a,
+    BATTLE_SPRITESHEET_ID_BALK = 0x2b,
+    BATTLE_SPRITESHEET_ID_ALMA_2C = 0x2c,
+    BATTLE_SPRITESHEET_ID_CELIA = 0x2d,
+    BATTLE_SPRITESHEET_ID_LEDE = 0x2e,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_ENEMY = 0x2f,
+    BATTLE_SPRITESHEET_ID_ALMA_EVENTS = 0x30,
+    BATTLE_SPRITESHEET_ID_AJORA = 0x31,
+    BATTLE_SPRITESHEET_ID_CLOUD = 0x32,
+    BATTLE_SPRITESHEET_ID_ZALBAG_ZOMBIE = 0x33,
+    BATTLE_SPRITESHEET_ID_AGRIAS_GUEST = 0x34,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST_35 = 0x35,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST_36 = 0x36,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_37 = 0x37,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_38 = 0x38,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_39 = 0x39,
+    BATTLE_SPRITESHEET_ID_CELIA_3A = 0x3a,
+    BATTLE_SPRITESHEET_ID_LEDE_3B = 0x3b,
+    BATTLE_SPRITESHEET_ID_VELIUS = 0x3c,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT_3D = 0x3d,
+    BATTLE_SPRITESHEET_ID_ZALERA = 0x3e,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER_3F = 0x3f,
+    BATTLE_SPRITESHEET_ID_HASHMALUM = 0x40,
     BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM = 0x41,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_42 = 0x42,
+    BATTLE_SPRITESHEET_ID_QUEKLAIN = 0x43,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE_44 = 0x44,
+    BATTLE_SPRITESHEET_ID_ADRAMELK = 0x45,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_46 = 0x46,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER_47 = 0x47,
+    BATTLE_SPRITESHEET_ID_REIS_DRAGON = 0x48,
     BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM = 0x49,
+    BATTLE_SPRITESHEET_ID_BOY = 0x4a,
+    BATTLE_SPRITESHEET_ID_GIRL = 0x4b,
+    BATTLE_SPRITESHEET_ID_YOUNG_MAN = 0x4c,
+    BATTLE_SPRITESHEET_ID_YOUNG_WOMAN = 0x4d,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_MAN = 0x4e,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_WOMAN = 0x4f,
+    BATTLE_SPRITESHEET_ID_OLD_MAN = 0x50,
+    BATTLE_SPRITESHEET_ID_OLD_WOMAN = 0x51,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_MAN = 0x52,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_WOMAN = 0x53,
+    BATTLE_SPRITESHEET_ID_FUNERAL_MAN = 0x54,
+    BATTLE_SPRITESHEET_ID_FUNERAL_WOMAN = 0x55,
+    BATTLE_SPRITESHEET_ID_FUNERAL_PRIEST = 0x56,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_57 = 0x57,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_58 = 0x58,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_59 = 0x59,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5A = 0x5a,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5B = 0x5b,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5C = 0x5c,
+    BATTLE_SPRITESHEET_ID_DAMI = 0x5d,    /* named by its file, DAMI.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEK = 0x5e, /* named by its file, KASANEK.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEM = 0x5f, /* named by its file, KASANEM.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE = 0x60,
+    BATTLE_SPRITESHEET_ID_FEMALE_SQUIRE = 0x61,
+    BATTLE_SPRITESHEET_ID_MALE_CHEMIST = 0x62,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST = 0x63,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT = 0x64,
+    BATTLE_SPRITESHEET_ID_FEMALE_KNIGHT = 0x65,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER = 0x66,
+    BATTLE_SPRITESHEET_ID_FEMALE_ARCHER = 0x67,
+    BATTLE_SPRITESHEET_ID_MALE_MONK = 0x68,
+    BATTLE_SPRITESHEET_ID_FEMALE_MONK = 0x69,
+    BATTLE_SPRITESHEET_ID_MALE_PRIEST = 0x6a,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST = 0x6b,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD = 0x6c,
+    BATTLE_SPRITESHEET_ID_FEMALE_WIZARD = 0x6d,
+    BATTLE_SPRITESHEET_ID_MALE_TIME_MAGE = 0x6e,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE = 0x6f,
+    BATTLE_SPRITESHEET_ID_MALE_SUMMONER = 0x70,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER = 0x71,
+    BATTLE_SPRITESHEET_ID_MALE_THIEF = 0x72,
+    BATTLE_SPRITESHEET_ID_FEMALE_THIEF = 0x73,
+    BATTLE_SPRITESHEET_ID_MALE_MEDIATOR = 0x74,
+    BATTLE_SPRITESHEET_ID_FEMALE_MEDIATOR = 0x75,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE = 0x76,
+    BATTLE_SPRITESHEET_ID_FEMALE_ORACLE = 0x77,
+    BATTLE_SPRITESHEET_ID_MALE_GEOMANCER = 0x78,
+    BATTLE_SPRITESHEET_ID_FEMALE_GEOMANCER = 0x79,
+    BATTLE_SPRITESHEET_ID_MALE_LANCER = 0x7a,
+    BATTLE_SPRITESHEET_ID_FEMALE_LANCER = 0x7b,
+    BATTLE_SPRITESHEET_ID_MALE_SAMURAI = 0x7c,
+    BATTLE_SPRITESHEET_ID_FEMALE_SAMURAI = 0x7d,
+    BATTLE_SPRITESHEET_ID_MALE_NINJA = 0x7e,
+    BATTLE_SPRITESHEET_ID_FEMALE_NINJA = 0x7f,
+    BATTLE_SPRITESHEET_ID_MALE_CALCULATOR = 0x80,
+    BATTLE_SPRITESHEET_ID_FEMALE_CALCULATOR = 0x81,
+    BATTLE_SPRITESHEET_ID_BARD = 0x82,
+    BATTLE_SPRITESHEET_ID_DANCER = 0x83,
+    BATTLE_SPRITESHEET_ID_MALE_MIME = 0x84,
+    BATTLE_SPRITESHEET_ID_FEMALE_MIME = 0x85,
     BATTLE_SPRITESHEET_ID_CHOCOBO = 0x86,
+    BATTLE_SPRITESHEET_ID_GOBLIN = 0x87,
+    BATTLE_SPRITESHEET_ID_BOMB = 0x88,
+    BATTLE_SPRITESHEET_ID_RED_PANTHER = 0x89,
+    BATTLE_SPRITESHEET_ID_PISCO_DEMON = 0x8a,
     BATTLE_SPRITESHEET_ID_SKELETON = 0x8b,
     BATTLE_SPRITESHEET_ID_GHOUL = 0x8c,
+    BATTLE_SPRITESHEET_ID_FLOTIBALL = 0x8d,
+    BATTLE_SPRITESHEET_ID_JURAVIS = 0x8e,
+    BATTLE_SPRITESHEET_ID_URIBO = 0x8f,
+    BATTLE_SPRITESHEET_ID_WOODMAN = 0x90,
+    BATTLE_SPRITESHEET_ID_BULL_DEMON = 0x91,
     BATTLE_SPRITESHEET_ID_MORBOL = 0x92,
+    BATTLE_SPRITESHEET_ID_BEHEMOTH = 0x93,
+    BATTLE_SPRITESHEET_ID_DRAGON = 0x94, /* also Reis as a Holy Dragon */
+    BATTLE_SPRITESHEET_ID_HYUDRA = 0x95,
+    BATTLE_SPRITESHEET_ID_BYBLOS = 0x96, /* and Apanda */
+    BATTLE_SPRITESHEET_ID_SERPENTARIUS = 0x97,
+    BATTLE_SPRITESHEET_ID_DRAGON_98 = 0x98,     /* loads the Dragon file again; no job has it */
+    BATTLE_SPRITESHEET_ID_ARCHAIC_DEMON = 0x99, /* and Ultima Demon */
+    BATTLE_SPRITESHEET_ID_STEEL_GIANT = 0x9a,
     BATTLE_SPRITESHEET_ID_CRYSTAL = 0x9b,
     BATTLE_SPRITESHEET_ID_CHICKEN = 0x9c,
     BATTLE_SPRITESHEET_ID_FROG = 0x9d,
     BATTLE_SPRITESHEET_ID_TREASURE = 0x9e,
+} battle_spritesheet_id_e;
+
+enum {
+    BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
+    BATTLE_SPRITESHEET_ID_JOB_FIRST = 0x60, /* the generic job sheets start here; the monsters' follow */
 };
 
 /* Second section, indexed from frame 0xd2 (battle_gfx_select_unit_shp_frame). Its frame
@@ -5611,7 +5773,7 @@ typedef struct battle_strike_work {
     u8 actor_id;
     u8 target_count;
     u8 target_list[16];
-    u8 animate_on_miss_flag;
+    u8 skip_empty_tile_effect;
     u8 math_skill_flag;
     s16 last_attack_id;
     u8 post_action_message;
@@ -6328,7 +6490,7 @@ typedef struct battle_move_pathfind_scratch {
     u8 target_level;
     u8 unit_id;              /* 0x0d; mount id when riding */
     u8 move_type;            /* 0x0e; battle_move_class_e */
-    u8 move_mod;             /* 0x0f */
+    u8 cost_table;           /* 0x0f; main_terrain_cost_table_e */
     u8 movement_3;           /* 0x10 */
     u8 cannot_enter_water;   /* 0x11 */
     u8 will_drown;           /* 0x12 */

@@ -49,14 +49,15 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             = g_main_item_ability_item_ids[ability_id - ABILITY_ID_ITEM_FIRST];
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        ai->considered_ability.parameters.bytes.item_id = ability_id - 0x26;
+        ai->considered_ability.parameters.bytes.item_id
+            = ability_id - (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
-        if (ability_id >= 0x7a && ability_id <= 0x7c) {
+        if (ability_id >= ITEM_ID_SHURIKEN && ability_id <= ITEM_ID_YAGYU_DARKNESS) {
             ai->considered_ability.ability_id = ABILITY_ID_THROW_SHURIKEN;
             ai->considered_ability.parameters.bytes.item_id = ability_id;
             ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
-        } else if (ability_id >= 0x7d && ability_id <= 0x7f) {
+        } else if (ability_id >= ITEM_ID_FIRE_BALL && ability_id <= ITEM_ID_LIGHTNING_BALL) {
             ai->considered_ability.ability_id = ABILITY_ID_THROW_BALL;
             ai->considered_ability.parameters.bytes.item_id = ability_id;
             ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;

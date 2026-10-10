@@ -200,7 +200,7 @@ s32 require_select_party_unit_to_remove(void) {
         party_unit = main_party_get_data_pointer(selected_party_index);
         formation_index = 0;
         if (party_unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
-            message_id = ((party_unit->sprite_set - 0x80) * 8)
+            message_id = ((party_unit->sprite_set - CHARACTER_IDENTITY_SELECTOR_FIRST) * 8)
                 + (battle_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 7) + 0x1800;
         } else {
             s32 sprite_column;

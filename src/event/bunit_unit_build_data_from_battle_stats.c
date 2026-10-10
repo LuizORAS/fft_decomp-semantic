@@ -115,7 +115,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         record->equipment[3] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
         record->equipment[4] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
         for (i = 0; i < 5; i++) {
-            if (record->equipment[i] >= 0xfe) {
+            if (record->equipment[i] >= ITEM_ID_END) {
                 record->equipment[i] = ITEM_ID_NOTHING;
             }
         }

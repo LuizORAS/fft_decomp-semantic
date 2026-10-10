@@ -3,7 +3,7 @@
 void battle_formula_init_weapon_xa_ya(void) {
     u8 weapon_type = g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type;
 
-    if (weapon_type == ITEM_TYPE_POLEARM) {
+    if (weapon_type == ITEM_TYPE_SPEAR) {
         g_battle_action_current_ability.xa
             = g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK] * 3 / 2;
     } else {

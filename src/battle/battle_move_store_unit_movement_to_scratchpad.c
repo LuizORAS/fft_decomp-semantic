@@ -11,7 +11,7 @@
  *
  * `mount` and `blocked` hold the 0xFF record fill and terrain-cost sentinel,
  * and the cost table base is loaded before its row offset is added: literal
- * constants and `g_main_terrain_movement_cost_tables[move_mod]` let sched1 reorder the pre-loop
+ * constants and `g_main_terrain_movement_cost_tables[cost_table]` let sched1 reorder the pre-loop
  * `li s2`/`li a3`/`lbu` sequence.
  */
 void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
@@ -88,32 +88,32 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     weather = battle_move_get_weather_terrain_cost();
     if (movement[2] & BATTLE_MOVEMENT_SET_3_FLY) {
-        config->move_mod = 1;
+        config->cost_table = MAIN_TERRAIN_COST_TABLE_FLY_TELEPORT;
         config->move_type = BATTLE_MOVEMENT_CLASS_FLY;
         config->fly_or_teleport = 1;
     } else if (movement[1] & (BATTLE_MOVEMENT_SET_2_TELEPORT | BATTLE_MOVEMENT_SET_2_TELEPORT_2)) {
-        config->move_mod = 1;
+        config->cost_table = MAIN_TERRAIN_COST_TABLE_FLY_TELEPORT;
         config->movement_set_2 = movement[1];
         config->move_type = BATTLE_MOVEMENT_CLASS_TELEPORT;
         config->fly_or_teleport = 1;
     } else {
         if (movement[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
-            config->move_mod = 2;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_FLOAT;
             config->move_type = BATTLE_MOVEMENT_CLASS_FLOAT;
         } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA) {
-            config->move_mod = 5;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_LAVA;
             config->move_type = BATTLE_MOVEMENT_CLASS_LAVA;
         } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
-            config->move_mod = 3;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_WATER;
             config->move_type = BATTLE_MOVEMENT_CLASS_WATER_SURFACE;
         } else if (movement[2] & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
-            config->move_mod = 3;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_WATER;
             config->move_type = BATTLE_MOVEMENT_CLASS_WATER_DEPTH_ONE;
         } else if (movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER) {
-            config->move_mod = 4;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_UNDERWATER;
             config->move_type = BATTLE_MOVEMENT_CLASS_UNDERWATER;
         } else {
-            config->move_mod = 0;
+            config->cost_table = MAIN_TERRAIN_COST_TABLE_DEFAULT;
             config->move_type = BATTLE_MOVEMENT_CLASS_NORMAL;
         }
     }
@@ -135,12 +135,12 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     ignore_terrain = movement[1] & BATTLE_MOVEMENT_SET_2_ANY_GROUND;
     i = 0;
-    blocked = 0xFF;
+    blocked = MAIN_TERRAIN_COST_BLOCKED;
     table = g_main_terrain_movement_cost_tables[0];
-    table += config->move_mod * 64;
+    table += config->cost_table * 64;
     for (; i < 0x40; i++) {
         byte = table[i];
-        if (byte == 0) {
+        if (byte == MAIN_TERRAIN_COST_WEATHER) {
             byte = weather;
         } else if (ignore_terrain && byte != blocked) {
             byte = 1;

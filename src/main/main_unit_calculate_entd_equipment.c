@@ -40,7 +40,7 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
                 }
                 if (item == ENTD_VALUE_RANDOM) {
                     if (flags & BATTLE_SUPPORT_SET_1_EQUIP_SPEAR) {
-                        item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_POLEARM);
+                        item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_SPEAR);
                     }
                     if (item == ENTD_VALUE_RANDOM) {
                         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_AXE) {

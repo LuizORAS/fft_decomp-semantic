@@ -85,7 +85,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
             record->equipment[3] = party->equipment[UNIT_EQUIPMENT_SLOT_BODY];
             record->equipment[4] = party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
             for (i = 0; i < 5; i++) {
-                if (record->equipment[i] >= 0xfe) {
+                if (record->equipment[i] >= ITEM_ID_END) {
                     record->equipment[i] = ITEM_ID_NOTHING;
                 }
             }

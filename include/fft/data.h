@@ -559,6 +559,7 @@ typedef enum ability_id {
 } ability_id_e;
 
 typedef enum ability_secondary_flags_3 {
+    ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS = 0x01, /* a strike that reaches no unit still plays on the target tile */
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
     ABILITY_SECONDARY_FLAG_3_PERSEVERE = 0x04,
     ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM = 0x08,
@@ -567,11 +568,6 @@ typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE = 0x40,
     ABILITY_SECONDARY_FLAG_3_REFLECTABLE = 0x80,
 } ability_secondary_flags_3_e;
-
-/* Flags in byte 0x03 of the eight-byte primary ability records. */
-typedef enum ability_data_flags {
-    ABILITY_DATA_FLAG_SPELL_QUOTE = 0x40,
-} ability_data_flags_e;
 
 /* Formula ids of abilities, weapons and items: the index of the BATTLE handler that resolves the
  * action (g_battle_formula_handlers). Only the ids the code tests by number are named, after
@@ -642,42 +638,47 @@ enum {
 };
 
 /* Item categories stored in item_data_t.type and in the four-byte job/unit
- * equippable-type set.  The table layout starts at 0x80062eb8. */
+ * equippable-type set.  The table layout starts at 0x80062eb8. A name is the
+ * type word that ends the help text of the type's items ("Ninja sword",
+ * "Hammer", "Dictionary", "Spear", "Stick", "Clothes", "Gauntlet", "Mantle",
+ * "Women's ribbon"; INSTRUMENT is "Mus inst" there) or, for the two thrown
+ * types, the name of the Throw ability that g_main_throw_ability_item_types
+ * maps to it. */
 typedef enum item_type {
     ITEM_TYPE_UNARMED = 0x00,
     ITEM_TYPE_KNIFE = 0x01,
-    ITEM_TYPE_NINJA_BLADE = 0x02,
+    ITEM_TYPE_NINJA_SWORD = 0x02,
     ITEM_TYPE_SWORD = 0x03,
     ITEM_TYPE_KNIGHT_SWORD = 0x04,
     ITEM_TYPE_KATANA = 0x05,
     ITEM_TYPE_AXE = 0x06,
     ITEM_TYPE_ROD = 0x07,
     ITEM_TYPE_STAFF = 0x08,
-    ITEM_TYPE_FLAIL = 0x09,
+    ITEM_TYPE_HAMMER = 0x09,
     ITEM_TYPE_GUN = 0x0a,
     ITEM_TYPE_CROSSBOW = 0x0b,
     ITEM_TYPE_BOW = 0x0c,
     ITEM_TYPE_INSTRUMENT = 0x0d,
-    ITEM_TYPE_BOOK = 0x0e,
-    ITEM_TYPE_POLEARM = 0x0f,
-    ITEM_TYPE_POLE = 0x10,
+    ITEM_TYPE_DICTIONARY = 0x0e,
+    ITEM_TYPE_SPEAR = 0x0f,
+    ITEM_TYPE_STICK = 0x10,
     ITEM_TYPE_BAG = 0x11,
     ITEM_TYPE_CLOTH = 0x12,
     ITEM_TYPE_SHIELD = 0x13,
     ITEM_TYPE_HELMET = 0x14,
     ITEM_TYPE_HAT = 0x15,
-    ITEM_TYPE_HAIR_ADORNMENT = 0x16,
+    ITEM_TYPE_RIBBON = 0x16,
     ITEM_TYPE_ARMOR = 0x17,
-    ITEM_TYPE_CLOTHING = 0x18,
+    ITEM_TYPE_CLOTHES = 0x18,
     ITEM_TYPE_ROBE = 0x19,
     ITEM_TYPE_SHOES = 0x1a,
-    ITEM_TYPE_ARMGUARD = 0x1b,
+    ITEM_TYPE_GAUNTLET = 0x1b,
     ITEM_TYPE_RING = 0x1c,
     ITEM_TYPE_ARMLET = 0x1d,
-    ITEM_TYPE_CLOAK = 0x1e,
+    ITEM_TYPE_MANTLE = 0x1e,
     ITEM_TYPE_PERFUME = 0x1f,
-    ITEM_TYPE_THROWING = 0x20,
-    ITEM_TYPE_BOMB = 0x21,
+    ITEM_TYPE_SHURIKEN = 0x20,
+    ITEM_TYPE_BALL = 0x21,
     ITEM_TYPE_CONSUMABLE = 0x22,
     ITEM_TYPE_COUNT = 0x23,
 } item_type_e;
@@ -704,15 +705,288 @@ typedef enum weapon_flag {
     WEAPON_FLAG_STRIKING = 0x80,
 } weapon_flag_e;
 
-/* Item IDs index the 256-row primary item table at 0x80062eb8. Only IDs used
- * as named boundaries or fixed inventory entries are listed here. Item 0 is
+/* Item ids index the 256-row primary item table at 0x80062eb8. A name is the
+ * item's name in the game's text; the second Javelin and the second
+ * Escutcheon, which repeat a name and are never sold, end in _RARE. Item 0 is
  * Nothing, the unarmed item record. Rows 0xfe and 0xff otherwise contain zero
- * data but retain ITEM_TYPE_FLAG_RARE; ENTD uses them for Random and None,
- * while the random selector also uses 0xff as an Any-type filter. */
+ * data but retain ITEM_TYPE_FLAG_RARE; ENTD uses them for Random
+ * (ENTD_VALUE_RANDOM) and None, while the random selector also uses 0xff as an
+ * Any-type filter. */
 typedef enum item_id {
     ITEM_ID_NOTHING = 0x00,
+    /* ITEM_TYPE_KNIFE */
     ITEM_ID_DAGGER = 0x01,
+    ITEM_ID_MYTHRIL_KNIFE = 0x02,
+    ITEM_ID_BLIND_KNIFE = 0x03,
+    ITEM_ID_MAGE_MASHER = 0x04,
+    ITEM_ID_PLATINA_DAGGER = 0x05,
+    ITEM_ID_MAIN_GAUCHE = 0x06,
+    ITEM_ID_ORICHALCUM = 0x07,
+    ITEM_ID_ASSASSIN_DAGGER = 0x08,
+    ITEM_ID_AIR_KNIFE = 0x09,
+    ITEM_ID_ZORLIN_SHAPE = 0x0a,
+    /* ITEM_TYPE_NINJA_SWORD */
+    ITEM_ID_HIDDEN_KNIFE = 0x0b,
+    ITEM_ID_NINJA_KNIFE = 0x0c,
+    ITEM_ID_SHORT_EDGE = 0x0d,
+    ITEM_ID_NINJA_EDGE = 0x0e,
+    ITEM_ID_SPELL_EDGE = 0x0f,
+    ITEM_ID_SASUKE_KNIFE = 0x10,
+    ITEM_ID_IGA_KNIFE = 0x11,
+    ITEM_ID_KOGA_KNIFE = 0x12,
+    /* ITEM_TYPE_SWORD */
+    ITEM_ID_BROAD_SWORD = 0x13,
+    ITEM_ID_LONG_SWORD = 0x14,
+    ITEM_ID_IRON_SWORD = 0x15,
+    ITEM_ID_MYTHRIL_SWORD = 0x16,
+    ITEM_ID_BLOOD_SWORD = 0x17,
+    ITEM_ID_CORAL_SWORD = 0x18,
+    ITEM_ID_ANCIENT_SWORD = 0x19,
+    ITEM_ID_SLEEP_SWORD = 0x1a,
+    ITEM_ID_PLATINUM_SWORD = 0x1b,
+    ITEM_ID_DIAMOND_SWORD = 0x1c,
+    ITEM_ID_ICE_BRAND = 0x1d,
+    ITEM_ID_RUNE_BLADE = 0x1e,
+    ITEM_ID_NAGRAROCK = 0x1f,
     ITEM_ID_MATERIA_BLADE = 0x20,
+    /* ITEM_TYPE_KNIGHT_SWORD */
+    ITEM_ID_DEFENDER = 0x21,
+    ITEM_ID_SAVE_THE_QUEEN = 0x22,
+    ITEM_ID_EXCALIBUR = 0x23,
+    ITEM_ID_RAGNAROK = 0x24,
+    ITEM_ID_CHAOS_BLADE = 0x25,
+    /* ITEM_TYPE_KATANA */
+    ITEM_ID_ASURA_KNIFE = 0x26,
+    ITEM_ID_KOUTETSU_KNIFE = 0x27,
+    ITEM_ID_BIZEN_BOAT = 0x28,
+    ITEM_ID_MURASAME = 0x29,
+    ITEM_ID_HEAVENS_CLOUD = 0x2a,
+    ITEM_ID_KIYOMORI = 0x2b,
+    ITEM_ID_MURAMASA = 0x2c,
+    ITEM_ID_KIKUICHIMOJI = 0x2d,
+    ITEM_ID_MASAMUNE = 0x2e,
+    ITEM_ID_CHIRIJIRADEN = 0x2f,
+    /* ITEM_TYPE_AXE */
+    ITEM_ID_BATTLE_AXE = 0x30,
+    ITEM_ID_GIANT_AXE = 0x31,
+    ITEM_ID_SLASHER = 0x32,
+    /* ITEM_TYPE_ROD */
+    ITEM_ID_ROD = 0x33,
+    ITEM_ID_THUNDER_ROD = 0x34,
+    ITEM_ID_FLAME_ROD = 0x35,
+    ITEM_ID_ICE_ROD = 0x36,
+    ITEM_ID_POISON_ROD = 0x37,
+    ITEM_ID_WIZARD_ROD = 0x38,
+    ITEM_ID_DRAGON_ROD = 0x39,
+    ITEM_ID_FAITH_ROD = 0x3a,
+    /* ITEM_TYPE_STAFF */
+    ITEM_ID_OAK_STAFF = 0x3b,
+    ITEM_ID_WHITE_STAFF = 0x3c,
+    ITEM_ID_HEALING_STAFF = 0x3d,
+    ITEM_ID_RAINBOW_STAFF = 0x3e,
+    ITEM_ID_WIZARD_STAFF = 0x3f,
+    ITEM_ID_GOLD_STAFF = 0x40,
+    ITEM_ID_MACE_OF_ZEUS = 0x41,
+    ITEM_ID_SAGE_STAFF = 0x42,
+    /* ITEM_TYPE_HAMMER */
+    ITEM_ID_FLAIL = 0x43,
+    ITEM_ID_FLAME_WHIP = 0x44,
+    ITEM_ID_MORNING_STAR = 0x45,
+    ITEM_ID_SCORPION_TAIL = 0x46,
+    /* ITEM_TYPE_GUN */
+    ITEM_ID_ROMANDA_GUN = 0x47,
+    ITEM_ID_MYTHRIL_GUN = 0x48,
+    ITEM_ID_STONE_GUN = 0x49,
+    ITEM_ID_BLAZE_GUN = 0x4a,
+    ITEM_ID_GLACIER_GUN = 0x4b,
+    ITEM_ID_BLAST_GUN = 0x4c,
+    /* ITEM_TYPE_CROSSBOW */
+    ITEM_ID_BOW_GUN = 0x4d,
+    ITEM_ID_NIGHT_KILLER = 0x4e,
+    ITEM_ID_CROSS_BOW = 0x4f,
+    ITEM_ID_POISON_BOW = 0x50,
+    ITEM_ID_HUNTING_BOW = 0x51,
+    ITEM_ID_GASTRAFITIS = 0x52,
+    /* ITEM_TYPE_BOW */
+    ITEM_ID_LONG_BOW = 0x53,
+    ITEM_ID_SILVER_BOW = 0x54,
+    ITEM_ID_ICE_BOW = 0x55,
+    ITEM_ID_LIGHTNING_BOW = 0x56,
+    ITEM_ID_WINDSLASH_BOW = 0x57,
+    ITEM_ID_MYTHRIL_BOW = 0x58,
+    ITEM_ID_ULTIMUS_BOW = 0x59,
+    ITEM_ID_YOICHI_BOW = 0x5a,
+    ITEM_ID_PERSEUS_BOW = 0x5b,
+    /* ITEM_TYPE_INSTRUMENT */
+    ITEM_ID_RAMIA_HARP = 0x5c,
+    ITEM_ID_BLOODY_STRINGS = 0x5d,
+    ITEM_ID_FAIRY_HARP = 0x5e,
+    /* ITEM_TYPE_DICTIONARY */
+    ITEM_ID_BATTLE_DICT = 0x5f,
+    ITEM_ID_MONSTER_DICT = 0x60,
+    ITEM_ID_PAPYRUS_PLATE = 0x61,
+    ITEM_ID_MADLEMGEN = 0x62,
+    /* ITEM_TYPE_SPEAR */
+    ITEM_ID_JAVELIN = 0x63,
+    ITEM_ID_SPEAR = 0x64,
+    ITEM_ID_MYTHRIL_SPEAR = 0x65,
+    ITEM_ID_PARTISAN = 0x66,
+    ITEM_ID_OBERISK = 0x67,
+    ITEM_ID_HOLY_LANCE = 0x68,
+    ITEM_ID_DRAGON_WHISKER = 0x69,
+    ITEM_ID_JAVELIN_RARE = 0x6a, /* the second "Javelin" of the name text, never sold */
+    /* ITEM_TYPE_STICK */
+    ITEM_ID_CYPRESS_ROD = 0x6b,
+    ITEM_ID_BATTLE_BAMBOO = 0x6c,
+    ITEM_ID_MUSK_ROD = 0x6d,
+    ITEM_ID_IRON_FAN = 0x6e,
+    ITEM_ID_GOKUU_ROD = 0x6f,
+    ITEM_ID_IVORY_ROD = 0x70,
+    ITEM_ID_OCTAGON_ROD = 0x71,
+    ITEM_ID_WHALE_WHISKER = 0x72,
+    /* ITEM_TYPE_BAG */
+    ITEM_ID_C_BAG = 0x73,
+    ITEM_ID_FS_BAG = 0x74,
+    ITEM_ID_P_BAG = 0x75,
+    ITEM_ID_H_BAG = 0x76,
+    /* ITEM_TYPE_CLOTH */
+    ITEM_ID_PERSIA = 0x77,
+    ITEM_ID_CASHMERE = 0x78,
+    ITEM_ID_RYOZAN_SILK = 0x79,
+    /* ITEM_TYPE_SHURIKEN */
+    ITEM_ID_SHURIKEN = 0x7a,
+    ITEM_ID_MAGIC_SHURIKEN = 0x7b,
+    ITEM_ID_YAGYU_DARKNESS = 0x7c,
+    /* ITEM_TYPE_BALL */
+    ITEM_ID_FIRE_BALL = 0x7d,
+    ITEM_ID_WATER_BALL = 0x7e,
+    ITEM_ID_LIGHTNING_BALL = 0x7f,
+    /* ITEM_TYPE_SHIELD */
+    ITEM_ID_ESCUTCHEON = 0x80,
+    ITEM_ID_BUCKLER = 0x81,
+    ITEM_ID_BRONZE_SHIELD = 0x82,
+    ITEM_ID_ROUND_SHIELD = 0x83,
+    ITEM_ID_MYTHRIL_SHIELD = 0x84,
+    ITEM_ID_GOLD_SHIELD = 0x85,
+    ITEM_ID_ICE_SHIELD = 0x86,
+    ITEM_ID_FLAME_SHIELD = 0x87,
+    ITEM_ID_AEGIS_SHIELD = 0x88,
+    ITEM_ID_DIAMOND_SHIELD = 0x89,
+    ITEM_ID_PLATINA_SHIELD = 0x8a,
+    ITEM_ID_CRYSTAL_SHIELD = 0x8b,
+    ITEM_ID_GENJI_SHIELD = 0x8c,
+    ITEM_ID_KAISER_PLATE = 0x8d,
+    ITEM_ID_VENETIAN_SHIELD = 0x8e,
+    ITEM_ID_ESCUTCHEON_RARE = 0x8f, /* the second "Escutcheon" of the name text, never sold */
+    /* ITEM_TYPE_HELMET */
+    ITEM_ID_LEATHER_HELMET = 0x90,
+    ITEM_ID_BRONZE_HELMET = 0x91,
+    ITEM_ID_IRON_HELMET = 0x92,
+    ITEM_ID_BARBUTA = 0x93,
+    ITEM_ID_MYTHRIL_HELMET = 0x94,
+    ITEM_ID_GOLD_HELMET = 0x95,
+    ITEM_ID_CROSS_HELMET = 0x96,
+    ITEM_ID_DIAMOND_HELMET = 0x97,
+    ITEM_ID_PLATINA_HELMET = 0x98,
+    ITEM_ID_CIRCLET = 0x99,
+    ITEM_ID_CRYSTAL_HELMET = 0x9a,
+    ITEM_ID_GENJI_HELMET = 0x9b,
+    ITEM_ID_GRAND_HELMET = 0x9c,
+    /* ITEM_TYPE_HAT */
+    ITEM_ID_LEATHER_HAT = 0x9d,
+    ITEM_ID_FEATHER_HAT = 0x9e,
+    ITEM_ID_RED_HOOD = 0x9f,
+    ITEM_ID_HEADGEAR = 0xa0,
+    ITEM_ID_TRIANGLE_HAT = 0xa1,
+    ITEM_ID_GREEN_BERET = 0xa2,
+    ITEM_ID_TWIST_HEADBAND = 0xa3,
+    ITEM_ID_HOLY_MITER = 0xa4,
+    ITEM_ID_BLACK_HOOD = 0xa5,
+    ITEM_ID_GOLDEN_HAIRPIN = 0xa6,
+    ITEM_ID_FLASH_HAT = 0xa7,
+    ITEM_ID_THIEF_HAT = 0xa8,
+    /* ITEM_TYPE_RIBBON */
+    ITEM_ID_CACHUSHA = 0xa9,
+    ITEM_ID_BARETTE = 0xaa,
+    ITEM_ID_RIBBON = 0xab,
+    /* ITEM_TYPE_ARMOR */
+    ITEM_ID_LEATHER_ARMOR = 0xac,
+    ITEM_ID_LINEN_CUIRASS = 0xad,
+    ITEM_ID_BRONZE_ARMOR = 0xae,
+    ITEM_ID_CHAIN_MAIL = 0xaf,
+    ITEM_ID_MYTHRIL_ARMOR = 0xb0,
+    ITEM_ID_PLATE_MAIL = 0xb1,
+    ITEM_ID_GOLD_ARMOR = 0xb2,
+    ITEM_ID_DIAMOND_ARMOR = 0xb3,
+    ITEM_ID_PLATINA_ARMOR = 0xb4,
+    ITEM_ID_CARABINI_MAIL = 0xb5,
+    ITEM_ID_CRYSTAL_MAIL = 0xb6,
+    ITEM_ID_GENJI_ARMOR = 0xb7,
+    ITEM_ID_REFLECT_MAIL = 0xb8,
+    ITEM_ID_MAXIMILLIAN = 0xb9,
+    /* ITEM_TYPE_CLOTHES */
+    ITEM_ID_CLOTHES = 0xba,
+    ITEM_ID_LEATHER_OUTFIT = 0xbb,
+    ITEM_ID_LEATHER_VEST = 0xbc,
+    ITEM_ID_CHAIN_VEST = 0xbd,
+    ITEM_ID_MYTHRIL_VEST = 0xbe,
+    ITEM_ID_ADAMAN_VEST = 0xbf,
+    ITEM_ID_WIZARD_OUTFIT = 0xc0,
+    ITEM_ID_BRIGANDINE = 0xc1,
+    ITEM_ID_JUDO_OUTFIT = 0xc2,
+    ITEM_ID_POWER_SLEEVE = 0xc3,
+    ITEM_ID_EARTH_CLOTHES = 0xc4,
+    ITEM_ID_SECRET_CLOTHES = 0xc5,
+    ITEM_ID_BLACK_COSTUME = 0xc6,
+    ITEM_ID_RUBBER_COSTUME = 0xc7,
+    /* ITEM_TYPE_ROBE */
+    ITEM_ID_LINEN_ROBE = 0xc8,
+    ITEM_ID_SILK_ROBE = 0xc9,
+    ITEM_ID_WIZARD_ROBE = 0xca,
+    ITEM_ID_CHAMELEON_ROBE = 0xcb,
+    ITEM_ID_WHITE_ROBE = 0xcc,
+    ITEM_ID_BLACK_ROBE = 0xcd,
+    ITEM_ID_LIGHT_ROBE = 0xce,
+    ITEM_ID_ROBE_OF_LORDS = 0xcf,
+    /* ITEM_TYPE_SHOES */
+    ITEM_ID_BATTLE_BOOTS = 0xd0,
+    ITEM_ID_SPIKE_SHOES = 0xd1,
+    ITEM_ID_GERMINAS_BOOTS = 0xd2,
+    ITEM_ID_RUBBER_SHOES = 0xd3,
+    ITEM_ID_FEATHER_BOOTS = 0xd4,
+    ITEM_ID_SPRINT_SHOES = 0xd5,
+    ITEM_ID_RED_SHOES = 0xd6,
+    /* ITEM_TYPE_GAUNTLET */
+    ITEM_ID_POWER_WRIST = 0xd7,
+    ITEM_ID_GENJI_GAUNTLET = 0xd8,
+    ITEM_ID_MAGIC_GAUNTLET = 0xd9,
+    ITEM_ID_BRACER = 0xda,
+    /* ITEM_TYPE_RING */
+    ITEM_ID_REFLECT_RING = 0xdb,
+    ITEM_ID_DEFENSE_RING = 0xdc,
+    ITEM_ID_MAGIC_RING = 0xdd,
+    ITEM_ID_CURSED_RING = 0xde,
+    ITEM_ID_ANGEL_RING = 0xdf,
+    /* ITEM_TYPE_ARMLET */
+    ITEM_ID_DIAMOND_ARMLET = 0xe0,
+    ITEM_ID_JADE_ARMLET = 0xe1,
+    ITEM_ID_108_GEMS = 0xe2,
+    ITEM_ID_N_KAI_ARMLET = 0xe3,
+    ITEM_ID_DEFENSE_ARMLET = 0xe4,
+    /* ITEM_TYPE_MANTLE */
+    ITEM_ID_SMALL_MANTLE = 0xe5,
+    ITEM_ID_LEATHER_MANTLE = 0xe6,
+    ITEM_ID_WIZARD_MANTLE = 0xe7,
+    ITEM_ID_ELF_MANTLE = 0xe8,
+    ITEM_ID_DRACULA_MANTLE = 0xe9,
+    ITEM_ID_FEATHER_MANTLE = 0xea,
+    ITEM_ID_VANISH_MANTLE = 0xeb,
+    /* ITEM_TYPE_PERFUME */
+    ITEM_ID_CHANTAGE = 0xec,
+    ITEM_ID_CHERCHE = 0xed,
+    ITEM_ID_SETIEMSON = 0xee,
+    ITEM_ID_SALTY_RAGE = 0xef,
+    /* ITEM_TYPE_CONSUMABLE */
     ITEM_ID_POTION = 0xf0,
     ITEM_ID_HI_POTION = 0xf1,
     ITEM_ID_X_POTION = 0xf2,
@@ -752,6 +1026,7 @@ enum {
     ITEM_ID_BODY_ARMOR_FIRST = 0xac,
     ITEM_ID_ACCESSORY_FIRST = 0xd0,
     ITEM_ID_CONSUMABLE_FIRST = 0xf0,
+    ITEM_ID_END = 0xfe, /* one past the last item; ENTD's Random and None follow */
 };
 
 /* Broad item categories shared by the WORLD and EQUIP menu classifiers.
@@ -905,11 +1180,18 @@ typedef struct job_data {
 } job_data_t;
 typedef char job_data_size_must_be_48[(sizeof(job_data_t) == 48) ? 1 : -1];
 
-/* PSX job-table IDs. Use PSX names, not the parenthesized PSP translations.
- * Unnamed table slots are deliberately omitted; neither a blank label nor
- * "None" proves a sentinel. Character/variant suffixes distinguish separate
- * records with the same job. The PSP-only additions beginning at 0xa0 are not
- * part of this target. */
+/* Job ids index the 160 records of g_main_job_data. A name is the job's name
+ * in the game's text. Where records share a name, a suffix names the
+ * character: the unit name the game's text has at the same index, which is
+ * also the name the ENTD gives the job's units. Two records of one character
+ * are told apart by the chapter, by the role the ENTD gives the unit (GUEST,
+ * JOIN, ENEMY) or by the record's status sets (UNDEAD, INNATE_KO and
+ * STARTING_KO are its innate and starting statuses). A numbered suffix marks a
+ * record that repeats a
+ * name with nothing but its id to name it: 0x35-0x38 repeat four generic jobs
+ * for ENTD units that can equip every item type, and 0x98 is an empty second
+ * Holy Dragon. Records without name text (0x00, 0x39-0x3b, 0x9b-0x9f) and
+ * those the text calls "None" (0x8e, 0x8f, 0x92-0x95) have no enumerator. */
 typedef enum job_id {
     JOB_ID_SQUIRE_RAMZA_CHAPTER_1 = 0x01,
     JOB_ID_SQUIRE_RAMZA_CHAPTER_2_3 = 0x02,
@@ -949,7 +1231,7 @@ typedef enum job_id {
     JOB_ID_DIVINE_KNIGHT_VORMAV = 0x24,
     JOB_ID_DIVINE_KNIGHT_ROFEL = 0x25,
     JOB_ID_KNIGHT_BLADE_IZLUDE = 0x26,
-    JOB_ID_SORCERER_KLETIAN = 0x27,
+    JOB_ID_SORCERER_KLETIAN = 0x27, /* "Sorceror" in the name text */
     JOB_ID_WHITE_KNIGHT_WIEGRAF_CHAPTER_3 = 0x28,
     JOB_ID_HEAVEN_KNIGHT_RAFA_JOIN = 0x29,
     JOB_ID_DIVINE_KNIGHT_MELIADOUL_JOIN = 0x2a,
@@ -967,7 +1249,6 @@ typedef enum job_id {
     JOB_ID_PRIEST_36 = 0x36,
     JOB_ID_WIZARD_37 = 0x37,
     JOB_ID_ORACLE_38 = 0x38,
-    JOB_ID_ORACLE_39 = 0x39,
 
     JOB_ID_WARLOCK_VELIUS = 0x3c,
     JOB_ID_KNIGHT_UNDEAD = 0x3d,
@@ -1283,21 +1564,21 @@ typedef struct status_effect_data {
 } status_effect_data_t;
 typedef char status_effect_data_size_must_be_0x10[(sizeof(status_effect_data_t) == 0x10) ? 1 : -1];
 
-/* Flags that build the shared status-check sets during main initialization.
- * Provisional names remain for sets whose common runtime policy is not yet
- * established. */
+/* Flags that build the shared status-check sets during main initialization
+ * (main_status_check_set_e). The records also set bits 0x08, 0x10, 0x20 and
+ * 0x40 of flags_1 and 0x20 of flags_2, which nothing reads. */
 typedef enum status_effect_flags_1 {
     STATUS_EFFECT_FLAG_1_KO = 0x01,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ENEMY = 0x02,
-    STATUS_EFFECT_FLAG_1_PROVISIONAL_TEAM_LOSS_ALLY = 0x04,
+    STATUS_EFFECT_FLAG_1_UNIT_LOST = 0x02,
+    STATUS_EFFECT_FLAG_1_CHECK_SET_2 = 0x04,
     STATUS_EFFECT_FLAG_1_FREEZE_CT = 0x80,
 } status_effect_flags_1_e;
 
 typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IMMORTAL_IMMUNITY = 0x01,
     STATUS_EFFECT_FLAG_2_FORMATION_IMMUNITY = 0x02,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_7 = 0x04,
-    STATUS_EFFECT_FLAG_2_PROVISIONAL_CHECK_SET_8 = 0x08,
+    STATUS_EFFECT_FLAG_2_CHECK_SET_7 = 0x04,
+    STATUS_EFFECT_FLAG_2_SCRIPT_FILTER_EXCLUDED = 0x08,
     STATUS_EFFECT_FLAG_2_MOUNT_REMOVAL = 0x10,
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,

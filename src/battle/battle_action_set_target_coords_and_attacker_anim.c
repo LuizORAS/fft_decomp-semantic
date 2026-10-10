@@ -5,27 +5,27 @@
  * through one pointer: the target addresses these fields relative to
  * misc + 0x18c. */
 typedef struct battle_action_misc_data {
-    u8 actor_id;             /* 0x00 (misc 0x18c) */
-    u8 target_count;         /* 0x01 (misc 0x18d) */
-    u8 target_list[0x10];    /* 0x02 (misc 0x18e) */
-    u8 animate_on_miss_flag; /* 0x12 (misc 0x19e) */
-    u8 math_skill_flag;      /* 0x13 */
-    u16 last_attack_id;      /* 0x14 */
-    u8 post_action_message;  /* 0x16 */
-    u8 reaction_occurred;    /* 0x17 (misc 0x1a3) */
-    u8 continue_attack;      /* 0x18 */
-    u8 current_hit_number;   /* 0x19 */
-    s16 reaction_id;         /* 0x1a */
-    u8 target_new_x;         /* 0x1c */
-    u8 target_new_y;         /* 0x1d */
-    u8 target_new_map_level; /* 0x1e */
-    u8 used_weapon_id;       /* 0x1f */
-    s16 reaction_ability_id; /* 0x20 (misc 0x1ac) */
+    u8 actor_id;               /* 0x00 (misc 0x18c) */
+    u8 target_count;           /* 0x01 (misc 0x18d) */
+    u8 target_list[0x10];      /* 0x02 (misc 0x18e) */
+    u8 skip_empty_tile_effect; /* 0x12 (misc 0x19e) */
+    u8 math_skill_flag;        /* 0x13 */
+    u16 last_attack_id;        /* 0x14 */
+    u8 post_action_message;    /* 0x16 */
+    u8 reaction_occurred;      /* 0x17 (misc 0x1a3) */
+    u8 continue_attack;        /* 0x18 */
+    u8 current_hit_number;     /* 0x19 */
+    s16 reaction_id;           /* 0x1a */
+    u8 target_new_x;           /* 0x1c */
+    u8 target_new_y;           /* 0x1d */
+    u8 target_new_map_level;   /* 0x1e */
+    u8 used_weapon_id;         /* 0x1f */
+    s16 reaction_ability_id;   /* 0x20 (misc 0x1ac) */
 } battle_action_misc_data_t;
 
 /* Blaze Gun, Glacier Gun and Blast Gun (item ids 0x4a..0x4c) play the weapon
  * strike even when an ability is used. */
-#define IS_ELEMENTAL_GUN(id) ((id == 0x4a || id == 0x4b) || id == 0x4c)
+#define IS_ELEMENTAL_GUN(id) ((id == ITEM_ID_BLAZE_GUN || id == ITEM_ID_GLACIER_GUN) || id == ITEM_ID_BLAST_GUN)
 
 /* Finalizes the casting unit's action and picks its attack animation.
  *

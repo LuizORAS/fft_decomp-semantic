@@ -259,7 +259,7 @@ typedef enum battle_equipment_categories_2 {
 
 typedef enum battle_equipment_categories_3 {
     BATTLE_EQUIPMENT_SET_3_ARMOR = 0x01,
-    BATTLE_EQUIPMENT_SET_3_HAIR_ORNAMENT = 0x02,
+    BATTLE_EQUIPMENT_SET_3_RIBBON = 0x02,
     BATTLE_EQUIPMENT_SET_3_HELM = 0x08,
     BATTLE_EQUIPMENT_SET_3_SHIELD = 0x10,
     BATTLE_EQUIPMENT_SET_3_BAG = 0x40,
@@ -345,16 +345,16 @@ typedef enum battle_status_id {
     BATTLE_STATUS_ID_DEAD = 0x02,
     BATTLE_STATUS_ID_UNDEAD = 0x03,
     BATTLE_STATUS_ID_CHARGING = 0x04,
-    BATTLE_STATUS_ID_JUMP = 0x05,
+    BATTLE_STATUS_ID_JUMP = 0x05, /* "Jumping" in the name text */
     BATTLE_STATUS_ID_DEFENDING = 0x06,
     BATTLE_STATUS_ID_PERFORMING = 0x07,
     BATTLE_STATUS_ID_PETRIFY = 0x08,
-    BATTLE_STATUS_ID_INVITE = 0x09,
+    BATTLE_STATUS_ID_INVITE = 0x09, /* "Invitation" in the name text */
     BATTLE_STATUS_ID_DARKNESS = 0x0a,
     BATTLE_STATUS_ID_CONFUSION = 0x0b,
     BATTLE_STATUS_ID_SILENCE = 0x0c,
     BATTLE_STATUS_ID_BLOOD_SUCK = 0x0d,
-    BATTLE_STATUS_ID_CURSED = 0x0e,
+    BATTLE_STATUS_ID_UNNAMED_0E = 0x0e, /* no name text and no data inflicts it; it darkens the unit */
     BATTLE_STATUS_ID_TREASURE = 0x0f,
     BATTLE_STATUS_ID_OIL = 0x10,
     BATTLE_STATUS_ID_FLOAT = 0x11,
@@ -386,16 +386,39 @@ typedef enum battle_status_id {
 
 #define BATTLE_STATUS_BYTE_MASK(id) ((u8)(0x80U >> ((id) & 7)))
 
+/* Rows of g_main_status_check_sets. main_status_init_check_data builds rows 0
+ * to 9 from the flag bytes of g_main_status_effect_data and writes row 10
+ * itself. In this release the rows hold:
+ *   KO: Crystal, Dead, Petrify, Invite, Blood Suck, Treasure.
+ *   UNIT_LOST: Crystal, Invite, Treasure; a unit of the highest team
+ *     importance that has one counts against its team's outcome.
+ *   UNREAD_2: Crystal, Treasure; nothing reads the row.
+ *   FREEZE_CT: Crystal, Petrify, Treasure, Stop, Sleep.
+ *   PREVENT_REACTION: Crystal, Dead, Jump, Petrify, Confusion, Blood Suck,
+ *     Treasure, Berserk, Chicken, Frog, Stop, Sleep, Don't Act.
+ *   IMMORTAL_IMMUNITY: Crystal, Dead, Undead, Petrify, Invite, Confusion,
+ *     Blood Suck, Treasure, Chicken, Frog, Charm, Sleep, Don't Act, Death
+ *     Sentence.
+ *   FORMATION_IMMUNITY: the same without Confusion, Sleep and Don't Act.
+ *   UNREAD_7: Darkness, Confusion, Silence, Transparent, Berserk, Chicken,
+ *     Frog, Stop, Charm, Sleep, Don't Move, Don't Act; nothing reads the row.
+ *   SCRIPT_FILTER_EXCLUDED: Crystal, Dead, Undead, Jump, Petrify, Invite,
+ *     Treasure, Critical; the event scripts' unit filters 3 and 5 pass over a
+ *     unit that has one (filter 5 leaves Undead out).
+ *   MOUNT_REMOVAL: Confusion, Berserk, Poison, Stop, Sleep, Don't Move, Don't
+ *     Act, Death Sentence.
+ *   UNMOUNTABLE: Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk,
+ *     Chicken, Frog, Charm. */
 typedef enum main_status_check_set {
     MAIN_STATUS_CHECK_SET_KO = 0,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY = 1,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ALLY = 2,
+    MAIN_STATUS_CHECK_SET_UNIT_LOST = 1,
+    MAIN_STATUS_CHECK_SET_UNREAD_2 = 2,
     MAIN_STATUS_CHECK_SET_FREEZE_CT = 3,
     MAIN_STATUS_CHECK_SET_PREVENT_REACTION = 4,
     MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY = 5,
     MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY = 6,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_7 = 7,
-    MAIN_STATUS_CHECK_SET_PROVISIONAL_8 = 8,
+    MAIN_STATUS_CHECK_SET_UNREAD_7 = 7,
+    MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED = 8,
     MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL = 9,
     MAIN_STATUS_CHECK_SET_UNMOUNTABLE = 10,
     MAIN_STATUS_CHECK_SET_COUNT = 11,

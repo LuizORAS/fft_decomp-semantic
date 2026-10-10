@@ -15,7 +15,7 @@ s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination) {
 
     spritesheet_id = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].spritesheet_id;
     animation_id = g_battle_ability_animation_data[unit->sp2_ability_id].attack_animation;
-    if (spritesheet_id == 0x9a) {
+    if (spritesheet_id == BATTLE_SPRITESHEET_ID_STEEL_GIANT) {
         index = animation_id - 0x73;
         lba = g_battle_gfx_worker8_sp2_files[index].sector;
         if (lba == 0) {

@@ -47,10 +47,10 @@ s32 battle_target_calculate_for_menu_types(const u8* source) {
         ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        if (action.item_id < 0x26 || action.item_id > 0x2f) {
+        if (action.item_id < ITEM_ID_ASURA_KNIFE || action.item_id > ITEM_ID_CHIRIJIRADEN) {
             return -1;
         }
-        ability_id = action.item_id + 0x26;
+        ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:

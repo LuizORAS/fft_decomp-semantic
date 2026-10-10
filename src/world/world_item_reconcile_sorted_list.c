@@ -9,7 +9,7 @@ void world_item_reconcile_sorted_list(s32 list_index) {
     s32 type;
     s32 category;
 
-    for (item_id = 1; item_id < 254; item_id++) {
+    for (item_id = 1; item_id < ITEM_ID_END; item_id++) {
         type = world_item_get_menu_category(item_id);
         category = 0;
         if (type != ITEM_MENU_CATEGORY_WEAPON) {

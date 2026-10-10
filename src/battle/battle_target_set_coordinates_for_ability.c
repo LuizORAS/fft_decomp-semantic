@@ -4,7 +4,7 @@
 void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out) {
     battle_stats_t* target;
 
-    out->animate_on_miss_flag = 0;
+    out->skip_empty_tile_effect = 0;
     if (g_battle_action_current_ability.random_fire_flag != 0) {
         out->target_new_x = g_battle_action_current_ability.target_new_x;
         out->target_new_y = g_battle_action_current_ability.target_new_y;

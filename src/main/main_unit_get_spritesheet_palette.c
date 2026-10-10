@@ -14,11 +14,11 @@ u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette) {
         return sprite_set;
     }
     if (sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
-        sprite_set = job_id * 2 - 0x34;
+        sprite_set = job_id * 2 - (JOB_ID_SQUIRE * 2 - CHARACTER_IDENTITY_FIXED_MALE_SQUIRE);
         return sprite_set;
     }
     if (sprite_set == CHARACTER_IDENTITY_GENERIC_FEMALE) {
-        sprite_set = job_id * 2 - 0x33;
+        sprite_set = job_id * 2 - (JOB_ID_SQUIRE * 2 - CHARACTER_IDENTITY_FIXED_FEMALE_SQUIRE);
         return sprite_set;
     }
     if (sprite_set == CHARACTER_IDENTITY_MONSTER) {
