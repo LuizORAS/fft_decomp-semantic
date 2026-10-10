@@ -16,10 +16,10 @@ void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work
     }
     owner->work_count--;
     switch (work->kind_flags & EFFECT_WORK_KIND_MASK) {
-    case EFFECT_WORK_KIND_LIST_NODE_0:
-    case EFFECT_WORK_KIND_LIST_NODE_2:
-    case EFFECT_WORK_KIND_LIST_NODE_4:
-    case EFFECT_WORK_KIND_LIST_NODE_6:
+    case EFFECT_WORK_KIND_SPRITE_WORLD:
+    case EFFECT_WORK_KIND_SPRITE_SCREEN_OFFSET:
+    case EFFECT_WORK_KIND_SPRITE_WORLD_UNSCALED:
+    case EFFECT_WORK_KIND_SPRITE_SCREEN:
         battle_effect_free_list_node(work->data);
         break;
     case EFFECT_WORK_KIND_HEAP_BLOCK:

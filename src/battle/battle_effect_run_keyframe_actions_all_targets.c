@@ -14,8 +14,9 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
         misc_id = -1;
-        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
-            misc_id = g_battle_effect_coord_data.targets[16].id.misc_id;
+        if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
+            == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            misc_id = g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id;
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) {
@@ -24,8 +25,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
                 battle_gfx_prepare_post_action_display_by_misc_id(misc_id);
             }
         } else {
-            for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+            for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
+                if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                     battle_gfx_prepare_post_action_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
@@ -37,8 +38,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
                 battle_unit_update_display_by_misc_id(misc_id);
             }
         } else {
-            for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+            for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
+                if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                     battle_unit_update_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
@@ -50,8 +51,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
                 battle_unit_set_target_anim_by_misc_id(misc_id);
             }
         } else {
-            for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+            for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
+                if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                     battle_unit_set_target_anim_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
                 }
             }
@@ -64,8 +65,8 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
                 battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
             }
         } else {
-            for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                if (g_battle_effect_coord_data.targets[i].target_type == 0) {
+            for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
+                if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                     battle_unit_set_specific_animation_by_misc_id(
                         g_battle_effect_coord_data.targets[i].id.misc_id, animation);
                 }
@@ -74,7 +75,7 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
     }
     if (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) {
         slot = (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) - 1;
-        state->callback_state[slot] = 1;
-        state->callback_ptrs[slot] = g_battle_effect_callback_slots[slot];
+        state->callback_phase[slot] = EFFECT_PHASE_INIT;
+        state->callbacks[slot] = g_battle_effect_callback_slots[slot];
     }
 }

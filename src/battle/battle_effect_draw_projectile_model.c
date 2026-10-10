@@ -45,9 +45,9 @@ typedef struct battle_effect_reflect_model_work {
     battle_effect_model_gt3_t gt3[2][24];
 } battle_effect_reflect_model_work_t;
 
-typedef struct battle_effect_model3_work {
+typedef struct battle_effect_shuriken_work {
     POLY_G3 g3[2][16];
-} battle_effect_model3_work_t;
+} battle_effect_shuriken_work_t;
 
 void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
 
@@ -85,8 +85,8 @@ void battle_effect_draw_projectile_model(
     SetTransMatrix(&matrix);
     model = g_battle_effect_model_data_ptrs[parameter & 0xff];
     scratch = SCRATCH;
-    vertices = (SVECTOR*)((u8*)model + (model->words[0] + 0xc));
-    count = model->words[1];
+    vertices = (SVECTOR*)((u8*)model + (model->words[BATTLE_EFFECT_MODEL_WORD_VERTICES_OFFSET] + 0xc));
+    count = model->words[BATTLE_EFFECT_MODEL_WORD_VERTEX_COUNT];
     for (i = 0; i < count; i++) {
         gte_ldv0(&vertices[i]);
         gte_rtv0tr();
@@ -125,7 +125,7 @@ void battle_effect_draw_projectile_model(
     g4_index = 0;
     g3_index = 0;
     switch (parameter & 0xff) {
-    case 0: {
+    case BATTLE_EFFECT_MODEL_ARROW: {
         battle_effect_arrow_work_t* work;
         POLY_G4* quad;
         POLY_G3* tri;
@@ -195,7 +195,7 @@ void battle_effect_draw_projectile_model(
         }
         break;
     }
-    case 1: {
+    case BATTLE_EFFECT_MODEL_STONE: {
         battle_effect_stone_work_t* work;
         POLY_G3* tri;
 
@@ -233,7 +233,7 @@ void battle_effect_draw_projectile_model(
         }
         break;
     }
-    case 2: {
+    case BATTLE_EFFECT_MODEL_REFLECT: {
         battle_effect_reflect_model_work_t* work;
         battle_effect_model_gt3_t* tri;
 
@@ -281,8 +281,8 @@ void battle_effect_draw_projectile_model(
         }
         break;
     }
-    case 3: {
-        battle_effect_model3_work_t* work;
+    case BATTLE_EFFECT_MODEL_SHURIKEN: {
+        battle_effect_shuriken_work_t* work;
         POLY_G3* tri;
 
         work = g_battle_effect_current_secondary->allocation;

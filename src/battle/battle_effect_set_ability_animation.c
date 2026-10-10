@@ -2,25 +2,27 @@
 #include "psx/types.h"
 
 /*
- * Select the effect file for an ability and arm its secondary animation.
+ * Select the effect file for an ability and start its charge secondary effect.
  *
- * `packed` carries the ability instance in its low halfword and the sprite
- * palette in its high halfword. Ninja balls (0x189) pick their effect from the
- * thrown ball type. A negative table entry means the ability has no effect
- * file: only the two fixed secondary animations for the 0x8a and 0x196 ability
- * ranges are started, and nothing is retained.
+ * `packed` carries the ability's charge animation set in its low halfword and
+ * its element mask in its high halfword. `ability` is an ability id or, from
+ * ABILITY_ID_COUNT up, one of the effects past the abilities. A thrown ball
+ * (ABILITY_ID_THROW_BALL) takes the Fire, Ice or Bolt effect by the ball's
+ * element. A negative table entry means the ability has no effect file: only
+ * the two fixed secondary animations for the equipment-break and Charge
+ * ability ranges are started, and nothing is retained.
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
-    g_effect_load_state = 0;
+    g_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
             s32 ball = battle_effect_get_ninja_ball(packed >> 16);
-            if (ball == 1)
-                g_battle_ability_effect_id = 0x10;
-            else if (ball == 2)
-                g_battle_ability_effect_id = 0x18;
-            else if (ball == 8)
-                g_battle_ability_effect_id = 0x14;
+            if (ball == BATTLE_EFFECT_ELEMENT_INDEX_FIRE)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_FIRE;
+            else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_WATER)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_ICE;
+            else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_BOLT;
         } else {
             g_battle_ability_effect_id = g_battle_effect_ability_ids[ability];
         }
@@ -30,7 +32,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
     }
 
     if (g_battle_ability_effect_id >= 0) {
-        g_battle_ability_effect_id &= 0x1ff;
+        g_battle_ability_effect_id &= BATTLE_EFFECT_ABILITY_FILE_MASK;
         g_battle_effect_phase = BATTLE_EFFECT_PHASE_REQUESTED;
         if (g_battle_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
             g_battle_effect_target_id = battle_effect_init_secondary(

@@ -13,7 +13,7 @@ extern void battle_effect_integrate_particle_motion(battle_effect_particle_t* li
  * Loads the camera matrix into the GTE and integrates the list's motion. Each
  * particle then ends its life once it is within a non-zero homing threshold
  * of its anchor on all three axes, runs its kind handler, spawns its mid-life
- * child and advances its palette column. When its countdown (or, for lifetime
+ * child and advances its curve frame. When its countdown (or, for lifetime
  * -1, its animation) ends it spawns its death child and is freed.
  *
  * The loop's locals are declared in its body: the block note ahead of the
@@ -40,7 +40,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
         }
         node = work;
         threshold
-            = (node->flags & EFFECT_WORK_BEHAVIOR_HOMING_THRESHOLD_MASK) >> EFFECT_WORK_BEHAVIOR_HOMING_THRESHOLD_SHIFT;
+            = (node->flags & EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK) >> EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_SHIFT;
         work = node->next;
         if (threshold != 0) {
             delta = (node->position[0] >> 12) - node->target_x;
@@ -57,15 +57,15 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
 
         g_battle_effect_particle_render_handlers[(node->kind_flags >> 12) & 0xf](record, node);
 
-        if ((node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_1
-            || (node->flags & EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_MID_LIFE_CHILD_MODE_2) {
+        if ((node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_1
+            || (node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_2) {
             battle_effect_spawn_emitter_particles(
                 record->record_index, record->frame_counter, node->child_emitter_mid_life, node);
         }
 
-        node->palette_frame++;
-        if (node->palette_frame == EFFECT_ANIMATION_CURVE_FRAME_BYTES) {
-            node->palette_frame = 0;
+        node->curve_frame++;
+        if (node->curve_frame == EFFECT_ANIMATION_CURVE_FRAMES) {
+            node->curve_frame = 0;
         }
 
         if (node->lifetime == EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN) {
@@ -76,10 +76,11 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             continue;
         }
 
-        if ((node->flags & EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MODE_1) {
+        if ((node->flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) == EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MODE_1) {
             battle_effect_spawn_emitter_particles(
                 record->record_index, record->frame_counter, node->child_emitter_on_death, node);
-        } else if ((node->flags & EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MASK) == EFFECT_WORK_BEHAVIOR_DEATH_CHILD_MODE_2) {
+        } else if ((node->flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK)
+            == EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MODE_2) {
             battle_effect_spawn_emitter_particles(
                 record->record_index, record->frame_counter, node->child_emitter_on_death, node);
         }

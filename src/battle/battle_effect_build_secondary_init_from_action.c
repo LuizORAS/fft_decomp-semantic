@@ -14,13 +14,13 @@ void battle_effect_build_secondary_init_from_action(
     s32 i;
 
     init->target_count = unit->target_count;
-    init->caster.fields.target_type = 0;
+    init->caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init->caster.fields.caster_id = unit->unit_id;
     init->used_weapon_id = unit->used_weapon_id;
     if (init->target_count != 0) {
         for (i = 0; i < init->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
-            init->target[i].fields.target_type = 0;
+            init->target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
             init->target[i].fields.target_id = target->unit_id;
             action = &target->battle_data->action;
             switch (action->miss_type) {

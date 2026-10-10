@@ -34,7 +34,7 @@ void battle_effect_remove_secondary(u8 id) {
             slot->next_slot_id = 0;
         }
         slot->previous_slot_id = 0;
-        slot->phase = 0;
+        slot->phase = BATTLE_SECONDARY_EFFECT_ENDED;
         return;
     }
     main_noop_800449f8(1, 0x67);

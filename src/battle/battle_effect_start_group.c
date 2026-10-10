@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Spawn this frame's share of a trap group's effect slots.
+/* Spawn this frame's share of a particle group's effect slots, drawn with CLUT
+ * clut_index of the weapons row.
  *
- * The group record's byte 0x28 caps how many slots one frame may start; the
- * secondary effect's active_count counts the slots started so far and stops at the
- * group's total count. */
-void battle_effect_start_group(s32 group, s32 animation) {
+ * The group spawns while the secondary effect's timer is inside its spawn
+ * frames. Its spawns_per_frame caps how many slots one frame may start; the
+ * secondary effect's active_count counts the live slots and stops the
+ * spawning at the group's total count. */
+void battle_effect_start_group(s32 group, s32 clut_index) {
     battle_effect_secondary_data_t* effect;
     battle_effect_slot_t* slot;
     s32 spawned;
@@ -30,7 +32,7 @@ void battle_effect_start_group(s32 group, s32 animation) {
             slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[i]];
             slot->life
                 = battle_effect_spawn_particle_motion(&g_battle_effect_trap_particle_configs[group], &slot->motion);
-            battle_effect_init_trap_animation(group, animation + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
+            battle_effect_init_trap_animation(group, clut_index + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
             effect = g_battle_effect_current_secondary;
             effect->active_count++;
             if (effect->active_count == g_battle_effect_trap_particle_configs[group].count) {

@@ -1,5 +1,13 @@
 #include "fft/battle.h"
 
+/* Runs the loaded effect file one frame and returns 1 while it plays.
+ *
+ * Once battle_effect_play releases a requested effect, the file's two CLUT
+ * rows and its texture go to VRAM; the memory from that last section of the
+ * file on then becomes the effect heap, the section pointers are bound and
+ * the root record starts the script. Each later frame runs every allocated
+ * record's script until it yields, freeing the records whose scripts end, and
+ * the effect is over when none is left. */
 s32 battle_effect_update_stage(void) {
     s32 result;
     s32 id;
@@ -64,7 +72,7 @@ s32 battle_effect_update_stage(void) {
         if (g_battle_effect_allocated_record_head != 0) {
             result = 1;
         } else {
-            if (g_battle_effect_flags_section->flags & EFFECT_FLAG_AUDIO_FADE) {
+            if (g_battle_effect_flags_section->flags & EFFECT_FLAG_QUIET_MUSIC) {
                 main_sound_set_current_music_volume_timed(0x78);
             }
             if (g_battle_effect_sound_section_ptr != 0) {

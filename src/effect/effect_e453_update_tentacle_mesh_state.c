@@ -1,3 +1,4 @@
+/* E453.BIN is the effect of effect id 0x221, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
@@ -8,7 +9,7 @@
 /* Run one phase of a tentacle-mesh effect: allocate its segment quads, spawn
  * up to 8 segments on the emitter interval, then advance each segment and
  * draw it as a strip of paired POLY_GT4 quads. */
-s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR tip;
     SVECTOR tip_spread;
     VECTOR origin;
@@ -87,20 +88,20 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
     s32 wrap;
 
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[geometry_index].tentacle_mesh;
+    entry = &g_effect_geometry_table->entries[emitter_index].tentacle_mesh;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[byte_offset]
+        work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), record_index);
         texture_page_flags = entry->texture_page_flags;
         abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
@@ -129,12 +130,12 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         curves1 = entry->curve_indices[1];
         target_index = record->target_index;
         curves0 = entry->curve_indices[0];
@@ -143,8 +144,8 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         if (i % battle_effect_lerp_linear(entry->spawn_interval_start, entry->spawn_interval_end, factor) == 0) {
             SetTransMatrix(&work->matrix);
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_coord_data.targets[16];
-            if (caster_target->target_type == 0) {
+            caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->id.misc_id) + 1) & 3) << 10;
                 rotation.vz = 0;
                 rotation.vx = 0;
@@ -152,8 +153,8 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
                 RotMatrix(&rotation, &facing);
             }
             battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, -1,
-                &g_battle_effect_coord_data, &caster);
+                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &caster);
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_coord_data, &target);
@@ -395,7 +396,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
                 }
                 seg->frame_timer = entry->frame_delay;
             }
-            if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
+            if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
                 red = g_effect_palette_table[entry->colour_curves & 0xF].factor[seg->head];
                 factor = entry->colour_curves & 0xFFF;
                 green = g_effect_palette_table[(factor >> 4) & 0xF].factor[seg->head];
@@ -444,7 +445,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
             emitter.position[0] = seg->points[point_index].x << 12;
             emitter.position[1] = seg->points[point_index].y << 12;
             emitter.position[2] = seg->points[point_index].z << 12;
-            if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
+            if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->child_emitter_mid_life, &emitter);
             }
@@ -563,7 +564,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
             AddPrim(&ot[depth], quad);
 
             if (seg->length + 8 == seg->head) {
-                if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
+                if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->child_emitter_on_death, &emitter);
                 }
@@ -575,16 +576,16 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 byte_offset, s3
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

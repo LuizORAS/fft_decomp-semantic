@@ -169,7 +169,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         for (i = 0; i < 2; i++) {
             j = state->ids_a[i];
             if (j != 0 && battle_effect_update_slot(j) == 0) {

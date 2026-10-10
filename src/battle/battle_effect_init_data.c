@@ -20,7 +20,7 @@ s32 battle_effect_init_data(void) {
     destination = g_main_heap_companion_overlay_load_address + 0x3500;
     if (g_battle_ability_effect_id >= 0) {
         switch (g_effect_load_state) {
-        case 0:
+        case BATTLE_EFFECT_LOAD_START:
             if (g_battle_effect_target_id != 0) {
                 g_battle_effect_load_countdown = 60;
             } else {
@@ -28,23 +28,23 @@ s32 battle_effect_init_data(void) {
             }
             battle_effect_load_lba_and_size(g_battle_ability_effect_id, &lba, &byte_length);
             if (byte_length == 0) {
-                g_battle_ability_effect_id = 1;
-                battle_effect_load_lba_and_size(1, &lba, &byte_length);
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_CURE;
+                battle_effect_load_lba_and_size(BATTLE_EFFECT_FILE_CURE, &lba, &byte_length);
             }
             result = main_file_call_build_header(lba, byte_length, destination);
             if (result == 0) {
-                g_effect_load_state = 1;
+                g_effect_load_state = BATTLE_EFFECT_LOAD_READING;
                 result = 1;
             }
             break;
-        case 1:
+        case BATTLE_EFFECT_LOAD_READING:
             result = main_file_is_still_loading();
             if (result == 0) {
-                g_effect_load_state = 2;
+                g_effect_load_state = BATTLE_EFFECT_LOAD_COUNTDOWN;
                 result = 1;
             }
             break;
-        case 2:
+        case BATTLE_EFFECT_LOAD_COUNTDOWN:
             if (g_battle_effect_load_countdown != 0) {
                 result = 1;
                 break;
@@ -52,16 +52,16 @@ s32 battle_effect_init_data(void) {
             if (g_battle_effect_target_id != 0) {
                 battle_effect_finalize_secondary(g_battle_effect_target_id);
             }
-            g_effect_load_state = 3;
+            g_effect_load_state = BATTLE_EFFECT_LOAD_ENDING_SECONDARY;
             battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
             /* An `lw` of the section's leading word, not a byte test. */
-            if (g_battle_effect_flags_section->flags & EFFECT_FLAG_AUDIO_FADE) {
+            if (g_battle_effect_flags_section->flags & EFFECT_FLAG_QUIET_MUSIC) {
                 main_sound_set_current_music_volume(0x40, 0xF0);
             }
             result = 1;
             break;
-        case 3:
-            result = battle_effect_get_secondary_phase(g_battle_effect_target_id) != 0;
+        case BATTLE_EFFECT_LOAD_ENDING_SECONDARY:
+            result = battle_effect_get_secondary_phase(g_battle_effect_target_id) != BATTLE_SECONDARY_EFFECT_ENDED;
             break;
         }
         if (g_battle_effect_load_countdown > 0) {

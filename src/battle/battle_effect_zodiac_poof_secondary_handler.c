@@ -5,11 +5,11 @@ enum {
     BATTLE_EFFECT_TRAP3_SLOT_COUNT = 24,
 };
 
-/* Updates the 24-slot secondary trap effect.
+/* Secondary effect function 0x11 (Zodiac Poof): the 24-slot particle group 3.
  *
- * Its spawn state is fixed at 0x801bade0 and its animation id comes from the
- * per-parameter table at 0x801b88dc. It follows the same phase structure as
- * the death-poof secondary handler while using the trap group's slot records.
+ * Its spawn state is fixed at 0x801bade0 and its CLUT comes from the table
+ * indexed by the effect's parameter, the caster's sprite palette. It follows
+ * the same phase structure as the death-poof secondary handler.
  */
 s32 battle_effect_zodiac_poof_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
@@ -23,7 +23,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     s32 done;
     s16 timer;
     u8 id;
-    u16 animation;
+    u16 clut_index;
 
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.zodiac_poof;
@@ -40,7 +40,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        animation = g_battle_effect_zodiac_poof_animations[effect->parameter];
+        clut_index = g_battle_effect_zodiac_poof_animations[effect->parameter];
         if (effect->timer
                 >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame
             && effect->timer
@@ -62,7 +62,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
                 slot->life = battle_effect_spawn_particle_motion(
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF], &slot->motion);
                 battle_effect_init_trap_animation(
-                    BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF, animation + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
+                    BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF, clut_index + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP3_SLOT_COUNT) {
                     break;
@@ -72,7 +72,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;
         gravity.x = 0;
         gravity.y = ONE;

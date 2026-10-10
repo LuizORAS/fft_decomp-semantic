@@ -12,12 +12,13 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_ef
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
         misc_id = -1;
-        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
-            misc_id = g_battle_effect_coord_data.targets[16].id.misc_id;
+        if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
+            == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            misc_id = g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id;
         }
     } else {
         misc_id = -1;
-        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             misc_id = g_battle_effect_coord_data.targets[target].id.misc_id;
         }
     }
@@ -36,7 +37,7 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_ef
     }
     if (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) {
         slot = (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) - 1;
-        state->callback_state[slot] = 1;
-        state->callback_ptrs[slot] = g_battle_effect_callback_slots[slot];
+        state->callback_phase[slot] = EFFECT_PHASE_INIT;
+        state->callbacks[slot] = g_battle_effect_callback_slots[slot];
     }
 }

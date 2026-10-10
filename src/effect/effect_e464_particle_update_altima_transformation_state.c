@@ -1,3 +1,4 @@
+/* E464.BIN is the effect of effect id 0x21a, one of the ids past the abilities. */
 #include "fft/effect.h"
 
 /* E464: Altima's Transformation; the target range ends before trailing data. */
@@ -9,7 +10,7 @@
  * vertex work and enables map data groups 1-6, phase 2 spawns each active
  * emitter's particles at its work vertex, phase 3 frees the work. */
 s32 effect_e464_particle_update_altima_transformation_state(
-    s16 record_index, s32 byte_offset, s32 entry_index, s32 frame) {
+    s16 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
     effect_record_t* record;
     VECTOR* work;
     effect_work_record_t parent;
@@ -22,15 +23,15 @@ s32 effect_e464_particle_update_altima_transformation_state(
 
     record = &g_effect_state_records[record_index];
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != NULL) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != NULL) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         vertex_work = battle_heap_alloc_block(0x200, record_index);
-        record->work_slots[byte_offset] = vertex_work;
+        record->work_slots[callback_slot] = vertex_work;
         g_battle_effect_current_work = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
@@ -38,10 +39,10 @@ s32 effect_e464_particle_update_altima_transformation_state(
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 4, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 5, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 6, 1, 1);
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         emitter_index = 0;
         do {
             emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
@@ -60,12 +61,12 @@ s32 effect_e464_particle_update_altima_transformation_state(
         } while (emitter_index < 16);
         break;
     case EFFECT_PHASE_DESTROY:
-        if (record->work_slots[byte_offset] != NULL) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
-            record->work_slots[byte_offset] = NULL;
+        if (record->work_slots[callback_slot] != NULL) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
+            record->work_slots[callback_slot] = NULL;
             g_battle_effect_current_work = NULL;
         }
-        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

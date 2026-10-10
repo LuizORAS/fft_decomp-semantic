@@ -1,3 +1,4 @@
+/* E482.BIN is the effect of effect id 0x21f, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -10,14 +11,14 @@
  * cells, three brightness entries per row and an ordering-table depth of at
  * least 4. The shared row/column scratch variables are explained there.
  */
-s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     effect_record_t* record;
     s32 translucent;
     u16 texture_page;
     s32 texture_width;
     s32 texture_height;
     u32* ot;
-    effect_geometry_entry_t* geometry;
+    effect_textured_quad_geometry_view_t* geometry;
     effect_textured_quad_grid_2x2_work_t* work;
     POLY_GT4* quad;
     s32 row;
@@ -35,18 +36,18 @@ s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
     u8 v;
 
     record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[geometry_index].emitter;
+    geometry = &g_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_2x2_work_t), record_index);
-        record->work_slots[byte_offset] = work;
+        record->work_slots[callback_slot] = work;
         if (geometry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             translucent = 0;
         } else {
@@ -76,12 +77,12 @@ s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
         work->frame = 0;
         work->buffer = 0;
         work->destroy_latched = 0;
-        work->texture_u = geometry->motion.textured_quad.texture_u;
-        work->texture_v = geometry->motion.textured_quad.texture_v;
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        work->texture_u = geometry->texture_u;
+        work->texture_v = geometry->texture_v;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         texture_width = geometry->texture_width / 2;
         texture_height = geometry->texture_height / 2;
         /* Two statements keep the target's li -1 / beq compare. */
@@ -100,8 +101,7 @@ s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
         } else {
             column = 0;
         }
-        angle = battle_effect_lerp_linear(
-            geometry->motion.textured_quad.scroll_angle_start, geometry->motion.textured_quad.scroll_angle_end, column);
+        angle = battle_effect_lerp_linear(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {
             work->scroll_u -= texture_width << 12;
@@ -117,7 +117,7 @@ s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
             work->scroll_v += texture_height << 12;
         }
         blue = 0x80;
-        if (geometry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
+        if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
             red = g_effect_palette_table[row & 0xf].factor[work->frame];
             green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
@@ -158,15 +158,15 @@ s32 effect_e482_update_textured_quad_grid_2x2(s16 record_index, s32 byte_offset,
         work->buffer = 1 - work->buffer;
         break;
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_latched == 0) {
             work->destroy_latched = 1;
         } else {
             if (work != 0) {
                 battle_heap_free_block(work);
-                record->work_slots[byte_offset] = 0;
+                record->work_slots[callback_slot] = 0;
             }
-            record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+            record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         }
         break;
     }

@@ -7,5 +7,5 @@ s32 battle_effect_is_item_ability(s32 ability_id) {
     if (entry < 0) {
         entry = ~entry;
     }
-    return (entry & 0x800) > 0;
+    return (entry & BATTLE_EFFECT_ABILITY_FLAG_ITEM) > 0;
 }

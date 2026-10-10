@@ -8,7 +8,7 @@
  * Phase 1 derives the arrow's heading, launch pitch and per-step gravity from
  * the trajectory origin/destination, builds its rotation matrix and allocates
  * the polygon work buffer. Phase 2 advances one step along the arc, orients
- * the arrow along the local slope and draws it through 0x801ae340; the last
+ * the arrow along the local slope and draws it with battle_effect_draw_projectile_model; the last
  * step or a positive height ends the flight. Phase 3 returns 0. An unknown
  * phase returns `result` uninitialised, as the target returns $s6 unwritten.
  */

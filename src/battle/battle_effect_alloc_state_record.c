@@ -16,6 +16,6 @@ s16 battle_effect_alloc_state_record(void) {
     *available = next_available;
     g_effect_state_records[index].next_index = next_allocated;
     *allocated = index;
-    g_effect_state_records[index].flags |= 1;
+    g_effect_state_records[index].flags |= EFFECT_RECORD_FLAG_ALLOCATED;
     return index;
 }

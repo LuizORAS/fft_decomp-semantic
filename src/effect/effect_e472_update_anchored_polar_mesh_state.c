@@ -1,9 +1,10 @@
+/* E472.BIN is the effect of effect id 0x215, one of the ids past the abilities. */
 #include "fft/effect.h"
 
 /* Builds and draws a four-fold symmetric polar mesh of textured quads anchored
  * to an effect target.
  *
- * The same renderer as the 6,012-byte polar mesh (effect_polar_mesh.h), with
+ * The same renderer as the 6,012-byte polar mesh (effect_eNNN_update_polar_mesh_state), with
  * two differences: the mesh centre is offset by the camera-space position of
  * the record's coordinate target (resolved to render coordinates, offset by
  * the unit's secondary coordinate vector, then RotTrans'd through the battle
@@ -13,7 +14,7 @@
  * `i` doubles as the curve factor and segment index, and `j` as the curve
  * index, scalar temporary and ring counter: the target keeps each pair in one
  * register. The s32 return with no value keeps $v0 live at the exit. */
-s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     effect_anchored_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
     effect_polar_mesh_geometry_view_t* entry;
@@ -28,18 +29,18 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
 
     scratch = (effect_anchored_polar_mesh_scratch_t*)0x1F800000;
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[geometry_index].polar_mesh;
+    entry = &g_effect_geometry_table->entries[emitter_index].polar_mesh;
     ot = main_gfx_get_otag();
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[byte_offset]
+        work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), record_index);
         if (entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             scratch->translucent = 0;
@@ -66,11 +67,11 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
         work->destroy_delay = 0;
         work->base_u = entry->texture_u;
         work->base_v = entry->texture_v;
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         scratch->half_width = entry->texture_width / 2;
         scratch->half_height = entry->texture_height / 2;
 
@@ -152,7 +153,7 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
             work->scroll_v += scratch->half_height << 12;
         }
 
-        if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
+        if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             j = entry->colour_curves & 0xFFF;
             scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
             scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
@@ -346,16 +347,16 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 byte_offs
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

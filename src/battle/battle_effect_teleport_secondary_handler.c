@@ -3,8 +3,8 @@
 /*
  * Secondary effect function 0x13 (Teleport) in g_battle_effect_secondary_handlers.
  * It shares the golem handler's
- * shape: initialize, then step the effect slots with a (0, 0x1000, 0) on-hit
- * vector until finish_timer reaches 1. Returns 1 to keep animating.
+ * shape: initialize, then step the effect slots with a gravity of
+ * (0, ONE, 0) until finish_timer reaches 1. Returns 1 to keep animating.
  */
 s32 battle_effect_teleport_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
@@ -27,7 +27,7 @@ s32 battle_effect_teleport_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;
         gravity.x = 0;
         gravity.y = ONE;

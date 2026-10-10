@@ -63,7 +63,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     prim->color.packed = slot->color.packed;
     setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
-    setSemiTrans(prim, frame->flags & 0x200);
+    setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
     ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];
@@ -71,7 +71,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
         &g_battle_effect_corner_bottom_left, &prim->xy0, &prim->xy1, &prim->xy2, &sxy, &flag);
     RotTransPers(&g_battle_effect_corner_bottom_right, &prim->xy3, &sxy, &flag);
-    prim->tpage = (frame->flags & 0xe0) | 8;
+    prim->tpage = (frame->flags & EFFECT_SPRITE_PART_TPAGE_MODE_MASK) | 8;
     prim->clut = slot->clut;
     corner_u = frame->u;
     prim->u2 = corner_u;

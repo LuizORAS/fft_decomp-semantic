@@ -1,3 +1,4 @@
+/* E174.BIN is the effect of ABILITY_ID_ALL_MAGIC_DARK_HOLY. */
 #include "fft/effect.h"
 
 /* Builds and draws a spinning, flaring ring of 2x32 textured quads.
@@ -16,7 +17,7 @@
  * is narrowed once, which is what places it in $s0. The handler returns no
  * value, but the s32 return keeps $v0 live at the exit, which leaves the phase
  * dispatch's delay slots empty as in the target. */
-s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR unused_10[3]; /* frame padding the target reserves but never touches */
     VECTOR origin;
     VECTOR growth;      /* vx: radius speed step, vy: row height step, vz: row radius step */
@@ -55,21 +56,21 @@ s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
 
     record_index = (s16)record_index;
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[geometry_index].ring_mesh;
+    entry = &g_effect_geometry_table->entries[emitter_index].ring_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
     scratch = (effect_ring_mesh_scratch_t*)0x1f800000;
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), record_index);
-        record->work_slots[byte_offset] = work;
+        record->work_slots[callback_slot] = work;
         abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         translucent = abe == 0;
@@ -92,11 +93,11 @@ s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         target_index = g_effect_state_records[record_index].target_index;
         READ_CURVE(j, i, entry->scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin.vx);
@@ -112,8 +113,8 @@ s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
             battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, -1,
-                &g_battle_effect_coord_data, &scratch->vertex);
+                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &scratch->vertex);
             origin.vx += scratch->vertex.vx;
             origin.vy += scratch->vertex.vy;
             origin.vz += scratch->vertex.vz;
@@ -388,7 +389,7 @@ s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
 
         n = entry->brightness_row;
         blue = 0x80;
-        if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
+        if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             k = entry->colour_curves & 0xfff;
             red = g_effect_palette_table[k & 0xf].factor[frame];
             green = g_effect_palette_table[(k >> 4) & 0xf].factor[frame];
@@ -451,16 +452,16 @@ s32 effect_e174_update_ring_mesh_state(s32 record_index, s32 byte_offset, s32 ge
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

@@ -23,16 +23,16 @@ effect_work_record_t* battle_effect_alloc_work_record(s16 record_index, s16 kind
     }
     g_battle_effect_free_work_record_head = work->next;
     switch (kind & EFFECT_WORK_KIND_MASK) {
-    case EFFECT_WORK_KIND_LIST_NODE_0:
+    case EFFECT_WORK_KIND_SPRITE_WORLD:
         work->data = battle_effect_alloc_list_node(EFFECT_LIST_NODE_WORLD);
         break;
-    case EFFECT_WORK_KIND_LIST_NODE_2:
+    case EFFECT_WORK_KIND_SPRITE_SCREEN_OFFSET:
         work->data = battle_effect_alloc_list_node(EFFECT_LIST_NODE_SCREEN_OFFSET);
         break;
-    case EFFECT_WORK_KIND_LIST_NODE_4:
+    case EFFECT_WORK_KIND_SPRITE_WORLD_UNSCALED:
         work->data = battle_effect_alloc_list_node(EFFECT_LIST_NODE_WORLD_UNSCALED);
         break;
-    case EFFECT_WORK_KIND_LIST_NODE_6:
+    case EFFECT_WORK_KIND_SPRITE_SCREEN:
         work->data = battle_effect_alloc_list_node(EFFECT_LIST_NODE_SCREEN);
         break;
     }

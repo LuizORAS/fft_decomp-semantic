@@ -2,8 +2,10 @@
 #include "psx/types.h"
 
 /*
- * Effect on-hit sound schedule: 0x00 halfword delay per entry, 0x12 byte
- * kind per entry (0/1 none, 2+ sound index + 2), 0x1c halfword entry count.
+ * Advances one sound track of the parent timeline by a frame. The 0x1e-byte
+ * track holds nine halfword durations at 0x00, nine channel bytes at 0x12
+ * (0 and 1 none, otherwise a sound channel of the flags section + 2) and its
+ * entry count at 0x1c; entering an entry plays the channel's next sound.
  * Sound ids are relative to g_battle_effect_sound_data_base, the effect sound
  * section's id set by battle_effect_load_sound_section.
  */

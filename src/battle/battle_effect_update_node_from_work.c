@@ -5,8 +5,8 @@
  *
  * With kind_flags bit 1 the velocity is rotated into camera space and its
  * screen heading stored on the node. Colour-curve records take each channel
- * from its g_effect_palette_table row at the current palette frame; others
- * use neutral 0x80. */
+ * from its animation curve at the record's curve frame; others use neutral
+ * 0x80. */
 void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t* work) {
     SVECTOR direction;
     VECTOR rotated;
@@ -14,7 +14,7 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
     work->data->x = work->position[0] >> 12;
     work->data->y = work->position[1] >> 12;
     work->data->z = work->position[2] >> 12;
-    if (work->kind_flags & EFFECT_WORK_KIND_FLAG_ORIENT_TO_VELOCITY) {
+    if (work->kind_flags & EFFECT_EMITTER_ORIENT_TO_VELOCITY) {
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_effect_particle_heading_matrix);
         direction.vx = work->velocity[0] >> 3;
@@ -25,11 +25,11 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
         RotTrans(&direction, &rotated, &rotated.pad);
         work->data->screen_rotation_angle = ratan2(rotated.vy, rotated.vx);
     }
-    if (work->flags & EFFECT_WORK_FLAG_COLOUR_CURVES) {
+    if (work->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
         battle_effect_render_particle_sprite(work->data,
-            g_effect_palette_table[work->colour_curves[0]].factor[work->palette_frame],
-            g_effect_palette_table[work->colour_curves[1]].factor[work->palette_frame],
-            g_effect_palette_table[work->colour_curves[2]].factor[work->palette_frame]);
+            g_effect_palette_table[work->colour_curves[0]].factor[work->curve_frame],
+            g_effect_palette_table[work->colour_curves[1]].factor[work->curve_frame],
+            g_effect_palette_table[work->colour_curves[2]].factor[work->curve_frame]);
     } else {
         battle_effect_render_particle_sprite(work->data, 0x80, 0x80, 0x80);
     }

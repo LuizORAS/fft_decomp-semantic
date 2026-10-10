@@ -9,7 +9,7 @@ effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requeste
     s16 node_count;
     s16 i;
 
-    if ((record->flags & 1) != 0) {
+    if ((record->flags & EFFECT_RECORD_FLAG_ALLOCATED) != 0) {
         if (requested_index >= 0) {
             node_count = record->work_count;
             if (requested_index < node_count) {

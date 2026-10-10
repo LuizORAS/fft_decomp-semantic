@@ -54,7 +54,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             main_heap_free(g_battle_effect_current_secondary->allocation);
         }
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
-        if ((parameter & 0xff) == 0) {
+        if ((parameter & 0xff) == BATTLE_EFFECT_MODEL_ARROW) {
             arrow = main_heap_alloc(0xc88);
             g_battle_effect_current_secondary->allocation = arrow;
             for (i = 0; i < 2; i++) {
@@ -66,7 +66,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 }
             }
         }
-        if ((parameter & 0xff) == 1) {
+        if ((parameter & 0xff) == BATTLE_EFFECT_MODEL_STONE) {
             work12 = main_heap_alloc(0x2a0);
             g_battle_effect_current_secondary->allocation = work12;
             for (i = 0; i < 2; i++) {
@@ -75,7 +75,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 }
             }
         }
-        if (parameter == -1) {
+        if (parameter == BATTLE_EFFECT_SECONDARY_PARAMETER_ITEM_GRAPHIC) {
             item = g_battle_effect_current_secondary->used_weapon_id;
             if (item >= ITEM_ID_SHURIKEN && item <= ITEM_ID_YAGYU_DARKNESS) {
                 work16 = main_heap_alloc(0x380);
@@ -122,15 +122,15 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         angles.vx = 0;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
         i = parameter & 0xff;
-        if (parameter != -1) {
-            if (i == 0) {
+        if (parameter != BATTLE_EFFECT_SECONDARY_PARAMETER_ITEM_GRAPHIC) {
+            if (i == BATTLE_EFFECT_MODEL_ARROW) {
                 scale.vz = 0x40;
                 scale.vy = 0x40;
                 scale.vx = 0x40;
                 spin.vz = 0;
                 spin.vy = 0;
                 spin.vx = 0;
-            } else if (i == 1) {
+            } else if (i == BATTLE_EFFECT_MODEL_STONE) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
@@ -148,7 +148,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 spin.vy = 0;
                 spin.vx = 0;
                 spin.vz = -(g_battle_effect_projectile_spin_passes * 256);
-                battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, 3);
+                battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, BATTLE_EFFECT_MODEL_SHURIKEN);
             } else {
                 battle_effect_draw_item_drop_sprite(&position, item, 0);
             }
@@ -156,7 +156,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         if (g_battle_effect_projectile_spin_passes == 2 && g_battle_effect_trajectory_hit_unit_id != -1) {
             kind = g_battle_effect_current_secondary->used_weapon_id;
             if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
-                && (kind < ITEM_ID_CONSUMABLE_FIRST || kind > ITEM_ID_END - 1)
+                && (kind < ITEM_ID_POTION || kind > ITEM_ID_PHOENIX_DOWN)
                 && g_battle_effect_current_secondary->target_count != 0) {
                 battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
                     g_battle_effect_current_secondary->target.fields.target_id);
@@ -170,12 +170,12 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[0]);
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
-            if (g_battle_effect_current_secondary->target.fields.target_type == 0
-                && g_battle_effect_current_secondary->target.fields.result_animation != 3
-                && g_battle_effect_current_secondary->target.fields.result_animation != 4) {
+            if (g_battle_effect_current_secondary->target.fields.target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT
+                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_MISSED
+                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_NO_EFFECT) {
                 battle_effect_play();
                 battle_state_set_animation_speed(2);
-            } else if (battle_effect_get_phase() == 1) {
+            } else if (battle_effect_get_phase() == BATTLE_EFFECT_PHASE_REQUESTED) {
                 if (g_battle_effect_current_secondary->target_count != 0) {
                     battle_unit_call_bow_hardcoding_by_misc_id(
                         g_battle_effect_current_secondary->caster.fields.caster_id,

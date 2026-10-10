@@ -1,24 +1,25 @@
 #include "fft/battle.h"
 
-/* Pick the evade-animation type: Throw Stone is hardcoded to type 6, Item and
- * Throw abilities use the item-toss type 0x10, and everything else looks the
- * type up in the per-weapon evade table. The target retains a redundant
+/* Starts the projectile secondary effect of the unit's action: the stone for
+ * Throw Stone, the thrown item for the Item and Throw abilities, and for
+ * anything else the animation of the equipped weapon's type (an arrow for
+ * bows and crossbows, none for the rest). The target retains a redundant
  * Shuriken test before checking the complete Item/Throw span. */
-void battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(battle_unit_misc_data_t* unit) {
+void battle_effect_set_animation_id_data_item_and_throw_stone_hardcoding(battle_unit_misc_data_t* unit) {
     battle_effect_secondary_init_t secondary_init;
     u16 ability_id;
-    u8 evade_type;
+    u8 animation_id;
     battle_effect_build_secondary_init_from_action(unit, &secondary_init);
     ability_id = unit->used_ability_id;
     if (ability_id == ABILITY_ID_BASIC_SKILL_THROW_STONE) {
-        evade_type = 6;
+        animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_STONE;
     } else {
-        evade_type = 0x10;
+        animation_id = BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_ITEM;
         if ((ability_id != ABILITY_ID_THROW_SHURIKEN)
             && ((u32)(unit->used_ability_id - ABILITY_ID_ITEM_FIRST)
                 >= (ABILITY_ID_JUMP_FIRST - ABILITY_ID_ITEM_FIRST))) {
-            evade_type = (&g_battle_effect_weapon_type_extra_flags)[unit->equipped_weapon_type];
+            animation_id = g_battle_effect_weapon_type_extra_flags[unit->equipped_weapon_type];
         }
     }
-    battle_effect_init_projectile_secondary(evade_type, &secondary_init);
+    battle_effect_init_projectile_secondary(animation_id, &secondary_init);
 }

@@ -7,7 +7,7 @@
  * Each of the acting unit's targets contributes a target block carrying its
  * unit id and a result animation; with no targets the first block instead
  * holds the post-action destination tile. Every other living unit that is not
- * already a target is appended to palette_target_ids. The packed
+ * already a target is appended to spectator_ids. The packed
  * argument combines the ability's charge animation set with the element used
  * as the effect's sprite palette, and stays 0 while the action has no attack
  * to animate. The failed-condition path is written as its own `packed = 0`
@@ -27,7 +27,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     battle_strike_work_t* block;
 
     init.target_count = unit->target_count;
-    init.caster.fields.target_type = 0;
+    init.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init.caster.fields.caster_id = unit->unit_id;
     save_3_u16(
         (SVECTOR*)&init.target_tile.id.tile_x, unit->target_new_x, unit->target_new_map_level, unit->target_new_y);
@@ -35,7 +35,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
-            init.target[i].fields.target_type = 0;
+            init.target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
             init.target[i].fields.target_id = target->unit_id;
             {
                 battle_stats_t* target_stats;
@@ -77,12 +77,12 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
                     if (j < block->target_count) {
                         continue;
                     }
-                    init.palette_target_ids[spectators++] = spectator->unit_id;
+                    init.spectator_ids[spectators++] = spectator->unit_id;
                 }
             }
         }
     }
-    init.palette_target_count = spectators;
+    init.spectator_count = spectators;
     init.math_skill_flag = block->math_skill_flag;
     init.used_weapon_id = block->used_weapon_id;
     if (block->last_attack_id == 0 || block->reaction_occurred != 0

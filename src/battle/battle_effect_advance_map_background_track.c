@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advance the map background track one frame.
+/* Advance the screen colour track one frame.
  *
- * A starting keyframe with preset bit 7 modulates the background gradient by
+ * A starting APPLY keyframe modulates the background gradient by
  * its doubled colour (and the scaled palette when weather flag 2 is set);
  * otherwise both colours become the new gradient stops, with the first also
  * driving the darkness colour under weather flag 2. */
@@ -32,8 +32,8 @@ void battle_effect_advance_map_background_track(
             }
             *remaining_frames = duration;
             preset = track->preset[index];
-            if (preset & 0x80) {
-                mode = preset & 0x7f;
+            if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
+                mode = preset & EFFECT_COLOR_KEYFRAME_MODE_MASK;
                 red = track->color[index][0] * 2;
                 green = track->color[index][1] * 2;
                 blue = track->color[index][2] * 2;

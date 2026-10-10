@@ -19,7 +19,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
     battle_effect_burst_state_t* state;
     battle_effect_slot_t* slot;
     s32 unused[8];
-    battle_effect_gravity_t pos;
+    battle_effect_gravity_t gravity;
     VECTOR zoom;
     VECTOR offset;
     s32 result;
@@ -124,12 +124,12 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
-        pos.z = 0;
-        pos.x = 0;
-        pos.y = ONE;
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
         battle_effect_save_gravity();
-        battle_effect_set_gravity(&pos);
+        battle_effect_set_gravity(&gravity);
         for (i = 0; i < 8; i++) {
             id = state->ids_a[i];
             if (id != 0 && battle_effect_update_slot(id) == 0) {
@@ -151,17 +151,21 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         if (g_battle_effect_current_secondary->target.fields.result_animation == BATTLE_EFFECT_HIT_CRITICAL) {
             if (state->frame == 0) {
                 zoom.vx = zoom.vy = zoom.vz = -0x80;
-                battle_camera_execute_zoom_command(0x500, 0, 2, &zoom);
+                battle_camera_execute_zoom_command(
+                    BATTLE_EFFECT_CAMERA_SOURCE_SAVED | BATTLE_EFFECT_CAMERA_MODE_COSINE, 0, 2, &zoom);
             }
             if (state->frame == 2) {
                 zoom.vx = zoom.vy = zoom.vz = 0x2e4;
-                battle_camera_execute_zoom_command(0x500, 0, 2, &zoom);
+                battle_camera_execute_zoom_command(
+                    BATTLE_EFFECT_CAMERA_SOURCE_SAVED | BATTLE_EFFECT_CAMERA_MODE_COSINE, 0, 2, &zoom);
             }
             if (state->frame == 4) {
                 zoom.vx = zoom.vy = zoom.vz = 0;
-                battle_camera_execute_zoom_command(0x500, 0, 0xc, &zoom);
+                battle_camera_execute_zoom_command(
+                    BATTLE_EFFECT_CAMERA_SOURCE_SAVED | BATTLE_EFFECT_CAMERA_MODE_COSINE, 0, 0xc, &zoom);
                 offset.vx = offset.vy = offset.vz = 4;
-                battle_camera_execute_position_command(0x1440, 0, 9, &offset);
+                battle_camera_execute_position_command(
+                    BATTLE_EFFECT_CAMERA_SOURCE_GIVEN | BATTLE_EFFECT_CAMERA_MODE_SHAKE_DECAYING, 0, 9, &offset);
             }
         }
         done = state->done;

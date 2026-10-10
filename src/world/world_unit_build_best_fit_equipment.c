@@ -1,4 +1,4 @@
-/* "Equip Best" (also known as "Optimize"): fills equipment[5] (right hand, left hand,
+/* Best Fit: fills equipment[5] (right hand, left hand,
  * head, body, accessory) with the best-ranked held items for formation unit
  * `unit_index`; called by world_menu_run_best_fit_equipment. Each slot's list
  * comes from world_item_build_category_list plus the unit's current weapons,

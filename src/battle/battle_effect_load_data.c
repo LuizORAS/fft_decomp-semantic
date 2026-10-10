@@ -7,8 +7,8 @@ void battle_effect_load_data(void) {
 
     battle_effect_load_lba_and_size(g_battle_ability_effect_id, &lba, &byte_length);
     if (byte_length == 0) {
-        g_battle_ability_effect_id = 1;
-        battle_effect_load_lba_and_size(1, &lba, &byte_length);
+        g_battle_ability_effect_id = BATTLE_EFFECT_FILE_CURE;
+        battle_effect_load_lba_and_size(BATTLE_EFFECT_FILE_CURE, &lba, &byte_length);
     }
     main_file_call_build_header(lba, byte_length, 0);
 }

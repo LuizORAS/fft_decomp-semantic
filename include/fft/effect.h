@@ -8,7 +8,7 @@
 struct effect_timeline_header;
 
 /* helpers */
-/* Reads curve `nibble` (0 = none, otherwise palette row + 1) at `frame`. The
+/* Reads animation curve `nibble` (0 = none, otherwise the curve index + 1) at `frame`. The
  * separate decrement keeps the target's compare against -1. */
 #define READ_CURVE(result, index, nibble, frame)                                                                       \
     {                                                                                                                  \
@@ -268,9 +268,9 @@ typedef struct effect_textured_quad_grid_2x2_work {
     s32 scroll_u; /* 0x1ec: 20.12 texture scroll, wrapped to texture_width / 2 */
     s32 scroll_v; /* 0x1f0: 20.12 texture scroll, wrapped to texture_height / 2 */
     u8 _unused_1f4[4];
-    u16 texture_u;       /* 0x1f8: from the geometry entry; read back as u8 */
+    u16 texture_u;       /* 0x1f8: from the emitter record; read back as u8 */
     u16 texture_v;       /* 0x1fa */
-    s32 frame;           /* 0x1fc: column of the palette-curve rows */
+    s32 frame;           /* 0x1fc: column of the animation curves */
     s32 destroy_latched; /* 0x200: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_2x2_work_t;
 typedef char
@@ -283,9 +283,9 @@ typedef struct effect_textured_quad_grid_4x4_work {
     s32 scroll_u; /* 0x6cc: 20.12 texture scroll, wrapped to texture_width / 2 */
     s32 scroll_v; /* 0x6d0: 20.12 texture scroll, wrapped to texture_height / 2 */
     u8 _unused_6d4[4];
-    u16 texture_u;       /* 0x6d8: from the geometry entry; read back as u8 */
+    u16 texture_u;       /* 0x6d8: from the emitter record; read back as u8 */
     u16 texture_v;       /* 0x6da */
-    s32 frame;           /* 0x6dc: column of the palette-curve rows */
+    s32 frame;           /* 0x6dc: column of the animation curves */
     s32 destroy_latched; /* 0x6e0: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_4x4_work_t;
 typedef char
@@ -297,9 +297,9 @@ typedef struct effect_textured_quad_grid_8x8_work {
     s32 scroll_u;          /* 0x1a04: 20.12 texture scroll, wrapped to texture_width / 2 */
     s32 scroll_v;          /* 0x1a08: 20.12 texture scroll, wrapped to texture_height / 2 */
     u8 _unused_1a0c[4];
-    u16 texture_u;       /* 0x1a10: from the geometry entry; read back as u8 */
+    u16 texture_u;       /* 0x1a10: from the emitter record; read back as u8 */
     u16 texture_v;       /* 0x1a12 */
-    s32 frame;           /* 0x1a14: column of the palette-curve rows */
+    s32 frame;           /* 0x1a14: column of the animation curves */
     s32 destroy_latched; /* 0x1a18: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_8x8_work_t;
 typedef char
@@ -457,18 +457,18 @@ extern u32 g_effect_e474_summon_mesh_brightness_table[][9];
 extern u32 g_effect_summon_mesh_brightness_table[][9];
 
 /* system */
-/* Shared layout of the EFFECT/E###.BIN overlay state handlers.
+/* The native handlers of the EFFECT/E###.BIN overlays.
  *
- * Every native overlay routine is a state handler
- *     handler(s16 record_index, s32 byte_offset, s32 entry_index, s32 frame)
- * over one 0xf8-byte record of g_effect_state_records. The state block
- * addressed by byte_offset carries the phase byte (1 init, 2 update, 3 destroy);
- * the record's work-slot table at +0xe4 is indexed by the same byte_offset.
- * Field names are provisional: only offsets proven by matched code are named. */
-typedef struct effect_state {
-    u8 _unused_00[0x22];
-    u8 phase; /* 0x22: 1 init, 2 update, 3 destroy, 0 idle */
-} effect_state_t;
+ * Effect script opcode 06 puts a handler in one of the callback slots, and a
+ * particle keyframe whose action word names the slot binds it to the record.
+ * While a keyframe that names the slot runs, the particle channel calls
+ *     handler(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame)
+ * once a frame in place of the particle emitter: emitter_index is the
+ * keyframe's emitter record, which the handler reads through its own view,
+ * and frame counts from the start of the keyframe. The slot's phase
+ * (effect_record_t.callback_phase, effect_phase_e) starts at INIT, where the
+ * handler allocates its work block into work_slots; it then stays at UPDATE
+ * until the channel sets DESTROY two frames before the keyframe ends. */
 
 extern u8 g_effect_e454_particle_work_offset_scale_16;
 extern u8 g_effect_e454_particle_work_offset_scale_64;
@@ -548,7 +548,7 @@ extern u32 g_effect_tentacle_mesh_brightness_table[][9];
  * eight EFFECT overlays compile from one source (for example E033 at
  * 0x801c3c7c). */
 /* Work block of the 8x8 wave mesh, allocated in phase 1. The four wave phases
- * are 4096-per-turn angles; the geometry entry's spawn spread (x, y) and
+ * are 4096-per-turn angles; the emitter record's spawn spread (x, y) and
  * wave_phase_speed curves advance them once per update. */
 typedef struct effect_wave_mesh_work {
     s32 buffer;            /* 0x0000: quads[buffer] is drawn this frame */

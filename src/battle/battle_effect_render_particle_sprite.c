@@ -104,7 +104,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             depth = 8;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_FARTHEST:
-            depth = 0x17e;
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_16:
             depth = 0x10;
@@ -116,8 +116,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth < 0) {
             return;
         }
-        if (depth > 0x17e) {
-            depth = 0x17e;
+        if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
         position[0] = output.vx;
         position[1] = output.vy;
@@ -131,8 +131,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth < 0) {
             depth = 0;
         }
-        if (depth > 0x17e) {
-            depth = 0x17e;
+        if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
         battle_effect_submit_sprite_to_ordering_table(node->sprite_block, position, node->screen_rotation_angle,
             &g_battle_camera_zoom, g_battle_effect_otag + depth);
@@ -153,7 +153,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             depth = 8;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_FARTHEST:
-            depth = 0x17e;
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_16:
             depth = 0x10;
@@ -165,8 +165,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth < 0) {
             return;
         }
-        if (depth > 0x17e) {
-            depth = 0x17e;
+        if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
         position[0] = output.vx;
         position[1] = output.vy;
@@ -180,8 +180,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth < 0) {
             depth = 0;
         }
-        if (depth > 0x17e) {
-            depth = 0x17e;
+        if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
+            depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
         battle_effect_submit_sprite_to_ordering_table(
             node->sprite_block, position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);

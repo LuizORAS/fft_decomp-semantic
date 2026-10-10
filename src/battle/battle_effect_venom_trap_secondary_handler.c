@@ -4,13 +4,13 @@
  * Secondary effect function 0x0c (Venom Trap) in g_battle_effect_secondary_handlers.
  * It shares the golem handler's
  * shape: initialize and play sound 0x22, then step the effect slots with a
- * (0, 0x1000, 0) on-hit vector until finish_timer reaches 1. Returns 1 to keep
+ * gravity of (0, ONE, 0) until finish_timer reaches 1. Returns 1 to keep
  * animating.
  */
 s32 battle_effect_venom_trap_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     s32 unused[6]; /* Reserves the target's 0x48-byte frame. */
-    battle_effect_gravity_t pos;
+    battle_effect_gravity_t gravity;
     s32 result;
     s16 finish_timer;
 
@@ -30,12 +30,12 @@ s32 battle_effect_venom_trap_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
-        pos.z = 0;
-        pos.x = 0;
-        pos.y = ONE;
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
         battle_effect_save_gravity();
-        battle_effect_set_gravity(&pos);
+        battle_effect_set_gravity(&gravity);
         battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();

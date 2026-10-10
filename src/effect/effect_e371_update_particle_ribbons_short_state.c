@@ -1,3 +1,4 @@
+/* E371.BIN is the effect of ABILITY_ID_MONSTER_BULL_DEMON_SHAKE_OFF. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
@@ -20,7 +21,7 @@
  * so fold keeps the target's (j - 16) and (index - 16) subexpressions; the
  * head point is re-read through the same `slot->trail[index]` address before
  * `index` steps back to the tail. */
-s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR target_base;
     SVECTOR target_spread;
     VECTOR origin;
@@ -91,21 +92,21 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
     battle_effect_target_t* caster_target;
 
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[geometry_index].particle_ribbon;
+    entry = &g_effect_geometry_table->entries[emitter_index].particle_ribbon;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();
 
-    switch (record->callback_phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), record_index);
-        record->work_slots[byte_offset] = work;
+        record->work_slots[callback_slot] = work;
         abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
         tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
@@ -138,13 +139,13 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->callback_phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
         frame %= 160;
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         wave = entry->curve_indices[1];
         target_index = record->target_index;
         scroll = entry->curve_indices[0];
@@ -152,10 +153,10 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
         if (i % battle_effect_lerp_linear(entry->spawn_interval_start, entry->spawn_interval_end, factor) == 0) {
             SetTransMatrix(&work->matrix);
             rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_coord_data.targets[16];
-            if (caster_target->target_type == 0) {
-                quadrant
-                    = battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_coord_data.targets[16].id.misc_id);
+            caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                quadrant = battle_unit_get_facing_quadrant_by_misc_id(
+                    g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
                 quadrant = ((quadrant + 1) & 3) << 10;
                 vector.vz = 0;
                 vector.vx = 0;
@@ -163,8 +164,8 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
                 RotMatrix(&vector, &facing);
             }
             battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, -1,
-                &g_battle_effect_coord_data, &caster);
+                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &caster);
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_coord_data, &target);
@@ -422,7 +423,7 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
                 }
                 slot->frame_timer = entry->frame_delay;
             }
-            if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
+            if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
                 factor = entry->colour_curves & 0xfff;
                 red = g_effect_palette_table[entry->colour_curves & 0xf].factor[slot->age];
                 green = g_effect_palette_table[(factor >> 4) & 0xf].factor[slot->age];
@@ -465,7 +466,7 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
             parent.position[0] = slot->trail[index].x << 12;
             parent.position[1] = slot->trail[index].y << 12;
             parent.position[2] = slot->trail[index].z << 12;
-            if (flags & EFFECT_GEOMETRY_FLAG_CHILD_MID_LIFE_MASK) {
+            if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, slot->age, entry->child_emitter_mid_life, &parent);
             }
@@ -564,7 +565,7 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
             }
             AddPrim(ot + depth, quad);
             if (slot->lifetime + RIBBON_SEGMENTS == slot->age) {
-                if (flags & EFFECT_GEOMETRY_FLAG_CHILD_ON_DEATH_MASK) {
+                if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, slot->age, entry->child_emitter_on_death, &parent);
                 }
@@ -576,16 +577,16 @@ s32 effect_e371_update_particle_ribbons_short_state(s16 record_index, s32 byte_o
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

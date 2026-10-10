@@ -11,7 +11,7 @@ s32 battle_effect_splash_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     map_tile_t* tile;
     s32 unused[6]; /* Reserves the target's 0x48-byte frame. */
-    battle_effect_gravity_t pos;
+    battle_effect_gravity_t gravity;
     s32 result;
     s16 finish_timer;
 
@@ -35,12 +35,12 @@ s32 battle_effect_splash_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
-        pos.z = 0;
-        pos.x = 0;
-        pos.y = ONE;
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
         battle_effect_save_gravity();
-        battle_effect_set_gravity(&pos);
+        battle_effect_set_gravity(&gravity);
         battle_effect_update_active_slots(BATTLE_EFFECT_PARTICLE_GROUP_SPLASH);
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();

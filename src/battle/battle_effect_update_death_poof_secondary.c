@@ -20,7 +20,7 @@ enum {
 /*
  * Death Poof secondary effect (0x0f) handler for the two-slot trap group 4: it
  * starts this frame's share of the group's effect slots, steps them with a
- * (0, 0x1000, 0) on-hit vector and finishes once the spawn state's finish_timer
+ * gravity of (0, ONE, 0) and finishes once the spawn state's finish_timer
  * reaches 1.
  *
  * The unrecognized-phase return path preserves its second incoming argument
@@ -32,7 +32,7 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
     battle_effect_secondary_data_t* effect;
     battle_effect_trap_state_t* state;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
-    battle_effect_gravity_t on_hit_vector;
+    battle_effect_gravity_t gravity;
     s32 result;
     s32 spawned;
     s32 i;
@@ -93,12 +93,12 @@ s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) 
         u8 id;
 
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
-        on_hit_vector.z = 0;
-        on_hit_vector.x = 0;
-        on_hit_vector.y = ONE;
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
+        gravity.z = 0;
+        gravity.x = 0;
+        gravity.y = ONE;
         battle_effect_save_gravity();
-        battle_effect_set_gravity(&on_hit_vector);
+        battle_effect_set_gravity(&gravity);
         for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
             id = state->ids[i];
             if (id != 0 && battle_effect_update_slot(id) == 0) {

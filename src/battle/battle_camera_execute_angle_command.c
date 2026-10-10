@@ -13,15 +13,15 @@
  *
  * Mode 0x40 keeps its own `current` pointer: sharing `rotation` with the other
  * modes changes that case's register allocation. */
-void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SVECTOR* angles) {
+void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR* angles) {
     SVECTOR coords;
     SVECTOR* rotation;
     SVECTOR* current;
     s16 delta;
 
-    switch (flags & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
+    switch (command & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
-        if (g_battle_effect_coord_data.targets[target].target_type == 0) {
+        if (g_battle_effect_coord_data.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[target].id.misc_id, &coords.vx);
         } else {
             coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[target].id;
@@ -43,7 +43,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
         g_battle_effect_camera_rotation_target.vx = angles->vx;
         g_battle_effect_camera_rotation_target.vy = delta + current->vy;
         g_battle_effect_camera_rotation_target.vz = angles->vz;
-        g_battle_effect_camera_rotation_mode = flags & BATTLE_EFFECT_CAMERA_MODE_MASK;
+        g_battle_effect_camera_rotation_mode = command & BATTLE_EFFECT_CAMERA_MODE_MASK;
         g_battle_effect_camera_rotation_duration = duration;
         g_battle_effect_camera_rotation_frame = 0;
         return;
@@ -72,10 +72,12 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
-        if (g_battle_effect_coord_data.targets[16].target_type == 0) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[16].id.misc_id, &coords.vx);
+        if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
+            == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            battle_unit_get_map_coords_from_misc_id(
+                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, &coords.vx);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[16].id;
+            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id;
         }
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
@@ -112,7 +114,7 @@ void battle_camera_execute_angle_command(s32 flags, s32 target, s32 duration, SV
     default:
         return;
     }
-    g_battle_effect_camera_rotation_mode = flags & BATTLE_EFFECT_CAMERA_MODE_MASK;
+    g_battle_effect_camera_rotation_mode = command & BATTLE_EFFECT_CAMERA_MODE_MASK;
     g_battle_effect_camera_rotation_duration = duration;
     g_battle_effect_camera_rotation_frame = 0;
 }

@@ -10,7 +10,6 @@ enum {
 /* Secondary effect 0x16 (summon charge): three rings of ten effect slots
  * spinning around the target.
  *
- * Listed as "Smn chrg" in the secondary handler table at 0x801b8900.
  * Initialisation allocates the 30
  * slots and plays sound 0x21; the executing phase grows the radius, spin and
  * brightness with the timer, the finalizing phase widens the rings and fades
@@ -39,7 +38,8 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         state->radius = 0;
         state->angle_step = 0;
         state->angle = 0;
-        battle_effect_resolve_target_render_coords(0, -1, &g_battle_effect_coord_data, &state->center);
+        battle_effect_resolve_target_render_coords(
+            0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &state->center);
         state->brightness = 0;
         state->center.vy -= 0x18;
         for (i = 0; i < 3; i++) {

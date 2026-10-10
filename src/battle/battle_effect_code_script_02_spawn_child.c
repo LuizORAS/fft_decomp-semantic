@@ -1,25 +1,25 @@
 #include "fft/battle.h"
 
-enum { EFFECT_SCRIPT_PHASE_SLOT_COUNT = 4 };
+enum { EFFECT_SCRIPT_CHILD_SLOT_COUNT = 4 };
 
-/* Starts a new temp effect phase from the next halfword and stores its id in
- * the phase slot selected by the instruction second byte (high nibble). */
-s32 battle_effect_code_script_02_spawn_child(effect_record_t* effect) {
+/* Opcode 02: start a child record on this script at the offset in the second
+ * halfword and keep its index in the child slot named by the high nibble of
+ * the instruction's second byte (slots 4 and up keep nothing). */
+s32 battle_effect_code_script_02_spawn_child(effect_record_t* record) {
     s16 slot;
-    s16 phase_id;
+    s16 child;
     s32 pc;
     u8* script;
     u8* instruction;
 
-    pc = effect->pc;
-    script = effect->script;
+    pc = record->pc;
+    script = record->script;
     instruction = (u8*)(pc + (u32)script);
     slot = instruction[1] >> 4;
-    phase_id
-        = battle_effect_start_script_record(script, *(s16*)(instruction + 2), g_battle_effect_current_record_index);
-    if (slot < EFFECT_SCRIPT_PHASE_SLOT_COUNT) {
-        effect->child_indices[slot] = phase_id;
+    child = battle_effect_start_script_record(script, *(s16*)(instruction + 2), g_battle_effect_current_record_index);
+    if (slot < EFFECT_SCRIPT_CHILD_SLOT_COUNT) {
+        record->child_indices[slot] = child;
     }
-    effect->pc += 4;
+    record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

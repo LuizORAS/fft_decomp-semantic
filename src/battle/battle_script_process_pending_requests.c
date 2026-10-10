@@ -116,10 +116,11 @@ void battle_script_process_pending_requests(void) {
     }
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {
-        if (g_battle_event_effect_target_mode == 2) {
-            battle_effect_start_new(effect_id, 2, (u8*)g_battle_event_effect_target_misc_id);
+        if (g_battle_event_effect_target_mode == BATTLE_EFFECT_START_ON_CASTER) {
+            battle_effect_start_new(
+                effect_id, BATTLE_EFFECT_START_ON_CASTER, (u8*)g_battle_event_effect_target_misc_id);
         } else {
-            battle_effect_start_new(effect_id, 0, (u8*)g_battle_event_effect_target_misc_id);
+            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_UNIT, (u8*)g_battle_event_effect_target_misc_id);
         }
     }
     if (g_battle_unit_graphics_load_pending != 0) {

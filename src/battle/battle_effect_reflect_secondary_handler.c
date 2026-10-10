@@ -13,12 +13,14 @@ typedef struct battle_effect_reflect_work {
     battle_effect_reflect_prim_t prims[2][24];
 } battle_effect_reflect_work_t;
 
-/* Secondary-effect handler 0x12 (Reflect).
+/* Secondary-effect handler 0x12 (Reflect). The effect's parameter is the
+ * frames the shield stays, at least 26: the child timeline passes the
+ * effect's spawn_delay.
  *
  * Phase 1 allocates and initialises the work buffer; phase 2 advances a
  * two-entry CLUT wipe near the end of the effect, uploads the CLUT, aims the
  * shield from the target's centre toward the caster and hands the transform
- * to 0x801ae340; phase 3 finishes. The wipe indices are assigned inside the
+ * to battle_effect_draw_projectile_model; phase 3 finishes. The wipe indices are assigned inside the
  * subscript, each to its own variable: a separate statement or a folded
  * `timer - 1 - span` changes the order and association of the index
  * arithmetic. spin_timer keeps the timer load at full width (lh). */

@@ -27,7 +27,7 @@ s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index
         record->callback_phase[i] = EFFECT_PHASE_IDLE;
         record->work_slots[i] = 0;
     }
-    record->flags = 1;
+    record->flags = EFFECT_RECORD_FLAG_ALLOCATED;
     record->work_head = 0;
     record->work_count = 0;
     record->frame_counter = -1;

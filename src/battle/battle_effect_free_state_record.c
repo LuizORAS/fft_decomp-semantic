@@ -30,7 +30,7 @@ void battle_effect_free_state_record(s16 record_index) {
         g_effect_state_records[record_index].callbacks[i] = 0;
     }
     parent = g_effect_state_records[record_index].parent_index;
-    if (parent != 0 && (g_effect_state_records[parent].flags & 1)) {
+    if (parent != 0 && (g_effect_state_records[parent].flags & EFFECT_RECORD_FLAG_ALLOCATED)) {
         for (i = 0; i < 4; i++) {
             if (g_effect_state_records[parent].child_indices[i] == record_index) {
                 g_effect_state_records[parent].child_indices[i] = 0;
@@ -55,5 +55,5 @@ void battle_effect_free_state_record(s16 record_index) {
         g_effect_state_records[cur].next_index = *available_after_unlink;
         *available_after_unlink = cur;
     }
-    g_effect_state_records[record_index].flags &= ~1;
+    g_effect_state_records[record_index].flags &= ~EFFECT_RECORD_FLAG_ALLOCATED;
 }

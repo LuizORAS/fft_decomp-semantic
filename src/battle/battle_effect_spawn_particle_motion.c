@@ -35,7 +35,8 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     s16 speed;
 
     init.caster.block = g_battle_effect_current_secondary->caster.block;
-    battle_effect_resolve_target_render_coords(0, -1, (battle_effect_coord_data_t*)&init, &origin);
+    battle_effect_resolve_target_render_coords(
+        0, BATTLE_EFFECT_TARGET_INDEX_CASTER, (battle_effect_coord_data_t*)&init, &origin);
     init.target[0].block = g_battle_effect_current_secondary->target.block;
     battle_effect_resolve_target_render_coords(0, 0, (battle_effect_coord_data_t*)&init, &target);
     oriented = 0;
@@ -157,9 +158,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         }
         break;
     }
-    motion->force[0] = motion->force[1] = motion->force[2] = motion->force_step[0] = motion->force_step[1]
-        = motion->force_step[2] = 0;
-    motion->mass = ONE;
+    motion->acceleration[0] = motion->acceleration[1] = motion->acceleration[2] = motion->acceleration_step[0]
+        = motion->acceleration_step[1] = motion->acceleration_step[2] = 0;
+    motion->inertia = ONE;
     motion->weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
     return battle_effect_get_random_between(values->lifetime_min, values->lifetime_max);
 }
