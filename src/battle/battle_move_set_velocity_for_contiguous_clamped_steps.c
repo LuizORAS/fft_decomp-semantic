@@ -69,7 +69,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
             end_y = (y * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_NEAR_EDGE;
             break;
         }
-        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, (current->value >> 5) & 1);
+        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, current->bits.higher);
         if (end_z != start_z) {
             break;
         }

@@ -69,7 +69,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
             end_y = (y * MAP_TILE_SIZE) + MAP_TILE_SIZE;
             break;
         }
-        layer = (current->value >> 5) & 1;
+        layer = current->bits.higher;
         if (unit->movement_path_offset == path->count) {
             tile = battle_map_get_tile_data_pointer(x, y, layer);
             depth = tile->depth_half_height.value;

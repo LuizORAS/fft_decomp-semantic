@@ -15,6 +15,7 @@
  */
 void battle_move_start_float_climb_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
+    battle_move_step_t current_step;
     s32 rise;
     s32 frames;
     u8* step;
@@ -28,20 +29,24 @@ void battle_move_start_float_climb_jump_step(
     height = to->height * 2 + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height
         + 2;
     height -= -unit->screen.vy / 6;
-    height += ((unit->current_path_step.value & 3) + 1) * 2;
+    current_step = unit->current_path_step;
+    height += (current_step.bits.length + 1) * 2;
     rise_height = height * 6;
     rise = SquareRoot12(rise_height * g_battle_move_jump_gravity * 2);
     frames = rise / g_battle_move_jump_gravity;
     unit->velocity.vy = -rise;
-    apex = ((unit->current_path_step.value & 3) + 1) * 12;
+    current_step = unit->current_path_step;
+    apex = (current_step.bits.length + 1) * 12;
     frames += SquareRoot12(apex * g_battle_move_jump_gravity * 2) / g_battle_move_jump_gravity;
-    switch (unit->current_path_step.value >> 6) {
+    /* The byte copy prevents a wider direction load. */
+    current_step = unit->current_path_step;
+    switch (current_step.bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST;
         unit->facing = BATTLE_FACING_EAST;
         unit->velocity.vz = 0;
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
+        unit->movement.bytes.destination_x = next + unit->current_path_step.bits.length;
         unit->velocity.vx = 0xE000 / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
@@ -49,7 +54,7 @@ void battle_move_start_float_climb_jump_step(
         unit->facing = BATTLE_FACING_WEST;
         unit->velocity.vz = 0;
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
+        unit->movement.bytes.destination_x = next - unit->current_path_step.bits.length;
         unit->velocity.vx = -0xE000 / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
@@ -57,7 +62,7 @@ void battle_move_start_float_climb_jump_step(
         unit->facing = BATTLE_FACING_SOUTH;
         unit->velocity.vx = 0;
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
+        unit->movement.bytes.destination_y = next - unit->current_path_step.bits.length;
         unit->velocity.vz = -0xE000 / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
@@ -65,7 +70,7 @@ void battle_move_start_float_climb_jump_step(
         unit->facing = BATTLE_FACING_NORTH;
         unit->velocity.vx = 0;
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
+        unit->movement.bytes.destination_y = next + unit->current_path_step.bits.length;
         unit->velocity.vz = 0xE000 / frames;
         break;
     }

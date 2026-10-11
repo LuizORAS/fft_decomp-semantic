@@ -16,21 +16,22 @@ void battle_move_start_unit_jump_step(
         BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH };
     u8 hop_phases[4] = { BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST,
         BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH };
-    u8* step;
+    battle_move_step_t* step;
     s32 animation;
     u32 word;
-    s32 value;
+    battle_move_step_t current_step;
 
-    unit->velocity.vy
-        = -g_battle_move_jump_gravity * ((((unit->current_path_step.value & 3) * 0x1C000) + 0xE000) / 24576);
-    step = &unit->current_path_step.value;
-    value = unit->current_path_step.value;
-    if ((value & 3) >= 2) {
-        unit->step_phase = jump_phases[unit->current_path_step.value >> 6];
-        battle_unit_store_animation_facing(
-            BATTLE_UNIT_ANIMATION_JUMP, facings[unit->current_path_step.value >> 6], unit);
+    /* Copy the byte to retain narrow loads of the packed step fields. */
+    current_step = unit->current_path_step;
+    unit->velocity.vy = -g_battle_move_jump_gravity * (((current_step.bits.length * 0x1C000) + 0xE000) / 24576);
+    step = &unit->current_path_step;
+    current_step = unit->current_path_step;
+    if (current_step.bits.length >= 2) {
+        unit->step_phase = jump_phases[current_step.bits.direction];
+        current_step = unit->current_path_step;
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, facings[current_step.bits.direction], unit);
     } else {
-        unit->step_phase = hop_phases[unit->current_path_step.value >> 6];
+        unit->step_phase = hop_phases[current_step.bits.direction];
         battle_unit_dismount_rider(unit);
         animation = BATTLE_UNIT_ANIMATION_HOP;
         if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
@@ -40,31 +41,31 @@ void battle_move_start_unit_jump_step(
         word = unit->movement.word;
         unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
     }
-    switch (*step >> 6) {
+    switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + (*step & 3);
+        unit->movement.bytes.destination_x = next + step->bits.length;
         unit->velocity.vx = 0x3000;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - (*step & 3);
+        unit->movement.bytes.destination_x = next - step->bits.length;
         unit->velocity.vx = -0x3000;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - (*step & 3);
+        unit->movement.bytes.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = -0x3000;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + (*step & 3);
+        unit->movement.bytes.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = 0x3000;
         break;
     }
-    unit->movement.bytes.destination_z = (*step >> 5) & 1;
+    unit->movement.bytes.destination_z = step->bits.higher;
 }

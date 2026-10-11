@@ -18,7 +18,7 @@ void battle_move_set_unit_step_delta_edge_to_center(
 
     direction.vy = (edge_height - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
         * BATTLE_MOVE_STEP_HEIGHT_SCALE;
-    switch (step->value >> 6) {
+    switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         direction.vx = MAP_TILE_SIZE;
         direction.vz = 0;
