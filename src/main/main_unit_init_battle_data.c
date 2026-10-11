@@ -47,6 +47,6 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     /* Copy the adjacent current/total JP tables as their 80 serialized bytes. */
     main_util_copy_byte_data(&party->career.job_points, &unit->career.job_points, sizeof(unit->career.job_points));
     main_util_copy_byte_data(party->name, unit->name, sizeof(unit->name));
-    unit->quote_name_id = party->name_id[0] + (party->name_id[1] << 8);
+    unit->quote_name_id = party->name_id.index + (party->name_id.name_class << 8);
     main_util_clear_byte_data(&unit->ai_target_x, 7);
 }

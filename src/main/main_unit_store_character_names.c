@@ -24,7 +24,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     u8* text;
     party_data_t* party;
     battle_stats_t* other;
-    u8* name_bytes;
+    const party_name_id_t* name_id_record;
 
     prepare_text = battle_text_find_entry;
     if (g_main_unit_name_uses_world_text != 0) {
@@ -38,13 +38,13 @@ void main_unit_store_character_names(battle_stats_t* unit) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_MALE;
+                name_base = PARTY_NAME_CLASS_GENERIC_MALE << PARTY_NAME_CLASS_SHIFT;
             } else if (unit->unit_flags & UNIT_FLAG_FEMALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_FEMALE;
+                name_base = PARTY_NAME_CLASS_GENERIC_FEMALE << PARTY_NAME_CLASS_SHIFT;
             } else {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_MONSTER;
+                name_base = PARTY_NAME_CLASS_GENERIC_MONSTER << PARTY_NAME_CLASS_SHIFT;
             }
             do {
                 name_available = 1;
@@ -52,8 +52,8 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                 for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
                     party = &g_main_party_data[i];
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
-                        name_bytes = party->name_id;
-                        if ((name_bytes[0] | (name_bytes[1] << 8)) == name_id) {
+                        name_id_record = &party->name_id;
+                        if ((name_id_record->index | (name_id_record->name_class << 8)) == name_id) {
                             name_available = 0;
                             break;
                         }

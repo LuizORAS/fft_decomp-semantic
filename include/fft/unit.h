@@ -1025,23 +1025,34 @@ typedef struct entd_file {
 } entd_file_t;
 typedef char entd_file_size_must_be_81920[(sizeof(entd_file_t) == 81920) ? 1 : -1];
 
-/* The high byte of party_data_t.name_id selects the page of unit-name text ids used for the
- * four persistent-unit name classes. */
+/* party_name_id_t.name_class selects the unit-name text page. */
 typedef enum party_name_class {
-    PARTY_NAME_CLASS_SPECIAL = 0x0000,
-    PARTY_NAME_CLASS_GENERIC_MALE = 0x0100,
-    PARTY_NAME_CLASS_GENERIC_FEMALE = 0x0200,
-    PARTY_NAME_CLASS_GENERIC_MONSTER = 0x0300
+    PARTY_NAME_CLASS_SPECIAL = 0,
+    PARTY_NAME_CLASS_GENERIC_MALE = 1,
+    PARTY_NAME_CLASS_GENERIC_FEMALE = 2,
+    PARTY_NAME_CLASS_GENERIC_MONSTER = 3
 } party_name_class_e;
 
+/* Encoded name-id class bits. */
 enum {
     PARTY_NAME_CLASS_SHIFT = 8,
     PARTY_NAME_CLASS_MASK = 0x0300,
+};
+
+/* Serialized birthday and zodiac bits. */
+enum {
     PARTY_BIRTHDAY_DAY_MASK = 0x01ff,
     PARTY_BIRTHDAY_DAY_HIGH_BIT_MASK = 0x01,
     PARTY_ZODIAC_SHIFT = 4,
     PARTY_ZODIAC_MASK = 0xf0,
 };
+
+/* Serialized unit-name id: the low byte indexes the selected name class. */
+typedef struct party_name_id {
+    u8 index;
+    u8 name_class;
+} party_name_id_t;
+typedef char party_name_id_size_must_be_2[(sizeof(party_name_id_t) == 2) ? 1 : -1];
 
 /*
  * Persistent roster record. Its 0x100-byte stride is established by the
@@ -1069,7 +1080,7 @@ typedef struct party_data {
     unit_raw_stats_t raw_stats; /* 0x19 */
     unit_career_data_t career;  /* 0x28; unlocked jobs, learned abilities, levels and JP */
     u8 name[16];                /* 0xbe */
-    u8 name_id[2];              /* 0xce; little-endian, accessed bytewise like the ability ids */
+    party_name_id_t name_id;    /* 0xce */
     u8 proposition_status;      /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */

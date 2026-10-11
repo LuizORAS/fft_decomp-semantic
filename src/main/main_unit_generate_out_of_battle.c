@@ -29,26 +29,26 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
 
     if (unit_type == MAIN_UNIT_TYPE_MALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_MALE;
+        name_modifier = PARTY_NAME_CLASS_GENERIC_MALE << PARTY_NAME_CLASS_SHIFT;
         party->sprite_set = CHARACTER_IDENTITY_GENERIC_MALE;
         party->gender_flags = UNIT_FLAG_MALE;
         party->job_id = JOB_ID_SQUIRE;
     } else if (unit_type == MAIN_UNIT_TYPE_FEMALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_FEMALE;
+        name_modifier = PARTY_NAME_CLASS_GENERIC_FEMALE << PARTY_NAME_CLASS_SHIFT;
         party->sprite_set = CHARACTER_IDENTITY_GENERIC_FEMALE;
         party->gender_flags = UNIT_FLAG_FEMALE;
         party->job_id = JOB_ID_SQUIRE;
     } else if (unit_type == MAIN_UNIT_TYPE_MONSTER) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_MONSTER;
+        name_modifier = PARTY_NAME_CLASS_GENERIC_MONSTER << PARTY_NAME_CLASS_SHIFT;
         party->sprite_set = CHARACTER_IDENTITY_MONSTER;
         party->gender_flags = UNIT_FLAG_MONSTER;
         party->job_id = JOB_ID_SQUIRE;
     } else {
         name_flags = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
         unit_type = MAIN_UNIT_TYPE_RAMZA;
-        name_modifier = PARTY_NAME_CLASS_SPECIAL;
+        name_modifier = PARTY_NAME_CLASS_SPECIAL << PARTY_NAME_CLASS_SHIFT;
         party->sprite_set = CHARACTER_IDENTITY_RAMZA_CHAPTER_1;
         party->gender_flags = UNIT_FLAG_MALE;
         party->job_id = JOB_ID_SQUIRE_RAMZA_CHAPTER_1;
@@ -110,15 +110,15 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
         name_id = 1;
     } else {
-        party->name_id[0] = 0xff;
-        party->name_id[1] = hi;
+        party->name_id.index = 0xff;
+        party->name_id.name_class = hi;
         do {
             found = 1;
             name_id = name_modifier + (rand() * 255) / 0x8000;
             for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
                 other = &g_main_party_data[i];
                 if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id
-                    && (other->name_id[0] | (other->name_id[1] << 8)) == (name_id & 0xffff)) {
+                    && (other->name_id.index | (other->name_id.name_class << 8)) == (name_id & 0xffff)) {
                     found = 0;
                     break;
                 }
@@ -126,8 +126,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
         } while (found == 0);
     }
     name_id_hi = name_id >> PARTY_NAME_CLASS_SHIFT;
-    party->name_id[0] = name_id;
-    party->name_id[1] = name_id_hi;
+    party->name_id.index = name_id;
+    party->name_id.name_class = name_id_hi;
     name_flags += name_id & 0xff;
     main_util_copy_bytes(world_text_find_entry(name_flags), party->name, sizeof(party->name));
     party->proposition_status = 0;
