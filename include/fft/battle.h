@@ -2386,6 +2386,7 @@ s32 battle_camera_get_input_direction(s32 mode);
 void battle_camera_update_effect_rotation_and_zoom(void);
 
 /* Some routines address these components as separate linker symbols. */
+void battle_camera_step_real_coords_toward_target(battle_unit_misc_data_t* target);
 void battle_camera_update_vector_from_game_state(void);
 void battle_camera_calculate_acting_unit_vector_normal(void);
 s32 battle_camera_calculate_cursor_tile_vector_normal(void);
@@ -8491,6 +8492,8 @@ extern RECT g_battle_menu_attack_caster_stats_display;
 extern RECT g_battle_menu_attack_target_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_caster_stats_setup[8];
 extern menu_number_entry_t g_battle_menu_attack_target_stats_setup[8];
+/* The final two entries of g_battle_menu_attack_caster_stats_setup. */
+extern menu_number_entry_t g_battle_menu_projected_value_panel[2];
 extern s32 g_battle_menu_companion_executable_lbas[];
 extern s32 g_battle_menu_companion_executable_sizes[];
 extern s32 g_battle_menu_companion_executable_offsets[];

@@ -1,11 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Accepted spelling (battle_camera_step_target_t*, per the definition); this
- * site passes the misc record that overlays it, so the view is a cast. */
-typedef struct battle_camera_step_target battle_camera_step_target_t;
-void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* target);
-
 /* Per-frame camera vector update, dispatched on the game state.
  *
  * The crystal-learn state tracks the map cursor with a narrow acceptance
@@ -62,7 +57,7 @@ void battle_camera_update_vector_from_game_state(void) {
         } else {
             battle_camera_shift_acting_unit_vector();
         }
-        battle_camera_step_real_coords_toward_target((battle_camera_step_target_t*)unit);
+        battle_camera_step_real_coords_toward_target(unit);
         return;
     }
     if (g_battle_game_state >= BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT) {
