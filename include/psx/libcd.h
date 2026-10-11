@@ -165,12 +165,11 @@ s32 CD_ready(s32 mode, u8* result);
 void psyq_cd_stream_ready_callback(u8 unused_event, u8* unused_result);
 
 extern s32 g_psyq_cd_stream_ring_sectors;
-extern s32 g_psyq_cd_test_parameter_count;
 extern char g_psyq_cd_init_failure_message[];
 void CD_initintr(void);
 s32 CD_init(void);
 s32 CD_initvol(void);
-void CD_set_test_parmnum(s32 mode);
+void CD_set_test_parmnum(s32 parameter_count);
 
 /* Current SDK caller ABI corrections, established by original v0 use. */
 s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous);
@@ -229,10 +228,14 @@ void data_ready_callback(void);
 extern u8* g_psyq_cd_init_irq_state_pointer;
 
 /* CD command attribute tables (remain original data). */
-extern s32 g_psyq_cd_command_waits_for_complete[32];
-extern s32 g_psyq_cd_command_resets_ready[32];
-extern s32 g_psyq_cd_command_ack_updates_status[32];
-extern s32 g_psyq_cd_command_parameter_counts[32];
+enum { PSYQ_CD_COMMAND_TEST = 0x19 };
+typedef struct {
+    s32 waits_for_complete[32];
+    s32 resets_ready[32];
+    s32 ack_updates_status[32];
+    s32 parameter_counts[32];
+} psyq_cd_command_attributes_t;
+extern psyq_cd_command_attributes_t g_psyq_cd_command_attributes;
 extern s32 g_psyq_cd_shell_open_count;
 extern u8 g_psyq_cd_second_ready_result[8];
 extern char g_psyq_cd_disk_error_message[];

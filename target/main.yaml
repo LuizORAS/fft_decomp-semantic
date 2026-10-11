@@ -1050,11 +1050,7 @@ data:
   - {addr: 0x8003189d, name: g_psyq_cd_last_command}
   - {addr: 0x800318a0, name: g_psyq_cd_command_names}
   - {addr: 0x80031920, name: g_psyq_cd_interrupt_names}
-  - {addr: 0x80031940, name: g_psyq_cd_command_waits_for_complete}
-  - {addr: 0x800319c0, name: g_psyq_cd_command_resets_ready}
-  - {addr: 0x80031a40, name: g_psyq_cd_command_ack_updates_status}
-  - {addr: 0x80031ac0, name: g_psyq_cd_command_parameter_counts}
-  - {addr: 0x80031b24, name: g_psyq_cd_test_parameter_count}
+  - {addr: 0x80031940, name: g_psyq_cd_command_attributes}
   - {addr: 0x80031b40, name: g_psyq_cd_index_status_register}
   - {addr: 0x80031b44, name: g_psyq_cd_command_response_register}
   - {addr: 0x80031b48, name: g_psyq_cd_parameter_data_register}

@@ -37,7 +37,7 @@ s32 getintr(void) {
     *g_psyq_cd_index_status_register = 1;
     *g_psyq_cd_request_interrupt_register = 7;
     *g_psyq_cd_parameter_data_register = 7;
-    if (interrupt != CdlAcknowledge || g_psyq_cd_command_ack_updates_status[g_psyq_cd_last_command]) {
+    if (interrupt != CdlAcknowledge || g_psyq_cd_command_attributes.ack_updates_status[g_psyq_cd_last_command]) {
         if (!(g_psyq_cd_status & CdlStatShellOpen) && (response[0] & CdlStatShellOpen))
             g_psyq_cd_shell_open_count++;
         g_psyq_cd_status = response[0];
@@ -58,7 +58,7 @@ s32 getintr(void) {
             cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 2;
         }
-        if (g_psyq_cd_command_waits_for_complete[g_psyq_cd_last_command]) {
+        if (g_psyq_cd_command_attributes.waits_for_complete[g_psyq_cd_last_command]) {
             g_psyq_cd_irq_state.sync = CdlAcknowledge;
             cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 1;
