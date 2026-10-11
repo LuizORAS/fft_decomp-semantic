@@ -1930,6 +1930,8 @@ typedef union wldcore_menu_stack_record {
 } wldcore_menu_stack_record_t;
 typedef char wldcore_menu_stack_record_size_must_be_92[sizeof(wldcore_menu_stack_record_t) == 92 ? 1 : -1];
 
+enum { WLDCORE_WINDOW_RECORD_CAPACITY = 32 };
+
 /* Verified fields of the 52-byte render records at 0x800bbc70. The pool init
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
  * sprites through wldcore_gfx_draw_display_object_sprite. */
@@ -1981,7 +1983,7 @@ extern void* g_wldcore_window_aux_render_object_queue[];
 extern menu_text_layout_t g_wldcore_window_panel_label_state;
 extern menu_entry_t g_wldcore_window_panel_render_state;
 extern s32 g_wldcore_window_record_count;
-extern world_animated_render_record_t g_wldcore_window_records[];
+extern world_animated_render_record_t g_wldcore_window_records[WLDCORE_WINDOW_RECORD_CAPACITY];
 extern wldcore_window_layout_row_t g_wldcore_window_layout_rows[];
 extern s32 g_wldcore_window_render_object_count;
 
@@ -1989,7 +1991,7 @@ extern s32 g_wldcore_window_render_object_count;
  * the leading 32-bit flags of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
 extern void* g_wldcore_window_render_object_queue[];
-extern wldcore_window_render_record_t g_wldcore_window_render_records[];
+extern wldcore_window_render_record_t g_wldcore_window_render_records[WLDCORE_WINDOW_RECORD_CAPACITY];
 extern s32 g_wldcore_window_render_record_count;
 extern wldcore_window_xy_t g_wldcore_window_record_positions[];
 
