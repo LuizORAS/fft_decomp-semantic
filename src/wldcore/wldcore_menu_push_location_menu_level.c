@@ -22,8 +22,8 @@
 void wldcore_menu_push_location_menu_level(s32 menu) {
     GsIMAGE image;
     RECT bounds;
-    wldcore_point32_t origin;
-    wldcore_point32_t dimensions;
+    point32_t origin;
+    point32_t dimensions;
     s16 text_width;
     s16 text_rows;
     s32 index;
@@ -37,7 +37,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     CVECTOR* color;
     wldcore_window_record_t* records;
     wldcore_location_list_level_t* level;
-    wldcore_point32_t* base;
+    point32_t* base;
     wldcore_window_xy_t* position;
 
     g_wldcore_map_projection_state.marker.sub_kind

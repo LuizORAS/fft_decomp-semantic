@@ -6,8 +6,8 @@
  * 0x94, and appends its 0x5c-byte record tagged 0x1d. Twin of
  * wldcore_list_open_treasures, but walks the output arrays by pointer. */
 void wldcore_list_open_story_events(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s16* values;
     s16* flags;
     s32 count;

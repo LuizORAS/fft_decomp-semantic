@@ -2380,8 +2380,9 @@ extern SVECTOR g_battle_camera_render_state;
 
 /* 0x80166054: camera consumer unpacks two 2-bit fields and a high nibble. */
 extern s32 g_battle_camera_speed_curve;
-void battle_camera_convert_screen_coords_by_rotation(const s16* input, s16* output, s32 offset);
-void battle_camera_convert_screen_coords_modify_by_1(const s16* screen, s16* destination);
+void battle_camera_convert_screen_coords_by_rotation(const SVECTOR* input, SVECTOR* output, s32 offset);
+void battle_camera_convert_screen_coords_modify_by_1(const SVECTOR* screen, SVECTOR* destination);
+void battle_camera_convert_screen_coords_by_1_from_misc_id(u32 misc_id, SVECTOR* coords);
 void battle_camera_toggle_tilt(void);
 s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void battle_camera_step_focus_toward_cursor_tile(s16 height);
@@ -2441,13 +2442,13 @@ void battle_camera_update_zoom(void);
 void battle_camera_update_zoom_animation(void);
 s32 battle_camera_wrap_yaw_angle(void);
 void battle_camera_advance_effect_tracks(s16 frame);
-void battle_camera_calculate_relative_offset(const u16* input, s16* output, s32 offset);
-void battle_camera_calculate_relative_offset_by_1(const u16* input, s16* output);
-void battle_camera_calculate_relative_offset_by_5(const u16* input, s16* output);
+void battle_camera_calculate_relative_offset(const SVECTOR* input, SVECTOR* output, s32 offset);
+void battle_camera_calculate_relative_offset_by_1(const SVECTOR* input, SVECTOR* output);
+void battle_camera_calculate_relative_offset_by_5(const SVECTOR* input, SVECTOR* output);
 
 void battle_camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECTOR* rotation_out);
 
-void battle_camera_convert_screen_coords_modify_by_5(const s16* screen, s16* destination);
+void battle_camera_convert_screen_coords_modify_by_5(const SVECTOR* screen, SVECTOR* destination);
 s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
 void battle_camera_load_state_from_script_variables(void);
 
@@ -4044,17 +4045,6 @@ typedef struct effect_textured_quad_geometry_view {
 typedef char
     assert_effect_textured_quad_geometry_view_size[sizeof(effect_textured_quad_geometry_view_t) == 0xc4 ? 1 : -1];
 
-typedef struct effect_summon_mesh_curve_halves {
-    u16 low;  /* 0x00 */
-    u16 high; /* 0x02 */
-} effect_summon_mesh_curve_halves_t;
-
-/* The target reads the radius curve nibble with its own halfword load. */
-typedef union effect_summon_mesh_curve_word {
-    u32 word;
-    effect_summon_mesh_curve_halves_t half;
-} effect_summon_mesh_curve_word_t;
-
 /* This renderer's view of one effect_geometry_entry_t. */
 typedef struct effect_particle_ribbon_geometry_view {
     u8 _unused_00[0x02];
@@ -4237,15 +4227,15 @@ typedef struct effect_summon_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
-    u16 flags;                                   /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;                           /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    effect_summon_mesh_curve_word_t wave_curves; /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;                           /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];                         /* 0x14 */
-    s16 origin_end[3];                           /* 0x1a */
-    s16 u_span;                                  /* 0x20 */
-    s16 v_span;                                  /* 0x22 */
-    u16 texture_page_flags;                      /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
+    u32 scroll_curves;      /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
+    u32 wave_curves;        /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
+    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
+    s16 origin_start[3];    /* 0x14 */
+    s16 origin_end[3];      /* 0x1a */
+    s16 u_span;             /* 0x20 */
+    s16 v_span;             /* 0x22 */
+    u16 texture_page_flags; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
     u8 _unused_26[0x06];
     s16 u_start;        /* 0x2c */
     s16 v_start;        /* 0x2e */

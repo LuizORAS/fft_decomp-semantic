@@ -5,8 +5,8 @@
  * 0xd800 + flag index), shows up to eight rows at (0x80, 0x50) with width
  * 0x60, and appends its 0x5c-byte record tagged 0x18. */
 void wldcore_list_open_unexplored_lands(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 count;
     s32 i; /* reused as the visible-row count, which the target keeps in $s0 */
     s32 record_index;

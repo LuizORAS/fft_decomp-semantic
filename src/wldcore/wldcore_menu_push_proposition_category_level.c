@@ -10,10 +10,10 @@
  * target's v1/v0 assignment in the tail. `unused` reproduces the 0x58 frame.
  */
 void wldcore_menu_push_proposition_category_level(void) {
-    wldcore_point32_t point;
+    point32_t point;
     RECT bounds;
     s32 unused[4];
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 index;
     s32 i;
     s32 completed;

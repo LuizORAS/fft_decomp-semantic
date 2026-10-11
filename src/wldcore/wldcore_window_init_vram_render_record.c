@@ -4,7 +4,7 @@
  *
  * Caller flags replace bits 0x18; texture coordinates use doubled 4bpp units.
  */
-void wldcore_window_init_vram_render_record(s32 index, RECT bounds, wldcore_point32_t clut, s32 flags) {
+void wldcore_window_init_vram_render_record(s32 index, RECT bounds, point32_t clut, s32 flags) {
     RECT* record_bounds;
     CVECTOR* rgb;
 

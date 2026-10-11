@@ -28,7 +28,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     u8 unused[8];
     wldcore_window_record_t* windows;
     wldcore_window_xy_t* positions;
-    wldcore_point32_t* position;
+    point32_t* position;
     CVECTOR* colors;
     s16* newest;
     s32 index;

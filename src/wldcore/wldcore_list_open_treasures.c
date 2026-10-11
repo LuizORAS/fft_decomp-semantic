@@ -5,8 +5,8 @@
  * 0xe000 + flag index), shows up to eight rows at (0x88, 0x50) with width
  * 0x5a, and appends its 0x5c-byte record tagged 0x1a. Twin of 0x8007dfcc. */
 void wldcore_list_open_treasures(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 count;
     s32 i; /* reused as the visible-row count, which the target keeps in $s0 */
     s32 record_index;

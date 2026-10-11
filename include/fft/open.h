@@ -154,16 +154,6 @@ void open_movie_update_stream_frame(void);
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused);
 
 /* render record */
-/* Two-word point: music-test window extent/origin, sprite CLUT position and
- * the birthday menu's text origin. The birthday menu passes it by value; the
- * target homes a2/a3 into the incoming argument slots, which GCC 2.6.3 only
- * does for an aggregate register argument. The WLDCORE twin uses
- * wldcore_point32_t. */
-typedef struct open_point32 {
-    s32 x;
-    s32 y;
-} open_point32_t;
-
 /* open_render_record_36_t.palette of the selected menu entry. */
 enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
 
@@ -193,8 +183,8 @@ typedef struct open_render_record {
 /* CLUT position and source rectangle at +0x24 of a 56-byte record.
  * open_gfx_init_window_frame_record takes its address as one pointer. */
 typedef struct open_render_record_56_tail {
-    /* 0x00 */ open_point32_t clut; /* open_gfx_draw_window_record passes it to GetClut */
-    /* 0x08 */ RECT quad;           /* quarter-pixel source rectangle */
+    /* 0x00 */ point32_t clut; /* open_gfx_draw_window_record passes it to GetClut */
+    /* 0x08 */ RECT quad;      /* quarter-pixel source rectangle */
 } open_render_record_56_tail_t;
 
 typedef struct open_render_record_56 {
@@ -320,8 +310,7 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
 s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day);
 void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
 
-void open_birthday_draw_menu_text_entry(
-    s32 record_index, s32 combined_text_index, open_point32_t position, void* image);
+void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, void* image);
 
 void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu);
 void open_birthday_load_window_image(s32 record_index, u32* image);
@@ -337,7 +326,7 @@ extern s32 g_open_menu_formation_otag_index;
 enum {
     OPEN_THREAD_SLOT_MUSIC_TEST_LIST = 12,
 };
-void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point32_t* extent, open_point32_t* origin);
+void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t* extent, point32_t* origin);
 
 void open_menu_start_music_test_controller(void);
 void open_menu_update_world_formation(void);

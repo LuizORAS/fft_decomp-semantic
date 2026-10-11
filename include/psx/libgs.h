@@ -150,20 +150,6 @@ typedef struct {
 
 typedef char psyq_gs_sprite_packet_size_must_be_0x18[(sizeof(psyq_gs_sprite_packet_t) == 0x18) ? 1 : -1];
 
-/* POLY_FT4 packet as the packed words the sprite sorters write. */
-typedef struct {
-    u32 tag;       /* 0x00 */
-    u32 mode;      /* 0x04: r | g << 8 | b << 16 | code << 24 */
-    u32 xy0;       /* 0x08 */
-    u32 uv0_clut;  /* 0x0c */
-    u32 xy1;       /* 0x10 */
-    u32 uv1_tpage; /* 0x14 */
-    u32 xy2;       /* 0x18 */
-    u32 uv2;       /* 0x1c */
-    u32 xy3;       /* 0x20 */
-    u32 uv3;       /* 0x24 */
-} psyq_gs_poly_ft4_packet_t;
-
 extern const char g_psyq_gs_sort_sprite_overflow_message[];
 extern TILE g_psyq_gs_clear_tile[2]; /* GsSortClear's tile for each draw buffer */
 

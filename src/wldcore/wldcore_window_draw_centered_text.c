@@ -5,7 +5,7 @@
  * horizontally in it (nothing for id 0) and upload it. Also clears the
  * three pending sound script variables. */
 void wldcore_window_draw_centered_text(s32 window_index, s32 text_id) {
-    wldcore_point32_t point;
+    point32_t point;
     s16 text_width;
     s16 text_height;
     s32 i;

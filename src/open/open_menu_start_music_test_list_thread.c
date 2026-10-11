@@ -4,7 +4,7 @@
 /* Fills the music-test list's column layout and menu entry, then starts the
  * AT list thread on them. The window is the extent's width plus a 24-pixel
  * margin, rounded down to a multiple of four; its height fields start at 0. */
-void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point32_t* extent, open_point32_t* origin) {
+void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t* extent, point32_t* origin) {
     s32 width;
 
     width = (extent->x + 0x18) & 0xFFFC;

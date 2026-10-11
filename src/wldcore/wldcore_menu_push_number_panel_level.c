@@ -7,7 +7,7 @@
  * thread on that range starting at the minimum, and withholds Circle and
  * Cross from the WORLD menu threads (the level's own step handles them). */
 void wldcore_menu_push_number_panel_level(void) {
-    wldcore_point32_t origin;
+    point32_t origin;
     s32 record_index;
     s32 x;
     s32 y;

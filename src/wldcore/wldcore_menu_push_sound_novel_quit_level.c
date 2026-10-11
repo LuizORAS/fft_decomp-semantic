@@ -14,7 +14,7 @@
 void wldcore_menu_push_sound_novel_quit_level(void) {
     RECT bounds;
     u8 unused[0x28];
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 index;
     s32 depth;
     wldcore_sortbox_state_t* fade;

@@ -6,7 +6,7 @@
  *
  * The point is passed by value in a0/a1; the target reads both members back
  * from the incoming argument home slots. */
-s32 wldcore_map_find_dot_at_point(wldcore_point32_t point) {
+s32 wldcore_map_find_dot_at_point(point32_t point) {
     s32 best;
     s32 i;
     s32 hit;

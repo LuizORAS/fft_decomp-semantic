@@ -19,7 +19,7 @@
  * the 0x58-byte frame. */
 void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_history_level_t* level) {
     world_glyph_blit_t box;
-    wldcore_point32_t point;
+    point32_t point;
     u8 unused[0x20];
     u32* image;
     s16* index1;

@@ -24,8 +24,8 @@
  * The list is indexed by `count` rather than `i`; indexing by `i` lets loop.c
  * fold the final count to the constant 41. */
 void wldcore_list_open_tutorial_topics(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 count;
     s32 i;
     s32 visible;

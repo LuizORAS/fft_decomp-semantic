@@ -6,8 +6,8 @@
  * hides the parent list window's content render record and appends its
  * 0x5c-byte record tagged 0x2e. Twin of 0x80087b94. */
 void wldcore_list_open_script_flags_01a4_01bb(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s16* values;
     s16* flags;
     s32 count;

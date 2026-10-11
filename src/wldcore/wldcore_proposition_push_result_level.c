@@ -12,7 +12,7 @@
  * which GCC 2.6.3 only does when both accesses are aggregate members. */
 void wldcore_proposition_push_result_level(s32 proposition) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s16 text_width;
     s16 text_rows;
     s32 index;
@@ -22,7 +22,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     s32 depth;
     u16* panel_text;
     s32* party;
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 rows;
 
     count = g_main_active_propositions[proposition].participant_count;

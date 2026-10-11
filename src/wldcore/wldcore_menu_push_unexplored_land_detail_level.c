@@ -24,13 +24,13 @@
  * it still uses the $at absolute form. Spelling both coordinates as ordinary
  * indexed field stores recomputes the $at base twice and costs four
  * instructions. The cast is over adjacent s32 base_x/base_y; the header would
- * express it better as a wldcore_point32_t member.
+ * express it better as a point32_t member.
  *
  * `unused` reproduces eight bytes of locals below the date bytes that the
  * target never touches. */
 void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     s32 index;
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 coordinate_mode = 1;
     u8 unused[8];
     wldcore_date_t date;

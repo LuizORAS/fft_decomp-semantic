@@ -19,8 +19,8 @@
 void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail_level_t* level) {
     GsIMAGE image;
     RECT bounds;
-    wldcore_point32_t clut_position;
-    wldcore_point32_t* base;
+    point32_t clut_position;
+    point32_t* base;
     s32* index;
     s32 render;
     s32 depth;

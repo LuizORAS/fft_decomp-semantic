@@ -87,7 +87,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
     if (unit->status_bubble_timer & 0x10) {
         position.vy = y - 1;
     }
-    battle_camera_convert_screen_coords_modify_by_1(&base.vx, (s16*)&raised);
+    battle_camera_convert_screen_coords_modify_by_1(&base, &raised);
     raised.vy += 12;
     RotTrans(&raised, &transformed, &flag);
     display = unit->status_bubble_display;

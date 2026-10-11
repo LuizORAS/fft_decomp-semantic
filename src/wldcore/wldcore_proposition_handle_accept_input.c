@@ -7,7 +7,7 @@
  * opens the yes/no panel at (0x48, 0x20), and pushes a level tagged 0xa. */
 void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t* owner) {
     s32 total;
-    wldcore_point32_t origin;
+    point32_t origin;
 
     if (g_wldcore_window_render_records[owner->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;

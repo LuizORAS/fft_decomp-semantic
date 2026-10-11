@@ -12,7 +12,7 @@
  * The target's frame holds two words no instruction touches, reproduced by
  * the unused point. */
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level) {
-    wldcore_point32_t unused;
+    point32_t unused;
     u32 buttons;
     s32 unit;
 

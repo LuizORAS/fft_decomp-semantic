@@ -7,7 +7,7 @@
  * stores); two field assignments reorder it. */
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s32 i;
     s32 offset;
     s32 top;

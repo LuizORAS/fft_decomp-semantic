@@ -28,7 +28,7 @@
 void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* level) {
     GsIMAGE image;
     RECT bounds;
-    wldcore_point32_t clut;
+    point32_t clut;
     s32 record;
     s32 count;
     s32 participant;
@@ -204,7 +204,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
                 {
-                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
+                    point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw - 4;
                     base->y = -(image.ph >> 1) + 0x1A;
                 }
@@ -218,7 +218,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
-                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
+                    point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -0x46;
                     base->y = -0x2A;
                 }
@@ -242,7 +242,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 g_wldcore_window_render_records[record].priority = 9;
                 g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
                 {
-                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
+                    point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw;
                     base->y = -(image.ph >> 1);
                 }
@@ -256,7 +256,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
-                    wldcore_point32_t* base = &g_wldcore_window_render_records[record].base;
+                    point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -0x41;
                     base->y = -0x2C;
                 }

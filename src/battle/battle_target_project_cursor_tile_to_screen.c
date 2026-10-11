@@ -19,9 +19,9 @@ void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* pos
     tile = battle_map_get_tile_data_pointer((position->vx / 28), (position->vz / 28), g_battle_cursor_z);
     position->vy -= (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12;
     if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
-        battle_camera_convert_screen_coords_modify_by_5(&position->vx, &raised->vx);
+        battle_camera_convert_screen_coords_modify_by_5(position, raised);
     } else {
-        battle_camera_convert_screen_coords_modify_by_1(&position->vx, &raised->vx);
+        battle_camera_convert_screen_coords_modify_by_1(position, raised);
     }
     RotTrans(raised, projected, &flag);
     g_battle_cursor_screen_x = projected->vx;

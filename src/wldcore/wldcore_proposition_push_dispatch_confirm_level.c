@@ -11,11 +11,11 @@
  * ahead of `move a0`. */
 void wldcore_proposition_push_dispatch_confirm_level(void) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s16 size[2];
     s32 unused[8];
-    wldcore_point32_t* position;
-    wldcore_point32_t* base;
+    point32_t* position;
+    point32_t* base;
     u16* location;
     s32 index;
     s32 depth;

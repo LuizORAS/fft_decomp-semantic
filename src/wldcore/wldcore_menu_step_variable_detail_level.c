@@ -24,7 +24,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     s32 page_x;
     urect16_t* bounds;
     CVECTOR* color;
-    wldcore_point32_t* base;
+    point32_t* base;
 
     switch (level->phase) {
     case WLDCORE_DETAIL_PHASE_LOAD:

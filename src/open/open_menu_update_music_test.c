@@ -13,8 +13,8 @@
  * selection.
  */
 void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
-    open_point32_t extent;
-    open_point32_t origin;
+    point32_t extent;
+    point32_t origin;
     s32 buttons;
 
     if (state->blink_frames != 0 && ++state->blink_frames >= 10) {

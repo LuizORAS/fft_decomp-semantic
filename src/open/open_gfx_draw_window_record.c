@@ -17,7 +17,7 @@
  * on the colour stores keep their index order and the 0x50-byte frame.
  */
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
-    open_point32_t clut;
+    point32_t clut;
     RECT scaled;
     s32 step;
     s32 px;

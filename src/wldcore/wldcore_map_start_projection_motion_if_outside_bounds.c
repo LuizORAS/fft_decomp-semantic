@@ -5,7 +5,7 @@
  *
  * The motion record snapshots the current origin and stores the target
  * distance in the same 8-bit fractional scale used by its progress field. */
-s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const SVECTOR* coordinates) {
+s32 wldcore_map_start_projection_motion_if_outside_bounds(const point32_t* point, const SVECTOR* coordinates) {
     s32 dx;
     s32 dy;
 

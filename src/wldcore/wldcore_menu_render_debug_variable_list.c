@@ -6,10 +6,10 @@
  * variable's value: one register (v1) in the target. */
 void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s32 index;
-    wldcore_point32_t* base;
-    wldcore_point32_t* records;
+    point32_t* base;
+    point32_t* records;
     s32 variable;
     s32 text_id;
     u32 value;
@@ -31,7 +31,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     /* Direct record indexing moves the symbol load after the index scaling
      * and breaks the exact match. Retain the target's biased base and stride. */
     records = &g_wldcore_window_render_records[0].base;
-    base = (wldcore_point32_t*)((u8*)records + index * sizeof(wldcore_window_render_record_t));
+    base = (point32_t*)((u8*)records + index * sizeof(wldcore_window_render_record_t));
     base->x = -(bounds.w / 2);
     base->y = -88;
     point.x = 8;

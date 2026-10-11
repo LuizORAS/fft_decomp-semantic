@@ -7,7 +7,7 @@
  * close enough to the opposite edge for wrapping to bring it into view. The
  * final `||` shares one `return 0` between both lower-bound tests, which keeps
  * GCC from folding the last test into a store-flag. */
-s32 wldcore_map_is_point_outside_projection_bounds(const wldcore_point32_t* point) {
+s32 wldcore_map_is_point_outside_projection_bounds(const point32_t* point) {
     s32 x;
     s32 y;
 

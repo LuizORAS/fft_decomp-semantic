@@ -7,9 +7,9 @@
  * target addresses them from &base_x, not from the record start. */
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s32 index;
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 i;
 
     index = panel->render_index;

@@ -16,17 +16,17 @@
  */
 void wldcore_menu_push_sound_novel_level(s32 argument) {
     RECT bounds;
-    wldcore_point32_t origin;
+    point32_t origin;
     wldcore_window_record_t* window1;
     wldcore_window_record_t* window2;
     wldcore_window_record_t* window4;
     s32 bar_render;
     s32 index;
-    wldcore_point32_t* pos1;
-    wldcore_point32_t* pos2;
-    wldcore_point32_t* pos3;
-    wldcore_point32_t* pos4;
-    wldcore_point32_t* render_pos;
+    point32_t* pos1;
+    point32_t* pos2;
+    point32_t* pos3;
+    point32_t* pos4;
+    point32_t* render_pos;
 
     /* Held from entry: with every saved register taken, reload rematerialises
      * the constant beside its one use, which is the target's la placement. */
@@ -77,7 +77,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     origin.x = 0x20;
     origin.y = 0x1E8;
     wldcore_window_init_vram_render_record(index, bounds, origin, 0);
-    pos3 = (wldcore_point32_t*)((s32)render_pos + index * sizeof(wldcore_window_render_record_t));
+    pos3 = (point32_t*)((s32)render_pos + index * sizeof(wldcore_window_render_record_t));
     pos3->x = 0x34;
     pos3->y = 0x55;
     g_wldcore_window_render_records[index].priority = 8;

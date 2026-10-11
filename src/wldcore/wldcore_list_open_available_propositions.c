@@ -13,8 +13,8 @@
  * resumes the parent, shows text 0xb80d and marks the parent's content
  * published. */
 void wldcore_list_open_available_propositions(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 count;
     s32 i;
     s32 index;

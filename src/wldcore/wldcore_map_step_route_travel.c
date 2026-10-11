@@ -13,7 +13,7 @@
  * each copy keeps the target's direct g_wldcore_location_view accesses and the &state
  * base register in the flags update. */
 void wldcore_map_step_route_travel(void) {
-    wldcore_point32_t delta;
+    point32_t delta;
     SVECTOR previous;
     s32 dx;
     s32 dy;

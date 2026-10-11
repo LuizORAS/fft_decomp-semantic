@@ -6,8 +6,8 @@
  * width 0x96, appends its 0x5c-byte record tagged 0x29 and hides the parent
  * list window's content render record. Twin of wldcore_list_open_story_events. */
 void wldcore_list_open_brave_story_propositions(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s16* values;
     s16* flags;
     s32 count;

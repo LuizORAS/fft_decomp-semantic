@@ -4,7 +4,7 @@
 /* Redraw the send-unit layout render record: a window frame with one
  * 16-pixel row per chosen unit name. */
 void wldcore_window_draw_text_rows(wldcore_menu_send_unit_level_t* level) {
-    wldcore_point32_t point;
+    point32_t point;
     s32 index;
     s32 i;
 

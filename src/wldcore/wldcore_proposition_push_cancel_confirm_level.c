@@ -19,7 +19,7 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
     u8 unused[0x30];
     s32 index;
     s32 depth;
-    wldcore_point32_t* base;
+    point32_t* base;
 
     wldcore_unpack_proposition_row(
         g_wldcore_selected_proposition_row, g_main_active_propositions[proposition].proposition_id);

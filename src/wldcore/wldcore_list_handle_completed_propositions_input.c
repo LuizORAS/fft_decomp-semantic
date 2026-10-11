@@ -6,7 +6,7 @@
 void wldcore_list_handle_completed_propositions_input(s32* values) {
     s32 buttons;
     s32 depth;
-    wldcore_point32_t origin;
+    point32_t origin;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

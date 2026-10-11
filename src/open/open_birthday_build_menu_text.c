@@ -7,7 +7,7 @@
  * into one scratch image before it is uploaded to VRAM. */
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu) {
     RECT quad;
-    open_point32_t position;
+    point32_t position;
     s16 width;
     u16 height;
     s32 index;

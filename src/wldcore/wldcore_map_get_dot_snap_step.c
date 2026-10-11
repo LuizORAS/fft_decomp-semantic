@@ -7,7 +7,7 @@
  *
  * The point is passed by value in a0/a1; the target reads both members back
  * from the incoming argument home slots. */
-s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y) {
+s32 wldcore_map_get_dot_snap_step(point32_t point, s32* step_x, s32* step_y) {
     s32 hit;
     s32 dot_x;
     s32 dot_y;

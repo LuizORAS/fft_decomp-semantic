@@ -27,9 +27,9 @@
 #define PARENT g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].proposition_list
 
 void wldcore_list_open_active_propositions(void) {
-    wldcore_point32_t point;
+    point32_t point;
     RECT bounds;
-    wldcore_point32_t* base;
+    point32_t* base;
     s32 index;
     s32 depth;
     s32 i;

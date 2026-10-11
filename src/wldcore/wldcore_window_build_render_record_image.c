@@ -8,7 +8,7 @@
  * argument save slots, and the transform call receives the same struct.
  */
 void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, u32* image) {
-    wldcore_point32_t* clut;
+    point32_t* clut;
     CVECTOR* color;
     s32 transformed[2];
 

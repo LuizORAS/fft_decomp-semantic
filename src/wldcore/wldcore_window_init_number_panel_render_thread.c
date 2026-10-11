@@ -5,8 +5,7 @@
  * The packed word supplies two displayed halfwords; their magnitude selects
  * a one- through four-digit panel width before the optional label is measured.
  * `width` holds the digit count first and the panel's pixel width after. */
-void wldcore_window_init_number_panel_render_thread(
-    s32 thread_id, u32 packed_values, s32 text_id, wldcore_point32_t* origin) {
+void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_values, s32 text_id, point32_t* origin) {
     s16 text_width;
     s16 text_height;
     s32 width;

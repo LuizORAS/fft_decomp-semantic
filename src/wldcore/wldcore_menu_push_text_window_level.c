@@ -21,12 +21,12 @@
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     wldcore_text_scrollable_window_t* window;
     wldcore_window_record_t* records;
-    wldcore_point32_t* positions;
-    wldcore_point32_t* position;
+    point32_t* positions;
+    point32_t* position;
     s32* anchor;
     s32 index;
-    wldcore_point32_t box;
-    wldcore_point32_t unused_point;
+    point32_t box;
+    point32_t unused_point;
     s16 dims[2];
     s32 unused[2];
     u8* entry;
@@ -75,7 +75,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     positions = &records[0].position;
     /* This byte-view stride retains the target addiu of &records[0].x;
      * &records[index].x removes it and breaks the exact match. */
-    position = (wldcore_point32_t*)((u8*)positions + index * sizeof(wldcore_window_record_t));
+    position = (point32_t*)((u8*)positions + index * sizeof(wldcore_window_record_t));
     position->x = -(box.x / 2) + 2;
     position->y = -(box.y / 2) - 2;
     wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);

@@ -8,8 +8,8 @@
  * entries it resets the parent window-pair level's records and shows text
  * 0xb80a instead. */
 void wldcore_list_open_rumors(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s16* values;
     s16* flags;
     s32* locations;

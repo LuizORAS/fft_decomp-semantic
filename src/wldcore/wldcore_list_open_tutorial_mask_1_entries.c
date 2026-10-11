@@ -6,8 +6,8 @@
  * with width 0x8c; appends its record tagged 0x2d. Sibling of
  * wldcore_list_open_formation_tutorials. */
 void wldcore_list_open_tutorial_mask_1_entries(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 i;
     s32 count;
     s32 record_index;

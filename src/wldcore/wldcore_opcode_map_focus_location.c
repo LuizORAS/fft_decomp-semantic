@@ -17,8 +17,7 @@ void wldcore_opcode_map_focus_location(void) {
         index = entry;
         g_wldcore_proposition_selected_entry = index + 1;
     }
-    if (wldcore_map_is_point_outside_projection_bounds((const wldcore_point32_t*)&g_wldcore_map_dot_screen_x[index])
-        != 0) {
+    if (wldcore_map_is_point_outside_projection_bounds((const point32_t*)&g_wldcore_map_dot_screen_x[index]) != 0) {
         s32* flags = &g_wldcore_script_state.flags;
 
         *flags |= WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION;

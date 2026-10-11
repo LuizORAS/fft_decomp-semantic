@@ -8,8 +8,8 @@
  * The flag value lives in its own variable so the target keeps 8 in a saved
  * register across the loop. */
 void wldcore_list_open_formation_tutorials(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    point32_t dimensions;
+    point32_t origin;
     s32 i;
     s32 count;
     s32 record_index;

@@ -140,7 +140,7 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             break;
         }
 
-        READ_CURVE(i, j, entry->wave_curves.half.high & 0xF, frame);
+        READ_CURVE(i, j, (entry->wave_curves >> 16) & 0xF, frame);
         radius = battle_effect_lerp_linear(entry->radius_start, entry->radius_end, i);
 
         READ_CURVE(i, j, (entry->scroll_curves >> 8) & 0xF, frame);
@@ -156,11 +156,11 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             work->v_scroll += v_span << 8;
         }
 
-        READ_CURVE(i, j, entry->wave_curves.word & 0xF, frame);
+        READ_CURVE(i, j, entry->wave_curves & 0xF, frame);
         growth.vx = battle_effect_lerp_linear(entry->growth_start, entry->growth_end, i);
         growth.vy = battle_effect_lerp_linear(entry->height_start, entry->height_end, i);
 
-        READ_CURVE(i, j, (entry->wave_curves.word >> 4) & 0xF, frame);
+        READ_CURVE(i, j, (entry->wave_curves >> 4) & 0xF, frame);
         growth_step.vx = battle_effect_lerp_linear(entry->growth_step_start, entry->growth_step_end, i);
         growth_step.vy = battle_effect_lerp_linear(entry->height_step_start, entry->height_step_end, i);
 
@@ -175,6 +175,7 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             k = ((radius + (work->radius_offset >> 8)) * rcos(j << 7)) >> 12;
             n = ((((radius + (work->radius_offset >> 8)) * rsin(j << 7)) >> 12) * growth.vy) >> 8;
             for (i = 0; i < 17; i++) {
+                /* Typed lattice indexing changes the loop induction and register allocation. */
                 lattice_point = (vec3s16_t*)(lattice_bytes + (j * 0x66 + i * 6));
                 lattice_point->x = (rcos(work->spin + (i << 8)) * k) >> 12;
                 lattice_point->z = (rsin(work->spin + (i << 8)) * k) >> 12;

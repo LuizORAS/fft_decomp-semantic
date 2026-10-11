@@ -4,7 +4,7 @@
 /* Queue the fixed "9999"-style number panel used on the world map and append
  * its 0x5c-byte record. Sibling of wldcore_menu_push_number_panel_level_with_argument. */
 void wldcore_menu_push_fixed_number_panel_level(void) {
-    wldcore_point32_t origin;
+    point32_t origin;
     s32 record_index;
 
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS;

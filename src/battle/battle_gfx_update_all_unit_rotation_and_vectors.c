@@ -37,14 +37,14 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         tile = battle_map_get_tile_data_pointer(unit->screen.vx / 28, unit->screen.vz / 28, unit->map_z);
         if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
             if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) != 0) {
-                battle_camera_calculate_relative_offset_by_5(&screen.vx, &adjusted.vx);
+                battle_camera_calculate_relative_offset_by_5(&screen, &adjusted);
             } else {
-                battle_camera_calculate_relative_offset_by_1(&screen.vx, &adjusted.vx);
+                battle_camera_calculate_relative_offset_by_1(&screen, &adjusted);
             }
         } else if ((tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) != 0) {
-            battle_camera_convert_screen_coords_modify_by_5(&screen.vx, &adjusted.vx);
+            battle_camera_convert_screen_coords_modify_by_5(&screen, &adjusted);
         } else {
-            battle_camera_convert_screen_coords_modify_by_1(&screen.vx, &adjusted.vx);
+            battle_camera_convert_screen_coords_modify_by_1(&screen, &adjusted);
         }
 
         if (unit->battle_data != 0) {

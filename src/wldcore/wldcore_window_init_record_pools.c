@@ -4,11 +4,11 @@
 /* Reset both world-map window pools and their allocation counters. */
 void wldcore_window_init_record_pools(void) {
     CVECTOR* window_color;
-    wldcore_point32_t* render_geometry;
+    point32_t* render_geometry;
     CVECTOR* render_color;
     CVECTOR* current_window_color;
     CVECTOR* current_render_color;
-    wldcore_point32_t* current_geometry;
+    point32_t* current_geometry;
     s32 i;
 
     /* Direct record-field access changes the column bases and instruction scheduling. */
@@ -31,7 +31,7 @@ void wldcore_window_init_record_pools(void) {
     for (i = 0; i < 0x20; i++) {
         g_wldcore_window_render_records[i].flags = WLDCORE_DISPLAY_OBJECT_IMAGE;
         g_wldcore_window_render_records[i].priority = 1;
-        current_geometry = (wldcore_point32_t*)((u8*)render_geometry + i * sizeof(g_wldcore_window_render_records[0]));
+        current_geometry = (point32_t*)((u8*)render_geometry + i * sizeof(g_wldcore_window_render_records[0]));
         current_geometry->x = 0x3c0;
         current_geometry->y = 0x1f0;
         current_render_color = (CVECTOR*)((u8*)render_color + i * sizeof(g_wldcore_window_render_records[0]));

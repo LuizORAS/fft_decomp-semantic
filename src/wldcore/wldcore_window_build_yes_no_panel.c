@@ -6,7 +6,7 @@
  * The origin arrives by value: the target spills a0/a1 to their home slots at
  * entry and copies both words into base_x/base_y together. The frame reserves
  * 40 bytes of locals the body never reads. */
-void wldcore_window_build_yes_no_panel(wldcore_point32_t origin) {
+void wldcore_window_build_yes_no_panel(point32_t origin) {
     RECT bounds;
     s32 dead_locals[10];
     s32 index;

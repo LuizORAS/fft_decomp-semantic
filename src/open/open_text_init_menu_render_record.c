@@ -8,7 +8,7 @@
 void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, void* image) {
     /* The pair is stack-resident (0x18 / 0x1c) because it is passed by value,
      * which also lets the y store fill the beqz delay slot. */
-    open_point32_t text;
+    point32_t text;
     s32 margin;
 
     open_gfx_init_window_frame_record(record_index, quad, depth, image);

@@ -12,7 +12,7 @@
  * The unused 48-byte local reproduces the target's frame size. */
 void wldcore_menu_push_brave_story_level(void) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s32 index;
     s32 value;
     s32 i;
@@ -68,7 +68,7 @@ void wldcore_menu_push_brave_story_level(void) {
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = -0x78;
         base->y = -0x28;
     }
@@ -105,7 +105,7 @@ void wldcore_menu_push_brave_story_level(void) {
         index, bounds, 0, WLDCORE_TEXT_ID_INJURED_CASUALTIES, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x1C;
         base->y = -0x28;
     }

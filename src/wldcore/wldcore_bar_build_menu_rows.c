@@ -13,11 +13,11 @@
  * access raises `index` above `level` in allocation priority. */
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     s32 index;
-    wldcore_point32_t point;
+    point32_t point;
     RECT bounds;
     s32 unused[8];
     wldcore_menu_cursor_state_t* cursor;
-    wldcore_point32_t* base;
+    point32_t* base;
     wldcore_window_render_record_t* render;
     s32 i;
 

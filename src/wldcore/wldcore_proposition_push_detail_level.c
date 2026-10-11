@@ -16,7 +16,7 @@ void wldcore_proposition_push_detail_level(s32 value) {
     s32 depth;
     u8 state;
     RECT bounds;
-    wldcore_point32_t* base;
+    point32_t* base;
 
     state = g_main_proposition_states[value];
     chance = (state & WLDCORE_PROPOSITION_STATE_FAILURE) ? 0x14 : 0;

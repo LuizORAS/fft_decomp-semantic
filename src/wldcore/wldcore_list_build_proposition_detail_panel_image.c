@@ -17,14 +17,14 @@
 void wldcore_list_build_proposition_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode) {
     RECT bounds;
-    wldcore_point32_t point;
+    point32_t point;
     s16 text_width;
     s16 text_rows;
     s32 index;
     s32 rows;
     s32 i;
     u16* panel_text;
-    wldcore_point32_t* base;
+    point32_t* base;
 
     panel_text = &g_wldcore_selected_proposition_row[0].fields.name_text;
     index = wldcore_window_append_render_record_and_reset_color(

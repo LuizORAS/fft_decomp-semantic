@@ -5,7 +5,7 @@
  * bits 22/23 flip the texture, bits 24-25 and 28-29 select the texture page
  * depth and blend mode, bit 30 shading and bit 6 semi-transparency. */
 void GsSortFlipSprite(const GsSPRITE* sp, GsOT* otp, u16 pri) {
-    psyq_gs_poly_ft4_packet_t* p;
+    POLY_FT4* p;
     s32 attr;
     s32 x;
     s32 y;
@@ -39,16 +39,17 @@ void GsSortFlipSprite(const GsSPRITE* sp, GsOT* otp, u16 pri) {
          * the 0x2c000000 constant onto the first term. */
         mode = ((u32)attr >> 5) & 0x02000000;
         code = ((attr << 18) & 0x01000000) | 0x2c000000;
-        p->mode = mode | code | (sp->b << 16) | (sp->g << 8) | sp->r;
-        p->xy0 = (x & 0xffff) | (y << 16);
-        p->uv0_clut = u0 | (v0 << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
-        p->xy1 = ((x + sp->w) & 0xffff) | (y << 16);
-        p->uv1_tpage = u1 | (v0 << 8) | ((sp->tpage & 0x1f) << 16) | (((u32)attr >> 1) & 0x01800000)
+        /* GPU words preserve the retail stores; member stores narrow the writes. */
+        *(u32*)&p->r0 = mode | code | (sp->b << 16) | (sp->g << 8) | sp->r;
+        *(u32*)&p->x0 = (x & 0xffff) | (y << 16);
+        *(u32*)&p->u0 = u0 | (v0 << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
+        *(u32*)&p->x1 = ((x + sp->w) & 0xffff) | (y << 16);
+        *(u32*)&p->u1 = u1 | (v0 << 8) | ((sp->tpage & 0x1f) << 16) | (((u32)attr >> 1) & 0x01800000)
             | (((u32)attr >> 7) & 0x600000);
-        p->xy2 = (x & 0xffff) | ((y + sp->h) << 16);
-        p->uv2 = u0 | (v1 << 8);
-        p->xy3 = ((x + sp->w) & 0xffff) | ((y + sp->h) << 16);
-        p->uv3 = u1 | (v1 << 8);
+        *(u32*)&p->x2 = (x & 0xffff) | ((y + sp->h) << 16);
+        *(u32*)&p->u2 = u0 | (v1 << 8);
+        *(u32*)&p->x3 = ((x + sp->w) & 0xffff) | ((y + sp->h) << 16);
+        *(u32*)&p->u3 = u1 | (v1 << 8);
         GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)p, otp, pri, 9);
     }
 }

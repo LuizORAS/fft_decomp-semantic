@@ -119,7 +119,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->v0 = color;
     prim->v3 = 0x98;
     prim->v2 = 0x98;
-    battle_camera_convert_screen_coords_modify_by_1(&base->vx, &screen.vx);
+    battle_camera_convert_screen_coords_modify_by_1(base, &screen);
     RotTrans(&screen, &transformed, &flag);
     AddPrim(ot + (transformed.vz / 4), prim);
 }

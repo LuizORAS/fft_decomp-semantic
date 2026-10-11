@@ -7,8 +7,8 @@
 void wldcore_opcode_load_picture(void) {
     GsIMAGE image;
     RECT bounds;
-    wldcore_point32_t clut_position;
-    wldcore_point32_t unused_slot; /* reserves the target frame's 0x50 slot */
+    point32_t clut_position;
+    point32_t unused_slot; /* reserves the target frame's 0x50 slot */
     u32 instruction;
     s32 picture;
     s32 x;

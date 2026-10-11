@@ -5,8 +5,7 @@
  * Width is rounded for its tiled image; stored origins are screen-relative.
  * Each coordinate is read into an int before it is narrowed into its s16
  * field: the target loads full words. */
-void wldcore_window_init_panel_render_state(
-    s32 unused, s32 extent, wldcore_point32_t* dimensions, wldcore_point32_t* origin) {
+void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* dimensions, point32_t* origin) {
     s32 width = dimensions->x;
     s32 rows = dimensions->y;
     s32 visible_rows;

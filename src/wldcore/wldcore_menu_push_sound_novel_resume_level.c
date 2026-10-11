@@ -17,16 +17,16 @@
 void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     GsIMAGE image;
     RECT bounds;
-    wldcore_point32_t clut;
+    point32_t clut;
     s32 unused[4];
     s32 index;
     s32 depth;
     s32 offset_x;
     s32 offset_y;
-    wldcore_point32_t* base1;
-    wldcore_point32_t* base2;
-    wldcore_point32_t* base3;
-    wldcore_point32_t* base4;
+    point32_t* base1;
+    point32_t* base2;
+    point32_t* base3;
+    point32_t* base4;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.mode = mode;
     index = wldcore_window_append_record_and_reset_color(

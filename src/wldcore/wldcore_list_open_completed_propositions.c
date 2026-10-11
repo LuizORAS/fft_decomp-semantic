@@ -17,9 +17,9 @@
  * as in the target. The unused point record preserves the 24-byte local
  * area. */
 void wldcore_list_open_completed_propositions(void) {
-    wldcore_point32_t origin;
-    wldcore_point32_t dimensions;
-    wldcore_point32_t unused_point;
+    point32_t origin;
+    point32_t dimensions;
+    point32_t unused_point;
     s32 count;
     s32 i;
     s32 total;

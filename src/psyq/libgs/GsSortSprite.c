@@ -1,6 +1,7 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* The target tests scalex/scaley against the identity ONE/ONE (0x10001000) with a
@@ -34,7 +35,8 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     s32 flag;
     void* packet;
     psyq_gs_sprite_packet_t* sprt;
-    psyq_gs_poly_ft4_packet_t* poly;
+    POLY_FT4* poly;
+    u32* words;
     u32 attr;
     u32 code;
     u32 mode;
@@ -121,19 +123,23 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
                 v_bottom = sp->v + sp->h - 1;
             }
             poly = packet;
+            /* GPU words preserve the shared tail store; member stores change scheduling. */
+            words = (u32*)poly;
             mode = (attr >> 5) & 0x02000000;
             shade = (attr << 18) & 0x01000000;
             code = 0x2c000000;
-            poly->mode = mode | (shade | code) | (sp->b << 16) | (sp->g << 8) | sp->r;
-            poly->xy0 = sxy0;
-            poly->uv0_clut = u_left | (v_top << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
-            poly->xy1 = sxy1;
-            poly->uv1_tpage = u_right | (v_top << 8) | ((sp->tpage & 0x1f) << 16) | ((attr >> 1) & 0x01800000)
-                | ((attr >> 7) & 0x600000);
-            poly->xy2 = sxy2;
-            poly->uv2 = u_left | (v_bottom << 8);
-            poly->xy3 = sxy3;
-            poly->uv3 = u_right | (v_bottom << 8);
+            words[offsetof(POLY_FT4, r0) / sizeof(*words)]
+                = mode | (shade | code) | (sp->b << 16) | (sp->g << 8) | sp->r;
+            words[offsetof(POLY_FT4, x0) / sizeof(*words)] = sxy0;
+            words[offsetof(POLY_FT4, u0) / sizeof(*words)]
+                = u_left | (v_top << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
+            words[offsetof(POLY_FT4, x1) / sizeof(*words)] = sxy1;
+            words[offsetof(POLY_FT4, u1) / sizeof(*words)] = u_right | (v_top << 8) | ((sp->tpage & 0x1f) << 16)
+                | ((attr >> 1) & 0x01800000) | ((attr >> 7) & 0x600000);
+            words[offsetof(POLY_FT4, x2) / sizeof(*words)] = sxy2;
+            words[offsetof(POLY_FT4, u2) / sizeof(*words)] = u_left | (v_bottom << 8);
+            words[offsetof(POLY_FT4, x3) / sizeof(*words)] = sxy3;
+            words[offsetof(POLY_FT4, u3) / sizeof(*words)] = u_right | (v_bottom << 8);
             packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 9);
         }
         GsOUT_PACKET_P = packet;
