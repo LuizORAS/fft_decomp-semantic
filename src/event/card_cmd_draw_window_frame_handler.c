@@ -10,7 +10,7 @@
  * byte operands, and source 1 selects the alternate border texture
  * coordinates. Returns the command that follows.
  */
-world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command) {
+menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t* command) {
     RECT rect;
     s32 left;
     s32 top;
@@ -159,6 +159,6 @@ world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_windo
     rect.h = 7;
     card_gfx_enqueue_textured_quad(
         &rect, u_right - 5, v_bottom - 7, 0, g_card_gfx_draw_semitrans, g_card_text_digit_texture_page, clut, priority);
-    command = (world_menu_window_command_t*)((u8*)command + command->length);
+    command = (menu_window_command_t*)((u8*)command + command->length);
     return command;
 }

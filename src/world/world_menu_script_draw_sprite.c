@@ -4,7 +4,7 @@
 
 /* Draws the sprite described by a 9-byte command header (x, y, w, h, u, v)
  * and returns the next command. */
-world_menu_instruction_t* world_menu_script_draw_sprite(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_sprite(menu_instruction_t* instruction) {
     RECT rect;
     s32 y;
     s16 step;
@@ -30,5 +30,5 @@ world_menu_instruction_t* world_menu_script_draw_sprite(world_menu_instruction_t
     }
     world_gfx_enqueue_textured_quad(&rect, instruction->sprite.sprite.u, instruction->sprite.sprite.v, color,
         g_world_menu_semi_trans, g_world_menu_texture_page, g_world_menu_clut, g_world_menu_draw_priority);
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

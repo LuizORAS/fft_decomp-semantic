@@ -20,16 +20,15 @@ s32 equip_bits_read_secondary(s32 count);
 /* command */
 /* Render-command stream callbacks: every handler consumes and returns a
  * command pointer; every row callback is indexed by a list row. */
-typedef u8* (*equip_command_handler_t)(u8*);
+typedef menu_instruction_t* (*equip_command_handler_t)(menu_instruction_t* instruction);
 
-/* The opcode that ends an EQUIP menu script stream (menu_script_opcode_e
- * names the others). */
+/* The opcode that ends an EQUIP menu display stream. */
 enum {
     EQUIP_CMD_END = 0x19,
 };
 
-extern equip_command_handler_t g_equip_cmd_handlers[];
-extern u8 g_equip_cmd_row_sprite_body[];
+extern equip_command_handler_t g_equip_cmd_handlers[25];
+extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
 
 /* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
  * (in equip_run_item_type_order_mode) the item-type order menus. Each is
@@ -37,11 +36,32 @@ extern u8 g_equip_cmd_row_sprite_body[];
  * g_battle_menu_thread_menu_data. */
 extern world_menu_entry_t g_equip_command_menu;
 extern s32 g_equip_cmd_stream_input;
-extern world_menu_window_command_t g_equip_cmd_window_interior_command;
-u8* equip_cmd_draw_textured_quad_handler(u8* command);
+extern menu_window_command_t g_equip_cmd_window_interior_command;
 void equip_cmd_run_stream(u8* stream, s32 input);
-world_menu_window_command_t* equip_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
-u8* equip_cmd_draw_tiled_rectangle_handler(u8* command);
+menu_instruction_t* equip_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_advance_window_scale_step_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_line_f2_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_row_callback_quad_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_tiled_rectangle_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_translucent_tile_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_run_if_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_draw_color_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_otag_index_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_semitrans_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_tpage_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
+menu_instruction_t* equip_cmd_skip_group(menu_instruction_t* instruction);
 
 /* editor */
 extern world_image_location_t g_equip_editor_numeric_geometry[];
@@ -432,7 +452,7 @@ void equip_menu_reset_state_flags(void);
 void equip_menu_restore_list_selection(s32 idx, s16* p1, s16* p2, s16* list);
 s32 equip_item_run_rearrange_mode(void);
 void equip_menu_icon_list_thread(void);
-void equip_menu_scroll_list_by_page(s32 direction, const u8* menu);
+void equip_menu_scroll_list_by_page(s32 direction, const menu_list_record_t* menu);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
 s32 equip_menu_set_selection_value(u8 index, s16 value);
 s32 equip_menu_init_selection_value(u8 index, s16 value);

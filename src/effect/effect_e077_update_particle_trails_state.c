@@ -120,7 +120,7 @@ s32 effect_e077_update_particle_trails_state(s16 record_index, s32 callback_slot
             count = battle_effect_lerp_linear(
                 entry->tentacle_mesh.particle_count_start, entry->tentacle_mesh.particle_count_end, factor);
             READ_CURVE(factor, index, curves0 & 0xF, frame);
-            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin.vx);
+            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
             case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:

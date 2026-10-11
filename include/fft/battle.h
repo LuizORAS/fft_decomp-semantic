@@ -3918,8 +3918,8 @@ typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 0xcc
  * or box half-extent around the spawn position and the velocity spread
  * randomizes the base angles. */
 typedef struct effect_emitter_geometry_view {
-    s16 spawn_position_start[3];      /* 0x14 */
-    s16 spawn_position_end[3];        /* 0x1a */
+    vec3s16_t spawn_position_start;   /* 0x14 */
+    vec3s16_t spawn_position_end;     /* 0x1a */
     s16 spawn_spread_start[3];        /* 0x20 */
     s16 spawn_spread_end[3];          /* 0x26 */
     s16 velocity_base_angle_start[3]; /* 0x2c */
@@ -3951,15 +3951,15 @@ typedef struct effect_geometry_entry {
     u8 _unused_00;
     u8 animation_index;  /* 0x01: the sprite sequence its particles play */
     u16 placement_flags; /* 0x02: EFFECT_EMITTER_* placement bits and EFFECT_WORK_KIND_*; the particle's kind_flags */
-    u8 animation_frame_group;    /* 0x04: frame group of that sequence's frames */
-    u8 _padding_05;              /* aligns flags */
-    u16 flags;                   /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
-    u32 curve_indices[2];        /* 0x08 */
-    u32 colour_curves;           /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
-    s16 spawn_position_start[3]; /* 0x14: offset from the origin effect_emitter_origin_e names */
-    s16 spawn_position_end[3];   /* 0x1a */
-    s16 spawn_spread_start[3];   /* 0x20: half-extent of the spawn box or ellipsoid */
-    s16 spawn_spread_end[3];     /* 0x26 */
+    u8 animation_frame_group; /* 0x04: frame group of that sequence's frames */
+    u8 _padding_05;           /* aligns flags */
+    u16 flags;                /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
+    u32 curve_indices[2];     /* 0x08 */
+    u32 colour_curves;        /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
+    vec3s16_t spawn_position_start;   /* 0x14: offset from the origin effect_emitter_origin_e names */
+    vec3s16_t spawn_position_end;     /* 0x1a */
+    s16 spawn_spread_start[3];        /* 0x20: half-extent of the spawn box or ellipsoid */
+    s16 spawn_spread_end[3];          /* 0x26 */
     s16 velocity_base_angle_start[3]; /* 0x2c */
     s16 velocity_base_angle_end[3];   /* 0x32 */
     s16 velocity_spread_start[3];     /* 0x38: random angle added to each base angle; halved when it has no curve */
@@ -4090,12 +4090,12 @@ typedef char
  * delta, 1 scroll, 3 angle step, 6 angle step delta. */
 typedef struct effect_polar_mesh_geometry_view {
     u8 _unused_00[0x06];
-    u16 flags;            /* 0x06: bit 6 = per-channel colour curves */
-    u32 curve_indices[2]; /* 0x08 */
-    u32 colour_curves;    /* 0x10: nibbles 0-2 = r/g/b */
-    s16 center_start[3];  /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
-    s16 center_end[3];    /* 0x1a */
-    s16 radius_start;     /* 0x20: spawn spread x */
+    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
+    u32 curve_indices[2];   /* 0x08 */
+    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
+    vec3s16_t center_start; /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
+    vec3s16_t center_end;   /* 0x1a */
+    s16 radius_start;       /* 0x20: spawn spread x */
     u8 _unused_22[0x04];
     s16 radius_end; /* 0x26 */
     u8 _unused_28[0x04];
@@ -4793,7 +4793,7 @@ void battle_effect_start_render_frame(void);
 s32 battle_effect_update_cycle(void);
 s32 battle_effect_update_slot(s32 id);
 s32 battle_effect_update_stage(void);
-void battle_effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 void battle_effect_interpolate_emitter_velocity_base_angles(
     const effect_geometry_record_t* source, s32 factor, s32* out);
 void battle_effect_interpolate_emitter_velocity_direction_spread(

@@ -6,7 +6,7 @@
  * when g_world_menu_use_alternate_palette selects the alternate palette, bytes 5..7, and record the
  * resulting CLUT id. Advances by the instruction length (byte 1), like
  * world_menu_script_set_texture_page. */
-world_menu_instruction_t* world_menu_script_set_clut(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_set_clut(menu_instruction_t* instruction) {
     if (g_world_menu_use_alternate_palette != 0) {
         g_world_menu_clut = GetClut(instruction->clut.alternate_x_div_16 << 4,
             instruction->clut.alternate_y_low + (instruction->clut.alternate_y_high << 8));
@@ -14,5 +14,5 @@ world_menu_instruction_t* world_menu_script_set_clut(world_menu_instruction_t* i
         g_world_menu_clut = GetClut(instruction->clut.normal_x_div_16 << 4,
             instruction->clut.normal_y_low + (instruction->clut.normal_y_high << 8));
     }
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

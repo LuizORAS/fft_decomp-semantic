@@ -578,7 +578,7 @@ typedef enum menu_arithmeticks_list {
 } menu_arithmeticks_list_e;
 /* Seven-byte window command in the menu script streams. The length field
  * advances to the next command, which may have a different size. */
-typedef struct world_menu_window_command {
+typedef struct menu_window_command {
     u8 opcode;
     u8 length;
     u8 rectangle_source;
@@ -586,7 +586,7 @@ typedef struct world_menu_window_command {
     u8 y;
     u8 width;
     u8 height;
-} world_menu_window_command_t;
+} menu_window_command_t;
 
 /* Opcode byte of a menu script command, the index of its handler in the
  * *_cmd_handlers table of BUNIT, EQUIP and JOBSTTS (CARD calls the same
@@ -1292,11 +1292,11 @@ typedef enum menu_number_value_flags {
     MENU_NUMBER_VALUE_DASHES = 0x20000000,   /* a row of dashes instead of the digits */
     MENU_NUMBER_VALUE_DISABLED = 0x40000000, /* drawn with the disabled number clut */
 } menu_number_value_flags_e;
-/* Ten-byte menu-script "draw number" command (opcodes 0x19-0x1b): an
+/* Ten-byte menu-script "draw number" command: an
  * opcode/length prefix followed by the value getter (a row-callback index),
  * layout and byte position operands. world_menu_script_draw_formatted_number
  * and the overlay copies advance by `length`. */
-typedef struct world_draw_number_command {
+typedef struct menu_draw_number_command {
     u8 opcode;
     u8 length;
     u8 style;
@@ -1307,7 +1307,161 @@ typedef struct world_draw_number_command {
     u8 x;
     u8 y;
     u8 value;
-} world_draw_number_command_t;
+} menu_draw_number_command_t;
+
+/* Variable-length list command (0x10) in the menu display stream: the layout
+ * world_menu_load_scrollable_list_layout reads and the placement
+ * world_menu_script_draw_scrollable_list draws with. */
+typedef struct menu_list_record {
+    u8 opcode;          /* 0x00: 0x10 = list layout */
+    u8 length;          /* 0x01: byte length of this record */
+    u8 show_cursor;     /* 0x02 */
+    u8 _unused_03;      /* 0x03 */
+    u8 skip_count;      /* 0x04: row records that follow (g_world_menu_list_row_record_count) */
+    u8 row_height;      /* 0x05 */
+    u8 visible_rows;    /* 0x06 */
+    u8 x;               /* 0x07 */
+    u8 y;               /* 0x08 */
+    u8 width_a;         /* 0x09 */
+    u8 width_b;         /* 0x0a */
+    u8 cursor_x_offset; /* 0x0b */
+    u8 arrow_up_y;      /* 0x0c */
+    u8 arrow_down_y;    /* 0x0d */
+} menu_list_record_t;
+
+/* Byte-aligned commands in the variable-length menu display stream. */
+typedef struct menu_sprite_command {
+    u8 opcode;
+    u8 length;
+    u8 _unknown_02;
+    battle_menu_sprite_cell_t sprite;
+} menu_sprite_command_t;
+typedef char menu_sprite_command_size_must_be_9[sizeof(menu_sprite_command_t) == 9 ? 1 : -1];
+
+typedef struct menu_callback_sprite_command {
+    u8 opcode;
+    u8 length;
+    u8 callback_index;
+    u8 row;
+    u8 x;
+    u8 y;
+} menu_callback_sprite_command_t;
+
+typedef struct menu_tile_command {
+    u8 opcode;
+    u8 length;
+    u8 x;
+    u8 y;
+    u8 width;
+    u8 height;
+    rgb24_t color;
+} menu_tile_command_t;
+typedef char menu_tile_command_size_must_be_9[sizeof(menu_tile_command_t) == 9 ? 1 : -1];
+
+/* LINE_F2 uses endpoint coordinates rather than a rectangle's extents. */
+typedef struct menu_line_command {
+    u8 opcode;
+    u8 length;
+    u8 x0;
+    u8 y0;
+    u8 x1;
+    u8 y1;
+    rgb24_t color;
+} menu_line_command_t;
+typedef char menu_line_command_size_must_be_9[sizeof(menu_line_command_t) == 9 ? 1 : -1];
+
+typedef struct menu_draw_area_command {
+    u8 opcode;
+    u8 length;
+    u8 x;
+    u8 y;
+    u8 width;
+    u8 height;
+} menu_draw_area_command_t;
+
+typedef struct menu_sprite_color_command {
+    u8 opcode;
+    u8 length;
+    rgb24_t normal;
+    rgb24_t alternate;
+} menu_sprite_color_command_t;
+typedef char menu_sprite_color_command_size_must_be_8[sizeof(menu_sprite_color_command_t) == 8 ? 1 : -1];
+
+/* A view of the current byte-aligned instruction, not a fixed-stride array.
+ * Commands advance by their encoded byte length; opcode 0x16 and the module's
+ * terminator are single bytes without a length operand. */
+typedef union menu_instruction {
+    struct {
+        u8 opcode;
+        u8 length;
+    } header;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 predicate;
+        u8 count;
+        u8 value;
+    } conditional;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 predicate;
+        u8 count_true;
+        u8 count_false;
+        u8 value;
+    } if_else;
+    menu_window_command_t window;
+    menu_draw_number_command_t number;
+    menu_list_record_t list;
+    menu_sprite_command_t sprite;
+    menu_callback_sprite_command_t callback_sprite;
+    menu_tile_command_t tile;
+    menu_line_command_t line;
+    menu_draw_area_command_t draw_area;
+    menu_sprite_color_command_t sprite_color;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 y_high;
+        u8 x_div_16;
+        u8 y_low;
+    } fixed_clut;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 normal_y_high;
+        u8 normal_x_div_16;
+        u8 normal_y_low;
+        u8 alternate_y_high;
+        u8 alternate_x_div_16;
+        u8 alternate_y_low;
+    } clut;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 y_blend; /* bits 0-1: y/256; bits 4-5: blend rate */
+        u8 x_div_16;
+        u8 depth;
+    } texture_page;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 value;
+    } draw_state;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 blend_rate;
+    } blend;
+} menu_instruction_t;
+typedef char menu_instruction_size_must_be_14[sizeof(menu_instruction_t) == 14 ? 1 : -1];
+
+static __inline__ menu_instruction_t* menu_next_instruction(menu_instruction_t* instruction) {
+    return (menu_instruction_t*)((u8*)instruction + instruction->header.length);
+}
 
 /* One 12-byte positioned number: a text position, a pointer to the live
  * value and the decimal format. *_menu_draw_numeric_display_entries draws

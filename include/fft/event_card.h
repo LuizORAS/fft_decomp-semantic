@@ -41,9 +41,9 @@ s32 card_io_wait_hardware_event_result(void);
 s32 card_io_wait_operation_result(s32 retry_limit);
 
 /* command */
-extern world_menu_window_command_t g_card_cmd_window_interior_command;
+extern menu_window_command_t g_card_cmd_window_interior_command;
 u8* card_cmd_draw_decimal_number_handler(u8* command);
-world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
+menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t* command);
 u8* card_cmd_draw_tiled_rectangle_handler(u8* command);
 
 /* file */
@@ -284,7 +284,7 @@ extern world_menu_entry_t g_card_save_card_error_prompt_descriptor[];
 extern s8 g_card_save_slot_scan_active;
 extern s8 g_card_save_format_delay_counter;
 extern s8 g_card_save_error_prompt_closing;
-extern world_menu_window_command_t g_card_save_slot_window_command;
+extern menu_window_command_t g_card_save_slot_window_command;
 extern world_menu_window_rect_source_t g_card_save_slot_window_rect_source[];
 extern u8 g_card_save_list_input_armed;
 extern u8 g_card_save_overwrite_prompt_active;

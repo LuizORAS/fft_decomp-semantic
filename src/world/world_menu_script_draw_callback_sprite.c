@@ -3,7 +3,7 @@
 
 /* Ask the selected callback for the literal row's icon, or the current
  * scrolling row's icon, then draw it at the command's position. */
-world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_callback_sprite(menu_instruction_t* instruction) {
     world_item_icon_source_t* (*handler)(s32);
     world_item_icon_source_t* entry;
     s32 index;
@@ -28,7 +28,7 @@ world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_inst
         g_world_menu_script_sprite_command.sprite.v = entry->v;
         g_world_menu_clut = entry->clut;
         g_world_menu_texture_page = entry->tpage;
-        world_menu_script_draw_sprite((world_menu_instruction_t*)&g_world_menu_script_sprite_command);
+        world_menu_script_draw_sprite((menu_instruction_t*)&g_world_menu_script_sprite_command);
     }
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

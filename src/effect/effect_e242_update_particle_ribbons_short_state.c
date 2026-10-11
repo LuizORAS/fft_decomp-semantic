@@ -178,7 +178,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 entry->particle_ribbon.particle_count_start, entry->particle_ribbon.particle_count_end, factor);
 
             READ_CURVE(factor, j, scroll & 0xf, frame);
-            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin.vx);
+            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
                 break;

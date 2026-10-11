@@ -15,15 +15,15 @@ typedef struct {
  * redraw the visible text ids when a list font is active. */
 void world_menu_load_scrollable_list_layout(u8* script) {
     world_menu_scrollable_list_image_t image;
-    world_menu_list_record_t* record;
-    world_menu_instruction_t* instruction = (world_menu_instruction_t*)script;
+    menu_list_record_t* record;
+    menu_instruction_t* instruction = (menu_instruction_t*)script;
     s32 i;
 
     while (instruction->header.opcode != 0x10) {
         if (instruction->header.opcode == 0x1C) {
             return;
         }
-        instruction = world_menu_next_instruction(instruction);
+        instruction = menu_next_instruction(instruction);
     }
     record = &instruction->list;
     g_world_menu_list_row_record_count = record->skip_count;

@@ -1590,7 +1590,7 @@ data:
   - {addr: 0x801d8700, name: g_equip_cmd_handlers}
   - {addr: 0x801d8764, name: g_equip_gfx_transition_frame}
   - {addr: 0x801d8768, name: g_equip_gfx_draw_area}
-  - {addr: 0x801d8773, name: g_equip_cmd_row_sprite_body}
+  - {addr: 0x801d8770, name: g_equip_cmd_row_sprite_command}
   - {addr: 0x801d877c, name: g_equip_cmd_window_interior_command}
   - {addr: 0x801d8784, name: g_equip_gfx_window_zoom_percent}
   - {addr: 0x801d878c, name: g_equip_gfx_blank_cell_rect}

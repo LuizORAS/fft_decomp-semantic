@@ -10,7 +10,7 @@
  * pointer's reference count above the draw priority's, so global allocation
  * places them in s6 and s7 like the target.
  */
-world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_parse_draw_window_frame(menu_instruction_t* instruction) {
     RECT rect;
     s32 left;
     s32 top;
@@ -129,7 +129,7 @@ world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruct
         g_world_menu_window_interior_command.width = instruction->window.width;
         g_world_menu_window_interior_command.height = instruction->window.height;
     }
-    world_menu_parse_draw_tiled_rectangle((world_menu_instruction_t*)&g_world_menu_window_interior_command);
+    world_menu_parse_draw_tiled_rectangle((menu_instruction_t*)&g_world_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;
@@ -158,6 +158,6 @@ world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruct
     rect.h = 7;
     world_gfx_enqueue_textured_quad(
         &rect, u_right - 5, v_bottom - 7, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
-    instruction = world_menu_next_instruction(instruction);
+    instruction = menu_next_instruction(instruction);
     return instruction;
 }

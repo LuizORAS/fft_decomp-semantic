@@ -4,7 +4,7 @@
 
 /* Draws the rectangle described by a 6-byte command header (x, y, w, h)
  * followed by its payload, and returns the next command. */
-world_menu_instruction_t* world_menu_script_draw_tile(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_tile(menu_instruction_t* instruction) {
     RECT rect;
     s32 y;
     s16 step;
@@ -23,5 +23,5 @@ world_menu_instruction_t* world_menu_script_draw_tile(world_menu_instruction_t* 
     rect.w = instruction->tile.width;
     rect.h = instruction->tile.height;
     world_gfx_enqueue_tile(&rect, &instruction->tile.color, g_world_menu_semi_trans, g_world_menu_draw_priority);
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

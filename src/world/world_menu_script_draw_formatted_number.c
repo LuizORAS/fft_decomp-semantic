@@ -9,7 +9,7 @@
  * The command selects its value source, width, spacing, palette, and one of
  * three glyph layouts. High value bits request a disabled palette or dashes.
  */
-world_menu_instruction_t* world_menu_script_draw_formatted_number(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_formatted_number(menu_instruction_t* instruction) {
     s8 text[16];
     RECT rect;
     RECT glyph;
@@ -134,5 +134,5 @@ world_menu_instruction_t* world_menu_script_draw_formatted_number(world_menu_ins
             }
         }
     }
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

@@ -3,15 +3,15 @@
 
 /* Stream command: enqueue a draw-area rect (x, y, w, h from the command)
    unless the zoom transition already emitted one. */
-u8* equip_cmd_set_draw_area_if_unlocked_handler(u8* cmd) {
+menu_instruction_t* equip_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* cmd) {
     RECT rect;
 
     if (g_equip_gfx_zoom_draw_area_active == 0) {
-        rect.x = cmd[2];
-        rect.y = cmd[3];
-        rect.w = cmd[4];
-        rect.h = cmd[5];
+        rect.x = cmd->draw_area.x;
+        rect.y = cmd->draw_area.y;
+        rect.w = cmd->draw_area.width;
+        rect.h = cmd->draw_area.height;
         equip_gfx_enqueue_draw_area(&rect, g_equip_gfx_sprite_ot_index - 1);
     }
-    return cmd + cmd[1];
+    return menu_next_instruction(cmd);
 }

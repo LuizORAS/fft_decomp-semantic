@@ -8,7 +8,7 @@
  * Built at -O1: the unscheduled prologue and load order are the -O1 signature
  * of the menu-script handlers (see world_menu_script_* in src/world). The
  * reassigned s32 y defeats plus->ior folding (gives addu). */
-world_menu_instruction_t* world_menu_script_set_fixed_clut(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_set_fixed_clut(menu_instruction_t* instruction) {
     s32 x;
     s32 y;
 
@@ -17,5 +17,5 @@ world_menu_instruction_t* world_menu_script_set_fixed_clut(world_menu_instructio
     y = instruction->fixed_clut.y_low;
     y += instruction->fixed_clut.y_high << 8;
     g_world_menu_clut = GetClut(x, y);
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

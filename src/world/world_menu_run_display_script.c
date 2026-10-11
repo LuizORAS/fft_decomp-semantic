@@ -5,7 +5,7 @@
  * after clearing the shared draw priority, semi-transparency, palette-mode
  * and temporary-draw-area state. */
 void world_menu_run_display_script(u8* script, s32 input) {
-    world_menu_instruction_t* instruction = (world_menu_instruction_t*)script;
+    menu_instruction_t* instruction = (menu_instruction_t*)script;
 
     g_world_menu_draw_priority = 0;
     g_world_menu_semi_trans = 0;

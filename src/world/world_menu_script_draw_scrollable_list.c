@@ -22,7 +22,7 @@
  * An empty list skips the list command and its following row group. Returns
  * the record that follows the list.
  */
-world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_scrollable_list(menu_instruction_t* instruction) {
     RECT rect;
     s32 unused[4];
     point16_t point;
@@ -33,7 +33,7 @@ world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_inst
     s32 rows;
     s32 index;
     u16 old_cursor;
-    world_menu_instruction_t* base;
+    menu_instruction_t* base;
 
     priority = g_world_menu_draw_priority;
     if (g_world_menu_option_count <= 0) {
@@ -194,7 +194,7 @@ world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_inst
             + (g_world_menu_cursor_position - g_world_menu_scroll_offset) * g_world_menu_row_height;
         world_menu_draw_animated_cursor(&point, &g_world_menu_list_cursor_anim, g_world_menu_use_alternate_palette);
     }
-    instruction = world_menu_next_instruction(instruction);
+    instruction = menu_next_instruction(instruction);
     g_world_menu_scroll_row_offset = 0;
     rows = g_world_menu_list_visible_rows + 1;
     if (g_world_menu_scroll_pixel_offset == 0) {

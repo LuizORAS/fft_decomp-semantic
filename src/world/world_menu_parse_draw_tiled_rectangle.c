@@ -5,7 +5,7 @@
  *
  * Source 2 uses the signed shared rectangle; other sources use byte operands.
  */
-world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_parse_draw_tiled_rectangle(menu_instruction_t* instruction) {
     RECT rect;
     s32 base_x;
     s32 full_rows;
@@ -56,7 +56,7 @@ world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instr
         }
     }
     if (partial_height == 0) {
-        return world_menu_next_instruction(instruction);
+        return menu_next_instruction(instruction);
     }
     rect.x = base_x;
     rect.y = base_y + row * 16;
@@ -71,5 +71,5 @@ world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instr
         world_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
     }
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

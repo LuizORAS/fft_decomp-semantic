@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-const u8* equip_cmd_set_semitrans_handler(const u8* data) {
-    g_equip_gfx_semitransparency = data[3];
-    return data + data[1];
+menu_instruction_t* equip_cmd_set_semitrans_handler(menu_instruction_t* data) {
+    g_equip_gfx_semitransparency = data->draw_state.value;
+    return menu_next_instruction(data);
 }

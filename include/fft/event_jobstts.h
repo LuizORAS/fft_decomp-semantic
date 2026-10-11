@@ -49,7 +49,7 @@ typedef u8* (*jobstts_command_handler_t)(u8*);
 
 typedef s32 (*jobstts_condition_t)(s32);
 
-extern world_menu_window_command_t g_jobstts_cmd_window_interior_command;
+extern menu_window_command_t g_jobstts_cmd_window_interior_command;
 extern jobstts_condition_t g_jobstts_cmd_conditions[];
 /* The opcode that ends a JOBSTTS menu script stream (menu_script_opcode_e
  * names the others). */

@@ -9,7 +9,7 @@
  */
 
 u8* jobstts_cmd_draw_window_frame_handler(u8* stream) {
-    world_menu_window_command_t* command;
+    menu_window_command_t* command;
     RECT rect;
     s32 left;
     s32 top;
@@ -24,7 +24,7 @@ u8* jobstts_cmd_draw_window_frame_handler(u8* stream) {
     u8 width;
     u8 height;
 
-    command = (world_menu_window_command_t*)stream;
+    command = (menu_window_command_t*)stream;
     priority = g_jobstts_gfx_otag_index;
     clut = g_jobstts_menu_palette_clut;
     left = command->x - 5;
@@ -124,6 +124,6 @@ u8* jobstts_cmd_draw_window_frame_handler(u8* stream) {
     rect.h = 7;
     jobstts_gfx_enqueue_textured_quad(
         &rect, 0xF2, 0x11, 0, g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, priority);
-    command = (world_menu_window_command_t*)((u8*)command + command->length);
+    command = (menu_window_command_t*)((u8*)command + command->length);
     return (u8*)command;
 }

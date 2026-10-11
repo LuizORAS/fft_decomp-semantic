@@ -12,7 +12,7 @@
  * destination register as the minuend; written as a single subtraction the
  * sign-extended blanks claims $s2 and the operands swap.
  */
-world_menu_instruction_t* world_menu_script_draw_plain_number(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_draw_plain_number(menu_instruction_t* instruction) {
     s8 text[16];
     RECT rect;
     s32 value;
@@ -49,5 +49,5 @@ world_menu_instruction_t* world_menu_script_draw_plain_number(world_menu_instruc
         i++;
         rect.x += 8;
     }
-    return world_menu_next_instruction(instruction);
+    return menu_next_instruction(instruction);
 }

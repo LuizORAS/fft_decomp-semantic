@@ -22,9 +22,9 @@
 /* Scales a scratch record's colour by a 4.12 brightness and packs it with its
  * primitive code into one RGB-code word. */
 #define PACK_RGB(scratch, brightness)                                                                                  \
-    ((((brightness) * (scratch)->colour[0]) >> 12) | (scratch)->code                                                   \
-        | ((((brightness) * (scratch)->colour[1]) >> 12) << 8)                                                         \
-        | ((((brightness) * (scratch)->colour[2]) >> 12) << 16))
+    ((((brightness) * (scratch)->red_factor) >> 12) | (scratch)->code                                                  \
+        | ((((brightness) * (scratch)->green_factor) >> 12) << 8)                                                      \
+        | ((((brightness) * (scratch)->blue_factor) >> 12) << 16))
 
 /* The RGB-code word of vertex `n` of a primitive. */
 #define POLY_RGB(poly, n) (*(u32*)&(poly)->r##n)
@@ -127,7 +127,9 @@ extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIB
  * points[ring][0] rotated by 0x400, closing the quadrant. The renderer never
  * touches the unknown ranges. */
 typedef struct effect_polar_mesh_scratch {
-    s32 colour[3]; /* 0x00: r/g/b curve factors, 0x80 when colour curves are off */
+    s32 red_factor;   /* 0x00: colour curve factors, 0x80 when curves are off */
+    s32 green_factor; /* 0x04 */
+    s32 blue_factor;  /* 0x08 */
     u8 _unused_00c[0x04];
     u32 rgb;  /* 0x10: packed colour word of the current ring */
     u32 code; /* 0x14: primitive code byte of the first quad, kept in bits 24-31 */
@@ -145,11 +147,11 @@ typedef struct effect_polar_mesh_scratch {
     u8 _unused_050[0x0c];
     s32 velocity_angle;     /* 0x5c */
     s32 acceleration_angle; /* 0x60 */
-    s32 center[3];          /* 0x64: interpolated emitter spawn position; z is written but unused */
-    u8 _unused_070[0x34];
-    s32 velocity[2]; /* 0xa4: centre drift per ring, 20.12 fixed */
+    VECTOR center;          /* 0x64: interpolated emitter spawn position; z is written but unused */
+    u8 _unused_074[0x30];
+    point32_t velocity; /* 0xa4: centre drift per ring, 20.12 fixed */
     u8 _unused_0ac[0x08];
-    s32 acceleration[2]; /* 0xb4 */
+    point32_t acceleration; /* 0xb4 */
     u8 _unused_0bc[0x1c];
     s32 radius;             /* 0xd8: 20.12 fixed */
     s32 radius_step;        /* 0xdc */
@@ -165,8 +167,10 @@ typedef struct effect_polar_mesh_scratch {
  * renderer in E467, E468, E469, E471 and E472). Its fields shift from
  * effect_polar_mesh_scratch_t, so it is a separate layout, not a view. */
 typedef struct effect_anchored_polar_mesh_scratch {
-    s32 colour[3]; /* 0x00: r/g/b curve factors, 0x80 when colour curves are off */
-    u8 r;          /* 0x0c: colour bytes of the current ring */
+    s32 red_factor;   /* 0x00: colour curve factors, 0x80 when curves are off */
+    s32 green_factor; /* 0x04 */
+    s32 blue_factor;  /* 0x08 */
+    u8 r;             /* 0x0c: colour bytes of the current ring */
     u8 _unused_00d;
     u8 g; /* 0x0e */
     u8 _unused_00f;
@@ -186,11 +190,11 @@ typedef struct effect_anchored_polar_mesh_scratch {
     u8 _unused_04c[0x0c];
     s32 velocity_angle;     /* 0x58 */
     s32 acceleration_angle; /* 0x5c */
-    s32 center[3];          /* 0x60: interpolated emitter spawn position */
-    u8 _unused_06c[0x34];
-    s32 velocity[2]; /* 0xa0 */
+    VECTOR center;          /* 0x60: interpolated emitter spawn position */
+    u8 _unused_070[0x30];
+    point32_t velocity; /* 0xa0 */
     u8 _unused_0a8[0x08];
-    s32 acceleration[2]; /* 0xb0 */
+    point32_t acceleration; /* 0xb0 */
     u8 _unused_0b8[0x18];
     s32 target_index; /* 0xd0 */
     u8 _unused_0d4[0x14];
@@ -203,8 +207,7 @@ typedef struct effect_anchored_polar_mesh_scratch {
     s32 ot_depth;           /* 0x100 */
     SVECTOR position;       /* 0x104 */
     SVECTOR* unit_coords;   /* 0x10c */
-    s32 screen[3];          /* 0x110 */
-    long flag;              /* 0x11c */
+    VECTOR screen;          /* 0x110; RotTrans stores flags in the unused fourth word */
     point16_t points[6][5]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
 

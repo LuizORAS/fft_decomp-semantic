@@ -127,7 +127,7 @@ s32 battle_effect_spawn_emitter_particles(
     head = particle;
 
     CURVE_FACTOR(entry->emitter.curve_indices[0] & 0xf);
-    battle_effect_interpolate_emitter_spawn_position(entry, factor, &spawn.vx);
+    battle_effect_interpolate_emitter_spawn_position(entry, factor, &spawn);
     if (rotate) {
         SetRotMatrix(&matrix);
         rotation.vx = spawn.vx;

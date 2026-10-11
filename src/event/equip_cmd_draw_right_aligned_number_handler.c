@@ -3,9 +3,9 @@
 #include "psx/types.h"
 
 /* Draw record: print a callback-supplied number right-aligned in a field of
- * `command[4]` eight-pixel cells, then advance past the record. `count` holds
+ * `command->number.width` eight-pixel cells, then advance past the record. `count` holds
  * the value, then the printed length, then the number of digit cells. */
-u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
+menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction_t* command) {
     s8 buf[0x10];
     RECT rect;
     s16 i;
@@ -15,12 +15,12 @@ u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
     s16 blanks;
     s32 j;
 
-    count = g_equip_menu_list_row_callbacks[command[3]](command[9]);
+    count = g_equip_menu_list_row_callbacks[command->number.getter](command->number.value);
     count = sprintf(buf, g_equip_text_decimal_format, count);
-    blanks = command[4] - count;
-    x = command[7];
-    y = command[8];
-    count = command[4] - blanks;
+    blanks = command->number.width - count;
+    x = command->number.x;
+    y = command->number.y;
+    count = command->number.width - blanks;
     g_equip_gfx_blank_cell_rect.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_equip_gfx_blank_cell_rect.x = x;
@@ -37,5 +37,5 @@ u8* equip_cmd_draw_right_aligned_number_handler(u8* command) {
             g_equip_text_clut_1_mode0, g_equip_gfx_sprite_ot_index);
         rect.x += 8;
     }
-    return command + command[1];
+    return menu_next_instruction(command);
 }

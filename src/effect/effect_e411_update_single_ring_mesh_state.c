@@ -92,7 +92,7 @@ s32 effect_e411_update_single_ring_mesh_state(s32 record_index, s32 callback_slo
         work = record->work_slots[callback_slot];
         target_index = g_effect_state_records[record_index].target_index;
         READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
-        battle_effect_interpolate_emitter_spawn_position(entry, j, &origin.vx);
+        battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
         case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:

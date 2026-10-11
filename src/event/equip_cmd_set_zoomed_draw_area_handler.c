@@ -6,7 +6,7 @@
  * centre to the zoom table's percentage of its size (and, for the first
  * three, withholds the stream's input), then draws the frame through
  * equip_cmd_draw_window_frame_handler. */
-world_menu_window_command_t* equip_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
+menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* command) {
     RECT area;
     s32 frame;
     s32 scale;
@@ -17,10 +17,10 @@ world_menu_window_command_t* equip_cmd_set_zoomed_draw_area_handler(world_menu_w
             g_equip_cmd_stream_input = 0;
         }
         scale = g_equip_gfx_window_zoom_percent[frame];
-        area.w = command->width * scale / 100;
-        area.h = command->height * scale / 100;
-        area.x = command->x + (command->width >> 1) - (area.w >> 1);
-        area.y = command->y + (command->height >> 1) - (area.h >> 1);
+        area.w = command->window.width * scale / 100;
+        area.h = command->window.height * scale / 100;
+        area.x = command->window.x + (command->window.width >> 1) - (area.w >> 1);
+        area.y = command->window.y + (command->window.height >> 1) - (area.h >> 1);
         equip_gfx_enqueue_draw_area(&area, g_equip_gfx_sprite_ot_index - 1);
         g_equip_gfx_zoom_draw_area_active = 1;
     } else {

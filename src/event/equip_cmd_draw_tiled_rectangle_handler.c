@@ -6,7 +6,7 @@
  * Kind 2 takes the rectangle from the global tiled rect; otherwise command
  * bytes 5 and 6 pack the full-tile counts and remainders in their nibbles.
  */
-u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
+menu_instruction_t* equip_cmd_draw_tiled_rectangle_handler(menu_instruction_t* command) {
     RECT rect;
     s32 base_x;
     s32 base_y;
@@ -22,7 +22,7 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
     otag_index = g_equip_gfx_sprite_ot_index;
     clut = g_equip_menu_palette_clut;
 
-    if (command[2] == 2) {
+    if (command->window.rectangle_source == 2) {
         base_x = g_equip_gfx_tiled_rect.x;
         base_y = g_equip_gfx_tiled_rect.y;
         full_columns = g_equip_gfx_tiled_rect.w / 16;
@@ -33,10 +33,10 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
         u8 packed_width;
         u8 packed_height;
 
-        base_x = command[3];
-        base_y = command[4];
-        packed_width = command[5];
-        packed_height = command[6];
+        base_x = command->window.x;
+        base_y = command->window.y;
+        packed_width = command->window.width;
+        packed_height = command->window.height;
         full_columns = packed_width >> 4;
         partial_width = packed_width & 15;
         full_rows = packed_height >> 4;
@@ -77,6 +77,6 @@ u8* equip_cmd_draw_tiled_rectangle_handler(u8* command) {
         }
     }
 
-    command += command[1];
+    command = menu_next_instruction(command);
     return command;
 }

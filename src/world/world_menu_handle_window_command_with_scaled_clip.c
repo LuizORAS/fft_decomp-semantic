@@ -6,7 +6,7 @@
  * Steps 0-3 scale width and height by the signed percentage table. Later
  * steps disable the temporary clip; the downstream command still runs.
  */
-world_menu_instruction_t* world_menu_handle_window_command_with_scaled_clip(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_handle_window_command_with_scaled_clip(menu_instruction_t* instruction) {
     RECT clip;
     s32 scale;
 

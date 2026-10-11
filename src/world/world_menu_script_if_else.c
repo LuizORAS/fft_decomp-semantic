@@ -3,7 +3,7 @@
 
 /* Execute the selected branch and skip the other by encoded instruction
  * lengths, using a literal predicate argument or the current scrolling row. */
-world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* instruction) {
+menu_instruction_t* world_menu_script_if_else(menu_instruction_t* instruction) {
     s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->if_else.predicate].value;
     s32 count_true = instruction->if_else.count_true;
     s32 count_false = instruction->if_else.count_false;
@@ -17,7 +17,7 @@ world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* in
             arg -= 1;
         }
     }
-    instruction = world_menu_next_instruction(instruction);
+    instruction = menu_next_instruction(instruction);
     if (predicate(arg) != 0) {
         count_true -= 1;
         while (count_true != -1) {
@@ -26,13 +26,13 @@ world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* in
         }
         count_false -= 1;
         while (count_false != -1) {
-            instruction = world_menu_next_instruction(instruction);
+            instruction = menu_next_instruction(instruction);
             count_false -= 1;
         }
     } else {
         count_true -= 1;
         while (count_true != -1) {
-            instruction = world_menu_next_instruction(instruction);
+            instruction = menu_next_instruction(instruction);
             count_true -= 1;
         }
         count_false -= 1;

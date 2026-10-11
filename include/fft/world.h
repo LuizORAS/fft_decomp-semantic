@@ -1459,16 +1459,16 @@ extern u8 g_world_formation_triangle_menu_running;
 extern volatile u8 g_world_formation_unit_slide_frame;
 extern s8 g_world_formation_banner_slide_step;
 extern u8 g_world_formation_stat_display_mode; /* menu_unit_readout_e, HP to BRAVE_FAITH */
-extern world_draw_number_command_t g_world_formation_gauge_value_number;
-extern world_draw_number_command_t g_world_formation_level_number;
-extern world_draw_number_command_t g_world_formation_experience_number;
-extern world_draw_number_command_t g_world_formation_brave_number;
-extern world_draw_number_command_t g_world_formation_faith_number;
-extern world_draw_number_command_t g_world_formation_brave_number_wide;
-extern world_draw_number_command_t g_world_formation_faith_number_wide;
-extern world_draw_number_command_t g_world_formation_gauge_max_number;
-extern world_menu_window_command_t g_world_formation_stat_bar_window_top;
-extern world_menu_window_command_t g_world_formation_stat_bar_window_bottom;
+extern menu_draw_number_command_t g_world_formation_gauge_value_number;
+extern menu_draw_number_command_t g_world_formation_level_number;
+extern menu_draw_number_command_t g_world_formation_experience_number;
+extern menu_draw_number_command_t g_world_formation_brave_number;
+extern menu_draw_number_command_t g_world_formation_faith_number;
+extern menu_draw_number_command_t g_world_formation_brave_number_wide;
+extern menu_draw_number_command_t g_world_formation_faith_number_wide;
+extern menu_draw_number_command_t g_world_formation_gauge_max_number;
+extern menu_window_command_t g_world_formation_stat_bar_window_top;
+extern menu_window_command_t g_world_formation_stat_bar_window_bottom;
 
 /* Three consecutive sprite records at 0x8018c704 / 0x8018c718 / 0x8018c72c. */
 extern world_oriented_quad_t g_world_formation_shadow_egg_sprites[3];
@@ -1994,26 +1994,6 @@ enum world_menu_line_layout_offset {
     WORLD_MENU_LINE_LAYOUT_SIZE = 8
 };
 
-/* Variable-length list command (0x10) in a WORLD menu script: the layout
- * world_menu_load_scrollable_list_layout reads and the placement
- * world_menu_script_draw_scrollable_list draws with. */
-typedef struct world_menu_list_record {
-    u8 opcode;          /* 0x00: 0x10 = list layout */
-    u8 length;          /* 0x01: byte length of this record */
-    u8 show_cursor;     /* 0x02 */
-    u8 _unused_03;      /* 0x03 */
-    u8 skip_count;      /* 0x04: row records that follow (g_world_menu_list_row_record_count) */
-    u8 row_height;      /* 0x05 */
-    u8 visible_rows;    /* 0x06 */
-    u8 x;               /* 0x07 */
-    u8 y;               /* 0x08 */
-    u8 width_a;         /* 0x09 */
-    u8 width_b;         /* 0x0a */
-    u8 cursor_x_offset; /* 0x0b */
-    u8 arrow_up_y;      /* 0x0c */
-    u8 arrow_down_y;    /* 0x0d */
-} world_menu_list_record_t;
-
 typedef char world_menu_line_f2_size_must_be_16[(sizeof(LINE_F2) == 16) ? 1 : -1];
 
 /* Provisional record handed to the world text character thread by
@@ -2274,136 +2254,6 @@ extern u16 g_world_menu_ct_gauge_clut;
 extern u16 g_world_menu_background_clut;
 extern u16 g_world_menu_window_clut_alt;
 extern u16 g_world_menu_window_clut_normal;
-/* Byte-aligned commands in the variable-length menu display stream. */
-typedef struct world_menu_sprite_command {
-    u8 opcode;
-    u8 length;
-    u8 _unknown_02;
-    battle_menu_sprite_cell_t sprite;
-} world_menu_sprite_command_t;
-typedef char world_menu_sprite_command_size_must_be_9[sizeof(world_menu_sprite_command_t) == 9 ? 1 : -1];
-
-typedef struct world_menu_callback_sprite_command {
-    u8 opcode;
-    u8 length;
-    u8 callback_index;
-    u8 row;
-    u8 x;
-    u8 y;
-} world_menu_callback_sprite_command_t;
-
-typedef struct world_menu_tile_command {
-    u8 opcode;
-    u8 length;
-    u8 x;
-    u8 y;
-    u8 width;
-    u8 height;
-    rgb24_t color;
-} world_menu_tile_command_t;
-typedef char world_menu_tile_command_size_must_be_9[sizeof(world_menu_tile_command_t) == 9 ? 1 : -1];
-
-/* LINE_F2 uses endpoint coordinates rather than a rectangle's extents. */
-typedef struct world_menu_line_command {
-    u8 opcode;
-    u8 length;
-    u8 x0;
-    u8 y0;
-    u8 x1;
-    u8 y1;
-    rgb24_t color;
-} world_menu_line_command_t;
-typedef char world_menu_line_command_size_must_be_9[sizeof(world_menu_line_command_t) == 9 ? 1 : -1];
-
-typedef struct world_menu_draw_area_command {
-    u8 opcode;
-    u8 length;
-    u8 x;
-    u8 y;
-    u8 width;
-    u8 height;
-} world_menu_draw_area_command_t;
-
-typedef struct world_menu_sprite_color_command {
-    u8 opcode;
-    u8 length;
-    rgb24_t normal;
-    rgb24_t alternate;
-} world_menu_sprite_color_command_t;
-typedef char world_menu_sprite_color_command_size_must_be_8[sizeof(world_menu_sprite_color_command_t) == 8 ? 1 : -1];
-
-/* A view of the current byte-aligned instruction, not a fixed-stride array.
- * Commands advance by their encoded byte length; opcode 0x16 and the 0x1c
- * terminator are single bytes without a length operand. */
-typedef union world_menu_instruction {
-    struct {
-        u8 opcode;
-        u8 length;
-    } header;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 _unused_02;
-        u8 predicate;
-        u8 count;
-        u8 value;
-    } conditional;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 _unused_02;
-        u8 predicate;
-        u8 count_true;
-        u8 count_false;
-        u8 value;
-    } if_else;
-    world_menu_window_command_t window;
-    world_draw_number_command_t number;
-    world_menu_list_record_t list;
-    world_menu_sprite_command_t sprite;
-    world_menu_callback_sprite_command_t callback_sprite;
-    world_menu_tile_command_t tile;
-    world_menu_line_command_t line;
-    world_menu_draw_area_command_t draw_area;
-    world_menu_sprite_color_command_t sprite_color;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 y_high;
-        u8 x_div_16;
-        u8 y_low;
-    } fixed_clut;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 normal_y_high;
-        u8 normal_x_div_16;
-        u8 normal_y_low;
-        u8 alternate_y_high;
-        u8 alternate_x_div_16;
-        u8 alternate_y_low;
-    } clut;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 y_blend; /* bits 0-1: y/256; bits 4-5: blend rate */
-        u8 x_div_16;
-        u8 depth;
-    } texture_page;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 _unused_02;
-        u8 value;
-    } draw_state;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 blend_rate;
-    } blend;
-} world_menu_instruction_t;
-typedef char world_menu_instruction_size_must_be_14[sizeof(world_menu_instruction_t) == 14 ? 1 : -1];
-
 /* The display opcode selects the row callback's result: an icon source
  * for opcode 0x06, or an integer for predicates and number renderers. */
 typedef union world_menu_callback {
@@ -2412,13 +2262,9 @@ typedef union world_menu_callback {
 } world_menu_callback_t;
 typedef char world_menu_callback_size_must_be_4[sizeof(world_menu_callback_t) == 4 ? 1 : -1];
 
-static __inline__ world_menu_instruction_t* world_menu_next_instruction(world_menu_instruction_t* instruction) {
-    return (world_menu_instruction_t*)((u8*)instruction + instruction->header.length);
-}
-
-extern world_menu_instruction_t* (*g_world_menu_script_handlers[28])(world_menu_instruction_t* instruction);
-extern world_menu_sprite_command_t g_world_menu_script_sprite_command;
-extern world_menu_window_command_t g_world_menu_window_interior_command;
+extern menu_instruction_t* (*g_world_menu_script_handlers[28])(menu_instruction_t* instruction);
+extern menu_sprite_command_t g_world_menu_script_sprite_command;
+extern menu_window_command_t g_world_menu_window_interior_command;
 extern s16 g_world_menu_window_scale_table[];
 extern world_oriented_quad_t g_world_menu_number_blank_sprite;
 extern s8 g_world_menu_cursor_bob_thresholds[];
@@ -2497,30 +2343,30 @@ extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
  * reconstructions.  Each module's linker table maps these names to its own
  * copy of the routine.
  */
-world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_conditional(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_tile(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_sprite(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_line(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_fixed_clut(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_clut(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_sprite_color(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_texture_page(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_formatted_number(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_semi_trans(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_draw_priority(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_handle_window_command_with_scaled_clip(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_clear_temporary_draw_area(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_set_draw_area(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_reregister_temporary_draw_area(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_advance_window_scale_step(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_draw_plain_number(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_script_add_blend_draw_mode(world_menu_instruction_t* instruction);
-world_menu_instruction_t* world_menu_skip_instruction_group(world_menu_instruction_t* instruction);
+menu_instruction_t* world_menu_parse_draw_window_frame(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_conditional(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_if_else(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_tile(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_sprite(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_callback_sprite(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_line(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_fixed_clut(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_clut(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_sprite_color(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_texture_page(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_formatted_number(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_semi_trans(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_draw_priority(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_scrollable_list(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_parse_draw_tiled_rectangle(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_handle_window_command_with_scaled_clip(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_clear_temporary_draw_area(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_set_draw_area(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_reregister_temporary_draw_area(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_advance_window_scale_step(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_draw_plain_number(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_script_add_blend_draw_mode(menu_instruction_t* instruction);
+menu_instruction_t* world_menu_skip_instruction_group(menu_instruction_t* instruction);
 
 void world_menu_unit_status_banner_thread(void);
 void world_menu_equipment_panel_thread(void);
@@ -2590,7 +2436,7 @@ void world_menu_run_equip_thread(void);
 void world_screen_menu_window_frame_thread(void);
 void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
-void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list);
+void world_menu_scroll_list_page(s32 dir, menu_list_record_t* list);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
 void world_menu_select_sprite_clut(world_texture_prim_t* primitive);
 void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index);
@@ -2829,13 +2675,13 @@ extern world_menu_entry_t g_world_card_access_error_message;
 extern s8 g_world_card_slot_scan_active;
 extern s8 g_world_card_format_delay_counter;
 extern s8 g_world_card_error_message_closing;
-extern world_menu_window_command_t g_world_card_slot_window_command;
+extern menu_window_command_t g_world_card_slot_window_command;
 extern world_menu_window_rect_source_t g_world_card_slot_window;
 extern s16 g_world_card_slot_description_row_ids[];
-extern world_draw_number_command_t g_world_card_slot_number_command;
-extern world_draw_number_command_t g_world_card_playtime_hours_command;
-extern world_draw_number_command_t g_world_card_playtime_minutes_command;
-extern world_draw_number_command_t g_world_card_playtime_seconds_command;
+extern menu_draw_number_command_t g_world_card_slot_number_command;
+extern menu_draw_number_command_t g_world_card_playtime_hours_command;
+extern menu_draw_number_command_t g_world_card_playtime_minutes_command;
+extern menu_draw_number_command_t g_world_card_playtime_seconds_command;
 extern point16_t g_world_card_slot_cursor_point;
 extern u16 g_world_card_slot_cursor_anim;
 extern u8 g_world_card_slot_list_input_ready;

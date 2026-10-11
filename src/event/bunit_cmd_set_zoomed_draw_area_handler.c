@@ -6,7 +6,7 @@
  * centre to the zoom table's percentage of its size (and, for the first
  * three, withholds the stream's input), then draws the frame through
  * bunit_cmd_draw_window_frame_handler. */
-world_menu_window_command_t* bunit_cmd_set_zoomed_draw_area_handler(world_menu_window_command_t* command) {
+menu_window_command_t* bunit_cmd_set_zoomed_draw_area_handler(menu_window_command_t* command) {
     RECT area;
     s32 frame;
     s32 scale;

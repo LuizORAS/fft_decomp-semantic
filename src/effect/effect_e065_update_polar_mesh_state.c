@@ -107,7 +107,7 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         }
 
         READ_CURVE(i, j, entry->polar_mesh.curve_indices[0] & 0xF, work->frame);
-        battle_effect_interpolate_emitter_spawn_position(entry, i, scratch->center);
+        battle_effect_interpolate_emitter_spawn_position(entry, i, &scratch->center);
 
         READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 8) & 0xF, work->frame);
         scratch->velocity_angle
@@ -115,8 +115,8 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             << 4;
         j = battle_effect_lerp_linear(entry->polar_mesh.velocity_speed_start, entry->polar_mesh.velocity_speed_end, i)
             << 4;
-        scratch->velocity[0] = rcos(scratch->velocity_angle) * j >> 12;
-        scratch->velocity[1] = rsin(scratch->velocity_angle) * j >> 12;
+        scratch->velocity.x = rcos(scratch->velocity_angle) * j >> 12;
+        scratch->velocity.y = rsin(scratch->velocity_angle) * j >> 12;
 
         READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 12) & 0xF, work->frame);
         scratch->acceleration_angle = battle_effect_lerp_linear(entry->polar_mesh.acceleration_angle_start,
@@ -125,8 +125,8 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         j = battle_effect_lerp_linear(
                 entry->polar_mesh.acceleration_speed_start, entry->polar_mesh.acceleration_speed_end, i)
             << 4;
-        scratch->acceleration[0] = rcos(scratch->acceleration_angle) * j >> 12;
-        scratch->acceleration[1] = rsin(scratch->acceleration_angle) * j >> 12;
+        scratch->acceleration.x = rcos(scratch->acceleration_angle) * j >> 12;
+        scratch->acceleration.y = rsin(scratch->acceleration_angle) * j >> 12;
 
         /* The scroll curve alone is read at the caller's frame. */
         READ_CURVE(i, j, (entry->polar_mesh.curve_indices[1] >> 4) & 0xF, frame);
@@ -151,13 +151,13 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
         if (entry->polar_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             j = entry->polar_mesh.colour_curves & 0xFFF;
-            scratch->colour[0] = g_effect_palette_table[entry->polar_mesh.colour_curves & 0xF].factor[work->frame];
-            scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
+            scratch->red_factor = g_effect_palette_table[entry->polar_mesh.colour_curves & 0xF].factor[work->frame];
+            scratch->green_factor = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
+            scratch->blue_factor = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
         } else {
-            scratch->colour[2] = 0x80;
-            scratch->colour[1] = 0x80;
-            scratch->colour[0] = 0x80;
+            scratch->blue_factor = 0x80;
+            scratch->green_factor = 0x80;
+            scratch->red_factor = 0x80;
         }
         scratch->brightness_row = entry->polar_mesh.brightness_row;
         scratch->ot_depth = entry->polar_mesh.ot_depth;
@@ -172,10 +172,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         /* Ring 0: the inner edge of the first quad row, which also sets the UVs. */
         for (i = 0; i < 4; i++) {
             quad = &work->quads[work->buffer][i];
-            quad->x0 = scratch->center[0] + scratch->points[0][i].x + 0x80;
-            quad->y0 = scratch->center[1] + scratch->points[0][i].y;
-            quad->x1 = scratch->center[0] + scratch->points[0][i + 1].x + 0x80;
-            quad->y1 = scratch->center[1] + scratch->points[0][i + 1].y;
+            quad->x0 = scratch->center.vx + scratch->points[0][i].x + 0x80;
+            quad->y0 = scratch->center.vy + scratch->points[0][i].y;
+            quad->x1 = scratch->center.vx + scratch->points[0][i + 1].x + 0x80;
+            quad->y1 = scratch->center.vy + scratch->points[0][i + 1].y;
             scratch->u0 = quad->u0 = quad->u2 = (work->scroll_u >> 12) + work->base_u;
             scratch->u1 = quad->u1 = quad->u3 = scratch->u0 + scratch->half_width;
             scratch->v0 = quad->v0 = quad->v1 = (work->scroll_v >> 12) + work->base_v;
@@ -186,10 +186,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             POLY_RGB(quad, 1) = scratch->rgb;
 
             quad = &work->quads[work->buffer][i + 20];
-            quad->x0 = scratch->center[0] - scratch->points[0][i].y + 0x80;
-            quad->y0 = scratch->center[1] + scratch->points[0][i].x;
-            quad->x1 = scratch->center[0] - scratch->points[0][i + 1].y + 0x80;
-            quad->y1 = scratch->center[1] + scratch->points[0][i + 1].x;
+            quad->x0 = scratch->center.vx - scratch->points[0][i].y + 0x80;
+            quad->y0 = scratch->center.vy + scratch->points[0][i].x;
+            quad->x1 = scratch->center.vx - scratch->points[0][i + 1].y + 0x80;
+            quad->y1 = scratch->center.vy + scratch->points[0][i + 1].x;
             quad->u0 = quad->u2 = scratch->u0;
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
@@ -198,10 +198,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             POLY_RGB(quad, 1) = scratch->rgb;
 
             quad = &work->quads[work->buffer][i + 40];
-            quad->x0 = scratch->center[0] - scratch->points[0][i].x + 0x80;
-            quad->y0 = scratch->center[1] - scratch->points[0][i].y;
-            quad->x1 = scratch->center[0] - scratch->points[0][i + 1].x + 0x80;
-            quad->y1 = scratch->center[1] - scratch->points[0][i + 1].y;
+            quad->x0 = scratch->center.vx - scratch->points[0][i].x + 0x80;
+            quad->y0 = scratch->center.vy - scratch->points[0][i].y;
+            quad->x1 = scratch->center.vx - scratch->points[0][i + 1].x + 0x80;
+            quad->y1 = scratch->center.vy - scratch->points[0][i + 1].y;
             quad->u0 = quad->u2 = scratch->u0;
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
@@ -210,10 +210,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             POLY_RGB(quad, 1) = scratch->rgb;
 
             quad = &work->quads[work->buffer][i + 60];
-            quad->x0 = scratch->center[0] + scratch->points[0][i].y + 0x80;
-            quad->y0 = scratch->center[1] - scratch->points[0][i].x;
-            quad->x1 = scratch->center[0] + scratch->points[0][i + 1].y + 0x80;
-            quad->y1 = scratch->center[1] - scratch->points[0][i + 1].x;
+            quad->x0 = scratch->center.vx + scratch->points[0][i].y + 0x80;
+            quad->y0 = scratch->center.vy - scratch->points[0][i].x;
+            quad->x1 = scratch->center.vx + scratch->points[0][i + 1].y + 0x80;
+            quad->y1 = scratch->center.vy - scratch->points[0][i + 1].x;
             quad->u0 = quad->u2 = scratch->u0;
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
@@ -224,17 +224,17 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
         /* Rings 1-4 close the inner quad row and open the next one. */
         for (j = 0; j < 4; j++) {
-            scratch->center[0] += scratch->velocity[0] >> 12;
-            scratch->center[1] += scratch->velocity[1] >> 12;
-            scratch->velocity[0] += scratch->acceleration[0];
-            scratch->velocity[1] += scratch->acceleration[1];
+            scratch->center.vx += scratch->velocity.x >> 12;
+            scratch->center.vy += scratch->velocity.y >> 12;
+            scratch->velocity.x += scratch->acceleration.x;
+            scratch->velocity.y += scratch->acceleration.y;
             for (i = 0; i < 4; i++) {
                 inner = &work->quads[work->buffer][j * 4 + i];
                 quad = &work->quads[work->buffer][(j + 1) * 4 + i];
-                quad->x0 = inner->x2 = scratch->center[0] + scratch->points[j + 1][i].x + 0x80;
-                quad->y0 = inner->y2 = scratch->center[1] + scratch->points[j + 1][i].y;
-                quad->x1 = inner->x3 = scratch->center[0] + scratch->points[j + 1][i + 1].x + 0x80;
-                quad->y1 = inner->y3 = scratch->center[1] + scratch->points[j + 1][i + 1].y;
+                quad->x0 = inner->x2 = scratch->center.vx + scratch->points[j + 1][i].x + 0x80;
+                quad->y0 = inner->y2 = scratch->center.vy + scratch->points[j + 1][i].y;
+                quad->x1 = inner->x3 = scratch->center.vx + scratch->points[j + 1][i + 1].x + 0x80;
+                quad->y1 = inner->y3 = scratch->center.vy + scratch->points[j + 1][i + 1].y;
                 brightness = g_effect_e065_polar_mesh_brightness_table[scratch->brightness_row][j + 1];
                 POLY_RGB(quad, 0) = POLY_RGB(quad, 1) = POLY_RGB(inner, 2) = POLY_RGB(inner, 3) = scratch->rgb
                     = PACK_RGB(scratch, brightness);
@@ -246,10 +246,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
                 inner = &work->quads[work->buffer][j * 4 + i + 20];
                 quad = &work->quads[work->buffer][(j + 1) * 4 + i + 20];
-                quad->x0 = inner->x2 = scratch->center[0] - scratch->points[j + 1][i].y + 0x80;
-                quad->y0 = inner->y2 = scratch->center[1] + scratch->points[j + 1][i].x;
-                quad->x1 = inner->x3 = scratch->center[0] - scratch->points[j + 1][i + 1].y + 0x80;
-                quad->y1 = inner->y3 = scratch->center[1] + scratch->points[j + 1][i + 1].x;
+                quad->x0 = inner->x2 = scratch->center.vx - scratch->points[j + 1][i].y + 0x80;
+                quad->y0 = inner->y2 = scratch->center.vy + scratch->points[j + 1][i].x;
+                quad->x1 = inner->x3 = scratch->center.vx - scratch->points[j + 1][i + 1].y + 0x80;
+                quad->y1 = inner->y3 = scratch->center.vy + scratch->points[j + 1][i + 1].x;
                 POLY_RGB(quad, 0) = POLY_RGB(quad, 1) = POLY_RGB(inner, 2) = POLY_RGB(inner, 3) = scratch->rgb;
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
@@ -259,10 +259,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
                 inner = &work->quads[work->buffer][j * 4 + i + 40];
                 quad = &work->quads[work->buffer][(j + 1) * 4 + i + 40];
-                quad->x0 = inner->x2 = scratch->center[0] - scratch->points[j + 1][i].x + 0x80;
-                quad->y0 = inner->y2 = scratch->center[1] - scratch->points[j + 1][i].y;
-                quad->x1 = inner->x3 = scratch->center[0] - scratch->points[j + 1][i + 1].x + 0x80;
-                quad->y1 = inner->y3 = scratch->center[1] - scratch->points[j + 1][i + 1].y;
+                quad->x0 = inner->x2 = scratch->center.vx - scratch->points[j + 1][i].x + 0x80;
+                quad->y0 = inner->y2 = scratch->center.vy - scratch->points[j + 1][i].y;
+                quad->x1 = inner->x3 = scratch->center.vx - scratch->points[j + 1][i + 1].x + 0x80;
+                quad->y1 = inner->y3 = scratch->center.vy - scratch->points[j + 1][i + 1].y;
                 POLY_RGB(quad, 0) = POLY_RGB(quad, 1) = POLY_RGB(inner, 2) = POLY_RGB(inner, 3) = scratch->rgb;
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
@@ -272,10 +272,10 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
                 inner = &work->quads[work->buffer][j * 4 + i + 60];
                 quad = &work->quads[work->buffer][(j + 1) * 4 + i + 60];
-                quad->x0 = inner->x2 = scratch->center[0] + scratch->points[j + 1][i].y + 0x80;
-                quad->y0 = inner->y2 = scratch->center[1] - scratch->points[j + 1][i].x;
-                quad->x1 = inner->x3 = scratch->center[0] + scratch->points[j + 1][i + 1].y + 0x80;
-                quad->y1 = inner->y3 = scratch->center[1] - scratch->points[j + 1][i + 1].x;
+                quad->x0 = inner->x2 = scratch->center.vx + scratch->points[j + 1][i].y + 0x80;
+                quad->y0 = inner->y2 = scratch->center.vy - scratch->points[j + 1][i].x;
+                quad->x1 = inner->x3 = scratch->center.vx + scratch->points[j + 1][i + 1].y + 0x80;
+                quad->y1 = inner->y3 = scratch->center.vy - scratch->points[j + 1][i + 1].x;
                 POLY_RGB(quad, 0) = POLY_RGB(quad, 1) = POLY_RGB(inner, 2) = POLY_RGB(inner, 3) = scratch->rgb;
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
@@ -286,41 +286,41 @@ s32 effect_e065_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         }
 
         /* Ring 5: the outer edge of the last quad row. */
-        scratch->center[0] += scratch->velocity[0] >> 12;
-        scratch->center[1] += scratch->velocity[1] >> 12;
-        scratch->velocity[0] += scratch->acceleration[0];
-        scratch->velocity[1] += scratch->acceleration[1];
+        scratch->center.vx += scratch->velocity.x >> 12;
+        scratch->center.vy += scratch->velocity.y >> 12;
+        scratch->velocity.x += scratch->acceleration.x;
+        scratch->velocity.y += scratch->acceleration.y;
         for (i = 0; i < 4; i++) {
             quad = &work->quads[work->buffer][i + 16];
-            quad->x2 = scratch->center[0] + scratch->points[5][i].x + 0x80;
-            quad->y2 = scratch->center[1] + scratch->points[5][i].y;
-            quad->x3 = scratch->center[0] + scratch->points[5][i + 1].x + 0x80;
-            quad->y3 = scratch->center[1] + scratch->points[5][i + 1].y;
+            quad->x2 = scratch->center.vx + scratch->points[5][i].x + 0x80;
+            quad->y2 = scratch->center.vy + scratch->points[5][i].y;
+            quad->x3 = scratch->center.vx + scratch->points[5][i + 1].x + 0x80;
+            quad->y3 = scratch->center.vy + scratch->points[5][i + 1].y;
             brightness = g_effect_e065_polar_mesh_brightness_table[scratch->brightness_row][5];
             POLY_RGB(quad, 2) = POLY_RGB(quad, 3) = scratch->rgb = PACK_RGB(scratch, brightness);
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + 16 + 20];
-            quad->x2 = scratch->center[0] - scratch->points[5][i].y + 0x80;
-            quad->y2 = scratch->center[1] + scratch->points[5][i].x;
-            quad->x3 = scratch->center[0] - scratch->points[5][i + 1].y + 0x80;
-            quad->y3 = scratch->center[1] + scratch->points[5][i + 1].x;
+            quad->x2 = scratch->center.vx - scratch->points[5][i].y + 0x80;
+            quad->y2 = scratch->center.vy + scratch->points[5][i].x;
+            quad->x3 = scratch->center.vx - scratch->points[5][i + 1].y + 0x80;
+            quad->y3 = scratch->center.vy + scratch->points[5][i + 1].x;
             POLY_RGB(quad, 2) = POLY_RGB(quad, 3) = scratch->rgb;
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + 16 + 40];
-            quad->x2 = scratch->center[0] - scratch->points[5][i].x + 0x80;
-            quad->y2 = scratch->center[1] - scratch->points[5][i].y;
-            quad->x3 = scratch->center[0] - scratch->points[5][i + 1].x + 0x80;
-            quad->y3 = scratch->center[1] - scratch->points[5][i + 1].y;
+            quad->x2 = scratch->center.vx - scratch->points[5][i].x + 0x80;
+            quad->y2 = scratch->center.vy - scratch->points[5][i].y;
+            quad->x3 = scratch->center.vx - scratch->points[5][i + 1].x + 0x80;
+            quad->y3 = scratch->center.vy - scratch->points[5][i + 1].y;
             POLY_RGB(quad, 2) = POLY_RGB(quad, 3) = scratch->rgb;
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + 16 + 60];
-            quad->x2 = scratch->center[0] + scratch->points[5][i].y + 0x80;
-            quad->y2 = scratch->center[1] - scratch->points[5][i].x;
-            quad->x3 = scratch->center[0] + scratch->points[5][i + 1].y + 0x80;
-            quad->y3 = scratch->center[1] - scratch->points[5][i + 1].x;
+            quad->x2 = scratch->center.vx + scratch->points[5][i].y + 0x80;
+            quad->y2 = scratch->center.vy - scratch->points[5][i].x;
+            quad->x3 = scratch->center.vx + scratch->points[5][i + 1].y + 0x80;
+            quad->y3 = scratch->center.vy - scratch->points[5][i + 1].x;
             POLY_RGB(quad, 2) = POLY_RGB(quad, 3) = scratch->rgb;
             AddPrim(ot + scratch->ot_depth, quad);
         }

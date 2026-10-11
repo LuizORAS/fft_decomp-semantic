@@ -3,7 +3,7 @@
 
 /* Stream command: advance the window transition frame by one, up to 4, and
  * skip the one-byte command. */
-u8* equip_cmd_advance_window_scale_step_handler(u8* data) {
+menu_instruction_t* equip_cmd_advance_window_scale_step_handler(menu_instruction_t* data) {
     s32 current;
     s16 previous;
     s32 unused[2];
@@ -13,5 +13,5 @@ u8* equip_cmd_advance_window_scale_step_handler(u8* data) {
     if (current < 4) {
         g_equip_gfx_transition_frame = previous + 1;
     }
-    return data + 1;
+    return (menu_instruction_t*)((u8*)data + 1);
 }
