@@ -452,7 +452,6 @@ extern u8 g_battle_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT];
 extern battle_target_panel_t g_battle_target_panel_data[MAP_TILE_COUNT];
 extern battle_current_ability_t g_battle_action_current_ability;
 extern s32 g_battle_action_hamedo_flag;
-extern s32 g_battle_script_loaded_event_id;
 extern s32 g_battle_state_wait_direction_facing;
 extern battle_action_command_t g_battle_action_saved_command;
 extern battle_stats_t* g_battle_action_target;

@@ -221,7 +221,6 @@ typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32
 
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
-void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 
 /* screen */
 typedef struct battle_action_reward_display {
@@ -1227,7 +1226,6 @@ extern u8 g_battle_unit_editor_line_colors[8 * MENU_UNIT_EDITOR_LINE_SIZE];
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
-s32 battle_script_get_misc_id(s32 unit_id);
 void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
 s32 battle_unit_draw_and_activate_by_misc_id(u32 misc_id);
@@ -1405,5 +1403,7 @@ SVECTOR* battle_unit_get_screen_data_ptr_by_misc_id(u32 misc_id);
 void battle_unit_set_real_coords_from_screen_coords(struct battle_unit_misc_data* unit);
 void battle_unit_set_screen_coords_from_real_coords(struct battle_unit_misc_data* unit);
 void battle_unit_clear_misc_units(void);
+
+s32 battle_unit_is_moving(s32 misc_id);
 
 #endif

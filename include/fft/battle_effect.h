@@ -2023,7 +2023,6 @@ void battle_effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
 void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_effect_obstacle_unit_list_t** out);
 void battle_effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
 void battle_effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length);
-void battle_script_play_effect_and_wait(void);
 void battle_effect_remove_secondary(u8 id);
 void battle_effect_replace_flags_0006(struct battle_effect_flag_prefix* object, s32 value);
 void battle_effect_reset_render_state(void);

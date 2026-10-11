@@ -1095,4 +1095,6 @@ void battle_map_init_weather_particles(s32 command);
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);
 
+void battle_map_reset_script_light_transform(void);
+
 #endif

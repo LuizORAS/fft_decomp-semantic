@@ -769,4 +769,8 @@ s32 battle_gfx_poll_unit_graphics_load(void);
 /* 0x80088904: 0 finished, 1 pending/deferred, 2 immediate progress. */
 s32 battle_gfx_step_queued_unit_graphics_load(void);
 
+void battle_gfx_ramp_screen_overlay_intensity_to_max(void);
+
+void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
+
 #endif
