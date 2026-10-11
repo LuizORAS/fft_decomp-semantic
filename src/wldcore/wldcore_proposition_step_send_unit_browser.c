@@ -29,8 +29,8 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
-        g_wldcore_window_records[level->left_arrow].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->right_arrow].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->left_arrow].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->right_arrow].flags ^= WORLD_RENDER_RECORD_HIDDEN;
         level->mode = WLDCORE_SEND_UNIT_MODE_STATUS;
         menu_selected_index = &g_wldcore_window_panel_render_state.selected_index;
         wldcore_start_core_background_threads(g_wldcore_list_entry_values[*menu_selected_index] & TEXT_ID_ENTRY_MASK);
@@ -38,8 +38,8 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS) {
         buttons = g_wldcore_new_button_presses;
         if (buttons & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
-            g_wldcore_window_records[level->left_arrow].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            g_wldcore_window_records[level->right_arrow].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->left_arrow].flags |= WORLD_RENDER_RECORD_HIDDEN;
+            g_wldcore_window_records[level->right_arrow].flags |= WORLD_RENDER_RECORD_HIDDEN;
             level->mode = WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE;
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
@@ -118,11 +118,11 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
         world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
-        g_wldcore_window_records[level->list_frame.window_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->list_frame.render_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->frame_window_a].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->frame_window_b].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->preview_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->list_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->list_frame.window_index].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[level->list_frame.render_index].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->frame_window_a].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->frame_window_b].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[level->preview_render].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[level->list_render].flags ^= WORLD_RENDER_RECORD_HIDDEN;
     }
 }

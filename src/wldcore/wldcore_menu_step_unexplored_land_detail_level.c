@@ -27,7 +27,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
 
     switch (level->phase) {
     case WLDCORE_DETAIL_PHASE_LOAD:
-        if (!(g_wldcore_window_render_records[level->saved_record_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+        if (!(g_wldcore_window_render_records[level->saved_record_index].flags & WORLD_RENDER_RECORD_POP_IN)) {
             level->phase = WLDCORE_DETAIL_PHASE_BUILD;
         }
         break;
@@ -45,27 +45,27 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         bounds.h = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, WORLD_RENDER_RECORD_8BIT_CLUT);
         g_wldcore_window_render_records[render].priority = 0xA;
         base = &g_wldcore_window_render_records[render].base;
         base->x = -0x74;
         base->y = -0x22;
         g_wldcore_window_render_records[render].flags
-            = (g_wldcore_window_render_records[render].flags & ~WLDCORE_DISPLAY_OBJECT_HIDDEN)
-            | WLDCORE_DISPLAY_OBJECT_POP_IN;
+            = (g_wldcore_window_render_records[render].flags & ~WORLD_RENDER_RECORD_HIDDEN)
+            | WORLD_RENDER_RECORD_POP_IN;
         g_wldcore_scrollable_text_window.extra_render_index = render;
         g_wldcore_scrollable_text_window.extra_base = *base;
         g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render].bounds;
         level->phase = level->phase + 1;
         break;
     case WLDCORE_DETAIL_PHASE_POP_IN:
-        if (!(g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+        if (!(g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN)) {
             level->phase = WLDCORE_DETAIL_PHASE_SHOWN;
         }
         break;
     default:
         index = &g_wldcore_scrollable_text_window.render_record_index;
-        if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+        if (g_wldcore_window_render_records[*index].flags & WORLD_RENDER_RECORD_POP_IN) {
             break;
         }
         if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
@@ -73,19 +73,19 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         }
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
-            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            ^= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
-            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            ^= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            ^= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-            |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            |= WORLD_RENDER_RECORD_POP_IN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
-            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            ^= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count--;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
-            ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            ^= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_menu_stack_depth = depth - 1;
         wldcore_list_open_unexplored_lands();
         break;

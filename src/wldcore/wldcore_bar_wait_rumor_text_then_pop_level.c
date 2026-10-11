@@ -8,16 +8,16 @@
 void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_t* level) {
     s32* index = &g_wldcore_scrollable_text_window.render_record_index;
 
-    if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[*index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
         return;
     }
-    g_wldcore_window_records[level->first_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_window_records[level->second_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_window_render_records[level->render_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[level->first_window].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+    g_wldcore_window_records[level->second_window].flags ^= WORLD_RENDER_RECORD_HIDDEN;
+    g_wldcore_window_render_records[level->render_index].flags ^= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_depth--;
-    g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[level->render_index].flags |= WORLD_RENDER_RECORD_POP_IN;
     wldcore_list_open_rumors();
 }

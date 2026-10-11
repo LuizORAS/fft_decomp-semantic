@@ -11,5 +11,5 @@ void wldcore_window_init_render_record_image(s32 index, RECT bounds, s32 coordin
         wldcore_menu_display_text_entry(index, text_id, text_origin, image);
     }
     wldcore_window_load_image_record_to_vram(index, image);
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
 }

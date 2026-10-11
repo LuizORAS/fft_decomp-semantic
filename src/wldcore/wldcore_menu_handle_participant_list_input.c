@@ -18,7 +18,7 @@
 void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* level) {
     s32 count;
 
-    if (g_wldcore_window_render_records[level->participant_list.render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->participant_list.render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)

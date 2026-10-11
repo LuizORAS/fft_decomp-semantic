@@ -8,6 +8,5 @@ void wldcore_window_init_record(s32 index, s32 priority, s32 sequence) {
     g_wldcore_window_records[index].priority = priority;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED;
+    g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_ANIMATE_WHILE_PAUSED;
 }

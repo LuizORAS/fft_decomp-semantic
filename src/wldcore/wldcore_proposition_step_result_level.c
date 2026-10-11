@@ -24,7 +24,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     s32 month;
     s32 i;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (level->phase == WLDCORE_PROPOSITION_RESULT_PHASE_DONE) {

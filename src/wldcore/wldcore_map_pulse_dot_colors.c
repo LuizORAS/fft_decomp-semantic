@@ -43,7 +43,7 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].render.flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
+        if (!(g_wldcore_map_dots[i].render.flags & WORLD_RENDER_RECORD_HIDDEN)) {
             /* Direct nested access biases the base to render; retail addresses the color column. */
             color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
             if (g_wldcore_map_dots[i].render.palette != 0) {

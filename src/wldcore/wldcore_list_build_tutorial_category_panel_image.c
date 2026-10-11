@@ -19,7 +19,7 @@ void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t*
     bounds.h = panel->row_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;

@@ -29,7 +29,7 @@
 void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* object, GsOT* ot) {
     GsSPRITE sprite;
     CVECTOR color;
-    wldcore_anim_sequence_t* sequence;
+    world_sprite_animation_sequence_t* sequence;
     world_sprite_part_t* part;
     world_sprite_cel_header_t** cels;
     world_sprite_cel_header_t* cel;
@@ -52,7 +52,7 @@ void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* ob
     sprite.scalex = ONE;
     sprite.rotate = 0;
     cels = g_wldcore_anim_cel_table;
-    if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
+    if (object->flags & WORLD_RENDER_RECORD_UNTINTED) {
         color = object->color;
     } else {
         wldcore_gfx_copy_color_with_tint(&object->color, &color);
@@ -60,7 +60,7 @@ void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* ob
     sprite.r = color.r;
     sprite.g = color.g;
     sprite.b = color.b;
-    if ((object->flags & WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED)
+    if ((object->flags & WORLD_RENDER_RECORD_ANIMATE_WHILE_PAUSED)
         || !(g_main_system_flags & MAIN_SYSTEM_FLAG_FREEZE_ANIMATION)) {
         object->anim_counter = object->anim_counter + 1;
     }
@@ -89,10 +89,10 @@ step_frame:
     for (i = 0; i < count; i++) {
         index = ((count - i) * 2) | 1;
         sprite.attribute = words[index] & 0x80000000;
-        if (object->flags & WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT) {
+        if (object->flags & WORLD_RENDER_RECORD_SEMI_TRANSPARENT) {
             sprite.attribute |= 0x40000000;
-            sprite.attribute |= (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) << 22;
-            mode = (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) >> 6;
+            sprite.attribute |= (object->flags & WORLD_RENDER_RECORD_BLEND_RATE_MASK) << 22;
+            mode = (object->flags & WORLD_RENDER_RECORD_BLEND_RATE_MASK) >> 6;
         } else {
             sprite.attribute |= words[index] & 0x70000000;
             mode = (words[index] >> 28) & 3;

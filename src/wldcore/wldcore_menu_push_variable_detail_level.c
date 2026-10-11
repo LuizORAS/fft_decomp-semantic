@@ -20,19 +20,18 @@ void wldcore_menu_push_variable_detail_level(s32 value) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
     g_wldcore_window_render_records[index].flags
-        = (g_wldcore_window_render_records[index].flags & ~WLDCORE_DISPLAY_OBJECT_8BIT_CLUT)
-        | WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        = (g_wldcore_window_render_records[index].flags & ~WORLD_RENDER_RECORD_8BIT_CLUT) | WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.frame_render]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.upper_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     if (variable == 0) {
         g_world_text_substitution_values[0] = (value & 0xF) + WLDCORE_TEXT_ID_RAMZA_TITLE_FIRST;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RAMZA_INFO, 0);

@@ -16,7 +16,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
     GsIMAGE image;
     s32 buttons;
 
-    if (g_wldcore_window_render_records[level->message_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->message_render].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (level->dissolve_step != 0) {

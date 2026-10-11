@@ -75,7 +75,7 @@ void open_title_push_menu_controller(s32 argument) {
     g_open_gfx_render_records_36[record].priority = 4;
     g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
-    g_open_gfx_render_records_36[record].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_open_gfx_render_records_36[record].flags |= WORLD_RENDER_RECORD_HIDDEN;
     position = &g_open_gfx_render_records_36[record].position;
     position->x = 0x60;
     position->y = 0x58;

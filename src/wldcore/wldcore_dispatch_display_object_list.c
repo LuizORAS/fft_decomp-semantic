@@ -15,13 +15,13 @@ void wldcore_dispatch_display_object_list(GsOT* ot, void** list, s32 count) {
     for (i = 0; i < count; i++) {
         object = list[i];
         flags = object;
-        if (*flags & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
+        if (*flags & (WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN)) {
             continue;
         }
-        if (*flags & WLDCORE_DISPLAY_OBJECT_ANIMATED) {
+        if (*flags & WORLD_RENDER_RECORD_ANIMATED) {
             world_animated_render_record_t* animated = object;
             wldcore_gfx_draw_animated_display_object(animated, ot);
-        } else if (*flags & WLDCORE_DISPLAY_OBJECT_IMAGE) {
+        } else if (*flags & WORLD_RENDER_RECORD_IMAGE) {
             wldcore_window_render_record_t* image = object;
             wldcore_gfx_draw_display_object_sprite(image, ot);
         }

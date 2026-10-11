@@ -35,7 +35,7 @@ void wldcore_opcode_load_picture(void) {
     LoadTPage(image.pixel, 0, 0, bounds.x, bounds.y, bounds.w * 4, bounds.h);
     LoadClut(image.clut, clut_position.x, clut_position.y);
     wldcore_window_init_vram_render_record(
-        g_wldcore_opcode_state.render_index, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+        g_wldcore_opcode_state.render_index, bounds, clut_position, WORLD_RENDER_RECORD_8BIT_CLUT);
     g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].anim_counter = 0;
     g_wldcore_opcode_state.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

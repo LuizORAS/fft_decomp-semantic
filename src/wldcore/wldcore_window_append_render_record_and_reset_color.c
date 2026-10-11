@@ -12,7 +12,7 @@ s32 wldcore_window_append_render_record_and_reset_color(void** queue, s32* count
     /* Direct record.color access changes the column base and instruction scheduling. */
     color = &g_wldcore_window_render_records->color;
     g_wldcore_window_render_records[g_wldcore_window_render_record_count].flags
-        &= ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED);
+        &= ~(WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_UNTINTED);
     ((CVECTOR*)((u8*)color + g_wldcore_window_render_record_count * sizeof(g_wldcore_window_render_records[0])))->r
         = 0x80;
     ((CVECTOR*)((u8*)color + g_wldcore_window_render_record_count * sizeof(g_wldcore_window_render_records[0])))->g

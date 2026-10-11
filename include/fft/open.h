@@ -146,7 +146,7 @@ enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
 enum { OPEN_GFX_RENDER_RECORD_CAPACITY = 16 };
 
 /* Render records. open_gfx_draw_render_record_pointer_list dispatches on flags
- * (wldcore_display_object_flag_e): ANIMATED is a 36-byte record, IMAGE a
+ * (world_render_record_flag_e): ANIMATED is a 36-byte record, IMAGE a
  * 56-byte record, and a record with BLANK or HIDDEN set is skipped.
  * Each pool holds OPEN_GFX_RENDER_RECORD_CAPACITY entries. */
 /* The render queue holds either record format; its leading flags word selects
@@ -672,7 +672,7 @@ extern open_overlay_fade_t g_open_gfx_overlay_fade;
 extern open_gfx_transition_t g_open_gfx_transition;
 extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
-extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
+extern world_sprite_animation_sequence_t** g_open_gfx_record_36_animations;
 extern world_sprite_cel_header_t** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
 void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot);

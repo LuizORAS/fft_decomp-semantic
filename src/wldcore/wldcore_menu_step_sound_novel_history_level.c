@@ -122,22 +122,22 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             wldcore_window_draw_indexed_text(level, 4);
             level->scroll = level->scroll + 1;
             if (level->scroll == 3 || level->text_ids[level->scroll] == -1) {
-                g_wldcore_window_records[level->upper_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                g_wldcore_window_records[level->upper_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
             } else {
-                g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                g_wldcore_window_records[level->upper_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             }
-            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->lower_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
         wldcore_window_draw_indexed_text(level, 2);
         level->scroll = level->scroll - 1;
         if (level->scroll == 0) {
-            g_wldcore_window_records[level->lower_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->lower_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
         } else {
-            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->lower_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         }
-        g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->upper_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     }
     if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
         level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE;

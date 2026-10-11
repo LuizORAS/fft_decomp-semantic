@@ -38,7 +38,7 @@ void wldcore_menu_push_root_level(void) {
     g_wldcore_menu_stack_records_next[depth].window_pair.second_window = window_index;
     g_wldcore_window_records[window_index].sequence = WLDCORE_ANIM_SEQUENCE_MAP_EDGE_ARROWS;
     g_wldcore_window_records[window_index].priority = 12;
-    g_wldcore_window_records[window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     xy[window_index].x = 0;
     xy[window_index].y = 0;
     records[window_index].anim_counter = 0;

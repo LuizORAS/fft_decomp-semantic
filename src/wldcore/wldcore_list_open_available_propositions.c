@@ -24,16 +24,16 @@ void wldcore_list_open_available_propositions(void) {
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                             .list_window.frame_render]
             .flags
-        & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
+        & WORLD_RENDER_RECORD_HIDDEN) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .list_window.main_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .list_window.side_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                             .list_window.frame_render]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         wldcore_bar_build_menu_rows(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);
         wldcore_window_publish_slot_b806(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);
         index = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window;
@@ -43,7 +43,7 @@ void wldcore_list_open_available_propositions(void) {
         g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_STILL;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                             .list_window.frame_render]
-            .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            .flags |= WORLD_RENDER_RECORD_POP_IN;
     }
     count = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {

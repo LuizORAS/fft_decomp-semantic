@@ -4,8 +4,8 @@
  * returns its pool index. */
 s32 open_gfx_append_window_record(void** list, s32* count) {
     list[*count] = &g_open_gfx_render_records_56[g_open_gfx_next_render_record_56];
-    g_open_gfx_render_records_56[g_open_gfx_next_render_record_56].flags &= ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT
-        | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT);
+    g_open_gfx_render_records_56[g_open_gfx_next_render_record_56].flags &= ~(WORLD_RENDER_RECORD_8BIT_CLUT
+        | WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_SEMI_TRANSPARENT);
     g_open_gfx_render_records_56[g_open_gfx_next_render_record_56].palette = 0;
     /* Direct color members change the shared base and add four instructions. */
     (&g_open_gfx_render_records_56[g_open_gfx_next_render_record_56].color)->r = 0x80;

@@ -12,17 +12,17 @@ void wldcore_window_set_render_objects_visible(s32 clear) {
 
     if (clear) {
         for (i = 0; i < g_wldcore_window_aux_render_object_count; i++) {
-            *wldcore_display_object_flags(g_wldcore_window_aux_render_object_queue[i]) &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+            *wldcore_display_object_flags(g_wldcore_window_aux_render_object_queue[i]) &= ~WORLD_RENDER_RECORD_BLANK;
         }
         for (i = 0; i < g_wldcore_window_render_object_count; i++) {
-            *wldcore_display_object_flags(g_wldcore_window_render_object_queue[i]) &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+            *wldcore_display_object_flags(g_wldcore_window_render_object_queue[i]) &= ~WORLD_RENDER_RECORD_BLANK;
         }
     } else {
         for (i = 0; i < g_wldcore_window_aux_render_object_count; i++) {
-            *wldcore_display_object_flags(g_wldcore_window_aux_render_object_queue[i]) |= WLDCORE_DISPLAY_OBJECT_BLANK;
+            *wldcore_display_object_flags(g_wldcore_window_aux_render_object_queue[i]) |= WORLD_RENDER_RECORD_BLANK;
         }
         for (i = 0; i < g_wldcore_window_render_object_count; i++) {
-            *wldcore_display_object_flags(g_wldcore_window_render_object_queue[i]) |= WLDCORE_DISPLAY_OBJECT_BLANK;
+            *wldcore_display_object_flags(g_wldcore_window_render_object_queue[i]) |= WORLD_RENDER_RECORD_BLANK;
         }
     }
 }

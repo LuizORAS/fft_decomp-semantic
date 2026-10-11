@@ -54,7 +54,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     bounds.h = level->entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;

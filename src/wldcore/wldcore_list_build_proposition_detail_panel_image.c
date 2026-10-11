@@ -67,7 +67,7 @@ void wldcore_list_build_proposition_detail_panel_image(
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_proposition_detail_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x28;

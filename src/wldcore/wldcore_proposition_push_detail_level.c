@@ -49,11 +49,11 @@ void wldcore_proposition_push_detail_level(s32 value) {
     base->x = -0x7A;
     base->y = -0x28;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
     g_wldcore_menu_stack_types_next[depth] = WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL;
 }

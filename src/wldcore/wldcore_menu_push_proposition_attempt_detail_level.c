@@ -49,10 +49,10 @@ void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_render.window_index]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .window_render.render_index]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_world_text_substitution_values[0] = value + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL;

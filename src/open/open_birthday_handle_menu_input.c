@@ -19,7 +19,7 @@
  * entered. */
 void open_birthday_handle_menu_input(open_controller_record_t* record) {
     open_birthday_date_state_t* menu = &record->birthday_date;
-    if (g_open_gfx_render_records_56[menu->window_record_56].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_open_gfx_render_records_56[menu->window_record_56].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
 

@@ -11,10 +11,10 @@ void wldcore_window_reload_data_set_and_resume_thread14(wldcore_menu_stack_recor
         wldcore_wait_for_file_load();
     }
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+        &= ~WORLD_RENDER_RECORD_BLANK;
     if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
-        g_wldcore_window_records[level->sound_novel.left_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->sound_novel.right_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->sound_novel.left_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->sound_novel.right_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     }
     world_thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
 }

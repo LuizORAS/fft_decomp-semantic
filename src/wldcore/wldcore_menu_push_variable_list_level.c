@@ -25,7 +25,7 @@ void wldcore_menu_push_variable_list_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_list.render_index = index;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
     g_wldcore_window_render_records[index].priority = 3;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_list.first_variable = 0;
     wldcore_menu_render_debug_variable_list(

@@ -21,22 +21,22 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* ima
 
     width = rect->w;
     height = rect->h;
-    width_cells = width >> 4;
-    height_cells = height >> 4;
-    if (width & 0xF) {
+    width_cells = width >> WORLD_TPAGE7_CELL_PIXEL_SHIFT;
+    height_cells = height >> WORLD_TPAGE7_CELL_PIXEL_SHIFT;
+    if (width & WORLD_TPAGE7_CELL_PIXEL_MASK) {
         width_cells++;
     }
-    if (height & 0xF) {
+    if (height & WORLD_TPAGE7_CELL_PIXEL_MASK) {
         height_cells++;
     }
-    for (row = 0; row < 16 - height_cells; row++) {
-        for (column = 0; column <= 16 - width_cells; column++) {
+    for (row = 0; row < WORLD_TPAGE7_GRID_ROWS + 1 - height_cells; row++) {
+        for (column = 0; column <= WORLD_TPAGE7_GRID_COLUMNS - width_cells; column++) {
             if (g_world_gfx_texture_allocation_grid[row][column] != 0) {
                 continue;
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    if (g_world_gfx_texture_allocation_grid[y][x] == 0xFF) {
+                    if (g_world_gfx_texture_allocation_grid[y][x] == WORLD_TPAGE7_GRID_OCCUPIED) {
                         /* Continues the column loop from the nested scan. */
                         goto next;
                     }
@@ -44,11 +44,11 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* ima
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    g_world_gfx_texture_allocation_grid[y][x] = 0xFF;
+                    g_world_gfx_texture_allocation_grid[y][x] = WORLD_TPAGE7_GRID_OCCUPIED;
                 }
             }
-            x = column * 16;
-            y = row * 16;
+            x = column * WORLD_TPAGE7_CELL_PIXELS;
+            y = row * WORLD_TPAGE7_CELL_PIXELS;
             if ((prim->sprt.code & 0xFC) == 0x64) {
                 prim->sprt.u0 = x;
                 prim->sprt.v0 = y;

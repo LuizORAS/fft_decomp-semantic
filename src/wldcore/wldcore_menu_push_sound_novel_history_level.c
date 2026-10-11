@@ -56,7 +56,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     g_wldcore_window_records[index].priority = 9;
     windows[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     positions[index].x = 0;
     positions[index].y = 0x5E;
 
@@ -105,7 +105,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[2] = newest[-3];
     if (g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[0] == -1) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[top].sound_novel_history.upper_window].flags
-            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            |= WORLD_RENDER_RECORD_HIDDEN;
     }
 
     depth = g_wldcore_menu_stack_depth;

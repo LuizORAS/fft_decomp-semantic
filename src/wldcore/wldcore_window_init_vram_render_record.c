@@ -9,8 +9,7 @@ void wldcore_window_init_vram_render_record(s32 index, RECT bounds, point32_t cl
     CVECTOR* rgb;
 
     g_wldcore_window_render_records[index].flags
-        = (g_wldcore_window_render_records[index].flags
-              & ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+        = (g_wldcore_window_render_records[index].flags & ~(WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN))
         | flags;
     g_wldcore_window_render_records[index].clut = clut;
     g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, bounds.x, bounds.y);

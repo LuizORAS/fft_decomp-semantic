@@ -20,7 +20,7 @@ void wldcore_list_handle_set_script_variables_03c0_03ff_input(wldcore_menu_panel
         }
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                             .list_window.content_render]
-            .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            .flags |= WORLD_RENDER_RECORD_POP_IN;
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF);
         wldcore_menu_dispatch_resume_handler();
         return;

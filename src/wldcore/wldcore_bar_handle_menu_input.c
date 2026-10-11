@@ -18,7 +18,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;
 
-    if (g_wldcore_window_render_records[level->frame_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->frame_render].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     flags = g_main_system_flags;

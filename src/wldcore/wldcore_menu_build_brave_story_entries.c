@@ -51,7 +51,7 @@ void wldcore_menu_build_brave_story_entries(void) {
 
     count = 0;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
+        .flags |= WORLD_RENDER_RECORD_BLANK;
     for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
             count++;
@@ -64,7 +64,7 @@ void wldcore_menu_build_brave_story_entries(void) {
         if (count >= 0x10) {
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                          .list_window.upper_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+                .flags &= ~WORLD_RENDER_RECORD_BLANK;
         }
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
             .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]
@@ -74,7 +74,7 @@ void wldcore_menu_build_brave_story_entries(void) {
 
     count = 0;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
+        .flags |= WORLD_RENDER_RECORD_BLANK;
     for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             count++;
@@ -93,7 +93,7 @@ void wldcore_menu_build_brave_story_entries(void) {
         if (count >= 0x1F) {
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                          .list_window.lower_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+                .flags &= ~WORLD_RENDER_RECORD_BLANK;
         }
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
             .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count]

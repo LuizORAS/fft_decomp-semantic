@@ -43,7 +43,7 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.content_render]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;

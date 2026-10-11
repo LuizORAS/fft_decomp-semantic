@@ -88,7 +88,7 @@ void wldcore_map_step_route_travel(void) {
             }
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
                 .position.x = g_wldcore_map_projection_state.marker.render.position.x;

@@ -27,7 +27,7 @@
 void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_level_t* level) {
     s32 selection;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {

@@ -13,5 +13,5 @@ void wldcore_window_begin_tint_transition(wldcore_menu_list_window_level_t* leve
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                         .list_window.content_render]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
 }

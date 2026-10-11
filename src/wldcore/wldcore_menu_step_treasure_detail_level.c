@@ -35,7 +35,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
 
     switch (level->phase) {
     case WLDCORE_DETAIL_PHASE_LOAD:
-        if (!(g_wldcore_window_render_records[level->saved_record_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+        if (!(g_wldcore_window_render_records[level->saved_record_index].flags & WORLD_RENDER_RECORD_POP_IN)) {
             level->phase = WLDCORE_DETAIL_PHASE_BUILD;
         }
         break;
@@ -52,10 +52,9 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         bounds.h = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
-        wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+        wldcore_window_init_vram_render_record(render, bounds, clut_position, WORLD_RENDER_RECORD_8BIT_CLUT);
         g_wldcore_window_render_records[render].priority = 0xA;
-        g_wldcore_window_render_records[render].flags
-            &= ~(WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_POP_IN);
+        g_wldcore_window_render_records[render].flags &= ~(WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_POP_IN);
         base = &g_wldcore_window_render_records[render].base;
         base->x = -0x3E - image.pw;
         base->y = 0x10 - (image.ph >> 1);
@@ -94,19 +93,19 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) == 0) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
-                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
-                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+                |= WORLD_RENDER_RECORD_POP_IN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
-                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count--;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
-                ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                ^= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_menu_stack_depth = depth - 1;
             wldcore_list_open_treasures();
             break;

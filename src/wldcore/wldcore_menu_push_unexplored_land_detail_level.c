@@ -40,7 +40,7 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x74;
     base->y = -0x22;
@@ -67,16 +67,16 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.text_substitutions[1] = date.day;
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.frame_render]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.upper_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_world_text_substitution_values[0] = value + TEXT_ID_UNEXPLORED_LAND_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;

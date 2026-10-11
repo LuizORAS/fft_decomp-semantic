@@ -47,7 +47,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     window1->priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     pos1 = &g_wldcore_window_records[index].position;
     pos1->x = -0x7A;
     pos1->y = 0x60;
@@ -58,7 +58,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.right_window = index;
     g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON;
     g_wldcore_window_records[index].priority = 0xA;
-    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     window2 = &g_wldcore_window_records[index];
     window2->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -81,14 +81,14 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     pos3->x = 0x34;
     pos3->y = 0x55;
     g_wldcore_window_render_records[index].priority = 8;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_UNTINTED;
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.overlay_window = index;
     g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_OVERLAY;
     g_wldcore_window_records[index].priority = 8;
-    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED;
+    g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN | WORLD_RENDER_RECORD_UNTINTED;
     window4 = &g_wldcore_window_records[index];
     window4->anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;

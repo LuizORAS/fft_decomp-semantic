@@ -30,7 +30,7 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         g_wldcore_window_records[index].priority = 3;
         g_wldcore_window_records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
-        g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[index].flags |= WORLD_RENDER_RECORD_HIDDEN;
 
         g_wldcore_scrollable_text_window.text_id = text;
         g_wldcore_scrollable_text_window.image_x = 0;
@@ -47,7 +47,7 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
 
         g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
-            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            |= WORLD_RENDER_RECORD_HIDDEN;
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].position.x
             = g_wldcore_scrollable_text_window.base.x + 3;
@@ -56,7 +56,7 @@ void wldcore_menu_push_scrollable_text_window_level(s32 text) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
         g_wldcore_menu_stack_depth = depth + 1;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_index].flags
-            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_menu_stack_records_next[depth].scrollable_text._unknown_20 = 0x28;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW;
     }

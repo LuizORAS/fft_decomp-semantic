@@ -200,9 +200,9 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.h = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+                wldcore_window_init_vram_render_record(record, bounds, clut, WORLD_RENDER_RECORD_8BIT_CLUT);
                 g_wldcore_window_render_records[record].priority = 9;
-                g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+                g_wldcore_window_render_records[record].flags |= WORLD_RENDER_RECORD_POP_IN;
                 {
                     point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw - 4;
@@ -238,9 +238,9 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 bounds.h = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
-                wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+                wldcore_window_init_vram_render_record(record, bounds, clut, WORLD_RENDER_RECORD_8BIT_CLUT);
                 g_wldcore_window_render_records[record].priority = 9;
-                g_wldcore_window_render_records[record].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+                g_wldcore_window_render_records[record].flags |= WORLD_RENDER_RECORD_POP_IN;
                 {
                     point32_t* base = &g_wldcore_window_render_records[record].base;
                     base->x = -image.pw;

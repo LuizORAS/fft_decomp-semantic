@@ -85,7 +85,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_stack_record_t* level) {
                         return;
                     }
                 } else {
-                    g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                    g_wldcore_window_records[level->map_cursor.window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
                     wldcore_menu_push_focus_location_level(g_wldcore_map_projection_state.marker.kind);
                     return;
                 }
@@ -113,7 +113,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_stack_record_t* level) {
     motion = g_wldcore_map_zoom_motion.flags;
     if (!(motion & WLDCORE_PROJECTION_MOTION_ACTIVE)) {
         if (level->map_cursor.wide_view == 0 && (g_wldcore_new_button_presses & (PSX_PAD_L1 | PSX_PAD_R1))) {
-            g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->map_cursor.window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_map_zoom_motion.duration = 0x20;
             g_wldcore_map_zoom_motion.frame = 0;
             g_wldcore_map_zoom_motion.flags = (g_wldcore_map_zoom_motion.flags ^ WLDCORE_PROJECTION_MOTION_ZOOMED_OUT)
@@ -174,13 +174,13 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_stack_record_t* level) {
     if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
         if (level->map_cursor.wide_view != 0) {
             level->map_cursor.wide_view = 0;
-            g_wldcore_window_records[level->map_cursor.alt_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_records[level->map_cursor.alt_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
         }
-        g_wldcore_window_records[level->map_cursor.window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->map_cursor.window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     } else if (level->map_cursor.wide_view != 1) {
         level->map_cursor.wide_view = 1;
-        g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->map_cursor.alt_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->map_cursor.window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->map_cursor.alt_window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[level->map_cursor.alt_window_index].anim_counter
             = g_wldcore_window_records[level->map_cursor.alt_window_index].frame_index = 0;
         g_wldcore_map_cursor_scroll_y.value = 0;

@@ -38,10 +38,10 @@ void wldcore_list_open_active_propositions(void) {
 
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
 
-    if (g_wldcore_window_render_records[PARENT.title_window].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
-        g_wldcore_window_records[PARENT.cursor_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[PARENT.title_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[PARENT.title_window].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    if (g_wldcore_window_render_records[PARENT.title_window].flags & WORLD_RENDER_RECORD_HIDDEN) {
+        g_wldcore_window_records[PARENT.cursor_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[PARENT.title_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[PARENT.title_window].flags |= WORLD_RENDER_RECORD_POP_IN;
     }
 
     index = wldcore_window_append_record_and_reset_color(
@@ -93,7 +93,7 @@ void wldcore_list_open_active_propositions(void) {
     bounds.h = LEVEL.entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 2, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
-    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x60;
     base->y = -0x28;

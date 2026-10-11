@@ -52,7 +52,7 @@ void open_birthday_push_date_controller(void) {
 
     controller = g_open_current_controller_index;
     g_open_gfx_render_records_56[g_open_controller_records_next[controller].birthday_date.window_record_56].flags
-        |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+        |= WORLD_RENDER_RECORD_POP_IN;
     g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_date.cursor_record_36].position.x
         = g_open_gfx_render_records_56[g_open_controller_records_next[controller].birthday_date.window_record_56].x
         + 0x46;

@@ -42,7 +42,7 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     render_index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     state->render_record_index = render_index;
-    g_wldcore_window_render_records[render_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[render_index].flags |= WORLD_RENDER_RECORD_POP_IN;
     g_wldcore_window_render_records[state->render_record_index].priority = state->priority;
     g_wldcore_window_render_records[state->render_record_index].base = state->base;
 

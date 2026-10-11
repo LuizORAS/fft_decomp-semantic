@@ -51,12 +51,12 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
             & WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.first_window].flags
-                |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                |= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.second_window]
-                .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags |= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2]
                                                 .window_pair_render.render_index]
-                .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags |= WORLD_RENDER_RECORD_HIDDEN;
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TOLD_BEFORE, 0);
             level->result = 2;
             return;

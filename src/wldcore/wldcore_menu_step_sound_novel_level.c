@@ -78,14 +78,14 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         }
 
         if (level->fade_timer != 0) {
-            g_wldcore_window_render_records[level->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            g_wldcore_window_records[level->overlay_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_render_records[level->render_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
+            g_wldcore_window_records[level->overlay_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             width = 0x100 - g_wldcore_active_saved_record.brightness;
             g_wldcore_window_render_records[level->render_index].bounds.w = width / 4;
             level->fade_timer--;
         } else {
-            g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            g_wldcore_window_records[level->overlay_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_window_render_records[level->render_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+            g_wldcore_window_records[level->overlay_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
         }
 
         if (world_menu_get_event_state_flag() != 0) {
@@ -107,8 +107,8 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 g_wldcore_window_records[level->left_window].frame_index
                     = g_wldcore_window_records[level->left_window].anim_counter = 0;
                 level->fade_timer = 0;
-                g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-                g_wldcore_window_records[level->overlay_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                g_wldcore_window_render_records[level->render_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+                g_wldcore_window_records[level->overlay_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
                 wldcore_menu_push_sound_novel_quit_level();
                 return;
             }
@@ -121,8 +121,8 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 g_wldcore_window_records[window].anim_counter = 0;
                 g_wldcore_window_records[window].frame_index = 0;
                 level->fade_timer = 0;
-                g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-                g_wldcore_window_records[level->overlay_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                g_wldcore_window_render_records[level->render_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+                g_wldcore_window_records[level->overlay_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 level->phase = WLDCORE_SOUND_NOVEL_PHASE_OPEN_HISTORY;
                 level->countdown = 8;

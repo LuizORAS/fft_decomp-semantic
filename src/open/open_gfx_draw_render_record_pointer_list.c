@@ -20,11 +20,11 @@ void open_gfx_draw_render_record_pointer_list(u32* otag, void** records, s32 cou
         flags_word = record;
         flags = *flags_word;
         /* Both layouts start with the flags word. */
-        if ((flags & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN)) == 0) {
-            if ((flags & WLDCORE_DISPLAY_OBJECT_ANIMATED) != 0) {
+        if ((flags & (WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN)) == 0) {
+            if ((flags & WORLD_RENDER_RECORD_ANIMATED) != 0) {
                 world_animated_render_record_t* animated = record;
                 open_gfx_draw_animated_render_record(animated, otag);
-            } else if ((flags & WLDCORE_DISPLAY_OBJECT_IMAGE) != 0) {
+            } else if ((flags & WORLD_RENDER_RECORD_IMAGE) != 0) {
                 open_render_record_56_t* window = record;
                 open_gfx_draw_window_record(window, otag);
             }

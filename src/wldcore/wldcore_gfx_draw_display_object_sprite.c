@@ -36,7 +36,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     s32 page;
     s32 step;
 
-    if (object->flags & WLDCORE_DISPLAY_OBJECT_8BIT_CLUT) {
+    if (object->flags & WORLD_RENDER_RECORD_8BIT_CLUT) {
         sprite.attribute = 0x01000000;
     } else {
         sprite.attribute = 0;
@@ -49,7 +49,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     if (step != 0) {
         sprite.cx = object->clut.x + ((step - 1) << 4);
     }
-    if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
+    if (object->flags & WORLD_RENDER_RECORD_UNTINTED) {
         color = object->color;
     } else {
         wldcore_gfx_copy_color_with_tint(&object->color, &color);
@@ -59,7 +59,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     sprite.b = color.b;
     page = object->tpage;
     sprite.tpage = page;
-    if (object->flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (object->flags & WORLD_RENDER_RECORD_POP_IN) {
         s16 fx;
         s16 fy;
         s32 ox;
@@ -78,7 +78,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
         sprite.h = frame.h;
         if (object->anim_counter / 2 >= 4) {
             object->anim_counter = 0;
-            object->flags ^= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            object->flags ^= WORLD_RENDER_RECORD_POP_IN;
         } else {
             object->anim_counter = object->anim_counter + 1;
         }

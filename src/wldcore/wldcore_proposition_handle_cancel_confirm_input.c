@@ -9,7 +9,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
     s32 choice;
 
     if (g_wldcore_window_render_records[level->proposition_cancel_confirm.choice_render].flags
-        & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+        & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (level->proposition_cancel_confirm.confirmed != 0) {
@@ -54,8 +54,8 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
     level->proposition_cancel_confirm.confirmed = 1;
     g_main_active_propositions[level->proposition_cancel_confirm.proposition].flags
         |= WLDCORE_PROPOSITION_PROGRESS_RECALLED;
-    g_wldcore_window_records[level->proposition_cancel_confirm.cursor_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_window_records[level->proposition_cancel_confirm.frame_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[level->proposition_cancel_confirm.cursor_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
+    g_wldcore_window_records[level->proposition_cancel_confirm.frame_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[level->proposition_cancel_confirm.choice_render].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
 }

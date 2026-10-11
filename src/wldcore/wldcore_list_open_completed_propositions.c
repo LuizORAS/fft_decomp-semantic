@@ -31,15 +31,15 @@ void wldcore_list_open_completed_propositions(void) {
     previous = g_wldcore_menu_stack_depth - 1;
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
             .flags
-        & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
+        & WORLD_RENDER_RECORD_HIDDEN) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.first_window].flags
-            &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.second_window].flags
-            &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
-            .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            .flags |= WORLD_RENDER_RECORD_POP_IN;
     }
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);

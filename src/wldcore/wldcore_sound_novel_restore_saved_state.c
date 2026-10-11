@@ -41,9 +41,9 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].priority = 0xC;
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
+        &= ~WORLD_RENDER_RECORD_POP_IN;
 
     picture_id = g_wldcore_active_saved_record.picture_id;
     if (picture_id != -1) {
@@ -77,10 +77,10 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     state_flags = &g_wldcore_active_saved_record.state_flags;
     if (*state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair.first_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                      .window_pair.second_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     }
     if (*state_flags & WLDCORE_OPCODE_STATE_VALUE_DISPLAY) {
         g_wldcore_opcode_state.instruction = g_wldcore_active_saved_record.value_display_mode << 8;

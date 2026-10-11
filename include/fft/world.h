@@ -689,6 +689,16 @@ extern u8 g_world_comparison_unit_number_text_image[];
 extern palette_t g_world_comparison_unit_portrait_palettes[2];
 
 /* gfx */
+/* Texture-page 7 uses a grid of 16-pixel square allocation cells. */
+enum {
+    WORLD_TPAGE7_GRID_ROWS = 15,
+    WORLD_TPAGE7_GRID_COLUMNS = 16,
+    WORLD_TPAGE7_CELL_PIXELS = 16,
+    WORLD_TPAGE7_CELL_PIXEL_SHIFT = 4,
+    WORLD_TPAGE7_CELL_PIXEL_MASK = 0x0f,
+    WORLD_TPAGE7_GRID_OCCUPIED = 0xff,
+};
+
 /* Separate decreasing/increasing RGB-intensity flags.
  * The getter packs them into bits 0/1 and returns 0 when disabled. */
 typedef enum world_fade_state {
@@ -729,35 +739,35 @@ typedef char world_packet_buffer_gradient_lines_offset
 /* Flags word that leads every display object: the WLDCORE window and render
  * records and the OPEN render records. The two kind bits select the draw
  * routine; an object with either BLANK or HIDDEN set is skipped. */
-typedef enum wldcore_display_object_flag {
-    WLDCORE_DISPLAY_OBJECT_ANIMATED = 0x001,  /* 36-byte record drawn from its animation sequence */
-    WLDCORE_DISPLAY_OBJECT_IMAGE = 0x002,     /* 52- or 56-byte record drawn as one sprite */
-    WLDCORE_DISPLAY_OBJECT_8BIT_CLUT = 0x004, /* image: 8-bit texture instead of 4-bit */
-    WLDCORE_DISPLAY_OBJECT_BLANK = 0x008,     /* nothing to draw, whatever HIDDEN says */
-    WLDCORE_DISPLAY_OBJECT_HIDDEN = 0x010,    /* the show/hide toggle */
+typedef enum world_render_record_flag {
+    WORLD_RENDER_RECORD_ANIMATED = 0x001,  /* 36-byte record drawn from its animation sequence */
+    WORLD_RENDER_RECORD_IMAGE = 0x002,     /* 52- or 56-byte record drawn as one sprite */
+    WORLD_RENDER_RECORD_8BIT_CLUT = 0x004, /* image: 8-bit texture instead of 4-bit */
+    WORLD_RENDER_RECORD_BLANK = 0x008,     /* nothing to draw, whatever HIDDEN says */
+    WORLD_RENDER_RECORD_HIDDEN = 0x010,    /* the show/hide toggle */
     /* Semi-transparent at the rate in BLEND_RATE_MASK; a WLDCORE animated object otherwise takes
      * both from each cel part. */
-    WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT = 0x020,
-    WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK = 0x0c0,
-    WLDCORE_DISPLAY_OBJECT_POP_IN = 0x100,   /* image: the opening animation is running; clears itself */
-    WLDCORE_DISPLAY_OBJECT_UNTINTED = 0x400, /* WLDCORE: the colour is used as is, without the fade tint */
+    WORLD_RENDER_RECORD_SEMI_TRANSPARENT = 0x020,
+    WORLD_RENDER_RECORD_BLEND_RATE_MASK = 0x0c0,
+    WORLD_RENDER_RECORD_POP_IN = 0x100,   /* image: the opening animation is running; clears itself */
+    WORLD_RENDER_RECORD_UNTINTED = 0x400, /* WLDCORE: the colour is used as is, without the fade tint */
     /* WLDCORE animated object: steps its frame counter even while system flag 0x08000000 is set. */
-    WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED = 0x800,
-} wldcore_display_object_flag_e;
+    WORLD_RENDER_RECORD_ANIMATE_WHILE_PAUSED = 0x800,
+} world_render_record_flag_e;
 
 /* One frame of a WLDCORE display-object or OPEN sprite-actor animation
  * sequence: the cel (part list) it draws and how long it holds. duration
  * 0xffff pins the frame. */
-typedef struct wldcore_anim_frame {
+typedef struct world_sprite_animation_frame {
     u16 cel;      /* 0x00 */
     u16 duration; /* 0x02 */
-} wldcore_anim_frame_t;
+} world_sprite_animation_frame_t;
 
 /* An animation: a frame count followed by its frames. */
-typedef struct wldcore_anim_sequence {
-    s32 frame_count;                /* 0x00 */
-    wldcore_anim_frame_t frames[1]; /* 0x04 */
-} wldcore_anim_sequence_t;
+typedef struct world_sprite_animation_sequence {
+    s32 frame_count;                          /* 0x00 */
+    world_sprite_animation_frame_t frames[1]; /* 0x04 */
+} world_sprite_animation_sequence_t;
 
 /* Serialized cel header, followed by part_count eight-byte sprite parts.
  * Origins pack the x coordinate in the low half and y in the high half. */
@@ -789,7 +799,7 @@ typedef char world_sprite_part_size_must_be_8[sizeof(world_sprite_part_t) == 8 ?
 /* Animated display objects used by WLDCORE and OPEN. sequence selects a row
  * of the module's animation table; a zero palette keeps each sprite part's CLUT. */
 typedef struct world_animated_render_record {
-    s32 flags;          /* 0x00; wldcore_display_object_flag_e */
+    s32 flags;          /* 0x00; world_render_record_flag_e */
     s32 sequence;       /* 0x04 */
     s32 priority;       /* 0x08; ordering-table priority */
     s32 frame_index;    /* 0x0c; current sequence frame */
@@ -829,7 +839,7 @@ extern glyph_blit_t g_world_gfx_image_blit_destination;
 extern glyph_blit_t g_world_gfx_image_blit_source;
 extern menu_selection_record_t g_world_menu_selection_records[14];
 extern RECT g_world_gfx_temporary_draw_area;
-extern u8 g_world_gfx_texture_allocation_grid[15][16];
+extern u8 g_world_gfx_texture_allocation_grid[WORLD_TPAGE7_GRID_ROWS][WORLD_TPAGE7_GRID_COLUMNS];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
 extern point16_t g_world_gfx_menu_image_source;

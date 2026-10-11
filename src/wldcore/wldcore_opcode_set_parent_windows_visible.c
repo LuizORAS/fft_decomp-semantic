@@ -8,18 +8,18 @@ void wldcore_opcode_set_parent_windows_visible(void) {
         g_wldcore_opcode_state.state_flags |= WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair.first_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair.second_window]
-            .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     } else {
         g_wldcore_opcode_state.state_flags &= ~WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair.first_window]
-            .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair.second_window]
-            .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            .flags |= WORLD_RENDER_RECORD_HIDDEN;
     }
     g_wldcore_opcode_state.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

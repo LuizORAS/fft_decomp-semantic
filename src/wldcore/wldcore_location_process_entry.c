@@ -19,7 +19,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
             g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
         != 0) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
-            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_next_map_id[0] = 0;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
         wldcore_menu_push_event_transition_level(g_wldcore_script_state.args[1]);
@@ -50,7 +50,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         depth = g_wldcore_menu_stack_depth - 1;
         g_wldcore_location_entry_state.menu_level = depth;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].flags
-            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            |= WORLD_RENDER_RECORD_HIDDEN;
         if (wldcore_map_start_projection_motion_if_outside_bounds(
                 &g_wldcore_map_projection_state.marker.render.position, &g_wldcore_map_projection_state.marker.position)
             == 0) {

@@ -22,7 +22,7 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
     s32 row;
     party_data_t* unit;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
     if (level->mode == WLDCORE_ACCEPT_CONFIRM_MODE_CLOSE_MESSAGE) {

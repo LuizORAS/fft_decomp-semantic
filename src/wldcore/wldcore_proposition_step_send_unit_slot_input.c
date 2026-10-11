@@ -16,7 +16,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
     u32 buttons;
     s32 unit;
 
-    if ((g_wldcore_window_render_records[level->portrait_frame].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) == 0) {
+    if ((g_wldcore_window_render_records[level->portrait_frame].flags & WORLD_RENDER_RECORD_POP_IN) == 0) {
         unit = g_wldcore_proposition_send_units[level->slot] & 0x7FF;
         if (unit != level->shown_unit) {
             level->shown_unit = unit;
@@ -40,10 +40,10 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
     close:
         g_wldcore_window_records[level->frame_window_a].palette
             = g_wldcore_window_records[level->frame_window_b].palette = 0;
-        g_wldcore_window_render_records[level->portrait_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->portrait_frame].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->portrait_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->cursor_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_render_records[level->portrait_render].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_render_records[level->portrait_frame].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->portrait_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[level->cursor_window].flags |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
         level->mode = WLDCORE_SEND_UNIT_MODE_SELECT;
         return;

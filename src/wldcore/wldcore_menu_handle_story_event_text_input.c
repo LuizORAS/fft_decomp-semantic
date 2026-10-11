@@ -9,7 +9,7 @@ void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* lev
     u32 flags;
 
     if ((g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
-            & WLDCORE_DISPLAY_OBJECT_POP_IN)
+            & WORLD_RENDER_RECORD_POP_IN)
         != 0) {
         return;
     }
@@ -42,17 +42,17 @@ void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* lev
     depth = g_wldcore_menu_stack_depth;
     index = depth - 2;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[index].list_window.frame_render].flags
-        |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+        |= WORLD_RENDER_RECORD_POP_IN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[index].list_window.main_window].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        &= ~WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[index].list_window.side_window].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        &= ~WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[index].list_window.frame_render].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        &= ~WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[index].list_window.upper_window].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        &= ~WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_depth = depth - 1;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[index].list_window.lower_window].flags
-        &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        &= ~WORLD_RENDER_RECORD_HIDDEN;
     wldcore_list_open_story_events();
 }

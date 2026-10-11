@@ -89,12 +89,12 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         bounds.h = image.ph;
         origin.x = image.cx;
         origin.y = image.cy;
-        wldcore_window_init_vram_render_record(index, bounds, origin, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+        wldcore_window_init_vram_render_record(index, bounds, origin, WORLD_RENDER_RECORD_8BIT_CLUT);
         base = &g_wldcore_window_render_records[index].base;
         g_wldcore_window_render_records[index].priority = 0xB;
         base->x = -0x40;
         base->y = -0x4C;
-        g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+        g_wldcore_window_render_records[index].flags |= WORLD_RENDER_RECORD_POP_IN;
 
         index = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

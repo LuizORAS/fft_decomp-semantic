@@ -10,9 +10,9 @@ void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* sta
     s32 bottom;
 
     if (state->page_start_row == 0) {
-        g_wldcore_window_records[state->middle_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[state->right_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[state->lower_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->middle_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[state->right_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[state->lower_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
         return;
     }
 
@@ -20,15 +20,15 @@ void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* sta
     bottom = g_wldcore_window_records[state->middle_window_index].position.y;
     g_wldcore_window_records[state->lower_window_index].position.y
         = bottom + (top - bottom - 0x12) * state->scroll_row / state->page_start_row + 0x12;
-    g_wldcore_window_records[state->lower_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[state->lower_window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     if (state->scroll_row != 0) {
-        g_wldcore_window_records[state->middle_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->middle_window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     } else {
-        g_wldcore_window_records[state->middle_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->middle_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     }
     if (state->scroll_row != state->page_start_row) {
-        g_wldcore_window_records[state->right_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->right_window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     } else {
-        g_wldcore_window_records[state->right_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->right_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     }
 }

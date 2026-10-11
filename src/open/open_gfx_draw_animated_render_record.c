@@ -26,7 +26,7 @@
 
 void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot) {
     world_sprite_cel_header_t** sprites;
-    wldcore_anim_sequence_t* anim;
+    world_sprite_animation_sequence_t* anim;
     world_sprite_cel_header_t* cel;
     u32* sprite;
     s32 value;

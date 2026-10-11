@@ -37,8 +37,8 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
         rect.h = 0xF0;
         MoveImage(&rect, 0x100, 0);
         DrawSync(0);
-        g_wldcore_window_records[g_wldcore_map_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[g_wldcore_menu_root_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[g_wldcore_map_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
+        g_wldcore_window_records[g_wldcore_menu_root_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     }
     if (level->fade_phase == WLDCORE_EVENT_TRANSITION_FADE_WHITE_OUT) {
         red_sum = g_wldcore_screen_fade_box_0_color.r + 8;

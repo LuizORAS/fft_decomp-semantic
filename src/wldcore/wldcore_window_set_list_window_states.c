@@ -22,6 +22,6 @@ void wldcore_window_set_list_window_states(wldcore_menu_list_window_level_t* sta
     }
     if (state->entries[state->selected_entry] != WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
-        g_wldcore_window_render_records[state->content_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_render_records[state->content_render].flags |= WORLD_RENDER_RECORD_HIDDEN;
     }
 }

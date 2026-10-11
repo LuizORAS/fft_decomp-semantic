@@ -56,6 +56,6 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
     g_wldcore_menu_stack_depth = depth - 1;
     window_index = g_wldcore_menu_stack_records_next[depth - 2].window_index;
     g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
-    g_wldcore_window_records[window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[window_index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     wldcore_menu_dispatch_resume_handler();
 }

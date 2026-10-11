@@ -58,13 +58,13 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.main_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.side_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                                 .list_window.frame_render]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             wldcore_list_open_formation_tutorials();
             break;
         case WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES:
@@ -72,13 +72,13 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.main_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                          .list_window.side_window]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                                 .list_window.frame_render]
-                .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                .flags &= ~WORLD_RENDER_RECORD_HIDDEN;
             wldcore_list_open_tutorial_mask_1_entries();
             break;
         case WLDCORE_MENU_LEVEL_TREASURE_DETAIL:

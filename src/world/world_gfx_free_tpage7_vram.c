@@ -23,9 +23,9 @@ void world_gfx_free_tpage7_vram(RECT* rect) {
         g_world_gfx_free_rect_texels[3] = rect->h;
         destination = g_world_gfx_free_rect_grid_cells;
         for (; i < 4; i++) {
-            value = *source >> 4;
+            value = *source >> WORLD_TPAGE7_CELL_PIXEL_SHIFT;
             *destination = value;
-            if (*source & 15) {
+            if (*source & WORLD_TPAGE7_CELL_PIXEL_MASK) {
                 *destination = value + 1;
             }
             source++;
@@ -35,7 +35,7 @@ void world_gfx_free_tpage7_vram(RECT* rect) {
             y < g_world_gfx_free_rect_grid_cells[1] + g_world_gfx_free_rect_grid_cells[3]; y++) {
             for (x = g_world_gfx_free_rect_grid_cells[0];
                 x < g_world_gfx_free_rect_grid_cells[0] + g_world_gfx_free_rect_grid_cells[2]; x++) {
-                if (x >= 16 || y >= 15) {
+                if (x >= WORLD_TPAGE7_GRID_COLUMNS || y >= WORLD_TPAGE7_GRID_ROWS) {
                     world_thread_exit_current();
                 }
                 g_world_gfx_texture_allocation_grid[y][x] = 0;

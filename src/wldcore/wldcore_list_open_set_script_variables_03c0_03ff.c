@@ -48,7 +48,7 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void) {
     record_index = g_wldcore_menu_stack_depth;
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index - 1].list_window.content_render]
-        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_SET_SCRIPT_VARIABLES_03C0_03FF;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

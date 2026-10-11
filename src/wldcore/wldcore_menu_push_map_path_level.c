@@ -32,6 +32,6 @@ void wldcore_menu_push_map_path_level(s32 path_id, s32 path_id_hi, s32 erase) {
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
     window_index = g_wldcore_menu_stack_records_next[depth - 1].window_index;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_MAP_PATH;
-    g_wldcore_window_records[window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
 }

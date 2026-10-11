@@ -18,5 +18,5 @@ void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s
         open_birthday_draw_menu_text_entry(record_index, combined_text_index, text, image);
     }
     open_birthday_load_window_image(record_index, (u32*)image);
-    g_open_gfx_render_records_56[record_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_open_gfx_render_records_56[record_index].flags |= WORLD_RENDER_RECORD_POP_IN;
 }

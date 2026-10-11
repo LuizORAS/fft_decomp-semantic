@@ -47,7 +47,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.h = image.ph;
     clut.x = image.cx;
     clut.y = image.cy;
-    wldcore_window_init_vram_render_record(index, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
+    wldcore_window_init_vram_render_record(index, bounds, clut, WORLD_RENDER_RECORD_8BIT_CLUT);
     g_wldcore_window_render_records[index].priority = 0xA;
     wldcore_gfx_step_dissolve_image_upload(&image, 0);
 

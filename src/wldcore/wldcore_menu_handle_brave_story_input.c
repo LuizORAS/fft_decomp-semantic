@@ -32,7 +32,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     g_wldcore_displayed_numeric_value_secondary = g_main_system_play_time_minutes;
     g_wldcore_displayed_numeric_value_tertiary = g_main_system_play_time_seconds;
 
-    if (g_wldcore_window_render_records[level->content_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (g_wldcore_window_render_records[level->content_render].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
 

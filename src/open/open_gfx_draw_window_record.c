@@ -46,11 +46,11 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
 
     SetDrawMode(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode, 1,
         0,
-        GetTPage(((record->flags & WLDCORE_DISPLAY_OBJECT_8BIT_CLUT) >> 2) != 0,
-            (record->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) >> 6, record->vram_x, record->vram_y),
+        GetTPage(((record->flags & WORLD_RENDER_RECORD_8BIT_CLUT) >> 2) != 0,
+            (record->flags & WORLD_RENDER_RECORD_BLEND_RATE_MASK) >> 6, record->vram_x, record->vram_y),
         0);
 
-    if (record->flags & WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT) {
+    if (record->flags & WORLD_RENDER_RECORD_SEMI_TRANSPARENT) {
         SetSemiTrans(
             &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 1);
     } else {
@@ -58,7 +58,7 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
             &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 0);
     }
 
-    if (record->flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
+    if (record->flags & WORLD_RENDER_RECORD_POP_IN) {
         open_gfx_calculate_scaled_rectangle(record->pop_in_step / 2, &record->tail.quad, &scaled);
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.x0
             = scaled.x + (px = record->x);
@@ -73,7 +73,7 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
         step = record->pop_in_step;
         if (step / 2 >= 4) {
             record->pop_in_step = 0;
-            record->flags ^= WLDCORE_DISPLAY_OBJECT_POP_IN;
+            record->flags ^= WORLD_RENDER_RECORD_POP_IN;
         } else {
             record->pop_in_step = step + 1;
         }

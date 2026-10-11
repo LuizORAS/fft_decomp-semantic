@@ -15,7 +15,7 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
         return;
     }
 
-    request.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
+    request.flags = WORLD_RENDER_RECORD_ANIMATED;
     request.priority = 4;
     request.palette = 0;
     request.anim_counter = 0;

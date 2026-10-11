@@ -13,7 +13,7 @@ void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordi
     point32_t transformed;
 
     g_wldcore_window_render_records[index].flags
-        &= ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN);
+        &= ~(WORLD_RENDER_RECORD_8BIT_CLUT | WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN);
     g_wldcore_window_render_records[index].base.x = bounds.x - 0x80;
     g_wldcore_window_render_records[index].base.y = bounds.y - 0x78;
     g_wldcore_window_render_records[index].coordinate_mode = coordinate_mode;

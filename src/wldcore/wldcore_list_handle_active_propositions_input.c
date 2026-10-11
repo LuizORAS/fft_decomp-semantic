@@ -12,7 +12,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
     s32 count;
     s32 window;
 
-    if ((g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) != 0) {
+    if ((g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) != 0) {
         return;
     }
     buttons = g_wldcore_new_button_presses;

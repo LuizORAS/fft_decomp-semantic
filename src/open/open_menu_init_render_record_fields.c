@@ -16,7 +16,7 @@ void open_menu_init_render_record_fields(
 
     g_open_gfx_render_records_56[record_index].flags
         = (g_open_gfx_render_records_56[record_index].flags
-              & ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+              & ~(WORLD_RENDER_RECORD_8BIT_CLUT | WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN))
         | flags;
     g_open_gfx_render_records_56[record_index].tail.clut = clut_position;
     g_open_gfx_render_records_56[record_index].vram_x = vram_position.x;

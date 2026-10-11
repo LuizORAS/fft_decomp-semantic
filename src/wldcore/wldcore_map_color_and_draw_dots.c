@@ -36,7 +36,7 @@ void wldcore_map_color_and_draw_dots(void) {
         /* The x coordinate occupies the packed word's low halfword. */
         g_wldcore_map_dots[i].position.vx = src[i].position_and_kind;
         y = src[i].y;
-        g_wldcore_map_dots[i].render.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
+        g_wldcore_map_dots[i].render.flags = WORLD_RENDER_RECORD_ANIMATED;
         g_wldcore_map_dots[i].render.priority = 0xf;
         /* Direct nested access biases the base to render; retail addresses the color column. */
         color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
@@ -59,7 +59,7 @@ void wldcore_map_color_and_draw_dots(void) {
         dot->render.anim_counter = 0;
         g_wldcore_map_dots[i].render.frame_index = 0;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
-            g_wldcore_map_dots[i].render.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_map_dots[i].render.flags |= WORLD_RENDER_RECORD_HIDDEN;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;

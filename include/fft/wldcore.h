@@ -1938,7 +1938,7 @@ typedef char wldcore_menu_stack_record_size_must_be_92[sizeof(wldcore_menu_stack
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
  * sprites through wldcore_gfx_draw_display_object_sprite. */
 typedef struct wldcore_window_render_record {
-    s32 flags; /* 0x00; wldcore_display_object_flag_e */
+    s32 flags; /* 0x00; world_render_record_flag_e */
     s32 tpage;
     s32 priority; /* 0x08; OT priority passed to the sprite sort; 1 from the pool init */
     s32 coordinate_mode;
@@ -2135,7 +2135,7 @@ extern s32 g_wldcore_context_value_display_mode;
  * heuristic needs an in-struct object to keep the target's load order in
  * wldcore_list_handle_active_propositions_input; a scalar does not. */
 extern s32 g_wldcore_active_propositions_saved_cursor[];
-extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
+extern world_sprite_animation_sequence_t** g_wldcore_anim_sequence_table;
 extern world_sprite_cel_header_t** g_wldcore_anim_cel_table;
 extern u8 g_wldcore_choice_hidden_variable_offsets[];
 extern battle_stats_t g_wldcore_status_unit;

@@ -8,11 +8,11 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_menu_stack_records_next[depth].proposition_report.state = -1;
     g_wldcore_menu_stack_records_next[depth].proposition_report.proposition = argument;
     g_wldcore_menu_stack_records_next[depth].proposition_report.phase = 0;
